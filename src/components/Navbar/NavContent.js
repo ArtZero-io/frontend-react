@@ -18,6 +18,7 @@ import { Link as ReactRouterLink } from 'react-router-dom'
 const links = [
   { label: 'Home', href: '/' },
   { label: 'My Account', href: '/account' },
+  { label: 'My Collection', href: '/my-collection'}
 ]
 
 const MobileNavContent = props => {
