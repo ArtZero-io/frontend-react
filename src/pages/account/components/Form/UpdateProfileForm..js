@@ -6,7 +6,7 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
-  Heading,
+  // Heading,
   HStack,
   Input,
   Stack,
@@ -14,32 +14,37 @@ import {
   Text,
   Textarea,
   useColorModeValue,
+  useInterval,
   VStack,
-} from '@chakra-ui/react'
-import { useState } from 'react'
-import { HiCloudUpload } from 'react-icons/hi'
-import { FieldGroup } from './FieldGroup'
-import { useDispatch, useSelector } from 'react-redux'
-import { setMultipleAttributes } from '@actions/account'
-import { getProfile } from '@actions/account'
-import sleep from '../../../../utils/sleep'
-import toast from 'react-hot-toast'
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { HiCloudUpload } from "react-icons/hi";
+import { FieldGroup } from "./FieldGroup";
+import { useDispatch, useSelector } from "react-redux";
+import { setMultipleAttributes } from "@actions/account";
+import { getProfile } from "@actions/account";
+import toast from "react-hot-toast";
+import { useSubstrateState } from "@utils/substrate";
+import { encodeAddress } from "@polkadot/util-crypto";
 
-const Form = () => {
-  const { profile } = useSelector(s => s.account)
+const Form = ({ onClose }) => {
+  const { profile } = useSelector((s) => s.account);
+  const dispatch = useDispatch();
+  const { currentAccount } = useSubstrateState();
+  console.log("currentAccount1", currentAccount);
+  console.log("currentAccount1", currentAccount.addressRaw);
+  console.log("currentAccount3", encodeAddress(currentAccount.address));
 
-  const dispatch = useDispatch()
-
-  const [username, setUsername] = useState('')
+  const [username, setUsername] = useState("");
   const [avatar] = useState(
-    'https://images.unsplash.com/photo-1488282396544-0212eea56a21?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80'
-  )
-  const [bio, setBio] = useState('')
-  const [facebook, setFacebook] = useState('')
-  const [twitter, setTwitter] = useState('')
-  const [telegram, setTelegram] = useState('')
-  const [instagram, setInstagram] = useState('')
-
+    "https://images.unsplash.com/photo-1488282396544-0212eea56a21?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+  );
+  const [bio, setBio] = useState("");
+  const [facebook, setFacebook] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [telegram, setTelegram] = useState("");
+  const [instagram, setInstagram] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const obj = {
     username,
     bio,
@@ -47,34 +52,38 @@ const Form = () => {
     twitter,
     telegram,
     instagram,
-  }
+  };
 
   const objArr = Object.entries(obj).filter(([, value]) => {
-    return value !== ''
-  })
-  const attributes = objArr.map(item => item[0])
-  const values = objArr.map(item => item[1])
+    return value !== "";
+  });
+  const attributes = objArr.map((item) => item[0]);
+  const values = objArr.map((item) => item[1]);
+  console.log("profile", profile);
 
-  const onSubmitHandler = e => {
-    e.preventDefault()
+  useInterval(
+    () => isSubmitted && dispatch(getProfile() && setIsSubmitted(false)),
+    9000
+  );
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault();
     if (!attributes.length && !values.length) {
-      return toast.error('You are not update anything!!!')
+      return toast.error("You are not update anything!!!");
     }
 
-    dispatch(setMultipleAttributes(attributes, values))
-
-    sleep(9000).then(() => {
-      dispatch(getProfile())
-    })
-  }
+    dispatch(setMultipleAttributes(attributes, values));
+    setIsSubmitted(true);
+    onClose();
+  };
 
   return (
-    <Box px={{ base: '4', md: '10' }} py="16" maxWidth="3xl" mx="auto">
+    <Box px={{ base: "4", md: "10" }} p="1" maxWidth="3xl" mx="auto">
       <form id="settings-form" onSubmit={onSubmitHandler}>
         <Stack spacing="4" divider={<StackDivider />}>
-          <Heading size="lg" as="h1" paddingBottom="4">
+          {/* <Heading size="lg" as="h1" paddingBottom="4">
             Update Account
-          </Heading>
+          </Heading> */}
           <FieldGroup title="Personal Info">
             <HStack width="full">
               <Stack direction="column" spacing="6" align="center" width="full">
@@ -91,7 +100,7 @@ const Form = () => {
                   <Text
                     fontSize="sm"
                     mt="3"
-                    color={useColorModeValue('gray.500', 'whiteAlpha.600')}
+                    color={useColorModeValue("gray.500", "whiteAlpha.600")}
                   >
                     .jpg, .gif, or .png. Max file size 700K.
                   </Text>
@@ -188,14 +197,14 @@ const Form = () => {
             >
               Save Changes
             </Button>
-            <Button size="sm" variant="outline">
+            <Button size="sm" variant="outline" onClick={() => onClose()}>
               Cancel
             </Button>
           </Center>
         </FieldGroup>
       </form>
     </Box>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;

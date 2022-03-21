@@ -10,7 +10,11 @@ const Router = () => {
       <Switch>
         <Route exact path={ROUTES.HOME} component={HomePage} />
         <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
-
+        {/* <Route
+          exact
+          path={`${ROUTES.COLLECTIONS}/:collectionAddress`}
+          component={CollectionPage}
+        /> */}
         {/*  TODO Add Private Route */}
       </Switch>
     </>

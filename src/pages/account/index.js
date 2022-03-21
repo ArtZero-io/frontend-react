@@ -1,23 +1,23 @@
-import { Box, Heading, Text } from '@chakra-ui/react'
-import { CardContent } from './components/CardContent'
-import { CardWithAvatar } from './components/CardWithAvatar'
-import { UserInfo } from './components/UserInfo'
-import { useSubstrateState } from '../../utils/substrate'
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
-import { getProfile } from '@actions/account'
-import Form from './components/Form/index'
-import Loader from '../../components/Loader/Loader'
-// import Modal from './components/Modal'
+import { Box, Heading, Text } from "@chakra-ui/react";
+import { CardContent } from "./components/CardContent";
+import { CardWithAvatar } from "./components/CardWithAvatar";
+import { UserInfo } from "./components/UserInfo";
+import { useSubstrateState } from "../../utils/substrate";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getProfile } from "@actions/account";
+// import Form from "./components/Form/index";
+import Loader from "../../components/Loader/Loader";
+import UpdateProfileModal from "./components/Modal/UpdateProfileModal";
 
 const AccountPage = () => {
-  const dispatch = useDispatch()
-  const { currentAccount } = useSubstrateState()
-  const { profile, activeAddress } = useSelector(s => s.account)
+  const dispatch = useDispatch();
+  const { currentAccount } = useSubstrateState();
+  const { profile, activeAddress } = useSelector((s) => s.account);
 
   useEffect(() => {
-    dispatch(getProfile())
-  }, [dispatch, activeAddress])
+    dispatch(getProfile());
+  }, [dispatch, activeAddress]);
 
   return (
     <>
@@ -30,36 +30,35 @@ const AccountPage = () => {
             <CardWithAvatar
               maxW="xl"
               avatarProps={{
-                src: 'https://images.unsplash.com/photo-1485178575877-1a13bf489dfe?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDV8fHdvbWFufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60',
+                src: "https://images.unsplash.com/photo-1485178575877-1a13bf489dfe?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDV8fHdvbWFufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
                 name: profile?.username,
               }}
               action={
-                <div>
-                  123
-                  {/* <Modal /> */}
-                </div>
+                <>
+                  <UpdateProfileModal />
+                </>
               }
             >
               <CardContent>
                 <Heading size="lg" fontWeight="extrabold" letterSpacing="tight">
-                  {profile?.username || 'unknown'}
+                  {profile?.username || "unknown"}
                 </Heading>
                 <Text color="gray.600">
-                  {profile?.bio || 'Write your bio here'}
+                  {profile?.bio || "Write your bio here"}
                 </Text>
                 <UserInfo
-                  facebook={profile?.facebook || 'facebook'}
-                  twitter={profile?.twitter || 'twitter'}
-                  telegram={profile?.telegram || 'telegram'}
-                  instagram={profile?.instagram || 'instagram'}
+                  facebook={profile?.facebook || "facebook"}
+                  twitter={profile?.twitter || "twitter"}
+                  telegram={profile?.telegram || "telegram"}
+                  instagram={profile?.instagram || "instagram"}
                 />
               </CardContent>
             </CardWithAvatar>
           </Box>
-          <Form profile={profile}/>
+          {/* <Form profile={profile} /> */}
         </>
       )}
     </>
-  )
-}
-export default AccountPage
+  );
+};
+export default AccountPage;
