@@ -1,43 +1,42 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
-import { CardContent } from "./components/CardContent";
-import { CardWithAvatar } from "./components/CardWithAvatar";
-import { UserInfo } from "./components/UserInfo";
-import { useSubstrateState } from "../../utils/substrate";
+import { CardContent } from "./components/Card/CardContent";
+import { CardWithAvatar } from "./components/Card/CardWithAvatar";
+import { UserInfo } from "./components/Card/UserInfo";
+
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getProfile } from "@actions/account";
-// import Form from "./components/Form/index";
-import Loader from "../../components/Loader/Loader";
+ import Loader from "../../components/Loader/Loader";
 import UpdateProfileModal from "./components/Modal/UpdateProfileModal";
+import { IPFS_BASE_URL } from "@constants/index";
 
 const AccountPage = () => {
   const dispatch = useDispatch();
-  const { currentAccount } = useSubstrateState();
-  const { profile, activeAddress } = useSelector((s) => s.account);
+  const { profile, activeAddress, accountLoaders } = useSelector(
+    (s) => s.account
+  );
 
   useEffect(() => {
     dispatch(getProfile());
   }, [dispatch, activeAddress]);
 
+  console.log("!accountLoaders?.getProfile", !accountLoaders?.getProfile);
+  console.log("xxxxxAccountPage profile.avatar");
   return (
     <>
-      {!currentAccount?.address ? (
+      {accountLoaders?.getProfile ? (
         <Loader />
       ) : (
         <>
           <Box as="section" pt="20" pb="12" position="relative">
-            <Box position="absolute" inset="0" height="32" bg="blue.600" />
+            {/* <Box position="absolute" inset="0" height="32" bg="blue.600" /> */}
             <CardWithAvatar
               maxW="xl"
               avatarProps={{
-                src: "https://images.unsplash.com/photo-1485178575877-1a13bf489dfe?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDV8fHdvbWFufGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
+                src: `${IPFS_BASE_URL}${profile?.avatar}`,
                 name: profile?.username,
               }}
-              action={
-                <>
-                  <UpdateProfileModal />
-                </>
-              }
+              action={<UpdateProfileModal />}
             >
               <CardContent>
                 <Heading size="lg" fontWeight="extrabold" letterSpacing="tight">
@@ -55,7 +54,6 @@ const AccountPage = () => {
               </CardContent>
             </CardWithAvatar>
           </Box>
-          {/* <Form profile={profile} /> */}
         </>
       )}
     </>

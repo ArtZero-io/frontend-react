@@ -1,13 +1,20 @@
-import { Container } from '@chakra-ui/react'
- import Navbar from '../Navbar/index'
+import { Container, ScaleFade } from "@chakra-ui/react";
+import Navbar from "../Navbar/index";
 
-const Layout = ({ children, loading = false }) => {
+const Layout = ({ children }) => {
   return (
-    <Container maxW="container.xl" bg="transparent" height="100%" px="0">
+    <Container maxW="container.xl" height="100%" px="0">
       <Navbar />
-      <div>{children}</div>
+      <ScaleFade
+        initialScale={0.5}
+        in="true"
+        transitionEnd={{ opacity: 0 }}
+        delay={0.5}
+      >
+        <div>{children}</div>
+      </ScaleFade>
     </Container>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

@@ -3,7 +3,6 @@ import {
   Center,
   HStack,
   Stack,
-  StackDivider,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -13,11 +12,8 @@ import { NavLink } from "./NavLink";
 import { NavList } from "./NavList";
 import { NavListItem } from "./NavListItem";
 import WalletSelector from "../WalletSelector/index";
-const links = [
-  { label: 'Home', href: '/' },
-  { label: 'My Account', href: '/account' },
-  { label: 'My Collection', href: '/my-collection'}
-]
+
+import { MENU_LIST } from "../../constants";
 
 const MobileNavContent = (props) => {
   const { isOpen, onToggle } = useDisclosure();
@@ -39,11 +35,8 @@ const MobileNavContent = (props) => {
         top="64px"
         animate={isOpen ? "enter" : "exit"}
       >
-        <Stack
-          spacing="0"
-          divider={<StackDivider borderColor="whiteAlpha.200" />}
-        >
-          {links.map((link, index) => (
+        <Stack spacing="0">
+          {MENU_LIST.map((link, index) => (
             <NavListItem key={index}>
               <NavLink.Mobile label={link.label} to={link.href} />
             </NavListItem>
@@ -62,7 +55,7 @@ const MobileNavContent = (props) => {
 const DesktopNavContent = (props) => {
   return (
     <HStack spacing="8" align="stretch" {...props}>
-      {links.map((link, index) => (
+      {MENU_LIST.map((link, index) => (
         <NavLink.Desktop key={index} label={link.label} to={link.href} />
       ))}
 

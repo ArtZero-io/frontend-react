@@ -66,40 +66,31 @@ const reducer = (state, action) => {
 const connect = (state, dispatch) => {
   const { apiState, socket, jsonrpc } = state;
 
-   if (apiState) return;
+  if (apiState) return;
   dispatch({ type: "CONNECT_INIT" });
 
-  console.log(`xxx 1 Connected socket: ${socket}`);
+  console.log(`Connected socket: ${socket}`);
   const provider = new WsProvider(socket);
   const _api = new ApiPromise({ provider, rpc: jsonrpc });
-   // Set listeners for disconnection and reconnection event.
   _api.on("connected", () => {
-    console.log(`xxx 2 _api Connected`);
-
     dispatch({ type: "CONNECT", payload: _api });
-    // `ready` event is not emitted upon reconnection and is checked explicitly here.
-    _api.isReady.then((_api) => {
-      console.log(`xxx 3 _api Connected -> success`);
 
+    _api.isReady.then((_api) => {
       dispatch({ type: "CONNECT_SUCCESS" });
     });
   });
 
   _api.on("ready", () => {
-    console.log(`xxx 4 _api on Connected success`);
-
     dispatch({ type: "CONNECT_SUCCESS" });
   });
 
   _api.on("error", (err) => {
-    console.log(`xxx 5 _api on Err `);
-
     dispatch({ type: "CONNECT_ERROR", payload: err });
   });
 };
 
 const retrieveChainInfo = async (api) => {
-   const [systemChain, systemChainType] = await Promise.all([
+  const [systemChain, systemChainType] = await Promise.all([
     api.rpc.system.chain(),
     api.rpc.system.chainType
       ? api.rpc.system.chainType()

@@ -1,24 +1,20 @@
 import {
-  Avatar,
   Box,
   Button,
   Center,
   FormControl,
   FormHelperText,
   FormLabel,
-  // Heading,
   HStack,
   Input,
   Stack,
   StackDivider,
-  // Text,
   Textarea,
-  // useColorModeValue,
   useInterval,
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
-// import { HiCloudUpload } from "react-icons/hi";
+import { HiCloudUpload } from "react-icons/hi";
 import { FieldGroup } from "./FieldGroup";
 import { useDispatch, useSelector } from "react-redux";
 import { setMultipleAttributes } from "@actions/account";
@@ -27,13 +23,15 @@ import toast from "react-hot-toast";
 import { useSubstrateState } from "@utils/substrate";
 import { Identicon } from "@utils/reactIdenticon/Identicon";
 import { create } from "ipfs-http-client";
-import {Buffer} from 'buffer';
+import { Buffer } from "buffer";
+import AvatarUpload from "./AvatarUpload";
+import { IPFS_BASE_URL, IPFS_CLIENT_URL } from "@constants/index";
 
-// const defaultUrl ="https://ipfs.infura.io/ipfs/QmdeZKpXqwdW2uBvyQEMmntKoRcNcLrUGUTXGU5mEqdKWF";
-const client = create("https://ipfs.infura.io:5001/api/v0");
-
+const client = create(IPFS_CLIENT_URL);
 const size = 128;
+
 const Form = ({ onClose }) => {
+  console.log("re render Form");
   const { profile } = useSelector((s) => s.account);
   const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
@@ -49,6 +47,7 @@ const Form = ({ onClose }) => {
   const obj = {
     username,
     bio,
+    avatar,
     facebook,
     twitter,
     telegram,
@@ -74,21 +73,37 @@ const Form = ({ onClose }) => {
     if (!attributes.length && !values.length) {
       return toast.error("You are not update anything!!!");
     }
+
+    dispatch(setMultipleAttributes(attributes, values));
+    setIsSubmitted(true);
+    onClose();
+  };
+
+  const onUploadHandler = async (e) => {
     try {
       if (newAvatarData) {
-        const created = await client.add(newAvatarData);
-        const url = `https://ipfs.infura.io/ipfs/${created.path}`;
-        setAvatar(created.path);
-        toast.success("Upload Avatar successful.");
-        console.log("url newAvatarData xxx", url);
+        const uploadPromise = () =>
+          new Promise(function (resolve) {
+            const created = client.add(newAvatarData);
+
+            if (created) {
+              resolve(created);
+            }
+          });
+
+        toast.promise(
+          uploadPromise().then((created) => setAvatar(created?.path)),
+          {
+            loading: "Uploading...",
+            success: () => `Upload Avatar successful.!`,
+            error: "Could not upload Avatar.",
+          }
+        );
       }
     } catch (error) {
       console.log(error.message);
       toast.error(error.message);
     }
-    dispatch(setMultipleAttributes(attributes, values));
-    setIsSubmitted(true);
-    onClose();
   };
 
   const retrieveNewAvatar = (e) => {
@@ -98,16 +113,19 @@ const Form = ({ onClose }) => {
 
     reader.onloadend = () => {
       setNewAvatarData(Buffer(reader.result));
+      console.log("onloadend");
     };
 
     e.preventDefault();
 
     if (e.target.value !== "") {
       const src = URL.createObjectURL(e.target.files[0]);
+      console.log("setNewAvatarPreviewUrl");
+
       setNewAvatarPreviewUrl(src);
     }
   };
-
+  console.log("newAvatarPreviewUrl", newAvatarPreviewUrl);
   return (
     <Box px={{ base: "4", md: "10" }} p="1" maxWidth="3xl" mx="auto">
       <form id="settings-form" onSubmit={onSubmitHandler}>
@@ -116,50 +134,43 @@ const Form = ({ onClose }) => {
             <HStack width="full">
               <Stack direction="column" spacing="6" align="center" width="full">
                 <div className="">
-                  {!newAvatarPreviewUrl && avatar && (
-                    <Avatar
-                      src={`https://ipfs.infura.io/ipfs/${avatar}`}
-                      name="avatar"
-                      size="xl"
+                  {Object.keys(obj).length === 0 ? (
+                    <Identicon value={currentAccount.addressRaw} size={size} />
+                  ) : (
+                    <AvatarUpload
+                      src={
+                        newAvatarPreviewUrl ||
+                        `${IPFS_BASE_URL}${profile?.avatar}`
+                      }
                     />
                   )}
-                  {newAvatarPreviewUrl && (
-                    <>
-                      <div>Preview</div>
-                      <Avatar
-                        size="xl"
-                        src={newAvatarPreviewUrl}
-                        name="avatar"
-                      />
-                    </>
-                  )}
                 </div>
-                <input
-                  className="py-5"
-                  type="file"
-                  onChange={retrieveNewAvatar}
-                />
-                <div> test</div>
-                <Identicon value={currentAccount.addressRaw} size={size} />
-                {/* <Avatar size="xl" name="Alyssa Mall" src={defaultUrl} />
-                <Avatar size="xl" name="Alyssa Mall" src={avatar} /> */}
-                {/* <Box>
-                  <HStack spacing="5">
-                    <Button size="xs" leftIcon={<HiCloudUpload />}>
-                      Change photo
+                <Box>
+                  <HStack spacing="5" py="4" justifyContent="center">
+                    <label htmlFor="inputTag" style={{ cursor: "pointer" }}>
+                      Select Image
+                      <input
+                        style={{ display: "none" }}
+                        id="inputTag"
+                        onChange={retrieveNewAvatar}
+                        type="file"
+                        accept="image/png, image/jpg, image/gif, image/jpeg"
+                      />
+                    </label>
+                  </HStack>
+                  <HStack spacing="5" justifyContent="center">
+                    <Button
+                      size="xs"
+                      leftIcon={<HiCloudUpload />}
+                      onClick={onUploadHandler}
+                    >
+                      Upload
                     </Button>
-                    <Button variant="ghost" colorScheme="red">
+                    <Button variant="ghost" colorScheme="red" size="xs">
                       Delete
                     </Button>
                   </HStack>
-                  <Text
-                    fontSize="sm"
-                    mt="3"
-                    color={useColorModeValue("gray.500", "whiteAlpha.600")}
-                  >
-                    .jpg, .gif, or .png. Max file size 700K.
-                  </Text>
-                </Box> */}
+                </Box>
               </Stack>
               <VStack width="full">
                 <VStack width="full" spacing="6">
@@ -250,7 +261,7 @@ const Form = ({ onClose }) => {
               colorScheme="blue"
               mx="3"
             >
-              Save Changes
+              Confirm
             </Button>
             <Button size="sm" variant="outline" onClick={() => onClose()}>
               Cancel

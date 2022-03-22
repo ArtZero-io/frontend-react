@@ -3,8 +3,9 @@ import * as ROUTES from '@constants/routes'
 
 import HomePage from '@pages/home'
 import AccountPage from '../pages/account/index'
-import MyCollectionPage from '../pages/mycollection/index'
-import NewCollectionPage from '../pages/mycollection/new'
+import CollectionPage from '../pages/collections'
+import NewCollectionPage from '../pages/collections/new'
+import MyCollectionPage from '../pages/collections'
 
 const Router = () => {
   return (
@@ -14,6 +15,12 @@ const Router = () => {
         <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
         <Route exact path={ROUTES.MY_COLLECTION} component={MyCollectionPage} />
         <Route exact path={`${ROUTES.NEW_COLLECTION}:type`} component={NewCollectionPage} />
+        <Route
+          exact
+          path={`${ROUTES.COLLECTIONS}/:collectionAddress`}
+          component={CollectionPage}
+        />
+         
         {/*  TODO Add Private Route */}
       </Switch>
     </>

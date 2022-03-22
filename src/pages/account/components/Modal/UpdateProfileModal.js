@@ -4,7 +4,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  // ModalFooter,
   ModalHeader,
   ModalOverlay,
   useDisclosure,
@@ -12,7 +11,8 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { HiPencilAlt } from "react-icons/hi";
-import UpdateProfileForm from "../Form/UpdateProfileForm.";
+import UpdateProfileForm from "../Form/FormUpdateProfile";
+
 const UpdateProfileModal = () => {
   const OverlayOne = () => (
     <ModalOverlay
@@ -27,7 +27,7 @@ const UpdateProfileModal = () => {
   return (
     <>
       <Button
-        size="sm"
+        size="xs"
         leftIcon={<HiPencilAlt />}
         onClick={() => {
           setOverlay(<OverlayOne />);
@@ -45,9 +45,8 @@ const UpdateProfileModal = () => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-             <UpdateProfileForm onClose={onClose} />
+            <UpdateProfileForm onClose={onClose} />
           </ModalBody>
-           
         </ModalContent>
       </Modal>
     </>
