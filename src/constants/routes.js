@@ -6,6 +6,10 @@ export const HELP = '/help'
 // MY ACCOUNT
 export const ACCOUNT = '/account'
 
+// MY COLLECTION
+export const MY_COLLECTION = '/my-collection/'
+export const NEW_COLLECTION = '/new-collection/'
+
 //EXTERNAL LINKS
 export const LANDING_PAGE = 'http://artzero.io'
 export const STAKING_APP = 'https://staking.artzero.io'

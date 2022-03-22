@@ -14,9 +14,10 @@ import { NavList } from "./NavList";
 import { NavListItem } from "./NavListItem";
 import WalletSelector from "../WalletSelector/index";
 const links = [
-  { label: "Home", href: "/" },
-  { label: "My Account", href: "/account" },
-];
+  { label: 'Home', href: '/' },
+  { label: 'My Account', href: '/account' },
+  { label: 'My Collection', href: '/my-collection'}
+]
 
 const MobileNavContent = (props) => {
   const { isOpen, onToggle } = useDisclosure();
