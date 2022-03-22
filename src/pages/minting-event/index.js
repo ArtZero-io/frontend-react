@@ -16,15 +16,17 @@ const MintingEventPage = () => {
 
   const [whitelist,setWhitelist] = useState(null);
 
-  useEffect(() => {
+  useEffect(async () => {
     dispatch(getProfile());
-    artzero_nft_calls.getWhitelist(currentAccount,activeAddress);
+    await onClickWhiteList();
   }, [dispatch, activeAddress]);
 
   const onClickWhiteList = async (e) => {
     let whitelist = await artzero_nft_calls.getWhitelist(currentAccount,activeAddress);
     if (whitelist)
       setWhitelist(whitelist);
+    else
+      setWhitelist(null);
   }
   return (
     <>
@@ -38,6 +40,7 @@ const MintingEventPage = () => {
         >
           get_whitelist
         </Button>
+        <p>Your address: {activeAddress}</p>
         <p>You are {whitelist ? "in the whitelist" : "not in the whitelist"}</p>
         <p>{whitelist ? "You can claim " + whitelist.whitelistAmount + " NFTs" : ""}</p>
         <p>{whitelist ? "You already claimed " + whitelist.claimedAmount + " NFTs" : ""}</p>
