@@ -27,6 +27,7 @@ import toast from "react-hot-toast";
 import { useSubstrateState } from "@utils/substrate";
 import { Identicon } from "@utils/reactIdenticon/Identicon";
 import { create } from "ipfs-http-client";
+import {Buffer} from 'buffer';
 
 // const defaultUrl ="https://ipfs.infura.io/ipfs/QmdeZKpXqwdW2uBvyQEMmntKoRcNcLrUGUTXGU5mEqdKWF";
 const client = create("https://ipfs.infura.io:5001/api/v0");
