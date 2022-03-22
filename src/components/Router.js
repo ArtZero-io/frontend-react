@@ -17,7 +17,7 @@ const Router = () => {
         <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />
         <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
         <Route exact path={ROUTES.MY_COLLECTION} component={MyCollectionPage} />
-        <Route exact path={`${ROUTES.NEW_COLLECTION}:type`} component={NewCollectionPage} />
+        <Route exact path={ROUTES.NEW_COLLECTION} component={NewCollectionPage} />
         {/*  TODO Add Private Route */}
       </Switch>
     </>

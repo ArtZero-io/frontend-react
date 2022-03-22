@@ -8,7 +8,7 @@ export const ACCOUNT = '/account'
 
 // MY COLLECTION
 export const MY_COLLECTION = '/my-collection'
-export const NEW_COLLECTION = '/new-collection'
+export const NEW_COLLECTION = '/new-collection/:type'
 
 // MINTING EVENT
 export const MINTING_EVENT = '/mint'
