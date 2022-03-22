@@ -9,7 +9,7 @@ import { TypeRegistry } from "@polkadot/types/create";
 
 import config from "./config";
 import blockchainModule from "../blockchain";
-import smartContract from "../blockchain/contracts";
+import profile from "../blockchain/profile";
 import { ContractPromise } from "@polkadot/api-contract";
 
 const parsedQuery = new URLSearchParams(window.location.search);
@@ -146,11 +146,11 @@ export const loadAccounts = (state, dispatch) => {
 
   const contract = new ContractPromise(
     api,
-    smartContract.VENDOR_ABI,
-    smartContract.VENDOR_MANAGEMENT_ADDRESS
+    profile.CONTRACT_ABI,
+    profile.CONTRACT_ADDRESS
   );
   dispatch({ type: "SET_CONTRACT", payload: contract });
-  blockchainModule.setContract(contract);
+  blockchainModule.setProfileContract(contract);
 };
 
 const SubstrateContext = React.createContext();

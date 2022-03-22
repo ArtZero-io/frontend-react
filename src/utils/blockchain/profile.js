@@ -1,6 +1,6 @@
-const contracts = {
-  VENDOR_MANAGEMENT_ADDRESS: "5HkBnxrsZ1RfguKC669KCzZoJmhnUocW3N6vtpgxzJHWWHcU",
-  VENDOR_ABI: {
+const profile = {
+  CONTRACT_ADDRESS: "5HkBnxrsZ1RfguKC669KCzZoJmhnUocW3N6vtpgxzJHWWHcU",
+  CONTRACT_ABI: {
     source: {
       hash: "0x641ad3f5aca5dde856e540fd5432e9185fc2a09af516f6e96f6bf7a930f8377b",
       language: "ink! 3.0.0",
@@ -449,4 +449,4 @@ const contracts = {
   },
 };
 
-export default contracts;
+export default profile;
