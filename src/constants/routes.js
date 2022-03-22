@@ -7,8 +7,11 @@ export const HELP = '/help'
 export const ACCOUNT = '/account'
 
 // MY COLLECTION
-export const MY_COLLECTION = '/my-collection/'
-export const NEW_COLLECTION = '/new-collection/'
+export const MY_COLLECTION = '/my-collection'
+export const NEW_COLLECTION = '/new-collection'
+
+// MINTING EVENT
+export const MINTING_EVENT = '/mint'
 
 //EXTERNAL LINKS
 export const LANDING_PAGE = 'http://artzero.io'
