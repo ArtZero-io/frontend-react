@@ -21,8 +21,8 @@ const NewCollectionButton = () => {
     )
 
     const buttonLinks = [
-        { label: 'Simple Mode - ERC721', href: '/new-collection/type/1' },
-        { label: 'Advanced Mode - ERC721', href: '/new-collection/type/2'}
+        { label: 'Simple Mode - ERC721', href: '/new-collection/1' },
+        { label: 'Advanced Mode - ERC721', href: '/new-collection/2'}
       ]
 
     const { isOpen, onOpen, onClose } = useDisclosure()

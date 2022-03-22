@@ -9,7 +9,9 @@ import { TypeRegistry } from "@polkadot/types/create";
 
 import config from "./config";
 import blockchainModule from "../blockchain";
-import smartContract from "../blockchain/contracts";
+import profile from "../blockchain/profile";
+import artzero_nft from "../blockchain/artzero-nft";
+import artzero_nft_calls from "../blockchain/artzero-nft-calls";
 import { ContractPromise } from "@polkadot/api-contract";
 
 const parsedQuery = new URLSearchParams(window.location.search);
@@ -137,11 +139,19 @@ export const loadAccounts = (state, dispatch) => {
 
   const contract = new ContractPromise(
     api,
-    smartContract.VENDOR_ABI,
-    smartContract.VENDOR_MANAGEMENT_ADDRESS
+    profile.CONTRACT_ABI,
+    profile.CONTRACT_ADDRESS
   );
   dispatch({ type: "SET_CONTRACT", payload: contract });
-  blockchainModule.setContract(contract);
+  blockchainModule.setProfileContract(contract);
+
+  const artzero_contract = new ContractPromise(
+    api,
+    artzero_nft.CONTRACT_ABI,
+    artzero_nft.CONTRACT_ADDRESS
+  );
+  console.log('artzero_contract',artzero_contract);
+  artzero_nft_calls.setContract(artzero_contract);
 };
 
 const SubstrateContext = React.createContext();

@@ -2,7 +2,7 @@ import { web3FromSource } from '@polkadot/extension-dapp'
 import toast from 'react-hot-toast'
 
 let account
-let contract
+let profile
 
 const gasLimit = -1
 const value = 0
@@ -12,9 +12,9 @@ function setAccount(newAccount) {
   account = newAccount
 }
 
-function setContract(c) {
+function setProfileContract(c) {
   // console.log(`Setting contract in blockchain module`, c)
-  contract = c
+  profile = c
 }
 
 async function getWalletAddress() {
@@ -33,7 +33,7 @@ export async function getProfileOnChain() {
 
   let profile
 
-  const { result, output } = await contract.query.getAttributes(
+  const { result, output } = await profile.query.getAttributes(
     address,
     { value, gasLimit },
     address,
@@ -73,7 +73,7 @@ export async function setSingleAttributeProfileOnChain(data) {
   const injector = await web3FromSource(account?.meta?.source)
 
   account &&
-    contract.tx
+    profile.tx
       .setProfileAttribute({ gasLimit, value }, data?.attribute, data?.value)
       .signAndSend(
         address,
@@ -81,7 +81,7 @@ export async function setSingleAttributeProfileOnChain(data) {
         async ({ status, dispatchError }) => {
           if (dispatchError) {
             if (dispatchError.isModule) {
-              const decoded = contract.registry.findMetaError(
+              const decoded = profile.registry.findMetaError(
                 dispatchError.asModule
               )
               const { docs, name, section } = decoded
@@ -120,7 +120,7 @@ export async function setMultipleAttributesProfileOnChain(attributes, values) {
   const injector = await web3FromSource(account?.meta?.source)
 
   account &&
-    contract.tx
+    profile.tx
       .setMultipleAttributes({ gasLimit, value }, attributes, values)
       .signAndSend(
         address,
@@ -128,7 +128,7 @@ export async function setMultipleAttributesProfileOnChain(attributes, values) {
         async ({ status, dispatchError }) => {
           if (dispatchError) {
             if (dispatchError.isModule) {
-              const decoded = contract.registry.findMetaError(
+              const decoded = profile.registry.findMetaError(
                 dispatchError.asModule
               )
               const { docs, name, section } = decoded
@@ -162,7 +162,7 @@ const blockchainModule = {
   // My account
   getProfileOnChain,
   setAccount,
-  setContract,
+  setProfileContract,
   setSingleAttributeProfileOnChain,
   setMultipleAttributesProfileOnChain,
 }

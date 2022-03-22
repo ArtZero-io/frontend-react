@@ -13,7 +13,15 @@ import { NavList } from "./NavList";
 import { NavListItem } from "./NavListItem";
 import WalletSelector from "../WalletSelector/index";
 
-import { MENU_LIST } from "../../constants";
+ import * as ROUTES from '@constants/routes'
+
+const links = [
+  { label: 'Home', href: '/' },
+  { label: 'Mint', href: ROUTES.MINTING_EVENT },
+  { label: 'Admin', href: ROUTES.ADMIN },
+  { label: 'My Account', href: ROUTES.ACCOUNT },
+  { label: 'My Collection', href: ROUTES.MY_COLLECTION}
+]
 
 const MobileNavContent = (props) => {
   const { isOpen, onToggle } = useDisclosure();
@@ -36,7 +44,7 @@ const MobileNavContent = (props) => {
         animate={isOpen ? "enter" : "exit"}
       >
         <Stack spacing="0">
-          {MENU_LIST.map((link, index) => (
+          {links.map((link, index) => (
             <NavListItem key={index}>
               <NavLink.Mobile label={link.label} to={link.href} />
             </NavListItem>
@@ -55,7 +63,7 @@ const MobileNavContent = (props) => {
 const DesktopNavContent = (props) => {
   return (
     <HStack spacing="8" align="stretch" {...props}>
-      {MENU_LIST.map((link, index) => (
+      {links.map((link, index) => (
         <NavLink.Desktop key={index} label={link.label} to={link.href} />
       ))}
 
