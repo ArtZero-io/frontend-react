@@ -11,7 +11,7 @@ function WalletMenu() {
   useEffect(() => {
     let unsubscribe
 
-    currentAccount &&
+    api && currentAccount &&
       activeAddress &&
       api.query.system
         .account(activeAddress, balance => {

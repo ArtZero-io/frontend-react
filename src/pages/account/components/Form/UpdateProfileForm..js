@@ -11,34 +11,34 @@ import {
   Input,
   Stack,
   StackDivider,
-  Text,
+  // Text,
   Textarea,
-  useColorModeValue,
+  // useColorModeValue,
   useInterval,
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { HiCloudUpload } from "react-icons/hi";
+// import { HiCloudUpload } from "react-icons/hi";
 import { FieldGroup } from "./FieldGroup";
 import { useDispatch, useSelector } from "react-redux";
 import { setMultipleAttributes } from "@actions/account";
 import { getProfile } from "@actions/account";
 import toast from "react-hot-toast";
 import { useSubstrateState } from "@utils/substrate";
-import { encodeAddress } from "@polkadot/util-crypto";
+import { Identicon } from "@utils/reactIdenticon/Identicon";
+import { create } from "ipfs-http-client";
 
+// const defaultUrl ="https://ipfs.infura.io/ipfs/QmdeZKpXqwdW2uBvyQEMmntKoRcNcLrUGUTXGU5mEqdKWF";
+const client = create("https://ipfs.infura.io:5001/api/v0");
+
+const size = 128;
 const Form = ({ onClose }) => {
   const { profile } = useSelector((s) => s.account);
   const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
-  console.log("currentAccount1", currentAccount);
-  console.log("currentAccount1", currentAccount.addressRaw);
-  console.log("currentAccount3", encodeAddress(currentAccount.address));
 
   const [username, setUsername] = useState("");
-  const [avatar] = useState(
-    "https://images.unsplash.com/photo-1488282396544-0212eea56a21?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
-  );
+  const [avatar, setAvatar] = useState("");
   const [bio, setBio] = useState("");
   const [facebook, setFacebook] = useState("");
   const [twitter, setTwitter] = useState("");
@@ -59,36 +59,90 @@ const Form = ({ onClose }) => {
   });
   const attributes = objArr.map((item) => item[0]);
   const values = objArr.map((item) => item[1]);
-  console.log("profile", profile);
+
+  const [newAvatarData, setNewAvatarData] = useState(null);
+  const [newAvatarPreviewUrl, setNewAvatarPreviewUrl] = useState("");
 
   useInterval(
     () => isSubmitted && dispatch(getProfile() && setIsSubmitted(false)),
     9000
   );
 
-  const onSubmitHandler = (e) => {
+  const onSubmitHandler = async (e) => {
     e.preventDefault();
     if (!attributes.length && !values.length) {
       return toast.error("You are not update anything!!!");
     }
-
+    try {
+      if (newAvatarData) {
+        const created = await client.add(newAvatarData);
+        const url = `https://ipfs.infura.io/ipfs/${created.path}`;
+        setAvatar(created.path);
+        toast.success("Upload Avatar successful.");
+        console.log("url newAvatarData xxx", url);
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message);
+    }
     dispatch(setMultipleAttributes(attributes, values));
     setIsSubmitted(true);
     onClose();
+  };
+
+  const retrieveNewAvatar = (e) => {
+    const data = e.target.files[0];
+    const reader = new window.FileReader();
+    reader.readAsArrayBuffer(data);
+
+    reader.onloadend = () => {
+      setNewAvatarData(Buffer(reader.result));
+    };
+
+    e.preventDefault();
+
+    if (e.target.value !== "") {
+      const src = URL.createObjectURL(e.target.files[0]);
+      setNewAvatarPreviewUrl(src);
+    }
   };
 
   return (
     <Box px={{ base: "4", md: "10" }} p="1" maxWidth="3xl" mx="auto">
       <form id="settings-form" onSubmit={onSubmitHandler}>
         <Stack spacing="4" divider={<StackDivider />}>
-          {/* <Heading size="lg" as="h1" paddingBottom="4">
-            Update Account
-          </Heading> */}
           <FieldGroup title="Personal Info">
             <HStack width="full">
               <Stack direction="column" spacing="6" align="center" width="full">
-                <Avatar size="xl" name="Alyssa Mall" src={avatar} />
-                <Box>
+                <div className="">
+                  {!newAvatarPreviewUrl && avatar && (
+                    <Avatar
+                      src={`https://ipfs.infura.io/ipfs/${avatar}`}
+                      name="avatar"
+                      size="xl"
+                    />
+                  )}
+                  {newAvatarPreviewUrl && (
+                    <>
+                      <div>Preview</div>
+                      <Avatar
+                        size="xl"
+                        src={newAvatarPreviewUrl}
+                        name="avatar"
+                      />
+                    </>
+                  )}
+                </div>
+                <input
+                  className="py-5"
+                  type="file"
+                  onChange={retrieveNewAvatar}
+                />
+                <div> test</div>
+                <Identicon value={currentAccount.addressRaw} size={size} />
+                {/* <Avatar size="xl" name="Alyssa Mall" src={defaultUrl} />
+                <Avatar size="xl" name="Alyssa Mall" src={avatar} /> */}
+                {/* <Box>
                   <HStack spacing="5">
                     <Button size="xs" leftIcon={<HiCloudUpload />}>
                       Change photo
@@ -104,7 +158,7 @@ const Form = ({ onClose }) => {
                   >
                     .jpg, .gif, or .png. Max file size 700K.
                   </Text>
-                </Box>
+                </Box> */}
               </Stack>
               <VStack width="full">
                 <VStack width="full" spacing="6">

@@ -2,33 +2,31 @@ import {
   Box,
   Center,
   HStack,
-  Link,
   Stack,
   StackDivider,
   useColorModeValue,
   useDisclosure,
-} from '@chakra-ui/react'
-import * as React from 'react'
-import { HiOutlineMenu, HiX } from 'react-icons/hi'
-import { NavLink } from './NavLink'
-import { NavList } from './NavList'
-import { NavListItem } from './NavListItem'
-import WalletSelector from '../WalletSelector/index'
-import { Link as ReactRouterLink } from 'react-router-dom'
+} from "@chakra-ui/react";
+import * as React from "react";
+import { HiOutlineMenu, HiX } from "react-icons/hi";
+import { NavLink } from "./NavLink";
+import { NavList } from "./NavList";
+import { NavListItem } from "./NavListItem";
+import WalletSelector from "../WalletSelector/index";
 const links = [
-  { label: 'Home', href: '/' },
-  { label: 'My Account', href: '/account' },
-]
+  { label: "Home", href: "/" },
+  { label: "My Account", href: "/account" },
+];
 
-const MobileNavContent = props => {
-  const { isOpen, onToggle } = useDisclosure()
+const MobileNavContent = (props) => {
+  const { isOpen, onToggle } = useDisclosure();
   return (
     <Box {...props}>
       <Center
         as="button"
         p="2"
         fontSize="2xl"
-        color={useColorModeValue('gray.600', 'gray.400')}
+        color={useColorModeValue("gray.600", "gray.400")}
         onClick={onToggle}
       >
         {isOpen ? <HiX /> : <HiOutlineMenu />}
@@ -38,7 +36,7 @@ const MobileNavContent = props => {
         insetX="0"
         bg="blue.600"
         top="64px"
-        animate={isOpen ? 'enter' : 'exit'}
+        animate={isOpen ? "enter" : "exit"}
       >
         <Stack
           spacing="0"
@@ -46,12 +44,10 @@ const MobileNavContent = props => {
         >
           {links.map((link, index) => (
             <NavListItem key={index}>
-              <Link as={ReactRouterLink} to={link.href}>
-                <NavLink.Mobile>{link.label}</NavLink.Mobile>
-              </Link>
+              <NavLink.Mobile label={link.label} to={link.href} />
             </NavListItem>
           ))}
-          <NavListItem style={{ flex: '1' }}>
+          <NavListItem style={{ flex: "1" }}>
             <NavLink.Mobile>
               <WalletSelector />
             </NavLink.Mobile>
@@ -59,26 +55,22 @@ const MobileNavContent = props => {
         </Stack>
       </NavList>
     </Box>
-  )
-}
+  );
+};
 
-const DesktopNavContent = props => {
+const DesktopNavContent = (props) => {
   return (
     <HStack spacing="8" align="stretch" {...props}>
       {links.map((link, index) => (
-        <NavLink.Desktop key={index}>
-          <Link as={ReactRouterLink} to={link.href}>
-            {link.label}
-          </Link>
-        </NavLink.Desktop>
+        <NavLink.Desktop key={index} label={link.label} to={link.href} />
       ))}
 
       <WalletSelector />
     </HStack>
-  )
-}
+  );
+};
 
 export const NavContent = {
   Mobile: MobileNavContent,
   Desktop: DesktopNavContent,
-}
+};
