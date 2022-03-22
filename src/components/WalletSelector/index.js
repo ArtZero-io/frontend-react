@@ -63,8 +63,8 @@ function WalletSelector(props) {
         <Menu>
           <MenuButton mx="2" as={Button} rightIcon={<ChevronDownIcon />}>
             {currentAccount?.meta?.name.replace(" (polkadot-js)", "")} -{" "}
-            {currentAccount.address.slice(0, 6)} ...{" "}
-            {currentAccount.address.slice(-6)}
+            {currentAccount?.address.slice(0, 6)} ...{" "}
+            {currentAccount?.address.slice(-6)}
           </MenuButton>
           <MenuList>
             {keyringOptions.map(({ address, name }) => (

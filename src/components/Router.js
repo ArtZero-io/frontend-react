@@ -4,9 +4,9 @@ import * as ROUTES from '@constants/routes'
 import HomePage from '@pages/home'
 import AccountPage from '../pages/account/index'
 import CollectionPage from '../pages/collections'
-import MyCollectionPage from '../pages/mycollection/index'
-import NewCollectionPage from '../pages/mycollection/new'
-import MintPage from '../pages/minting-event'
+import MyCollectionPage from '../pages/collections/index'
+import NewCollectionPage from '../pages/collections/new'
+import MintPage from '../pages/launchpad'
 import AdminPage from '../pages/admin'
 
 const Router = () => {
