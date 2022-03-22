@@ -13,6 +13,8 @@ export const NEW_COLLECTION = '/new-collection'
 // MINTING EVENT
 export const MINTING_EVENT = '/mint'
 
+export const ADMIN = '/admin'
+
 //EXTERNAL LINKS
 export const LANDING_PAGE = 'http://artzero.io'
 export const STAKING_APP = 'https://staking.artzero.io'

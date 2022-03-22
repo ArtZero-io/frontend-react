@@ -18,6 +18,7 @@ import * as ROUTES from '@constants/routes'
 const links = [
   { label: 'Home', href: '/' },
   { label: 'Mint', href: ROUTES.MINTING_EVENT },
+  { label: 'Admin', href: ROUTES.ADMIN },
   { label: 'My Account', href: ROUTES.ACCOUNT },
   { label: 'My Collection', href: ROUTES.MY_COLLECTION}
 ]
