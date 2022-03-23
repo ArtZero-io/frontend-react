@@ -1,3 +1,20 @@
+import { decodeAddress, encodeAddress } from '@polkadot/keyring';
+import { hexToU8a, isHex } from '@polkadot/util';
+
+export function isValidAddressPolkadotAddress(address) {
+  try {
+    encodeAddress(
+      isHex(address)
+        ? hexToU8a(address)
+        : decodeAddress(address)
+    );
+
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
 
 export function delay(timeout:number) {
     return new Promise(resolve => {

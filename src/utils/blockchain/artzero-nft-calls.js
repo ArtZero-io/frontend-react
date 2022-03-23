@@ -2,13 +2,32 @@
 import BN from "bn.js";
 import toast from 'react-hot-toast'
 import { web3FromSource } from '@polkadot/extension-dapp'
-
+import {isValidAddressPolkadotAddress} from '../../utils'
 let artzero_contract
 
 /*
   PSP34 functions
 */
+async function owner(caller_account){
+  if (!artzero_contract || !caller_account ){
+    console.log('invalid inputs');
+    return null;
+  }
+  const address = caller_account?.address
+  const gasLimit = -1
+  const azero_value = 0
+  console.log(artzero_contract);
 
+  const { result, output } = await artzero_contract.query["ownable::owner"](
+    address,
+    { value:azero_value, gasLimit }
+  )
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+
+}
 async function totalSupply(caller_account) {
   if (!artzero_contract || !caller_account ){
     console.log('invalid inputs');
@@ -190,12 +209,9 @@ async function whitelistMint(caller_account, mint_amount) {
       async ({ status, dispatchError }) => {
         if (dispatchError) {
           if (dispatchError.isModule) {
-            const decoded = artzero_contract.registry.findMetaError(
-              dispatchError.asModule
+            toast.error(
+              `There is some error with your request`
             )
-            const { docs, name, section } = decoded
-
-            console.log(`Lỗi: ${section}.${name}: ${docs.join(' ')}`)
           } else {
             console.log(
               'dispatchError setProfileAttribute',
@@ -239,12 +255,62 @@ async function paidMint(caller_account, fee) {
       async ({ status, dispatchError }) => {
         if (dispatchError) {
           if (dispatchError.isModule) {
-            const decoded = artzero_contract.registry.findMetaError(
-              dispatchError.asModule
+            toast.error(
+              `There is some error with your request`
             )
-            const { docs, name, section } = decoded
+          } else {
+            console.log(
+              'dispatchError setProfileAttribute',
+              dispatchError.toString()
+            )
+          }
+        }
 
-            console.log(`Lỗi: ${section}.${name}: ${docs.join(' ')}`)
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0]
+          toast.success(
+            `Public Minting ${
+              statusText === '0' ? 'started' : statusText.toLowerCase()
+            }.`
+          )
+        }
+      }
+    )
+    .then(unsub => (unsubscribe = unsub))
+    .catch(e => console.log('e', e));
+    return unsubscribe;
+}
+async function addWhitelist(caller_account, account, amount) {
+  if (!artzero_contract || !caller_account ){
+    console.log('invalid inputs');
+    return null;
+  }
+  console.log(parseInt(amount),account,isValidAddressPolkadotAddress(account))
+  if (parseInt(amount) <= 0 || !isValidAddressPolkadotAddress(account)){
+    toast.error(
+      `invalid inputs`
+    )
+    return;
+  }
+  //TODO: Check account and amount
+  let unsubscribe
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source)
+
+  artzero_contract.tx
+    .paidMint({ gasLimit, value:azero_value })
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(
+              `There is some error with your request`
+            )
           } else {
             console.log(
               'dispatchError setProfileAttribute',
@@ -284,7 +350,9 @@ const artzero_contract_calls = {
   whitelistMint,
   paidMint,
   balanceOf,
-  totalSupply
+  totalSupply,
+  owner,
+  addWhitelist
 }
 
 export default artzero_contract_calls
