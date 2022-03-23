@@ -9,6 +9,25 @@ let artzero_contract
   PSP34 functions
 */
 
+async function totalSupply(caller_account) {
+  if (!artzero_contract || !caller_account ){
+    console.log('invalid inputs');
+    return null;
+  }
+  const address = caller_account?.address
+  const gasLimit = -1
+  const azero_value = 0
+  console.log(artzero_contract);
+
+  const { result, output } = await artzero_contract.query["psp34::totalSupply"](
+    address,
+    { value:azero_value, gasLimit }
+  )
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
 async function balanceOf(caller_account, account) {
   if (!artzero_contract || !caller_account || !account ){
     console.log('invalid inputs');
@@ -264,7 +283,8 @@ const artzero_contract_calls = {
   tokenUri,
   whitelistMint,
   paidMint,
-  balanceOf
+  balanceOf,
+  totalSupply
 }
 
 export default artzero_contract_calls
