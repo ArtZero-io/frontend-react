@@ -106,7 +106,7 @@ const retrieveChainInfo = async (api) => {
 
 ///
 // Loading accounts from dev and polkadot-js extension
-export const loadAccounts = (state, dispatch) => {
+export const loadAccounts = async (state, dispatch) => {
   const { api } = state;
   dispatch({ type: "LOAD_KEYRING" });
 

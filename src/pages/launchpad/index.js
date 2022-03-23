@@ -14,6 +14,7 @@ const MintingEventPage = () => {
   const { currentAccount } = useSubstrateState();
   const { activeAddress } = useSelector((s) => s.account);
 
+  const [balance,setBalance]      = useState(0);
   const [whitelist,setWhitelist]  = useState(null);
   const [mintMode,setMintMode]    = useState(-1);
   const [fee1,setFee1]            = useState(-1);
@@ -22,13 +23,24 @@ const MintingEventPage = () => {
 
   useEffect(async () => {
     dispatch(getProfile());
+    await onRefresh();
+  }, [dispatch, activeAddress]);
+
+  const onRefresh = async () => {
+    await onGetBalance();
     await onGetWhiteList();
     await onGetMintMode();
     await onGetFee1();
     await onGetFee2();
     await onGetAmount1();
-  }, [dispatch, activeAddress]);
-
+  }
+  const onGetBalance = async (e) => {
+    let res = await artzero_nft_calls.balanceOf(currentAccount,activeAddress);
+    if (res)
+      setBalance(res);
+    else
+      setBalance(0);
+  }
   const onGetWhiteList = async (e) => {
     let whitelist = await artzero_nft_calls.getWhitelist(currentAccount,activeAddress);
     if (whitelist)
@@ -66,14 +78,14 @@ const MintingEventPage = () => {
   }
   const onWhiteListMint = async () => {
     await artzero_nft_calls.whitelistMint(currentAccount,1);
-    await onGetWhiteList();
+    await onRefresh();
   }
   const onPaidMint = async () => {
     if (mintMode == 1)
       await artzero_nft_calls.paidMint(currentAccount,fee1);
     else if (mintMode == 2)
       await artzero_nft_calls.paidMint(currentAccount,fee2);
-    await onGetWhiteList();
+    await onRefresh();
   }
   return (
     <>
@@ -81,48 +93,24 @@ const MintingEventPage = () => {
         <Loader />
       ) : (
         <>
+        <br/>
+        <Box  align='center' position="relative" bg='green.500' padding='2'>
+          <Text> <strong>Nếu ai được thưởng token thì sẽ nằm trong Whitelist và sẽ mint (tạo ra) được NFT của ArtZero miễn phí. Còn lại sẽ phải Mint với 1 mức phí nhất định tuỳ giai đoạn. GĐ 1: tối đa {amount1} NFTs giá {fee1}, GĐ 2: giá {fee2}</strong></Text>
+        </Box>
         <Box as="section" pt="20" pb="12" position="relative">
           <Flex
-            position="relative"
-            direction="column"
-            align={{ sm: 'center' }}
-            maxW="2xl"
-            mx="auto"
             color='white'
-            shadow={{ sm: 'base' }}
-            rounded={{ sm: 'lg' }}
-            px={{ base: '6', md: '8' }}
-            pb={{ base: '6', md: '8' }}
           >
-            <Button
-              size="sm"
-              color='black'
-              onClick={() => onGetWhiteList()}
-            >
-              get_whitelist
-            </Button>
-            <Text>Your address: {activeAddress}</Text>
+          <Box flex='1' bg='blue.500' margin='2' padding='2' >
+            <Text>Your address: <strong>{activeAddress}</strong></Text>
+            <Text>Your ArtZero's NFT Balance: <strong>{balance} NFTs</strong></Text>
+
+          </Box>
+          <Box flex='1' bg='blue.500' margin='2' padding='2'>
             <Text>You are {whitelist ? "in the whitelist for minting ArtZero NFTs" : "not in the whitelist for minting ArtZero NFTs"}</Text>
             <Text>{whitelist ? "You can claim " + whitelist.whitelistAmount + " ArtZero NFTs" : ""}</Text>
             <Text>{whitelist ? "You already claimed " + whitelist.claimedAmount + " ArtZero NFTs" : ""}</Text>
-            <Text>------------</Text>
-            <Text>Minting is {mintMode <=0 ? "disabled" : "enabled"}</Text>
-            {mintMode == 1 ?
-                <>
-                  <Text>Minting fee is {fee1} AZERO</Text>
-                  <Text>Max Mint: {amount1} NFTs</Text>
-                </>
-              :
-              null
-            }
-            {mintMode == 2 ?
-                <>
-                  <Text>Minting fee is {fee2} AZERO</Text>
-                  <Text>Max Mint: {amount1} NFTs</Text>
-                </>
-              :
-              null
-            }
+            <br/>
             <Button
               size="sm"
               color='black'
@@ -130,16 +118,43 @@ const MintingEventPage = () => {
             >
               WhiteList Mint (FREE)
             </Button>
+
+          </Box>
+          <Box flex='1' bg='blue.500' margin='2' padding='2'>
+            <Text>Public Minting is {mintMode <=0 ? <strong>Disabled</strong> : <strong>Enabled</strong>}</Text>
+            {mintMode == 1 ?
+                <>
+                  <Text>Minting fee is <strong>{fee1} AZERO</strong></Text>
+                  <Text>Max Mint: <strong>{amount1} NFTs</strong></Text>
+                </>
+              :
+              null
+            }
+            {mintMode == 2 ?
+                <>
+                  <Text>Minting fee is <strong>{fee2} AZERO</strong></Text>
+                  <Text>Max Mint: <strong>{amount1} NFTs</strong></Text>
+                </>
+              :
+              null
+            }
+            <br/>
             <Button
               size="sm"
               color='black'
               onClick={() => onPaidMint()}
             >
-              Mint Now (WITH FEE)
+              Mint Now
             </Button>
+          </Box>
+
+
           </Flex>
 
-          </Box>
+        </Box>
+        <Box  align='center' position="relative" bg='green.500' padding='2'>
+          <Text as='mark'> <strong>TO SHOW ALL ARTZERO NFTs BELONG TO USER HERE</strong></Text>
+        </Box>
         </>
       )}
     </>
