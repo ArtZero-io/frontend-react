@@ -1,8 +1,8 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5CAmTgzZj9rDjqqisBzPcGB2uG7DgBmGje2NsWYuwsZNSXxR",
+  CONTRACT_ADDRESS: "5GL6jcGgcjBEKhXQhwFtm7BhPGQZZneBjoEeNqRNofCPQE3G",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x20b0bb14e9ae828801a21889efa80cc917ef96051ee60fa4a9b549d422f25bb7",
+      "hash": "0x491fc8b71661ad3ea2c77bd99e08afde25f3191774db2c2f0811073951f7bc27",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -55,7 +55,7 @@ const collection_manager = {
                   "displayName": [
                     "Option"
                   ],
-                  "type": 14
+                  "type": 6
                 }
               },
               {
@@ -66,7 +66,7 @@ const collection_manager = {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 6
+                  "type": 7
                 }
               }
             ],
@@ -83,7 +83,7 @@ const collection_manager = {
                   "displayName": [
                     "Option"
                   ],
-                  "type": 14
+                  "type": 6
                 }
               },
               {
@@ -94,7 +94,7 @@ const collection_manager = {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 6
+                  "type": 7
                 }
               }
             ],
@@ -125,7 +125,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 8
+              "type": 10
             },
             "selector": "0x1bb3d394"
           },
@@ -155,21 +155,30 @@ const collection_manager = {
                   ],
                   "type": 0
                 }
+              },
+              {
+                "label": "index",
+                "type": {
+                  "displayName": [
+                    "u32"
+                  ],
+                  "type": 7
+                }
               }
             ],
             "docs": [
               "Get staked token ids by AccountId"
             ],
-            "label": "get_staked_ids",
+            "label": "get_staked_id",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "Option"
+                "u32"
               ],
-              "type": 11
+              "type": 7
             },
-            "selector": "0x2815abda"
+            "selector": "0xd5ee8ef6"
           },
           {
             "args": [],
@@ -183,7 +192,7 @@ const collection_manager = {
               "displayName": [
                 "u32"
               ],
-              "type": 6
+              "type": 7
             },
             "selector": "0x02c779a5"
           },
@@ -195,7 +204,7 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 5
+                  "type": 13
                 }
               }
             ],
@@ -209,7 +218,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 8
+              "type": 10
             },
             "selector": "0x5adb38de"
           },
@@ -221,7 +230,7 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 5
+                  "type": 13
                 }
               }
             ],
@@ -235,9 +244,70 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 8
+              "type": 10
             },
             "selector": "0x82364901"
+          },
+          {
+            "args": [
+              {
+                "label": "value",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 14
+                }
+              }
+            ],
+            "docs": [
+              " Withdraw Fees - only Owner"
+            ],
+            "label": "withdraw_fee",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 10
+            },
+            "selector": "0x07fdb555"
+          },
+          {
+            "args": [
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "Id"
+                  ],
+                  "type": 15
+                }
+              },
+              {
+                "label": "receiver",
+                "type": {
+                  "displayName": [
+                    "AccountId"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              "Transfer NFT token"
+            ],
+            "label": "tranfer_nft",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 10
+            },
+            "selector": "0xd34ab274"
           },
           {
             "args": [],
@@ -253,6 +323,21 @@ const collection_manager = {
               "type": 0
             },
             "selector": "0x4fa43c8c"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 19
+            },
+            "selector": "0x5e228753"
           },
           {
             "args": [
@@ -276,24 +361,9 @@ const collection_manager = {
                 "ownable_external",
                 "TransferOwnershipOutput"
               ],
-              "type": 12
+              "type": 19
             },
             "selector": "0x11f43efd"
-          },
-          {
-            "args": [],
-            "docs": [],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 12
-            },
-            "selector": "0x5e228753"
           },
           {
             "args": [
@@ -319,7 +389,7 @@ const collection_manager = {
                 "crossartzerostaking_external",
                 "GetTotalStakedByAccountOutput"
               ],
-              "type": 6
+              "type": 7
             },
             "selector": "0x487f1cac"
           }
@@ -374,9 +444,27 @@ const collection_manager = {
             },
             {
               "layout": {
-                "cell": {
-                  "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 4
+                "struct": {
+                  "fields": [
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                          "ty": 4
+                        }
+                      },
+                      "name": "id_to_index"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
+                          "ty": 4
+                        }
+                      },
+                      "name": "index_to_id"
+                    }
+                  ]
                 }
               },
               "name": "staking_list"
@@ -384,7 +472,16 @@ const collection_manager = {
             {
               "layout": {
                 "cell": {
-                  "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
+                  "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 9
+                }
+              },
+              "name": "staking_list_last_index"
+            },
+            {
+              "layout": {
+                "cell": {
+                  "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
                   "ty": 0
                 }
               },
@@ -393,8 +490,8 @@ const collection_manager = {
             {
               "layout": {
                 "cell": {
-                  "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 6
+                  "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 7
                 }
               },
               "name": "total_staked"
@@ -458,7 +555,7 @@ const collection_manager = {
                 "fields": [
                   {
                     "name": "offset_key",
-                    "type": 7,
+                    "type": 8,
                     "typeName": "Key"
                   }
                 ]
@@ -467,11 +564,11 @@ const collection_manager = {
             "params": [
               {
                 "name": "K",
-                "type": 0
+                "type": 5
               },
               {
                 "name": "V",
-                "type": 5
+                "type": 7
               }
             ],
             "path": [
@@ -486,9 +583,10 @@ const collection_manager = {
           "id": 5,
           "type": {
             "def": {
-              "sequence": {
-                "type": 6
-              }
+              "tuple": [
+                6,
+                7
+              ]
             }
           }
         },
@@ -496,12 +594,45 @@ const collection_manager = {
           "id": 6,
           "type": {
             "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "index": 0,
+                    "name": "None"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 0
+                      }
+                    ],
+                    "index": 1,
+                    "name": "Some"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "T",
+                "type": 0
+              }
+            ],
+            "path": [
+              "Option"
+            ]
+          }
+        },
+        {
+          "id": 7,
+          "type": {
+            "def": {
               "primitive": "u32"
             }
           }
         },
         {
-          "id": 7,
+          "id": 8,
           "type": {
             "def": {
               "composite": {
@@ -520,7 +651,39 @@ const collection_manager = {
           }
         },
         {
-          "id": 8,
+          "id": 9,
+          "type": {
+            "def": {
+              "composite": {
+                "fields": [
+                  {
+                    "name": "offset_key",
+                    "type": 8,
+                    "typeName": "Key"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "K",
+                "type": 6
+              },
+              {
+                "name": "V",
+                "type": 7
+              }
+            ],
+            "path": [
+              "ink_storage",
+              "lazy",
+              "mapping",
+              "Mapping"
+            ]
+          }
+        },
+        {
+          "id": 10,
           "type": {
             "def": {
               "variant": {
@@ -537,7 +700,7 @@ const collection_manager = {
                   {
                     "fields": [
                       {
-                        "type": 9
+                        "type": 11
                       }
                     ],
                     "index": 1,
@@ -553,7 +716,7 @@ const collection_manager = {
               },
               {
                 "name": "E",
-                "type": 9
+                "type": 11
               }
             ],
             "path": [
@@ -562,7 +725,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 9,
+          "id": 11,
           "type": {
             "def": {
               "variant": {
@@ -570,7 +733,7 @@ const collection_manager = {
                   {
                     "fields": [
                       {
-                        "type": 10,
+                        "type": 12,
                         "typeName": "String"
                       }
                     ],
@@ -600,7 +763,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 10,
+          "id": 12,
           "type": {
             "def": {
               "primitive": "str"
@@ -608,40 +771,129 @@ const collection_manager = {
           }
         },
         {
-          "id": 11,
+          "id": 13,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 7
+              }
+            }
+          }
+        },
+        {
+          "id": 14,
+          "type": {
+            "def": {
+              "primitive": "u128"
+            }
+          }
+        },
+        {
+          "id": 15,
           "type": {
             "def": {
               "variant": {
                 "variants": [
                   {
+                    "fields": [
+                      {
+                        "type": 2,
+                        "typeName": "u8"
+                      }
+                    ],
                     "index": 0,
-                    "name": "None"
+                    "name": "U8"
                   },
                   {
                     "fields": [
                       {
-                        "type": 5
+                        "type": 16,
+                        "typeName": "u16"
                       }
                     ],
                     "index": 1,
-                    "name": "Some"
+                    "name": "U16"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 7,
+                        "typeName": "u32"
+                      }
+                    ],
+                    "index": 2,
+                    "name": "U32"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 17,
+                        "typeName": "u64"
+                      }
+                    ],
+                    "index": 3,
+                    "name": "U64"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 14,
+                        "typeName": "u128"
+                      }
+                    ],
+                    "index": 4,
+                    "name": "U128"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 18,
+                        "typeName": "Vec<u8>"
+                      }
+                    ],
+                    "index": 5,
+                    "name": "Bytes"
                   }
                 ]
               }
             },
-            "params": [
-              {
-                "name": "T",
-                "type": 5
-              }
-            ],
             "path": [
-              "Option"
+              "contracts",
+              "traits",
+              "psp34",
+              "psp34",
+              "Id"
             ]
           }
         },
         {
-          "id": 12,
+          "id": 16,
+          "type": {
+            "def": {
+              "primitive": "u16"
+            }
+          }
+        },
+        {
+          "id": 17,
+          "type": {
+            "def": {
+              "primitive": "u64"
+            }
+          }
+        },
+        {
+          "id": 18,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 2
+              }
+            }
+          }
+        },
+        {
+          "id": 19,
           "type": {
             "def": {
               "variant": {
@@ -658,7 +910,7 @@ const collection_manager = {
                   {
                     "fields": [
                       {
-                        "type": 13
+                        "type": 20
                       }
                     ],
                     "index": 1,
@@ -674,7 +926,7 @@ const collection_manager = {
               },
               {
                 "name": "E",
-                "type": 13
+                "type": 20
               }
             ],
             "path": [
@@ -683,7 +935,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 13,
+          "id": 20,
           "type": {
             "def": {
               "variant": {
@@ -705,39 +957,6 @@ const collection_manager = {
               "errors",
               "ownable",
               "OwnableError"
-            ]
-          }
-        },
-        {
-          "id": 14,
-          "type": {
-            "def": {
-              "variant": {
-                "variants": [
-                  {
-                    "index": 0,
-                    "name": "None"
-                  },
-                  {
-                    "fields": [
-                      {
-                        "type": 0
-                      }
-                    ],
-                    "index": 1,
-                    "name": "Some"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "T",
-                "type": 0
-              }
-            ],
-            "path": [
-              "Option"
             ]
           }
         }
