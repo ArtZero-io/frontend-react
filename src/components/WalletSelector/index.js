@@ -17,17 +17,19 @@ import {
   Flex,
   Box,
   Spacer,
+  Text,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { AccountActionTypes } from "../../store/types/account.types";
- 
+import { useHistory } from "react-router-dom";
+
 function WalletSelector(props) {
   const dispatch = useDispatch();
 
-  const {
-    setCurrentAccount,
-    state: { keyring, currentAccount },
-  } = useSubstrate();
+  const { setCurrentAccount, state } = useSubstrate();
+  const { keyring, currentAccount, walletPendingApprove } = state;
 
   const keyringOptions = keyring.getPairs().map((account) => ({
     key: account.address,
@@ -35,7 +37,7 @@ function WalletSelector(props) {
     name: account.meta.name,
     icon: "user",
   }));
-  console.log("keyring.getPairs()", keyring.getPairs());
+
   const initialAddress =
     keyringOptions?.length > 0 ? keyringOptions[0].address : "";
 
@@ -47,7 +49,14 @@ function WalletSelector(props) {
         payload: initialAddress,
       });
     }
-  }, [dispatch, currentAccount, setCurrentAccount, keyring, initialAddress]);
+  }, [
+    dispatch,
+    currentAccount,
+    setCurrentAccount,
+    keyring,
+    initialAddress,
+    walletPendingApprove,
+  ]);
 
   function selectAccountHandler(address) {
     setCurrentAccount(keyring.getPair(address));
@@ -56,15 +65,33 @@ function WalletSelector(props) {
       payload: address,
     });
   }
+  const history = useHistory();
 
+  function logoutHandler() {
+    window.location.reload();
+    history.push("/home");
+  }
   return (
-    <Box color="blackAlpha.900" height="100%" minW="sm" mx="auto">
-      <Flex align="center" justify="space-between" height="100%" mx="2">
+    <Box color="blackAlpha.900" height="100%" mx="auto" w="28rem">
+      <Flex
+        align="center"
+        justify="space-between"
+        height="100%"
+        mx="2"
+        flexDirection={{ md: "colum" }}
+      >
         <Menu>
-          <MenuButton mx="2" as={Button} rightIcon={<ChevronDownIcon />}>
-            {currentAccount?.meta?.name.replace(" (polkadot-js)", "")} -{" "}
-            {currentAccount?.address.slice(0, 6)} ...{" "}
-            {currentAccount?.address.slice(-6)}
+          <MenuButton
+            ringColor="transparent"
+            ring={0}
+            minW={72}
+            mx="0"
+            h="8"
+            as={Button}
+            rightIcon={<ChevronDownIcon />}
+          >
+            {currentAccount?.meta?.name} - {currentAccount?.address.slice(0, 6)}{" "}
+            ... {currentAccount?.address.slice(-6)}
           </MenuButton>
           <MenuList>
             {keyringOptions.map(({ address, name }) => (
@@ -73,10 +100,13 @@ function WalletSelector(props) {
                 key={address}
                 isDisabled={currentAccount?.address === address ? true : false}
               >
-                {name.replace(" (polkadot-js)", "")} - {address.slice(0, 6)} ...{" "}
-                {address.slice(-6)}
+                {name} - {address.slice(0, 6)} ... {address.slice(-6)}
               </MenuItem>
             ))}
+            <Spacer />
+            <MenuItem color="red" onClick={() => logoutHandler()}>
+              Disconnect wallet.
+            </MenuItem>
           </MenuList>
         </Menu>
         <Spacer />
@@ -87,7 +117,17 @@ function WalletSelector(props) {
 }
 
 export default function AccountSelector(props) {
-  const { keyring, api } = useSubstrateState();
+  const { keyring, api, walletPendingApprove } = useSubstrateState();
+  console.log("walletPendingApprove", walletPendingApprove);
+  if (walletPendingApprove)
+    return (
+      <Box pr="2">
+        <Alert status="warning" maxW="10rem" py="1">
+          <AlertIcon />
+          <Text fontSize="sm">Please approve on you wallet.</Text>
+        </Alert>
+      </Box>
+    );
 
   return keyring?.getPairs && api?.query ? (
     <WalletSelector {...props} />

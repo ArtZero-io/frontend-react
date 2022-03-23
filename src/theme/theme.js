@@ -20,6 +20,7 @@ const theme = extendTheme({
         margin: 0,
         padding: 0,
         backgroundColor: "#000322",
+        color:'#b6b6b6'
       },
       "#root": {
         height: "100%",

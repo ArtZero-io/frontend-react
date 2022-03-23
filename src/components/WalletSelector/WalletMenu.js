@@ -26,7 +26,7 @@ function WalletMenu() {
   }, [api, currentAccount, activeAddress, accountBalance])
 
   return currentAccount ? (
-    <Box height="100%" minW="28">
+    <Box height="100%" minW="30" w='32'>
       <Flex align="center" justify="end" height="100%" w="100%">
         <Tag size="lg">{accountBalance} SZERO</Tag>
       </Flex>

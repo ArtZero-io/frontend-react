@@ -6,22 +6,25 @@ import { UserInfo } from "./components/Card/UserInfo";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getProfile } from "@actions/account";
- import Loader from "../../components/Loader/Loader";
+import Loader from "../../components/Loader/Loader";
 import UpdateProfileModal from "./components/Modal/UpdateProfileModal";
 import { IPFS_BASE_URL } from "@constants/index";
+import { useSubstrateState } from "@utils/substrate";
 
 const AccountPage = () => {
   const dispatch = useDispatch();
   const { profile, activeAddress, accountLoaders } = useSelector(
     (s) => s.account
   );
+  const { currentAccount } = useSubstrateState();
 
   useEffect(() => {
     dispatch(getProfile());
+   
+    
   }, [dispatch, activeAddress]);
 
-  console.log("!accountLoaders?.getProfile", !accountLoaders?.getProfile);
-  console.log("xxxxxAccountPage profile.avatar");
+
   return (
     <>
       {accountLoaders?.getProfile ? (
@@ -32,6 +35,8 @@ const AccountPage = () => {
             {/* <Box position="absolute" inset="0" height="32" bg="blue.600" /> */}
             <CardWithAvatar
               maxW="xl"
+              useIdenticon={!profile?.avatar}
+              addressRaw={currentAccount?.addressRaw}
               avatarProps={{
                 src: `${IPFS_BASE_URL}${profile?.avatar}`,
                 name: profile?.username,

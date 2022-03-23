@@ -1,8 +1,8 @@
-import { web3FromSource } from '@polkadot/extension-dapp'
+import { web3FromSource } from '../wallets/extension-dapp'
 import toast from 'react-hot-toast'
 
 let account
-let profile
+let profileContract
 
 const gasLimit = -1
 const value = 0
@@ -12,9 +12,9 @@ function setAccount(newAccount) {
   account = newAccount
 }
 
-function setProfileContract(c) {
+function setProfileContract(contract) {
   // console.log(`Setting contract in blockchain module`, c)
-  profile = c
+  profileContract = contract
 }
 
 async function getWalletAddress() {
@@ -33,7 +33,7 @@ export async function getProfileOnChain() {
 
   let profile
 
-  const { result, output } = await profile.query.getAttributes(
+  const { result, output } = await profileContract.query.getAttributes(
     address,
     { value, gasLimit },
     address,
@@ -73,7 +73,7 @@ export async function setSingleAttributeProfileOnChain(data) {
   const injector = await web3FromSource(account?.meta?.source)
 
   account &&
-    profile.tx
+  profileContract.tx
       .setProfileAttribute({ gasLimit, value }, data?.attribute, data?.value)
       .signAndSend(
         address,
@@ -81,7 +81,7 @@ export async function setSingleAttributeProfileOnChain(data) {
         async ({ status, dispatchError }) => {
           if (dispatchError) {
             if (dispatchError.isModule) {
-              const decoded = profile.registry.findMetaError(
+              const decoded = profileContract.registry.findMetaError(
                 dispatchError.asModule
               )
               const { docs, name, section } = decoded
@@ -120,7 +120,7 @@ export async function setMultipleAttributesProfileOnChain(attributes, values) {
   const injector = await web3FromSource(account?.meta?.source)
 
   account &&
-    profile.tx
+  profileContract.tx
       .setMultipleAttributes({ gasLimit, value }, attributes, values)
       .signAndSend(
         address,
@@ -128,7 +128,7 @@ export async function setMultipleAttributesProfileOnChain(attributes, values) {
         async ({ status, dispatchError }) => {
           if (dispatchError) {
             if (dispatchError.isModule) {
-              const decoded = profile.registry.findMetaError(
+              const decoded = profileContract.registry.findMetaError(
                 dispatchError.asModule
               )
               const { docs, name, section } = decoded

@@ -2,7 +2,7 @@ import React, { useReducer, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import jsonrpc from "@polkadot/types/interfaces/jsonrpc";
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import { web3Accounts, web3Enable } from "@polkadot/extension-dapp";
+import { web3Accounts, web3Enable } from "../wallets/extension-dapp";
 import { keyring as Keyring } from "@polkadot/ui-keyring";
 import { isTestChain } from "@polkadot/util";
 import { TypeRegistry } from "@polkadot/types/create";
@@ -30,6 +30,9 @@ const initialState = {
   apiState: null,
   currentAccount: null,
   contract: null,
+  walletPendingApprove: false,
+  supportedWallet: null,
+  currentWallet: null,
 };
 
 const registry = new TypeRegistry();
@@ -57,6 +60,10 @@ const reducer = (state, action) => {
       return { ...state, currentAccount: action.payload };
     case "SET_CONTRACT":
       return { ...state, contract: action.payload };
+    case "SET_SUPPORTED_EXTENSIONS":
+      return { ...state, supportedExtensions: action.payload };
+    case "SET_CURRENT_EXTENSION":
+      return { ...state, currentExtension: action.payload };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }
@@ -106,19 +113,22 @@ const retrieveChainInfo = async (api) => {
 
 ///
 // Loading accounts from dev and polkadot-js extension
-export const loadAccounts = (state, dispatch) => {
+export const loadAccounts = (state, dispatch, wallet) => {
   const { api } = state;
+
   dispatch({ type: "LOAD_KEYRING" });
 
   const asyncLoadAccounts = async () => {
     try {
-      await web3Enable(config.APP_NAME);
-      let allAccounts = await web3Accounts();
+      await web3Enable(config.APP_NAME, [], wallet);
 
+      let allAccounts = await web3Accounts();
+      console.log("BE allAccounts", allAccounts);
       allAccounts = allAccounts.map(({ address, meta }) => ({
         address,
-        meta: { ...meta, name: `${meta.name} (${meta.source})` },
+        meta: { ...meta, name: `${meta.name}` },
       }));
+      console.log("AT allAccounts", allAccounts);
 
       // Logics to check if the connecting chain is a dev chain, coming from polkadot-js Apps
       const { systemChain, systemChainType } = await retrieveChainInfo(api);
@@ -150,7 +160,7 @@ export const loadAccounts = (state, dispatch) => {
     artzero_nft.CONTRACT_ABI,
     artzero_nft.CONTRACT_ADDRESS
   );
-  console.log('artzero_contract',artzero_contract);
+  console.log("artzero_contract", artzero_contract);
   artzero_nft_calls.setContract(artzero_contract);
 };
 

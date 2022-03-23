@@ -13,15 +13,15 @@ import { NavList } from "./NavList";
 import { NavListItem } from "./NavListItem";
 import WalletSelector from "../WalletSelector/index";
 
- import * as ROUTES from '@constants/routes'
+import * as ROUTES from "@constants/routes";
 
 const links = [
-  { label: 'Home', href: '/' },
-  { label: 'Mint', href: ROUTES.MINTING_EVENT },
-  { label: 'Admin', href: ROUTES.ADMIN },
-  { label: 'My Account', href: ROUTES.ACCOUNT },
-  { label: 'My Collection', href: ROUTES.MY_COLLECTION}
-]
+  { label: "Home", href: "/" },
+  { label: "Mint", href: ROUTES.MINTING_EVENT },
+  { label: "Admin", href: ROUTES.ADMIN },
+  { label: "My Account", href: ROUTES.ACCOUNT },
+  { label: "My Collection", href: ROUTES.MY_COLLECTION },
+];
 
 const MobileNavContent = (props) => {
   const { isOpen, onToggle } = useDisclosure();
@@ -49,10 +49,10 @@ const MobileNavContent = (props) => {
               <NavLink.Mobile label={link.label} to={link.href} />
             </NavListItem>
           ))}
-          <NavListItem style={{ flex: "1" }}>
-            <NavLink.Mobile>
-              <WalletSelector />
-            </NavLink.Mobile>
+          <NavListItem
+            style={{ flex: "1", display: "flex", flexDirection: "column" }}
+          >
+            <WalletSelector />
           </NavListItem>
         </Stack>
       </NavList>

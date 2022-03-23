@@ -43,7 +43,7 @@ const Form = ({ onClose }) => {
   const [twitter, setTwitter] = useState("");
   const [telegram, setTelegram] = useState("");
   const [instagram, setInstagram] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [, setIsSubmitted] = useState(false);
   const obj = {
     username,
     bio,
@@ -63,11 +63,6 @@ const Form = ({ onClose }) => {
   const [newAvatarData, setNewAvatarData] = useState(null);
   const [newAvatarPreviewUrl, setNewAvatarPreviewUrl] = useState("");
 
-  useInterval(
-    () => isSubmitted && dispatch(getProfile() && setIsSubmitted(false)),
-    9000
-  );
-
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     if (!attributes.length && !values.length) {
@@ -78,6 +73,7 @@ const Form = ({ onClose }) => {
     setIsSubmitted(true);
     onClose();
   };
+  useInterval(dispatch(getProfile), 9000);
 
   const onUploadHandler = async (e) => {
     try {
@@ -134,7 +130,7 @@ const Form = ({ onClose }) => {
             <HStack width="full">
               <Stack direction="column" spacing="6" align="center" width="full">
                 <div className="">
-                  {Object.keys(obj).length === 0 ? (
+                  {!profile?.avatar ? (
                     <Identicon value={currentAccount.addressRaw} size={size} />
                   ) : (
                     <AvatarUpload
