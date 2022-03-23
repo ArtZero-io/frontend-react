@@ -10,6 +10,15 @@ import {
   NumberDecrementStepper,
   Input
 } from '@chakra-ui/react'
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+} from '@chakra-ui/react'
 import { useSubstrateState } from '../../utils/substrate'
 import Loader from '../../components/Loader/Loader'
 import artzero_nft_calls from "../../utils/blockchain/artzero-nft-calls";
@@ -19,6 +28,7 @@ import {delay, truncateStr} from '../../utils';
 import { getProfile } from "@actions/account";
 import toast from 'react-hot-toast'
 
+let wl_count = 0;
 const AdminPage = () => {
   const { currentAccount } = useSubstrateState()
   const { activeAddress } = useSelector((s) => s.account);
@@ -32,9 +42,34 @@ const AdminPage = () => {
   const [art0_NFT_owner,setArt0NFTOwner] = useState("");
   const [whitelistAmount,setWhitelistAmount] = useState(1);
   const [whitelistAddress,setWhitelistAddress] = useState("");
-
+  const [whitelistCount,setWhitelistCount] = useState(0);
+  const [whitelist,setwhitelist] = useState([]);
   const onRefresh = async () => {
     await onGetOwner();
+    await onGetWhitelistCount();
+    await delay(1000);
+    await getAllWhiteList();
+  }
+  const getAllWhiteList = async (e) => {
+    var whitelist = [];
+    for (var i=0;i<wl_count;i++) {
+      let account = await artzero_nft_calls.getWhitelistAccount(currentAccount,i+1);
+      console.log(account);
+      let data = await artzero_nft_calls.getWhitelist(currentAccount,account);
+      console.log(data);
+      data["account"] = account;
+      whitelist.push(data);
+    }
+    console.log(whitelist);
+    setwhitelist(whitelist);
+  }
+  const onGetWhitelistCount = async (e) => {
+    let res = await artzero_nft_calls.getWhitelistCount(currentAccount);
+    wl_count = res;
+    if (res)
+      setWhitelistCount(res);
+    else
+      setWhitelistCount(0);
   }
   const onGetOwner = async (e) => {
     let res = await artzero_nft_calls.owner(currentAccount);
@@ -97,6 +132,36 @@ const AdminPage = () => {
                 >
                   Add Whitelist
                 </Button>
+                <br/>
+                <br/>
+                <Text>Total Whitelist account: <strong>{whitelistCount}</strong></Text>
+                <Table variant='simple'>
+                  <Thead>
+                    <Tr>
+                      <Th>Address</Th>
+                      <Th isNumeric>Amount</Th>
+                      <Th isNumeric>Claimed</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                  {whitelist.map((wl) => (
+                    <Tr>
+                      <Td>{truncateStr(wl.account,9)}</Td>
+                      <Td isNumeric>{wl.whitelistAmount}</Td>
+                      <Td isNumeric>{wl.claimedAmount}</Td>
+                    </Tr>
+
+                  ))}
+
+                  </Tbody>
+                  <Tfoot>
+                    <Tr>
+                      <Th>Address</Th>
+                      <Th isNumeric>Amount</Th>
+                      <Th isNumeric>Claimed</Th>
+                    </Tr>
+                  </Tfoot>
+                </Table>
               </Box>
               <Box flex='1' bg='blue.500' margin='2' padding='2' >
               </Box>

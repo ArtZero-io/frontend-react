@@ -16,7 +16,7 @@ async function owner(caller_account){
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  console.log(artzero_contract);
+  //console.log(artzero_contract);
 
   const { result, output } = await artzero_contract.query["ownable::owner"](
     address,
@@ -36,7 +36,7 @@ async function totalSupply(caller_account) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  console.log(artzero_contract);
+  //console.log(artzero_contract);
 
   const { result, output } = await artzero_contract.query["psp34::totalSupply"](
     address,
@@ -55,7 +55,7 @@ async function balanceOf(caller_account, account) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  console.log(artzero_contract);
+  //console.log(artzero_contract);
 
   const { result, output } = await artzero_contract.query["psp34::balanceOf"](
     address,
@@ -72,6 +72,46 @@ async function balanceOf(caller_account, account) {
 /*
   ARTZERO NFT Contract functions
 */
+async function getWhitelistAccount(caller_account,index) {
+  if (!artzero_contract || !caller_account ){
+    console.log('invalid inputs');
+    return null;
+  }
+  const address = caller_account?.address
+  const gasLimit = -1
+  const azero_value = 0
+  //console.log(artzero_contract);
+
+  const { result, output } = await artzero_contract.query.getWhitelistAccount(
+    address,
+    { value:azero_value, gasLimit },
+    index
+  )
+  if (result.isOk) {
+    console.log(output);
+    return output.toHuman();
+  }
+  return null;
+}
+async function getWhitelistCount(caller_account) {
+  if (!artzero_contract || !caller_account ){
+    console.log('invalid inputs');
+    return null;
+  }
+  const address = caller_account?.address
+  const gasLimit = -1
+  const azero_value = 0
+  //console.log(artzero_contract);
+
+  const { result, output } = await artzero_contract.query.getWhitelistCount(
+    address,
+    { value:azero_value, gasLimit }
+  )
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
 async function getWhitelist(caller_account, account) {
   if (!artzero_contract || !caller_account || !account ){
     console.log('invalid inputs');
@@ -80,7 +120,7 @@ async function getWhitelist(caller_account, account) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  console.log(artzero_contract);
+  //console.log(artzero_contract);
 
   const { result, output } = await artzero_contract.query.getWhitelist(
     address,
@@ -100,7 +140,7 @@ async function getMintMode(caller_account) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  console.log(artzero_contract);
+  //console.log(artzero_contract);
 
   const { result, output } = await artzero_contract.query.getMintMode(
     address,
@@ -119,7 +159,7 @@ async function getFee1(caller_account) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  console.log(artzero_contract);
+  //console.log(artzero_contract);
 
   const { result, output } = await artzero_contract.query.getFee1(
     address,
@@ -139,7 +179,7 @@ async function getFee2(caller_account) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  console.log(artzero_contract);
+  //console.log(artzero_contract);
 
   const { result, output } = await artzero_contract.query.getFee2(
     address,
@@ -158,7 +198,7 @@ async function getAmount1(caller_account) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  console.log(artzero_contract);
+  //console.log(artzero_contract);
 
   const { result, output } = await artzero_contract.query.getAmount1(
     address,
@@ -285,7 +325,7 @@ async function addWhitelist(caller_account, account, amount) {
     console.log('invalid inputs');
     return null;
   }
-  console.log(parseInt(amount),account,isValidAddressPolkadotAddress(account))
+
   if (parseInt(amount) <= 0 || !isValidAddressPolkadotAddress(account)){
     toast.error(
       `invalid inputs`
@@ -301,7 +341,7 @@ async function addWhitelist(caller_account, account, amount) {
   const injector = await web3FromSource(caller_account?.meta?.source)
 
   artzero_contract.tx
-    .paidMint({ gasLimit, value:azero_value })
+    .addWhitelist({ gasLimit, value:azero_value },account, amount)
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -340,6 +380,9 @@ function setContract(c) {
 }
 
 const artzero_contract_calls = {
+
+  getWhitelistAccount,
+  getWhitelistCount,
   setContract,
   getWhitelist,
   getMintMode,
