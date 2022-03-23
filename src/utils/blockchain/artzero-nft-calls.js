@@ -1,7 +1,7 @@
 //import { web3FromSource } from '@polkadot/extension-dapp'
 import BN from "bn.js";
 import toast from 'react-hot-toast'
-import { web3FromSource } from '@polkadot/extension-dapp'
+import { web3FromSource } from '../wallets/extension-dapp'
 import {isValidAddressPolkadotAddress} from '../../utils'
 let artzero_contract
 
