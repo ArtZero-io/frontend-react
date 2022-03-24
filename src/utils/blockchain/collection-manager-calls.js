@@ -48,7 +48,7 @@ async function addNewCollection(caller_account ,data) {
 }
 //GETTERS
 async function getCollectionCount(caller_account) {
-  if (!staking_contract || !caller_account
+  if (!collection_manager_contract || !caller_account
     ){
     console.log('invalid inputs');
     return null;
@@ -56,9 +56,9 @@ async function getCollectionCount(caller_account) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(staking_contract);
+  //console.log(collection_manager_contract);
 
-  const { result, output } = await staking_contract.query.getCollectionCount(
+  const { result, output } = await collection_manager_contract.query.getCollectionCount(
     address,
     { value:azero_value, gasLimit }
   )
@@ -68,7 +68,7 @@ async function getCollectionCount(caller_account) {
   return null;
 }
 async function getCollectionsByOwner(caller_account,owner) {
-  if (!staking_contract || !caller_account ||
+  if (!collection_manager_contract || !caller_account ||
     !isValidAddressPolkadotAddress(owner)
     ){
     console.log('invalid inputs');
@@ -77,9 +77,9 @@ async function getCollectionsByOwner(caller_account,owner) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(staking_contract);
+  //console.log(collection_manager_contract);
 
-  const { result, output } = await staking_contract.query.getCollectionsByOwner(
+  const { result, output } = await collection_manager_contract.query.getCollectionsByOwner(
     address,
     { value:azero_value, gasLimit },
     owner
@@ -90,7 +90,7 @@ async function getCollectionsByOwner(caller_account,owner) {
   return null;
 }
 async function getContractById(caller_account,collection_id) {
-  if (!staking_contract || !caller_account
+  if (!collection_manager_contract || !caller_account
     ){
     console.log('invalid inputs');
     return null;
@@ -98,9 +98,9 @@ async function getContractById(caller_account,collection_id) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(staking_contract);
+  //console.log(collection_manager_contract);
 
-  const { result, output } = await staking_contract.query.getContractById(
+  const { result, output } = await collection_manager_contract.query.getContractById(
     address,
     { value:azero_value, gasLimit },
     collection_id
@@ -111,7 +111,7 @@ async function getContractById(caller_account,collection_id) {
   return null;
 }
 async function getAdminAddress(caller_account) {
-  if (!staking_contract || !caller_account
+  if (!collection_manager_contract || !caller_account
     ){
     console.log('invalid inputs');
     return null;
@@ -119,9 +119,9 @@ async function getAdminAddress(caller_account) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(staking_contract);
+  //console.log(collection_manager_contract);
 
-  const { result, output } = await staking_contract.query.getAdminAddress(
+  const { result, output } = await collection_manager_contract.query.getAdminAddress(
     address,
     { value:azero_value, gasLimit }
   )
@@ -131,7 +131,7 @@ async function getAdminAddress(caller_account) {
   return null;
 }
 async function isActive(caller_account,collection_address) {
-  if (!staking_contract || !caller_account ||
+  if (!collection_manager_contract || !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
     ){
     console.log('invalid inputs');
@@ -140,9 +140,9 @@ async function isActive(caller_account,collection_address) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(staking_contract);
+  //console.log(collection_manager_contract);
 
-  const { result, output } = await staking_contract.query["crossArtZeroCollection::isActive"](
+  const { result, output } = await collection_manager_contract.query["crossArtZeroCollection::isActive"](
     address,
     { value:azero_value, gasLimit }
   )
@@ -152,7 +152,7 @@ async function isActive(caller_account,collection_address) {
   return null;
 }
 async function getRoyalFee(caller_account,collection_address) {
-  if (!staking_contract || !caller_account ||
+  if (!collection_manager_contract || !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
     ){
     console.log('invalid inputs');
@@ -161,9 +161,9 @@ async function getRoyalFee(caller_account,collection_address) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(staking_contract);
+  //console.log(collection_manager_contract);
 
-  const { result, output } = await staking_contract.query["crossArtZeroCollection::getRoyalFee"](
+  const { result, output } = await collection_manager_contract.query["crossArtZeroCollection::getRoyalFee"](
     address,
     { value:azero_value, gasLimit }
   )
@@ -173,7 +173,7 @@ async function getRoyalFee(caller_account,collection_address) {
   return null;
 }
 async function getContractType(caller_account,collection_address) {
-  if (!staking_contract || !caller_account ||
+  if (!collection_manager_contract || !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
     ){
     console.log('invalid inputs');
@@ -182,9 +182,9 @@ async function getContractType(caller_account,collection_address) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(staking_contract);
+  //console.log(collection_manager_contract);
 
-  const { result, output } = await staking_contract.query["crossArtZeroCollection::getContractType"](
+  const { result, output } = await collection_manager_contract.query["crossArtZeroCollection::getContractType"](
     address,
     { value:azero_value, gasLimit }
   )
@@ -194,7 +194,7 @@ async function getContractType(caller_account,collection_address) {
   return null;
 }
 async function getCollectionOwner(caller_account,collection_address) {
-  if (!staking_contract || !caller_account ||
+  if (!collection_manager_contract || !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
     ){
     console.log('invalid inputs');
@@ -203,9 +203,9 @@ async function getCollectionOwner(caller_account,collection_address) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(staking_contract);
+  //console.log(collection_manager_contract);
 
-  const { result, output } = await staking_contract.query["crossArtZeroCollection::getCollectionOwner"](
+  const { result, output } = await collection_manager_contract.query["crossArtZeroCollection::getCollectionOwner"](
     address,
     { value:azero_value, gasLimit }
   )
