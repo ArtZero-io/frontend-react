@@ -116,10 +116,10 @@ const connect = (state, dispatch) => {
 
 const retrieveChainInfo = async (api) => {
   const [systemChain, systemChainType] = await Promise.all([
-    api.rpc.system.chain(),
-    api.rpc.system.chainType
-      ? api.rpc.system.chainType()
-      : Promise.resolve(registry.createType("ChainType", "Live")),
+    api?.rpc?.system?.chain(),
+    api?.rpc?.system?.chainType
+      ? api?.rpc?.system?.chainType()
+      : Promise.resolve(registry?.createType("ChainType", "Live")),
   ]);
   return {
     systemChain: (systemChain || "<unknown>").toString(),
