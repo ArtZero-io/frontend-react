@@ -171,7 +171,7 @@ async function getRoyalFee(caller_account,collection_address) {
     return new BN(output, 10, "le").toNumber();
   }
   return null;
-
+}
 async function getContractType(caller_account,collection_address) {
   if (!staking_contract || !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
