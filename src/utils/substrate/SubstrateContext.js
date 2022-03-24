@@ -10,8 +10,16 @@ import { TypeRegistry } from "@polkadot/types/create";
 import config from "./config";
 import blockchainModule from "../blockchain";
 import profile from "../blockchain/profile";
+
 import artzero_nft from "../blockchain/artzero-nft";
 import artzero_nft_calls from "../blockchain/artzero-nft-calls";
+
+import marketplace from "../blockchain/marketplace";
+import marketplace_contract_calls from "../blockchain/marketplace_contract_calls";
+
+import staking from "../blockchain/staking";
+import staking_calls from "../blockchain/staking_calls";
+
 import collection_manager from "../blockchain/collection-manager";
 import collection_manager_calls from '../blockchain/colletion-manager-calls';
 import { ContractPromise } from "@polkadot/api-contract";
@@ -173,6 +181,23 @@ export const loadAccounts = async (state, dispatch, wallet) => {
   );
   console.log('collection_contract',collection_contract);
   collection_manager_calls.setContract(collection_contract);
+
+  const marketplace_contract = new ContractPromise(
+    api,
+    marketplace.CONTRACT_ABI,
+    marketplace.CONTRACT_ADDRESS
+  );
+  console.log('marketplace_contract',marketplace_contract);
+  marketplace_contract_calls.setContract(marketplace_contract);
+
+  const staking_contract = new ContractPromise(
+    api,
+    staking.CONTRACT_ABI,
+    staking.CONTRACT_ADDRESS
+  );
+  console.log('staking_contract',staking_contract);
+  staking_calls.setContract(staking_contract);
+
 };
 
 const SubstrateContext = React.createContext();

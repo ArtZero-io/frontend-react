@@ -1,4 +1,4 @@
-const collection_manager = {
+const staking = {
   CONTRACT_ADDRESS: "5GL6jcGgcjBEKhXQhwFtm7BhPGQZZneBjoEeNqRNofCPQE3G",
   CONTRACT_ABI: {
     "source": {
@@ -965,4 +965,4 @@ const collection_manager = {
   }
 };
 
-export default collection_manager;
+export default staking;

@@ -44,6 +44,8 @@ const AdminPage = () => {
   const [whitelistAddress,setWhitelistAddress] = useState("");
   const [whitelistCount,setWhitelistCount] = useState(0);
   const [whitelist,setwhitelist] = useState([]);
+  const [withdrawAmount,setWithdrawAmount] = useState(0);
+
   const onRefresh = async () => {
     await onGetOwner();
     await onGetWhitelistCount();
@@ -92,6 +94,33 @@ const AdminPage = () => {
     await onRefresh();
 
   }
+  const onAddWhitelistUpdate = async () =>{
+    if (art0_NFT_owner != activeAddress) {
+      toast.error(
+        `You are not owner of this contract`
+      )
+      return;
+    }
+    console.log(whitelistAddress,whitelistAmount)
+    //check whitelistAddress
+    await artzero_nft_calls.updateWhitelistAmount(currentAccount,whitelistAddress,whitelistAmount);
+    await delay(10000);
+    await onRefresh();
+
+  }
+  const onWithdraw = async () =>{
+    if (art0_NFT_owner != activeAddress) {
+      toast.error(
+        `You are not owner of this contract`
+      )
+      return;
+    }
+    //check whitelistAddress
+    await artzero_nft_calls.onWithdraw(currentAccount,withdrawAmount);
+    await delay(5000);
+
+
+  }
   return (
     <>
       {!currentAccount?.address ? (
@@ -109,6 +138,26 @@ const AdminPage = () => {
               <Box flex='1' bg='blue.500' margin='2' padding='2' >
                 <Text> <strong>Quản lý Artzero NFT Contract:</strong></Text>
                 <Text> Contract Owner: <strong>{truncateStr(art0_NFT_owner,9)}</strong></Text>
+                <Text> Contract Balance: <strong>{truncateStr(art0_NFT_owner,9)}</strong></Text>
+                <br/>
+                <Text>Owner Withdraw AZERO:</Text>
+                <NumberInput defaultValue={0}
+                  onChange={(valueString) => setWithdrawAmount(valueString)}
+                  value={withdrawAmount}>
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                </NumberInput> <br/>
+                <Button
+                  size="sm"
+                  color='black'
+                  onClick={() => onWithdraw()}
+                >
+                  Withdraw
+                </Button>
+                <br/>
                 <br/>
                 <Text>Add Whitelist:</Text>
                 <Input placeholder='Enter address'
@@ -128,9 +177,17 @@ const AdminPage = () => {
                 <Button
                   size="sm"
                   color='black'
+                  marginRight='2'
                   onClick={() => onAddWhitelist()}
                 >
                   Add Whitelist
+                </Button>
+                <Button
+                  size="sm"
+                  color='black'
+                  onClick={() => onAddWhitelistUpdate()}
+                >
+                  Update Whitelist
                 </Button>
                 <br/>
                 <br/>
