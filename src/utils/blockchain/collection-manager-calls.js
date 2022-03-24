@@ -29,7 +29,7 @@ async function addNewCollection(caller_account ,data) {
     data.collectionRoyalFeeData
   ).signAndSend(address, { signer: injector.signer }, async (result) => {
       let isSuccess = false;
-      result.toHuman().events.map((e) => {if (e.method == "ExtrinsicSuccess") { isSuccess = true}});
+      result.toHuman().events.map((e) => {if (e.method === "ExtrinsicSuccess") { isSuccess = true}});
       if (isSuccess) {
           toast.success("Added collection successfully!");
       } else {
@@ -38,7 +38,7 @@ async function addNewCollection(caller_account ,data) {
   }).then((unsub) => {
     unsubscribe = unsub;
   }).catch((e) => {
-      if (e == 'Error: Cancelled') {
+      if (e === 'Error: Cancelled') {
           toast.error("You cancelled this transaction. Please add new collection again!");
       } else {
           toast.error("Has something wrong in this transaction!");

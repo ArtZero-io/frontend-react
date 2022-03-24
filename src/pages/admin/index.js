@@ -81,7 +81,7 @@ const AdminPage = () => {
       setArt0NFTOwner("");
   }
   const onAddWhitelist = async () =>{
-    if (art0_NFT_owner != activeAddress) {
+    if (art0_NFT_owner !== activeAddress) {
       toast.error(
         `You are not owner of this contract`
       )
@@ -95,7 +95,7 @@ const AdminPage = () => {
 
   }
   const onAddWhitelistUpdate = async () =>{
-    if (art0_NFT_owner != activeAddress) {
+    if (art0_NFT_owner !== activeAddress) {
       toast.error(
         `You are not owner of this contract`
       )
@@ -109,7 +109,7 @@ const AdminPage = () => {
 
   }
   const onWithdraw = async () =>{
-    if (art0_NFT_owner != activeAddress) {
+    if (art0_NFT_owner !== activeAddress) {
       toast.error(
         `You are not owner of this contract`
       )
