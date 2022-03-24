@@ -498,8 +498,7 @@ const artzero_contract_calls = {
   owner,
   addWhitelist,
   updateWhitelistAmount,
-  withdrawFee,
-  contractBalance
+  withdrawFee
 }
 
 export default artzero_contract_calls
