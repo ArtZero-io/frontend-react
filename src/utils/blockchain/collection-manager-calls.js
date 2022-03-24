@@ -46,6 +46,54 @@ async function addNewCollection(caller_account ,data) {
   });
   return unsubscribe;
 }
+
+async function updateIsActive(caller_account,collection_address){
+  if (!collection_manager_contract || !caller_account ||
+    !isValidAddressPolkadotAddress(collection_address)
+    ){
+    console.log('invalid inputs');
+    return null;
+  }
+  let unsubscribe
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source)
+
+  collection_manager_contract.tx
+    .updateIsActive({ gasLimit, value:azero_value }, collection_address)
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(
+              `There is some error with your request`
+            )
+          } else {
+            console.log(
+              'dispatchError ',
+              dispatchError.toString()
+            )
+          }
+        }
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0]
+          toast.success(
+            `Update Colleciont Status ${
+              statusText === '0' ? 'started' : statusText.toLowerCase()
+            }.`
+          )
+        }
+      }
+    )
+    .then(unsub => (unsubscribe = unsub))
+    .catch(e => console.log('e', e));
+    return unsubscribe;
+}
 //GETTERS
 async function getCollectionCount(caller_account) {
   if (!collection_manager_contract || !caller_account
@@ -144,7 +192,8 @@ async function isActive(caller_account,collection_address) {
 
   const { result, output } = await collection_manager_contract.query["crossArtZeroCollection::isActive"](
     address,
-    { value:azero_value, gasLimit }
+    { value:azero_value, gasLimit },
+    collection_address
   )
   if (result.isOk) {
     return output.toHuman();
@@ -165,7 +214,8 @@ async function getRoyalFee(caller_account,collection_address) {
 
   const { result, output } = await collection_manager_contract.query["crossArtZeroCollection::getRoyalFee"](
     address,
-    { value:azero_value, gasLimit }
+    { value:azero_value, gasLimit },
+    collection_address
   )
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
@@ -186,7 +236,8 @@ async function getContractType(caller_account,collection_address) {
 
   const { result, output } = await collection_manager_contract.query["crossArtZeroCollection::getContractType"](
     address,
-    { value:azero_value, gasLimit }
+    { value:azero_value, gasLimit },
+    collection_address
   )
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
@@ -207,7 +258,8 @@ async function getCollectionOwner(caller_account,collection_address) {
 
   const { result, output } = await collection_manager_contract.query["crossArtZeroCollection::getCollectionOwner"](
     address,
-    { value:azero_value, gasLimit }
+    { value:azero_value, gasLimit },
+    collection_address
   )
   if (result.isOk) {
     return output.toHuman();
@@ -215,6 +267,28 @@ async function getCollectionOwner(caller_account,collection_address) {
   return null;
 }
 
+async function getCollectionByAddress(caller_account,collection_address) {
+  if (!collection_manager_contract || !caller_account ||
+    !isValidAddressPolkadotAddress(collection_address)
+    ){
+    console.log('invalid inputs');
+    return null;
+  }
+  const address = caller_account?.address
+  const gasLimit = -1
+  const azero_value = 0
+  //console.log(collection_manager_contract);
+
+  const { result, output } = await collection_manager_contract.query.getCollectionByAddress(
+    address,
+    { value:azero_value, gasLimit },
+    collection_address
+  )
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
 async function getAddingFee(caller_account) {
   const gasLimit = -1
   const address = caller_account?.address
@@ -226,6 +300,26 @@ async function getAddingFee(caller_account) {
     return new BN(output, 10, "le").toNumber();
   }
   return null;
+}
+async function owner(caller_account){
+  if (!collection_manager_contract || !caller_account ){
+    console.log('invalid inputs');
+    return null;
+  }
+  const address = caller_account?.address
+  const gasLimit = -1
+  const azero_value = 0
+  //console.log(collection_manager_contract);
+
+  const { result, output } = await collection_manager_contract.query["ownable::owner"](
+    address,
+    { value:azero_value, gasLimit }
+  )
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+
 }
 
 function setContract(c) {
@@ -239,12 +333,15 @@ const collection_manager_calls = {
   addNewCollection,
   getCollectionCount,
   getCollectionsByOwner,
+  getCollectionByAddress,
   getContractById,
   getAdminAddress,
   isActive,
   getRoyalFee,
   getContractType,
-  getCollectionOwner
+  getCollectionOwner,
+  updateIsActive,
+  owner
 }
 
 export default collection_manager_calls

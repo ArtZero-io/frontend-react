@@ -22,15 +22,20 @@ import {
 import { useSubstrateState } from '../../utils/substrate'
 import Loader from '../../components/Loader/Loader'
 import artzero_nft_calls from "../../utils/blockchain/artzero-nft-calls";
+import collection_manager_calls from '../../utils/blockchain/collection-manager-calls';
+import collection_manager from "../../utils/blockchain/collection-manager";
+import artzero_nft from "../../utils/blockchain/artzero-nft";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect,useState } from "react";
 import {delay, truncateStr} from '../../utils';
 import { getProfile } from "@actions/account";
 import toast from 'react-hot-toast'
+import BN from "bn.js";
 
 let wl_count = 0;
+let collection_count = 0;
 const AdminPage = () => {
-  const { currentAccount } = useSubstrateState()
+  const { api, currentAccount } = useSubstrateState()
   const { activeAddress } = useSelector((s) => s.account);
   const dispatch = useDispatch();
 
@@ -45,12 +50,33 @@ const AdminPage = () => {
   const [whitelistCount,setWhitelistCount] = useState(0);
   const [whitelist,setwhitelist] = useState([]);
   const [withdrawAmount,setWithdrawAmount] = useState(0);
+  const [azNFTContractBalance, setAzNFTContractBalance] = useState(0);
+
+  const [collectionCount,setCollectionCount] = useState(0);
+  const [collections,setCollections] = useState([]);
+  const [collectionContractOwner,setCollectionContractOwner] = useState("");
+  const [collectionContractBalance, setCollectionContractBalance] = useState(0);
 
   const onRefresh = async () => {
+    await getAZNFTContractBalance();
+    await getCollectionContractBalance();
+
     await onGetOwner();
+    await onGetCollectionContractOwner();
+
     await onGetWhitelistCount();
     await delay(1000);
     await getAllWhiteList();
+
+    await onGetCollectionCount();
+    await delay(1000);
+    await getAllCollections();
+  }
+  const getAZNFTContractBalance = async () =>{
+
+    const {data: balance } = await api.query.system.account(artzero_nft.CONTRACT_ADDRESS);
+    setAzNFTContractBalance(new BN(balance.free, 10, "le").toNumber() / (10**12));
+
   }
   const getAllWhiteList = async (e) => {
     var whitelist = [];
@@ -67,9 +93,11 @@ const AdminPage = () => {
   }
   const onGetWhitelistCount = async (e) => {
     let res = await artzero_nft_calls.getWhitelistCount(currentAccount);
-    wl_count = res;
-    if (res)
+
+    if (res){
+      wl_count = res;
       setWhitelistCount(res);
+    }
     else
       setWhitelistCount(0);
   }
@@ -121,6 +149,55 @@ const AdminPage = () => {
 
 
   }
+
+  const getCollectionContractBalance = async () =>{
+
+    const {data: balance } = await api.query.system.account(collection_manager.CONTRACT_ADDRESS);
+    setCollectionContractBalance(new BN(balance.free, 10, "le").toNumber() / (10**12));
+
+  }
+  const onGetCollectionContractOwner = async (e) => {
+    let res = await collection_manager_calls.owner(currentAccount);
+    if (res)
+      setCollectionContractOwner(res);
+    else
+      setCollectionContractOwner("");
+  }
+  const onGetCollectionCount = async () => {
+    let res = await collection_manager_calls.getCollectionCount(currentAccount);
+
+    if (res){
+      collection_count = res;
+      setCollectionCount(res);
+    }
+    else
+      setCollectionCount(0);
+  }
+  const getAllCollections = async (e) => {
+    var collections = [];
+    for (var i=0;i<collection_count;i++) {
+      let collection_account = await collection_manager_calls.getContractById(currentAccount,i+1);
+      console.log(collection_account);
+      let data = await collection_manager_calls.getCollectionByAddress(currentAccount,collection_account);
+      collections.push(data);
+    }
+    console.log(collections);
+    setCollections(collections);
+  }
+  const onEnableCollection = async (collection_contract) =>{
+
+    if (collectionContractOwner != activeAddress) {
+      toast.error(
+        `You are not owner of this contract`
+      )
+      return;
+    }
+    await collection_manager_calls.updateIsActive(currentAccount,collection_contract);
+    await delay(5000);
+    await onGetCollectionCount();
+    await delay(1000);
+    await getAllCollections();
+  }
   return (
     <>
       {!currentAccount?.address ? (
@@ -138,7 +215,7 @@ const AdminPage = () => {
               <Box flex='1' bg='blue.500' margin='2' padding='2' >
                 <Text> <strong>Quản lý Artzero NFT Contract:</strong></Text>
                 <Text> Contract Owner: <strong>{truncateStr(art0_NFT_owner,9)}</strong></Text>
-                <Text> Contract Balance: <strong>{truncateStr(art0_NFT_owner,9)}</strong></Text>
+                <Text> Contract Balance: <strong>{azNFTContractBalance}</strong></Text>
                 <br/>
                 <Text>Owner Withdraw AZERO:</Text>
                 <NumberInput defaultValue={0}
@@ -192,6 +269,7 @@ const AdminPage = () => {
                 <br/>
                 <br/>
                 <Text>Total Whitelist account: <strong>{whitelistCount}</strong></Text>
+                <br/>
                 <Table variant='simple'>
                   <Thead>
                     <Tr>
@@ -201,9 +279,9 @@ const AdminPage = () => {
                     </Tr>
                   </Thead>
                   <Tbody>
-                  {whitelist.map((wl) => (
-                    <Tr>
-                      <Td>{truncateStr(wl.account,9)}</Td>
+                  {whitelist.map((wl,index) => (
+                    <Tr key={index}>
+                      <Td>{truncateStr(wl.account,5)}</Td>
                       <Td isNumeric>{wl.whitelistAmount}</Td>
                       <Td isNumeric>{wl.claimedAmount}</Td>
                     </Tr>
@@ -221,6 +299,62 @@ const AdminPage = () => {
                 </Table>
               </Box>
               <Box flex='1' bg='blue.500' margin='2' padding='2' >
+                <Text> <strong>Quản lý Collection:</strong></Text>
+                <Text>Total Collection: <strong>{collectionCount}</strong></Text>
+                <Text>Collection Contract Balance: <strong>{collectionContractBalance}</strong></Text>
+                <Table variant='simple'>
+                  <Thead>
+                    <Tr>
+                      <Th>Collection Address</Th>
+                      <Th>Owner</Th>
+                      <Th isNumeric>Type</Th>
+                      <Th>Status</Th>
+                      <Th isNumeric>Royal Fee</Th>
+                      <Th>Metadata</Th>
+                      <Th></Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                  {collections.map((collection,index) => (
+                    <Tr key={index}>
+                      <Td>{truncateStr(collection.nftContractAddress,5)}</Td>
+                      <Td>{truncateStr(collection.collectionOwner,5)}</Td>
+                      <Td isNumeric>{collection.contractType == 2 ? "Auto" : "Manual"} </Td>
+                      <Td>{collection.isActive ? "Active" : "Inactive"} </Td>
+                      <Td>{collection.isCollectRoyalFee ? collection.royalFee/100 : "N/A"} </Td>
+                      <Td>{collection.showOnChainMetadata ? "On-chain" : "Off-chain"} </Td>
+                      <Td>
+                        {
+                          !collection.isActive ?
+                            <Button
+                              size="sm"
+                              color='black'
+                              onClick={() => onEnableCollection(collection.nftContractAddress)}
+                            >
+                              Enable
+                            </Button>
+                          :
+                          null
+
+                        }
+                      </Td>
+
+                    </Tr>
+
+                  ))}
+
+                  </Tbody>
+                  <Tfoot>
+                    <Tr>
+                      <Th>Collection Address</Th>
+                      <Th isNumeric>Owner</Th>
+                      <Th isNumeric>Type</Th>
+                      <Th isNumeric>Status</Th>
+                      <Th isNumeric>Royal Fee</Th>
+                      <Th isNumeric>Metadata</Th>
+                    </Tr>
+                  </Tfoot>
+                </Table>
               </Box>
             </Flex>
           </Box>

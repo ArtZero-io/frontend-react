@@ -68,7 +68,6 @@ async function balanceOf(caller_account, account) {
   return null;
 }
 
-
 /*
   ARTZERO NFT Contract functions
 */
