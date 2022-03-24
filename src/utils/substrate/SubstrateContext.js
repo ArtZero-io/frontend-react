@@ -21,7 +21,7 @@ import staking from "../blockchain/staking";
 import staking_calls from "../blockchain/staking_calls";
 
 import collection_manager from "../blockchain/collection-manager";
-import collection_manager_calls from '../blockchain/colletion-manager-calls';
+import collection_manager_calls from '../blockchain/collection-manager-calls';
 import { ContractPromise } from "@polkadot/api-contract";
 
 const parsedQuery = new URLSearchParams(window.location.search);

@@ -13,7 +13,7 @@ import profile from "../blockchain/profile";
 import artzero_nft from "../blockchain/artzero-nft";
 import artzero_nft_calls from "../blockchain/artzero-nft-calls";
 import collection_manager from "../blockchain/collection-manager";
-import collection_manager_calls from '../blockchain/colletion-manager-calls';
+import collection_manager_calls from '../blockchain/collection-manager-calls';
 import { ContractPromise } from "@polkadot/api-contract";
 
 const parsedQuery = new URLSearchParams(window.location.search);
@@ -154,7 +154,7 @@ export const loadAccounts = async (state, dispatch) => {
   );
   console.log('artzero_contract',artzero_contract);
   artzero_nft_calls.setContract(artzero_contract);
-  
+
   const collection_contract = new ContractPromise(
     api,
     collection_manager.CONTRACT_ABI,
