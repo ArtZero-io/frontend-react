@@ -68,7 +68,6 @@ async function balanceOf(caller_account, account) {
   return null;
 }
 
-
 /*
   ARTZERO NFT Contract functions
 */
@@ -499,7 +498,8 @@ const artzero_contract_calls = {
   owner,
   addWhitelist,
   updateWhitelistAmount,
-  withdrawFee
+  withdrawFee,
+  contractBalance
 }
 
 export default artzero_contract_calls
