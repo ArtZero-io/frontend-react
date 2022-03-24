@@ -15,9 +15,11 @@ import { useSubstrate, loadAccounts } from "@utils/substrate/SubstrateContext";
 import { SUPPORTED_WALLET_LIST } from "@constants/index";
 import SubwalletLogo from "@utils/wallets/SubWalletLogo.svg";
 import PolkadotjsLogo from "@utils/wallets/PolkadotjsLogo.svg";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 function WalletNotConnected() {
   const { dispatch, state } = useSubstrate();
+  const [, setSelectedExtensionLocal] = useLocalStorage("selectedExtension");
 
   const { keyring } = state;
 
@@ -30,8 +32,8 @@ function WalletNotConnected() {
 
   function handleConnect(wallet) {
     if (!keyring) {
+      setSelectedExtensionLocal(wallet)
       loadAccounts(state, dispatch, wallet);
-      console.log("load accounts");
     }
   }
 
@@ -41,7 +43,7 @@ function WalletNotConnected() {
         color="blackAlpha.900"
         height="100%"
         mx="auto"
-        w={['', "28rem", "28rem"]}
+        w={["", "28rem", "28rem"]}
       >
         <Flex align="center" justify="end" height="100%">
           <Menu>

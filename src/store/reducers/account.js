@@ -1,8 +1,12 @@
 import { AccountActionTypes } from "../types/account.types";
 
+const activeAddressLocal = JSON.parse(
+  window.localStorage.getItem("activeAddress")
+);
+
 const initialState = {
   profile: null,
-  activeAddress: null,
+  activeAddress: activeAddressLocal || null,
   accountLoaders: {
     getProfile: true,
     setProfileAttribute: true,
@@ -18,7 +22,7 @@ const accountReducer = (state = initialState, action) => {
         profile: action.payload,
         accountLoaders: {
           ...state.accountLoaders,
-          getProfile: false,
+          getProfile: true,
         },
       };
     case AccountActionTypes.SET_ACTIVE_ADDRESS:

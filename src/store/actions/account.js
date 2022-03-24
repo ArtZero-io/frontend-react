@@ -2,11 +2,7 @@ import blockchain from "../../utils/blockchain";
 import { AccountActionTypes } from "../types/account.types";
 
 export function getProfile() {
-
-
-  
   return async function (dispatch) {
-
     const loadingName = "getProfile";
     dispatch({
       type: AccountActionTypes.ACCOUNT_LOADING,
@@ -14,9 +10,7 @@ export function getProfile() {
     });
 
     try {
-
       const profile = await blockchain.getProfileOnChain();
-
       dispatch({
         type: AccountActionTypes.GET_PROFILE,
         payload: profile,

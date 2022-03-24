@@ -1,7 +1,6 @@
 import { Heading, Center, Spinner, Stack } from "@chakra-ui/react";
 
 const Loader = ({ addText = "", ...rest }) => {
-  console.log("addText", addText);
   return (
     <Center width="100%" height="100%" minH="xl">
       <Stack direction="row" alignItems="center" spacing={2}>

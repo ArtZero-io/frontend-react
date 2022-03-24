@@ -73,8 +73,7 @@ const connect = (state, dispatch) => {
   if (apiState) return;
   dispatch({ type: "CONNECT_INIT" });
 
-  console.log(`Connected socket: ${socket}`);
-  const provider = new WsProvider(socket);
+   const provider = new WsProvider(socket);
   const _api = new ApiPromise({ provider, rpc: jsonrpc });
   _api.on("connected", () => {
     dispatch({ type: "CONNECT", payload: _api });
@@ -152,16 +151,14 @@ export const loadAccounts = async (state, dispatch) => {
     artzero_nft.CONTRACT_ABI,
     artzero_nft.CONTRACT_ADDRESS
   );
-  console.log('artzero_contract',artzero_contract);
-  artzero_nft_calls.setContract(artzero_contract);
+   artzero_nft_calls.setContract(artzero_contract);
 
   const collection_contract = new ContractPromise(
     api,
     collection_manager.CONTRACT_ABI,
     collection_manager.CONTRACT_ADDRESS
   );
-  console.log('collection_contract',collection_contract);
-  collection_manager_calls.setContract(collection_contract);
+   collection_manager_calls.setContract(collection_contract);
 };
 
 const SubstrateContext = React.createContext();

@@ -21,13 +21,19 @@ import staking from "../blockchain/staking";
 import staking_calls from "../blockchain/staking_calls";
 
 import collection_manager from "../blockchain/collection-manager";
-import collection_manager_calls from '../blockchain/collection-manager-calls';
+import collection_manager_calls from "../blockchain/collection-manager-calls";
 import { ContractPromise } from "@polkadot/api-contract";
 
 const parsedQuery = new URLSearchParams(window.location.search);
 const connectedSocket = parsedQuery.get("rpc") || config.PROVIDER_SOCKET;
 ///
 // Initial state for `useReducer`
+const currentAccountLocal = JSON.parse(
+  window.localStorage.getItem("currentAccount")
+);
+const selectedExtension = JSON.parse(
+  window.localStorage.getItem("selectedExtension")
+);
 
 const initialState = {
   // These are the states
@@ -38,11 +44,11 @@ const initialState = {
   api: null,
   apiError: null,
   apiState: null,
-  currentAccount: null,
-  contract: null,
+  currentAccount: currentAccountLocal || null,
+  profileContract: null,
   walletPendingApprove: false,
   supportedWallet: null,
-  currentWallet: null,
+  selectedExtension: selectedExtension || null,
 };
 
 const registry = new TypeRegistry();
@@ -134,12 +140,10 @@ export const loadAccounts = async (state, dispatch, wallet) => {
       await web3Enable(config.APP_NAME, [], wallet);
 
       let allAccounts = await web3Accounts();
-      console.log("BE allAccounts", allAccounts);
       allAccounts = allAccounts.map(({ address, meta }) => ({
         address,
         meta: { ...meta, name: `${meta.name}` },
       }));
-      console.log("AT allAccounts", allAccounts);
 
       // Logics to check if the connecting chain is a dev chain, coming from polkadot-js Apps
       const { systemChain, systemChainType } = await retrieveChainInfo(api);
@@ -171,7 +175,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
     artzero_nft.CONTRACT_ABI,
     artzero_nft.CONTRACT_ADDRESS
   );
-  console.log("artzero_contract", artzero_contract);
+  // console.log("artzero_contract", artzero_contract);
   artzero_nft_calls.setContract(artzero_contract);
 
   const collection_contract = new ContractPromise(
@@ -179,7 +183,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
     collection_manager.CONTRACT_ABI,
     collection_manager.CONTRACT_ADDRESS
   );
-  console.log('collection_contract',collection_contract);
+  console.log("collection_contract", collection_contract);
   collection_manager_calls.setContract(collection_contract);
 
   const marketplace_contract = new ContractPromise(
@@ -187,7 +191,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
     marketplace.CONTRACT_ABI,
     marketplace.CONTRACT_ADDRESS
   );
-  console.log('marketplace_contract',marketplace_contract);
+  console.log("marketplace_contract", marketplace_contract);
   marketplace_contract_calls.setContract(marketplace_contract);
 
   const staking_contract = new ContractPromise(
@@ -195,9 +199,8 @@ export const loadAccounts = async (state, dispatch, wallet) => {
     staking.CONTRACT_ABI,
     staking.CONTRACT_ADDRESS
   );
-  console.log('staking_contract',staking_contract);
+  console.log("staking_contract", staking_contract);
   staking_calls.setContract(staking_contract);
-
 };
 
 const SubstrateContext = React.createContext();
@@ -218,15 +221,18 @@ const SubstrateContextProvider = (props) => {
 
   useEffect(() => {
     const { apiState, keyringState } = state;
+
     if (apiState === "READY" && !keyringState && !keyringLoadAll) {
       keyringLoadAll = true;
-      // loadAccounts(state, dispatch)
+      state?.currentAccount?.address &&
+        loadAccounts(state, dispatch, state?.selectedExtension);
     }
   }, [state, dispatch]);
 
   function setCurrentAccount(acct) {
     dispatch({ type: "SET_CURRENT_ACCOUNT", payload: acct });
     blockchainModule.setAccount(acct);
+    window.localStorage.setItem("currentAccount", JSON.stringify(acct));
   }
 
   return (

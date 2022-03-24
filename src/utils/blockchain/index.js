@@ -1,52 +1,58 @@
-import { web3FromSource } from '../wallets/extension-dapp'
-import toast from 'react-hot-toast'
+import { web3FromSource } from "../wallets/extension-dapp";
+import toast from "react-hot-toast";
 
-let account
-let profileContract
+let account;
+let profileContract;
 
-const gasLimit = -1
-const value = 0
+const gasLimit = -1;
+const value = 0;
+
+const currentAccountLocal = JSON.parse(
+  window.localStorage.getItem("currentAccount")
+);
+account = currentAccountLocal || null;
 
 function setAccount(newAccount) {
   // console.log(`Setting a new account in blockchain module`, newAccount.address)
-  account = newAccount
+  account = newAccount;
 }
 
 function setProfileContract(contract) {
   // console.log(`Setting contract in blockchain module`, c)
-  profileContract = contract
+  profileContract = contract;
 }
 
 async function getWalletAddress() {
-  const address = account?.address
+  const address = account?.address;
 
   if (address) {
-    return address
+    return address;
   } else {
-    console.log(`Unable to get wallet address.`)
-    return ''
+    console.log(`Unable to get wallet address.`);
+    return "";
   }
 }
 
 export async function getProfileOnChain() {
-  const address = await getWalletAddress()
+  const address = await getWalletAddress();
 
-  let profile
+  let profile;
 
   const { result, output } = await profileContract.query.getAttributes(
     address,
     { value, gasLimit },
     address,
     [
-      'username',
-      'avatar',
-      'bio',
-      'facebook',
-      'twitter',
-      'instagram',
-      'telegram',
+      "username",
+      "avatar",
+      "bio",
+      "facebook",
+      "twitter",
+      "instagram",
+      "telegram",
     ]
-  )
+  );
+
   if (result.isOk) {
     profile = {
       username: output.toHuman()[0],
@@ -56,24 +62,24 @@ export async function getProfileOnChain() {
       twitter: output.toHuman()[4],
       instagram: output.toHuman()[5],
       telegram: output.toHuman()[6],
-    }
-    console.log('Load profile successful.')
+    };
+    console.log("Load profile successful.");
   }
 
-  return profile
+  return profile;
 }
 
 export async function setSingleAttributeProfileOnChain(data) {
-  let unsubscribe
+  let unsubscribe;
 
-  const address = account?.address
-  const gasLimit = -1
-  const value = 0
+  const address = account?.address;
+  const gasLimit = -1;
+  const value = 0;
 
-  const injector = await web3FromSource(account?.meta?.source)
+  const injector = await web3FromSource(account?.meta?.source);
 
   account &&
-  profileContract.tx
+    profileContract.tx
       .setProfileAttribute({ gasLimit, value }, data?.attribute, data?.value)
       .signAndSend(
         address,
@@ -83,44 +89,44 @@ export async function setSingleAttributeProfileOnChain(data) {
             if (dispatchError.isModule) {
               const decoded = profileContract.registry.findMetaError(
                 dispatchError.asModule
-              )
-              const { docs, name, section } = decoded
+              );
+              const { docs, name, section } = decoded;
 
-              console.log(`Lỗi: ${section}.${name}: ${docs.join(' ')}`)
+              console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
             } else {
               console.log(
-                'dispatchError setProfileAttribute',
+                "dispatchError setProfileAttribute",
                 dispatchError.toString()
-              )
+              );
             }
           }
 
           if (status) {
-            const statusText = Object.keys(status.toHuman())[0]
+            const statusText = Object.keys(status.toHuman())[0];
             toast.success(
               `Profile update ${
-                statusText === '0' ? 'start' : statusText.toLowerCase()
+                statusText === "0" ? "start" : statusText.toLowerCase()
               }.`
-            )
+            );
           }
         }
       )
-      .then(unsub => (unsubscribe = unsub))
-      .catch(e => console.log('e', e))
+      .then((unsub) => (unsubscribe = unsub))
+      .catch((e) => console.log("e", e));
 
-  return unsubscribe
+  return unsubscribe;
 }
 export async function setMultipleAttributesProfileOnChain(attributes, values) {
-  let unsubscribe
+  let unsubscribe;
 
-  const address = account?.address
-  const gasLimit = -1
-  const value = 0
+  const address = account?.address;
+  const gasLimit = -1;
+  const value = 0;
 
-  const injector = await web3FromSource(account?.meta?.source)
+  const injector = await web3FromSource(account?.meta?.source);
 
   account &&
-  profileContract.tx
+    profileContract.tx
       .setMultipleAttributes({ gasLimit, value }, attributes, values)
       .signAndSend(
         address,
@@ -130,32 +136,29 @@ export async function setMultipleAttributesProfileOnChain(attributes, values) {
             if (dispatchError.isModule) {
               const decoded = profileContract.registry.findMetaError(
                 dispatchError.asModule
-              )
-              const { docs, name, section } = decoded
+              );
+              const { docs, name, section } = decoded;
 
-              console.log(`Lỗi: ${section}.${name}: ${docs.join(' ')}`)
+              console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
             } else {
-              console.log(
-                'dispatchError setProfileAttribute',
-                dispatchError.toString()
-              )
+              console.log(dispatchError.toString());
             }
           }
 
           if (status) {
-            const statusText = Object.keys(status.toHuman())[0]
+            const statusText = Object.keys(status.toHuman())[0];
             toast.success(
               `Profile update ${
-                statusText === '0' ? 'start' : statusText.toLowerCase()
+                statusText === "0" ? "start" : statusText.toLowerCase()
               }.`
-            )
+            );
           }
         }
       )
-      .then(unsub => (unsubscribe = unsub))
-      .catch(e => console.log('e', e))
+      .then((unsub) => (unsubscribe = unsub))
+      .catch((e) => console.log("e", e));
 
-  return unsubscribe
+  return unsubscribe;
 }
 
 const blockchainModule = {
@@ -165,6 +168,6 @@ const blockchainModule = {
   setProfileContract,
   setSingleAttributeProfileOnChain,
   setMultipleAttributesProfileOnChain,
-}
+};
 
-export default blockchainModule
+export default blockchainModule;

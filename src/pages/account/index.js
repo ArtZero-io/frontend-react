@@ -20,14 +20,11 @@ const AccountPage = () => {
 
   useEffect(() => {
     dispatch(getProfile());
-   
-    
   }, [dispatch, activeAddress]);
-
 
   return (
     <>
-      {accountLoaders?.getProfile ? (
+      {!accountLoaders?.getProfile ? (
         <Loader />
       ) : (
         <>

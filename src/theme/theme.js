@@ -8,9 +8,6 @@ const theme = extendTheme({
   },
   styles: {
     global: {
-      // "*":{
-      // border: 'dotted 1px red'
-      // },
       html: {
         minHeight: "100vh",
       },
@@ -20,7 +17,7 @@ const theme = extendTheme({
         margin: 0,
         padding: 0,
         backgroundColor: "#000322",
-        color:'#b6b6b6'
+        color: "#b6b6b6",
       },
       "#root": {
         height: "100%",

@@ -31,7 +31,6 @@ const client = create(IPFS_CLIENT_URL);
 const size = 128;
 
 const Form = ({ onClose }) => {
-  console.log("re render Form");
   const { profile } = useSelector((s) => s.account);
   const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
@@ -109,19 +108,16 @@ const Form = ({ onClose }) => {
 
     reader.onloadend = () => {
       setNewAvatarData(Buffer(reader.result));
-      console.log("onloadend");
     };
 
     e.preventDefault();
 
     if (e.target.value !== "") {
       const src = URL.createObjectURL(e.target.files[0]);
-      console.log("setNewAvatarPreviewUrl");
-
       setNewAvatarPreviewUrl(src);
     }
   };
-  console.log("newAvatarPreviewUrl", newAvatarPreviewUrl);
+
   return (
     <Box px={{ base: "4", md: "10" }} p="1" maxWidth="3xl" mx="auto">
       <form id="settings-form" onSubmit={onSubmitHandler}>

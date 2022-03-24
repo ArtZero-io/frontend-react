@@ -23,13 +23,13 @@ import {
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { AccountActionTypes } from "../../store/types/account.types";
-import { useHistory } from "react-router-dom";
+import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 function WalletSelector(props) {
   const dispatch = useDispatch();
-
+  const [, setActiveAddressLocal] = useLocalStorage("activeAddress");
   const { setCurrentAccount, state } = useSubstrate();
-  const { keyring, currentAccount, walletPendingApprove } = state;
+  const { keyring, currentAccount } = state;
 
   const keyringOptions = keyring.getPairs().map((account) => ({
     key: account.address,
@@ -48,14 +48,15 @@ function WalletSelector(props) {
         type: AccountActionTypes.SET_ACTIVE_ADDRESS,
         payload: initialAddress,
       });
+      setActiveAddressLocal(initialAddress);
     }
   }, [
+    setActiveAddressLocal,
     dispatch,
     currentAccount,
     setCurrentAccount,
     keyring,
     initialAddress,
-    walletPendingApprove,
   ]);
 
   function selectAccountHandler(address) {
@@ -64,12 +65,12 @@ function WalletSelector(props) {
       type: AccountActionTypes.SET_ACTIVE_ADDRESS,
       payload: address,
     });
+    setActiveAddressLocal(address);
   }
-  const history = useHistory();
 
   function logoutHandler() {
-    window.location.reload();
-    history.push("/home");
+    window.localStorage.clear();
+    window.location.assign("/");
   }
   return (
     <Box color="blackAlpha.900" height="100%" mx="auto" w="28rem">
@@ -118,7 +119,6 @@ function WalletSelector(props) {
 
 export default function AccountSelector(props) {
   const { keyring, api, walletPendingApprove } = useSubstrateState();
-  console.log("walletPendingApprove", walletPendingApprove);
   if (walletPendingApprove)
     return (
       <Box pr="2">
