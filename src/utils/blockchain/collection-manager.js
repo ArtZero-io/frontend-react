@@ -1,8 +1,8 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5GBBXatBR3F9jEcThxu8sTLQo9HHj99yNYLZKod4bVX9p8dz",
+  CONTRACT_ADDRESS: "5EJvs6z6P2Re7vF9xRDSqemHixiJpDpHLvwKqH5KsWoDBwAz",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x331270a776c7826dafcf2adcbf899f8b96a5f7f8186095d619e0f34c148db845",
+      "hash": "0xc6ed251ce0ab96600964e3a6859365f2a8297ac7fcdcce6a68405fe0af05da43",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -88,36 +88,36 @@ const collection_manager = {
                 "label": "name",
                 "type": {
                   "displayName": [
-                    "Vec"
+                    "String"
                   ],
-                  "type": 9
+                  "type": 16
                 }
               },
               {
                 "label": "description",
                 "type": {
                   "displayName": [
-                    "Vec"
+                    "String"
                   ],
-                  "type": 9
+                  "type": 16
                 }
               },
               {
                 "label": "avatar_image",
                 "type": {
                   "displayName": [
-                    "Vec"
+                    "String"
                   ],
-                  "type": 9
+                  "type": 16
                 }
               },
               {
                 "label": "header_image",
                 "type": {
                   "displayName": [
-                    "Vec"
+                    "String"
                   ],
-                  "type": 9
+                  "type": 16
                 }
               },
               {
@@ -177,36 +177,36 @@ const collection_manager = {
                 "label": "name",
                 "type": {
                   "displayName": [
-                    "Vec"
+                    "String"
                   ],
-                  "type": 9
+                  "type": 16
                 }
               },
               {
                 "label": "description",
                 "type": {
                   "displayName": [
-                    "Vec"
+                    "String"
                   ],
-                  "type": 9
+                  "type": 16
                 }
               },
               {
                 "label": "avatar_image",
                 "type": {
                   "displayName": [
-                    "Vec"
+                    "String"
                   ],
-                  "type": 9
+                  "type": 16
                 }
               },
               {
                 "label": "header_image",
                 "type": {
                   "displayName": [
-                    "Vec"
+                    "String"
                   ],
-                  "type": 9
+                  "type": 16
                 }
               },
               {
@@ -921,34 +921,6 @@ const collection_manager = {
                 "type": {
                   "displayName": [
                     "crossartzerocollection_external",
-                    "GetRoyalFeeInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              "Get royal fee of the Collection"
-            ],
-            "label": "CrossArtZeroCollection::get_royal_fee",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "GetRoyalFeeOutput"
-              ],
-              "type": 11
-            },
-            "selector": "0xfa0f936e"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
                     "IsActiveInput1"
                   ],
                   "type": 0
@@ -977,26 +949,26 @@ const collection_manager = {
                 "type": {
                   "displayName": [
                     "crossartzerocollection_external",
-                    "GetCollectionOwnerInput1"
+                    "GetRoyalFeeInput1"
                   ],
                   "type": 0
                 }
               }
             ],
             "docs": [
-              " Get Collection Owner by Collection Address (NFT address)"
+              "Get royal fee of the Collection"
             ],
-            "label": "CrossArtZeroCollection::get_collection_owner",
+            "label": "CrossArtZeroCollection::get_royal_fee",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "crossartzerocollection_external",
-                "GetCollectionOwnerOutput"
+                "GetRoyalFeeOutput"
               ],
-              "type": 21
+              "type": 11
             },
-            "selector": "0xb1f1e401"
+            "selector": "0xfa0f936e"
           },
           {
             "args": [
@@ -1025,6 +997,34 @@ const collection_manager = {
               "type": 2
             },
             "selector": "0x81fa82e9"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "GetCollectionOwnerInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Get Collection Owner by Collection Address (NFT address)"
+            ],
+            "label": "CrossArtZeroCollection::get_collection_owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "GetCollectionOwnerOutput"
+              ],
+              "type": 21
+            },
+            "selector": "0xb1f1e401"
           }
         ]
       },

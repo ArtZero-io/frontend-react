@@ -5,7 +5,7 @@ import {
 import { useSubstrateState } from '../../utils/substrate'
 import Loader from '../../components/Loader/Loader'
 //import { ContractPromise } from "@polkadot/api-contract";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect,useState } from "react";
 // import staking_calls from "../../utils/blockchain/staking_calls";
 import {delay, isValidImage} from '../../utils';
@@ -15,7 +15,7 @@ import collection_manager_calls from '../../utils/blockchain/collection-manager-
 let collection_count = 0;
 
 const MarketplacePage = () => {
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
   const { activeAddress } = useSelector((s) => s.account);
 
@@ -44,8 +44,10 @@ const MarketplacePage = () => {
   }
 
   useEffect(async () => {
+    await delay(5000);
+    console.log("HERE");
     await onRefresh();
-  }, [dispatch, activeAddress]);
+  }, [activeAddress]);
 
   const onRefresh = async () => {
 
@@ -67,8 +69,8 @@ const MarketplacePage = () => {
         </Box>
         <Grid templateColumns='repeat(5, 1fr)' gap={6}>
           {collections.map((collection,index) => (
-            <GridItem w='100%' h='10' bg='blue.500'>
-                <Image src={isValidImage(collection.headerImage) ? collection.headerImage : "https://picsum.photos/300/100"} alt={collection.name} />
+            <GridItem w='100%' h='10' bg='blue.500' key={index}>
+                <Image src={isValidImage(collection.headerImage) ? collection.headerImage : "https://picsum.photos/350/200"} alt={collection.name} />
                 <Text>{collection.name}</Text>
                 <Text>{collection.description}</Text>
             </GridItem>

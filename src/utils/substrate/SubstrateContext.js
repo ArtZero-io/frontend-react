@@ -175,7 +175,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
     artzero_nft.CONTRACT_ABI,
     artzero_nft.CONTRACT_ADDRESS
   );
-  // console.log("artzero_contract", artzero_contract);
+  console.log("artzero_contract", artzero_contract);
   artzero_nft_calls.setContract(artzero_contract);
 
   const collection_contract = new ContractPromise(
@@ -201,6 +201,8 @@ export const loadAccounts = async (state, dispatch, wallet) => {
   );
   console.log("staking_contract", staking_contract);
   staking_calls.setContract(staking_contract);
+
+
 };
 
 const SubstrateContext = React.createContext();

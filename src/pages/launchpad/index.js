@@ -10,12 +10,12 @@ import {
 import { useSubstrateState } from '../../utils/substrate'
 import Loader from '../../components/Loader/Loader'
 //import { ContractPromise } from "@polkadot/api-contract";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect,useState } from "react";
 import artzero_nft_calls from "../../utils/blockchain/artzero-nft-calls";
 import {delay, truncateStr} from '../../utils';
 const MintingEventPage = () => {
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
   const { activeAddress } = useSelector((s) => s.account);
 
@@ -29,8 +29,9 @@ const MintingEventPage = () => {
   const [whitelistAmount,setWhitelistAmount] = useState(1);
 
   useEffect(async () => {
+    await delay(5000);
     await onRefresh();
-  }, [dispatch, activeAddress]);
+  }, [activeAddress]);
 
   const onRefresh = async () => {
     await onGetBalance();
