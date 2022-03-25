@@ -8,7 +8,6 @@ import Loader from '../../components/Loader/Loader'
 import {  useSelector } from "react-redux";
 import { useEffect,useState } from "react";
 import staking_calls from "../../utils/blockchain/staking_calls";
-import {delay} from '../../utils';
 
 const StakePage = () => {
   //const dispatch = useDispatch();
@@ -19,9 +18,8 @@ const StakePage = () => {
   const [myTotalStaked,setMyTotalStaked] = useState(0);
 
   useEffect(async () => {
-    await delay(5000);
     await onRefresh();
-  }, [activeAddress]);
+  }, [activeAddress,staking_calls.isLoaded()]);
 
   const onRefresh = async () => {
     await onGetTotalStake();

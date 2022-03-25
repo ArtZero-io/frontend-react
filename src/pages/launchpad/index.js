@@ -29,9 +29,8 @@ const MintingEventPage = () => {
   const [whitelistAmount,setWhitelistAmount] = useState(1);
 
   useEffect(async () => {
-    await delay(5000);
     await onRefresh();
-  }, [activeAddress]);
+  }, [activeAddress,artzero_nft_calls.isLoaded()]);
 
   const onRefresh = async () => {
     await onGetBalance();

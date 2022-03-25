@@ -4,20 +4,15 @@ import {
 } from '@chakra-ui/react'
 import { useSubstrateState } from '../../utils/substrate'
 import Loader from '../../components/Loader/Loader'
-//import { ContractPromise } from "@polkadot/api-contract";
-import { useSelector } from "react-redux";
 import { useEffect,useState } from "react";
-// import staking_calls from "../../utils/blockchain/staking_calls";
 import {delay, isValidImage} from '../../utils';
 import collection_manager_calls from '../../utils/blockchain/collection-manager-calls';
-//import collection_manager from "../../utils/blockchain/collection-manager";
 
 let collection_count = 0;
 
 const MarketplacePage = () => {
   //const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
-  const { activeAddress } = useSelector((s) => s.account);
 
   const [collectionCount,setCollectionCount] = useState(0);
   const [collections,setCollections] = useState([]);
@@ -44,10 +39,8 @@ const MarketplacePage = () => {
   }
 
   useEffect(async () => {
-    await delay(5000);
-    console.log("HERE");
     await onRefresh();
-  }, [activeAddress]);
+  }, [collection_manager_calls.isLoaded()]);
 
   const onRefresh = async () => {
 

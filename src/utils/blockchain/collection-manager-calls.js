@@ -5,6 +5,9 @@ import {isValidAddressPolkadotAddress} from '../../utils'
 
 let collection_manager_contract
 
+function isLoaded() {
+  if (collection_manager_contract) return true; else return false;
+}
 //SETTERS
 async function addNewCollection(caller_account ,data) {
   if (!isValidAddressPolkadotAddress(data.nftContractAddress)) {
@@ -341,7 +344,8 @@ const collection_manager_calls = {
   getContractType,
   getCollectionOwner,
   updateIsActive,
-  owner
+  owner,
+  isLoaded
 }
 
 export default collection_manager_calls

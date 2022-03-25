@@ -5,6 +5,9 @@ import { web3FromSource } from '../wallets/extension-dapp'
 import {isValidAddressPolkadotAddress} from '../../utils'
 let artzero_contract
 
+function isLoaded() {
+  if (artzero_contract) return true; else return false;
+}
 /*
   PSP34 functions
 */
@@ -498,7 +501,8 @@ const artzero_contract_calls = {
   owner,
   addWhitelist,
   updateWhitelistAmount,
-  withdrawFee
+  withdrawFee,
+  isLoaded
 }
 
 export default artzero_contract_calls

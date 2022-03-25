@@ -4,6 +4,10 @@ import { web3FromSource } from '../wallets/extension-dapp'
 import {isValidAddressPolkadotAddress} from '../../utils'
 let staking_contract
 
+function isLoaded() {
+  if (staking_contract) return true; else return false;
+}
+
 function setContract(c) {
   // console.log(`Setting contract in blockchain module`, c)
   staking_contract = c
@@ -174,7 +178,8 @@ const staking_calls = {
   getStakedId,
   stake,
   unstake,
-  setContract
+  setContract,
+  isLoaded
 }
 
 export default staking_calls

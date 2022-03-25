@@ -4,6 +4,10 @@ import { web3FromSource } from '../wallets/extension-dapp'
 import {isValidAddressPolkadotAddress} from '../../utils'
 let marketplace_contract
 
+function isLoaded() {
+  if (marketplace_contract) return true; else return false;
+}
+
 function setContract(c) {
   // console.log(`Setting contract in blockchain module`, c)
   marketplace_contract = c
@@ -413,7 +417,8 @@ const marketplace_contract_calls = {
   bid,
   buy,
   acceptBid,
-  setContract
+  setContract,
+  isLoaded
 }
 
 export default marketplace_contract_calls

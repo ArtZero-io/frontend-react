@@ -37,11 +37,6 @@ const AdminPage = () => {
   const { api, currentAccount } = useSubstrateState()
   const { activeAddress } = useSelector((s) => s.account);
 
-  useEffect(async () => {
-    await delay(5000);
-    await onRefresh();
-  }, [ activeAddress]);
-
   const [art0_NFT_owner,setArt0NFTOwner] = useState("");
   const [whitelistAmount,setWhitelistAmount] = useState(1);
   const [whitelistAddress,setWhitelistAddress] = useState("");
@@ -55,7 +50,12 @@ const AdminPage = () => {
   const [collectionContractOwner,setCollectionContractOwner] = useState("");
   const [collectionContractBalance, setCollectionContractBalance] = useState(0);
 
-  const onRefresh = async () => {
+  const onRefreshCollection = async () =>{
+    await onGetCollectionCount();
+    await delay(1000);
+    await getAllCollections();
+  }
+  const onRefreshAZNFT = async () =>{
     await getAZNFTContractBalance();
     await getCollectionContractBalance();
 
@@ -65,11 +65,16 @@ const AdminPage = () => {
     await onGetWhitelistCount();
     await delay(1000);
     await getAllWhiteList();
-
-    await onGetCollectionCount();
-    await delay(1000);
-    await getAllCollections();
   }
+  useEffect(async () => {
+    onRefreshCollection();
+  }, [collection_manager_calls.isLoaded()]);
+
+  useEffect(async () => {
+    onRefreshAZNFT();
+  }, [artzero_nft_calls.isLoaded()]);
+
+
   const getAZNFTContractBalance = async () =>{
 
     const {data: balance } = await api.query.system.account(artzero_nft.CONTRACT_ADDRESS);
@@ -117,7 +122,7 @@ const AdminPage = () => {
     //check whitelistAddress
     await artzero_nft_calls.addWhitelist(currentAccount,whitelistAddress,whitelistAmount);
     await delay(10000);
-    await onRefresh();
+    await onRefreshAZNFT();
 
   }
   const onAddWhitelistUpdate = async () =>{
@@ -131,7 +136,7 @@ const AdminPage = () => {
     //check whitelistAddress
     await artzero_nft_calls.updateWhitelistAmount(currentAccount,whitelistAddress,whitelistAmount);
     await delay(10000);
-    await onRefresh();
+    await onRefreshAZNFT();
 
   }
   const onWithdraw = async () =>{
@@ -144,7 +149,7 @@ const AdminPage = () => {
     //check whitelistAddress
     await artzero_nft_calls.onWithdraw(currentAccount,withdrawAmount);
     await delay(5000);
-
+    await onRefreshAZNFT();
 
   }
 
