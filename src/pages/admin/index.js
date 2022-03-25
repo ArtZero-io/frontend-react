@@ -25,10 +25,9 @@ import artzero_nft_calls from "../../utils/blockchain/artzero-nft-calls";
 import collection_manager_calls from '../../utils/blockchain/collection-manager-calls';
 import collection_manager from "../../utils/blockchain/collection-manager";
 import artzero_nft from "../../utils/blockchain/artzero-nft";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect,useState } from "react";
 import {delay, truncateStr} from '../../utils';
-import { getProfile } from "@actions/account";
 import toast from 'react-hot-toast'
 import BN from "bn.js";
 
@@ -37,12 +36,11 @@ let collection_count = 0;
 const AdminPage = () => {
   const { api, currentAccount } = useSubstrateState()
   const { activeAddress } = useSelector((s) => s.account);
-  const dispatch = useDispatch();
 
   useEffect(async () => {
-    dispatch(getProfile());
+    await delay(5000);
     await onRefresh();
-  }, [dispatch, activeAddress]);
+  }, [ activeAddress]);
 
   const [art0_NFT_owner,setArt0NFTOwner] = useState("");
   const [whitelistAmount,setWhitelistAmount] = useState(1);

@@ -5,13 +5,13 @@ import {
 import { useSubstrateState } from '../../utils/substrate'
 import Loader from '../../components/Loader/Loader'
 //import { ContractPromise } from "@polkadot/api-contract";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { useEffect,useState } from "react";
 import staking_calls from "../../utils/blockchain/staking_calls";
-//import {delay, truncateStr} from '../../utils';
+import {delay} from '../../utils';
 
 const StakePage = () => {
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
   const { activeAddress } = useSelector((s) => s.account);
 
@@ -19,8 +19,9 @@ const StakePage = () => {
   const [myTotalStaked,setMyTotalStaked] = useState(0);
 
   useEffect(async () => {
+    await delay(5000);
     await onRefresh();
-  }, [dispatch, activeAddress]);
+  }, [activeAddress]);
 
   const onRefresh = async () => {
     await onGetTotalStake();
