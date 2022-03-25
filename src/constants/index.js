@@ -17,7 +17,7 @@ export const SUPPORTED_WALLET_LIST = [
   {
     extensionName: "subwallet-js",
     title: "SubWallet",
-    logo: "PolkadotjsLogo.svg",
+    logo: "SubWalletLogo.svg",
     noExtensionMessage:
       "You can use any Polkadot compatible wallet but we recommend using Subwallet",
     installUrl:
@@ -26,10 +26,20 @@ export const SUPPORTED_WALLET_LIST = [
   {
     extensionName: "polkadot-js",
     title: "Polkadot{.js}",
-    logo: "SubWalletLogo.svg",
+    logo: "PolkadotjsLogo.svg",
     noExtensionMessage:
-      "You can use any Polkadot compatible wallet but we recommend using Talisman",
+      "You can use any Polkadot compatible wallet but we recommend using Polkadot{.js}",
     installUrl:
       "https://chrome.google.com/webstore/detail/polkadot%7Bjs%7D-extension/mopnmbcafieddcagagdcbnhejhlodfdd/related",
   },
+  {
+    extensionName: "talisman",
+    title: "Talisman",
+    logo: "TalismanLogo.svg",
+    noExtensionMessage:
+      "You can use any Polkadot compatible wallet but we recommend using Talisman",
+    installUrl:
+      "https://chrome.google.com/webstore/detail/talisman-wallet/fijngjgcjhjmmpcmkeiomlglpeiijkld",
+  },
 ];
+ 

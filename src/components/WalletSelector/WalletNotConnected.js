@@ -15,6 +15,7 @@ import { useSubstrate, loadAccounts } from "@utils/substrate/SubstrateContext";
 import { SUPPORTED_WALLET_LIST } from "@constants/index";
 import SubwalletLogo from "@utils/wallets/SubWalletLogo.svg";
 import PolkadotjsLogo from "@utils/wallets/PolkadotjsLogo.svg";
+import TalismanLogo from "@utils/wallets/TalismanLogo.svg";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 
 function WalletNotConnected() {
@@ -32,7 +33,7 @@ function WalletNotConnected() {
 
   function handleConnect(wallet) {
     if (!keyring) {
-      setSelectedExtensionLocal(wallet)
+      setSelectedExtensionLocal(wallet);
       loadAccounts(state, dispatch, wallet);
     }
   }
@@ -67,14 +68,15 @@ function WalletNotConnected() {
                     <Box minW="52">
                       <Flex justifyContent="start" align="center">
                         <Box boxSize="26px">
-                          <Image
-                            src={
-                              extensionName === "subwallet-js"
-                                ? SubwalletLogo
-                                : PolkadotjsLogo
-                            }
-                            alt={extensionName}
-                          />
+                          {extensionName === "subwallet-js" && (
+                            <Image src={SubwalletLogo} alt={extensionName} />
+                          )}
+                          {extensionName === "talisman" && (
+                            <Image src={TalismanLogo} alt={extensionName} />
+                          )}
+                          {extensionName === "polkadot-js" && (
+                            <Image src={PolkadotjsLogo} alt={extensionName} />
+                          )}
                         </Box>
                         <Text mx="2">{title}</Text>
 
