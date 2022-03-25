@@ -304,7 +304,7 @@ const AdminPage = () => {
               <Box flex='1' bg='blue.500' margin='2' padding='2' >
                 <Text> <strong>Quản lý Collection:</strong></Text>
                 <Text>Total Collection: <strong>{collectionCount}</strong></Text>
-                <Text>Collection Contract Owner: <strong>{collectionContractOwner}</strong></Text>
+                <Text>Collection Contract Owner: <strong>{truncateStr(collectionContractOwner,9)}</strong></Text>
                 <Text>Collection Contract Balance: <strong>{collectionContractBalance} SZERO</strong></Text>
                 <Table variant='simple'>
                   <Thead>
