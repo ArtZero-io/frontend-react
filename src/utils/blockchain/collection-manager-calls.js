@@ -24,18 +24,33 @@ async function addNewCollection(caller_account ,data) {
     data.collectionDescription,
     data.avatarData,
     data.headerImageData,
-    1,
     data.collectionAllowRoyalFee,
     data.collectionRoyalFeeData
-  ).signAndSend(address, { signer: injector.signer }, async (result) => {
-      let isSuccess = false;
-      result.toHuman().events.map((e) => {if (e.method === "ExtrinsicSuccess") { isSuccess = true}});
-      if (isSuccess) {
-          toast.success("Added collection successfully!");
-      } else {
-          toast.error("Has something wrong in this transaction!");
+  ).signAndSend(address, { signer: injector.signer }, 
+    async ({ status, dispatchError }) => {
+      if (dispatchError) {
+        if (dispatchError.isModule) {
+          toast.error(
+            `There is some error with your request`
+          )
+        } else {
+          console.log(
+            'dispatchError ',
+            dispatchError.toString()
+          )
+        }
       }
-  }).then((unsub) => {
+
+      if (status) {
+        const statusText = Object.keys(status.toHuman())[0]
+        toast.success(
+          `Add New Collection ${
+            statusText === '0' ? 'started' : statusText.toLowerCase()
+          }.`
+        )
+      }
+    }
+    ).then((unsub) => {
     unsubscribe = unsub;
   }).catch((e) => {
       if (e === 'Error: Cancelled') {

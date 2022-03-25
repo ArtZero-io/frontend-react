@@ -23,7 +23,7 @@ import { useSubstrateState } from '../../../utils/substrate'
 
 const client = create(IPFS_CLIENT_URL);
 
-const AdvancedERC721Form = () => {
+const SimpleERC721Form = () => {
     const { currentAccount, api } = useSubstrateState();
     const [collectionName, setColletionName] = useState("");
     const [nftContractAddress, setNftContractAddress] = useState("");
@@ -71,7 +71,7 @@ const AdvancedERC721Form = () => {
                     avatarData: collectionAvatarImage,
                     headerImageData: collectionHeaderImage,
                     collectionAllowRoyalFee: collectionAllowRoyalFee,
-                    collectionRoyalFeeData: (collectionAllowRoyalFee) ? Math.round(collectionRoyalFee * 100) : 0
+                    collectionRoyalFeeData: (collectionAllowRoyalFee) ?  collectionRoyalFee : 0
                 };
 
                 await collection_manager_calls.addNewCollection(currentAccount, data);
@@ -189,11 +189,18 @@ const AdvancedERC721Form = () => {
     return (
         <>
             <FormControl>
-                <FormLabel htmlFor='nft_contract_address'>Nft Contract Address</FormLabel>
-                <Input id='nft_contract_address' type='text' 
-                    onChange={({ target }) => setNftContractAddress(target.value)}
+                <FormLabel htmlFor='nft_name'>Nft Name</FormLabel>
+                <Input id='nft_name' type='text' 
+                    onChange={({ target }) => setNftName(target.value)}
                 />
-                <div>{errorNftContractAddress}</div>
+                <div>{errorNftName}</div>
+            </FormControl>
+            <FormControl>
+                <FormLabel htmlFor='nft_symbol'>Nft Symbol</FormLabel>
+                <Input id='nft_symbol' type='text' 
+                    onChange={({ target }) => setNftName(target.value)}
+                />
+                <div>{errorNftSymbol}</div>
             </FormControl>
             <FormControl>
                 <FormLabel htmlFor='collection_name'>Collection Name</FormLabel>
@@ -240,7 +247,7 @@ const AdvancedERC721Form = () => {
                 <FormLabel htmlFor='is_collect_royal_fee' mb='0'>
                     Royal Fee
                 </FormLabel>
-                <NumberInput defaultValue={1} min={1} max={5} precision={2} step={0.01}
+                <NumberInput defaultValue={1} min={1} max={5} 
                     value={collectionRoyalFee}
                     onChange={(valueString) => setCollectionRoyalFee(valueString)}
                     isReadOnly={!collectionAllowRoyalFee}
@@ -259,4 +266,4 @@ const AdvancedERC721Form = () => {
     );
 }
 
-export default AdvancedERC721Form;
+export default SimpleERC721Form;
