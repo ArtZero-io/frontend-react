@@ -1,6 +1,18 @@
 import { decodeAddress, encodeAddress } from '@polkadot/keyring';
 import { hexToU8a, isHex } from '@polkadot/util';
 
+export function isValidImage(imageUrl) {
+  try {
+    fetch(imageUrl).then(res => {
+      if (res.status === 200) return true
+      return false;
+    });
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
 export function isValidAddressPolkadotAddress(address) {
   try {
     encodeAddress(

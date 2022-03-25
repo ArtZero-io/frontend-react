@@ -87,7 +87,7 @@ async function getWhitelistAccount(caller_account,index) {
     index
   )
   if (result.isOk) {
-    console.log(output);
+    //console.log(output);
     return output.toHuman();
   }
   return null;

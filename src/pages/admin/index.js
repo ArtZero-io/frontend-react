@@ -215,7 +215,7 @@ const AdminPage = () => {
               <Box flex='1' bg='blue.500' margin='2' padding='2' >
                 <Text> <strong>Quản lý Artzero NFT Contract:</strong></Text>
                 <Text> Contract Owner: <strong>{truncateStr(art0_NFT_owner,9)}</strong></Text>
-                <Text> Contract Balance: <strong>{azNFTContractBalance}</strong></Text>
+                <Text> Contract Balance: <strong>{azNFTContractBalance} SZERO</strong></Text>
                 <br/>
                 <Text>Owner Withdraw AZERO:</Text>
                 <NumberInput defaultValue={0}
@@ -301,7 +301,7 @@ const AdminPage = () => {
               <Box flex='1' bg='blue.500' margin='2' padding='2' >
                 <Text> <strong>Quản lý Collection:</strong></Text>
                 <Text>Total Collection: <strong>{collectionCount}</strong></Text>
-                <Text>Collection Contract Balance: <strong>{collectionContractBalance}</strong></Text>
+                <Text>Collection Contract Balance: <strong>{collectionContractBalance} SZERO</strong></Text>
                 <Table variant='simple'>
                   <Thead>
                     <Tr>

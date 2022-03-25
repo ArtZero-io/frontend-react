@@ -15,6 +15,8 @@ export const NEW_COLLECTION = '/new-collection/:type'
 export const MINTING_EVENT = '/mint'
 
 export const ADMIN = '/admin'
+export const MARKETPLACE = '/marketplace'
+export const STAKE = '/staking'
 
 //EXTERNAL LINKS
 export const LANDING_PAGE = 'http://artzero.io'

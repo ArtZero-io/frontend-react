@@ -12,7 +12,6 @@ import Loader from '../../components/Loader/Loader'
 //import { ContractPromise } from "@polkadot/api-contract";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect,useState } from "react";
-import { getProfile } from "@actions/account";
 import artzero_nft_calls from "../../utils/blockchain/artzero-nft-calls";
 import {delay, truncateStr} from '../../utils';
 const MintingEventPage = () => {
@@ -30,7 +29,6 @@ const MintingEventPage = () => {
   const [whitelistAmount,setWhitelistAmount] = useState(1);
 
   useEffect(async () => {
-    dispatch(getProfile());
     await onRefresh();
   }, [dispatch, activeAddress]);
 
@@ -186,6 +184,10 @@ const MintingEventPage = () => {
         </Box>
         <Box  align='center' position="relative" bg='green.500' padding='2'>
           <Text as='mark'> <strong>TO SHOW ALL ARTZERO NFTs BELONG TO USER HERE</strong></Text>
+        </Box>
+        <br/>
+        <Box  align='center' position="relative" bg='green.500' padding='2'>
+          <Text as='mark'> <strong>TO SHOW ALL MINT HISTORY HERE</strong></Text>
         </Box>
         </>
       )}
