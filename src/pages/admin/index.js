@@ -25,10 +25,9 @@ import artzero_nft_calls from "../../utils/blockchain/artzero-nft-calls";
 import collection_manager_calls from '../../utils/blockchain/collection-manager-calls';
 import collection_manager from "../../utils/blockchain/collection-manager";
 import artzero_nft from "../../utils/blockchain/artzero-nft";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect,useState } from "react";
 import {delay, truncateStr} from '../../utils';
-import { getProfile } from "@actions/account";
 import toast from 'react-hot-toast'
 import BN from "bn.js";
 
@@ -37,12 +36,6 @@ let collection_count = 0;
 const AdminPage = () => {
   const { api, currentAccount } = useSubstrateState()
   const { activeAddress } = useSelector((s) => s.account);
-  const dispatch = useDispatch();
-
-  useEffect(async () => {
-    dispatch(getProfile());
-    await onRefresh();
-  }, [dispatch, activeAddress]);
 
   const [art0_NFT_owner,setArt0NFTOwner] = useState("");
   const [whitelistAmount,setWhitelistAmount] = useState(1);
@@ -57,7 +50,12 @@ const AdminPage = () => {
   const [collectionContractOwner,setCollectionContractOwner] = useState("");
   const [collectionContractBalance, setCollectionContractBalance] = useState(0);
 
-  const onRefresh = async () => {
+  const onRefreshCollection = async () =>{
+    await onGetCollectionCount();
+    await delay(1000);
+    await getAllCollections();
+  }
+  const onRefreshAZNFT = async () =>{
     await getAZNFTContractBalance();
     await getCollectionContractBalance();
 
@@ -67,11 +65,16 @@ const AdminPage = () => {
     await onGetWhitelistCount();
     await delay(1000);
     await getAllWhiteList();
-
-    await onGetCollectionCount();
-    await delay(1000);
-    await getAllCollections();
   }
+  useEffect(async () => {
+    onRefreshCollection();
+  }, [collection_manager_calls.isLoaded()]);
+
+  useEffect(async () => {
+    onRefreshAZNFT();
+  }, [artzero_nft_calls.isLoaded()]);
+
+
   const getAZNFTContractBalance = async () =>{
 
     const {data: balance } = await api.query.system.account(artzero_nft.CONTRACT_ADDRESS);
@@ -119,7 +122,7 @@ const AdminPage = () => {
     //check whitelistAddress
     await artzero_nft_calls.addWhitelist(currentAccount,whitelistAddress,whitelistAmount);
     await delay(10000);
-    await onRefresh();
+    await onRefreshAZNFT();
 
   }
   const onAddWhitelistUpdate = async () =>{
@@ -133,7 +136,7 @@ const AdminPage = () => {
     //check whitelistAddress
     await artzero_nft_calls.updateWhitelistAmount(currentAccount,whitelistAddress,whitelistAmount);
     await delay(10000);
-    await onRefresh();
+    await onRefreshAZNFT();
 
   }
   const onWithdraw = async () =>{
@@ -146,7 +149,7 @@ const AdminPage = () => {
     //check whitelistAddress
     await artzero_nft_calls.onWithdraw(currentAccount,withdrawAmount);
     await delay(5000);
-
+    await onRefreshAZNFT();
 
   }
 
@@ -215,7 +218,7 @@ const AdminPage = () => {
               <Box flex='1' bg='blue.500' margin='2' padding='2' >
                 <Text> <strong>Quản lý Artzero NFT Contract:</strong></Text>
                 <Text> Contract Owner: <strong>{truncateStr(art0_NFT_owner,9)}</strong></Text>
-                <Text> Contract Balance: <strong>{azNFTContractBalance}</strong></Text>
+                <Text> Contract Balance: <strong>{azNFTContractBalance} SZERO</strong></Text>
                 <br/>
                 <Text>Owner Withdraw AZERO:</Text>
                 <NumberInput defaultValue={0}
@@ -301,7 +304,8 @@ const AdminPage = () => {
               <Box flex='1' bg='blue.500' margin='2' padding='2' >
                 <Text> <strong>Quản lý Collection:</strong></Text>
                 <Text>Total Collection: <strong>{collectionCount}</strong></Text>
-                <Text>Collection Contract Balance: <strong>{collectionContractBalance}</strong></Text>
+                <Text>Collection Contract Owner: <strong>{truncateStr(collectionContractOwner,9)}</strong></Text>
+                <Text>Collection Contract Balance: <strong>{collectionContractBalance} SZERO</strong></Text>
                 <Table variant='simple'>
                   <Thead>
                     <Tr>

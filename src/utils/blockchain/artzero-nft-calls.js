@@ -5,8 +5,13 @@ import { web3FromSource } from "../wallets/extension-dapp";
 import { isValidAddressPolkadotAddress } from "../../utils";
 let artzero_contract;
 function setContract(c) {
-  console.log(`Setting contract in blockchain module`, c)
+  console.log(`Setting contract in blockchain module`, c);
   artzero_contract = c;
+}
+
+function isLoaded() {
+  if (artzero_contract) return true;
+  else return false;
 }
 /*
   PSP34 functions
@@ -92,7 +97,7 @@ async function getWhitelistAccount(caller_account, index) {
     index
   );
   if (result.isOk) {
-    console.log(output);
+    //console.log(output);
     return output.toHuman();
   }
   return null;
@@ -449,8 +454,6 @@ async function withdrawFee(caller_account, amount) {
   return unsubscribe;
 }
 
-
-
 const artzero_contract_calls = {
   getWhitelistAccount,
   getWhitelistCount,
@@ -469,6 +472,7 @@ const artzero_contract_calls = {
   addWhitelist,
   updateWhitelistAmount,
   withdrawFee,
+  isLoaded,
 };
 
 export default artzero_contract_calls;

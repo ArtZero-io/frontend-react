@@ -17,7 +17,10 @@ import * as ROUTES from "@constants/routes";
 
 const links = [
   { label: "Home", href: "/" },
+  { label: "Marketplace", href: ROUTES.MARKETPLACE },
   { label: "Mint", href: ROUTES.MINTING_EVENT },
+  { label: "Staking", href: ROUTES.STAKE },
+
   { label: "Admin", href: ROUTES.ADMIN },
   { label: "My Account", href: ROUTES.ACCOUNT },
   { label: "My Collection", href: ROUTES.MY_COLLECTION },

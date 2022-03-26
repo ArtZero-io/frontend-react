@@ -236,6 +236,20 @@ const MintingEventPage = () => {
               <strong>TO SHOW ALL ARTZERO NFTs BELONG TO USER HERE</strong>
             </Text>
           </Box>
+
+          <Box align="center" position="relative" bg="green.500" padding="2">
+            <Text as="mark">
+              {" "}
+              <strong>TO SHOW ALL ARTZERO NFTs BELONG TO USER HERE</strong>
+            </Text>
+          </Box>
+          <br />
+          <Box align="center" position="relative" bg="green.500" padding="2">
+            <Text as="mark">
+              {" "}
+              <strong>TO SHOW ALL MINT HISTORY HERE</strong>
+            </Text>
+          </Box>
         </>
       )}
     </>

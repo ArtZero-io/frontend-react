@@ -12,6 +12,10 @@ const currentAccountLocal = JSON.parse(
 );
 account = currentAccountLocal || null;
 
+function isLoaded() {
+  if (profileContract) return true; else return false;
+}
+
 function setAccount(newAccount) {
   // console.log(`Setting a new account in blockchain module`, newAccount.address)
   account = newAccount;
@@ -169,6 +173,7 @@ const blockchainModule = {
   setProfileContract,
   setSingleAttributeProfileOnChain,
   setMultipleAttributesProfileOnChain,
+  isLoaded
 };
 
 export default blockchainModule;

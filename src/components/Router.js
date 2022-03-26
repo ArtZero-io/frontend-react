@@ -8,14 +8,18 @@ import MyCollectionPage from '../pages/collections/index'
 import NewCollectionPage from '../pages/collections/new'
 import MintPage from '../pages/launchpad'
 import AdminPage from '../pages/admin'
-
+import StakePage from '../pages/stake'
+import MarketplacePage from '../pages/marketplace'
 const Router = () => {
   return (
     <>
       <Switch>
         <Route exact path={ROUTES.HOME} component={HomePage} />
+        <Route exact path={ROUTES.MARKETPLACE} component={MarketplacePage} />
         <Route exact path={ROUTES.ADMIN} component={AdminPage} />
         <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />
+        <Route exact path={ROUTES.STAKE} component={StakePage} />
+
         <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
         <Route exact path={ROUTES.MY_COLLECTION} component={MyCollectionPage} />
         <Route exact path={`${ROUTES.NEW_COLLECTION}:type`} component={NewCollectionPage} />
@@ -24,7 +28,7 @@ const Router = () => {
           path={`${ROUTES.COLLECTIONS}/:collectionAddress`}
           component={CollectionPage}
         />
-         
+
 
         <Route exact path={ROUTES.NEW_COLLECTION} component={NewCollectionPage} />
         {/*  TODO Add Private Route */}

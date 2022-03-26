@@ -173,34 +173,36 @@ export const loadAccounts = async (state, dispatch, wallet) => {
   );
   dispatch({ type: "SET_PROFILE_CONTRACT", payload: profileContract });
   blockchainModule.setProfileContract(profileContract);
- 
+
   const artzero_contract = new ContractPromise(
     api,
     artzero_nft.CONTRACT_ABI,
     artzero_nft.CONTRACT_ADDRESS
   );
-   artzero_nft_calls.setContract(artzero_contract);
+  console.log("artzero_contract", artzero_contract);
+  artzero_nft_calls.setContract(artzero_contract);
 
   const collection_contract = new ContractPromise(
     api,
     collection_manager.CONTRACT_ABI,
     collection_manager.CONTRACT_ADDRESS
   );
-   collection_manager_calls.setContract(collection_contract);
+  collection_manager_calls.setContract(collection_contract);
 
   const marketplace_contract = new ContractPromise(
     api,
     marketplace.CONTRACT_ABI,
     marketplace.CONTRACT_ADDRESS
   );
-   marketplace_contract_calls.setContract(marketplace_contract);
+  marketplace_contract_calls.setContract(marketplace_contract);
 
   const staking_contract = new ContractPromise(
     api,
     staking.CONTRACT_ABI,
     staking.CONTRACT_ADDRESS
   );
-   staking_calls.setContract(staking_contract);
+  console.log("staking_contract", staking_contract);
+  staking_calls.setContract(staking_contract);
 };
 
 const SubstrateContext = React.createContext();
