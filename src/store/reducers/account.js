@@ -5,11 +5,10 @@ const activeAddressLocal = JSON.parse(
 );
 
 const initialState = {
-  profile: null,
   activeAddress: activeAddressLocal || null,
   accountLoaders: {
-    getProfile: true,
-    setProfileAttribute: true,
+    getProfile: false,
+    setProfileAttribute: false,
   },
   accountErrors: null,
 };
@@ -19,10 +18,9 @@ const accountReducer = (state = initialState, action) => {
     case AccountActionTypes.GET_PROFILE:
       return {
         ...state,
-        profile: action.payload,
         accountLoaders: {
           ...state.accountLoaders,
-          getProfile: true,
+          getProfile: false,
         },
       };
     case AccountActionTypes.SET_ACTIVE_ADDRESS:

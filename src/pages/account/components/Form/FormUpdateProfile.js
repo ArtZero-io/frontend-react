@@ -16,7 +16,7 @@ import {
 import { useState } from "react";
 import { HiCloudUpload } from "react-icons/hi";
 import { FieldGroup } from "./FieldGroup";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setMultipleAttributes } from "@actions/account";
 import { getProfile } from "@actions/account";
 import toast from "react-hot-toast";
@@ -30,8 +30,7 @@ import { IPFS_BASE_URL, IPFS_CLIENT_URL } from "@constants/index";
 const client = create(IPFS_CLIENT_URL);
 const size = 128;
 
-const Form = ({ onClose }) => {
-  const { profile } = useSelector((s) => s.account);
+const Form = ({ onClose, profile }) => {
   const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
 
@@ -70,8 +69,10 @@ const Form = ({ onClose }) => {
 
     dispatch(setMultipleAttributes(attributes, values));
     setIsSubmitted(true);
+    dispatch(getProfile());
     onClose();
   };
+
   useInterval(dispatch(getProfile), 9000);
 
   const onUploadHandler = async (e) => {

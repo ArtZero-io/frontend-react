@@ -1,20 +1,21 @@
-import blockchain from "../../utils/blockchain";
+import profile_calls from "../../utils/blockchain/profile_calls";
 import { AccountActionTypes } from "../types/account.types";
 
 export function getProfile() {
   return async function (dispatch) {
     const loadingName = "getProfile";
+
     dispatch({
       type: AccountActionTypes.ACCOUNT_LOADING,
       payload: loadingName,
     });
 
     try {
-      const profile = await blockchain.getProfileOnChain();
+      const profile = await profile_calls.getProfileOnChain();
       dispatch({
         type: AccountActionTypes.GET_PROFILE,
-        payload: profile,
-      });
+       });
+       return profile
     } catch (error) {
       dispatch({
         type: AccountActionTypes.ACCOUNT_ERROR,
@@ -34,7 +35,7 @@ export function setProfileAttribute(data) {
     });
 
     try {
-      await blockchain.setSingleAttributeProfileOnChain(data);
+      await profile_calls.setSingleAttributeProfileOnChain(data);
     } catch (error) {
       dispatch({
         type: AccountActionTypes.ACCOUNT_ERROR,
@@ -54,7 +55,7 @@ export function setMultipleAttributes(attributes, values) {
     });
 
     try {
-      await blockchain.setMultipleAttributesProfileOnChain(attributes, values);
+      await profile_calls.setMultipleAttributesProfileOnChain(attributes, values);
       dispatch({
         type: AccountActionTypes.SET_PROFILE_ATTRIBUTE,
       });

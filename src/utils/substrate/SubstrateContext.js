@@ -2,13 +2,14 @@ import React, { useReducer, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import jsonrpc from "@polkadot/types/interfaces/jsonrpc";
 import { ApiPromise, WsProvider } from "@polkadot/api";
+import { ContractPromise } from "@polkadot/api-contract";
 import { web3Accounts, web3Enable } from "../wallets/extension-dapp";
 import { keyring as Keyring } from "@polkadot/ui-keyring";
 import { isTestChain } from "@polkadot/util";
 import { TypeRegistry } from "@polkadot/types/create";
 
 import config from "./config";
-import blockchainModule from "../blockchain";
+import blockchainModule from "../blockchain/profile_calls";
 import profile from "../blockchain/profile";
 
 import artzero_nft from "../blockchain/artzero-nft";
@@ -22,7 +23,6 @@ import staking_calls from "../blockchain/staking_calls";
 
 import collection_manager from "../blockchain/collection-manager";
 import collection_manager_calls from "../blockchain/collection-manager-calls";
-import { ContractPromise } from "@polkadot/api-contract";
 
 const parsedQuery = new URLSearchParams(window.location.search);
 const connectedSocket = parsedQuery.get("rpc") || config.PROVIDER_SOCKET;
@@ -74,8 +74,8 @@ const reducer = (state, action) => {
       return { ...state, keyring: null, keyringState: "ERROR" };
     case "SET_CURRENT_ACCOUNT":
       return { ...state, currentAccount: action.payload };
-    case "SET_CONTRACT":
-      return { ...state, contract: action.payload };
+    case "SET_PROFILE_CONTRACT":
+      return { ...state, profileContract: action.payload };
     case "SET_SUPPORTED_EXTENSIONS":
       return { ...state, supportedExtensions: action.payload };
     case "SET_CURRENT_EXTENSION":
@@ -92,6 +92,7 @@ const connect = (state, dispatch) => {
   const { apiState, socket, jsonrpc } = state;
 
   if (apiState) return;
+  console.log("apiState before connect", apiState);
   dispatch({ type: "CONNECT_INIT" });
 
   console.log(`Connected socket: ${socket}`);
@@ -121,6 +122,7 @@ const retrieveChainInfo = async (api) => {
       ? api?.rpc?.system?.chainType()
       : Promise.resolve(registry?.createType("ChainType", "Live")),
   ]);
+
   return {
     systemChain: (systemChain || "<unknown>").toString(),
     systemChainType,
@@ -140,6 +142,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
       await web3Enable(config.APP_NAME, [], wallet);
 
       let allAccounts = await web3Accounts();
+
       allAccounts = allAccounts.map(({ address, meta }) => ({
         address,
         meta: { ...meta, name: `${meta.name}` },
@@ -153,6 +156,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
         isTestChain(systemChain);
 
       Keyring.loadAll({ isDevelopment }, allAccounts);
+
       dispatch({ type: "SET_KEYRING", payload: Keyring });
     } catch (e) {
       console.error(e);
@@ -160,47 +164,43 @@ export const loadAccounts = async (state, dispatch, wallet) => {
     }
   };
 
-  asyncLoadAccounts();
+  await asyncLoadAccounts();
 
-  const contract = new ContractPromise(
+  const profileContract = new ContractPromise(
     api,
     profile.CONTRACT_ABI,
     profile.CONTRACT_ADDRESS
   );
-  dispatch({ type: "SET_CONTRACT", payload: contract });
-  blockchainModule.setProfileContract(contract);
-
+  dispatch({ type: "SET_PROFILE_CONTRACT", payload: profileContract });
+  blockchainModule.setProfileContract(profileContract);
+ 
   const artzero_contract = new ContractPromise(
     api,
     artzero_nft.CONTRACT_ABI,
     artzero_nft.CONTRACT_ADDRESS
   );
-  // console.log("artzero_contract", artzero_contract);
-  artzero_nft_calls.setContract(artzero_contract);
+   artzero_nft_calls.setContract(artzero_contract);
 
   const collection_contract = new ContractPromise(
     api,
     collection_manager.CONTRACT_ABI,
     collection_manager.CONTRACT_ADDRESS
   );
-  console.log("collection_contract", collection_contract);
-  collection_manager_calls.setContract(collection_contract);
+   collection_manager_calls.setContract(collection_contract);
 
   const marketplace_contract = new ContractPromise(
     api,
     marketplace.CONTRACT_ABI,
     marketplace.CONTRACT_ADDRESS
   );
-  console.log("marketplace_contract", marketplace_contract);
-  marketplace_contract_calls.setContract(marketplace_contract);
+   marketplace_contract_calls.setContract(marketplace_contract);
 
   const staking_contract = new ContractPromise(
     api,
     staking.CONTRACT_ABI,
     staking.CONTRACT_ADDRESS
   );
-  console.log("staking_contract", staking_contract);
-  staking_calls.setContract(staking_contract);
+   staking_calls.setContract(staking_contract);
 };
 
 const SubstrateContext = React.createContext();

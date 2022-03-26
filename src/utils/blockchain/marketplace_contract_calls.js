@@ -5,7 +5,7 @@ import {isValidAddressPolkadotAddress} from '../../utils'
 let marketplace_contract
 
 function setContract(c) {
-  // console.log(`Setting contract in blockchain module`, c)
+  // console.log(`xyz 2 Setting contract in marketplace_contract blockchain module`, c)
   marketplace_contract = c
 }
 

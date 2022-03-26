@@ -13,7 +13,7 @@ import { useState } from "react";
 import { HiPencilAlt } from "react-icons/hi";
 import UpdateProfileForm from "../Form/FormUpdateProfile";
 
-const UpdateProfileModal = () => {
+const UpdateProfileModal = ({ profile }) => {
   const OverlayOne = () => (
     <ModalOverlay
       bg="blackAlpha.300"
@@ -45,7 +45,7 @@ const UpdateProfileModal = () => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <UpdateProfileForm onClose={onClose} />
+            <UpdateProfileForm onClose={onClose} profile={profile} />
           </ModalBody>
         </ModalContent>
       </Modal>

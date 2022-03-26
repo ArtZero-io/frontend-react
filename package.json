@@ -8,6 +8,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
+    "buildnomap": "set GENERATE_SOURCEMAP=false&& yarn build",
     "test": "CI=true react-app-rewired test",
     "eject": "react-scripts eject",
     "eslint:check": "eslint --ext .jsx,.js src/",

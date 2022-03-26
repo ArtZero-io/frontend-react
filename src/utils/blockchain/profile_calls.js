@@ -18,7 +18,7 @@ function setAccount(newAccount) {
 }
 
 function setProfileContract(contract) {
-  // console.log(`Setting contract in blockchain module`, c)
+  // console.log(`xyz 2 Setting contract in profileContract blockchain module`, contract)
   profileContract = contract;
 }
 
@@ -63,7 +63,7 @@ export async function getProfileOnChain() {
       instagram: output.toHuman()[5],
       telegram: output.toHuman()[6],
     };
-    console.log("Load profile successful.");
+    console.log("Load profile successful.", profile);
   }
 
   return profile;
@@ -116,6 +116,7 @@ export async function setSingleAttributeProfileOnChain(data) {
 
   return unsubscribe;
 }
+
 export async function setMultipleAttributesProfileOnChain(attributes, values) {
   let unsubscribe;
 
