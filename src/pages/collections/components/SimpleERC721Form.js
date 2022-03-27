@@ -13,7 +13,6 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from "react";
 import collection_manager_calls from "../../../utils/blockchain/collection-manager-calls";
-import {isValidAddressPolkadotAddress} from '../../../utils';
 import { create } from "ipfs-http-client";
 import { Buffer } from "buffer";
 import { IPFS_BASE_URL, IPFS_CLIENT_URL } from "@constants/index";
@@ -25,18 +24,22 @@ const client = create(IPFS_CLIENT_URL);
 
 const SimpleERC721Form = () => {
     const { currentAccount, api } = useSubstrateState();
+    
+    const [nftName , setNftName] = useState("");
+    const [nftSymbol, setNftSymbol] = useState("");
     const [collectionName, setColletionName] = useState("");
-    const [nftContractAddress, setNftContractAddress] = useState("");
     const [collectionDescription, setCollectionDescription] = useState("");
     const [collectionAllowRoyalFee, setCollectionAllowRoyalFee] = useState(0);
     const [collectionRoyalFee, setCollectionRoyalFee] = useState(0);
     const [collectionAvatarImage, setColletionAvatarImage] = useState('');
     const [collectionHeaderImage, setCollectionHeaderImage] = useState('');
     const [addingFee, setAddingFee] = useState(0);
+
+    const [errorNftName, setErrorNftName] = useState('');
+    const [errorNftSymbol, setErrorNftSymbol] = useState('');
     const [errorCollectionName, setErrorCollectionName] = useState('');
     const [errorCollectionDescription, setErrorCollectionDescription] = useState('');
     const [errorCollectionRoyalFee, setErrorCollectionRoyalFee] = useState('');
-    const [errorNftContractAddress, setErrorNftContractAddress] = useState('');
     const [errorAvatarData, setErrorAvatarData] = useState('');
     const [errorHeaderImageData, setErrorHeaderImageData] = useState('');
 
@@ -65,7 +68,8 @@ const SimpleERC721Form = () => {
                   );
             } else {
                 const data = {
-                    nftContractAddress: nftContractAddress,
+                    nftName: nftName,
+                    nftSymbol: nftSymbol,
                     collectionName: collectionName,
                     collectionDescription: collectionDescription,
                     avatarData: collectionAvatarImage,
@@ -74,7 +78,7 @@ const SimpleERC721Form = () => {
                     collectionRoyalFeeData: (collectionAllowRoyalFee) ?  collectionRoyalFee : 0
                 };
 
-                await collection_manager_calls.addNewCollection(currentAccount, data);
+                await collection_manager_calls.autoNewCollection(currentAccount, data);
             }
             
         }
@@ -83,28 +87,32 @@ const SimpleERC721Form = () => {
 
     const validateForm = () => {
         let res = true;
+        if (!nftName) {
+            setErrorNftName('The name of NFT must required!');
+            res = false;
+        } else {
+            setErrorNftName('');
+        }
+        if (!nftSymbol) {
+            setErrorNftSymbol('The symbol of NFT must required!');
+            res = false;
+        } else {
+            setErrorNftSymbol('');
+        }
         if (!collectionName) {
             setErrorCollectionName('The name of collection must required!');
             res = false;
         } else {
             setErrorCollectionName('');
         }
-        console.log(errorCollectionName);
+        
         if (!collectionDescription) {
             res = false;
             setErrorCollectionDescription('The description of collection must required!');
         } else {
             setErrorCollectionDescription('');
         }
-        if (!nftContractAddress) {
-            res = false;
-            setErrorNftContractAddress('The NFT contract address must required!');
-        } else if (!isValidAddressPolkadotAddress(nftContractAddress)) {
-            res = false;
-            setErrorNftContractAddress('The NFT contract address must be an address!');
-        } else {
-            setErrorNftContractAddress('');
-        }
+        
         if (!collectionAvatarImage) {
             res = false;
             setErrorAvatarData('Please choose the avatar of collection');
@@ -190,7 +198,8 @@ const SimpleERC721Form = () => {
         <>
             <FormControl>
                 <FormLabel htmlFor='nft_name'>Nft Name</FormLabel>
-                <Input id='nft_name' type='text' 
+                <Input id='nft_name' type='text'
+                    value={nftName}
                     onChange={({ target }) => setNftName(target.value)}
                 />
                 <div>{errorNftName}</div>
@@ -198,7 +207,8 @@ const SimpleERC721Form = () => {
             <FormControl>
                 <FormLabel htmlFor='nft_symbol'>Nft Symbol</FormLabel>
                 <Input id='nft_symbol' type='text' 
-                    onChange={({ target }) => setNftName(target.value)}
+                    value={nftSymbol}
+                    onChange={({ target }) => setNftSymbol(target.value)}
                 />
                 <div>{errorNftSymbol}</div>
             </FormControl>

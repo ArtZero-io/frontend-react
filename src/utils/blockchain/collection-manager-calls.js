@@ -65,6 +65,59 @@ async function addNewCollection(caller_account ,data) {
   return unsubscribe;
 }
 
+async function autoNewCollection(caller_account ,data) {
+  let unsubscribe;
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+  const azero_value = await getAddingFee(caller_account);
+  collection_manager_contract.tx.autoNewCollection(
+    { gasLimit, value: azero_value },
+    data.nftName,
+    data.nftSymbol,
+    address,
+    data.collectionName,
+    data.collectionDescription,
+    data.avatarData,
+    data.headerImageData,
+    data.collectionAllowRoyalFee,
+    data.collectionRoyalFeeData
+  ).signAndSend(address, { signer: injector.signer }, 
+    async ({ status, dispatchError }) => {
+      if (dispatchError) {
+        if (dispatchError.isModule) {
+          toast.error(
+            `There is some error with your request`
+          )
+        } else {
+          console.log(
+            'dispatchError ',
+            dispatchError.toString()
+          )
+        }
+      }
+
+      if (status) {
+        const statusText = Object.keys(status.toHuman())[0]
+        toast.success(
+          `Add New Collection ${
+            statusText === '0' ? 'started' : statusText.toLowerCase()
+          }.`
+        )
+      }
+    }
+    ).then((unsub) => {
+    unsubscribe = unsub;
+  }).catch((e) => {
+      if (e === 'Error: Cancelled') {
+          toast.error("You cancelled this transaction. Please add new collection again!");
+      } else {
+          toast.error("Has something wrong in this transaction!");
+      }
+  });
+  return unsubscribe;
+}
+
 async function updateIsActive(caller_account,collection_address){
   if (!collection_manager_contract || !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
@@ -349,6 +402,7 @@ const collection_manager_calls = {
   setContract,
   getAddingFee,
   addNewCollection,
+  autoNewCollection,
   getCollectionCount,
   getCollectionsByOwner,
   getCollectionByAddress,

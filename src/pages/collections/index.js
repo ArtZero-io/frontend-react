@@ -1,6 +1,6 @@
 import { useSubstrateState } from '../../utils/substrate'
-import Loader from '../../components/Loader/Loader'
-import NewCollectionButton from './components/NewCollectionButton'
+import NewCollectionButton from './components/NewCollectionButton';
+import MyCollectionLising from './components/MyCollectionLising';
 
 const MyCollectionPage = (props) => {
   const { currentAccount } = useSubstrateState()
@@ -9,10 +9,11 @@ const MyCollectionPage = (props) => {
   return (
     <>
       {!currentAccount?.address ? (
-        <Loader />
+        <div>Please connect wallet first!</div>
       ) : (
         <NewCollectionButton />
       )}
+      <MyCollectionLising />
     </>
   )
 }
