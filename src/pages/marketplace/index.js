@@ -32,7 +32,7 @@ const MarketplacePage = () => {
     for (var i=0;i<collection_count;i++) {
       let collection_account = await collection_manager_calls.getContractById(currentAccount,i+1);
       let data = await collection_manager_calls.getCollectionByAddress(currentAccount,collection_account);
-      collections.push(data);
+      if (data.isActive) collections.push(data);
     }
     console.log(collections);
     setCollections(collections);
