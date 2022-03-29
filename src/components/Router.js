@@ -3,7 +3,7 @@ import * as ROUTES from '@constants/routes'
 
 import HomePage from '@pages/home'
 import AccountPage from '../pages/account/index'
-import CollectionPage from '../pages/collections'
+// import CollectionPage from '../pages/collections'
 import MyCollectionPage from '../pages/collections/index'
 import NewCollectionPage from '../pages/collections/new'
 import MintPage from '../pages/launchpad'
@@ -11,6 +11,8 @@ import AdminPage from '../pages/admin'
 import StakePage from '../pages/stake'
 import MarketplacePage from '../pages/marketplace'
 import CollectionsPage from '../pages/collections/collections'
+import DetailCollectionPage from '../pages/collections/detail'
+
 const Router = () => {
   return (
     <>
@@ -24,6 +26,7 @@ const Router = () => {
         <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
         <Route exact path={ROUTES.MY_COLLECTION} component={MyCollectionPage} />
         <Route exact path={`${ROUTES.NEW_COLLECTION}:type`} component={NewCollectionPage} />
+        <Route exact path={ROUTES.DETAIL_COLLECTION} component={DetailCollectionPage} />
         <Route
           exact
           path={`${ROUTES.COLLECTIONS}/`}

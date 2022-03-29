@@ -10,6 +10,8 @@ export const ACCOUNT = '/account'
 export const MY_COLLECTION = '/my-collection'
 // export const NEW_COLLECTION = '/new-collection'
 export const NEW_COLLECTION = '/new-collection/:type'
+export const DETAIL_COLLECTION = '/collection/:address'
+export const DETAIL_COLLECTION_BASE = '/collection/'
 
 // MINTING EVENT
 export const MINTING_EVENT = '/mint'
