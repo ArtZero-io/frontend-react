@@ -1,9 +1,20 @@
 import { extendTheme } from "@chakra-ui/react";
 
 const theme = extendTheme({
+  fonts: {
+    heading: `Evogria Italic, sans-serif`,
+    body: `Oswald, sans-serif`,
+  },
+  colors: {
+    brand: {
+      blue: "#7AE7FF",
+      grayLight: "#888888",
+      grayDark: "#222222",
+    },
+  },
   sizes: {
     container: {
-      "2xl": "1440px",
+      "3xl": "1920px",
     },
   },
   styles: {
@@ -11,16 +22,50 @@ const theme = extendTheme({
       html: {
         minHeight: "100vh",
       },
+      button: { fontFamily: `Evogria, sans-serif` },
       body: {
-        fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", Ubuntu, sans-serif`,
         height: "100%",
         margin: 0,
         padding: 0,
-        backgroundColor: "#000322",
-        color: "#b6b6b6",
+        backgroundColor: "#000",
+        color: "#FFF",
       },
       "#root": {
         height: "100%",
+      },
+    },
+  },
+  components: {
+    Button: {
+      baseStyle: {
+        textTransform: "uppercase",
+        borderRadius: 0,
+        bg: "transparent",
+        border: "2px solid #343333",
+
+        h: "3.125rem",
+        fontSize: "sm",
+        px: "2rem",
+        fontWeight: "400",
+        color: "#ffffff",
+      },
+      sizes: {
+        xl: {
+          // h: "3.125rem",
+          // fontSize: "sm",
+          // px: "2rem",
+          // fontWeight: "400",
+          // color: "#ffffff",
+        },
+      },
+      variants: {
+        transparent: {
+          // boxShadow: "0 0 2px 2px #efdfde",
+        },
+        //  override existing variants
+        solid: (props) => ({
+          bg: props.colorMode === "dark" ? "red.300" : "red.500",
+        }),
       },
     },
   },

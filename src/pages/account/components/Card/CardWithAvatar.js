@@ -5,7 +5,7 @@ import { Identicon } from "@utils/reactIdenticon/Identicon";
 import * as React from "react";
 
 export const CardWithAvatar = (props) => {
-  const { action, avatarProps, children, useIdenticon, addressRaw, ...rest } =
+  const { action, avatarProps, children, useIdenticon, currentAccount, ...rest } =
     props;
   return (
     <Flex
@@ -21,7 +21,7 @@ export const CardWithAvatar = (props) => {
       pb={{ base: "6", md: "8" }}
       {...rest}
     >
-      {useIdenticon && addressRaw && <Identicon value={addressRaw} size={84} />}{" "}
+      {useIdenticon && currentAccount?.addressRaw && <Identicon value={currentAccount?.addressRaw} size={84} />}{" "}
       {!useIdenticon && (
         <Avatar
           mt="-10"

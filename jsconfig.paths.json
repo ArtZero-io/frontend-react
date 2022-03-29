@@ -5,6 +5,7 @@
       "@components": ["src/components"],
       "@constants": ["src/constants"],
       "@pages": ["src/pages"],
+      "@hooks": ["src/hooks"],
       "@store": ["src/store"],
       "@actions": ["src/store/actions"],
       "@theme": ["src/theme"],

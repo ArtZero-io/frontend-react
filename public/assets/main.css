@@ -1,8 +1,16 @@
-.github-fork-ribbon.right-bottom:before {
-  background-color: #666;
+@font-face {
+  font-family: "Evogria";
+  src: url("./fonts/Evogria.otf");
 }
-
-.ui.statistic.block_number > .value {
-  font-size: 2.4rem !important;
-  line-height: 4rem !important;
+@font-face {
+  font-family: "Evogria Italic";
+  src: url("./fonts/Evogria Italic.otf");
+}
+@font-face {
+  font-family: "DS-Digital";
+  src: url("./fonts/DS-DIGI.TTF");
+}
+@font-face {
+  font-family: "DS-Digital-Bold";
+  src: url("./fonts/DS-DIGIB.TTF");
 }

@@ -12,22 +12,67 @@ import { IPFS_BASE_URL } from "@constants/index";
 import { useSubstrateState } from "@utils/substrate";
 import MyStaking from "./MyStaking";
 import MyCollections from "./MyCollections";
+import { Identicon } from "@utils/reactIdenticon/Identicon";
 
 const AccountPage = () => {
   const [profile, setProfile] = useState(null);
   const dispatch = useDispatch();
   const { activeAddress, accountLoaders } = useSelector((s) => s.account);
-  const { currentAccount } = useSubstrateState();
+  const { currentAccount, keyringState, apiState } = useSubstrateState();
+
+  console.log("++++++++++++++++++++++++++++++");
+  console.log("0apiState", apiState);
+  console.log("0keyringState", keyringState);
+  console.log("0activeAddress", activeAddress);
+  console.log("++++++++++++++++++++++++++++++");
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (activeAddress) {
+        const profile = await dispatch(getProfile());
+        console.log("profile >> xxx", profile);
+        setProfile(profile);
+      }
+    };
+    console.log("++++++++++++++++++++++++++++++");
+    console.log("1apiState", apiState);
+    console.log("1keyringState", keyringState);
+    console.log("1activeAddress", activeAddress);
+    console.log("++++++++++++++++++++++++++++++");
+
+    apiState === "READY" &&
+      keyringState === "READY" &&
+      activeAddress &&
+      loadProfile();
+    // eslint-disable-next-line
+  }, [activeAddress]);
 
   useEffect(() => {
     const loadProfile = async () => {
       if (activeAddress) {
         const profile = await dispatch(getProfile());
+        console.log("profile >> yyy", profile);
         setProfile(profile);
       }
     };
-    profile === null && loadProfile();
-  }, [dispatch, activeAddress, profile]);
+    console.log("++++++++++++++++++++++++++++++");
+    console.log("2apiState", apiState);
+    console.log("2keyringState", keyringState);
+    console.log("2activeAddress", activeAddress);
+    console.log("++++++++++++++++++++++++++++++");
+    apiState === "READY" &&
+      keyringState === "READY" &&
+      activeAddress &&
+      !profile &&
+      loadProfile();
+    // eslint-disable-next-line
+  }, [
+    dispatch,
+    currentAccount,
+    apiState,
+    keyringState,
+    activeAddress,
+    profile,
+  ]);
 
   return (
     <>
@@ -40,13 +85,21 @@ const AccountPage = () => {
             <CardWithAvatar
               maxW="xl"
               useIdenticon={!profile?.avatar}
-              addressRaw={currentAccount?.addressRaw}
+              addressRaw={currentAccount}
               avatarProps={{
                 src: `${IPFS_BASE_URL}${profile?.avatar}`,
                 name: profile?.username,
               }}
               action={<UpdateProfileModal profile={profile} />}
             >
+              <Identicon value={currentAccount?.addressRaw} size={84} />
+              {!profile?.avatar && currentAccount?.addressRaw && (
+                <>
+                  
+                  <Identicon value={currentAccount?.addressRaw} size={84} /> abc
+                </>
+              )}
+
               <CardContent>
                 <Heading size="lg" fontWeight="extrabold" letterSpacing="tight">
                   {profile?.username || "unknown"}

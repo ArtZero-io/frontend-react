@@ -1,9 +1,14 @@
 import { Container, ScaleFade } from "@chakra-ui/react";
-import Navbar from "../Navbar/index";
+import Navbar from "../Navbar/Nav";
 
 const Layout = ({ children }) => {
   return (
-    <Container maxW="container.xl" height="100%" px="0">
+    <Container
+      id="layout-container"
+      maxW="container.3xl"
+      height="100%"
+      px={{ sm: "1"}}
+    >
       <Navbar />
       <ScaleFade
         initialScale={0.5}

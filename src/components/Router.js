@@ -10,6 +10,7 @@ import MintPage from '../pages/launchpad'
 import AdminPage from '../pages/admin'
 import StakePage from '../pages/stake'
 import MarketplacePage from '../pages/marketplace'
+import CollectionsPage from '../pages/collections/collections'
 const Router = () => {
   return (
     <>
@@ -25,8 +26,8 @@ const Router = () => {
         <Route exact path={`${ROUTES.NEW_COLLECTION}:type`} component={NewCollectionPage} />
         <Route
           exact
-          path={`${ROUTES.COLLECTIONS}/:collectionAddress`}
-          component={CollectionPage}
+          path={`${ROUTES.COLLECTIONS}/`}
+          component={CollectionsPage}
         />
 
 

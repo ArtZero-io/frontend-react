@@ -159,7 +159,7 @@ const Form = ({ onClose, profile }) => {
                     >
                       Upload
                     </Button>
-                    <Button variant="ghost" colorScheme="red" size="xs">
+                    <Button variant="ghost" size="xs">
                       Delete
                     </Button>
                   </HStack>
@@ -247,13 +247,7 @@ const Form = ({ onClose, profile }) => {
         </Stack>
         <FieldGroup mt="8">
           <Center width="full">
-            <Button
-              disabled={!objArr.length}
-              size="sm"
-              type="submit"
-              colorScheme="blue"
-              mx="3"
-            >
+            <Button disabled={!objArr.length} size="sm" type="submit" mx="3">
               Confirm
             </Button>
             <Button size="sm" variant="outline" onClick={() => onClose()}>

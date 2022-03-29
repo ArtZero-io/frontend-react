@@ -1,4 +1,4 @@
-import { Link, useColorModeValue } from "@chakra-ui/react";
+import { Link } from "@chakra-ui/react";
 import * as React from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 
@@ -14,9 +14,10 @@ const DesktopNavLink = ({ label, to, ...props }) => {
       borderBottom="2px"
       borderColor="transparent"
       transition="all 0.2s"
+      textTransform='uppercase'
       _hover={{
         borderColor: "currentcolor",
-        color: useColorModeValue("blue.600", "blue.200"),
+        color: "brand.blue"
       }}
     >
       {label}

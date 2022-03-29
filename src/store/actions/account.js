@@ -4,7 +4,7 @@ import { AccountActionTypes } from "../types/account.types";
 export function getProfile() {
   return async function (dispatch) {
     const loadingName = "getProfile";
-
+    console.log('profile_calls', profile_calls)
     dispatch({
       type: AccountActionTypes.ACCOUNT_LOADING,
       payload: loadingName,

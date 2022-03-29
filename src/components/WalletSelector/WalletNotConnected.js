@@ -40,28 +40,24 @@ function WalletNotConnected() {
 
   return (
     <>
-      <Box
-        color="blackAlpha.900"
-        height="100%"
-        mx="auto"
-        w={["", "28rem", "28rem"]}
-      >
+      <Box bg="transparent" height="100%" mx="auto" w={["", "28rem", "28rem"]}>
         <Flex align="center" justify="end" height="100%">
           <Menu>
             <MenuButton
               as={Button}
-              // height="16"
-              rounded="0"
-              colorScheme="blue"
+              height="16"
+              size="base"
               minW="10rem"
+              bg="brand.blue"
+              color="blackAlpha.900"
             >
               Connect Wallet
             </MenuButton>
-            <MenuList>
+            <MenuList bg={"blackAlpha.900"}>
               {SUPPORTED_WALLET_LIST.map(
                 ({ extensionName, title, installUrl, installed }) => (
                   <MenuItem
-                    key={extensionName}
+                    key={extensionName} 
                     isDisabled={!installed}
                     onClick={() => handleConnect(extensionName)}
                   >

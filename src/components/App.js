@@ -1,22 +1,23 @@
-import React from 'react'
+import React from "react";
+import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
-import { ChakraProvider, Grid } from '@chakra-ui/react'
-import { SubstrateContextProvider, useSubstrateState } from '../utils/substrate'
-import Router from '@components/Router'
+import {
+  SubstrateContextProvider,
+  useSubstrateState,
+} from "../utils/substrate";
+import Router from "@components/Router";
+import { store } from "@store/store";
 
-// import { ColorModeSwitcher } from '../components/ColorModeSwitcher/ColorModeSwitcher'
-import { Toaster } from 'react-hot-toast'
-import Layout from './Layout/Layout'
-
-import { BrowserRouter } from 'react-router-dom'
-import { Provider } from 'react-redux'
-import { store } from '@store/store'
-import theme from '../theme/theme'
+import { ChakraProvider, Grid } from "@chakra-ui/react";
+import theme from "../theme/theme";
+import "@fontsource/oswald";
 
 function Main() {
-  const { apiState, apiError } = useSubstrateState()
+  const { apiState, apiError } = useSubstrateState();
 
-  const message = errObj => (
+  const message = (errObj) => (
     <Grid centered columns={2} padded>
       <Grid.Column>
         <div
@@ -28,19 +29,16 @@ function Main() {
         />
       </Grid.Column>
     </Grid>
-  )
+  );
 
-  if (apiState === 'ERROR') return message(apiError)
+  if (apiState === "ERROR") return message(apiError);
 
   return (
     <ChakraProvider theme={theme}>
-      <Layout>
-        {/* <ColorModeSwitcher justifySelf="flex-end" /> */}
-        <Toaster position="top-right" reverseOrder={false} />
-        <Router />
-      </Layout>
+      <Toaster position="top-right" reverseOrder={false} />
+      <Router />
     </ChakraProvider>
-  )
+  );
 }
 
 export default function App() {
@@ -52,5 +50,5 @@ export default function App() {
         </BrowserRouter>
       </Provider>
     </SubstrateContextProvider>
-  )
+  );
 }
