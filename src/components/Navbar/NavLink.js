@@ -5,6 +5,7 @@ import { Link as ReactRouterLink } from "react-router-dom";
 const DesktopNavLink = ({ label, to, ...props }) => {
   return (
     <Link
+      size="sm" fontFamily='Evogria, sans-serif'
       as={ReactRouterLink}
       to={to}
       fontWeight="medium"
@@ -14,10 +15,10 @@ const DesktopNavLink = ({ label, to, ...props }) => {
       borderBottom="2px"
       borderColor="transparent"
       transition="all 0.2s"
-      textTransform='uppercase'
+      textTransform="uppercase"
       _hover={{
         borderColor: "currentcolor",
-        color: "brand.blue"
+        color: "brand.blue",
       }}
     >
       {label}

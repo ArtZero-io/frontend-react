@@ -1,7 +1,8 @@
-import { Box, Flex, Skeleton, Tag } from "@chakra-ui/react";
+import { Avatar, Flex, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useSubstrateState } from "../../utils/substrate/SubstrateContext";
+import AzeroIcon from "@theme/assets/icon/Azero.png";
 
 function WalletMenu() {
   const { api, currentAccount } = useSubstrateState();
@@ -27,15 +28,26 @@ function WalletMenu() {
   }, [api, currentAccount, activeAddress, accountBalance]);
 
   return currentAccount ? (
-    <Box height="100%" minW="30" w="32">
-      <Flex align="center" justify="end" height="100%" w="100%">
-        {!accountBalance && <Skeleton height="20px" />}
-        <Tag size="lg">{accountBalance} SZERO</Tag>
-      </Flex>
-    </Box>
-  ) : (
-    <>0</>
-  );
+    <Flex
+      bg="brand.grayDark"
+      color="white"
+      minW={24}
+      height="12"
+      px="4"
+      alignItems="center"
+      justifyContent="end"
+    >
+      <Text> {accountBalance}</Text>
+      <Avatar
+        src={AzeroIcon}
+        h={5}
+        w={5}
+        ml={2}
+        name="AzeroLogo"
+        bg="transparent"
+      />
+    </Flex>
+  ) : null;
 }
 
 export default WalletMenu;

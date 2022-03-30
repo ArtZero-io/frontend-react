@@ -42,26 +42,34 @@ function WalletNotConnected() {
     <>
       <Box bg="transparent" height="100%" mx="auto" w={["", "28rem", "28rem"]}>
         <Flex align="center" justify="end" height="100%">
-          <Menu>
+          <Menu autoSelect={false} placement='bottom-end'>
             <MenuButton
               as={Button}
-              height="16"
-              size="base"
+              height="14"
+              px="8"
+              size="md"
               minW="10rem"
               bg="brand.blue"
               color="blackAlpha.900"
             >
               Connect Wallet
             </MenuButton>
-            <MenuList bg={"blackAlpha.900"}>
+            <MenuList
+              bg={"brand.grayDark"}
+              borderRadius="0"
+              borderWidth={2}
+              borderColor="brand.blue"
+              p={3}
+            >
               {SUPPORTED_WALLET_LIST.map(
                 ({ extensionName, title, installUrl, installed }) => (
                   <MenuItem
-                    key={extensionName} 
+                    _hover={{ bg: "blackAlpha.900" }}
+                    key={extensionName}
                     isDisabled={!installed}
                     onClick={() => handleConnect(extensionName)}
                   >
-                    <Box minW="52">
+                    <Box minW="36">
                       <Flex justifyContent="start" align="center">
                         <Box boxSize="26px">
                           {extensionName === "subwallet-js" && (
@@ -74,7 +82,9 @@ function WalletNotConnected() {
                             <Image src={PolkadotjsLogo} alt={extensionName} />
                           )}
                         </Box>
-                        <Text mx="2">{title}</Text>
+                        <Text size='sm' ml="3" mr="2">
+                          {title}
+                        </Text>
 
                         {!installed && (
                           <Link href={installUrl} isExternal>

@@ -23,7 +23,7 @@ function Nav() {
               <VisuallyHidden>ArtZero.io</VisuallyHidden>
               <Image
                 alt={AzeroLogo}
-                h={6}
+                h={7}
                 w="auto"
                 maxH={64}
                 objectFit="cover"

@@ -19,6 +19,7 @@ const theme = extendTheme({
   },
   styles: {
     global: {
+      // "*": { border: "1px yellow dotted" },
       html: {
         minHeight: "100vh",
       },
@@ -48,6 +49,9 @@ const theme = extendTheme({
         px: "2rem",
         fontWeight: "400",
         color: "#ffffff",
+        _focus: {
+          boxShadow: "none",
+        },
       },
       sizes: {
         xl: {

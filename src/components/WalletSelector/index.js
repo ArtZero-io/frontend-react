@@ -73,7 +73,7 @@ function WalletSelector(props) {
     window.location.assign("/");
   }
   return (
-    <Box color="blackAlpha.900" height="100%" mx="auto" w="28rem">
+    <Box color="brand.blue" height="100%" mx="auto" w="28rem">
       <Flex
         align="center"
         justify="space-between"
@@ -81,31 +81,50 @@ function WalletSelector(props) {
         mx="2"
         flexDirection={{ md: "colum" }}
       >
-        <Menu>
+        <Menu autoSelect={false} placement="bottom-end" offset={[0,-1]} >
           <MenuButton
-            ringColor="transparent"
+            _hover={{ bg: "brand.grayDark" }}
+            _active={{ bg: "transparent" , borderBottom:0}}
+            bg="transparent"
+            borderRadius="0"
+            borderWidth={2}
+            borderColor="brand.blue"
+            fontFamily="Oswald"
+            color="brand.blue"
             ring={0}
             minW={72}
             mx="0"
-            h="8"
+            h="12"
             as={Button}
             rightIcon={<ChevronDownIcon />}
           >
             {currentAccount?.meta?.name} - {currentAccount?.address.slice(0, 6)}{" "}
             ... {currentAccount?.address.slice(-6)}
           </MenuButton>
-          <MenuList>
+          <MenuList minW={72}
+            borderRadius="0"
+            borderWidth={2}
+            borderColor="brand.blue"
+            bg="transparent"
+            borderTop='0'
+          >
             {keyringOptions.map(({ address, name }) => (
               <MenuItem
+                fontFamily="Oswald"
                 onClick={() => selectAccountHandler(address)}
                 key={address}
                 isDisabled={currentAccount?.address === address ? true : false}
               >
-                {name} - {address.slice(0, 6)} ... {address.slice(-6)}
+                {name} - {address.slice(0, 6)}...{address.slice(-6)}
               </MenuItem>
             ))}
             <Spacer />
-            <MenuItem color="red" onClick={() => logoutHandler()}>
+            <MenuItem
+              color="white"
+              textDecoration="underline"
+              fontFamily="Oswald"
+              onClick={() => logoutHandler()}
+            >
               Disconnect wallet.
             </MenuItem>
           </MenuList>
