@@ -12,6 +12,7 @@ import StakePage from '../pages/stake'
 import MarketplacePage from '../pages/marketplace'
 import CollectionsPage from '../pages/collections/collections'
 import DetailCollectionPage from '../pages/collections/detail'
+import CollectionPage from '../pages/collection/collection'
 
 const Router = () => {
   return (
@@ -32,6 +33,8 @@ const Router = () => {
           path={`${ROUTES.COLLECTIONS}/`}
           component={CollectionsPage}
         />
+        {/* /New UI */}
+        <Route path={`/collectionNew/:collectionAddress`} component={CollectionPage} />
 
 
         <Route exact path={ROUTES.NEW_COLLECTION} component={NewCollectionPage} />

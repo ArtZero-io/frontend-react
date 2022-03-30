@@ -13,12 +13,7 @@ import AzeroIcon from "@theme/assets/icon/Azero.png";
 export const CollectionCard = (props) => {
   const { avatar, name, desc, volume, backdrop } = props;
   return (
-    <Box
-      className="collection-card-hover"
-      _hover={{
-        bg: "brand.blue",
-      }}
-    >
+    <Box>
       <Flex
         m="0.5"
         direction="column"

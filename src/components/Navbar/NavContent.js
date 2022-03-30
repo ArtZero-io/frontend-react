@@ -16,7 +16,7 @@ import WalletSelector from "../WalletSelector/index";
 import * as ROUTES from "@constants/routes";
 
 const links = [
-  { label: "Home", href: "/" },
+  { label: "NewC", href: "/collections" },
   { label: "MP", href: ROUTES.MARKETPLACE },
   { label: "Mint", href: ROUTES.MINTING_EVENT },
   { label: "Staking", href: ROUTES.STAKE },
