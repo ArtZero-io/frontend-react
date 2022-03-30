@@ -73,7 +73,7 @@ function WalletSelector(props) {
     window.location.assign("/");
   }
   return (
-    <Box color="brand.blue" height="100%" mx="auto" w="28rem">
+    <Box color="brand.blue" height="100%" mx="auto" minW={96}>
       <Flex
         align="center"
         justify="space-between"
@@ -81,10 +81,10 @@ function WalletSelector(props) {
         mx="2"
         flexDirection={{ md: "colum" }}
       >
-        <Menu autoSelect={false} placement="bottom-end" offset={[0,-1]} >
+        <Menu autoSelect={false} placement="bottom-end" offset={[-0.5, -1]}>
           <MenuButton
             _hover={{ bg: "brand.grayDark" }}
-            _active={{ bg: "transparent" , borderBottom:0}}
+            _active={{ bg: "transparent", borderBottom: 0 }}
             bg="transparent"
             borderRadius="0"
             borderWidth={2}
@@ -93,7 +93,7 @@ function WalletSelector(props) {
             color="brand.blue"
             ring={0}
             minW={72}
-            mx="0"
+            mx="2"
             h="12"
             as={Button}
             rightIcon={<ChevronDownIcon />}
@@ -101,15 +101,17 @@ function WalletSelector(props) {
             {currentAccount?.meta?.name} - {currentAccount?.address.slice(0, 6)}{" "}
             ... {currentAccount?.address.slice(-6)}
           </MenuButton>
-          <MenuList minW={72}
+          <MenuList
+            minW={72}
             borderRadius="0"
             borderWidth={2}
             borderColor="brand.blue"
             bg="transparent"
-            borderTop='0'
+            borderTop="0" px={2}
           >
             {keyringOptions.map(({ address, name }) => (
               <MenuItem
+                _hover={{ bg: "brand.grayLight", color: "white" }}
                 fontFamily="Oswald"
                 onClick={() => selectAccountHandler(address)}
                 key={address}
@@ -120,6 +122,7 @@ function WalletSelector(props) {
             ))}
             <Spacer />
             <MenuItem
+              _hover={{ bg: "brand.grayLight", color: "brand.blue" }}
               color="white"
               textDecoration="underline"
               fontFamily="Oswald"

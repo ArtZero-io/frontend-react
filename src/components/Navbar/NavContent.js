@@ -17,13 +17,13 @@ import * as ROUTES from "@constants/routes";
 
 const links = [
   { label: "Home", href: "/" },
-  { label: "Marketplace", href: ROUTES.MARKETPLACE },
+  { label: "MP", href: ROUTES.MARKETPLACE },
   { label: "Mint", href: ROUTES.MINTING_EVENT },
   { label: "Staking", href: ROUTES.STAKE },
 
   { label: "Admin", href: ROUTES.ADMIN },
-  { label: "My Account", href: ROUTES.ACCOUNT },
-  { label: "My Collection", href: ROUTES.MY_COLLECTION },
+  { label: "Account", href: ROUTES.ACCOUNT },
+  { label: "Collection", href: ROUTES.MY_COLLECTION },
 ];
 
 const MobileNavContent = (props) => {
@@ -65,7 +65,7 @@ const MobileNavContent = (props) => {
 
 const DesktopNavContent = (props) => {
   return (
-    <HStack spacing="8" align="stretch" {...props}>
+    <HStack spacing="8" align="stretch" {...props} overflowX='hidden'>
       {links.map((link, index) => (
         <NavLink.Desktop key={index} label={link.label} to={link.href} />
       ))}
