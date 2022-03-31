@@ -1,6 +1,6 @@
 import {
+  Box,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Td,
@@ -12,45 +12,34 @@ import React from "react";
 
 function TabActivity() {
   return (
-    <TableContainer>
-      <Table variant="striped" colorScheme="black">
-        <TableCaption>Imperial to metric conversion factors</TableCaption>
-        <Thead>
-          <Tr>
-            <Th>To convert</Th>
-            <Th>into</Th>
-            <Th isNumeric>multiply by</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          <Tr>
-            <Td>inches</Td>
-            <Td>millimetres (mm)</Td>
-            <Td isNumeric>25.4</Td>
-          </Tr>
-          <Tr>
-            <Td>feet</Td>
-            <Td>centimetres (cm)</Td>
-            <Td isNumeric>30.48</Td>
-          </Tr>
-          <Tr>
-            <Td>yards</Td>
-            <Td>metres (m)</Td>
-            <Td isNumeric>0.91444</Td>
-          </Tr>
-          <Tr>
-            <Td>yards</Td>
-            <Td>metres (m)</Td>
-            <Td isNumeric>0.91444</Td>
-          </Tr>
-          <Tr>
-            <Td>yards</Td>
-            <Td>metres (m)</Td>
-            <Td isNumeric>0.91444</Td>
-          </Tr>
-        </Tbody>
-      </Table>
-    </TableContainer>
+    <Box as="section" maxW="container.3xl" px={5} position="relative">
+      <TableContainer>
+        <Table>
+          <Thead>
+            <Tr>
+              <Th>NFT</Th>
+              <Th>Type</Th>
+              <Th isNumeric>Price</Th>
+              <Th>From</Th>
+              <Th>To</Th>
+              <Th>Time</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {[...Array(15)].map((i) => (
+              <Tr key={i}>
+                <Td>Degen Ape #171923</Td>
+                <Td>Sale</Td>
+                <Td isNumeric>25.41</Td>
+                <Td>FjSn...WXGd</Td>
+                <Td>FjSn...WXGd</Td>
+                <Td>2 hours ago</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 }
 

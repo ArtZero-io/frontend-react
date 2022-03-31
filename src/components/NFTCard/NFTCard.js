@@ -13,14 +13,7 @@ import AzeroIcon from "@theme/assets/icon/Azero.png";
 export const NFTCard = (props) => {
   const { name, askPrice, bidPrice, img } = props;
   return (
-    <Box
-      // style={{
-      //   position: "absolute",
-      //   transitionProperty: "all",
-      //   transitionTimingFunction: "cubic-bezier(.4,0,.2,1)",
-      //   transitionDuration: "0.5s",
-      // }}
-    >
+    <Box>
       <Flex
         m="0.5"
         direction="column"

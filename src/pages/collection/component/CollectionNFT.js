@@ -13,7 +13,7 @@ function CollectionNFT() {
       >
         {NFT.map((item) => {
           return (
-            <GridItem w="100%" h="100%" _hover={{ bg: "brand.blue" }}>
+            <GridItem id='abc' w="100%" h="100%" _hover={{ bg: "brand.blue" }}>
               <NFTCard {...item} />
             </GridItem>
           );
