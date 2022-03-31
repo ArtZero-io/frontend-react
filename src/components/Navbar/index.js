@@ -11,7 +11,7 @@ const Navbar = () => (
   <Box minHeight="65px" bg="blackAlpha.900">
     <Box
       as="header"
-      height="16"
+      height={16}
       bg={useColorModeValue("#00a86b", "gray.800")}
       position="relative"
     >

@@ -18,134 +18,128 @@ const overlay =
 
 function CollectionHero({ avatar, name, description }) {
   return (
-    <>
+    <Box
+      // maxH={96}
+      as="section"
+      maxW="container.3xl"
+      px={5}
+      position="relative"
+      bg={overlay}
+    >
       <Box
-        as="section"
-        maxW="container.3xl"
-        px={5}
-        position="relative"
-        bg={overlay}
+        mx="auto"
+        px={{ base: "6", md: "8" }}
+        pt={{ base: "12", md: "48" }}
+        pb={{ base: "12", md: "20" }}
       >
-        <Box
-          mx="auto"
-          px={{ base: "6", md: "8" }}
-          pt={{ base: "12", md: "52" }}
-          pb={{ base: "12", md: "20" }}
-        >
-          <VStack>
-            <Center
+        <VStack>
+          <Center
+            rounded="full"
+            w={40}
+            h={40}
+            mt={-8}
+            p="-px"
+            border="4px solid"
+            borderColor="whiteAlpha.900"
+          >
+            <Image
+              alt={avatar}
+              w="full"
+              h="full"
               rounded="full"
-              w={40}
-              h={40}
-              mt={-8}
-              p="-px"
-              border="4px solid"
-              borderColor="whiteAlpha.900"
-            >
-              <Image
-                alt={avatar}
-                w="full"
-                h="full"
-                rounded="full"
-                objectFit="cover"
-                src={avatar}
-                fallbackSrc="https://via.placeholder.com/64"
-              />
-            </Center>
+              objectFit="cover"
+              src={avatar}
+              fallbackSrc="https://via.placeholder.com/64"
+            />
+          </Center>
 
-            <HStack w="full" justifyContent="space-around" py={9}>
-              <VStack textAlign="center">
-                <Button variant="transparent">add global offer</Button>
-                <Text textDecoration="underine">What is a global offer?</Text>
-              </VStack>
+          <HStack w="full" justifyContent="space-around" py={9}>
+            <VStack textAlign="center">
+              <Button variant="transparent">add global offer</Button>
+              <Text textDecoration="underine">What is a global offer?</Text>
+            </VStack>
 
-              <VStack textAlign="center" justifyContent="space-between">
-                <Heading
-                  size="2xl"
-                  letterSpacing="wider"
-                  fontWeight="normal"
-                  mb="9"
-                >
-                  {name}
-                </Heading>
+            <VStack textAlign="center" justifyContent="space-between">
+              <Heading size="2xl" letterSpacing="wider" fontWeight="normal">
+                {name}
+              </Heading>
 
-                <Text maxW="md">{description}</Text>
-              </VStack>
+              <Text maxW="md">{description}</Text>
+            </VStack>
 
-              <HStack textAlign="center">
-                <Button variant="transparent" borderRadius="full" p="0">
-                  <FaInstagram size="27" />{" "}
-                </Button>
-                <Button variant="transparent" borderRadius="full" p="0">
-                  <FaTwitter size="27" />{" "}
-                </Button>
-                <Button variant="transparent" borderRadius="full" p="0">
-                  <FaDiscord size="27" />{" "}
-                </Button>
-              </HStack>
+            <HStack textAlign="center">
+              <Button variant="transparent" borderRadius="full" p="0">
+                <FaInstagram size="27" />{" "}
+              </Button>
+              <Button variant="transparent" borderRadius="full" p="0">
+                <FaTwitter size="27" />{" "}
+              </Button>
+              <Button variant="transparent" borderRadius="full" p="0">
+                <FaDiscord size="27" />{" "}
+              </Button>
             </HStack>
+          </HStack>
 
-            <HStack
-              color="brand.blue"
-              minW="container.md"
-              borderWidth={1}
-              borderColor="brand.grayDark"
-              px="16"
-              py="5"
-              justifyContent="space-between"
-            >
-              <VStack textAlign="center">
-                <Text fontFamily="DS-Digital" fontSize="6xl">
-                  100
+          <HStack
+            color="brand.blue"
+            minW="container.md"
+            borderWidth={1}
+            borderColor="brand.grayDark"
+            px="16"
+            py="5"
+            justifyContent="space-between"
+          >
+            <VStack textAlign="center">
+              <Text fontFamily="DS-Digital" fontSize="6xl" lineHeight="none">
+                100
+              </Text>
+              <Text>Items</Text>
+            </VStack>
+
+            <VStack textAlign="center">
+              <Text fontFamily="DS-Digital" fontSize="6xl" lineHeight="none">
+                234
+              </Text>
+              <Text>Listed</Text>
+            </VStack>
+
+            <VStack textAlign="center">
+              <Flex alignItems="center" justifyContent="center">
+                <Text fontFamily="DS-Digital" fontSize="6xl" lineHeight="none">
+                  18.11
                 </Text>
-                <Text>Items</Text>
-              </VStack>
+                <Avatar
+                  src={AzeroIcon}
+                  h={7}
+                  w={7}
+                  ml={3}
+                  name="AzeroLogo"
+                  bg="transparent"
+                />
+              </Flex>
+              <Text>Floor price</Text>
+            </VStack>
 
-              <VStack textAlign="center">
-                <Text fontFamily="DS-Digital" fontSize="6xl">
-                  234
+            <VStack textAlign="center">
+              <Flex alignItems="center" justifyContent="center">
+                <Text fontFamily="DS-Digital" fontSize="6xl" lineHeight="none">
+                  1.11 M
                 </Text>
-                <Text>Listed</Text>
-              </VStack>
-
-              <VStack textAlign="center">
-                <Flex alignItems="center" justifyContent="center">
-                  <Text fontFamily="DS-Digital" fontSize="6xl">
-                    18.11
-                  </Text>
-                  <Avatar
-                    src={AzeroIcon}
-                    h={7}
-                    w={7}
-                    ml={3}
-                    name="AzeroLogo"
-                    bg="transparent"
-                  />
-                </Flex>
-                <Text>Floor price</Text>
-              </VStack>
-
-              <VStack textAlign="center">
-                <Flex alignItems="center" justifyContent="center">
-                  <Text fontFamily="DS-Digital" fontSize="6xl">
-                    1.11 M
-                  </Text>
-                  <Avatar
-                    src={AzeroIcon}
-                    h={7}
-                    w={7}
-                    ml={3}
-                    name="AzeroLogo"
-                    bg="transparent"
-                  />
-                </Flex>
-                <Text>Volume traded</Text>
-              </VStack>
-            </HStack>
-          </VStack>
-        </Box>
+                <Avatar
+                  src={AzeroIcon}
+                  h={7}
+                  w={7}
+                  ml={3}
+                  name="AzeroLogo"
+                  bg="transparent"
+                />
+              </Flex>
+              <Text mt={0}>Volume traded</Text>
+            </VStack>
+          </HStack>
+        </VStack>
       </Box>
-    </>
+    </Box>
   );
 }
 

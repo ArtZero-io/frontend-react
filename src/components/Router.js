@@ -9,7 +9,7 @@ import NewCollectionPage from '../pages/collections/new'
 import MintPage from '../pages/launchpad'
 import AdminPage from '../pages/admin'
 import StakePage from '../pages/stake'
-import MarketplacePage from '../pages/marketplace'
+// import MarketplacePage from '../pages/marketplace'
 import CollectionsPage from '../pages/collections/collections'
 import DetailCollectionPage from '../pages/collections/detail'
 import CollectionPage from '../pages/collection/collection'
@@ -19,7 +19,8 @@ const Router = () => {
     <>
       <Switch>
         <Route exact path={ROUTES.HOME} component={HomePage} />
-        <Route exact path={ROUTES.MARKETPLACE} component={MarketplacePage} />
+        <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
+        {/* <Route exact path={ROUTES.MARKETPLACE} component={MarketplacePage} /> */}
         <Route exact path={ROUTES.ADMIN} component={AdminPage} />
         <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />
         <Route exact path={ROUTES.STAKE} component={StakePage} />

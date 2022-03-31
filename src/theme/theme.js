@@ -30,6 +30,12 @@ const theme = extendTheme({
         padding: 0,
         backgroundColor: "#000",
         color: "#FFF",
+        fontWeight: 400,
+        "-ms-overflow-style": "none",
+        "scrollbar-width": "none",
+      },
+      "body::-webkit-scrollbar": {
+        display: "none",
       },
       "#root": {
         height: "100%",

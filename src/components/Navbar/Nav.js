@@ -2,11 +2,12 @@ import React from "react";
 import { Box, Flex, Image, VisuallyHidden } from "@chakra-ui/react";
 import { NavContent } from "./NavContent";
 import AzeroLogo from "../../theme/assets/logo/ArtZeroFull_Logo.png";
+
 function Nav() {
   return (
     <Box minHeight={28}>
-      <Box as="header" height="16" bg="transparent" position="relative" pt={14}>
-        <Box height="100%" mx="auto" px={{ "xl": "1","2xl": "24" }}>
+      <Box as="header" height="16" bg="transparent" position="relative" pt={10}>
+        <Box height="100%" mx="auto" px={{ xl: "1", "2xl": "24" }}>
           <Flex
             as="nav"
             aria-label="Site navigation"

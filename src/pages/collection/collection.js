@@ -15,7 +15,7 @@ function CollectionPage() {
   return (
     <Layout backdrop={backdrop}>
       <CollectionHero {...collection} />
-      <CollectionMain />
+      <CollectionMain {...collection}/>
      </Layout>
   );
 }
