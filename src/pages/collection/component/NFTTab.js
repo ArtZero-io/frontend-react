@@ -1,14 +1,27 @@
 import React from "react";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import NFTTabCollectible from "./NFTTabCollectible";
-import NFTTabOffers from "./NFTTabOffers";
+import NFTTabActivity from "./NFTTabActivity";
 
-function NFTTab() {
+function NFTTab({ address }) {
+  const tabData = [
+    {
+      label: "Collectible",
+      content: <NFTTabCollectible address={address} />,
+    },
+    {
+      label: "Activity",
+      content: <NFTTabActivity address={address} />,
+    },
+  ];
+
   return (
     <Tabs isLazy align="left">
       <TabList>
         {tabData.map((tab, index) => (
-          <Tab key={index} fontSize='md' fontFamily='Evogria Italic'>{tab.label}</Tab>
+          <Tab key={index} fontSize="md" fontFamily="Evogria Italic">
+            {tab.label}
+          </Tab>
         ))}
       </TabList>
 
@@ -24,14 +37,3 @@ function NFTTab() {
 }
 
 export default NFTTab;
-
-const tabData = [
-  {
-    label: "Collectible",
-    content: <NFTTabCollectible />,
-  },
-  {
-    label: "Offers",
-    content: <NFTTabOffers />,
-  },
-];

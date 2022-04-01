@@ -29,7 +29,7 @@ function CollectionHero({ avatar, name, description }) {
       <Box
         mx="auto"
         px={{ base: "6", md: "8" }}
-        pt={{ base: "12", md: "48" }}
+        pt={{ base: "12", md: "6" }}
         pb={{ base: "12", md: "20" }}
       >
         <VStack>

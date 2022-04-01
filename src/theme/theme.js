@@ -70,15 +70,17 @@ const theme = extendTheme({
         // },
       },
       variants: {
-        // transparent: {
-        // boxShadow: "0 0 2px 2px #efdfde",
-        // },
         outline: (props) => ({
           border: "2px solid #222222",
           bg: "transparent",
         }),
         icon: (props) => ({
           padding: 0,
+        }),
+        "buy-sell": (props) => ({
+          bg: "brand.blue",
+          color: "black",
+          height: "2.5rem",
         }),
       },
       defaultProps: {

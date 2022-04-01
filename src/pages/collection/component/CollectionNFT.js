@@ -1,20 +1,33 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Grid, GridItem, useDisclosure } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { NFTCard } from "../../../components/NFTCard/NFTCard";
-// import NFTModal from "./NFTModal";
+import { NFTCard } from "@components/NFTCard/NFTCard";
+import NFTModal from "./NFTModal";
 
 function CollectionNFT() {
   const [NFT] = useState(NFTDataList);
+  const [address, setAddress] = useState("default");
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <div>
+      <NFTModal address={address} isOpen={isOpen} onClose={onClose} />
+
       <Grid
         templateColumns="repeat(auto-fill, minmax(min(100%, 250px), 1fr))"
         gap={6}
       >
         {NFT.map((item) => {
           return (
-            <GridItem id="abc" w="100%" h="100%" _hover={{ bg: "brand.blue" }}>
+            <GridItem
+              w="100%"
+              h="100%"
+              cursor="pointer"
+              _hover={{ bg: "brand.blue" }}
+              onClick={() => {
+                setAddress("abc");
+                onOpen();
+              }}
+            >
               <NFTCard {...item} />
             </GridItem>
           );
