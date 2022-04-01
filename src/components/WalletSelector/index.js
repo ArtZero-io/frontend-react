@@ -98,8 +98,13 @@ function WalletSelector(props) {
             as={Button}
             rightIcon={<ChevronDownIcon />}
           >
-            {currentAccount?.meta?.name} - {currentAccount?.address.slice(0, 6)}{" "}
-            ... {currentAccount?.address.slice(-6)}
+            <Flex>
+              <Text maxWidth={20} isTruncated>
+                {currentAccount?.meta?.name}
+              </Text>{" "}
+              - {currentAccount?.address.slice(0, 6)} ...{" "}
+              {currentAccount?.address.slice(-6)}
+            </Flex>
           </MenuButton>
           <MenuList
             minW={72}
@@ -107,7 +112,8 @@ function WalletSelector(props) {
             borderWidth={2}
             borderColor="brand.blue"
             bg="transparent"
-            borderTop="0" px={2}
+            borderTop="0"
+            px={2}
           >
             {keyringOptions.map(({ address, name }) => (
               <MenuItem
@@ -117,7 +123,13 @@ function WalletSelector(props) {
                 key={address}
                 isDisabled={currentAccount?.address === address ? true : false}
               >
-                {name} - {address.slice(0, 6)}...{address.slice(-6)}
+                <Flex>
+                  <Text maxWidth={20} isTruncated>
+                    {currentAccount?.meta?.name}
+                  </Text>{" "}
+                  - {currentAccount?.address.slice(0, 6)} ...{" "}
+                  {currentAccount?.address.slice(-6)}
+                </Flex>
               </MenuItem>
             ))}
             <Spacer />

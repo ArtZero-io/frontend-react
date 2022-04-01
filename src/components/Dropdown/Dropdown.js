@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 
-function Dropdown({ options, defaultItem }) {
+function Dropdown({ options = [], defaultItem = "" }) {
   const [selectedItem, setSelectedItem] = useState(defaultItem);
 
   return (

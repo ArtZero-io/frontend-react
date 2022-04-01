@@ -19,6 +19,7 @@ export const MINTING_EVENT = '/mint'
 export const ADMIN = '/admin'
 export const MARKETPLACE = '/marketplace'
 export const STAKE = '/staking'
+export const NFT = '/nft'
 
 //EXTERNAL LINKS
 export const LANDING_PAGE = 'http://artzero.io'
