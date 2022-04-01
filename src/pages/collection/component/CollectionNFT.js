@@ -1,6 +1,7 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { NFTCard } from "../../../components/NFTCard/NFTCard";
+// import NFTModal from "./NFTModal";
 
 function CollectionNFT() {
   const [NFT] = useState(NFTDataList);
@@ -13,7 +14,7 @@ function CollectionNFT() {
       >
         {NFT.map((item) => {
           return (
-            <GridItem id='abc' w="100%" h="100%" _hover={{ bg: "brand.blue" }}>
+            <GridItem id="abc" w="100%" h="100%" _hover={{ bg: "brand.blue" }}>
               <NFTCard {...item} />
             </GridItem>
           );
@@ -24,6 +25,7 @@ function CollectionNFT() {
 }
 
 export default CollectionNFT;
+
 const NFTDataList = [
   {
     id: "18",

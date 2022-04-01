@@ -2,73 +2,50 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
-  Flex,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Spacer,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 
-function Dropdown() {
-  const [selectedItem, setSelectedItem] = useState("Oldest");
-
-  const options = ["Oldest", "Price: Low to High", "Price: High to Low"];
+function Dropdown({ options, defaultItem }) {
+  const [selectedItem, setSelectedItem] = useState(defaultItem);
 
   return (
-    <Box color="brand.blue" height="100%" mx="auto" minW={48} >
-      <Flex
-        align="center"
-        justify="space-between"
-        height="100%"
-        mx="2"
-        flexDirection={{ md: "colum" }}
-      >
-        <Menu autoSelect={false} placement="bottom-end" offset={[-0.5, -1]}>
-          <MenuButton
-            _hover={{ bg: "brand.grayDark" }}
-            _active={{ bg: "transparent", borderBottom: 0 }}
-            bg="transparent"
-            borderRadius="0"
-            borderWidth={2}
-            borderColor="brand.blue"
-            fontFamily="Oswald"
-            color="brand.blue"
-            ring={0}
-            minW={72}
-            mx="2"
-                        h={14}
-
-            as={Button}
-            rightIcon={<ChevronDownIcon />}
-          >
-            {selectedItem}
-          </MenuButton>
-          <MenuList
-            minW={72}
-            borderRadius="0"
-            borderWidth={2}
-            borderColor="brand.blue"
-            bg="transparent"
-            borderTop="0"
-            px={2}
-          >
-            {options.map((option, idx) => (
-              <MenuItem
-                _hover={{ bg: "brand.grayLight", color: "white" }}
-                fontFamily="Oswald"
-                onClick={() => setSelectedItem(option)}
-                key={idx}
-                isDisabled={option === selectedItem ? true : false}
-              >
-                {option}
-              </MenuItem>
-            ))}
-          </MenuList>
-        </Menu>
-        <Spacer />
-      </Flex>
+    <Box color="brand.blue" height="100%">
+      <Menu autoSelect={false} placement="bottom-end">
+        <MenuButton
+          _hover={{ bg: "brand.grayLight" }}
+          _active={{ bg: "brand.grayLight" }}
+          fontFamily="Oswald"
+          ring={0}
+          minW={{ xl: "max", "2xl": "3xs" }}
+          textAlign="left"
+          px={4}
+          as={Button}
+          rightIcon={<ChevronDownIcon />}
+        >
+          {selectedItem}
+        </MenuButton>
+        <MenuList
+          minW={{ xl: "max", "2xl": "3xs" }}
+          bg="brand.grayLight"
+          borderRadius="0"
+        >
+          {options.map((item, idx) => (
+            <MenuItem
+              _hover={{ bg: "brand.grayLight", color: "white" }}
+              fontFamily="Oswald"
+              onClick={() => setSelectedItem(item)}
+              key={idx}
+              isDisabled={item === selectedItem ? true : false}
+            >
+              {item}
+            </MenuItem>
+          ))}
+        </MenuList>
+      </Menu>
     </Box>
   );
 }

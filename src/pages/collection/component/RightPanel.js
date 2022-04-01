@@ -1,60 +1,51 @@
-import { Box, Button, Flex, Input, InputGroup, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Square, Input, Text } from "@chakra-ui/react";
 import React from "react";
 import CollectionNFT from "./CollectionNFT";
-import { IoMdRefresh } from "react-icons/io";
 import Dropdown from "../../../components/Dropdown/Dropdown";
 import { RiLayoutGridLine } from "react-icons/ri";
 import { BsGrid3X3 } from "react-icons/bs";
-// import { GrGrid } from "react-icons/gr";
+import { RepeatIcon } from "@chakra-ui/icons";
+ import NFTModal from "./NFTModal";
+
 function RightPanel() {
   return (
     <Box w="full" textAlign="left">
-      <Flex>
-        <Button variant="transparent" mx={2} h={14}>
-          <IoMdRefresh />
+      <Flex w="full">
+        <Button variant="icon">
+          <Square size="3.125rem">
+            <RepeatIcon />
+          </Square>
         </Button>
-        <Button variant="transparent" h={14}>
-          Show unlisted
+
+        <Button variant="outline">Show unlisted</Button>
+
+        <Input placeholder="Search items, collections, and accounts" />
+
+        <Dropdown options={options} defaultItem={options[0]} />
+
+        <Button variant="icon">
+          <Square size="3.125rem">
+            <RiLayoutGridLine />
+          </Square>
         </Button>
-        <InputGroup
-          mx="auto"
-          maxW="container.md"
-          w="full"
-          bg="brand.grayDark"
-          h={14}
-          // py={1}
-          borderRadius="0"
-          color="white"
-        >
-          <Input
-            variant="unstyled"
-            my={1}
-            pl={5}
-            bg="brand.grayDark"
-            placeholder="Search items, collections, and accounts"
-            _placeholder={{
-              fontSize: "lg",
-              color: "white",
-            }}
-          />
-        </InputGroup>
-        <Dropdown />
-        <Button
-          variant="transparent"
-          _hover={{ bg: "brand.grayDark" }}
-          mx={2}
-          h={14}
-        >
-          <RiLayoutGridLine h={14} w={14} />
-        </Button>
-        <Button variant="transparent" _hover={{ bg: "brand.grayDark" }} h={14}>
-          <BsGrid3X3 h={14} w={14} />
+
+        <Button variant="icon">
+          <Square size="3.125rem">
+            <BsGrid3X3 />
+          </Square>
         </Button>
       </Flex>
-      <Text p={4}>123 items</Text>
+
+      <Text px={2} py={4}>
+        123 items
+      </Text>
+      <NFTModal/>
+
       <CollectionNFT />
     </Box>
   );
 }
 
 export default RightPanel;
+
+const options = ["Price: Oldest", "Price: Low to High", "Price: High to Low"];

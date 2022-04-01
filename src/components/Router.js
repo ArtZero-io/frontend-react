@@ -2,7 +2,7 @@ import { Switch, Route } from 'react-router-dom'
 import * as ROUTES from '@constants/routes'
 
 import HomePage from '@pages/home'
-import AccountPage from '../pages/account/index'
+import AccountPage from '../pages/account/account'
 // import CollectionPage from '../pages/collections'
 import MyCollectionPage from '../pages/collections/index'
 import NewCollectionPage from '../pages/collections/new'

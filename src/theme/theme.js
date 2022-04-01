@@ -1,6 +1,7 @@
 import { extendTheme } from "@chakra-ui/react";
 
 const theme = extendTheme({
+  config: { initialColorMode: "dark", useSystemColorMode: false },
   fonts: {
     heading: `Evogria Italic, sans-serif`,
     body: `Oswald, sans-serif`,
@@ -31,8 +32,9 @@ const theme = extendTheme({
         backgroundColor: "#000",
         color: "#FFF",
         fontWeight: 400,
+        fontSize: "16px",
         "-msOverflowStyle": "none",
-        "scrollbarWidth": "none",
+        scrollbarWidth: "none",
       },
       "body::-webkit-scrollbar": {
         display: "none",
@@ -45,37 +47,73 @@ const theme = extendTheme({
   components: {
     Button: {
       baseStyle: {
-        textTransform: "uppercase",
         borderRadius: 0,
-        bg: "transparent",
-        border: "2px solid #343333",
-
-        h: "3.125rem",
-        fontSize: "sm",
+        bg: "#222222",
+        height: "3.125rem",
         px: "2rem",
-        fontWeight: "400",
+        mx: "0.25rem",
+        textTransform: "uppercase",
+        fontSize: "sm",
+        fontWeight: "normal",
         color: "#ffffff",
         _focus: {
           boxShadow: "none",
         },
       },
       sizes: {
-        xl: {
-          // h: "3.125rem",
-          // fontSize: "sm",
-          // px: "2rem",
-          // fontWeight: "400",
-          // color: "#ffffff",
+        // xl: {
+        // h: "3.125rem",
+        // fontSize: "sm",
+        // px: "2rem",
+        // fontWeight: "400",
+        // color: "#ffffff",
+        // },
+      },
+      variants: {
+        // transparent: {
+        // boxShadow: "0 0 2px 2px #efdfde",
+        // },
+        outline: (props) => ({
+          border: "2px solid #222222",
+          bg: "transparent",
+        }),
+        icon: (props) => ({
+          padding: 0,
+        }),
+      },
+      defaultProps: {
+        size: "5xl",
+        variant: "",
+      },
+    },
+    Input: {
+      baseStyle: {
+        field: {
+          px: "2rem",
+          h: "3.125rem",
+          bg: "#222222",
+          borderRadius: "0px",
+          mx: "0.25rem",
+          _placeholder: {
+            fontSize: "lg",
+            color: "brand.darkLight",
+          },
+        },
+      },
+      sizes: {
+        brand: {
+          fontSize: "lg",
         },
       },
       variants: {
-        transparent: {
-          // boxShadow: "0 0 2px 2px #efdfde",
-        },
-        //  override existing variants
-        solid: (props) => ({
-          bg: props.colorMode === "dark" ? "red.300" : "red.500",
-        }),
+        // filled: (props) => ({
+        //   bg: "#222222",
+        //   borderRadius: "0px",
+        // }),
+      },
+      defaultProps: {
+        size: "brand",
+        variant: null,
       },
     },
   },

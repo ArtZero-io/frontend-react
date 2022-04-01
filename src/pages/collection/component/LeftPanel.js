@@ -4,6 +4,7 @@ import {
   Collapse,
   Flex,
   Spacer,
+  Square,
   Text,
   // Drawer,
   // DrawerBody,
@@ -28,8 +29,10 @@ function LeftPanel() {
     <Box textAlign="left" px={2}>
       <Flex>
         <Spacer />
-        <Button variant="transparent" onClick={onToggle} h={14}>
-          <BiLeftArrowAlt />
+        <Button variant="icon" onClick={onToggle}>
+          <Square size="3.125rem">
+            <BiLeftArrowAlt />
+          </Square>
         </Button>
       </Flex>
       <Collapse textAlign="left" in={isOpen} animateOpacity>
@@ -40,8 +43,7 @@ function LeftPanel() {
           variant="transparent"
           fontFamily="Oswald"
           minW={80}
-          h={14}
-        >
+         >
           Price filter
         </Button>
 
@@ -53,13 +55,13 @@ function LeftPanel() {
           borderWidth={1}
           borderColor="brand.blue"
           shadow="md"
-          h={14}
+        
         >
           {`0 AZERO -> 999 AZERO`}
         </Box>
         <Text h={8}>Attribute</Text>
         <VStack>
-          <Button variant="transparent" fontFamily="Oswald" minW={80} h={14}>
+          <Button variant="transparent" fontFamily="Oswald" minW={80}>
             <Flex w="full">
               Price filter
               <Spacer />
@@ -67,7 +69,7 @@ function LeftPanel() {
               <BiRightArrowAlt />
             </Flex>
           </Button>
-          <Button variant="transparent" fontFamily="Oswald" minW={80} h={14}>
+          <Button variant="transparent" fontFamily="Oswald" minW={80}>
             <Flex w="full">
               Price filter
               <Spacer />
@@ -75,7 +77,7 @@ function LeftPanel() {
               <BiRightArrowAlt />
             </Flex>
           </Button>
-          <Button variant="transparent" fontFamily="Oswald" minW={80} h={14}>
+          <Button variant="transparent" fontFamily="Oswald" minW={80}>
             <Flex w="full">
               Price filter
               <Spacer />
@@ -83,7 +85,7 @@ function LeftPanel() {
               <BiRightArrowAlt />
             </Flex>
           </Button>
-          <Button variant="transparent" fontFamily="Oswald" minW={80} h={14}>
+          <Button variant="transparent" fontFamily="Oswald" minW={80}>
             <Flex w="full">
               Price filter
               <Spacer />
