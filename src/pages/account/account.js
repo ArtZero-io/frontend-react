@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Center,
+  Circle,
   Heading,
   HStack,
   Image,
@@ -11,6 +12,8 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { FaInstagram, FaTwitter, FaDiscord } from "react-icons/fa";
+import { EditIcon } from "@chakra-ui/icons";
+import AccountTab from "./components/AccountTab";
 
 function Account() {
   const [profile] = useState(accountData);
@@ -19,13 +22,7 @@ function Account() {
 
   return (
     <Layout>
-      <Box
-        // maxH={96}
-        as="section"
-        maxW="container.3xl"
-        px={5}
-        position="relative"
-      >
+      <Box as="section" maxW="container.3xl" px={5} position="relative">
         {/* //Account Hero */}
         <Box
           mx="auto"
@@ -36,9 +33,8 @@ function Account() {
           <VStack>
             <Center
               rounded="full"
-              w={24}
-              h={24}
-              mt={-8}
+              w={32}
+              h={32}
               p="-px"
               border="4px solid"
               borderColor="whiteAlpha.900"
@@ -54,35 +50,41 @@ function Account() {
               />
             </Center>
 
-            <HStack w="full" justifyContent="space-around" py={9}>
-              <VStack textAlign="center">
-                <Button variant="transparent">add global offer</Button>
-                <Text textDecoration="underine">What is a global offer?</Text>
-              </VStack>
-
+            <HStack w="full" justifyContent="space-around" py={4}>
               <VStack textAlign="center" justifyContent="space-between">
                 <Heading size="2xl" letterSpacing="wider" fontWeight="normal">
                   {name}
+                  <Button variant="icon" bg="transparent">
+                    <Circle size="3.125rem">
+                      <EditIcon size="3rem" />
+                    </Circle>
+                  </Button>
                 </Heading>
 
                 <Text maxW="md">{description}</Text>
+                <HStack textAlign="center">
+                  <Button variant="icon" borderRadius="full">
+                    <Circle size="3.125rem">
+                      <FaInstagram size="1.5rem" />
+                    </Circle>
+                  </Button>
+                  <Button variant="icon" borderRadius="full">
+                    <Circle size="3.125rem">
+                      <FaTwitter size="1.5rem" />
+                    </Circle>
+                  </Button>
+                  <Button variant="icon" borderRadius="full">
+                    <Circle size="3.125rem">
+                      <FaDiscord size="1.5rem" />
+                    </Circle>
+                  </Button>
+                </HStack>
               </VStack>
-
-              <HStack textAlign="center">
-                <Button variant="transparent" borderRadius="full" p="0">
-                  <FaInstagram size="27" />{" "}
-                </Button>
-                <Button variant="transparent" borderRadius="full" p="0">
-                  <FaTwitter size="27" />{" "}
-                </Button>
-                <Button variant="transparent" borderRadius="full" p="0">
-                  <FaDiscord size="27" />{" "}
-                </Button>
-              </HStack>
             </HStack>
           </VStack>
         </Box>
       </Box>
+      <AccountTab/>
     </Layout>
   );
 }

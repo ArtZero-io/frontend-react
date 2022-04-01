@@ -7,7 +7,6 @@ import {
   InputGroup,
   InputRightElement,
   Link,
-  Select,
   SimpleGrid,
 } from "@chakra-ui/react";
 import Layout from "@components/Layout/Layout";
@@ -15,6 +14,7 @@ import Layout from "@components/Layout/Layout";
 import { CollectionCard } from "../../components/CollectionCard/CollectionCard";
 import { FiSearch } from "react-icons/fi";
 import { Link as ReactRouterLink } from "react-router-dom";
+import Dropdown from "../../components/Dropdown/Dropdown";
 
 const CollectionsPage = () => {
   return (
@@ -77,43 +77,11 @@ const CollectionsPage = () => {
               display="flex"
               justifyContent="end"
             >
-              <Select
+              <Dropdown
                 maxW="3xs"
-                bg="brand.grayDark"
-                borderRadius="0"
-                border="none"
-                _option={{
-                  borderRadius: "0",
-                }}
-              >
-                <option
-                  style={{
-                    background: "#222",
-                    borderRadius: "0",
-                    margin: "4px",
-                  }}
-                >
-                  Trending
-                </option>
-                <option
-                  style={{
-                    background: "#222",
-                    borderRadius: "0",
-                    margin: "4px",
-                  }}
-                >
-                  Hottest
-                </option>
-                <option
-                  style={{
-                    background: "#222",
-                    borderRadius: "0",
-                    margin: "4px",
-                  }}
-                >
-                  New Release
-                </option>
-              </Select>
+                options={["Trending", "Hottest", "New Release"]}
+                defaultItem={"Trending"}
+              />
             </FormControl>
           </Flex>
 

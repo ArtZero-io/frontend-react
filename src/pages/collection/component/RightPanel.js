@@ -15,7 +15,7 @@ function RightPanel() {
           <Square size="3.125rem">
             <RepeatIcon />
           </Square>
-        </Button>
+        </Button> 
 
         <Button variant="outline">Show unlisted</Button>
 

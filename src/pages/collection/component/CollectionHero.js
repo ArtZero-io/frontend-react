@@ -10,6 +10,8 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { Circle } from "@chakra-ui/react";
+
 import React from "react";
 import { FaInstagram, FaTwitter, FaDiscord } from "react-icons/fa";
 import AzeroIcon from "@theme/assets/icon/Azero.png";
@@ -68,14 +70,20 @@ function CollectionHero({ avatar, name, description }) {
             </VStack>
 
             <HStack textAlign="center">
-              <Button variant="transparent" borderRadius="full" p="0">
-                <FaInstagram size="27" />{" "}
+              <Button variant="icon" borderRadius="full">
+                <Circle size="3.125rem">
+                  <FaInstagram size="1.5rem" />
+                </Circle>
               </Button>
-              <Button variant="transparent" borderRadius="full" p="0">
-                <FaTwitter size="27" />{" "}
+              <Button variant="icon" borderRadius="full">
+                <Circle size="3.125rem">
+                  <FaTwitter size="1.5rem" />
+                </Circle>
               </Button>
-              <Button variant="transparent" borderRadius="full" p="0">
-                <FaDiscord size="27" />{" "}
+              <Button variant="icon" borderRadius="full">
+                <Circle size="3.125rem">
+                  <FaDiscord size="1.5rem" />
+                </Circle>
               </Button>
             </HStack>
           </HStack>
