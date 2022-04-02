@@ -23,10 +23,8 @@ async function addNewCollection(caller_account ,data) {
     { gasLimit, value: azero_value },
     address,
     data.nftContractAddress,
-    data.collectionName,
-    data.collectionDescription,
-    data.avatarData,
-    data.headerImageData,
+    data.attributes,
+    data.attributeVals,
     data.collectionAllowRoyalFee,
     data.collectionRoyalFeeData
   ).signAndSend(address, { signer: injector.signer }, 
@@ -76,10 +74,8 @@ async function autoNewCollection(caller_account ,data) {
     data.nftName,
     data.nftSymbol,
     address,
-    data.collectionName,
-    data.collectionDescription,
-    data.avatarData,
-    data.headerImageData,
+    data.attributes,
+    data.attributeVals,
     data.collectionAllowRoyalFee,
     data.collectionRoyalFeeData
   ).signAndSend(address, { signer: injector.signer }, 
@@ -393,6 +389,48 @@ async function owner(caller_account){
 
 }
 
+async function getActiveCollectionCount(caller_account) {
+  if (!collection_manager_contract || !caller_account
+    ){
+    console.log('invalid inputs');
+    return null;
+  }
+  const address = caller_account?.address
+  const gasLimit = -1
+  const azero_value = 0
+  //console.log(collection_manager_contract);
+
+  const { result, output } = await collection_manager_contract.query.getActiveCollectionCount(
+    address,
+    { value:azero_value, gasLimit }
+  )
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+
+async function getAttributes(caller_account, nft_contract_address, attributes) {
+  if (!collection_manager_contract || !caller_account) {
+    console.log('invalid inputs');
+    return null;
+  }
+  let attributeVals;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const address = caller_account?.address;
+  const { result, output } = await collection_manager_contract.query.getAttributes(
+    address,
+    { value:azero_value, gasLimit },
+    nft_contract_address,
+    attributes
+  );
+  if (result.isOk) {
+    attributeVals = output.toHuman();
+  }
+  return attributeVals;
+}
+
 function setContract(c) {
   // console.log(`Setting contract in blockchain module`, c)
   collection_manager_contract = c
@@ -414,6 +452,8 @@ const collection_manager_calls = {
   getCollectionOwner,
   updateIsActive,
   owner,
+  getActiveCollectionCount,
+  getAttributes,
   isLoaded
 }
 

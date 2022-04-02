@@ -1,8 +1,8 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5DwSCCtjf2hBp6AERtE3o4QhZQgJ2zS7S4F3BJphkCszYEG2",
+  CONTRACT_ADDRESS: "5EchPjLxDP3mMVTerSqKiiiPX1rFPySu5BqzbKagMR2m1qfg",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xc6ed251ce0ab96600964e3a6859365f2a8297ac7fcdcce6a68405fe0af05da43",
+      "hash": "0xafbe271ac93f3db164ef5c40eed8ce6b8166c0ab295bf54dc9a0a4252f97b9fc",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -63,7 +63,7 @@ const collection_manager = {
                   "displayName": [
                     "String"
                   ],
-                  "type": 16
+                  "type": 18
                 }
               },
               {
@@ -72,7 +72,7 @@ const collection_manager = {
                   "displayName": [
                     "String"
                   ],
-                  "type": 16
+                  "type": 18
                 }
               },
               {
@@ -85,39 +85,21 @@ const collection_manager = {
                 }
               },
               {
-                "label": "name",
+                "label": "attributes",
                 "type": {
                   "displayName": [
-                    "String"
+                    "Vec"
                   ],
-                  "type": 16
+                  "type": 19
                 }
               },
               {
-                "label": "description",
+                "label": "attribute_vals",
                 "type": {
                   "displayName": [
-                    "String"
+                    "Vec"
                   ],
-                  "type": 16
-                }
-              },
-              {
-                "label": "avatar_image",
-                "type": {
-                  "displayName": [
-                    "String"
-                  ],
-                  "type": 16
-                }
-              },
-              {
-                "label": "header_image",
-                "type": {
-                  "displayName": [
-                    "String"
-                  ],
-                  "type": 16
+                  "type": 19
                 }
               },
               {
@@ -126,7 +108,7 @@ const collection_manager = {
                   "displayName": [
                     "bool"
                   ],
-                  "type": 10
+                  "type": 9
                 }
               },
               {
@@ -135,7 +117,7 @@ const collection_manager = {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 11
+                  "type": 10
                 }
               }
             ],
@@ -149,7 +131,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 20
             },
             "selector": "0x05c561cd"
           },
@@ -174,39 +156,21 @@ const collection_manager = {
                 }
               },
               {
-                "label": "name",
+                "label": "attributes",
                 "type": {
                   "displayName": [
-                    "String"
+                    "Vec"
                   ],
-                  "type": 16
+                  "type": 19
                 }
               },
               {
-                "label": "description",
+                "label": "attribute_vals",
                 "type": {
                   "displayName": [
-                    "String"
+                    "Vec"
                   ],
-                  "type": 16
-                }
-              },
-              {
-                "label": "avatar_image",
-                "type": {
-                  "displayName": [
-                    "String"
-                  ],
-                  "type": 16
-                }
-              },
-              {
-                "label": "header_image",
-                "type": {
-                  "displayName": [
-                    "String"
-                  ],
-                  "type": 16
+                  "type": 19
                 }
               },
               {
@@ -215,7 +179,7 @@ const collection_manager = {
                   "displayName": [
                     "bool"
                   ],
-                  "type": 10
+                  "type": 9
                 }
               },
               {
@@ -224,7 +188,7 @@ const collection_manager = {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 11
+                  "type": 10
                 }
               }
             ],
@@ -238,7 +202,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 20
             },
             "selector": "0x36193f5f"
           },
@@ -273,7 +237,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 20
             },
             "selector": "0x5c7d9082"
           },
@@ -308,7 +272,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 20
             },
             "selector": "0x6500109f"
           },
@@ -324,33 +288,42 @@ const collection_manager = {
                 }
               },
               {
-                "label": "name",
+                "label": "attributes",
                 "type": {
                   "displayName": [
-                    "String"
+                    "Vec"
                   ],
-                  "type": 16
+                  "type": 19
+                }
+              },
+              {
+                "label": "values",
+                "type": {
+                  "displayName": [
+                    "Vec"
+                  ],
+                  "type": 19
                 }
               }
             ],
             "docs": [
-              " Update Name - admin and collection owner can change"
+              " Set multiple profile attribute, username, description, title, profile_image, twitter, facebook, telegram, instagram"
             ],
-            "label": "update_name",
+            "label": "set_multiple_attributes",
             "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 20
             },
-            "selector": "0x63312534"
+            "selector": "0x8119d25e"
           },
           {
             "args": [
               {
-                "label": "contract_address",
+                "label": "account",
                 "type": {
                   "displayName": [
                     "AccountId"
@@ -359,98 +332,26 @@ const collection_manager = {
                 }
               },
               {
-                "label": "description",
+                "label": "attributes",
                 "type": {
                   "displayName": [
-                    "String"
+                    "Vec"
                   ],
-                  "type": 16
+                  "type": 19
                 }
               }
             ],
-            "docs": [
-              " Update Description - admin and collection owner can change"
-            ],
-            "label": "update_description",
-            "mutates": true,
+            "docs": [],
+            "label": "get_attributes",
+            "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "Result"
+                "Vec"
               ],
-              "type": 17
+              "type": 19
             },
-            "selector": "0x560bf87c"
-          },
-          {
-            "args": [
-              {
-                "label": "contract_address",
-                "type": {
-                  "displayName": [
-                    "AccountId"
-                  ],
-                  "type": 0
-                }
-              },
-              {
-                "label": "avatar_image",
-                "type": {
-                  "displayName": [
-                    "String"
-                  ],
-                  "type": 16
-                }
-              }
-            ],
-            "docs": [
-              " Update Avatar Image - admin and collection owner can change"
-            ],
-            "label": "update_avatar_image",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "Result"
-              ],
-              "type": 17
-            },
-            "selector": "0x7040bc0a"
-          },
-          {
-            "args": [
-              {
-                "label": "contract_address",
-                "type": {
-                  "displayName": [
-                    "AccountId"
-                  ],
-                  "type": 0
-                }
-              },
-              {
-                "label": "header_image",
-                "type": {
-                  "displayName": [
-                    "String"
-                  ],
-                  "type": 16
-                }
-              }
-            ],
-            "docs": [
-              " Update header Image - admin and collection owner can change"
-            ],
-            "label": "update_header_image",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "Result"
-              ],
-              "type": 17
-            },
-            "selector": "0xa7b9a9d9"
+            "selector": "0x8d76b3fe"
           },
           {
             "args": [
@@ -474,7 +375,7 @@ const collection_manager = {
               }
             ],
             "docs": [
-              " Update Type Collection - only Admin can change - 0 - PSP34 ERC721 ; 1 - ERC1155 PSP1155"
+              " Update Type Collection - only Admin can change - 1: Manual 2: Auto"
             ],
             "label": "update_contract_type",
             "mutates": true,
@@ -483,7 +384,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 20
             },
             "selector": "0xeb59ea76"
           },
@@ -504,7 +405,7 @@ const collection_manager = {
                   "displayName": [
                     "bool"
                   ],
-                  "type": 10
+                  "type": 9
                 }
               }
             ],
@@ -518,7 +419,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 20
             },
             "selector": "0x96c46720"
           },
@@ -539,7 +440,7 @@ const collection_manager = {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 11
+                  "type": 10
                 }
               }
             ],
@@ -553,7 +454,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 20
             },
             "selector": "0x482ff6b1"
           },
@@ -574,7 +475,7 @@ const collection_manager = {
                   "displayName": [
                     "bool"
                   ],
-                  "type": 10
+                  "type": 9
                 }
               }
             ],
@@ -588,7 +489,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 20
             },
             "selector": "0x0fb1f1cf"
           },
@@ -609,7 +510,7 @@ const collection_manager = {
                   "displayName": [
                     "bool"
                   ],
-                  "type": 10
+                  "type": 9
                 }
               }
             ],
@@ -624,7 +525,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 20
             },
             "selector": "0x33ad2887"
           },
@@ -650,7 +551,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 20
             },
             "selector": "0x5655700b"
           },
@@ -662,7 +563,7 @@ const collection_manager = {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 11
+                  "type": 10
                 }
               }
             ],
@@ -676,7 +577,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 20
             },
             "selector": "0xa4dfde0d"
           },
@@ -702,7 +603,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 20
             },
             "selector": "0xb470cada"
           },
@@ -728,7 +629,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 20
             },
             "selector": "0x07fdb555"
           },
@@ -754,7 +655,7 @@ const collection_manager = {
               "displayName": [
                 "Option"
               ],
-              "type": 19
+              "type": 22
             },
             "selector": "0x786d1a79"
           },
@@ -780,7 +681,7 @@ const collection_manager = {
               "displayName": [
                 "Option"
               ],
-              "type": 20
+              "type": 23
             },
             "selector": "0x83091e54"
           },
@@ -806,7 +707,7 @@ const collection_manager = {
               "displayName": [
                 "Option"
               ],
-              "type": 21
+              "type": 24
             },
             "selector": "0x672b1346"
           },
@@ -825,6 +726,22 @@ const collection_manager = {
               "type": 5
             },
             "selector": "0x95c014c7"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Get Collection Count"
+            ],
+            "label": "get_active_collection_count",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 5
+            },
+            "selector": "0xe149966a"
           },
           {
             "args": [],
@@ -869,9 +786,24 @@ const collection_manager = {
                 "ownable_external",
                 "RenounceOwnershipOutput"
               ],
-              "type": 22
+              "type": 25
             },
             "selector": "0x5e228753"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [
@@ -895,24 +827,9 @@ const collection_manager = {
                 "ownable_external",
                 "TransferOwnershipOutput"
               ],
-              "type": 22
+              "type": 25
             },
             "selector": "0x11f43efd"
-          },
-          {
-            "args": [],
-            "docs": [],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
           },
           {
             "args": [
@@ -938,7 +855,7 @@ const collection_manager = {
                 "crossartzerocollection_external",
                 "IsActiveOutput"
               ],
-              "type": 10
+              "type": 9
             },
             "selector": "0x74687faf"
           },
@@ -949,26 +866,26 @@ const collection_manager = {
                 "type": {
                   "displayName": [
                     "crossartzerocollection_external",
-                    "GetRoyalFeeInput1"
+                    "GetCollectionOwnerInput1"
                   ],
                   "type": 0
                 }
               }
             ],
             "docs": [
-              "Get royal fee of the Collection"
+              " Get Collection Owner by Collection Address (NFT address)"
             ],
-            "label": "CrossArtZeroCollection::get_royal_fee",
+            "label": "CrossArtZeroCollection::get_collection_owner",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "crossartzerocollection_external",
-                "GetRoyalFeeOutput"
+                "GetCollectionOwnerOutput"
               ],
-              "type": 11
+              "type": 24
             },
-            "selector": "0xfa0f936e"
+            "selector": "0xb1f1e401"
           },
           {
             "args": [
@@ -1005,26 +922,26 @@ const collection_manager = {
                 "type": {
                   "displayName": [
                     "crossartzerocollection_external",
-                    "GetCollectionOwnerInput1"
+                    "GetRoyalFeeInput1"
                   ],
                   "type": 0
                 }
               }
             ],
             "docs": [
-              " Get Collection Owner by Collection Address (NFT address)"
+              "Get royal fee of the Collection"
             ],
-            "label": "CrossArtZeroCollection::get_collection_owner",
+            "label": "CrossArtZeroCollection::get_royal_fee",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "crossartzerocollection_external",
-                "GetCollectionOwnerOutput"
+                "GetRoyalFeeOutput"
               ],
-              "type": 21
+              "type": 10
             },
-            "selector": "0xb1f1e401"
+            "selector": "0xfa0f936e"
           }
         ]
       },
@@ -1124,7 +1041,7 @@ const collection_manager = {
               "layout": {
                 "cell": {
                   "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 13
+                  "ty": 12
                 }
               },
               "name": "collections_by_id"
@@ -1133,7 +1050,7 @@ const collection_manager = {
               "layout": {
                 "cell": {
                   "key": "0x0600000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 14
+                  "ty": 13
                 }
               },
               "name": "collections_by_owner"
@@ -1142,10 +1059,28 @@ const collection_manager = {
               "layout": {
                 "cell": {
                   "key": "0x0700000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 11
+                  "ty": 10
                 }
               },
               "name": "max_royal_fee_rate"
+            },
+            {
+              "layout": {
+                "cell": {
+                  "key": "0x0800000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 5
+                }
+              },
+              "name": "active_collection_count"
+            },
+            {
+              "layout": {
+                "cell": {
+                  "key": "0x0900000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 15
+                }
+              },
+              "name": "attributes"
             }
           ]
         }
@@ -1242,7 +1177,7 @@ const collection_manager = {
                 "fields": [
                   {
                     "name": "offset_key",
-                    "type": 12,
+                    "type": 11,
                     "typeName": "Key"
                   }
                 ]
@@ -1283,48 +1218,28 @@ const collection_manager = {
                     "typeName": "AccountId"
                   },
                   {
-                    "name": "name",
-                    "type": 9,
-                    "typeName": "Vec<u8>"
-                  },
-                  {
-                    "name": "description",
-                    "type": 9,
-                    "typeName": "Vec<u8>"
-                  },
-                  {
-                    "name": "avatar_image",
-                    "type": 9,
-                    "typeName": "Vec<u8>"
-                  },
-                  {
-                    "name": "header_image",
-                    "type": 9,
-                    "typeName": "Vec<u8>"
-                  },
-                  {
                     "name": "contract_type",
                     "type": 2,
                     "typeName": "u8"
                   },
                   {
                     "name": "is_collect_royal_fee",
-                    "type": 10,
+                    "type": 9,
                     "typeName": "bool"
                   },
                   {
                     "name": "royal_fee",
-                    "type": 11,
+                    "type": 10,
                     "typeName": "u32"
                   },
                   {
                     "name": "is_active",
-                    "type": 10,
+                    "type": 9,
                     "typeName": "bool"
                   },
                   {
                     "name": "show_on_chain_metadata",
-                    "type": 10,
+                    "type": 9,
                     "typeName": "bool"
                   }
                 ]
@@ -1341,9 +1256,7 @@ const collection_manager = {
           "id": 9,
           "type": {
             "def": {
-              "sequence": {
-                "type": 2
-              }
+              "primitive": "bool"
             }
           }
         },
@@ -1351,20 +1264,12 @@ const collection_manager = {
           "id": 10,
           "type": {
             "def": {
-              "primitive": "bool"
-            }
-          }
-        },
-        {
-          "id": 11,
-          "type": {
-            "def": {
               "primitive": "u32"
             }
           }
         },
         {
-          "id": 12,
+          "id": 11,
           "type": {
             "def": {
               "composite": {
@@ -1383,14 +1288,14 @@ const collection_manager = {
           }
         },
         {
-          "id": 13,
+          "id": 12,
           "type": {
             "def": {
               "composite": {
                 "fields": [
                   {
                     "name": "offset_key",
-                    "type": 12,
+                    "type": 11,
                     "typeName": "Key"
                   }
                 ]
@@ -1415,14 +1320,14 @@ const collection_manager = {
           }
         },
         {
-          "id": 14,
+          "id": 13,
           "type": {
             "def": {
               "composite": {
                 "fields": [
                   {
                     "name": "offset_key",
-                    "type": 12,
+                    "type": 11,
                     "typeName": "Key"
                   }
                 ]
@@ -1435,7 +1340,7 @@ const collection_manager = {
               },
               {
                 "name": "V",
-                "type": 15
+                "type": 14
               }
             ],
             "path": [
@@ -1447,7 +1352,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 15,
+          "id": 14,
           "type": {
             "def": {
               "sequence": {
@@ -1457,7 +1362,60 @@ const collection_manager = {
           }
         },
         {
+          "id": 15,
+          "type": {
+            "def": {
+              "composite": {
+                "fields": [
+                  {
+                    "name": "offset_key",
+                    "type": 11,
+                    "typeName": "Key"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "K",
+                "type": 16
+              },
+              {
+                "name": "V",
+                "type": 17
+              }
+            ],
+            "path": [
+              "ink_storage",
+              "lazy",
+              "mapping",
+              "Mapping"
+            ]
+          }
+        },
+        {
           "id": 16,
+          "type": {
+            "def": {
+              "tuple": [
+                0,
+                17
+              ]
+            }
+          }
+        },
+        {
+          "id": 17,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 2
+              }
+            }
+          }
+        },
+        {
+          "id": 18,
           "type": {
             "def": {
               "primitive": "str"
@@ -1465,7 +1423,17 @@ const collection_manager = {
           }
         },
         {
-          "id": 17,
+          "id": 19,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 18
+              }
+            }
+          }
+        },
+        {
+          "id": 20,
           "type": {
             "def": {
               "variant": {
@@ -1482,7 +1450,7 @@ const collection_manager = {
                   {
                     "fields": [
                       {
-                        "type": 18
+                        "type": 21
                       }
                     ],
                     "index": 1,
@@ -1498,7 +1466,7 @@ const collection_manager = {
               },
               {
                 "name": "E",
-                "type": 18
+                "type": 21
               }
             ],
             "path": [
@@ -1507,7 +1475,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 18,
+          "id": 21,
           "type": {
             "def": {
               "variant": {
@@ -1515,7 +1483,7 @@ const collection_manager = {
                   {
                     "fields": [
                       {
-                        "type": 16,
+                        "type": 18,
                         "typeName": "String"
                       }
                     ],
@@ -1532,26 +1500,30 @@ const collection_manager = {
                   },
                   {
                     "index": 3,
-                    "name": "OnlyOwner"
+                    "name": "CollectionOwnerAndAdmin"
                   },
                   {
                     "index": 4,
-                    "name": "OnlyAdmin"
+                    "name": "OnlyOwner"
                   },
                   {
                     "index": 5,
-                    "name": "InvalidCaller"
+                    "name": "OnlyAdmin"
                   },
                   {
                     "index": 6,
-                    "name": "InvalidFee"
+                    "name": "InvalidCaller"
                   },
                   {
                     "index": 7,
-                    "name": "InvalidRoyalFee"
+                    "name": "InvalidFee"
                   },
                   {
                     "index": 8,
+                    "name": "InvalidRoyalFee"
+                  },
+                  {
+                    "index": 9,
                     "name": "NotEnoughBalance"
                   }
                 ]
@@ -1565,7 +1537,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 19,
+          "id": 22,
           "type": {
             "def": {
               "variant": {
@@ -1598,7 +1570,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 20,
+          "id": 23,
           "type": {
             "def": {
               "variant": {
@@ -1610,7 +1582,7 @@ const collection_manager = {
                   {
                     "fields": [
                       {
-                        "type": 15
+                        "type": 14
                       }
                     ],
                     "index": 1,
@@ -1622,7 +1594,7 @@ const collection_manager = {
             "params": [
               {
                 "name": "T",
-                "type": 15
+                "type": 14
               }
             ],
             "path": [
@@ -1631,7 +1603,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 21,
+          "id": 24,
           "type": {
             "def": {
               "variant": {
@@ -1664,7 +1636,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 22,
+          "id": 25,
           "type": {
             "def": {
               "variant": {
@@ -1681,7 +1653,7 @@ const collection_manager = {
                   {
                     "fields": [
                       {
-                        "type": 23
+                        "type": 26
                       }
                     ],
                     "index": 1,
@@ -1697,7 +1669,7 @@ const collection_manager = {
               },
               {
                 "name": "E",
-                "type": 23
+                "type": 26
               }
             ],
             "path": [
@@ -1706,7 +1678,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 23,
+          "id": 26,
           "type": {
             "def": {
               "variant": {

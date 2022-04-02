@@ -25,6 +25,7 @@ import collection_manager_calls from "../../utils/blockchain/collection-manager-
 import { useSubstrateState } from "../../utils/substrate";
 import { NUMBER_PER_PAGE } from "../../constants/index";
 import { usePagination } from "@ajna/pagination";
+import { IPFS_BASE_URL } from "@constants/index";
 
 const CollectionsPage = (props) => {
   const { currentAccount } = useSubstrateState();
@@ -52,30 +53,12 @@ const CollectionsPage = (props) => {
   console.log("offset", offset);
   console.log("pageSize", pageSize);
 
-  /**
-   * gọi trong useEffect
-   * gọi lần đầu
-   * offset = 0 và pageSize = 5 =>
-   * Trang 2
-   * offset = 1 và pageSize = 5
-   * Call API => fetch.abc.getAllCollections {get ID từ pageSize*offset + 1 là ID #6 đến pageSize*(offset + 1 ) là ID #10}
-   *
-   * offset = 2 và pageSize = 5 =>
-   * Call API => fetch.abc.getAllCollections {get ID từ pageSize*offset + 1 là ID #11 đến pageSize*(offset + 1 )  là ID #15}
-   * Tương tự
-   * offset = 3 và pageSize = 5 =>
-   * offset = 4 và pageSize = 5 =>
-   * offset = 5 và pageSize = 5 =>
-   *
-   *
-   */
-
   const onGetCollectionCount = async () => {
-    let res = await collection_manager_calls.getCollectionCount(currentAccount);
-
+    let res = await collection_manager_calls.getActiveCollectionCount(currentAccount);
+    console.log(res);
     if (res) {
       setCollectionCount(res);
-      // setTotalPage(Math.ceil(res / NUMBER_PER_PAGE));
+      setTotalPage(Math.ceil(res / NUMBER_PER_PAGE));
     } else {
       setCollectionCount(0);
     }
@@ -84,9 +67,8 @@ const CollectionsPage = (props) => {
   const getAllCollections = async (e) => {
     setLoading(true);
     var collections = [];
-
-    // Quet do 5 cai dau tien hoac 1000 cai
-    for (var i = 0; i < 5; i++) {
+    let attributes = null;
+    for (var i = offset; i < offset + NUMBER_PER_PAGE; i++) {
       let collection_address = await collection_manager_calls.getContractById(
         currentAccount,
         i + 1
@@ -97,20 +79,16 @@ const CollectionsPage = (props) => {
           currentAccount,
           collection_address
         );
-        collections.push(data);
-        // if (data.isActive) {
-        //   collections.push(data);
-        // }
+        if (data.isActive) {
+          attributes = await collection_manager_calls.getAttributes(currentAccount, data.nftContractAddress, ['name', 'description', 'avatar_image', 'header_image']);
+          data.attributes = attributes;
+          collections.push(data);
+
+        }
       }
     }
 
-    // FAKE API FITLER
-    setTotalPage(collections.length);
-    const fakeCollections = collections.slice(
-      pageSize * offset,
-      pageSize * offset + pageSize
-    );
-    setCollections(fakeCollections);
+    setCollections(collections);
     setLoading(false);
   };
 
@@ -221,13 +199,14 @@ const CollectionsPage = (props) => {
                       bg: "brand.blue",
                     }}
                   >
+                    
                     <CollectionCard
                       id={item?.nftContractAddress}
                       volume="111"
-                      backdrop={item?.headerImage}
-                      avatar={item?.avatarImage}
-                      desc={item?.description}
-                      name={item?.name}
+                      backdrop={`${IPFS_BASE_URL}${item?.attributes[3]}`}
+                      avatar={`${IPFS_BASE_URL}${item?.attributes[2]}`}
+                      desc={item?.attributes[1]}
+                      name={item?.attributes[0]}
                     />
                   </Link>
                 </>

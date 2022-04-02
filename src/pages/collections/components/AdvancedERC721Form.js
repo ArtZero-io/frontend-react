@@ -16,7 +16,7 @@ import collection_manager_calls from "../../../utils/blockchain/collection-manag
 import {isValidAddressPolkadotAddress} from '../../../utils';
 import { create } from "ipfs-http-client";
 import { Buffer } from "buffer";
-import { IPFS_BASE_URL, IPFS_CLIENT_URL } from "@constants/index";
+import { IPFS_CLIENT_URL } from "@constants/index";
 import toast from "react-hot-toast";
 import { useSubstrateState } from '../../../utils/substrate'
 // import BN from 'bn.js';
@@ -66,10 +66,8 @@ const AdvancedERC721Form = () => {
             } else {
                 const data = {
                     nftContractAddress: nftContractAddress,
-                    collectionName: collectionName,
-                    collectionDescription: collectionDescription,
-                    avatarData: collectionAvatarImage,
-                    headerImageData: collectionHeaderImage,
+                    attributes: ['name', 'description', 'avatar_image', 'header_image'],
+                    attributeVals: [collectionName, collectionDescription, collectionAvatarImage, collectionHeaderImage],
                     collectionAllowRoyalFee: collectionAllowRoyalFee,
                     collectionRoyalFeeData: (collectionAllowRoyalFee) ? Math.round(collectionRoyalFee * 100) : 0
                 };
@@ -149,7 +147,7 @@ const AdvancedERC721Form = () => {
             });
             console.log("onloadend");
             toast.promise(
-                uploadPromise().then((created) => setColletionAvatarImage(`${IPFS_BASE_URL}${created?.path}`)),
+                uploadPromise().then((created) => setColletionAvatarImage(created?.path)),
                 {
                   loading: "Uploading...",
                   success: () => `Upload Avatar successful.!`,
@@ -176,7 +174,7 @@ const AdvancedERC721Form = () => {
             });
             console.log("onloadend");
             toast.promise(
-                uploadPromise().then((created) => setCollectionHeaderImage(`${IPFS_BASE_URL}${created?.path}`)),
+                uploadPromise().then((created) => setCollectionHeaderImage(created?.path)),
                 {
                   loading: "Uploading...",
                   success: () => `Upload Avatar successful.!`,
