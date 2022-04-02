@@ -17,7 +17,7 @@ export const DETAIL_COLLECTION_BASE = '/collection/'
 export const MINTING_EVENT = '/mint'
 
 export const ADMIN = '/admin'
-export const MARKETPLACE = '/marketplace'
+export const MARKETPLACE = '/marketplace/:page'
 export const STAKE = '/staking'
 export const NFT = '/nft'
 

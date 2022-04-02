@@ -18,6 +18,8 @@ import {
   ChevronRightIcon,
 } from "@chakra-ui/icons";
 
+import {NUMBER_PER_PAGE} from '../../constants/index';
+
 const PaginationMP = () => {
   //TODO states for test page navigation, thay API sau
   const [pokemonsTotal, setPokemonsTotal] = useState(undefined);
@@ -35,7 +37,7 @@ const PaginationMP = () => {
   } = usePagination({
     total: pokemonsTotal, //initial Data
     initialState: {
-      pageSize: 6,
+      pageSize: NUMBER_PER_PAGE,
       isDisabled: false,
       currentPage: 1,
     },
