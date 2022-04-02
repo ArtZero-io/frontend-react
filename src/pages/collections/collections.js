@@ -4,11 +4,13 @@ import {
   // InputRightElement,
   // InputGroup,
   Box,
+  Center,
   Flex,
   Heading,
   Link,
   SimpleGrid,
   Spacer,
+  Spinner,
 } from "@chakra-ui/react";
 // import Collections from "@components/Collections/Collections";
 // import { FiSearch } from "react-icons/fi";
@@ -29,6 +31,7 @@ const CollectionsPage = (props) => {
   const [collectionCount, setCollectionCount] = useState(0);
   const [collections, setCollections] = useState([]);
   const [totalPage, setTotalPage] = useState(undefined);
+  const [loading, setLoading] = useState(null);
 
   const {
     pagesCount,
@@ -49,23 +52,23 @@ const CollectionsPage = (props) => {
   console.log("offset", offset);
   console.log("pageSize", pageSize);
 
-/**
- * gọi trong useEffect
- * gọi lần đầu
- * offset = 0 và pageSize = 5 =>
- * Trang 2
- * offset = 1 và pageSize = 5 
- * Call API => fetch.abc.getAllCollections {get ID từ pageSize*offset + 1 là ID #6 đến pageSize*(offset + 1 ) là ID #10} 
- * 
- * offset = 2 và pageSize = 5 =>
- * Call API => fetch.abc.getAllCollections {get ID từ pageSize*offset + 1 là ID #11 đến pageSize*(offset + 1 )  là ID #15}
- * Tương tự
- * offset = 3 và pageSize = 5 =>
- * offset = 4 và pageSize = 5 =>
- * offset = 5 và pageSize = 5 =>
- * 
- * 
- */
+  /**
+   * gọi trong useEffect
+   * gọi lần đầu
+   * offset = 0 và pageSize = 5 =>
+   * Trang 2
+   * offset = 1 và pageSize = 5
+   * Call API => fetch.abc.getAllCollections {get ID từ pageSize*offset + 1 là ID #6 đến pageSize*(offset + 1 ) là ID #10}
+   *
+   * offset = 2 và pageSize = 5 =>
+   * Call API => fetch.abc.getAllCollections {get ID từ pageSize*offset + 1 là ID #11 đến pageSize*(offset + 1 )  là ID #15}
+   * Tương tự
+   * offset = 3 và pageSize = 5 =>
+   * offset = 4 và pageSize = 5 =>
+   * offset = 5 và pageSize = 5 =>
+   *
+   *
+   */
 
   const onGetCollectionCount = async () => {
     let res = await collection_manager_calls.getCollectionCount(currentAccount);
@@ -79,24 +82,36 @@ const CollectionsPage = (props) => {
   };
 
   const getAllCollections = async (e) => {
+    setLoading(true);
     var collections = [];
-    var endIndex = offset + pageSize;
-    for (var i = offset; i < endIndex; i++) {
-      let collection_account = await collection_manager_calls.getContractById(
+
+    // Quet do 5 cai dau tien hoac 1000 cai
+    for (var i = 0; i < 5; i++) {
+      let collection_address = await collection_manager_calls.getContractById(
         currentAccount,
         i + 1
       );
-      let data = await collection_manager_calls.getCollectionByAddress(
-        currentAccount,
-        collection_account
-      );
-      if (data.isActive) {
+
+      if (collection_address) {
+        let data = await collection_manager_calls.getCollectionByAddress(
+          currentAccount,
+          collection_address
+        );
         collections.push(data);
+        // if (data.isActive) {
+        //   collections.push(data);
+        // }
       }
     }
-    console.log('xxx collections', collections)
-    setCollections(collections);
-    setTotalPage(Math.ceil(collections.length / pageSize));
+
+    // FAKE API FITLER
+    setTotalPage(collections.length);
+    const fakeCollections = collections.slice(
+      pageSize * offset,
+      pageSize * offset + pageSize
+    );
+    setCollections(fakeCollections);
+    setLoading(false);
   };
 
   useEffect(async () => {
@@ -160,64 +175,76 @@ const CollectionsPage = (props) => {
           </Box>
         </Box>
       </Box>
-
+      {loading && (
+        <Center>
+          <Spinner
+            thickness="4px"
+            speed="0.65s"
+            emptyColor="gray.200"
+            color="blue.500"
+            size="xl"
+          />
+        </Center>
+      )}
       <Box as="section" maxW="container.3xl" px={5}>
-        <Box
-          mx="auto"
-          maxW={{ base: "xl", md: "7xl" }}
-          px={{ base: "6", md: "8" }}
-          py={{ base: "12", md: "20" }}
-        >
-          <Flex w="full" alignItems="end">
-            <PaginationMP
-              isDisabled={isDisabled}
-              currentPage={currentPage}
-              pagesCount={pagesCount}
-              setCurrentPage={setCurrentPage}
-            />
-            <Spacer />{" "}
-            <Dropdown
-              maxW="3xs"
-              options={["Trending", "Hottest", "New Release"]}
-              defaultItem={"Trending"}
-            />
-          </Flex>
+        {!loading && (
+          <Box
+            mx="auto"
+            maxW={{ base: "xl", md: "7xl" }}
+            px={{ base: "6", md: "8" }}
+            py={{ base: "12", md: "20" }}
+          >
+            <Flex w="full" alignItems="end">
+              <PaginationMP
+                isDisabled={isDisabled}
+                currentPage={currentPage}
+                pagesCount={pagesCount}
+                setCurrentPage={setCurrentPage}
+              />
+              <Spacer />{" "}
+              <Dropdown
+                maxW="3xs"
+                options={["Trending", "Hottest", "New Release"]}
+                defaultItem={"Trending"}
+              />
+            </Flex>
 
-          <SimpleGrid py={16} columns={{ base: 1, md: 2, lg: 3 }} spacing="8">
-            {collections.map((item, idx) => (
-              <>
-                <Link
-                  key={item.nftContractAddress}
-                  as={ReactRouterLink}
-                  to={`collectionNew/${item.nftContractAddress}`}
-                  className="collection-card-hover"
-                  _hover={{
-                    bg: "brand.blue",
-                  }}
-                >
-                  <CollectionCard
-                    id={item.nftContractAddress}
-                    volume="111"
-                    backdrop={item.headerImage}
-                    avatar={item.avatarImage}
-                    desc={item.description}
-                    name={item.name}
-                  />
-                </Link>
-              </>
-            ))}
-          </SimpleGrid>
+            <SimpleGrid py={16} columns={{ base: 1, md: 2, lg: 3 }} spacing="8">
+              {collections.map((item, idx) => (
+                <>
+                  <Link
+                    key={item?.nftContractAddress}
+                    as={ReactRouterLink}
+                    to={`collectionNew/${item?.nftContractAddress}`}
+                    className="collection-card-hover"
+                    _hover={{
+                      bg: "brand.blue",
+                    }}
+                  >
+                    <CollectionCard
+                      id={item?.nftContractAddress}
+                      volume="111"
+                      backdrop={item?.headerImage}
+                      avatar={item?.avatarImage}
+                      desc={item?.description}
+                      name={item?.name}
+                    />
+                  </Link>
+                </>
+              ))}
+            </SimpleGrid>
 
-          <Flex w="full" alignItems="end">
-            <PaginationMP
-              isDisabled={isDisabled}
-              currentPage={currentPage}
-              pagesCount={pagesCount}
-              setCurrentPage={setCurrentPage}
-            />
-            <Spacer />
-          </Flex>
-        </Box>
+            <Flex w="full" alignItems="end">
+              <PaginationMP
+                isDisabled={isDisabled}
+                currentPage={currentPage}
+                pagesCount={pagesCount}
+                setCurrentPage={setCurrentPage}
+              />
+              <Spacer />
+            </Flex>
+          </Box>
+        )}
       </Box>
     </Layout>
   );
