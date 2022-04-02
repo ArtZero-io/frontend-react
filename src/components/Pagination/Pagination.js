@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
 import { Text, Stack, Square, Button, Input } from "@chakra-ui/react";
 import {
   Pagination,
-  usePagination,
+  // usePagination,
   // PaginationPage,
   PaginationNext,
   PaginationPrevious,
@@ -17,42 +16,17 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@chakra-ui/icons";
+import toast from "react-hot-toast";
 
-import {NUMBER_PER_PAGE} from '../../constants/index';
+// import { NUMBER_PER_PAGE } from "../../constants/index";
 
-const PaginationMP = () => {
-  //TODO states for test page navigation, thay API sau
-  const [pokemonsTotal, setPokemonsTotal] = useState(undefined);
-  const [, setPokemons] = useState([]);
-
-  const {
-    // pages,
-    pagesCount,
-    offset,
-    currentPage,
-    setCurrentPage,
-    isDisabled,
-    pageSize,
-    // setPageSize
-  } = usePagination({
-    total: pokemonsTotal, //initial Data
-    initialState: {
-      pageSize: NUMBER_PER_PAGE,
-      isDisabled: false,
-      currentPage: 1,
-    },
-  });
-
+const PaginationMP = ({
+  isDisabled,
+  currentPage,
+  pagesCount,
+  setCurrentPage,
+}) => {
   //TODO effects for test page navigation, thay API sau
-
-  useEffect(() => {
-    fetchPokemons(pageSize, offset)
-      .then((pokemons) => {
-        setPokemonsTotal(pokemons.count);
-        setPokemons(pokemons.results);
-      })
-      .catch((error) => console.log("App =>", error));
-  }, [currentPage, pageSize, offset]);
 
   // page change handlers
   const handlePageChange = (nextPage) => {
@@ -62,6 +36,9 @@ const PaginationMP = () => {
   const onEnterHandler = (e) => {
     if (e.charCode === 13) {
       e.preventDefault();
+      if (isNaN(e.target.value)) return toast.error("Number only!!!");
+      if (e.target.value <= 0 || e.target.value > pagesCount)
+        return toast.error("Out of page range!!!");
       setCurrentPage(e.target.value);
     }
   };
@@ -152,9 +129,3 @@ const PaginationMP = () => {
 };
 
 export default PaginationMP;
-// Fake for test
-const fetchPokemons = async (pageSize, offset) => {
-  return await fetch(
-    `https://pokeapi.co/api/v2/pokemon?limit=${pageSize}&offset=${offset}`
-  ).then(async (res) => await res.json());
-};
