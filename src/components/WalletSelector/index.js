@@ -125,10 +125,9 @@ function WalletSelector(props) {
               >
                 <Flex>
                   <Text maxWidth={20} isTruncated>
-                    {currentAccount?.meta?.name}
+                    {name}
                   </Text>{" "}
-                  - {currentAccount?.address.slice(0, 6)} ...{" "}
-                  {currentAccount?.address.slice(-6)}
+                  - {address.slice(0, 6)} ... {address.slice(-6)}
                 </Flex>
               </MenuItem>
             ))}
