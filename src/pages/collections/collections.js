@@ -1,20 +1,22 @@
 import {
   Box,
   Flex,
-  FormControl,
+  // FormControl,
   Heading,
-  Input,
-  InputGroup,
-  InputRightElement,
+  // Input,
+  // InputRightElement,
+  // InputGroup,
   Link,
   SimpleGrid,
+  Spacer,
 } from "@chakra-ui/react";
 import Layout from "@components/Layout/Layout";
 // import Collections from "@components/Collections/Collections";
 import { CollectionCard } from "../../components/CollectionCard/CollectionCard";
-import { FiSearch } from "react-icons/fi";
+// import { FiSearch } from "react-icons/fi";
 import { Link as ReactRouterLink } from "react-router-dom";
 import Dropdown from "../../components/Dropdown/Dropdown";
+import PaginationMP from "../../components/Pagination/Pagination";
 
 const CollectionsPage = () => {
   return (
@@ -35,7 +37,7 @@ const CollectionsPage = () => {
             >
               Explore collections
             </Heading>
-            <InputGroup
+            {/* <InputGroup
               mx="auto"
               maxW="container.md"
               w="full"
@@ -59,7 +61,7 @@ const CollectionsPage = () => {
                   fontSize: "lg",
                 }}
               />
-            </InputGroup>
+            </InputGroup> */}
           </Box>
         </Box>
       </Box>
@@ -71,18 +73,14 @@ const CollectionsPage = () => {
           px={{ base: "6", md: "8" }}
           py={{ base: "12", md: "20" }}
         >
-          <Flex w="full">
-            <FormControl
-              id="collection-type"
-              display="flex"
-              justifyContent="end"
-            >
-              <Dropdown
-                maxW="3xs"
-                options={["Trending", "Hottest", "New Release"]}
-                defaultItem={"Trending"}
-              />
-            </FormControl>
+          <Flex w="full" alignItems="end">
+            <PaginationMP />
+            <Spacer />{" "}
+            <Dropdown
+              maxW="3xs"
+              options={["Trending", "Hottest", "New Release"]}
+              defaultItem={"Trending"}
+            />
           </Flex>
 
           <SimpleGrid py={16} columns={{ base: 1, md: 2, lg: 3 }} spacing="8">
@@ -109,6 +107,11 @@ const CollectionsPage = () => {
               </>
             ))}
           </SimpleGrid>
+
+          <Flex w="full" alignItems="end">
+            <PaginationMP />
+            <Spacer />
+          </Flex>
         </Box>
       </Box>
     </Layout>

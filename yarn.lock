@@ -2,6 +2,14 @@
 # yarn lockfile v1
 
 
+"@ajna/pagination@^1.4.17":
+  version "1.4.17"
+  resolved "https://registry.yarnpkg.com/@ajna/pagination/-/pagination-1.4.17.tgz#e9c273c3e939cfaae7982a7fd6bc143dcaa3e862"
+  integrity sha512-sPeJuo4Hg5MGJXYaHyAo2EncxdARrAvVXItbdQtXJ2+EXdZqSMVxrpNJu4T5oadSayMHRM3IqkbgpD0LLbSKLg==
+  dependencies:
+    framer-motion "^6.2.8"
+    lodash.union "^4.6.0"
+
 "@algolia/cache-browser-local-storage@4.13.0":
   version "4.13.0"
   resolved "https://registry.npmjs.org/@algolia/cache-browser-local-storage/-/cache-browser-local-storage-4.13.0.tgz"
@@ -6419,7 +6427,7 @@ fraction.js@^4.2.0:
   resolved "https://registry.npmjs.org/fraction.js/-/fraction.js-4.2.0.tgz"
   integrity sha512-MhLuK+2gUcnZe8ZHlaaINnQLl0xRIGRfcGk2yl8xoQAfHrSsL3rYu6FCmBdkdbhc9EPlwyGHewaRsvwRMJtAlA==
 
-framer-motion@^6:
+framer-motion@^6, framer-motion@^6.2.8:
   version "6.2.8"
   resolved "https://registry.npmjs.org/framer-motion/-/framer-motion-6.2.8.tgz"
   integrity sha512-4PtBWFJ6NqR350zYVt9AsFDtISTqsdqna79FvSYPfYDXuuqFmiKtZdkTnYPslnsOMedTW0pEvaQ7eqjD+sA+HA==
@@ -8303,6 +8311,11 @@ lodash.truncate@^4.4.2:
   version "4.4.2"
   resolved "https://registry.npmjs.org/lodash.truncate/-/lodash.truncate-4.4.2.tgz"
   integrity sha1-WjUNoLERO4N+z//VgSy+WNbq4ZM=
+
+lodash.union@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.union/-/lodash.union-4.6.0.tgz#48bb5088409f16f1821666641c44dd1aaae3cd88"
+  integrity sha1-SLtQiECfFvGCFmZkHETdGqrjzYg=
 
 lodash.uniq@^4.5.0:
   version "4.5.0"
