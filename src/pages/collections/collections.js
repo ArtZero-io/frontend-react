@@ -23,7 +23,6 @@ import collection_manager_calls from "../../utils/blockchain/collection-manager-
 import { useSubstrateState } from "../../utils/substrate";
 import { NUMBER_PER_PAGE } from "../../constants/index";
 import { usePagination } from "@ajna/pagination";
-let collection_count = 0;
 
 const CollectionsPage = (props) => {
   const { currentAccount } = useSubstrateState();
@@ -42,8 +41,7 @@ const CollectionsPage = (props) => {
   } = usePagination({
     total: totalPage,
     initialState: {
-      pageSize: 1,
-      // pageSize: NUMBER_PER_PAGE,
+      pageSize: NUMBER_PER_PAGE,
       isDisabled: false,
       currentPage: 1,
     },
@@ -73,18 +71,17 @@ const CollectionsPage = (props) => {
     let res = await collection_manager_calls.getCollectionCount(currentAccount);
 
     if (res) {
-      collection_count = res;
       setCollectionCount(res);
       setTotalPage(Math.ceil(res / NUMBER_PER_PAGE));
     } else {
       setCollectionCount(0);
     }
   };
+
   const getAllCollections = async (e) => {
     var collections = [];
-    let startIndex = props.match.params.page;
-    console.log("startIndex", startIndex);
-    for (var i = 0; i < collection_count; i++) {
+    var endIndex = offset + pageSize;
+    for (var i = offset; i < endIndex; i++) {
       let collection_account = await collection_manager_calls.getContractById(
         currentAccount,
         i + 1
@@ -210,7 +207,12 @@ const CollectionsPage = (props) => {
           </SimpleGrid>
 
           <Flex w="full" alignItems="end">
-            <PaginationMP />
+            <PaginationMP
+              isDisabled={isDisabled}
+              currentPage={currentPage}
+              pagesCount={pagesCount}
+              setCurrentPage={setCurrentPage}
+            />
             <Spacer />
           </Flex>
         </Box>
