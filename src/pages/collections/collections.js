@@ -28,7 +28,7 @@ const CollectionsPage = (props) => {
   const { currentAccount } = useSubstrateState();
   const [collectionCount, setCollectionCount] = useState(0);
   const [collections, setCollections] = useState([]);
-  const [totalPage, setTotalPage] = useState(0);
+  const [totalPage, setTotalPage] = useState(undefined);
 
   const {
     pagesCount,
@@ -72,7 +72,7 @@ const CollectionsPage = (props) => {
 
     if (res) {
       setCollectionCount(res);
-      setTotalPage(Math.ceil(res / NUMBER_PER_PAGE));
+      // setTotalPage(Math.ceil(res / NUMBER_PER_PAGE));
     } else {
       setCollectionCount(0);
     }
@@ -94,7 +94,9 @@ const CollectionsPage = (props) => {
         collections.push(data);
       }
     }
+    console.log('xxx collections', collections)
     setCollections(collections);
+    setTotalPage(Math.ceil(collections.length / pageSize));
   };
 
   useEffect(async () => {
