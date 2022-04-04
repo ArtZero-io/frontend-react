@@ -6,7 +6,7 @@ import CollectionMain from "./component/CollectionMain";
 import collection_manager_calls from "../../utils/blockchain/collection-manager-calls";
 import { useSubstrateState } from "../../utils/substrate";
 import { delay } from "../../utils";
-
+import { IPFS_BASE_URL } from "@constants/index";
 
 const backdrop =
   "https://cdn-image.solanart.io/unsafe/1080x360/filters:format(webp)/www.datocms-assets.com/58930/1639537046-degenape.webp";
@@ -32,9 +32,15 @@ function CollectionPage(props) {
       param.collectionAddress
     );
     let attributes = await collection_manager_calls.getAttributes(currentAccount, data.nftContractAddress, ['name', 'description', 'avatar_image', 'header_image']);
-    data.attributes = attributes;
-    data.volume = "11.1b";
-    setCollectionData(data);
+    let res = {
+      id: param.collectionAddress,
+      avatar: IPFS_BASE_URL + attributes[2],
+      backdrop: IPFS_BASE_URL + attributes[3],
+      volume: "11.1b",
+      name: attributes[0],
+      description: attributes[1]
+    }; 
+    setCollectionData(res);
   }
 
   return (
