@@ -1,5 +1,6 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import TabGeneral from "../components/TabGeneral";
+import TabMyCollections from "./TabMyCollections";
 
 function AccountTab() {
   return (
@@ -15,7 +16,7 @@ function AccountTab() {
 
         <TabPanels>
           {tabData.map((tab, index) => (
-            <TabPanel p={4} key={index}  bg="#171717">
+            <TabPanel p={4} key={index} bg="#171717">
               {tab.content}
             </TabPanel>
           ))}
@@ -34,7 +35,7 @@ const tabData = [
   },
   {
     label: "My Collections",
-    content: "My Collections",
+    content: <TabMyCollections />,
   },
   {
     label: "My NFT",

@@ -18,18 +18,15 @@ import {
 } from "@chakra-ui/icons";
 import toast from "react-hot-toast";
 
-// import { NUMBER_PER_PAGE } from "../../constants/index";
-
+ 
 const PaginationMP = ({
   isDisabled,
   currentPage,
   pagesCount,
   setCurrentPage,
 }) => {
-  //TODO effects for test page navigation, thay API sau
-
-  // page change handlers
-  const handlePageChange = (nextPage) => {
+ 
+   const handlePageChange = (nextPage) => {
     setCurrentPage(nextPage);
   };
 
@@ -44,7 +41,7 @@ const PaginationMP = ({
   };
 
   return (
-    <Stack maxW="25rem">
+    <Stack maxW="25rem" textAlign='left'>
       <Text color="brand.grayLight" ml="1">
         Page {currentPage} of {pagesCount}
       </Text>

@@ -1,8 +1,4 @@
 import {
-  // FormControl,
-  // Input,
-  // InputRightElement,
-  // InputGroup,
   Box,
   Center,
   Flex,
@@ -12,18 +8,16 @@ import {
   Spacer,
   Spinner,
 } from "@chakra-ui/react";
-// import Collections from "@components/Collections/Collections";
-// import { FiSearch } from "react-icons/fi";
 import Layout from "@components/Layout/Layout";
-import { CollectionCard } from "../../components/CollectionCard/CollectionCard";
+import { CollectionCard } from "@components/CollectionCard/CollectionCard";
 import { Link as ReactRouterLink } from "react-router-dom";
-import Dropdown from "../../components/Dropdown/Dropdown";
-import PaginationMP from "../../components/Pagination/Pagination";
+import Dropdown from "@components/Dropdown/Dropdown";
+import PaginationMP from "@components/Pagination/Pagination";
 import { useEffect, useState } from "react";
-import { delay } from "../../utils";
-import collection_manager_calls from "../../utils/blockchain/collection-manager-calls";
-import { useSubstrateState } from "../../utils/substrate";
-import { NUMBER_PER_PAGE } from "../../constants/index";
+import { delay } from "@utils";
+import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+import { useSubstrateState } from "@utils/substrate";
+import { NUMBER_PER_PAGE } from "@constants/index";
 import { usePagination } from "@ajna/pagination";
 import { IPFS_BASE_URL } from "@constants/index";
 
@@ -35,12 +29,11 @@ const CollectionsPage = (props) => {
 
   const {
     pagesCount,
-    offset, // => nó là range lấy ID trang 2 thì lấy với pageSize 5 thì lấy từ 5
-    // nếu trang 3 thì lấy ID từ 10
+    offset,
     currentPage,
     setCurrentPage,
     isDisabled,
-    pageSize, // số Item trả về trong mỗi response
+    pageSize,
   } = usePagination({
     total: totalPage,
     initialState: {
@@ -53,7 +46,9 @@ const CollectionsPage = (props) => {
   console.log("pageSize", pageSize);
 
   const onGetCollectionCount = async () => {
-    let res = await collection_manager_calls.getActiveCollectionCount(currentAccount);
+    let res = await collection_manager_calls.getActiveCollectionCount(
+      currentAccount
+    );
     console.log(res);
     if (res) {
       setTotalPage(res);
@@ -78,7 +73,11 @@ const CollectionsPage = (props) => {
           collection_address
         );
         if (data.isActive) {
-          attributes = await collection_manager_calls.getAttributes(currentAccount, data.nftContractAddress, ['name', 'description', 'avatar_image', 'header_image']);
+          attributes = await collection_manager_calls.getAttributes(
+            currentAccount,
+            data.nftContractAddress,
+            ["name", "description", "avatar_image", "header_image"]
+          );
           data.attributes = attributes;
           collections.push(data);
         }
@@ -191,7 +190,6 @@ const CollectionsPage = (props) => {
                       bg: "brand.blue",
                     }}
                   >
-                    
                     <CollectionCard
                       id={item?.nftContractAddress}
                       volume="111"
@@ -222,9 +220,3 @@ const CollectionsPage = (props) => {
 };
 
 export default CollectionsPage;
-// Fake for test
-// const fetchPokemons = async (pageSize, offset) => {
-//   return await fetch(
-//     `https://pokeapi.co/api/v2/pokemon?limit=${pageSize}&offset=${offset}`
-//   ).then(async (res) => await res.json());
-// };
