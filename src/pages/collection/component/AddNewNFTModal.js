@@ -6,10 +6,7 @@ import {
     FormControl,
     FormLabel,
     Input,
-    Button,
-    HStack,
-    PinInput,
-    PinInputField 
+    Button
   } from "@chakra-ui/react";
 import React from "react";
 import { IPFS_CLIENT_URL } from "@constants/index";
@@ -115,19 +112,20 @@ const AddNewNFTModal = ( {collection, isOpen, onClose} )  => {
     }
 
     const addFormLevelFields = () => {
-        setFormLevelValues([...formLevelValues, { name: "", value: "" }])
+        setFormLevelValues([...formLevelValues, { name: "", value1: "", value2: "" }])
     }
 
     const removeFormLevelFields = (i) => {
         console.log(formLevelValues);
         let newFormLevelValues = [...formLevelValues];
         newFormLevelValues.splice(i, 1);
-        setFormPropertyValues(newFormLevelValues)
+        setFormLevelValues(newFormLevelValues)
     }
 
     const handleChangeLevelField = (i, e) => {
         let newFormLevelValues = [...formLevelValues];
         newFormLevelValues[i][e.target.name] = e.target.value;
+        console.log(newFormLevelValues);
         setFormLevelValues(newFormLevelValues);
     }
 
@@ -189,19 +187,14 @@ const AddNewNFTModal = ( {collection, isOpen, onClose} )  => {
                 </div>
             ))}
             <Button onClick={() => addFormLevelFields()}>Add New Level</Button>
-            
             {formLevelValues.map((element, index) => (
                 <div className="form-inline" key={index}>
-                <HStack>
-                    <Input type='text' placeholder="Name" value={element.name || ""}
-                            onChange={e => handleChangeLevelField(index, e)}
-                    />
-                    <PinInput value={element.value || ""} onChange={e => handleChangeLevelField(index, e)}>
-                        <PinInputField /> 
-                        <div>of</div>
-                        <PinInputField />
-                    </PinInput>
-                </HStack>
+                <label>Name</label>
+                    <input type="text" name="name" value={element.name || ""} onChange={e => handleChangeLevelField(index, e)} />
+                    <label>Value</label>
+                    <input type="text" name="value1" value={element.value1 || ""} onChange={e => handleChangeLevelField(index, e)} />
+                    <label>of</label>
+                    <input type="text" name="value2" value={element.value2 || ""} onChange={e => handleChangeLevelField(index, e)} />
                 <button type="button"  className="button remove" onClick={() => removeFormLevelFields(index)}>Remove</button> 
                 </div>
             ))}
