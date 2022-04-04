@@ -29,7 +29,6 @@ import { IPFS_BASE_URL } from "@constants/index";
 
 const CollectionsPage = (props) => {
   const { currentAccount } = useSubstrateState();
-  const [collectionCount, setCollectionCount] = useState(0);
   const [collections, setCollections] = useState([]);
   const [totalPage, setTotalPage] = useState(undefined);
   const [loading, setLoading] = useState(null);
@@ -57,10 +56,9 @@ const CollectionsPage = (props) => {
     let res = await collection_manager_calls.getActiveCollectionCount(currentAccount);
     console.log(res);
     if (res) {
-      setCollectionCount(res);
-      setTotalPage(Math.ceil(res / NUMBER_PER_PAGE));
+      setTotalPage(res);
     } else {
-      setCollectionCount(0);
+      setTotalPage(0);
     }
   };
 
@@ -83,7 +81,6 @@ const CollectionsPage = (props) => {
           attributes = await collection_manager_calls.getAttributes(currentAccount, data.nftContractAddress, ['name', 'description', 'avatar_image', 'header_image']);
           data.attributes = attributes;
           collections.push(data);
-
         }
       }
     }
@@ -104,11 +101,6 @@ const CollectionsPage = (props) => {
 
   return (
     <Layout>
-      {console.log("collectionCount ", collectionCount)}
-      {console.log("collections ", collections)}
-      {console.log("totalPage ", totalPage)}
-      {console.log("props.match.params.page ", props.match.params.page)}
-
       <Box as="section" maxW="container.3xl" px={5} position="relative">
         <Box
           mx="auto"

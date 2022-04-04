@@ -1,16 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "@components/Layout/Layout";
 import { useParams } from "react-router-dom";
 import CollectionHero from "./component/CollectionHero";
 import CollectionMain from "./component/CollectionMain";
+import collection_manager_calls from "../../utils/blockchain/collection-manager-calls";
+import { useSubstrateState } from "../../utils/substrate";
+import { delay } from "../../utils";
+
 
 const backdrop =
   "https://cdn-image.solanart.io/unsafe/1080x360/filters:format(webp)/www.datocms-assets.com/58930/1639537046-degenape.webp";
 
-function CollectionPage() {
-  const [collection] = useState(collectionData);
+function CollectionPage(props) {
+  const { currentAccount } = useSubstrateState();
+  const [collection, setCollectionData] = useState({});
   const param = useParams();
-  console.log("props.id", param.collectionAddress);
+
+  useEffect(async () => {
+    await onRefresh();
+  }, [collection_manager_calls.isLoaded()]);
+
+  const onRefresh = async () => {
+    await getCollectionData();
+    await delay(1000);
+
+  };
+
+  const getCollectionData = async () => {
+    let data = await collection_manager_calls.getCollectionByAddress(
+      currentAccount,
+      param.collectionAddress
+    );
+    let attributes = await collection_manager_calls.getAttributes(currentAccount, data.nftContractAddress, ['name', 'description', 'avatar_image', 'header_image']);
+    data.attributes = attributes;
+    data.volume = "11.1b";
+    setCollectionData(data);
+  }
 
   return (
     <Layout backdrop={backdrop}>
@@ -22,14 +47,14 @@ function CollectionPage() {
 
 export default CollectionPage;
 
-const collectionData = {
-  id: "18",
-  avatar:
-    "https://solanart.io/_next/image?url=https%3A%2F%2Fdata.solanart.io%2Fimg%2Fcollections%2Fsolpunkspreview.webp&w=256&q=75",
-  backdrop:
-    "https://solanart.io/_next/image?url=https%3A%2F%2Fdata.solanart.io%2Fimg%2Fcollections%2Fdegods.webp&w=1920&q=75",
-  description:
-    "The Degenerate Ape Academy is an NFT brand housed on the Solana blockchain. The academy consists of 10,000 degenerate ape NFTs.",
-  volume: "11.1b",
-  name: "Degenerate Trash Pandas",
-};
+// const collectionData = {
+//   id: "18",
+//   avatar:
+//     "https://solanart.io/_next/image?url=https%3A%2F%2Fdata.solanart.io%2Fimg%2Fcollections%2Fsolpunkspreview.webp&w=256&q=75",
+//   backdrop:
+//     "https://solanart.io/_next/image?url=https%3A%2F%2Fdata.solanart.io%2Fimg%2Fcollections%2Fdegods.webp&w=1920&q=75",
+//   description:
+//     "The Degenerate Ape Academy is an NFT brand housed on the Solana blockchain. The academy consists of 10,000 degenerate ape NFTs.",
+//   volume: "11.1b",
+//   name: "Degenerate Trash Pandas",
+// };
