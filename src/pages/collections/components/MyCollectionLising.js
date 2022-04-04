@@ -26,7 +26,6 @@ const MyCollectionListing = () => {
         if (collection_account) {
             for (let collection of collection_account) {
                 let data = await collection_manager_calls.getCollectionByAddress(currentAccount, collection);
-                console.log(data);
                 myCollections.push(data);
             }
         }

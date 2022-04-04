@@ -52,15 +52,3 @@ function CollectionPage(props) {
 }
 
 export default CollectionPage;
-
-// const collectionData = {
-//   id: "18",
-//   avatar:
-//     "https://solanart.io/_next/image?url=https%3A%2F%2Fdata.solanart.io%2Fimg%2Fcollections%2Fsolpunkspreview.webp&w=256&q=75",
-//   backdrop:
-//     "https://solanart.io/_next/image?url=https%3A%2F%2Fdata.solanart.io%2Fimg%2Fcollections%2Fdegods.webp&w=1920&q=75",
-//   description:
-//     "The Degenerate Ape Academy is an NFT brand housed on the Solana blockchain. The academy consists of 10,000 degenerate ape NFTs.",
-//   volume: "11.1b",
-//   name: "Degenerate Trash Pandas",
-// };

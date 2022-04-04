@@ -4,7 +4,7 @@ import {
   Heading,
   Spacer,
   Center,
-   
+  Link,
   SimpleGrid,
   Spinner,
   Button,
@@ -14,7 +14,7 @@ import React from "react";
 // import AzeroIcon from "@theme/assets/icon/Azero.png";
 
 import { CollectionCard } from "@components/CollectionCard/CollectionCard";
-// import { Link as ReactRouterLink } from "react-router-dom";
+import { Link as ReactRouterLink } from "react-router-dom";
 import PaginationMP from "@components/Pagination/Pagination";
 import { useEffect, useState } from "react";
 import { delay } from "@utils";
@@ -29,6 +29,7 @@ function TabMyCollections() {
   const [collections, setCollections] = useState([]);
   const [totalPage, setTotalPage] = useState(undefined);
   const [loading, setLoading] = useState(null);
+  const [currentCollections, setCurrentCollections] = useState([]);
 
   const {
     pagesCount,
@@ -45,60 +46,51 @@ function TabMyCollections() {
       currentPage: 1,
     },
   });
-  console.log("offset", offset);
-  console.log("pageSize", pageSize);
 
-  const onGetCollectionCount = async () => {
-    let res = await collection_manager_calls.getActiveCollectionCount(
-      currentAccount
-    );
-    console.log(res);
-    if (res) {
-      setTotalPage(res);
-    } else {
-      setTotalPage(0);
-    }
-  };
+  console.log(pageSize);
 
   const getAllCollections = async (e) => {
     setLoading(true);
     var collections = [];
-    let attributes = null;
-    for (var i = offset; i < offset + NUMBER_PER_PAGE; i++) {
-      let collection_address = await collection_manager_calls.getContractById(
-        currentAccount,
-        i + 1
-      );
-
-      if (collection_address) {
-        let data = await collection_manager_calls.getCollectionByAddress(
-          currentAccount,
-          collection_address
-        );
-        if (data.isActive) {
-          attributes = await collection_manager_calls.getAttributes(
+    let collection_account = await collection_manager_calls.getCollectionsByOwner(currentAccount, currentAccount?.address);
+    if (collection_account) {
+      for (let collection of collection_account) {
+          let data = await collection_manager_calls.getCollectionByAddress(currentAccount, collection);
+          let attributes = await collection_manager_calls.getAttributes(
             currentAccount,
             data.nftContractAddress,
             ["name", "description", "avatar_image", "header_image"]
           );
           data.attributes = attributes;
           collections.push(data);
-        }
       }
     }
-
     setCollections(collections);
+    setTotalPage(collections.length);
     setLoading(false);
   };
+
+  const filterCollections = async (e) => {
+    setLoading(true);
+    let currentCollections = [];
+    for (var i = offset; i < offset + NUMBER_PER_PAGE; i++) {
+      if (collections[i]) {
+        currentCollections.push(collections[i]);
+      }
+    }
+    console.log(currentCollections);
+    setCurrentCollections(currentCollections);
+    setLoading(false);
+  }
 
   useEffect(async () => {
     await onRefresh();
   }, [currentPage, collection_manager_calls.isLoaded()]);
 
   const onRefresh = async () => {
-    await onGetCollectionCount();
-    await delay(1000);
     await getAllCollections();
+    await delay(1000);
+    await filterCollections();
   };
 
   return (
@@ -133,16 +125,16 @@ function TabMyCollections() {
           {!loading && (
             <>
               <Text textAlign='left' color="brand.grayLight">
-              There are {pagesCount} collections  
+              There are {collections.length} collections  
               </Text>
               <SimpleGrid
                 py={10}
                 columns={{ base: 1, md: 2, lg: 3 }}
                 spacing="8"
               >
-                {collections.map((item, idx) => (
+                {currentCollections.map((item, idx) => (
                   <>
-                    {/* <Link 
+                    <Link 
                       key={item?.nftContractAddress}
                       as={ReactRouterLink}
                       to={`collectionNew/${item?.nftContractAddress}`}
@@ -150,7 +142,7 @@ function TabMyCollections() {
                       _hover={{
                         bg: "brand.blue",
                       }}
-                    >*/}
+                    >
                       <CollectionCard
                         id={item?.nftContractAddress}
                         volume="111"
@@ -159,7 +151,7 @@ function TabMyCollections() {
                         desc={item?.attributes[1]}
                         name={item?.attributes[0]}
                       />
-                    {/* </Link> */}
+                    </Link>
                   </>
                 ))}
               </SimpleGrid>
