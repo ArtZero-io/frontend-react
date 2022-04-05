@@ -102,7 +102,7 @@ function TabMyCollections() {
 
   return (
     <>
-      <Box as="section" maxW="container.3xl" px={5}>
+      <Box as="section" maxW="container.3xl" px={5} minH='60rem'>
         <Box
           mx="auto"
           maxW={{ base: "xl", md: "7xl" }}

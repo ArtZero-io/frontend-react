@@ -1,6 +1,7 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import TabGeneral from "../components/TabGeneral";
 import TabMyCollections from "./TabMyCollections";
+import TabMyNFT from "./TabMyNFT";
 
 function AccountTab() {
   return (
@@ -39,7 +40,7 @@ const tabData = [
   },
   {
     label: "My NFT",
-    content: "My NFT",
+    content: <TabMyNFT />,
   },
   {
     label: "My Stakes",
