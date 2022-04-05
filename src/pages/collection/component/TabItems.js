@@ -1,12 +1,12 @@
 import { Flex } from "@chakra-ui/react";
-import LeftPanel from "./LeftPanel";
+// import LeftPanel from "./LeftPanel";
 import RightPanel from "./RightPanel";
 
 function TabItems() {
   
   return (
     <Flex>
-      <LeftPanel />
+      {/* <LeftPanel /> */}
       <RightPanel />
     </Flex>
   );

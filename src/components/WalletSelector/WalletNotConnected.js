@@ -11,12 +11,13 @@ import {
   MenuList,
   Text,
 } from "@chakra-ui/react";
-import { useSubstrate, loadAccounts } from "@utils/substrate/SubstrateContext";
+import { useSubstrate } from "@utils/substrate/SubstrateContext";
 import { SUPPORTED_WALLET_LIST } from "@constants/index";
 import SubwalletLogo from "@utils/wallets/SubWalletLogo.svg";
 import PolkadotjsLogo from "@utils/wallets/PolkadotjsLogo.svg";
 import TalismanLogo from "@utils/wallets/TalismanLogo.svg";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { loadAccounts } from "../../utils/substrate/SubstrateContext";
 
 function WalletNotConnected() {
   const { dispatch, state } = useSubstrate();
@@ -42,7 +43,7 @@ function WalletNotConnected() {
     <>
       <Box bg="transparent" height="100%" mx="auto" w={["", "28rem", "28rem"]}>
         <Flex align="center" justify="end" height="100%">
-          <Menu autoSelect={false} placement='bottom-end'>
+          <Menu autoSelect={false} placement="bottom-end">
             <MenuButton
               as={Button}
               height="14"
@@ -82,7 +83,7 @@ function WalletNotConnected() {
                             <Image src={PolkadotjsLogo} alt={extensionName} />
                           )}
                         </Box>
-                        <Text size='sm' ml="3" mr="2">
+                        <Text size="sm" ml="3" mr="2">
                           {title}
                         </Text>
 

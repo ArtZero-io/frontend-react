@@ -23,7 +23,6 @@ function CollectionPage(props) {
   const onRefresh = async () => {
     await getCollectionData();
     await delay(1000);
-
   };
 
   const getCollectionData = async () => {
@@ -31,23 +30,27 @@ function CollectionPage(props) {
       currentAccount,
       param.collectionAddress
     );
-    let attributes = await collection_manager_calls.getAttributes(currentAccount, data.nftContractAddress, ['name', 'description', 'avatar_image', 'header_image']);
+    let attributes = await collection_manager_calls.getAttributes(
+      currentAccount,
+      data.nftContractAddress,
+      ["name", "description", "avatar_image", "header_image"]
+    );
     let res = {
       id: param.collectionAddress,
       avatar: IPFS_BASE_URL + attributes[2],
       backdrop: IPFS_BASE_URL + attributes[3],
       volume: "11.1b",
       name: attributes[0],
-      description: attributes[1]
-    }; 
+      description: attributes[1],
+    };
     setCollectionData(res);
-  }
+  };
 
   return (
     <Layout backdrop={backdrop}>
       <CollectionHero {...collection} />
-      <CollectionMain {...collection}/>
-     </Layout>
+      <CollectionMain />
+    </Layout>
   );
 }
 

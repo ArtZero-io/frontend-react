@@ -15,7 +15,7 @@ const CollectionNFT = () => {
   const [address, setAddress] = useState("default");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const param = useParams();
-  const [ , setIsOwnerCollection] = useState(false);
+  const [ isOwnerCollection, setIsOwnerCollection] = useState(false);
   const { currentAccount } = useSubstrateState();
   const [currentCollection, setCurrentCollection] = useState({});
 
@@ -170,13 +170,13 @@ const CollectionNFT = () => {
   return (
     <div>
       <NFTModal address={address} isOpen={isOpen} onClose={onClose} />
-      <AddNewNFTModal
+      {/* <AddNewNFTModal
         collection={currentCollection}
         isOpen={isOpen}
         onClose={onClose}
       />
 
-      {/* {isOwnerCollection ? ( */}
+      {isOwnerCollection ? (
         <>
           <Button
             onClick={() => {
@@ -186,7 +186,7 @@ const CollectionNFT = () => {
             Add New NFT
           </Button>
         </>
-      {/* ) : (
+      ) : (
         ""
       )} */}
       <Grid

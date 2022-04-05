@@ -1,10 +1,19 @@
-import { Box, Button, Flex, Square, Input, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Square,
+  Input,
+  Text,
+  Spacer,
+} from "@chakra-ui/react";
 import React from "react";
 import CollectionNFT from "./CollectionNFT";
 import Dropdown from "../../../components/Dropdown/Dropdown";
 import { RiLayoutGridLine } from "react-icons/ri";
 import { BsGrid3X3 } from "react-icons/bs";
 import { RepeatIcon } from "@chakra-ui/icons";
+import AddNewNFTModal from "./Modal/AddNewNFT";
 
 function RightPanel() {
   return (
@@ -34,11 +43,13 @@ function RightPanel() {
           </Square>
         </Button>
       </Flex>
-
-      <Text px={2} py={4}>
-        123 items
-      </Text>
-
+      <Flex align="center" py={4}>
+        <Text px={2}  >
+          123 items
+        </Text>
+        <Spacer />
+        <AddNewNFTModal />
+      </Flex>
       <CollectionNFT />
     </Box>
   );

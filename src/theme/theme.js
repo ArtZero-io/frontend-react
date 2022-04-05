@@ -51,7 +51,7 @@ const theme = extendTheme({
         bg: "#222222",
         height: "3.125rem",
         px: "2rem",
-        mx: "0.25rem",
+        // mx: "0.25rem",
         textTransform: "uppercase",
         fontSize: "sm",
         fontWeight: "normal",
@@ -76,6 +76,10 @@ const theme = extendTheme({
         }),
         icon: (props) => ({
           padding: 0,
+          _hover: {
+            bg: "brand.blue",
+            color: "black",
+          },
         }),
         "buy-sell": (props) => ({
           bg: "brand.blue",
