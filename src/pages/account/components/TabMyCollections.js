@@ -7,7 +7,6 @@ import {
   Link,
   SimpleGrid,
   Spinner,
-  Button,
   Text,
 } from "@chakra-ui/react";
 import React from "react";
@@ -23,6 +22,7 @@ import { useSubstrateState } from "@utils/substrate";
 import { NUMBER_PER_PAGE } from "@constants/index";
 import { usePagination } from "@ajna/pagination";
 import { IPFS_BASE_URL } from "@constants/index";
+import AddNewCollection from "./Modal/AddNewCollection";
 
 function TabMyCollections() {
   const { currentAccount } = useSubstrateState();
@@ -52,17 +52,24 @@ function TabMyCollections() {
   const getAllCollections = async (e) => {
     setLoading(true);
     var collections = [];
-    let collection_account = await collection_manager_calls.getCollectionsByOwner(currentAccount, currentAccount?.address);
+    let collection_account =
+      await collection_manager_calls.getCollectionsByOwner(
+        currentAccount,
+        currentAccount?.address
+      );
     if (collection_account) {
       for (let collection of collection_account) {
-          let data = await collection_manager_calls.getCollectionByAddress(currentAccount, collection);
-          let attributes = await collection_manager_calls.getAttributes(
-            currentAccount,
-            data.nftContractAddress,
-            ["name", "description", "avatar_image", "header_image"]
-          );
-          data.attributes = attributes;
-          collections.push(data);
+        let data = await collection_manager_calls.getCollectionByAddress(
+          currentAccount,
+          collection
+        );
+        let attributes = await collection_manager_calls.getAttributes(
+          currentAccount,
+          data.nftContractAddress,
+          ["name", "description", "avatar_image", "header_image"]
+        );
+        data.attributes = attributes;
+        collections.push(data);
       }
     }
     setCollections(collections);
@@ -81,7 +88,7 @@ function TabMyCollections() {
     console.log(currentCollections);
     setCurrentCollections(currentCollections);
     setLoading(false);
-  }
+  };
 
   useEffect(async () => {
     await onRefresh();
@@ -104,12 +111,10 @@ function TabMyCollections() {
         >
           <Flex w="full" alignItems="end" pb={12}>
             <Heading size="2xl" letterSpacing="wider" fontWeight="normal">
-              Explore collections
+              My collections
             </Heading>
             <Spacer />
-            <Button variant="outline" color="brand.blue">
-              Add collection
-            </Button>
+            <AddNewCollection />
           </Flex>
           {loading && (
             <Center>
@@ -124,17 +129,18 @@ function TabMyCollections() {
           )}
           {!loading && (
             <>
-              <Text textAlign='left' color="brand.grayLight">
-              There are {collections.length} collections  
+              <Text textAlign="left" color="brand.grayLight">
+                There are {collections.length} collections
               </Text>
               <SimpleGrid
                 py={10}
                 columns={{ base: 1, md: 2, lg: 3 }}
                 spacing="8"
               >
+                {fakeCollection}
                 {currentCollections.map((item, idx) => (
                   <>
-                    <Link 
+                    <Link
                       key={item?.nftContractAddress}
                       as={ReactRouterLink}
                       to={`collectionNew/${item?.nftContractAddress}`}
@@ -150,6 +156,8 @@ function TabMyCollections() {
                         avatar={`${IPFS_BASE_URL}${item?.attributes[2]}`}
                         desc={item?.attributes[1]}
                         name={item?.attributes[0]}
+                        isActive={item?.isActive}
+                        variant="my-collection"
                       />
                     </Link>
                   </>
@@ -174,3 +182,41 @@ function TabMyCollections() {
 }
 
 export default TabMyCollections;
+
+const fake = {
+  collectionOwner: "5EfUESCp28GXw1v9CXmpAL5BfoCNW2y4skipcEoKAbN5Ykfn",
+  nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
+  name: "AlbertCoin",
+  description: "AlbertCoin",
+  avatarImage:
+    "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+  headerImage:
+    "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+  contractType: "2",
+  isCollectRoyalFee: true,
+  royalFee: "1",
+  isActive: true,
+  showOnChainMetadata: true,
+};
+const fakeCollection = (
+  <Link
+    key={fake?.nftContractAddress}
+    as={ReactRouterLink}
+    to={`collectionNew/${fake?.nftContractAddress}`}
+    className="collection-card-hover"
+    _hover={{
+      bg: "brand.blue",
+    }}
+  >
+    <CollectionCard
+      id={fake?.nftContractAddress}
+      volume="111"
+      backdrop={`${IPFS_BASE_URL}${fake?.headerImage}`}
+      avatar={`${IPFS_BASE_URL}${fake?.avatarImage}`}
+      desc={fake?.description}
+      name={fake?.name}
+      variant={"my-collection"}
+      isActive={false}
+    />
+  </Link>
+);

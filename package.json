@@ -36,6 +36,8 @@
     "@polkadot/util-crypto": "^8.4.1",
     "@yarnpkg/plugin-interactive-tools": "^3.1.2",
     "buffer": "^6.0.3",
+    "formik": "^2.2.9",
+    "formik-chakra-ui": "^1.6.0",
     "framer-motion": "^6",
     "ipfs-http-client": "^52.0.0",
     "jdenticon": "^3.1.1",
@@ -55,7 +57,8 @@
     "stream-browserify": "^3.0.0",
     "styled-components": "^5.3.5",
     "use-interval": "^1.4.0",
-    "yarn": "^1.22.18"
+    "yarn": "^1.22.18",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "eslint": "^8.10.0",

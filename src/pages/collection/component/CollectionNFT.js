@@ -8,17 +8,17 @@ import collection_manager_calls from "../../../utils/blockchain/collection-manag
 import artzero_nft_calls from "../../../utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "../../../utils/substrate";
 import { delay } from "../../../utils";
-import artzero_nft from '../../../utils/blockchain/artzero-nft';
+import artzero_nft from "../../../utils/blockchain/artzero-nft";
 
 const CollectionNFT = () => {
   const [NFT, setNFTDataList] = useState([]);
   const [address, setAddress] = useState("default");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const param = useParams();
-  const [isOwnerCollection, setIsOwnerCollection] = useState(false);
+  const [ , setIsOwnerCollection] = useState(false);
   const { currentAccount } = useSubstrateState();
   const [currentCollection, setCurrentCollection] = useState({});
-  
+
   useEffect(async () => {
     await onRefresh();
   }, [collection_manager_calls.isLoaded(), artzero_nft_calls.isLoaded()]);
@@ -27,20 +27,21 @@ const CollectionNFT = () => {
     await checkIsOwnerCollection();
     await loadListNFT();
     await delay(1000);
-    
   };
 
   const checkIsOwnerCollection = async () => {
-    let res = await collection_manager_calls.getCollectionOwner(currentAccount, param.collectionAddress);
+    let res = await collection_manager_calls.getCollectionOwner(
+      currentAccount,
+      param.collectionAddress
+    );
     if (res == currentAccount.address) {
       setIsOwnerCollection(true);
     } else {
       setIsOwnerCollection(false);
     }
-  }
+  };
 
-  const loadListNFT = async () =>
-  {
+  const loadListNFT = async () => {
     let NFTDataList = [
       {
         id: "18",
@@ -148,28 +149,46 @@ const CollectionNFT = () => {
         name: "Degenerate ape #4262",
       },
     ];
-    let currentCollection = await collection_manager_calls.getCollectionByAddress(currentAccount, param.collectionAddress);
+    let currentCollection =
+      await collection_manager_calls.getCollectionByAddress(
+        currentAccount,
+        param.collectionAddress
+      );
     setCurrentCollection(currentCollection);
     if (currentCollection.showOnChainMetadata) {
       console.log(currentCollection);
     } else {
-      if (currentCollection.nftContractAddress == artzero_nft.CONTRACT_ADDRESS) {
-        console.log(currentCollection.nftContractAddress); 
+      if (
+        currentCollection.nftContractAddress == artzero_nft.CONTRACT_ADDRESS
+      ) {
+        console.log(currentCollection.nftContractAddress);
       }
     }
     setNFTDataList(NFTDataList);
-  }
+  };
 
   return (
     <div>
       <NFTModal address={address} isOpen={isOpen} onClose={onClose} />
-      <AddNewNFTModal collection={currentCollection} isOpen={isOpen} onClose={onClose} />
-      
-      {(isOwnerCollection) ? <>
-        <Button onClick={() => {
-                onOpen();
-              }}>Add New NFT</Button>
-      </> : ''}
+      <AddNewNFTModal
+        collection={currentCollection}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
+
+      {/* {isOwnerCollection ? ( */}
+        <>
+          <Button
+            onClick={() => {
+              onOpen();
+            }}
+          >
+            Add New NFT
+          </Button>
+        </>
+      {/* ) : (
+        ""
+      )} */}
       <Grid
         templateColumns="repeat(auto-fill, minmax(min(100%, 250px), 1fr))"
         gap={6}
@@ -182,7 +201,7 @@ const CollectionNFT = () => {
               cursor="pointer"
               _hover={{ bg: "brand.blue" }}
               onClick={() => {
-                setAddress("abc");
+                setAddress(address);
                 onOpen();
               }}
             >
@@ -193,6 +212,6 @@ const CollectionNFT = () => {
       </Grid>
     </div>
   );
-}
+};
 
 export default CollectionNFT;

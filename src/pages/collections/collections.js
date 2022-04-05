@@ -170,7 +170,7 @@ const CollectionsPage = (props) => {
                 pagesCount={pagesCount}
                 setCurrentPage={setCurrentPage}
               />
-              <Spacer />{" "}
+              <Spacer />
               <Dropdown
                 maxW="3xs"
                 options={["Trending", "Hottest", "New Release"]}

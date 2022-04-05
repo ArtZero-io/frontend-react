@@ -4,14 +4,25 @@ import {
   Center,
   Flex,
   Heading,
+  Icon,
   Image,
+  Spacer,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.png";
+import { MdHighlightOff, MdCheckCircle } from "react-icons/md";
 
 export const CollectionCard = (props) => {
-  const { avatar, name, desc, volume, backdrop } = props;
+  const {
+    avatar,
+    name,
+    desc,
+    volume,
+    backdrop,
+    isActive,
+    variant,
+  } = props;
   return (
     <Box>
       <Flex
@@ -50,7 +61,7 @@ export const CollectionCard = (props) => {
             fallbackSrc="https://via.placeholder.com/64"
           />
         </Center>
-        <VStack pb={6} justifyContent="space-between" flexGrow="1">
+        <VStack pb={6} justifyContent="space-between" flexGrow="1" w='full' px={4}>
           <Box mt="4">
             <Heading as="h4" size="md">
               {name}
@@ -59,22 +70,51 @@ export const CollectionCard = (props) => {
           <Text color="brand.grayLight" maxW={{ base: "unset", md: "20rem" }}>
             {desc}
           </Text>
+
           <Flex
-            bg="blackAlpha.900"
-            h={10}
-            w={36}
+            w={variant === "my-collection" ? "full" : 36}
             alignItems="center"
-            justifyContent="center"
           >
-            <Avatar
-              src={AzeroIcon}
-              h={5}
-              w={5}
-              mr={2}
-              name="AzeroLogo"
-              bg="transparent"
-            />
-            <Text>Volume {volume}m</Text>
+            <Flex
+              bg="blackAlpha.900"
+              h={10}
+              w={36}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Avatar
+                src={AzeroIcon}
+                h={5}
+                w={5}
+                mr={2}
+                name="AzeroLogo"
+                bg="transparent"
+              />
+              <Text>Volume {volume} m</Text>
+            </Flex>
+
+            {variant === "my-collection" && (
+              <>
+                <Spacer />
+                {isActive && (
+                  <Flex color="brand.blue">
+                    <Icon as={MdCheckCircle} w={6} h={6} color="brand.blue" />
+                    <Text ml={1}>Active</Text>
+                  </Flex>
+                )}
+                {!isActive && (
+                  <Flex color="brand.grayLight">
+                    <Icon
+                      as={MdHighlightOff}
+                      w={6}
+                      h={6}
+                      color="brand.grayLight"
+                    />
+                    <Text ml={1}>Inactive</Text>
+                  </Flex>
+                )}
+              </>
+            )}
           </Flex>
         </VStack>
       </Flex>

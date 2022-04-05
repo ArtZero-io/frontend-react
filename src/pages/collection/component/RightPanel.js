@@ -5,7 +5,6 @@ import Dropdown from "../../../components/Dropdown/Dropdown";
 import { RiLayoutGridLine } from "react-icons/ri";
 import { BsGrid3X3 } from "react-icons/bs";
 import { RepeatIcon } from "@chakra-ui/icons";
- import NFTModal from "./NFTModal";
 
 function RightPanel() {
   return (
@@ -15,7 +14,7 @@ function RightPanel() {
           <Square size="3.125rem">
             <RepeatIcon />
           </Square>
-        </Button> 
+        </Button>
 
         <Button variant="outline">Show unlisted</Button>
 
@@ -39,7 +38,6 @@ function RightPanel() {
       <Text px={2} py={4}>
         123 items
       </Text>
-      <NFTModal/>
 
       <CollectionNFT />
     </Box>

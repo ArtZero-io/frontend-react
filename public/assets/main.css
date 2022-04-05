@@ -14,3 +14,10 @@
   font-family: "DS-Digital-Bold";
   src: url("./fonts/DS-DIGIB.TTF");
 }
+/* 
+form#simple-mode-form input {
+  background: black;
+}
+form#simple-mode-form input::placeholder {
+  color: white;
+} */

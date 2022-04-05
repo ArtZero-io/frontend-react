@@ -8,6 +8,7 @@ import React from "react";
 import NFTTab from "./NFTTab";
 
 function NFTModal({ address, isOpen, onClose }) {
+  console.log("NFTModal address", address);
   return (
     <Modal onClose={onClose} isCentered isOpen={isOpen} size={"7xl"}>
       <ModalOverlay
