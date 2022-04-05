@@ -7,10 +7,10 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
+import AdvancedModeForm from "../Form/AdvancedMode";
 
 function AdvancedMode() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -21,9 +21,7 @@ function AdvancedMode() {
         Advanced Mode
       </Button>
 
-      <Modal isCentered isOpen={isOpen} onClose={onClose}>
-        {" "}
-        size='xl'
+      <Modal isCentered isOpen={isOpen} onClose={onClose} size="6xl">
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
@@ -34,6 +32,7 @@ function AdvancedMode() {
           py={10}
           px={20}
           borderRadius="0"
+          textAlign="center"
         >
           <ModalCloseButton
             position="absolute"
@@ -48,7 +47,7 @@ function AdvancedMode() {
             </Heading>
           </ModalHeader>
           <ModalBody>
-            <Text>AdvancedMode</Text>
+            <AdvancedModeForm />
           </ModalBody>
         </ModalContent>
       </Modal>

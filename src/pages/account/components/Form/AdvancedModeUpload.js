@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 
 const client = create(IPFS_CLIENT_URL);
 
-const SimpleModeUpload = ({ profile }) => {
+const AdvancedModeUpload = ({ profile }) => {
   const [, setAvatar] = useState("");
 
   const [newAvatarData, setNewAvatarData] = useState(null);
@@ -105,4 +105,4 @@ const SimpleModeUpload = ({ profile }) => {
   );
 };
 
-export default SimpleModeUpload;
+export default AdvancedModeUpload;

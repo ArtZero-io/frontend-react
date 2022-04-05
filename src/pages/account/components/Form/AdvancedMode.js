@@ -16,9 +16,9 @@ import {
 } from "@chakra-ui/react";
 import { Formik, Form, useField, Field } from "formik";
 import * as Yup from "yup";
-import SimpleModeUpload from "./SimpleModeUpload";
+import AdvancedModeUpload from "./AdvancedModeUpload";
 
-const SimpleModeInput = ({ label, ...props }) => {
+const AdvancedModeInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   return (
     <FormControl h={28}>
@@ -35,7 +35,7 @@ const SimpleModeInput = ({ label, ...props }) => {
   );
 };
 
-const SimpleModeTextarea = ({ label, ...props }) => {
+const AdvancedModeTextarea = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   return (
     <FormControl h={28} mb={8}>
@@ -59,7 +59,7 @@ const SimpleModeTextarea = ({ label, ...props }) => {
   );
 };
 
-const SimpleModeSwitch = ({ label, ...props }) => {
+const AdvancedModeSwitch = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   return (
     <FormControl display="flex">
@@ -83,7 +83,7 @@ const SimpleModeSwitch = ({ label, ...props }) => {
   );
 };
 
-const SimpleModeNumberInput = ({ label, name, isDisabled, ...props }) => {
+const AdvancedModeNumberInput = ({ label, name, isDisabled, ...props }) => {
   // const [, meta] = useField(props);
   return (
     <Field name="royalFee">
@@ -115,24 +115,20 @@ const SimpleModeNumberInput = ({ label, name, isDisabled, ...props }) => {
   );
 };
 
-const SimpleModeForm = () => {
+const AdvancedModeForm = () => {
   return (
     <>
       <Formik
         initialValues={{
-          nftName: "",
-          nftSymbol: "",
+          nftContractAddress: "",
           collectionName: "",
           collectionDescription: "",
           collectRoyalFee: false,
           royalFee: 10,
         }}
         validationSchema={Yup.object({
-          nftName: Yup.string()
-            .max(15, "Must be 15 characters or less")
-            .required("Required"),
-          nftSymbol: Yup.string()
-            .max(20, "Must be 5 characters or less")
+          nftContractAddress: Yup.string()
+            .max(115, "Must be 115 characters or less")
             .required("Required"),
           collectionName: Yup.string()
             .max(20, "Must be 20 characters or less")
@@ -156,19 +152,13 @@ const SimpleModeForm = () => {
       >
         <Form>
           <HStack>
-            <SimpleModeInput
-              label="NFT Name"
-              name="nftName"
+            <AdvancedModeInput
+              label="NFT Contract Address"
+              name="nftContractAddress"
               type="text"
-              placeholder="NFT Name"
+              placeholder="NFT Contract Address"
             />
-            <SimpleModeInput
-              label="NFT Symbol"
-              name="nftSymbol"
-              type="text"
-              placeholder="NFT Symbol"
-            />
-            <SimpleModeInput
+            <AdvancedModeInput
               label="Collection Name"
               name="collectionName"
               type="collectionName"
@@ -176,7 +166,7 @@ const SimpleModeForm = () => {
             />
           </HStack>
 
-          <SimpleModeTextarea
+          <AdvancedModeTextarea
             label="Collection Description"
             name="collectionDescription"
             type="text"
@@ -184,16 +174,16 @@ const SimpleModeForm = () => {
           />
 
           <Stack direction={{ xl: "row", "2xl": "column" }} alignItems="start">
-            <SimpleModeUpload />
-            <SimpleModeUpload />
+            <AdvancedModeUpload />
+            <AdvancedModeUpload />
             {/* <Spacer /> */}
             <Stack direction={{ xl: "row", "2xl": "column" }} alignItems="end">
-              <SimpleModeSwitch
+              <AdvancedModeSwitch
                 label="Collect Royal Fee"
                 name="collectRoyalFee"
               />
 
-              <SimpleModeNumberInput
+              <AdvancedModeNumberInput
                 label="Royal Fee %"
                 name="royalFee"
                 type="number"
@@ -217,4 +207,4 @@ const SimpleModeForm = () => {
   );
 };
 
-export default SimpleModeForm;
+export default AdvancedModeForm;
