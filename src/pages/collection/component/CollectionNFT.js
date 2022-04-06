@@ -1,22 +1,22 @@
-import { Button, Grid, GridItem, useDisclosure } from "@chakra-ui/react";
+import { Grid, GridItem, useDisclosure } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { NFTCard } from "@components/NFTCard/NFTCard";
 import NFTModal from "./NFTModal";
-import AddNewNFTModal from "./AddNewNFTModal";
 import { useParams } from "react-router-dom";
 import collection_manager_calls from "../../../utils/blockchain/collection-manager-calls";
 import artzero_nft_calls from "../../../utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "../../../utils/substrate";
 import { delay } from "../../../utils";
 import artzero_nft from "../../../utils/blockchain/artzero-nft";
+import { ContractPromise } from "@polkadot/api-contract";
+import axios from 'axios';
 
 const CollectionNFT = () => {
   const [NFT, setNFTDataList] = useState([]);
-  const [address, setAddress] = useState("default");
+  const [address, setAddress] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const param = useParams();
-  const [ isOwnerCollection, setIsOwnerCollection] = useState(false);
-  const { currentAccount } = useSubstrateState();
+  const { api, currentAccount } = useSubstrateState();
   const [currentCollection, setCurrentCollection] = useState({});
 
   useEffect(async () => {
@@ -24,131 +24,12 @@ const CollectionNFT = () => {
   }, [collection_manager_calls.isLoaded(), artzero_nft_calls.isLoaded()]);
 
   const onRefresh = async () => {
-    await checkIsOwnerCollection();
     await loadListNFT();
     await delay(1000);
   };
 
-  const checkIsOwnerCollection = async () => {
-    let res = await collection_manager_calls.getCollectionOwner(
-      currentAccount,
-      param.collectionAddress
-    );
-    if (res == currentAccount.address) {
-      setIsOwnerCollection(true);
-    } else {
-      setIsOwnerCollection(false);
-    }
-  };
-
   const loadListNFT = async () => {
-    let NFTDataList = [
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-      {
-        id: "18",
-        img: "https://cdn-image.solanart.io/unsafe/600x600/filters:format(webp)/arweave.net/RlVE3yH-p4YPw2wpQxcgGDRzm91bNKbRsHrtG8rGgSU",
-        askPrice: "12.3",
-        bidPrice: "12.3",
-        name: "Degenerate ape #4262",
-      },
-    ];
+    let NFTDataList = [];
     let currentCollection =
       await collection_manager_calls.getCollectionByAddress(
         currentAccount,
@@ -161,7 +42,36 @@ const CollectionNFT = () => {
       if (
         currentCollection.nftContractAddress == artzero_nft.CONTRACT_ADDRESS
       ) {
-        console.log(currentCollection.nftContractAddress);
+        if (!artzero_nft_calls.isLoaded()) {
+          const artzero_nft_contract = new ContractPromise(
+              api,
+              artzero_nft.CONTRACT_ABI,
+              artzero_nft.CONTRACT_ADDRESS
+            );
+            artzero_nft_calls.setContract(artzero_nft_contract);
+        }
+
+        //TODO: handle again total supply, add pagination
+        const totalSupply = 10;
+        for (let i = 1; i <= totalSupply - 7; i++) {
+          const res = await artzero_nft_calls.tokenUri(currentAccount, i);
+          axios.get(res)
+            .then(response => {
+                if (response.status === 200) {
+                  const nft = {
+                    id: i,
+                    askPrice: "12.3",
+                    bidPrice: "12.3",
+                    name: response.data.name,
+                    img: response.data.image
+                  };
+                  NFTDataList.push(nft);
+                }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }
       }
     }
     setNFTDataList(NFTDataList);
@@ -169,26 +79,8 @@ const CollectionNFT = () => {
 
   return (
     <div>
+      {console.log(currentCollection)}
       <NFTModal address={address} isOpen={isOpen} onClose={onClose} />
-      {/* <AddNewNFTModal
-        collection={currentCollection}
-        isOpen={isOpen}
-        onClose={onClose}
-      />
-
-      {isOwnerCollection ? (
-        <>
-          <Button
-            onClick={() => {
-              onOpen();
-            }}
-          >
-            Add New NFT
-          </Button>
-        </>
-      ) : (
-        ""
-      )} */}
       <Grid
         templateColumns="repeat(auto-fill, minmax(min(100%, 250px), 1fr))"
         gap={6}
@@ -201,7 +93,7 @@ const CollectionNFT = () => {
               cursor="pointer"
               _hover={{ bg: "brand.blue" }}
               onClick={() => {
-                setAddress(address);
+                setAddress(item.id);
                 onOpen();
               }}
             >

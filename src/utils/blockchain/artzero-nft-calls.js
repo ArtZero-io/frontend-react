@@ -218,7 +218,8 @@ async function getAmount1(caller_account) {
   return null;
 }
 
-async function tokenUri(caller_account) {
+async function tokenUri(caller_account, tokenId) {
+
   if (!artzero_contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -230,9 +231,8 @@ async function tokenUri(caller_account) {
   const { result, output } = await artzero_contract.query.tokenUri(address, {
     value: azero_value,
     gasLimit,
-  });
+  }, tokenId);
   if (result.isOk) {
-    console.log("output.toHuman()", output.toHuman());
     return output.toHuman();
   }
   return null;

@@ -25,8 +25,7 @@ const AddNewNFTModal = ({ collection, isOpen, onClose }) => {
   const [attributes, setAttributes] = useState([]);
   const { api, currentAccount } = useSubstrateState();
   const [isLoadedContract, setIsLoadedContract] = useState(false);
-  const [nft721Psp34StandardContract, setNft721Psp34StandardContract] =
-    useState({});
+  const [nft721Psp34StandardContract, setNft721Psp34StandardContract] = useState({});
   const [formPropertyValues, setFormPropertyValues] = useState([]);
   const [formLevelValues, setFormLevelValues] = useState([]);
 

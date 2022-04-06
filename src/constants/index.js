@@ -4,7 +4,7 @@ export const CHROME_EXT_URL =
 export const FIREFOX_ADDON_URL =
   "https://addons.mozilla.org/en-US/firefox/addon/polkadot-js-extension/";
 
-export const NUMBER_PER_PAGE = 3;
+export const NUMBER_PER_PAGE = 6;
 
 export const IPFS_BASE_URL = "https://ipfs.infura.io/ipfs/";
 export const IPFS_CLIENT_URL = "https://ipfs.infura.io:5001/api/v0";
