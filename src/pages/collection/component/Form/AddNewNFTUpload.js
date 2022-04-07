@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 
 const client = create(IPFS_CLIENT_URL);
 
-const AdvancedModeUpload = ({ profile }) => {
+const AdvancedModeUpload = ({ setAvatarIPFSUrl }) => {
   const [, setAvatar] = useState("");
 
   const [newAvatarData, setNewAvatarData] = useState(null);
@@ -46,7 +46,11 @@ const AdvancedModeUpload = ({ profile }) => {
           });
 
         toast.promise(
-          uploadPromise().then((created) => setAvatar(created?.path)),
+          uploadPromise().then((created) => {
+            setAvatarIPFSUrl(created?.path);
+            setAvatar(created?.path);
+            console.log('created?.path', created?.path)
+          }),
           {
             loading: "Uploading...",
             success: () => `Upload Avatar successful.!`,
@@ -61,13 +65,13 @@ const AdvancedModeUpload = ({ profile }) => {
   };
 
   return (
-    <VStack alignItems="start" py={6} borderBottomWidth={2} >
+    <VStack alignItems="start" py={6} borderBottomWidth={2}>
       <Text ml={2}>Collection Avatar Image</Text>
       {!newAvatarPreviewUrl && (
         <HStack py="1" justifyContent="center">
           <label htmlFor="inputTag" style={{ cursor: "pointer" }}>
             <Flex alignItems="center">
-              <Button as="heading" variant="outline" color="brand.blue">
+              <Button as={Text} variant="outline" color="brand.blue">
                 Select Image
               </Button>
               <Text ml={4} color="brand.grayLight">

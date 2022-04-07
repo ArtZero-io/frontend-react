@@ -28,7 +28,7 @@ export function isValidAddressPolkadotAddress(address) {
   }
 };
 
-export function delay(timeout:number) {
+export function delay(timeout) {
     return new Promise(resolve => {
         setTimeout(resolve, timeout);
     });

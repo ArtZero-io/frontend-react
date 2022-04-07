@@ -10,79 +10,76 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import CommonInput from "../../../../components/Input/Input";
 
-function AddLevel({ data }) {
+const AddNewNFTLevelsList = ({ values }) => {
   return (
-    <Box py={6} borderBottomWidth={2}>
+    <>
       <Flex w="full">
         <VStack alignItems="start">
-          <Heading size='lg' fontWeight='400'>Levels</Heading>
-          <Text>Textural trails that show up as restangles</Text>
+          <Heading size="lg" fontWeight="400">
+            Levels
+          </Heading>
+          <Text>Textural trails that show up as restangles</Text>{" "}
         </VStack>
         <Spacer />
         <Button variant="outline" color="brand.blue">
           Add Levels
         </Button>
       </Flex>
-
       <Flex>
         <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
           <Text>Name</Text>
         </Box>
-        <Box mb={4} flexBasis="content" minW={72} textAlign="left" pl={3}>
-          <Text>Value</Text>
+        <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
+          <Text>Level</Text>
         </Box>
-
         <Box w={14} />
       </Flex>
+      <FieldArray
+        name="levels"
+        render={(arrayHelpers) => (
+          <div>
+            {values.levels.map((level, index) => (
+              <div key={index}>
+                {/** both these conventions do the same */}
+                <Flex alignItems="center" mb={4}>
+                  <Field as={Input} bg="black" name={`levels[${index}].name`} />
+                  <Field as={Input} bg="black" name={`levels.${index}.level`} />
+                  <Field
+                    as={Input}
+                    bg="black"
+                    name={`levels.${index}.maxLevel`}
+                  />
 
-      {data?.map((item) => (
-        <Flex alignItems="center" mb={4}>
-          <Box flexGrow={1} textAlign="left" pl={3}>
-            <Text>{item.name}</Text>
-          </Box>
+                  <Button
+                    variant="icon"
+                    borderWidth={2}
+                    onClick={() => arrayHelpers.remove(index)}
+                  >
+                    <Circle size="3.125rem">
+                      <DeleteIcon fontSize="1.5rem" />
+                    </Circle>
+                  </Button>
+                </Flex>
+              </div>
+            ))}
 
-          <Box textAlign="left" pl={3} minW={32}>
-            <Text>{item.value}</Text>
-          </Box>
-          <Text>of</Text>
-
-          <Box flexBasis="content" textAlign="left" pl={3} minW={32}>
-            <Text>{item.of}</Text>
-          </Box>
-
-          <Button variant="icon" borderWidth={2}>
-            <Circle size="3.125rem">
-              <DeleteIcon fontSize="1.5rem" />
-            </Circle>
-          </Button>
-        </Flex>
-      ))}
-
-      <Flex alignItems="center" mb={4}>
-        <CommonInput flexGrow="1" name="name" type="text" placeholder="name" />
-        <CommonInput
-          flexBasis="content"
-          name="value"
-          type="text"
-          placeholder="value"
-        />
-        <Text>of</Text>
-        <CommonInput
-          flexBasis="content"
-          name="of"
-          type="text"
-          placeholder="of"
-        />
-        <Button variant="icon" borderWidth={2}>
-          <Circle size="3.125rem">
-            <AddIcon fontSize="1.5rem" />
-          </Circle>
-        </Button>
-      </Flex>
-    </Box>
+            <Button
+              variant="icon"
+              borderWidth={2}
+              onClick={() =>
+                arrayHelpers.push({ name: "", level: "", maxLevel: "" })
+              }
+            >
+              <Circle size="3.125rem">
+                <AddIcon fontSize="1.5rem" />
+              </Circle>
+            </Button>
+          </div>
+        )}
+      />
+    </>
   );
-}
+};
 
-export default AddLevel;
+export default AddNewNFTLevelsList;

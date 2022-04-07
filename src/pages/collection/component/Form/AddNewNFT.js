@@ -1,17 +1,100 @@
+import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
+  Circle,
+  Flex,
   FormControl,
   FormLabel,
+  Heading,
   HStack,
   Input,
+  Spacer,
   Text,
   Textarea,
+  VStack,
 } from "@chakra-ui/react";
-import { Formik, Form, useField, Field } from "formik";
+import { Formik, Form, useField, Field, FieldArray } from "formik";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import * as Yup from "yup";
-import AddLevel from "./AddLevel";
 import AddNewNFTUpload from "./AddNewNFTUpload";
-import AddProperties from "./AddProperties";
+
+const AddNewNFTForm = () => {
+  const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
+  console.log("avatarIPFSUrl", avatarIPFSUrl);
+  return (
+    <div>
+      <Formik
+        initialValues={{
+          NFTName: "",
+          description: "",
+          properties: [{ type: "typeA ", name: "nameA" }],
+          levels: [{ name: "typeA ", level: "2", maxLevel: "5" }],
+        }}
+        validationSchema={Yup.object({
+          NFTName: Yup.string()
+            .max(20, "Must be 20 characters or less")
+            .required("Required"),
+          description: Yup.string()
+            .max(20, "Must be 200 characters or less")
+            .required("Required"),
+        })}
+        onSubmit={async (values, { setSubmitting }) => {
+          console.log("values first", values);
+
+          !avatarIPFSUrl && toast.error("Upload anh first");
+
+          if (avatarIPFSUrl) {
+            values.avatarIPFSUrl = avatarIPFSUrl;
+            console.log("values later", values);
+            alert(JSON.stringify(values));
+          }
+        }}
+      >
+        {({ values }) => (
+          <div>
+            <Form>
+              <>{JSON.stringify(values)}</>
+              <HStack>
+                <AddNewNFTInput
+                  label="NFT Name"
+                  name="NFTName"
+                  type="NFTName"
+                  placeholder="NFT Name"
+                />
+              </HStack>
+
+              <AddNewNFTTextarea
+                label="Description"
+                name="description"
+                type="text"
+                placeholder="Description"
+              />
+
+              <AddNewNFTUpload setAvatarIPFSUrl={setAvatarIPFSUrl} />
+
+              <AddNewNFTPropertiesList values={values} />
+              <AddNewNFTLevelsList values={values} />
+
+              <Button
+                variant="buy-sell"
+                w="full"
+                type="submit"
+                mt={8}
+                mb={{ xl: "16px", "2xl": "32px" }}
+              >
+                Add new NFT
+              </Button>
+            </Form>
+          </div>
+        )}
+      </Formik>
+    </div>
+  );
+};
+
+export default AddNewNFTForm;
 
 const AddNewNFTInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -54,64 +137,145 @@ const AddNewNFTTextarea = ({ label, ...props }) => {
   );
 };
 
-const AddNewNFTForm = () => {
+const AddNewNFTPropertiesList = ({ values }) => {
   return (
     <>
-      <Formik
-        initialValues={{
-          NFTName: "",
-          description: "",
-        }}
-        validationSchema={Yup.object({
-          NFTName: Yup.string()
-            .max(20, "Must be 20 characters or less")
-            .required("Required"),
-          description: Yup.string()
-            .max(20, "Must be 200 characters or less")
-            .required("Required"),
-        })}
-        onSubmit={async (values, { setSubmitting }) => {
-          alert(JSON.stringify(values));
-          await new Promise((r) => setTimeout(r, 500));
-          setSubmitting(false);
-        }}
-      >
-        <Form>
-          <HStack>
-            <AddNewNFTInput
-              label="NFT Name"
-              name="NFTName"
-              type="NFTName"
-              placeholder="NFT Name"
-            />
-          </HStack>
+      <Flex w="full">
+        <VStack alignItems="start">
+          <Heading size="lg" fontWeight="400">
+            properties
+          </Heading>
+          <Text>Textural trails that show up as restangles</Text>{" "}
+        </VStack>
+        <Spacer />
+        <Button variant="outline" color="brand.blue">
+          Add properties
+        </Button>
+      </Flex>
+      <Flex>
+        <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
+          <Text>Type</Text>
+        </Box>
+        <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
+          <Text>Name</Text>
+        </Box>
+        <Box w={14} />
+      </Flex>
+      <FieldArray
+        name="properties"
+        render={(arrayHelpers) => (
+          <div>
+            {values.properties.map((property, index) => (
+              <div key={index}>
+                {/** both these conventions do the same */}
+                <Flex alignItems="center" mb={4}>
+                  <Field
+                    as={Input}
+                    bg="black"
+                    name={`properties[${index}].type`}
+                  />
+                  <Field
+                    as={Input}
+                    bg="black"
+                    name={`properties.${index}.name`}
+                  />
 
-          <AddNewNFTTextarea
-            label="Description"
-            name="Description"
-            type="text"
-            placeholder="Description"
-          />
+                  <Button
+                    variant="icon"
+                    borderWidth={2}
+                    onClick={() => arrayHelpers.remove(index)}
+                  >
+                    <Circle size="3.125rem">
+                      <DeleteIcon fontSize="1.5rem" />
+                    </Circle>
+                  </Button>
+                </Flex>
+              </div>
+            ))}
 
-          <AddNewNFTUpload/>
-          <AddProperties data={fakePropsData}/>
-          <AddLevel data={fakeLevelData}/>
-          <Button
-            variant="buy-sell"
-            w="full"
-            type="submit"
-            mt={8}
-            mb={{ xl: "16px", "2xl": "32px" }}
-          >
-            Add new NFT
-          </Button>
-        </Form>
-      </Formik>
+            <Button
+              variant="icon"
+              borderWidth={2}
+              onClick={() => arrayHelpers.push({ type: "", name: "" })}
+            >
+              <Circle size="3.125rem">
+                <AddIcon fontSize="1.5rem" />
+              </Circle>
+            </Button>
+          </div>
+        )}
+      />
     </>
   );
 };
 
-export default AddNewNFTForm;
+const AddNewNFTLevelsList = ({ values }) => {
+  return (
+    <>
+      <Flex w="full">
+        <VStack alignItems="start">
+          <Heading size="lg" fontWeight="400">
+            Levels
+          </Heading>
+          <Text>Textural trails that show up as restangles</Text>{" "}
+        </VStack>
+        <Spacer />
+        <Button variant="outline" color="brand.blue">
+          Add Levels
+        </Button>
+      </Flex>
+      <Flex>
+        <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
+          <Text>Name</Text>
+        </Box>
+        <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
+          <Text>Level</Text>
+        </Box>
+        <Box w={14} />
+      </Flex>
+      <FieldArray
+        name="levels"
+        render={(arrayHelpers) => (
+          <div>
+            {values.levels.map((level, index) => (
+              <div key={index}>
+                {/** both these conventions do the same */}
+                <Flex alignItems="center" mb={4}>
+                  <Field as={Input} bg="black" name={`levels[${index}].name`} />
+                  <Field as={Input} bg="black" name={`levels.${index}.level`} />
+                  <Field
+                    as={Input}
+                    bg="black"
+                    name={`levels.${index}.maxLevel`}
+                  />
 
-const fakePropsData = [{ type: "type1", name: "name"}];
-const fakeLevelData = [{ name: "type1", value: "3", of:'5'}];
+                  <Button
+                    variant="icon"
+                    borderWidth={2}
+                    onClick={() => arrayHelpers.remove(index)}
+                  >
+                    <Circle size="3.125rem">
+                      <DeleteIcon fontSize="1.5rem" />
+                    </Circle>
+                  </Button>
+                </Flex>
+              </div>
+            ))}
+
+            <Button
+              variant="icon"
+              borderWidth={2}
+              onClick={() =>
+                arrayHelpers.push({ name: "", level: "", maxLevel: "" })
+              }
+            >
+              <Circle size="3.125rem">
+                <AddIcon fontSize="1.5rem" />
+              </Circle>
+            </Button>
+          </div>
+        )}
+      />
+    </>
+  );
+};

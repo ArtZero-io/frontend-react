@@ -1,4 +1,4 @@
-import { Avatar, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
+import { Avatar, Button, Flex, Heading, HStack, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { HiCloudUpload } from "react-icons/hi";
 
@@ -67,7 +67,7 @@ const AdvancedModeUpload = ({ profile }) => {
         <HStack py="1" justifyContent="center">
           <label htmlFor="inputTag" style={{ cursor: "pointer" }}>
             <Flex alignItems="center">
-              <Button as="heading" variant="outline" color="brand.blue">
+              <Button as={Heading} variant="outline" color="brand.blue">
                 Select Image
               </Button>
               <Text ml={4} color="brand.grayLight">

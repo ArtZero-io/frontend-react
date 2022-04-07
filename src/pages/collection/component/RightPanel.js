@@ -89,7 +89,10 @@ const RightPanel = () => {
           123 items
         </Text>
         <Spacer />
-        {(isOwnerCollection && currentCollection.contractType == 2) ? <AddNewNFTModal /> : ''}
+        {/* // Comment when done */}
+        <AddNewNFTModal /> 
+        {/* // Comment when done */}
+        {(isOwnerCollection && currentCollection.contractType === 2) ? <AddNewNFTModal /> : ''}
       </Flex>
       <CollectionNFT />
     </Box>
