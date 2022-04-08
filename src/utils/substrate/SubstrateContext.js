@@ -97,7 +97,24 @@ const connect = (state, dispatch) => {
 
   console.log(`Connected socket: ${socket}`);
   const provider = new WsProvider(socket);
-  const _api = new ApiPromise({ provider, rpc: jsonrpc });
+  const _api = new ApiPromise(
+    { 
+      provider, 
+      rpc: jsonrpc , 
+      types: {
+        ContractsPsp34Id: {
+          _enum: {
+            U8: "u8",
+            U16: "u16",
+            U32: "u32",
+            U64: "u64",
+            U128: "u128",
+            Bytes: "Vec<u8>"
+          }
+        }
+      }
+    }
+  );
   _api.on("connected", () => {
     dispatch({ type: "CONNECT", payload: _api });
 

@@ -43,7 +43,8 @@ const NewNFTForm = (props) => {
                 return atribute;
             });
         }
-        
+        console.log(nft721Psp34StandardContract);
+        console.log(currentAccount);
         if (existAttribute == false) {
             tmpAttributes.push({
                 name: name,
@@ -54,7 +55,7 @@ const NewNFTForm = (props) => {
     }
 
     const onSubmitHandler = async () => {
-        console.log(nft721Psp34StandardContract.mint(currentAccount));
+        console.log();
         
     }
 
