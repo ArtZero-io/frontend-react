@@ -93,9 +93,39 @@ const AddNewNFTForm = () => {
           if (avatarIPFSUrl) {
             values.avatarIPFSUrl = avatarIPFSUrl;
             if (collection.collectionOwner == currentAccount?.address) {
-              const newNft = await nft721Psp34StandardContract.mintWithAttributes(currentAccount);
+              let attributes = [
+                {
+                  name: 'nft_name',
+                  value: values.NFTName
+                },
+                {
+                  name: 'description',
+                  value: values.description
+                },
+                {
+                  name: 'avatar',
+                  value: values.avatarIPFSUrl
+                }
+              ];
+              
+              for (const property of values.properties) {
+                attributes.push({
+                  name: property.type,
+                  value: property.name
+                });
+              }
+
+              for (const level of values.levels) {
+                attributes.push({
+                  name: level.name,
+                  value: level.level + '|' + level.maxLevel
+                });
+              }
+              const newNft = await nft721Psp34StandardContract.mintWithAttributes(currentAccount, attributes);
+              console.log(attributes);
               console.log(newNft);
             } else {
+              console.log("You aren't the owner of this collection!");
               toast.error("You aren't the owner of this collection!")
             }
             

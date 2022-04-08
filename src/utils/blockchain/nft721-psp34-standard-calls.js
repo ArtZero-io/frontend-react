@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import BN from "bn.js";
+import { numberToU8a } from "@polkadot/util";
 
 let nft721_psp34_standard_contract;
 function setContract(c) {
@@ -74,13 +75,19 @@ async function mint(caller_account) {
   return unsubscribe;
 }
 
-async function (caller_account, attributes) {
-  if (!nft721_psp34_standard_contract || !caller_account || !attributes) {
-    console.log("invalid inputs");
-    return null;
-  }
+// async function setMultiAttributes() {
+//   if (!nft721_psp34_standard_contract || !caller_account) {
+//     console.log("invalid inputs");
+//     return null;
+//   }
+//   let unsubscribe;
+//   const injector = await web3FromSource(caller_account?.meta?.source);
+//   const address = caller_account?.address;
+//   const gasLimit = -1;
+//   const azero_value = 0;
   
-}
+  
+// }
 
 async function mintWithAttributes(caller_account, attributes) {
   if (!nft721_psp34_standard_contract || !caller_account) {
@@ -110,16 +117,31 @@ async function mintWithAttributes(caller_account, attributes) {
         }
 
         if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
           if (status.isFinalized) {
             const lastTokenId = await this.getTotalSupply(caller_account);
-            
+            let atributeName = [];
+            let attributeVal = [];
+            for (const attribute of attributes) {
+              atributeName.push(attribute.name);
+              attributeVal.push(attribute.value);
+            }
+            const tokenIdOnChain = await nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U8': numberToU8a(lastTokenId)});
+
+            nft721_psp34_standard_contract.tx["psp34Traits::setMultipleAttributes"]({ gasLimit, value: azero_value }, tokenIdOnChain, atributeName, attributeVal).signAndSend(address,
+              { signer: injector.signer },({ status }) => {
+                if (status) {
+                  const statusText = Object.keys(status.toHuman())[0];
+                  if (status.isFinalized) {
+                    toast.success(
+                      `Public Minting ${
+                        statusText === "0" ? "started" : statusText.toLowerCase()
+                      }.`
+                    );
+                  }
+                }
+              });
           }
-          toast.success(
-            `Public Minting ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
+          
 
         }
       }
