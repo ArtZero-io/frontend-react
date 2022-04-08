@@ -15,14 +15,59 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Formik, Form, useField, Field, FieldArray } from "formik";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 import AddNewNFTUpload from "./AddNewNFTUpload";
+import { useSubstrateState } from "@utils/substrate";
+import nft721_psp34_standard from "../../../../utils/blockchain/nft721-psp34-standard"
+import nft721_psp34_standard_calls from "../../../../utils/blockchain/nft721-psp34-standard-calls"
+import { ContractPromise } from "@polkadot/api-contract";
+import { useParams } from "react-router-dom";
+import collection_manager_calls from "../../../../utils/blockchain/collection-manager-calls";
+import { delay } from "../../../../utils";
 
 const AddNewNFTForm = () => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   console.log("avatarIPFSUrl", avatarIPFSUrl);
+  const { api, currentAccount } = useSubstrateState();
+  const [isLoadedContract, setIsLoadedContract] = useState(false);
+  const [nft721Psp34StandardContract, setNft721Psp34StandardContract] = useState({});
+  const param = useParams();
+  const [collection, setCollectionData] = useState({});
+
+  useEffect(async () => {
+    if (isLoadedContract == false) {
+        const nft721_psp34_standard_contract = new ContractPromise(
+            api,
+            nft721_psp34_standard.CONTRACT_ABI,
+            param.collectionAddress
+        );
+        nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+        setNft721Psp34StandardContract(nft721_psp34_standard_calls);
+        setIsLoadedContract(true);
+    }
+    
+  }, [isLoadedContract]);
+
+  useEffect(async () => {
+    await onRefresh();
+  }, [collection_manager_calls.isLoaded()]);
+
+  const onRefresh = async () => {
+    await getCollectionData();
+    await delay(1000);
+  };
+
+  const getCollectionData = async () => {
+    let data = await collection_manager_calls.getCollectionByAddress(
+      currentAccount,
+      param.collectionAddress
+    );
+    setCollectionData(data);
+  };
+
+
   return (
     <div>
       <Formik
@@ -44,11 +89,16 @@ const AddNewNFTForm = () => {
           console.log("values first", values);
 
           !avatarIPFSUrl && toast.error("Upload anh first");
-
+          
           if (avatarIPFSUrl) {
             values.avatarIPFSUrl = avatarIPFSUrl;
-            console.log("values later", values);
-            alert(JSON.stringify(values));
+            if (collection.collectionOwner == currentAccount?.address) {
+              const newNft = await nft721Psp34StandardContract.mintWithAttributes(currentAccount);
+              console.log(newNft);
+            } else {
+              toast.error("You aren't the owner of this collection!")
+            }
+            
           }
         }}
       >
