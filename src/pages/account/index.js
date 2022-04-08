@@ -87,7 +87,7 @@ const AccountPage = () => {
               useIdenticon={!profile?.avatar}
               addressRaw={currentAccount}
               avatarProps={{
-                src: `${IPFS_BASE_URL}${profile?.avatar}`,
+                src: `${IPFS_BASE_URL}/${profile?.avatar}`,
                 name: profile?.username,
               }}
               action={<UpdateProfileModal profile={profile} />}

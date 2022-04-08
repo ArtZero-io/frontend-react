@@ -106,12 +106,7 @@ const CollectionsPage = (props) => {
           py={{ base: "12", md: "28" }}
         >
           <Box textAlign="center">
-            <Heading
-              size="2xl"
-              letterSpacing="wider"
-              fontWeight="normal"
-              mb="9"
-            >
+            <Heading size="h1" mb="9">
               Explore collections
             </Heading>
             {/* <InputGroup
@@ -191,8 +186,8 @@ const CollectionsPage = (props) => {
                     <CollectionCard
                       id={item?.nftContractAddress}
                       volume="111"
-                      backdrop={`${IPFS_BASE_URL}${item?.attributes[3]}`}
-                      avatar={`${IPFS_BASE_URL}${item?.attributes[2]}`}
+                      backdrop={`${IPFS_BASE_URL}/${item?.attributes[3]}`}
+                      avatar={`${IPFS_BASE_URL}/${item?.attributes[2]}`}
                       desc={item?.attributes[1]}
                       name={item?.attributes[0]}
                     />

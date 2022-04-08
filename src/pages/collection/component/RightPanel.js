@@ -2,10 +2,10 @@ import {
   Box,
   Button,
   Flex,
-  Square,
   Input,
   Text,
   Spacer,
+  IconButton,
 } from "@chakra-ui/react";
 import CollectionNFT from "./CollectionNFT";
 import Dropdown from "../../../components/Dropdown/Dropdown";
@@ -20,9 +20,8 @@ import { delay } from "../../../utils";
 import React, { useState, useEffect } from "react";
 
 const RightPanel = () => {
-
   const param = useParams();
-  const [ isOwnerCollection, setIsOwnerCollection] = useState(false);
+  const [isOwnerCollection, setIsOwnerCollection] = useState(false);
   const { currentAccount } = useSubstrateState();
   const [currentCollection, setCurrentCollection] = useState({});
 
@@ -54,50 +53,55 @@ const RightPanel = () => {
         currentAccount,
         param.collectionAddress
       );
-      setCurrentCollection(currentCollection);
-  }
+    setCurrentCollection(currentCollection);
+  };
 
   return (
     <Box w="full" textAlign="left">
       <Flex w="full">
-        <Button variant="icon">
-          <Square size="3.125rem">
-            <RepeatIcon />
-          </Square>
-        </Button>
-
+        <IconButton
+          aria-label="download"
+          icon={<RepeatIcon fontSize="1.5rem" />}
+          size="icon"
+          variant="iconSolid"
+          mx={1}
+        />
         <Button variant="outline">Show unlisted</Button>
 
         <Input placeholder="Search items, collections, and accounts" />
 
         <Dropdown options={options} defaultItem={options[0]} />
-
-        <Button variant="icon">
-          <Square size="3.125rem">
-            <RiLayoutGridLine />
-          </Square>
-        </Button>
-
-        <Button variant="icon">
-          <Square size="3.125rem">
-            <BsGrid3X3 />
-          </Square>
-        </Button>
+        <IconButton
+          aria-label="download"
+          icon={<RiLayoutGridLine fontSize="1.5rem" />}
+          size="icon"
+          variant="iconSolid"
+          mx={1}
+        />
+        <IconButton
+          aria-label="download"
+          icon={<BsGrid3X3 fontSize="1.5rem" />}
+          size="icon"
+          variant="iconSolid"
+          mx={1}
+        />
       </Flex>
       <Flex align="center" py={4}>
-        <Text px={2}  >
-          123 items
-        </Text>
+        <Text px={2}>123 items</Text>
         <Spacer />
         {/* // Comment when done */}
-        <AddNewNFTModal /> 
+        <AddNewNFTModal />
         {/* // Comment when done */}
-        {(isOwnerCollection && currentCollection.contractType === 2) ? <AddNewNFTModal /> : ''}
+        {isOwnerCollection && currentCollection.contractType === 2 ? (
+          <AddNewNFTModal />
+        ) : (
+          ""
+        )}
       </Flex>
       <CollectionNFT />
     </Box>
   );
-}
+};
 
 export default RightPanel;
 

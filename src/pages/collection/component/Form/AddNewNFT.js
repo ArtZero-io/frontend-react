@@ -128,7 +128,7 @@ const AddNewNFTForm = () => {
               <AddNewNFTLevelsList values={values} />
 
               <Button
-                variant="buy-sell"
+                variant="solid"
                 w="full"
                 type="submit"
                 mt={8}

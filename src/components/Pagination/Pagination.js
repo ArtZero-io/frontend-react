@@ -1,4 +1,4 @@
-import { Text, Stack, Square, Button, Input } from "@chakra-ui/react";
+import { Text, Stack, Square, Input, IconButton } from "@chakra-ui/react";
 import {
   Pagination,
   // usePagination,
@@ -18,15 +18,13 @@ import {
 } from "@chakra-ui/icons";
 import toast from "react-hot-toast";
 
- 
 const PaginationMP = ({
   isDisabled,
   currentPage,
   pagesCount,
   setCurrentPage,
 }) => {
- 
-   const handlePageChange = (nextPage) => {
+  const handlePageChange = (nextPage) => {
     setCurrentPage(nextPage);
   };
 
@@ -41,7 +39,7 @@ const PaginationMP = ({
   };
 
   return (
-    <Stack maxW="25rem" textAlign='left'>
+    <Stack maxW="25rem" textAlign="left">
       <Text color="brand.grayLight" ml="1">
         Page {currentPage} of {pagesCount}
       </Text>
@@ -57,19 +55,14 @@ const PaginationMP = ({
           p={0}
           w="full"
         >
-          <Button
+          <IconButton
+            size="icon"
+            icon={<ArrowLeftIcon />}
+            variant="iconSolid"
+            aria-label="go-start"
             disabled={currentPage === 1}
-            variant="icon"
-            _hover={{
-              bg: "brand.blue",
-              color: "black",
-            }}
             onClick={() => setCurrentPage(1)}
-          >
-            <Square size="3.125rem">
-              <ArrowLeftIcon size="24px" />
-            </Square>
-          </Button>
+          />
           <PaginationPrevious
             p={0}
             _hover={{
@@ -105,19 +98,14 @@ const PaginationMP = ({
               />
             </Square>
           </PaginationNext>
-          <Button
-            variant="icon"
-            _hover={{
-              bg: "brand.blue",
-              color: "black",
-            }}
+          <IconButton
+            size="icon"
+            icon={<ArrowRightIcon />}
+            variant="iconSolid"
+            aria-label="go-end"
             onClick={() => setCurrentPage(pagesCount)}
             disabled={currentPage === pagesCount}
-          >
-            <Square size="50px">
-              <ArrowRightIcon size="18px" />
-            </Square>
-          </Button>{" "}
+          />{" "}
           <Input placeholder="Go to page" onKeyPress={onEnterHandler} />
         </PaginationContainer>
       </Pagination>

@@ -1,20 +1,23 @@
 import {
-  Avatar,
   Box,
   Flex,
   Heading,
   Image,
   Square,
+  Tag,
+  TagLabel,
+  TagRightIcon,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import AzeroIcon from "@theme/assets/icon/Azero.png";
+// import AzeroIcon from "@theme/assets/icon/Azero.png";
 // import { MdHighlightOff, MdCheckCircle } from "react-icons/md";
+import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 const MyNFTCard = (props) => {
   const { name = "test name", backdrop, isListing, isBids = true } = props;
   return (
-    <Box minW="234px" _hover={{ bg: "brand.blue" }} p={1}>
+    <Box minW="234px" _hover={{ bg: "brand.blue" }} p='px'>
       <Flex
         minW={56}
         direction="column"
@@ -34,14 +37,18 @@ const MyNFTCard = (props) => {
         </Square>
 
         <Box w="full" p={3}>
-          <Heading as="h4" mb={3} size="sm" textAlign="left">
+          <Heading mb={3} size="h6" textAlign="left">
             {name}
           </Heading>
           {isListing && (
             <Flex align="center" justify="start" w="full">
-              <VStack>
+              <VStack align="start">
                 <Text color="brand.grayLight">For sale at</Text>
-                <Flex alignItems="center" justifyContent="start">
+                <Tag>
+                  <TagLabel>82.00</TagLabel>
+                  <TagRightIcon as={AzeroIcon} />
+                </Tag>
+                {/* <Flex alignItems="center" justifyContent="start">
                   <Text mt={-2}>72.00</Text>
                   <Avatar
                     mt={-2}
@@ -52,7 +59,7 @@ const MyNFTCard = (props) => {
                     name="AzeroLogo"
                     bg="transparent"
                   />
-                </Flex>
+                </Flex> */}
               </VStack>
             </Flex>
           )}
@@ -60,7 +67,11 @@ const MyNFTCard = (props) => {
             <Flex align="center" justify="start" w="full">
               <VStack align="start">
                 <Text color="brand.grayLight">My offer</Text>
-                <Flex alignItems="center" justifyContent="start">
+                <Tag>
+                  <TagLabel>82.00</TagLabel>
+                  <TagRightIcon as={AzeroIcon} />
+                </Tag>
+                {/* <Flex alignItems="center" justifyContent="start">
                   <Text mt={-2}>72.00</Text>
                   <Avatar
                     mt={-2}
@@ -71,7 +82,7 @@ const MyNFTCard = (props) => {
                     name="AzeroLogo"
                     bg="transparent"
                   />
-                </Flex>
+                </Flex> */}
               </VStack>
             </Flex>
           )}

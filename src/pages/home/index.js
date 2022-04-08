@@ -14,6 +14,8 @@ import {
 import React from "react";
 import Layout from "../../components/Layout/Layout";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
+import ActiveIcon from "@theme/assets/icon/Active.js";
+import InActiveIcon from "@theme/assets/icon/InActive.js";
 
 function HomePage() {
   return (
@@ -29,16 +31,27 @@ function HomePage() {
             <TagLabel>Unlisted</TagLabel>
           </Tag>
           <Tag>
-            <TagLabel>12.88</TagLabel>
+            <TagLabel>82.00</TagLabel>
             <TagRightIcon as={AzeroIcon} />
           </Tag>
 
           <Tag variant="outline">
             <TagLabel>Fees: 3%</TagLabel>
           </Tag>
+
           <Tag variant="grayBg" size="2xl">
             <TagLabel>8,999</TagLabel>
             <TagRightIcon as={AzeroIcon} />
+          </Tag>
+
+          <Tag variant="active">
+            <TagLeftIcon as={ActiveIcon} />
+            <TagLabel>Active</TagLabel>
+          </Tag>
+
+          <Tag variant="inActive">
+            <TagLeftIcon as={InActiveIcon} />
+            <TagLabel>Inactive</TagLabel>
           </Tag>
         </Stack>
 
@@ -59,16 +72,14 @@ function HomePage() {
           <IconButton
             aria-label="download"
             icon={<DownloadIcon />}
-            size="lg"
-            w="3.125rem"
+            size="icon"
             variant="iconOutline"
           />
           <br />
           <IconButton
             aria-label="download"
             icon={<DownloadIcon />}
-            size="lg"
-            w="3.125rem"
+            size="icon"
             variant="iconOutline"
             isDisabled
           />
@@ -76,16 +87,14 @@ function HomePage() {
           <IconButton
             aria-label="download"
             icon={<DownloadIcon />}
-            size="lg"
-            w="3.125rem"
+            size="icon"
             variant="iconSolid"
           />
           <br />
           <IconButton
             aria-label="download"
             icon={<DownloadIcon />}
-            size="lg"
-            w="3.125rem"
+            size="icon"
             variant="iconSolid"
             isDisabled
           />

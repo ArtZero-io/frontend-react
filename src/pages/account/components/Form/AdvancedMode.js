@@ -108,7 +108,7 @@ const AdvancedModeForm = () => {
           </Stack>
 
           <Button
-            variant="buy-sell"
+            variant="solid"
             w="full"
             type="submit"
             mt={8}

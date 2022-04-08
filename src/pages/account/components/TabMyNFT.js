@@ -6,7 +6,7 @@ import {
   Center,
   Spinner,
   Button,
-  Square,
+  IconButton,
 } from "@chakra-ui/react";
 import React from "react";
 // import AzeroIcon from "@theme/assets/icon/Azero.png";
@@ -29,18 +29,25 @@ function TabMyNFT() {
           py={{ base: "12", md: "20" }}
         >
           <Flex w="full" alignItems="end" pb={12}>
-            <Heading size="2xl" letterSpacing="wider" fontWeight="normal">
-              My NFTs
-            </Heading>
+            <Heading size="h2">My NFTs</Heading>
             <Spacer />
-            <Button variant="outline">Collected</Button>
-            <Button variant="outline">My Listing</Button>
-            <Button variant="outline">My Bids</Button>
-            <Button variant="icon">
-              <Square size="3.125rem">
-                <RepeatIcon />
-              </Square>
+            <Button variant="outline" mx={1}>
+              Collected
             </Button>
+            <Button variant="outline" mx={1}>
+              My Listing
+            </Button>
+            <Button variant="outline" mx={1}>
+              My Bids
+            </Button>
+
+            <IconButton
+              mx={1}
+              aria-label="refresh"
+              icon={<RepeatIcon />}
+              size="icon"
+              variant="iconSolid"
+            />
           </Flex>
           {loading && (
             <Center>
@@ -72,10 +79,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -88,10 +93,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -103,10 +106,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -118,10 +119,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -133,10 +132,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -154,10 +151,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -170,10 +165,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -185,10 +178,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -200,10 +191,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -215,10 +204,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -236,10 +223,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -252,10 +237,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -267,10 +250,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -282,10 +263,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -297,10 +276,8 @@ const fake = [
         nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
         name: "AlbertCoin",
         description: "AlbertCoin",
-        avatarImage:
-          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-        headerImage:
-          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+        avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+        headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",

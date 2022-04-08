@@ -2,20 +2,27 @@ import React, { useState } from "react";
 import Layout from "../../components/Layout/Layout";
 import {
   Box,
-  Button,
   Center,
-  Circle,
   Heading,
   HStack,
   Image,
   Text,
   VStack,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  useDisclosure,
+  IconButton,
 } from "@chakra-ui/react";
 import { FaInstagram, FaTwitter, FaDiscord } from "react-icons/fa";
 import { EditIcon } from "@chakra-ui/icons";
 import AccountTab from "./components/AccountTab";
+import ProfileForm from "./components/Form/ProfileForm";
 
 function Account() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const [profile] = useState(accountData);
 
   const { avatar, name, description } = profile;
@@ -23,7 +30,7 @@ function Account() {
   return (
     <Layout>
       <Box as="section" maxW="container.3xl" px={5} position="relative">
-        {/* //Account Hero */}
+        <ProfileModal address="{address}" isOpen={isOpen} onClose={onClose} />
         <Box
           mx="auto"
           px={{ base: "6", md: "8" }}
@@ -52,40 +59,49 @@ function Account() {
 
             <HStack w="full" justifyContent="space-around" py={4}>
               <VStack textAlign="center" justifyContent="space-between">
-                <Heading size="2xl" letterSpacing="wider" fontWeight="normal">
+                <Heading size="h2" letterSpacing="wider" fontWeight="normal">
                   {name}
-                  <Button variant="icon" bg="transparent">
-                    <Circle size="3.125rem">
-                      <EditIcon size="3rem" />
-                    </Circle>
-                  </Button>
+                  <IconButton
+                    aria-label="edit-profile"
+                    icon={<EditIcon size="1.5rem" />}
+                    size="icon"
+                    variant="iconOutline"
+                    onClick={() => onOpen()}
+                    ml={5}
+                  />
                 </Heading>
 
-                <Text maxW="md">{description}</Text>
+                <Text fontSize="lg" maxW="md">
+                  {description}
+                </Text>
+
                 <HStack textAlign="center">
-                  <Button variant="icon" borderRadius="full">
-                    <Circle size="3.125rem">
-                      <FaInstagram size="1.5rem" />
-                    </Circle>
-                  </Button>
-                  <Button variant="icon" borderRadius="full">
-                    <Circle size="3.125rem">
-                      <FaTwitter size="1.5rem" />
-                    </Circle>
-                  </Button>
-                  <Button variant="icon" borderRadius="full">
-                    <Circle size="3.125rem">
-                      <FaDiscord size="1.5rem" />
-                    </Circle>
-                  </Button>
+                  <IconButton
+                    aria-label="download"
+                    icon={<FaInstagram size="1.5rem" />}
+                    size="icon"
+                    variant="iconOutline"
+                  />
+                  <IconButton
+                    aria-label="download"
+                    icon={<FaTwitter size="1.5rem" />}
+                    size="icon"
+                    variant="iconOutline"
+                  />
+                  <IconButton
+                    aria-label="download"
+                    icon={<FaDiscord size="1.5rem" />}
+                    size="icon"
+                    variant="iconOutline"
+                  />
                 </HStack>
               </VStack>
             </HStack>
           </VStack>
         </Box>
       </Box>
-      
-      <AccountTab/>
+
+      <AccountTab />
     </Layout>
   );
 }
@@ -103,3 +119,33 @@ const accountData = {
   volume: "11.1b",
   name: "Degenerate Trash Pandas",
 };
+
+function ProfileModal({ address, isOpen, onClose, isSale = true }) {
+  return (
+    <Modal onClose={onClose} isCentered isOpen={isOpen} size={"6xl"}>
+      <ModalOverlay
+        bg="blackAlpha.300"
+        backdropFilter="blur(10px) hue-rotate(90deg)"
+      />
+
+      <ModalContent
+        position="relative"
+        mx={{ "2xl": 72 }}
+        bg="brand.grayDark"
+        p={12}
+        borderRadius="0"
+        minH={{ xl: "md" }}
+      >
+        <ModalCloseButton
+          position="absolute"
+          top="-8"
+          right="-8"
+          borderWidth={2}
+          borderRadius="0"
+        />
+
+        <ProfileForm />
+      </ModalContent>
+    </Modal>
+  );
+}

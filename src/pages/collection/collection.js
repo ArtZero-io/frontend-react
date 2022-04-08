@@ -37,8 +37,8 @@ function CollectionPage(props) {
     );
     let res = {
       id: param.collectionAddress,
-      avatar: IPFS_BASE_URL + attributes[2],
-      backdrop: IPFS_BASE_URL + attributes[3],
+      avatar: `${IPFS_BASE_URL}/${attributes[2]}`,
+      backdrop: `${IPFS_BASE_URL}/${attributes[3]}`,
       volume: "11.1b",
       name: attributes[0],
       description: attributes[1],

@@ -11,6 +11,7 @@ const theme = extendTheme({
     "4xl-mid": "2.5rem",
     "5xl-mid": "3.5rem",
   },
+  // space: { 88: "22.5rem", 80: "20rem" },
   colors: {
     brand: {
       blue: "#7AE7FF",
@@ -62,24 +63,25 @@ const theme = extendTheme({
     Button: {
       baseStyle: {
         height: "3.125rem",
-        minWidth: "11.25rem",
+        // minWidth: "11.25rem",
         borderRadius: 0,
         px: "2rem",
         fontWeight: "normal",
       },
       sizes: {
-        // icon: {
-        //   width: "50px",
-        // },
+        icon: {
+          maxWidth: "3.125rem",
+          minWidth: "3.125rem",
+        },
       },
       variants: {
         outline: (props) => ({
           border: "2px solid #333",
-          bg: "#000",
+          bg: "transparent",
           color: "#7AE7FF",
           _hover: {
             border: "2px solid #7AE7FF",
-            bg: "#000",
+            bg: "transparent",
             filter: "drop-shadow(1px 3px 7px #7AE7FF70)",
             transition: "all 0.2s cubic-bezier(.08,.52,.52,1)",
 
@@ -91,7 +93,7 @@ const theme = extendTheme({
           },
           _focus: {
             border: "2px solid #7AE7FF",
-            bg: "#000",
+            bg: "transparent",
           },
           _disabled: {
             color: "#888",
@@ -299,6 +301,28 @@ const theme = extendTheme({
             backgroundColor: "transparent",
             color: "#fff",
             fontSize: "lg",
+          },
+        }),
+        active: (props) => ({
+          container: {
+            backgroundColor: "transparent",
+            borderColor: "#7AE7FF",
+            borderWidth: 0,
+          },
+          label: {
+            backgroundColor: "transparent",
+            color: "#7AE7FF",
+          },
+        }),
+        inActive: (props) => ({
+          container: {
+            backgroundColor: "transparent",
+            borderColor: "#7AE7FF",
+            borderWidth: 0,
+          },
+          label: {
+            backgroundColor: "transparent",
+            color: "#888",
           },
         }),
       },

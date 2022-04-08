@@ -17,7 +17,7 @@ import {
 import AzeroIcon from "@theme/assets/icon/Azero.png";
 import { FiUpload, FiRefreshCw } from "react-icons/fi";
 
-function NFTTabCollectible({ address, isSale = true }) {
+function NFTTabInfo({ address, isSale = true }) {
   return (
     <HStack>
       <Avatar w={{ xl: "16rem" }} h={{ xl: "16rem" }} rounded="none"></Avatar>
@@ -91,7 +91,7 @@ function NFTTabCollectible({ address, isSale = true }) {
               bg="black"
               placeholder="100"
             />
-            <Button ml={2} variant="buy-sell">
+            <Button ml={2} variant="solid">
               Push for sale
             </Button>
           </Flex>
@@ -112,7 +112,7 @@ function NFTTabCollectible({ address, isSale = true }) {
                 bg="transparent"
               />
             </Flex>
-            <Button ml={2} variant="buy-sell">
+            <Button ml={2} variant="solid">
               remove from sale
             </Button>
           </Flex>
@@ -122,7 +122,7 @@ function NFTTabCollectible({ address, isSale = true }) {
   );
 }
 
-export default NFTTabCollectible;
+export default NFTTabInfo;
 
 const atts = [
   { name: "Background", text: "Blue", value: "21.6%" },

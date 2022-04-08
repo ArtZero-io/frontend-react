@@ -21,9 +21,9 @@ function MyNFTCardsGroup({ collectionName, totalItems, listNFT }) {
   return (
     <Box my={10}>
       <Flex>
-        <Avatar />
-        <VStack align="start" ml={3}>
-          <Heading size="xs">{collectionName}</Heading>
+        <Avatar size={"lg"} />
+        <VStack align="start" ml={3} justifyContent="center">
+          <Heading size="h6">{collectionName}</Heading>
           <Text textAlign="left" color="brand.grayLight" size="2xs">
             {totalItems} items
           </Text>
@@ -34,11 +34,12 @@ function MyNFTCardsGroup({ collectionName, totalItems, listNFT }) {
         borderBottomWidth={1}
         templateColumns="repeat(auto-fill, minmax(min(100%, 224px), 1fr))"
         gap={6}
-        py={10} 
+        py={10}
       >
         {listNFT.map((item) => {
           return (
             <GridItem
+              shadow="base"
               w="100%"
               h="100%"
               cursor="pointer"

@@ -133,7 +133,7 @@ const Form = ({ onClose, profile }) => {
                     <AvatarUpload
                       src={
                         newAvatarPreviewUrl ||
-                        `${IPFS_BASE_URL}${profile?.avatar}`
+                        `${IPFS_BASE_URL}/${profile?.avatar}`
                       }
                     />
                   )}

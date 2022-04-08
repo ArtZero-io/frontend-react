@@ -144,7 +144,7 @@ const MyAccountDropdown = () => {
               fontFamily="Evogria, sans-serif"
               _hover={{ bg: "black" }}
               onClick={() => history.push(item.href)}
-              key={idx}
+              key={idx} to='#'
             >
               {item.label}
             </MenuItem>

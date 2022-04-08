@@ -128,7 +128,7 @@ const NFTTabCollectible = ({ address }) => {
             py={3}
             borderWidth={2}
           >
-            <Button variant="buy-sell">Buy now</Button>
+            <Button variant="solid">Buy now</Button>
             <Spacer />
             <Flex w="full">
               <Spacer />
@@ -158,7 +158,7 @@ const NFTTabCollectible = ({ address }) => {
             py={3}
             borderWidth={2}
           >
-            <Button variant="buy-sell">Make offer</Button>
+            <Button variant="solid">Make offer</Button>
             <Spacer />
             <Flex w="full">
               <Spacer />

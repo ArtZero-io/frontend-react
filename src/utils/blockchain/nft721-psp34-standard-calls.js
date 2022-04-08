@@ -9,20 +9,18 @@ function setContract(c) {
 }
 
 async function getTotalSupply(caller_account) {
-  if (!nft721_psp34_standard_contract || !caller_account
-    ){
-    console.log('invalid inputs');
+  if (!nft721_psp34_standard_contract || !caller_account) {
+    console.log("invalid inputs");
     return null;
   }
-  const address = caller_account?.address
-  const gasLimit = -1
-  const azero_value = 0
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
   //console.log(collection_manager_contract);
 
-  const { result, output } = await nft721_psp34_standard_contract.query["psp34::totalSupply"](
-    address,
-    { value: azero_value, gasLimit }
-  );
+  const { result, output } = await nft721_psp34_standard_contract.query[
+    "psp34::totalSupply"
+  ](address, { value: azero_value, gasLimit });
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
@@ -62,7 +60,6 @@ async function mint(caller_account) {
               statusText === "0" ? "started" : statusText.toLowerCase()
             }.`
           );
-
         }
       }
     )
@@ -74,13 +71,13 @@ async function mint(caller_account) {
   return unsubscribe;
 }
 
-async function (caller_account, attributes) {
-  if (!nft721_psp34_standard_contract || !caller_account || !attributes) {
-    console.log("invalid inputs");
-    return null;
-  }
-  
-}
+// async function abc (caller_account, attributes) {
+//   if (!nft721_psp34_standard_contract || !caller_account || !attributes) {
+//     console.log("invalid inputs");
+//     return null;
+//   }
+
+// }
 
 async function mintWithAttributes(caller_account, attributes) {
   if (!nft721_psp34_standard_contract || !caller_account) {
@@ -112,15 +109,14 @@ async function mintWithAttributes(caller_account, attributes) {
         if (status) {
           const statusText = Object.keys(status.toHuman())[0];
           if (status.isFinalized) {
+            // eslint-disable-next-line
             const lastTokenId = await this.getTotalSupply(caller_account);
-            
           }
           toast.success(
             `Public Minting ${
               statusText === "0" ? "started" : statusText.toLowerCase()
             }.`
           );
-
         }
       }
     )
@@ -132,12 +128,11 @@ async function mintWithAttributes(caller_account, attributes) {
   return resStatus;
 }
 
-
 const nft721_psp34_standard_calls = {
   mint,
   mintWithAttributes,
   getTotalSupply,
-  setContract
+  setContract,
 };
 
 export default nft721_psp34_standard_calls;

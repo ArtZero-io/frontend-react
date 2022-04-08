@@ -98,83 +98,75 @@ function TabMyCollections() {
   };
 
   return (
-    <>
-      <Box as="section" maxW="container.3xl" px={5} minH="60rem">
-        <Box
-          mx="auto"
-          maxW={{ base: "xl", md: "7xl" }}
-          px={{ base: "6", md: "8" }}
-          py={{ base: "12", md: "20" }}
-        >
-          <Flex w="full" alignItems="end" pb={12}>
-            <Heading size="2xl" letterSpacing="wider" fontWeight="normal">
-              My collections
-            </Heading>
-            <Spacer />
-            <AddNewCollection />
-          </Flex>
-          {loading && (
-            <Center>
-              <Spinner
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="blue.500"
-                size="xl"
-              />
-            </Center>
-          )}
-          {!loading && (
-            <>
-              <Text textAlign="left" color="brand.grayLight">
-                There are {collections.length} collections
-              </Text>
-              <SimpleGrid
-                py={10}
-                columns={{ base: 1, md: 2, lg: 3 }}
-                spacing="8"
-              >
-                {fakeCollection}
-                {currentCollections.map((item, idx) => (
-                  <>
-                    <Link
-                      key={item?.nftContractAddress}
-                      as={ReactRouterLink}
-                      to={`collectionNew/${item?.nftContractAddress}`}
-                      className="collection-card-hover"
-                      _hover={{
-                        bg: "brand.blue",
-                      }}
-                    >
-                      <CollectionCard
-                        id={item?.nftContractAddress}
-                        volume="111"
-                        backdrop={`${IPFS_BASE_URL}${item?.attributes[3]}`}
-                        avatar={`${IPFS_BASE_URL}${item?.attributes[2]}`}
-                        desc={item?.attributes[1]}
-                        name={item?.attributes[0]}
-                        isActive={item?.isActive}
-                        variant="my-collection"
-                      />
-                    </Link>
-                  </>
-                ))}
-              </SimpleGrid>
+    <Box as="section" maxW="container.3xl" px={5} minH="60rem">
+      <Box
+        mx="auto"
+        maxW={{ base: "xl", md: "7xl" }}
+        px={{ base: "6", md: "8" }}
+        py={{ base: "12", md: "20" }}
+      >
+        <Flex w="full" alignItems="end" pb={12}>
+          <Heading size="h2">My collections</Heading>
+          <Spacer />
+          <AddNewCollection />
+        </Flex>
+        {loading && (
+          <Center>
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="xl"
+            />
+          </Center>
+        )}
+        {!loading && (
+          <>
+            <Text textAlign="left" color="brand.grayLight">
+              There are {collections.length} collections
+            </Text>
+            <SimpleGrid py={10} columns={{ base: 1, md: 2, lg: 3 }} spacing="8">
+              {fakeCollection}
+              {currentCollections.map((item, idx) => (
+                <>
+                  <Link
+                    key={item?.nftContractAddress}
+                    as={ReactRouterLink}
+                    to={`collectionNew/${item?.nftContractAddress}`}
+                    className="collection-card-hover"
+                    _hover={{
+                      bg: "brand.blue",
+                    }}
+                  >
+                    <CollectionCard
+                      id={item?.nftContractAddress}
+                      volume="111"
+                      backdrop={`${IPFS_BASE_URL}/${item?.attributes[3]}`}
+                      avatar={`${IPFS_BASE_URL}/${item?.attributes[2]}`}
+                      desc={item?.attributes[1]}
+                      name={item?.attributes[0]}
+                      isActive={item?.isActive}
+                      variant="my-collection"
+                    />
+                  </Link>
+                </>
+              ))}
+            </SimpleGrid>
 
-              <Flex w="full">
-                <PaginationMP
-                  isDisabled={isDisabled}
-                  currentPage={currentPage}
-                  pagesCount={pagesCount}
-                  setCurrentPage={setCurrentPage}
-                />
-                <Spacer />
-              </Flex>
-            </>
-          )}
-        </Box>
+            <Flex w="full">
+              <PaginationMP
+                isDisabled={isDisabled}
+                currentPage={currentPage}
+                pagesCount={pagesCount}
+                setCurrentPage={setCurrentPage}
+              />
+              <Spacer />
+            </Flex>
+          </>
+        )}
       </Box>
-    </>
+    </Box>
   );
 }
 
@@ -185,10 +177,8 @@ const fake = {
   nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
   name: "AlbertCoin",
   description: "AlbertCoin",
-  avatarImage:
-    "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-  headerImage:
-    "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+  avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+  headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
   contractType: "2",
   isCollectRoyalFee: true,
   royalFee: "1",
@@ -208,8 +198,8 @@ const fakeCollection = (
     <CollectionCard
       id={fake?.nftContractAddress}
       volume="111"
-      backdrop={`${IPFS_BASE_URL}${fake?.headerImage}`}
-      avatar={`${IPFS_BASE_URL}${fake?.avatarImage}`}
+      backdrop={`${IPFS_BASE_URL}/${fake?.headerImage}`}
+      avatar={`${IPFS_BASE_URL}/${fake?.avatarImage}`}
       desc={fake?.description}
       name={fake?.name}
       variant={"my-collection"}

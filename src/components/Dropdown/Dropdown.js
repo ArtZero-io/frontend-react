@@ -23,6 +23,7 @@ function Dropdown({ options = [], defaultItem = "" }) {
           minW={{ xl: "max", "2xl": "3xs" }}
           textAlign="left"
           px={4}
+          variant='outline'
           as={Button}
           rightIcon={<ChevronDownIcon />}
         >
