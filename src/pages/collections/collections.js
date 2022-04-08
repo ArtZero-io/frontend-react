@@ -33,7 +33,7 @@ const CollectionsPage = (props) => {
     currentPage,
     setCurrentPage,
     isDisabled,
-    pageSize,
+    // pageSize,
   } = usePagination({
     total: totalPage,
     initialState: {
@@ -42,8 +42,6 @@ const CollectionsPage = (props) => {
       currentPage: 1,
     },
   });
-  console.log("offset", offset);
-  console.log("pageSize", pageSize);
 
   const onGetCollectionCount = async () => {
     let res = await collection_manager_calls.getActiveCollectionCount(

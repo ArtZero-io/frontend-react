@@ -9,11 +9,15 @@ import toast from "react-hot-toast";
 
 const client = create(IPFS_CLIENT_URL);
 
-const SimpleModeUpload = ({ profile }) => {
-  const [, setAvatar] = useState("");
+const ImageUpload = ({
+  title = "Upload Image",
+  setImageIPFSUrl,
+  limitedSize = { width: "430", height: "430" },
+}) => {
+  const [imgURL, setImgURL] = useState("");
 
   const [newAvatarData, setNewAvatarData] = useState(null);
-  const [newAvatarPreviewUrl, setNewAvatarPreviewUrl] = useState("");
+  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
 
   const retrieveNewAvatar = (e) => {
     const data = e.target.files[0];
@@ -29,7 +33,7 @@ const SimpleModeUpload = ({ profile }) => {
     if (e.target.value !== "") {
       const src = URL.createObjectURL(e.target.files[0]);
       console.log("src", src);
-      setNewAvatarPreviewUrl(src);
+      setImagePreviewUrl(src);
     }
   };
 
@@ -46,7 +50,11 @@ const SimpleModeUpload = ({ profile }) => {
           });
 
         toast.promise(
-          uploadPromise().then((created) => setAvatar(created?.path)),
+          uploadPromise().then((created) => {
+            setImageIPFSUrl(created?.path);
+            setImgURL(created?.path);
+            console.log("created?.path", created?.path);
+          }),
           {
             loading: "Uploading...",
             success: () => `Upload Avatar successful.!`,
@@ -61,13 +69,13 @@ const SimpleModeUpload = ({ profile }) => {
   };
 
   return (
-    <VStack alignItems="start" mb={6}>
-      <Text ml={2}>Collection Avatar Image</Text>
-      {!newAvatarPreviewUrl && (
+    <VStack alignItems="start" py={6} borderBottomWidth={2}>
+      <Text ml={2}>{title}</Text>
+      {!imagePreviewUrl && (
         <HStack py="1" justifyContent="center">
           <label htmlFor="inputTag" style={{ cursor: "pointer" }}>
             <Flex alignItems="center">
-              <Button as="heading" variant="outline" color="brand.blue">
+              <Button as={Text} variant="outline" color="brand.blue">
                 Select Image
               </Button>
               <Text ml={4} color="brand.grayLight">
@@ -85,24 +93,28 @@ const SimpleModeUpload = ({ profile }) => {
         </HStack>
       )}
 
-      {newAvatarPreviewUrl && (
+      {imagePreviewUrl && (
         <HStack justifyContent="center">
-          <Avatar ml={2} src={newAvatarPreviewUrl} />
-          <Button
-            size="xs"
-            leftIcon={<HiCloudUpload />}
-            onClick={onUploadHandler}
-          >
-            Upload Image
-          </Button>
+          <Avatar ml={2} src={imagePreviewUrl} />
+
+          {imgURL ? (
+            <div>Ready for submit</div>
+          ) : (
+            <Button
+              size="xs"
+              leftIcon={<HiCloudUpload />}
+              onClick={onUploadHandler}
+            >
+              Upload Image
+            </Button>
+          )}
         </HStack>
       )}
       <Text ml={2} fontSize="14px" color="brand.grayLight">
-        {" "}
-        Recommended file size is 430x430px
+        Recommended file size is {limitedSize.width}x{limitedSize.height} px
       </Text>
     </VStack>
   );
 };
 
-export default SimpleModeUpload;
+export default ImageUpload;

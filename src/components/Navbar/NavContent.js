@@ -125,6 +125,7 @@ const MyAccountDropdown = () => {
             m={0}
             fontFamily="Evogria, sans-serif"
             fontWeight="medium"
+            color='white'
           >
             My Account
           </Heading>

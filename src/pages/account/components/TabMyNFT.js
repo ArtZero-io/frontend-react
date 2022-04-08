@@ -73,9 +73,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -89,9 +89,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -104,9 +104,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -119,9 +119,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -134,9 +134,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -155,9 +155,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -171,9 +171,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -186,9 +186,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -201,9 +201,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -216,9 +216,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -237,9 +237,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -253,9 +253,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -268,9 +268,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -283,9 +283,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",
@@ -298,9 +298,9 @@ const fake = [
         name: "AlbertCoin",
         description: "AlbertCoin",
         avatarImage:
-          "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+          "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
         headerImage:
-          "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+          "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
         contractType: "2",
         isCollectRoyalFee: true,
         royalFee: "1",

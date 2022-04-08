@@ -15,8 +15,124 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { Formik, Form, useField, Field } from "formik";
+import { useState } from "react";
+import toast from "react-hot-toast";
 import * as Yup from "yup";
-import SimpleModeUpload from "./SimpleModeUpload";
+import ImageUpload from "./ImageUpload";
+
+const SimpleModeForm = () => {
+  const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
+  const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
+
+  return (
+    <>
+      <Formik
+        initialValues={{
+          nftName: "",
+          nftSymbol: "",
+          collectionName: "",
+          collectionDescription: "",
+          collectRoyalFee: false,
+          royalFee: 10,
+        }}
+        validationSchema={Yup.object({
+          nftName: Yup.string()
+            .max(15, "Must be 15 characters or less")
+            .required("Required"),
+          nftSymbol: Yup.string()
+            .max(20, "Must be 5 characters or less")
+            .required("Required"),
+          collectionName: Yup.string()
+            .max(20, "Must be 20 characters or less")
+            .required("Required"),
+          collectionDescription: Yup.string()
+            .max(20, "Must be 200 characters or less")
+            .required("Required"),
+          collectRoyalFee: Yup.boolean(),
+          royalFee: Yup.string().when("collectRoyalFee", {
+            is: (collectRoyalFee) => collectRoyalFee === true,
+            then: Yup.string().required(
+              "I am required now that checkboxes are checked"
+            ),
+          }),
+        })}
+        onSubmit={async (values, { setSubmitting }) => {
+          console.log("values first", values);
+
+          (!headerIPFSUrl || !avatarIPFSUrl) && toast.error("Upload anh first");
+
+          if (avatarIPFSUrl && headerIPFSUrl) {
+            values.avatarIPFSUrl = avatarIPFSUrl;
+            values.headerIPFSUrl = headerIPFSUrl;
+            console.log("values later", values);
+            alert(JSON.stringify(values));
+          }
+        }}
+      >
+        <Form>
+          <HStack>
+            <SimpleModeInput
+              label="NFT Name"
+              name="nftName"
+              type="text"
+              placeholder="NFT Name"
+            />
+            <SimpleModeInput
+              label="NFT Symbol"
+              name="nftSymbol"
+              type="text"
+              placeholder="NFT Symbol"
+            />
+            <SimpleModeInput
+              label="Collection Name"
+              name="collectionName"
+              type="collectionName"
+              placeholder="Collection Name"
+            />
+          </HStack>
+
+          <SimpleModeTextarea
+            label="Collection Description"
+            name="collectionDescription"
+            type="text"
+            placeholder="Collection Description"
+          />
+
+          <Stack direction={{ xl: "row", "2xl": "column" }} alignItems="start">
+            <ImageUpload setImageIPFSUrl={setAvatarIPFSUrl} />
+            <ImageUpload setImageIPFSUrl={setHeaderIPFSUrl} />
+
+            <Stack direction={{ xl: "row", "2xl": "column" }} alignItems="end">
+              <SimpleModeSwitch
+                label="Collect Royal Fee"
+                name="collectRoyalFee"
+              />
+
+              <SimpleModeNumberInput
+                label="Royal Fee %"
+                name="royalFee"
+                type="number"
+                placeholder="Royal Fee"
+              />
+            </Stack>
+          </Stack>
+
+          <Button
+            variant="buy-sell"
+            w="full"
+            type="submit"
+            mt={8}
+            mb={{ xl: "16px", "2xl": "32px" }}
+          >
+            Add new collection
+          </Button>
+        </Form>
+      </Formik>
+    </>
+  );
+};
+
+export default SimpleModeForm;
 
 const SimpleModeInput = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -114,107 +230,3 @@ const SimpleModeNumberInput = ({ label, name, isDisabled, ...props }) => {
     </Field>
   );
 };
-
-const SimpleModeForm = () => {
-  return (
-    <>
-      <Formik
-        initialValues={{
-          nftName: "",
-          nftSymbol: "",
-          collectionName: "",
-          collectionDescription: "",
-          collectRoyalFee: false,
-          royalFee: 10,
-        }}
-        validationSchema={Yup.object({
-          nftName: Yup.string()
-            .max(15, "Must be 15 characters or less")
-            .required("Required"),
-          nftSymbol: Yup.string()
-            .max(20, "Must be 5 characters or less")
-            .required("Required"),
-          collectionName: Yup.string()
-            .max(20, "Must be 20 characters or less")
-            .required("Required"),
-          collectionDescription: Yup.string()
-            .max(20, "Must be 200 characters or less")
-            .required("Required"),
-          collectRoyalFee: Yup.boolean(),
-          royalFee: Yup.string().when("collectRoyalFee", {
-            is: (collectRoyalFee) => collectRoyalFee === true,
-            then: Yup.string().required(
-              "I am required now that checkboxes are checked"
-            ),
-          }),
-        })}
-        onSubmit={async (values, { setSubmitting }) => {
-          alert(JSON.stringify(values));
-          await new Promise((r) => setTimeout(r, 500));
-          setSubmitting(false);
-        }}
-      >
-        <Form>
-          <HStack>
-            <SimpleModeInput
-              label="NFT Name"
-              name="nftName"
-              type="text"
-              placeholder="NFT Name"
-            />
-            <SimpleModeInput
-              label="NFT Symbol"
-              name="nftSymbol"
-              type="text"
-              placeholder="NFT Symbol"
-            />
-            <SimpleModeInput
-              label="Collection Name"
-              name="collectionName"
-              type="collectionName"
-              placeholder="Collection Name"
-            />
-          </HStack>
-
-          <SimpleModeTextarea
-            label="Collection Description"
-            name="collectionDescription"
-            type="text"
-            placeholder="Collection Description"
-          />
-
-          <Stack direction={{ xl: "row", "2xl": "column" }} alignItems="start">
-            <SimpleModeUpload />
-            <SimpleModeUpload />
-            {/* <Spacer /> */}
-            <Stack direction={{ xl: "row", "2xl": "column" }} alignItems="end">
-              <SimpleModeSwitch
-                label="Collect Royal Fee"
-                name="collectRoyalFee"
-              />
-
-              <SimpleModeNumberInput
-                label="Royal Fee %"
-                name="royalFee"
-                type="number"
-                placeholder="Royal Fee"
-              />
-            </Stack>
-          </Stack>
-
-          <Button
-            variant="buy-sell"
-            w="full"
-            type="submit"
-            mt={8}
-            mb={{ xl: "16px", "2xl": "32px" }}
-          >
-            Add new collection
-          </Button>
-        </Form>
-      </Formik>
-    </>
-  );
-};
-
-export default SimpleModeForm;

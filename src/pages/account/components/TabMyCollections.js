@@ -37,7 +37,7 @@ function TabMyCollections() {
     currentPage,
     setCurrentPage,
     isDisabled,
-    pageSize,
+    // pageSize,
   } = usePagination({
     total: totalPage,
     initialState: {
@@ -46,8 +46,6 @@ function TabMyCollections() {
       currentPage: 1,
     },
   });
-
-  console.log(pageSize);
 
   const getAllCollections = async (e) => {
     setLoading(true);
@@ -85,7 +83,6 @@ function TabMyCollections() {
         currentCollections.push(collections[i]);
       }
     }
-    console.log(currentCollections);
     setCurrentCollections(currentCollections);
     setLoading(false);
   };
@@ -102,7 +99,7 @@ function TabMyCollections() {
 
   return (
     <>
-      <Box as="section" maxW="container.3xl" px={5} minH='60rem'>
+      <Box as="section" maxW="container.3xl" px={5} minH="60rem">
         <Box
           mx="auto"
           maxW={{ base: "xl", md: "7xl" }}
@@ -189,9 +186,9 @@ const fake = {
   name: "AlbertCoin",
   description: "AlbertCoin",
   avatarImage:
-    "https://ipfs.infura.io/ipfs/QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
+    "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
   headerImage:
-    "https://ipfs.infura.io/ipfs/QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
+    "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
   contractType: "2",
   isCollectRoyalFee: true,
   royalFee: "1",
