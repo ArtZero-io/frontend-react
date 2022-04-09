@@ -10,6 +10,9 @@ import { delay } from "../../../utils";
 import artzero_nft from "../../../utils/blockchain/artzero-nft";
 import { ContractPromise } from "@polkadot/api-contract";
 import axios from 'axios';
+import nft721_psp34_standard from "../../../utils/blockchain/nft721-psp34-standard";
+import nft721_psp34_standard_calls from "../../../utils/blockchain/nft721-psp34-standard-calls";
+import { numberToU8a } from "@polkadot/util";
 
 const CollectionNFT = () => {
   const [NFT, setNFTDataList] = useState([]);
@@ -18,6 +21,7 @@ const CollectionNFT = () => {
   const param = useParams();
   const { api, currentAccount } = useSubstrateState();
   const [currentCollection, setCurrentCollection] = useState({});
+  // const [nft721Psp34StandardContract, setNft721Psp34StandardContract] = useState({});
 
   useEffect(async () => {
     await onRefresh();
@@ -37,7 +41,27 @@ const CollectionNFT = () => {
       );
     setCurrentCollection(currentCollection);
     if (currentCollection.showOnChainMetadata) {
-      console.log(currentCollection);
+      const nft721_psp34_standard_contract = new ContractPromise(
+        api,
+        nft721_psp34_standard.CONTRACT_ABI,
+        param.collectionAddress
+      );
+      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+      const totalSupply = await nft721_psp34_standard_calls.getTotalSupply(currentAccount);
+      for (let i = 1; i <= totalSupply; i++) {
+        const attribute_count = await nft721_psp34_standard_calls.getAttributeCount(currentAccount);
+        let attributes = [];
+        for (let j = 1; j <= attribute_count; j++) {
+          const attribute_name = await nft721_psp34_standard_calls.getAttributeName(currentAccount, j);
+          console.log(attribute_name);
+          if (attribute_name) {
+            attributes.push(attribute_name);
+          }
+        }
+        const tokenId = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U8': numberToU8a(i)});
+        const attributeVals = await nft721_psp34_standard_calls.getAttributes(currentAccount, tokenId, attributes);
+        console.log(attributeVals);
+      }
     } else {
       if (
         currentCollection.nftContractAddress == artzero_nft.CONTRACT_ADDRESS

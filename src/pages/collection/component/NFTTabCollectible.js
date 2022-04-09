@@ -26,12 +26,15 @@ import { delay } from "../../../utils";
 import artzero_nft from "../../../utils/blockchain/artzero-nft";
 import { ContractPromise } from "@polkadot/api-contract";
 import axios from 'axios';
+import nft721_psp34_standard from "../../../utils/blockchain/nft721-psp34-standard";
+import nft721_psp34_standard_calls from "../../../utils/blockchain/nft721-psp34-standard-calls";
 
 const NFTTabCollectible = ({ address }) => {
 
   const [NFT, setNFT] = useState({});
   const param = useParams();
   const { api, currentAccount } = useSubstrateState();
+  const [nft721Psp34StandardContract, setNft721Psp34StandardContract] = useState({});
 
   useEffect(async () => {
     await onRefresh();
@@ -48,9 +51,17 @@ const NFTTabCollectible = ({ address }) => {
         currentAccount,
         param.collectionAddress
       );
-  
+    console.log('NFTTAB', currentCollection);
+
     if (currentCollection.showOnChainMetadata) {
-      console.log(currentCollection);
+      const nft721_psp34_standard_contract = new ContractPromise(
+        api,
+        nft721_psp34_standard.CONTRACT_ABI,
+        param.collectionAddress
+      );
+      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+      setNft721Psp34StandardContract(nft721_psp34_standard_calls);
+      console.log(nft721Psp34StandardContract);
     } else {
       if (
         currentCollection.nftContractAddress == artzero_nft.CONTRACT_ADDRESS

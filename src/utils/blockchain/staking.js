@@ -1,8 +1,8 @@
 const staking = {
-  CONTRACT_ADDRESS: "5D94ZJKKQmzv4UamUoPfCMBWNcSQuN5U9umXMJQyaNkwBrFU",
+  CONTRACT_ADDRESS: "5FZPyiE6UYDjHFSn3rTPK7c56nky9akbbWCY84TVus16rF9m",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x491fc8b71661ad3ea2c77bd99e08afde25f3191774db2c2f0811073951f7bc27",
+      "hash": "0x60bd51d3c8385677ff73c95eab2610861d145dafde295e6927dc90cbfbfd81d1",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -312,21 +312,6 @@ const staking = {
           {
             "args": [],
             "docs": [],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [],
-            "docs": [],
             "label": "Ownable::renounce_ownership",
             "mutates": true,
             "payable": false,
@@ -364,6 +349,21 @@ const staking = {
               "type": 19
             },
             "selector": "0x11f43efd"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [

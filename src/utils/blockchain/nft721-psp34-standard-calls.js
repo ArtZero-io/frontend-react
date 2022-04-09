@@ -72,19 +72,41 @@ async function mint(caller_account) {
   return unsubscribe;
 }
 
-// async function setMultiAttributes() {
-//   if (!nft721_psp34_standard_contract || !caller_account) {
-//     console.log("invalid inputs");
-//     return null;
-//   }
-//   let unsubscribe;
-//   const injector = await web3FromSource(caller_account?.meta?.source);
-//   const address = caller_account?.address;
-//   const gasLimit = -1;
-//   const azero_value = 0;
-  
-  
-// }
+async function getAttributeName(caller_account, attributeIndex) {
+  if (!nft721_psp34_standard_contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const { result, output } = await nft721_psp34_standard_contract.query[
+    "psp34Traits::getAttributeName"
+  ](address, { value: azero_value, gasLimit }, attributeIndex);
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
+async function getAttributeCount(caller_account) {
+  if (!nft721_psp34_standard_contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const { result, output } = await nft721_psp34_standard_contract.query[
+    "psp34Traits::getAttributeCount"
+  ](address, { value: azero_value, gasLimit });
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
 
 async function mintWithAttributes(caller_account, attributes) {
   if (!nft721_psp34_standard_contract || !caller_account) {
@@ -152,11 +174,32 @@ async function mintWithAttributes(caller_account, attributes) {
   return resStatus;
 }
 
+async function getAttributes(caller_account, tokenId, attributes) {
+  if (!nft721_psp34_standard_contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  
+  const { result, output } = await nft721_psp34_standard_contract.query[
+    "psp34Traits::getAttributes"
+  ](address, { value: azero_value, gasLimit }, tokenId, attributes);
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
 const nft721_psp34_standard_calls = {
   mint,
   mintWithAttributes,
   getTotalSupply,
   setContract,
+  getAttributeCount,
+  getAttributeName,
+  getAttributes
 };
 
 export default nft721_psp34_standard_calls;
