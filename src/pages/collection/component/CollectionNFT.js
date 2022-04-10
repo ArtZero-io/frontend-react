@@ -12,7 +12,8 @@ import { ContractPromise } from "@polkadot/api-contract";
 import axios from 'axios';
 import nft721_psp34_standard from "../../../utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "../../../utils/blockchain/nft721-psp34-standard-calls";
-import { numberToU8a } from "@polkadot/util";
+import { numberToU8a, stringToHex } from "@polkadot/util";
+import { IPFS_BASE_URL } from "@constants/index";
 
 const CollectionNFT = () => {
   const [NFT, setNFTDataList] = useState([]);
@@ -49,19 +50,32 @@ const CollectionNFT = () => {
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
       const totalSupply = await nft721_psp34_standard_calls.getTotalSupply(currentAccount);
       for (let i = 1; i <= totalSupply; i++) {
-        const attribute_count = await nft721_psp34_standard_calls.getAttributeCount(currentAccount);
-        let attributes = [];
-        for (let j = 1; j <= attribute_count; j++) {
-          const attribute_name = await nft721_psp34_standard_calls.getAttributeName(currentAccount, j);
-          console.log(attribute_name);
-          if (attribute_name) {
-            attributes.push(attribute_name);
-          }
-        }
         const tokenId = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U8': numberToU8a(i)});
-        const attributeVals = await nft721_psp34_standard_calls.getAttributes(currentAccount, tokenId, attributes);
-        console.log(attributeVals);
+        console.log(stringToHex('nft_name'));
+        const tokenName = await nft721_psp34_standard_calls.getAttribute(currentAccount, tokenId, stringToHex('nft_name'));
+        const tokenAvatar = await nft721_psp34_standard_calls.getAttribute(currentAccount, tokenId, stringToHex('avatar'));
+        const nft = {
+          id: i,
+          askPrice: "12.3",
+          bidPrice: "12.3",
+          name: tokenName,
+          img: `${IPFS_BASE_URL}/${tokenAvatar}`
+        };
+        NFTDataList.push(nft);
+        // const attribute_count = await nft721_psp34_standard_calls.getAttributeCount(currentAccount);
+        // let attributes = [];
+        // for (let j = 1; j <= attribute_count; j++) {
+        //   const attribute_name = await nft721_psp34_standard_calls.getAttributeName(currentAccount, j);
+        //   console.log(attribute_name);
+        //   if (attribute_name && attribute_name != 'nft_name' && attribute_name != 'description' && attribute_name != 'avatar') {
+        //     attributes.push(attribute_name);
+        //   }
+        // }
+        // const tokenId = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U8': numberToU8a(i)});
+        // const attributeVals = await nft721_psp34_standard_calls.getAttributes(currentAccount, tokenId, attributes);
+        // console.log(attributeVals);
       }
+      setNFTDataList(NFTDataList);
     } else {
       if (
         currentCollection.nftContractAddress == artzero_nft.CONTRACT_ADDRESS

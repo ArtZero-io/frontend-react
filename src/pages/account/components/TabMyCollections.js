@@ -70,6 +70,7 @@ function TabMyCollections() {
         collections.push(data);
       }
     }
+
     setCollections(collections);
     setTotalPage(collections.length);
     setLoading(false);
@@ -127,7 +128,6 @@ function TabMyCollections() {
               There are {collections.length} collections
             </Text>
             <SimpleGrid py={10} columns={{ base: 1, md: 2, lg: 3 }} spacing="8">
-              {fakeCollection}
               {currentCollections.map((item, idx) => (
                 <>
                   <Link
@@ -171,39 +171,3 @@ function TabMyCollections() {
 }
 
 export default TabMyCollections;
-
-const fake = {
-  collectionOwner: "5EfUESCp28GXw1v9CXmpAL5BfoCNW2y4skipcEoKAbN5Ykfn",
-  nftContractAddress: "5CjyvL5W1YKYju5F5vyah9LC8gWZcBFrnG1theRViSCp4zCb",
-  name: "AlbertCoin",
-  description: "AlbertCoin",
-  avatarImage: "QmSSCnzwXBgwooUoEps4Y1yYv7u9e8YBw2EEzcpvzNnMWP",
-  headerImage: "QmeSwooLzUbA3hDDBnHrNaavtTjJTN8qni3VdQsgsLk722",
-  contractType: "2",
-  isCollectRoyalFee: true,
-  royalFee: "1",
-  isActive: true,
-  showOnChainMetadata: true,
-};
-const fakeCollection = (
-  <Link
-    key={fake?.nftContractAddress}
-    as={ReactRouterLink}
-    to={`collectionNew/${fake?.nftContractAddress}`}
-    className="collection-card-hover"
-    _hover={{
-      bg: "brand.blue",
-    }}
-  >
-    <CollectionCard
-      id={fake?.nftContractAddress}
-      volume="111"
-      backdrop={`${IPFS_BASE_URL}/${fake?.headerImage}`}
-      avatar={`${IPFS_BASE_URL}/${fake?.avatarImage}`}
-      desc={fake?.description}
-      name={fake?.name}
-      variant={"my-collection"}
-      isActive={false}
-    />
-  </Link>
-);

@@ -174,6 +174,24 @@ async function mintWithAttributes(caller_account, attributes) {
   return resStatus;
 }
 
+async function getAttribute(caller_account, tokenId, attribute) {
+  if (!nft721_psp34_standard_contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const { result, output } = await nft721_psp34_standard_contract.query[
+    "psp34Metadata::getAttribute"
+  ](address, { value: azero_value, gasLimit }, tokenId, attribute);
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
 async function getAttributes(caller_account, tokenId, attributes) {
   if (!nft721_psp34_standard_contract || !caller_account) {
     console.log("invalid inputs");
@@ -199,7 +217,8 @@ const nft721_psp34_standard_calls = {
   setContract,
   getAttributeCount,
   getAttributeName,
-  getAttributes
+  getAttributes,
+  getAttribute
 };
 
 export default nft721_psp34_standard_calls;

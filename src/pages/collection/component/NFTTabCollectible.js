@@ -28,13 +28,15 @@ import { ContractPromise } from "@polkadot/api-contract";
 import axios from 'axios';
 import nft721_psp34_standard from "../../../utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "../../../utils/blockchain/nft721-psp34-standard-calls";
+import { numberToU8a, stringToHex } from "@polkadot/util";
+import { IPFS_BASE_URL } from "@constants/index";
 
 const NFTTabCollectible = ({ address }) => {
 
   const [NFT, setNFT] = useState({});
   const param = useParams();
   const { api, currentAccount } = useSubstrateState();
-  const [nft721Psp34StandardContract, setNft721Psp34StandardContract] = useState({});
+
 
   useEffect(async () => {
     await onRefresh();
@@ -60,8 +62,38 @@ const NFTTabCollectible = ({ address }) => {
         param.collectionAddress
       );
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-      setNft721Psp34StandardContract(nft721_psp34_standard_calls);
-      console.log(nft721Psp34StandardContract);
+      const attribute_count = await nft721_psp34_standard_calls.getAttributeCount(currentAccount);
+      let atts = [];
+      const tokenId = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U8': numberToU8a(address)});
+      const tokenName = await nft721_psp34_standard_calls.getAttribute(currentAccount, tokenId, stringToHex('nft_name'));
+      const tokenAvatar = await nft721_psp34_standard_calls.getAttribute(currentAccount, tokenId, stringToHex('avatar'));
+      console.log(tokenAvatar);
+      const base_attributes = ['nft_name', 'description', 'avatar'];
+      for (let j = 1; j <= attribute_count; j++) {
+        const attribute_name = await nft721_psp34_standard_calls.getAttributeName(currentAccount, j);
+        
+        if (attribute_name && !base_attributes.includes(attribute_name) ) {
+          const attribute_val = await nft721_psp34_standard_calls.getAttribute(currentAccount, tokenId, stringToHex(attribute_name));
+          if (attribute_val) {
+            atts.push({ name: attribute_name, value: attribute_val });
+          }
+          
+        }
+      }
+      console.log(atts);
+      const nft = {
+        id: address,
+        askPrice: "12.3",
+        bidPrice: "12.3",
+        name: tokenName,
+        img: `${IPFS_BASE_URL}/${tokenAvatar}`,
+        atts: atts
+      };
+      console.log(nft);
+      setNFT(nft);
+      // const tokenId = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U8': numberToU8a(i)});
+      // const attributeVals = await nft721_psp34_standard_calls.getAttributes(currentAccount, tokenId, attributes);
+      // console.log(attributeVals);
     } else {
       if (
         currentCollection.nftContractAddress == artzero_nft.CONTRACT_ADDRESS
@@ -106,7 +138,7 @@ const NFTTabCollectible = ({ address }) => {
   return (
     
     <HStack>
-      <Avatar w={{ xl: "16rem" }} h={{ xl: "16rem" }} rounded="none"></Avatar>
+      <Avatar w={{ xl: "16rem" }} h={{ xl: "16rem" }} src={NFT.img} rounded="none"></Avatar>
       <VStack w="full" px={10} py={2}>
         <Box w="full">
           <Flex>
@@ -149,7 +181,7 @@ const NFTTabCollectible = ({ address }) => {
                   <Flex pl={3} alignItems="center" justifyContent="center">
                     <Text color="brand.blue">123</Text>
                     <Avatar
-                      src={NFT.img}
+                      src={AzeroIcon}
                       h={5}
                       w={5}
                       ml={2}
