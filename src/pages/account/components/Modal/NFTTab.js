@@ -3,11 +3,11 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import NFTTabInfo from "./NFTTabInfo";
 import NFTTabOffers from "./NFTTabOffers";
 
-function NFTTab({ address }) {
+function NFTTab({ nft_detail, collection_detail, nft_contract_address, address }) {
   const tabData = [
     {
       label: "NFT info",
-      content: <NFTTabInfo address={address} />,
+      content: <NFTTabInfo nft_detail={nft_detail} nft_contract_address={nft_contract_address} address={address} collection_detail={collection_detail}/>,
     },
     {
       label: "Offers",

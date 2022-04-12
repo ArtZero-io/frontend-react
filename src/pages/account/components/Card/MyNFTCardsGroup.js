@@ -14,10 +14,10 @@ import NFTModal from "../Modal/NFTModal";
 // import { Link } from "react-router-dom";
 import MyNFTCard from "./MyNFTCard";
 
-function MyNFTCardsGroup({ collectionName, totalItems, listNFT }) {
+function MyNFTCardsGroup({ collectionName, collection_detail, totalItems, listNFT , nftContractAddress}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [address, setAddress] = useState("default");
-
+  const [ nft_detail, setNftDetail ] = useState({});
   return (
     <Box my={10}>
       <Flex>
@@ -29,14 +29,14 @@ function MyNFTCardsGroup({ collectionName, totalItems, listNFT }) {
           </Text>
         </VStack>
       </Flex>
-      <NFTModal address={address} isOpen={isOpen} onClose={onClose} />
+      <NFTModal nft_detail={nft_detail} collection_detail={collection_detail} nft_contract_address={nftContractAddress} address={address} isOpen={isOpen} onClose={onClose} />
       <Grid
         borderBottomWidth={1}
         templateColumns="repeat(auto-fill, minmax(min(100%, 224px), 1fr))"
         gap={6}
         py={10}
       >
-        {listNFT.map((item) => {
+        {listNFT.length ? listNFT.map((item) => {
           return (
             <GridItem
               shadow="base"
@@ -45,13 +45,14 @@ function MyNFTCardsGroup({ collectionName, totalItems, listNFT }) {
               cursor="pointer"
               onClick={() => {
                 setAddress(address);
+                setNftDetail(item);
                 onOpen();
               }}
             >
               <MyNFTCard {...item} />
             </GridItem>
           );
-        })}
+        }) : ''}
       </Grid>
     </Box>
   );

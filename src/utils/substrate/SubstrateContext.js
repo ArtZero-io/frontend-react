@@ -111,7 +111,7 @@ const connect = (state, dispatch) => {
             U128: "u128",
             Bytes: "Vec<u8>"
           }
-        }
+        },
       }
     }
   );
