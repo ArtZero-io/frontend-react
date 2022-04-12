@@ -3,47 +3,51 @@ import {
   FormControl,
   FormLabel,
   HStack,
-  Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
   Stack,
-  Switch,
-  Text,
-  Textarea,
 } from "@chakra-ui/react";
-import { Formik, Form, useField, Field } from "formik";
+import { Formik, Form, Field } from "formik";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
-import ImageUpload from "./ImageUpload";
-import { useSubstrateState } from '../../../../utils/substrate';
-import collection_manager_calls from "../../../../utils/blockchain/collection-manager-calls";
+import ImageUpload from "@components/ImageUpload/Collection";
+import { useSubstrateState } from "@utils/substrate";
+import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+import SimpleModeInput from "../../../components/Input";
+import SimpleModeTextArea from "../../../components/TextArea";
+import SimpleModeSwitch from "../../../components/Switch";
+import { useDispatch } from "react-redux";
 
 const SimpleModeForm = () => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
   const [addingFee, setAddingFee] = useState(0);
   const { currentAccount, api } = useSubstrateState();
-
+  const dispatch = useDispatch();
   useEffect(async () => {
     if (addingFee == 0) {
-        const adddingFee = await collection_manager_calls.getAddingFee(currentAccount);
-        setAddingFee(adddingFee / (10**12));
+      const adddingFee = await collection_manager_calls.getAddingFee(
+        currentAccount
+      );
+      setAddingFee(adddingFee / 10 ** 12);
     }
   }, [addingFee]);
 
   const checkCurrentBalance = async () => {
-    const { data: balance } = await api.query.system.account(currentAccount.address);
+    const { data: balance } = await api.query.system.account(
+      currentAccount.address
+    );
     console.log(balance.free);
     if (balance.free.toNumber() > addingFee) {
-        return true;
+      return true;
     } else {
-        return false;
+      return false;
     }
-  }
+  };
 
   return (
     <>
@@ -80,26 +84,41 @@ const SimpleModeForm = () => {
         onSubmit={async (values, { setSubmitting }) => {
           console.log("values first", values);
 
-          (!headerIPFSUrl || !avatarIPFSUrl) && toast.error("Upload anh first");
+          (!headerIPFSUrl || !avatarIPFSUrl) &&
+            toast.error("Upload avatar or header too");
 
           if (avatarIPFSUrl && headerIPFSUrl) {
             values.avatarIPFSUrl = avatarIPFSUrl;
             values.headerIPFSUrl = headerIPFSUrl;
             if (!checkCurrentBalance) {
-              toast.error(
-                  `Your balance not enough`
-                );
+              toast.error(`Your balance not enough`);
             } else {
-                const data = {
-                    nftName: values.nftName,
-                    nftSymbol: values.nftSymbol,
-                    attributes: ['name', 'description', 'avatar_image', 'header_image'],
-                    attributeVals: [values.collectionName, values.collectionDescription, values.avatarIPFSUrl, values.headerIPFSUrl],
-                    collectionAllowRoyalFee: values.collectionRoyalFee,
-                    collectionRoyalFeeData: (values.collectionRoyalFee) ?  Math.round(values.royalFee * 100) : 0
-                };
+              const data = {
+                nftName: values.nftName,
+                nftSymbol: values.nftSymbol,
+                attributes: [
+                  "name",
+                  "description",
+                  "avatar_image",
+                  "header_image",
+                ],
+                attributeVals: [
+                  values.collectionName,
+                  values.collectionDescription,
+                  values.avatarIPFSUrl,
+                  values.headerIPFSUrl,
+                ],
+                collectionAllowRoyalFee: values.collectionRoyalFee,
+                collectionRoyalFeeData: values.collectionRoyalFee
+                  ? Math.round(values.royalFee * 100)
+                  : 0,
+              };
 
-                await collection_manager_calls.autoNewCollection(currentAccount, data);
+              await collection_manager_calls.autoNewCollection(
+                currentAccount,
+                data,
+                dispatch
+              );
             }
           }
         }}
@@ -126,7 +145,7 @@ const SimpleModeForm = () => {
             />
           </HStack>
 
-          <SimpleModeTextarea
+          <SimpleModeTextArea
             label="Collection Description"
             name="collectionDescription"
             type="text"
@@ -135,6 +154,7 @@ const SimpleModeForm = () => {
 
           <Stack direction={{ xl: "row", "2xl": "column" }} alignItems="start">
             <ImageUpload setImageIPFSUrl={setAvatarIPFSUrl} />
+
             <ImageUpload setImageIPFSUrl={setHeaderIPFSUrl} />
 
             <Stack direction={{ xl: "row", "2xl": "column" }} alignItems="end">
@@ -168,71 +188,6 @@ const SimpleModeForm = () => {
 };
 
 export default SimpleModeForm;
-
-const SimpleModeInput = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
-  return (
-    <FormControl h={28}>
-      <FormLabel ml={2} htmlFor={props.id || props.name}>
-        {label}
-      </FormLabel>
-      <Field pl={2} as={Input} bg="black" {...field} {...props} />
-      {meta.touched && meta.error ? (
-        <Text textAlign="left" color="red" ml={2}>
-          {meta.error}
-        </Text>
-      ) : null}
-    </FormControl>
-  );
-};
-
-const SimpleModeTextarea = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
-  return (
-    <FormControl h={28} mb={8}>
-      <FormLabel ml={2} htmlFor={props.id || props.name}>
-        {label}
-      </FormLabel>
-      <Field
-        pl={2}
-        borderRadius="0"
-        as={Textarea}
-        bg="black"
-        {...field}
-        {...props}
-      />
-      {meta.touched && meta.error ? (
-        <Text textAlign="left" color="red" ml={2}>
-          {meta.error}
-        </Text>
-      ) : null}
-    </FormControl>
-  );
-};
-
-const SimpleModeSwitch = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
-  return (
-    <FormControl display="flex">
-      <FormLabel ml={1} htmlFor={props.id || props.name}>
-        {label}
-      </FormLabel>
-      <Field
-        pl={2}
-        size="lg"
-        as={Switch}
-        colorScheme="teal"
-        {...field}
-        {...props}
-      />
-      {meta.touched && meta.error ? (
-        <Text textAlign="left" color="red" ml={2}>
-          {meta.error}
-        </Text>
-      ) : null}
-    </FormControl>
-  );
-};
 
 const SimpleModeNumberInput = ({ label, name, isDisabled, ...props }) => {
   // const [, meta] = useField(props);

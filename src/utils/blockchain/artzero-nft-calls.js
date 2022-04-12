@@ -5,7 +5,7 @@ import { web3FromSource } from "../wallets/extension-dapp";
 import { isValidAddressPolkadotAddress } from "../../utils";
 let artzero_contract;
 function setContract(c) {
-  console.log(`Setting contract in blockchain module`, c);
+  // console.log(`Setting contract in blockchain module`, c);
   artzero_contract = c;
 }
 

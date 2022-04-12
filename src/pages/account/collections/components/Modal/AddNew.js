@@ -1,5 +1,6 @@
 import {
   Button,
+  Flex,
   Heading,
   Modal,
   ModalBody,
@@ -7,21 +8,24 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-   
+  Spacer,
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
-import SimpleModeForm from "../Form/SimpleMode";
- function SimpleMode() {
+import AdvancedMode from "./AdvancedMode";
+import SimpleMode from "./SimpleMode";
+
+import AddCollectionIcon from "@theme/assets/icon/AddCollection";
+function AddNewCollection() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
       <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-        Simple Mode
+        Add Collection
       </Button>
 
-      <Modal isCentered isOpen={isOpen} onClose={onClose} size="5xl">
+      <Modal isCentered isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
@@ -29,9 +33,9 @@ import SimpleModeForm from "../Form/SimpleMode";
         <ModalContent
           position="relative"
           bg="brand.grayDark"
-          px={10}
+          py={10}
+          px={20}
           borderRadius="0"
-          textAlign='center'
         >
           <ModalCloseButton
             position="absolute"
@@ -40,13 +44,19 @@ import SimpleModeForm from "../Form/SimpleMode";
             borderWidth={2}
             borderRadius="0"
           />
-          <ModalHeader>
-            <Heading size="lg" fontWeight="normal" my={3}>
-              Simple Mode
+          <ModalHeader textAlign="center">
+            <AddCollectionIcon />
+            <Heading size="h3" my={3}>
+              Add collection
             </Heading>
           </ModalHeader>
+
           <ModalBody>
-             <SimpleModeForm/>
+            <Flex>
+              <SimpleMode />
+              <Spacer />
+              <AdvancedMode />
+            </Flex>
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -54,4 +64,4 @@ import SimpleModeForm from "../Form/SimpleMode";
   );
 }
 
-export default SimpleMode;
+export default AddNewCollection;

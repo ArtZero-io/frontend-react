@@ -12,7 +12,7 @@ import {
   Jdenticon,
   Polkadot,
 } from "./icons/index.js";
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx } from "react/jsx-runtime.js";
 const Fallback = Beachball;
 const DEFAULT_SIZE = 128;
 const Components = {

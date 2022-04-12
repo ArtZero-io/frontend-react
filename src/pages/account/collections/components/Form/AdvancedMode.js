@@ -18,10 +18,10 @@ import { Formik, Form, useField, Field } from "formik";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
-import ImageUpload from "./ImageUpload";
-import { useSubstrateState } from '../../../../utils/substrate';
-import collection_manager_calls from "../../../../utils/blockchain/collection-manager-calls";
-import {isValidAddressPolkadotAddress} from '../../../../utils';
+import ImageUpload from "@components/ImageUpload/Collection";
+import { useSubstrateState } from "@utils/substrate";
+import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+import { isValidAddressPolkadotAddress } from "@utils";
 
 const AdvancedModeForm = () => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -31,20 +31,24 @@ const AdvancedModeForm = () => {
 
   useEffect(async () => {
     if (addingFee == 0) {
-        const adddingFee = await collection_manager_calls.getAddingFee(currentAccount);
-        setAddingFee(adddingFee / (10**12));
+      const adddingFee = await collection_manager_calls.getAddingFee(
+        currentAccount
+      );
+      setAddingFee(adddingFee / 10 ** 12);
     }
   }, [addingFee]);
 
   const checkCurrentBalance = async () => {
-      const { data: balance } = await api.query.system.account(currentAccount.address);
-      console.log(balance.free);
-      if (balance.free.toNumber() > addingFee) {
-          return true;
-      } else {
-          return false;
-      }
-  }
+    const { data: balance } = await api.query.system.account(
+      currentAccount.address
+    );
+    console.log(balance.free);
+    if (balance.free.toNumber() > addingFee) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   return (
     <>
@@ -83,23 +87,36 @@ const AdvancedModeForm = () => {
             values.avatarIPFSUrl = avatarIPFSUrl;
             values.headerIPFSUrl = headerIPFSUrl;
             if (!checkCurrentBalance) {
-              toast.error(
-                  `Your balance not enough!`
-                );
-            } else if (!isValidAddressPolkadotAddress(values.nftContractAddress)) {
-              toast.error(
-                `The NFT contract address must be an address!`
-              );
+              toast.error(`Your balance not enough!`);
+            } else if (
+              !isValidAddressPolkadotAddress(values.nftContractAddress)
+            ) {
+              toast.error(`The NFT contract address must be an address!`);
             } else {
-                const data = {
-                    nftContractAddress: values.nftContractAddress,
-                    attributes: ['name', 'description', 'avatar_image', 'header_image'],
-                    attributeVals: [values.collectionName, values.collectionDescription, values.avatarIPFSUrl, values.headerIPFSUrl],
-                    collectionAllowRoyalFee: values.collectRoyalFee,
-                    collectionRoyalFeeData: (values.collectRoyalFee) ? Math.round(values.royalFee * 100) : 0
-                };
+              const data = {
+                nftContractAddress: values.nftContractAddress,
+                attributes: [
+                  "name",
+                  "description",
+                  "avatar_image",
+                  "header_image",
+                ],
+                attributeVals: [
+                  values.collectionName,
+                  values.collectionDescription,
+                  values.avatarIPFSUrl,
+                  values.headerIPFSUrl,
+                ],
+                collectionAllowRoyalFee: values.collectRoyalFee,
+                collectionRoyalFeeData: values.collectRoyalFee
+                  ? Math.round(values.royalFee * 100)
+                  : 0,
+              };
 
-                await collection_manager_calls.addNewCollection(currentAccount, data);
+              await collection_manager_calls.addNewCollection(
+                currentAccount,
+                data
+              );
             }
           }
         }}

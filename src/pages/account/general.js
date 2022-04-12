@@ -8,33 +8,37 @@ import {
   Spacer,
   Text,
   VStack,
+  TagRightIcon,
   Input,
   useClipboard,
-  Avatar,
+  Square,
+  Image,
   HStack,
   Tag,
   TagLabel,
 } from "@chakra-ui/react";
-import React from "react";
-import AzeroIcon from "@theme/assets/icon/Azero.png";
+import { useSelector } from "react-redux";
+import AzeroIcon from "@theme/assets/icon/Azero.js";
+import ImageAccountBanner from "@theme/assets/image-account-banner.png";
+import * as ROUTES from "@constants/routes";
+import { useHistory } from "react-router-dom";
 
-function TabGeneral() {
-  const [address] = React.useState(
-    "8jJPfNyVoKTb4E589WHErgUcJncyKcJ9SQasMw6j5Zkz"
-  );
-  const { hasCopied, onCopy } = useClipboard(address);
+function GeneralPage() {
+  const { activeAddress } = useSelector((s) => s.account);
+  const { hasCopied, onCopy } = useClipboard(activeAddress);
+  const history = useHistory();
 
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">
       <Box
         mx="auto"
-        maxW={{ base: "xl", md: "7xl" }}
-        px={{ base: "6", md: "8" }}
-        py={{ base: "12", md: "20" }}
+        maxW={{ base: "xl", "2xl": "7xl" }}
+        px={{ base: "6", "2xl": "8" }}
+        py={{ base: "12", "2xl": "20" }}
       >
         <VStack as="section" w="full">
           <Box w="full" textAlign="left" mb={6}>
-            <Heading size="h2">DASHBOARD </Heading>
+            <Heading size="h2">DASHBOARD</Heading>
 
             <Flex alignItems="center">
               <Button
@@ -47,10 +51,10 @@ function TabGeneral() {
                 mr={3}
                 h={9}
               >
-                <Text fontFamily="Oswald">{address}</Text>
+                <Text fontFamily="Oswald">{activeAddress}</Text>
                 <Input
                   display="none"
-                  defaultValue={address}
+                  defaultValue={activeAddress}
                   px={2}
                   h={8}
                   mx={0}
@@ -95,26 +99,19 @@ function TabGeneral() {
                     py={3}
                   >
                     <Flex w="full">
-                      <Text color="brand.grayLight">
+                      <Text>
                         <Text>{item.name}</Text>
                         <Flex alignItems="center">
-                          <Heading
-                            fontSize="5xl"
-                            color="white"
-                            mt={2}
-                            fontFamily="DS-Digital"
-                          >
-                            {item.text}
-                          </Heading>
-                          <Avatar
-                            src={AzeroIcon}
-                            h={6}
-                            w={6}
-                            ml={2}
-                            mt={2}
-                            name="AzeroLogo"
-                            bg="transparent"
-                          />
+                          <Tag bg="transparent" pl={0}>
+                            <TagLabel
+                              bg="transparent"
+                              fontSize="5xl"
+                              fontFamily="DS-Digital"
+                            >
+                              {item.text}
+                            </TagLabel>
+                            <TagRightIcon fontSize="2xl" as={AzeroIcon} />
+                          </Tag>
                         </Flex>
                       </Text>
                       <Spacer />
@@ -130,44 +127,55 @@ function TabGeneral() {
           </Grid>
         </VStack>
 
-        <HStack h="full" mx={10} p={10} maxW="container.xl" bg="black">
-          <Avatar
-            w={{ xl: "16rem" }}
-            h={{ xl: "16rem" }}
-            rounded="none"
-          ></Avatar>
-          <VStack px={10} py={2} textAlign="left">
+        <HStack
+          h="full"
+          my={10}
+          p={7}
+          maxW="container.xl"
+          bg="black"
+          pos="relative"
+        >
+          <Square size="16rem" bg="#222">
+            <Image src={ImageAccountBanner} />
+          </Square>
+
+          <VStack px={10} textAlign="left">
             <Flex w="full">
-              <Heading fontSize="3xl" display="flex" w="full">
-                Stake your Praying Mantis Predator to reduce your fees to reduce
-                your fees
-              </Heading>
+              <Box fontFamily="Evogria Italic" fontSize="4xl" color="#FFF">
+                <span>Stake your </span>
+                <span style={{ color: "#7AE7FF" }}>
+                  Praying Mantis Predator
+                </span>
+                <div />
+                <span>to reduce your </span>
+                <span style={{ color: "#7AE7FF" }}>fees</span>
+              </Box>
               <Spacer />
-              <Text
-                p={1}
-                h={8}
-                w={20}
-                mx={0}
-                ml={10}
-                readOnly={true}
-                cursor="pointer"
-                color="brand.blue"
-                borderWidth={1}
-                borderColor="brand.blue"
+              <Tag
+                variant="outline"
+                maxH={6}
+                pos="absolute"
+                top={10}
+                right={10}
               >
-                Fee: 3%
-              </Text>
+                <TagLabel>Fees: 3%</TagLabel>
+              </Tag>
             </Flex>
             <Flex w="full">
-              <Text mt={4} mb={8}>
+              <Text mt={0} mb={8} fontSize="lg" color="#fff">
                 You currently have 0 badgers staked.
               </Text>
               <Spacer />
             </Flex>
 
             <Flex w="full" alignItems="center">
-              <Button variant="solid">Stake now</Button>
-              <Button variant="filled" bg="transparent">
+              <Button
+                variant="solid"
+                onClick={() => history.push(ROUTES.ACCOUNT_MY_STAKES)}
+              >
+                Stake now
+              </Button>
+              <Button variant="filled" bg="transparent" color="#fff">
                 more information
               </Button>
             </Flex>
@@ -178,7 +186,7 @@ function TabGeneral() {
   );
 }
 
-export default TabGeneral;
+export default GeneralPage;
 
 const atts = [
   { name: "Min wallet value", text: "82.00", value: "21.6" },

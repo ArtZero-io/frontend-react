@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import React, { useCallback } from 'react';
 import { beachballIcon } from '@polkadot/ui-shared';
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx } from "react/jsx-runtime.js";
 
 function Identicon({
   address,

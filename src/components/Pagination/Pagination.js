@@ -1,13 +1,9 @@
 import { Text, Stack, Square, Input, IconButton } from "@chakra-ui/react";
 import {
   Pagination,
-  // usePagination,
-  // PaginationPage,
   PaginationNext,
   PaginationPrevious,
   PaginationContainer,
-  // PaginationPageGroup,
-  // PaginationSeparator,
 } from "@ajna/pagination";
 
 import {
@@ -104,8 +100,8 @@ const PaginationMP = ({
             variant="iconSolid"
             aria-label="go-end"
             onClick={() => setCurrentPage(pagesCount)}
-            disabled={currentPage === pagesCount}
-          />{" "}
+            disabled={currentPage >= pagesCount}
+          />
           <Input placeholder="Go to page" onKeyPress={onEnterHandler} />
         </PaginationContainer>
       </Pagination>

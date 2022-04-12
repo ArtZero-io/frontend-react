@@ -1,7 +1,7 @@
 // Copyright 2017-2022 @polkadot/react-identicon authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 import React from 'react';
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx } from "react/jsx-runtime.js";
 
 function Identicon({
   className = '',

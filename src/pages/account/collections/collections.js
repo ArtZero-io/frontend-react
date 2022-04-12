@@ -10,7 +10,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
-// import AzeroIcon from "@theme/assets/icon/Azero.png";
 
 import { CollectionCard } from "@components/CollectionCard/CollectionCard";
 import { Link as ReactRouterLink } from "react-router-dom";
@@ -22,30 +21,24 @@ import { useSubstrateState } from "@utils/substrate";
 import { NUMBER_PER_PAGE } from "@constants/index";
 import { usePagination } from "@ajna/pagination";
 import { IPFS_BASE_URL } from "@constants/index";
-import AddNewCollection from "./Modal/AddNewCollection";
+import AddNewCollectionModal from "./components/Modal/AddNew";
 
-function TabMyCollections() {
+function MyCollectionsPage() {
   const { currentAccount } = useSubstrateState();
   const [collections, setCollections] = useState([]);
   const [totalPage, setTotalPage] = useState(undefined);
   const [loading, setLoading] = useState(null);
   const [currentCollections, setCurrentCollections] = useState([]);
 
-  const {
-    pagesCount,
-    offset,
-    currentPage,
-    setCurrentPage,
-    isDisabled,
-    // pageSize,
-  } = usePagination({
-    total: totalPage,
-    initialState: {
-      pageSize: NUMBER_PER_PAGE,
-      isDisabled: false,
-      currentPage: 1,
-    },
-  });
+  const { pagesCount, offset, currentPage, setCurrentPage, isDisabled } =
+    usePagination({
+      total: totalPage,
+      initialState: {
+        pageSize: NUMBER_PER_PAGE,
+        isDisabled: false,
+        currentPage: 1,
+      },
+    });
 
   const getAllCollections = async (e) => {
     setLoading(true);
@@ -55,6 +48,7 @@ function TabMyCollections() {
         currentAccount,
         currentAccount?.address
       );
+    console.log("collection_account", collection_account);
     if (collection_account) {
       for (let collection of collection_account) {
         let data = await collection_manager_calls.getCollectionByAddress(
@@ -70,7 +64,7 @@ function TabMyCollections() {
         collections.push(data);
       }
     }
-
+    console.log("collections", collections);
     setCollections(collections);
     setTotalPage(collections.length);
     setLoading(false);
@@ -109,7 +103,7 @@ function TabMyCollections() {
         <Flex w="full" alignItems="end" pb={12}>
           <Heading size="h2">My collections</Heading>
           <Spacer />
-          <AddNewCollection />
+          <AddNewCollectionModal />
         </Flex>
         {loading && (
           <Center>
@@ -128,7 +122,7 @@ function TabMyCollections() {
               There are {collections.length} collections
             </Text>
             <SimpleGrid py={10} columns={{ base: 1, md: 2, lg: 3 }} spacing="8">
-              {currentCollections.map((item, idx) => (
+              {collections.map((item, idx) => (
                 <>
                   <Link
                     key={item?.nftContractAddress}
@@ -170,4 +164,4 @@ function TabMyCollections() {
   );
 }
 
-export default TabMyCollections;
+export default MyCollectionsPage;

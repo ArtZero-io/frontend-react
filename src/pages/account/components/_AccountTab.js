@@ -1,26 +1,32 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-import TabGeneral from "../components/TabGeneral";
+import TabGeneral from "./TabGeneral";
 import TabMyCollections from "./TabMyCollections";
 import TabMyNFT from "./TabMyNFT";
+import { useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 function AccountTab() {
+  const history = useHistory();
+  console.log("history", history);
+  const location = useLocation();
   return (
     <>
-      <Tabs isLazy align="center">
+      <Tabs isLazy align="center" value={location.pathname}>
         <TabList>
           {tabData.map((tab, index) => (
-            <Tab key={index} fontFamily="Evogria Italic, san serif">
+            <Tab key={tab.label} fontFamily="Evogria Italic, san serif">
               {tab.label}
             </Tab>
           ))}
         </TabList>
 
         <TabPanels>
-          {tabData.map((tab, index) => (
+          <TabPanel>{}</TabPanel>
+          {/* {tabData.map((tab, index) => (
             <TabPanel p={4} key={index} bg="#171717">
               {tab.content}
             </TabPanel>
-          ))}
+          ))} */}
         </TabPanels>
       </Tabs>
     </>

@@ -14,15 +14,7 @@ import AzeroIcon from "@theme/assets/icon/Azero.png";
 import { MdHighlightOff, MdCheckCircle } from "react-icons/md";
 
 export const CollectionCard = (props) => {
-  const {
-    avatar,
-    name,
-    desc,
-    volume,
-    backdrop,
-    isActive,
-    variant,
-  } = props;
+  const { avatar, name, desc, volume, backdrop, isActive, variant } = props;
   return (
     <Box>
       <Flex
@@ -49,7 +41,7 @@ export const CollectionCard = (props) => {
           mt={-8}
           p="-px"
           border="2px solid"
-          borderColor="whiteAlpha.900"
+          borderColor="white "
         >
           <Image
             alt={avatar}
@@ -61,15 +53,17 @@ export const CollectionCard = (props) => {
             fallbackSrc="https://via.placeholder.com/64"
           />
         </Center>
-        <VStack pb={6} justifyContent="space-between" flexGrow="1" w='full' px={4}>
+        <VStack
+          pb={6}
+          justifyContent="space-between"
+          flexGrow="1"
+          w="full"
+          px={4}
+        >
           <Box mt="4">
-            <Heading as="h4" size="md">
-              {name}
-            </Heading>
+            <Heading size="h4"> {name}</Heading>
           </Box>
-          <Text color="brand.grayLight" maxW={{ base: "unset", md: "20rem" }}>
-            {desc}
-          </Text>
+          <Text maxW={{ base: "unset", md: "20rem" }}>{desc}</Text>
 
           <Flex
             w={variant === "my-collection" ? "full" : 36}

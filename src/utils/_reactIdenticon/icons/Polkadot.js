@@ -15,7 +15,7 @@
 //   - Overall it is now just a static component, expecting an address as an input value
 import React from 'react';
 import { polkadotIcon } from '@polkadot/ui-shared';
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx } from "react/jsx-runtime.js";
 
 function renderCircle({
   cx,

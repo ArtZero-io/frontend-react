@@ -17,8 +17,9 @@ import {
 } from "@chakra-ui/react";
 import { FaInstagram, FaTwitter, FaDiscord } from "react-icons/fa";
 import { EditIcon } from "@chakra-ui/icons";
-import AccountTab from "./components/AccountTab";
-import ProfileForm from "./components/Form/ProfileForm";
+// import AccountTab from "./components/AccountTab";
+import ProfileForm from "./components/Form/Profile";
+import AccountLayout from "../../components/Layout/AccountLayout";
 
 function Account() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -100,8 +101,7 @@ function Account() {
           </VStack>
         </Box>
       </Box>
-
-      <AccountTab />
+      <AccountLayout />
     </Layout>
   );
 }

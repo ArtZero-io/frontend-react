@@ -1,6 +1,5 @@
 import {
   Button,
-  Flex,
   Heading,
   Modal,
   ModalBody,
@@ -8,24 +7,21 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Spacer,
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
-import AdvancedMode from "./AdvancedMode";
-import SimpleMode from "./SimpleMode";
+import AdvancedModeForm from "../Form/AdvancedMode";
 
-import AddCollectionIcon from "@theme/assets/icon/AddCollection";
-function AddNewCollection() {
+function AdvancedMode() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
       <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-        Add Collection
+        Advanced Mode
       </Button>
 
-      <Modal isCentered isOpen={isOpen} onClose={onClose} size="xl">
+      <Modal isCentered isOpen={isOpen} onClose={onClose} size="6xl">
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
@@ -36,6 +32,7 @@ function AddNewCollection() {
           py={10}
           px={20}
           borderRadius="0"
+          textAlign="center"
         >
           <ModalCloseButton
             position="absolute"
@@ -44,19 +41,11 @@ function AddNewCollection() {
             borderWidth={2}
             borderRadius="0"
           />
-          <ModalHeader textAlign="center">
-            <AddCollectionIcon />
-            <Heading size="lg"  fontWeight="normal" my={3}>
-              Add collection
-            </Heading>
+          <ModalHeader>
+            <Heading size="h3">Advanced Mode</Heading>
           </ModalHeader>
-
           <ModalBody>
-            <Flex>
-              <SimpleMode />
-              <Spacer />
-              <AdvancedMode />
-            </Flex>
+            <AdvancedModeForm />
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -64,4 +53,4 @@ function AddNewCollection() {
   );
 }
 
-export default AddNewCollection;
+export default AdvancedMode;

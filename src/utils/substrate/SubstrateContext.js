@@ -75,7 +75,7 @@ const reducer = (state, action) => {
     case "SET_CURRENT_ACCOUNT":
       return { ...state, currentAccount: action.payload };
     case "SET_PROFILE_CONTRACT":
-      return { ...state, profileContract: action.payload };
+      return { ...state, profileContract: "READY" };
     case "SET_SUPPORTED_EXTENSIONS":
       return { ...state, supportedExtensions: action.payload };
     case "SET_CURRENT_EXTENSION":
@@ -92,29 +92,26 @@ const connect = (state, dispatch) => {
   const { apiState, socket, jsonrpc } = state;
 
   if (apiState) return;
-  console.log("apiState before connect", apiState);
   dispatch({ type: "CONNECT_INIT" });
 
   console.log(`Connected socket: ${socket}`);
   const provider = new WsProvider(socket);
-  const _api = new ApiPromise(
-    { 
-      provider, 
-      rpc: jsonrpc , 
-      types: {
-        ContractsPsp34Id: {
-          _enum: {
-            U8: "u8",
-            U16: "u16",
-            U32: "u32",
-            U64: "u64",
-            U128: "u128",
-            Bytes: "Vec<u8>"
-          }
-        }
-      }
-    }
-  );
+  const _api = new ApiPromise({
+    provider,
+    rpc: jsonrpc,
+    types: {
+      ContractsPsp34Id: {
+        _enum: {
+          U8: "u8",
+          U16: "u16",
+          U32: "u32",
+          U64: "u64",
+          U128: "u128",
+          Bytes: "Vec<u8>",
+        },
+      },
+    },
+  });
   _api.on("connected", () => {
     dispatch({ type: "CONNECT", payload: _api });
 
@@ -188,7 +185,9 @@ export const loadAccounts = async (state, dispatch, wallet) => {
     profile.CONTRACT_ABI,
     profile.CONTRACT_ADDRESS
   );
-  dispatch({ type: "SET_PROFILE_CONTRACT", payload: profileContract });
+
+  dispatch({ type: "SET_PROFILE_CONTRACT" });
+
   blockchainModule.setProfileContract(profileContract);
 
   const artzero_contract = new ContractPromise(
@@ -196,7 +195,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
     artzero_nft.CONTRACT_ABI,
     artzero_nft.CONTRACT_ADDRESS
   );
-  console.log("artzero_contract", artzero_contract);
+
   artzero_nft_calls.setContract(artzero_contract);
 
   const collection_contract = new ContractPromise(
@@ -218,7 +217,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
     staking.CONTRACT_ABI,
     staking.CONTRACT_ADDRESS
   );
-  console.log("staking_contract", staking_contract);
+  // console.log("staking_contract", staking_contract);
   staking_calls.setContract(staking_contract);
 };
 

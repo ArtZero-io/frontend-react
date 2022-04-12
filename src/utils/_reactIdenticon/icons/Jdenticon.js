@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 import * as jdenticon from 'jdenticon';
 import React from 'react';
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx } from "react/jsx-runtime.js";
 
 function Identicon({
   className = '',

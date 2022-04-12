@@ -10,18 +10,18 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
-import AdvancedModeForm from "../Form/AdvancedMode";
+import SimpleModeForm from "../Form/SimpleMode";
 
-function AdvancedMode() {
+function SimpleMode() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
       <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-        Advanced Mode
+        Simple Mode
       </Button>
 
-      <Modal isCentered isOpen={isOpen} onClose={onClose} size="6xl">
+      <Modal isCentered isOpen={isOpen} onClose={onClose} size="5xl">
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
@@ -29,8 +29,7 @@ function AdvancedMode() {
         <ModalContent
           position="relative"
           bg="brand.grayDark"
-          py={10}
-          px={20}
+          px={10}
           borderRadius="0"
           textAlign="center"
         >
@@ -42,12 +41,12 @@ function AdvancedMode() {
             borderRadius="0"
           />
           <ModalHeader>
-            <Heading size="2xl" letterSpacing="wider" fontWeight="normal">
-              Advanced Mode
+            <Heading size="h3" my={3}>
+              Simple Mode
             </Heading>
           </ModalHeader>
           <ModalBody>
-            <AdvancedModeForm />
+            <SimpleModeForm />
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -55,4 +54,4 @@ function AdvancedMode() {
   );
 }
 
-export default AdvancedMode;
+export default SimpleMode;

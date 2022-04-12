@@ -10,9 +10,9 @@ export default function ActiveIcon(props) {
       <path
         d="m14.813 6.938-6.126 6.125L5.626 10"
         stroke="#000"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </Icon>
   );

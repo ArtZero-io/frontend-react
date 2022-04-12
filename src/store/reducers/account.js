@@ -9,6 +9,7 @@ const initialState = {
   accountLoaders: {
     getProfile: false,
     setProfileAttribute: false,
+    tnxStatus:null
   },
   accountErrors: null,
 };
@@ -34,6 +35,14 @@ const accountReducer = (state = initialState, action) => {
         accountLoaders: {
           ...state.accountLoaders,
           setProfileAttribute: false,
+        },
+      };
+    case AccountActionTypes.SET_TNX_STATUS:
+      return {
+        ...state,
+        accountLoaders: {
+          ...state.accountLoaders,
+          tnxStatus: action.payload,
         },
       };
     case AccountActionTypes.ACCOUNT_LOADING:

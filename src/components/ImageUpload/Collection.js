@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 
 const client = create(IPFS_CLIENT_URL);
 
-const ImageUpload = ({
+const ImageUploadCollection = ({
   title = "Upload Image",
   setImageIPFSUrl,
   limitedSize = { width: "430", height: "430" },
@@ -117,4 +117,4 @@ const ImageUpload = ({
   );
 };
 
-export default ImageUpload;
+export default ImageUploadCollection;
