@@ -23,8 +23,6 @@ import nft721_psp34_standard_calls from "../../../../utils/blockchain/nft721-psp
 import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
 import marketplace from "../../../../utils/blockchain/marketplace";
-import BN from 'bn.js';
-import { BN_BILLION, BN_THOUSAND } from "@polkadot/util";
 
 const NFTTabInfo = ({ nft_detail, collection_detail, nft_contract_address, isSale = false }) => {
   const { api, currentAccount } = useSubstrateState();
@@ -47,13 +45,13 @@ const NFTTabInfo = ({ nft_detail, collection_detail, nft_contract_address, isSal
       
       if (ownerAddress == currentAccount.address) {
         const is_allownce = await nft721_psp34_standard_calls.allowance(currentAccount, marketplace.CONTRACT_ADDRESS, nft_detail.id);
-        const token_price = new BN(sale_price).mul(BN_BILLION).mul(BN_THOUSAND).toNumber();
+
         if (is_allownce) {
-          await marketplace_contract_calls.list(currentAccount, nft_contract_address, nft_detail.id, token_price);
+          await marketplace_contract_calls.list(currentAccount, nft_contract_address, nft_detail.id, sale_price);
         } else {
           const is_approve = await nft721_psp34_standard_calls.approve(currentAccount, marketplace.CONTRACT_ADDRESS, nft_detail.id, true);
           if (is_approve) {
-            await marketplace_contract_calls.list(currentAccount, nft_contract_address, nft_detail.id, token_price);
+            await marketplace_contract_calls.list(currentAccount, nft_contract_address, nft_detail.id, sale_price);
           }
         }
         

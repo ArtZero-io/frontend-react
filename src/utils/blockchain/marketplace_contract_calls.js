@@ -2,8 +2,7 @@ import BN from "bn.js";
 import toast from 'react-hot-toast'
 import { web3FromSource } from '../wallets/extension-dapp'
 import {isValidAddressPolkadotAddress} from '../../utils'
-import { numberToU8a } from "@polkadot/util";
-import { TypeRegistry, U128 } from '@polkadot/types';
+import { TypeRegistry, U128, U64 } from '@polkadot/types';
 
 let marketplace_contract
 
@@ -184,8 +183,8 @@ async function list(caller_account, nft_contract_address,token_id,price) {
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source)
-  const tokenId = marketplace_contract.api.createType('ContractsPsp34Id', {'U8': numberToU8a(token_id)}); 
-  const sale_price = new U128(new TypeRegistry(), price);
+  const tokenId = await marketplace_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
+  const sale_price = new U128(new TypeRegistry(), Math.round(price * (10**12)));
   marketplace_contract.tx
     .list({ gasLimit, value:azero_value }, nft_contract_address, tokenId, sale_price)
     .signAndSend(
