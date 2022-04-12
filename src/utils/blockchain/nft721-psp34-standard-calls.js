@@ -223,39 +223,59 @@ async function getOwnerAddressByTokenId(caller_account, token_id) {
   // const tokenId = new U64(new TypeRegistry(), token_id);
   const tokenId = await nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
   console.log(tokenId);
-  const test = await nft721_psp34_standard_contract.query["psp34::ownerOf"](address, { value: azero_value, gasLimit }, tokenId);
-  console.log(test);
-  // console.log(output);
-  // if (result.isOk) {
-  //   return output.toHuman();
-  // }
+  const {result, output} = await nft721_psp34_standard_contract.query["psp34::ownerOf"](address, { value: azero_value, gasLimit }, tokenId);
+
+  if (result.isOk) {
+    return output.toHuman();
+  }
   return null;
 }
 
-// async function approve(caller_account) {
-//   if (!nft721_psp34_standard_contract || !caller_account) {
-//     console.log("invalid inputs");
-//     return null;
-//   }
-//   const address = caller_account?.address;
-//   const gasLimit = -1;
-//   const azero_value = 0;
-//   const injector = await web3FromSource(caller_account?.meta?.source);
-//   const tokenId = await nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), 4)});
-//   nft721_psp34_standard_contract.tx["psp34::approve"]({ gasLimit, value: azero_value }, '5G46BG71ngjxe3SZBnDSgwumSv4NLsCeQNFeBdAXUuct57nt', tokenId, 1).signAndSend(address,
-//     { signer: injector.signer },({ status }) => {
-//       if (status) {
-//         const statusText = Object.keys(status.toHuman())[0];
-//         if (status.isFinalized) {
-//           toast.success(
-//             `Public Minting ${
-//               statusText === "0" ? "started" : statusText.toLowerCase()
-//             }.`
-//           );
-//         }
-//       }
-//     });
-// } 
+async function allowance(caller_account, operator_address, token_id) {
+  if (!nft721_psp34_standard_contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const tokenId = await nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
+  const { result, output } = await nft721_psp34_standard_contract.query[
+    "psp34::allowance"
+  ](address, { value: azero_value, gasLimit }, address, operator_address, tokenId);
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
+async function approve(caller_account, operator_address, token_id, is_approve) {
+  if (!nft721_psp34_standard_contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+  const tokenId = await nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
+  nft721_psp34_standard_contract.tx["psp34::approve"]({ gasLimit, value: azero_value }, operator_address, tokenId, is_approve).signAndSend(address,
+    { signer: injector.signer },({ status }) => {
+      if (status) {
+        const statusText = Object.keys(status.toHuman())[0];
+        if (status.isFinalized) {
+          
+          toast.success(
+            `Approve ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+          return true;
+        }
+      }
+    });
+    return false;
+} 
 
 const nft721_psp34_standard_calls = {
   mint,
@@ -266,7 +286,9 @@ const nft721_psp34_standard_calls = {
   getAttributeName,
   getAttributes,
   getAttribute,
-  getOwnerAddressByTokenId
+  getOwnerAddressByTokenId,
+  approve,
+  allowance
 };
 
 export default nft721_psp34_standard_calls;
