@@ -9,9 +9,9 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useCallback } from "react";
 
-import { CollectionCard } from "@components/CollectionCard/CollectionCard";
+import { CollectionCard } from "@components/Card/CollectionCard";
 import { Link as ReactRouterLink } from "react-router-dom";
 import PaginationMP from "@components/Pagination/Pagination";
 import { useEffect, useState } from "react";
@@ -25,10 +25,12 @@ import AddNewCollectionModal from "./components/Modal/AddNew";
 
 function MyCollectionsPage() {
   const { currentAccount } = useSubstrateState();
+
   const [collections, setCollections] = useState([]);
-  const [totalPage, setTotalPage] = useState(undefined);
+  const [totalPage, setTotalPage] = useState(null);
   const [loading, setLoading] = useState(null);
   const [currentCollections, setCurrentCollections] = useState([]);
+  console.log("currentCollections", currentCollections);
 
   const { pagesCount, offset, currentPage, setCurrentPage, isDisabled } =
     usePagination({
@@ -43,6 +45,7 @@ function MyCollectionsPage() {
   const getAllCollections = async (e) => {
     setLoading(true);
     var collections = [];
+
     let collection_account =
       await collection_manager_calls.getCollectionsByOwner(
         currentAccount,
@@ -92,18 +95,26 @@ function MyCollectionsPage() {
     await filterCollections();
   };
 
+  console.log("collection ...");
+
+  const forceUpdate = useCallback(() => {
+    console.log("forceUpdate...");
+
+    onRefresh();
+  }, []);
+
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">
       <Box
         mx="auto"
-        maxW={{ base: "xl", md: "7xl" }}
-        px={{ base: "6", md: "8" }}
-        py={{ base: "12", md: "20" }}
+        maxW={{ base: "6xl", "2xl": "7xl" }}
+        px={{ base: "6", "2xl": "8" }}
+        py={{ base: "12", "2xl": "20" }}
       >
-        <Flex w="full" alignItems="end" pb={12}>
+        <Flex w="full" alignItems="start" pb={12}>
           <Heading size="h2">My collections</Heading>
           <Spacer />
-          <AddNewCollectionModal />
+          <AddNewCollectionModal forceUpdate={forceUpdate} />
         </Flex>
         {loading && (
           <Center>
@@ -119,12 +130,13 @@ function MyCollectionsPage() {
         {!loading && (
           <>
             <Text textAlign="left" color="brand.grayLight">
-              There are {collections.length} collections
+              There are {collections?.length} collections
             </Text>
-            <SimpleGrid py={10} columns={{ base: 1, md: 2, lg: 3 }} spacing="8">
-              {collections.map((item, idx) => (
+            <SimpleGrid py={10} columns={{ base: 1, md: 2, lg: 3 }} spacing="7">
+              {collections?.map((item, idx) => (
                 <>
                   <Link
+                    minW={{ base: "auto", "2xl": "25rem" }}
                     key={item?.nftContractAddress}
                     as={ReactRouterLink}
                     to={`collectionNew/${item?.nftContractAddress}`}
@@ -133,9 +145,10 @@ function MyCollectionsPage() {
                       bg: "brand.blue",
                     }}
                   >
+                    {/* TODO: add volume */}
                     <CollectionCard
                       id={item?.nftContractAddress}
-                      volume="111"
+                      volume={item?.volume || 12.34}
                       backdrop={`${IPFS_BASE_URL}/${item?.attributes[3]}`}
                       avatar={`${IPFS_BASE_URL}/${item?.attributes[2]}`}
                       desc={item?.attributes[1]}

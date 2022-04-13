@@ -22,6 +22,7 @@ function Main() {
         reverseOrder={false}
         toastOptions={{
           style: {
+            marginRight:'2rem',
             borderRadius: 0,
             padding: "16px",
             color: "#000",

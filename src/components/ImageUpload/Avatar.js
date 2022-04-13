@@ -19,7 +19,7 @@ import ActiveIcon from "@theme/assets/icon/Active.js";
 import { IPFS_CLIENT_URL } from "@constants/index";
 import { Buffer } from "buffer";
 import { IPFS_BASE_URL } from "@constants/index";
-import IdenticonAvatar from "../../pages/account/components/IdenticonAvatar";
+import IdenticonAvatar from "@pages/account/components/IdenticonAvatar";
 
 const client = create(IPFS_CLIENT_URL);
 
@@ -113,7 +113,7 @@ export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
               accept="image/png, image/jpg, image/gif, image/jpeg"
             />
             <Button as={Text} fontFamily="Evogria" variant="outline">
-              {!imagePreviewUrl ? "Select Image" : "Pick another11"}
+              {!imagePreviewUrl ? "Select Image" : "Pick another"}
             </Button>
           </label>
         </VStack>

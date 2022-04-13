@@ -9,7 +9,7 @@ const initialState = {
   accountLoaders: {
     getProfile: false,
     setProfileAttribute: false,
-    tnxStatus:null
+    tnxStatus: null,
   },
   accountErrors: null,
 };

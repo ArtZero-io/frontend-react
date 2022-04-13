@@ -13,7 +13,7 @@ import CollectionPage from "@pages/collection/collection";
 
 import GeneralPage from "@pages/account/general";
 import MyCollectionsPage from "@pages/account/collections/collections";
-import MyNFTPage from "@pages/account/nft";
+import MyNFTsPage from "@pages/account/nfts/nfts";
 import MyStakesPage from "@pages/account/stakes";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import AccountLayout from "./Layout/AccountLayout";
@@ -73,7 +73,7 @@ const Router = () => {
                   <Route
                     exact
                     path={ROUTES.ACCOUNT_MY_NFTS}
-                    component={MyNFTPage}
+                    component={MyNFTsPage}
                   />
                   <Route
                     exact

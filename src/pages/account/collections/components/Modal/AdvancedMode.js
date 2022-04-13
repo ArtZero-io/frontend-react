@@ -12,7 +12,7 @@ import {
 import React from "react";
 import AdvancedModeForm from "../Form/AdvancedMode";
 
-function AdvancedMode() {
+function AdvancedModeModal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -21,7 +21,7 @@ function AdvancedMode() {
         Advanced Mode
       </Button>
 
-      <Modal isCentered isOpen={isOpen} onClose={onClose} size="6xl">
+      <Modal isCentered isOpen={isOpen} onClose={onClose} size="4xl">
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
@@ -29,8 +29,7 @@ function AdvancedMode() {
         <ModalContent
           position="relative"
           bg="brand.grayDark"
-          py={10}
-          px={20}
+          px={6}
           borderRadius="0"
           textAlign="center"
         >
@@ -42,10 +41,12 @@ function AdvancedMode() {
             borderRadius="0"
           />
           <ModalHeader>
-            <Heading size="h3">Advanced Mode</Heading>
+            <Heading size="h4" my={2}>
+              Advanced Mode
+            </Heading>
           </ModalHeader>
           <ModalBody>
-            <AdvancedModeForm />
+            <AdvancedModeForm onClose={onClose} />
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -53,4 +54,4 @@ function AdvancedMode() {
   );
 }
 
-export default AdvancedMode;
+export default AdvancedModeModal;

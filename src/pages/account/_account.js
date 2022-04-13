@@ -60,7 +60,8 @@ function Account() {
 
             <HStack w="full" justifyContent="space-around" py={4}>
               <VStack textAlign="center" justifyContent="space-between">
-                <Heading size="h2" letterSpacing="wider" fontWeight="normal">
+               
+                <Heading size="h2">
                   {name}
                   <IconButton
                     aria-label="edit-profile"

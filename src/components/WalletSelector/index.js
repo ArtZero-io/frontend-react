@@ -35,7 +35,6 @@ function WalletSelector(props) {
     key: account.address,
     address: account.address,
     name: account.meta.name,
-    icon: "user",
   }));
 
   const initialAddress =
@@ -73,7 +72,7 @@ function WalletSelector(props) {
     window.location.assign("/");
   }
   return (
-    <Box color="brand.blue" height="100%" mx="auto" minW={96}>
+    <Box color="brand.blue" height="100%" mx="auto" minW={64}>
       <Flex
         align="center"
         justify="space-between"
@@ -92,22 +91,26 @@ function WalletSelector(props) {
             fontFamily="Oswald"
             color="brand.blue"
             ring={0}
-            minW={72}
+            minW={64}
+            maxW={64}
             mx="2"
+            px="3"
             h="12"
             as={Button}
-            rightIcon={<ChevronDownIcon />}
+            rightIcon={<ChevronDownIcon fontSize='2xl'/>}
+            fontSize="lg"
           >
             <Flex>
               <Text maxWidth={20} isTruncated>
-                {currentAccount?.meta?.name}
+                {currentAccount?.meta?.name}{" "}
               </Text>{" "}
               - {currentAccount?.address.slice(0, 6)} ...{" "}
               {currentAccount?.address.slice(-6)}
             </Flex>
           </MenuButton>
           <MenuList
-            minW={72}
+            minW={64}
+            maxW={64}
             borderRadius="0"
             borderWidth={2}
             borderColor="brand.blue"
@@ -120,10 +123,11 @@ function WalletSelector(props) {
                 _hover={{ bg: "brand.grayLight", color: "white" }}
                 fontFamily="Oswald"
                 onClick={() => selectAccountHandler(address)}
-                key={address}
+                key={address}             px="1"
+
                 isDisabled={currentAccount?.address === address ? true : false}
               >
-                <Flex>
+                <Flex fontSize="lg">
                   <Text maxWidth={20} isTruncated>
                     {name}
                   </Text>{" "}
@@ -138,6 +142,8 @@ function WalletSelector(props) {
               textDecoration="underline"
               fontFamily="Oswald"
               onClick={() => logoutHandler()}
+              fontSize="lg"             px="1"
+
             >
               Disconnect wallet.
             </MenuItem>

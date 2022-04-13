@@ -178,12 +178,12 @@ export async function setMultipleAttributesProfileOnChain(
               });
             }
 
-            const statusText = Object.keys(status.toHuman())[0];
-            toast.success(
-              `Profile update ${
-                statusText === "0" ? "start" : statusText.toLowerCase()
-              }.`
-            );
+            // const statusText = Object.keys(status.toHuman())[0];
+            // toast.success(
+            //   `Profile update ${
+            //     statusText === "0" ? "start" : statusText.toLowerCase()
+            //   }.`
+            // );
           }
         }
       )

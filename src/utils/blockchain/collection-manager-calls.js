@@ -10,7 +10,7 @@ function isLoaded() {
   else return false;
 }
 //SETTERS
-async function addNewCollection(caller_account, data) {
+async function addNewCollection(caller_account, data, dispatch) {
   if (!isValidAddressPolkadotAddress(data.nftContractAddress)) {
     console.log("invalid addresses");
     return null;
@@ -34,22 +34,28 @@ async function addNewCollection(caller_account, data) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
+        handleContractCall(
+          status,
+          dispatchError,
+          dispatch,
+          collection_manager_contract
+        );
+        // if (dispatchError) {
+        //   if (dispatchError.isModule) {
+        //     toast.error(`There is some error with your request`);
+        //   } else {
+        //     console.log("dispatchError ", dispatchError.toString());
+        //   }
+        // }
 
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Add New Collection ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-        }
+        // if (status) {
+        //   const statusText = Object.keys(status.toHuman())[0];
+        //   toast.success(
+        //     `Add New Collection ${
+        //       statusText === "0" ? "started" : statusText.toLowerCase()
+        //     }.`
+        //   );
+        // }
       }
     )
     .then((unsub) => {

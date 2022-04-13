@@ -9,19 +9,34 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import React from "react";
+
 import SimpleModeForm from "../Form/SimpleMode";
 
-function SimpleMode() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+function SimpleModeModal() {
+  const {
+    isOpen: isOpenSimpleMode,
+    onOpen: onOpenSimpleMode,
+    onClose: onCloseSimpleMode,
+  } = useDisclosure();
 
   return (
     <>
-      <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
+      <Button
+        variant="outline"
+        color="brand.blue"
+        onClick={() => {
+          onOpenSimpleMode();
+        }}
+      >
         Simple Mode
       </Button>
 
-      <Modal isCentered isOpen={isOpen} onClose={onClose} size="5xl">
+      <Modal
+        isCentered
+        isOpen={isOpenSimpleMode}
+        onClose={onCloseSimpleMode}
+        size="4xl"
+      >
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
@@ -29,7 +44,7 @@ function SimpleMode() {
         <ModalContent
           position="relative"
           bg="brand.grayDark"
-          px={10}
+          px={6}
           borderRadius="0"
           textAlign="center"
         >
@@ -41,12 +56,12 @@ function SimpleMode() {
             borderRadius="0"
           />
           <ModalHeader>
-            <Heading size="h3" my={3}>
+            <Heading size="h4" my={2}>
               Simple Mode
             </Heading>
           </ModalHeader>
           <ModalBody>
-            <SimpleModeForm />
+            <SimpleModeForm onClose={onCloseSimpleMode} />
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -54,4 +69,4 @@ function SimpleMode() {
   );
 }
 
-export default SimpleMode;
+export default SimpleModeModal;

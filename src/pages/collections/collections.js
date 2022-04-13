@@ -9,7 +9,7 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import Layout from "@components/Layout/Layout";
-import { CollectionCard } from "@components/CollectionCard/CollectionCard";
+import { CollectionCard } from "@components/Card/CollectionCard";
 import { Link as ReactRouterLink } from "react-router-dom";
 import Dropdown from "@components/Dropdown/Dropdown";
 import PaginationMP from "@components/Pagination/Pagination";

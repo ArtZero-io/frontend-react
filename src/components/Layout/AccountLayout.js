@@ -23,7 +23,7 @@ const AccountLayout = ({ children }) => {
       value: ROUTES.ACCOUNT_MY_COLLECTIONS,
     },
     {
-      label: "My NFT",
+      label: "My NFTS",
       value: ROUTES.ACCOUNT_MY_NFTS,
     },
     {
@@ -52,7 +52,11 @@ const AccountLayout = ({ children }) => {
             >
               <TabList>
                 {tabData.map((tab) => (
-                  <Tab key={tab.label} fontFamily="Evogria Italic, san serif">
+                  <Tab
+                    key={tab.label}
+                    fontFamily="Evogria Italic, san serif"
+                    color="#fff" pb={5} px={1} mx={4} fontSize='lg'
+                  >
                     {tab.label}
                   </Tab>
                 ))}

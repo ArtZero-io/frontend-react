@@ -1,18 +1,20 @@
 import {
-  Avatar,
   Box,
   Center,
   Flex,
   Heading,
-  Icon,
   Image,
   Spacer,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
   Text,
   VStack,
 } from "@chakra-ui/react";
-import AzeroIcon from "@theme/assets/icon/Azero.png";
-import { MdHighlightOff, MdCheckCircle } from "react-icons/md";
 
+import ActiveIcon from "@theme/assets/icon/Active.js";
+import InActiveIcon from "@theme/assets/icon/InActive.js";
+import AzeroIcon from "@theme/assets/icon/Azero.js";
 export const CollectionCard = (props) => {
   const { avatar, name, desc, volume, backdrop, isActive, variant } = props;
   return (
@@ -23,12 +25,14 @@ export const CollectionCard = (props) => {
         align="center"
         textAlign="center"
         bg="brand.grayDark"
-        minH="31.25rem"
+        shadow="lg"
+        minH="30rem"
+        minW={{ base: "auto", "2xl": "24.5rem" }}
       >
         <Image
           alt={backdrop}
           h={64}
-          w="auto"
+          w="full"
           maxH={64}
           objectFit="cover"
           src={backdrop}
@@ -61,51 +65,40 @@ export const CollectionCard = (props) => {
           px={4}
         >
           <Box mt="4">
-            <Heading size="h4"> {name}</Heading>
+            <Heading size="h6"> {name}</Heading>
           </Box>
-          <Text maxW={{ base: "unset", md: "20rem" }}>{desc}</Text>
+          <Text noOfLines={[1,3]} maxW={{ base: "unset", md: "20rem" }}>
+            {desc}
+          </Text>
 
           <Flex
             w={variant === "my-collection" ? "full" : 36}
             alignItems="center"
           >
-            <Flex
-              bg="blackAlpha.900"
-              h={10}
-              w={36}
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Avatar
-                src={AzeroIcon}
-                h={5}
-                w={5}
-                mr={2}
-                name="AzeroLogo"
-                bg="transparent"
-              />
-              <Text>Volume {volume} m</Text>
-            </Flex>
+            <Tag>
+              <TagLeftIcon>
+                <AzeroIcon fill={isActive ? "#7AE7FF" : "#888"} />
+              </TagLeftIcon>
+              <TagLabel color={isActive ? "#fff" : "#888"}>
+                Volume {volume} m
+              </TagLabel>
+            </Tag>
 
             {variant === "my-collection" && (
               <>
                 <Spacer />
+
                 {isActive && (
-                  <Flex color="brand.blue">
-                    <Icon as={MdCheckCircle} w={6} h={6} color="brand.blue" />
-                    <Text ml={1}>Active</Text>
-                  </Flex>
+                  <Tag variant="active">
+                    <TagLeftIcon as={ActiveIcon} />
+                    <TagLabel>Active</TagLabel>
+                  </Tag>
                 )}
                 {!isActive && (
-                  <Flex color="brand.grayLight">
-                    <Icon
-                      as={MdHighlightOff}
-                      w={6}
-                      h={6}
-                      color="brand.grayLight"
-                    />
-                    <Text ml={1}>Inactive</Text>
-                  </Flex>
+                  <Tag variant="inActive">
+                    <TagLeftIcon as={InActiveIcon} />
+                    <TagLabel>Inactive</TagLabel>
+                  </Tag>
                 )}
               </>
             )}

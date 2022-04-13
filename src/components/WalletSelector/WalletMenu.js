@@ -1,8 +1,8 @@
-import { Avatar, Flex, Text } from "@chakra-ui/react";
+import { Tag, TagLabel, TagRightIcon } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useSubstrateState } from "../../utils/substrate/SubstrateContext";
-import AzeroIcon from "@theme/assets/icon/Azero.png";
+import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 function WalletMenu() {
   const { api, currentAccount } = useSubstrateState();
@@ -11,7 +11,7 @@ function WalletMenu() {
 
   useEffect(() => {
     let unsubscribe;
-
+    // TODO: Update balance to Number Format
     api &&
       currentAccount &&
       activeAddress &&
@@ -28,25 +28,10 @@ function WalletMenu() {
   }, [api, currentAccount, activeAddress, accountBalance]);
 
   return currentAccount ? (
-    <Flex
-      bg="brand.grayDark"
-      color="white"
-      minW={24}
-      height="12"
-      px="4"
-      alignItems="center"
-      justifyContent="end"
-    >
-      <Text> {accountBalance}</Text>
-      <Avatar
-        src={AzeroIcon}
-        h={5}
-        w={5}
-        ml={2}
-        name="AzeroLogo"
-        bg="transparent"
-      />
-    </Flex>
+    <Tag variant="grayBg" size="2xl" minW={24} justifyContent="end">
+      <TagLabel>{accountBalance}</TagLabel>
+      <TagRightIcon as={AzeroIcon} />
+    </Tag>
   ) : null;
 }
 

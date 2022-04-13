@@ -32,7 +32,7 @@ function GeneralPage() {
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">
       <Box
         mx="auto"
-        maxW={{ base: "xl", "2xl": "7xl" }}
+        maxW={{ base: "6xl", "2xl": "7xl" }}
         px={{ base: "6", "2xl": "8" }}
         py={{ base: "12", "2xl": "20" }}
       >
@@ -97,6 +97,7 @@ function GeneralPage() {
                     bg="brand.grayDark"
                     px={4}
                     py={3}
+                    fontSize="lg"
                   >
                     <Flex w="full">
                       <Text>
@@ -135,13 +136,13 @@ function GeneralPage() {
           bg="black"
           pos="relative"
         >
-          <Square size="16rem" bg="#222">
-            <Image src={ImageAccountBanner} />
+          <Square size="20rem" bg="#222">
+            <Image w="full" h="full" src={ImageAccountBanner} />
           </Square>
 
-          <VStack px={10} textAlign="left">
+          <VStack h={72} px={10} textAlign="left">
             <Flex w="full">
-              <Box fontFamily="Evogria Italic" fontSize="4xl" color="#FFF">
+              <Box fontFamily="Evogria Italic" fontSize="3xl-mid" color="#FFF">
                 <span>Stake your </span>
                 <span style={{ color: "#7AE7FF" }}>
                   Praying Mantis Predator
@@ -161,6 +162,7 @@ function GeneralPage() {
                 <TagLabel>Fees: 3%</TagLabel>
               </Tag>
             </Flex>
+
             <Flex w="full">
               <Text mt={0} mb={8} fontSize="lg" color="#fff">
                 You currently have 0 badgers staked.

@@ -10,7 +10,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { FaInstagram, FaTwitter, FaTelegram, FaFacebook } from "react-icons/fa";
-import { EditIcon } from "@chakra-ui/icons";
+import EditIcon from "@theme/assets/icon/Edit.js";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfile } from "@actions/account";
@@ -69,8 +69,7 @@ function ProfileHeader() {
       <Box
         mx="auto"
         px={{ base: "6", "2xl": "8" }}
-        pt={{ base: "12", "2xl": "28" }}
-        pb={{ base: "12", "2xl": "20" }}
+        py={{ base: "8", "2xl": "14" }}
       >
         <VStack>
           <Center
@@ -96,19 +95,27 @@ function ProfileHeader() {
 
           <HStack w="full" justifyContent="space-around" py={4}>
             <VStack textAlign="center" justifyContent="space-between">
-              <Heading size="h2" letterSpacing="wider" fontWeight="normal">
-                {profile?.username || "Unknown"}
-
-                <IconButton
-                  aria-label="edit-profile"
-                  icon={<EditIcon size="1.5rem" />}
-                  size="icon"
-                  variant="iconOutline"
-                  onClick={() => onOpen()}
-                  ml={5}
-                  borderWidth={0}
-                />
-              </Heading>
+              <Center w="full" pos="relative">
+                <Heading size="h2">{profile?.username || "Unknown"}</Heading>
+              </Center>
+              <IconButton
+                pos="relative"
+                bottom={7}
+                right={-60}
+                aria-label="edit"
+                icon={<EditIcon />}
+                size="icon"
+                borderWidth={0}
+                variant="iconOutline"
+                onClick={() => onOpen()}
+                h={0}
+                _hover={{
+                  h: 0,
+                }}
+                _focus={{
+                  h: 0,
+                }}
+              />
 
               <Text fontSize="lg" maxW="md">
                 {profile?.bio || "Something about yourself ..."}

@@ -11,21 +11,52 @@ import {
   Spacer,
   useDisclosure,
 } from "@chakra-ui/react";
-import React from "react";
 import AdvancedMode from "./AdvancedMode";
 import SimpleMode from "./SimpleMode";
 
 import AddCollectionIcon from "@theme/assets/icon/AddCollection";
-function AddNewCollection() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { AccountActionTypes } from "../../../../../store/types/account.types";
+
+function AddNewCollection({ forceUpdate }) {
+  const {
+    isOpen: isOpenAddNew,
+    onOpen: onOpenAddNew,
+    onClose: onCloseAddNew,
+  } = useDisclosure();
+
+  const dispatch = useDispatch();
+
+  const { tnxStatus } = useSelector((state) => state.account.accountLoaders);
+
+  useEffect(() => {
+    function onCloseHandler() {
+      if (tnxStatus?.status === "Finalized") {
+        dispatch({
+          type: AccountActionTypes.SET_TNX_STATUS,
+          payload: null,
+        });
+        forceUpdate();
+        console.log('forceUpdate...')
+        onCloseAddNew();
+      }
+    }
+
+    onCloseHandler();
+  }, [tnxStatus, dispatch, forceUpdate, onCloseAddNew]);
 
   return (
     <>
-      <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
+      <Button
+        variant="outline"
+        color="brand.blue"
+        onClick={() => onOpenAddNew()}
+      >
         Add Collection
       </Button>
 
-      <Modal isCentered isOpen={isOpen} onClose={onClose} size="xl">
+      <Modal isCentered isOpen={isOpenAddNew} onClose={onCloseAddNew} size="xl">
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
@@ -46,14 +77,14 @@ function AddNewCollection() {
           />
           <ModalHeader textAlign="center">
             <AddCollectionIcon />
-            <Heading size="h3" my={3}>
+            <Heading size="h4" my={3}>
               Add collection
             </Heading>
           </ModalHeader>
 
           <ModalBody>
             <Flex>
-              <SimpleMode />
+              <SimpleMode onCloseParent={onCloseAddNew} />
               <Spacer />
               <AdvancedMode />
             </Flex>

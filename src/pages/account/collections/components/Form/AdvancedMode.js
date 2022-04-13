@@ -1,33 +1,27 @@
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  HStack,
-  Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Stack,
-  Switch,
-  Text,
-  Textarea,
-} from "@chakra-ui/react";
-import { Formik, Form, useField, Field } from "formik";
+import { Button, HStack, Stack } from "@chakra-ui/react";
+import { Formik, Form } from "formik";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
-import ImageUpload from "@components/ImageUpload/Collection";
+import CollectionImageUpload from "@components/ImageUpload/Collection";
 import { useSubstrateState } from "@utils/substrate";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import { isValidAddressPolkadotAddress } from "@utils";
+import { useDispatch, useSelector } from "react-redux";
+import AddCollectionNumberInput from "../NumberInput";
+import AdvancedModeInput from "../../../components/Input";
+import AdvancedModeSwitch from "../../../components/Switch";
+import AdvancedModeTextArea from "../../../components/TextArea";
 
 const AdvancedModeForm = () => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
-  const { currentAccount, api } = useSubstrateState();
   const [addingFee, setAddingFee] = useState(0);
+  const [isSetRoyal, setIsSetRoyal] = useState(false);
+
+  const dispatch = useDispatch();
+  const { currentAccount, api } = useSubstrateState();
+  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
 
   useEffect(async () => {
     if (addingFee == 0) {
@@ -115,7 +109,8 @@ const AdvancedModeForm = () => {
 
               await collection_manager_calls.addNewCollection(
                 currentAccount,
-                data
+                data,
+                dispatch
               );
             }
           }
@@ -137,24 +132,44 @@ const AdvancedModeForm = () => {
             />
           </HStack>
 
-          <AdvancedModeTextarea
+          <AdvancedModeTextArea
             label="Collection Description"
             name="collectionDescription"
             type="text"
             placeholder="Collection Description"
           />
 
-          <Stack direction={{ xl: "row", "2xl": "column" }} alignItems="start">
-            <ImageUpload setImageIPFSUrl={setAvatarIPFSUrl} />
-            <ImageUpload setImageIPFSUrl={setHeaderIPFSUrl} />
+          <Stack
+            direction={{ xl: "row", "2xl": "column" }}
+            alignItems="start"
+            justifyContent="space-between"
+          >
+            <CollectionImageUpload
+              setImageIPFSUrl={setAvatarIPFSUrl}
+              title="Collection Avatar Image"
+              limitedSize={{ width: "64", height: "64" }}
+            />
 
-            <Stack direction={{ xl: "row", "2xl": "column" }} alignItems="end">
+            <CollectionImageUpload
+              setImageIPFSUrl={setHeaderIPFSUrl}
+              title="Collection Header Image"
+              limitedSize={{ width: "400", height: "260" }}
+            />
+
+            <Stack
+              direction={{ base: "column", "2xl": "row" }}
+              alignItems="end"
+              minH={20} minW={52}
+            >
               <AdvancedModeSwitch
+                onChange={() => setIsSetRoyal(!isSetRoyal)}
                 label="Collect Royal Fee"
                 name="collectRoyalFee"
               />
 
-              <AdvancedModeNumberInput
+              <AddCollectionNumberInput
+                isDisabled={!isSetRoyal}
+                isDisplay={isSetRoyal}
                 label="Royal Fee %"
                 name="royalFee"
                 type="number"
@@ -164,6 +179,9 @@ const AdvancedModeForm = () => {
           </Stack>
 
           <Button
+            spinnerPlacement="start"
+            isLoading={tnxStatus}
+            loadingText={`${tnxStatus?.status}`}
             variant="solid"
             w="full"
             type="submit"
@@ -179,100 +197,3 @@ const AdvancedModeForm = () => {
 };
 
 export default AdvancedModeForm;
-
-const AdvancedModeInput = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
-  return (
-    <FormControl h={28}>
-      <FormLabel ml={2} htmlFor={props.id || props.name}>
-        {label}
-      </FormLabel>
-      <Field pl={2} as={Input} bg="black" {...field} {...props} />
-      {meta.touched && meta.error ? (
-        <Text textAlign="left" color="red" ml={2}>
-          {meta.error}
-        </Text>
-      ) : null}
-    </FormControl>
-  );
-};
-
-const AdvancedModeTextarea = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
-  return (
-    <FormControl h={28} mb={8}>
-      <FormLabel ml={2} htmlFor={props.id || props.name}>
-        {label}
-      </FormLabel>
-      <Field
-        pl={2}
-        borderRadius="0"
-        as={Textarea}
-        bg="black"
-        {...field}
-        {...props}
-      />
-      {meta.touched && meta.error ? (
-        <Text textAlign="left" color="red" ml={2}>
-          {meta.error}
-        </Text>
-      ) : null}
-    </FormControl>
-  );
-};
-
-const AdvancedModeSwitch = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
-  return (
-    <FormControl display="flex">
-      <FormLabel ml={1} htmlFor={props.id || props.name}>
-        {label}
-      </FormLabel>
-      <Field
-        pl={2}
-        size="lg"
-        as={Switch}
-        colorScheme="teal"
-        {...field}
-        {...props}
-      />
-      {meta.touched && meta.error ? (
-        <Text textAlign="left" color="red" ml={2}>
-          {meta.error}
-        </Text>
-      ) : null}
-    </FormControl>
-  );
-};
-
-const AdvancedModeNumberInput = ({ label, name, isDisabled, ...props }) => {
-  // const [, meta] = useField(props);
-  return (
-    <Field name="royalFee">
-      {({ field, form }) => (
-        <FormControl id={name}>
-          <FormLabel ml={1} htmlFor="royalFee">
-            {label}
-          </FormLabel>
-          <NumberInput
-            isDisabled={isDisabled}
-            id={name}
-            min={0}
-            max={5}
-            precision={0}
-            step={0.01}
-            bg="black"
-            {...field}
-            onChange={(val) => form.setFieldValue(field.name, val)}
-          >
-            <NumberInputField borderRadius="0" />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-        </FormControl>
-      )}
-    </Field>
-  );
-};

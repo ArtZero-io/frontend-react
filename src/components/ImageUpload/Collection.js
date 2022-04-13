@@ -10,8 +10,8 @@ import toast from "react-hot-toast";
 const client = create(IPFS_CLIENT_URL);
 
 const ImageUploadCollection = ({
-  title = "Upload Image",
   setImageIPFSUrl,
+  title = "Upload Image",
   limitedSize = { width: "430", height: "430" },
 }) => {
   const [imgURL, setImgURL] = useState("");
@@ -69,16 +69,24 @@ const ImageUploadCollection = ({
   };
 
   return (
-    <VStack alignItems="start" py={6} borderBottomWidth={2}>
-      <Text ml={2}>{title}</Text>
+    <VStack minW={52} alignItems="start" pt={6} fontSize="lg">
+      <Text color="#fff" ml={0}>
+        {title}
+      </Text>
       {!imagePreviewUrl && (
-        <HStack py="1" justifyContent="center">
+        <HStack py="1" justifyContent="center" minH={16}>
           <label htmlFor="inputTag" style={{ cursor: "pointer" }}>
             <Flex alignItems="center">
-              <Button as={Text} variant="outline" color="brand.blue">
+              <Button
+                as={Text}
+                variant="outline"
+                color="brand.blue"
+                fontFamily="Evogria"
+                fontSize="md"
+              >
                 Select Image
               </Button>
-              <Text ml={4} color="brand.grayLight">
+              <Text minW={28} ml={4} color="brand.grayLight">
                 No file chosen
               </Text>
               <input
@@ -94,11 +102,13 @@ const ImageUploadCollection = ({
       )}
 
       {imagePreviewUrl && (
-        <HStack justifyContent="center">
-          <Avatar ml={2} src={imagePreviewUrl} />
+        <HStack justifyContent="center" minH={16}>
+          <Avatar minH={16} minW={16} ml={2} src={imagePreviewUrl} />
 
           {imgURL ? (
-            <div>Ready for submit</div>
+            <Text minW={28} color="brand.blue">
+              Ready for submit !
+            </Text>
           ) : (
             <Button
               size="xs"

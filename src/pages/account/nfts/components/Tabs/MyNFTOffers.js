@@ -12,8 +12,8 @@ import React from "react";
 
 function NFTTabActivity({ address }) {
   return (
-    <Box as="section" maxW="container.3xl" px={5} position="relative">
-      { address }
+    <Box minH="30rem" as="section" maxW="container.3xl" position="relative">
+      {address}
       <TableContainer>
         <Table>
           <Thead>

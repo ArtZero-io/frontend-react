@@ -5,8 +5,8 @@ import { useField, Field } from "formik";
 export default function SimpleModeSwitch({ label, ...props }) {
   const [field, meta] = useField(props);
   return (
-    <FormControl display="flex">
-      <FormLabel ml={1} htmlFor={props.id || props.name}>
+    <FormControl color="#fff"  fontSize='lg' display="flex" mt={6}>
+      <FormLabel  fontSize='lg' ml={1} htmlFor={props.id || props.name}>
         {label}
       </FormLabel>
       <Field
@@ -18,7 +18,7 @@ export default function SimpleModeSwitch({ label, ...props }) {
         {...props}
       />
       {meta.touched && meta.error ? (
-        <Text textAlign="left" color="red" ml={2}>
+        <Text textAlign="left" color="red" ml={1} fontSize='sm'>
           {meta.error}
         </Text>
       ) : null}
