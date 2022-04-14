@@ -184,7 +184,7 @@ async function list(caller_account, nft_contract_address,token_id,price) {
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source)
   const tokenId = await marketplace_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
-  const sale_price = new U128(new TypeRegistry(), Math.round(price * (10**12)));
+  const sale_price = new U128(new TypeRegistry(), price);
   marketplace_contract.tx
     .list({ gasLimit, value:azero_value }, nft_contract_address, tokenId, sale_price)
     .signAndSend(
@@ -232,9 +232,9 @@ async function unlist(caller_account, nft_contract_address,token_id) {
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source)
-
+  const tokenId = await marketplace_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
   marketplace_contract.tx
-    .unlist({ gasLimit, value:azero_value }, nft_contract_address,token_id)
+    .unlist({ gasLimit, value:azero_value }, nft_contract_address,tokenId)
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -326,9 +326,9 @@ async function buy(caller_account, nft_contract_address,token_id,price) {
   const gasLimit = -1;
   const azero_value = Math.round(price * (10**12));
   const injector = await web3FromSource(caller_account?.meta?.source)
-
+  const tokenId = await marketplace_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
   marketplace_contract.tx
-    .buy({ gasLimit, value:azero_value }, nft_contract_address,token_id)
+    .buy({ gasLimit, value:azero_value }, nft_contract_address,tokenId)
     .signAndSend(
       address,
       { signer: injector.signer },

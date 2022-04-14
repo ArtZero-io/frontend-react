@@ -31,16 +31,11 @@ function NFTTabInfo({
   nft_detail,
   collection_detail,
 }) {
-  const { name, description, isListed, isBid, attributes, image } = selectedNFT;
-  console.log("isListed", isListed);
+  const { name, description, isListed, isBid, atts, img, price } = selectedNFT;
   const { api, currentAccount } = useSubstrateState();
   const [sale_price, setSalePrice] = useState(0);
 
   const listToken = async () => {
-    console.log(nft_contract_address);
-    console.log(sale_price);
-    console.log(nft_detail?.id);
-    console.log(collection_detail);
     if (collection_detail?.contractType === "2") {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
@@ -53,7 +48,6 @@ function NFTTabInfo({
           currentAccount,
           nft_detail.id
         );
-      console.log(ownerAddress);
 
       if (ownerAddress == currentAccount.address) {
         const is_allownce = await nft721_psp34_standard_calls.allowance(
@@ -90,6 +84,11 @@ function NFTTabInfo({
       }
     }
   };
+
+  const unlistToken = async () => {
+    await marketplace_contract_calls.unlist(currentAccount, nft_contract_address, nft_detail.id);
+  }
+
   return (
     <HStack>
       <Image
@@ -97,7 +96,7 @@ function NFTTabInfo({
         boxSize="30rem"
         alt="nft-img"
         objectFit="cover"
-        src={image}
+        src={img}
         fallbackSrc="https://via.placeholder.com/480"
       />
 
@@ -118,7 +117,7 @@ function NFTTabInfo({
           templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
           gap={5}
         >
-          {attributes?.map((item) => {
+          {atts?.map((item) => {
             return (
               <GridItem
                 id="abc"
@@ -131,7 +130,7 @@ function NFTTabInfo({
                     <Text color="brand.grayLight">
                       <Text>{item.trait_type}</Text>
                       <Heading size="h6" isTruncated mt={1}>
-                        {item.value}
+                        {item.name}
                       </Heading>
                     </Text>
                     <Spacer />
@@ -146,7 +145,7 @@ function NFTTabInfo({
           })}
         </Grid>
 
-        {isListed && !isListed?.status && (
+        {!isListed && (
           <Flex
             w="full"
             py={2}
@@ -215,7 +214,7 @@ function NFTTabInfo({
             </Button>
           </Flex>
         )}
-        {isListed && isListed?.status && (
+        {isListed && (
           <Flex w="full" py={2} alignItems="center" justifyContent="start">
             <Spacer />
             <Flex
@@ -227,11 +226,11 @@ function NFTTabInfo({
               <Text color="brand.grayLight">For Sale At</Text>
 
               <Text color="#fff" mx={2}>
-                72.00
+                {price}
               </Text>
               <AzeroIcon />
             </Flex>
-            <Button ml={2} variant="solid">
+            <Button ml={2} variant="solid" onClick={unlistToken}>
               remove from sale
             </Button>
           </Flex>
