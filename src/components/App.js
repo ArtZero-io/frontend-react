@@ -1,41 +1,35 @@
-import React from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
-import {
-  SubstrateContextProvider,
-  useSubstrateState,
-} from "../utils/substrate";
+import { SubstrateContextProvider, useSubstrateState } from "@utils/substrate";
 import Router from "@components/Router";
 import { store } from "@store/store";
 
-import { ChakraProvider, Grid } from "@chakra-ui/react";
-import theme from "../theme/theme";
+import { ChakraProvider } from "@chakra-ui/react";
+import theme from "@theme/theme";
 import "@fontsource/oswald";
 
 function Main() {
   const { apiState, apiError } = useSubstrateState();
 
-  const message = (errObj) => (
-    <Grid centered columns={2} padded>
-      <Grid.Column>
-        <div
-          negative
-          compact
-          floating
-          header="Error Connecting to Substrate"
-          content={`Connection to websocket '${errObj.target.url}' failed.`}
-        />
-      </Grid.Column>
-    </Grid>
-  );
-
-  if (apiState === "ERROR") return message(apiError);
+  if (apiState === "ERROR") return toast.error(apiError);
 
   return (
     <ChakraProvider theme={theme}>
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          style: {
+            marginRight:'2rem',
+            borderRadius: 0,
+            padding: "16px",
+            color: "#000",
+            background: "#7AE7FF",
+          },
+        }}
+      />
       <Router />
     </ChakraProvider>
   );

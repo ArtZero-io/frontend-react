@@ -1,8 +1,11 @@
 import { Box, Container, Flex, Img, ScaleFade } from "@chakra-ui/react";
 import Navbar from "../Navbar/Nav";
 import bgHeroFull from "@theme/assets/bg-hero-full.png";
+import { useSubstrateState } from "@utils/substrate";
+import Loader from "../Loader/Loader";
 
 const Layout = ({ backdrop, children }) => {
+  const { apiState } = useSubstrateState();
   return (
     <Container
       id="layout-container"
@@ -37,12 +40,12 @@ const Layout = ({ backdrop, children }) => {
       </Flex>
       <Navbar />
       <ScaleFade
-        initialScale={0.5}
+        initialScale={0.6}
         in="true"
         transitionEnd={{ opacity: 0 }}
-        delay={0.5}
+        delay={0.3}
       >
-        <div>{children}</div>
+        {apiState === "READY" ? <div>{children}</div> : <Loader />}
       </ScaleFade>
     </Container>
   );

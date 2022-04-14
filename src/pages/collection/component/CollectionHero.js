@@ -62,7 +62,7 @@ function CollectionHero({ avatar, name, description }) {
             </VStack>
 
             <VStack textAlign="center" justifyContent="space-between">
-              <Heading size="2xl" letterSpacing="wider" fontWeight="normal">
+              <Heading size="2xl">
                 {name}
               </Heading>
 

@@ -77,7 +77,7 @@ const AddNewNFTModal = () => {
             borderRadius="0"
           />
           <ModalHeader>
-            <Heading size="2xl" letterSpacing="wider" fontWeight="normal">
+            <Heading size="h1" >
               Add new NFT
             </Heading>
           </ModalHeader>

@@ -7,9 +7,9 @@ export default function InActiveIcon(props) {
       <path
         d="m6.535 6.536 7.071 6.934m.001-6.934-7.07 6.934"
         stroke="#000"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </Icon>
   );

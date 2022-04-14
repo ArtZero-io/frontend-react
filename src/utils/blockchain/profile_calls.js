@@ -1,5 +1,7 @@
 import { web3FromSource } from "../wallets/extension-dapp";
 import toast from "react-hot-toast";
+import { AccountActionTypes } from "../../store/types/account.types";
+import { truncateStr } from "..";
 
 let account;
 let profileContract;
@@ -13,7 +15,8 @@ const currentAccountLocal = JSON.parse(
 account = currentAccountLocal || null;
 
 function isLoaded() {
-  if (profileContract) return true; else return false;
+  if (profileContract) return true;
+  else return false;
 }
 
 function setAccount(newAccount) {
@@ -22,7 +25,10 @@ function setAccount(newAccount) {
 }
 
 function setProfileContract(contract) {
-  // console.log(`xyz 2 Setting contract in profileContract blockchain module`, contract)
+  // console.log(
+  //   `xyz 2 Setting contract in profileContract blockchain module`,
+  //   contract
+  // );
   profileContract = contract;
 }
 
@@ -67,7 +73,7 @@ export async function getProfileOnChain() {
       instagram: output.toHuman()[5],
       telegram: output.toHuman()[6],
     };
-    console.log("Load profile successful.", profile);
+    // console.log("Load profile successful.", profile);
   }
 
   return profile;
@@ -121,7 +127,11 @@ export async function setSingleAttributeProfileOnChain(data) {
   return unsubscribe;
 }
 
-export async function setMultipleAttributesProfileOnChain(attributes, values) {
+export async function setMultipleAttributesProfileOnChain(
+  attributes,
+  values,
+  dispatch
+) {
   let unsubscribe;
 
   const address = account?.address;
@@ -151,16 +161,35 @@ export async function setMultipleAttributesProfileOnChain(attributes, values) {
           }
 
           if (status) {
-            const statusText = Object.keys(status.toHuman())[0];
-            toast.success(
-              `Profile update ${
-                statusText === "0" ? "start" : statusText.toLowerCase()
-              }.`
-            );
+            const statusToHuman = Object.entries(status.toHuman());
+
+            if (Object.keys(status.toHuman())[0] === "0") {
+              dispatch({
+                type: AccountActionTypes.SET_TNX_STATUS,
+                payload: { status: "Ready" },
+              });
+            } else {
+              dispatch({
+                type: AccountActionTypes.SET_TNX_STATUS,
+                payload: {
+                  status: statusToHuman[0][0],
+                  value: truncateStr(statusToHuman[0][1], 6),
+                },
+              });
+            }
+
+            // const statusText = Object.keys(status.toHuman())[0];
+            // toast.success(
+            //   `Profile update ${
+            //     statusText === "0" ? "start" : statusText.toLowerCase()
+            //   }.`
+            // );
           }
         }
       )
-      .then((unsub) => (unsubscribe = unsub))
+      .then((unsub) => {
+        return (unsubscribe = unsub);
+      })
       .catch((e) => console.log("e", e));
 
   return unsubscribe;
@@ -173,7 +202,48 @@ const blockchainModule = {
   setProfileContract,
   setSingleAttributeProfileOnChain,
   setMultipleAttributesProfileOnChain,
-  isLoaded
+  isLoaded,
 };
 
 export default blockchainModule;
+
+// function handleContractCall(status, dispatchError, dispatch) {
+//   if (dispatchError) {
+//     if (dispatchError.isModule) {
+//       const decoded = profileContract.registry.findMetaError(
+//         dispatchError.asModule
+//       );
+//       const { docs, name, section } = decoded;
+
+//       console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
+//     } else {
+//       console.log(dispatchError.toString());
+//     }
+//   }
+
+//   if (status) {
+//     const statusToHuman = Object.entries(status.toHuman());
+
+//     if (Object.keys(status.toHuman())[0] === "0") {
+//       dispatch({
+//         type: AccountActionTypes.SET_TNX_STATUS,
+//         payload: { status: "Ready" },
+//       });
+//     } else {
+//       dispatch({
+//         type: AccountActionTypes.SET_TNX_STATUS,
+//         payload: {
+//           status: statusToHuman[0][0],
+//           value: truncateStr(statusToHuman[0][1], 6),
+//         },
+//       });
+//     }
+
+//     const statusText = Object.keys(status.toHuman())[0];
+//     toast.success(
+//       `Profile update ${
+//         statusText === "0" ? "start" : statusText.toLowerCase()
+//       }.`
+//     );
+//   }
+// }

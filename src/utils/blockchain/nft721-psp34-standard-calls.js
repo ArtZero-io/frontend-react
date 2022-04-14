@@ -6,7 +6,7 @@ import { TypeRegistry, U64 } from '@polkadot/types';
 
 let nft721_psp34_standard_contract;
 function setContract(c) {
-  console.log(`Setting contract in blockchain module`, c);
+  // console.log(`Setting contract in blockchain module`, c);
   nft721_psp34_standard_contract = c;
 }
 

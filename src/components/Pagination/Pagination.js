@@ -1,13 +1,9 @@
 import { Text, Stack, Square, Input, IconButton } from "@chakra-ui/react";
 import {
   Pagination,
-  // usePagination,
-  // PaginationPage,
   PaginationNext,
   PaginationPrevious,
   PaginationContainer,
-  // PaginationPageGroup,
-  // PaginationSeparator,
 } from "@ajna/pagination";
 
 import {
@@ -55,7 +51,7 @@ const PaginationMP = ({
           p={0}
           w="full"
         >
-          <IconButton
+          <IconButton mr={2}
             size="icon"
             icon={<ArrowLeftIcon />}
             variant="iconSolid"
@@ -64,7 +60,7 @@ const PaginationMP = ({
             onClick={() => setCurrentPage(1)}
           />
           <PaginationPrevious
-            p={0}
+            p={0}  mr={2}
             _hover={{
               bg: "brand.blue",
             }}
@@ -81,7 +77,7 @@ const PaginationMP = ({
             </Square>
           </PaginationPrevious>
           <PaginationNext
-            p={0}
+            p={0}  mr={2}
             _hover={{
               bg: "brand.blue",
               color: "black",
@@ -98,14 +94,14 @@ const PaginationMP = ({
               />
             </Square>
           </PaginationNext>
-          <IconButton
+          <IconButton  mr={2}
             size="icon"
             icon={<ArrowRightIcon />}
             variant="iconSolid"
             aria-label="go-end"
             onClick={() => setCurrentPage(pagesCount)}
-            disabled={currentPage === pagesCount}
-          />{" "}
+            disabled={currentPage >= pagesCount}
+          />
           <Input placeholder="Go to page" onKeyPress={onEnterHandler} />
         </PaginationContainer>
       </Pagination>

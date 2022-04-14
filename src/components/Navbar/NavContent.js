@@ -96,9 +96,9 @@ export const NavContent = {
 };
 const myAccountList = [
   { label: "General", href: ROUTES.ACCOUNT },
-  { label: "My Collection", href: ROUTES.MY_COLLECTION },
-  { label: "My NFT", href: ROUTES.MINTING_EVENT },
-  { label: "My Stakes", href: ROUTES.STAKE },
+  { label: "My Collection", href: ROUTES.ACCOUNT_MY_COLLECTIONS },
+  { label: "My NFT", href: ROUTES.ACCOUNT_MY_NFTS },
+  { label: "My Stakes", href: ROUTES.ACCOUNT_MY_STAKES },
 ];
 const MyAccountDropdown = () => {
   const history = useHistory();
