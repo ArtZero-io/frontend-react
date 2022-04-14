@@ -1,5 +1,5 @@
 const marketplace = {
-  CONTRACT_ADDRESS: "5GDX5yzaLCsaJJWr7n7kZWtdR45qazGmp5Kww4EnzkCLCnbk",
+  CONTRACT_ADDRESS: "5G46BG71ngjxe3SZBnDSgwumSv4NLsCeQNFeBdAXUuct57nt",
   CONTRACT_ABI: {
     "source": {
       "hash": "0xe481713d61023cabf39d216187f4abc2304dc97a41e2629fc35898c3249eabf1",
