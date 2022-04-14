@@ -1,7 +1,7 @@
 import BN from "bn.js";
 import toast from 'react-hot-toast'
 import { web3FromSource } from '../wallets/extension-dapp'
-import {isValidAddressPolkadotAddress} from '../../utils'
+import {isValidAddressPolkadotAddress} from '@utils'
 let staking_contract
 
 function isLoaded() {

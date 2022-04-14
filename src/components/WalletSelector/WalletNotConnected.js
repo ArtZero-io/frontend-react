@@ -17,7 +17,7 @@ import SubwalletLogo from "@utils/wallets/SubWalletLogo.svg";
 import PolkadotjsLogo from "@utils/wallets/PolkadotjsLogo.svg";
 import TalismanLogo from "@utils/wallets/TalismanLogo.svg";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
-import { loadAccounts } from "../../utils/substrate/SubstrateContext";
+import { loadAccounts } from "@utils/substrate/SubstrateContext";
 
 function WalletNotConnected() {
   const { dispatch, state } = useSubstrate();

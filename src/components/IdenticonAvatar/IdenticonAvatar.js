@@ -1,5 +1,5 @@
 import React from "react";
-import { useSubstrateState } from "../utils/substrate";
+import { useSubstrateState } from "@utils/substrate";
 import { Circle } from "@chakra-ui/react";
 import Identicon from "@polkadot/react-identicon";
 

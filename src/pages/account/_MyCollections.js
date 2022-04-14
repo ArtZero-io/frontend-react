@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import staking_calls from "../../utils/blockchain/staking_calls";
-import { useSubstrateState } from "../../utils/substrate";
+import staking_calls from "@utils/blockchain/staking_calls";
+import { useSubstrateState } from "@utils/substrate";
 
 function MyCollections() {
   const { currentAccount } = useSubstrateState();

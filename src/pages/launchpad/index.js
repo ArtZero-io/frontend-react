@@ -9,12 +9,12 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
 } from "@chakra-ui/react";
-import { useSubstrateState } from "../../utils/substrate";
+import { useSubstrateState } from "@utils/substrate";
 import Loader from "../../components/Loader/Loader";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import artzero_nft_calls from "../../utils/blockchain/artzero-nft-calls";
-import { delay, truncateStr } from "../../utils";
+import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
+import { delay, truncateStr } from "@utils";
 const MintingEventPage = () => {
   const dispatch = useDispatch();
   const { currentAccount, keyringState, apiState } = useSubstrateState();

@@ -1,4 +1,4 @@
-import profile_calls from "../../utils/blockchain/profile_calls";
+import profile_calls from "@utils/blockchain/profile_calls";
 import { AccountActionTypes } from "../types/account.types";
 
 export function getProfile() {

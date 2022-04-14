@@ -6,11 +6,14 @@ import Loader from "../Loader/Loader";
 
 const Layout = ({ backdrop, children }) => {
   const { apiState } = useSubstrateState();
+  const sub = useSubstrateState()
+
+  console.log('hehe sub', sub)
   return (
     <Container
       id="layout-container"
       maxW="container.3xl"
-      height="100%"
+      height="100vh"
       px={{ sm: "0" }}
       position="relative"
     >
@@ -38,12 +41,14 @@ const Layout = ({ backdrop, children }) => {
           <Box position="absolute" w="full" h="full" bg="blackAlpha.600" />
         </Box>
       </Flex>
+
       <Navbar />
+
       <ScaleFade
-        initialScale={0.6}
+        initialScale={0.8}
         in="true"
         transitionEnd={{ opacity: 0 }}
-        delay={0.3}
+        delay={0.2}
       >
         {apiState === "READY" ? <div>{children}</div> : <Loader />}
       </ScaleFade>

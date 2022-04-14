@@ -3,11 +3,11 @@ import TabGeneral from "./TabGeneral";
 import TabMyCollections from "./TabMyCollections";
 import TabMyNFT from "./TabMyNFT";
 import { useLocation } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+
 
 function AccountTab() {
-  const history = useHistory();
-  console.log("history", history);
+
+  
   const location = useLocation();
   return (
     <>
@@ -21,12 +21,9 @@ function AccountTab() {
         </TabList>
 
         <TabPanels>
-          <TabPanel>{}</TabPanel>
-          {/* {tabData.map((tab, index) => (
-            <TabPanel p={4} key={index} bg="#171717">
-              {tab.content}
-            </TabPanel>
-          ))} */}
+
+         
+         
         </TabPanels>
       </Tabs>
     </>

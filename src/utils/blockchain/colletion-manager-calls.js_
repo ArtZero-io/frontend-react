@@ -1,7 +1,7 @@
 import BN from "bn.js";
 import toast from 'react-hot-toast'
 import { web3FromSource } from '@polkadot/extension-dapp'
-import {isValidAddressPolkadotAddress} from '../../utils';
+import {isValidAddressPolkadotAddress} from '@utils';
 
 let collection_manager_contract
 

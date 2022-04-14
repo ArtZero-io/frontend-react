@@ -54,8 +54,8 @@ const NFTTabCollectible = ({ address }) => {
         currentAccount,
         param.address
       );
-    console.log("NFTTAB", currentCollection);
 
+      
     if (currentCollection?.showOnChainMetadata) {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
@@ -167,7 +167,7 @@ const NFTTabCollectible = ({ address }) => {
         fallbackSrc="https://via.placeholder.com/480"
       />
 
-      <VStack maxH="30rem" w="full" pl={10} py={0}>
+      <VStack minH="30rem" justify='start' maxH="30rem" w="full" pl={10} py={0}>
         <Box w="full">
           <Flex>
             <Heading size="h4">{NFT.name}</Heading>

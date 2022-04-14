@@ -20,24 +20,13 @@ const AccountPage = () => {
   const { activeAddress, accountLoaders } = useSelector((s) => s.account);
   const { currentAccount, keyringState, apiState } = useSubstrateState();
 
-  console.log("++++++++++++++++++++++++++++++");
-  console.log("0apiState", apiState);
-  console.log("0keyringState", keyringState);
-  console.log("0activeAddress", activeAddress);
-  console.log("++++++++++++++++++++++++++++++");
   useEffect(() => {
     const loadProfile = async () => {
       if (activeAddress) {
         const profile = await dispatch(getProfile());
-        console.log("profile >> xxx", profile);
         setProfile(profile);
       }
     };
-    console.log("++++++++++++++++++++++++++++++");
-    console.log("1apiState", apiState);
-    console.log("1keyringState", keyringState);
-    console.log("1activeAddress", activeAddress);
-    console.log("++++++++++++++++++++++++++++++");
 
     apiState === "READY" &&
       keyringState === "READY" &&
@@ -50,15 +39,10 @@ const AccountPage = () => {
     const loadProfile = async () => {
       if (activeAddress) {
         const profile = await dispatch(getProfile());
-        console.log("profile >> yyy", profile);
         setProfile(profile);
       }
     };
-    console.log("++++++++++++++++++++++++++++++");
-    console.log("2apiState", apiState);
-    console.log("2keyringState", keyringState);
-    console.log("2activeAddress", activeAddress);
-    console.log("++++++++++++++++++++++++++++++");
+
     apiState === "READY" &&
       keyringState === "READY" &&
       activeAddress &&
@@ -95,7 +79,6 @@ const AccountPage = () => {
               <Identicon value={currentAccount?.addressRaw} size={84} />
               {!profile?.avatar && currentAccount?.addressRaw && (
                 <>
-                  
                   <Identicon value={currentAccount?.addressRaw} size={84} /> abc
                 </>
               )}

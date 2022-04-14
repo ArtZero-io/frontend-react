@@ -7,7 +7,7 @@ import {
   Spacer,
   IconButton,
 } from "@chakra-ui/react";
-import CollectionNFT from "./NFTGrid";
+import CollectionNFTGrid from "./NFTGrid";
 import Dropdown from "../../../../components/Dropdown/Dropdown";
 import { RiLayoutGridLine } from "react-icons/ri";
 import { BsGrid3X3 } from "react-icons/bs";
@@ -25,9 +25,7 @@ const CollectionItems = () => {
 
   const [isOwnerCollection, setIsOwnerCollection] = useState(false);
   const [currentCollection, setCurrentCollection] = useState({});
-  console.log("isOwnerCollection", isOwnerCollection);
 
-  console.log("param", param);
   useEffect(async () => {
     await onRefresh();
   }, [collection_manager_calls.isLoaded()]);
@@ -43,7 +41,7 @@ const CollectionItems = () => {
       currentAccount,
       param.address
     );
-    console.log("res", res);
+
     if (res === currentAccount?.address) {
       setIsOwnerCollection(true);
     } else {
@@ -58,15 +56,14 @@ const CollectionItems = () => {
         param.address
       );
 
-    console.log("currentCollection", currentCollection);
     setCurrentCollection(currentCollection);
   };
 
   const forceUpdate = useCallback(() => {
-    console.log("forceUpdate...");
-
     onRefresh();
   }, []);
+
+  const [bigCard, setBigCard] = useState(true);
 
   return (
     <Box w="full" textAlign="left" minH={"54rem"}>
@@ -90,6 +87,7 @@ const CollectionItems = () => {
         />
 
         <Dropdown mx={1.5} options={options} defaultItem={options[0]} />
+
         <IconButton
           aria-label="download"
           icon={<RiLayoutGridLine fontSize="1.5rem" />}
@@ -97,6 +95,7 @@ const CollectionItems = () => {
           variant="iconSolid"
           mr={1.5}
           ml={3}
+          onClick={() => setBigCard(true)}
         />
         <IconButton
           aria-label="download"
@@ -104,6 +103,7 @@ const CollectionItems = () => {
           size="icon"
           variant="iconSolid"
           mx={1.5}
+          onClick={() => setBigCard(false)}
         />
       </Flex>
       <Flex align="center" py={4} minH={20}>
@@ -115,7 +115,7 @@ const CollectionItems = () => {
         ) : null}
       </Flex>
 
-      <CollectionNFT />
+      <CollectionNFTGrid bigCard={bigCard} />
     </Box>
   );
 };

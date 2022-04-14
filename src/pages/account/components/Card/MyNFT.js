@@ -15,7 +15,7 @@ import {
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 const MyNFTCard = (props) => {
-  console.log("props", props);
+
   const { name, image, isListed, isBid, isStaked } = props;
   return (
     <Box minW="14.25rem" _hover={{ bg: "brand.blue" }} p="px">

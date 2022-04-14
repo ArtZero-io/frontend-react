@@ -46,7 +46,7 @@ const MyNFTsPage = () => {
         currentAccount
       );
 
-      console.log("totalSupply", totalSupply);
+
       for (let i = 1; i <= totalSupply; i++) {
         const tokenId = nft721_psp34_standard_contract.api.createType(
           "ContractsPsp34Id",
@@ -93,7 +93,7 @@ const MyNFTsPage = () => {
           img: `${IPFS_BASE_URL}/${tokenAvatar}`,
           atts: atts,
         };
-        console.log("TabMyNFT", nft);
+
         myNFTs.push(nft);
       }
     } else {
@@ -128,7 +128,7 @@ const MyNFTsPage = () => {
       //   }
       // }
     }
-    console.log("xxx myNFTs", myNFTs);
+
     return myNFTs;
   };
 
@@ -141,7 +141,6 @@ const MyNFTsPage = () => {
       currentAccount?.address
     );
 
-    console.log("MyNFTPage collections", collections);
     if (collections?.length) {
       for (let collection of collections) {
         let data = await collection_manager_calls.getCollectionByAddress(
@@ -163,7 +162,7 @@ const MyNFTsPage = () => {
           listNFT: listNft,
         });
       }
-      console.log("1MyNFTPage collections", collections);
+
       setMyCollections(myCollections);
 
       // setMyCollections(fakeAPI.collected);
@@ -193,7 +192,7 @@ const MyNFTsPage = () => {
     setMyCollections(data);
     setSelectedCollectionNo(id);
   }
-  console.log("myCollections", selectedCollectionNo);
+
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">
       <Box

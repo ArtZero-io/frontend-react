@@ -137,7 +137,8 @@ const CollectionsPage = (props) => {
           </Box>
         </Box>
       </Box>
-      {loading && (
+
+      {loading ? (
         <Center>
           <Spinner
             thickness="4px"
@@ -147,29 +148,30 @@ const CollectionsPage = (props) => {
             size="xl"
           />
         </Center>
-      )}
-      <Box as="section" maxW="container.3xl" px={5}>
-        {!loading && (
+      ) : (
+        <Box as="section" maxW="container.3xl" px={5}>
           <Box
             mx="auto"
             maxW={{ base: "xl", md: "7xl" }}
             px={{ base: "6", md: "8" }}
             py={{ base: "12", md: "20" }}
           >
-            <Flex w="full" alignItems="end">
-              <PaginationMP
-                isDisabled={isDisabled}
-                currentPage={currentPage}
-                pagesCount={pagesCount}
-                setCurrentPage={setCurrentPage}
-              />
-              <Spacer />
-              <Dropdown
-                maxW="3xs"
-                options={["Trending", "Hottest", "New Release"]}
-                defaultItem={"Trending"}
-              />
-            </Flex>
+            {collections.length ? (
+              <Flex w="full" alignItems="end">
+                <PaginationMP
+                  isDisabled={isDisabled}
+                  currentPage={currentPage}
+                  pagesCount={pagesCount}
+                  setCurrentPage={setCurrentPage}
+                />
+                <Spacer />
+                <Dropdown
+                  maxW="3xs"
+                  options={["Trending", "Hottest", "New Release"]}
+                  defaultItem={"Trending"}
+                />
+              </Flex>
+            ) : null}
 
             <SimpleGrid py={16} columns={{ base: 1, md: 2, lg: 3 }} spacing="8">
               {collections.map((item, idx) => (
@@ -197,18 +199,20 @@ const CollectionsPage = (props) => {
               ))}
             </SimpleGrid>
 
-            <Flex w="full" alignItems="end">
-              <PaginationMP
-                isDisabled={isDisabled}
-                currentPage={currentPage}
-                pagesCount={pagesCount}
-                setCurrentPage={setCurrentPage}
-              />
-              <Spacer />
-            </Flex>
+            {collections.length ? (
+              <Flex w="full" alignItems="end">
+                <PaginationMP
+                  isDisabled={isDisabled}
+                  currentPage={currentPage}
+                  pagesCount={pagesCount}
+                  setCurrentPage={setCurrentPage}
+                />
+                <Spacer />
+              </Flex>
+            ) : null}
           </Box>
-        )}
-      </Box>
+        </Box>
+      )}
     </Layout>
   );
 };

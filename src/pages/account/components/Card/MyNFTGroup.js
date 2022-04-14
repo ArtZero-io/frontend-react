@@ -25,12 +25,7 @@ function MyNFTCardsGroup({
   const [selectedNFT, setSelectedNFT] = useState(null);
   const [nft_detail, setNftDetail] = useState({});
 
-  console.log("collectionName", collectionName);
-  console.log("totalItems", totalItems);
-  console.log("listNFT", listNFT);
-  console.log("image", image);
-  console.log("collection_detail", collection_detail);
-  console.log("nftContractAddress", nftContractAddress);
+  
 
   function onClickHandler(item) {
     console.log('item xxx', item)
@@ -39,7 +34,7 @@ function MyNFTCardsGroup({
     setNftDetail(item);
     !item?.isStaked && onOpen();
 
-    console.log("first", onOpen);
+
   }
   return (
     <Box my={10}>

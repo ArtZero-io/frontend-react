@@ -145,7 +145,7 @@ const AdvancedERC721Form = () => {
                     resolve(created);
                 }
             });
-            console.log("onloadend");
+            
             toast.promise(
                 uploadPromise().then((created) => setColletionAvatarImage(created?.path)),
                 {
@@ -172,7 +172,7 @@ const AdvancedERC721Form = () => {
                     resolve(created);
                 }
             });
-            console.log("onloadend");
+            
             toast.promise(
                 uploadPromise().then((created) => setCollectionHeaderImage(created?.path)),
                 {

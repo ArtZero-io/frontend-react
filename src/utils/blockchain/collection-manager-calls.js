@@ -1,7 +1,7 @@
 import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
-import { handleContractCall, isValidAddressPolkadotAddress } from "../../utils";
+import { handleContractCall, isValidAddressPolkadotAddress } from "@utils";
 
 let collection_manager_contract;
 
@@ -12,7 +12,7 @@ function isLoaded() {
 //SETTERS
 async function addNewCollection(caller_account, data, dispatch) {
   if (!isValidAddressPolkadotAddress(data?.nftContractAddress)) {
-    console.log("invalid addresses");
+
     return null;
   }
   let unsubscribe;
@@ -139,7 +139,7 @@ async function updateIsActive(caller_account, collection_address) {
     !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
   ) {
-    console.log("invalid inputs");
+   
     return null;
   }
   let unsubscribe;
@@ -180,7 +180,7 @@ async function updateIsActive(caller_account, collection_address) {
 //GETTERS
 async function getCollectionCount(caller_account) {
   if (!collection_manager_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -204,7 +204,7 @@ async function getCollectionsByOwner(caller_account, owner) {
     !caller_account ||
     !isValidAddressPolkadotAddress(owner)
   ) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -225,7 +225,7 @@ async function getCollectionsByOwner(caller_account, owner) {
 }
 async function getContractById(caller_account, collection_id) {
   if (!collection_manager_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -246,7 +246,7 @@ async function getContractById(caller_account, collection_id) {
 }
 async function getAdminAddress(caller_account) {
   if (!collection_manager_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -270,7 +270,7 @@ async function isActive(caller_account, collection_address) {
     !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
   ) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -292,7 +292,7 @@ async function getRoyalFee(caller_account, collection_address) {
     !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
   ) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -314,7 +314,7 @@ async function getContractType(caller_account, collection_address) {
     !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
   ) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -336,7 +336,7 @@ async function getCollectionOwner(caller_account, collection_address) {
     !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
   ) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -359,7 +359,7 @@ async function getCollectionByAddress(caller_account, collection_address) {
     !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
   ) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -390,7 +390,7 @@ async function getAddingFee(caller_account) {
 }
 async function owner(caller_account) {
   if (!collection_manager_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -409,7 +409,7 @@ async function owner(caller_account) {
 
 async function getActiveCollectionCount(caller_account) {
   if (!collection_manager_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -430,7 +430,7 @@ async function getActiveCollectionCount(caller_account) {
 
 async function getAttributes(caller_account, nft_contract_address, attributes) {
   if (!collection_manager_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   let attributeVals;

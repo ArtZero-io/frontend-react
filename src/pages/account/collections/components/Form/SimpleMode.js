@@ -6,9 +6,9 @@ import * as Yup from "yup";
 import CollectionImageUpload from "@components/ImageUpload/Collection";
 import { useSubstrateState } from "@utils/substrate";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-import SimpleModeInput from "@components/Input";
-import SimpleModeTextArea from "@components/TextArea";
-import SimpleModeSwitch from "@components/Switch";
+import SimpleModeInput from "@components/Input/Input";
+import SimpleModeTextArea from "@components/TextArea/TextArea";
+import SimpleModeSwitch from "@components/Switch/Switch";
 import { useDispatch, useSelector } from "react-redux";
 import AddCollectionNumberInput from "../NumberInput";
 const SimpleModeForm = () => {

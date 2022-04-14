@@ -9,9 +9,9 @@ import collection_manager_calls from "@utils/blockchain/collection-manager-calls
 import { isValidAddressPolkadotAddress } from "@utils";
 import { useDispatch, useSelector } from "react-redux";
 import AddCollectionNumberInput from "../NumberInput";
-import AdvancedModeInput from "@components/Input";
-import AdvancedModeSwitch from "@components/Switch";
-import AdvancedModeTextArea from "@components/TextArea";
+import AdvancedModeInput from "@components/Input/Input";
+import AdvancedModeSwitch from "@components/Switch/Switch";
+import AdvancedModeTextArea from "@components/TextArea/TextArea";
 
 const AdvancedModeForm = () => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -73,8 +73,8 @@ const AdvancedModeForm = () => {
           }),
         })}
         onSubmit={async (values, { setSubmitting }) => {
-          console.log("values first", values);
 
+          
           (!headerIPFSUrl || !avatarIPFSUrl) && toast.error("Upload images first");
 
           if (avatarIPFSUrl && headerIPFSUrl) {

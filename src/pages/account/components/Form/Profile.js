@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form } from "formik";
 import { setMultipleAttributes } from "@actions/account";
 import ImageUpload from "@components/ImageUpload/Avatar";
-import SimpleModeInput from "@components/Input";
-import SimpleModeTextarea from "@components/TextArea";
+import SimpleModeInput from "@components/Input/Input";
+import SimpleModeTextarea from "@components/TextArea/TextArea";
 
 const ProfileForm = ({ profile }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState(null);

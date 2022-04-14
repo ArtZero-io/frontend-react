@@ -32,7 +32,7 @@ function NFTTabInfo({
   collection_detail,
 }) {
   const { name, description, isListed, isBid, attributes, image } = selectedNFT;
-  console.log("isListed", isListed);
+
   const { api, currentAccount } = useSubstrateState();
   const [sale_price, setSalePrice] = useState(0);
 

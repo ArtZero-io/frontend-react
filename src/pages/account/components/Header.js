@@ -17,7 +17,7 @@ import { getProfile } from "@actions/account";
 import ProfileModal from "./Modal/Profile";
 import { Link } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
-import IdenticonAvatar from "@components/IdenticonAvatar";
+import IdenticonAvatar from "@components/IdenticonAvatar/IdenticonAvatar";
 import { IPFS_BASE_URL } from "@constants/index";
 
 function ProfileHeader() {

@@ -19,15 +19,15 @@ import {
   Th,
   Td,
 } from '@chakra-ui/react'
-import { useSubstrateState } from '../../utils/substrate'
+import { useSubstrateState } from '@utils/substrate'
 import Loader from '../../components/Loader/Loader'
-import artzero_nft_calls from "../../utils/blockchain/artzero-nft-calls";
-import collection_manager_calls from '../../utils/blockchain/collection-manager-calls';
-import collection_manager from "../../utils/blockchain/collection-manager";
-import artzero_nft from "../../utils/blockchain/artzero-nft";
+import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
+import collection_manager_calls from '@utils/blockchain/collection-manager-calls';
+import collection_manager from "@utils/blockchain/collection-manager";
+import artzero_nft from "@utils/blockchain/artzero-nft";
 import { useSelector } from "react-redux";
 import { useEffect,useState } from "react";
-import {delay, truncateStr} from '../../utils';
+import {delay, truncateStr} from '@utils';
 import toast from 'react-hot-toast'
 import BN from "bn.js";
 

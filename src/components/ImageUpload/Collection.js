@@ -32,7 +32,7 @@ const ImageUploadCollection = ({
 
     if (e.target.value !== "") {
       const src = URL.createObjectURL(e.target.files[0]);
-      console.log("src", src);
+      
       setImagePreviewUrl(src);
     }
   };
@@ -53,7 +53,7 @@ const ImageUploadCollection = ({
           uploadPromise().then((created) => {
             setImageIPFSUrl(created?.path);
             setImgURL(created?.path);
-            console.log("created?.path", created?.path);
+            
           }),
           {
             loading: "Uploading...",

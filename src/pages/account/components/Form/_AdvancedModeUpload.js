@@ -28,7 +28,7 @@ const AdvancedModeUpload = ({ profile }) => {
 
     if (e.target.value !== "") {
       const src = URL.createObjectURL(e.target.files[0]);
-      console.log("src", src);
+      
       setNewAvatarPreviewUrl(src);
     }
   };

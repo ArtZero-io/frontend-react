@@ -13,7 +13,7 @@ function setContract(c) {
 
 async function getTotalSupply(caller_account) {
   if (!nft721_psp34_standard_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -32,7 +32,7 @@ async function getTotalSupply(caller_account) {
 
 async function mint(caller_account) {
   if (!nft721_psp34_standard_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   let unsubscribe;
@@ -76,7 +76,7 @@ async function mint(caller_account) {
 
 async function getAttributeName(caller_account, attributeIndex) {
   if (!nft721_psp34_standard_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -94,7 +94,7 @@ async function getAttributeName(caller_account, attributeIndex) {
 
 async function getAttributeCount(caller_account) {
   if (!nft721_psp34_standard_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -112,7 +112,7 @@ async function getAttributeCount(caller_account) {
 
 async function mintWithAttributes(caller_account, attributes, dispatch) {
   if (!nft721_psp34_standard_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   let unsubscribe;
@@ -128,12 +128,12 @@ async function mintWithAttributes(caller_account, attributes, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError, output }) => {
-        handleContractCall(
-          status,
-          dispatchError,
-          dispatch,
-          nft721_psp34_standard_contract
-        );
+        // handleContractCall(
+        //   status,
+        //   dispatchError,
+        //   dispatch,
+        //   nft721_psp34_standard_contract
+        // );
 
         console.log(output);
         if (dispatchError) {
@@ -205,7 +205,7 @@ async function mintWithAttributes(caller_account, attributes, dispatch) {
 
 async function getAttribute(caller_account, tokenId, attribute) {
   if (!nft721_psp34_standard_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -223,7 +223,7 @@ async function getAttribute(caller_account, tokenId, attribute) {
 
 async function getAttributes(caller_account, tokenId, attributes) {
   if (!nft721_psp34_standard_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -241,7 +241,7 @@ async function getAttributes(caller_account, tokenId, attributes) {
 
 async function getOwnerAddressByTokenId(caller_account, token_id) {
   if (!nft721_psp34_standard_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -266,7 +266,7 @@ async function getOwnerAddressByTokenId(caller_account, token_id) {
 
 async function allowance(caller_account, operator_address, token_id) {
   if (!nft721_psp34_standard_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -293,7 +293,7 @@ async function allowance(caller_account, operator_address, token_id) {
 
 async function approve(caller_account, operator_address, token_id, is_approve) {
   if (!nft721_psp34_standard_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;

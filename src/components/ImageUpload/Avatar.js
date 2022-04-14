@@ -19,7 +19,7 @@ import ActiveIcon from "@theme/assets/icon/Active.js";
 import { IPFS_CLIENT_URL } from "@constants/index";
 import { Buffer } from "buffer";
 import { IPFS_BASE_URL } from "@constants/index";
-import IdenticonAvatar from "@components/IdenticonAvatar";
+import IdenticonAvatar from "@components/IdenticonAvatar/IdenticonAvatar/";
 
 const client = create(IPFS_CLIENT_URL);
 
@@ -43,7 +43,7 @@ export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
 
     if (e.target.value !== "") {
       const src = URL.createObjectURL(e.target.files[0]);
-      console.log("src", src);
+
       setImagePreviewUrl(src);
     }
   };
@@ -64,7 +64,7 @@ export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
           uploadPromise().then((created) => {
             setImageIPFSUrl(created?.path);
             setImgURL(created?.path);
-            console.log("created?.path", created?.path);
+
           }),
           {
             loading: "Uploading...",

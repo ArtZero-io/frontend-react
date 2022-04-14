@@ -1,7 +1,7 @@
 import { Tag, TagLabel, TagRightIcon } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useSubstrateState } from "../../utils/substrate/SubstrateContext";
+import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 function WalletMenu() {

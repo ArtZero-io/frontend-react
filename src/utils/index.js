@@ -119,7 +119,6 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
         payload: { status: "Ready" },
       });
     } else {
-      console.log("truncateStr(statusToHuman[0][1], 6)", statusToHuman[0][1]);
       dispatch({
         type: AccountActionTypes.SET_TNX_STATUS,
         payload: {

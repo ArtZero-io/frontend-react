@@ -5,10 +5,10 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import React from "react";
-import NFTDetailTab from "../Tab/NFTTab";
+import NFTDetailTab from "../Tab/NFTDetail";
 
 function NFTDetailModal({ address, isOpen, onClose }) {
-  console.log("NFTModal address", address);
+
   return (
     <Modal
       onClose={onClose}

@@ -2,12 +2,12 @@
 import {
   Box, Text, Button
 } from '@chakra-ui/react'
-import { useSubstrateState } from '../../utils/substrate'
+import { useSubstrateState } from '@utils/substrate'
 import Loader from '../../components/Loader/Loader'
 //import { ContractPromise } from "@polkadot/api-contract";
 import {  useSelector } from "react-redux";
 import { useEffect,useState } from "react";
-import staking_calls from "../../utils/blockchain/staking_calls";
+import staking_calls from "@utils/blockchain/staking_calls";
 
 const StakePage = () => {
   //const dispatch = useDispatch();

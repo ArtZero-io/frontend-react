@@ -20,12 +20,12 @@ import { NavListItem } from "./NavListItem";
 import WalletSelector from "../WalletSelector/index";
 import * as ROUTES from "@constants/routes";
 
-import { useSubstrateState } from "../../utils/substrate/SubstrateContext";
+import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 const links = [
   // { label: "NewC", href: "/collections" },
-  { label: "Marketplace", href: ROUTES.MARKETPLACE },
+  // { label: "Marketplace", href: ROUTES.MARKETPLACE },
   // { label: "Mint", href: ROUTES.MINTING_EVENT },
   // { label: "Staking", href: ROUTES.STAKE },
 

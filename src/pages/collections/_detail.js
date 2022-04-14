@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import collection_manager_calls from "../../utils/blockchain/collection-manager-calls";
-import { useSubstrateState } from '../../utils/substrate'
-import {  delay } from '../../utils';
-import NewNFTForm from './components/NewNFTForm';
+import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+import { useSubstrateState } from '@utils/substrate'
+import {  delay } from '@utils';
+import NewNFTForm from './components/_NewNFTForm';
 
 const DetailCollectionPage = (props) => {
 

@@ -58,8 +58,8 @@ const AddNewNFTModal = ({ collection, isOpen, onClose }) => {
             resolve(created);
           }
         });
-      console.log("onloadend");
-      toast.promise(
+
+        toast.promise(
         uploadPromise().then((created) =>
           updateAttributes(created?.path, "avatar_image", "base")
         ),

@@ -84,7 +84,7 @@ const TabMyNFT = () => {
           img: `${IPFS_BASE_URL}/${tokenAvatar}`,
           atts: atts,
         };
-        console.log("TabMyNFT", nft);
+
         myNFTs.push(nft);
       }
     } else {

@@ -9,21 +9,23 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react";
-import React, { useCallback } from "react";
+
+import { useEffect, useState, useCallback } from "react";
+import { Link as ReactRouterLink } from "react-router-dom";
+import { usePagination } from "@ajna/pagination";
+import { useSelector } from "react-redux";
 
 import { CollectionCard } from "@components/Card/Collection";
-import { Link as ReactRouterLink } from "react-router-dom";
 import PaginationMP from "@components/Pagination/Pagination";
-import { useEffect, useState } from "react";
-import { delay } from "@utils";
+
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import { useSubstrateState } from "@utils/substrate";
-import { NUMBER_PER_PAGE } from "@constants/index";
-import { usePagination } from "@ajna/pagination";
-import { IPFS_BASE_URL } from "@constants/index";
+import { delay } from "@utils";
+
+import { NUMBER_PER_PAGE, IPFS_BASE_URL } from "@constants/index";
+import * as ROUTES from "@constants/routes";
+
 import AddNewCollectionModal from "./components/Modal/AddNew";
-import { useSelector } from "react-redux";
-import * as ROUTES from "../../../constants/routes";
 
 function MyCollectionsPage() {
   const { currentAccount } = useSubstrateState();
@@ -32,9 +34,9 @@ function MyCollectionsPage() {
   const [collections, setCollections] = useState([]);
   const [totalPage, setTotalPage] = useState(null);
   const [loading, setLoading] = useState(null);
-  const [currentCollections, setCurrentCollections] = useState([]);
-  console.log("currentCollections", currentCollections);
+  const [, setCurrentCollections] = useState([]);
 
+  
   const { pagesCount, offset, currentPage, setCurrentPage, isDisabled } =
     usePagination({
       total: totalPage,
@@ -45,8 +47,9 @@ function MyCollectionsPage() {
       },
     });
 
-  const getAllCollections = async (e) => {
+  const getAllCollections = useCallback(async (e) => {
     setLoading(true);
+
     var collections = [];
 
     let collection_account =
@@ -54,57 +57,67 @@ function MyCollectionsPage() {
         currentAccount,
         currentAccount?.address
       );
-    console.log("collection_account", collection_account);
+
+
+      
     if (collection_account) {
       for (let collection of collection_account) {
         let data = await collection_manager_calls.getCollectionByAddress(
           currentAccount,
           collection
         );
+
         let attributes = await collection_manager_calls.getAttributes(
           currentAccount,
           data?.nftContractAddress,
           ["name", "description", "avatar_image", "header_image"]
         );
+
         data.attributes = attributes;
         collections.push(data);
       }
     }
-    console.log("collections", collections);
-    setCollections(collections);
-    setTotalPage(collections.length);
-    setLoading(false);
-  };
 
-  const filterCollections = async (e) => {
+    
+    setTotalPage(collections.length);
+    setCollections(collections);
+    setLoading(false);
+  }, []);
+
+  const filterCollections = useCallback(async (e) => {
     setLoading(true);
+
+    
     let currentCollections = [];
+
     for (var i = offset; i < offset + NUMBER_PER_PAGE; i++) {
       if (collections[i]) {
         currentCollections.push(collections[i]);
       }
     }
+
     setCurrentCollections(currentCollections);
     setLoading(false);
-  };
+  }, []);
 
-  useEffect(async () => {
-    await onRefresh();
-  }, [activeAddress, currentPage, collection_manager_calls.isLoaded()]);
-
-  const onRefresh = async () => {
+  const onRefresh = useCallback(async () => {
     await getAllCollections();
     await delay(1000);
     await filterCollections();
-  };
-
-  console.log("collection ...");
+  }, []);
 
   const forceUpdate = useCallback(() => {
-    console.log("forceUpdate...");
-
     onRefresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    async function fetch() {
+      await onRefresh();
+    }
+
+    fetch();
+  }, [activeAddress, onRefresh]);
 
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">
@@ -144,7 +157,7 @@ function MyCollectionsPage() {
               >
                 {collections?.map((item) => (
                   <>
-                    <Link 
+                    <Link
                       minW={{ base: "auto", "2xl": "25rem" }}
                       key={item?.nftContractAddress}
                       as={ReactRouterLink}

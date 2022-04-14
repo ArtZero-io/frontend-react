@@ -15,7 +15,7 @@ import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard
 import { numberToU8a, stringToHex } from "@polkadot/util";
 import { IPFS_BASE_URL } from "@constants/index";
 
-const NFTGrid = () => {
+const NFTGrid = ({bigCard}) => {
   const [NFTList, setNFTList] = useState([]);
   const [address, setAddress] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -134,7 +134,7 @@ const NFTGrid = () => {
       {console.log('currentCollection',currentCollection)}
       <NFTDetailModal address={address} isOpen={isOpen} onClose={onClose} />
       <Grid
-        templateColumns="repeat(auto-fill, minmax(min(100%, 20rem), 1fr))"
+        templateColumns={`repeat(auto-fill, minmax(min(100%, ${bigCard ? '25rem' : '20rem'}), 1fr))`}
         gap={6}
       >
         {NFTList.map((item) => {

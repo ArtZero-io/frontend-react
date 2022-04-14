@@ -36,7 +36,6 @@ const AddNewNFTModal = ({ forceUpdate }) => {
           payload: null,
         });
         forceUpdate();
-        console.log("forceUpdate...");
         onClose();
       }
     }

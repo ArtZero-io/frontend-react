@@ -23,13 +23,13 @@ import { ContractPromise } from "@polkadot/api-contract";
 import { useParams } from "react-router-dom";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import { delay } from "@utils";
-import AddNewNFTInput from "@components/Input";
-import AddNewNFTTextArea from "@components/TextArea";
+import AddNewNFTInput from "@components/Input/Input";
+import AddNewNFTTextArea from "@components/TextArea/TextArea";
 import { useDispatch, useSelector } from "react-redux";
 
 const AddNewNFTForm = () => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
-  console.log("avatarIPFSUrl", avatarIPFSUrl);
+
   const { api, currentAccount } = useSubstrateState();
   const [isLoadedContract, setIsLoadedContract] = useState(false);
   const [nft721Psp34StandardContract, setNft721Psp34StandardContract] =
@@ -88,8 +88,6 @@ const AddNewNFTForm = () => {
             .required("Required"),
         })}
         onSubmit={async (values, { setSubmitting }) => {
-          console.log("values first", values);
-
           !avatarIPFSUrl && toast.error("Upload images first");
 
           if (avatarIPFSUrl) {
@@ -123,14 +121,12 @@ const AddNewNFTForm = () => {
                   value: level.level + "|" + level.maxLevel,
                 });
               }
-              const newNft =
+          
                 await nft721Psp34StandardContract.mintWithAttributes(
                   currentAccount,
                   attributes,
                   dispatch
                 );
-              console.log("attributes", attributes);
-              console.log("newNft", newNft);
             } else {
               console.log("You aren't the owner of this collection!");
               toast.error("You aren't the owner of this collection!");

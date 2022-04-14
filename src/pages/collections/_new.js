@@ -1,5 +1,5 @@
 import React from "react";
-import { useSubstrateState } from "../../utils/substrate";
+import { useSubstrateState } from "@utils/substrate";
 import AdvancedERC721Form from './components/AdvancedERC721Form';
 import SimpleERC721Form from "./components/SimpleERC721Form";
 

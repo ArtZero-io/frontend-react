@@ -44,6 +44,7 @@ const AccountLayout = ({ children }) => {
         ) : (
           <>
             <ProfileHeader />
+            
             <Tabs
               index={tabData.map((i) => i.value).indexOf(pathname)}
               isLazy

@@ -25,7 +25,6 @@ function MyNFTCardsGroup({
   const [address, setAddress] = useState("default");
   const [nft_detail, setNftDetail] = useState({});
 
-  console.log("1totalItems ", totalItems);
 
   return (
     <Box my={10}>

@@ -2,7 +2,7 @@
 import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
-import { isValidAddressPolkadotAddress } from "../../utils";
+import { isValidAddressPolkadotAddress } from "@utils";
 let artzero_contract;
 function setContract(c) {
   // console.log(`Setting contract in blockchain module`, c);
@@ -18,7 +18,7 @@ function isLoaded() {
 */
 async function owner(caller_account) {
   if (!artzero_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -37,7 +37,7 @@ async function owner(caller_account) {
 }
 async function totalSupply(caller_account) {
   if (!artzero_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -56,10 +56,7 @@ async function totalSupply(caller_account) {
 }
 async function balanceOf(caller_account, account) {
   if (!artzero_contract || !caller_account || !account) {
-    console.log("artzero_contract ", artzero_contract);
-    console.log("caller_account ", caller_account);
-    console.log("account ", account);
-    console.log("invalid inputs");
+ 
     return null;
   }
   const address = caller_account?.address;
@@ -83,7 +80,7 @@ async function balanceOf(caller_account, account) {
 */
 async function getWhitelistAccount(caller_account, index) {
   if (!artzero_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -104,7 +101,7 @@ async function getWhitelistAccount(caller_account, index) {
 }
 async function getWhitelistCount(caller_account) {
   if (!artzero_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -123,7 +120,7 @@ async function getWhitelistCount(caller_account) {
 }
 async function getWhitelist(caller_account, account) {
   if (!artzero_contract || !caller_account || !account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -143,7 +140,7 @@ async function getWhitelist(caller_account, account) {
 }
 async function getMintMode(caller_account) {
   if (!artzero_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -162,7 +159,7 @@ async function getMintMode(caller_account) {
 }
 async function getFee1(caller_account) {
   if (!artzero_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -181,7 +178,7 @@ async function getFee1(caller_account) {
 }
 async function getFee2(caller_account) {
   if (!artzero_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -200,7 +197,7 @@ async function getFee2(caller_account) {
 }
 async function getAmount1(caller_account) {
   if (!artzero_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -221,7 +218,7 @@ async function getAmount1(caller_account) {
 async function tokenUri(caller_account, tokenId) {
 
   if (!artzero_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   const address = caller_account?.address;
@@ -240,7 +237,7 @@ async function tokenUri(caller_account, tokenId) {
 
 async function whitelistMint(caller_account, mint_amount) {
   if (!artzero_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   let unsubscribe;
@@ -280,7 +277,7 @@ async function whitelistMint(caller_account, mint_amount) {
 }
 async function paidMint(caller_account, fee) {
   if (!artzero_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
   let unsubscribe;
@@ -320,7 +317,7 @@ async function paidMint(caller_account, fee) {
 }
 async function addWhitelist(caller_account, account, amount) {
   if (!artzero_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
 
@@ -365,7 +362,7 @@ async function addWhitelist(caller_account, account, amount) {
 }
 async function updateWhitelistAmount(caller_account, account, amount) {
   if (!artzero_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
 
@@ -410,7 +407,7 @@ async function updateWhitelistAmount(caller_account, account, amount) {
 }
 async function withdrawFee(caller_account, amount) {
   if (!artzero_contract || !caller_account) {
-    console.log("invalid inputs");
+   
     return null;
   }
 
