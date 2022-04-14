@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Flex,
   Heading,
   Image,
@@ -14,7 +15,8 @@ import {
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 const MyNFTCard = (props) => {
-  const { name, image, isListed, isBid } = props;
+  console.log("props", props);
+  const { name, image, isListed, isBid, isStaked } = props;
   return (
     <Box minW="14.25rem" _hover={{ bg: "brand.blue" }} p="px">
       <Flex
@@ -39,6 +41,14 @@ const MyNFTCard = (props) => {
           <Heading mb={3} size="h6" textAlign="left">
             {name}
           </Heading>
+          {isStaked && (
+            <Flex align="center" justify="start" w="full">
+              <Button variant="outline">
+                {isStaked?.status ? "UnStake" : "Stake"}
+              </Button>
+            </Flex>
+          )}
+
           {(isListed?.status || isBid) && (
             <Flex align="center" justify="start" w="full">
               <VStack align="start">

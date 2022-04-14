@@ -10,7 +10,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import NFTModal from "../Modal/MyNFT";
+import NFTModal from "../../nfts/components/Modal/MyNFT";
 import MyNFTCard from "./MyNFT";
 
 function MyNFTCardsGroup({
@@ -33,12 +33,13 @@ function MyNFTCardsGroup({
   console.log("nftContractAddress", nftContractAddress);
 
   function onClickHandler(item) {
-    console.log('item', item)
+    console.log('item xxx', item)
     const [result] = listNFT.filter((i) => i.name === item?.name);
     setSelectedNFT(result);
     setNftDetail(item);
-    onOpen();
-    console.log("first");
+    !item?.isStaked && onOpen();
+
+    console.log("first", onOpen);
   }
   return (
     <Box my={10}>
