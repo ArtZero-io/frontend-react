@@ -7,6 +7,7 @@ import {
   Spinner,
   Button,
   IconButton,
+  Text,
 } from "@chakra-ui/react";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import React, { useEffect, useState } from "react";
@@ -66,10 +67,12 @@ const MyNFTsPage = () => {
           ],
         });
       }
-      //
+      console.log("1MyNFTPage collections", collections);
+
       setMyCollections(fakeAPI.collected);
       setLoading(false);
     }
+    setLoading(false);
   };
 
   const onRefresh = async () => {
@@ -153,6 +156,9 @@ const MyNFTsPage = () => {
         )}
         {!loading &&
           myCollections?.map((item) => <MyNFTCardsGroup {...item} />)}
+        {!loading && myCollections?.length === 0 && (
+          <Text>You don't have any NFTs</Text>
+        )}
       </Box>
     </Box>
   );

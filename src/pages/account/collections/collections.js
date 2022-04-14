@@ -22,9 +22,11 @@ import { NUMBER_PER_PAGE } from "@constants/index";
 import { usePagination } from "@ajna/pagination";
 import { IPFS_BASE_URL } from "@constants/index";
 import AddNewCollectionModal from "./components/Modal/AddNew";
+import { useSelector } from "react-redux";
 
 function MyCollectionsPage() {
   const { currentAccount } = useSubstrateState();
+  const { activeAddress } = useSelector((s) => s.account);
 
   const [collections, setCollections] = useState([]);
   const [totalPage, setTotalPage] = useState(null);
@@ -87,7 +89,7 @@ function MyCollectionsPage() {
 
   useEffect(async () => {
     await onRefresh();
-  }, [currentPage, collection_manager_calls.isLoaded()]);
+  }, [activeAddress,currentPage, collection_manager_calls.isLoaded()]);
 
   const onRefresh = async () => {
     await getAllCollections();
@@ -132,8 +134,8 @@ function MyCollectionsPage() {
             <Text textAlign="left" color="brand.grayLight">
               There are {collections?.length} collections
             </Text>
-            <SimpleGrid py={10} columns={{ base: 1, md: 2, lg: 3 }} spacing="7">
-              {collections?.map((item, idx) => (
+            {collections.length ? <SimpleGrid py={10} columns={{ base: 1, md: 2, lg: 3 }} spacing="7">
+              {collections?.map((item, ) => (
                 <>
                   <Link
                     minW={{ base: "auto", "2xl": "25rem" }}
@@ -159,9 +161,9 @@ function MyCollectionsPage() {
                   </Link>
                 </>
               ))}
-            </SimpleGrid>
+            </SimpleGrid> : null}
 
-            <Flex w="full">
+            {collections.length ? <Flex w="full">
               <PaginationMP
                 isDisabled={isDisabled}
                 currentPage={currentPage}
@@ -169,7 +171,7 @@ function MyCollectionsPage() {
                 setCurrentPage={setCurrentPage}
               />
               <Spacer />
-            </Flex>
+            </Flex> : null}
           </>
         )}
       </Box>
