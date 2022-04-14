@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -17,10 +17,79 @@ import {
 } from "@chakra-ui/react";
 // import { FiUpload, FiRefreshCw } from "react-icons/fi";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+import { useSubstrateState } from "@utils/substrate";
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
+import toast from "react-hot-toast";
+import { ContractPromise } from "@polkadot/api-contract";
+import marketplace from "@utils/blockchain/marketplace";
 
-function NFTTabInfo({ selectedNFT }) {
+function NFTTabInfo({
+  nft_contract_address,
+  selectedNFT,
+  nft_detail,
+  collection_detail,
+}) {
   const { name, description, isListed, isBid, attributes, image } = selectedNFT;
   console.log("isListed", isListed);
+  const { api, currentAccount } = useSubstrateState();
+  const [sale_price, setSalePrice] = useState(0);
+
+  const listToken = async () => {
+    console.log(nft_contract_address);
+    console.log(sale_price);
+    console.log(nft_detail?.id);
+    console.log(collection_detail);
+    if (collection_detail?.contractType === "2") {
+      const nft721_psp34_standard_contract = new ContractPromise(
+        api,
+        nft721_psp34_standard.CONTRACT_ABI,
+        collection_detail.nftContractAddress
+      );
+      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+      const ownerAddress =
+        await nft721_psp34_standard_calls.getOwnerAddressByTokenId(
+          currentAccount,
+          nft_detail.id
+        );
+      console.log(ownerAddress);
+
+      if (ownerAddress == currentAccount.address) {
+        const is_allownce = await nft721_psp34_standard_calls.allowance(
+          currentAccount,
+          marketplace.CONTRACT_ADDRESS,
+          nft_detail.id
+        );
+
+        if (is_allownce) {
+          await marketplace_contract_calls.list(
+            currentAccount,
+            nft_contract_address,
+            nft_detail.id,
+            sale_price
+          );
+        } else {
+          const is_approve = await nft721_psp34_standard_calls.approve(
+            currentAccount,
+            marketplace.CONTRACT_ADDRESS,
+            nft_detail.id,
+            true
+          );
+          if (is_approve) {
+            await marketplace_contract_calls.list(
+              currentAccount,
+              nft_contract_address,
+              nft_detail.id,
+              sale_price
+            );
+          }
+        }
+      } else {
+        toast.error(`This token is not yours!`);
+      }
+    }
+  };
   return (
     <HStack>
       <Image
@@ -42,7 +111,8 @@ function NFTTabInfo({ selectedNFT }) {
           </Heading>
         </Box>
 
-        <Grid overflowY='auto'
+        <Grid
+          overflowY="auto"
           w="full"
           templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
           gap={5}
@@ -135,10 +205,11 @@ function NFTTabInfo({ selectedNFT }) {
                   color: "#888",
                   fontSize: "lg",
                 }}
+                onChange={({ target }) => setSalePrice(target.value)}
               />
             </InputGroup>
 
-            <Button ml={2} variant="solid">
+            <Button ml={2} variant="solid" onClick={listToken}>
               Push for sale
             </Button>
           </Flex>

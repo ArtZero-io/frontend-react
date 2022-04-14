@@ -13,19 +13,43 @@ import React, { useState } from "react";
 import NFTModal from "../Modal/MyNFT";
 import MyNFTCard from "./MyNFT";
 
-function MyNFTCardsGroup({ collectionName, totalItems, listNFT, image }) {
+function MyNFTCardsGroup({
+  collectionName,
+  totalItems,
+  listNFT,
+  image,
+  collection_detail,
+  nftContractAddress,
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedNFT, setSelectedNFT] = useState(null);
+  const [nft_detail, setNftDetail] = useState({});
 
-  function onClickHandler(name) {
-    const [result] = listNFT.filter((i) => i.name === name);
+  console.log("collectionName", collectionName);
+  console.log("totalItems", totalItems);
+  console.log("listNFT", listNFT);
+  console.log("image", image);
+  console.log("collection_detail", collection_detail);
+  console.log("nftContractAddress", nftContractAddress);
+
+  function onClickHandler(item) {
+    console.log('item', item)
+    const [result] = listNFT.filter((i) => i.name === item?.name);
     setSelectedNFT(result);
+    setNftDetail(item);
     onOpen();
     console.log("first");
   }
   return (
     <Box my={10}>
-      <NFTModal selectedNFT={selectedNFT} isOpen={isOpen} onClose={onClose} />
+      <NFTModal
+        nft_detail={nft_detail}
+        collection_detail={collection_detail}
+        nft_contract_address={nftContractAddress}
+        selectedNFT={selectedNFT}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
       <Flex>
         <Avatar size={"lg"} src={image} />
         <VStack align="start" ml={3} justifyContent="center">
@@ -48,7 +72,7 @@ function MyNFTCardsGroup({ collectionName, totalItems, listNFT, image }) {
             w="full"
             h="full"
             cursor="pointer"
-            onClick={() => onClickHandler(item.name)}
+            onClick={() => onClickHandler(item)}
           >
             <MyNFTCard {...item} />
           </GridItem>

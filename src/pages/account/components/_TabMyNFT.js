@@ -12,7 +12,7 @@ import collection_manager_calls from "@utils/blockchain/collection-manager-calls
 import React, { useEffect, useState } from "react";
 import { delay } from "@utils";
 import { RepeatIcon } from "@chakra-ui/icons";
-import MyNFTCardsGroup from "./Card/MyNFTCardsGroup";
+import MyNFTCardsGroup from "./Card/_MyNFTCardsGroup";
 import { useSubstrateState } from "@utils/substrate";
 import { ContractPromise } from "@polkadot/api-contract";
 import nft721_psp34_standard from "../../../utils/blockchain/nft721-psp34-standard";
@@ -24,7 +24,7 @@ const TabMyNFT = () => {
   const [loading] = useState(null);
   const { api, currentAccount } = useSubstrateState();
   const [my_collections, setMyCollections] = useState([]);
-  
+
   const getMyNFTByCollection = async (collection) => {
     let myNFTs = [];
     let atts = [];
@@ -35,23 +35,45 @@ const TabMyNFT = () => {
         collection.nftContractAddress
       );
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-      const totalSupply = await nft721_psp34_standard_calls.getTotalSupply(currentAccount);
+      const totalSupply = await nft721_psp34_standard_calls.getTotalSupply(
+        currentAccount
+      );
       for (let i = 1; i <= totalSupply; i++) {
-        const tokenId = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U8': numberToU8a(i)}); 
-        const tokenName = await nft721_psp34_standard_calls.getAttribute(currentAccount, tokenId, stringToHex('nft_name'));
-        const tokenAvatar = await nft721_psp34_standard_calls.getAttribute(currentAccount, tokenId, stringToHex('avatar'));
-        const base_attributes = ['nft_name', 'description', 'avatar'];
-        const attribute_count = await nft721_psp34_standard_calls.getAttributeCount(currentAccount);
+        const tokenId = nft721_psp34_standard_contract.api.createType(
+          "ContractsPsp34Id",
+          { U8: numberToU8a(i) }
+        );
+        const tokenName = await nft721_psp34_standard_calls.getAttribute(
+          currentAccount,
+          tokenId,
+          stringToHex("nft_name")
+        );
+        const tokenAvatar = await nft721_psp34_standard_calls.getAttribute(
+          currentAccount,
+          tokenId,
+          stringToHex("avatar")
+        );
+        const base_attributes = ["nft_name", "description", "avatar"];
+        const attribute_count =
+          await nft721_psp34_standard_calls.getAttributeCount(currentAccount);
         atts = [];
         for (let j = 1; j <= attribute_count; j++) {
-          const attribute_name = await nft721_psp34_standard_calls.getAttributeName(currentAccount, j);
-          
-          if (attribute_name && !base_attributes.includes(attribute_name) ) {
-            const attribute_val = await nft721_psp34_standard_calls.getAttribute(currentAccount, tokenId, stringToHex(attribute_name));
+          const attribute_name =
+            await nft721_psp34_standard_calls.getAttributeName(
+              currentAccount,
+              j
+            );
+
+          if (attribute_name && !base_attributes.includes(attribute_name)) {
+            const attribute_val =
+              await nft721_psp34_standard_calls.getAttribute(
+                currentAccount,
+                tokenId,
+                stringToHex(attribute_name)
+              );
             if (attribute_val) {
               atts.push({ name: attribute_name, value: attribute_val });
             }
-            
           }
         }
         const nft = {
@@ -60,9 +82,9 @@ const TabMyNFT = () => {
           bidPrice: "12.3",
           name: tokenName,
           img: `${IPFS_BASE_URL}/${tokenAvatar}`,
-          atts: atts
+          atts: atts,
         };
-        console.log('TabMyNFT', nft);
+        console.log("TabMyNFT", nft);
         myNFTs.push(nft);
       }
     } else {
@@ -77,7 +99,6 @@ const TabMyNFT = () => {
       //       );
       //       artzero_nft_calls.setContract(artzero_nft_contract);
       //   }
-
       //   //TODO: handle again total supply, add pagination
       //   const totalSupply = 10;
       //   for (let i = 1; i <= totalSupply - 7; i++) {
@@ -99,15 +120,14 @@ const TabMyNFT = () => {
       // }
     }
     return myNFTs;
-  }
+  };
 
   const getAllCollections = async () => {
     var my_collections = [];
-    let collections =
-      await collection_manager_calls.getCollectionsByOwner(
-        currentAccount,
-        currentAccount?.address
-      );
+    let collections = await collection_manager_calls.getCollectionsByOwner(
+      currentAccount,
+      currentAccount?.address
+    );
     for (let collection of collections) {
       let data = await collection_manager_calls.getCollectionByAddress(
         currentAccount,
@@ -120,28 +140,26 @@ const TabMyNFT = () => {
       );
       const listNft = await getMyNFTByCollection(data);
       console.log(listNft);
-      my_collections.push(
-        {
-          collectionName: attributes[0],
-          totalItems: listNft.length,
-          nftContractAddress: data.nftContractAddress,
-          collection_detail: data,
-          listNFT: listNft
-        }
-      );
+      my_collections.push({
+        collectionName: attributes[0],
+        totalItems: listNft.length,
+        nftContractAddress: data.nftContractAddress,
+        collection_detail: data,
+        listNFT: listNft,
+      });
     }
     setMyCollections(my_collections);
-  }
+  };
 
   const onRefresh = async () => {
     await delay(1000);
     await getAllCollections();
-  }
+  };
 
   useEffect(async () => {
     await onRefresh();
   }, [collection_manager_calls.isLoaded()]);
-  
+
   return (
     <>
       <Box as="section" maxW="container.3xl" px={5} minH="60rem">
@@ -183,12 +201,13 @@ const TabMyNFT = () => {
               />
             </Center>
           )}
-          {!loading && my_collections.map((item) => <MyNFTCardsGroup {...item} />)}
+          {!loading &&
+            my_collections.map((item) => <MyNFTCardsGroup {...item} />)}
         </Box>
       </Box>
     </>
   );
-}
+};
 
 export default TabMyNFT;
 
