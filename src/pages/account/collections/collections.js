@@ -131,6 +131,7 @@ function MyCollectionsPage() {
         )}
         {!loading && (
           <>
+            {console.log(collections)}
             <Text textAlign="left" color="brand.grayLight">
               There are {collections?.length} collections
             </Text>

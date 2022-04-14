@@ -2,6 +2,7 @@ import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import BN from "bn.js";
 import { numberToU8a } from "@polkadot/util";
+import { TypeRegistry, U64 } from '@polkadot/types';
 
 let nft721_psp34_standard_contract;
 function setContract(c) {
@@ -210,6 +211,52 @@ async function getAttributes(caller_account, tokenId, attributes) {
   return null;
 }
 
+async function getOwnerAddressByTokenId(caller_account, token_id) {
+  if (!nft721_psp34_standard_contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  console.log(new U64(new TypeRegistry(), token_id));
+  // const tokenId = new U64(new TypeRegistry(), token_id);
+  const tokenId = await nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
+  console.log(tokenId);
+  const test = await nft721_psp34_standard_contract.query["psp34::ownerOf"](address, { value: azero_value, gasLimit }, tokenId);
+  console.log(test);
+  // console.log(output);
+  // if (result.isOk) {
+  //   return output.toHuman();
+  // }
+  return null;
+}
+
+// async function approve(caller_account) {
+//   if (!nft721_psp34_standard_contract || !caller_account) {
+//     console.log("invalid inputs");
+//     return null;
+//   }
+//   const address = caller_account?.address;
+//   const gasLimit = -1;
+//   const azero_value = 0;
+//   const injector = await web3FromSource(caller_account?.meta?.source);
+//   const tokenId = await nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), 4)});
+//   nft721_psp34_standard_contract.tx["psp34::approve"]({ gasLimit, value: azero_value }, '5G46BG71ngjxe3SZBnDSgwumSv4NLsCeQNFeBdAXUuct57nt', tokenId, 1).signAndSend(address,
+//     { signer: injector.signer },({ status }) => {
+//       if (status) {
+//         const statusText = Object.keys(status.toHuman())[0];
+//         if (status.isFinalized) {
+//           toast.success(
+//             `Public Minting ${
+//               statusText === "0" ? "started" : statusText.toLowerCase()
+//             }.`
+//           );
+//         }
+//       }
+//     });
+// } 
+
 const nft721_psp34_standard_calls = {
   mint,
   mintWithAttributes,
@@ -218,7 +265,8 @@ const nft721_psp34_standard_calls = {
   getAttributeCount,
   getAttributeName,
   getAttributes,
-  getAttribute
+  getAttribute,
+  getOwnerAddressByTokenId
 };
 
 export default nft721_psp34_standard_calls;
