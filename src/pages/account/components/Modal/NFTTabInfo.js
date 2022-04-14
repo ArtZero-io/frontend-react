@@ -16,13 +16,15 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.png";
 import { FiUpload, FiRefreshCw } from "react-icons/fi";
-// import marketplace_contract_calls from '../../../../utils/blockchain/marketplace_contract_calls';
+import marketplace_contract_calls from '../../../../utils/blockchain/marketplace_contract_calls';
 import { useSubstrateState } from "@utils/substrate";
 import nft721_psp34_standard from "../../../../utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "../../../../utils/blockchain/nft721-psp34-standard-calls";
-// import toast from "react-hot-toast";
+import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
-// import { TypeRegistry, U64 } from '@polkadot/types';
+import marketplace from "../../../../utils/blockchain/marketplace";
+import BN from 'bn.js';
+import { BN_BILLION, BN_THOUSAND } from "@polkadot/util";
 
 const NFTTabInfo = ({ nft_detail, collection_detail, nft_contract_address, isSale = false }) => {
   const { api, currentAccount } = useSubstrateState();
@@ -37,20 +39,27 @@ const NFTTabInfo = ({ nft_detail, collection_detail, nft_contract_address, isSal
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
         nft721_psp34_standard.CONTRACT_ABI,
-        collection_detail.nft_contract_address
+        collection_detail.nftContractAddress
       );
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-      // const ownerAddress = await nft721_psp34_standard_calls.approve(currentAccount?.address, nft_detail.id);
-      const gasLimit = -1;
-      const azero_value = 0;
-      // const tokenId = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U64': 5});
-      const {result, output} = await nft721_psp34_standard_contract.query["psp34::ownerOf"](currentAccount?.address, { value: azero_value, gasLimit }, 5);
-      console.log(result, output);
-      // if (ownerAddress == currentAccount.address) {
-      //   marketplace_contract_calls.list(currentAccount, nft_contract_address, nft_detail.id, sale_price);
-      // } else {
-      //   toast.error(`This token is not yours!`);
-      // }
+      const ownerAddress = await nft721_psp34_standard_calls.getOwnerAddressByTokenId(currentAccount, nft_detail.id);
+      console.log(ownerAddress);
+      
+      if (ownerAddress == currentAccount.address) {
+        const is_allownce = await nft721_psp34_standard_calls.allowance(currentAccount, marketplace.CONTRACT_ADDRESS, nft_detail.id);
+        const token_price = new BN(sale_price).mul(BN_BILLION).mul(BN_THOUSAND).toNumber();
+        if (is_allownce) {
+          await marketplace_contract_calls.list(currentAccount, nft_contract_address, nft_detail.id, token_price);
+        } else {
+          const is_approve = await nft721_psp34_standard_calls.approve(currentAccount, marketplace.CONTRACT_ADDRESS, nft_detail.id, true);
+          if (is_approve) {
+            await marketplace_contract_calls.list(currentAccount, nft_contract_address, nft_detail.id, token_price);
+          }
+        }
+        
+      } else {
+        toast.error(`This token is not yours!`);
+      }
       
     }
     

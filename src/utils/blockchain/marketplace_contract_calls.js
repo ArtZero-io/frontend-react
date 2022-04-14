@@ -192,7 +192,7 @@ async function list(caller_account, nft_contract_address,token_id,price) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        console.log(dispatchError.toString());
+        
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(
