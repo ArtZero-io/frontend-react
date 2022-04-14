@@ -1,7 +1,6 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import TabActivity from "./TabActivity";
-import TabItems from "./TabItems";
- 
+import RightPanel from "./Items";
 
 function CollectionMain() {
   return (
@@ -15,7 +14,7 @@ function CollectionMain() {
 
         <TabPanels>
           {tabData.map((tab, index) => (
-            <TabPanel p={4} key={index}>
+            <TabPanel pt={4} px={24} bg="#171717" key={index}>
               {tab.content}
             </TabPanel>
           ))}
@@ -30,7 +29,7 @@ export default CollectionMain;
 const tabData = [
   {
     label: "items",
-    content: <TabItems />,
+    content: <RightPanel />,
   },
   {
     label: "activity",

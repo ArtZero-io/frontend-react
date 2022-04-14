@@ -19,7 +19,7 @@ import ActiveIcon from "@theme/assets/icon/Active.js";
 import { IPFS_CLIENT_URL } from "@constants/index";
 import { Buffer } from "buffer";
 import { IPFS_BASE_URL } from "@constants/index";
-import IdenticonAvatar from "@pages/account/components/IdenticonAvatar";
+import IdenticonAvatar from "@components/IdenticonAvatar";
 
 const client = create(IPFS_CLIENT_URL);
 

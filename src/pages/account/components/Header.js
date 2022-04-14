@@ -17,7 +17,7 @@ import { getProfile } from "@actions/account";
 import ProfileModal from "./Modal/Profile";
 import { Link } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
-import IdenticonAvatar from "./IdenticonAvatar";
+import IdenticonAvatar from "@components/IdenticonAvatar";
 import { IPFS_BASE_URL } from "@constants/index";
 
 function ProfileHeader() {
@@ -120,7 +120,7 @@ function ProfileHeader() {
               <Text fontSize="lg" maxW="md">
                 {profile?.bio || "Something about yourself ..."}
               </Text>
-
+ 
               <HStack textAlign="center">
                 <Link
                   isExternal

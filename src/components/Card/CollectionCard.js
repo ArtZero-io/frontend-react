@@ -16,7 +16,7 @@ import ActiveIcon from "@theme/assets/icon/Active.js";
 import InActiveIcon from "@theme/assets/icon/InActive.js";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 export const CollectionCard = (props) => {
-  const { avatar, name, desc, volume, backdrop, isActive, variant } = props;
+  const { avatar, name, desc, volume, backdrop, isActive = true, variant } = props;
   return (
     <Box>
       <Flex

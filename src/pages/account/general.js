@@ -82,7 +82,7 @@ function GeneralPage() {
             templateColumns="repeat(auto-fill, minmax(min(100%, 20rem), 1fr))"
             gap={6}
           >
-            {atts.map((item, idx) => {
+            {dashboardInfo.map((item, idx) => {
               return (
                 <GridItem
                   key={idx}
@@ -109,9 +109,11 @@ function GeneralPage() {
                               fontSize="5xl"
                               fontFamily="DS-Digital"
                             >
-                              {item.text}
+                              {item.value}
                             </TagLabel>
-                            <TagRightIcon fontSize="2xl" as={AzeroIcon} />
+                            {item.name === "Amount Trades" && (
+                              <TagRightIcon fontSize="2xl" as={AzeroIcon} />
+                            )}
                           </Tag>
                         </Flex>
                       </Text>
@@ -119,7 +121,7 @@ function GeneralPage() {
                     </Flex>
                     <Flex w="full" textAlign="left">
                       <Spacer />
-                      <Text color="brand.blue"> $ {item.value}</Text>
+                      <Text color="brand.blue"> $ {item.text1}</Text>
                     </Flex>
                   </Box>
                 </GridItem>
@@ -190,11 +192,11 @@ function GeneralPage() {
 
 export default GeneralPage;
 
-const atts = [
-  { name: "Min wallet value", text: "82.00", value: "21.6" },
-  { name: "Min wallet value", text: "82.00", value: "21.6" },
-  { name: "Min wallet value", text: "82.00", value: "21.6" },
-  { name: "Min wallet value", text: "82.00", value: "21.6" },
-  { name: "Min wallet value", text: "82.00", value: "21.6" },
-  { name: "Min wallet value", text: "82.00", value: "21.6" },
+const dashboardInfo = [
+  { name: "Owned NFTs", text1: "82.00", value: "99" },
+  { name: "Amount Trades", text1: "82.00", value: "143" },
+  { name: "Ratio Purchase/Sell", text1: "82.00", value: "30%" },
+  { name: "NFTs for sale", text1: "82.00", value: "56" },
+  { name: "NFTs offers placed", text1: "82.00", value: "45" },
+  { name: "NFTs offers received", text1: "82.00", value: "38" },
 ];

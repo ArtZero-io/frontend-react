@@ -23,6 +23,7 @@ import { usePagination } from "@ajna/pagination";
 import { IPFS_BASE_URL } from "@constants/index";
 import AddNewCollectionModal from "./components/Modal/AddNew";
 import { useSelector } from "react-redux";
+import * as ROUTES from "../../../constants/routes";
 
 function MyCollectionsPage() {
   const { currentAccount } = useSubstrateState();
@@ -89,7 +90,7 @@ function MyCollectionsPage() {
 
   useEffect(async () => {
     await onRefresh();
-  }, [activeAddress,currentPage, collection_manager_calls.isLoaded()]);
+  }, [activeAddress, currentPage, collection_manager_calls.isLoaded()]);
 
   const onRefresh = async () => {
     await getAllCollections();
@@ -135,44 +136,52 @@ function MyCollectionsPage() {
             <Text textAlign="left" color="brand.grayLight">
               There are {collections?.length} collections
             </Text>
-            {collections.length ? <SimpleGrid py={10} columns={{ base: 1, md: 2, lg: 3 }} spacing="7">
-              {collections?.map((item, ) => (
-                <>
-                  <Link
-                    minW={{ base: "auto", "2xl": "25rem" }}
-                    key={item?.nftContractAddress}
-                    as={ReactRouterLink}
-                    to={`collectionNew/${item?.nftContractAddress}`}
-                    className="collection-card-hover"
-                    _hover={{
-                      bg: "brand.blue",
-                    }}
-                  >
-                    {/* TODO: add volume */}
-                    <CollectionCard
-                      id={item?.nftContractAddress}
-                      volume={item?.volume || 12.34}
-                      backdrop={`${IPFS_BASE_URL}/${item?.attributes[3]}`}
-                      avatar={`${IPFS_BASE_URL}/${item?.attributes[2]}`}
-                      desc={item?.attributes[1]}
-                      name={item?.attributes[0]}
-                      isActive={item?.isActive}
-                      variant="my-collection"
-                    />
-                  </Link>
-                </>
-              ))}
-            </SimpleGrid> : null}
+            {collections.length ? (
+              <SimpleGrid
+                py={10}
+                columns={{ base: 1, md: 2, lg: 3 }}
+                spacing="7"
+              >
+                {collections?.map((item) => (
+                  <>
+                    <Link 
+                      minW={{ base: "auto", "2xl": "25rem" }}
+                      key={item?.nftContractAddress}
+                      as={ReactRouterLink}
+                      to={`${ROUTES.DETAIL_COLLECTION_BASE}/${item?.nftContractAddress}`}
+                      className="collection-card-hover"
+                      _hover={{
+                        bg: "brand.blue",
+                      }}
+                    >
+                      {/* TODO: add volume */}
+                      <CollectionCard
+                        id={item?.nftContractAddress}
+                        volume={item?.volume || 12.34}
+                        backdrop={`${IPFS_BASE_URL}/${item?.attributes[3]}`}
+                        avatar={`${IPFS_BASE_URL}/${item?.attributes[2]}`}
+                        desc={item?.attributes[1]}
+                        name={item?.attributes[0]}
+                        isActive={item?.isActive}
+                        variant="my-collection"
+                      />
+                    </Link>
+                  </>
+                ))}
+              </SimpleGrid>
+            ) : null}
 
-            {collections.length ? <Flex w="full">
-              <PaginationMP
-                isDisabled={isDisabled}
-                currentPage={currentPage}
-                pagesCount={pagesCount}
-                setCurrentPage={setCurrentPage}
-              />
-              <Spacer />
-            </Flex> : null}
+            {collections.length ? (
+              <Flex w="full">
+                <PaginationMP
+                  isDisabled={isDisabled}
+                  currentPage={currentPage}
+                  pagesCount={pagesCount}
+                  setCurrentPage={setCurrentPage}
+                />
+                <Spacer />
+              </Flex>
+            ) : null}
           </>
         )}
       </Box>

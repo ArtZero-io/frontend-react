@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form } from "formik";
 import { setMultipleAttributes } from "@actions/account";
 import ImageUpload from "@components/ImageUpload/Avatar";
-import SimpleModeInput from "../Input";
-import SimpleModeTextarea from "../TextArea";
+import SimpleModeInput from "@components/Input";
+import SimpleModeTextarea from "@components/TextArea";
 
 const ProfileForm = ({ profile }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState(null);
@@ -41,7 +41,7 @@ const ProfileForm = ({ profile }) => {
             .max(30, "Must be 30 characters or less"),
         })}
         onSubmit={async (values, { setSubmitting }) => {
-          values.avatar = avatarIPFSUrl;
+          avatarIPFSUrl && (values.avatar = avatarIPFSUrl)
 
           const objArr = Object.entries(values).filter(([, value]) => {
             return value !== "";
@@ -49,7 +49,8 @@ const ProfileForm = ({ profile }) => {
 
           const a = objArr.map((item) => item[0]);
           const v = objArr.map((item) => item[1]);
-
+          console.log('a', a)
+          console.log('v', v)
           dispatch(setMultipleAttributes(a, v));
         }}
       >

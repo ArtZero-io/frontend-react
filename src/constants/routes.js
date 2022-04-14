@@ -2,6 +2,7 @@ export const HOME = "/";
 export const COLLECTIONS = "/collections";
 export const STATISTICS = "/statistics";
 export const HELP = "/help";
+export const DESIGN = "/design";
 
 // MY ACCOUNT
 export const ACCOUNT = "/account/general";
@@ -9,12 +10,12 @@ export const ACCOUNT_MY_COLLECTIONS = "/account/collections";
 export const ACCOUNT_MY_NFTS = "/account/nfts";
 export const ACCOUNT_MY_STAKES = "/account/stakes";
 
-// MY COLLECTION
-export const MY_COLLECTION = "/my-collection";
+// COLLECTION
+// export const MY_COLLECTION = "/my-collection";
 // export const NEW_COLLECTION = '/new-collection'
-export const NEW_COLLECTION = "/new-collection/:type";
+// export const NEW_COLLECTION = "/new-collection/:type";
 export const DETAIL_COLLECTION = "/collection/:address";
-export const DETAIL_COLLECTION_BASE = "/collection/";
+export const DETAIL_COLLECTION_BASE = "/collection";
 
 // MINTING EVENT
 export const MINTING_EVENT = "/mint";

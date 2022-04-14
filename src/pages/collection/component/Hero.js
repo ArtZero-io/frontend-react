@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Center,
   Flex,
   Heading,
@@ -10,15 +9,14 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { Circle } from "@chakra-ui/react";
 
-import React from "react";
-import { FaInstagram, FaTwitter, FaDiscord } from "react-icons/fa";
 import AzeroIcon from "@theme/assets/icon/Azero.png";
+import SocialCard from "@components/Card/Social";
+
 const overlay =
   "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.9) 45%, rgba(0,0,0,0.0) 70%, rgba(0,0,0,0) 100%)";
 
-function CollectionHero({ avatar, name, description }) {
+function CollectionHero({ avatar, name, description, profile }) {
   return (
     <Box
       // maxH={96}
@@ -55,37 +53,21 @@ function CollectionHero({ avatar, name, description }) {
             />
           </Center>
 
-          <HStack w="full" justifyContent="space-around" py={9}>
-            <VStack textAlign="center">
-              <Button variant="transparent">add global offer</Button>
-              <Text textDecoration="underine">What is a global offer?</Text>
-            </VStack>
-
+          <HStack w="full" justifyContent="space-around" py={9} pos="relative">
             <VStack textAlign="center" justifyContent="space-between">
-              <Heading size="2xl">
-                {name}
-              </Heading>
+              <Heading size="h2">{name}</Heading>
 
-              <Text maxW="md">{description}</Text>
+              <Text maxW="md" color="#fff">
+                {description}
+              </Text>
             </VStack>
 
-            <HStack textAlign="center">
-              <Button variant="icon" borderRadius="full">
-                <Circle size="3.125rem">
-                  <FaInstagram size="1.5rem" />
-                </Circle>
-              </Button>
-              <Button variant="icon" borderRadius="full">
-                <Circle size="3.125rem">
-                  <FaTwitter size="1.5rem" />
-                </Circle>
-              </Button>
-              <Button variant="icon" borderRadius="full">
-                <Circle size="3.125rem">
-                  <FaDiscord size="1.5rem" />
-                </Circle>
-              </Button>
-            </HStack>
+            <SocialCard
+              profile={profile}
+              pos={"absolute"}
+              right={"3rem"}
+              top={"50%"}
+            />
           </HStack>
 
           <HStack

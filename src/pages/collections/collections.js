@@ -175,9 +175,10 @@ const CollectionsPage = (props) => {
               {collections.map((item, idx) => (
                 <>
                   <Link
+                    minW={{ base: "auto", "2xl": "25rem" }}
                     key={item?.nftContractAddress}
                     as={ReactRouterLink}
-                    to={`collectionNew/${item?.nftContractAddress}`}
+                    to={`collection/${item?.nftContractAddress}`}
                     className="collection-card-hover"
                     _hover={{
                       bg: "brand.blue",
@@ -185,7 +186,7 @@ const CollectionsPage = (props) => {
                   >
                     <CollectionCard
                       id={item?.nftContractAddress}
-                      volume="111"
+                      volume="11121"
                       backdrop={`${IPFS_BASE_URL}/${item?.attributes[3]}`}
                       avatar={`${IPFS_BASE_URL}/${item?.attributes[2]}`}
                       desc={item?.attributes[1]}

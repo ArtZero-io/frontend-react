@@ -59,7 +59,7 @@ const MyCollectionListing = () => {
                 <GridItem w='100%' h='10' bg='blue.500' key={index}>
                     <Link
                         as={ReactRouterLink}
-                        to={`${ROUTES.DETAIL_COLLECTION_BASE}${collection?.nftContractAddress}`}
+                        to={`${ROUTES.DETAIL_COLLECTION_BASE}/${collection?.nftContractAddress}`}
                         fontWeight="medium"
                         display="flex"
                         alignItems="center"

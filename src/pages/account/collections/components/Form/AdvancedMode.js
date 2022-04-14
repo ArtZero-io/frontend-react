@@ -9,9 +9,9 @@ import collection_manager_calls from "@utils/blockchain/collection-manager-calls
 import { isValidAddressPolkadotAddress } from "@utils";
 import { useDispatch, useSelector } from "react-redux";
 import AddCollectionNumberInput from "../NumberInput";
-import AdvancedModeInput from "../../../components/Input";
-import AdvancedModeSwitch from "../../../components/Switch";
-import AdvancedModeTextArea from "../../../components/TextArea";
+import AdvancedModeInput from "@components/Input";
+import AdvancedModeSwitch from "@components/Switch";
+import AdvancedModeTextArea from "@components/TextArea";
 
 const AdvancedModeForm = () => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -159,7 +159,8 @@ const AdvancedModeForm = () => {
             <Stack
               direction={{ base: "column", "2xl": "row" }}
               alignItems="end"
-              minH={20} minW={52}
+              minH={20}
+              minW={52}
             >
               <AdvancedModeSwitch
                 onChange={() => setIsSetRoyal(!isSetRoyal)}

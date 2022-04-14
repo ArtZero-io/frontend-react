@@ -11,16 +11,38 @@ import {
 } from "@chakra-ui/react";
 import AddNewNFTForm from "../Form/AddNewNFT";
 import { useParams } from "react-router-dom";
-import collection_manager_calls from "../../../../utils/blockchain/collection-manager-calls";
-import { delay } from "../../../../utils";
+import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+import { delay } from "@utils";
 import React, { useEffect, useState } from "react";
 import { useSubstrateState } from "@utils/substrate";
+import { useDispatch, useSelector } from "react-redux";
+import { AccountActionTypes } from "@store/types/account.types";
 
-const AddNewNFTModal = () => {
+const AddNewNFTModal = ({ forceUpdate }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const param = useParams();
-  const [collection, setCollectionData] = useState({});
+  const [, setCollectionData] = useState({});
   const { currentAccount } = useSubstrateState();
+
+  const dispatch = useDispatch();
+
+  const { tnxStatus } = useSelector((state) => state.account.accountLoaders);
+
+  useEffect(() => {
+    function onCloseHandler() {
+      if (tnxStatus?.status === "Finalized") {
+        dispatch({
+          type: AccountActionTypes.SET_TNX_STATUS,
+          payload: null,
+        });
+        forceUpdate();
+        console.log("forceUpdate...");
+        onClose();
+      }
+    }
+
+    onCloseHandler();
+  }, [tnxStatus, dispatch, forceUpdate, onClose]);
 
   useEffect(async () => {
     await onRefresh();
@@ -42,19 +64,23 @@ const AddNewNFTModal = () => {
 
   return (
     <>
-      {console.log(collection)}
+      {/* {console.log(collection)}
       {console.log(currentAccount.address)}
       
-      {collection.collectionOwner == currentAccount.address && collection.showOnChainMetadata && collection.contractType == '2' && collection.isActive ? <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
+      {collection?.collectionOwner === currentAccount.address && collection?.showOnChainMetadata && collection.contractType == '2' && collection?.isActive ? <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
         Add new NFT (*)
       </Button> : ''}
-      
+       */}
+
+      <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
+        Add new NFT
+      </Button>
 
       <Modal
         isCentered
         isOpen={isOpen}
         onClose={onClose}
-        size="6xl"
+        size={"4xl"}
         scrollBehavior="inside"
       >
         <ModalOverlay
@@ -63,11 +89,11 @@ const AddNewNFTModal = () => {
         />
         <ModalContent
           position="relative"
-          bg="brand.grayDark"
-          py={10}
-          px={20}
+          px={6}
+          minH={{ xl: "md" }}
           borderRadius="0"
           textAlign="center"
+          bg="brand.grayDark"
         >
           <ModalCloseButton
             position="absolute"
@@ -77,7 +103,7 @@ const AddNewNFTModal = () => {
             borderRadius="0"
           />
           <ModalHeader>
-            <Heading size="h1" >
+            <Heading size="h4" my={2}>
               Add new NFT
             </Heading>
           </ModalHeader>
@@ -88,6 +114,6 @@ const AddNewNFTModal = () => {
       </Modal>
     </>
   );
-}
+};
 
 export default AddNewNFTModal;
