@@ -12,13 +12,13 @@ import {
     Button
 } from '@chakra-ui/react';
 import { useEffect, useState } from "react";
-import collection_manager_calls from "../../../utils/blockchain/collection-manager-calls";
-import {isValidAddressPolkadotAddress} from '../../../utils';
+import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+import {isValidAddressPolkadotAddress} from '@utils';
 import { create } from "ipfs-http-client";
 import { Buffer } from "buffer";
 import { IPFS_CLIENT_URL } from "@constants/index";
 import toast from "react-hot-toast";
-import { useSubstrateState } from '../../../utils/substrate'
+import { useSubstrateState } from '@utils/substrate'
 // import BN from 'bn.js';
 
 const client = create(IPFS_CLIENT_URL);

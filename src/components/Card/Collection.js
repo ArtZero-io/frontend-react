@@ -15,6 +15,7 @@ import {
 import ActiveIcon from "@theme/assets/icon/Active.js";
 import InActiveIcon from "@theme/assets/icon/InActive.js";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
+
 export const CollectionCard = (props) => {
   const { avatar, name, desc, volume, backdrop, isActive = true, variant } = props;
   return (
@@ -65,7 +66,7 @@ export const CollectionCard = (props) => {
           px={4}
         >
           <Box mt="4">
-            <Heading size="h6"> {name}</Heading>
+           <Heading size="h6"> {name}</Heading>
           </Box>
           <Text noOfLines={[1,3]} maxW={{ base: "unset", md: "20rem" }}>
             {desc}

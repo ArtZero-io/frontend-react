@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useCallback } from "react";
 
-import { CollectionCard } from "@components/Card/CollectionCard";
+import { CollectionCard } from "@components/Card/Collection";
 import { Link as ReactRouterLink } from "react-router-dom";
 import PaginationMP from "@components/Pagination/Pagination";
 import { useEffect, useState } from "react";
@@ -63,7 +63,7 @@ function MyCollectionsPage() {
         );
         let attributes = await collection_manager_calls.getAttributes(
           currentAccount,
-          data.nftContractAddress,
+          data?.nftContractAddress,
           ["name", "description", "avatar_image", "header_image"]
         );
         data.attributes = attributes;

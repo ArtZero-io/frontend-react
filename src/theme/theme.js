@@ -20,6 +20,7 @@ const theme = extendTheme({
     },
   },
   sizes: {
+    "6xl-mid": "78rem",
     container: {
       "3xl": "1920px",
     },

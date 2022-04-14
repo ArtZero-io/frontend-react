@@ -6,10 +6,10 @@ import {
     Image,
     Link
 } from '@chakra-ui/react';
-import {  delay, isValidImage } from '../../../utils';
+import {  delay, isValidImage } from '@utils';
 import { useEffect, useState } from 'react';
-import collection_manager_calls from "../../../utils/blockchain/collection-manager-calls";
-import { useSubstrateState } from '../../../utils/substrate'
+import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+import { useSubstrateState } from '@utils/substrate'
 import { Link as ReactRouterLink } from "react-router-dom";
 import * as ROUTES from '@constants/routes'
 // import * as ROUTES from '@constants/routes'

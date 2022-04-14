@@ -16,7 +16,7 @@ const AddNewNFTLevelsList = ({ values }) => {
     <>
       <Flex w="full">
         <VStack alignItems="start">
-          <Heading size="lg" fontWeight="400">
+          <Heading size="h4">
             Levels
           </Heading>
           <Text>Textural trails that show up as restangles</Text>{" "}

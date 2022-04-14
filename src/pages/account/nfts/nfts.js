@@ -14,8 +14,8 @@ import React, { useEffect, useState } from "react";
 import { delay } from "@utils";
 import MyNFTCardsGroup from "../components/Card/MyNFTGroup";
 import { useSubstrateState } from "@utils/substrate";
-import nft721_psp34_standard from "../../../utils/blockchain/nft721-psp34-standard";
-import nft721_psp34_standard_calls from "../../../utils/blockchain/nft721-psp34-standard-calls";
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import { numberToU8a, stringToHex } from "@polkadot/util";
 import { IPFS_BASE_URL } from "@constants/index";
 import { ContractPromise } from "@polkadot/api-contract";
@@ -150,7 +150,7 @@ const MyNFTsPage = () => {
         );
         let attributes = await collection_manager_calls.getAttributes(
           currentAccount,
-          data.nftContractAddress,
+          data?.nftContractAddress,
           ["name"]
         );
         const listNft = await getMyNFTByCollection(data);
@@ -158,7 +158,7 @@ const MyNFTsPage = () => {
         myCollections.push({
           collectionName: attributes[0],
           totalItems: listNft.length,
-          nftContractAddress: data.nftContractAddress,
+          nftContractAddress: data?.nftContractAddress,
           collection_detail: data,
           listNFT: listNft,
         });

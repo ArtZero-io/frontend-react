@@ -75,7 +75,7 @@ const AdvancedModeForm = () => {
         onSubmit={async (values, { setSubmitting }) => {
           console.log("values first", values);
 
-          (!headerIPFSUrl || !avatarIPFSUrl) && toast.error("Upload anh first");
+          (!headerIPFSUrl || !avatarIPFSUrl) && toast.error("Upload images first");
 
           if (avatarIPFSUrl && headerIPFSUrl) {
             values.avatarIPFSUrl = avatarIPFSUrl;

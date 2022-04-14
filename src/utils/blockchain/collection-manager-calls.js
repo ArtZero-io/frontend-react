@@ -11,7 +11,7 @@ function isLoaded() {
 }
 //SETTERS
 async function addNewCollection(caller_account, data, dispatch) {
-  if (!isValidAddressPolkadotAddress(data.nftContractAddress)) {
+  if (!isValidAddressPolkadotAddress(data?.nftContractAddress)) {
     console.log("invalid addresses");
     return null;
   }
@@ -24,7 +24,7 @@ async function addNewCollection(caller_account, data, dispatch) {
     .addNewCollection(
       { gasLimit, value: azero_value },
       address,
-      data.nftContractAddress,
+      data?.nftContractAddress,
       data.attributes,
       data.attributeVals,
       data.collectionAllowRoyalFee,

@@ -16,7 +16,7 @@ import SocialCard from "@components/Card/Social";
 const overlay =
   "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.9) 45%, rgba(0,0,0,0.0) 70%, rgba(0,0,0,0) 100%)";
 
-function CollectionHero({ avatar, name, description, profile }) {
+function CollectionHeader({ avatar, name, description, profile }) {
   return (
     <Box
       // maxH={96}
@@ -133,4 +133,4 @@ function CollectionHero({ avatar, name, description, profile }) {
   );
 }
 
-export default CollectionHero;
+export default CollectionHeader;

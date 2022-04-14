@@ -148,10 +148,10 @@ async function mintWithAttributes(caller_account, attributes, dispatch) {
           if (status.isFinalized) {
             // eslint-disable-next-line
             const lastTokenId = await this.getTotalSupply(caller_account);
-            let atributeName = [];
+            let attributeName = [];
             let attributeVal = [];
             for (const attribute of attributes) {
-              atributeName.push(attribute.name);
+              attributeName.push(attribute.name);
               attributeVal.push(attribute.value);
             }
             const tokenIdOnChain =
@@ -165,12 +165,18 @@ async function mintWithAttributes(caller_account, attributes, dispatch) {
             ](
               { gasLimit, value: azero_value },
               tokenIdOnChain,
-              atributeName,
+              attributeName,
               attributeVal
             ).signAndSend(
               address,
               { signer: injector.signer },
-              ({ status }) => {
+              ({ status, dispatchError, output }) => {
+                handleContractCall(
+                  status,
+                  dispatchError,
+                  dispatch,
+                  nft721_psp34_standard_contract
+                );
                 if (status) {
                   const statusText = Object.keys(status.toHuman())[0];
                   if (status.isFinalized) {

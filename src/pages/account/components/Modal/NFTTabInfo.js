@@ -16,15 +16,20 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.png";
 import { FiUpload, FiRefreshCw } from "react-icons/fi";
-import marketplace_contract_calls from '../../../../utils/blockchain/marketplace_contract_calls';
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { useSubstrateState } from "@utils/substrate";
-import nft721_psp34_standard from "../../../../utils/blockchain/nft721-psp34-standard";
-import nft721_psp34_standard_calls from "../../../../utils/blockchain/nft721-psp34-standard-calls";
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
-import marketplace from "../../../../utils/blockchain/marketplace";
+import marketplace from "@utils/blockchain/marketplace";
 
-const NFTTabInfo = ({ nft_detail, collection_detail, nft_contract_address, isSale = false }) => {
+const NFTTabInfo = ({
+  nft_detail,
+  collection_detail,
+  nft_contract_address,
+  isSale = false,
+}) => {
   const { api, currentAccount } = useSubstrateState();
   const [sale_price, setSalePrice] = useState(0);
 
@@ -33,43 +38,68 @@ const NFTTabInfo = ({ nft_detail, collection_detail, nft_contract_address, isSal
     console.log(sale_price);
     console.log(nft_detail.id);
     console.log(collection_detail);
-    if (collection_detail.contractType == '2') {
+    if (collection_detail.contractType == "2") {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
         nft721_psp34_standard.CONTRACT_ABI,
         collection_detail.nftContractAddress
       );
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-      const ownerAddress = await nft721_psp34_standard_calls.getOwnerAddressByTokenId(currentAccount, nft_detail.id);
+      const ownerAddress =
+        await nft721_psp34_standard_calls.getOwnerAddressByTokenId(
+          currentAccount,
+          nft_detail.id
+        );
       console.log(ownerAddress);
-      
+
       if (ownerAddress == currentAccount.address) {
-        const is_allownce = await nft721_psp34_standard_calls.allowance(currentAccount, marketplace.CONTRACT_ADDRESS, nft_detail.id);
+        const is_allownce = await nft721_psp34_standard_calls.allowance(
+          currentAccount,
+          marketplace.CONTRACT_ADDRESS,
+          nft_detail.id
+        );
 
         if (is_allownce) {
-          await marketplace_contract_calls.list(currentAccount, nft_contract_address, nft_detail.id, sale_price);
+          await marketplace_contract_calls.list(
+            currentAccount,
+            nft_contract_address,
+            nft_detail.id,
+            sale_price
+          );
         } else {
-          const is_approve = await nft721_psp34_standard_calls.approve(currentAccount, marketplace.CONTRACT_ADDRESS, nft_detail.id, true);
+          const is_approve = await nft721_psp34_standard_calls.approve(
+            currentAccount,
+            marketplace.CONTRACT_ADDRESS,
+            nft_detail.id,
+            true
+          );
           if (is_approve) {
-            await marketplace_contract_calls.list(currentAccount, nft_contract_address, nft_detail.id, sale_price);
+            await marketplace_contract_calls.list(
+              currentAccount,
+              nft_contract_address,
+              nft_detail.id,
+              sale_price
+            );
           }
         }
-        
       } else {
         toast.error(`This token is not yours!`);
       }
-      
     }
-    
-  }
+  };
 
   return (
     <HStack>
-      <Avatar src={nft_detail.img} w={{ xl: "16rem" }} h={{ xl: "16rem" }} rounded="none"></Avatar>
+      <Avatar
+        src={nft_detail.img}
+        w={{ xl: "16rem" }}
+        h={{ xl: "16rem" }}
+        rounded="none"
+      ></Avatar>
       <VStack w="full" px={10} py={2}>
         <Box w="full">
           <Flex>
-            <Heading fontSize="3xl">{nft_detail.name}</Heading>
+            <Heading size="h4">{nft_detail.name}</Heading>
             <Spacer />
             <Button variant="icon">
               <Square size="3.125rem">
@@ -82,7 +112,7 @@ const NFTTabInfo = ({ nft_detail, collection_detail, nft_contract_address, isSal
               </Square>
             </Button>
           </Flex>
-          <Heading fontSize="lg" color="brand.grayLight">
+          <Heading size="h6" color="brand.grayLight">
             {nft_detail.name}
           </Heading>
         </Box>
@@ -104,7 +134,7 @@ const NFTTabInfo = ({ nft_detail, collection_detail, nft_contract_address, isSal
                   <Flex w="full">
                     <Text color="brand.grayLight">
                       <Text>{item.name}</Text>
-                      <Heading fontSize="lg" color="white" mt={1}>
+                      <Heading size="h6" mt={1}>
                         {item.value}
                       </Heading>
                     </Text>
@@ -167,7 +197,7 @@ const NFTTabInfo = ({ nft_detail, collection_detail, nft_contract_address, isSal
       </VStack>
     </HStack>
   );
-}
+};
 
 export default NFTTabInfo;
 

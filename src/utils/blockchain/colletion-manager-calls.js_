@@ -6,7 +6,7 @@ import {isValidAddressPolkadotAddress} from '../../utils';
 let collection_manager_contract
 
 async function addNewCollection(caller_account ,data) {
-  if (!isValidAddressPolkadotAddress(data.nftContractAddress)) {
+  if (!isValidAddressPolkadotAddress(data?.nftContractAddress)) {
     console.log('invalid addresses');
     return null;
   }
@@ -18,7 +18,7 @@ async function addNewCollection(caller_account ,data) {
   collection_manager_contract.tx.addNewCollection(
     { gasLimit, value: azero_value }, 
     address, 
-    data.nftContractAddress, 
+    data?.nftContractAddress, 
     data.collectionName, 
     data.collectionDescription, 
     data.avatarData, 

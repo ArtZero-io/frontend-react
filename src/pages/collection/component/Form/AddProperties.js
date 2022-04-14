@@ -3,7 +3,7 @@ const AddNewNFTPropertiesList = ({ values }) => {
     <>
       <Flex w="full">
         <VStack alignItems="start">
-          <Heading size="lg" fontWeight="400">
+          <Heading size="h4" >
             properties
           </Heading>
           <Text>Textural trails that show up as restangles</Text>{" "}

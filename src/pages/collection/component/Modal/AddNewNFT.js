@@ -56,7 +56,7 @@ const AddNewNFTModal = ({ forceUpdate }) => {
   const getCollectionData = async () => {
     let data = await collection_manager_calls.getCollectionByAddress(
       currentAccount,
-      param.collectionAddress
+      param.address
     );
     console.log(data);
     setCollectionData(data);
@@ -64,14 +64,6 @@ const AddNewNFTModal = ({ forceUpdate }) => {
 
   return (
     <>
-      {/* {console.log(collection)}
-      {console.log(currentAccount.address)}
-      
-      {collection?.collectionOwner === currentAccount.address && collection?.showOnChainMetadata && collection.contractType == '2' && collection?.isActive ? <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-        Add new NFT (*)
-      </Button> : ''}
-       */}
-
       <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
         Add new NFT
       </Button>

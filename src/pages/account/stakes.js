@@ -151,7 +151,7 @@ const MyStakesPage = () => {
         );
         let attributes = await collection_manager_calls.getAttributes(
           currentAccount,
-          data.nftContractAddress,
+          data?.nftContractAddress,
           ["name"]
         );
         const listNft = await getMyNFTByCollection(data);
@@ -159,7 +159,7 @@ const MyStakesPage = () => {
         myCollections.push({
           collectionName: attributes[0],
           totalItems: listNft.length,
-          nftContractAddress: data.nftContractAddress,
+          nftContractAddress: data?.nftContractAddress,
           collection_detail: data,
           listNFT: listNft,
         });

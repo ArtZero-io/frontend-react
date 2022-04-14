@@ -93,11 +93,12 @@ function NFTTabInfo({
   return (
     <HStack>
       <Image
-        boxShadow="base"
+        boxShadow="lg"
         boxSize="30rem"
-        alt=""
+        alt="nft-img"
         objectFit="cover"
         src={image}
+        fallbackSrc="https://via.placeholder.com/480"
       />
 
       <VStack maxH="30rem" w="full" pl={10} py={0}>

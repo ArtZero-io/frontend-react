@@ -9,7 +9,7 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import Layout from "@components/Layout/Layout";
-import { CollectionCard } from "@components/Card/CollectionCard";
+import { CollectionCard } from "@components/Card/Collection";
 import { Link as ReactRouterLink } from "react-router-dom";
 import Dropdown from "@components/Dropdown/Dropdown";
 import PaginationMP from "@components/Pagination/Pagination";
@@ -73,7 +73,7 @@ const CollectionsPage = (props) => {
         if (data.isActive) {
           attributes = await collection_manager_calls.getAttributes(
             currentAccount,
-            data.nftContractAddress,
+            data?.nftContractAddress,
             ["name", "description", "avatar_image", "header_image"]
           );
           data.attributes = attributes;

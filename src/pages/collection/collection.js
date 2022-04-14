@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Layout from "@components/Layout/Layout";
 import { useParams } from "react-router-dom";
-import CollectionHero from "./component/Hero";
-import CollectionMain from "./component/Main";
+import CollectionHero from "./component/Header/Header";
+import CollectionMain from "./component/Main/Main";
 import collection_manager_calls from "../../utils/blockchain/collection-manager-calls";
 import { useSubstrateState } from "../../utils/substrate";
 import { delay } from "../../utils";
@@ -33,7 +33,7 @@ function CollectionPage(props) {
     console.log("CollectionPage data", data);
     let attributes = await collection_manager_calls.getAttributes(
       currentAccount,
-      data.nftContractAddress,
+      data?.nftContractAddress,
       ["name", "description", "avatar_image", "header_image"]
     );
     console.log("CollectionPage attributes", attributes);

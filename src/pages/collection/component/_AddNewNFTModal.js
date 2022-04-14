@@ -11,8 +11,8 @@ import {
 import React from "react";
 import { IPFS_CLIENT_URL } from "@constants/index";
 import { create } from "ipfs-http-client";
-import nft721_psp34_standard from "../../../utils/blockchain/nft721-psp34-standard";
-import nft721_psp34_standard_calls from "../../../utils/blockchain/nft721-psp34-standard-calls";
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
 import { useSubstrateState } from "@utils/substrate";
 import { useEffect, useState } from "react";

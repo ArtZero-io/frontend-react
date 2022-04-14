@@ -6,8 +6,8 @@ import {
 } from '@chakra-ui/react';
 import { useSubstrateState } from "@utils/substrate";
 import { useEffect, useState } from 'react';
-import nft721_psp34_standard from "../../../utils/blockchain/nft721-psp34-standard"
-import nft721_psp34_standard_calls from "../../../utils/blockchain/nft721-psp34-standard-calls"
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard"
+import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls"
 import { ContractPromise } from "@polkadot/api-contract";
 
 const NewNFTForm = (props) => {

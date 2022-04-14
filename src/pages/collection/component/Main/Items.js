@@ -7,19 +7,19 @@ import {
   Spacer,
   IconButton,
 } from "@chakra-ui/react";
-import CollectionNFT from "./CollectionNFT";
-import Dropdown from "../../../components/Dropdown/Dropdown";
+import CollectionNFT from "./NFTGrid";
+import Dropdown from "../../../../components/Dropdown/Dropdown";
 import { RiLayoutGridLine } from "react-icons/ri";
 import { BsGrid3X3 } from "react-icons/bs";
-import AddNewNFTModal from "./Modal/AddNewNFT";
-import collection_manager_calls from "../../../utils/blockchain/collection-manager-calls";
+import AddNewNFTModal from "../Modal/AddNewNFT";
+import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import { useParams } from "react-router-dom";
-import { useSubstrateState } from "../../../utils/substrate";
-import { delay } from "../../../utils";
+import { useSubstrateState } from "@utils/substrate";
+import { delay } from "@utils";
 import React, { useState, useEffect, useCallback } from "react";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 
-const CollectionItem = () => {
+const CollectionItems = () => {
   const param = useParams();
   const { currentAccount } = useSubstrateState();
 
@@ -44,7 +44,7 @@ const CollectionItem = () => {
       param.address
     );
     console.log("res", res);
-    if (res === currentAccount.address) {
+    if (res === currentAccount?.address) {
       setIsOwnerCollection(true);
     } else {
       setIsOwnerCollection(false);
@@ -77,6 +77,7 @@ const CollectionItem = () => {
           size="icon"
           variant="iconSolid"
           mx={1.5}
+          onClick={() => onRefresh()}
         />
         <Button mx={1.5} variant="outline">
           Show unlisted
@@ -105,19 +106,20 @@ const CollectionItem = () => {
           mx={1.5}
         />
       </Flex>
-      <Flex align="center" py={4}>
+      <Flex align="center" py={4} minH={20}>
         <Text px={2}>123 items</Text>
         <Spacer />
 
         {isOwnerCollection && currentCollection.contractType === "2" ? (
-          <AddNewNFTModal forceUpdate={forceUpdate}/>
+          <AddNewNFTModal forceUpdate={forceUpdate} />
         ) : null}
       </Flex>
+
       <CollectionNFT />
     </Box>
   );
 };
 
-export default CollectionItem;
+export default CollectionItems;
 
 const options = ["Price: Oldest", "Price: Low to High", "Price: High to Low"];

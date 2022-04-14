@@ -17,12 +17,12 @@ import toast from "react-hot-toast";
 import * as Yup from "yup";
 import AddNewNFTImageUpload from "@components/ImageUpload/Collection";
 import { useSubstrateState } from "@utils/substrate";
-import nft721_psp34_standard from "../../../../utils/blockchain/nft721-psp34-standard";
-import nft721_psp34_standard_calls from "../../../../utils/blockchain/nft721-psp34-standard-calls";
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
 import { useParams } from "react-router-dom";
-import collection_manager_calls from "../../../../utils/blockchain/collection-manager-calls";
-import { delay } from "../../../../utils";
+import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+import { delay } from "@utils";
 import AddNewNFTInput from "@components/Input";
 import AddNewNFTTextArea from "@components/TextArea";
 import { useDispatch, useSelector } from "react-redux";
@@ -45,13 +45,13 @@ const AddNewNFTForm = () => {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
         nft721_psp34_standard.CONTRACT_ABI,
-        param.collectionAddress
+        param.address
       );
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
       setNft721Psp34StandardContract(nft721_psp34_standard_calls);
       setIsLoadedContract(true);
     }
-  }, [isLoadedContract]);
+  }, [api, isLoadedContract, param.address]);
 
   useEffect(async () => {
     await onRefresh();
@@ -65,7 +65,7 @@ const AddNewNFTForm = () => {
   const getCollectionData = async () => {
     let data = await collection_manager_calls.getCollectionByAddress(
       currentAccount,
-      param.collectionAddress
+      param.address
     );
     setCollectionData(data);
   };
@@ -90,7 +90,7 @@ const AddNewNFTForm = () => {
         onSubmit={async (values, { setSubmitting }) => {
           console.log("values first", values);
 
-          !avatarIPFSUrl && toast.error("Upload anh first");
+          !avatarIPFSUrl && toast.error("Upload images first");
 
           if (avatarIPFSUrl) {
             values.avatarIPFSUrl = avatarIPFSUrl;
@@ -129,8 +129,8 @@ const AddNewNFTForm = () => {
                   attributes,
                   dispatch
                 );
-              console.log('attributes',attributes);
-              console.log("newNft",newNft);
+              console.log("attributes", attributes);
+              console.log("newNft", newNft);
             } else {
               console.log("You aren't the owner of this collection!");
               toast.error("You aren't the owner of this collection!");

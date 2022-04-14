@@ -5,11 +5,17 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 import React from "react";
-import NFTTab from "../Tabs/MyNFT";
+import MyNFTTab from "../Tabs/MyNFT";
 
-function NFTModal({ nft_detail, nft_contract_address, collection_detail, address, isOpen, onClose, selectedNFT }) {
-  console.log("NFTModal address", address);
-  console.log("Nft Detail", nft_detail);
+function MyNFTModal({
+  nft_detail,
+  nft_contract_address,
+  collection_detail,
+  address,
+  isOpen,
+  onClose,
+  selectedNFT,
+}) {
   return (
     <Modal
       onClose={onClose}
@@ -38,10 +44,16 @@ function NFTModal({ nft_detail, nft_contract_address, collection_detail, address
           borderWidth={2}
           borderRadius="0"
         />
-        <NFTTab selectedNFT={selectedNFT} collection_detail={collection_detail} nft_detail={nft_detail} nft_contract_address={nft_contract_address} address={address} />
+        <MyNFTTab
+          selectedNFT={selectedNFT}
+          collection_detail={collection_detail}
+          nft_detail={nft_detail}
+          nft_contract_address={nft_contract_address}
+          address={address}
+        />
       </ModalContent>
     </Modal>
   );
 }
 
-export default NFTModal;
+export default MyNFTModal;
