@@ -14,6 +14,8 @@ import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import { numberToU8a, stringToHex } from "@polkadot/util";
 import { IPFS_BASE_URL } from "@constants/index";
+import marketplace_contract_calls from "../../../../utils/blockchain/marketplace_contract_calls";
+import { TypeRegistry, U64 } from '@polkadot/types';
 
 const NFTGrid = ({bigCard}) => {
   const [NFTList, setNFTList] = useState([]);
@@ -67,14 +69,19 @@ const NFTGrid = ({bigCard}) => {
           tokenId,
           stringToHex("avatar")
         );
-        const nft = {
-          id: i,
-          askPrice: "12.3",
-          bidPrice: "12.3",
-          name: tokenName,
-          img: `${IPFS_BASE_URL}/${tokenAvatar}`,
-        };
-        NFTDataList.push(nft);
+        const tokenIdU64 = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), i)});
+        const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(currentAccount, param.address, tokenIdU64);
+        if (nftSaleInfo.isForSale) {
+          const nft = {
+            id: i,
+            askPrice: nftSaleInfo.price,
+            bidPrice: "12.3",
+            name: tokenName,
+            img: `${IPFS_BASE_URL}/${tokenAvatar}`,
+          };
+          NFTDataList.push(nft);
+        }
+        
         // const attribute_count = await nft721_psp34_standard_calls.getAttributeCount(currentAccount);
         // let attributes = [];
         // for (let j = 1; j <= attribute_count; j++) {

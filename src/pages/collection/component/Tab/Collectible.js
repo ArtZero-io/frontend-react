@@ -33,6 +33,9 @@ import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import { numberToU8a, stringToHex } from "@polkadot/util";
 import { IPFS_BASE_URL } from "@constants/index";
+import marketplace_contract_calls from "../../../../utils/blockchain/marketplace_contract_calls";
+import { TypeRegistry, U64 } from '@polkadot/types';
+import toast from "react-hot-toast";
 
 const NFTTabCollectible = ({ address }) => {
   const [NFT, setNFT] = useState({});
@@ -48,6 +51,19 @@ const NFTTabCollectible = ({ address }) => {
     await delay(1000);
   };
 
+  const buyToken = async () => {
+    const { data: balance } = await api.query.system.account(
+      currentAccount.address
+    );
+    console.log(balance.free.toNumber());
+    if (balance.free.toNumber() > NFT.askPrice) {
+      await marketplace_contract_calls.buy(currentAccount, param.address, NFT.address, NFT.askPrice);
+    } else {
+      toast.error(`Your balance not enough!`);
+    }
+    
+  }
+ 
   const loadNFT = async () => {
     let currentCollection =
       await collection_manager_calls.getCollectionByAddress(
@@ -97,10 +113,11 @@ const NFTTabCollectible = ({ address }) => {
           }
         }
       }
-      console.log(atts);
+      const tokenIdU64 = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), address)});
+      const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(currentAccount, param.address, tokenIdU64);
       const nft = {
         id: address,
-        askPrice: "12.3",
+        askPrice: nftSaleInfo.price,
         bidPrice: "12.3",
         name: tokenName,
         img: `${IPFS_BASE_URL}/${tokenAvatar}`,
@@ -206,7 +223,7 @@ const NFTTabCollectible = ({ address }) => {
             py={1}
             borderWidth={2}
           >
-            <Button h={10} maxW={32} variant="solid">
+            <Button h={10} maxW={32} variant="solid" onClick={buyToken}>
               Buy now
             </Button>
 
@@ -217,7 +234,7 @@ const NFTTabCollectible = ({ address }) => {
               <Text textAlign="right" color="brand.grayLight">
                 <Text>Current price</Text>
                 <Tag h={4} pr={0} bg="transparent">
-                  <TagLabel bg="transparent">82.00</TagLabel>
+                  <TagLabel bg="transparent">{NFT.askPrice}</TagLabel>
                   <TagRightIcon as={AzeroIcon} />
                 </Tag>
               </Text>
@@ -283,10 +300,10 @@ const NFTTabCollectible = ({ address }) => {
                         </Text>
                         <Spacer />
                       </Flex>
-                      <Flex w="full" color="#7AE7FF">
+                      {/* <Flex w="full" color="#7AE7FF">
                         <Spacer />
                         <Text>88.88%</Text>
-                      </Flex>
+                      </Flex> */}
                     </Box>
                   </GridItem>
                 );

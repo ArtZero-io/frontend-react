@@ -20,6 +20,8 @@ import { numberToU8a, stringToHex } from "@polkadot/util";
 import { IPFS_BASE_URL } from "@constants/index";
 import { ContractPromise } from "@polkadot/api-contract";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
+import marketplace_contract_calls from "../../../utils/blockchain/marketplace_contract_calls";
+import { TypeRegistry, U64 } from '@polkadot/types';
 
 const MyNFTsPage = () => {
   const { api, currentAccount } = useSubstrateState();
@@ -85,6 +87,16 @@ const MyNFTsPage = () => {
             }
           }
         }
+
+        const tokenIdU64 = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), i)});
+        const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(currentAccount, collection.nftContractAddress, tokenIdU64);
+        console.log(nftSaleInfo);
+        let tokenPrice = 0;
+        let isListed = false;
+        if (nftSaleInfo) {
+          isListed = nftSaleInfo.isForSale;
+          tokenPrice = nftSaleInfo.price;
+        }
         const nft = {
           id: i,
           askPrice: "12.3",
@@ -92,6 +104,8 @@ const MyNFTsPage = () => {
           name: tokenName,
           img: `${IPFS_BASE_URL}/${tokenAvatar}`,
           atts: atts,
+          isListed: isListed,
+          price: tokenPrice
         };
 
         myNFTs.push(nft);
