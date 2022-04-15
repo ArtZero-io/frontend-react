@@ -13,7 +13,7 @@ import React, { useState } from "react";
 import NFTModal from "../../nfts/components/Modal/MyNFT";
 import MyNFTCard from "./MyNFT";
 
-function MyNFTCardsGroup({
+function MyNFTGroupCard({
   collectionName,
   totalItems,
   listNFT,
@@ -24,7 +24,7 @@ function MyNFTCardsGroup({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedNFT, setSelectedNFT] = useState(null);
   const [nft_detail, setNftDetail] = useState({});
-
+console.log('listNFT', listNFT)
   
 
   function onClickHandler(item) {
@@ -36,6 +36,7 @@ function MyNFTCardsGroup({
 
 
   }
+
   return (
     <Box my={10}>
       <NFTModal
@@ -78,4 +79,4 @@ function MyNFTCardsGroup({
   );
 }
 
-export default MyNFTCardsGroup;
+export default MyNFTGroupCard;

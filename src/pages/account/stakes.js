@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import { delay } from "@utils";
-import MyNFTCardsGroup from "./components/Card/MyNFTGroup";
+import MyNFTGroupCard from "./components/Card/MyNFTGroup";
 import { useSubstrateState } from "@utils/substrate";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
@@ -272,7 +272,7 @@ const MyStakesPage = () => {
           </Center>
         )}
         {!loading &&
-          myCollections?.map((item) => <MyNFTCardsGroup {...item} />)}
+          myCollections?.map((item) => <MyNFTGroupCard {...item} />)}
         {!loading && myCollections?.length === 0 && (
           <Text>You don't have any NFTs</Text>
         )}

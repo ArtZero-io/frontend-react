@@ -15,8 +15,8 @@ import {
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 const MyNFTCard = (props) => {
-
-  const { name, image, isListed, isBid, isStaked } = props;
+  console.log('props MyNFTCard Account', props)
+  const { name, img, isListed, isBid, isStaked } = props;
   return (
     <Box minW="14.25rem" _hover={{ bg: "brand.blue" }} p="px">
       <Flex
@@ -28,11 +28,11 @@ const MyNFTCard = (props) => {
       >
         <Square minW={56}>
           <Image
-            alt={image}
+            alt={img}
             h="full"
             w="full"
             objectFit="cover"
-            src={image}
+            src={img}
             fallbackSrc="https://via.placeholder.com/400x400"
           />
         </Square>

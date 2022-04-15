@@ -1,6 +1,6 @@
 import { Grid, GridItem, useDisclosure } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import { NFTCard } from "@components/Card/NFT";
+import NFTChangeSize from "@components/Card/NFTChangeSize";
 import NFTDetailModal from "../Modal/NFTDetail";
 import { useParams } from "react-router-dom";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
@@ -15,9 +15,9 @@ import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard
 import { numberToU8a, stringToHex } from "@polkadot/util";
 import { IPFS_BASE_URL } from "@constants/index";
 import marketplace_contract_calls from "../../../../utils/blockchain/marketplace_contract_calls";
-import { TypeRegistry, U64 } from '@polkadot/types';
+import { TypeRegistry, U64 } from "@polkadot/types";
 
-const NFTGrid = ({bigCard}) => {
+const NFTGrid = ({ bigCard }) => {
   const [NFTList, setNFTList] = useState([]);
   const [address, setAddress] = useState(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -25,7 +25,7 @@ const NFTGrid = ({bigCard}) => {
   const { api, currentAccount } = useSubstrateState();
   const [currentCollection, setCurrentCollection] = useState({});
   // const [nft721Psp34StandardContract, setNft721Psp34StandardContract] = useState({});
-  console.log('NFTList', NFTList)
+  console.log("NFTList", NFTList);
   useEffect(async () => {
     await onRefresh();
   }, [collection_manager_calls.isLoaded(), artzero_nft_calls.isLoaded()]);
@@ -69,19 +69,26 @@ const NFTGrid = ({bigCard}) => {
           tokenId,
           stringToHex("avatar")
         );
-        const tokenIdU64 = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), i)});
-        const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(currentAccount, param.address, tokenIdU64);
-        if (nftSaleInfo.isForSale) {
+        const tokenIdU64 = nft721_psp34_standard_contract.api.createType(
+          "ContractsPsp34Id",
+          { U64: new U64(new TypeRegistry(), i) }
+        );
+        const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(
+          currentAccount,
+          param.address,
+          tokenIdU64
+        );
+        if (nftSaleInfo?.isForSale) {
           const nft = {
             id: i,
-            askPrice: nftSaleInfo.price,
+            askPrice: nftSaleInfo?.price,
             bidPrice: "12.3",
             name: tokenName,
             img: `${IPFS_BASE_URL}/${tokenAvatar}`,
           };
           NFTDataList.push(nft);
         }
-        
+
         // const attribute_count = await nft721_psp34_standard_calls.getAttributeCount(currentAccount);
         // let attributes = [];
         // for (let j = 1; j <= attribute_count; j++) {
@@ -138,10 +145,12 @@ const NFTGrid = ({bigCard}) => {
 
   return (
     <div>
-      {console.log('currentCollection',currentCollection)}
+      {console.log("currentCollection", currentCollection)}
       <NFTDetailModal address={address} isOpen={isOpen} onClose={onClose} />
       <Grid
-        templateColumns={`repeat(auto-fill, minmax(min(100%, ${bigCard ? '25rem' : '20rem'}), 1fr))`}
+        templateColumns={`repeat(auto-fill, minmax(min(100%, ${
+          bigCard ? "25rem" : "20rem"
+        }), 1fr))`}
         gap={6}
       >
         {NFTList.map((item) => {
@@ -156,7 +165,7 @@ const NFTGrid = ({bigCard}) => {
                 onOpen();
               }}
             >
-              <NFTCard {...item} />
+              <NFTChangeSize {...item} />
             </GridItem>
           );
         })}

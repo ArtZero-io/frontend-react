@@ -12,7 +12,9 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
-export const NFTCard = (props) => {
+export default function NFTChangeSize(props) {
+  console.log("props MyNFTCard", props);
+
   const { name, askPrice, bidPrice, img } = props;
   return (
     <Box>
@@ -64,4 +66,4 @@ export const NFTCard = (props) => {
       </Flex>
     </Box>
   );
-};
+}
