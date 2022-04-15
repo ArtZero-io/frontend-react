@@ -86,8 +86,12 @@ function NFTTabInfo({
   };
 
   const unlistToken = async () => {
-    await marketplace_contract_calls.unlist(currentAccount, nft_contract_address, nft_detail.id);
-  }
+    await marketplace_contract_calls.unlist(
+      currentAccount,
+      nft_contract_address,
+      nft_detail.id
+    );
+  };
 
   return (
     <HStack>
@@ -100,7 +104,13 @@ function NFTTabInfo({
         fallbackSrc="https://via.placeholder.com/480"
       />
 
-      <VStack maxH="30rem" w="full" pl={10} py={0}>
+      <VStack
+        minH="30rem"
+        w="full"
+        pl={10}
+        py={0}
+        justifyContent="space-between"
+      >
         <Box w="full">
           <Flex>
             <Heading size="h4"> {name}</Heading>
