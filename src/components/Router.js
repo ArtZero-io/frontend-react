@@ -20,6 +20,7 @@ import MyStakesPage from "@pages/account/stakes";
 
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import AccountLayout from "./Layout/AccountLayout";
+import AdminLayout from "./Layout/AdminLayout";
 
 const Router = () => {
   return (
@@ -29,28 +30,51 @@ const Router = () => {
           path="/account"
           render={() => {
             return (
-              <AccountLayout>
-                <Switch>
-                  <Route exact path={ROUTES.ACCOUNT} component={GeneralPage} />
+              <>
+                <AccountLayout>
+                  <Switch>
+                    <Route
+                      exact
+                      path={ROUTES.ACCOUNT}
+                      component={GeneralPage}
+                    />
 
-                  <Route exact path={ROUTES.ACCOUNT_ADMIN} component={AdminPage} />
-                  <Route
-                    exact
-                    path={ROUTES.ACCOUNT_MY_COLLECTIONS}
-                    component={MyCollectionsPage}
-                  />
-                  <Route
-                    exact
-                    path={ROUTES.ACCOUNT_MY_NFTS}
-                    component={MyNFTsPage}
-                  />
-                  <Route
-                    exact
-                    path={ROUTES.ACCOUNT_MY_STAKES}
-                    component={MyStakesPage}
-                  />
-                </Switch>
-              </AccountLayout>
+                    <Route
+                      exact
+                      path={ROUTES.ACCOUNT_MY_COLLECTIONS}
+                      component={MyCollectionsPage}
+                    />
+                    <Route
+                      exact
+                      path={ROUTES.ACCOUNT_MY_NFTS}
+                      component={MyNFTsPage}
+                    />
+                    <Route
+                      exact
+                      path={ROUTES.ACCOUNT_MY_STAKES}
+                      component={MyStakesPage}
+                    />
+                  </Switch>
+                </AccountLayout>
+              </>
+            );
+          }}
+        />
+        <PrivateRoute
+          path="/admin"
+          render={() => {
+            return (
+              <>
+                <AdminLayout>
+                  <Switch>
+                    <Route
+                      exact
+                      path={ROUTES.ACCOUNT_ADMIN}
+                      component={AdminPage}
+                    />
+                  </Switch>
+                </AdminLayout>
+              </>
             );
           }}
         />

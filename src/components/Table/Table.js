@@ -9,7 +9,6 @@ import {
   Tr,
 } from "@chakra-ui/react";
 
- 
 function DataTable() {
   return (
     <TableContainer maxW="6xl-mid" fontSize="lg">

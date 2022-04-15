@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import React from "react";
 import DataTable from '@components/Table/Table'
-function History() {
+function HistoryTab() {
   return (
     <Box
       mx="auto"
@@ -13,4 +13,4 @@ function History() {
   );
 }
 
-export default History;
+export default HistoryTab;

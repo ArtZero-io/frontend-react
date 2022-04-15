@@ -1,16 +1,13 @@
-import { Box, Tab, TabList, TabPanels, Tabs, TabPanel } from "@chakra-ui/react";
-import { useSubstrateState } from "@utils/substrate";
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 
 import Loader from "@components/Loader/Loader";
 import Layout from "@components/Layout/Layout";
-import ProfileHeader from "@pages/mint/components/Header";
+import AdminHeader from "@pages/admin/components/Header";
+import { useSubstrateState } from "@utils/substrate";
+import ContractTab from "../../pages/admin/components/Tab/Contract";
+import CollectionTab from "../../pages/admin/components/Tab/Collection";
 
-import NFTMintTab from "./components/Tab/NFTMint";
-import MintHistoryTab from "./components/Tab/History";
-
-const MintPage = () => {
-  //  const { currentAccount, keyringState, apiState } = useSubstrateState();
-  // const { activeAddress } = useSelector((s) => s.account);
+const AdminLayout = ({ children }) => {
   const { profileContract } = useSubstrateState();
 
   return (
@@ -20,7 +17,7 @@ const MintPage = () => {
           <Loader />
         ) : (
           <>
-            <ProfileHeader />
+            <AdminHeader />
 
             <Tabs isLazy align="center">
               <TabList>
@@ -38,6 +35,7 @@ const MintPage = () => {
                   </Tab>
                 ))}
               </TabList>
+
               <TabPanels bg="#171717">
                 {tabData.map((tab, index) => (
                   <TabPanel px={12} py={8} key={index}>
@@ -52,15 +50,15 @@ const MintPage = () => {
     </Layout>
   );
 };
-export default MintPage;
 
+export default AdminLayout;
 const tabData = [
   {
-    label: "Artzero Nfts",
-    content: <NFTMintTab />,
+    label: "Contract",
+    content: <ContractTab />,
   },
   {
-    label: "Minting history",
-    content: <MintHistoryTab />,
+    label: "Collection",
+    content: <CollectionTab />,
   },
 ];

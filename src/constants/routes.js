@@ -6,7 +6,7 @@ export const ACCOUNT = "/account/general";
 export const ACCOUNT_MY_COLLECTIONS = "/account/collections";
 export const ACCOUNT_MY_NFTS = "/account/nfts";
 export const ACCOUNT_MY_STAKES = "/account/stakes";
-export const ACCOUNT_ADMIN = "/account/admin";
+export const ACCOUNT_ADMIN = "/admin";
 
 // COLLECTION
 

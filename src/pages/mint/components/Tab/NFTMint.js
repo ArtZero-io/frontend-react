@@ -1,8 +1,8 @@
 import { Box, Grid } from "@chakra-ui/react";
 import React from "react";
-import MyNFTCard from "../../account/components/Card/MyNFT";
+import MyNFTCard from "../../../account/components/Card/MyNFT";
 
-function NFTMint() {
+function NFTMintTab() {
   return (
     <Box
       mx="auto"
@@ -24,7 +24,7 @@ function NFTMint() {
   );
 }
 
-export default NFTMint;
+export default NFTMintTab;
 
 const listNFT = [
   {
