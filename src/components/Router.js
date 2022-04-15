@@ -7,7 +7,7 @@ import * as ROUTES from "@constants/routes";
 // import DetailCollectionPage from "@pages/collections/detail";
 
 import HomePage from "@pages/home";
-import MintPage from "@pages/launchpad";
+import MintPage from "@pages/mint";
 import AdminPage from "@pages/admin";
 
 import CollectionsPage from "@pages/collections/collections";
@@ -32,6 +32,8 @@ const Router = () => {
               <AccountLayout>
                 <Switch>
                   <Route exact path={ROUTES.ACCOUNT} component={GeneralPage} />
+
+                  <Route exact path={ROUTES.ACCOUNT_ADMIN} component={AdminPage} />
                   <Route
                     exact
                     path={ROUTES.ACCOUNT_MY_COLLECTIONS}
@@ -53,18 +55,17 @@ const Router = () => {
           }}
         />
 
-        <Route exact path={ROUTES.ADMIN} component={AdminPage} />
         <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />
         <Route
           exact
           path={ROUTES.DETAIL_COLLECTION}
           component={CollectionPage}
         />
-        <Route exact path={ROUTES.HOME} component={CollectionsPage} />
+        <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
+        <Route exact path={ROUTES.HOME} component={HomePage} />
 
-        {/* <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} /> */}
         {/*   Private Route */}
-        <Route exact path={ROUTES.DESIGN} component={HomePage} />
+        {/* <Route exact path={ROUTES.DESIGN} component={HomePage} /> */}
       </Switch>
     </>
   );

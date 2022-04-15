@@ -24,13 +24,8 @@ import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 const links = [
-  // { label: "NewC", href: "/collections" },
-  // { label: "Marketplace", href: ROUTES.MARKETPLACE },
-  // { label: "Mint", href: ROUTES.MINTING_EVENT },
-  // { label: "Staking", href: ROUTES.STAKE },
-
-  { label: "Admin", href: ROUTES.ADMIN },
-  // { label: "Collection", href: ROUTES.MY_COLLECTION },
+  { label: "Marketplace", href: ROUTES.MARKETPLACE },
+  { label: "TGE", href: ROUTES.MINTING_EVENT },
 ];
 
 const MobileNavContent = (props) => {
@@ -84,6 +79,9 @@ const DesktopNavContent = (props) => {
       {links.map((link, index) => (
         <NavLink.Desktop key={index} label={link.label} to={link.href} />
       ))}
+      {currentAccount && currentAccount?.address && (
+        <NavLink.Desktop label="Admin" to={ROUTES.ACCOUNT_ADMIN} />
+      )}
       {currentAccount && currentAccount?.address && <MyAccountDropdown />}
       <WalletSelector />
     </HStack>
@@ -125,7 +123,7 @@ const MyAccountDropdown = () => {
             m={0}
             fontFamily="Evogria, sans-serif"
             fontWeight="medium"
-            color='white'
+            color="white"
           >
             My Account
           </Heading>
@@ -144,7 +142,8 @@ const MyAccountDropdown = () => {
               fontFamily="Evogria, sans-serif"
               _hover={{ bg: "black" }}
               onClick={() => history.push(item.href)}
-              key={idx} to='#'
+              key={idx}
+              to="#"
             >
               {item.label}
             </MenuItem>
