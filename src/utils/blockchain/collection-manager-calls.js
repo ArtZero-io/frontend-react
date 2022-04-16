@@ -199,6 +199,7 @@ async function getCollectionCount(caller_account) {
   return null;
 }
 async function getCollectionsByOwner(caller_account, owner) {
+
   if (
     !collection_manager_contract ||
     !caller_account ||
@@ -207,14 +208,12 @@ async function getCollectionsByOwner(caller_account, owner) {
    
     return null;
   }
-  const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
 
   const { result, output } =
     await collection_manager_contract.query.getCollectionsByOwner(
-      address,
+      caller_account,
       { value: azero_value, gasLimit },
       owner
     );

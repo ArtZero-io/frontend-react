@@ -14,21 +14,15 @@ import { useEffect, useState, useCallback } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { usePagination } from "@ajna/pagination";
 import { useSelector } from "react-redux";
-
 import { CollectionCard } from "@components/Card/Collection";
 import PaginationMP from "@components/Pagination/Pagination";
-
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-import { useSubstrateState } from "@utils/substrate";
 import { delay } from "@utils";
-
 import { NUMBER_PER_PAGE, IPFS_BASE_URL } from "@constants/index";
 import * as ROUTES from "@constants/routes";
-
 import AddNewCollectionModal from "./components/Modal/AddNew";
 
 function MyCollectionsPage() {
-  const { currentAccount } = useSubstrateState();
   const { activeAddress } = useSelector((s) => s.account);
 
   const [collections, setCollections] = useState([]);
@@ -49,26 +43,24 @@ function MyCollectionsPage() {
 
   const getAllCollections = useCallback(async (e) => {
     setLoading(true);
-
+    console.log('getAllCollections', activeAddress);
     var collections = [];
 
     let collection_account =
       await collection_manager_calls.getCollectionsByOwner(
-        currentAccount,
-        currentAccount?.address
+        activeAddress,
+        activeAddress
       );
-
-
       
     if (collection_account) {
       for (let collection of collection_account) {
         let data = await collection_manager_calls.getCollectionByAddress(
-          currentAccount,
+          activeAddress,
           collection
         );
 
         let attributes = await collection_manager_calls.getAttributes(
-          currentAccount,
+          activeAddress,
           data?.nftContractAddress,
           ["name", "description", "avatar_image", "header_image"]
         );

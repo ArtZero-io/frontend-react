@@ -198,11 +198,14 @@ export const loadAccounts = async (state, dispatch, wallet) => {
 
   artzero_nft_calls.setContract(artzero_contract);
 
+  
+
   const collection_contract = new ContractPromise(
     api,
     collection_manager.CONTRACT_ABI,
     collection_manager.CONTRACT_ADDRESS
   );
+  console.log('SubstrateContext:', collection_contract);
   collection_manager_calls.setContract(collection_contract);
 
   const marketplace_contract = new ContractPromise(
