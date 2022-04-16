@@ -14,23 +14,24 @@ import { BsGrid3X3 } from "react-icons/bs";
 import AddNewNFTModal from "../Modal/AddNewNFT";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import { useParams } from "react-router-dom";
-import { useSubstrateState } from "@utils/substrate";
 import { delay } from "@utils";
 import React, { useState, useEffect, useCallback } from "react";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
+import { useSelector } from "react-redux";
 
 const CollectionItems = () => {
-  const param = useParams();
-  const { currentAccount } = useSubstrateState();
 
+  const param = useParams();
+  const { activeAddress } = useSelector((s) => s.account);
   const [isOwnerCollection, setIsOwnerCollection] = useState(false);
   const [currentCollection, setCurrentCollection] = useState({});
 
   useEffect(async () => {
     await onRefresh();
-  }, [collection_manager_calls.isLoaded()]);
+  }, [activeAddress, collection_manager_calls.isLoaded()]);
 
   const onRefresh = async () => {
+    console.log(activeAddress);
     await checkIsOwnerCollection();
     await delay(1000);
     await loadCurrentCollection();
@@ -38,11 +39,12 @@ const CollectionItems = () => {
 
   const checkIsOwnerCollection = async () => {
     let res = await collection_manager_calls.getCollectionOwner(
-      currentAccount,
+      activeAddress,
       param.address
     );
+    console.log(res);
 
-    if (res === currentAccount?.address) {
+    if (res === activeAddress) {
       setIsOwnerCollection(true);
     } else {
       setIsOwnerCollection(false);
@@ -52,7 +54,7 @@ const CollectionItems = () => {
   const loadCurrentCollection = async () => {
     let currentCollection =
       await collection_manager_calls.getCollectionByAddress(
-        currentAccount,
+        activeAddress,
         param.address
       );
 
@@ -66,6 +68,8 @@ const CollectionItems = () => {
   const [bigCard, setBigCard] = useState(true);
 
   return (
+    <>
+    {console.log(bigCard)}
     <Box w="full" textAlign="left" minH={"54rem"}>
       <Flex w="full">
         <IconButton
@@ -109,14 +113,15 @@ const CollectionItems = () => {
       <Flex align="center" py={4} minH={20}>
         <Text px={2}>123 items</Text>
         <Spacer />
-
-        {isOwnerCollection && currentCollection.contractType === "2" ? (
+        
+        {isOwnerCollection && currentCollection.contractType == "2" ? (
           <AddNewNFTModal forceUpdate={forceUpdate} />
         ) : null}
       </Flex>
 
       <CollectionNFTGrid bigCard={bigCard} />
     </Box>
+    </>
   );
 };
 
