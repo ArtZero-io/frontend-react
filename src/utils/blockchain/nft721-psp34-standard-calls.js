@@ -3,7 +3,7 @@ import { web3FromSource } from "../wallets/extension-dapp";
 import BN from "bn.js";
 import { numberToU8a } from "@polkadot/util";
 import { TypeRegistry, U64 } from "@polkadot/types";
-import { handleContractCall } from "@utils";
+// import { handleContractCall } from "@utils";
 
 let nft721_psp34_standard_contract;
 function setContract(c) {
@@ -16,14 +16,14 @@ async function getTotalSupply(caller_account) {
    
     return null;
   }
-  const address = caller_account?.address;
+  
   const gasLimit = -1;
   const azero_value = 0;
   //console.log(collection_manager_contract);
 
   const { result, output } = await nft721_psp34_standard_contract.query[
     "psp34::totalSupply"
-  ](address, { value: azero_value, gasLimit });
+  ](caller_account, { value: azero_value, gasLimit });
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
@@ -171,12 +171,12 @@ async function mintWithAttributes(caller_account, attributes, dispatch) {
               address,
               { signer: injector.signer },
               ({ status, dispatchError, output }) => {
-                handleContractCall(
-                  status,
-                  dispatchError,
-                  dispatch,
-                  nft721_psp34_standard_contract
-                );
+                // handleContractCall(
+                //   status,
+                //   dispatchError,
+                //   dispatch,
+                //   nft721_psp34_standard_contract
+                // );
                 if (status) {
                   const statusText = Object.keys(status.toHuman())[0];
                   if (status.isFinalized) {
@@ -204,17 +204,21 @@ async function mintWithAttributes(caller_account, attributes, dispatch) {
 }
 
 async function getAttribute(caller_account, tokenId, attribute) {
+  console.log('getAttribute:getAttribute nft721_psp34_standard_contract', nft721_psp34_standard_contract);
+  console.log('getAttribute:getAttribute caller_account', caller_account);
+  console.log('getAttribute precheck', (!nft721_psp34_standard_contract || !caller_account));
   if (!nft721_psp34_standard_contract || !caller_account) {
    
     return null;
   }
-  const address = caller_account?.address;
+  
   const gasLimit = -1;
   const azero_value = 0;
-
+  console.log('getAttribute:getAttribute caller_account', caller_account);
   const { result, output } = await nft721_psp34_standard_contract.query[
     "psp34Metadata::getAttribute"
-  ](address, { value: azero_value, gasLimit }, tokenId, attribute);
+  ](caller_account, { value: azero_value, gasLimit }, tokenId, attribute);
+  console.log('getAttribute:getAttribute result', result);
   if (result.isOk) {
     return output.toHuman();
   }

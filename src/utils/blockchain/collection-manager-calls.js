@@ -329,6 +329,7 @@ async function getContractType(caller_account, collection_address) {
   }
   return null;
 }
+
 async function getCollectionOwner(caller_account, collection_address) {
   if (
     !collection_manager_contract ||
@@ -338,14 +339,14 @@ async function getCollectionOwner(caller_account, collection_address) {
    
     return null;
   }
-  const address = caller_account?.address;
+
   const gasLimit = -1;
   const azero_value = 0;
   //console.log(collection_manager_contract);
 
   const { result, output } = await collection_manager_contract.query[
     "crossArtZeroCollection::getCollectionOwner"
-  ](address, { value: azero_value, gasLimit }, collection_address);
+  ](caller_account, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
     return output.toHuman();
   }
@@ -361,14 +362,14 @@ async function getCollectionByAddress(caller_account, collection_address) {
    
     return null;
   }
-  const address = caller_account?.address;
+
   const gasLimit = -1;
   const azero_value = 0;
   //console.log(collection_manager_contract);
 
   const { result, output } =
     await collection_manager_contract.query.getCollectionByAddress(
-      address,
+      caller_account,
       { value: azero_value, gasLimit },
       collection_address
     );

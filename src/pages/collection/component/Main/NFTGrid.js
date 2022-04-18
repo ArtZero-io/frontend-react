@@ -16,6 +16,7 @@ import { numberToU8a, stringToHex } from "@polkadot/util";
 import { IPFS_BASE_URL } from "@constants/index";
 import marketplace_contract_calls from "../../../../utils/blockchain/marketplace_contract_calls";
 import { TypeRegistry, U64 } from "@polkadot/types";
+import { useSelector } from "react-redux";
 
 const NFTGrid = ({ bigCard }) => {
   const [NFTList, setNFTList] = useState([]);
@@ -24,11 +25,12 @@ const NFTGrid = ({ bigCard }) => {
   const param = useParams();
   const { api, currentAccount } = useSubstrateState();
   const [currentCollection, setCurrentCollection] = useState({});
-  // const [nft721Psp34StandardContract, setNft721Psp34StandardContract] = useState({});
+  const { activeAddress } = useSelector((s) => s.account);
+
   console.log("NFTList", NFTList);
   useEffect(async () => {
     await onRefresh();
-  }, [collection_manager_calls.isLoaded(), artzero_nft_calls.isLoaded()]);
+  }, [activeAddress, collection_manager_calls.isLoaded(), artzero_nft_calls.isLoaded()]);
 
   const onRefresh = async () => {
     await loadListNFT();
@@ -36,14 +38,19 @@ const NFTGrid = ({ bigCard }) => {
   };
 
   const loadListNFT = async () => {
+    console.log('NFTGrid:loadListNFT()_param.address', param.address);
     let NFTDataList = [];
     let currentCollection =
       await collection_manager_calls.getCollectionByAddress(
-        currentAccount,
+        activeAddress,
         param.address
       );
+
+    console.log('NFTGrid:loadListNFT()_activeAddress', activeAddress);
     setCurrentCollection(currentCollection);
+
     if (currentCollection?.showOnChainMetadata) {
+      
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
         nft721_psp34_standard.CONTRACT_ABI,
@@ -51,34 +58,40 @@ const NFTGrid = ({ bigCard }) => {
       );
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
       const totalSupply = await nft721_psp34_standard_calls.getTotalSupply(
-        currentAccount
+        activeAddress
       );
+      console.log('NFTGrid:loadListNFT()_totalSupply', totalSupply);
+      console.log(totalSupply);
       for (let i = 1; i <= totalSupply; i++) {
         const tokenId = nft721_psp34_standard_contract.api.createType(
           "ContractsPsp34Id",
-          { U8: numberToU8a(i) }
+          { U64: numberToU8a(i) }
+
         );
-        console.log(stringToHex("nft_name"));
+        console.log('NFTGrid:loadListNFT()_nft721_psp34_standard_contract', nft721_psp34_standard_contract);
+        console.log('NFTGrid:loadListNFT()_nft721_psp34_standard_calls', nft721_psp34_standard_calls);
         const tokenName = await nft721_psp34_standard_calls.getAttribute(
-          currentAccount,
+          activeAddress,
           tokenId,
           stringToHex("nft_name")
         );
+        console.log('NFTGrid:loadListNFT()_tokenName', tokenName);
         const tokenAvatar = await nft721_psp34_standard_calls.getAttribute(
-          currentAccount,
+          activeAddress,
           tokenId,
           stringToHex("avatar")
         );
+        console.log('NFTGrid:loadListNFT()_tokenAvatar', tokenAvatar);
         const tokenIdU64 = nft721_psp34_standard_contract.api.createType(
           "ContractsPsp34Id",
           { U64: new U64(new TypeRegistry(), i) }
         );
         const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(
-          currentAccount,
+          activeAddress,
           param.address,
           tokenIdU64
         );
-        if (nftSaleInfo?.isForSale) {
+        // if (nftSaleInfo?.isForSale) {
           const nft = {
             id: i,
             askPrice: nftSaleInfo?.price,
@@ -87,21 +100,10 @@ const NFTGrid = ({ bigCard }) => {
             img: `${IPFS_BASE_URL}/${tokenAvatar}`,
           };
           NFTDataList.push(nft);
-        }
-
-        // const attribute_count = await nft721_psp34_standard_calls.getAttributeCount(currentAccount);
-        // let attributes = [];
-        // for (let j = 1; j <= attribute_count; j++) {
-        //   const attribute_name = await nft721_psp34_standard_calls.getAttributeName(currentAccount, j);
-        //   console.log(attribute_name);
-        //   if (attribute_name && attribute_name != 'nft_name' && attribute_name != 'description' && attribute_name != 'avatar') {
-        //     attributes.push(attribute_name);
-        //   }
         // }
-        // const tokenId = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U8': numberToU8a(i)});
-        // const attributeVals = await nft721_psp34_standard_calls.getAttributes(currentAccount, tokenId, attributes);
-        // console.log(attributeVals);
+
       }
+
       setNFTList(NFTDataList);
     } else {
       if (
