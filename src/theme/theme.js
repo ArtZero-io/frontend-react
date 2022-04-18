@@ -17,6 +17,7 @@ const theme = extendTheme({
       blue: "#7AE7FF",
       grayLight: "#888888",
       grayDark: "#222222",
+      semiBlack: "#171717",
     },
   },
   sizes: {

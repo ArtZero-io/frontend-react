@@ -8,7 +8,7 @@ const NewCollectionPage = (props) => {
 
   return (
     <>
-      {!currentAccount?.address ? <div>Please connect wallet first!</div>: (props.match.params.type == 1) ? <SimpleERC721Form /> : <AdvancedERC721Form />}
+      {!currentAccount?.address ? <div>Please connect wallet first!</div>: (props.match.params.type === 1) ? <SimpleERC721Form /> : <AdvancedERC721Form />}
     </>
   );
 };

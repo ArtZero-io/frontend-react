@@ -1,4 +1,4 @@
-import { Button, HStack, Stack } from "@chakra-ui/react";
+import { Box, Button, Flex, HStack, Spacer, Stack } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -22,7 +22,7 @@ const SimpleModeForm = () => {
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
 
   useEffect(async () => {
-    if (addingFee == 0) {
+    if (addingFee === 0) {
       const adddingFee = await collection_manager_calls.getAddingFee(
         currentAccount
       );
@@ -67,6 +67,15 @@ const SimpleModeForm = () => {
             .max(150, "Must be 150 characters or less")
             .required("Required"),
           collectRoyalFee: Yup.boolean(),
+          website: Yup.string()
+            .url("This must be a valid URL")
+            .max(30, "Must be 30 characters or less"),
+          twitter: Yup.string()
+            .url("This must be a valid URL")
+            .max(30, "Must be 30 characters or less"),
+          discord: Yup.string()
+            .url("This must be a valid URL")
+            .max(30, "Must be 30 characters or less"),
         })}
         onSubmit={async (values, { setSubmitting }) => {
           (!headerIPFSUrl || !avatarIPFSUrl) &&
@@ -86,12 +95,18 @@ const SimpleModeForm = () => {
                   "description",
                   "avatar_image",
                   "header_image",
+                  "website",
+                  "twitter",
+                  "discord",
                 ],
                 attributeVals: [
                   values.collectionName,
                   values.collectionDescription,
                   values.avatarIPFSUrl,
                   values.headerIPFSUrl,
+                  values.website,
+                  values.twitter,
+                  values.discord,
                 ],
                 collectionAllowRoyalFee: values.collectionRoyalFee,
                 collectionRoyalFeeData: values.collectionRoyalFee
@@ -131,6 +146,26 @@ const SimpleModeForm = () => {
               />
             </HStack>
 
+            <HStack>
+              <SimpleModeInput
+                label="Website URL"
+                name="website"
+                type="text"
+                placeholder={"Website URL"}
+              />
+              <SimpleModeInput
+                label="Twitter URL"
+                name="twitter"
+                type="text"
+                placeholder={"Twitter URL"}
+              />
+              <SimpleModeInput
+                label="Discord URL"
+                name="discord"
+                type="text"
+                placeholder={"Discord URL"}
+              />
+            </HStack>
             <SimpleModeTextArea
               label="Collection Description"
               name="collectionDescription"
@@ -139,43 +174,44 @@ const SimpleModeForm = () => {
             />
 
             <Stack
-              direction={{ xl: "row", "2xl": "column" }}
+              direction="row"
               alignItems="start"
-              justifyContent="space-between"
+              justifyContent="space-around"
             >
               <CollectionImageUpload
+                id="avatar"
                 setImageIPFSUrl={setAvatarIPFSUrl}
                 title="Collection Avatar Image"
                 limitedSize={{ width: "64", height: "64" }}
               />
 
               <CollectionImageUpload
+                id="header"
                 setImageIPFSUrl={setHeaderIPFSUrl}
                 title="Collection Header Image"
                 limitedSize={{ width: "400", height: "260" }}
               />
+            </Stack>
 
-              <Stack 
-                direction={{ base: "column", "2xl": "row" }}
-                alignItems="center"
-                minH={20} minW={52}
-              >
+            <Flex alignItems="center" minH={20} mt={5}>
+              <Box w="15rem">
                 <SimpleModeSwitch
                   onChange={() => setIsSetRoyal(!isSetRoyal)}
                   label="Collect Royal Fee"
                   name="collectRoyalFee"
                 />
+              </Box>
 
-                <AddCollectionNumberInput
-                  isDisabled={!isSetRoyal}
-                  isDisplay={isSetRoyal}
-                  label="Royal Fee %"
-                  name="royalFee"
-                  type="number"
-                  placeholder="Royal Fee"
-                />
-              </Stack>
-            </Stack>
+              <AddCollectionNumberInput
+                isDisabled={!isSetRoyal}
+                isDisplay={isSetRoyal}
+                label="Royal Fee %"
+                name="royalFee"
+                type="number"
+                placeholder="Royal Fee"
+              />
+              <Spacer />
+            </Flex>
 
             <Button
               variant="solid"

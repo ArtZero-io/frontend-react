@@ -31,7 +31,7 @@ export default function NFTChangeSize(props) {
           objectFit="cover"
           src={img}
           minH={18}
-          fallbackSrc="https://via.placeholder.com/390x260"
+          fallbackSrc="https://via.placeholder.com/480"
         />
 
         <VStack

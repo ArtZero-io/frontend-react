@@ -1,4 +1,13 @@
-import { Avatar, Button, Flex, HStack, Text, VStack } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  Center,
+  Flex,
+  HStack,
+  Spacer,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { HiCloudUpload } from "react-icons/hi";
 
@@ -10,6 +19,7 @@ import toast from "react-hot-toast";
 const client = create(IPFS_CLIENT_URL);
 
 const ImageUploadCollection = ({
+  id,
   setImageIPFSUrl,
   title = "Upload Image",
   limitedSize = { width: "430", height: "430" },
@@ -19,7 +29,13 @@ const ImageUploadCollection = ({
   const [newAvatarData, setNewAvatarData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
 
+  console.log(id, " 121id", id);
+  console.log(id, " 121title", title);
+  console.log(id, " 121limitedSize", limitedSize);
+
   const retrieveNewAvatar = (e) => {
+    setImgURL(null);
+
     const data = e.target.files[0];
     const reader = new window.FileReader();
     reader.readAsArrayBuffer(data);
@@ -32,7 +48,7 @@ const ImageUploadCollection = ({
 
     if (e.target.value !== "") {
       const src = URL.createObjectURL(e.target.files[0]);
-      
+
       setImagePreviewUrl(src);
     }
   };
@@ -53,7 +69,6 @@ const ImageUploadCollection = ({
           uploadPromise().then((created) => {
             setImageIPFSUrl(created?.path);
             setImgURL(created?.path);
-            
           }),
           {
             loading: "Uploading...",
@@ -73,9 +88,9 @@ const ImageUploadCollection = ({
       <Text color="#fff" ml={0}>
         {title}
       </Text>
-      {!imagePreviewUrl && (
+      <Center w="full" justifyContent="center">
         <HStack py="1" justifyContent="center" minH={16}>
-          <label htmlFor="inputTag" style={{ cursor: "pointer" }}>
+          <label htmlFor={`${id}InputTag`} style={{ cursor: "pointer" }}>
             <Flex alignItems="center">
               <Button
                 as={Text}
@@ -84,14 +99,14 @@ const ImageUploadCollection = ({
                 fontFamily="Evogria"
                 fontSize="md"
               >
-                Select Image
+                {!imagePreviewUrl ? "Select Image" : "Pick another"}
               </Button>
-              <Text minW={28} ml={4} color="brand.grayLight">
+              <Text hidden minW={28} ml={4} color="brand.grayLight">
                 No file chosen
               </Text>
               <input
                 style={{ display: "none" }}
-                id="inputTag"
+                id={`${id}InputTag`}
                 onChange={retrieveNewAvatar}
                 type="file"
                 accept="image/png, image/jpg, image/gif, image/jpeg"
@@ -99,27 +114,28 @@ const ImageUploadCollection = ({
             </Flex>
           </label>
         </HStack>
-      )}
 
-      {imagePreviewUrl && (
-        <HStack justifyContent="center" minH={16}>
-          <Avatar minH={16} minW={16} ml={2} src={imagePreviewUrl} />
+        {imagePreviewUrl && (
+          <HStack justifyContent="center" minH={16}>
+            <Avatar minH={16} minW={16} ml={2} src={imagePreviewUrl} />
 
-          {imgURL ? (
-            <Text minW={28} color="brand.blue">
-              Ready for submit !
-            </Text>
-          ) : (
-            <Button
-              size="xs"
-              leftIcon={<HiCloudUpload />}
-              onClick={onUploadHandler}
-            >
-              Upload Image
-            </Button>
-          )}
-        </HStack>
-      )}
+            {imgURL ? (
+              <Text minW={28} color="brand.blue">
+                Ready for submit !
+              </Text>
+            ) : (
+              <Button
+                size="xs"
+                leftIcon={<HiCloudUpload />}
+                onClick={onUploadHandler}
+              >
+                Upload Image
+              </Button>
+            )}
+          </HStack>
+        )}
+        <Spacer />
+      </Center>
       <Text ml={2} fontSize="14px" color="brand.grayLight">
         Recommended file size is {limitedSize.width}x{limitedSize.height} px
       </Text>

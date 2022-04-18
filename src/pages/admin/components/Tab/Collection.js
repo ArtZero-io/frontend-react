@@ -187,13 +187,18 @@ function CollectionAdmin() {
     await delay(1000);
     await getAllCollections();
   };
+
+  const onDisableCollection = async (collection_contract) => {
+    return console.log("collection_contract");
+  };
+
   return (
     <Box
       mx="auto"
       px={{ base: "6", "2xl": "8" }}
       py={{ base: "8", "2xl": "4" }}
     >
-      <Box maxW="6xl-mid" fontSize="lg">
+      <Box maxW="6xl-mid" fontSize="lg" minH="50rem">
         <HStack pb={5} borderBottomWidth={1}>
           <Flex alignItems="start" pr={20}>
             <Text ml={1} color="brand.grayLight">
@@ -268,18 +273,27 @@ function CollectionAdmin() {
                     {collection.showOnChainMetadata ? "On-chain" : "Off-chain"}{" "}
                   </Td>
                   <Td>
-                    {/* {collection.isActive ? ( */}
-                    <Button
-                      isDisabled={collection.isActive}
-                      size="sm"
-                      color="black"
-                      onClick={() =>
-                        onEnableCollection(collection.nftContractAddress)
-                      }
-                    >
-                      Enable
-                    </Button>
-                    {/* ) : null} */}
+                    {!collection.isActive ? (
+                      <Button
+                        size="sm"
+                        color="black"
+                        onClick={() =>
+                          onEnableCollection(collection.nftContractAddress)
+                        }
+                      >
+                        Enable
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        color="black"
+                        onClick={() =>
+                          onDisableCollection(collection.nftContractAddress)
+                        }
+                      >
+                        Disable
+                      </Button>
+                    )}
                   </Td>
                 </Tr>
               ))

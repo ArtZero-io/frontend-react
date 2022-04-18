@@ -22,6 +22,7 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 import ImageAccountBanner from "@theme/assets/image-account-banner.png";
 import * as ROUTES from "@constants/routes";
 import { useHistory } from "react-router-dom";
+import FeeInfoModal from "./components/Modal/FeeInfo";
 
 function GeneralPage() {
   const { activeAddress } = useSelector((s) => s.account);
@@ -121,7 +122,7 @@ function GeneralPage() {
                     </Flex>
                     <Flex w="full" textAlign="left">
                       <Spacer />
-                      <Text color="brand.blue"> $ {item.text1}</Text>
+                      {/* <Text color="brand.blue"> $ {item.text1}</Text> */}
                     </Flex>
                   </Box>
                 </GridItem>
@@ -154,20 +155,28 @@ function GeneralPage() {
                 <span style={{ color: "#7AE7FF" }}>fees</span>
               </Box>
               <Spacer />
-              <Tag
+              <Box
                 variant="outline"
-                maxH={6}
+                h={32}
+                w={36}
                 pos="absolute"
                 top={10}
                 right={10}
               >
-                <TagLabel>Fees: 3%</TagLabel>
-              </Tag>
+                <Tag variant="outline" h={6} w={40} mt={3}>
+                  <TagLabel>Market Fees: 3.0%</TagLabel>
+                </Tag>
+                <Tag variant="outline" h={6} w={40} mt={3}>
+                  <TagLabel>Discount Fees: 2.1%</TagLabel>
+                </Tag>
+              </Box>
             </Flex>
 
             <Flex w="full">
               <Text mt={0} mb={8} fontSize="lg" color="#fff">
-                You currently have 0 badgers staked.
+                You currently have{" "}
+                <span style={{ color: "#7AE7FF" }}>0 NFTs </span>
+                staked.
               </Text>
               <Spacer />
             </Flex>
@@ -179,9 +188,8 @@ function GeneralPage() {
               >
                 Stake now
               </Button>
-              <Button variant="filled" bg="transparent" color="#fff">
-                more information
-              </Button>
+
+              <FeeInfoModal />
             </Flex>
           </VStack>
         </HStack>

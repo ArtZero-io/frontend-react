@@ -38,7 +38,7 @@ const NFTTabInfo = ({
     console.log(sale_price);
     console.log(nft_detail.id);
     console.log(collection_detail);
-    if (collection_detail.contractType == "2") {
+    if (collection_detail.contractType === "2") {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
         nft721_psp34_standard.CONTRACT_ABI,
@@ -52,7 +52,7 @@ const NFTTabInfo = ({
         );
       console.log(ownerAddress);
 
-      if (ownerAddress == currentAccount.address) {
+      if (ownerAddress === currentAccount.address) {
         const is_allownce = await nft721_psp34_standard_calls.allowance(
           currentAccount,
           marketplace.CONTRACT_ADDRESS,

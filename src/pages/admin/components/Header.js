@@ -3,76 +3,76 @@ import {
   Center,
   Heading,
   HStack,
-  Image,
-  Text,
   VStack,
-  useDisclosure,
-  IconButton,
+  // Image,
+  // Text,
+  // useDisclosure,
+  // IconButton,
 } from "@chakra-ui/react";
-import { FaInstagram, FaTwitter, FaTelegram, FaFacebook } from "react-icons/fa";
-import EditIcon from "@theme/assets/icon/Edit.js";
-import { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getProfile } from "@actions/account";
-import ProfileModal from "../../account/components/Modal/Profile";
-import { Link } from "@chakra-ui/react";
-import { useSubstrateState } from "@utils/substrate";
-import IdenticonAvatar from "@components/IdenticonAvatar/IdenticonAvatar";
-import { IPFS_BASE_URL } from "@constants/index";
+// import { FaInstagram, FaTwitter, FaTelegram, FaFacebook } from "react-icons/fa";
+// import EditIcon from "@theme/assets/icon/Edit.js";
+// import { useCallback, useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { getProfile } from "@actions/account";
+// import ProfileModal from "../../account/components/Modal/Profile";
+// import { Link } from "@chakra-ui/react";
+// import { useSubstrateState } from "@utils/substrate";
+// import IdenticonAvatar from "@components/IdenticonAvatar/IdenticonAvatar";
+// import { IPFS_BASE_URL } from "@constants/index";
 
 function AdminHeader() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { profileContract } = useSubstrateState();
+  // const { isOpen, onOpen, onClose } = useDisclosure();
+  // const { profileContract } = useSubstrateState();
 
-  const { activeAddress } = useSelector((s) => s.account);
-  const [, setLoading] = useState();
-  const [profile, setProfile] = useState(null);
-  const dispatch = useDispatch();
+  // const { activeAddress } = useSelector((s) => s.account);
+  // const [, setLoading] = useState();
+  // const [profile, setProfile] = useState(null);
+  // const dispatch = useDispatch();
 
-  const forceUpdate = useCallback(() => {
-    setProfile(null);
-  }, []);
+  // const forceUpdate = useCallback(() => {
+  //   setProfile(null);
+  // }, []);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      setLoading(true);
+  // useEffect(() => {
+  //   const fetchProfile = async () => {
+  //     setLoading(true);
 
-      const profile = await dispatch(getProfile());
-      if (profile.username) {
-        setProfile((prev) => {
-          return {
-            ...prev,
-            ...profile,
-            address: activeAddress,
-          };
-        });
-        setLoading(false);
-      }
-    };
-    (!profile?.address || profile?.address !== activeAddress) && fetchProfile();
-  }, [activeAddress, dispatch, profile]);
+  //     const profile = await dispatch(getProfile());
+  //     if (profile.username) {
+  //       setProfile((prev) => {
+  //         return {
+  //           ...prev,
+  //           ...profile,
+  //           address: activeAddress,
+  //         };
+  //       });
+  //       setLoading(false);
+  //     }
+  //   };
+  //   (!profile?.address || profile?.address !== activeAddress) && fetchProfile();
+  // }, [activeAddress, dispatch, profile]);
 
-  const [isProfileContractReady, setIsProfileContractReady] = useState(false);
+  // const [isProfileContractReady, setIsProfileContractReady] = useState(false);
 
-  useEffect(() => {
-    if (profileContract === "READY") setIsProfileContractReady(true);
-  }, [profileContract, isProfileContractReady]);
+  // useEffect(() => {
+  //   if (profileContract === "READY") setIsProfileContractReady(true);
+  // }, [profileContract, isProfileContractReady]);
 
   return (
     <>
-      <ProfileModal
+      {/* <ProfileModal
         profile={profile}
         isOpen={isOpen}
         onClose={onClose}
         forceUpdate={forceUpdate}
-      />
+      /> */}
       <Box
         mx="auto"
         px={{ base: "6", "2xl": "8" }}
         py={{ base: "8", "2xl": "14" }}
       >
         <VStack>
-          <Center
+          {/* <Center
             rounded="full"
             w={32}
             h={32}
@@ -91,14 +91,15 @@ function AdminHeader() {
               />
             )}
             {!profile?.avatar && <IdenticonAvatar size={120} />}
-          </Center>
+          </Center> */}
 
           <HStack w="full" justifyContent="space-around" py={4}>
             <VStack textAlign="center" justifyContent="space-between">
               <Center w="full" pos="relative">
-                <Heading size="h2">{profile?.username || "Unknown"}</Heading>
+                {/* <Heading size="h2">{profile?.username || "Unknown"}</Heading> */}
+                <Heading size="h2">Admin manager</Heading>
               </Center>
-              <IconButton
+              {/* <IconButton
                 pos="relative"
                 bottom={7}
                 right={-60}
@@ -166,7 +167,7 @@ function AdminHeader() {
                     variant="iconOutline"
                   />
                 </Link>
-              </HStack>
+              </HStack> */}
             </VStack>
           </HStack>
         </VStack>

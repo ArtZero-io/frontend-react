@@ -18,6 +18,8 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 export const CollectionCard = (props) => {
   const { avatar, name, desc, volume, backdrop, isActive = true, variant } = props;
+
+  
   return (
     <Box>
       <Flex
@@ -37,7 +39,7 @@ export const CollectionCard = (props) => {
           maxH={64}
           objectFit="cover"
           src={backdrop}
-          fallbackSrc="https://via.placeholder.com/390x260"
+          fallbackSrc="https://via.placeholder.com/480x480"
         />
         <Center
           rounded="full"

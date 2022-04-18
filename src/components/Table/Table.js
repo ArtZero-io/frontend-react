@@ -11,7 +11,7 @@ import {
 
 function DataTable() {
   return (
-    <TableContainer maxW="6xl-mid" fontSize="lg">
+    <TableContainer maxW="6xl-mid" fontSize="lg" minH={'30rem'}>
       <Table variant="striped" colorScheme="blackAlpha">
         <Thead>
           <Tr>

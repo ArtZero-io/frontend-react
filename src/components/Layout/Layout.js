@@ -6,9 +6,9 @@ import Loader from "../Loader/Loader";
 
 const Layout = ({ backdrop, children }) => {
   const { apiState } = useSubstrateState();
-  const sub = useSubstrateState()
+  // const sub = useSubstrateState()
 
-  console.log('hehe sub', sub)
+  // console.log('hehe sub', sub)
   return (
     <Container
       id="layout-container"

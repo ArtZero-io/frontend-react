@@ -30,7 +30,7 @@ const AddNewNFTModal = ({ collection, isOpen, onClose }) => {
   const [formLevelValues, setFormLevelValues] = useState([]);
 
   useEffect(async () => {
-    if (isLoadedContract == false) {
+    if (isLoadedContract === false) {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
         nft721_psp34_standard.CONTRACT_ABI,
@@ -77,7 +77,7 @@ const AddNewNFTModal = ({ collection, isOpen, onClose }) => {
     let tmpAttributes = [];
     if (attributes.length) {
       tmpAttributes = attributes.map((atribute) => {
-        if (atribute && atribute.name == name) {
+        if (atribute && atribute.name === name) {
           atribute.value = value;
           existAttribute = true;
         }
@@ -85,7 +85,7 @@ const AddNewNFTModal = ({ collection, isOpen, onClose }) => {
       });
     }
 
-    if (existAttribute == false) {
+    if (existAttribute === false) {
       tmpAttributes.push({
         name: name,
         value: value,

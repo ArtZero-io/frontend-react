@@ -24,7 +24,7 @@ const AdvancedModeForm = () => {
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
 
   useEffect(async () => {
-    if (addingFee == 0) {
+    if (addingFee === 0) {
       const adddingFee = await collection_manager_calls.getAddingFee(
         currentAccount
       );

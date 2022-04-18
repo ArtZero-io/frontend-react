@@ -102,6 +102,7 @@ export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
         )}
         {!imagePreviewUrl && !profile?.avatar && <IdenticonAvatar size={360}/>}
       </Box>
+
       <Center w="full" justifyContent="center">
         <VStack>
           <label htmlFor="inputTag" style={{ cursor: "pointer" }}>
@@ -118,7 +119,9 @@ export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
           </label>
         </VStack>
         <Spacer />
+        
         <HStack justifyContent="center">
+
           {imgURL ? (
             <Tag variant="active">
               <TagLeftIcon as={ActiveIcon} />

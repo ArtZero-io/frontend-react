@@ -347,7 +347,7 @@ const AdminPage = () => {
                         <Td>{truncateStr(collection.nftContractAddress, 5)}</Td>
                         <Td>{truncateStr(collection.collectionOwner, 5)}</Td>
                         <Td isNumeric>
-                          {collection.contractType == 2 ? "Auto" : "Manual"}{" "}
+                          {collection.contractType === 2 ? "Auto" : "Manual"}{" "}
                         </Td>
                         <Td>{collection.isActive ? "Active" : "Inactive"} </Td>
                         <Td>

@@ -32,7 +32,7 @@ const DetailCollectionPage = (props) => {
     return (
         <>
             {(collection) ? (
-                <div>{(collection.contractType == '2' && collection.showOnChainMetadata) ? <NewNFTForm nftAddress={props.match.params.address} /> : ''}</div>
+                <div>{(collection.contractType === '2' && collection.showOnChainMetadata) ? <NewNFTForm nftAddress={props.match.params.address} /> : ''}</div>
             ) : ""}
         </>
     );

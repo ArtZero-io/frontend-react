@@ -112,7 +112,7 @@ const MyNFTsPage = () => {
       }
     } else {
       // if (
-      //   collection.nftContractAddress == artzero_nft.CONTRACT_ADDRESS
+      //   collection.nftContractAddress === artzero_nft.CONTRACT_ADDRESS
       // ) {
       //   if (!artzero_nft_calls.isLoaded()) {
       //     const artzero_nft_contract = new ContractPromise(

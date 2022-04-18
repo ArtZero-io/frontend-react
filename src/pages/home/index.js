@@ -1,27 +1,31 @@
-import { DownloadIcon } from "@chakra-ui/icons";
 import {
-  Button,
-  Flex,
+  Center,
   Heading,
-  IconButton,
-  Stack,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  TagRightIcon,
-  Text,
+  // Button,
+  // Flex,
+  // IconButton,
+  // Stack,
+  // Tag,
+  // TagLabel,
+  // TagLeftIcon,
+  // TagRightIcon,
+  // Text,
 } from "@chakra-ui/react";
 import React from "react";
 import Layout from "../../components/Layout/Layout";
-import AzeroIcon from "@theme/assets/icon/Azero.js";
-import ActiveIcon from "@theme/assets/icon/Active.js";
-import InActiveIcon from "@theme/assets/icon/InActive.js";
+// import { DownloadIcon } from "@chakra-ui/icons";
+// import AzeroIcon from "@theme/assets/icon/Azero.js";
+// import ActiveIcon from "@theme/assets/icon/Active.js";
+// import InActiveIcon from "@theme/assets/icon/InActive.js";
 
 function HomePage() {
   return (
     <Layout>
-      <div>This is a HomePage</div>
-      <Flex w="full" justify="start" p={4}>
+      <Center h="80vh" w="full">
+        <Heading size="h1">Welcome to Artzero Demo</Heading>
+      </Center>
+
+      {/* <Flex w="full" justify="start" p={4}>
         <Stack p={10} bg="#464646">
           <Tag>
             <TagLeftIcon as={AzeroIcon} />
@@ -112,7 +116,7 @@ function HomePage() {
           <Heading size="h5">heading 5 24/30</Heading>
           <Heading size="h6">heading 6 18/22.5</Heading>
         </Stack>
-      </Flex>
+      </Flex> */}
     </Layout>
   );
 }

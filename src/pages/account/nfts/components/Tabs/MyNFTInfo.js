@@ -33,7 +33,7 @@ function NFTTabInfo({
 }) {
   const { name, description, isListed, isBid, atts, img, price } = selectedNFT;
   const { api, currentAccount } = useSubstrateState();
-  const [sale_price, setSalePrice] = useState(0);
+  const [sale_price] = useState(0);
 
   const listToken = async () => {
     if (collection_detail?.contractType === "2") {
@@ -49,7 +49,7 @@ function NFTTabInfo({
           nft_detail.id
         );
 
-      if (ownerAddress == currentAccount.address) {
+      if (ownerAddress === currentAccount.address) {
         const is_allownce = await nft721_psp34_standard_calls.allowance(
           currentAccount,
           marketplace.CONTRACT_ADDRESS,
@@ -190,7 +190,7 @@ function NFTTabInfo({
               </InputRightElement>
             </InputGroup>
 
-            <InputGroup
+            {/* <InputGroup
               maxW={64}
               mx="auto"
               mr={2}
@@ -217,8 +217,8 @@ function NFTTabInfo({
                 }}
                 onChange={({ target }) => setSalePrice(target.value)}
               />
-            </InputGroup>
-
+            </InputGroup> */}
+            <Spacer />
             <Button ml={2} variant="solid" onClick={listToken}>
               Push for sale
             </Button>

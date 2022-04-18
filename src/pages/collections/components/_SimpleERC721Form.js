@@ -44,7 +44,7 @@ const SimpleERC721Form = () => {
     const [errorHeaderImageData, setErrorHeaderImageData] = useState('');
 
     useEffect(async () => {
-        if (addingFee == 0) {
+        if (addingFee === 0) {
             const adddingFee = await collection_manager_calls.getAddingFee(currentAccount);
             setAddingFee(adddingFee / (10**12));
         }
@@ -123,7 +123,7 @@ const SimpleERC721Form = () => {
         } else {
             setErrorHeaderImageData('');
         }
-        if (collectionAllowRoyalFee == '1') {
+        if (collectionAllowRoyalFee === '1') {
             if (collectionRoyalFee <= 0) {
                 res = false;
                 setErrorCollectionRoyalFee('The royal fee must be greater than 0');

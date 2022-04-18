@@ -1,8 +1,5 @@
-/* eslint-disable */
-
 import React, { useState, useEffect } from "react";
 import {
-  Avatar,
   Box,
   Button,
   Flex,
@@ -12,13 +9,17 @@ import {
   HStack,
   Spacer,
   Text,
-  Square,
   VStack,
   Link,
   Image,
   Tag,
   TagLabel,
   TagRightIcon,
+  // Skeleton,
+  InputGroup,
+  InputRightElement,
+  IconButton,
+  Input,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { useParams } from "react-router-dom";
@@ -34,11 +35,15 @@ import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard
 import { numberToU8a, stringToHex } from "@polkadot/util";
 import { IPFS_BASE_URL } from "@constants/index";
 import marketplace_contract_calls from "../../../../utils/blockchain/marketplace_contract_calls";
-import { TypeRegistry, U64 } from '@polkadot/types';
+import { TypeRegistry, U64 } from "@polkadot/types";
 import toast from "react-hot-toast";
+import { FaTelegram } from "react-icons/fa";
 
 const NFTTabCollectible = ({ address }) => {
   const [NFT, setNFT] = useState({});
+  const [doOffer, setDoOffer] = useState(false);
+  // const [onLoad, setOnLoad] = useState(false);
+  const [bidPrice, setBidPrice] = useState(null);
   const param = useParams();
   const { api, currentAccount } = useSubstrateState();
 
@@ -57,13 +62,17 @@ const NFTTabCollectible = ({ address }) => {
     );
     console.log(balance.free.toNumber());
     if (balance.free.toNumber() > NFT.askPrice) {
-      await marketplace_contract_calls.buy(currentAccount, param.address, NFT.address, NFT.askPrice);
+      await marketplace_contract_calls.buy(
+        currentAccount,
+        param.address,
+        NFT.address,
+        NFT.askPrice
+      );
     } else {
       toast.error(`Your balance not enough!`);
     }
-    
-  }
- 
+  };
+
   const loadNFT = async () => {
     let currentCollection =
       await collection_manager_calls.getCollectionByAddress(
@@ -71,7 +80,6 @@ const NFTTabCollectible = ({ address }) => {
         param.address
       );
 
-      
     if (currentCollection?.showOnChainMetadata) {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
@@ -113,8 +121,15 @@ const NFTTabCollectible = ({ address }) => {
           }
         }
       }
-      const tokenIdU64 = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), address)});
-      const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(currentAccount, param.address, tokenIdU64);
+      const tokenIdU64 = nft721_psp34_standard_contract.api.createType(
+        "ContractsPsp34Id",
+        { U64: new U64(new TypeRegistry(), address) }
+      );
+      const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(
+        currentAccount,
+        param.address,
+        tokenIdU64
+      );
       const nft = {
         id: address,
         askPrice: nftSaleInfo.price,
@@ -130,7 +145,7 @@ const NFTTabCollectible = ({ address }) => {
       // console.log(attributeVals);
     } else {
       if (
-        currentCollection.nftContractAddress == artzero_nft.CONTRACT_ADDRESS
+        currentCollection.nftContractAddress === artzero_nft.CONTRACT_ADDRESS
       ) {
         if (!artzero_nft_calls.isLoaded()) {
           const artzero_nft_contract = new ContractPromise(
@@ -173,6 +188,12 @@ const NFTTabCollectible = ({ address }) => {
     console.log(NFT);
   };
 
+  const placeOffer = async () => {
+    console.log("placeOffer", bidPrice, "AZERO");
+    //TODO Handle validate price
+    setDoOffer(false);
+  };
+
   return (
     <HStack>
       <Image
@@ -181,13 +202,21 @@ const NFTTabCollectible = ({ address }) => {
         alt="nft-img"
         objectFit="cover"
         src={NFT.img}
+        loaf
         fallbackSrc="https://via.placeholder.com/480"
+        // onLoad={() => {
+        //   setOnLoad(true);
+        // }}
+        // onError={() => {
+        //   setOnLoad(false);
+        // }}
       />
 
-      <VStack minH="30rem" justify='start' maxH="30rem" w="full" pl={10} py={0}>
+      {/* <Skeleton boxSize="30rem" isLoaded={onLoad} /> */}
+      <VStack minH="30rem" justify="start" maxH="30rem" w="full" pl={10} py={0}>
         <Box w="full">
           <Flex>
-            <Heading size="h4">{NFT.name}</Heading>
+            <Heading size="h4">{NFT.name || "unknown name"}</Heading>
 
             <Spacer />
             {/* <Button variant="icon">
@@ -203,7 +232,7 @@ const NFTTabCollectible = ({ address }) => {
           </Flex>
 
           <Heading size="h6" py={3} color="brand.grayLight">
-            {NFT.name}
+            {NFT.name || "unknown description"}
           </Heading>
 
           <Text color="#fff">
@@ -249,9 +278,55 @@ const NFTTabCollectible = ({ address }) => {
             py={1}
             borderWidth={2}
           >
-            <Button h={10} maxW={32} variant="solid">
-              Make offer
-            </Button>
+            {!doOffer && (
+              <Button
+                h={10}
+                maxW={32}
+                variant="solid"
+                onClick={() => setDoOffer(true)}
+              >
+                Make offer
+              </Button>
+            )}
+
+            {doOffer && (
+              <InputGroup
+                w={32}
+                bg="black"
+                h={10}
+                py={1}
+                color="black"
+                borderRadius="0"
+              >
+                <InputRightElement bg="transparent" h={10} w="48px">
+                  <IconButton
+                    aria-label="telegram"
+                    icon={<FaTelegram size="1.5rem" />}
+                    size="icon"
+                    variant="outline"
+                    borderWidth={0}
+                    h={10}
+                    onClick={placeOffer}
+                  />
+                </InputRightElement>
+                <Input
+                  bg="black"
+                  color="white"
+                  variant="unstyled"
+                  my={1}
+                  pl={1.5}
+                  placeholder="0"
+                  _placeholder={{
+                    color: "brand.grayLight",
+                    fontSize: "lg",
+                  }}
+                  onChange={({ target }) => {
+                    setBidPrice(target.value);
+                  }}
+                  value={bidPrice}
+                />
+              </InputGroup>
+            )}
 
             <Spacer />
 

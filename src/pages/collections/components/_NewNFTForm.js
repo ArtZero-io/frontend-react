@@ -18,7 +18,7 @@ const NewNFTForm = (props) => {
     const [nft721Psp34StandardContract, setNft721Psp34StandardContract] = useState({});
 
     useEffect(async () => {
-        if (isLoadedContract == false) {
+        if (isLoadedContract === false) {
             const nft721_psp34_standard_contract = new ContractPromise(
                 api,
                 nft721_psp34_standard.CONTRACT_ABI,
@@ -36,7 +36,7 @@ const NewNFTForm = (props) => {
         let tmpAttributes = [];
         if (attributes.length) {
             tmpAttributes = attributes.map((atribute) => {
-                if (atribute && atribute.name == name) {
+                if (atribute && atribute.name === name) {
                     atribute.value = value;
                     existAttribute = true;
                 }
@@ -45,7 +45,7 @@ const NewNFTForm = (props) => {
         }
         console.log(nft721Psp34StandardContract);
         console.log(currentAccount);
-        if (existAttribute == false) {
+        if (existAttribute === false) {
             tmpAttributes.push({
                 name: name,
                 value: value
