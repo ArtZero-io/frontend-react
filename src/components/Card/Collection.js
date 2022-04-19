@@ -15,11 +15,17 @@ import {
 import ActiveIcon from "@theme/assets/icon/Active.js";
 import InActiveIcon from "@theme/assets/icon/InActive.js";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
+import { IPFS_BASE_URL } from "@constants/index";
 
-export const CollectionCard = (props) => {
-  const { avatar, name, desc, volume, backdrop, isActive = true, variant } = props;
-
-  
+export const CollectionCard = ({
+  headerImage,
+  avatarImage,
+  name,
+  description,
+  volume,
+  isActive,
+  variant,
+}) => {
   return (
     <Box>
       <Flex
@@ -33,13 +39,13 @@ export const CollectionCard = (props) => {
         minW={{ base: "auto", "2xl": "24.5rem" }}
       >
         <Image
-          alt={backdrop}
+          alt={`header-img-${name}`}
           h={64}
           w="full"
           maxH={64}
           objectFit="cover"
-          src={backdrop}
-          fallbackSrc="https://via.placeholder.com/480x480"
+          src={`${IPFS_BASE_URL}/${headerImage}`}
+          fallbackSrc="https://via.placeholder.com/1280x768"
         />
         <Center
           rounded="full"
@@ -51,13 +57,13 @@ export const CollectionCard = (props) => {
           borderColor="white "
         >
           <Image
-            alt={avatar}
+            alt={`avatar-img-${name}`}
             w="full"
             h="full"
             rounded="full"
             objectFit="cover"
-            src={avatar}
-            fallbackSrc="https://via.placeholder.com/64"
+            src={`${IPFS_BASE_URL}/${avatarImage}`}
+            fallbackSrc="https://via.placeholder.com/84"
           />
         </Center>
         <VStack
@@ -68,10 +74,10 @@ export const CollectionCard = (props) => {
           px={4}
         >
           <Box mt="4">
-           <Heading size="h6"> {name}</Heading>
+            <Heading size="h6">{name}</Heading>
           </Box>
-          <Text noOfLines={[1,3]} maxW={{ base: "unset", md: "20rem" }}>
-            {desc}
+          <Text noOfLines={[1, 3]} maxW={{ base: "unset", md: "20rem" }}>
+            {description}
           </Text>
 
           <Flex

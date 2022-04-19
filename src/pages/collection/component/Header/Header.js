@@ -13,24 +13,33 @@ import {
 import AzeroIcon from "@theme/assets/icon/Azero.png";
 import SocialCard from "@components/Card/Social";
 
+import { IPFS_BASE_URL } from "@constants/index";
+
 const overlay =
   "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.9) 45%, rgba(0,0,0,0.0) 70%, rgba(0,0,0,0) 100%)";
 
-function CollectionHeader({ avatar, name, description, profile }) {
+function CollectionHeader({
+  avatarImage,
+  name,
+  description,
+  profile,
+  volume,
+  floorPrice, nftTotalCount
+}) {
   return (
     <Box
       // maxH={96}
       as="section"
+      position="relative"
       maxW="container.3xl"
       px={5}
-      position="relative"
       bg={overlay}
     >
       <Box
         mx="auto"
-        px={{ base: "6", md: "8" }}
-        pt={{ base: "12", md: "6" }}
-        pb={{ base: "12", md: "20" }}
+        px={{ base: "6", "2xl": "8" }}
+        pt={{ base: "12", "2xl": "6" }}
+        pb={{ base: "12", "2xl": "20" }}
       >
         <VStack>
           <Center
@@ -43,12 +52,12 @@ function CollectionHeader({ avatar, name, description, profile }) {
             borderColor="whiteAlpha.900"
           >
             <Image
-              alt={avatar}
+              alt={name}
               w="full"
               h="full"
               rounded="full"
               objectFit="cover"
-              src={avatar}
+              src={`${IPFS_BASE_URL}/${avatarImage}`}
               fallbackSrc="https://via.placeholder.com/64"
             />
           </Center>
@@ -81,14 +90,14 @@ function CollectionHeader({ avatar, name, description, profile }) {
           >
             <VStack textAlign="center">
               <Text fontFamily="DS-Digital" fontSize="6xl" lineHeight="none">
-                100
+                {nftTotalCount}
               </Text>
               <Text>Items</Text>
             </VStack>
 
             <VStack textAlign="center">
               <Text fontFamily="DS-Digital" fontSize="6xl" lineHeight="none">
-                234
+                999
               </Text>
               <Text>Listed</Text>
             </VStack>
@@ -96,7 +105,7 @@ function CollectionHeader({ avatar, name, description, profile }) {
             <VStack textAlign="center">
               <Flex alignItems="center" justifyContent="center">
                 <Text fontFamily="DS-Digital" fontSize="6xl" lineHeight="none">
-                  18.11
+                  {floorPrice}
                 </Text>
                 <Avatar
                   src={AzeroIcon}
@@ -113,7 +122,7 @@ function CollectionHeader({ avatar, name, description, profile }) {
             <VStack textAlign="center">
               <Flex alignItems="center" justifyContent="center">
                 <Text fontFamily="DS-Digital" fontSize="6xl" lineHeight="none">
-                  1.11 M
+                  {volume} M
                 </Text>
                 <Avatar
                   src={AzeroIcon}

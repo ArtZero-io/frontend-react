@@ -3,6 +3,17 @@ import TabActivity from "./TabActivity";
 import TabCollectionItems from "./TabItems";
 
 function CollectionMain() {
+  const tabData = [
+    {
+      label: "Items",
+      content: <TabCollectionItems />,
+    },
+    {
+      label: "Activity",
+      content: <TabActivity />,
+    },
+  ];
+
   return (
     <>
       <Tabs isLazy align="center">
@@ -25,14 +36,3 @@ function CollectionMain() {
 }
 
 export default CollectionMain;
-
-const tabData = [
-  {
-    label: "items",
-    content: <TabCollectionItems />,
-  },
-  {
-    label: "activity",
-    content: <TabActivity />,
-  },
-];

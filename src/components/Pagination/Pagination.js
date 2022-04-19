@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { Text, Stack, Square, Input, IconButton } from "@chakra-ui/react";
 import {
   Pagination,
@@ -12,7 +13,6 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@chakra-ui/icons";
-import toast from "react-hot-toast";
 
 const PaginationMP = ({
   isDisabled,
@@ -51,16 +51,30 @@ const PaginationMP = ({
           p={0}
           w="full"
         >
-          <IconButton mr={2}
+          <IconButton
+            color="#888"
+            mr={2}
             size="icon"
             icon={<ArrowLeftIcon />}
             variant="iconSolid"
             aria-label="go-start"
-            disabled={currentPage === 1}
             onClick={() => setCurrentPage(1)}
+            disabled={currentPage === 1}
+            _disabled={{
+              bg: "#222",
+              color: "#333",
+              cursor: "not-allowed",
+              _hover: {
+                bg: "#7ae7ff",
+              },
+            }}
           />
+
           <PaginationPrevious
-            p={0}  mr={2}
+            p={0}
+            mr={2}
+            color="#888"
+            bg="#222"
             _hover={{
               bg: "brand.blue",
             }}
@@ -72,12 +86,16 @@ const PaginationMP = ({
                 }}
                 width="1.5rem"
                 height="1.5rem"
-                color="white"
+                color="#888"
               />
             </Square>
           </PaginationPrevious>
+
           <PaginationNext
-            p={0}  mr={2}
+            p={0}
+            mr={2}
+            color="#888"
+            bg="#222"
             _hover={{
               bg: "brand.blue",
               color: "black",
@@ -90,17 +108,28 @@ const PaginationMP = ({
                 }}
                 width="1.5rem"
                 height="1.5rem"
-                color="white"
+                color="#888"
               />
             </Square>
           </PaginationNext>
-          <IconButton  mr={2}
+
+          <IconButton
+            color="#888"
+            mr={2}
             size="icon"
             icon={<ArrowRightIcon />}
             variant="iconSolid"
             aria-label="go-end"
             onClick={() => setCurrentPage(pagesCount)}
             disabled={currentPage >= pagesCount}
+            _disabled={{
+              bg: "#222",
+              color: "#333",
+              cursor: "not-allowed",
+              _hover: {
+                bg: "#7ae7ff",
+              },
+            }}
           />
           <Input placeholder="Go to page" onKeyPress={onEnterHandler} />
         </PaginationContainer>

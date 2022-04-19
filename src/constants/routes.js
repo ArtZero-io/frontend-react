@@ -10,7 +10,7 @@ export const ACCOUNT_ADMIN = "/admin";
 
 // COLLECTION
 
-export const DETAIL_COLLECTION = "/collection/:address";
+export const DETAIL_COLLECTION = "/collection/:collection_address";
 export const DETAIL_COLLECTION_BASE = "/collection";
 
 // MINTING EVENT

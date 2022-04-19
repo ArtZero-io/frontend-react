@@ -34,12 +34,21 @@ import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import { numberToU8a, stringToHex } from "@polkadot/util";
 import { IPFS_BASE_URL } from "@constants/index";
-import marketplace_contract_calls from "../../../../utils/blockchain/marketplace_contract_calls";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { TypeRegistry, U64 } from "@polkadot/types";
 import toast from "react-hot-toast";
 import { FaTelegram } from "react-icons/fa";
 
-const NFTTabCollectible = ({ address }) => {
+const NFTTabCollectible = ({
+  address,
+  nftContractAddress,
+  nft_name,
+  owner,
+  attributes,
+  attributesValue,
+  is_for_sale,
+  price,
+}) => {
   const [NFT, setNFT] = useState({});
   const [doOffer, setDoOffer] = useState(false);
   // const [onLoad, setOnLoad] = useState(false);
@@ -193,16 +202,21 @@ const NFTTabCollectible = ({ address }) => {
     //TODO Handle validate price
     setDoOffer(false);
   };
+  console.log("nftContractAddress", nftContractAddress);
+
+  function getDataFromAttrs(attrName) {
+    const attrIdx = attributes.indexOf(attrName);
+    return attributesValue[attrIdx];
+  }
 
   return (
     <HStack>
       <Image
+        alt={nft_name}
         boxShadow="lg"
         boxSize="30rem"
-        alt="nft-img"
         objectFit="cover"
-        src={NFT.img}
-        loaf
+        src={`${IPFS_BASE_URL}/${getDataFromAttrs("avatar")}`}
         fallbackSrc="https://via.placeholder.com/480"
         // onLoad={() => {
         //   setOnLoad(true);
@@ -216,7 +230,9 @@ const NFTTabCollectible = ({ address }) => {
       <VStack minH="30rem" justify="start" maxH="30rem" w="full" pl={10} py={0}>
         <Box w="full">
           <Flex>
-            <Heading size="h4">{NFT.name || "unknown name"}</Heading>
+            <Heading size="h4">
+              {getDataFromAttrs("nft_name") || "unknown name"}
+            </Heading>
 
             <Spacer />
             {/* <Button variant="icon">
@@ -232,115 +248,120 @@ const NFTTabCollectible = ({ address }) => {
           </Flex>
 
           <Heading size="h6" py={3} color="brand.grayLight">
-            {NFT.name || "unknown description"}
+            {getDataFromAttrs("description") || "unknown description"}
           </Heading>
 
           <Text color="#fff">
-            Owned by{" "}
-            <Link color="#7AE7FF">
-              8jJPfNyVoKTb4E589WHErgUcJncyKcJ9SQasMw6j5Zkz
-            </Link>
+            Owned by <Link color="#7AE7FF">{owner}</Link>
           </Text>
         </Box>
 
         <HStack w="full" py={2}>
-          <Flex
-            w="full"
-            alignItems="center"
-            borderColor="#343333"
-            px={4}
-            py={1}
-            borderWidth={2}
-          >
-            <Button h={10} maxW={32} variant="solid" onClick={buyToken}>
-              Buy now
-            </Button>
-
-            <Spacer />
-
-            <Flex w="full">
-              <Spacer />
-              <Text textAlign="right" color="brand.grayLight">
-                <Text>Current price</Text>
-                <Tag h={4} pr={0} bg="transparent">
-                  <TagLabel bg="transparent">{NFT.askPrice}</TagLabel>
-                  <TagRightIcon as={AzeroIcon} />
-                </Tag>
-              </Text>
-            </Flex>
-          </Flex>
-
-          <Flex
-            w="full"
-            alignItems="center"
-            borderColor="#343333"
-            px={4}
-            py={1}
-            borderWidth={2}
-          >
-            {!doOffer && (
-              <Button
-                h={10}
-                maxW={32}
-                variant="solid"
-                onClick={() => setDoOffer(true)}
-              >
-                Make offer
-              </Button>
-            )}
-
-            {doOffer && (
-              <InputGroup
-                w={32}
-                bg="black"
-                h={10}
+          {is_for_sale ? (
+            <>
+              <Flex
+                w="full"
+                alignItems="center"
+                borderColor="#343333"
+                px={4}
                 py={1}
-                color="black"
-                borderRadius="0"
+                borderWidth={2}
               >
-                <InputRightElement bg="transparent" h={10} w="48px">
-                  <IconButton
-                    aria-label="telegram"
-                    icon={<FaTelegram size="1.5rem" />}
-                    size="icon"
-                    variant="outline"
-                    borderWidth={0}
+                <Button h={10} maxW={32} variant="solid" onClick={buyToken}>
+                  Buy now
+                </Button>
+
+                <Spacer />
+
+                <Flex w="full">
+                  <Spacer />
+                  <Text textAlign="right" color="brand.grayLight">
+                    <Text>Current price</Text>
+                    <Tag h={4} pr={0} bg="transparent">
+                      <TagLabel bg="transparent">{price}</TagLabel>
+                      <TagRightIcon as={AzeroIcon} />
+                    </Tag>
+                  </Text>
+                </Flex>
+              </Flex>
+
+              <Flex
+                w="full"
+                alignItems="center"
+                borderColor="#343333"
+                px={4}
+                py={1}
+                borderWidth={2}
+              >
+                {!doOffer && (
+                  <Button
                     h={10}
-                    onClick={placeOffer}
-                  />
-                </InputRightElement>
-                <Input
-                  bg="black"
-                  color="white"
-                  variant="unstyled"
-                  my={1}
-                  pl={1.5}
-                  placeholder="0"
-                  _placeholder={{
-                    color: "brand.grayLight",
-                    fontSize: "lg",
-                  }}
-                  onChange={({ target }) => {
-                    setBidPrice(target.value);
-                  }}
-                  value={bidPrice}
-                />
-              </InputGroup>
-            )}
+                    maxW={32}
+                    variant="solid"
+                    onClick={() => setDoOffer(true)}
+                  >
+                    Make offer
+                  </Button>
+                )}
 
-            <Spacer />
+                {doOffer && (
+                  <InputGroup
+                    w={32}
+                    bg="black"
+                    h={10}
+                    py={1}
+                    color="black"
+                    borderRadius="0"
+                  >
+                    <InputRightElement bg="transparent" h={10} w="48px">
+                      <IconButton
+                        aria-label="telegram"
+                        icon={<FaTelegram size="1.5rem" />}
+                        size="icon"
+                        variant="outline"
+                        borderWidth={0}
+                        h={10}
+                        onClick={placeOffer}
+                      />
+                    </InputRightElement>
+                    <Input
+                      bg="black"
+                      color="white"
+                      variant="unstyled"
+                      my={1}
+                      pl={1.5}
+                      placeholder="0"
+                      _placeholder={{
+                        color: "brand.grayLight",
+                        fontSize: "lg",
+                      }}
+                      onChange={({ target }) => {
+                        setBidPrice(target.value);
+                      }}
+                      value={bidPrice}
+                    />
+                  </InputGroup>
+                )}
 
-            <Flex w="full">
-              <Spacer />
-              <Text textAlign="right" color="brand.grayLight">
-                <Text>Current offer</Text>
-                <Tag pr={0} bg="transparent">
-                  <TagLabel bg="transparent">82.00</TagLabel>
-                  <TagRightIcon as={AzeroIcon} />
-                </Tag>
-              </Text>
-            </Flex>
-          </Flex>
+                <Spacer />
+
+                <Flex w="full">
+                  <Spacer />
+                  <Text textAlign="right" color="brand.grayLight">
+                    <Text>Current offer</Text>
+                    <Tag pr={0} bg="transparent">
+                      <TagLabel bg="transparent">82.00</TagLabel>
+                      <TagRightIcon as={AzeroIcon} />
+                    </Tag>
+                  </Text>
+                </Flex>
+              </Flex>
+            </>
+          ) : (
+            <>
+              <Heading size="h6">Not for sale</Heading>
+            </>
+          )}
         </HStack>
 
         <Grid

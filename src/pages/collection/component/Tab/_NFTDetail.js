@@ -1,7 +1,7 @@
 import React from "react";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-import NFTTabCollectible from "../Tab/Collectible";
-import NFTTabActivity from "../Tab/Activity";
+import NFTTabCollectible from "./Collectible";
+import NFTTabActivity from "./Activity";
 
 function NFTDetailTab({ address }) {
   const tabData = [

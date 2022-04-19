@@ -6,7 +6,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AccountActionTypes } from "../../../../store/types/account.types";
+import { AccountActionTypes } from "@store/types/account.types";
 import ProfileForm from "../Form/Profile";
 
 export default function ProfileModal({

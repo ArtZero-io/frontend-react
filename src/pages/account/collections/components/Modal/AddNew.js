@@ -17,7 +17,7 @@ import SimpleMode from "./SimpleMode";
 import AddCollectionIcon from "@theme/assets/icon/AddCollection";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { AccountActionTypes } from "../../../../../store/types/account.types";
+import { AccountActionTypes } from "@store/types/account.types";
 
 function AddNewCollection({ forceUpdate }) {
   const {
