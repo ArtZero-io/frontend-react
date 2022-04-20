@@ -2,7 +2,7 @@ import React, { useReducer, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import jsonrpc from "@polkadot/types/interfaces/jsonrpc";
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import { ContractPromise } from "@polkadot/api-contract";
+// import { ContractPromise } from "@polkadot/api-contract";
 import { web3Accounts, web3Enable } from "../wallets/extension-dapp";
 import { keyring as Keyring } from "@polkadot/ui-keyring";
 import { isTestChain } from "@polkadot/util";
@@ -10,19 +10,19 @@ import { TypeRegistry } from "@polkadot/types/create";
 
 import config from "./config";
 import blockchainModule from "../blockchain/profile_calls";
-import profile from "../blockchain/profile";
+// import profile from "../blockchain/profile";
 
-import artzero_nft from "../blockchain/artzero-nft";
-import artzero_nft_calls from "../blockchain/artzero-nft-calls";
+// import artzero_nft from "../blockchain/artzero-nft";
+// import artzero_nft_calls from "../blockchain/artzero-nft-calls";
 
-import marketplace from "../blockchain/marketplace";
-import marketplace_contract_calls from "../blockchain/marketplace_contract_calls";
+// import marketplace from "../blockchain/marketplace";
+// import marketplace_contract_calls from "../blockchain/marketplace_contract_calls";
 
-import staking from "../blockchain/staking";
-import staking_calls from "../blockchain/staking_calls";
+// import staking from "../blockchain/staking";
+// import staking_calls from "../blockchain/staking_calls";
 
-import collection_manager from "../blockchain/collection-manager";
-import collection_manager_calls from "../blockchain/collection-manager-calls";
+// import collection_manager from "../blockchain/collection-manager";
+// import collection_manager_calls from "../blockchain/collection-manager-calls";
 
 const parsedQuery = new URLSearchParams(window.location.search);
 const connectedSocket = parsedQuery.get("rpc") || config.PROVIDER_SOCKET;
@@ -180,48 +180,46 @@ export const loadAccounts = async (state, dispatch, wallet) => {
 
   await asyncLoadAccounts();
 
-  const profileContract = new ContractPromise(
-    api,
-    profile.CONTRACT_ABI,
-    profile.CONTRACT_ADDRESS
-  );
+  // const profileContract = new ContractPromise(
+  //   api,
+  //   profile.CONTRACT_ABI,
+  //   profile.CONTRACT_ADDRESS
+  // );
 
-  dispatch({ type: "SET_PROFILE_CONTRACT" });
+  // dispatch({ type: "SET_PROFILE_CONTRACT" });
 
-  blockchainModule.setProfileContract(profileContract);
+  // blockchainModule.setProfileContract(profileContract);
 
-  const artzero_contract = new ContractPromise(
-    api,
-    artzero_nft.CONTRACT_ABI,
-    artzero_nft.CONTRACT_ADDRESS
-  );
+  // const artzero_contract = new ContractPromise(
+  //   api,
+  //   artzero_nft.CONTRACT_ABI,
+  //   artzero_nft.CONTRACT_ADDRESS
+  // );
 
-  artzero_nft_calls.setContract(artzero_contract);
+  // artzero_nft_calls.setContract(artzero_contract);
 
-  
+  // const collection_contract = new ContractPromise(
+  //   api,
+  //   collection_manager.CONTRACT_ABI,
+  //   collection_manager.CONTRACT_ADDRESS
+  // );
+  // console.log("SubstrateContext:", collection_contract);
+  // collection_manager_calls.setContract(collection_contract);
 
-  const collection_contract = new ContractPromise(
-    api,
-    collection_manager.CONTRACT_ABI,
-    collection_manager.CONTRACT_ADDRESS
-  );
-  console.log('SubstrateContext:', collection_contract);
-  collection_manager_calls.setContract(collection_contract);
+  // const marketplace_contract = new ContractPromise(
+  //   api,
+  //   marketplace.CONTRACT_ABI,
+  //   marketplace.CONTRACT_ADDRESS
+  // );
+  // marketplace_contract_calls.setContract(marketplace_contract);
 
-  const marketplace_contract = new ContractPromise(
-    api,
-    marketplace.CONTRACT_ABI,
-    marketplace.CONTRACT_ADDRESS
-  );
-  marketplace_contract_calls.setContract(marketplace_contract);
+  // const staking_contract = new ContractPromise(
+  //   api,
+  //   staking.CONTRACT_ABI,
+  //   staking.CONTRACT_ADDRESS
+  // );
 
-  const staking_contract = new ContractPromise(
-    api,
-    staking.CONTRACT_ABI,
-    staking.CONTRACT_ADDRESS
-  );
-
-  staking_calls.setContract(staking_contract);
+  // staking_calls.setContract(staking_contract);
 };
 
 const SubstrateContext = React.createContext();

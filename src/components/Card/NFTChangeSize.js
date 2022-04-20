@@ -1,8 +1,10 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Flex,
   Heading,
   Image,
+  Skeleton,
   Spacer,
   Tag,
   TagLabel,
@@ -12,21 +14,30 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { IPFS_BASE_URL } from "@constants/index";
+import { useState } from "react";
 
 export default function NFTChangeSize({
   nft_name,
   askPrice,
   bidPrice,
   is_for_sale,
+  price,
   attributes,
   attributesValue,
-  price,
 }) {
-  function getDataFromAttrs(attrName) {
-    const attrIdx = attributes.indexOf(attrName);
-    return attributesValue[attrIdx];
-  }
+  const getDataFromAttrs = function () {
+    if (attributes && attributesValue) {
+      return Object.assign(
+        ...attributes.map((v, i) => ({ [v]: attributesValue[i] }))
+      );
+    }
 
+    return console.log("Can not create attributes Object");
+  };
+  const attrsObject = getDataFromAttrs();
+
+  const [loaded, setLoaded] = useState(false);
+  console.log("loaded", loaded);
   return (
     <Box>
       <Flex
@@ -40,10 +51,17 @@ export default function NFTChangeSize({
         <Image
           alt={nft_name}
           objectFit="cover"
-          src={`${IPFS_BASE_URL}/${getDataFromAttrs("avatar")}`}
+          src={`${IPFS_BASE_URL}/${attrsObject?.avatar}`}
           minH={18}
-          fallbackSrc="https://via.placeholder.com/720"
+          // fallbackSrc="https://via.placeholder.com/720"
+          fallback={<Skeleton w="full" h="full" minH={"20rem"} />}
+          // onLoad={() => console.log("onload ...")}
         />
+        {/*  */}
+        {console.log("attrsObject", attrsObject)}
+        {/*  */}
+        {console.log("attrsObject.avatar", attrsObject.avatar)}
+        {/* <Skeleton boxSize="25rem" isLoaded={loaded} /> */}
 
         <VStack
           p={4}

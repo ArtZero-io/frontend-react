@@ -3,113 +3,76 @@ import {
   Flex,
   Heading,
   Spacer,
-  Center,
   Link,
   SimpleGrid,
-  Spinner,
   Text,
 } from "@chakra-ui/react";
 
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
-import { usePagination } from "@ajna/pagination";
-import { useSelector } from "react-redux";
+// import { usePagination } from "@ajna/pagination";
+import toast from "react-hot-toast";
+
 import { CollectionCard } from "@components/Card/Collection";
-import PaginationMP from "@components/Pagination/Pagination";
-import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-import { delay } from "@utils";
-import { NUMBER_PER_PAGE, IPFS_BASE_URL } from "@constants/index";
+// import PaginationMP from "@components/Pagination/Pagination";
 import * as ROUTES from "@constants/routes";
+
+import { clientAPI } from "@api/client";
+import { useSubstrateState } from "@utils/substrate";
+// import { NUMBER_PER_PAGE } from "@constants/index";
+
 import AddNewCollectionModal from "./components/Modal/AddNew";
 
 function MyCollectionsPage() {
-  const { activeAddress } = useSelector((s) => s.account);
-
   const [collections, setCollections] = useState([]);
-  const [totalPage, setTotalPage] = useState(null);
-  const [loading, setLoading] = useState(null);
-  const [, setCurrentCollections] = useState([]);
+  // const [totalCollectionsCount, setTotalCollectionsCount] = useState(null);
+  const { currentAccount } = useSubstrateState();
 
-  
-  const { pagesCount, offset, currentPage, setCurrentPage, isDisabled } =
-    usePagination({
-      total: totalPage,
-      initialState: {
-        pageSize: NUMBER_PER_PAGE,
-        isDisabled: false,
-        currentPage: 1,
-      },
-    });
-
-  const getAllCollections = useCallback(async (e) => {
-    setLoading(true);
-    console.log('getAllCollections', activeAddress);
-    var collections = [];
-
-    let collection_account =
-      await collection_manager_calls.getCollectionsByOwner(
-        activeAddress,
-        activeAddress
-      );
-      
-    if (collection_account) {
-      for (let collection of collection_account) {
-        let data = await collection_manager_calls.getCollectionByAddress(
-          activeAddress,
-          collection
-        );
-
-        let attributes = await collection_manager_calls.getAttributes(
-          activeAddress,
-          data?.nftContractAddress,
-          ["name", "description", "avatar_image", "header_image"]
-        );
-
-        data.attributes = attributes;
-        collections.push(data);
-      }
-    }
-
-    
-    setTotalPage(collections.length);
-    setCollections(collections);
-    setLoading(false);
-  }, []);
-
-  const filterCollections = useCallback(async (e) => {
-    setLoading(true);
-
-    
-    let currentCollections = [];
-
-    for (var i = offset; i < offset + NUMBER_PER_PAGE; i++) {
-      if (collections[i]) {
-        currentCollections.push(collections[i]);
-      }
-    }
-
-    setCurrentCollections(currentCollections);
-    setLoading(false);
-  }, []);
-
-  const onRefresh = useCallback(async () => {
-    await getAllCollections();
-    await delay(1000);
-    await filterCollections();
-  }, []);
-
-  const forceUpdate = useCallback(() => {
-    onRefresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // const {
+  //   pagesCount,
+  //   currentPage,
+  //   setCurrentPage,
+  //   isDisabled,
+  //   offset,
+  //   pageSize,
+  // } = usePagination({
+  //   total: totalCollectionsCount,
+  //   initialState: {
+  //     pageSize: NUMBER_PER_PAGE,
+  //     isDisabled: false,
+  //     currentPage: 1,
+  //   },
+  // });
 
   useEffect(() => {
-    async function fetch() {
-      await onRefresh();
-    }
+    const fetchCollectionsOwned = async () => {
+      const options = {
+        owner: currentAccount.address,
+      };
 
-    fetch();
-  }, [activeAddress, onRefresh]);
+      try {
+        const dataList = await clientAPI(
+          "post",
+          "/getCollectionsByOwner",
+          options
+        );
+        console.log("dataList", dataList);
+        setCollections(dataList);
+        // setTotalCollectionsCount(dataList);
+      } catch (error) {
+        console.log(error);
+
+        toast.error("There was an error while fetching the collections.");
+      }
+    };
+
+    fetchCollectionsOwned();
+  }, [currentAccount]);
+
+  const forceUpdate = useCallback(() => {
+    // onRefresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">
@@ -124,7 +87,7 @@ function MyCollectionsPage() {
           <Spacer />
           <AddNewCollectionModal forceUpdate={forceUpdate} />
         </Flex>
-        {loading && (
+        {/* {loading && (
           <Center>
             <Spinner
               thickness="4px"
@@ -134,61 +97,41 @@ function MyCollectionsPage() {
               size="xl"
             />
           </Center>
-        )}
-        {!loading && (
-          <>
-            {console.log(collections)}
-            <Text textAlign="left" color="brand.grayLight">
-              There are {collections?.length} collections
-            </Text>
-            {collections.length ? (
-              <SimpleGrid
-                py={10}
-                columns={{ base: 1, md: 2, lg: 3 }}
-                spacing="7"
-              >
-                {collections?.map((item) => (
-                  <>
-                    <Link
-                      minW={{ base: "auto", "2xl": "25rem" }}
-                      key={item?.nftContractAddress}
-                      as={ReactRouterLink}
-                      to={`${ROUTES.DETAIL_COLLECTION_BASE}/${item?.nftContractAddress}`}
-                      className="collection-card-hover"
-                      _hover={{
-                        bg: "brand.blue",
-                      }}
-                    >
-                      {/* TODO: add volume */}
-                      <CollectionCard
-                        id={item?.nftContractAddress}
-                        volume={item?.volume || 12.34}
-                        backdrop={`${IPFS_BASE_URL}/${item?.attributes[3]}`}
-                        avatar={`${IPFS_BASE_URL}/${item?.attributes[2]}`}
-                        desc={item?.attributes[1]}
-                        name={item?.attributes[0]}
-                        isActive={item?.isActive}
-                        variant="my-collection"
-                      />
-                    </Link>
-                  </>
-                ))}
-              </SimpleGrid>
-            ) : null}
+        )} */}
 
-            {collections.length ? (
-              <Flex w="full">
-                <PaginationMP
-                  isDisabled={isDisabled}
-                  currentPage={currentPage}
-                  pagesCount={pagesCount}
-                  setCurrentPage={setCurrentPage}
-                />
-                <Spacer />
-              </Flex>
-            ) : null}
+        <Text textAlign="left" color="brand.grayLight">
+          There are {collections?.length} collections
+        </Text>
+        {collections?.length ? (
+          <>
+            <SimpleGrid py={10} columns={{ base: 1, md: 2, lg: 3 }} spacing="7">
+              {collections?.map((item, idx) => (
+                <React.Fragment key={idx}>
+                  <Link
+                    minW={{ base: "auto", "2xl": "25rem" }}
+                    as={ReactRouterLink}
+                    to={`${ROUTES.DETAIL_COLLECTION_BASE}/${item?.nftContractAddress}`}
+                    className="collection-card-hover"
+                    _hover={{
+                      bg: "brand.blue",
+                    }}
+                  >
+                    <CollectionCard {...item} variant="my-collection" />
+                  </Link>
+                </React.Fragment>
+              ))}
+            </SimpleGrid>
+            {/* <Flex w="full">
+              <PaginationMP
+                isDisabled={isDisabled}
+                currentPage={currentPage}
+                pagesCount={pagesCount}
+                setCurrentPage={setCurrentPage}
+              />
+              <Spacer />
+            </Flex> */}
           </>
-        )}
+        ) : null}
       </Box>
     </Box>
   );

@@ -53,7 +53,7 @@ const NFTTabCollectible = ({
   const [doOffer, setDoOffer] = useState(false);
   // const [onLoad, setOnLoad] = useState(false);
   const [bidPrice, setBidPrice] = useState(null);
-  const param = useParams();
+  const { collection_address } = useParams();
   const { api, currentAccount } = useSubstrateState();
 
   useEffect(async () => {
@@ -73,7 +73,7 @@ const NFTTabCollectible = ({
     if (balance.free.toNumber() > NFT.askPrice) {
       await marketplace_contract_calls.buy(
         currentAccount,
-        param.address,
+        collection_address,
         NFT.address,
         NFT.askPrice
       );
@@ -86,14 +86,14 @@ const NFTTabCollectible = ({
     let currentCollection =
       await collection_manager_calls.getCollectionByAddress(
         currentAccount,
-        param.address
+        collection_address
       );
 
     if (currentCollection?.showOnChainMetadata) {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
         nft721_psp34_standard.CONTRACT_ABI,
-        param.address
+        collection_address
       );
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
       const attribute_count =
@@ -136,7 +136,7 @@ const NFTTabCollectible = ({
       );
       const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(
         currentAccount,
-        param.address,
+        collection_address,
         tokenIdU64
       );
       const nft = {

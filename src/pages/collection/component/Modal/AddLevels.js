@@ -89,7 +89,6 @@ function AddLevelsModal({ name, isOpen, onClose }) {
         <FieldArray
           name="levels"
           render={(arrayHelpers) => {
-            console.log("getCollectionData arrayHelpers", arrayHelpers);
             return (
               <div>
                 {value?.map((levels, index) => (

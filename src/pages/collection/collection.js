@@ -1,58 +1,20 @@
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-// import { useSelector } from "react-redux";
-
-import CollectionHero from "./component/Header/Header";
+import toast from "react-hot-toast";
 
 import Layout from "@components/Layout/Layout";
 
-// import { useSubstrateState } from "@utils/substrate";
 import { clientAPI } from "@api/client";
-import toast from "react-hot-toast";
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import TabActivity from "./component/TabActivity";
 import TabCollectionItems from "./component/TabItems";
+import CollectionHero from "./component/Header/Header";
+
 function CollectionPage() {
   const { collection_address } = useParams();
 
-  // const { currentAccount } = useSubstrateState();
-  // const { activeAddress } = useSelector((s) => s.account);
-
   const [collection, setCollection] = useState({});
-
-  // useEffect(async () => {
-  //   console.log("hehe call contract");
-  //   await onRefresh();
-  // }, [activeAddress, currentAccount, collection_manager_calls.isLoaded()]);
-
-  // const onRefresh = async () => {
-  //   await getCollectionData();
-  //   await delay(1000);
-  // };
-
-  // const getCollectionData = async () => {
-  //   let data = await collection_manager_calls.getCollectionByAddress(
-  //     currentAccount,
-  //     param.address
-  //   );
-
-  //   let attributes = await collection_manager_calls.getAttributes(
-  //     currentAccount,
-  //     data?.nftContractAddress,
-  //     ["name", "description", "avatar_image", "header_image"]
-  //   );
-
-  //   let res = {
-  //     id: param.address,
-  //     avatar: `${IPFS_BASE_URL}/${attributes[2]}`,
-  //     backdrop: `${IPFS_BASE_URL}/${attributes[3]}`,
-  //     volume: "11.1b",
-  //     name: attributes[0],
-  //     description: attributes[1],
-  //   };
-
-  //   setCollection(res);
-  // };
+  const [isShowUnlisted, setIsShowUnlisted] = useState(false);
 
   useEffect(() => {
     const fetchCollectionDetail = async () => {
@@ -62,6 +24,7 @@ function CollectionPage() {
         sort: -1,
         collection_address,
       };
+
       try {
         const [collectionDetail] = await clientAPI(
           "post",
@@ -83,19 +46,30 @@ function CollectionPage() {
 
         setCollection(collectionDetail);
       } catch (error) {
-        console.log(error);
+        console.log("fetchCollectionDetail error", error);
 
         toast.error("There was an error while fetching the collections.");
       }
     };
 
     fetchCollectionDetail();
-  }, []);
+  }, [collection_address]);
+
+  useEffect(() => {
+    isShowUnlisted &&
+      collection?.nftList?.filter((item) => item.is_for_sale === false);
+  }, [collection, isShowUnlisted]);
 
   const tabData = [
     {
       label: "Items",
-      content: <TabCollectionItems {...collection} />,
+      content: (
+        <TabCollectionItems
+          {...collection}
+          isShowUnlisted={isShowUnlisted}
+          setIsShowUnlisted={setIsShowUnlisted}
+        />
+      ),
     },
     {
       label: "Activity",

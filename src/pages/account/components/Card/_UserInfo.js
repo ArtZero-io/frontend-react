@@ -23,25 +23,25 @@ export const UserInfo = props => {
     >
       <HStack>
         <Icon as={FaFacebook} />
-        <Link href={`www.facebook.com/${facebook}`} isExternal>
+        <Link href={`www.facebook.com/${facebook}`} isexternal="true">
           <Text> {facebook}</Text>
         </Link>
       </HStack>
       <HStack>
         <Icon as={FaTwitter} />
-        <Link href={`twitter.com/${twitter}`} isExternal>
+        <Link href={`twitter.com/${twitter}`} isexternal="true">
           <Text>{twitter}</Text>
         </Link>
       </HStack>
       <HStack>
         <Icon as={FaTelegram} />
-        <Link href={`t.me/${telegram}`} isExternal>
+        <Link href={`t.me/${telegram}`} isexternal="true">
           <Text>{telegram}</Text>
         </Link>
       </HStack>
       <HStack>
         <Icon as={FaInstagram} />
-        <Link href={`instagram.com/${instagram}`} isExternal>
+        <Link href={`instagram.com/${instagram}`} isexternal="true">
           <Text>{instagram}</Text>
         </Link>
       </HStack>

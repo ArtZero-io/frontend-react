@@ -1,3 +1,6 @@
 {
-  "thunder-client.codeSnippetLanguage": "js-axios"
+  "thunder-client.codeSnippetLanguage": "js-axios",
+  "cSpell.words": [
+    "isexternal"
+  ]
 }

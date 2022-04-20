@@ -102,7 +102,7 @@ const FeeInfoModal = ({
       <Button
         variant="filled"
         bg="transparent"
-        color="#fff"
+        color="#fff" ml={3}
         onClick={() => onOpen()}
       >
         more information
@@ -116,7 +116,7 @@ const FeeInfoModal = ({
         <ModalContent
           position="relative"
           bg="brand.semiBlack"
-          p={6}
+          p={{ base: "3", "2xl": "6" }}
           borderRadius="0"
         >
           <ModalCloseButton
@@ -128,7 +128,7 @@ const FeeInfoModal = ({
           />
           <ModalHeader textAlign="center">
             <Heading size="h4" my={3}>
-              Trade discount for Artzero NFT stakers
+              Trade discount for Artzero NFT staked
             </Heading>
           </ModalHeader>
 
@@ -138,50 +138,67 @@ const FeeInfoModal = ({
               templateColumns="repeat(auto-fill, minmax(min(100%, 20rem), 1fr))"
               gap={6}
             >
-              <Box w="full" textAlign="center" px={4} py={3}>
+              <Box
+                w="full"
+                textAlign="center"
+                px={4}
+                py={{ base: "1", "2xl": "4" }}
+              >
                 <Flex direction="column" w="full">
-                  <Heading size="h5" mb={3}>
+                  <Heading size="h5" mb={3} p={0}>
                     Stakers
                   </Heading>
                   {feeChart.map((item, idx) => (
-                    <Flex align="center" justify="center" borderWidth={1}>
-                      <Box minH={"5rem"} py={6}>
-                        <Heading size="h5" minW={"5rem"}>
-                          {item.qty} NFTs
-                        </Heading>
-                      </Box>
-                    </Flex>
+                    <React.Fragment key={idx}>
+                      <Flex align="center" justify="center" borderWidth={1}>
+                        <Box
+                          minH={{ base: "4.5rem", "2xl": "5rem" }}
+                          py={{ base: "4", "2xl": "6" }}
+                        >
+                          <Heading size="h5" minW={"5rem"}>
+                            {item.qty} NFTs
+                          </Heading>
+                        </Box>
+                      </Flex>
+                    </React.Fragment>
                   ))}
                 </Flex>
               </Box>
-              <Box w="full" textAlign="left" px={4} py={3}>
+              <Box
+                w="full"
+                textAlign="left"
+                px={4}
+                py={{ base: "1", "2xl": "4" }}
+              >
                 <Flex direction="column" w="full" align="center">
                   <Heading size="h5" mb={3}>
                     Trade discount
                   </Heading>
                   {feeChart.map((item, idx) => (
-                    <Flex borderWidth={1} w="full" pl={10}>
-                      <Box minH={"5rem"} mr={3}>
-                        <Text
-                          fontFamily="DS-Digital"
-                          fontSize="5xl"
-                          color="#fff"
+                    <React.Fragment key={idx}>
+                      <Flex borderWidth={1} w="full" pl={10}>
+                        <Box minH={{ base: "4.5rem", "2xl": "5rem" }} mr={3}>
+                          <Text
+                            fontFamily="DS-Digital"
+                            fontSize="5xl"
+                            color="#fff"
+                          >
+                            {item.percent}%
+                          </Text>
+                        </Box>
+                        <Flex
+                          direction="column"
+                          align="start"
+                          justify="center"
+                          pr={3}
                         >
-                          {item.percent}%
-                        </Text>
-                      </Box>
-                      <Flex
-                        direction="column"
-                        align="start"
-                        justify="center"
-                        pr={3}
-                      >
-                        <Heading size="h6" color="#7AE7FF" mb="2">
-                          Off
-                        </Heading>
-                        <Heading size="h6">Trade Fee</Heading>
+                          <Heading size="h6" color="#7AE7FF" mb="2">
+                            Off
+                          </Heading>
+                          <Heading size="h6">Trade Fee</Heading>
+                        </Flex>
                       </Flex>
-                    </Flex>
+                    </React.Fragment>
                   ))}
                 </Flex>
               </Box>

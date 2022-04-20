@@ -17,17 +17,79 @@ import {
   Tag,
   TagLabel,
 } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+
+import * as ROUTES from "@constants/routes";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import ImageAccountBanner from "@theme/assets/image-account-banner.png";
-import * as ROUTES from "@constants/routes";
-import { useHistory } from "react-router-dom";
+
 import FeeInfoModal from "./components/Modal/FeeInfo";
 
+import { clientAPI } from "@api/client";
+import { useEffect, useState } from "react";
+import { useSubstrateState } from "@utils/substrate";
+import toast from "react-hot-toast";
+
+import staking_calls from "@utils/blockchain/staking_calls";
+
 function GeneralPage() {
-  const { activeAddress } = useSelector((s) => s.account);
-  const { hasCopied, onCopy } = useClipboard(activeAddress);
   const history = useHistory();
+  const { currentAccount } = useSubstrateState();
+  const { hasCopied, onCopy } = useClipboard(currentAccount.address);
+
+  const [nftList, setNftList] = useState(null);
+  const [totalStaked, setTotalStaked] = useState(null);
+  const [dashboardInfo, setDashboardInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchAllNfts = async () => {
+      const options = {
+        owner: currentAccount.address,
+      };
+
+      try {
+        const nftListPromise = await clientAPI(
+          "post",
+          "/getNFTsByOwner",
+          options
+        );
+
+        const totalStakedPromise = await staking_calls.getTotalStakedByAccount(
+          currentAccount,
+          currentAccount.address
+        );
+
+        Promise.all([nftListPromise, totalStakedPromise]).then(
+          ([nftList, totalStaked]) => {
+            const nftForSale = nftList.reduce(function (a, b) {
+              return (a.is_for_sale & 1) + (b.is_for_sale & 1);
+            }, 0);
+
+            console.log("nftForSale", nftForSale);
+
+            let info = [];
+
+            info = [
+              ...info,
+              { name: "NFTs for sale", value: nftForSale },
+              { name: "Owned NFTs", value: nftList.length },
+            ];
+
+            setDashboardInfo(info);
+
+            setNftList(nftList);
+            setTotalStaked(totalStaked);
+          }
+        );
+      } catch (error) {
+        console.log(error);
+
+        toast.error("There was an error while fetching the collections.");
+      }
+    };
+
+    !nftList && fetchAllNfts();
+  }, [currentAccount, currentAccount.address, nftList]);
 
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">
@@ -52,10 +114,10 @@ function GeneralPage() {
                 mr={3}
                 h={9}
               >
-                <Text fontFamily="Oswald">{activeAddress}</Text>
+                <Text fontFamily="Oswald">{currentAccount.address}</Text>
                 <Input
                   display="none"
-                  defaultValue={activeAddress}
+                  defaultValue={currentAccount.address}
                   px={2}
                   h={8}
                   mx={0}
@@ -83,7 +145,7 @@ function GeneralPage() {
             templateColumns="repeat(auto-fill, minmax(min(100%, 20rem), 1fr))"
             gap={6}
           >
-            {dashboardInfo.map((item, idx) => {
+            {dashboardInfo?.map((item, idx) => {
               return (
                 <GridItem
                   key={idx}
@@ -101,7 +163,7 @@ function GeneralPage() {
                     fontSize="lg"
                   >
                     <Flex w="full">
-                      <Text>
+                      <Box>
                         <Text>{item.name}</Text>
                         <Flex alignItems="center">
                           <Tag bg="transparent" pl={0}>
@@ -117,7 +179,7 @@ function GeneralPage() {
                             )}
                           </Tag>
                         </Flex>
-                      </Text>
+                      </Box>
                       <Spacer />
                     </Flex>
                     <Flex w="full" textAlign="left">
@@ -134,16 +196,22 @@ function GeneralPage() {
         <HStack
           h="full"
           my={10}
-          p={7}
+          p={{ base: "6", "2xl": "7" }}
           maxW="container.xl"
           bg="black"
           pos="relative"
         >
-          <Square size="20rem" bg="#222">
+          <Square size={{ base: "18rem", "2xl": "20rem" }} bg="#222">
             <Image w="full" h="full" src={ImageAccountBanner} />
           </Square>
 
-          <VStack h={72} px={10} textAlign="left">
+          <VStack
+            w="full"
+            h={72}
+            pr={2}
+            pl={{ base: "4", "2xl": "10" }}
+            textAlign="left"
+          >
             <Flex w="full">
               <Box fontFamily="Evogria Italic" fontSize="3xl-mid" color="#FFF">
                 <span>Stake your </span>
@@ -155,14 +223,7 @@ function GeneralPage() {
                 <span style={{ color: "#7AE7FF" }}>fees</span>
               </Box>
               <Spacer />
-              <Box
-                variant="outline"
-                h={32}
-                w={36}
-                pos="absolute"
-                top={10}
-                right={10}
-              >
+              <Box variant="outline" h={32} w={36}>
                 <Tag variant="outline" h={6} w={40} mt={3}>
                   <TagLabel>Market Fees: 3.0%</TagLabel>
                 </Tag>
@@ -175,7 +236,9 @@ function GeneralPage() {
             <Flex w="full">
               <Text mt={0} mb={8} fontSize="lg" color="#fff">
                 You currently have{" "}
-                <span style={{ color: "#7AE7FF" }}>0 NFTs </span>
+                <span style={{ color: "#7AE7FF" }}>
+                  {totalStaked || 0} NFTs{" "}
+                </span>
                 staked.
               </Text>
               <Spacer />
@@ -200,11 +263,11 @@ function GeneralPage() {
 
 export default GeneralPage;
 
-const dashboardInfo = [
-  { name: "Owned NFTs", text1: "82.00", value: "99" },
-  { name: "Amount Trades", text1: "82.00", value: "143" },
-  { name: "Ratio Purchase/Sell", text1: "82.00", value: "30%" },
-  { name: "NFTs for sale", text1: "82.00", value: "56" },
-  { name: "NFTs offers placed", text1: "82.00", value: "45" },
-  { name: "NFTs offers received", text1: "82.00", value: "38" },
-];
+// const dashboardInfo = [
+//   { name: "Owned NFTs", text1: "82.00", value: "99" },
+//   { name: "Amount Trades", text1: "82.00", value: "143" },
+//   { name: "Ratio Purchase/Sell", text1: "82.00", value: "30%" },
+//   { name: "NFTs for sale", text1: "82.00", value: "56" },
+//   { name: "NFTs offers placed", text1: "82.00", value: "45" },
+//   { name: "NFTs offers received", text1: "82.00", value: "38" },
+// ];

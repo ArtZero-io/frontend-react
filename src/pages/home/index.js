@@ -12,7 +12,7 @@ import {
   // Text,
 } from "@chakra-ui/react";
 import React from "react";
-import Layout from "../../components/Layout/Layout";
+import Layout from "@components/Layout/Layout";
 // import { DownloadIcon } from "@chakra-ui/icons";
 // import AzeroIcon from "@theme/assets/icon/Azero.js";
 // import ActiveIcon from "@theme/assets/icon/Active.js";

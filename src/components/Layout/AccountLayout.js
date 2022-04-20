@@ -2,16 +2,12 @@ import { useHistory, useLocation } from "react-router-dom";
 import { Box, Tab, TabList, TabPanels, Tabs } from "@chakra-ui/react";
 
 import * as ROUTES from "@constants/routes";
-import Loader from "@components/Loader/Loader";
 import Layout from "@components/Layout/Layout";
 import ProfileHeader from "@pages/account/components/Header";
-import { useSubstrateState } from "@utils/substrate";
 
 const AccountLayout = ({ children }) => {
   const history = useHistory();
   const { pathname } = useLocation();
-
-  const { profileContract } = useSubstrateState();
 
   const tabData = [
     {
@@ -33,42 +29,41 @@ const AccountLayout = ({ children }) => {
   ];
 
   const handleTabsChange = (index) => {
+    console.log("index", index);
     history.push(tabData[index].value);
   };
 
   return (
     <Layout>
       <Box as="section" maxW="container.3xl" position="relative">
-        {profileContract !== "READY" ? (
-          <Loader />
-        ) : (
-          <>
-            <ProfileHeader />
-            
-            <Tabs
-              index={tabData.map((i) => i.value).indexOf(pathname)}
-              isLazy
-              align="center"
-              onChange={handleTabsChange}
-            >
-              <TabList>
-                {tabData.map((tab) => (
-                  <Tab
-                    key={tab.label}
-                    fontFamily="Evogria Italic, san serif"
-                    color="#fff" pb={5} px={1} mx={4} fontSize='lg'
-                  >
-                    {tab.label}
-                  </Tab>
-                ))}
-              </TabList>
+        <ProfileHeader />
 
-              <TabPanels className="TabPanels" bg="#171717" p={0}>
-                {children}
-              </TabPanels>
-            </Tabs>
-          </>
-        )}
+        <Tabs
+          index={tabData.map((i) => i.value).indexOf(pathname)}
+          onChange={handleTabsChange}
+          align="center"
+          isLazy
+        >
+          <TabList>
+            {tabData.map((tab) => (
+              <Tab
+                key={tab.label}
+                fontFamily="Evogria Italic, san serif"
+                color="#fff"
+                fontSize="lg"
+                pb={5}
+                px={1}
+                mx={4}
+              >
+                {tab.label}
+              </Tab>
+            ))}
+          </TabList>
+
+          <TabPanels className="TabPanels" bg="#171717" p={0}>
+            {children}
+          </TabPanels>
+        </Tabs>
       </Box>
     </Layout>
   );

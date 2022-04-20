@@ -1,12 +1,11 @@
-import { HStack, IconButton } from "@chakra-ui/react";
+import { HStack, IconButton, Link } from "@chakra-ui/react";
 import React from "react";
-import { Link } from "react-router-dom";
 import { FaInstagram, FaTwitter, FaTelegram, FaFacebook } from "react-icons/fa";
 function SocialCard({ profile, pos, right, top }) {
   return (
     <HStack textAlign="center" id="hehe" pos={pos} right={right} top={top}>
       <Link
-        isExternal
+        isexternal="true"
         href={`${profile?.instagram}` || `https://instagram.com`}
       >
         <IconButton
@@ -16,7 +15,10 @@ function SocialCard({ profile, pos, right, top }) {
           variant="iconOutline"
         />
       </Link>
-      <Link isExternal href={`${profile?.twitter}` || `https://twitter.com`}>
+      <Link
+        isexternal="true"
+        href={`${profile?.twitter}` || `https://twitter.com`}
+      >
         <IconButton
           aria-label="twitter"
           icon={<FaTwitter size="1.5rem" />}
@@ -25,7 +27,7 @@ function SocialCard({ profile, pos, right, top }) {
         />
       </Link>
       <Link
-        isExternal
+        isexternal="true"
         href={`${profile?.telegram}` || `https://t.me/artzero_io`}
       >
         <IconButton
@@ -36,7 +38,7 @@ function SocialCard({ profile, pos, right, top }) {
         />
       </Link>
       <Link
-        isExternal
+        isexternal="true"
         href={`${profile?.facebook}` || `https://www.facebook.com`}
       >
         <IconButton

@@ -124,7 +124,7 @@ function AdminHeader() {
  
               <HStack textAlign="center">
                 <Link
-                  isExternal
+                  isexternal="true"
                   href={`${profile?.instagram}` || `https://instagram.com`}
                 >
                   <IconButton
@@ -135,7 +135,7 @@ function AdminHeader() {
                   />
                 </Link>
                 <Link
-                  isExternal
+                  isexternal="true"
                   href={`${profile?.twitter}` || `https://twitter.com`}
                 >
                   <IconButton
@@ -146,7 +146,7 @@ function AdminHeader() {
                   />
                 </Link>
                 <Link
-                  isExternal
+                  isexternal="true"
                   href={`${profile?.telegram}` || `https://t.me/artzero_io`}
                 >
                   <IconButton
@@ -157,7 +157,7 @@ function AdminHeader() {
                   />
                 </Link>
                 <Link
-                  isExternal
+                  isexternal="true"
                   href={`${profile?.facebook}` || `https://www.facebook.com`}
                 >
                   <IconButton

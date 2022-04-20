@@ -1,28 +1,63 @@
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import { useEffect, useState } from "react";
+import { Toaster } from "react-hot-toast";
+import { GridLoader } from "react-spinners";
 
-import { SubstrateContextProvider, useSubstrateState } from "@utils/substrate";
-import Router from "@components/Router";
-import { store } from "@store/store";
-
-import { ChakraProvider } from "@chakra-ui/react";
-import theme from "@theme/theme";
+import {
+  Modal,
+  Heading,
+  ModalContent,
+  ModalOverlay,
+  ChakraProvider,
+} from "@chakra-ui/react";
 import "@fontsource/oswald";
+import theme from "@theme/theme";
 
-function Main() {
+import Router from "@components/Router";
+import { useSubstrateState } from "@utils/substrate";
+
+export default function App() {
   const { apiState, apiError } = useSubstrateState();
+  const [loadingErrorMess, setLoadingErrorMess] = useState(null);
 
-  if (apiState === "ERROR") return toast.error(apiError);
+  useEffect(() => {
+    if (apiState === "ERROR") {
+      setLoadingErrorMess("to websocket failed.");
+    } else if (apiState !== "READY") {
+      setLoadingErrorMess("to network . . .");
+    }
+  }, [apiError, apiState]);
 
   return (
     <ChakraProvider theme={theme}>
+      <Modal isCentered isOpen={apiState !== "READY"}>
+        <ModalOverlay
+          bg="#33333330"
+          backdropFilter="blur(10px) hue-rotate(90deg)"
+        />
+        <ModalContent
+          bg="transparent"
+          boxShadow={"none"}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <GridLoader
+            color="#7ae7ff"
+            size={20}
+            margin={5}
+            speedMultiplier={1.8}
+          />
+          <Heading size="h6" my={14}>
+            Connecting {loadingErrorMess}
+          </Heading>
+        </ModalContent>
+      </Modal>
+
       <Toaster
         position="top-right"
         reverseOrder={false}
         toastOptions={{
           style: {
-            marginRight:'2rem',
+            marginRight: "2rem",
             borderRadius: 0,
             padding: "16px",
             color: "#000",
@@ -30,19 +65,8 @@ function Main() {
           },
         }}
       />
+
       <Router />
     </ChakraProvider>
-  );
-}
-
-export default function App() {
-  return (
-    <SubstrateContextProvider>
-      <Provider store={store}>
-        <BrowserRouter>
-          <Main />
-        </BrowserRouter>
-      </Provider>
-    </SubstrateContextProvider>
   );
 }

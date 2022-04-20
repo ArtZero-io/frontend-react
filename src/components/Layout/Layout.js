@@ -1,13 +1,9 @@
-import { Box, Container, Flex, Img, ScaleFade } from "@chakra-ui/react";
+import { Box, Container, Fade, Flex, Image } from "@chakra-ui/react";
 import Navbar from "../Navbar/Nav";
 import bgHeroFull from "@theme/assets/bg-hero-full.png";
-import { useSubstrateState } from "@utils/substrate";
-import Loader from "../Loader/Loader";
 import { IPFS_BASE_URL } from "@constants/index";
 
 const Layout = ({ backdrop, children }) => {
-  const { apiState } = useSubstrateState();
-
   return (
     <Container
       id="layout-container"
@@ -28,8 +24,8 @@ const Layout = ({ backdrop, children }) => {
         zIndex="hide"
       >
         <Box position="relative" w="full" h="full">
-          <Img
-            src={`${IPFS_BASE_URL}/${backdrop}` || bgHeroFull}
+          <Image
+            src={backdrop ? `${IPFS_BASE_URL}/${backdrop}` : bgHeroFull}
             alt="bg-heroFull"
             w="full"
             h="full"
@@ -43,14 +39,9 @@ const Layout = ({ backdrop, children }) => {
 
       <Navbar />
 
-      <ScaleFade
-        initialScale={0.8}
-        in="true"
-        transitionEnd={{ opacity: 0 }}
-        delay={0.2}
-      >
-        {apiState === "READY" ? <div>{children}</div> : <Loader />}
-      </ScaleFade>
+      <Fade in="true" delay={0.1}>
+        {children}
+      </Fade>
     </Container>
   );
 };

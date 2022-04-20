@@ -1,8 +1,8 @@
 const marketplace = {
-  CONTRACT_ADDRESS: "5GKZKS5i2HJSRPZsSGJVARo1iEJfpS6V2eqQMJjEXSuyKrTm",
+  CONTRACT_ADDRESS: "5EiM2FBqx2KHGHcMzb73DbsDTzY1L66rqSCyF1wpnq6dAdE7",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xe481713d61023cabf39d216187f4abc2304dc97a41e2629fc35898c3249eabf1",
+      "hash": "0x62350a122087739ca44747d424c8a7d220121a70a1a8d6372a657f628e39a71b",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -349,7 +349,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 28
+              "type": 29
             },
             "selector": "0x832a283f"
           },
@@ -384,7 +384,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 28
+              "type": 29
             },
             "selector": "0x5aeeb315"
           },
@@ -419,7 +419,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 28
+              "type": 29
             },
             "selector": "0x15d62801"
           },
@@ -454,7 +454,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 28
+              "type": 29
             },
             "selector": "0x668d28a7"
           },
@@ -489,7 +489,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 28
+              "type": 29
             },
             "selector": "0x412b6e0f"
           },
@@ -533,7 +533,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 28
+              "type": 29
             },
             "selector": "0x1856538b"
           },
@@ -559,7 +559,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 28
+              "type": 29
             },
             "selector": "0xe84bde5a"
           },
@@ -585,7 +585,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 28
+              "type": 29
             },
             "selector": "0xcf051612"
           },
@@ -606,7 +606,7 @@ const marketplace = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 27
+                  "type": 28
                 }
               }
             ],
@@ -620,7 +620,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 28
+              "type": 29
             },
             "selector": "0x693e798c"
           },
@@ -664,7 +664,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 28
+              "type": 29
             },
             "selector": "0xd34ab274"
           },
@@ -699,9 +699,35 @@ const marketplace = {
               "displayName": [
                 "Option"
               ],
-              "type": 31
+              "type": 32
             },
             "selector": "0xfd066a27"
+          },
+          {
+            "args": [
+              {
+                "label": "collection_contract_address",
+                "type": {
+                  "displayName": [
+                    "AccountId"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Get listed token count by collection address"
+            ],
+            "label": "get_listed_token_count_by_collection_address",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 9
+            },
+            "selector": "0x7eecb2bb"
           },
           {
             "args": [
@@ -822,7 +848,7 @@ const marketplace = {
               "displayName": [
                 "Option"
               ],
-              "type": 32
+              "type": 33
             },
             "selector": "0xb36025ae"
           },
@@ -896,7 +922,7 @@ const marketplace = {
               "displayName": [
                 "Option"
               ],
-              "type": 33
+              "type": 34
             },
             "selector": "0xc4fd2cdc"
           },
@@ -922,9 +948,35 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 28
+              "type": 29
             },
             "selector": "0x07fdb555"
+          },
+          {
+            "args": [
+              {
+                "label": "new_owner",
+                "type": {
+                  "displayName": [
+                    "ownable_external",
+                    "TransferOwnershipInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "TransferOwnershipOutput"
+              ],
+              "type": 35
+            },
+            "selector": "0x11f43efd"
           },
           {
             "args": [],
@@ -952,35 +1004,9 @@ const marketplace = {
                 "ownable_external",
                 "RenounceOwnershipOutput"
               ],
-              "type": 34
+              "type": 35
             },
             "selector": "0x5e228753"
-          },
-          {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 34
-            },
-            "selector": "0x11f43efd"
           }
         ]
       },
@@ -1116,6 +1142,15 @@ const marketplace = {
               "layout": {
                 "cell": {
                   "key": "0x0800000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 26
+                }
+              },
+              "name": "listed_token_number_by_collection_address"
+            },
+            {
+              "layout": {
+                "cell": {
+                  "key": "0x0900000000000000000000000000000000000000000000000000000000000000",
                   "ty": 10
                 }
               },
@@ -1124,8 +1159,8 @@ const marketplace = {
             {
               "layout": {
                 "cell": {
-                  "key": "0x0900000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 26
+                  "key": "0x0a00000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 27
                 }
               },
               "name": "volume_by_collection"
@@ -1133,8 +1168,8 @@ const marketplace = {
             {
               "layout": {
                 "cell": {
-                  "key": "0x0a00000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 26
+                  "key": "0x0b00000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 27
                 }
               },
               "name": "volume_by_user"
@@ -1142,7 +1177,7 @@ const marketplace = {
             {
               "layout": {
                 "cell": {
-                  "key": "0x0b00000000000000000000000000000000000000000000000000000000000000",
+                  "key": "0x0c00000000000000000000000000000000000000000000000000000000000000",
                   "ty": 11
                 }
               },
@@ -1151,8 +1186,8 @@ const marketplace = {
             {
               "layout": {
                 "cell": {
-                  "key": "0x0c00000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 27
+                  "key": "0x0d00000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 28
                 }
               },
               "name": "staking_discount_rate"
@@ -1704,7 +1739,7 @@ const marketplace = {
               },
               {
                 "name": "V",
-                "type": 10
+                "type": 9
               }
             ],
             "path": [
@@ -1719,6 +1754,38 @@ const marketplace = {
           "id": 27,
           "type": {
             "def": {
+              "composite": {
+                "fields": [
+                  {
+                    "name": "offset_key",
+                    "type": 14,
+                    "typeName": "Key"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "K",
+                "type": 0
+              },
+              {
+                "name": "V",
+                "type": 10
+              }
+            ],
+            "path": [
+              "ink_storage",
+              "lazy",
+              "mapping",
+              "Mapping"
+            ]
+          }
+        },
+        {
+          "id": 28,
+          "type": {
+            "def": {
               "sequence": {
                 "type": 8
               }
@@ -1726,7 +1793,7 @@ const marketplace = {
           }
         },
         {
-          "id": 28,
+          "id": 29,
           "type": {
             "def": {
               "variant": {
@@ -1743,7 +1810,7 @@ const marketplace = {
                   {
                     "fields": [
                       {
-                        "type": 29
+                        "type": 30
                       }
                     ],
                     "index": 1,
@@ -1759,7 +1826,7 @@ const marketplace = {
               },
               {
                 "name": "E",
-                "type": 29
+                "type": 30
               }
             ],
             "path": [
@@ -1768,7 +1835,7 @@ const marketplace = {
           }
         },
         {
-          "id": 29,
+          "id": 30,
           "type": {
             "def": {
               "variant": {
@@ -1776,7 +1843,7 @@ const marketplace = {
                   {
                     "fields": [
                       {
-                        "type": 30,
+                        "type": 31,
                         "typeName": "String"
                       }
                     ],
@@ -1822,7 +1889,7 @@ const marketplace = {
           }
         },
         {
-          "id": 30,
+          "id": 31,
           "type": {
             "def": {
               "primitive": "str"
@@ -1830,7 +1897,7 @@ const marketplace = {
           }
         },
         {
-          "id": 31,
+          "id": 32,
           "type": {
             "def": {
               "variant": {
@@ -1863,7 +1930,7 @@ const marketplace = {
           }
         },
         {
-          "id": 32,
+          "id": 33,
           "type": {
             "def": {
               "variant": {
@@ -1896,7 +1963,7 @@ const marketplace = {
           }
         },
         {
-          "id": 33,
+          "id": 34,
           "type": {
             "def": {
               "variant": {
@@ -1929,7 +1996,7 @@ const marketplace = {
           }
         },
         {
-          "id": 34,
+          "id": 35,
           "type": {
             "def": {
               "variant": {
@@ -1946,7 +2013,7 @@ const marketplace = {
                   {
                     "fields": [
                       {
-                        "type": 35
+                        "type": 36
                       }
                     ],
                     "index": 1,
@@ -1962,7 +2029,7 @@ const marketplace = {
               },
               {
                 "name": "E",
-                "type": 35
+                "type": 36
               }
             ],
             "path": [
@@ -1971,7 +2038,7 @@ const marketplace = {
           }
         },
         {
-          "id": 35,
+          "id": 36,
           "type": {
             "def": {
               "variant": {

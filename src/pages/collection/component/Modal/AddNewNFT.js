@@ -9,20 +9,17 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
+import React, { useEffect } from "react";
 import AddNewNFTForm from "../Form/AddNewNFT";
-import { useParams } from "react-router-dom";
-import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-import { delay } from "@utils";
-import React, { useEffect, useState } from "react";
-import { useSubstrateState } from "@utils/substrate";
+// import { useParams } from "react-router-dom";
+// import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+// import { delay } from "@utils";
+// import { useSubstrateState } from "@utils/substrate";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
 
-const AddNewNFTModal = ({ forceUpdate }) => {
+const AddNewNFTModal = ({ forceUpdate, collectionOwner }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const param = useParams();
-  const [, setCollectionData] = useState({});
-  const { currentAccount } = useSubstrateState();
 
   const dispatch = useDispatch();
 
@@ -43,23 +40,23 @@ const AddNewNFTModal = ({ forceUpdate }) => {
     onCloseHandler();
   }, [tnxStatus, dispatch, forceUpdate, onClose]);
 
-  useEffect(async () => {
-    await onRefresh();
-  }, [collection_manager_calls.isLoaded()]);
+  // useEffect(async () => {
+  //   await onRefresh();
+  // }, [collection_manager_calls.isLoaded()]);
 
-  const onRefresh = async () => {
-    await getCollectionData();
-    await delay(1000);
-  };
+  // const onRefresh = async () => {
+  //   await getCollectionData();
+  //   await delay(1000);
+  // };
 
-  const getCollectionData = async () => {
-    let data = await collection_manager_calls.getCollectionByAddress(
-      currentAccount,
-      param.address
-    );
-    console.log(data);
-    setCollectionData(data);
-  };
+  // const getCollectionData = async () => {
+  //   let data = await collection_manager_calls.getCollectionByAddress(
+  //     currentAccount,
+  //     param.address
+  //   );
+  //   console.log(data);
+  //   setCollectionData(data);
+  // };
 
   return (
     <>
@@ -99,7 +96,7 @@ const AddNewNFTModal = ({ forceUpdate }) => {
             </Heading>
           </ModalHeader>
           <ModalBody>
-            <AddNewNFTForm />
+            <AddNewNFTForm collectionOwner={collectionOwner}/>
           </ModalBody>
         </ModalContent>
       </Modal>

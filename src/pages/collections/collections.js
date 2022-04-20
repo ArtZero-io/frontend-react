@@ -52,10 +52,7 @@ const CollectionsPage = () => {
       };
 
       try {
-        const totalCollections = await clientAPI(
-          "get",
-          "/getCollectionCount"
-        );
+        const totalCollections = await clientAPI("get", "/getCollectionCount");
         setTotalCollectionsCount(totalCollections);
 
         if (selectedItem === 0) {

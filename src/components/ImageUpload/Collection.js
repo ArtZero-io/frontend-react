@@ -29,10 +29,6 @@ const ImageUploadCollection = ({
   const [newAvatarData, setNewAvatarData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
 
-  console.log(id, " 121id", id);
-  console.log(id, " 121title", title);
-  console.log(id, " 121limitedSize", limitedSize);
-
   const retrieveNewAvatar = (e) => {
     setImgURL(null);
 
@@ -109,7 +105,7 @@ const ImageUploadCollection = ({
                 id={`${id}InputTag`}
                 onChange={retrieveNewAvatar}
                 type="file"
-                accept="image/png, image/jpg, image/gif, image/jpeg"
+                accept="image/png, image/jpg, image/gif, image/jpeg, image/webp"
               />
             </Flex>
           </label>

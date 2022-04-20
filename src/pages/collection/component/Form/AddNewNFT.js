@@ -12,65 +12,66 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 import AddNewNFTImageUpload from "@components/ImageUpload/Collection";
 import { useSubstrateState } from "@utils/substrate";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+// import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
-import { ContractPromise } from "@polkadot/api-contract";
-import { useParams } from "react-router-dom";
-import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-import { delay } from "@utils";
+// import { ContractPromise } from "@polkadot/api-contract";
+// import { useParams } from "react-router-dom";
+// import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+// import { delay } from "@utils";
 import AddNewNFTInput from "@components/Input/Input";
 import AddNewNFTTextArea from "@components/TextArea/TextArea";
 import { useDispatch, useSelector } from "react-redux";
 import AddPropertiesModal from "../Modal/AddProperties";
 import AddLevelsModal from "../Modal/AddLevels";
 
-const AddNewNFTForm = () => {
+const AddNewNFTForm = ({ collectionOwner }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
+  const { currentAccount } = useSubstrateState();
 
-  const { api, currentAccount } = useSubstrateState();
-  const [isLoadedContract, setIsLoadedContract] = useState(false);
-  const [nft721Psp34StandardContract, setNft721Psp34StandardContract] =
-    useState({});
-  const param = useParams();
-  const [collection, setCollectionData] = useState({});
+  // const { api, currentAccount } = useSubstrateState();
+  // const [isLoadedContract, setIsLoadedContract] = useState(false);
+  // const [nft721Psp34StandardContract, setNft721Psp34StandardContract] =
+  //   useState({});
+  // const { collection_address } = useParams();
+  // const [collection, setCollectionData] = useState({});
 
   const dispatch = useDispatch();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
 
-  useEffect(async () => {
-    if (isLoadedContract === false) {
-      const nft721_psp34_standard_contract = new ContractPromise(
-        api,
-        nft721_psp34_standard.CONTRACT_ABI,
-        param.address
-      );
-      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-      setNft721Psp34StandardContract(nft721_psp34_standard_calls);
-      setIsLoadedContract(true);
-    }
-  }, [api, isLoadedContract, param.address]);
+  // useEffect(async () => {
+  //   if (isLoadedContract === false) {
+  //     const nft721_psp34_standard_contract = new ContractPromise(
+  //       api,
+  //       nft721_psp34_standard.CONTRACT_ABI,
+  //       collection_address
+  //     );
+  //     nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+  //     setNft721Psp34StandardContract(nft721_psp34_standard_calls);
+  //     setIsLoadedContract(true);
+  //   }
+  // }, [api, isLoadedContract, collection_address]);
 
-  useEffect(async () => {
-    await onRefresh();
-  }, [collection_manager_calls.isLoaded()]);
+  // useEffect(async () => {
+  //   await onRefresh();
+  // }, [collection_manager_calls.isLoaded()]);
 
-  const onRefresh = async () => {
-    await getCollectionData();
-    await delay(1000);
-  };
+  // const onRefresh = async () => {
+  //   await getCollectionData();
+  //   await delay(1000);
+  // };
 
-  const getCollectionData = async () => {
-    let data = await collection_manager_calls.getCollectionByAddress(
-      currentAccount,
-      param.address
-    );
-    setCollectionData(data);
-  };
+  // const getCollectionData = async () => {
+  //   let data = await collection_manager_calls.getCollectionByAddress(
+  //     currentAccount,
+  //     collection_address
+  //   );
+  //   setCollectionData(data);
+  // };
   const [modifierToEdit, setModifierToEdit] = useState(-1);
 
   return (
@@ -125,11 +126,20 @@ const AddNewNFTForm = () => {
             .max(9),
         })}
         onSubmit={async (values, { setSubmitting }) => {
+          console.log("onSubmit start");
+          console.log("onSubmit start values", values);
+          console.log("onSubmit start avatarIPFSUrl", avatarIPFSUrl);
           !avatarIPFSUrl && toast.error("Upload images first");
 
           if (avatarIPFSUrl) {
             values.avatarIPFSUrl = avatarIPFSUrl;
-            if (collection.collectionOwner === currentAccount?.address) {
+
+            console.log("onSubmit start avatarIPFSUrl", values);
+            console.log(
+              "onSubmit collectionOwner === currentAccount?.address",
+              collectionOwner === currentAccount?.address
+            );
+            if (collectionOwner === currentAccount?.address) {
               let attributes = [
                 {
                   name: "nft_name",
@@ -145,25 +155,30 @@ const AddNewNFTForm = () => {
                 },
               ];
 
+              console.log("onSubmit 1 attributes", attributes);
+
               for (const property of values.properties) {
                 attributes.push({
                   name: property.type,
                   value: property.name,
                 });
               }
+              console.log("onSubmit 2 attributes", attributes);
 
               for (const level of values.levels) {
                 attributes.push({
                   name: level.name,
-                  value: level.level + "|" + level.maxLevel,
+                  value: level.level + "|" + level.levelMax,
                 });
               }
+              console.log("onSubmit 3 attributes", attributes);
 
-              await nft721Psp34StandardContract.mintWithAttributes(
+              await nft721_psp34_standard_calls.mintWithAttributes(
                 currentAccount,
                 attributes,
                 dispatch
               );
+              console.log("onSubmit 1 call ct done", attributes);
             } else {
               console.log("You aren't the owner of this collection!");
               toast.error("You aren't the owner of this collection!");
@@ -222,28 +237,30 @@ const AddNewNFTForm = () => {
                     gap={6}
                     overflowY="auto"
                   >
-                    {values?.properties.map((item) => {
+                    {values?.properties.map((item, idx) => {
                       return (
-                        <GridItem w="100%" h="100%">
-                          <Box
-                            w="full"
-                            textAlign="left"
-                            alignItems="end"
-                            bg="brand.semiBlack"
-                            px={4}
-                            py={3}
-                          >
-                            <Flex w="full">
-                              <Text color="brand.grayLight">
-                                <Text>{item.type}</Text>
-                                <Heading size="h6" mt={1}>
-                                  {item.name}
-                                </Heading>
-                              </Text>
-                              <Spacer />
-                            </Flex>
-                          </Box>
-                        </GridItem>
+                        <React.Fragment key={idx}>
+                          <GridItem w="100%" h="100%">
+                            <Box
+                              w="full"
+                              textAlign="left"
+                              alignItems="end"
+                              bg="brand.semiBlack"
+                              px={4}
+                              py={3}
+                            >
+                              <Flex w="full">
+                                <Box color="brand.grayLight">
+                                  <Text>{item.type}</Text>
+                                  <Heading size="h6" mt={1}>
+                                    {item.name}
+                                  </Heading>
+                                </Box>
+                                <Spacer />
+                              </Flex>
+                            </Box>
+                          </GridItem>
+                        </React.Fragment>
                       );
                     })}
                   </Grid>
@@ -276,34 +293,34 @@ const AddNewNFTForm = () => {
                 </Flex>
 
                 {values.levels[0].name
-                  ? values?.levels.map((item) => {
+                  ? values?.levels.map((item, idx) => {
                       return (
-                        <Box
-                          w="full"
-                          textAlign="left"
-                          alignItems="end"
-                          bg="brand.semiBlack"
-                          p={5}
-                          mb={3}
-                        >
-                          <Flex w="full" mb={3}>
-                            <Text color="#fff">
+                        <React.Fragment key={idx}>
+                          <Box
+                            w="full"
+                            textAlign="left"
+                            alignItems="end"
+                            bg="brand.semiBlack"
+                            p={5}
+                            mb={3}
+                          >
+                            <Flex w="full" mb={3}>
                               <Heading size="h6" mt={1} color="#fff">
                                 {item.name}
                               </Heading>
-                            </Text>
-                            <Spacer />{" "}
-                            <Text color="#fff">
-                              {item.level} of {item.levelMax}
-                            </Text>
-                          </Flex>
-                          <Progress
-                            colorScheme="telegram"
-                            size="sm"
-                            value={Number((item.level * 100) / item.levelMax)}
-                            height="6px"
-                          />
-                        </Box>
+                              <Spacer />
+                              <Text color="#fff">
+                                {item.level} of {item.levelMax}
+                              </Text>
+                            </Flex>
+                            <Progress
+                              colorScheme="telegram"
+                              size="sm"
+                              value={Number((item.level * 100) / item.levelMax)}
+                              height="6px"
+                            />
+                          </Box>
+                        </React.Fragment>
                       );
                     })
                   : null}
@@ -336,92 +353,3 @@ const AddNewNFTForm = () => {
 };
 
 export default AddNewNFTForm;
-
-// const AddNewNFTPropertiesList = ({ values }) => {
-//   const { isOpen, onOpen, onClose } = useDisclosure();
-
-//   return (
-//     <Box pt={6}>
-//       <Flex w="full" pb={3} borderBottomWidth={1}>
-//         <VStack alignItems="start">
-//           <Heading size="h5">properties</Heading>
-//           <Text fontSize={"lg"}>
-//             Textural trails that show up as restangles
-//           </Text>
-//         </VStack>
-//         <Spacer />
-//         <Button variant="outline" color="brand.blue" onClick={onOpen}>
-//           Add properties
-//         </Button>
-//       </Flex>
-
-//       <AddPropertiesModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
-//     </Box>
-//   );
-// };
-
-// const AddNewNFTLevelsList = ({ values }) => {
-//   return (
-//     <Box pt={6}>
-//       <Flex w="full" pb={3} borderBottomWidth={1}>
-//         <VStack alignItems="start">
-//           <Heading size="h5">Levels</Heading>
-//           <Text fontSize={"lg"}>
-//             Textural trails that show up as restangles
-//           </Text>
-//         </VStack>
-//         <Spacer />
-//         <Button variant="outline" color="brand.blue">
-//           Add Levels
-//         </Button>
-//       </Flex>
-
-//       <Flex>
-//         <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
-//           <Text>Name</Text>
-//         </Box>
-//         <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
-//           <Text>Level</Text>
-//         </Box>
-//         <Box w={14} />
-//       </Flex>
-//       <FieldArray
-//         name="levels"
-//         render={(arrayHelpers) => (
-//           <div>
-//             {values.levels.map((level, index) => (
-//               <div key={index}>
-//                 {/** both these conventions do the same */}
-//                 <Flex alignItems="center" mb={4}>
-//                   <Field as={Input} bg="black" name={`levels[${index}].name`} />
-//                   <Field as={Input} bg="black" name={`levels.${index}.level`} />
-//                   <Field
-//                     as={Input}
-//                     bg="black"
-//                     name={`levels.${index}.maxLevel`}
-//                   />
-//                   <IconButton
-//                     aria-label="Delete"
-//                     icon={<DeleteIcon fontSize="1.5rem" />}
-//                     size="icon"
-//                     variant="iconOutline"
-//                     onClick={() => arrayHelpers.remove(index)}
-//                   />
-//                 </Flex>
-//               </div>
-//             ))}
-//             <IconButton
-//               aria-label="Add"
-//               icon={<AddIcon fontSize="1.5rem" />}
-//               size="icon"
-//               variant="iconOutline"
-//               onClick={() =>
-//                 arrayHelpers.push({ name: "", level: "", maxLevel: "" })
-//               }
-//             />
-//           </div>
-//         )}
-//       />
-//     </Box>
-//   );
-// };

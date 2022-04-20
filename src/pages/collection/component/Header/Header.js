@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Avatar,
   Box,
@@ -6,6 +7,7 @@ import {
   Heading,
   HStack,
   Image,
+  Skeleton,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -24,7 +26,8 @@ function CollectionHeader({
   description,
   profile,
   volume,
-  floorPrice, nftTotalCount
+  floorPrice,
+  nftTotalCount,
 }) {
   return (
     <Box
@@ -58,7 +61,8 @@ function CollectionHeader({
               rounded="full"
               objectFit="cover"
               src={`${IPFS_BASE_URL}/${avatarImage}`}
-              fallbackSrc="https://via.placeholder.com/64"
+              // fallbackSrc="https://via.placeholder.com/64"
+              fallback={<Skeleton w={40} h={40} />}
             />
           </Center>
 
@@ -90,7 +94,7 @@ function CollectionHeader({
           >
             <VStack textAlign="center">
               <Text fontFamily="DS-Digital" fontSize="6xl" lineHeight="none">
-                {nftTotalCount}
+                {nftTotalCount || 0}
               </Text>
               <Text>Items</Text>
             </VStack>
@@ -105,7 +109,7 @@ function CollectionHeader({
             <VStack textAlign="center">
               <Flex alignItems="center" justifyContent="center">
                 <Text fontFamily="DS-Digital" fontSize="6xl" lineHeight="none">
-                  {floorPrice}
+                  {floorPrice || 0}
                 </Text>
                 <Avatar
                   src={AzeroIcon}
@@ -122,7 +126,7 @@ function CollectionHeader({
             <VStack textAlign="center">
               <Flex alignItems="center" justifyContent="center">
                 <Text fontFamily="DS-Digital" fontSize="6xl" lineHeight="none">
-                  {volume} M
+                  {volume || 0} m
                 </Text>
                 <Avatar
                   src={AzeroIcon}

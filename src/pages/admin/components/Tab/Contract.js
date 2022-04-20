@@ -11,9 +11,8 @@ import {
   Input,
   HStack,
   Heading,
-  Center,
 } from "@chakra-ui/react";
-import { Table, Thead, Tbody, Tfoot, Tr, Th, Td } from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
 import Loader from "@components/Loader/Loader";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
@@ -402,101 +401,6 @@ function ContractTab() {
                   </Flex>
                 </Box>
               </Flex>
-
-              <Flex hidden bg="blue.500" my={12} flexWrap>
-                <Text>
-                  {" "}
-                  <strong>Quản lý Artzero NFT Contract:</strong>
-                </Text>
-                <Text>
-                  {" "}
-                  Contract Owner:{" "}
-                  <strong>{truncateStr(art0_NFT_owner, 9)}</strong>
-                </Text>
-                <Text>
-                  {" "}
-                  Contract Balance:{" "}
-                  <strong>{azNFTContractBalance} SZERO</strong>
-                </Text>
-                <Text>Owner Withdraw AZERO:</Text>
-                <NumberInput
-                  defaultValue={0}
-                  onChange={(valueString) => setWithdrawAmount(valueString)}
-                  value={withdrawAmount}
-                >
-                  <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>{" "}
-                <Button size="sm" color="black" onClick={() => onWithdraw()}>
-                  Withdraw
-                </Button>
-                <Text>Add Whitelist:</Text>
-                <Input
-                  placeholder="Enter address"
-                  value={whitelistAddress}
-                  onChange={(event) =>
-                    setWhitelistAddress(event.target.value.toString())
-                  }
-                />
-                <NumberInput
-                  defaultValue={1}
-                  min={1}
-                  onChange={(valueString) => setWhitelistAmount(valueString)}
-                  value={whitelistAmount}
-                >
-                  <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>{" "}
-                <Button
-                  size="sm"
-                  color="black"
-                  marginRight="2"
-                  onClick={() => onAddWhitelist()}
-                >
-                  Add Whitelist
-                </Button>
-                <Button
-                  size="sm"
-                  color="black"
-                  onClick={() => onAddWhitelistUpdate()}
-                >
-                  Update Whitelist
-                </Button>
-                <Text>
-                  Total Whitelist account: <strong>{whitelistCount}</strong>
-                </Text>
-                <Table variant="simple">
-                  <Thead>
-                    <Tr>
-                      <Th>Address</Th>
-                      <Th isNumeric>Amount</Th>
-                      <Th isNumeric>Claimed</Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {whitelist.map((wl, index) => (
-                      <Tr key={index}>
-                        <Td>{truncateStr(wl.account, 5)}</Td>
-                        <Td isNumeric>{wl.whitelistAmount}</Td>
-                        <Td isNumeric>{wl.claimedAmount}</Td>
-                      </Tr>
-                    ))}
-                  </Tbody>
-                  <Tfoot>
-                    <Tr>
-                      <Th>Address</Th>
-                      <Th isNumeric>Amount</Th>
-                      <Th isNumeric>Claimed</Th>
-                    </Tr>
-                  </Tfoot>
-                </Table>
-              </Flex>
             </Box>
 
             <Box maxW="6xl-mid" fontSize="lg">
@@ -543,7 +447,9 @@ function ContractTab() {
                 </Thead>
                 <Tbody>
                   {whitelist.length === 0 ? (
-                    <Center py={7}>There is no data.</Center>
+                    <Tr color="#fff">
+                      <Td py={7}>There is no data.</Td>
+                    </Tr>
                   ) : (
                     whitelist.map((wl, index) => (
                       <Tr key={index} color="#fff">

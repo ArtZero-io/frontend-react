@@ -1,77 +1,78 @@
+import { ContractPromise } from "@polkadot/api-contract";
+import toast from "react-hot-toast";
 import BN from "bn.js";
-import toast from 'react-hot-toast'
-import { web3FromSource } from '../wallets/extension-dapp'
-import {isValidAddressPolkadotAddress} from '@utils'
-let staking_contract
 
-function isLoaded() {
-  if (staking_contract) return true; else return false;
-}
+import { web3FromSource } from "../wallets/extension-dapp";
 
-function setContract(c) {
-  // console.log(`Setting contract in blockchain module`, c)
-  staking_contract = c
-}
+import { isValidAddressPolkadotAddress } from "@utils";
+
+let account;
+let contract;
+console.log('account', account)
+
+export const setAccount = (newAccount) => (account = newAccount);
+
+export const setStakingContract = (api, data) => {
+  contract = new ContractPromise(
+    api,
+    data?.CONTRACT_ABI,
+    data?.CONTRACT_ADDRESS
+  );
+};
 //GETTERS
 async function getTotalStaked(caller_account) {
-  if (!staking_contract || !caller_account
-    ){
-    console.log('invalid inputs');
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
     return null;
   }
-  const address = caller_account?.address
-  const gasLimit = -1
-  const azero_value = 0
-  //console.log(staking_contract);
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
 
-  const { result, output } = await staking_contract.query.getTotalStaked(
-    address,
-    { value:azero_value, gasLimit }
-  )
+  const { result, output } = await contract.query.getTotalStaked(address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
-async function getTotalStakedByAccount(caller_account,account) {
-  if (!staking_contract || !caller_account ||
-    !isValidAddressPolkadotAddress(account)
-    ){
-    console.log('invalid inputs');
+async function getTotalStakedByAccount(caller_account, account) {
+  if (!contract || !caller_account || !isValidAddressPolkadotAddress(account)) {
+    console.log("invalid inputs");
     return null;
   }
-  const address = caller_account?.address
-  const gasLimit = -1
-  const azero_value = 0
-  //console.log(staking_contract);
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
 
-  const { result, output } = await staking_contract.query["crossArtZeroStaking::getTotalStakedByAccount"](
-    address,
-    { value:azero_value, gasLimit },
-    account
-  )
+  const { result, output } = await contract.query[
+    "crossArtZeroStaking::getTotalStakedByAccount"
+  ](address, { value: azero_value, gasLimit }, account);
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
-async function getStakedId(caller_account,account,index) {
-  if (!staking_contract || !caller_account ||
-    !isValidAddressPolkadotAddress(account)
-    ){
-    console.log('invalid inputs');
+async function getStakedId(caller_account, account, index) {
+  if (!contract || !caller_account || !isValidAddressPolkadotAddress(account)) {
+    console.log("invalid inputs");
     return null;
   }
-  const address = caller_account?.address
-  const gasLimit = -1
-  const azero_value = 0
-  //console.log(staking_contract);
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
 
-  const { result, output } = await staking_contract.query.getStakedId(
+  const { result, output } = await contract.query.getStakedId(
     address,
-    { value:azero_value, gasLimit },
-    account,index
-  )
+    { value: azero_value, gasLimit },
+    account,
+    index
+  );
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
@@ -80,96 +81,84 @@ async function getStakedId(caller_account,account,index) {
 
 //SETTERS
 async function stake(caller_account, token_ids) {
-  if (!staking_contract || !caller_account
-    ){
-    console.log('invalid inputs');
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
     return null;
   }
-  let unsubscribe
+  let unsubscribe;
 
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source)
+  const injector = await web3FromSource(caller_account?.meta?.source);
 
-  staking_contract.tx
-    .stake({ gasLimit, value:azero_value }, token_ids)
+  contract.tx
+    .stake({ gasLimit, value: azero_value }, token_ids)
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
         if (dispatchError) {
           if (dispatchError.isModule) {
-            toast.error(
-              `There is some error with your request`
-            )
+            toast.error(`There is some error with your request`);
           } else {
-            console.log(
-              'dispatchError ',
-              dispatchError.toString()
-            )
+            console.log("dispatchError ", dispatchError.toString());
           }
         }
 
         if (status) {
-          const statusText = Object.keys(status.toHuman())[0]
+          const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Stake Artzero NFTs ${
-              statusText === '0' ? 'started' : statusText.toLowerCase()
+              statusText === "0" ? "started" : statusText.toLowerCase()
             }.`
-          )
+          );
         }
       }
     )
-    .then(unsub => (unsubscribe = unsub))
-    .catch(e => console.log('e', e));
-    return unsubscribe;
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
+  return unsubscribe;
 }
 async function unstake(caller_account, token_ids) {
-  if (!staking_contract || !caller_account
-    ){
-    console.log('invalid inputs');
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
     return null;
   }
-  let unsubscribe
+  let unsubscribe;
 
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source)
+  const injector = await web3FromSource(caller_account?.meta?.source);
 
-  staking_contract.tx
-    .unstake({ gasLimit, value:azero_value }, token_ids)
+  contract.tx
+    .unstake({ gasLimit, value: azero_value }, token_ids)
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
         if (dispatchError) {
           if (dispatchError.isModule) {
-            toast.error(
-              `There is some error with your request`
-            )
+            toast.error(`There is some error with your request`);
           } else {
-            console.log(
-              'dispatchError ',
-              dispatchError.toString()
-            )
+            console.log("dispatchError ", dispatchError.toString());
           }
         }
 
         if (status) {
-          const statusText = Object.keys(status.toHuman())[0]
+          const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Unstake Artzero NFTs ${
-              statusText === '0' ? 'started' : statusText.toLowerCase()
+              statusText === "0" ? "started" : statusText.toLowerCase()
             }.`
-          )
+          );
         }
       }
     )
-    .then(unsub => (unsubscribe = unsub))
-    .catch(e => console.log('e', e));
-    return unsubscribe;
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
+  return unsubscribe;
 }
 
 const staking_calls = {
@@ -178,8 +167,8 @@ const staking_calls = {
   getStakedId,
   stake,
   unstake,
-  setContract,
-  isLoaded
-}
+  setStakingContract,
+  setAccount,
+};
 
-export default staking_calls
+export default staking_calls;

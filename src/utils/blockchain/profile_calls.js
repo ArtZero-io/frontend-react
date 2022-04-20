@@ -1,36 +1,24 @@
-import { web3FromSource } from "../wallets/extension-dapp";
 import toast from "react-hot-toast";
-import { AccountActionTypes } from "../../store/types/account.types";
+import { ContractPromise } from "@polkadot/api-contract";
+import { web3FromSource } from "../wallets/extension-dapp";
+import { AccountActionTypes } from "@store/types/account.types";
 import { truncateStr } from "..";
 
 let account;
-let profileContract;
+let contract;
 
-const gasLimit = -1;
 const value = 0;
+const gasLimit = -1;
 
-const currentAccountLocal = JSON.parse(
-  window.localStorage.getItem("currentAccount")
-);
-account = currentAccountLocal || null;
+export const setAccount = (newAccount) => (account = newAccount);
 
-function isLoaded() {
-  if (profileContract) return true;
-  else return false;
-}
-
-function setAccount(newAccount) {
-  // console.log(`Setting a new account in blockchain module`, newAccount.address)
-  account = newAccount;
-}
-
-function setProfileContract(contract) {
-  // console.log(
-  //   `xyz 2 Setting contract in profileContract blockchain module`,
-  //   contract
-  // );
-  profileContract = contract;
-}
+export const setProfileContract = (api, data) => {
+  contract = new ContractPromise(
+    api,
+    data?.CONTRACT_ABI,
+    data?.CONTRACT_ADDRESS
+  );
+};
 
 async function getWalletAddress() {
   const address = account?.address;
@@ -46,9 +34,9 @@ async function getWalletAddress() {
 export async function getProfileOnChain() {
   const address = await getWalletAddress();
 
-  let profile;
+  let profileInfo;
 
-  const { result, output } = await profileContract.query.getAttributes(
+  const { result, output } = await contract.query.getAttributes(
     address,
     { value, gasLimit },
     address,
@@ -64,7 +52,7 @@ export async function getProfileOnChain() {
   );
 
   if (result.isOk) {
-    profile = {
+    profileInfo = {
       username: output.toHuman()[0],
       avatar: output.toHuman()[1],
       bio: output.toHuman()[2],
@@ -73,10 +61,9 @@ export async function getProfileOnChain() {
       instagram: output.toHuman()[5],
       telegram: output.toHuman()[6],
     };
-    // console.log("Load profile successful.", profile);
   }
 
-  return profile;
+  return profileInfo;
 }
 
 export async function setSingleAttributeProfileOnChain(data) {
@@ -89,7 +76,7 @@ export async function setSingleAttributeProfileOnChain(data) {
   const injector = await web3FromSource(account?.meta?.source);
 
   account &&
-    profileContract.tx
+    contract.tx
       .setProfileAttribute({ gasLimit, value }, data?.attribute, data?.value)
       .signAndSend(
         address,
@@ -97,7 +84,7 @@ export async function setSingleAttributeProfileOnChain(data) {
         async ({ status, dispatchError }) => {
           if (dispatchError) {
             if (dispatchError.isModule) {
-              const decoded = profileContract.registry.findMetaError(
+              const decoded = contract.registry.findMetaError(
                 dispatchError.asModule
               );
               const { docs, name, section } = decoded;
@@ -141,7 +128,7 @@ export async function setMultipleAttributesProfileOnChain(
   const injector = await web3FromSource(account?.meta?.source);
 
   account &&
-    profileContract.tx
+    contract.tx
       .setMultipleAttributes({ gasLimit, value }, attributes, values)
       .signAndSend(
         address,
@@ -149,7 +136,7 @@ export async function setMultipleAttributesProfileOnChain(
         async ({ status, dispatchError }) => {
           if (dispatchError) {
             if (dispatchError.isModule) {
-              const decoded = profileContract.registry.findMetaError(
+              const decoded = contract.registry.findMetaError(
                 dispatchError.asModule
               );
               const { docs, name, section } = decoded;
@@ -196,54 +183,12 @@ export async function setMultipleAttributesProfileOnChain(
 }
 
 const blockchainModule = {
-  // My account
   getProfileOnChain,
   setAccount,
   setProfileContract,
   setSingleAttributeProfileOnChain,
   setMultipleAttributesProfileOnChain,
-  isLoaded,
+  // isLoaded,
 };
 
 export default blockchainModule;
-
-// function handleContractCall(status, dispatchError, dispatch) {
-//   if (dispatchError) {
-//     if (dispatchError.isModule) {
-//       const decoded = profileContract.registry.findMetaError(
-//         dispatchError.asModule
-//       );
-//       const { docs, name, section } = decoded;
-
-//       console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
-//     } else {
-//       console.log(dispatchError.toString());
-//     }
-//   }
-
-//   if (status) {
-//     const statusToHuman = Object.entries(status.toHuman());
-
-//     if (Object.keys(status.toHuman())[0] === "0") {
-//       dispatch({
-//         type: AccountActionTypes.SET_TNX_STATUS,
-//         payload: { status: "Ready" },
-//       });
-//     } else {
-//       dispatch({
-//         type: AccountActionTypes.SET_TNX_STATUS,
-//         payload: {
-//           status: statusToHuman[0][0],
-//           value: truncateStr(statusToHuman[0][1], 6),
-//         },
-//       });
-//     }
-
-//     const statusText = Object.keys(status.toHuman())[0];
-//     toast.success(
-//       `Profile update ${
-//         statusText === "0" ? "start" : statusText.toLowerCase()
-//       }.`
-//     );
-//   }
-// }

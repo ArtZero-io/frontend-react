@@ -88,7 +88,7 @@ function WalletNotConnected() {
                         </Text>
 
                         {!installed && (
-                          <Link href={installUrl} isExternal>
+                          <Link href={installUrl} isexternal="true">
                             Install <ExternalLinkIcon mx="1px" />
                           </Link>
                         )}
