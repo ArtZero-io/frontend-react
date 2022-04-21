@@ -70,7 +70,7 @@ export default function NFTChangeSize({
           alignItems="start"
           flexGrow="1"
         >
-          <Heading size="h6">{nft_name}</Heading>
+          <Heading size="h6">{attrsObject.nft_name}</Heading>
 
           {is_for_sale && (
             <Flex w="full">

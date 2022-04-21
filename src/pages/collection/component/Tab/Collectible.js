@@ -58,7 +58,7 @@ const NFTTabCollectible = ({
 
   useEffect(async () => {
     await onRefresh();
-  }, [collection_manager_calls.isLoaded(), artzero_nft_calls.isLoaded()]);
+  }, [artzero_nft_calls.isLoaded()]);
 
   const onRefresh = async () => {
     await loadNFT();
