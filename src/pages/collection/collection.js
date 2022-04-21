@@ -9,12 +9,30 @@ import { clientAPI } from "@api/client";
 import TabActivity from "./component/TabActivity";
 import TabCollectionItems from "./component/TabItems";
 import CollectionHero from "./component/Header/Header";
+import contractData from "@utils/blockchain/index";
+import {
+  setNft721Psp34Contract,
+  setAccount as setAccountNft721Psp34Module,
+} from "@utils/blockchain/nft721-psp34-standard-calls";
+import { useSubstrateState } from "@utils/substrate";
 
 function CollectionPage() {
   const { collection_address } = useParams();
+  const { api, apiState, currentAccount } = useSubstrateState();
 
   const [collection, setCollection] = useState({});
   const [isShowUnlisted, setIsShowUnlisted] = useState(false);
+
+  useEffect(() => {
+    contractData.nft721Psp34.CONTRACT_ADDRESS = collection_address;
+
+    const setNft721Psp34ContractModule = async () => {
+      setAccountNft721Psp34Module(currentAccount);
+      setNft721Psp34Contract(api, contractData.nft721Psp34);
+    };
+
+    apiState === "READY" && setNft721Psp34ContractModule();
+  }, [api, apiState, collection_address, currentAccount]);
 
   useEffect(() => {
     const fetchCollectionDetail = async () => {
@@ -40,12 +58,10 @@ function CollectionPage() {
 
         const NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
 
-        console.log("xxx", NFTList);
-
         collectionDetail.floorPrice = floorPrice || 0;
         collectionDetail.nftList = NFTList;
         collectionDetail.nftTotalCount = NFTList?.length;
-        console.log("collectionDetail", collectionDetail);
+
         setCollection(collectionDetail);
       } catch (error) {
         console.log("fetchCollectionDetail error", error);
@@ -62,8 +78,6 @@ function CollectionPage() {
       collection?.nftList?.filter((item) => item.is_for_sale === false);
   }, [collection, isShowUnlisted]);
 
-  console.log("CollectionPage collection", collection);
-  console.log("CollectionPage collection.nftList", collection.nftList);
   const tabData = [
     {
       label: "Items",

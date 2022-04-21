@@ -270,7 +270,7 @@ const MyNFTsPage = () => {
           </Center>
         )} */}
 
-        {!loading && myCollections?.length === 0 ? (
+        {myCollections?.length === 0 ? (
           <Text>You don't have any NFTs</Text>
         ) : (
           myCollections?.map((item) => <MyNFTGroupCard {...item} />)

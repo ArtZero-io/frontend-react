@@ -139,6 +139,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
               "onSubmit collectionOwner === currentAccount?.address",
               collectionOwner === currentAccount?.address
             );
+
             if (collectionOwner === currentAccount?.address) {
               let attributes = [
                 {
@@ -157,19 +158,22 @@ const AddNewNFTForm = ({ collectionOwner }) => {
 
               console.log("onSubmit 1 attributes", attributes);
 
-              for (const property of values.properties) {
-                attributes.push({
-                  name: property.type,
-                  value: property.name,
-                });
+              if (values?.properties?.name) {
+                for (const property of values.properties) {
+                  attributes.push({
+                    name: property.type,
+                    value: property.name,
+                  });
+                }
               }
               console.log("onSubmit 2 attributes", attributes);
-
-              for (const level of values.levels) {
-                attributes.push({
-                  name: level.name,
-                  value: level.level + "|" + level.levelMax,
-                });
+              if (values?.properties?.name) {
+                for (const level of values.levels) {
+                  attributes.push({
+                    name: level.name,
+                    value: level.level + "|" + level.levelMax,
+                  });
+                }
               }
               console.log("onSubmit 3 attributes", attributes);
 
@@ -188,6 +192,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
       >
         {({ values }) => (
           <div>
+            {console.log("values", values)}
             <Form>
               <HStack>
                 <AddNewNFTInput

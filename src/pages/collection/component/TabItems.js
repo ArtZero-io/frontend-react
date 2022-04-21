@@ -29,7 +29,7 @@ const CollectionItems = ({
   isShowUnlisted,
 }) => {
   const { currentAccount } = useSubstrateState();
-  console.log('CollectionItems nftList', nftList)
+
   const forceUpdate = useCallback(() => {
     // onRefresh();
   }, []);
@@ -90,7 +90,10 @@ const CollectionItems = ({
         <Spacer />
 
         {currentAccount?.address === collectionOwner && contractType === 2 ? (
-          <AddNewNFTModal collectionOwner={collectionOwner} forceUpdate={forceUpdate} />
+          <AddNewNFTModal
+            collectionOwner={collectionOwner}
+            forceUpdate={forceUpdate}
+          />
         ) : null}
       </Flex>
       <CollectionNFTGrid bigCard={bigCard} nftList={nftList} />

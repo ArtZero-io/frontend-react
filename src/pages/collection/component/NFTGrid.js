@@ -12,7 +12,7 @@ const NFTGrid = ({ bigCard, nftList }) => {
     setSelectedNft(item);
     onOpen();
   }
-  console.log("NFTGrid nftList", nftList);
+
   return (
     <div>
       <NFTDetailModal
