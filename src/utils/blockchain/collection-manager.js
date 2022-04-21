@@ -2,7 +2,7 @@ const collection_manager = {
   CONTRACT_ADDRESS: "5FdU38sQ5ZCN8S6LE9ojkkJ7pRLJC8Vpvgf7WYKB9eQeZKx3",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xed1e083ee5a084d19499333f485a41ed8177201dd5a21e833507ee7535dd2564",
+      "hash": "0x5428bbeececa3805b82d106d9560f9357c8dfb37f74a405d05e7dbb7ec4fddec",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -776,32 +776,6 @@ const collection_manager = {
             "selector": "0x8938ef71"
           },
           {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 25
-            },
-            "selector": "0x11f43efd"
-          },
-          {
             "args": [],
             "docs": [],
             "label": "Ownable::renounce_ownership",
@@ -834,58 +808,28 @@ const collection_manager = {
           {
             "args": [
               {
-                "label": "nft_contract_address",
+                "label": "new_owner",
                 "type": {
                   "displayName": [
-                    "crossartzerocollection_external",
-                    "GetContractTypeInput1"
+                    "ownable_external",
+                    "TransferOwnershipInput1"
                   ],
                   "type": 0
                 }
               }
             ],
-            "docs": [
-              "Get NFT Contract Type 1 or 2 for PSP34"
-            ],
-            "label": "CrossArtZeroCollection::get_contract_type",
-            "mutates": false,
+            "docs": [],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
-                "crossartzerocollection_external",
-                "GetContractTypeOutput"
+                "ownable_external",
+                "TransferOwnershipOutput"
               ],
-              "type": 2
+              "type": 25
             },
-            "selector": "0x81fa82e9"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
-                    "GetCollectionOwnerInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Get Collection Owner by Collection Address (NFT address)"
-            ],
-            "label": "CrossArtZeroCollection::get_collection_owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "GetCollectionOwnerOutput"
-              ],
-              "type": 24
-            },
-            "selector": "0xb1f1e401"
+            "selector": "0x11f43efd"
           },
           {
             "args": [
@@ -942,6 +886,62 @@ const collection_manager = {
               "type": 9
             },
             "selector": "0x74687faf"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "GetContractTypeInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              "Get NFT Contract Type 1 or 2 for PSP34"
+            ],
+            "label": "CrossArtZeroCollection::get_contract_type",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "GetContractTypeOutput"
+              ],
+              "type": 2
+            },
+            "selector": "0x81fa82e9"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "GetCollectionOwnerInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Get Collection Owner by Collection Address (NFT address)"
+            ],
+            "label": "CrossArtZeroCollection::get_collection_owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "GetCollectionOwnerOutput"
+              ],
+              "type": 24
+            },
+            "selector": "0xb1f1e401"
           }
         ]
       },

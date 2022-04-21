@@ -1,8 +1,8 @@
 const marketplace = {
-  CONTRACT_ADDRESS: "5EiM2FBqx2KHGHcMzb73DbsDTzY1L66rqSCyF1wpnq6dAdE7",
+  CONTRACT_ADDRESS: "5EHyw2uPsaxCwfJkNb24vjAR3U48U4Dpt65afkMd2irL3fdV",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x62350a122087739ca44747d424c8a7d220121a70a1a8d6372a657f628e39a71b",
+      "hash": "0x5f4c97c190ca8d59443c0aaf9b0c30ef66d348e90e1bc259e409fab230da4efe",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -702,6 +702,54 @@ const marketplace = {
               "type": 32
             },
             "selector": "0xfd066a27"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Get platform fee"
+            ],
+            "label": "get_platform_fee",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "u32"
+              ],
+              "type": 4
+            },
+            "selector": "0xd11d7ceb"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Get Staking Discount Criteria"
+            ],
+            "label": "get_staking_discount_criteria",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Vec"
+              ],
+              "type": 11
+            },
+            "selector": "0xac3b80e4"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Get Staking Discount Rates"
+            ],
+            "label": "get_staking_discount_rate",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Vec"
+              ],
+              "type": 28
+            },
+            "selector": "0xc32f36d7"
           },
           {
             "args": [
