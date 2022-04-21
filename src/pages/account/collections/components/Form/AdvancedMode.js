@@ -87,6 +87,7 @@ const AdvancedModeForm = () => {
             ) {
               toast.error(`The NFT contract address must be an address!`);
             } else {
+              // TODO: Need to values.abiFileUrl as file input and extension allow : json
               const data = {
                 nftContractAddress: values.nftContractAddress,
                 attributes: [
@@ -94,12 +95,14 @@ const AdvancedModeForm = () => {
                   "description",
                   "avatar_image",
                   "header_image",
+                  "abi_file"
                 ],
                 attributeVals: [
                   values.collectionName,
                   values.collectionDescription,
                   values.avatarIPFSUrl,
                   values.headerIPFSUrl,
+                  values.abiFileUrl
                 ],
                 collectionAllowRoyalFee: values.collectRoyalFee,
                 collectionRoyalFeeData: values.collectRoyalFee
