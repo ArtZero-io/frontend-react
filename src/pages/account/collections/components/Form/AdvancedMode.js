@@ -101,7 +101,7 @@ const AdvancedModeForm = () => {
                   "description",
                   "avatar_image",
                   "header_image",
-                  "abiUrl",
+                  "abi_file",
                 ],
 
                 attributeVals: [
@@ -117,7 +117,7 @@ const AdvancedModeForm = () => {
                   ? Math.round(values.royalFee * 100)
                   : 0,
               };
-              console.log("data...", data);
+
               await collection_manager_calls.addNewCollection(
                 currentAccount,
                 data,
