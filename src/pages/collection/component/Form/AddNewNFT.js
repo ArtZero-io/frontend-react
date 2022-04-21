@@ -17,10 +17,10 @@ import toast from "react-hot-toast";
 import * as Yup from "yup";
 import AddNewNFTImageUpload from "@components/ImageUpload/Collection";
 import { useSubstrateState } from "@utils/substrate";
-// import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
-// import { ContractPromise } from "@polkadot/api-contract";
-// import { useParams } from "react-router-dom";
+import { ContractPromise } from "@polkadot/api-contract";
+import { useParams } from "react-router-dom";
 // import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 // import { delay } from "@utils";
 import AddNewNFTInput from "@components/Input/Input";
@@ -31,13 +31,13 @@ import AddLevelsModal from "../Modal/AddLevels";
 
 const AddNewNFTForm = ({ collectionOwner }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
-  const { currentAccount } = useSubstrateState();
+  const { currentAccount, api } = useSubstrateState();
 
   // const { api, currentAccount } = useSubstrateState();
   // const [isLoadedContract, setIsLoadedContract] = useState(false);
   // const [nft721Psp34StandardContract, setNft721Psp34StandardContract] =
   //   useState({});
-  // const { collection_address } = useParams();
+  const { collection_address } = useParams();
   // const [collection, setCollectionData] = useState({});
 
   const dispatch = useDispatch();
@@ -176,7 +176,12 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                 }
               }
               console.log("onSubmit 3 attributes", attributes);
-
+              const nft721_psp34_standard_contract = new ContractPromise(
+                api,
+                nft721_psp34_standard.CONTRACT_ABI,
+                collection_address
+              );
+              nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
               await nft721_psp34_standard_calls.mintWithAttributes(
                 currentAccount,
                 attributes,
