@@ -1,16 +1,20 @@
 import { Box, Button, Flex, HStack, Spacer, Stack } from "@chakra-ui/react";
-import { Formik, Form } from "formik";
+import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
+import { Formik, Form } from "formik";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
+
 import CollectionImageUpload from "@components/ImageUpload/Collection";
-import { useSubstrateState } from "@utils/substrate";
-import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import SimpleModeInput from "@components/Input/Input";
 import SimpleModeTextArea from "@components/TextArea/TextArea";
 import SimpleModeSwitch from "@components/Switch/Switch";
-import { useDispatch, useSelector } from "react-redux";
+
+import { useSubstrateState } from "@utils/substrate";
+import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+
 import AddCollectionNumberInput from "../NumberInput";
+
 const SimpleModeForm = () => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
@@ -21,14 +25,17 @@ const SimpleModeForm = () => {
   const { currentAccount, api } = useSubstrateState();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
 
-  useEffect(async () => {
-    if (addingFee === 0) {
-      const adddingFee = await collection_manager_calls.getAddingFee(
-        currentAccount
-      );
-      setAddingFee(adddingFee / 10 ** 12);
-    }
-  }, [addingFee]);
+  useEffect(() => {
+    const fetchFee = async () => {
+      if (addingFee === 0) {
+        const addingFeeData = await collection_manager_calls.getAddingFee(
+          currentAccount
+        );
+        setAddingFee(addingFeeData / 10 ** 12);
+      }
+    };
+    fetchFee();
+  }, [addingFee, currentAccount]);
 
   const checkCurrentBalance = async () => {
     const { data: balance } = await api.query.system.account(
@@ -52,30 +59,40 @@ const SimpleModeForm = () => {
           collectionDescription: "",
           collectRoyalFee: false,
           royalFee: 10,
+          website: "",
+          twitter: "",
+          discord: "",
         }}
         validationSchema={Yup.object({
           nftName: Yup.string()
-            .max(30, "Must be 30 characters or less")
+            .min(3, "Must be longer than 3 characters")
+            .max(25, "Must be less than 25 characters")
             .required("Required"),
           nftSymbol: Yup.string()
-            .max(10, "Must be 10 characters or less")
+            .min(3, "Must be longer than 3 characters")
+            .max(8, "Must be less than 8 characters")
             .required("Required"),
           collectionName: Yup.string()
-            .max(30, "Must be 30 characters or less")
+            .min(3, "Must be longer than 3 characters")
+            .max(50, "Must be less than 50 characters")
             .required("Required"),
           collectionDescription: Yup.string()
-            .max(150, "Must be 150 characters or less")
+            .min(3, "Must be longer than 3 characters")
+            .max(150, "Must be less than 150 characters")
             .required("Required"),
           collectRoyalFee: Yup.boolean(),
           website: Yup.string()
             .url("This must be a valid URL")
-            .max(30, "Must be 30 characters or less"),
+            .min(3, "Must be longer than 3 characters")
+            .max(50, "Must be less than 50 characters"),
           twitter: Yup.string()
             .url("This must be a valid URL")
-            .max(30, "Must be 30 characters or less"),
+            .min(3, "Must be longer than 3 characters")
+            .max(50, "Must be less than 50 characters"),
           discord: Yup.string()
             .url("This must be a valid URL")
-            .max(30, "Must be 30 characters or less"),
+            .min(3, "Must be longer than 3 characters")
+            .max(50, "Must be less than 50 characters"),
         })}
         onSubmit={async (values, { setSubmitting }) => {
           (!headerIPFSUrl || !avatarIPFSUrl) &&
@@ -84,12 +101,14 @@ const SimpleModeForm = () => {
           if (avatarIPFSUrl && headerIPFSUrl) {
             values.avatarIPFSUrl = avatarIPFSUrl;
             values.headerIPFSUrl = headerIPFSUrl;
+
             if (!checkCurrentBalance) {
               toast.error(`Your balance not enough`);
             } else {
               const data = {
                 nftName: values.nftName,
                 nftSymbol: values.nftSymbol,
+
                 attributes: [
                   "name",
                   "description",
@@ -99,6 +118,7 @@ const SimpleModeForm = () => {
                   "twitter",
                   "discord",
                 ],
+
                 attributeVals: [
                   values.collectionName,
                   values.collectionDescription,
@@ -108,12 +128,14 @@ const SimpleModeForm = () => {
                   values.twitter,
                   values.discord,
                 ],
+
                 collectionAllowRoyalFee: values.collectionRoyalFee,
                 collectionRoyalFeeData: values.collectionRoyalFee
                   ? Math.round(values.royalFee * 100)
                   : 0,
               };
 
+              console.log('data', data)
               await collection_manager_calls.autoNewCollection(
                 currentAccount,
                 data,
@@ -166,6 +188,7 @@ const SimpleModeForm = () => {
                 placeholder={"Discord URL"}
               />
             </HStack>
+
             <SimpleModeTextArea
               label="Collection Description"
               name="collectionDescription"
@@ -196,7 +219,10 @@ const SimpleModeForm = () => {
             <Flex alignItems="center" minH={20} mt={5}>
               <Box w="15rem">
                 <SimpleModeSwitch
-                  onChange={() => setIsSetRoyal(!isSetRoyal)}
+                  onChange={() => {
+                    values.collectRoyalFee = !values.collectRoyalFee;
+                    setIsSetRoyal(!isSetRoyal);
+                  }}
                   label="Collect Royal Fee"
                   name="collectRoyalFee"
                 />

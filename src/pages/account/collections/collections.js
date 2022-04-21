@@ -24,7 +24,7 @@ import { useSubstrateState } from "@utils/substrate";
 import AddNewCollectionModal from "./components/Modal/AddNew";
 
 function MyCollectionsPage() {
-  const [collections, setCollections] = useState([]);
+  const [collections, setCollections] = useState(null);
   // const [totalCollectionsCount, setTotalCollectionsCount] = useState(null);
   const { currentAccount } = useSubstrateState();
 
@@ -56,7 +56,7 @@ function MyCollectionsPage() {
           "/getCollectionsByOwner",
           options
         );
-        console.log("dataList", dataList);
+        console.log("fetchCollectionsOwned dataList", dataList);
         setCollections(dataList);
         // setTotalCollectionsCount(dataList);
       } catch (error) {
@@ -70,8 +70,7 @@ function MyCollectionsPage() {
   }, [currentAccount]);
 
   const forceUpdate = useCallback(() => {
-    // onRefresh();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setCollections(null);
   }, []);
 
   return (

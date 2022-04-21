@@ -15,6 +15,10 @@ import {
   setStakingContract,
   setAccount as setAccountStakingModule,
 } from "@utils/blockchain/staking_calls";
+import {
+  setCollectionContract,
+  setAccount as setAccountCollectionModule,
+} from "@utils/blockchain/collection-manager-calls";
 
 const PrivateRoute = ({ ...rest }) => {
   const { api, keyringState, currentAccount } = useSubstrateState();
@@ -24,7 +28,7 @@ const PrivateRoute = ({ ...rest }) => {
       <Modal isCentered>
         <ModalOverlay
           bg="#33333330"
-          backdropFilter="blur(10px) hue-rotate(90deg)"
+          backdropFilter="blur(50px) hue-rotate(90deg)"
         />
         <ModalContent
           bg="transparent"
@@ -32,7 +36,7 @@ const PrivateRoute = ({ ...rest }) => {
           justifyContent="center"
           alignItems="center"
         >
-          <Loader color="#7ae7ff" size={20} margin={5} speedMultiplier={1.5} />
+          <Loader color="#7ae7ff" size={15} margin={3} speedMultiplier={1.5} />
           <Heading size="h6" my={14}>
             Re - connecting to network . . .
           </Heading>
@@ -48,6 +52,9 @@ const PrivateRoute = ({ ...rest }) => {
 
   setAccountStakingModule(currentAccount);
   setStakingContract(api, contractData.staking);
+
+  setAccountCollectionModule(currentAccount);
+  setCollectionContract(api, contractData.collection);
 
   return <Route {...rest} />;
 };

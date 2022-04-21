@@ -2,17 +2,25 @@ import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import { handleContractCall, isValidAddressPolkadotAddress } from "@utils";
+import { ContractPromise } from "@polkadot/api-contract";
 
-let collection_manager_contract;
+let account;
+let contract;
+console.log("account", account);
 
-function isLoaded() {
-  if (collection_manager_contract) return true;
-  else return false;
-}
+export const setAccount = (newAccount) => (account = newAccount);
+
+export const setCollectionContract = (api, data) => {
+  contract = new ContractPromise(
+    api,
+    data?.CONTRACT_ABI,
+    data?.CONTRACT_ADDRESS
+  );
+};
+
 //SETTERS
 async function addNewCollection(caller_account, data, dispatch) {
   if (!isValidAddressPolkadotAddress(data?.nftContractAddress)) {
-
     return null;
   }
   let unsubscribe;
@@ -20,7 +28,7 @@ async function addNewCollection(caller_account, data, dispatch) {
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
   const azero_value = await getAddingFee(caller_account);
-  collection_manager_contract.tx
+  contract.tx
     .addNewCollection(
       { gasLimit, value: azero_value },
       address,
@@ -34,12 +42,7 @@ async function addNewCollection(caller_account, data, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(
-          status,
-          dispatchError,
-          dispatch,
-          collection_manager_contract
-        );
+        handleContractCall(status, dispatchError, dispatch, contract);
         // if (dispatchError) {
         //   if (dispatchError.isModule) {
         //     toast.error(`There is some error with your request`);
@@ -79,7 +82,7 @@ async function autoNewCollection(caller_account, data, dispatch) {
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
   const azero_value = await getAddingFee(caller_account);
-  collection_manager_contract.tx
+  contract.tx
     .autoNewCollection(
       { gasLimit, value: azero_value },
       data.nftName,
@@ -94,12 +97,7 @@ async function autoNewCollection(caller_account, data, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(
-          status,
-          dispatchError,
-          dispatch,
-          collection_manager_contract
-        );
+        handleContractCall(status, dispatchError, dispatch, contract);
         // if (dispatchError) {
         //   if (dispatchError.isModule) {
         //     toast.error(`There is some error with your request`);
@@ -135,11 +133,10 @@ async function autoNewCollection(caller_account, data, dispatch) {
 
 async function updateIsActive(caller_account, collection_address) {
   if (
-    !collection_manager_contract ||
+    !contract ||
     !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
   ) {
-   
     return null;
   }
   let unsubscribe;
@@ -149,7 +146,7 @@ async function updateIsActive(caller_account, collection_address) {
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  collection_manager_contract.tx
+  contract.tx
     .updateIsActive({ gasLimit, value: azero_value }, collection_address)
     .signAndSend(
       address,
@@ -179,85 +176,72 @@ async function updateIsActive(caller_account, collection_address) {
 }
 //GETTERS
 async function getCollectionCount(caller_account) {
-  if (!collection_manager_contract || !caller_account) {
-   
+  if (!contract || !caller_account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
+  //console.log(contract);
 
-  const { result, output } =
-    await collection_manager_contract.query.getCollectionCount(address, {
-      value: azero_value,
-      gasLimit,
-    });
+  const { result, output } = await contract.query.getCollectionCount(address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
 async function getCollectionsByOwner(caller_account, owner) {
-
-  if (
-    !collection_manager_contract ||
-    !caller_account ||
-    !isValidAddressPolkadotAddress(owner)
-  ) {
-   
+  if (!contract || !caller_account || !isValidAddressPolkadotAddress(owner)) {
     return null;
   }
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } =
-    await collection_manager_contract.query.getCollectionsByOwner(
-      caller_account,
-      { value: azero_value, gasLimit },
-      owner
-    );
+  const { result, output } = await contract.query.getCollectionsByOwner(
+    caller_account,
+    { value: azero_value, gasLimit },
+    owner
+  );
   if (result.isOk) {
     return output.toHuman();
   }
   return null;
 }
 async function getContractById(caller_account, collection_id) {
-  if (!collection_manager_contract || !caller_account) {
-   
+  if (!contract || !caller_account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
+  //console.log(contract);
 
-  const { result, output } =
-    await collection_manager_contract.query.getContractById(
-      address,
-      { value: azero_value, gasLimit },
-      collection_id
-    );
+  const { result, output } = await contract.query.getContractById(
+    address,
+    { value: azero_value, gasLimit },
+    collection_id
+  );
   if (result.isOk) {
     return output.toHuman();
   }
   return null;
 }
 async function getAdminAddress(caller_account) {
-  if (!collection_manager_contract || !caller_account) {
-   
+  if (!contract || !caller_account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
+  //console.log(contract);
 
-  const { result, output } =
-    await collection_manager_contract.query.getAdminAddress(address, {
-      value: azero_value,
-      gasLimit,
-    });
+  const { result, output } = await contract.query.getAdminAddress(address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return output.toHuman();
   }
@@ -265,19 +249,18 @@ async function getAdminAddress(caller_account) {
 }
 async function isActive(caller_account, collection_address) {
   if (
-    !collection_manager_contract ||
+    !contract ||
     !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
   ) {
-   
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
+  //console.log(contract);
 
-  const { result, output } = await collection_manager_contract.query[
+  const { result, output } = await contract.query[
     "crossArtZeroCollection::isActive"
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
@@ -287,19 +270,18 @@ async function isActive(caller_account, collection_address) {
 }
 async function getRoyalFee(caller_account, collection_address) {
   if (
-    !collection_manager_contract ||
+    !contract ||
     !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
   ) {
-   
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
+  //console.log(contract);
 
-  const { result, output } = await collection_manager_contract.query[
+  const { result, output } = await contract.query[
     "crossArtZeroCollection::getRoyalFee"
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
@@ -309,19 +291,18 @@ async function getRoyalFee(caller_account, collection_address) {
 }
 async function getContractType(caller_account, collection_address) {
   if (
-    !collection_manager_contract ||
+    !contract ||
     !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
   ) {
-   
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
+  //console.log(contract);
 
-  const { result, output } = await collection_manager_contract.query[
+  const { result, output } = await contract.query[
     "crossArtZeroCollection::getContractType"
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
@@ -332,19 +313,18 @@ async function getContractType(caller_account, collection_address) {
 
 async function getCollectionOwner(caller_account, collection_address) {
   if (
-    !collection_manager_contract ||
+    !contract ||
     !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
   ) {
-   
     return null;
   }
 
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
+  //console.log(contract);
 
-  const { result, output } = await collection_manager_contract.query[
+  const { result, output } = await contract.query[
     "crossArtZeroCollection::getCollectionOwner"
   ](caller_account, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
@@ -355,24 +335,22 @@ async function getCollectionOwner(caller_account, collection_address) {
 
 async function getCollectionByAddress(caller_account, collection_address) {
   if (
-    !collection_manager_contract ||
+    !contract ||
     !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
   ) {
-   
     return null;
   }
 
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
+  //console.log(contract);
 
-  const { result, output } =
-    await collection_manager_contract.query.getCollectionByAddress(
-      caller_account,
-      { value: azero_value, gasLimit },
-      collection_address
-    );
+  const { result, output } = await contract.query.getCollectionByAddress(
+    caller_account,
+    { value: azero_value, gasLimit },
+    collection_address
+  );
   if (result.isOk) {
     return output.toHuman();
   }
@@ -381,26 +359,27 @@ async function getCollectionByAddress(caller_account, collection_address) {
 async function getAddingFee(caller_account) {
   const gasLimit = -1;
   const address = caller_account?.address;
-  const { result, output } =
-    await collection_manager_contract.query.getAddingFee(address, { gasLimit });
+  const { result, output } = await contract.query.getAddingFee(address, {
+    gasLimit,
+  });
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
 async function owner(caller_account) {
-  if (!collection_manager_contract || !caller_account) {
-   
+  if (!contract || !caller_account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
+  //console.log(contract);
 
-  const { result, output } = await collection_manager_contract.query[
-    "ownable::owner"
-  ](address, { value: azero_value, gasLimit });
+  const { result, output } = await contract.query["ownable::owner"](address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return output.toHuman();
   }
@@ -408,20 +387,21 @@ async function owner(caller_account) {
 }
 
 async function getActiveCollectionCount(caller_account) {
-  if (!collection_manager_contract || !caller_account) {
-   
+  if (!contract || !caller_account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
+  //console.log(contract);
 
-  const { result, output } =
-    await collection_manager_contract.query.getActiveCollectionCount(address, {
+  const { result, output } = await contract.query.getActiveCollectionCount(
+    address,
+    {
       value: azero_value,
       gasLimit,
-    });
+    }
+  );
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
@@ -429,34 +409,26 @@ async function getActiveCollectionCount(caller_account) {
 }
 
 async function getAttributes(caller_account, nft_contract_address, attributes) {
-  if (!collection_manager_contract || !caller_account) {
-   
+  if (!contract || !caller_account) {
     return null;
   }
   let attributeVals;
   const gasLimit = -1;
   const azero_value = 0;
   const address = caller_account?.address;
-  const { result, output } =
-    await collection_manager_contract.query.getAttributes(
-      address,
-      { value: azero_value, gasLimit },
-      nft_contract_address,
-      attributes
-    );
+  const { result, output } = await contract.query.getAttributes(
+    address,
+    { value: azero_value, gasLimit },
+    nft_contract_address,
+    attributes
+  );
   if (result.isOk) {
     attributeVals = output.toHuman();
   }
   return attributeVals;
 }
 
-function setContract(c) {
-  // console.log(`Setting contract in blockchain module`, c)
-  collection_manager_contract = c;
-}
-
 const collection_manager_calls = {
-  setContract,
   getAddingFee,
   addNewCollection,
   autoNewCollection,
@@ -473,7 +445,8 @@ const collection_manager_calls = {
   owner,
   getActiveCollectionCount,
   getAttributes,
-  isLoaded,
+  setCollectionContract,
+  setAccount,
 };
 
 export default collection_manager_calls;

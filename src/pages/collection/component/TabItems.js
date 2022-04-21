@@ -29,7 +29,7 @@ const CollectionItems = ({
   isShowUnlisted,
 }) => {
   const { currentAccount } = useSubstrateState();
-
+  console.log('CollectionItems nftList', nftList)
   const forceUpdate = useCallback(() => {
     // onRefresh();
   }, []);

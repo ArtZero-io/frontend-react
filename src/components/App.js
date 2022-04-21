@@ -32,7 +32,7 @@ export default function App() {
       <Modal isCentered isOpen={apiState !== "READY"}>
         <ModalOverlay
           bg="#33333330"
-          backdropFilter="blur(10px) hue-rotate(90deg)"
+          backdropFilter="blur(50px) hue-rotate(90deg)"
         />
         <ModalContent
           bg="transparent"
@@ -42,8 +42,8 @@ export default function App() {
         >
           <GridLoader
             color="#7ae7ff"
-            size={20}
-            margin={5}
+            size={15}
+            margin={3}
             speedMultiplier={1.8}
           />
           <Heading size="h6" my={14}>

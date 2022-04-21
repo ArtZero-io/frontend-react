@@ -1,4 +1,4 @@
-import { 
+import {
   Modal,
   ModalCloseButton,
   ModalContent,
@@ -25,7 +25,9 @@ export default function ProfileModal({
           type: AccountActionTypes.SET_TNX_STATUS,
           payload: null,
         });
+
         forceUpdate();
+
         onClose();
       }
     }
@@ -55,7 +57,7 @@ export default function ProfileModal({
           borderWidth={2}
           borderRadius="0"
         />
-        <ProfileForm profile={profile} />  
+        <ProfileForm profile={profile} />
       </ModalContent>
     </Modal>
   );

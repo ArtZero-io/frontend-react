@@ -1,15 +1,18 @@
-import { Button, Flex, VStack } from "@chakra-ui/react";
 import * as Yup from "yup";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form } from "formik";
+import { useDispatch, useSelector } from "react-redux";
+import { Button, Flex, VStack } from "@chakra-ui/react";
+
 import { setMultipleAttributes } from "@actions/account";
-import ImageUpload from "@components/ImageUpload/Avatar";
+
 import SimpleModeInput from "@components/Input/Input";
+import ImageUpload from "@components/ImageUpload/Avatar";
 import SimpleModeTextarea from "@components/TextArea/TextArea";
 
 const ProfileForm = ({ profile }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState(null);
+
   const dispatch = useDispatch();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
 
@@ -25,8 +28,12 @@ const ProfileForm = ({ profile }) => {
           instagram: "",
         }}
         validationSchema={Yup.object({
-          username: Yup.string().max(15, "Must be 15 characters or less"),
-          bio: Yup.string().max(200, "Must be 200 characters or less"),
+          username: Yup.string()
+            .min(3, "Must be longer than 3 characters")
+            .max(30, "Must be less than 30 characters"),
+          bio: Yup.string()
+            .min(3, "Must be longer than 3 characters")
+            .max(150, "Must be less than 150 characters"),
           twitter: Yup.string()
             .url("This must be a valid URL")
             .max(30, "Must be 30 characters or less"),
@@ -41,7 +48,7 @@ const ProfileForm = ({ profile }) => {
             .max(30, "Must be 30 characters or less"),
         })}
         onSubmit={async (values, { setSubmitting }) => {
-          avatarIPFSUrl && (values.avatar = avatarIPFSUrl)
+          avatarIPFSUrl && (values.avatar = avatarIPFSUrl);
 
           const objArr = Object.entries(values).filter(([, value]) => {
             return value !== "";
@@ -49,8 +56,7 @@ const ProfileForm = ({ profile }) => {
 
           const a = objArr.map((item) => item[0]);
           const v = objArr.map((item) => item[1]);
-          console.log('a', a)
-          console.log('v', v)
+
           dispatch(setMultipleAttributes(a, v));
         }}
       >

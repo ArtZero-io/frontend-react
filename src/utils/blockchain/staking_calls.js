@@ -8,7 +8,7 @@ import { isValidAddressPolkadotAddress } from "@utils";
 
 let account;
 let contract;
-console.log('account', account)
+console.log("account", account);
 
 export const setAccount = (newAccount) => (account = newAccount);
 
@@ -19,6 +19,7 @@ export const setStakingContract = (api, data) => {
     data?.CONTRACT_ADDRESS
   );
 };
+
 //GETTERS
 async function getTotalStaked(caller_account) {
   if (!contract || !caller_account) {

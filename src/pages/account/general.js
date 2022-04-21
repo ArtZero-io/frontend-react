@@ -144,15 +144,15 @@ function GeneralPage() {
             w="full"
             templateColumns="repeat(auto-fill, minmax(min(100%, 20rem), 1fr))"
             gap={6}
+            minH={"7rem"}
           >
             {dashboardInfo?.map((item, idx) => {
               return (
                 <GridItem
                   key={idx}
-                  id="abc"
                   w="100%"
                   h="100%"
-                  _hover={{ bg: "brand.blue" }}
+                  // _hover={{ bg: "brand.blue" }}
                 >
                   <Box
                     w="full"

@@ -1,10 +1,9 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Flex,
   Heading,
   Spacer,
-  Center,
-  Spinner,
   Button,
   IconButton,
   Text,
@@ -20,8 +19,8 @@ import { numberToU8a, stringToHex } from "@polkadot/util";
 import { IPFS_BASE_URL } from "@constants/index";
 import { ContractPromise } from "@polkadot/api-contract";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
-import marketplace_contract_calls from "../../../utils/blockchain/marketplace_contract_calls";
-import { TypeRegistry, U64 } from '@polkadot/types';
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+import { TypeRegistry, U64 } from "@polkadot/types";
 
 const MyNFTsPage = () => {
   const { api, currentAccount } = useSubstrateState();
@@ -47,7 +46,6 @@ const MyNFTsPage = () => {
       const totalSupply = await nft721_psp34_standard_calls.getTotalSupply(
         currentAccount
       );
-
 
       for (let i = 1; i <= totalSupply; i++) {
         const tokenId = nft721_psp34_standard_contract.api.createType(
@@ -88,8 +86,15 @@ const MyNFTsPage = () => {
           }
         }
 
-        const tokenIdU64 = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), i)});
-        const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(currentAccount, collection.nftContractAddress, tokenIdU64);
+        const tokenIdU64 = nft721_psp34_standard_contract.api.createType(
+          "ContractsPsp34Id",
+          { U64: new U64(new TypeRegistry(), i) }
+        );
+        const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(
+          currentAccount,
+          collection.nftContractAddress,
+          tokenIdU64
+        );
         console.log(nftSaleInfo);
         let tokenPrice = 0;
         let isListed = false;
@@ -105,7 +110,7 @@ const MyNFTsPage = () => {
           img: `${IPFS_BASE_URL}/${tokenAvatar}`,
           atts: atts,
           isListed: isListed,
-          price: tokenPrice
+          price: tokenPrice,
         };
 
         myNFTs.push(nft);
@@ -185,14 +190,14 @@ const MyNFTsPage = () => {
     setLoading(false);
   };
 
-  const onRefresh = async () => {
-    await delay(1000);
-    await getAllCollections();
-  };
+  // const onRefresh = async () => {
+  //   await delay(1000);
+  //   await getAllCollections();
+  // };
 
-  useEffect(async () => {
-    await onRefresh();
-  }, [collection_manager_calls.isLoaded()]);
+  // useEffect(async () => {
+  //   await onRefresh();
+  // }, [collection_manager_calls.isLoaded()]);
 
   function onClickHandler(e) {
     const id = e.target.getAttribute("id");
@@ -253,7 +258,7 @@ const MyNFTsPage = () => {
             variant="iconSolid"
           />
         </Flex>
-        {loading && (
+        {/* {loading && (
           <Center>
             <Spinner
               thickness="4px"
@@ -263,11 +268,12 @@ const MyNFTsPage = () => {
               size="xl"
             />
           </Center>
-        )}
-        {!loading &&
-          myCollections?.map((item) => <MyNFTGroupCard {...item} />)}
-        {!loading && myCollections?.length === 0 && (
+        )} */}
+
+        {!loading && myCollections?.length === 0 ? (
           <Text>You don't have any NFTs</Text>
+        ) : (
+          myCollections?.map((item) => <MyNFTGroupCard {...item} />)
         )}
       </Box>
     </Box>

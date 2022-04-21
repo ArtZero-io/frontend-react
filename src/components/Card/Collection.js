@@ -47,6 +47,7 @@ export const CollectionCard = ({
           src={`${IPFS_BASE_URL}/${headerImage}`}
           fallbackSrc="https://via.placeholder.com/1280x768"
         />
+
         <Center
           rounded="full"
           w={16}
@@ -66,6 +67,7 @@ export const CollectionCard = ({
             fallbackSrc="https://via.placeholder.com/84"
           />
         </Center>
+
         <VStack
           pb={6}
           justifyContent="space-between"
@@ -76,6 +78,7 @@ export const CollectionCard = ({
           <Box mt="4">
             <Heading size="h6">{name}</Heading>
           </Box>
+
           <Text noOfLines={[1, 3]} maxW={{ base: "unset", md: "20rem" }}>
             {description}
           </Text>

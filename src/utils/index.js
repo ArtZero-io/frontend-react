@@ -112,7 +112,7 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
 
   if (status) {
     const statusToHuman = Object.entries(status.toHuman());
-
+    console.log("statusToHuman", statusToHuman);
     if (Object.keys(status.toHuman())[0] === "0") {
       dispatch({
         type: AccountActionTypes.SET_TNX_STATUS,
