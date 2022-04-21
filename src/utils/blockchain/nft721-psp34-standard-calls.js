@@ -1,7 +1,6 @@
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import BN from "bn.js";
-import { numberToU8a } from "@polkadot/util";
 import { TypeRegistry, U64 } from "@polkadot/types";
 // import { ContractPromise } from "@polkadot/api-contract";
 // import { CONTRACT_ABI, CONTRACT_ADDRESS } from "./collection-manager";
@@ -136,91 +135,49 @@ async function mintWithAttributes(caller_account, attributes, dispatch) {
     "1 nft721_psp34_standard_contract",
     nft721_psp34_standard_contract
   );
+  
+  let attribute_label = [];
+  let attribute_value = [];
 
-  nft721_psp34_standard_contract.tx
-    .mint({ gasLimit, value: azero_value })
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError, output }) => {
-        console.log("status", status, dispatchError, output);
-        // handleContractCall(
-        //   status,
-        //   dispatchError,
-        //   dispatch,
-        //   nft721_psp34_standard_contract
-        // );
+  for (const attribute of attributes) {
+    attribute_label.push(attribute.name);
+    attribute_value.push(attribute.value);
+  }
 
-        console.log(output);
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError", dispatchError.toString());
-          }
-        }
+  if (attribute_label.length == attribute_value.length ) {
+    nft721_psp34_standard_contract.tx
+      .mintWithAttributes({ gasLimit, value: azero_value }, attribute_label, attribute_value)
+      .signAndSend(
+        address,
+        { signer: injector.signer },
+        async ({ status, dispatchError, output }) => {
+          console.log("status", status, dispatchError, output);
 
-        if (status) {
-          if (status.isFinalized) {
-            // eslint-disable-next-line
-            const lastTokenId = await this.getTotalSupply(caller_account);
-            let attributeName = [];
-            let attributeVal = [];
-            for (const attribute of attributes) {
-              attributeName.push(attribute.name);
-              attributeVal.push(attribute.value);
+          console.log(output);
+          if (dispatchError) {
+            if (dispatchError.isModule) {
+              toast.error(`There is some error with your request`);
+            } else {
+              console.log("dispatchError", dispatchError.toString());
             }
-            const tokenIdOnChain =
-              await nft721_psp34_standard_contract.api.createType(
-                "ContractsPsp34Id",
-                { U8: numberToU8a(lastTokenId) }
-              );
+          }
 
-            nft721_psp34_standard_contract.tx[
-              "psp34Traits::setMultipleAttributes"
-            ](
-              { gasLimit, value: azero_value },
-              tokenIdOnChain,
-              attributeName,
-              attributeVal
-            ).signAndSend(
-              address,
-              { signer: injector.signer },
-              ({ status, dispatchError, output }) => {
-                // handleContractCall(
-                //   status,
-                //   dispatchError,
-                //   dispatch,
-                //   nft721_psp34_standard_contract
-                // );
-                if (status) {
-                  const statusText = Object.keys(status.toHuman())[0];
-                  if (status.isFinalized) {
-                    toast.success(
-                      `Public Minting ${
-                        statusText === "0"
-                          ? "started"
-                          : statusText.toLowerCase()
-                      }.`
-                    );
-                  }
-                }
-              }
-            );
+          if (status) {
+            toast.success(`Okay`);
           }
         }
-      }
-    )
-    .then((unsub) => {
-      unsubscribe = unsub;
-      console.log(unsubscribe);
-    })
-    .catch((e) => console.log("e", e));
+      )
+      .then((unsub) => {
+        unsubscribe = unsub;
+        console.log(unsubscribe);
+      })
+      .catch((e) => console.log("e", e));
 
-  console.log(
-    "2 nft721_psp34_standard_contract",
-    nft721_psp34_standard_contract
-  );
+    console.log(
+      "2 nft721_psp34_standard_contract",
+      nft721_psp34_standard_contract
+    );
+  }
 
   return resStatus;
 }
