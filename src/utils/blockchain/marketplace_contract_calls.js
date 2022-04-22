@@ -170,7 +170,10 @@ async function owner(caller_account){
 }
 
 //SETS
-async function list(caller_account, nft_contract_address,token_id,price) {
+async function list(caller_account, nft_contract_address, token_id, price) {
+  console.log((!marketplace_contract));
+  console.log((!caller_account));
+  console.log((!isValidAddressPolkadotAddress(nft_contract_address)));
   if (!marketplace_contract || !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
     ){
@@ -183,10 +186,10 @@ async function list(caller_account, nft_contract_address,token_id,price) {
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source)
-  const tokenId = await marketplace_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
+
   const sale_price = new U128(new TypeRegistry(), price);
   marketplace_contract.tx
-    .list({ gasLimit, value:azero_value }, nft_contract_address, tokenId, sale_price)
+    .list({ gasLimit, value:azero_value }, nft_contract_address, token_id, sale_price)
     .signAndSend(
       address,
       { signer: injector.signer },

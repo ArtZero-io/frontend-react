@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -25,6 +25,7 @@ import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
 import marketplace from "@utils/blockchain/marketplace";
 import { IPFS_BASE_URL } from "@constants/index";
+import marketplace_contract from "@utils/blockchain/marketplace";
 
 function NFTTabInfo({
   avatar,
@@ -41,46 +42,42 @@ function NFTTabInfo({
 }) {
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
+  const [isAllownceMarketplaceContract, setIsAllownceMarketplaceContract] = useState(false);
 
-  const listToken = async () => {
-    if (contractType === "2") {
+  useEffect(async () => {
+    await checkAllowMarketplaceContract();
+  }, [currentAccount]);
+
+  const checkAllowMarketplaceContract = async () => {
+    if (contractType == "2") {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
         nft721_psp34_standard.CONTRACT_ABI,
         nftContractAddress
       );
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+      const isAllownceMarketplaceContract = await nft721_psp34_standard_calls.allowance(currentAccount, marketplace_contract.CONTRACT_ADDRESS, { "u64": tokenID });
+      setIsAllownceMarketplaceContract(isAllownceMarketplaceContract);
+    }
+  }
 
+  const listToken = async () => {
+    if (contractType === 2) {
+      const nft721_psp34_standard_contract = new ContractPromise(
+        api,
+        nft721_psp34_standard.CONTRACT_ABI,
+        nftContractAddress
+      );
+      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+      console.log('xxx');
       if (owner === currentAccount.address) {
-        const is_allownce = await nft721_psp34_standard_calls.allowance(
+        
+        await marketplace_contract_calls.list(
           currentAccount,
-          marketplace.CONTRACT_ADDRESS,
-          tokenID
-        );
-
-        if (is_allownce) {
-          await marketplace_contract_calls.list(
-            currentAccount,
-            nftContractAddress,
-            tokenID,
-            askPrice
-          );
-        } else {
-          const is_approve = await nft721_psp34_standard_calls.approve(
-            currentAccount,
-            marketplace.CONTRACT_ADDRESS,
-            tokenID,
-            true
-          );
-          if (is_approve) {
-            await marketplace_contract_calls.list(
-              currentAccount,
-              nftContractAddress,
-              tokenID,
-              askPrice
-            );
-          }
-        }
+          nftContractAddress,
+          {'u64': tokenID},
+          askPrice
+        );  
       } else {
         toast.error(`This token is not yours!`);
       }
@@ -94,6 +91,23 @@ function NFTTabInfo({
       tokenID
     );
   };
+
+  const approveMarketplaceContract = async () => {
+    if (owner == currentAccount.address) {
+      const is_approve = await nft721_psp34_standard_calls.approve(
+        currentAccount,
+        marketplace.CONTRACT_ADDRESS,
+        {"u64": tokenID},
+        true
+      );
+      if (is_approve) {
+        setIsAllownceMarketplaceContract(true);
+      }
+    } else {
+      toast.error(`This token is not yours!`);
+    }
+    
+  }
 
   return (
     <HStack>
@@ -159,8 +173,17 @@ function NFTTabInfo({
             );
           })}
         </Grid>
+          {console.log('isAllownceMarketplaceContract:', isAllownceMarketplaceContract)}
 
-        {!is_for_sale && (
+        { (!isAllownceMarketplaceContract) ? (<Flex w="full" py={2} alignItems="center" justifyContent="start">
+            <Spacer />
+            
+            <Button ml={2} variant="solid" onClick={approveMarketplaceContract}>
+              Approve (You need to approve permission for marketplace contract)
+            </Button>
+            
+          </Flex>) : '' }
+        {isAllownceMarketplaceContract && !is_for_sale && (
           <Flex
             w="full"
             py={2}
@@ -231,7 +254,7 @@ function NFTTabInfo({
             </Button>
           </Flex>
         )}
-        {is_for_sale && (
+        {isAllownceMarketplaceContract && is_for_sale && (
           <Flex w="full" py={2} alignItems="center" justifyContent="start">
             <Spacer />
             <Flex
@@ -252,7 +275,7 @@ function NFTTabInfo({
             </Button>
           </Flex>
         )}
-        {isOffered?.status && (
+        {isAllownceMarketplaceContract && isOffered?.status && (
           <Flex w="full" py={2} alignItems="center" justifyContent="start">
             <Spacer />
             <Flex

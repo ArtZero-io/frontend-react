@@ -245,18 +245,19 @@ async function allowance(caller_account, operator_address, token_id) {
   if (!contract || !caller_account) {
     return null;
   }
+  console.log(operator_address, token_id);
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  const tokenId = await contract.api.createType("ContractsPsp34Id", {
-    U64: new U64(new TypeRegistry(), token_id),
-  });
+  // const tokenId = await contract.api.createType("ContractsPsp34Id", {
+  //   U64: new U64(new TypeRegistry(), token_id),
+  // });
   const { result, output } = await contract.query["psp34::allowance"](
     address,
     { value: azero_value, gasLimit },
     address,
     operator_address,
-    tokenId
+    token_id
   );
   if (result.isOk) {
     return output.toHuman();
@@ -268,32 +269,34 @@ async function approve(caller_account, operator_address, token_id, is_approve) {
   if (!contract || !caller_account) {
     return null;
   }
+  let res = false;
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
-  const tokenId = await contract.api.createType("ContractsPsp34Id", {
-    U64: new U64(new TypeRegistry(), token_id),
-  });
+
   contract.tx["psp34::approve"](
     { gasLimit, value: azero_value },
     operator_address,
-    tokenId,
+    token_id,
     is_approve
-  ).signAndSend(address, { signer: injector.signer }, ({ status }) => {
+  ).signAndSend(address, { signer: injector.signer }, ({ status, output }) => {
+    console.log(output);
     if (status) {
       const statusText = Object.keys(status.toHuman())[0];
       if (status.isFinalized) {
+        console.log(status.toHuman());
+        console.log(status);
         toast.success(
           `Approve ${
             statusText === "0" ? "started" : statusText.toLowerCase()
           }.`
         );
-        return true;
+        res = true;
       }
     }
   });
-  return false;
+  return res;
 }
 
 const nft721_psp34_standard_calls = {
