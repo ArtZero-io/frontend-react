@@ -153,9 +153,7 @@ const NFTTabCollectible = ({
       // const attributeVals = await nft721_psp34_standard_calls.getAttributes(currentAccount, tokenId, attributes);
       // console.log(attributeVals);
     } else {
-      if (
-        currentCollection.nftContractAddress === artzero_nft.CONTRACT_ADDRESS
-      ) {
+      if (nftContractAddress === artzero_nft.CONTRACT_ADDRESS) {
         if (!artzero_nft_calls.isLoaded()) {
           const artzero_nft_contract = new ContractPromise(
             api,
@@ -202,7 +200,6 @@ const NFTTabCollectible = ({
     //TODO Handle validate price
     setDoOffer(false);
   };
-  console.log("nftContractAddress", nftContractAddress);
 
   function getDataFromAttrs(attrName) {
     const attrIdx = attributes.indexOf(attrName);

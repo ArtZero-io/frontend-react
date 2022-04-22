@@ -13,10 +13,16 @@ import {
 } from "@chakra-ui/react";
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
+import { IPFS_BASE_URL } from "@constants/index";
 
-const MyNFTCard = (props) => {
-  console.log('props MyNFTCard Account', props)
-  const { name, img, isListed, isBid, isStaked } = props;
+const MyNFTCard = ({
+  is_for_sale,
+  price,
+  avatar,
+  nftName,
+  isStaked = false,
+  isBid,
+}) => {
   return (
     <Box minW="14.25rem" _hover={{ bg: "brand.blue" }} p="px">
       <Flex
@@ -28,37 +34,37 @@ const MyNFTCard = (props) => {
       >
         <Square minW={56}>
           <Image
-            alt={img}
+            alt={nftName}
             h="full"
             w="full"
             objectFit="cover"
-            src={img}
+            src={`${IPFS_BASE_URL}/${avatar}`}
             fallbackSrc="https://via.placeholder.com/400x400"
           />
         </Square>
 
         <Box w="full" p={3}>
           <Heading mb={3} size="h6" textAlign="left">
-            {name}
+            {nftName}
           </Heading>
           {isStaked && (
             <Flex align="center" justify="start" w="full">
               <Button variant="outline">
-                {isStaked?.status ? "UnStake" : "Stake"}
+                {isStaked ? "UnStake" : "Stake"}
               </Button>
             </Flex>
           )}
 
-          {(isListed?.status || isBid) && (
+          {(is_for_sale || isBid) && (
             <Flex align="center" justify="start" w="full">
               <VStack align="start">
                 <Text ml={1} color="brand.grayLight">
-                  {isListed?.status && "For sale at"}
+                  {is_for_sale && "For sale at"}
                   {isBid?.status && "My offer"}
                 </Text>
                 <Tag>
                   <TagLabel>
-                    {isListed?.askPrice}
+                    {price}
                     {isBid?.bidPrice}
                   </TagLabel>
                   <TagRightIcon as={AzeroIcon} />

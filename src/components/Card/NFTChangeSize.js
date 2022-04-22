@@ -36,8 +36,6 @@ export default function NFTChangeSize({
   };
   const attrsObject = getDataFromAttrs();
 
-  const [loaded, setLoaded] = useState(false);
-  console.log("loaded", loaded);
   return (
     <Box>
       <Flex
@@ -55,13 +53,7 @@ export default function NFTChangeSize({
           minH={18}
           // fallbackSrc="https://via.placeholder.com/720"
           fallback={<Skeleton w="full" h="full" minH={"20rem"} />}
-          // onLoad={() => console.log("onload ...")}
         />
-        {/*  */}
-        {console.log("attrsObject", attrsObject)}
-        {/*  */}
-        {console.log("attrsObject.avatar", attrsObject.avatar)}
-        {/* <Skeleton boxSize="25rem" isLoaded={loaded} /> */}
 
         <VStack
           p={4}

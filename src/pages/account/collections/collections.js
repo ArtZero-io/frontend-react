@@ -56,9 +56,8 @@ function MyCollectionsPage() {
           "/getCollectionsByOwner",
           options
         );
-        console.log("fetchCollectionsOwned dataList", dataList);
+
         setCollections(dataList);
-        // setTotalCollectionsCount(dataList);
       } catch (error) {
         console.log(error);
 

@@ -87,10 +87,11 @@ const CollectionsPage = () => {
     <Layout>
       {!collections || (collections && collections.length <= 0) ? (
         <Center mt={"20"}>
-          <Heading size="h5" color="lightOrange">
+          {/* <Heading size="h5" color="lightOrange">
             We don't have any collections at the moment. Please stay tune and
             come back later.
           </Heading>
+           */}
         </Center>
       ) : (
         <>

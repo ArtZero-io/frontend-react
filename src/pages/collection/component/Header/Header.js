@@ -62,7 +62,7 @@ function CollectionHeader({
               objectFit="cover"
               src={`${IPFS_BASE_URL}/${avatarImage}`}
               // fallbackSrc="https://via.placeholder.com/64"
-              fallback={<Skeleton w={40} h={40} />}
+              fallback={<Skeleton w={40} h={40} borderRadius='full'/>}
             />
           </Center>
 

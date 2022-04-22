@@ -3,24 +3,34 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
 } from "@chakra-ui/react";
 import React from "react";
-import MyNFTTab from "../Tabs/MyNFT";
+import NFTTabInfo from "../Tabs/MyNFTInfo";
+import NFTTabOffers from "../Tabs/MyNFTOffers";
 
-function MyNFTModal({
-  nft_detail,
-  nft_contract_address,
-  collection_detail,
-  address,
-  isOpen,
-  onClose,
-  selectedNFT,
-}) {
+function MyNFTModal(props) {
+  console.log('propsprops', props)
+  const tabData = [
+    {
+      label: "NFT info",
+      content: <NFTTabInfo {...props} />,
+    },
+    {
+      label: "Offers",
+      content: <NFTTabOffers {...props} />,
+    },
+  ];
+
   return (
     <Modal
-      onClose={onClose}
+      onClose={props.onClose}
       isCentered
-      isOpen={isOpen}
+      isOpen={props.isOpen}
       size={"6xl"}
       minH="40rem"
     >
@@ -44,13 +54,29 @@ function MyNFTModal({
           borderWidth={2}
           borderRadius="0"
         />
-        <MyNFTTab
-          selectedNFT={selectedNFT}
-          collection_detail={collection_detail}
-          nft_detail={nft_detail}
-          nft_contract_address={nft_contract_address}
-          address={address}
-        />
+        <Tabs isLazy align="left">
+          <TabList bg="#171717">
+            {tabData.map((tab, index) => (
+              <Tab
+                key={index}
+                ml={12}
+                fontSize="md"
+                fontFamily="Evogria Italic"
+                minH="4.5rem"
+              >
+                {tab.label}
+              </Tab>
+            ))}
+          </TabList>
+
+          <TabPanels>
+            {tabData.map((tab, index) => (
+              <TabPanel px={12} py={8} key={index}>
+                {tab.content}
+              </TabPanel>
+            ))}
+          </TabPanels>
+        </Tabs>
       </ModalContent>
     </Modal>
   );

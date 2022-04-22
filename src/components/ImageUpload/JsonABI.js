@@ -30,10 +30,8 @@ const FileUpload = ({ setFileIPFSUrl, id, title = "File Upload" }) => {
 
     setFileName(data?.name);
 
-    console.log("name", data?.name);
-
     const reader = new window.FileReader();
-    console.log("reader", reader);
+
     reader.readAsArrayBuffer(data);
 
     reader.onloadend = () => {

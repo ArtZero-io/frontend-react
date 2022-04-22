@@ -8,7 +8,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 
 import { RiLayoutGridLine } from "react-icons/ri";
 import { BsGrid3X3 } from "react-icons/bs";
@@ -27,12 +27,9 @@ const CollectionItems = ({
   contractType,
   setIsShowUnlisted,
   isShowUnlisted,
+  forceUpdate,
 }) => {
   const { currentAccount } = useSubstrateState();
-
-  const forceUpdate = useCallback(() => {
-    // onRefresh();
-  }, []);
 
   const [bigCard, setBigCard] = useState(false);
 
@@ -45,7 +42,7 @@ const CollectionItems = ({
           size="icon"
           variant="iconSolid"
           mx={1.5}
-          // onClick={() => onRefresh()}
+          onClick={() => forceUpdate()}
         />
         <Button
           mx={1.5}
@@ -96,6 +93,7 @@ const CollectionItems = ({
           />
         ) : null}
       </Flex>
+
       <CollectionNFTGrid bigCard={bigCard} nftList={nftList} />
     </Box>
   );

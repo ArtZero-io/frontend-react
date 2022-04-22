@@ -29,7 +29,6 @@ const AccountLayout = ({ children }) => {
   ];
 
   const handleTabsChange = (index) => {
-    console.log("index", index);
     history.push(tabData[index].value);
   };
 

@@ -65,8 +65,6 @@ function GeneralPage() {
               return (a.is_for_sale & 1) + (b.is_for_sale & 1);
             }, 0);
 
-            console.log("nftForSale", nftForSale);
-
             let info = [];
 
             info = [

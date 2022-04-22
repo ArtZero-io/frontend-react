@@ -24,58 +24,60 @@ import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard
 import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
 import marketplace from "@utils/blockchain/marketplace";
+import { IPFS_BASE_URL } from "@constants/index";
 
 function NFTTabInfo({
-  nft_contract_address,
-  selectedNFT,
-  nft_detail,
-  collection_detail,
+  avatar,
+  nftName,
+  description,
+  attrsList,
+  is_for_sale,
+  price,
+  isOffered,
+  tokenID,
+  owner,
+  nftContractAddress,
+  contractType,
 }) {
-  const { name, description, isListed, isBid, atts, img, price } = selectedNFT;
   const { api, currentAccount } = useSubstrateState();
-  const [sale_price] = useState(0);
+  const [askPrice, setAskPrice] = useState(10);
 
   const listToken = async () => {
-    if (collection_detail?.contractType === "2") {
+    if (contractType === "2") {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
         nft721_psp34_standard.CONTRACT_ABI,
-        collection_detail.nftContractAddress
+        nftContractAddress
       );
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-      const ownerAddress =
-        await nft721_psp34_standard_calls.getOwnerAddressByTokenId(
-          currentAccount,
-          nft_detail.id
-        );
 
-      if (ownerAddress === currentAccount.address) {
+      if (owner === currentAccount.address) {
         const is_allownce = await nft721_psp34_standard_calls.allowance(
           currentAccount,
           marketplace.CONTRACT_ADDRESS,
-          nft_detail.id
+          tokenID
         );
 
         if (is_allownce) {
           await marketplace_contract_calls.list(
             currentAccount,
-            nft_contract_address,
-            nft_detail.id,
-            sale_price
+            nftContractAddress,
+            tokenID,
+            askPrice
           );
         } else {
           const is_approve = await nft721_psp34_standard_calls.approve(
             currentAccount,
             marketplace.CONTRACT_ADDRESS,
-            nft_detail.id,
+            tokenID,
             true
           );
           if (is_approve) {
             await marketplace_contract_calls.list(
               currentAccount,
-              nft_contract_address,
-              nft_detail.id,
-              sale_price
+              nftContractAddress,
+              tokenID,
+              askPrice
             );
           }
         }
@@ -88,8 +90,8 @@ function NFTTabInfo({
   const unlistToken = async () => {
     await marketplace_contract_calls.unlist(
       currentAccount,
-      nft_contract_address,
-      nft_detail.id
+      nftContractAddress,
+      tokenID
     );
   };
 
@@ -100,7 +102,7 @@ function NFTTabInfo({
         boxSize="30rem"
         alt="nft-img"
         objectFit="cover"
-        src={img}
+        src={`${IPFS_BASE_URL}/${avatar}`}
         fallbackSrc="https://via.placeholder.com/480"
       />
 
@@ -109,11 +111,12 @@ function NFTTabInfo({
         w="full"
         pl={10}
         py={0}
-        justifyContent="space-between"
+        justifyContent="start"
+        alignItems={"start"}
       >
         <Box w="full">
           <Flex>
-            <Heading size="h4"> {name}</Heading>
+            <Heading size="h4">{nftName}</Heading>
             <Spacer />
           </Flex>
           <Heading size="h6" py={3} color="brand.grayLight">
@@ -127,35 +130,37 @@ function NFTTabInfo({
           templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
           gap={5}
         >
-          {atts?.map((item) => {
+          {attrsList?.map((item, index) => {
             return (
-              <GridItem
-                id="abc"
-                w="100%"
-                h="100%"
-                _hover={{ bg: "brand.blue" }}
-              >
-                <Box w="full" textAlign="left" bg="#171717" px={4} py={2}>
-                  <Flex w="full">
-                    <Text color="brand.grayLight">
-                      <Text>{item.trait_type}</Text>
-                      <Heading size="h6" isTruncated mt={1}>
-                        {item.name}
-                      </Heading>
-                    </Text>
-                    <Spacer />
-                  </Flex>
-                  <Flex w="full" textAlign="left">
-                    <Spacer />
-                    <Text color="brand.blue"> {item.value}</Text>
-                  </Flex>
-                </Box>
-              </GridItem>
+              <React.Fragment key={index}>
+                <GridItem
+                  id="abc"
+                  w="100%"
+                  h="100%"
+                  _hover={{ bg: "brand.blue" }}
+                >
+                  <Box w="full" textAlign="left" bg="#171717" px={4} py={2}>
+                    <Flex w="full">
+                      <Text color="brand.grayLight">
+                        <Text>{Object.keys(item)[0]}</Text>
+                        <Heading size="h6" isTruncated mt={1}>
+                          {Object.values(item)[0]}
+                        </Heading>
+                      </Text>
+                      <Spacer />
+                    </Flex>
+                    <Flex w="full" textAlign="left">
+                      <Spacer />
+                      <Text color="brand.blue"> </Text>
+                    </Flex>
+                  </Box>
+                </GridItem>
+              </React.Fragment>
             );
           })}
         </Grid>
 
-        {!isListed && (
+        {!is_for_sale && (
           <Flex
             w="full"
             py={2}
@@ -174,12 +179,14 @@ function NFTTabInfo({
               borderRadius="0"
             >
               <Input
-                variant="unstyled"
+                value={askPrice}
+                onChange={({ target }) => setAskPrice(target.value)}
                 m={0}
                 h={14}
                 pl={5}
                 bg="black"
-                placeholder="100"
+                variant="unstyled"
+                placeholder="10"
                 _placeholder={{
                   color: "#888",
                   fontSize: "lg",
@@ -224,7 +231,7 @@ function NFTTabInfo({
             </Button>
           </Flex>
         )}
-        {isListed && (
+        {is_for_sale && (
           <Flex w="full" py={2} alignItems="center" justifyContent="start">
             <Spacer />
             <Flex
@@ -245,7 +252,7 @@ function NFTTabInfo({
             </Button>
           </Flex>
         )}
-        {isBid?.status && (
+        {isOffered?.status && (
           <Flex w="full" py={2} alignItems="center" justifyContent="start">
             <Spacer />
             <Flex

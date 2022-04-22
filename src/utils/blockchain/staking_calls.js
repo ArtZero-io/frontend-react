@@ -6,9 +6,9 @@ import { web3FromSource } from "../wallets/extension-dapp";
 
 import { isValidAddressPolkadotAddress } from "@utils";
 
+// eslint-disable-next-line no-unused-vars
 let account;
 let contract;
-console.log("account", account);
 
 export const setAccount = (newAccount) => (account = newAccount);
 

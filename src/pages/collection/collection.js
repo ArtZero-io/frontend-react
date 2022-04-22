@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -15,24 +16,47 @@ import {
   setAccount as setAccountNft721Psp34Module,
 } from "@utils/blockchain/nft721-psp34-standard-calls";
 import { useSubstrateState } from "@utils/substrate";
+import { useDispatch, useSelector } from "react-redux";
+import { AccountActionTypes } from "@store/types/account.types";
 
 function CollectionPage() {
   const { collection_address } = useParams();
   const { api, apiState, currentAccount } = useSubstrateState();
 
-  const [collection, setCollection] = useState({});
+  const [collection, setCollection] = useState(null);
   const [isShowUnlisted, setIsShowUnlisted] = useState(false);
 
+  // useEffect(() => {
+  //   contractData.nft721Psp34.CONTRACT_ADDRESS = collection_address;
+
+  //   const setNft721Psp34ContractModule = async () => {
+  //     setAccountNft721Psp34Module(currentAccount);
+  //     setNft721Psp34Contract(api, contractData.nft721Psp34);
+  //   };
+
+  //   apiState === "READY" && setNft721Psp34ContractModule();
+  // }, [api, apiState, collection_address, currentAccount]);
+
+  const dispatch = useDispatch();
+
+  const { tnxStatus } = useSelector((state) => state.account.accountLoaders);
+  const forceUpdate = useCallback(() => {
+    setCollection(null);
+  }, []);
   useEffect(() => {
-    contractData.nft721Psp34.CONTRACT_ADDRESS = collection_address;
+    function onCloseHandler() {
+      if (tnxStatus?.status === "Finalized") {
+        dispatch({
+          type: AccountActionTypes.SET_TNX_STATUS,
+          payload: null,
+        });
+        // forceUpdate();
+        console.log("forceUpdate...");
+      }
+    }
 
-    const setNft721Psp34ContractModule = async () => {
-      setAccountNft721Psp34Module(currentAccount);
-      setNft721Psp34Contract(api, contractData.nft721Psp34);
-    };
-
-    apiState === "READY" && setNft721Psp34ContractModule();
-  }, [api, apiState, collection_address, currentAccount]);
+    onCloseHandler();
+  }, [tnxStatus, dispatch, forceUpdate]);
 
   useEffect(() => {
     const fetchCollectionDetail = async () => {
@@ -86,6 +110,7 @@ function CollectionPage() {
           {...collection}
           isShowUnlisted={isShowUnlisted}
           setIsShowUnlisted={setIsShowUnlisted}
+          forceUpdate={forceUpdate}
         />
       ),
     },
@@ -96,7 +121,7 @@ function CollectionPage() {
   ];
 
   return (
-    <Layout backdrop={collection.headerImage}>
+    <Layout backdrop={collection?.headerImage}>
       <CollectionHero {...collection} />
 
       <Tabs isLazy align="center">

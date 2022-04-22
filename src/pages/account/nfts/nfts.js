@@ -7,6 +7,7 @@ import {
   Button,
   IconButton,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import React, { useEffect, useState } from "react";
@@ -21,196 +22,60 @@ import { ContractPromise } from "@polkadot/api-contract";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { TypeRegistry, U64 } from "@polkadot/types";
+import { clientAPI } from "@api/client";
+import toast from "react-hot-toast";
 
 const MyNFTsPage = () => {
   const { api, currentAccount } = useSubstrateState();
 
-  const [loading, setLoading] = useState(null);
   const [myCollections, setMyCollections] = useState([]);
-  const [selectedCollectionNo, setSelectedCollectionNo] = useState("collected");
 
-  const getMyNFTByCollection = async (collection) => {
-    let myNFTs = [];
-    let atts = [];
-    console.log(
-      "collection.showOnChainMetadata",
-      collection.showOnChainMetadata
-    );
-    if (collection.showOnChainMetadata) {
-      const nft721_psp34_standard_contract = new ContractPromise(
-        api,
-        nft721_psp34_standard.CONTRACT_ABI,
-        collection.nftContractAddress
-      );
-      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-      const totalSupply = await nft721_psp34_standard_calls.getTotalSupply(
-        currentAccount
-      );
+  const [filterSelected, setFilterSelected] = useState(0);
 
-      for (let i = 1; i <= totalSupply; i++) {
-        const tokenId = nft721_psp34_standard_contract.api.createType(
-          "ContractsPsp34Id",
-          { U8: numberToU8a(i) }
-        );
-        const tokenName = await nft721_psp34_standard_calls.getAttribute(
-          currentAccount,
-          tokenId,
-          stringToHex("nft_name")
-        );
-        const tokenAvatar = await nft721_psp34_standard_calls.getAttribute(
-          currentAccount,
-          tokenId,
-          stringToHex("avatar")
-        );
-        const base_attributes = ["nft_name", "description", "avatar"];
-        const attribute_count =
-          await nft721_psp34_standard_calls.getAttributeCount(currentAccount);
-        atts = [];
-        for (let j = 1; j <= attribute_count; j++) {
-          const attribute_name =
-            await nft721_psp34_standard_calls.getAttributeName(
-              currentAccount,
-              j
-            );
+  function onClickHandler(v) {
+    //   const id = e.target.getAttribute("id");
+    //   let data;
+    // if (id === "collected") data = fakeAPI.collected;
+    // if (id === "listed") data = fakeAPI.listed;
+    // if (id === "bid") data = fakeAPI.bid;
+    //   setMyCollections(data);
+    //   setSelectedCollectionNo(id);
 
-          if (attribute_name && !base_attributes.includes(attribute_name)) {
-            const attribute_val =
-              await nft721_psp34_standard_calls.getAttribute(
-                currentAccount,
-                tokenId,
-                stringToHex(attribute_name)
-              );
-            if (attribute_val) {
-              atts.push({ name: attribute_name, value: attribute_val });
-            }
-          }
-        }
-
-        const tokenIdU64 = nft721_psp34_standard_contract.api.createType(
-          "ContractsPsp34Id",
-          { U64: new U64(new TypeRegistry(), i) }
-        );
-        const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(
-          currentAccount,
-          collection.nftContractAddress,
-          tokenIdU64
-        );
-        console.log(nftSaleInfo);
-        let tokenPrice = 0;
-        let isListed = false;
-        if (nftSaleInfo) {
-          isListed = nftSaleInfo.isForSale;
-          tokenPrice = nftSaleInfo.price;
-        }
-        const nft = {
-          id: i,
-          askPrice: "12.3",
-          bidPrice: "12.3",
-          name: tokenName,
-          img: `${IPFS_BASE_URL}/${tokenAvatar}`,
-          atts: atts,
-          isListed: isListed,
-          price: tokenPrice,
-        };
-
-        myNFTs.push(nft);
-      }
-    } else {
-      // if (
-      //   collection.nftContractAddress === artzero_nft.CONTRACT_ADDRESS
-      // ) {
-      //   if (!artzero_nft_calls.isLoaded()) {
-      //     const artzero_nft_contract = new ContractPromise(
-      //         api,
-      //         artzero_nft.CONTRACT_ABI,
-      //         artzero_nft.CONTRACT_ADDRESS
-      //       );
-      //       artzero_nft_calls.setContract(artzero_nft_contract);
-      //   }
-      //   //TODO: handle again total supply, add pagination
-      //   const totalSupply = 10;
-      //   for (let i = 1; i <= totalSupply - 7; i++) {
-      //     const res = await artzero_nft_calls.tokenUri(currentAccount, i);
-      //     axios.get(res)
-      //       .then(response => {
-      //           if (response.status === 200) {
-      //             const nft = {
-      //        marketplace_contract_calls       name: response.data.name,
-      //               img: response.data.image
-      //             };
-      //             NFTDataList.push(nft);
-      //           }
-      //       })
-      //       .catch(error => {
-      //         console.log(error);
-      //       });
-      //   }
-      // }
-    }
-
-    return myNFTs;
-  };
-
-  const getAllCollections = async () => {
-    setLoading(true);
-    var myCollections = [];
-
-    let collections = await collection_manager_calls.getCollectionsByOwner(
-      currentAccount,
-      currentAccount?.address
-    );
-
-    if (collections?.length) {
-      for (let collection of collections) {
-        let data = await collection_manager_calls.getCollectionByAddress(
-          currentAccount,
-          collection
-        );
-        let attributes = await collection_manager_calls.getAttributes(
-          currentAccount,
-          data?.nftContractAddress,
-          ["name"]
-        );
-        const listNft = await getMyNFTByCollection(data);
-        console.log(listNft);
-        myCollections.push({
-          collectionName: attributes[0],
-          totalItems: listNft.length,
-          nftContractAddress: data?.nftContractAddress,
-          collection_detail: data,
-          listNFT: listNft,
-        });
-      }
-
-      setMyCollections(myCollections);
-
-      // setMyCollections(fakeAPI.collected);
-      setLoading(false);
-    }
-    setLoading(false);
-  };
-
-  // const onRefresh = async () => {
-  //   await delay(1000);
-  //   await getAllCollections();
-  // };
-
-  // useEffect(async () => {
-  //   await onRefresh();
-  // }, [collection_manager_calls.isLoaded()]);
-
-  function onClickHandler(e) {
-    const id = e.target.getAttribute("id");
-
-    let data;
-
-    if (id === "collected") data = fakeAPI.collected;
-    if (id === "listed") data = fakeAPI.listed;
-    if (id === "bid") data = fakeAPI.bid;
-
-    setMyCollections(data);
-    setSelectedCollectionNo(id);
+    setFilterSelected(v);
   }
+
+  useEffect(() => {
+    const fetchMyCollections = async () => {
+      const allCollectionsOwned = await clientAPI(
+        "post",
+        "/getCollectionsByOwner",
+        {
+          owner: currentAccount.address,
+        }
+      );
+
+      const data = await Promise.all(
+        allCollectionsOwned.map(async (collection) => {
+          const options = {
+            collection_address: collection.nftContractAddress,
+            limit: 100,
+            offset: 0,
+            sort: -1,
+          };
+
+          const dataList = await clientAPI("post", "/getNFTs", options);
+
+          collection.listNFT = dataList;
+
+          return collection;
+        })
+      );
+
+      setMyCollections(data);
+    };
+
+    fetchMyCollections();
+  }, [currentAccount.address]);
 
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">
@@ -224,29 +89,29 @@ const MyNFTsPage = () => {
           <Heading size="h2">My NFTs</Heading>
           <Spacer />
           <Button
-            isActive={"collected" === selectedCollectionNo}
+            isActive={filterSelected === 0}
             variant="outline"
             mx={1}
             id="collected"
-            onClick={onClickHandler}
+            onClick={() => onClickHandler(0)}
           >
             Collected
           </Button>
           <Button
-            isActive={"listed" === selectedCollectionNo}
+            isActive={filterSelected === 1}
             variant="outline"
             mx={1}
             id="listed"
-            onClick={onClickHandler}
+            onClick={() => onClickHandler(1)}
           >
             My Listing
           </Button>
           <Button
-            isActive={"bid" === selectedCollectionNo}
+            isActive={filterSelected === 2}
             variant="outline"
             mx={1}
             id="bid"
-            onClick={onClickHandler}
+            onClick={() => onClickHandler(2)}
           >
             My Bids
           </Button>
@@ -256,6 +121,7 @@ const MyNFTsPage = () => {
             icon={<RefreshIcon />}
             size="icon"
             variant="iconSolid"
+            onClick={() => setMyCollections(null)}
           />
         </Flex>
         {/* {loading && (
@@ -271,9 +137,15 @@ const MyNFTsPage = () => {
         )} */}
 
         {myCollections?.length === 0 ? (
-          <Text>You don't have any NFTs</Text>
+          <VStack py={10} align="start" ml={3} justifyContent="center">
+            <Text textAlign="center" color="brand.grayLight" size="2xs">
+              You don't have any NFT yet.
+            </Text>
+          </VStack>
         ) : (
-          myCollections?.map((item) => <MyNFTGroupCard {...item} />)
+          myCollections?.map((item) => {
+            return <MyNFTGroupCard {...item} />;
+          })
         )}
       </Box>
     </Box>
@@ -281,246 +153,3 @@ const MyNFTsPage = () => {
 };
 
 export default MyNFTsPage;
-
-const fakeAPI = {
-  collected: [
-    {
-      collectionName: "Sol City Donkey",
-      image: "https://data.solanart.io/img/collections/degenapepreview.webp",
-      totalItems: "1",
-      listNFT: [
-        {
-          isListed: { status: false },
-          name: "SolPunk #6269",
-          symbol: "",
-          description: "SolPunk #6269 - Male",
-          seller_fee_basis_points: 500,
-          image:
-            "https://arweave.net/P508HbGo9dEZkuHs9B1pqyELa7XXFj3o3i-6L9Ad8iw",
-          external_url: "https://solpunks.com",
-          attributes: [
-            { trait_type: "Rank", value: 6270 },
-            { trait_type: "Skin", value: "Dark" },
-            { trait_type: "Type", value: "Male" },
-            { trait_type: "Attribute 1", value: "Luxurious Beard" },
-            { trait_type: "Attribute 2", value: "Messy Hair" },
-            { trait_type: "Attribute 3", value: "Horned Rim Glasses" },
-            { trait_type: "Attribute 4", value: "Earring" },
-            { trait_type: "Attribute Count", value: 4 },
-          ],
-          properties: {
-            creators: [
-              {
-                address: "punknPuatYGcB6EM4Mt7q1qxz1PKhNiTmd1We1Srt9d",
-                verified: true,
-                share: 100,
-              },
-            ],
-          },
-        },
-      ],
-    },
-  ],
-
-  listed: [
-    {
-      collectionName: "Sol City Donkey",
-      image: "https://data.solanart.io/img/collections/degenapepreview.webp",
-      totalItems: "2",
-      listNFT: [
-        {
-          isListed: { status: true, askPrice: "11", denom: "azero" },
-          name: "Sol City Donkey #541",
-          symbol: "SCPC",
-          description:
-            "777 degenerate donkeys bucking around on the solana blockchain",
-          seller_fee_basis_points: 1000,
-          image:
-            "https://arweave.net/QKoJNEY7XvX41fPCrib8hiP1n1iuntm0XgYlWNAhIhg?ext=png",
-          external_url: "https://solcitypoker.com",
-          edition: 541,
-          collection: { name: "Sol City Poker Club", family: "Sol City" },
-          attributes: [
-            { trait_type: "Background", value: "Purple" },
-            { trait_type: "Body", value: "Gold" },
-            { trait_type: "Torso", value: "Vacation Shirt" },
-            { trait_type: "Mouth", value: "Angry" },
-            { trait_type: "Head", value: "Captain" },
-            { trait_type: "Eyes", value: "Diamonds" },
-            { trait_type: "Hand", value: "Poker Chips" },
-          ],
-          properties: {
-            files: [
-              {
-                uri: "https://arweave.net/QKoJNEY7XvX41fPCrib8hiP1n1iuntm0XgYlWNAhIhg?ext=png",
-                type: "image/png",
-              },
-            ],
-            category: "image",
-            creators: [
-              {
-                address: "CcPssghZG9gUCHJeDAw3p1oyDfPmLt4B2wWk3sfkof2Q",
-                share: 20,
-              },
-              {
-                address: "GXdhXExg8aPg4x1x24cPrzwQGT5kSr5Cut2eM4g3GHp7",
-                share: 40,
-              },
-              {
-                address: "2axV4eiqU9DJGmM9pUg18e6FzcdVTsPyckkKoynDud4d",
-                share: 40,
-              },
-            ],
-          },
-        },
-        {
-          isListed: { status: true, askPrice: "11", denom: "azero" },
-
-          name: "Sol City Donkey #215",
-          symbol: "SCPC",
-          description:
-            "777 degenerate donkeys bucking around on the solana blockchain",
-          seller_fee_basis_points: 1000,
-          image:
-            "https://arweave.net/xpyby-8GJnIhO_kN6pwyjhEIKA5s84FxODYJem0UaDw?ext=png",
-          external_url: "https://solcitypoker.com",
-          edition: 215,
-          collection: { name: "Sol City Poker Club", family: "Sol City" },
-          attributes: [
-            { trait_type: "Background", value: "Purple" },
-            { trait_type: "Body", value: "Solana" },
-            { trait_type: "Torso", value: "Vacation Shirt" },
-            { trait_type: "Mouth", value: "Cigar" },
-            { trait_type: "Head", value: "5 Panel" },
-            { trait_type: "Eyes", value: "Clubs" },
-            { trait_type: "Hand", value: "Eat Your Greens" },
-          ],
-          properties: {
-            files: [
-              {
-                uri: "https://arweave.net/xpyby-8GJnIhO_kN6pwyjhEIKA5s84FxODYJem0UaDw?ext=png",
-                type: "image/png",
-              },
-            ],
-            category: "image",
-            creators: [
-              {
-                address: "CcPssghZG9gUCHJeDAw3p1oyDfPmLt4B2wWk3sfkof2Q",
-                share: 20,
-              },
-              {
-                address: "GXdhXExg8aPg4x1x24cPrzwQGT5kSr5Cut2eM4g3GHp7",
-                share: 40,
-              },
-              {
-                address: "2axV4eiqU9DJGmM9pUg18e6FzcdVTsPyckkKoynDud4d",
-                share: 40,
-              },
-            ],
-          },
-        },
-      ],
-    },
-  ],
-
-  bid: [
-    {
-      collectionName: "Sol City Donkey",
-      image: "https://data.solanart.io/img/collections/degenapepreview.webp",
-      totalItems: "2",
-      listNFT: [
-        {
-          isBid: { status: true, bidPrice: "111", denom: "azero" },
-          name: "Sol City Donkey #541",
-          symbol: "SCPC",
-          description:
-            "777 degenerate donkeys bucking around on the solana blockchain",
-          seller_fee_basis_points: 1000,
-          image:
-            "https://arweave.net/QKoJNEY7XvX41fPCrib8hiP1n1iuntm0XgYlWNAhIhg?ext=png",
-          external_url: "https://solcitypoker.com",
-          edition: 541,
-          collection: { name: "Sol City Poker Club", family: "Sol City" },
-          attributes: [
-            { trait_type: "Background", value: "Purple" },
-            { trait_type: "Body", value: "Gold" },
-            { trait_type: "Torso", value: "Vacation Shirt" },
-            { trait_type: "Mouth", value: "Angry" },
-            { trait_type: "Head", value: "Captain" },
-            { trait_type: "Eyes", value: "Diamonds" },
-            { trait_type: "Hand", value: "Poker Chips" },
-          ],
-          properties: {
-            files: [
-              {
-                uri: "https://arweave.net/QKoJNEY7XvX41fPCrib8hiP1n1iuntm0XgYlWNAhIhg?ext=png",
-                type: "image/png",
-              },
-            ],
-            category: "image",
-            creators: [
-              {
-                address: "CcPssghZG9gUCHJeDAw3p1oyDfPmLt4B2wWk3sfkof2Q",
-                share: 20,
-              },
-              {
-                address: "GXdhXExg8aPg4x1x24cPrzwQGT5kSr5Cut2eM4g3GHp7",
-                share: 40,
-              },
-              {
-                address: "2axV4eiqU9DJGmM9pUg18e6FzcdVTsPyckkKoynDud4d",
-                share: 40,
-              },
-            ],
-          },
-        },
-        {
-          isBid: { status: true, bidPrice: "121", denom: "azero" },
-
-          name: "Sol City Donkey #215",
-          symbol: "SCPC",
-          description:
-            "777 degenerate donkeys bucking around on the solana blockchain",
-          seller_fee_basis_points: 1000,
-          image:
-            "https://arweave.net/xpyby-8GJnIhO_kN6pwyjhEIKA5s84FxODYJem0UaDw?ext=png",
-          external_url: "https://solcitypoker.com",
-          edition: 215,
-          collection: { name: "Sol City Poker Club", family: "Sol City" },
-          attributes: [
-            { trait_type: "Background", value: "Purple" },
-            { trait_type: "Body", value: "Solana" },
-            { trait_type: "Torso", value: "Vacation Shirt" },
-            { trait_type: "Mouth", value: "Cigar" },
-            { trait_type: "Head", value: "5 Panel" },
-            { trait_type: "Eyes", value: "Clubs" },
-            { trait_type: "Hand", value: "Eat Your Greens" },
-          ],
-          properties: {
-            files: [
-              {
-                uri: "https://arweave.net/xpyby-8GJnIhO_kN6pwyjhEIKA5s84FxODYJem0UaDw?ext=png",
-                type: "image/png",
-              },
-            ],
-            category: "image",
-            creators: [
-              {
-                address: "CcPssghZG9gUCHJeDAw3p1oyDfPmLt4B2wWk3sfkof2Q",
-                share: 20,
-              },
-              {
-                address: "GXdhXExg8aPg4x1x24cPrzwQGT5kSr5Cut2eM4g3GHp7",
-                share: 40,
-              },
-              {
-                address: "2axV4eiqU9DJGmM9pUg18e6FzcdVTsPyckkKoynDud4d",
-                share: 40,
-              },
-            ],
-          },
-        },
-      ],
-    },
-  ],
-};

@@ -21,8 +21,6 @@ import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
 import { useParams } from "react-router-dom";
-// import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-// import { delay } from "@utils";
 import AddNewNFTInput from "@components/Input/Input";
 import AddNewNFTTextArea from "@components/TextArea/TextArea";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,45 +31,11 @@ const AddNewNFTForm = ({ collectionOwner }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const { currentAccount, api } = useSubstrateState();
 
-  // const { api, currentAccount } = useSubstrateState();
-  // const [isLoadedContract, setIsLoadedContract] = useState(false);
-  // const [nft721Psp34StandardContract, setNft721Psp34StandardContract] =
-  //   useState({});
   const { collection_address } = useParams();
-  // const [collection, setCollectionData] = useState({});
 
   const dispatch = useDispatch();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
 
-  // useEffect(async () => {
-  //   if (isLoadedContract === false) {
-  //     const nft721_psp34_standard_contract = new ContractPromise(
-  //       api,
-  //       nft721_psp34_standard.CONTRACT_ABI,
-  //       collection_address
-  //     );
-  //     nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-  //     setNft721Psp34StandardContract(nft721_psp34_standard_calls);
-  //     setIsLoadedContract(true);
-  //   }
-  // }, [api, isLoadedContract, collection_address]);
-
-  // useEffect(async () => {
-  //   await onRefresh();
-  // }, [collection_manager_calls.isLoaded()]);
-
-  // const onRefresh = async () => {
-  //   await getCollectionData();
-  //   await delay(1000);
-  // };
-
-  // const getCollectionData = async () => {
-  //   let data = await collection_manager_calls.getCollectionByAddress(
-  //     currentAccount,
-  //     collection_address
-  //   );
-  //   setCollectionData(data);
-  // };
   const [modifierToEdit, setModifierToEdit] = useState(-1);
 
   return (
@@ -126,19 +90,10 @@ const AddNewNFTForm = ({ collectionOwner }) => {
             .max(9),
         })}
         onSubmit={async (values, { setSubmitting }) => {
-          console.log("onSubmit start");
-          console.log("onSubmit start values", values);
-          console.log("onSubmit start avatarIPFSUrl", avatarIPFSUrl);
           !avatarIPFSUrl && toast.error("Upload images first");
 
           if (avatarIPFSUrl) {
             values.avatarIPFSUrl = avatarIPFSUrl;
-
-            console.log("onSubmit start avatarIPFSUrl", values);
-            console.log(
-              "onSubmit collectionOwner === currentAccount?.address",
-              collectionOwner === currentAccount?.address
-            );
 
             if (collectionOwner === currentAccount?.address) {
               let attributes = [
@@ -156,8 +111,6 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                 },
               ];
 
-              console.log("onSubmit 1 attributes", attributes);
-
               if (values?.properties?.name) {
                 for (const property of values.properties) {
                   attributes.push({
@@ -166,7 +119,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                   });
                 }
               }
-              console.log("onSubmit 2 attributes", attributes);
+
               if (values?.properties?.name) {
                 for (const level of values.levels) {
                   attributes.push({
@@ -175,19 +128,20 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                   });
                 }
               }
-              console.log("onSubmit 3 attributes", attributes);
+
               const nft721_psp34_standard_contract = new ContractPromise(
                 api,
                 nft721_psp34_standard.CONTRACT_ABI,
                 collection_address
               );
-              nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+              nft721_psp34_standard_calls.setContract(
+                nft721_psp34_standard_contract
+              );
               await nft721_psp34_standard_calls.mintWithAttributes(
                 currentAccount,
                 attributes,
                 dispatch
               );
-              console.log("onSubmit 1 call ct done", attributes);
             } else {
               console.log("You aren't the owner of this collection!");
               toast.error("You aren't the owner of this collection!");
@@ -197,7 +151,6 @@ const AddNewNFTForm = ({ collectionOwner }) => {
       >
         {({ values }) => (
           <div>
-            {console.log("values", values)}
             <Form>
               <HStack>
                 <AddNewNFTInput

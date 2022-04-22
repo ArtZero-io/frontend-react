@@ -13,8 +13,7 @@ import {
 
 export default function AddLevelsInput({ label, height, form, ...props }) {
   const [field, meta] = useField(props);
-  console.log("field", field);
-  console.log("meta", meta);
+
   return (
     <FormControl mx={1} fontSize="lg" color="#fff" h={height || 28}>
       {label && (
@@ -42,8 +41,8 @@ export default function AddLevelsInput({ label, height, form, ...props }) {
         {...props}
         value={field.value}
         onChange={(val) => {
-          console.log('val', val)
-          return form.setFieldValue(field.name, val)}}
+          return form.setFieldValue(field.name, val);
+        }}
       >
         <NumberInputField borderRadius="0" h={12} />
         <NumberInputStepper>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
@@ -7,7 +8,6 @@ import { clientAPI } from "@api/client";
 
 let account;
 let contract;
-console.log("account", account);
 
 export const setAccount = (newAccount) => (account = newAccount);
 
@@ -44,14 +44,14 @@ async function addNewCollection(caller_account, data, dispatch) {
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
         handleContractCall(status, dispatchError, dispatch, contract);
-        
-        if (status.isFinalized == true) {
-          console.log('status', status);
+
+        if (status.isFinalized === true) {
+          console.log("status", status);
           const update_collection_api_res = await clientAPI(
             "post",
             "/updateCollection",
             {
-              collection_address: data.nftContractAddress
+              collection_address: data.nftContractAddress,
             }
           );
           console.log("update_collection_api_res", update_collection_api_res);

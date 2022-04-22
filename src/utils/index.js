@@ -112,7 +112,7 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
 
   if (status) {
     const statusToHuman = Object.entries(status.toHuman());
-    console.log("statusToHuman", statusToHuman);
+
     if (Object.keys(status.toHuman())[0] === "0") {
       dispatch({
         type: AccountActionTypes.SET_TNX_STATUS,
@@ -129,3 +129,26 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
     }
   }
 }
+
+export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
+  if (attrsArr.length !== 0 && attrsArr.length === attrsValArr.length) {
+    let result = {};
+
+    result.nftName = attrsValArr[0];
+    result.description = attrsValArr[1];
+    result.avatar = attrsValArr[2];
+
+    const attrsList = attrsArr.slice(2, attrsArr.length);
+    const attrsValList = attrsValArr.slice(2, attrsArr.length);
+    
+    const formatList = Object.assign(
+      [...attrsList].map((v, i) => ({ [v]: attrsValList[i] }))
+    );
+
+    result.attrsList = formatList;
+
+    return result;
+  }
+
+  return console.log("Can not create attributes Object");
+};

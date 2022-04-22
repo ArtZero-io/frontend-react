@@ -4,6 +4,7 @@ import {
   Flex,
   Heading,
   Image,
+  Skeleton,
   Spacer,
   Tag,
   TagLabel,
@@ -45,7 +46,9 @@ export const CollectionCard = ({
           maxH={64}
           objectFit="cover"
           src={`${IPFS_BASE_URL}/${headerImage}`}
-          fallbackSrc="https://via.placeholder.com/1280x768"
+          // fallbackSrc="https://via.placeholder.com/1280x768"
+          fallback={<Skeleton w="full" h="full" minH={"20rem"} />}
+
         />
 
         <Center
@@ -55,7 +58,7 @@ export const CollectionCard = ({
           mt={-8}
           p="-px"
           border="2px solid"
-          borderColor="white "
+          borderColor="white " 
         >
           <Image
             alt={`avatar-img-${name}`}
