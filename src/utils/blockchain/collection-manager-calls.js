@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import { handleContractCall, isValidAddressPolkadotAddress } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
+import { clientAPI } from "@api/client";
 
 let account;
 let contract;
@@ -43,6 +44,18 @@ async function addNewCollection(caller_account, data, dispatch) {
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
         handleContractCall(status, dispatchError, dispatch, contract);
+        
+        if (status.isFinalized == true) {
+          console.log('status', status);
+          const update_collection_api_res = await clientAPI(
+            "post",
+            "/updateCollection",
+            {
+              collection_address: data.nftContractAddress
+            }
+          );
+          console.log("update_collection_api_res", update_collection_api_res);
+        }
         // if (dispatchError) {
         //   if (dispatchError.isModule) {
         //     toast.error(`There is some error with your request`);
