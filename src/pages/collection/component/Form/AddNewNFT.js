@@ -139,6 +139,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
               );
               await nft721_psp34_standard_calls.mintWithAttributes(
                 currentAccount,
+                collection_address,
                 attributes,
                 dispatch
               );

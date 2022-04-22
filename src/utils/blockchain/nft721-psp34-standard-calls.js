@@ -3,6 +3,7 @@ import { web3FromSource } from "../wallets/extension-dapp";
 import BN from "bn.js";
 import { TypeRegistry, U64 } from "@polkadot/types";
 import { handleContractCall } from "@utils";
+import { clientAPI } from "@api/client";
 
 let contract;
 
@@ -12,6 +13,7 @@ function setContract(c) {
 }
 
 async function getTotalSupply(caller_account) {
+  console.log('getTotalSupply before check', (!caller_account));
   if (!contract || !caller_account) {
     return null;
   }
@@ -107,7 +109,7 @@ async function getAttributeCount(caller_account) {
   return null;
 }
 
-async function mintWithAttributes(caller_account, attributes, dispatch) {
+async function mintWithAttributes(caller_account, nft_address, attributes, dispatch) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -147,9 +149,23 @@ async function mintWithAttributes(caller_account, attributes, dispatch) {
               console.log("dispatchError", dispatchError.toString());
             }
           }
-
+          console.log('mintWithAttributes output:', output);
           if (status) {
-            toast.success(`Okay`);
+            if (status.isFinalized === true) {
+              toast.success(`Okay`);
+              const token_id = await getTotalSupply(address);
+              console.log('token_id', token_id);
+              const update_nft_api_res = await clientAPI(
+                "post",
+                "/updateNFT",
+                {
+                  collection_address: nft_address,
+                  token_id: token_id
+                }
+              );
+              console.log("update_nft_api_res", update_nft_api_res);
+            }
+            
           }
         }
       )
