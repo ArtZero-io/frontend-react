@@ -69,7 +69,7 @@ function NFTTabInfo({
         nftContractAddress
       );
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-      console.log('xxx');
+
       if (owner === currentAccount.address) {
         
         await marketplace_contract_calls.list(
@@ -119,7 +119,7 @@ function NFTTabInfo({
         src={`${IPFS_BASE_URL}/${avatar}`}
         fallbackSrc="https://via.placeholder.com/480"
       />
-
+  {console.log('is_for_sale', is_for_sale)}
       <VStack
         minH="30rem"
         w="full"
@@ -254,6 +254,7 @@ function NFTTabInfo({
             </Button>
           </Flex>
         )}
+        
         {isAllownceMarketplaceContract && is_for_sale && (
           <Flex w="full" py={2} alignItems="center" justifyContent="start">
             <Spacer />

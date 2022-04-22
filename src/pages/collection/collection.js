@@ -68,6 +68,7 @@ function CollectionPage() {
       };
 
       try {
+        console.log('1');
         const [collectionDetail] = await clientAPI(
           "post",
           "/getCollectionByAddress",
@@ -75,18 +76,20 @@ function CollectionPage() {
             collection_address,
           }
         );
-
+        console.log('2');
         const [floorPrice] = await clientAPI("post", "/getFloorPrice", {
           collection_address,
         });
-
+        console.log('3');
         const NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
 
         collectionDetail.floorPrice = floorPrice || 0;
         collectionDetail.nftList = NFTList;
         collectionDetail.nftTotalCount = NFTList?.length;
-
+        console.log('4');
+        console.log('before collectionDetail', collectionDetail);
         setCollection(collectionDetail);
+        console.log('after collectionDetail', collectionDetail);
       } catch (error) {
         console.log("fetchCollectionDetail error", error);
 
