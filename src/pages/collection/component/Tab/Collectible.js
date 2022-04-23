@@ -54,16 +54,16 @@ const NFTTabCollectible = ({
   // const [onLoad, setOnLoad] = useState(false);
   const [bidPrice, setBidPrice] = useState(null);
   // const { collection_address } = useParams();
+  
   const { api, currentAccount } = useSubstrateState();
 
-  // useEffect(async () => {
-  //   await onRefresh();
-  // }, [artzero_nft_calls.isLoaded()]);
+  useEffect(async () => {
+    await onRefresh();
+  }, [artzero_nft_calls.isLoaded()]);
 
-  // const onRefresh = async () => {
-  //   await loadNFT();
-  //   await delay(1000);
-  // };
+  const onRefresh = async () => {
+    
+  };
 
   const buyToken = async () => {
     setNFT({});
@@ -211,7 +211,27 @@ const NFTTabCollectible = ({
 
   const placeOffer = async () => {
     console.log("placeOffer", bidPrice, "AZERO");
+    
     //TODO Handle validate price
+
+    const { data: balance } = await api.query.system.account(
+      currentAccount.address
+    );
+
+    marketplace_contract_calls.setMarketplaceContract(api, contractData.marketplace);
+    
+    if (balance.free.toNumber() / (10 ** 12) > bidPrice) {
+      await marketplace_contract_calls.bid(
+        currentAccount,
+        nftContractAddress,
+        {'u64': tokenID},
+        bidPrice
+      );
+      
+    } else {
+      toast.error(`Your balance not enough!`);
+    }
+
     setDoOffer(false);
   };
 
@@ -361,7 +381,7 @@ const NFTTabCollectible = ({
                   <Text textAlign="right" color="brand.grayLight">
                     <Text>Current offer</Text>
                     <Tag pr={0} bg="transparent">
-                      <TagLabel bg="transparent">82.00</TagLabel>
+                      <TagLabel bg="transparent">{bidPrice}</TagLabel>
                       <TagRightIcon as={AzeroIcon} />
                     </Tag>
                   </Text>
