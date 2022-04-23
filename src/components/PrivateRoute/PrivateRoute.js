@@ -20,6 +20,11 @@ import {
   setAccount as setAccountCollectionModule,
 } from "@utils/blockchain/collection-manager-calls";
 
+import {
+  setMarketplaceContract,
+  setAccount as setAccountMarketplaceModule,
+} from "@utils/blockchain/marketplace_contract_calls";
+
 const PrivateRoute = ({ ...rest }) => {
   const { api, keyringState, currentAccount } = useSubstrateState();
 
@@ -55,6 +60,9 @@ const PrivateRoute = ({ ...rest }) => {
 
   setAccountCollectionModule(currentAccount);
   setCollectionContract(api, contractData.collection);
+
+  setAccountMarketplaceModule(currentAccount);
+  setMarketplaceContract(api, contractData.marketplace);
 
   return <Route {...rest} />;
 };

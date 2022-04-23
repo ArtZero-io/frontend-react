@@ -3,21 +3,35 @@ import toast from 'react-hot-toast'
 import { web3FromSource } from '../wallets/extension-dapp'
 import {isValidAddressPolkadotAddress} from '@utils'
 import { TypeRegistry, U128, U64 } from '@polkadot/types';
+import { ContractPromise } from "@polkadot/api-contract";
+import { clientAPI } from "@api/client";
 
-let marketplace_contract
+// eslint-disable-next-line no-unused-vars
+let account;
+let contract;
+
+export const setAccount = (newAccount) => (account = newAccount);
 
 function isLoaded() {
-  if (marketplace_contract) return true; else return false;
+  if (contract) return true; else return false;
 }
 
+export const setMarketplaceContract = (api, data) => {
+  contract = new ContractPromise(
+    api,
+    data?.CONTRACT_ABI,
+    data?.CONTRACT_ADDRESS
+  );
+};
+
 function setContract(c) {
-  // console.log(`xyz 2 Setting contract in marketplace_contract blockchain module`, c)
-  marketplace_contract = c
+  // console.log(`xyz 2 Setting contract in contract blockchain module`, c)
+  contract = c
 }
 
 //GETS
 async function totalTokensForSale(caller_account,nft_contract_address,seller) {
-  if (!marketplace_contract || !caller_account ||
+  if (!contract || !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address) ||
     !isValidAddressPolkadotAddress(seller)
     ){
@@ -27,9 +41,9 @@ async function totalTokensForSale(caller_account,nft_contract_address,seller) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(marketplace_contract);
+  //console.log(contract);
 
-  const { result, output } = await marketplace_contract.query.totalTokensForSale(
+  const { result, output } = await contract.query.totalTokensForSale(
     address,
     { value:azero_value, gasLimit },
     nft_contract_address,seller
@@ -40,7 +54,7 @@ async function totalTokensForSale(caller_account,nft_contract_address,seller) {
   return null;
 }
 async function getVolumeByCollection(caller_account,nft_contract_address) {
-  if (!marketplace_contract || !caller_account ||
+  if (!contract || !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
     ){
     console.log('invalid inputs');
@@ -49,9 +63,9 @@ async function getVolumeByCollection(caller_account,nft_contract_address) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(marketplace_contract);
+  //console.log(contract);
 
-  const { result, output } = await marketplace_contract.query.getVolumeByCollection(
+  const { result, output } = await contract.query.getVolumeByCollection(
     address,
     { value:azero_value, gasLimit },
     nft_contract_address
@@ -62,16 +76,16 @@ async function getVolumeByCollection(caller_account,nft_contract_address) {
   return null;
 }
 async function getTotalVolume(caller_account) {
-  if (!marketplace_contract || !caller_account ){
+  if (!contract || !caller_account ){
     console.log('invalid inputs');
     return null;
   }
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(marketplace_contract);
+  //console.log(contract);
 
-  const { result, output } = await marketplace_contract.query.getTotalVolume(
+  const { result, output } = await contract.query.getTotalVolume(
     address,
     { value:azero_value, gasLimit }
   )
@@ -81,7 +95,7 @@ async function getTotalVolume(caller_account) {
   return null;
 }
 async function getNftSaleInfo(caller_account,nft_contract_address,token_id) {
-  if (!marketplace_contract || !caller_account ||
+  if (!contract || !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
     ){
     console.log('invalid inputs');
@@ -90,9 +104,9 @@ async function getNftSaleInfo(caller_account,nft_contract_address,token_id) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(marketplace_contract);
+  //console.log(contract);
 
-  const { result, output } = await marketplace_contract.query.getNftSaleInfo(
+  const { result, output } = await contract.query.getNftSaleInfo(
     address,
     { value:azero_value, gasLimit },
     nft_contract_address,token_id
@@ -103,7 +117,7 @@ async function getNftSaleInfo(caller_account,nft_contract_address,token_id) {
   return null;
 }
 async function getForSaleTokenId(caller_account,nft_contract_address,seller,index) {
-  if (!marketplace_contract || !caller_account ||
+  if (!contract || !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address) ||
     !isValidAddressPolkadotAddress(seller)
     ){
@@ -113,9 +127,9 @@ async function getForSaleTokenId(caller_account,nft_contract_address,seller,inde
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(marketplace_contract);
+  //console.log(contract);
 
-  const { result, output } = await marketplace_contract.query.getForSaleTokenId(
+  const { result, output } = await contract.query.getForSaleTokenId(
     address,
     { value:azero_value, gasLimit },
     nft_contract_address,seller,index
@@ -126,7 +140,7 @@ async function getForSaleTokenId(caller_account,nft_contract_address,seller,inde
   return null;
 }
 async function getAllBids(caller_account,nft_contract_address,seller,index) {
-  if (!marketplace_contract || !caller_account ||
+  if (!contract || !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address) ||
     !isValidAddressPolkadotAddress(seller)
     ){
@@ -136,9 +150,9 @@ async function getAllBids(caller_account,nft_contract_address,seller,index) {
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(marketplace_contract);
+  //console.log(contract);
 
-  const { result, output } = await marketplace_contract.query.getAllBids(
+  const { result, output } = await contract.query.getAllBids(
     address,
     { value:azero_value, gasLimit },
     nft_contract_address,seller,index
@@ -149,16 +163,16 @@ async function getAllBids(caller_account,nft_contract_address,seller,index) {
   return null;
 }
 async function owner(caller_account){
-  if (!marketplace_contract || !caller_account ){
+  if (!contract || !caller_account ){
     console.log('invalid inputs');
     return null;
   }
   const address = caller_account?.address
   const gasLimit = -1
   const azero_value = 0
-  //console.log(marketplace_contract);
+  //console.log(contract);
 
-  const { result, output } = await marketplace_contract.query["ownable::owner"](
+  const { result, output } = await contract.query["ownable::owner"](
     address,
     { value:azero_value, gasLimit }
   )
@@ -170,8 +184,8 @@ async function owner(caller_account){
 }
 
 //SETS
-async function list(caller_account, nft_contract_address,token_id,price) {
-  if (!marketplace_contract || !caller_account ||
+async function list(caller_account, nft_contract_address, token_id, price) {
+  if (!contract || !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
     ){
     console.log('invalid inputs');
@@ -183,10 +197,12 @@ async function list(caller_account, nft_contract_address,token_id,price) {
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source)
-  const tokenId = await marketplace_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
+
   const sale_price = new U128(new TypeRegistry(), price);
-  marketplace_contract.tx
-    .list({ gasLimit, value:azero_value }, nft_contract_address, tokenId, sale_price)
+  console.log('token_id', token_id);
+  console.log('nft_contract_address', nft_contract_address);
+  contract.tx
+    .list({ gasLimit, value:azero_value }, nft_contract_address, token_id, sale_price)
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -207,6 +223,19 @@ async function list(caller_account, nft_contract_address,token_id,price) {
 
         if (status) {
           const statusText = Object.keys(status.toHuman())[0]
+          if (status.isFinalized === true) {
+            toast.success(`Okay`);
+            console.log('token_id', token_id);
+            const update_nft_api_res = await clientAPI(
+              "post",
+              "/updateNFT",
+              {
+                collection_address: nft_contract_address,
+                token_id: token_id.u64
+              }
+            );
+            console.log("update_nft_api_res", update_nft_api_res);
+          }
           toast.success(
             `List NFT ${
               statusText === '0' ? 'started' : statusText.toLowerCase()
@@ -220,7 +249,7 @@ async function list(caller_account, nft_contract_address,token_id,price) {
     return unsubscribe;
 }
 async function unlist(caller_account, nft_contract_address,token_id) {
-  if (!marketplace_contract || !caller_account ||
+  if (!contract || !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
     ){
     console.log('invalid inputs');
@@ -232,8 +261,8 @@ async function unlist(caller_account, nft_contract_address,token_id) {
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source)
-  const tokenId = await marketplace_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
-  marketplace_contract.tx
+  const tokenId = await contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
+  contract.tx
     .unlist({ gasLimit, value:azero_value }, nft_contract_address,tokenId)
     .signAndSend(
       address,
@@ -267,7 +296,7 @@ async function unlist(caller_account, nft_contract_address,token_id) {
     return unsubscribe;
 }
 async function bid(caller_account, nft_contract_address,token_id,bid_amount) {
-  if (!marketplace_contract || !caller_account  ||
+  if (!contract || !caller_account  ||
     !isValidAddressPolkadotAddress(nft_contract_address)
     ){
     console.log('invalid inputs');
@@ -280,7 +309,7 @@ async function bid(caller_account, nft_contract_address,token_id,bid_amount) {
   const azero_value = Math.round(bid_amount * (10**12));
   const injector = await web3FromSource(caller_account?.meta?.source)
 
-  marketplace_contract.tx
+  contract.tx
     .bid({ gasLimit, value:azero_value }, nft_contract_address,token_id)
     .signAndSend(
       address,
@@ -314,7 +343,7 @@ async function bid(caller_account, nft_contract_address,token_id,bid_amount) {
     return unsubscribe;
 }
 async function buy(caller_account, nft_contract_address,token_id,price) {
-  if (!marketplace_contract || !caller_account  ||
+  if (!contract || !caller_account  ||
     !isValidAddressPolkadotAddress(nft_contract_address)
     ){
     console.log('invalid inputs');
@@ -326,8 +355,8 @@ async function buy(caller_account, nft_contract_address,token_id,price) {
   const gasLimit = -1;
   const azero_value = Math.round(price * (10**12));
   const injector = await web3FromSource(caller_account?.meta?.source)
-  const tokenId = await marketplace_contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
-  marketplace_contract.tx
+  const tokenId = await contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
+  contract.tx
     .buy({ gasLimit, value:azero_value }, nft_contract_address,tokenId)
     .signAndSend(
       address,
@@ -361,7 +390,7 @@ async function buy(caller_account, nft_contract_address,token_id,price) {
     return unsubscribe;
 }
 async function acceptBid(caller_account, nft_contract_address,token_id,bidIndex) {
-  if (!marketplace_contract || !caller_account ||
+  if (!contract || !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
     ){
     console.log('invalid inputs');
@@ -374,7 +403,7 @@ async function acceptBid(caller_account, nft_contract_address,token_id,bidIndex)
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source)
 
-  marketplace_contract.tx
+  contract.tx
     .acceptBid({ gasLimit, value:azero_value }, nft_contract_address,token_id,bidIndex)
     .signAndSend(
       address,
@@ -422,7 +451,9 @@ const marketplace_contract_calls = {
   buy,
   acceptBid,
   setContract,
-  isLoaded
+  isLoaded,
+  setMarketplaceContract,
+  setAccount,
 }
 
 export default marketplace_contract_calls
