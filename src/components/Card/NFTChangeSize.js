@@ -26,6 +26,8 @@ export default function NFTChangeSize({
   attributesValue,
 }) {
   const getDataFromAttrs = function () {
+    console.log(attributes);
+    console.log(attributesValue);
     if (attributes && attributesValue) {
       return Object.assign(
         ...attributes.map((v, i) => ({ [v]: attributesValue[i] }))
