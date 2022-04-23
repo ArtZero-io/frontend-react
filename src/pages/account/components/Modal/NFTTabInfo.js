@@ -55,6 +55,7 @@ const NFTTabInfo = ({
       if (ownerAddress === currentAccount.address) {
         const is_allownce = await nft721_psp34_standard_calls.allowance(
           currentAccount,
+          currentAccount.address,
           marketplace.CONTRACT_ADDRESS,
           nft_detail.id
         );

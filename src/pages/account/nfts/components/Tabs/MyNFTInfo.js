@@ -56,7 +56,9 @@ function NFTTabInfo({
         nftContractAddress
       );
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-      const isAllownceMarketplaceContract = await nft721_psp34_standard_calls.allowance(currentAccount, marketplace_contract.CONTRACT_ADDRESS, { "u64": tokenID });
+      const isAllownceMarketplaceContract = await nft721_psp34_standard_calls.allowance(
+        currentAccount, currentAccount.address, marketplace_contract.CONTRACT_ADDRESS, { "u64": tokenID }
+        );
       setIsAllownceMarketplaceContract(isAllownceMarketplaceContract);
     }
   }
