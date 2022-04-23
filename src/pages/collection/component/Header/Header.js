@@ -31,7 +31,8 @@ function CollectionHeader({
 }) {
   return (
     <Box
-      // maxH={96}
+      maxH={"32rem"}
+      minH={"32rem"}
       as="section"
       position="relative"
       maxW="container.3xl"
@@ -61,8 +62,7 @@ function CollectionHeader({
               rounded="full"
               objectFit="cover"
               src={`${IPFS_BASE_URL}/${avatarImage}`}
-              // fallbackSrc="https://via.placeholder.com/64"
-              fallback={<Skeleton w={40} h={40} borderRadius='full'/>}
+              fallback={<Skeleton w={40} h={40} borderRadius="full" />}
             />
           </Center>
 

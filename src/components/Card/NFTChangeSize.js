@@ -17,25 +17,12 @@ import { IPFS_BASE_URL } from "@constants/index";
 import { useState } from "react";
 
 export default function NFTChangeSize({
-  nft_name,
-  askPrice,
   bidPrice,
   is_for_sale,
   price,
-  attributes,
-  attributesValue,
+  avatar,
+  nftName,
 }) {
-  const getDataFromAttrs = function () {
-    if (attributes && attributesValue) {
-      return Object.assign(
-        ...attributes.map((v, i) => ({ [v]: attributesValue[i] }))
-      );
-    }
-
-    return console.log("Can not create attributes Object");
-  };
-  const attrsObject = getDataFromAttrs();
-
   return (
     <Box>
       <Flex
@@ -47,10 +34,10 @@ export default function NFTChangeSize({
         minH="25rem"
       >
         <Image
-          alt={nft_name}
+          alt={nftName}
           objectFit="cover"
-          src={`${IPFS_BASE_URL}/${attrsObject?.avatar}`}
-          minH={18}
+          src={`${IPFS_BASE_URL}/${avatar}`}
+          minH="21rem"
           // fallbackSrc="https://via.placeholder.com/720"
           fallback={<Skeleton w="full" h="full" minH={"20rem"} />}
         />
@@ -62,7 +49,7 @@ export default function NFTChangeSize({
           alignItems="start"
           flexGrow="1"
         >
-          <Heading size="h6">{attrsObject.nft_name}</Heading>
+          <Heading size="h6">{nftName}</Heading>
 
           {is_for_sale && (
             <Flex w="full">

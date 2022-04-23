@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -10,21 +9,22 @@ import { clientAPI } from "@api/client";
 import TabActivity from "./component/TabActivity";
 import TabCollectionItems from "./component/TabItems";
 import CollectionHero from "./component/Header/Header";
-import contractData from "@utils/blockchain/index";
-import {
-  setNft721Psp34Contract,
-  setAccount as setAccountNft721Psp34Module,
-} from "@utils/blockchain/nft721-psp34-standard-calls";
+// import contractData from "@utils/blockchain/index";
+// import {
+//   setNft721Psp34Contract,
+//   setAccount as setAccountNft721Psp34Module,
+// } from "@utils/blockchain/nft721-psp34-standard-calls";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
+import { createObjAttrsNFT } from "@utils/index";
 
 function CollectionPage() {
   const { collection_address } = useParams();
-  const { api, apiState, currentAccount } = useSubstrateState();
+  const { currentAccount } = useSubstrateState();
 
-  const [collection, setCollection] = useState(null);
   const [isShowUnlisted, setIsShowUnlisted] = useState(false);
+  const [formattedCollection, setFormattedCollection] = useState(null);
 
   // useEffect(() => {
   //   contractData.nft721Psp34.CONTRACT_ADDRESS = collection_address;
@@ -40,9 +40,11 @@ function CollectionPage() {
   const dispatch = useDispatch();
 
   const { tnxStatus } = useSelector((state) => state.account.accountLoaders);
+
   const forceUpdate = useCallback(() => {
-    setCollection(null);
+    setFormattedCollection(null);
   }, []);
+
   useEffect(() => {
     function onCloseHandler() {
       if (tnxStatus?.status === "Finalized") {
@@ -50,7 +52,7 @@ function CollectionPage() {
           type: AccountActionTypes.SET_TNX_STATUS,
           payload: null,
         });
-        // forceUpdate();
+        forceUpdate();
         console.log("forceUpdate...");
       }
     }
@@ -80,13 +82,26 @@ function CollectionPage() {
           collection_address,
         });
 
+        collectionDetail.floorPrice = floorPrice || 0;
+
         const NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
 
-        collectionDetail.floorPrice = floorPrice || 0;
-        collectionDetail.nftList = NFTList;
         collectionDetail.nftTotalCount = NFTList?.length;
 
-        setCollection(collectionDetail);
+        Promise.all(
+          NFTList.map((item) => {
+            const itemData = createObjAttrsNFT(
+              item.attributes,
+              item.attributesValue
+            );
+
+            return { ...item, ...itemData };
+          })
+        ).then((NFTListFormatted) => {
+          collectionDetail.NFTListFormatted = NFTListFormatted;
+
+          setFormattedCollection(collectionDetail);
+        });
       } catch (error) {
         console.log("fetchCollectionDetail error", error);
 
@@ -94,20 +109,20 @@ function CollectionPage() {
       }
     };
 
-    fetchCollectionDetail();
-  }, [collection_address]);
+    !formattedCollection && fetchCollectionDetail();
+  }, [currentAccount, formattedCollection, collection_address]);
 
   useEffect(() => {
     isShowUnlisted &&
-      collection?.nftList?.filter((item) => item.is_for_sale === false);
-  }, [collection, isShowUnlisted]);
+      formattedCollection?.nftList?.filter((i) => i.is_for_sale === false);
+  }, [formattedCollection, isShowUnlisted]);
 
   const tabData = [
     {
       label: "Items",
       content: (
         <TabCollectionItems
-          {...collection}
+          {...formattedCollection}
           isShowUnlisted={isShowUnlisted}
           setIsShowUnlisted={setIsShowUnlisted}
           forceUpdate={forceUpdate}
@@ -121,8 +136,8 @@ function CollectionPage() {
   ];
 
   return (
-    <Layout backdrop={collection?.headerImage}>
-      <CollectionHero {...collection} />
+    <Layout backdrop={formattedCollection?.headerImage}>
+      <CollectionHero {...formattedCollection} />
 
       <Tabs isLazy align="center">
         <TabList>
@@ -131,9 +146,16 @@ function CollectionPage() {
           ))}
         </TabList>
 
-        <TabPanels>
+        <TabPanels h="full">
           {tabData.map((tab, index) => (
-            <TabPanel pt={4} px={24} bg="#171717" key={index}>
+            <TabPanel
+              pt={4}
+              px={24}
+              bg="#171717"
+              key={index}
+              h="full"
+              flexGrow="1"
+            >
               {tab.content}
             </TabPanel>
           ))}

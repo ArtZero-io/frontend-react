@@ -14,6 +14,7 @@ import {
   Image,
   InputGroup,
   InputRightElement,
+  Progress,
 } from "@chakra-ui/react";
 // import { FiUpload, FiRefreshCw } from "react-icons/fi";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -125,41 +126,104 @@ function NFTTabInfo({
         </Box>
 
         <Grid
+          pr={"0.25rem"}
           overflowY="auto"
           w="full"
           templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
           gap={5}
+          sx={{
+            "&::-webkit-scrollbar": {
+              width: "0.3rem",
+              borderRadius: "1px",
+              backgroundColor: `#7ae7ff`,
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: `#7ae7ff`,
+            },
+          }}
         >
-          {attrsList?.map((item, index) => {
-            return (
-              <React.Fragment key={index}>
-                <GridItem
-                  id="abc"
-                  w="100%"
-                  h="100%"
-                  _hover={{ bg: "brand.blue" }}
-                >
-                  <Box w="full" textAlign="left" bg="#171717" px={4} py={2}>
-                    <Flex w="full">
-                      <Text color="brand.grayLight">
-                        <Text>{Object.keys(item)[0]}</Text>
-                        <Heading size="h6" isTruncated mt={1}>
-                          {Object.values(item)[0]}
-                        </Heading>
-                      </Text>
-                      <Spacer />
-                    </Flex>
-                    <Flex w="full" textAlign="left">
-                      <Spacer />
-                      <Text color="brand.blue"> </Text>
-                    </Flex>
-                  </Box>
-                </GridItem>
-              </React.Fragment>
-            );
-          })}
+          {attrsList?.length
+            ? attrsList
+                .filter((i) => !JSON.stringify(Object.values(i)).includes("|"))
+                .map((item) => {
+                  return (
+                    <GridItem
+                      id="abc"
+                      w="100%"
+                      h="100%"
+                      _hover={{ bg: "brand.blue" }}
+                    >
+                      <Box
+                        w="full"
+                        textAlign="left"
+                        alignItems="end"
+                        bg="black"
+                        px={4}
+                        py={3}
+                      >
+                        <Flex w="full">
+                          <Text color="brand.grayLight">
+                            <Text>{Object.keys(item)[0]}</Text>
+                            <Heading
+                              size="h6"
+                              mt={1}
+                              isTruncated
+                              maxW={"10rem"}
+                            >
+                              {Object.values(item)[0]}
+                            </Heading>
+                          </Text>
+                          <Spacer />
+                        </Flex>
+                        <Flex w="full" color="#7AE7FF">
+                          <Spacer />
+                          <Text> </Text>
+                        </Flex>
+                      </Box>
+                    </GridItem>
+                  );
+                })
+            : ""}
         </Grid>
 
+        {attrsList?.length
+          ? attrsList
+              .filter((i) => JSON.stringify(Object.values(i)).includes("|"))
+              .map((item, idx) => {
+                return (
+                  <React.Fragment key={idx}>
+                    <Box
+                      w="full"
+                      textAlign="left"
+                      alignItems="end"
+                      bg="brand.semiBlack"
+                      p={5}
+                      mb={3}
+                    >
+                      <Flex w="full" mb={3}>
+                        <Heading size="h6" mt={1} color="#fff">
+                          {Object.keys(item)[0]}
+                        </Heading>
+                        <Spacer />
+                        <Text color="#fff">
+                          {Object.values(item)[0].slice(0, 1)} of{" "}
+                          {Object.values(item)[0].slice(-1)}
+                        </Text>
+                      </Flex>
+                      <Progress
+                        colorScheme="telegram"
+                        size="sm"
+                        value={Number(
+                          (Object.values(item)[0].slice(0, 1) * 100) /
+                            Object.values(item)[0].slice(-1)
+                        )}
+                        height="6px"
+                      />
+                    </Box>
+                  </React.Fragment>
+                );
+              })
+          : null}
         {!is_for_sale && (
           <Flex
             w="full"

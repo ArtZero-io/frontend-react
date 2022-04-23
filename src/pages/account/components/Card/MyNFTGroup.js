@@ -71,6 +71,7 @@ function MyNFTGroupCard({ name, avatarImage, listNFT, contractType }) {
           templateColumns="repeat(auto-fill, minmax(min(100%, 224px), 1fr))"
           gap={6}
           py={10}
+          px={1}
         >
           {listNFTFormatted?.map((item, idx) => (
             <React.Fragment key={idx}>

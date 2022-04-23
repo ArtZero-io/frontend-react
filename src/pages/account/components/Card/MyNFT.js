@@ -24,13 +24,19 @@ const MyNFTCard = ({
   isBid,
 }) => {
   return (
-    <Box minW="14.25rem" _hover={{ bg: "brand.blue" }} p="px">
+    <Box
+      minW="14.25rem"
+      borderWidth={"2px"}
+      _hover={{ borderColor: "brand.blue" }}
+      h="full"
+    >
       <Flex
         minW={56}
         direction="column"
         align="center"
         textAlign="center"
         bg="brand.grayDark"
+        h="full"
       >
         <Square minW={56}>
           <Image

@@ -138,7 +138,7 @@ export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
     result.description = attrsValArr[1];
     result.avatar = attrsValArr[2];
 
-    const attrsList = attrsArr.slice(2, attrsArr.length);
+    const attrsList = attrsArr.slice(3, attrsArr.length);
     const attrsValList = attrsValArr.slice(2, attrsArr.length);
     
     const formatList = Object.assign(

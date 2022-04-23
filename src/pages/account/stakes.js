@@ -177,7 +177,7 @@ const MyStakesPage = () => {
 
   useEffect(async () => {
     await onRefresh();
-  }, [collection_manager_calls.isLoaded()]);
+  }, [onRefresh]);
 
   function onClickHandler(e) {
     const id = e.target.getAttribute("id");

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -20,6 +21,7 @@ import {
   InputRightElement,
   IconButton,
   Input,
+  Progress,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { useParams } from "react-router-dom";
@@ -42,28 +44,19 @@ import { FaTelegram } from "react-icons/fa";
 const NFTTabCollectible = ({
   address,
   nftContractAddress,
-  nft_name,
+  description,
+  nftName,
   owner,
-  attributes,
-  attributesValue,
   is_for_sale,
+  avatar,
   price,
+  attrsList,
 }) => {
   const [NFT, setNFT] = useState({});
   const [doOffer, setDoOffer] = useState(false);
-  // const [onLoad, setOnLoad] = useState(false);
   const [bidPrice, setBidPrice] = useState(null);
   const { collection_address } = useParams();
   const { api, currentAccount } = useSubstrateState();
-
-  useEffect(async () => {
-    await onRefresh();
-  }, [artzero_nft_calls.isLoaded()]);
-
-  const onRefresh = async () => {
-    await loadNFT();
-    await delay(1000);
-  };
 
   const buyToken = async () => {
     const { data: balance } = await api.query.system.account(
@@ -106,7 +99,7 @@ const NFTTabCollectible = ({
       const tokenName = await nft721_psp34_standard_calls.getAttribute(
         currentAccount,
         tokenId,
-        stringToHex("nft_name")
+        stringToHex("nftName")
       );
       const tokenAvatar = await nft721_psp34_standard_calls.getAttribute(
         currentAccount,
@@ -114,7 +107,7 @@ const NFTTabCollectible = ({
         stringToHex("avatar")
       );
       console.log(tokenAvatar);
-      const base_attributes = ["nft_name", "description", "avatar"];
+      const base_attributes = ["nftName", "description", "avatar"];
       for (let j = 1; j <= attribute_count; j++) {
         const attribute_name =
           await nft721_psp34_standard_calls.getAttributeName(currentAccount, j);
@@ -201,51 +194,35 @@ const NFTTabCollectible = ({
     setDoOffer(false);
   };
 
-  function getDataFromAttrs(attrName) {
-    const attrIdx = attributes.indexOf(attrName);
-    return attributesValue[attrIdx];
-  }
-
   return (
     <HStack>
       <Image
-        alt={nft_name}
+        alt={nftName}
         boxShadow="lg"
-        boxSize="30rem"
+        boxSize={{ base: "16rem", "2xl": "28rem" }}
         objectFit="cover"
-        src={`${IPFS_BASE_URL}/${getDataFromAttrs("avatar")}`}
+        src={`${IPFS_BASE_URL}/${avatar}`}
         fallbackSrc="https://via.placeholder.com/480"
-        // onLoad={() => {
-        //   setOnLoad(true);
-        // }}
-        // onError={() => {
-        //   setOnLoad(false);
-        // }}
       />
 
-      {/* <Skeleton boxSize="30rem" isLoaded={onLoad} /> */}
-      <VStack minH="30rem" justify="start" maxH="30rem" w="full" pl={10} py={0}>
+      {/* <Skeleton w="30rem" isLoaded={onLoad} /> */}
+      <Flex
+        direction={"column"}
+        justify="start"
+        // maxH="30rem"
+        w="full"
+        h="full"
+        pl={10}
+        py={0}
+        maxW="38rem"
+      >
         <Box w="full">
           <Flex>
-            <Heading size="h4">
-              {getDataFromAttrs("nft_name") || "unknown name"}
-            </Heading>
-
-            <Spacer />
-            {/* <Button variant="icon">
-              <Square size="3.125rem">
-                <FiRefreshCw size="24px" />
-              </Square>
-            </Button>
-            <Button variant="icon">
-              <Square size="3.125rem">
-                <FiUpload size="24px" />
-              </Square>
-            </Button> */}
+            <Heading size="h4">{nftName || "unknown name"}</Heading>
           </Flex>
 
-          <Heading size="h6" py={3} color="brand.grayLight">
-            {getDataFromAttrs("description") || "unknown description"}
+          <Heading size="h6" color="brand.grayLight" noOfLines={[0, 1]} my={2}>
+            {description || "unknown description"}
           </Heading>
 
           <Text color="#fff">
@@ -362,48 +339,101 @@ const NFTTabCollectible = ({
         </HStack>
 
         <Grid
-          w="full"
-          templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
-          gap={6}
+          maxH="28"
+          pr={"0.25rem"}
+          w="100%"
+          templateColumns="repeat(auto-fill, minmax(min(100%, 10rem), 1fr))"
+          gap={3}
           overflowY="auto"
+          overflowX="hidden"
+          sx={{
+            "&::-webkit-scrollbar": {
+              width: "0.3rem",
+              borderRadius: "1px",
+              backgroundColor: `#7ae7ff`,
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: `#7ae7ff`,
+            },
+          }}
         >
-          {NFT.atts
-            ? NFT.atts.map((item) => {
+          {attrsList?.length
+            ? attrsList
+                .filter((i) => !JSON.stringify(Object.values(i)).includes("|"))
+                .map((item) => {
+                  return (
+                    <GridItem id="abc" w="100%" h="100%">
+                      <Box
+                        w="full"
+                        textAlign="left"
+                        alignItems="end"
+                        bg="brand.semiBlack"
+                        p={3}
+                      >
+                        <Flex w="full">
+                          <Text color="brand.grayLight">
+                            <Text>{Object.keys(item)[0]}</Text>
+                            <Heading
+                              size="h6"
+                              mt={1}
+                              isTruncated
+                              maxW={"10rem"}
+                            >
+                              {Object.values(item)[0]}
+                            </Heading>
+                          </Text>
+                          <Spacer />
+                        </Flex>
+                        <Flex w="full" color="#7AE7FF">
+                          <Spacer />
+                          <Text> </Text>
+                        </Flex>
+                      </Box>
+                    </GridItem>
+                  );
+                })
+            : ""}
+        </Grid>
+
+        {attrsList?.length
+          ? attrsList
+              .filter((i) => JSON.stringify(Object.values(i)).includes("|"))
+              .map((item, idx) => {
                 return (
-                  <GridItem
-                    id="abc"
-                    w="100%"
-                    h="100%"
-                    _hover={{ bg: "brand.blue" }}
-                  >
+                  <React.Fragment key={idx}>
                     <Box
                       w="full"
                       textAlign="left"
                       alignItems="end"
-                      bg="black"
-                      px={4}
-                      py={3}
+                      bg="brand.semiBlack"
+                      p={2}
+                      mt={2}
                     >
-                      <Flex w="full">
-                        <Text color="brand.grayLight">
-                          <Text>{item.name}</Text>
-                          <Heading size="h6" mt={1}>
-                            {item.value}
-                          </Heading>
+                      <Flex w="full" mb={2}>
+                        <Heading size="h6" mt={1} color="#fff">
+                          {Object.keys(item)[0]}
+                        </Heading>
+                        <Spacer />
+                        <Text color="#fff">
+                          {Object.values(item)[0].slice(0, 1)} of{" "}
+                          {Object.values(item)[0].slice(-1)}
                         </Text>
-                        <Spacer />
                       </Flex>
-                      {/* <Flex w="full" color="#7AE7FF">
-                        <Spacer />
-                        <Text>88.88%</Text>
-                      </Flex> */}
+                      <Progress
+                        colorScheme="telegram"
+                        size="sm"
+                        value={Number(
+                          (Object.values(item)[0].slice(0, 1) * 100) /
+                            Object.values(item)[0].slice(-1)
+                        )}
+                        height="6px"
+                      />
                     </Box>
-                  </GridItem>
+                  </React.Fragment>
                 );
               })
-            : ""}
-        </Grid>
-      </VStack>
+          : null}
+      </Flex>
     </HStack>
   );
 };

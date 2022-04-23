@@ -27,6 +27,8 @@ const CollectionsPage = () => {
   const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
   const [selectedItem, setSelectedItem] = useState(0);
 
+  const options = ["All collections", "Trending"];
+
   const {
     pagesCount,
     currentPage,
@@ -134,12 +136,13 @@ const CollectionsPage = () => {
               </Box>
             </Box>
           </Box>
+
           <Box as="section" maxW="container.3xl" px={5}>
             <Box
               mx="auto"
-              maxW={{ base: "xl", md: "7xl" }}
-              px={{ base: "6", md: "8" }}
-              py={{ base: "12", md: "20" }}
+              maxW={{ base: "auto", "2xl": "7xl" }}
+              px={{ base: "6", "2xl": "8" }}
+              py={{ base: "12", "2xl": "20" }}
             >
               {collections?.length ? (
                 <>
@@ -152,11 +155,13 @@ const CollectionsPage = () => {
                     />
                     <Spacer />
                     <Dropdown
+                      options={options}
                       selectedItem={selectedItem}
                       setSelectedItem={setSelectedItem}
                       maxW="3xs"
                     />
                   </Flex>
+
                   <SimpleGrid
                     py={16}
                     columns={{ base: 1, md: 2, lg: 3 }}
@@ -165,19 +170,18 @@ const CollectionsPage = () => {
                     {collections?.map((item) => (
                       <React.Fragment key={item?.index}>
                         <Link
-                          minW={{ base: "auto", "2xl": "25rem" }}
+                          minW="full"
+                          maxW="full"
                           as={ReactRouterLink}
                           to={`collection/${item?.nftContractAddress}`}
                           className="collection-card-hover"
-                          _hover={{
-                            bg: "brand.blue",
-                          }}
                         >
                           <CollectionCard {...item} />
                         </Link>
                       </React.Fragment>
                     ))}
                   </SimpleGrid>
+
                   <Flex w="full" alignItems="end">
                     <PaginationMP
                       isDisabled={isDisabled}

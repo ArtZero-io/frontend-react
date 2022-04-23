@@ -65,7 +65,7 @@ function GeneralPage() {
               return (a.is_for_sale & 1) + (b.is_for_sale & 1);
             }, 0);
 
-            let info = [];
+            let info = [{ address: currentAccount.address }];
 
             info = [
               ...info,
@@ -85,9 +85,10 @@ function GeneralPage() {
         toast.error("There was an error while fetching the collections.");
       }
     };
-
-    !nftList && fetchAllNfts();
-  }, [currentAccount, currentAccount.address, nftList]);
+    (!nftList || dashboardInfo.address !== currentAccount.address) &&
+      fetchAllNfts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentAccount, dashboardInfo?.address]);
 
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">
@@ -144,50 +145,47 @@ function GeneralPage() {
             gap={6}
             minH={"7rem"}
           >
-            {dashboardInfo?.map((item, idx) => {
-              return (
-                <GridItem
-                  key={idx}
-                  w="100%"
-                  h="100%"
-                  // _hover={{ bg: "brand.blue" }}
-                >
-                  <Box
-                    w="full"
-                    textAlign="left"
-                    bg="brand.grayDark"
-                    px={4}
-                    py={3}
-                    fontSize="lg"
-                  >
-                    <Flex w="full">
-                      <Box>
-                        <Text>{item.name}</Text>
-                        <Flex alignItems="center">
-                          <Tag bg="transparent" pl={0}>
-                            <TagLabel
-                              bg="transparent"
-                              fontSize="5xl"
-                              fontFamily="DS-Digital"
-                            >
-                              {item.value}
-                            </TagLabel>
-                            {item.name === "Amount Trades" && (
-                              <TagRightIcon fontSize="2xl" as={AzeroIcon} />
-                            )}
-                          </Tag>
-                        </Flex>
-                      </Box>
-                      <Spacer />
-                    </Flex>
-                    <Flex w="full" textAlign="left">
-                      <Spacer />
-                      {/* <Text color="brand.blue"> $ {item.text1}</Text> */}
-                    </Flex>
-                  </Box>
-                </GridItem>
-              );
-            })}
+            {dashboardInfo
+              ?.filter((item) => !Object.keys(item).includes("address"))
+              .map((item, idx) => {
+                return (
+                  <GridItem key={idx} w="100%" h="100%">
+                    <Box
+                      w="full"
+                      textAlign="left"
+                      bg="brand.grayDark"
+                      px={4}
+                      py={3}
+                      fontSize="lg"
+                    >
+                      <Flex w="full">
+                        <Box>
+                          <Text>{item.name}</Text>
+                          <Flex alignItems="center">
+                            <Tag bg="transparent" pl={0}>
+                              <TagLabel
+                                bg="transparent"
+                                fontSize="5xl"
+                                fontFamily="DS-Digital"
+                              >
+                                {item.value}
+                              </TagLabel>
+                              {item.name === "Amount Trades" && (
+                                <TagRightIcon fontSize="2xl" as={AzeroIcon} />
+                              )}
+                            </Tag>
+                          </Flex>
+                        </Box>
+                        <Spacer />
+                      </Flex>
+                      <Flex w="full" textAlign="left">
+                        <Spacer />
+                        {/* <Text color="brand.blue"> $ {item.text1}</Text> */}
+                      </Flex>
+                    </Box>
+                  </GridItem>
+                );
+              })}
           </Grid>
         </VStack>
 

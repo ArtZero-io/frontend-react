@@ -111,7 +111,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                 },
               ];
 
-              if (values?.properties?.name) {
+              if (values?.properties[0]?.name) {
                 for (const property of values.properties) {
                   attributes.push({
                     name: property.type,
@@ -120,7 +120,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                 }
               }
 
-              if (values?.properties?.name) {
+              if (values?.properties[0]?.name) {
                 for (const level of values.levels) {
                   attributes.push({
                     name: level.name,
@@ -216,7 +216,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                               <Flex w="full">
                                 <Box color="brand.grayLight">
                                   <Text>{item.type}</Text>
-                                  <Heading size="h6" mt={1}>
+                                  <Heading size="h6" mt={1} noOfLines={[1, 2]}>
                                     {item.name}
                                   </Heading>
                                 </Box>
