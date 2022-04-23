@@ -46,6 +46,10 @@ function NFTTabInfo({
   const [isAllownceMarketplaceContract, setIsAllownceMarketplaceContract] =
     useState(false);
 
+  useEffect(async () => {
+    await checkAllowMarketplaceContract();
+  }, [currentAccount]);
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkAllowMarketplaceContract = async () => {
     if (contractType === "2") {
@@ -58,9 +62,14 @@ function NFTTabInfo({
       const isAllownceMarketplaceContract =
         await nft721_psp34_standard_calls.allowance(
           currentAccount,
+          currentAccount.address,
           marketplace_contract.CONTRACT_ADDRESS,
           { u64: tokenID }
         );
+      console.log(
+        "isAllownceMarketplaceContract",
+        isAllownceMarketplaceContract
+      );
       setIsAllownceMarketplaceContract(isAllownceMarketplaceContract);
     }
   };
@@ -95,7 +104,7 @@ function NFTTabInfo({
     await marketplace_contract_calls.unlist(
       currentAccount,
       nftContractAddress,
-      tokenID
+      { u64: tokenID }
     );
   };
 
@@ -140,7 +149,8 @@ function NFTTabInfo({
             <Spacer />
           </Flex>
           <Heading size="h6" py={3} color="brand.grayLight">
-            {description}
+            {description} <br></br>
+            {owner}
           </Heading>
         </Box>
 
@@ -258,6 +268,7 @@ function NFTTabInfo({
         ) : (
           ""
         )}
+
         {isAllownceMarketplaceContract && !is_for_sale && (
           <Flex
             w="full"
@@ -295,34 +306,6 @@ function NFTTabInfo({
               </InputRightElement>
             </InputGroup>
 
-            {/* <InputGroup
-              maxW={64}
-              mx="auto"
-              mr={2}
-              w="full"
-              bg="black"
-              h={14}
-              py={0}
-              color="#fff "
-              borderRadius="0"
-            >
-              <InputRightElement bg="transparent" h={14} w={16}>
-                $
-              </InputRightElement>
-              <Input
-                variant="unstyled"
-                my={0}
-                h={14}
-                pl={5}
-                bg="black"
-                placeholder="100"
-                _placeholder={{
-                  color: "#888",
-                  fontSize: "lg",
-                }}
-                onChange={({ target }) => setSalePrice(target.value)}
-              />
-            </InputGroup> */}
             <Spacer />
             <Button ml={2} variant="solid" onClick={listToken}>
               Push for sale
@@ -330,7 +313,7 @@ function NFTTabInfo({
           </Flex>
         )}
 
-        {isAllownceMarketplaceContract && is_for_sale && (
+        {owner === marketplace.CONTRACT_ADDRESS && is_for_sale && (
           <Flex w="full" py={2} alignItems="center" justifyContent="start">
             <Spacer />
             <Flex

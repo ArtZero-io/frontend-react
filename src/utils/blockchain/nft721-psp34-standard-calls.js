@@ -243,11 +243,11 @@ async function getOwnerAddressByTokenId(caller_account, token_id) {
   return null;
 }
 
-async function allowance(caller_account, operator_address, token_id) {
+async function allowance(caller_account, owner_address, operator_address, token_id) {
   if (!contract || !caller_account) {
     return null;
   }
-  console.log(operator_address, token_id);
+
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
@@ -257,7 +257,7 @@ async function allowance(caller_account, operator_address, token_id) {
   const { result, output } = await contract.query["psp34::allowance"](
     address,
     { value: azero_value, gasLimit },
-    address,
+    owner_address,
     operator_address,
     token_id
   );
