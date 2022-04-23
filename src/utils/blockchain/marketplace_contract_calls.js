@@ -261,9 +261,8 @@ async function unlist(caller_account, nft_contract_address,token_id) {
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source)
-  const tokenId = await contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
   contract.tx
-    .unlist({ gasLimit, value:azero_value }, nft_contract_address,tokenId)
+    .unlist({ gasLimit, value:azero_value }, nft_contract_address,token_id)
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -288,6 +287,19 @@ async function unlist(caller_account, nft_contract_address,token_id) {
               statusText === '0' ? 'started' : statusText.toLowerCase()
             }.`
           )
+          if (status.isFinalized === true) {
+            toast.success(`Okay`);
+            console.log('token_id', token_id);
+            const update_nft_api_res = await clientAPI(
+              "post",
+              "/updateNFT",
+              {
+                collection_address: nft_contract_address,
+                token_id: token_id.u64
+              }
+            );
+            console.log("update_nft_api_res", update_nft_api_res);
+          }
         }
       }
     )

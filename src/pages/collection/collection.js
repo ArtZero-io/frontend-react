@@ -83,7 +83,7 @@ function CollectionPage() {
         console.log('3');
         const NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
 
-        collectionDetail.floorPrice = floorPrice.price || 0;
+        collectionDetail.floorPrice = floorPrice?.price || 0;
         collectionDetail.nftList = NFTList;
         collectionDetail.nftTotalCount = NFTList?.length;
         console.log('4');

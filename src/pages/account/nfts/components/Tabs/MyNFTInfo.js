@@ -43,7 +43,7 @@ function NFTTabInfo({
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllownceMarketplaceContract, setIsAllownceMarketplaceContract] = useState(false);
-
+  
   useEffect(async () => {
     await checkAllowMarketplaceContract();
   }, [currentAccount]);
@@ -59,6 +59,7 @@ function NFTTabInfo({
       const isAllownceMarketplaceContract = await nft721_psp34_standard_calls.allowance(
         currentAccount, currentAccount.address, marketplace_contract.CONTRACT_ADDRESS, { "u64": tokenID }
         );
+        console.log('isAllownceMarketplaceContract', isAllownceMarketplaceContract);
       setIsAllownceMarketplaceContract(isAllownceMarketplaceContract);
     }
   }
@@ -90,7 +91,7 @@ function NFTTabInfo({
     await marketplace_contract_calls.unlist(
       currentAccount,
       nftContractAddress,
-      tokenID
+      {'u64': tokenID}
     );
   };
 
@@ -136,7 +137,8 @@ function NFTTabInfo({
             <Spacer />
           </Flex>
           <Heading size="h6" py={3} color="brand.grayLight">
-            {description}
+            {description} <br></br>
+            {owner}
           </Heading>
         </Box>
 
@@ -177,7 +179,7 @@ function NFTTabInfo({
         </Grid>
           {console.log('isAllownceMarketplaceContract:', isAllownceMarketplaceContract)}
 
-        { (!isAllownceMarketplaceContract) ? (<Flex w="full" py={2} alignItems="center" justifyContent="start">
+        { (!isAllownceMarketplaceContract && owner == currentAccount.address) ? (<Flex w="full" py={2} alignItems="center" justifyContent="start">
             <Spacer />
             
             <Button ml={2} variant="solid" onClick={approveMarketplaceContract}>
@@ -185,7 +187,7 @@ function NFTTabInfo({
             </Button>
             
           </Flex>) : '' }
-        {isAllownceMarketplaceContract && !is_for_sale && (
+        {(isAllownceMarketplaceContract) && !is_for_sale && (
           <Flex
             w="full"
             py={2}
@@ -257,7 +259,7 @@ function NFTTabInfo({
           </Flex>
         )}
         
-        {isAllownceMarketplaceContract && is_for_sale && (
+        {(owner == marketplace.CONTRACT_ADDRESS) && is_for_sale && (
           <Flex w="full" py={2} alignItems="center" justifyContent="start">
             <Spacer />
             <Flex
