@@ -66,7 +66,7 @@ export const CollectionCard = ({
             objectFit="cover"
             src={`${IPFS_BASE_URL}/${avatarImage}`}
             fallbackSrc="https://via.placeholder.com/84"
-            fallback={<Skeleton w={16} h={16} />}
+            fallback={<Skeleton w={16} h={16} rounded="full" />}
           />
         </Center>
 

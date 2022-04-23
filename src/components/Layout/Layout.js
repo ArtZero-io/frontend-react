@@ -37,9 +37,9 @@ const Layout = ({ backdrop, children }) => {
         </Box>
       </Flex>
 
-      <Navbar />
+      <Navbar/>
 
-      <Fade in="true" delay={0.1}>
+      <Fade in="true" delay={0.15}>
         {children}
       </Fade>
     </Container>

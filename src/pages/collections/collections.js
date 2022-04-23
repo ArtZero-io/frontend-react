@@ -170,11 +170,12 @@ const CollectionsPage = () => {
                     {collections?.map((item) => (
                       <React.Fragment key={item?.index}>
                         <Link
+                          id="asd"
                           minW="full"
                           maxW="full"
                           as={ReactRouterLink}
                           to={`collection/${item?.nftContractAddress}`}
-                          className="collection-card-hover"
+                          style={{ textDecoration: "none" }}
                         >
                           <CollectionCard {...item} />
                         </Link>
