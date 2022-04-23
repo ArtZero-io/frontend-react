@@ -60,7 +60,7 @@ const PrivateRoute = ({ ...rest }) => {
 
   setAccountCollectionModule(currentAccount);
   setCollectionContract(api, contractData.collection);
-
+  
   setAccountMarketplaceModule(currentAccount);
   setMarketplaceContract(api, contractData.marketplace);
 

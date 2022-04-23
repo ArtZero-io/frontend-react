@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -22,178 +22,192 @@ import {
   Input,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { useParams } from "react-router-dom";
-import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
+// import { useParams } from "react-router-dom";
+// import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+// import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "@utils/substrate";
-import { delay } from "@utils";
-import artzero_nft from "@utils/blockchain/artzero-nft";
-import { ContractPromise } from "@polkadot/api-contract";
-import axios from "axios";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
-import { numberToU8a, stringToHex } from "@polkadot/util";
+// import { delay } from "@utils";
+// import artzero_nft from "@utils/blockchain/artzero-nft";
+// import { ContractPromise } from "@polkadot/api-contract";
+// import axios from "axios";
+// import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+// import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
+// import { numberToU8a, stringToHex } from "@polkadot/util";
 import { IPFS_BASE_URL } from "@constants/index";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import { TypeRegistry, U64 } from "@polkadot/types";
+// import { TypeRegistry, U64 } from "@polkadot/types";
 import toast from "react-hot-toast";
 import { FaTelegram } from "react-icons/fa";
+import contractData from "@utils/blockchain/index";
 
 const NFTTabCollectible = ({
-  address,
   nftContractAddress,
-  nft_name,
   owner,
   attributes,
   attributesValue,
   is_for_sale,
+  tokenID,
   price,
 }) => {
   const [NFT, setNFT] = useState({});
   const [doOffer, setDoOffer] = useState(false);
   // const [onLoad, setOnLoad] = useState(false);
   const [bidPrice, setBidPrice] = useState(null);
-  const { collection_address } = useParams();
+  // const { collection_address } = useParams();
   const { api, currentAccount } = useSubstrateState();
 
-  useEffect(async () => {
-    await onRefresh();
-  }, [artzero_nft_calls.isLoaded()]);
+  // useEffect(async () => {
+  //   await onRefresh();
+  // }, [artzero_nft_calls.isLoaded()]);
 
-  const onRefresh = async () => {
-    await loadNFT();
-    await delay(1000);
-  };
+  // const onRefresh = async () => {
+  //   await loadNFT();
+  //   await delay(1000);
+  // };
 
   const buyToken = async () => {
+    setNFT({});
     const { data: balance } = await api.query.system.account(
       currentAccount.address
     );
-    console.log(balance.free.toNumber());
-    if (balance.free.toNumber() > NFT.askPrice) {
+
+    marketplace_contract_calls.setMarketplaceContract(api, contractData.marketplace);
+    
+    if (balance.free.toNumber() > price) {
+      console.log({
+        nftContractAddress,
+        owner,
+        attributes,
+        attributesValue,
+        is_for_sale,
+        tokenID,
+        price,
+      });
       await marketplace_contract_calls.buy(
         currentAccount,
-        collection_address,
-        NFT.address,
-        NFT.askPrice
+        nftContractAddress,
+        {'u64': tokenID},
+        price
       );
+      
     } else {
       toast.error(`Your balance not enough!`);
     }
   };
 
-  const loadNFT = async () => {
-    let currentCollection =
-      await collection_manager_calls.getCollectionByAddress(
-        currentAccount,
-        collection_address
-      );
+  // const loadNFT = async () => {
+  //   let currentCollection =
+  //     await collection_manager_calls.getCollectionByAddress(
+  //       currentAccount,
+  //       collection_address
+  //     );
 
-    if (currentCollection?.showOnChainMetadata) {
-      const nft721_psp34_standard_contract = new ContractPromise(
-        api,
-        nft721_psp34_standard.CONTRACT_ABI,
-        collection_address
-      );
-      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-      const attribute_count =
-        await nft721_psp34_standard_calls.getAttributeCount(currentAccount);
-      let atts = [];
-      const tokenId = nft721_psp34_standard_contract.api.createType(
-        "ContractsPsp34Id",
-        { U8: numberToU8a(address) }
-      );
-      const tokenName = await nft721_psp34_standard_calls.getAttribute(
-        currentAccount,
-        tokenId,
-        stringToHex("nft_name")
-      );
-      const tokenAvatar = await nft721_psp34_standard_calls.getAttribute(
-        currentAccount,
-        tokenId,
-        stringToHex("avatar")
-      );
-      console.log(tokenAvatar);
-      const base_attributes = ["nft_name", "description", "avatar"];
-      for (let j = 1; j <= attribute_count; j++) {
-        const attribute_name =
-          await nft721_psp34_standard_calls.getAttributeName(currentAccount, j);
+  //   if (currentCollection?.showOnChainMetadata) {
+  //     const nft721_psp34_standard_contract = new ContractPromise(
+  //       api,
+  //       nft721_psp34_standard.CONTRACT_ABI,
+  //       collection_address
+  //     );
+  //     nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+  //     const attribute_count =
+  //       await nft721_psp34_standard_calls.getAttributeCount(currentAccount);
+  //     let atts = [];
+  //     const tokenId = nft721_psp34_standard_contract.api.createType(
+  //       "ContractsPsp34Id",
+  //       { U8: numberToU8a(address) }
+  //     );
+  //     const tokenName = await nft721_psp34_standard_calls.getAttribute(
+  //       currentAccount,
+  //       tokenId,
+  //       stringToHex("nft_name")
+  //     );
+  //     const tokenAvatar = await nft721_psp34_standard_calls.getAttribute(
+  //       currentAccount,
+  //       tokenId,
+  //       stringToHex("avatar")
+  //     );
+  //     console.log(tokenAvatar);
+  //     const base_attributes = ["nft_name", "description", "avatar"];
+  //     for (let j = 1; j <= attribute_count; j++) {
+  //       const attribute_name =
+  //         await nft721_psp34_standard_calls.getAttributeName(currentAccount, j);
 
-        if (attribute_name && !base_attributes.includes(attribute_name)) {
-          const attribute_val = await nft721_psp34_standard_calls.getAttribute(
-            currentAccount,
-            tokenId,
-            stringToHex(attribute_name)
-          );
-          if (attribute_val) {
-            atts.push({ name: attribute_name, value: attribute_val });
-          }
-        }
-      }
-      const tokenIdU64 = nft721_psp34_standard_contract.api.createType(
-        "ContractsPsp34Id",
-        { U64: new U64(new TypeRegistry(), address) }
-      );
-      const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(
-        currentAccount,
-        collection_address,
-        tokenIdU64
-      );
-      const nft = {
-        id: address,
-        askPrice: nftSaleInfo.price,
-        bidPrice: "12.3",
-        name: tokenName,
-        img: `${IPFS_BASE_URL}/${tokenAvatar}`,
-        atts: atts,
-      };
-      console.log(nft);
-      setNFT(nft);
-      // const tokenId = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U8': numberToU8a(i)});
-      // const attributeVals = await nft721_psp34_standard_calls.getAttributes(currentAccount, tokenId, attributes);
-      // console.log(attributeVals);
-    } else {
-      if (nftContractAddress === artzero_nft.CONTRACT_ADDRESS) {
-        if (!artzero_nft_calls.isLoaded()) {
-          const artzero_nft_contract = new ContractPromise(
-            api,
-            artzero_nft.CONTRACT_ABI,
-            artzero_nft.CONTRACT_ADDRESS
-          );
-          artzero_nft_calls.setContract(artzero_nft_contract);
-        }
-        const res = await artzero_nft_calls.tokenUri(currentAccount, address);
-        axios
-          .get(res)
-          .then((response) => {
-            if (response.status === 200) {
-              let atts = [];
-              console.log(response.data.attributes);
-              for (const attribute of response.data.attributes) {
-                atts.push({
-                  name: attribute.trait_type,
-                  value: attribute.value,
-                });
-              }
-              const nft = {
-                id: address,
-                askPrice: "12.3",
-                bidPrice: "12.3",
-                name: response.data.name,
-                img: response.data.image,
-                atts: atts,
-              };
-              console.log(nft);
-              setNFT(nft);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-    }
-    console.log(NFT);
-  };
+  //       if (attribute_name && !base_attributes.includes(attribute_name)) {
+  //         const attribute_val = await nft721_psp34_standard_calls.getAttribute(
+  //           currentAccount,
+  //           tokenId,
+  //           stringToHex(attribute_name)
+  //         );
+  //         if (attribute_val) {
+  //           atts.push({ name: attribute_name, value: attribute_val });
+  //         }
+  //       }
+  //     }
+  //     const tokenIdU64 = nft721_psp34_standard_contract.api.createType(
+  //       "ContractsPsp34Id",
+  //       { U64: new U64(new TypeRegistry(), address) }
+  //     );
+  //     const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(
+  //       currentAccount,
+  //       collection_address,
+  //       tokenIdU64
+  //     );
+  //     console.log('nftSaleInfo', nftSaleInfo);
+  //     const nft = {
+  //       id: address,
+  //       askPrice: nftSaleInfo.price,
+  //       bidPrice: "12.3",
+  //       name: tokenName,
+  //       img: `${IPFS_BASE_URL}/${tokenAvatar}`,
+  //       atts: atts,
+  //     };
+  //     console.log(nft);
+  //     setNFT(nft);
+  //     // const tokenId = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U8': numberToU8a(i)});
+  //     // const attributeVals = await nft721_psp34_standard_calls.getAttributes(currentAccount, tokenId, attributes);
+  //     // console.log(attributeVals);
+  //   } else {
+  //     if (nftContractAddress === artzero_nft.CONTRACT_ADDRESS) {
+  //       if (!artzero_nft_calls.isLoaded()) {
+  //         const artzero_nft_contract = new ContractPromise(
+  //           api,
+  //           artzero_nft.CONTRACT_ABI,
+  //           artzero_nft.CONTRACT_ADDRESS
+  //         );
+  //         artzero_nft_calls.setContract(artzero_nft_contract);
+  //       }
+  //       const res = await artzero_nft_calls.tokenUri(currentAccount, address);
+  //       axios
+  //         .get(res)
+  //         .then((response) => {
+  //           if (response.status === 200) {
+  //             let atts = [];
+  //             console.log(response.data.attributes);
+  //             for (const attribute of response.data.attributes) {
+  //               atts.push({
+  //                 name: attribute.trait_type,
+  //                 value: attribute.value,
+  //               });
+  //             }
+  //             const nft = {
+  //               id: address,
+  //               askPrice: "12.3",
+  //               bidPrice: "12.3",
+  //               name: response.data.name,
+  //               img: response.data.image,
+  //               atts: atts,
+  //             };
+  //             console.log(nft);
+  //             setNFT(nft);
+  //           }
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //         });
+  //     }
+  //   }
+  //   console.log(NFT);
+  // };
 
   const placeOffer = async () => {
     console.log("placeOffer", bidPrice, "AZERO");
@@ -209,7 +223,7 @@ const NFTTabCollectible = ({
   return (
     <HStack>
       <Image
-        alt={nft_name}
+        // alt={''}
         boxShadow="lg"
         boxSize="30rem"
         objectFit="cover"

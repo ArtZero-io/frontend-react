@@ -2,7 +2,7 @@ import BN from "bn.js";
 import toast from 'react-hot-toast'
 import { web3FromSource } from '../wallets/extension-dapp'
 import {isValidAddressPolkadotAddress} from '@utils'
-import { TypeRegistry, U128, U64 } from '@polkadot/types';
+import { TypeRegistry, U128 } from '@polkadot/types';
 import { ContractPromise } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
 
@@ -94,7 +94,7 @@ async function getTotalVolume(caller_account) {
   }
   return null;
 }
-async function getNftSaleInfo(caller_account,nft_contract_address,token_id) {
+async function getNftSaleInfo (caller_account,nft_contract_address,token_id) {
   if (!contract || !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
     ){
@@ -198,7 +198,8 @@ async function list(caller_account, nft_contract_address, token_id, price) {
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source)
 
-  const sale_price = new U128(new TypeRegistry(), price);
+  const sale_price = new U128(new TypeRegistry(), Math.round(price * (10**12)));
+  
   console.log('token_id', token_id);
   console.log('nft_contract_address', nft_contract_address);
   contract.tx
@@ -355,6 +356,10 @@ async function bid(caller_account, nft_contract_address,token_id,bid_amount) {
     return unsubscribe;
 }
 async function buy(caller_account, nft_contract_address,token_id,price) {
+  console.log(contract);
+  console.log((!contract));
+  console.log((!caller_account));
+  console.log((!isValidAddressPolkadotAddress(nft_contract_address)));
   if (!contract || !caller_account  ||
     !isValidAddressPolkadotAddress(nft_contract_address)
     ){
@@ -362,14 +367,13 @@ async function buy(caller_account, nft_contract_address,token_id,price) {
     return null;
   }
   let unsubscribe
-
+  console.log('xxxx');
   const address = caller_account?.address;
   const gasLimit = -1;
-  const azero_value = Math.round(price * (10**12));
+  const azero_value = new U128(new TypeRegistry(), price);
   const injector = await web3FromSource(caller_account?.meta?.source)
-  const tokenId = await contract.api.createType('ContractsPsp34Id', {'U64': new U64(new TypeRegistry(), token_id)});
   contract.tx
-    .buy({ gasLimit, value:azero_value }, nft_contract_address,tokenId)
+    .buy({ gasLimit, value:azero_value }, nft_contract_address, token_id)
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -389,6 +393,19 @@ async function buy(caller_account, nft_contract_address,token_id,price) {
 
         if (status) {
           const statusText = Object.keys(status.toHuman())[0]
+          if (status.isFinalized === true) {
+            toast.success(`Okay`);
+            console.log('token_id', token_id);
+            const update_nft_api_res = await clientAPI(
+              "post",
+              "/updateNFT",
+              {
+                collection_address: nft_contract_address,
+                token_id: token_id.u64
+              }
+            );
+            console.log("update_nft_api_res", update_nft_api_res);
+          }
           toast.success(
             `Buy NFT ${
               statusText === '0' ? 'started' : statusText.toLowerCase()

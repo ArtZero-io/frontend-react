@@ -93,7 +93,7 @@ const CollectionItems = ({
           />
         ) : null}
       </Flex>
-
+          {console.log(nftList)}
       <CollectionNFTGrid bigCard={bigCard} nftList={nftList} />
     </Box>
   );

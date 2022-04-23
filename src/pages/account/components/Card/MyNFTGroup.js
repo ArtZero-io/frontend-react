@@ -74,6 +74,7 @@ function MyNFTGroupCard({ name, avatarImage, listNFT, contractType }) {
         >
           {listNFTFormatted?.map((item, idx) => (
             <React.Fragment key={idx}>
+              {console.log(item)}
               <GridItem
                 shadow="lg"
                 w="full"
