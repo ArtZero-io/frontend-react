@@ -18,6 +18,10 @@ import {
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
+import { IPFS_BASE_URL } from "@constants/index";
+import axios from 'axios';
+import { ContractPromise } from "@polkadot/api-contract";
+import BN from "bn.js";
 
 function CollectionPage() {
   const { collection_address } = useParams();
@@ -81,11 +85,45 @@ function CollectionPage() {
           collection_address,
         });
         console.log('3');
-        const NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
+        if (collectionDetail.contractType == 2) {
+          const NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
+          collectionDetail.floorPrice = floorPrice?.price || 0;
+          collectionDetail.nftList = NFTList;
+          collectionDetail.nftTotalCount = NFTList?.length;
+        // }
+        } else if (collectionDetail.contractType == 1 && !collectionDetail.showOnChainMetadata) {
+          const abiJson = `${IPFS_BASE_URL}/${collectionDetail.abi_file}`;
+          axios.get(abiJson)
+          .then( async (response) => {
+            // handle success
+            const nft_contract = new ContractPromise(
+              api,
+              JSON.parse(response.request.response),
+              collectionDetail.nftContractAddress
+            );
+            const gasLimit = -1;
+            const azero_value = 0;
 
-        collectionDetail.floorPrice = floorPrice?.price || 0;
-        collectionDetail.nftList = NFTList;
-        collectionDetail.nftTotalCount = NFTList?.length;
+            const { result, output } = await nft_contract.query['getTokenCount'](currentAccount.address, { value: azero_value, gasLimit });
+            if (result.isOk) {
+              const token_count = new BN(output, 10, "le").toNumber();
+              if (token_count) {
+                for (let i = 1; i <= token_count; i++) {
+                  console.log(i);
+                }
+              }
+            }
+            console.log({result, output});
+          })
+          .catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+          .then(function () {
+            // always executed
+          });
+        }
+        
         console.log('4');
         console.log('before collectionDetail', collectionDetail);
         setCollection(collectionDetail);
