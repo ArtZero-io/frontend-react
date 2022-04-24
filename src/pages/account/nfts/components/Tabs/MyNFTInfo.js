@@ -271,7 +271,7 @@ function NFTTabInfo({
               <Text color="brand.grayLight">For Sale At</Text>
 
               <Text color="#fff" mx={2}>
-                {price}
+                {price / (10 ** 12)}
               </Text>
               <AzeroIcon />
             </Flex>

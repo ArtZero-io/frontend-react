@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -21,12 +21,13 @@ import {
   IconButton,
   Input,
 } from "@chakra-ui/react";
+
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 // import { useParams } from "react-router-dom";
 // import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 // import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "@utils/substrate";
-// import { delay } from "@utils";
+import { convertStringToPrice } from "@utils";
 // import artzero_nft from "@utils/blockchain/artzero-nft";
 // import { ContractPromise } from "@polkadot/api-contract";
 // import axios from "axios";
@@ -52,18 +53,27 @@ const NFTTabCollectible = ({
   const [NFT, setNFT] = useState({});
   const [doOffer, setDoOffer] = useState(false);
   // const [onLoad, setOnLoad] = useState(false);
-  const [bidPrice, setBidPrice] = useState(null);
+  const [bidPrice, setBidPrice] = useState(0);
   // const { collection_address } = useParams();
-  
+  const [isLoaded, setIsLoaded] = useState(false);
   const { api, currentAccount } = useSubstrateState();
+  const [isBided, setIsBided] = useState(false);
 
-  // useEffect(async () => {
-  //   await onRefresh();
-  // }, [artzero_nft_calls.isLoaded()]);
-
-  // const onRefresh = async () => {
-    
-  // };
+  useEffect(async () => {
+    if (isLoaded === false) {
+      marketplace_contract_calls.setMarketplaceContract(api, contractData.marketplace);
+      const sale_info = await marketplace_contract_calls.getNftSaleInfo(currentAccount, nftContractAddress, {'u64': tokenID});
+      console.log(sale_info);
+      const listBidder = await marketplace_contract_calls.getAllBids(currentAccount, nftContractAddress, sale_info.nftOwner, {'u64': tokenID});
+      for (const item of listBidder ) {
+        if (item.bidder == currentAccount.address) {
+          setIsBided(true);
+          setBidPrice(convertStringToPrice(item.bidValue));
+        }
+      }
+      setIsLoaded(true);
+    }
+  }, [isLoaded]);
 
   const buyToken = async () => {
     setNFT({});
@@ -74,15 +84,6 @@ const NFTTabCollectible = ({
     marketplace_contract_calls.setMarketplaceContract(api, contractData.marketplace);
     
     if (balance.free.toNumber() > price) {
-      console.log({
-        nftContractAddress,
-        owner,
-        attributes,
-        attributesValue,
-        is_for_sale,
-        tokenID,
-        price,
-      });
       await marketplace_contract_calls.buy(
         currentAccount,
         nftContractAddress,
@@ -177,7 +178,7 @@ const NFTTabCollectible = ({
   //         artzero_nft_calls.setContract(artzero_nft_contract);
   //       }
   //       const res = await artzero_nft_calls.tokenUri(currentAccount, address);
-  //       axios
+  //       axios  
   //         .get(res)
   //         .then((response) => {
   //           if (response.status === 200) {
@@ -209,6 +210,18 @@ const NFTTabCollectible = ({
   //   console.log(NFT);
   // };
 
+  const removeBid = async () => {
+   
+    const res = await marketplace_contract_calls.removeBid(
+      currentAccount,
+      nftContractAddress,
+      {'u64': tokenID}
+    );
+    console.log(res);
+    setIsBided(false);
+    setBidPrice(0);
+  };
+
   const placeOffer = async () => {
     console.log("placeOffer", bidPrice, "AZERO");
     
@@ -221,13 +234,16 @@ const NFTTabCollectible = ({
     marketplace_contract_calls.setMarketplaceContract(api, contractData.marketplace);
     
     if (balance.free.toNumber() / (10 ** 12) > bidPrice) {
-      await marketplace_contract_calls.bid(
-        currentAccount,
-        nftContractAddress,
-        {'u64': tokenID},
-        bidPrice
-      );
-      
+      if (price >= bidPrice) {
+        await marketplace_contract_calls.bid(
+          currentAccount,
+          nftContractAddress,
+          {'u64': tokenID},
+          bidPrice
+        );
+      } else {
+        toast.error(`Must to bid an amount less the price token!`);
+      }
     } else {
       toast.error(`Your balance not enough!`);
     }
@@ -309,7 +325,7 @@ const NFTTabCollectible = ({
                   <Text textAlign="right" color="brand.grayLight">
                     <Text>Current price</Text>
                     <Tag h={4} pr={0} bg="transparent">
-                      <TagLabel bg="transparent">{price}</TagLabel>
+                      <TagLabel bg="transparent">{(price / (10 ** 12))}</TagLabel>
                       <TagRightIcon as={AzeroIcon} />
                     </Tag>
                   </Text>
@@ -324,7 +340,7 @@ const NFTTabCollectible = ({
                 py={1}
                 borderWidth={2}
               >
-                {!doOffer && (
+                {(!doOffer && !isBided) && (
                   <Button
                     h={10}
                     maxW={32}
@@ -332,6 +348,17 @@ const NFTTabCollectible = ({
                     onClick={() => setDoOffer(true)}
                   >
                     Make offer
+                  </Button>
+                )}
+
+              {(!doOffer && isBided) && (
+                  <Button
+                    h={10}
+                    maxW={32}
+                    variant="solid"
+                    onClick={removeBid}
+                  >
+                    Remove Bid
                   </Button>
                 )}
 
