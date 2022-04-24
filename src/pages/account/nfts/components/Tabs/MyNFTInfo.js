@@ -14,6 +14,7 @@ import {
   Image,
   InputGroup,
   InputRightElement,
+  Progress,
 } from "@chakra-ui/react";
 // import { FiUpload, FiRefreshCw } from "react-icons/fi";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -42,27 +43,40 @@ function NFTTabInfo({
 }) {
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
-  const [isAllownceMarketplaceContract, setIsAllownceMarketplaceContract] = useState(false);
-  
+  const [isAllownceMarketplaceContract, setIsAllownceMarketplaceContract] =
+    useState(false);
+
   useEffect(async () => {
     await checkAllowMarketplaceContract();
   }, [currentAccount]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkAllowMarketplaceContract = async () => {
-    if (contractType == "2") {
+    if (contractType === "2") {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
         nft721_psp34_standard.CONTRACT_ABI,
         nftContractAddress
       );
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-      const isAllownceMarketplaceContract = await nft721_psp34_standard_calls.allowance(
-        currentAccount, currentAccount.address, marketplace_contract.CONTRACT_ADDRESS, { "u64": tokenID }
+      const isAllownceMarketplaceContract =
+        await nft721_psp34_standard_calls.allowance(
+          currentAccount,
+          currentAccount.address,
+          marketplace_contract.CONTRACT_ADDRESS,
+          { u64: tokenID }
         );
-        console.log('isAllownceMarketplaceContract', isAllownceMarketplaceContract);
+      console.log(
+        "isAllownceMarketplaceContract",
+        isAllownceMarketplaceContract
+      );
       setIsAllownceMarketplaceContract(isAllownceMarketplaceContract);
     }
-  }
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(async () => {
+    await checkAllowMarketplaceContract();
+  }, [checkAllowMarketplaceContract, currentAccount]);
 
   const listToken = async () => {
     if (contractType === 2) {
@@ -74,13 +88,12 @@ function NFTTabInfo({
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
 
       if (owner === currentAccount.address) {
-        
         await marketplace_contract_calls.list(
           currentAccount,
           nftContractAddress,
-          {'u64': tokenID},
+          { u64: tokenID },
           askPrice
-        );  
+        );
       } else {
         toast.error(`This token is not yours!`);
       }
@@ -91,16 +104,16 @@ function NFTTabInfo({
     await marketplace_contract_calls.unlist(
       currentAccount,
       nftContractAddress,
-      {'u64': tokenID}
+      { u64: tokenID }
     );
   };
 
   const approveMarketplaceContract = async () => {
-    if (owner == currentAccount.address) {
+    if (owner === currentAccount.address) {
       const is_approve = await nft721_psp34_standard_calls.approve(
         currentAccount,
         marketplace.CONTRACT_ADDRESS,
-        {"u64": tokenID},
+        { u64: tokenID },
         true
       );
       if (is_approve) {
@@ -109,20 +122,19 @@ function NFTTabInfo({
     } else {
       toast.error(`This token is not yours!`);
     }
-    
-  }
+  };
 
   return (
     <HStack>
       <Image
         boxShadow="lg"
-        boxSize="30rem"
+        boxSize="26rem"
         alt="nft-img"
         objectFit="cover"
         src={`${IPFS_BASE_URL}/${avatar}`}
         fallbackSrc="https://via.placeholder.com/480"
       />
-  {console.log('is_for_sale', is_for_sale)}
+      {console.log("is_for_sale", is_for_sale)}
       <VStack
         minH="30rem"
         w="full"
@@ -143,51 +155,121 @@ function NFTTabInfo({
         </Box>
 
         <Grid
+          pr={"0.25rem"}
           overflowY="auto"
           w="full"
           templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
           gap={5}
+          sx={{
+            "&::-webkit-scrollbar": {
+              width: "0.3rem",
+              borderRadius: "1px",
+              backgroundColor: `#7ae7ff`,
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: `#7ae7ff`,
+            },
+          }}
         >
-          {attrsList?.map((item, index) => {
-            return (
-              <React.Fragment key={index}>
-                <GridItem
-                  id="abc"
-                  w="100%"
-                  h="100%"
-                  _hover={{ bg: "brand.blue" }}
-                >
-                  <Box w="full" textAlign="left" bg="#171717" px={4} py={2}>
-                    <Flex w="full">
-                      <Text color="brand.grayLight">
-                        <Text>{Object.keys(item)[0]}</Text>
-                        <Heading size="h6" isTruncated mt={1}>
-                          {Object.values(item)[0]}
-                        </Heading>
-                      </Text>
-                      <Spacer />
-                    </Flex>
-                    <Flex w="full" textAlign="left">
-                      <Spacer />
-                      <Text color="brand.blue"> </Text>
-                    </Flex>
-                  </Box>
-                </GridItem>
-              </React.Fragment>
-            );
-          })}
+          {attrsList?.length
+            ? attrsList
+                .filter((i) => !JSON.stringify(Object.values(i)).includes("|"))
+                .map((item) => {
+                  return (
+                    <GridItem
+                      id="abc"
+                      w="100%"
+                      h="100%"
+                      _hover={{ bg: "brand.blue" }}
+                    >
+                      <Box
+                        w="full"
+                        textAlign="left"
+                        alignItems="end"
+                        bg="black"
+                        px={4}
+                        py={3}
+                      >
+                        <Flex w="full">
+                          <Text color="brand.grayLight">
+                            <Text>{Object.keys(item)[0]}</Text>
+                            <Heading
+                              size="h6"
+                              mt={1}
+                              isTruncated
+                              maxW={"10rem"}
+                            >
+                              {Object.values(item)[0]}
+                            </Heading>
+                          </Text>
+                          <Spacer />
+                        </Flex>
+                        <Flex w="full" color="#7AE7FF">
+                          <Spacer />
+                          <Text> </Text>
+                        </Flex>
+                      </Box>
+                    </GridItem>
+                  );
+                })
+            : ""}
         </Grid>
-          {console.log('isAllownceMarketplaceContract:', isAllownceMarketplaceContract)}
+        {console.log(
+          "isAllownceMarketplaceContract:",
+          isAllownceMarketplaceContract
+        )}
 
-        { (!isAllownceMarketplaceContract && owner == currentAccount.address) ? (<Flex w="full" py={2} alignItems="center" justifyContent="start">
+        {attrsList?.length
+          ? attrsList
+              .filter((i) => JSON.stringify(Object.values(i)).includes("|"))
+              .map((item, idx) => {
+                return (
+                  <React.Fragment key={idx}>
+                    <Box
+                      w="full"
+                      textAlign="left"
+                      alignItems="end"
+                      bg="brand.semiBlack"
+                      p={5}
+                      mb={3}
+                    >
+                      <Flex w="full" mb={3}>
+                        <Heading size="h6" mt={1} color="#fff">
+                          {Object.keys(item)[0]}
+                        </Heading>
+                        <Spacer />
+                        <Text color="#fff">
+                          {Object.values(item)[0].slice(0, 1)} of{" "}
+                          {Object.values(item)[0].slice(-1)}
+                        </Text>
+                      </Flex>
+                      <Progress
+                        colorScheme="telegram"
+                        size="sm"
+                        value={Number(
+                          (Object.values(item)[0].slice(0, 1) * 100) /
+                            Object.values(item)[0].slice(-1)
+                        )}
+                        height="6px"
+                      />
+                    </Box>
+                  </React.Fragment>
+                );
+              })
+          : null}
+        {!is_for_sale && !isAllownceMarketplaceContract ? (
+          <Flex w="full" py={2} alignItems="center" justifyContent="start">
             <Spacer />
-            
+
             <Button ml={2} variant="solid" onClick={approveMarketplaceContract}>
               Approve (You need to approve permission for marketplace contract)
             </Button>
-            
-          </Flex>) : '' }
-        {(isAllownceMarketplaceContract) && !is_for_sale && (
+          </Flex>
+        ) : (
+          ""
+        )}
+
+        {isAllownceMarketplaceContract && !is_for_sale && (
           <Flex
             w="full"
             py={2}
@@ -224,42 +306,14 @@ function NFTTabInfo({
               </InputRightElement>
             </InputGroup>
 
-            {/* <InputGroup
-              maxW={64}
-              mx="auto"
-              mr={2}
-              w="full"
-              bg="black"
-              h={14}
-              py={0}
-              color="#fff "
-              borderRadius="0"
-            >
-              <InputRightElement bg="transparent" h={14} w={16}>
-                $
-              </InputRightElement>
-              <Input
-                variant="unstyled"
-                my={0}
-                h={14}
-                pl={5}
-                bg="black"
-                placeholder="100"
-                _placeholder={{
-                  color: "#888",
-                  fontSize: "lg",
-                }}
-                onChange={({ target }) => setSalePrice(target.value)}
-              />
-            </InputGroup> */}
             <Spacer />
             <Button ml={2} variant="solid" onClick={listToken}>
               Push for sale
             </Button>
           </Flex>
         )}
-        
-        {(owner == marketplace.CONTRACT_ADDRESS) && is_for_sale && (
+
+        {owner === marketplace.CONTRACT_ADDRESS && is_for_sale && (
           <Flex w="full" py={2} alignItems="center" justifyContent="start">
             <Spacer />
             <Flex

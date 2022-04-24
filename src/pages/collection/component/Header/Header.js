@@ -24,14 +24,17 @@ function CollectionHeader({
   avatarImage,
   name,
   description,
-  profile,
+  website,
+  twitter,
+  discord,
   volume,
   floorPrice,
   nftTotalCount,
 }) {
   return (
     <Box
-      // maxH={96}
+      maxH={"34rem"}
+      minH={"34rem"}
       as="section"
       position="relative"
       maxW="container.3xl"
@@ -61,8 +64,7 @@ function CollectionHeader({
               rounded="full"
               objectFit="cover"
               src={`${IPFS_BASE_URL}/${avatarImage}`}
-              // fallbackSrc="https://via.placeholder.com/64"
-              fallback={<Skeleton w={40} h={40} borderRadius='full'/>}
+              fallback={<Skeleton w={40} h={40} borderRadius="full" />}
             />
           </Center>
 
@@ -76,7 +78,7 @@ function CollectionHeader({
             </VStack>
 
             <SocialCard
-              profile={profile}
+              profile={[{ website }, { twitter }, { discord }]}
               pos={"absolute"}
               right={"3rem"}
               top={"50%"}

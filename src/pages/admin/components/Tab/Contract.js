@@ -38,11 +38,12 @@ function ContractTab() {
   const [whitelist, setwhitelist] = useState([]);
   const [withdrawAmount, setWithdrawAmount] = useState(0);
   const [azNFTContractBalance, setAzNFTContractBalance] = useState(0);
-
+  // eslint-disable-next-line no-unused-vars
   const [collectionCount, setCollectionCount] = useState(0);
   // eslint-disable-next-line no-unused-vars
   const [collections, setCollections] = useState([]);
   const [collectionContractOwner, setCollectionContractOwner] = useState("");
+  // eslint-disable-next-line no-unused-vars
   const [collectionContractBalance, setCollectionContractBalance] = useState(0);
 
   const onRefreshCollection = async () => {
@@ -63,11 +64,11 @@ function ContractTab() {
   };
   useEffect(async () => {
     onRefreshCollection();
-  }, [collection_manager_calls.isLoaded()]);
+  }, [onRefreshCollection]);
 
   useEffect(async () => {
     onRefreshAZNFT();
-  }, [artzero_nft_calls.isLoaded()]);
+  }, [onRefreshAZNFT]);
 
   const getAZNFTContractBalance = async () => {
     const { data: balance } = await api.query.system.account(
@@ -240,6 +241,7 @@ function ContractTab() {
                 textAlign="left"
               >
                 <Box
+                  mx={2}
                   fontSize="lg"
                   bg="brand.grayDark"
                   padding={12}
@@ -301,6 +303,7 @@ function ContractTab() {
                 </Box>
 
                 <Box
+                  mx={2}
                   fontSize="lg"
                   bg="brand.grayDark"
                   padding={12}
@@ -465,29 +468,6 @@ function ContractTab() {
                   )}
                 </Tbody>
               </Table>
-            </Box>
-
-            {/* next tab */}
-            <Box as="section" pt="20" pb="12" position="relative">
-              <Flex color="white">
-                <Box hidden flex="1" bg="blue.500" margin="2" padding="2">
-                  <Text>
-                    {" "}
-                    <strong>Quản lý Collection:</strong>
-                  </Text>
-                  <Text>
-                    Total Collection: <strong>{collectionCount}</strong>
-                  </Text>
-                  <Text>
-                    Collection Contract Owner:{" "}
-                    <strong>{truncateStr(collectionContractOwner, 9)}</strong>
-                  </Text>
-                  <Text>
-                    Collection Contract Balance:{" "}
-                    <strong>{collectionContractBalance} SZERO</strong>
-                  </Text>
-                </Box>
-              </Flex>
             </Box>
           </Box>
         </>

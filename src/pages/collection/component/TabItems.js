@@ -22,7 +22,7 @@ import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 
 const CollectionItems = ({
   nftTotalCount,
-  nftList,
+  NFTListFormatted,
   collectionOwner,
   contractType,
   setIsShowUnlisted,
@@ -32,6 +32,8 @@ const CollectionItems = ({
   const { currentAccount } = useSubstrateState();
 
   const [bigCard, setBigCard] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(0);
+  const options = ["Price: Oldest", "Price: Low to High", "Price: High to Low"];
 
   return (
     <Box w="full" textAlign="left" minH={"54rem"}>
@@ -59,7 +61,12 @@ const CollectionItems = ({
           placeholder="Search items, collections, and accounts"
         />
 
-        <Dropdown mx={1.5} options={options} defaultItem={options[0]} />
+        <Dropdown
+          mx={1.5}
+          options={options}
+          selectedItem={selectedItem}
+          setSelectedItem={setSelectedItem}
+        />
 
         <IconButton
           aria-label="download"
@@ -93,12 +100,10 @@ const CollectionItems = ({
           />
         ) : null}
       </Flex>
-          {console.log(nftList)}
-      <CollectionNFTGrid bigCard={bigCard} nftList={nftList} />
+
+      <CollectionNFTGrid bigCard={bigCard} nftList={NFTListFormatted} />
     </Box>
   );
 };
 
 export default CollectionItems;
-
-const options = ["Price: Oldest", "Price: Low to High", "Price: High to Low"];

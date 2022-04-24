@@ -15,11 +15,7 @@ const NFTGrid = ({ bigCard, nftList }) => {
 
   return (
     <div>
-      <NFTDetailModal
-        selectedNft={selectedNft}
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      <NFTDetailModal {...selectedNft} isOpen={isOpen} onClose={onClose} />
       <Grid
         templateColumns={`repeat(auto-fill, minmax(min(100%, ${
           bigCard ? "25rem" : "20rem"
@@ -33,7 +29,6 @@ const NFTGrid = ({ bigCard, nftList }) => {
                 w="100%"
                 h="100%"
                 cursor="pointer"
-                _hover={{ bg: "brand.blue" }}
                 onClick={() => handleOnClick(item)}
               >
                 <NFTChangeSize {...item} />

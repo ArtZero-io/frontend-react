@@ -14,32 +14,21 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { IPFS_BASE_URL } from "@constants/index";
-import { useState } from "react";
 
 export default function NFTChangeSize({
-  nft_name,
-  askPrice,
   bidPrice,
   is_for_sale,
   price,
-  attributes,
-  attributesValue,
+  avatar,
+  nftName,
 }) {
-  const getDataFromAttrs = function () {
-    console.log(attributes);
-    console.log(attributesValue);
-    if (attributes && attributesValue) {
-      return Object.assign(
-        ...attributes.map((v, i) => ({ [v]: attributesValue[i] }))
-      );
-    }
-
-    return console.log("Can not create attributes Object");
-  };
-  const attrsObject = getDataFromAttrs();
-
   return (
-    <Box>
+    <Box
+      h="full"
+      borderColor="transparent"
+      borderWidth={"2px"}
+      _hover={{ borderColor: "brand.blue" }}
+    >
       <Flex
         m="0.5"
         direction="column"
@@ -49,12 +38,11 @@ export default function NFTChangeSize({
         minH="25rem"
       >
         <Image
-          alt={nft_name}
+          alt={nftName}
           objectFit="cover"
-          src={`${IPFS_BASE_URL}/${attrsObject?.avatar}`}
-          minH={18}
-          // fallbackSrc="https://via.placeholder.com/720"
-          fallback={<Skeleton w="full" h="full" minH={"20rem"} />}
+          src={`${IPFS_BASE_URL}/${avatar}`}
+          minH="21rem"
+          fallback={<Skeleton w="full" h="full" minH={"21rem"} />}
         />
 
         <VStack
@@ -64,7 +52,7 @@ export default function NFTChangeSize({
           alignItems="start"
           flexGrow="1"
         >
-          <Heading size="h6">{attrsObject.nft_name}</Heading>
+          <Heading size="h6">{nftName}</Heading>
 
           {is_for_sale && (
             <Flex w="full">

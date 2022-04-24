@@ -33,7 +33,7 @@ const AdminPage = () => {
   const [whitelistAmount, setWhitelistAmount] = useState(1);
   const [whitelistAddress, setWhitelistAddress] = useState("");
   const [whitelistCount, setWhitelistCount] = useState(0);
-  const [whitelist, setwhitelist] = useState([]);
+  const [whitelist, setWhitelist] = useState([]);
   const [withdrawAmount, setWithdrawAmount] = useState(0);
   const [azNFTContractBalance, setAzNFTContractBalance] = useState(0);
 
@@ -60,11 +60,11 @@ const AdminPage = () => {
   };
   useEffect(async () => {
     onRefreshCollection();
-  }, [collection_manager_calls.isLoaded()]);
+  }, [onRefreshCollection]);
 
   useEffect(async () => {
     onRefreshAZNFT();
-  }, [artzero_nft_calls.isLoaded()]);
+  }, [onRefreshAZNFT]);
 
   const getAZNFTContractBalance = async () => {
     const { data: balance } = await api.query.system.account(
@@ -88,7 +88,7 @@ const AdminPage = () => {
       whitelist.push(data);
     }
     console.log(whitelist);
-    setwhitelist(whitelist);
+    setWhitelist(whitelist);
   };
   const onGetWhitelistCount = async (e) => {
     let res = await artzero_nft_calls.getWhitelistCount(currentAccount);
@@ -183,7 +183,7 @@ const AdminPage = () => {
     setCollections(collections);
   };
   const onEnableCollection = async (collection_contract) => {
-    if (collectionContractOwner != activeAddress) {
+    if (collectionContractOwner !==activeAddress) {
       toast.error(`You are not owner of this contract`);
       return;
     }

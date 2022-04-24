@@ -51,11 +51,11 @@ function CollectionAdmin() {
   };
   useEffect(async () => {
     onRefreshCollection();
-  }, [collection_manager_calls.isLoaded()]);
+  }, [onRefreshCollection]);
 
   useEffect(async () => {
     onRefreshAZNFT();
-  }, [artzero_nft_calls.isLoaded()]);
+  }, [onRefreshAZNFT]);
 
   const getAZNFTContractBalance = async () => {
     const { data: balance } = await api.query.system.account(

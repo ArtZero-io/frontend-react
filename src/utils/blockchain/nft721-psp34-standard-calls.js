@@ -115,6 +115,8 @@ async function mintWithAttributes(caller_account, nft_address, attributes, dispa
   }
   let unsubscribe;
 
+
+  console.log('mintWithAttributes attributes', attributes)
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;

@@ -28,27 +28,25 @@ export const CollectionCard = ({
   variant,
 }) => {
   return (
-    <Box>
+    <Box h="full" borderColor="transparent" borderWidth={"2px"} _hover={{ borderColor: "brand.blue" }}>
       <Flex
-        m="0.5"
         direction="column"
         align="center"
         textAlign="center"
         bg="brand.grayDark"
         shadow="lg"
         minH="30rem"
-        minW={{ base: "auto", "2xl": "24.5rem" }}
+        h="full"
       >
         <Image
           alt={`header-img-${name}`}
           h={64}
           w="full"
           maxH={64}
+          minH={"20rem"}
           objectFit="cover"
           src={`${IPFS_BASE_URL}/${headerImage}`}
-          // fallbackSrc="https://via.placeholder.com/1280x768"
           fallback={<Skeleton w="full" h="full" minH={"20rem"} />}
-
         />
 
         <Center
@@ -58,7 +56,7 @@ export const CollectionCard = ({
           mt={-8}
           p="-px"
           border="2px solid"
-          borderColor="white " 
+          borderColor="white "
         >
           <Image
             alt={`avatar-img-${name}`}
@@ -68,6 +66,7 @@ export const CollectionCard = ({
             objectFit="cover"
             src={`${IPFS_BASE_URL}/${avatarImage}`}
             fallbackSrc="https://via.placeholder.com/84"
+            fallback={<Skeleton w={16} h={16} rounded="full" />}
           />
         </Center>
 
@@ -82,7 +81,11 @@ export const CollectionCard = ({
             <Heading size="h6">{name}</Heading>
           </Box>
 
-          <Text noOfLines={[1, 3]} maxW={{ base: "unset", md: "20rem" }}>
+          <Text
+            noOfLines={[1, 2]}
+            maxW={{ base: "unset", md: "20rem" }}
+            minH={"3rem"}
+          >
             {description}
           </Text>
 
@@ -95,7 +98,7 @@ export const CollectionCard = ({
                 <AzeroIcon fill={isActive ? "#7AE7FF" : "#888"} />
               </TagLeftIcon>
               <TagLabel color={isActive ? "#fff" : "#888"}>
-                Volume {volume} m
+                Volume {volume || 0} m
               </TagLabel>
             </Tag>
 

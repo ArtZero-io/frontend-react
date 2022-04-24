@@ -25,7 +25,7 @@ import AddNewCollectionModal from "./components/Modal/AddNew";
 
 function MyCollectionsPage() {
   const [collections, setCollections] = useState(null);
-  // const [totalCollectionsCount, setTotalCollectionsCount] = useState(null);
+  const [owner, setOwner] = useState(null);
   const { currentAccount } = useSubstrateState();
 
   // const {
@@ -57,16 +57,21 @@ function MyCollectionsPage() {
           options
         );
 
-        setCollections(dataList);
-      } catch (error) {
+        dataList?.length ? setCollections(dataList) : setCollections(null);
+        dataList?.length &&
+          setOwner(dataList[0].collectionOwner || options.owner);
+
+        } catch (error) {
         console.log(error);
 
         toast.error("There was an error while fetching the collections.");
       }
     };
+    
 
-    fetchCollectionsOwned();
-  }, [currentAccount]);
+    (!collections || owner !== currentAccount?.address) &&
+      fetchCollectionsOwned();
+  }, [collections, currentAccount, owner]);
 
   const forceUpdate = useCallback(() => {
     setCollections(null);
@@ -98,7 +103,7 @@ function MyCollectionsPage() {
         )} */}
 
         <Text textAlign="left" color="brand.grayLight">
-          There are {collections?.length} collections
+          There are {collections?.length || 0} collections
         </Text>
         {collections?.length ? (
           <>

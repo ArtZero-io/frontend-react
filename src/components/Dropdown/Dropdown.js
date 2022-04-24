@@ -8,9 +8,7 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 
-function Dropdown({ selectedItem, setSelectedItem }) {
-  const options = ["All collections", "Trending"];
-
+function Dropdown({ options, selectedItem, setSelectedItem }) {
   const onClickHandler = (item) => setSelectedItem(item);
 
   return (
