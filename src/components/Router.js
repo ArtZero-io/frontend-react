@@ -16,6 +16,7 @@ import MyStakesPage from "@pages/account/stakes";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import AccountLayout from "./Layout/AccountLayout";
 import AdminLayout from "./Layout/AdminLayout";
+import MintLayout from "./Layout/MintLayout";
 
 const Router = () => {
   return (
@@ -57,8 +58,17 @@ const Router = () => {
           </AdminLayout>
         )}
       />
-
-      <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />
+      <PrivateRoute
+        path="/mint"
+        render={() => (
+          <MintLayout>
+            <Switch>
+              <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />
+            </Switch>
+          </MintLayout>
+        )}
+      />
+      {/* <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />   */}
       <Route exact path={ROUTES.DETAIL_COLLECTION} component={CollectionPage} />
       <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
       <Route exact path={ROUTES.HOME} component={HomePage} />

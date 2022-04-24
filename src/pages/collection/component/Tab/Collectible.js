@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 /* eslint-disable no-unused-vars */
-=======
->>>>>>> 4691952609ce4f17fe94cd7266adccfdb9fbcc97
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -67,15 +64,13 @@ const NFTTabCollectible = ({
   const { api, currentAccount } = useSubstrateState();
   const [isBided, setIsBided] = useState(false);
 
-<<<<<<< HEAD
   // useEffect(async () => {
   //   await onRefresh();
   // }, [artzero_nft_calls.isLoaded()]);
 
-  const onRefresh = async () => {
+ // const onRefresh = async () => {
     
-  };
-=======
+  //};
   useEffect(async () => {
     if (isLoaded === false) {
       marketplace_contract_calls.setMarketplaceContract(api, contractData.marketplace);
@@ -91,7 +86,6 @@ const NFTTabCollectible = ({
       setIsLoaded(true);
     }
   }, [isLoaded]);
->>>>>>> 4691952609ce4f17fe94cd7266adccfdb9fbcc97
 
   const buyToken = async () => {
     setNFT({});
@@ -116,8 +110,6 @@ const NFTTabCollectible = ({
     }
   };
 
-<<<<<<< HEAD
-=======
   // const loadNFT = async () => {
   //   let currentCollection =
   //     await collection_manager_calls.getCollectionByAddress(
@@ -244,7 +236,6 @@ const NFTTabCollectible = ({
     setBidPrice(0);
   };
 
->>>>>>> 4691952609ce4f17fe94cd7266adccfdb9fbcc97
   const placeOffer = async () => {
     console.log("placeOffer", bidPrice, "AZERO");
     

@@ -43,7 +43,7 @@ function MintHeader() {
       setLoading(true);
 
       const profile = await dispatch(getProfile());
-      if (profile.username) {
+      if (profile?.username) {
         setProfile((prev) => {
           return {
             ...prev,
