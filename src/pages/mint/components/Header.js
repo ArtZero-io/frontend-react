@@ -166,19 +166,13 @@ function MintHeader() {
       >
         <VStack textAlign="center" justifyContent="space-between">
           <Center w="full" pos="relative">
-            <Heading size="h2">Minting</Heading>
+            <Heading size="h2">Token Generation Event</Heading>
           </Center>
 
-          <Text fontSize="lg" maxW="sm" color="#fff" mt={5}>
-            The Degenerate Ape Academy is an NFT brand housed on the Solana
-            blockchain.
+          <Text fontSize="lg" maxW="6xl-mid" color="#fff" mt={5}>
+            In the TGE, whitelisted addresses can mint NFTs for free. If you are not in the whitelist, you still can purchase an NFT.
           </Text>
-          <Text fontSize="lg" maxW="3xl" color="#fff" mt={5}>
-            Nếu ai được thưởng token thì sẽ nằm trong Whitelist và sẽ mint (tạo
-            ra) được NFT của ArtZero miễn phí. Còn lại sẽ phải Mint với 1 mức
-            phí nhất định tuỳ giai đoạn. GĐ 1: tối đa 200 NFTs giá 100, GĐ 2:
-            giá 200
-          </Text>
+
         </VStack>
 
         <Grid
@@ -206,7 +200,7 @@ function MintHeader() {
               <Box>
                 <Heading size="h6">ArtZero's NFT information:</Heading>
                 <Text mt={3}>
-                  Total Supply: <span style={{ color: "#fff" }}>10,000</span>
+                  Total Supply: <span style={{ color: "#fff" }}>200</span>
                 </Text>
                 <Text mt={3}>
                   Total Minted:
@@ -305,7 +299,7 @@ function MintHeader() {
                     </Tag>
                   </Flex>
                 )}
-                {mintMode === 1 ? (
+                {mintMode == 1 ? (
                   <>
                     <Text alignItems="center" mt={3}>
                       Minting fee: <span style={{ color: "#fff" }}>{fee1}</span>{" "}
@@ -318,7 +312,7 @@ function MintHeader() {
                   </>
                 ) : null}
 
-                {mintMode === 2 ? (
+                {mintMode == 2 ? (
                   <>
                     <Text alignItems="center" mt={3}>
                       Minting fee: <span style={{ color: "#fff" }}>{fee2}</span>{" "}

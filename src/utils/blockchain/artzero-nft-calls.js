@@ -1,13 +1,22 @@
-//import { web3FromSource } from '@polkadot/extension-dapp'
+/* eslint-disable no-unused-vars */
 import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import { isValidAddressPolkadotAddress } from "@utils";
+import { ContractPromise } from "@polkadot/api-contract";
+
+let account;
 let artzero_contract;
-function setContract(c) {
-  // console.log(`Setting contract in blockchain module`, c);
-  artzero_contract = c;
-}
+
+export const setAccount = (newAccount) => (account = newAccount);
+
+export const setAZNFTContract = (api, data) => {
+  artzero_contract = new ContractPromise(
+    api,
+    data?.CONTRACT_ABI,
+    data?.CONTRACT_ADDRESS
+  );
+};
 
 function isLoaded() {
   if (artzero_contract) return true;
@@ -18,7 +27,7 @@ function isLoaded() {
 */
 async function owner(caller_account) {
   if (!artzero_contract || !caller_account) {
-   
+
     return null;
   }
   const address = caller_account?.address;
@@ -37,7 +46,7 @@ async function owner(caller_account) {
 }
 async function totalSupply(caller_account) {
   if (!artzero_contract || !caller_account) {
-   
+
     return null;
   }
   const address = caller_account?.address;
@@ -56,7 +65,7 @@ async function totalSupply(caller_account) {
 }
 async function balanceOf(caller_account, account) {
   if (!artzero_contract || !caller_account || !account) {
- 
+
     return null;
   }
   const address = caller_account?.address;
@@ -80,7 +89,7 @@ async function balanceOf(caller_account, account) {
 */
 async function getWhitelistAccount(caller_account, index) {
   if (!artzero_contract || !caller_account) {
-   
+
     return null;
   }
   const address = caller_account?.address;
@@ -101,7 +110,7 @@ async function getWhitelistAccount(caller_account, index) {
 }
 async function getWhitelistCount(caller_account) {
   if (!artzero_contract || !caller_account) {
-   
+
     return null;
   }
   const address = caller_account?.address;
@@ -120,7 +129,7 @@ async function getWhitelistCount(caller_account) {
 }
 async function getWhitelist(caller_account, account) {
   if (!artzero_contract || !caller_account || !account) {
-   
+
     return null;
   }
   const address = caller_account?.address;
@@ -140,7 +149,7 @@ async function getWhitelist(caller_account, account) {
 }
 async function getMintMode(caller_account) {
   if (!artzero_contract || !caller_account) {
-   
+
     return null;
   }
   const address = caller_account?.address;
@@ -159,7 +168,7 @@ async function getMintMode(caller_account) {
 }
 async function getFee1(caller_account) {
   if (!artzero_contract || !caller_account) {
-   
+
     return null;
   }
   const address = caller_account?.address;
@@ -178,7 +187,7 @@ async function getFee1(caller_account) {
 }
 async function getFee2(caller_account) {
   if (!artzero_contract || !caller_account) {
-   
+
     return null;
   }
   const address = caller_account?.address;
@@ -197,7 +206,7 @@ async function getFee2(caller_account) {
 }
 async function getAmount1(caller_account) {
   if (!artzero_contract || !caller_account) {
-   
+
     return null;
   }
   const address = caller_account?.address;
@@ -218,7 +227,7 @@ async function getAmount1(caller_account) {
 async function tokenUri(caller_account, tokenId) {
 
   if (!artzero_contract || !caller_account) {
-   
+
     return null;
   }
   const address = caller_account?.address;
@@ -237,7 +246,7 @@ async function tokenUri(caller_account, tokenId) {
 
 async function whitelistMint(caller_account, mint_amount) {
   if (!artzero_contract || !caller_account) {
-   
+
     return null;
   }
   let unsubscribe;
@@ -277,7 +286,7 @@ async function whitelistMint(caller_account, mint_amount) {
 }
 async function paidMint(caller_account, fee) {
   if (!artzero_contract || !caller_account) {
-   
+
     return null;
   }
   let unsubscribe;
@@ -317,7 +326,7 @@ async function paidMint(caller_account, fee) {
 }
 async function addWhitelist(caller_account, account, amount) {
   if (!artzero_contract || !caller_account) {
-   
+
     return null;
   }
 
@@ -362,7 +371,7 @@ async function addWhitelist(caller_account, account, amount) {
 }
 async function updateWhitelistAmount(caller_account, account, amount) {
   if (!artzero_contract || !caller_account) {
-   
+
     return null;
   }
 
@@ -407,7 +416,7 @@ async function updateWhitelistAmount(caller_account, account, amount) {
 }
 async function withdrawFee(caller_account, amount) {
   if (!artzero_contract || !caller_account) {
-   
+
     return null;
   }
 
@@ -454,7 +463,6 @@ async function withdrawFee(caller_account, amount) {
 const artzero_contract_calls = {
   getWhitelistAccount,
   getWhitelistCount,
-  setContract,
   getWhitelist,
   getMintMode,
   getFee1,

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
+import BN from "bn.js";
 
 function WalletMenu() {
   const { api, currentAccount } = useSubstrateState();
@@ -11,15 +12,16 @@ function WalletMenu() {
 
   useEffect(() => {
     let unsubscribe;
-    // TODO: Update balance to Number Format
     api &&
       currentAccount &&
       activeAddress &&
       api.query.system
         .account(activeAddress, (balance) => {
-          const balToHuman = balance.data.free.toHuman();
-          const balSZERO = balToHuman.slice(0, balToHuman.length - 16);
-          setAccountBalance(balSZERO ? balSZERO : 0);
+          let balSZERO = new BN(balance.data.free, 10, "le").toNumber() / 10 ** 12;
+          let formatter = Intl.NumberFormat('en', { notation: 'compact' });
+          if (balSZERO >= 1) balSZERO = formatter.format(balSZERO);
+          else balSZERO = parseFloat(balSZERO).toFixed(3)
+          setAccountBalance(balSZERO);
         })
         .then((unsub) => (unsubscribe = unsub))
         .catch(console.error);

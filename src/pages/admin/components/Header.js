@@ -97,7 +97,7 @@ function AdminHeader() {
             <VStack textAlign="center" justifyContent="space-between">
               <Center w="full" pos="relative">
                 {/* <Heading size="h2">{profile?.username || "Unknown"}</Heading> */}
-                <Heading size="h2">Admin manager</Heading>
+                <Heading size="h2">ArtZero Administration</Heading>
               </Center>
               {/* <IconButton
                 pos="relative"
@@ -121,7 +121,7 @@ function AdminHeader() {
               <Text fontSize="lg" maxW="md">
                 {profile?.bio || "Something about yourself ..."}
               </Text>
- 
+
               <HStack textAlign="center">
                 <Link
                   isexternal="true"
