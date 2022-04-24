@@ -1,6 +1,7 @@
 import { decodeAddress, encodeAddress } from "@polkadot/keyring";
 import { hexToU8a, isHex } from "@polkadot/util";
 import { AccountActionTypes } from "../store/types/account.types";
+import BN from "bn.js";
 
 export function isValidImage(imageUrl) {
   try {
@@ -12,6 +13,25 @@ export function isValidImage(imageUrl) {
     console.log(error);
     return false;
   }
+}
+
+export function convertStringToPrice(stringPrice) {
+  try {
+     /* eslint-disable no-useless-escape */
+     const a = stringPrice.replace(/\,/g,'');
+     let price = new BN(a, 10).toNumber();
+     return price / (10 ** 12);
+  } catch (error) {
+    console.log(error);
+    return 0;
+  }
+}
+
+export function convertStringToDateTime(stringTimeStamp) {
+  /* eslint-disable no-useless-escape */
+  const a = stringTimeStamp.replace(/\,/g,'');
+  const dateObject = new Date(a)
+  return dateObject.toLocaleString() //2019-12-9 10:30:15
 }
 
 export function isValidAddressPolkadotAddress(address) {

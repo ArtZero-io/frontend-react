@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { IPFS_BASE_URL } from "@constants/index";
-import { useState } from "react";
 
 export default function NFTChangeSize({
   bidPrice,

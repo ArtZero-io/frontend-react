@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* eslint-disable no-unused-vars */
+=======
+>>>>>>> 4691952609ce4f17fe94cd7266adccfdb9fbcc97
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -24,12 +27,13 @@ import {
   Progress,
   Skeleton,
 } from "@chakra-ui/react";
+
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 // import { useParams } from "react-router-dom";
 // import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 // import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "@utils/substrate";
-// import { delay } from "@utils";
+import { convertStringToPrice } from "@utils";
 // import artzero_nft from "@utils/blockchain/artzero-nft";
 // import { ContractPromise } from "@polkadot/api-contract";
 // import axios from "axios";
@@ -56,11 +60,14 @@ const NFTTabCollectible = ({
 }) => {
   const [NFT, setNFT] = useState({});
   const [doOffer, setDoOffer] = useState(false);
-  const [bidPrice, setBidPrice] = useState(null);
+  // const [onLoad, setOnLoad] = useState(false);
+  const [bidPrice, setBidPrice] = useState(0);
   // const { collection_address } = useParams();
-  
+  const [isLoaded, setIsLoaded] = useState(false);
   const { api, currentAccount } = useSubstrateState();
+  const [isBided, setIsBided] = useState(false);
 
+<<<<<<< HEAD
   // useEffect(async () => {
   //   await onRefresh();
   // }, [artzero_nft_calls.isLoaded()]);
@@ -68,6 +75,23 @@ const NFTTabCollectible = ({
   const onRefresh = async () => {
     
   };
+=======
+  useEffect(async () => {
+    if (isLoaded === false) {
+      marketplace_contract_calls.setMarketplaceContract(api, contractData.marketplace);
+      const sale_info = await marketplace_contract_calls.getNftSaleInfo(currentAccount, nftContractAddress, {'u64': tokenID});
+      console.log(sale_info);
+      const listBidder = await marketplace_contract_calls.getAllBids(currentAccount, nftContractAddress, sale_info.nftOwner, {'u64': tokenID});
+      for (const item of listBidder ) {
+        if (item.bidder == currentAccount.address) {
+          setIsBided(true);
+          setBidPrice(convertStringToPrice(item.bidValue));
+        }
+      }
+      setIsLoaded(true);
+    }
+  }, [isLoaded]);
+>>>>>>> 4691952609ce4f17fe94cd7266adccfdb9fbcc97
 
   const buyToken = async () => {
     setNFT({});
@@ -92,6 +116,135 @@ const NFTTabCollectible = ({
     }
   };
 
+<<<<<<< HEAD
+=======
+  // const loadNFT = async () => {
+  //   let currentCollection =
+  //     await collection_manager_calls.getCollectionByAddress(
+  //       currentAccount,
+  //       collection_address
+  //     );
+
+  //   if (currentCollection?.showOnChainMetadata) {
+  //     const nft721_psp34_standard_contract = new ContractPromise(
+  //       api,
+  //       nft721_psp34_standard.CONTRACT_ABI,
+  //       collection_address
+  //     );
+  //     nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+  //     const attribute_count =
+  //       await nft721_psp34_standard_calls.getAttributeCount(currentAccount);
+  //     let atts = [];
+  //     const tokenId = nft721_psp34_standard_contract.api.createType(
+  //       "ContractsPsp34Id",
+  //       { U8: numberToU8a(address) }
+  //     );
+  //     const tokenName = await nft721_psp34_standard_calls.getAttribute(
+  //       currentAccount,
+  //       tokenId,
+  //       stringToHex("nft_name")
+  //     );
+  //     const tokenAvatar = await nft721_psp34_standard_calls.getAttribute(
+  //       currentAccount,
+  //       tokenId,
+  //       stringToHex("avatar")
+  //     );
+  //     console.log(tokenAvatar);
+  //     const base_attributes = ["nft_name", "description", "avatar"];
+  //     for (let j = 1; j <= attribute_count; j++) {
+  //       const attribute_name =
+  //         await nft721_psp34_standard_calls.getAttributeName(currentAccount, j);
+
+  //       if (attribute_name && !base_attributes.includes(attribute_name)) {
+  //         const attribute_val = await nft721_psp34_standard_calls.getAttribute(
+  //           currentAccount,
+  //           tokenId,
+  //           stringToHex(attribute_name)
+  //         );
+  //         if (attribute_val) {
+  //           atts.push({ name: attribute_name, value: attribute_val });
+  //         }
+  //       }
+  //     }
+  //     const tokenIdU64 = nft721_psp34_standard_contract.api.createType(
+  //       "ContractsPsp34Id",
+  //       { U64: new U64(new TypeRegistry(), address) }
+  //     );
+  //     const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(
+  //       currentAccount,
+  //       collection_address,
+  //       tokenIdU64
+  //     );
+  //     console.log('nftSaleInfo', nftSaleInfo);
+  //     const nft = {
+  //       id: address,
+  //       askPrice: nftSaleInfo.price,
+  //       bidPrice: "12.3",
+  //       name: tokenName,
+  //       img: `${IPFS_BASE_URL}/${tokenAvatar}`,
+  //       atts: atts,
+  //     };
+  //     console.log(nft);
+  //     setNFT(nft);
+  //     // const tokenId = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U8': numberToU8a(i)});
+  //     // const attributeVals = await nft721_psp34_standard_calls.getAttributes(currentAccount, tokenId, attributes);
+  //     // console.log(attributeVals);
+  //   } else {
+  //     if (nftContractAddress === artzero_nft.CONTRACT_ADDRESS) {
+  //       if (!artzero_nft_calls.isLoaded()) {
+  //         const artzero_nft_contract = new ContractPromise(
+  //           api,
+  //           artzero_nft.CONTRACT_ABI,
+  //           artzero_nft.CONTRACT_ADDRESS
+  //         );
+  //         artzero_nft_calls.setContract(artzero_nft_contract);
+  //       }
+  //       const res = await artzero_nft_calls.tokenUri(currentAccount, address);
+  //       axios  
+  //         .get(res)
+  //         .then((response) => {
+  //           if (response.status === 200) {
+  //             let atts = [];
+  //             console.log(response.data.attributes);
+  //             for (const attribute of response.data.attributes) {
+  //               atts.push({
+  //                 name: attribute.trait_type,
+  //                 value: attribute.value,
+  //               });
+  //             }
+  //             const nft = {
+  //               id: address,
+  //               askPrice: "12.3",
+  //               bidPrice: "12.3",
+  //               name: response.data.name,
+  //               img: response.data.image,
+  //               atts: atts,
+  //             };
+  //             console.log(nft);
+  //             setNFT(nft);
+  //           }
+  //         })
+  //         .catch((error) => {
+  //           console.log(error);
+  //         });
+  //     }
+  //   }
+  //   console.log(NFT);
+  // };
+
+  const removeBid = async () => {
+   
+    const res = await marketplace_contract_calls.removeBid(
+      currentAccount,
+      nftContractAddress,
+      {'u64': tokenID}
+    );
+    console.log(res);
+    setIsBided(false);
+    setBidPrice(0);
+  };
+
+>>>>>>> 4691952609ce4f17fe94cd7266adccfdb9fbcc97
   const placeOffer = async () => {
     console.log("placeOffer", bidPrice, "AZERO");
     
@@ -104,13 +257,16 @@ const NFTTabCollectible = ({
     marketplace_contract_calls.setMarketplaceContract(api, contractData.marketplace);
     
     if (balance.free.toNumber() / (10 ** 12) > bidPrice) {
-      await marketplace_contract_calls.bid(
-        currentAccount,
-        nftContractAddress,
-        {'u64': tokenID},
-        bidPrice
-      );
-      
+      if (price >= bidPrice) {
+        await marketplace_contract_calls.bid(
+          currentAccount,
+          nftContractAddress,
+          {'u64': tokenID},
+          bidPrice
+        );
+      } else {
+        toast.error(`Must to bid an amount less the price token!`);
+      }
     } else {
       toast.error(`Your balance not enough!`);
     }
@@ -178,7 +334,7 @@ const NFTTabCollectible = ({
                   <Text textAlign="right" color="brand.grayLight">
                     <Text>Current price</Text>
                     <Tag h={4} pr={0} bg="transparent">
-                      <TagLabel bg="transparent">{price}</TagLabel>
+                      <TagLabel bg="transparent">{(price / (10 ** 12))}</TagLabel>
                       <TagRightIcon as={AzeroIcon} />
                     </Tag>
                   </Text>
@@ -193,7 +349,7 @@ const NFTTabCollectible = ({
                 py={1}
                 borderWidth={2}
               >
-                {!doOffer && (
+                {(!doOffer && !isBided) && (
                   <Button
                     h={10}
                     maxW={32}
@@ -201,6 +357,17 @@ const NFTTabCollectible = ({
                     onClick={() => setDoOffer(true)}
                   >
                     Make offer
+                  </Button>
+                )}
+
+              {(!doOffer && isBided) && (
+                  <Button
+                    h={10}
+                    maxW={32}
+                    variant="solid"
+                    onClick={removeBid}
+                  >
+                    Remove Bid
                   </Button>
                 )}
 

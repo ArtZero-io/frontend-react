@@ -11,9 +11,10 @@
 import React from "react";
 import DataTable from "@components/Table/Table";
 
-function NFTTabActivity({ address }) {
+function NFTTabActivity(props) {
+  
   return (
-    <DataTable />
+    <DataTable  {...props} />
 
     // <Box minH="30rem" as="section" maxW="container.3xl" position="relative">
     //   <TableContainer>

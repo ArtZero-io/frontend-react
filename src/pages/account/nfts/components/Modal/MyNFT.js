@@ -14,7 +14,6 @@ import NFTTabInfo from "../Tabs/MyNFTInfo";
 import NFTTabOffers from "../Tabs/MyNFTOffers";
 
 function MyNFTModal(props) {
-
   const tabData = [
     {
       label: "NFT info",
