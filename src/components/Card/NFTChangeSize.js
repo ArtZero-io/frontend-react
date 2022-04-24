@@ -24,7 +24,12 @@ export default function NFTChangeSize({
   nftName,
 }) {
   return (
-    <Box>
+    <Box
+      h="full"
+      borderColor="transparent"
+      borderWidth={"2px"}
+      _hover={{ borderColor: "brand.blue" }}
+    >
       <Flex
         m="0.5"
         direction="column"
@@ -38,8 +43,7 @@ export default function NFTChangeSize({
           objectFit="cover"
           src={`${IPFS_BASE_URL}/${avatar}`}
           minH="21rem"
-          // fallbackSrc="https://via.placeholder.com/720"
-          fallback={<Skeleton w="full" h="full" minH={"20rem"} />}
+          fallback={<Skeleton w="full" h="full" minH={"21rem"} />}
         />
 
         <VStack

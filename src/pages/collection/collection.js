@@ -53,6 +53,7 @@ function CollectionPage() {
           payload: null,
         });
         forceUpdate();
+
         console.log("forceUpdate...");
       }
     }
@@ -70,7 +71,7 @@ function CollectionPage() {
       };
 
       try {
-        console.log('1');
+        console.log("1");
         const [collectionDetail] = await clientAPI(
           "post",
           "/getCollectionByAddress",
@@ -78,7 +79,7 @@ function CollectionPage() {
             collection_address,
           }
         );
-        console.log('2');
+        console.log("2");
         const [floorPrice] = await clientAPI("post", "/getFloorPrice", {
           collection_address,
         });

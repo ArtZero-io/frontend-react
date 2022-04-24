@@ -29,7 +29,6 @@ const NFTGrid = ({ bigCard, nftList }) => {
                 w="100%"
                 h="100%"
                 cursor="pointer"
-                _hover={{ bg: "brand.blue" }}
                 onClick={() => handleOnClick(item)}
               >
                 <NFTChangeSize {...item} />

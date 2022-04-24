@@ -28,7 +28,7 @@ export const CollectionCard = ({
   variant,
 }) => {
   return (
-    <Box h="full" borderWidth={"2px"} _hover={{ borderColor: "brand.blue" }}>
+    <Box h="full" borderColor="transparent" borderWidth={"2px"} _hover={{ borderColor: "brand.blue" }}>
       <Flex
         direction="column"
         align="center"

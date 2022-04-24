@@ -27,6 +27,7 @@ const MyNFTCard = ({
     <Box
       minW="14.25rem"
       borderWidth={"2px"}
+      borderColor="transparent"
       _hover={{ borderColor: "brand.blue" }}
       h="full"
     >

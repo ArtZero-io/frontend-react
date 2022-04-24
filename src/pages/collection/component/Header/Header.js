@@ -24,15 +24,17 @@ function CollectionHeader({
   avatarImage,
   name,
   description,
-  profile,
+  website,
+  twitter,
+  discord,
   volume,
   floorPrice,
   nftTotalCount,
 }) {
   return (
     <Box
-      maxH={"32rem"}
-      minH={"32rem"}
+      maxH={"34rem"}
+      minH={"34rem"}
       as="section"
       position="relative"
       maxW="container.3xl"
@@ -76,7 +78,7 @@ function CollectionHeader({
             </VStack>
 
             <SocialCard
-              profile={profile}
+              profile={[{ website }, { twitter }, { discord }]}
               pos={"absolute"}
               right={"3rem"}
               top={"50%"}
