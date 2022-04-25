@@ -17,7 +17,7 @@ function WalletMenu() {
       activeAddress &&
       api.query.system
         .account(activeAddress, (balance) => {
-          let balSZERO = new BN(balance.data.free, 10, "le").toNumber() / 10 ** 12;
+          let balSZERO = new BN(balance.data.free, 10, "le").div(new BN(10 ** 12)).toNumber();
           let formatter = Intl.NumberFormat('en', { notation: 'compact' });
           if (balSZERO >= 1) balSZERO = formatter.format(balSZERO);
           else balSZERO = parseFloat(balSZERO).toFixed(3)
