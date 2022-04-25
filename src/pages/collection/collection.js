@@ -23,7 +23,6 @@ import { AccountActionTypes } from "@store/types/account.types";
 // import BN from "bn.js";
 import { createObjAttrsNFT } from "@utils/index";
 
-
 function CollectionPage() {
   const { collection_address } = useParams();
   const { currentAccount } = useSubstrateState();
@@ -110,7 +109,6 @@ function CollectionPage() {
 
           setFormattedCollection(collectionDetail);
         });
-
       } catch (error) {
         console.log("fetchCollectionDetail error", error);
 
@@ -125,6 +123,8 @@ function CollectionPage() {
     isShowUnlisted &&
       formattedCollection?.nftList?.filter((i) => i.is_for_sale === false);
   }, [formattedCollection, isShowUnlisted]);
+
+  console.log("xx> formattedCollection", formattedCollection);
 
   const tabData = [
     {

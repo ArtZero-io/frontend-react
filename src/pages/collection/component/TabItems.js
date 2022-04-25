@@ -100,7 +100,6 @@ const CollectionItems = ({
           />
         ) : null}
       </Flex>
-
       <CollectionNFTGrid bigCard={bigCard} nftList={NFTListFormatted} />
     </Box>
   );

@@ -68,16 +68,28 @@ const NFTTabCollectible = ({
   //   await onRefresh();
   // }, [artzero_nft_calls.isLoaded()]);
 
- // const onRefresh = async () => {
-    
+  // const onRefresh = async () => {
+
   //};
   useEffect(async () => {
     if (isLoaded === false) {
-      marketplace_contract_calls.setMarketplaceContract(api, contractData.marketplace);
-      const sale_info = await marketplace_contract_calls.getNftSaleInfo(currentAccount, nftContractAddress, {'u64': tokenID});
+      marketplace_contract_calls.setMarketplaceContract(
+        api,
+        contractData.marketplace
+      );
+      const sale_info = await marketplace_contract_calls.getNftSaleInfo(
+        currentAccount,
+        nftContractAddress,
+        { u64: tokenID }
+      );
       console.log(sale_info);
-      const listBidder = await marketplace_contract_calls.getAllBids(currentAccount, nftContractAddress, sale_info.nftOwner, {'u64': tokenID});
-      for (const item of listBidder ) {
+      const listBidder = await marketplace_contract_calls.getAllBids(
+        currentAccount,
+        nftContractAddress,
+        sale_info.nftOwner,
+        { u64: tokenID }
+      );
+      for (const item of listBidder) {
         if (item.bidder == currentAccount.address) {
           setIsBided(true);
           setBidPrice(convertStringToPrice(item.bidValue));
@@ -192,7 +204,7 @@ const NFTTabCollectible = ({
   //         artzero_nft_calls.setContract(artzero_nft_contract);
   //       }
   //       const res = await artzero_nft_calls.tokenUri(currentAccount, address);
-  //       axios  
+  //       axios
   //         .get(res)
   //         .then((response) => {
   //           if (response.status === 200) {
@@ -225,11 +237,10 @@ const NFTTabCollectible = ({
   // };
 
   const removeBid = async () => {
-   
     const res = await marketplace_contract_calls.removeBid(
       currentAccount,
       nftContractAddress,
-      {'u64': tokenID}
+      { u64: tokenID }
     );
     console.log(res);
     setIsBided(false);
@@ -238,21 +249,24 @@ const NFTTabCollectible = ({
 
   const placeOffer = async () => {
     console.log("placeOffer", bidPrice, "AZERO");
-    
+
     //TODO Handle validate price
 
     const { data: balance } = await api.query.system.account(
       currentAccount.address
     );
 
-    marketplace_contract_calls.setMarketplaceContract(api, contractData.marketplace);
-    
-    if (balance.free.toNumber() / (10 ** 12) > bidPrice) {
+    marketplace_contract_calls.setMarketplaceContract(
+      api,
+      contractData.marketplace
+    );
+
+    if (balance.free.toNumber() / 10 ** 12 > bidPrice) {
       if (price >= bidPrice) {
         await marketplace_contract_calls.bid(
           currentAccount,
           nftContractAddress,
-          {'u64': tokenID},
+          { u64: tokenID },
           bidPrice
         );
       } else {
@@ -266,14 +280,13 @@ const NFTTabCollectible = ({
   };
 
   return (
-    <HStack>
+    <HStack justifyContent='space-between'>
       <Image
         alt={nftName}
         boxShadow="lg"
         boxSize={{ base: "16rem", "2xl": "28rem" }}
         objectFit="cover"
         src={`${IPFS_BASE_URL}/${avatar}`}
-        fallbackSrc="https://via.placeholder.com/480"
         fallback={
           <Skeleton w="30rem" boxSize={{ base: "16rem", "2xl": "28rem" }} />
         }
@@ -325,7 +338,7 @@ const NFTTabCollectible = ({
                   <Text textAlign="right" color="brand.grayLight">
                     <Text>Current price</Text>
                     <Tag h={4} pr={0} bg="transparent">
-                      <TagLabel bg="transparent">{(price / (10 ** 12))}</TagLabel>
+                      <TagLabel bg="transparent">{price / 10 ** 12}</TagLabel>
                       <TagRightIcon as={AzeroIcon} />
                     </Tag>
                   </Text>
@@ -340,7 +353,7 @@ const NFTTabCollectible = ({
                 py={1}
                 borderWidth={2}
               >
-                {(!doOffer && !isBided) && (
+                {!doOffer && !isBided && (
                   <Button
                     h={10}
                     maxW={32}
@@ -351,13 +364,8 @@ const NFTTabCollectible = ({
                   </Button>
                 )}
 
-              {(!doOffer && isBided) && (
-                  <Button
-                    h={10}
-                    maxW={32}
-                    variant="solid"
-                    onClick={removeBid}
-                  >
+                {!doOffer && isBided && (
+                  <Button h={10} maxW={32} variant="solid" onClick={removeBid}>
                     Remove Bid
                   </Button>
                 )}

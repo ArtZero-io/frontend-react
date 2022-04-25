@@ -45,7 +45,7 @@ function CollectionHeader({
         mx="auto"
         px={{ base: "6", "2xl": "8" }}
         pt={{ base: "12", "2xl": "6" }}
-        pb={{ base: "12", "2xl": "20" }}
+        pb={{ base: "12", "2xl": "18" }}
       >
         <VStack>
           <Center
