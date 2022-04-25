@@ -133,7 +133,7 @@ const MyAccountDropdown = () => {
             m={0}
             fontFamily="Evogria, sans-serif"
             fontWeight="medium"
-            color={path.includes('/account/') ? "white" : null}
+            color={path.includes('/account/') ? "white" : '#888'}
           >
             My Account
           </Heading>

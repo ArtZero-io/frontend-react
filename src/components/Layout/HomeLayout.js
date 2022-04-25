@@ -15,7 +15,7 @@ const HomeLayout = ({ children }) => {
       bgImage={BigHomePageBg}
       bgPosition="center"
       bgRepeat="no-repeat"
-      zIndex="-9"
+      zIndex="0"
     >
       <Navbar />
       <Fade in="true" delay={0.15}>
