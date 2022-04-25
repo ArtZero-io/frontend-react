@@ -6,7 +6,7 @@ import Layout from "@components/Layout/Layout";
 import MintHeader from "@pages/mint/components/Header";
 
 import NFTMintTab from "./components/Tab/NFTMint";
-import MintHistoryTab from "./components/Tab/History";
+//import MintHistoryTab from "./components/Tab/History";
 
 const MintPage = () => {
   //  const { currentAccount, keyringState, apiState } = useSubstrateState();
@@ -53,8 +53,8 @@ const tabData = [
     label: "My Artzero Nfts",
     content: <NFTMintTab />,
   },
-  {
-    label: "Minting history",
-    content: <MintHistoryTab />,
-  },
+  // {
+  //   label: "Minting history",
+  //   content: <MintHistoryTab />,
+  // },
 ];

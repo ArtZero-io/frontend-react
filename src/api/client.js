@@ -10,10 +10,21 @@ export const clientAPI = async (method, url, options) => {
     method,
     data: options,
   });
-
-  if (data?.status === "OK") {
-    return data?.ret;
-  } else {
-    return data?.message;
+  if (method.toLowerCase() == "post"){
+    if (data?.status === "OK") {
+      return data?.ret;
+    } else {
+      return data?.message;
+    }
   }
+  else if (method.toLowerCase() == "get"){
+    if (data?.status === "OK") {
+      return data?.ret;
+    } else if (data?.status === "FAILED") {
+      return data?.message;
+    }
+    else
+      return data;
+  }
+
 };

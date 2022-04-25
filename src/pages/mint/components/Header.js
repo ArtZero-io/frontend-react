@@ -126,8 +126,8 @@ function MintHeader() {
   };
 
   const onPaidMint = async () => {
-    if (mintMode === 1) await artzero_nft_calls.paidMint(currentAccount, fee1);
-    else if (mintMode === 2)
+    if (mintMode == 1) await artzero_nft_calls.paidMint(currentAccount, fee1);
+    else if (mintMode == 2)
       await artzero_nft_calls.paidMint(currentAccount, fee2);
     await delay(10000);
     await onRefresh();
@@ -203,8 +203,7 @@ function MintHeader() {
                   Total Supply: <span style={{ color: "#fff" }}>200</span>
                 </Text>
                 <Text mt={3}>
-                  Total Minted:
-                  <span style={{ color: "#fff" }}>{totalMinted}</span>
+                  Total Minted: <span style={{ color: "#fff" }}>{totalMinted}</span>
                 </Text>
               </Box>
             </Flex>
