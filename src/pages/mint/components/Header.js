@@ -25,6 +25,8 @@ import { delay, truncateStr } from "@utils";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import ActiveIcon from "@theme/assets/icon/Active.js";
 import InActiveIcon from "@theme/assets/icon/InActive.js";
+import BN from "bn.js";
+import toast from "react-hot-toast";
 
 function MintHeader() {
   const { profileContract } = useSubstrateState();
@@ -33,7 +35,6 @@ function MintHeader() {
   const [, setLoading] = useState();
   const [profile, setProfile] = useState(null);
   const dispatch = useDispatch();
-
   // const forceUpdate = useCallback(() => {
   //   setProfile(null);
   // }, []);
@@ -63,7 +64,7 @@ function MintHeader() {
     if (profileContract === "READY") setIsProfileContractReady(true);
   }, [profileContract, isProfileContractReady]);
 
-  const { currentAccount, keyringState, apiState } = useSubstrateState();
+  const { api, currentAccount, keyringState, apiState } = useSubstrateState();
 
   const [balance, setBalance] = useState(0);
   const [whitelist, setWhitelist] = useState(null);
@@ -120,15 +121,39 @@ function MintHeader() {
   };
 
   const onWhiteListMint = async () => {
+    const { data: balance } = await api.query.system.account(
+      currentAccount.address
+    );
+    if (balance.free.div(new BN(10**12)).toNumber() < 0.01){
+      toast.error('Your balance is low.');
+      return
+    }
     await artzero_nft_calls.whitelistMint(currentAccount, whitelistAmount);
     await delay(10000);
     await onRefresh();
   };
 
   const onPaidMint = async () => {
-    if (mintMode == 1) await artzero_nft_calls.paidMint(currentAccount, fee1);
-    else if (mintMode == 2)
+    const { data: balance } = await api.query.system.account(
+      currentAccount.address
+    );
+    console.log(balance.free.toNumber());
+
+    if (mintMode == 1){
+      if (balance.free.div(new BN(10**12)).toNumber() < fee1 + 0.01){
+        toast.error('Not enough balance to mint')
+        return;
+      }
+      await artzero_nft_calls.paidMint(currentAccount, fee1);
+    }
+    else if (mintMode == 2){
+      if (balance.free.div(new BN(10**12)).toNumber() < fee2 + 0.01){
+        toast.error('Not enough balance to mint')
+        return;
+      }
       await artzero_nft_calls.paidMint(currentAccount, fee2);
+    }
+
     await delay(10000);
     await onRefresh();
   };
