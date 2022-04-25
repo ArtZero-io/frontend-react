@@ -23,12 +23,17 @@ import * as ROUTES from "@constants/routes";
 import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useHistory } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
 const links = [
+  { label: "Home", href: ROUTES.HOME },
   { label: "Marketplace", href: ROUTES.MARKETPLACE },
   { label: "TGE", href: ROUTES.MINTING_EVENT },
 ];
 
 const MobileNavContent = (props) => {
+
   const { isOpen, onToggle } = useDisclosure();
   return (
     <Box {...props}>
@@ -100,6 +105,11 @@ const myAccountList = [
 ];
 const MyAccountDropdown = () => {
   const history = useHistory();
+  const location = useLocation();
+  const [path, setPath] = useState(location.pathname);
+  useEffect(() => {
+    setPath(location.pathname);
+  }, [location.pathname]);
   return (
     <Box>
       <Menu autoSelect={false} placement="bottom" offset={[-32, 12]}>
@@ -123,7 +133,7 @@ const MyAccountDropdown = () => {
             m={0}
             fontFamily="Evogria, sans-serif"
             fontWeight="medium"
-            color="white"
+            color={path.includes('/account/') ? "white" : null}
           >
             My Account
           </Heading>
