@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import Layout from "@components/Layout/Layout";
-
+import { TypeRegistry, U64 } from '@polkadot/types';
 import { clientAPI } from "@api/client";
 import TabActivity from "./component/TabActivity";
 import TabCollectionItems from "./component/TabItems";
@@ -18,14 +18,16 @@ import { useSubstrateState } from "@utils/substrate";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
 // import { IPFS_BASE_URL } from "@constants/index";
-// import axios from 'axios';
-// import { ContractPromise } from "@polkadot/api-contract";
-// import BN from "bn.js";
+import axios from 'axios';
+import { ContractPromise } from "@polkadot/api-contract";
+import BN from "bn.js";
 import { createObjAttrsNFT } from "@utils/index";
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import process from "process";
 
 function CollectionPage() {
   const { collection_address } = useParams();
-  const { currentAccount } = useSubstrateState();
+  const { currentAccount, api } = useSubstrateState();
 
   const [isShowUnlisted, setIsShowUnlisted] = useState(false);
   const [formattedCollection, setFormattedCollection] = useState(null);
@@ -94,21 +96,63 @@ function CollectionPage() {
         console.log('xxx NFTList', NFTList)
         collectionDetail.floorPrice = floorPrice?.price || 0;
         collectionDetail.nftTotalCount = NFTList?.length;
-
-        Promise.all(
-          NFTList.map((item) => {
-            const itemData = createObjAttrsNFT(
-              item.attributes,
-              item.attributesValue
-            );
-
-            return { ...item, ...itemData };
-          })
-        ).then((NFTListFormatted) => {
-          collectionDetail.NFTListFormatted = NFTListFormatted;
-
-          setFormattedCollection(collectionDetail);
-        });
+        if (collectionDetail.contractType == 2) {
+          Promise.all(
+            NFTList.map((item) => {
+              const itemData = createObjAttrsNFT(
+                item.attributes,
+                item.attributesValue
+              );
+  
+              return { ...item, ...itemData };
+            })
+          ).then((NFTListFormatted) => {
+            collectionDetail.NFTListFormatted = NFTListFormatted;
+  
+            setFormattedCollection(collectionDetail);
+          });
+        } else if(collectionDetail.contractType == 1 && !collectionDetail.showOnChainMetadata) {
+          const nft_contract = new ContractPromise(
+            api,
+            nft721_psp34_standard.CONTRACT_ABI,
+            collectionDetail.nftContractAddress
+          );
+          const gasLimit = -1;
+          const azero_value = 0;
+          const { result, output } = await nft_contract.query['getTokenCount'](currentAccount.address, { value: azero_value, gasLimit });
+          console.log(result, output);
+          if (result.isOk) {
+            const token_count = new BN(output, 10, "le").toNumber();
+            console.log(token_count);
+            collectionDetail.nftTotalCount = token_count;
+            if (token_count) {
+              for (let i = 1; i <= token_count; i++) {
+                console.log(nft_contract.query);
+                console.log(i);
+               const token_id = new U64(new TypeRegistry(), i);
+               console.log(token_id);
+               console.log(nft_contract.query);
+                const { result, output } = await nft_contract.query["psp34Traits::tokenUri"](
+                  currentAccount.address,
+                  { value: azero_value, gasLimit },
+                  token_id
+                );
+                
+                if (result.isOk) {
+                  const token_uri = output.toHuman();
+                  const token_info_api = process.env.REACT_APP_API_BASE_URL + '/getJSON?input=' + token_uri; 
+                  axios.get(token_info_api)
+                  .then(async (response) => {
+                    console.log(response);
+                    console.log(collectionDetail);
+                    
+                  })
+                }
+              }
+            }
+          }
+        }
+        
       } catch (error) {
         console.log("fetchCollectionDetail error", error);
 

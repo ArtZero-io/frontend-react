@@ -127,9 +127,14 @@ function HomePage() {
 
             <Center w="full" textAlign="center" mb="2rem">
               <Text size="h6" maxW="2xl" lineHeight="30px">
-                This version currently work with hyperlink SubWallet, polkadot
-                js, Talisman extensions. Please make sure you installed at least
-                one of these wallets and create an account.
+                This version currently work with <Link
+                  color="#7ae7ff"
+                  textDecoration="underline" href="https://subwallet.app/" target="_blank">SubWallet</Link>, <Link
+                    color="#7ae7ff"
+                    textDecoration="underline" href="https://polkadot.js.org/extension/" target="_blank">Polkadot JS</Link> and <Link
+                      color="#7ae7ff"
+                      textDecoration="underline"
+                      href="https://chrome.google.com/webstore/detail/talisman-wallet/fijngjgcjhjmmpcmkeiomlglpeiijkld" target="_blank">Talisman</Link>. Please make sure you installed at least one of these wallets and create an account.
               </Text>
             </Center>
 
