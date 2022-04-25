@@ -15,6 +15,7 @@ import { create } from "ipfs-http-client";
 import { Buffer } from "buffer";
 import { IPFS_CLIENT_URL } from "@constants/index";
 import toast from "react-hot-toast";
+import { clientAPI } from "@api/client";
 
 const client = create(IPFS_CLIENT_URL);
 
@@ -65,6 +66,14 @@ const ImageUploadCollection = ({
           uploadPromise().then((created) => {
             setImageIPFSUrl(created?.path);
             setImgURL(created?.path);
+            const update_nft_api_res = clientAPI(
+              "post",
+              "/cacheImage",
+              {
+                input: created?.path
+              }
+            );
+            console.log("update_nft_api_res", update_nft_api_res);
           }),
           {
             loading: "Uploading...",
