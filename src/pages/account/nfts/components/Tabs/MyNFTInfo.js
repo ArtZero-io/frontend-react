@@ -16,7 +16,7 @@ import {
   InputRightElement,
   Progress,
 } from "@chakra-ui/react";
-// import { FiUpload, FiRefreshCw } from "react-icons/fi";
+
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { useSubstrateState } from "@utils/substrate";
@@ -50,7 +50,7 @@ function NFTTabInfo({
     await checkAllowMarketplaceContract();
   }, [currentAccount]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   const checkAllowMarketplaceContract = async () => {
     if (contractType === "2") {
       const nft721_psp34_standard_contract = new ContractPromise(
@@ -73,7 +73,8 @@ function NFTTabInfo({
       setIsAllownceMarketplaceContract(isAllownceMarketplaceContract);
     }
   };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+ 
+  
   useEffect(async () => {
     await checkAllowMarketplaceContract();
   }, [checkAllowMarketplaceContract, currentAccount]);

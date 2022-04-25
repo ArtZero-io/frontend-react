@@ -87,8 +87,7 @@ function GeneralPage() {
     };
     (!nftList || dashboardInfo.address !== currentAccount.address) &&
       fetchAllNfts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentAccount, dashboardInfo?.address]);
+  }, [currentAccount, dashboardInfo?.address, nftList]);
 
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">

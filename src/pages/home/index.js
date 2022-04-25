@@ -1,16 +1,7 @@
-/* eslint-disable no-unused-vars */
 import {
-  // Box,
   Center,
   Heading,
-  Button,
   Flex,
-  IconButton,
-  Stack,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  TagRightIcon,
   Text,
   Box,
   Link,
@@ -25,15 +16,10 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import HomeLayout from "@components/Layout/HomeLayout";
-import { DownloadIcon } from "@chakra-ui/icons";
-import AzeroIcon from "@theme/assets/icon/Azero.js";
-import ActiveIcon from "@theme/assets/icon/Active.js";
-import InActiveIcon from "@theme/assets/icon/InActive.js";
 import BulletPointIcon from "@theme/assets/icon/BulletPoint.js";
 import FrameHomepage from "@theme/assets/icon/FrameHomepage.svg";
 import FrameHomepageSmall from "@theme/assets/icon/FrameHomepageSmall.svg";
 import SocialCard from "../../components/Card/Social";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
 import HomePageBg1 from "@theme/assets/bg-homepage-1.png";

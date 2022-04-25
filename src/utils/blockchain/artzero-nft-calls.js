@@ -4,38 +4,40 @@ import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import { isValidAddressPolkadotAddress } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
+import { handleContractCall } from "@utils";
 
 let account;
-let artzero_contract;
+let contract;
 
 export const setAccount = (newAccount) => (account = newAccount);
 
 export const setAZNFTContract = (api, data) => {
-  artzero_contract = new ContractPromise(
+  contract = new ContractPromise(
     api,
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
 };
 
-function isLoaded() {
-  if (artzero_contract) return true;
-  else return false;
-}
+// function isLoaded() {
+//   if (contract) return true;
+//   else return false;
+// }
+
 /*
   PSP34 functions
 */
-async function owner(caller_account) {
-  if (!artzero_contract || !caller_account) {
 
+async function owner(caller_account) {
+  if (!contract || !caller_account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(artzero_contract);
+  //console.log(contract);
 
-  const { result, output } = await artzero_contract.query["ownable::owner"](
+  const { result, output } = await contract.query["ownable::owner"](
     address,
     { value: azero_value, gasLimit }
   );
@@ -44,17 +46,17 @@ async function owner(caller_account) {
   }
   return null;
 }
-async function totalSupply(caller_account) {
-  if (!artzero_contract || !caller_account) {
 
+async function totalSupply(caller_account) {
+  if (!contract || !caller_account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(artzero_contract);
+  //console.log(contract);
 
-  const { result, output } = await artzero_contract.query["psp34::totalSupply"](
+  const { result, output } = await contract.query["psp34::totalSupply"](
     address,
     { value: azero_value, gasLimit }
   );
@@ -63,17 +65,17 @@ async function totalSupply(caller_account) {
   }
   return null;
 }
-async function balanceOf(caller_account, account) {
-  if (!artzero_contract || !caller_account || !account) {
 
+async function balanceOf(caller_account, account) {
+  if (!contract || !caller_account || !account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(artzero_contract);
+  //console.log(contract);
 
-  const { result, output } = await artzero_contract.query["psp34::balanceOf"](
+  const { result, output } = await contract.query["psp34::balanceOf"](
     address,
     { value: azero_value, gasLimit },
     account
@@ -88,16 +90,15 @@ async function balanceOf(caller_account, account) {
   ARTZERO NFT Contract functions
 */
 async function getWhitelistAccount(caller_account, index) {
-  if (!artzero_contract || !caller_account) {
-
+  if (!contract || !caller_account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(artzero_contract);
+  //console.log(contract);
 
-  const { result, output } = await artzero_contract.query.getWhitelistAccount(
+  const { result, output } = await contract.query.getWhitelistAccount(
     address,
     { value: azero_value, gasLimit },
     index
@@ -108,17 +109,17 @@ async function getWhitelistAccount(caller_account, index) {
   }
   return null;
 }
-async function getWhitelistCount(caller_account) {
-  if (!artzero_contract || !caller_account) {
 
+async function getWhitelistCount(caller_account) {
+  if (!contract || !caller_account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(artzero_contract);
+  //console.log(contract);
 
-  const { result, output } = await artzero_contract.query.getWhitelistCount(
+  const { result, output } = await contract.query.getWhitelistCount(
     address,
     { value: azero_value, gasLimit }
   );
@@ -127,17 +128,17 @@ async function getWhitelistCount(caller_account) {
   }
   return null;
 }
-async function getWhitelist(caller_account, account) {
-  if (!artzero_contract || !caller_account || !account) {
 
+async function getWhitelist(caller_account, account) {
+  if (!contract || !caller_account || !account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(artzero_contract);
+  //console.log(contract);
 
-  const { result, output } = await artzero_contract.query.getWhitelist(
+  const { result, output } = await contract.query.getWhitelist(
     address,
     { value: azero_value, gasLimit },
     account
@@ -147,17 +148,17 @@ async function getWhitelist(caller_account, account) {
   }
   return null;
 }
-async function getMintMode(caller_account) {
-  if (!artzero_contract || !caller_account) {
 
+async function getMintMode(caller_account) {
+  if (!contract || !caller_account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(artzero_contract);
+  //console.log(contract);
 
-  const { result, output } = await artzero_contract.query.getMintMode(address, {
+  const { result, output } = await contract.query.getMintMode(address, {
     value: azero_value,
     gasLimit,
   });
@@ -166,17 +167,17 @@ async function getMintMode(caller_account) {
   }
   return null;
 }
+
 async function getFee1(caller_account) {
-  if (!artzero_contract || !caller_account) {
-
+  if (!contract || !caller_account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(artzero_contract);
+  //console.log(contract);
 
-  const { result, output } = await artzero_contract.query.getFee1(address, {
+  const { result, output } = await contract.query.getFee1(address, {
     value: azero_value,
     gasLimit,
   });
@@ -185,17 +186,17 @@ async function getFee1(caller_account) {
   }
   return null;
 }
+
 async function getFee2(caller_account) {
-  if (!artzero_contract || !caller_account) {
-
+  if (!contract || !caller_account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(artzero_contract);
+  //console.log(contract);
 
-  const { result, output } = await artzero_contract.query.getFee2(address, {
+  const { result, output } = await contract.query.getFee2(address, {
     value: azero_value,
     gasLimit,
   });
@@ -204,17 +205,17 @@ async function getFee2(caller_account) {
   }
   return null;
 }
-async function getAmount1(caller_account) {
-  if (!artzero_contract || !caller_account) {
 
+async function getAmount1(caller_account) {
+  if (!contract || !caller_account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(artzero_contract);
+  //console.log(contract);
 
-  const { result, output } = await artzero_contract.query.getAmount1(address, {
+  const { result, output } = await contract.query.getAmount1(address, {
     value: azero_value,
     gasLimit,
   });
@@ -225,28 +226,29 @@ async function getAmount1(caller_account) {
 }
 
 async function tokenUri(caller_account, tokenId) {
-
-  if (!artzero_contract || !caller_account) {
-
+  if (!contract || !caller_account) {
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await artzero_contract.query.tokenUri(address, {
-    value: azero_value,
-    gasLimit,
-  }, tokenId);
+  const { result, output } = await contract.query.tokenUri(
+    address,
+    {
+      value: azero_value,
+      gasLimit,
+    },
+    tokenId
+  );
   if (result.isOk) {
     return output.toHuman();
   }
   return null;
 }
 
-async function whitelistMint(caller_account, mint_amount) {
-  if (!artzero_contract || !caller_account) {
-
+async function whitelistMint(caller_account, mint_amount,dispatch) {
+  if (!contract || !caller_account) {
     return null;
   }
   let unsubscribe;
@@ -256,12 +258,14 @@ async function whitelistMint(caller_account, mint_amount) {
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  artzero_contract.tx
+  contract.tx
     .whitelistMint({ gasLimit, value: azero_value }, mint_amount)
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
+        handleContractCall(status, dispatchError, dispatch, contract);
+
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -284,9 +288,9 @@ async function whitelistMint(caller_account, mint_amount) {
     .catch((e) => console.log("e", e));
   return unsubscribe;
 }
-async function paidMint(caller_account, fee) {
-  if (!artzero_contract || !caller_account) {
 
+async function paidMint(caller_account, fee,dispatch) {
+  if (!contract || !caller_account) {
     return null;
   }
   let unsubscribe;
@@ -296,12 +300,14 @@ async function paidMint(caller_account, fee) {
   const azero_value = Math.round(fee * 10 ** 12);
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  artzero_contract.tx
+  contract.tx
     .paidMint({ gasLimit, value: azero_value })
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
+        handleContractCall(status, dispatchError, dispatch, contract);
+
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -324,9 +330,9 @@ async function paidMint(caller_account, fee) {
     .catch((e) => console.log("e", e));
   return unsubscribe;
 }
-async function addWhitelist(caller_account, account, amount) {
-  if (!artzero_contract || !caller_account) {
 
+async function addWhitelist(caller_account, account, amount) {
+  if (!contract || !caller_account) {
     return null;
   }
 
@@ -341,7 +347,7 @@ async function addWhitelist(caller_account, account, amount) {
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  artzero_contract.tx
+  contract.tx
     .addWhitelist({ gasLimit, value: azero_value }, account, amount)
     .signAndSend(
       address,
@@ -369,9 +375,9 @@ async function addWhitelist(caller_account, account, amount) {
     .catch((e) => console.log("e", e));
   return unsubscribe;
 }
-async function updateWhitelistAmount(caller_account, account, amount) {
-  if (!artzero_contract || !caller_account) {
 
+async function updateWhitelistAmount(caller_account, account, amount) {
+  if (!contract || !caller_account) {
     return null;
   }
 
@@ -386,7 +392,7 @@ async function updateWhitelistAmount(caller_account, account, amount) {
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  artzero_contract.tx
+  contract.tx
     .updateWhitelistAmount({ gasLimit, value: azero_value }, account, amount)
     .signAndSend(
       address,
@@ -414,9 +420,9 @@ async function updateWhitelistAmount(caller_account, account, amount) {
     .catch((e) => console.log("e", e));
   return unsubscribe;
 }
-async function withdrawFee(caller_account, amount) {
-  if (!artzero_contract || !caller_account) {
 
+async function withdrawFee(caller_account, amount) {
+  if (!contract || !caller_account) {
     return null;
   }
 
@@ -431,7 +437,7 @@ async function withdrawFee(caller_account, amount) {
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  artzero_contract.tx
+  contract.tx
     .withdrawFee({ gasLimit, value: azero_value }, amount)
     .signAndSend(
       address,
@@ -460,7 +466,7 @@ async function withdrawFee(caller_account, amount) {
   return unsubscribe;
 }
 
-const artzero_contract_calls = {
+const contract_calls = {
   getWhitelistAccount,
   getWhitelistCount,
   getWhitelist,
@@ -477,7 +483,7 @@ const artzero_contract_calls = {
   addWhitelist,
   updateWhitelistAmount,
   withdrawFee,
-  isLoaded,
+  // isLoaded,
 };
 
-export default artzero_contract_calls;
+export default contract_calls;

@@ -144,7 +144,7 @@ async function autoNewCollection(caller_account, data, dispatch) {
   return unsubscribe;
 }
 
-async function updateIsActive(caller_account, collection_address,isActive) {
+async function updateIsActive(caller_account, collection_address, isActive) {
   if (
     !contract ||
     !caller_account ||
@@ -160,7 +160,11 @@ async function updateIsActive(caller_account, collection_address,isActive) {
   const injector = await web3FromSource(caller_account?.meta?.source);
 
   contract.tx
-    .updateIsActive({ gasLimit, value: azero_value }, collection_address,isActive)
+    .updateIsActive(
+      { gasLimit, value: azero_value },
+      collection_address,
+      isActive
+    )
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -190,7 +194,6 @@ async function updateIsActive(caller_account, collection_address,isActive) {
             );
             console.log("update_collection_api_res", update_collection_api_res);
           }
-
         }
       }
     )

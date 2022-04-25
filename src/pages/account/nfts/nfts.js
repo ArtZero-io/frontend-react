@@ -64,7 +64,7 @@ const MyNFTsPage = () => {
           };
 
           const dataList = await clientAPI("post", "/getNFTs", options);
-
+          console.log('getNFTs...')
           collection.listNFT = dataList;
 
           return collection;

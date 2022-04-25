@@ -1,12 +1,8 @@
-/* eslint-disable no-unused-vars */
 import { Box, Flex, Text, HStack, Center, Button } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
-import Loader from "@components/Loader/Loader";
-import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import collection_manager from "@utils/blockchain/collection-manager";
-import artzero_nft from "@utils/blockchain/artzero-nft";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { delay, truncateStr } from "@utils";
@@ -21,7 +17,7 @@ function CollectionAdmin() {
   const { api, currentAccount } = useSubstrateState();
 
   const [collectionCount, setCollectionCount] = useState(0);
-  // eslint-disable-next-line no-unused-vars
+
   const [collections, setCollections] = useState([]);
   const [collectionContractOwner, setCollectionContractOwner] = useState("");
   const [collectionContractAdmin, setCollectionContractAdmin] = useState("");
@@ -37,7 +33,6 @@ function CollectionAdmin() {
   useEffect(async () => {
     onRefreshCollection();
   }, [currentAccount]);
-
 
   const getCollectionContractBalance = async () => {
     const { data: balance } = await api.query.system.account(
@@ -71,16 +66,12 @@ function CollectionAdmin() {
       sort: -1,
     };
 
-    const collections = await clientAPI(
-      "post",
-      "/getCollections",
-      options
-    );
+    const collections = await clientAPI("post", "/getCollections", options);
     //console.log(collections)
     setCollections(collections);
   };
-  const onSetStatusCollection = async (collection_contract,isActive) => {
-    if (collectionContractAdmin != activeAddress) {
+  const onSetStatusCollection = async (collection_contract, isActive) => {
+    if (collectionContractAdmin !== activeAddress) {
       toast.error(`You are not admin of this contract`);
       return;
     }
@@ -119,26 +110,24 @@ function CollectionAdmin() {
               {collectionContractBalance} SZERO
             </Text>
           </Flex>
-
-
         </HStack>
         <HStack pb={5} borderBottomWidth={1}>
-        <Flex alignItems="start" pr={20}>
-          <Text ml={1} color="brand.grayLight">
-            Collection Contract Owner:{" "}
-          </Text>
-          <Text color="#fff" ml={2}>
-            {truncateStr(collectionContractOwner, 9)}
-          </Text>
-        </Flex>
-        <Flex alignItems="start" pr={20}>
-          <Text ml={1} color="brand.grayLight">
-            Collection Contract Admin:{" "}
-          </Text>
-          <Text color="#fff" ml={2}>
-            {truncateStr(collectionContractAdmin, 9)}
-          </Text>
-        </Flex>
+          <Flex alignItems="start" pr={20}>
+            <Text ml={1} color="brand.grayLight">
+              Collection Contract Owner:{" "}
+            </Text>
+            <Text color="#fff" ml={2}>
+              {truncateStr(collectionContractOwner, 9)}
+            </Text>
+          </Flex>
+          <Flex alignItems="start" pr={20}>
+            <Text ml={1} color="brand.grayLight">
+              Collection Contract Admin:{" "}
+            </Text>
+            <Text color="#fff" ml={2}>
+              {truncateStr(collectionContractAdmin, 9)}
+            </Text>
+          </Flex>
         </HStack>
         <Table variant="striped" colorScheme="blackAlpha">
           <Thead>
@@ -196,7 +185,10 @@ function CollectionAdmin() {
                         size="sm"
                         color="black"
                         onClick={() =>
-                          onSetStatusCollection(collection.nftContractAddress,true)
+                          onSetStatusCollection(
+                            collection.nftContractAddress,
+                            true
+                          )
                         }
                       >
                         Enable
@@ -206,7 +198,10 @@ function CollectionAdmin() {
                         size="sm"
                         color="black"
                         onClick={() =>
-                          onSetStatusCollection(collection.nftContractAddress,false)
+                          onSetStatusCollection(
+                            collection.nftContractAddress,
+                            false
+                          )
                         }
                       >
                         Disable

@@ -5,10 +5,10 @@ const Loader = ({ addText = "", ...rest }) => {
     <Center width="100%" height="100%" minH="xl">
       <Stack direction="row" alignItems="center" spacing={2}>
         <Spinner
-          thickness="8px"
-          speed="0.85s"
-          emptyColor="gray.200"
-          color="blue.500"
+          thickness="4px"
+          speed="0.5s"
+          emptyColor="#333"
+          color="#7ae7ff"
           size="xl"
           {...rest}
         />

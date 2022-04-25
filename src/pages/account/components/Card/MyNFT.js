@@ -4,6 +4,7 @@ import {
   Flex,
   Heading,
   Image,
+  Skeleton,
   Square,
   Tag,
   TagLabel,
@@ -46,7 +47,9 @@ const MyNFTCard = ({
             w="full"
             objectFit="cover"
             src={`${IPFS_BASE_URL}/${avatar}`}
-            fallbackSrc="https://via.placeholder.com/400x400"
+            fallback={<Skeleton w="full" h="full" minH={56} minW={56} />}
+
+            // fallbackSrc="https://via.placeholder.com/400x400"
           />
         </Square>
 

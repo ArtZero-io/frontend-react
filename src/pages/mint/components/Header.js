@@ -16,9 +16,9 @@ import {
   TagLeftIcon,
   TagLabel,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfile } from "@actions/account";
+
 import { useSubstrateState } from "@utils/substrate";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { delay, truncateStr } from "@utils";
@@ -29,41 +29,8 @@ import BN from "bn.js";
 import toast from "react-hot-toast";
 
 function MintHeader() {
-  const { profileContract } = useSubstrateState();
-
-  const { activeAddress } = useSelector((s) => s.account);
-  const [, setLoading] = useState();
-  const [profile, setProfile] = useState(null);
   const dispatch = useDispatch();
-  // const forceUpdate = useCallback(() => {
-  //   setProfile(null);
-  // }, []);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      setLoading(true);
-
-      const profile = await dispatch(getProfile());
-      if (profile?.username) {
-        setProfile((prev) => {
-          return {
-            ...prev,
-            ...profile,
-            address: activeAddress,
-          };
-        });
-        setLoading(false);
-      }
-    };
-    (!profile?.address || profile?.address !== activeAddress) && fetchProfile();
-  }, [activeAddress, dispatch, profile]);
-
-  const [isProfileContractReady, setIsProfileContractReady] = useState(false);
-
-  useEffect(() => {
-    if (profileContract === "READY") setIsProfileContractReady(true);
-  }, [profileContract, isProfileContractReady]);
-
+  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
   const { api, currentAccount, keyringState, apiState } = useSubstrateState();
 
   const [balance, setBalance] = useState(0);
@@ -75,22 +42,32 @@ function MintHeader() {
   const [totalMinted, setTotalMinted] = useState(0);
   const [whitelistAmount, setWhitelistAmount] = useState(1);
 
-  const onGetTotalMinted = async (e) => {
-    let res = await artzero_nft_calls.totalSupply(currentAccount);
-    if (res) setTotalMinted(res);
-    else setTotalMinted(0);
-  };
+  const onGetTotalMinted = useCallback(
+    async (e) => {
+      let res = await artzero_nft_calls.totalSupply(currentAccount);
+      console.log("res", res);
+      if (res) setTotalMinted(res);
+      else setTotalMinted(0);
+    },
+    [currentAccount]
+  );
 
-  const onGetBalance = async (e) => {
-    let res = await artzero_nft_calls.balanceOf(currentAccount, activeAddress);
-    if (res) setBalance(res);
-    else setBalance(0);
-  };
+  useEffect(() => {
+    const onGetBalance = async (e) => {
+      let res = await artzero_nft_calls.balanceOf(
+        currentAccount,
+        currentAccount.address
+      );
+      if (res) setBalance(res);
+      else setBalance(0);
+    };
+    onGetBalance();
+  }, [currentAccount]);
 
   const onGetWhiteList = async (e) => {
     let whitelist = await artzero_nft_calls.getWhitelist(
       currentAccount,
-      activeAddress
+      currentAccount.address
     );
     if (whitelist) setWhitelist(whitelist);
     else setWhitelist(null);
@@ -124,9 +101,9 @@ function MintHeader() {
     const { data: balance } = await api.query.system.account(
       currentAccount.address
     );
-    if (balance.free.div(new BN(10**12)).toNumber() < 0.01){
-      toast.error('Your balance is low.');
-      return
+    if (balance.free.div(new BN(10 ** 12)).toNumber() < 0.01) {
+      toast.error("Your balance is low.");
+      return;
     }
     await artzero_nft_calls.whitelistMint(currentAccount, whitelistAmount);
     await delay(10000);
@@ -134,53 +111,51 @@ function MintHeader() {
   };
 
   const onPaidMint = async () => {
-    const { data: balance } = await api.query.system.account(
-      currentAccount.address
-    );
-    //console.log(balance.free.toNumber());
+    const { data } = await api.query.system.account(currentAccount.address);
 
-    if (mintMode == 1){
-      if (balance.free.div(new BN(10**12)).toNumber() < fee1 + 0.01){
-        toast.error('Not enough balance to mint')
+    const balance = new BN(data.free, 10, "le") / 10 ** 12;
+
+    console.log("data", balance);
+
+    if (mintMode === "1") {
+      if (balance < fee1 + 0.01) {
+        toast.error("Not enough balance to mint");
         return;
       }
-      await artzero_nft_calls.paidMint(currentAccount, fee1);
-    }
-    else if (mintMode == 2){
-      if (balance.free.div(new BN(10**12)).toNumber() < fee2 + 0.01){
-        toast.error('Not enough balance to mint')
+      await artzero_nft_calls.paidMint(currentAccount, fee1, dispatch);
+    } else if (mintMode === "2") {
+      if (balance < fee2 + 0.01) {
+        toast.error("Not enough balance to mint");
         return;
       }
-      await artzero_nft_calls.paidMint(currentAccount, fee2);
+      await artzero_nft_calls.paidMint(currentAccount, fee2, dispatch);
     }
 
     await delay(10000);
     await onRefresh();
   };
 
-  const onRefresh = async () => {
-    await onGetBalance();
+  const onRefresh = useCallback(async () => {
+    // await onGetBalance();
     await onGetWhiteList();
     await onGetMintMode();
     await onGetFee1();
     await onGetFee2();
     await onGetAmount1();
     await onGetTotalMinted();
-  };
-
-  const fetchMintData = async () => {
-    await onRefresh();
-  };
-
-  useEffect(() => {
-    apiState && keyringState && activeAddress && fetchMintData();
-    // eslint-disable-next-line
   }, []);
 
+  const fetchMintData = useCallback(async () => {
+    await onRefresh();
+  },[]);
+
+  // useEffect(() => {
+  //   apiState && keyringState && currentAccount.address && fetchMintData();
+  // }, [apiState, currentAccount.address, fetchMintData, keyringState]);
+
   useEffect(() => {
-    apiState && keyringState && activeAddress && fetchMintData();
-    // eslint-disable-next-line
-  }, [dispatch, currentAccount, activeAddress, onRefresh]);
+    apiState && keyringState && currentAccount.address && fetchMintData();
+  }, [apiState, currentAccount.address, fetchMintData, keyringState]);
 
   return (
     <>
@@ -195,9 +170,9 @@ function MintHeader() {
           </Center>
 
           <Text fontSize="lg" maxW="6xl-mid" color="#fff" mt={5}>
-            In the TGE, whitelisted addresses can mint NFTs for free. If you are not in the whitelist, you still can purchase an NFT.
+            In the TGE, whitelisted addresses can mint NFTs for free. If you are
+            not in the whitelist, you still can purchase an NFT.
           </Text>
-
         </VStack>
 
         <Grid
@@ -214,7 +189,7 @@ function MintHeader() {
                 <Text mt={3}>
                   Your address:{" "}
                   <span style={{ color: "#7ae7ff" }}>
-                    {truncateStr(activeAddress, 9)}
+                    {truncateStr(currentAccount.address, 9)}
                   </span>
                 </Text>
                 <Text mt={3}>
@@ -228,7 +203,8 @@ function MintHeader() {
                   Total Supply: <span style={{ color: "#fff" }}>200</span>
                 </Text>
                 <Text mt={3}>
-                  Total Minted: <span style={{ color: "#fff" }}>{totalMinted}</span>
+                  Total Minted:{" "}
+                  <span style={{ color: "#fff" }}>{totalMinted}</span>
                 </Text>
               </Box>
             </Flex>
@@ -306,7 +282,7 @@ function MintHeader() {
             <Flex direction="column" justifyContent="space-between" h="full">
               <Box>
                 <Heading size="h6">Public Minting</Heading>
-                {mintMode <= 0 ? (
+                {mintMode <= "0" ? (
                   <Flex alignItems="center">
                     <Text>Status:</Text>
                     <Tag variant="inActive">
@@ -323,7 +299,7 @@ function MintHeader() {
                     </Tag>
                   </Flex>
                 )}
-                {mintMode == 1 ? (
+                {mintMode === "1" ? (
                   <>
                     <Text alignItems="center" mt={3}>
                       Minting fee: <span style={{ color: "#fff" }}>{fee1}</span>{" "}
@@ -336,7 +312,7 @@ function MintHeader() {
                   </>
                 ) : null}
 
-                {mintMode == 2 ? (
+                {mintMode === "2" ? (
                   <>
                     <Text alignItems="center" mt={3}>
                       Minting fee: <span style={{ color: "#fff" }}>{fee2}</span>{" "}
@@ -352,6 +328,9 @@ function MintHeader() {
 
               <Button
                 isDisabled={mintMode <= 0}
+                spinnerPlacement="start"
+                isLoading={tnxStatus}
+                loadingText={`${tnxStatus?.status}`}
                 variant="solid"
                 onClick={() => onPaidMint()}
               >
