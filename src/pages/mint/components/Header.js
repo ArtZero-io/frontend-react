@@ -299,7 +299,7 @@ function MintHeader() {
                     </Tag>
                   </Flex>
                 )}
-                {mintMode === 1 ? (
+                {mintMode == 1 ? (
                   <>
                     <Text alignItems="center" mt={3}>
                       Minting fee: <span style={{ color: "#fff" }}>{fee1}</span>{" "}
@@ -312,7 +312,7 @@ function MintHeader() {
                   </>
                 ) : null}
 
-                {mintMode === 2 ? (
+                {mintMode == 2 ? (
                   <>
                     <Text alignItems="center" mt={3}>
                       Minting fee: <span style={{ color: "#fff" }}>{fee2}</span>{" "}
