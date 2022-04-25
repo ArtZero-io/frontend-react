@@ -8,7 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HiCloudUpload } from "react-icons/hi";
 
 import { create } from "ipfs-http-client";
@@ -16,11 +16,14 @@ import { Buffer } from "buffer";
 import { IPFS_CLIENT_URL } from "@constants/index";
 import toast from "react-hot-toast";
 import { clientAPI } from "@api/client";
+import { IPFS_BASE_URL } from "@constants/index";
 
 const client = create(IPFS_CLIENT_URL);
 
 const ImageUploadCollection = ({
   id,
+  mode,
+  imageIPFSUrl,
   setImageIPFSUrl,
   title = "Upload Image",
   limitedSize = { width: "430", height: "430" },
@@ -29,6 +32,12 @@ const ImageUploadCollection = ({
 
   const [newAvatarData, setNewAvatarData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+  console.log("imageIPFSUrl", imageIPFSUrl);
+  console.log("mode,", mode);
+
+  useEffect(() => {
+    mode === "edit" && setImagePreviewUrl(imageIPFSUrl);
+  }, [imageIPFSUrl, mode]);
 
   const retrieveNewAvatar = (e) => {
     setImgURL(null);
@@ -66,13 +75,9 @@ const ImageUploadCollection = ({
           uploadPromise().then((created) => {
             setImageIPFSUrl(created?.path);
             setImgURL(created?.path);
-            const update_nft_api_res = clientAPI(
-              "post",
-              "/cacheImage",
-              {
-                input: created?.path
-              }
-            );
+            const update_nft_api_res = clientAPI("post", "/cacheImage", {
+              input: created?.path,
+            });
             console.log("update_nft_api_res", update_nft_api_res);
           }),
           {
@@ -93,6 +98,7 @@ const ImageUploadCollection = ({
       <Text color="#fff" ml={0}>
         {title}
       </Text>
+
       <Center w="full" justifyContent="center">
         <HStack py="1" justifyContent="center" minH={16}>
           <label htmlFor={`${id}InputTag`} style={{ cursor: "pointer" }}>
@@ -122,7 +128,16 @@ const ImageUploadCollection = ({
 
         {imagePreviewUrl && (
           <HStack justifyContent="center" minH={16}>
-            <Avatar minH={16} minW={16} ml={2} src={imagePreviewUrl} />
+            {mode === "edit" ? (
+              <Avatar
+                minH={16}
+                minW={16}
+                ml={2}
+                src={`${IPFS_BASE_URL}/${imageIPFSUrl}`}
+              />
+            ) : (
+              <Avatar minH={16} minW={16} ml={2} src={imagePreviewUrl} />
+            )}
 
             {imgURL ? (
               <Text minW={28} color="brand.blue">

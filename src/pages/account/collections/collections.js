@@ -60,14 +60,12 @@ function MyCollectionsPage() {
         dataList?.length ? setCollections(dataList) : setCollections(null);
         dataList?.length &&
           setOwner(dataList[0].collectionOwner || options.owner);
-
-        } catch (error) {
+      } catch (error) {
         console.log(error);
 
         toast.error("There was an error while fetching the collections.");
       }
     };
-    
 
     (!collections || owner !== currentAccount?.address) &&
       fetchCollectionsOwned();
@@ -88,7 +86,7 @@ function MyCollectionsPage() {
         <Flex w="full" alignItems="start" pb={12}>
           <Heading size="h2">My collections</Heading>
           <Spacer />
-          <AddNewCollectionModal forceUpdate={forceUpdate} />
+          <AddNewCollectionModal forceUpdate={forceUpdate} mode="add" />
         </Flex>
         {/* {loading && (
           <Center>
@@ -110,17 +108,22 @@ function MyCollectionsPage() {
             <SimpleGrid py={10} columns={{ base: 1, md: 2, lg: 3 }} spacing="7">
               {collections?.map((item, idx) => (
                 <React.Fragment key={idx}>
-                  <Link
-                    minW={{ base: "auto", "2xl": "25rem" }}
-                    as={ReactRouterLink}
-                    to={`${ROUTES.DETAIL_COLLECTION_BASE}/${item?.nftContractAddress}`}
-                    className="collection-card-hover"
-                    _hover={{
-                      bg: "brand.blue",
-                    }}
-                  >
-                    <CollectionCard {...item} variant="my-collection" />
-                  </Link>
+                  <Box pos="relative">
+                    <AddNewCollectionModal
+                      forceUpdate={forceUpdate}
+                      mode="edit"
+                      id={item.index}
+                    />
+                    <Link
+                      minW={{ base: "auto", "2xl": "25rem" }}
+                      as={ReactRouterLink}
+                      to={`${ROUTES.DETAIL_COLLECTION_BASE}/${item?.nftContractAddress}`}
+                      className="collection-card-hover"
+                      style={{ textDecoration: "none" }}
+                    >
+                      <CollectionCard {...item} variant="my-collection" />
+                    </Link>
+                  </Box>
                 </React.Fragment>
               ))}
             </SimpleGrid>

@@ -12,7 +12,7 @@ import {
 
 import SimpleModeForm from "../Form/SimpleMode";
 
-function SimpleModeModal() {
+function SimpleModeModal({ mode, id }) {
   const {
     isOpen: isOpenSimpleMode,
     onOpen: onOpenSimpleMode,
@@ -57,11 +57,11 @@ function SimpleModeModal() {
           />
           <ModalHeader>
             <Heading size="h4" my={2}>
-              Simple Mode
+              {mode === "add" ? "Simple Mode" : "Edit Collection"}
             </Heading>
           </ModalHeader>
           <ModalBody>
-            <SimpleModeForm onClose={onCloseSimpleMode} />
+            <SimpleModeForm onClose={onCloseSimpleMode} mode={mode} id={id} />
           </ModalBody>
         </ModalContent>
       </Modal>

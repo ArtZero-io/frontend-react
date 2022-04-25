@@ -2,6 +2,7 @@ import {
   Button,
   Flex,
   Heading,
+  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -18,8 +19,9 @@ import AddCollectionIcon from "@theme/assets/icon/AddCollection";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { AccountActionTypes } from "@store/types/account.types";
+import { EditIcon } from "@chakra-ui/icons";
 
-function AddNewCollection({ forceUpdate }) {
+function AddNewCollection({ forceUpdate, mode, id }) {
   const {
     isOpen: isOpenAddNew,
     onOpen: onOpenAddNew,
@@ -38,7 +40,7 @@ function AddNewCollection({ forceUpdate }) {
           payload: null,
         });
         forceUpdate();
-        console.log('forceUpdate...')
+        console.log("forceUpdate...");
         onCloseAddNew();
       }
     }
@@ -48,14 +50,35 @@ function AddNewCollection({ forceUpdate }) {
 
   return (
     <>
-      <Button
-        variant="outline"
-        color="brand.blue"
-        onClick={() => onOpenAddNew()}
-      >
-        Add Collection
-      </Button>
-
+      {mode === "add" && (
+        <Button
+          variant="outline"
+          color="brand.blue"
+          onClick={() => onOpenAddNew()}
+        >
+          Add Collection
+        </Button>
+      )}
+      {mode === "edit" && (
+        <IconButton
+          pos="absolute"
+          top="1.5rem"
+          right="1rem"
+          aria-label="edit"
+          icon={<EditIcon color="#7ae7ff" fontSize='1.5rem'/>}
+          size="icon"
+          borderWidth={0}
+          variant="iconOutline"
+          onClick={() => onOpenAddNew()}
+          h={0}
+          _hover={{
+            h: 0,
+          }}
+          _focus={{
+            h: 0,
+          }}
+        />
+      )}
       <Modal isCentered isOpen={isOpenAddNew} onClose={onCloseAddNew} size="xl">
         <ModalOverlay
           bg="blackAlpha.300"
@@ -78,15 +101,15 @@ function AddNewCollection({ forceUpdate }) {
           <ModalHeader textAlign="center">
             <AddCollectionIcon />
             <Heading size="h4" my={3}>
-              Add collection
+              {mode === "add" ? "Add collection" : "Edit collection"}
             </Heading>
           </ModalHeader>
 
           <ModalBody>
             <Flex>
-              <SimpleMode onCloseParent={onCloseAddNew} />
+              <SimpleMode onCloseParent={onCloseAddNew} mode={mode} id={id} />
               <Spacer />
-              <AdvancedMode />
+              <AdvancedMode onCloseParent={onCloseAddNew} mode={mode} id={id} />
             </Flex>
           </ModalBody>
         </ModalContent>
