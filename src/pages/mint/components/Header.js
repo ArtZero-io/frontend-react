@@ -137,7 +137,7 @@ function MintHeader() {
     const { data: balance } = await api.query.system.account(
       currentAccount.address
     );
-    console.log(balance.free.toNumber());
+    //console.log(balance.free.toNumber());
 
     if (mintMode == 1){
       if (balance.free.div(new BN(10**12)).toNumber() < fee1 + 0.01){
