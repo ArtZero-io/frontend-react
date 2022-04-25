@@ -91,7 +91,7 @@ function CollectionPage() {
         collectionDetail.floorPrice = floorPrice || 0;
 
         const NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
-
+        console.log('xxx NFTList', NFTList)
         collectionDetail.floorPrice = floorPrice?.price || 0;
         collectionDetail.nftTotalCount = NFTList?.length;
 
@@ -124,7 +124,7 @@ function CollectionPage() {
       formattedCollection?.nftList?.filter((i) => i.is_for_sale === false);
   }, [formattedCollection, isShowUnlisted]);
 
-  console.log("xx> formattedCollection", formattedCollection);
+  console.log("xxx formattedCollection", formattedCollection);
 
   const tabData = [
     {

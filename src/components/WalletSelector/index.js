@@ -97,7 +97,7 @@ function WalletSelector(props) {
             px="3"
             h="12"
             as={Button}
-            rightIcon={<ChevronDownIcon fontSize='2xl'/>}
+            rightIcon={<ChevronDownIcon fontSize="2xl" />}
             fontSize="lg"
           >
             <Flex>
@@ -123,8 +123,8 @@ function WalletSelector(props) {
                 _hover={{ bg: "brand.grayLight", color: "white" }}
                 fontFamily="Oswald"
                 onClick={() => selectAccountHandler(address)}
-                key={address}             px="1"
-
+                key={address}
+                px="1"
                 isDisabled={currentAccount?.address === address ? true : false}
               >
                 <Flex fontSize="lg">
@@ -142,8 +142,8 @@ function WalletSelector(props) {
               textDecoration="underline"
               fontFamily="Oswald"
               onClick={() => logoutHandler()}
-              fontSize="lg"             px="1"
-
+              fontSize="lg"
+              px="1"
             >
               Disconnect wallet.
             </MenuItem>

@@ -9,6 +9,8 @@ import {
   FaFacebook,
   FaGlobe,
 } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
+import { BsMedium } from "react-icons/bs";
 
 function SocialCard({ profile, pos, right, top }) {
   console.log("profile", profile);
@@ -20,6 +22,8 @@ function SocialCard({ profile, pos, right, top }) {
     facebook: <FaFacebook size="1.5rem" />,
     discord: <FaDiscord size="1.5rem" />,
     instagram: <FaInstagram size="1.5rem" />,
+    mail: <MdEmail size="1.5rem" />,
+    medium: <BsMedium size="1.5rem" />,
   };
 
   return (
@@ -36,50 +40,6 @@ function SocialCard({ profile, pos, right, top }) {
           </Link>
         );
       })}
-
-      {/* <Link isexternal="true" href={`${instagram}` || `https://instagram.com`}>
-        <IconButton
-          aria-label="instagram"
-          icon={<FaInstagram size="1.5rem" />}
-          size="icon"
-          variant="iconOutline"
-        />
-      </Link>
-      <Link isexternal="true" href={`${twitter}` || `https://twitter.com`}>
-        <IconButton
-          aria-label="twitter"
-          icon={<FaTwitter size="1.5rem" />}
-          size="icon"
-          variant="iconOutline"
-        />
-      </Link>
-      <Link isexternal="true" href={`${telegram}` || `https://t.me/artzero_io`}>
-        <IconButton
-          aria-label="telegram"
-          icon={<FaTelegram size="1.5rem" />}
-          size="icon"
-          variant="iconOutline"
-        />
-      </Link>
-      <Link
-        isexternal="true"
-        href={`${facebook}` || `https://www.facebook.com`}
-      >
-        <IconButton
-          aria-label="facebook"
-          icon={<FaFacebook size="1.5rem" />}
-          size="icon"
-          variant="iconOutline"
-        />
-      </Link>
-      <Link isexternal="true" href={`${discord}` || `https://www.discord.com`}>
-        <IconButton
-          aria-label="discord"
-          icon={<FaDiscord size="1.5rem" />}
-          size="icon"
-          variant="iconOutline"
-        />
-      </Link> */}
     </HStack>
   );
 }
