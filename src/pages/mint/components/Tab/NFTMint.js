@@ -1,8 +1,50 @@
+/* eslint-disable no-unused-vars */
 import { Box, Grid } from "@chakra-ui/react";
 import React, { Fragment } from "react";
 import MyNFTCard from "../../../account/components/Card/MyNFT";
+import { useSubstrateState } from "@utils/substrate";
+import { useEffect, useState } from "react";
+import { clientAPI } from "@api/client";
+import artzero_nft from "@utils/blockchain/artzero-nft";
+import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 
 function NFTMintTab() {
+  const { currentAccount } = useSubstrateState();
+  const [myAZNFTs, setMyAZNFTs] = useState([]);
+
+  useEffect(() => {
+    get_my_AZ_NFTs();
+  }, [currentAccount.address]);
+  const get_my_AZ_NFTs = async () =>{
+    const options = {
+      collection_address: artzero_nft.CONTRACT_ADDRESS,
+      owner: currentAccount.address,
+      limit: 10000,
+      offset: 0,
+      sort: -1,
+    };
+
+    const dataList = await clientAPI("post", "/getNFTsByOwnerAndCollection", options);
+    console.log(dataList);
+    const length = dataList.length;
+    let myNFTs = [];
+    for (var i=0;i<length;i++){
+
+      var obj = {
+        is_for_sale:dataList[i].is_for_sale,
+        price:dataList[i].price,
+        avatar:"",
+        nftName:"",
+        isStaked:false,
+        isBid:false,
+      }
+      myNFTs.push(obj);
+    }
+    setMyAZNFTs(myNFTs);
+
+    console.log(myNFTs);
+  }
+
   return (
     <Box
       mx="auto"
@@ -16,7 +58,7 @@ function NFTMintTab() {
         mx="auto"
         mb={12}
       >
-        {listNFT?.map((item, idx) => (
+        {myAZNFTs?.map((item, idx) => (
           <Fragment key={idx}>
             <MyNFTCard {...item} />
           </Fragment>

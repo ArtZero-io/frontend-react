@@ -3,7 +3,7 @@ import { Box, Tab, TabList, TabPanels, Tabs, TabPanel } from "@chakra-ui/react";
 
 // import Loader from "@components/Loader/Loader";
 import Layout from "@components/Layout/Layout";
-import ProfileHeader from "@pages/mint/components/Header";
+import MintHeader from "@pages/mint/components/Header";
 
 import NFTMintTab from "./components/Tab/NFTMint";
 import MintHistoryTab from "./components/Tab/History";
@@ -16,7 +16,7 @@ const MintPage = () => {
   return (
     <Layout>
       <Box as="section" maxW="container.3xl" position="relative">
-        <ProfileHeader />
+        <MintHeader />
 
         <Tabs isLazy align="center">
           <TabList>
@@ -50,7 +50,7 @@ export default MintPage;
 
 const tabData = [
   {
-    label: "Artzero Nfts",
+    label: "My Artzero Nfts",
     content: <NFTMintTab />,
   },
   {
