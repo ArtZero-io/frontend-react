@@ -17,7 +17,12 @@ import CollectionHero from "./component/Header/Header";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
+// import { IPFS_BASE_URL } from "@constants/index";
+// import axios from 'axios';
+// import { ContractPromise } from "@polkadot/api-contract";
+// import BN from "bn.js";
 import { createObjAttrsNFT } from "@utils/index";
+
 
 function CollectionPage() {
   const { collection_address } = useParams();
@@ -105,6 +110,7 @@ function CollectionPage() {
 
           setFormattedCollection(collectionDetail);
         });
+
       } catch (error) {
         console.log("fetchCollectionDetail error", error);
 

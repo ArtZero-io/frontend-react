@@ -12,128 +12,32 @@ import { useEffect, useState } from "react";
 import { delay, truncateStr } from "@utils";
 import toast from "react-hot-toast";
 import BN from "bn.js";
+import { clientAPI } from "@api/client";
 
-let wl_count = 0;
 let collection_count = 0;
 
 function CollectionAdmin() {
   const { activeAddress } = useSelector((s) => s.account);
   const { api, currentAccount } = useSubstrateState();
 
-  const [art0_NFT_owner, setArt0NFTOwner] = useState("");
-  const [whitelistAmount, setWhitelistAmount] = useState(1);
-  const [whitelistAddress, setWhitelistAddress] = useState("");
-  const [whitelistCount, setWhitelistCount] = useState(0);
-  const [whitelist, setwhitelist] = useState([]);
-  const [withdrawAmount, setWithdrawAmount] = useState(0);
-  const [azNFTContractBalance, setAzNFTContractBalance] = useState(0);
-
   const [collectionCount, setCollectionCount] = useState(0);
   // eslint-disable-next-line no-unused-vars
   const [collections, setCollections] = useState([]);
   const [collectionContractOwner, setCollectionContractOwner] = useState("");
+  const [collectionContractAdmin, setCollectionContractAdmin] = useState("");
   const [collectionContractBalance, setCollectionContractBalance] = useState(0);
   const onRefreshCollection = async () => {
+    await getCollectionContractBalance();
+    await onGetCollectionContractOwner();
+    await onGetCollectionContractAdmin();
     await onGetCollectionCount();
     await delay(1000);
     await getAllCollections();
   };
-  const onRefreshAZNFT = async () => {
-    await getAZNFTContractBalance();
-    await getCollectionContractBalance();
-
-    await onGetOwner();
-    await onGetCollectionContractOwner();
-
-    await onGetWhitelistCount();
-    await delay(1000);
-    await getAllWhiteList();
-  };
   useEffect(async () => {
     onRefreshCollection();
-  }, [onRefreshCollection]);
+  }, [currentAccount]);
 
-  useEffect(async () => {
-    onRefreshAZNFT();
-  }, [onRefreshAZNFT]);
-
-  const getAZNFTContractBalance = async () => {
-    const { data: balance } = await api.query.system.account(
-      artzero_nft.CONTRACT_ADDRESS
-    );
-    setAzNFTContractBalance(
-      new BN(balance.free, 10, "le").toNumber() / 10 ** 12
-    );
-  };
-  const getAllWhiteList = async (e) => {
-    var whitelist = [];
-    for (var i = 0; i < wl_count; i++) {
-      let account = await artzero_nft_calls.getWhitelistAccount(
-        currentAccount,
-        i + 1
-      );
-      console.log(account);
-      let data = await artzero_nft_calls.getWhitelist(currentAccount, account);
-      console.log(data);
-      data["account"] = account;
-      whitelist.push(data);
-    }
-    console.log(whitelist);
-    setwhitelist(whitelist);
-  };
-  const onGetWhitelistCount = async (e) => {
-    let res = await artzero_nft_calls.getWhitelistCount(currentAccount);
-
-    if (res) {
-      wl_count = res;
-      setWhitelistCount(res);
-    } else setWhitelistCount(0);
-  };
-  const onGetOwner = async (e) => {
-    let res = await artzero_nft_calls.owner(currentAccount);
-    if (res) setArt0NFTOwner(res);
-    else setArt0NFTOwner("");
-  };
-  const onAddWhitelist = async () => {
-    if (art0_NFT_owner !== activeAddress) {
-      toast.error(`You are not owner of this contract`);
-      return;
-    }
-    console.log(whitelistAddress, whitelistAmount);
-    //check whitelistAddress
-    await artzero_nft_calls.addWhitelist(
-      currentAccount,
-      whitelistAddress,
-      whitelistAmount
-    );
-    await delay(10000);
-    await onRefreshAZNFT();
-  };
-  const onAddWhitelistUpdate = async () => {
-    if (art0_NFT_owner !== activeAddress) {
-      toast.error(`You are not owner of this contract`);
-      return;
-    }
-    console.log(whitelistAddress, whitelistAmount);
-    //check whitelistAddress
-    await artzero_nft_calls.updateWhitelistAmount(
-      currentAccount,
-      whitelistAddress,
-      whitelistAmount
-    );
-    await delay(10000);
-    await onRefreshAZNFT();
-  };
-  const onWithdraw = async () => {
-    if (art0_NFT_owner !== activeAddress) {
-      toast.error(`You are not owner of this contract`);
-      return;
-    }
-    //check whitelistAddress
-    await artzero_nft_calls.onWithdraw(currentAccount, withdrawAmount);
-    await delay(5000);
-    await onRefreshAZNFT();
-  };
 
   const getCollectionContractBalance = async () => {
     const { data: balance } = await api.query.system.account(
@@ -148,48 +52,47 @@ function CollectionAdmin() {
     if (res) setCollectionContractOwner(res);
     else setCollectionContractOwner("");
   };
+  const onGetCollectionContractAdmin = async (e) => {
+    let res = await collection_manager_calls.getAdminAddress(currentAccount);
+    if (res) setCollectionContractAdmin(res);
+    else setCollectionContractAdmin("");
+  };
   const onGetCollectionCount = async () => {
     let res = await collection_manager_calls.getCollectionCount(currentAccount);
-
     if (res) {
       collection_count = res;
       setCollectionCount(res);
     } else setCollectionCount(0);
   };
   const getAllCollections = async (e) => {
-    var collections = [];
-    for (var i = 0; i < collection_count; i++) {
-      let collection_account = await collection_manager_calls.getContractById(
-        currentAccount,
-        i + 1
-      );
-      console.log(collection_account);
-      let data = await collection_manager_calls.getCollectionByAddress(
-        currentAccount,
-        collection_account
-      );
-      collections.push(data);
-    }
-    console.log(collections);
+    const options = {
+      limit: collection_count,
+      offset: 0,
+      sort: -1,
+    };
+
+    const collections = await clientAPI(
+      "post",
+      "/getCollections",
+      options
+    );
+    //console.log(collections)
     setCollections(collections);
   };
-  const onEnableCollection = async (collection_contract) => {
-    if (collectionContractOwner != activeAddress) {
-      toast.error(`You are not owner of this contract`);
+  const onSetStatusCollection = async (collection_contract,isActive) => {
+    if (collectionContractAdmin != activeAddress) {
+      toast.error(`You are not admin of this contract`);
       return;
     }
     await collection_manager_calls.updateIsActive(
       currentAccount,
-      collection_contract
+      collection_contract,
+      isActive
     );
-    await delay(5000);
+    await delay(10000);
     await onGetCollectionCount();
     await delay(1000);
     await getAllCollections();
-  };
-
-  const onDisableCollection = async (collection_contract) => {
-    return console.log("collection_contract");
   };
 
   return (
@@ -210,25 +113,39 @@ function CollectionAdmin() {
           </Flex>
           <Flex alignItems="start" pr={20}>
             <Text ml={1} color="brand.grayLight">
-              Collection Contract Owner:{" "}
-            </Text>
-            <Text color="#fff" ml={2}>
-              {truncateStr(collectionContractOwner, 9)}
-            </Text>
-          </Flex>
-          <Flex alignItems="start" pr={20}>
-            <Text ml={1} color="brand.grayLight">
               Collection Contract Balance:
             </Text>
             <Text color="#fff" ml={2}>
               {collectionContractBalance} SZERO
             </Text>
           </Flex>
-        </HStack>
 
+
+        </HStack>
+        <HStack pb={5} borderBottomWidth={1}>
+        <Flex alignItems="start" pr={20}>
+          <Text ml={1} color="brand.grayLight">
+            Collection Contract Owner:{" "}
+          </Text>
+          <Text color="#fff" ml={2}>
+            {truncateStr(collectionContractOwner, 9)}
+          </Text>
+        </Flex>
+        <Flex alignItems="start" pr={20}>
+          <Text ml={1} color="brand.grayLight">
+            Collection Contract Admin:{" "}
+          </Text>
+          <Text color="#fff" ml={2}>
+            {truncateStr(collectionContractAdmin, 9)}
+          </Text>
+        </Flex>
+        </HStack>
         <Table variant="striped" colorScheme="blackAlpha">
           <Thead>
             <Tr>
+              <Th fontFamily="Evogria" fontSize="sm" fontWeight="normal" py={7}>
+                Index
+              </Th>
               <Th fontFamily="Evogria" fontSize="sm" fontWeight="normal" py={7}>
                 Address
               </Th>
@@ -253,11 +170,12 @@ function CollectionAdmin() {
             </Tr>
           </Thead>
           <Tbody>
-            {collections.length === 0 ? (
+            {collectionCount === 0 ? (
               <Center py={7}>There is no data.</Center>
             ) : (
               collections.map((collection, index) => (
                 <Tr key={index}>
+                  <Td py={7}>{collection.index}</Td>
                   <Td py={7}>
                     {truncateStr(collection.nftContractAddress, 5)}
                   </Td>
@@ -266,7 +184,7 @@ function CollectionAdmin() {
                   <Td py={7}>{collection.isActive ? "Active" : "Inactive"} </Td>
                   <Td py={7}>
                     {collection.isCollectRoyalFee
-                      ? collection.royalFee / 100
+                      ? collection.royalFee / 100 + "%"
                       : "N/A"}{" "}
                   </Td>
                   <Td py={7}>
@@ -278,7 +196,7 @@ function CollectionAdmin() {
                         size="sm"
                         color="black"
                         onClick={() =>
-                          onEnableCollection(collection.nftContractAddress)
+                          onSetStatusCollection(collection.nftContractAddress,true)
                         }
                       >
                         Enable
@@ -288,7 +206,7 @@ function CollectionAdmin() {
                         size="sm"
                         color="black"
                         onClick={() =>
-                          onDisableCollection(collection.nftContractAddress)
+                          onSetStatusCollection(collection.nftContractAddress,false)
                         }
                       >
                         Disable

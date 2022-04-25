@@ -144,7 +144,7 @@ async function autoNewCollection(caller_account, data, dispatch) {
   return unsubscribe;
 }
 
-async function updateIsActive(caller_account, collection_address) {
+async function updateIsActive(caller_account, collection_address,isActive) {
   if (
     !contract ||
     !caller_account ||
@@ -160,7 +160,7 @@ async function updateIsActive(caller_account, collection_address) {
   const injector = await web3FromSource(caller_account?.meta?.source);
 
   contract.tx
-    .updateIsActive({ gasLimit, value: azero_value }, collection_address)
+    .updateIsActive({ gasLimit, value: azero_value }, collection_address,isActive)
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -180,6 +180,17 @@ async function updateIsActive(caller_account, collection_address) {
               statusText === "0" ? "started" : statusText.toLowerCase()
             }.`
           );
+          if (status.isFinalized === true) {
+            const update_collection_api_res = await clientAPI(
+              "post",
+              "/updateCollection",
+              {
+                collection_address: collection_address,
+              }
+            );
+            console.log("update_collection_api_res", update_collection_api_res);
+          }
+
         }
       }
     )
@@ -212,9 +223,10 @@ async function getCollectionsByOwner(caller_account, owner) {
   }
   const gasLimit = -1;
   const azero_value = 0;
+  const address = caller_account?.address;
 
   const { result, output } = await contract.query.getCollectionsByOwner(
-    caller_account,
+    address,
     { value: azero_value, gasLimit },
     owner
   );
@@ -335,11 +347,11 @@ async function getCollectionOwner(caller_account, collection_address) {
 
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  const address = caller_account?.address;
 
   const { result, output } = await contract.query[
     "crossArtZeroCollection::getCollectionOwner"
-  ](caller_account, { value: azero_value, gasLimit }, collection_address);
+  ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
     return output.toHuman();
   }
@@ -357,10 +369,10 @@ async function getCollectionByAddress(caller_account, collection_address) {
 
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  const address = caller_account?.address;
 
   const { result, output } = await contract.query.getCollectionByAddress(
-    caller_account,
+    address,
     { value: azero_value, gasLimit },
     collection_address
   );

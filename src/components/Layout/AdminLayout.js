@@ -9,11 +9,11 @@ import CollectionTab from "@pages/admin/components/Tab/Collection";
 const AdminLayout = () => {
   const tabData = [
     {
-      label: "Contract",
+      label: "AZ NFT Contract",
       content: <ContractTab />,
     },
     {
-      label: "Collection",
+      label: "Collection Management",
       content: <CollectionTab />,
     },
   ];

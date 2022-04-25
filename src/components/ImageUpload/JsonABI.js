@@ -14,6 +14,7 @@ import { create } from "ipfs-http-client";
 import { Buffer } from "buffer";
 import { IPFS_CLIENT_URL } from "@constants/index";
 import toast from "react-hot-toast";
+import { clientAPI } from "@api/client";
 
 const client = create(IPFS_CLIENT_URL);
 
@@ -64,6 +65,15 @@ const FileUpload = ({ setFileIPFSUrl, id, title = "File Upload" }) => {
           uploadPromise().then((created) => {
             setFileIPFSUrl(created?.path);
             setFileURL(created?.path);
+            const options = {
+              input: created?.path
+            };
+            const cacheJsonAPIRes = clientAPI(
+              "post",
+              "/cacheJSON",
+              options
+            );
+              console.log(cacheJsonAPIRes)
           }),
           {
             loading: "Uploading...",

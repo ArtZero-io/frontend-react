@@ -25,6 +25,11 @@ import {
   setAccount as setAccountMarketplaceModule,
 } from "@utils/blockchain/marketplace_contract_calls";
 
+import {
+  setAZNFTContract,
+  setAccount as setAccountAZNFTModule,
+} from "@utils/blockchain/artzero-nft-calls";
+
 const PrivateRoute = ({ ...rest }) => {
   const { api, keyringState, currentAccount } = useSubstrateState();
 
@@ -66,6 +71,9 @@ const PrivateRoute = ({ ...rest }) => {
   console.log("Init setMarketplaceContract");
   setAccountMarketplaceModule(currentAccount);
   setMarketplaceContract(api, contractData.marketplace);
+
+  setAccountAZNFTModule(currentAccount);
+  setAZNFTContract(api,contractData.artzeroNft);
 
   return <Route {...rest} />;
 };
