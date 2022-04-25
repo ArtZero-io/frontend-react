@@ -51,16 +51,19 @@ const PrivateRoute = ({ ...rest }) => {
   }
 
   if (!currentAccount?.address) return <Redirect to={ROUTES.HOME} />;
-
+  console.log("Init setProfileContract");
   setAccountProfileModule(currentAccount);
   setProfileContract(api, contractData.profile);
 
+  console.log("Init setStakingContract");
   setAccountStakingModule(currentAccount);
   setStakingContract(api, contractData.staking);
 
+  console.log("Init setCollectionContract");
   setAccountCollectionModule(currentAccount);
   setCollectionContract(api, contractData.collection);
-  
+
+  console.log("Init setMarketplaceContract");
   setAccountMarketplaceModule(currentAccount);
   setMarketplaceContract(api, contractData.marketplace);
 

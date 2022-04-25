@@ -99,6 +99,11 @@ async function getNftSaleInfo (caller_account,nft_contract_address,token_id) {
     !isValidAddressPolkadotAddress(nft_contract_address)
     ){
     console.log('invalid inputs');
+    console.log('contract',contract);
+    console.log('caller_account',caller_account);
+    console.log('nft_contract_address',nft_contract_address);
+    
+
     return null;
   }
   const address = caller_account?.address

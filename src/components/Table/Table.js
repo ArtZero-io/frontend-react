@@ -10,7 +10,7 @@ import {
   Tag,
   TagLabel,
   TagRightIcon,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import contractData from "@utils/blockchain/index";
@@ -31,34 +31,48 @@ function DataTable({
   nftContractAddress,
   contractType,
 }) {
-
   const [bidders, setBidders] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const { api, currentAccount } = useSubstrateState();
 
   useEffect(async () => {
     if (isLoaded === false) {
-      marketplace_contract_calls.setMarketplaceContract(api, contractData.marketplace);
-      const sale_info = await marketplace_contract_calls.getNftSaleInfo(currentAccount, nftContractAddress, {'u64': tokenID});
+      marketplace_contract_calls.setMarketplaceContract(
+        api,
+        contractData.marketplace
+      );
+      const sale_info = await marketplace_contract_calls.getNftSaleInfo(
+        currentAccount,
+        nftContractAddress,
+        { u64: tokenID }
+      );
       console.log(sale_info);
-      const listBidder = await marketplace_contract_calls.getAllBids(currentAccount, nftContractAddress, sale_info.nftOwner, {'u64': tokenID});
+      const listBidder = await marketplace_contract_calls.getAllBids(
+        currentAccount,
+        nftContractAddress,
+        sale_info?.nftOwner,
+        { u64: tokenID }
+      );
       setBidders(listBidder);
       setIsLoaded(true);
     }
   }, [isLoaded]);
 
   const acceptBid = async (bidId) => {
-    marketplace_contract_calls.setMarketplaceContract(api, contractData.marketplace);
+    marketplace_contract_calls.setMarketplaceContract(
+      api,
+      contractData.marketplace
+    );
     await marketplace_contract_calls.acceptBid(
       currentAccount,
       nftContractAddress,
-      {'u64': tokenID},
+      { u64: tokenID },
       bidId
     );
-  }
+  };
 
   return (
-    <TableContainer maxW="6xl-mid" fontSize="lg" minH={'30rem'}>
+    <TableContainer maxW="6xl-mid" fontSize="lg" minH={"30rem"}>
       <Table variant="striped" colorScheme="blackAlpha">
         <Thead>
           <Tr>
@@ -80,22 +94,25 @@ function DataTable({
           </Tr>
         </Thead>
         <Tbody>
-          { bidders.length && bidders.map((item, index) => (
-            <Tr key={item.bidder} color="#fff">
-              <Td color="#7ae7ff" py={7} onClick={() => acceptBid(index)}>
-                {item.bidder}
-              </Td>
-              {/* <Td py={7}>{convertStringToDateTime(item.bidDate)}</Td> */}
-              <Td py={7} isNumeric>
-                <Text textAlign="right" color="brand.grayLight">
+          {bidders?.length &&
+            bidders.map((item, index) => (
+              <Tr key={item.bidder} color="#fff">
+                <Td color="#7ae7ff" py={7} onClick={() => acceptBid(index)}>
+                  {item.bidder}
+                </Td>
+                {/* <Td py={7}>{convertStringToDateTime(item.bidDate)}</Td> */}
+                <Td py={7} isNumeric>
+                  <Text textAlign="right" color="brand.grayLight">
                     <Tag pr={0} bg="transparent">
-                      <TagLabel bg="transparent">{convertStringToPrice(item.bidValue)}</TagLabel>
+                      <TagLabel bg="transparent">
+                        {convertStringToPrice(item.bidValue)}
+                      </TagLabel>
                       <TagRightIcon as={AzeroIcon} />
                     </Tag>
-                </Text>
-              </Td>
-            </Tr>
-          ))}
+                  </Text>
+                </Td>
+              </Tr>
+            ))}
         </Tbody>
       </Table>
     </TableContainer>

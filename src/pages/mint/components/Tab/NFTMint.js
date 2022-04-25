@@ -1,5 +1,5 @@
 import { Box, Grid } from "@chakra-ui/react";
-import React from "react";
+import React, { Fragment } from "react";
 import MyNFTCard from "../../../account/components/Card/MyNFT";
 
 function NFTMintTab() {
@@ -17,7 +17,9 @@ function NFTMintTab() {
         mb={12}
       >
         {listNFT?.map((item, idx) => (
-          <MyNFTCard {...item} />
+          <Fragment key={idx}>
+            <MyNFTCard {...item} />
+          </Fragment>
         ))}
       </Grid>
     </Box>
