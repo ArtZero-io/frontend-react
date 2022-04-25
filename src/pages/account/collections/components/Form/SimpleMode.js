@@ -191,18 +191,22 @@ const SimpleModeForm = ({ mode, id }) => {
           {({ values }) => (
             <Form>
               <HStack>
-                <SimpleModeInput
-                  label="NFT Name"
-                  name="nftName"
-                  type="text"
-                  placeholder="NFT Name"
-                />
-                <SimpleModeInput
-                  label="NFT Symbol"
-                  name="nftSymbol"
-                  type="text"
-                  placeholder="NFT Symbol"
-                />
+                {mode === "add" && (
+                  <>
+                    <SimpleModeInput
+                      label="NFT Name"
+                      name="nftName"
+                      type="text"
+                      placeholder="NFT Name"
+                    />
+                    <SimpleModeInput
+                      label="NFT Symbol"
+                      name="nftSymbol"
+                      type="text"
+                      placeholder="NFT Symbol"
+                    />
+                  </>
+                )}
                 <SimpleModeInput
                   label="Collection Name"
                   name="collectionName"

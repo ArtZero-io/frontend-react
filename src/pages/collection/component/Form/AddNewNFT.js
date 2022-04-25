@@ -11,21 +11,26 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import * as Yup from "yup";
+import toast from "react-hot-toast";
 import { Formik, Form } from "formik";
 import React, { useState } from "react";
-import toast from "react-hot-toast";
-import * as Yup from "yup";
-import AddNewNFTImageUpload from "@components/ImageUpload/Collection";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 import { useSubstrateState } from "@utils/substrate";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
+
+
 import { ContractPromise } from "@polkadot/api-contract";
-import { useParams } from "react-router-dom";
+
 import AddNewNFTInput from "@components/Input/Input";
 import AddNewNFTTextArea from "@components/TextArea/TextArea";
-import { useDispatch, useSelector } from "react-redux";
-import AddPropertiesModal from "../Modal/AddProperties";
+import AddNewNFTImageUpload from "@components/ImageUpload/Collection";
+
 import AddLevelsModal from "../Modal/AddLevels";
+import AddPropertiesModal from "../Modal/AddProperties";
 
 const AddNewNFTForm = ({ collectionOwner }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
