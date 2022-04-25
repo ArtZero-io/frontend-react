@@ -102,7 +102,7 @@ async function getNftSaleInfo (caller_account,nft_contract_address,token_id) {
     console.log('contract',contract);
     console.log('caller_account',caller_account);
     console.log('nft_contract_address',nft_contract_address);
-    
+
 
     return null;
   }
@@ -187,6 +187,44 @@ async function owner(caller_account){
   return null;
 
 }
+async function getStakingDiscountCriteria(caller_account){
+  if (!contract || !caller_account ){
+    console.log('invalid inputs');
+    return null;
+  }
+  const address = caller_account?.address
+  const gasLimit = -1
+  const azero_value = 0
+  //console.log(contract);
+
+  const { result, output } = await contract.query.getStakingDiscountCriteria(
+    address,
+    { value:azero_value, gasLimit }
+  )
+  if (result.isOk) {
+    return output;
+  }
+  return null;
+}
+async function getStakingDiscountRate(caller_account){
+  if (!contract || !caller_account ){
+    console.log('invalid inputs');
+    return null;
+  }
+  const address = caller_account?.address
+  const gasLimit = -1
+  const azero_value = 0
+  //console.log(contract);
+
+  const { result, output } = await contract.query.getStakingDiscountRate(
+    address,
+    { value:azero_value, gasLimit }
+  )
+  if (result.isOk) {
+    return output;
+  }
+  return null;
+}
 
 //SETS
 async function list(caller_account, nft_contract_address, token_id, price) {
@@ -204,7 +242,7 @@ async function list(caller_account, nft_contract_address, token_id, price) {
   const injector = await web3FromSource(caller_account?.meta?.source)
 
   const sale_price = new U128(new TypeRegistry(), Math.round(price * (10**12)));
-  
+
   console.log('token_id', token_id);
   console.log('nft_contract_address', nft_contract_address);
   contract.tx
@@ -213,7 +251,7 @@ async function list(caller_account, nft_contract_address, token_id, price) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        
+
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(
@@ -401,7 +439,7 @@ async function removeBid(caller_account, nft_contract_address,token_id) {
               statusText === '0' ? 'started' : statusText.toLowerCase()
             }.`
           )
-          
+
         }
       }
     )
@@ -552,6 +590,8 @@ const marketplace_contract_calls = {
   setMarketplaceContract,
   setAccount,
   removeBid,
+  getStakingDiscountCriteria,
+  getStakingDiscountRate
 }
 
 export default marketplace_contract_calls

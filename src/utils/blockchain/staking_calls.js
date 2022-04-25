@@ -58,8 +58,26 @@ async function getTotalStakedByAccount(caller_account, account) {
   }
   return null;
 }
-async function getStakedId(caller_account, account, index) {
+async function getTotalPendingUnstakedByAccount(caller_account, account) {
   if (!contract || !caller_account || !isValidAddressPolkadotAddress(account)) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
+
+  const { result, output } = await contract.query[
+    "crossArtZeroStaking::getTotalPendingUnstakedByAccount"
+  ](address, { value: azero_value, gasLimit }, account);
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+async function getStakedId(caller_account, account, index) {
+  if (!contract || !caller_account || !isValidAddressPolkadotAddress(account) || !index) {
     console.log("invalid inputs");
     return null;
   }
@@ -79,7 +97,48 @@ async function getStakedId(caller_account, account, index) {
   }
   return null;
 }
+async function getPendingUnstakedId(caller_account, account, index){
+  if (!contract || !caller_account || !isValidAddressPolkadotAddress(account) || !index) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
 
+  const { result, output } = await contract.query.getPendingUnstakedId(
+    address,
+    { value: azero_value, gasLimit },
+    account,
+    index
+  );
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+async function getRequestUnstakeTime(caller_account, account, index){
+  if (!contract || !caller_account || !isValidAddressPolkadotAddress(account) || !index) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
+
+  const { result, output } = await contract.query.getRequestUnstakeTime(
+    address,
+    { value: azero_value, gasLimit },
+    account,
+    index
+  );
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
 //SETTERS
 async function stake(caller_account, token_ids) {
   if (!contract || !caller_account) {
@@ -163,6 +222,8 @@ async function unstake(caller_account, token_ids) {
 }
 
 const staking_calls = {
+  getPendingUnstakedId,
+  getRequestUnstakeTime,
   getTotalStaked,
   getTotalStakedByAccount,
   getStakedId,
@@ -170,6 +231,7 @@ const staking_calls = {
   unstake,
   setStakingContract,
   setAccount,
+  getTotalPendingUnstakedByAccount
 };
 
 export default staking_calls;
