@@ -138,7 +138,7 @@ function CollectionPage() {
               let NFTListFormattedAdv = [];
               for (let i = 1; i <= token_count; i++) {
                 const token_id = new U64(new TypeRegistry(), i);
-                const { result, output } = await nft_contract.query["tokenUri"](
+                const { result, output } = await nft_contract.query["psp34Traits::tokenUri"](
                   currentAccount.address,
                   { value: azero_value, gasLimit },
                   token_id
