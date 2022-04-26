@@ -244,7 +244,44 @@ async function getPlatformFee(caller_account){
   }
   return null;
 }
+async function getCurrentProfit(caller_account){
+  if (!contract || !caller_account ){
+    console.log('invalid inputs');
+    return null;
+  }
+  const address = caller_account?.address
+  const gasLimit = -1
+  const azero_value = 0
+  //console.log(contract);
 
+  const { result, output } = await contract.query.getCurrentProfit(
+    address,
+    { value:azero_value, gasLimit }
+  )
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+async function getTotalProfit(caller_account){
+  if (!contract || !caller_account ){
+    console.log('invalid inputs');
+    return null;
+  }
+  const address = caller_account?.address
+  const gasLimit = -1
+  const azero_value = 0
+  //console.log(contract);
+
+  const { result, output } = await contract.query.getTotalProfit(
+    address,
+    { value:azero_value, gasLimit }
+  )
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
 
 //SETS
 async function list(caller_account, nft_contract_address, token_id, price) {
@@ -593,6 +630,8 @@ async function acceptBid(caller_account, nft_contract_address,token_id,bidIndex)
 }
 
 const marketplace_contract_calls = {
+  getTotalProfit,
+  getCurrentProfit,
   getPlatformFee,
   totalTokensForSale,
   getVolumeByCollection,

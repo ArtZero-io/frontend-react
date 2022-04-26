@@ -43,6 +43,8 @@ function GeneralPage() {
   const [totalStaked, setTotalStaked] = useState(null);
   const [dashboardInfo, setDashboardInfo] = useState(null);
   const [tradeFee,setTradeFee] = useState(3);
+  //const [platformTotalStaked,setPlatformTotalStaked] = useState(3);
+  const [estimatedEarning,setEstimatedEarning] = useState(0);
   useEffect(() => {
     const fetchAllNfts = async () => {
       const options = {
@@ -55,11 +57,17 @@ function GeneralPage() {
           "/getNFTsByOwner",
           options
         );
+        const platformTotalStaked = await staking_calls.getTotalStaked(currentAccount);
+        //setPlatformTotalStaked(platformTotalStaked);
 
         const totalStakedPromise = await staking_calls.getTotalStakedByAccount(
           currentAccount,
           currentAccount.address
         );
+
+        const currentProfit = await marketplace_contract_calls.getCurrentProfit(currentAccount);
+
+        setEstimatedEarning(currentProfit * 0.3 * totalStakedPromise / platformTotalStaked);
 
         Promise.all([nftListPromise, totalStakedPromise]).then(
           ([nftList, totalStaked]) => {
@@ -111,7 +119,7 @@ function GeneralPage() {
     }
     getTradeFee();
 
-  }, [currentAccount, dashboardInfo, nftList]);
+  }, [currentAccount]);
 
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">
@@ -235,11 +243,13 @@ function GeneralPage() {
               <Box fontFamily="Evogria Italic" fontSize="3xl-mid" color="#FFF">
                 <span>Stake your </span>
                 <span style={{ color: "#7AE7FF" }}>
-                  Praying Mantis Predator
+                  Praying Mantis Predators
                 </span>
                 <div />
                 <span>to reduce your </span>
                 <span style={{ color: "#7AE7FF" }}>fees</span>
+                <span> and earn </span>
+                <span style={{ color: "#7AE7FF" }}>AZERO</span>
               </Box>
               <Spacer />
               <Box variant="outline" h={32} w={36}>
@@ -249,16 +259,30 @@ function GeneralPage() {
               </Box>
             </Flex>
 
+
             <Flex w="full">
-              <Text mt={0} mb={8} fontSize="lg" color="#fff">
-                You currently have{" "}
+
+              <Text mt={0} mb={1} fontSize="lg" color="#fff">
+                Your Total Stake:{" "}
                 <span style={{ color: "#7AE7FF" }}>
                   {totalStaked || 0} NFTs{" "}
                 </span>
-                staked.
               </Text>
-              <Spacer />
             </Flex>
+            <Flex w="full">
+
+              <Text mt={0} mb={1} fontSize="lg" color="#fff">
+                Your Estimated Earning:{" "}
+                <span style={{ color: "#7AE7FF" }}>
+                  {estimatedEarning || 0} AZERO{" "}
+                </span>
+                &nbsp;&nbsp;&nbsp;Next Payout:{" "}
+                <span style={{ color: "#7AE7FF" }}>
+                  July 01, 2022
+                </span>
+              </Text>
+            </Flex>
+
 
             <Flex w="full" alignItems="center">
               <Button
