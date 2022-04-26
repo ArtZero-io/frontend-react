@@ -35,6 +35,9 @@ function MyNFTGroupCard({ name, avatarImage, listNFT, contractType }) {
     setListNFTFormatted(data);
   }, [listNFT]);
 
+
+console.log('listNFT', listNFT)
+
   return (
     <Box my={10}>
       <NFTModal

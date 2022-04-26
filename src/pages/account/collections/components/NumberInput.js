@@ -30,9 +30,9 @@ export default function AddCollectionNumberInput({
               isDisabled={isDisabled}
               id={name}
               min={0}
-              max={35}
-              precision={0}
-              step={1}
+              max={5}
+              precision={2}
+              step={0.5}
               bg="black"
               {...field}
               onChange={(val) => form.setFieldValue(field.name, val)}

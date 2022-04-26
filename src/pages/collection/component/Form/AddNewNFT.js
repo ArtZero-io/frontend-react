@@ -22,7 +22,6 @@ import { useSubstrateState } from "@utils/substrate";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 
-
 import { ContractPromise } from "@polkadot/api-contract";
 
 import AddNewNFTInput from "@components/Input/Input";
@@ -142,6 +141,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
               nft721_psp34_standard_calls.setContract(
                 nft721_psp34_standard_contract
               );
+              console.log("attributes before mintWithAttributes", attributes);
               await nft721_psp34_standard_calls.mintWithAttributes(
                 currentAccount,
                 collection_address,

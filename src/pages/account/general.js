@@ -85,9 +85,14 @@ function GeneralPage() {
         toast.error("There was an error while fetching the collections.");
       }
     };
-    (!nftList || dashboardInfo.address !== currentAccount.address) &&
+    if (
+      !nftList ||
+      (dashboardInfo?.length &&
+        dashboardInfo[0].address !== currentAccount.address)
+    ) {
       fetchAllNfts();
-  }, [currentAccount, dashboardInfo?.address, nftList]);
+    }
+  }, [currentAccount, dashboardInfo, nftList]);
 
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">

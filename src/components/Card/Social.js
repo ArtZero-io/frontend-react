@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { HStack, IconButton, Link } from "@chakra-ui/react";
-import React from "react";
+import React, { Fragment } from "react";
 import {
   FaDiscord,
   FaInstagram,
@@ -30,14 +30,16 @@ function SocialCard({ profile, pos, right, top }) {
     <HStack textAlign="center" pos={pos} right={right} top={top}>
       {profile.map((i, idx) => {
         return (
-          <Link isexternal="true" href={`${Object.values(i)[0]}`}>
-            <IconButton
-              aria-label={Object.keys(i)[0]}
-              icon={iconList[Object.keys(i)[0]]}
-              size="icon"
-              variant="iconOutline"
-            />
-          </Link>
+          <Fragment key={idx}>
+            <Link isexternal="true" href={`${Object.values(i)[0]}`}>
+              <IconButton
+                aria-label={Object.keys(i)[0]}
+                icon={iconList[Object.keys(i)[0]]}
+                size="icon"
+                variant="iconOutline"
+              />
+            </Link>
+          </Fragment>
         );
       })}
     </HStack>

@@ -30,9 +30,9 @@ export default function AddLevelsInput({ label, height, form, ...props }) {
 
       <Field
         min={0}
-        max={35}
-        precision={0}
-        step={1}
+        max={5}
+        precision={2}
+        step={0.5}
         bg="black"
         ml={0}
         pl={1}
