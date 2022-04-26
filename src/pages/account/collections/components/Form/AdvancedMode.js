@@ -10,7 +10,6 @@ import { isValidAddressPolkadotAddress } from "@utils";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 
 import ImageUpload from "@components/ImageUpload/Collection";
-import FileUpload from "@components/ImageUpload/JsonABI";
 import AdvancedModeInput from "@components/Input/Input";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import AdvancedModeTextArea from "@components/TextArea/TextArea";
@@ -20,7 +19,6 @@ import AddCollectionNumberInput from "../NumberInput";
 const AdvancedModeForm = () => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
-  const [jsonAbiIPFSUrl, setJsonAbiIPFSUrl] = useState("");
   const [addingFee, setAddingFee] = useState(0);
   const [isSetRoyal, setIsSetRoyal] = useState(false);
 
@@ -84,7 +82,6 @@ const AdvancedModeForm = () => {
           if (avatarIPFSUrl && headerIPFSUrl) {
             values.avatarIPFSUrl = avatarIPFSUrl;
             values.headerIPFSUrl = headerIPFSUrl;
-            values.jsonAbiIPFSUrl = jsonAbiIPFSUrl;
 
             if (!checkCurrentBalance) {
               return toast.error(`Your balance not enough!`);
@@ -100,16 +97,14 @@ const AdvancedModeForm = () => {
                   "name",
                   "description",
                   "avatar_image",
-                  "header_image",
-                  "abi_file",
+                  "header_image"
                 ],
 
                 attributeVals: [
                   values.collectionName,
                   values.collectionDescription,
                   values.avatarIPFSUrl,
-                  values.headerIPFSUrl,
-                  values.jsonAbiIPFSUrl,
+                  values.headerIPFSUrl
                 ],
 
                 collectionAllowRoyalFee: values.collectRoyalFee,
@@ -175,12 +170,6 @@ const AdvancedModeForm = () => {
               alignItems="start"
               justifyContent="space-between"
             >
-              {" "}
-              <FileUpload
-                id="json-upload"
-                setFileIPFSUrl={setJsonAbiIPFSUrl}
-                title="Collection ABI Json"
-              />
               <Stack
                 direction={{ base: "column", "2xl": "row" }}
                 alignItems="end"
