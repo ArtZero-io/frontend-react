@@ -1837,6 +1837,5 @@ const nft721_psp34_standard = {
     }
   }
 };
-  
+
 export default nft721_psp34_standard;
-  

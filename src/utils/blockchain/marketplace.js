@@ -1,8 +1,8 @@
 const marketplace = {
-  CONTRACT_ADDRESS: "5EHyw2uPsaxCwfJkNb24vjAR3U48U4Dpt65afkMd2irL3fdV",
+  CONTRACT_ADDRESS: "5GmMzFJJnnHRMmSXFC1cobEouobSsRREUjoN9o1HRckn71AM",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x5f4c97c190ca8d59443c0aaf9b0c30ef66d348e90e1bc259e409fab230da4efe",
+      "hash": "0xba27e8fe1040f135d4e7c3bd6dae472bd8b2dbbed8f02adf56e11d9ed96185fd",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -975,6 +975,38 @@ const marketplace = {
             "selector": "0xc4fd2cdc"
           },
           {
+            "args": [],
+            "docs": [
+              "Get platform total Profit"
+            ],
+            "label": "get_total_profit",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 10
+            },
+            "selector": "0xc7198ed4"
+          },
+          {
+            "args": [],
+            "docs": [
+              "Get platform current available profit"
+            ],
+            "label": "get_current_profit",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 10
+            },
+            "selector": "0xe741ad59"
+          },
+          {
             "args": [
               {
                 "label": "value",
@@ -1003,6 +1035,56 @@ const marketplace = {
           {
             "args": [
               {
+                "label": "value",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 10
+                }
+              },
+              {
+                "label": "reciever",
+                "type": {
+                  "displayName": [
+                    "AccountId"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Withdraw Profit - only Owner"
+            ],
+            "label": "withdraw_profit",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 29
+            },
+            "selector": "0x8bb87aca"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
+          },
+          {
+            "args": [
+              {
                 "label": "new_owner",
                 "type": {
                   "displayName": [
@@ -1025,21 +1107,6 @@ const marketplace = {
               "type": 35
             },
             "selector": "0x11f43efd"
-          },
-          {
-            "args": [],
-            "docs": [],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
           },
           {
             "args": [],
@@ -1226,6 +1293,24 @@ const marketplace = {
               "layout": {
                 "cell": {
                   "key": "0x0c00000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 10
+                }
+              },
+              "name": "total_profit"
+            },
+            {
+              "layout": {
+                "cell": {
+                  "key": "0x0d00000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 10
+                }
+              },
+              "name": "current_profit"
+            },
+            {
+              "layout": {
+                "cell": {
+                  "key": "0x0e00000000000000000000000000000000000000000000000000000000000000",
                   "ty": 11
                 }
               },
@@ -1234,7 +1319,7 @@ const marketplace = {
             {
               "layout": {
                 "cell": {
-                  "key": "0x0d00000000000000000000000000000000000000000000000000000000000000",
+                  "key": "0x0f00000000000000000000000000000000000000000000000000000000000000",
                   "ty": 28
                 }
               },
