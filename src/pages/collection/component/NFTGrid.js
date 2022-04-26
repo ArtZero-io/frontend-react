@@ -2,6 +2,8 @@ import { Grid, GridItem, useDisclosure } from "@chakra-ui/react";
 import React, { useState } from "react";
 import NFTChangeSize from "@components/Card/NFTChangeSize";
 import NFTDetailModal from "./Modal/NFTDetail";
+// eslint-disable-next-line no-unused-vars
+import ResponsivelySizedModal from "../../../components/Modal/Modal";
 
 const NFTGrid = ({ bigCard, nftList }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -16,6 +18,13 @@ const NFTGrid = ({ bigCard, nftList }) => {
   return (
     <div>
       <NFTDetailModal {...selectedNft} isOpen={isOpen} onClose={onClose} />
+
+      {/* <ResponsivelySizedModal
+        {...selectedNft}
+        isOpen={isOpen}
+        onClose={onClose}
+      /> */}
+
       <Grid
         templateColumns={`repeat(auto-fill, minmax(min(100%, ${
           bigCard ? "25rem" : "20rem"
@@ -26,8 +35,8 @@ const NFTGrid = ({ bigCard, nftList }) => {
           return (
             <React.Fragment key={idx}>
               <GridItem
-                w="100%"
-                h="100%"
+                w="full"
+                h="full"
                 cursor="pointer"
                 onClick={() => handleOnClick(item)}
               >

@@ -40,7 +40,7 @@ const MyNFTCard = ({
         bg="brand.grayDark"
         h="full"
       >
-        <Square minW={56}>
+        <Square minW={56} bg="#372648">
           <Image
             alt={nftName}
             h="full"
@@ -48,8 +48,6 @@ const MyNFTCard = ({
             objectFit="cover"
             src={`${IPFS_BASE_URL}/${avatar}`}
             fallback={<Skeleton w="full" h="full" minH={56} minW={56} />}
-
-            // fallbackSrc="https://via.placeholder.com/400x400"
           />
         </Square>
 

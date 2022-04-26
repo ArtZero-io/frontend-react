@@ -30,7 +30,7 @@ function MyNFTModal(props) {
       onClose={props.onClose}
       isCentered
       isOpen={props.isOpen}
-      size={"6xl"}
+      size={{ '3xl': "4xl" }}
       minH="40rem"
     >
       <ModalOverlay

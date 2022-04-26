@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import Layout from "@components/Layout/Layout";
 import { TypeRegistry, U64 } from "@polkadot/types";
 import { clientAPI } from "@api/client";
-import TabActivity from "./component/TabActivity";
+// import TabActivity from "./component/TabActivity";
 import TabCollectionItems from "./component/TabItems";
 import CollectionHero from "./component/Header/Header";
 // import contractData from "@utils/blockchain/index";
@@ -197,7 +197,6 @@ function CollectionPage() {
       formattedCollection?.nftList?.filter((i) => i.is_for_sale === false);
   }, [formattedCollection, isShowUnlisted]);
 
-  console.log("xxx formattedCollection", formattedCollection);
 
   const tabData = [
     {
@@ -211,10 +210,10 @@ function CollectionPage() {
         />
       ),
     },
-    {
-      label: "Activity",
-      content: <TabActivity />,
-    },
+    // {
+    //   label: "Activity",
+    //   content: <TabActivity />,
+    // },
   ];
 
   return (

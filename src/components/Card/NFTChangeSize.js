@@ -38,6 +38,7 @@ export default function NFTChangeSize({
         minH="25rem"
       >
         <Image
+          bg="#372648"
           alt={nftName}
           objectFit="cover"
           src={`${IPFS_BASE_URL}/${avatar}`}

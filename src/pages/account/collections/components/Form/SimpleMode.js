@@ -267,28 +267,30 @@ const SimpleModeForm = ({ mode, id }) => {
                 />
               </Stack>
 
-              <Flex alignItems="center" minH={20} mt={5}>
-                <Box w="15rem">
-                  <SimpleModeSwitch
-                    onChange={() => {
-                      values.collectRoyalFee = !values.collectRoyalFee;
-                      setIsSetRoyal(!isSetRoyal);
-                    }}
-                    label="Collect Royal Fee"
-                    name="collectRoyalFee"
-                  />
-                </Box>
+              {mode === "add" && (
+                <Flex alignItems="center" minH={20} mt={5}>
+                  <Box w="15rem">
+                    <SimpleModeSwitch
+                      onChange={() => {
+                        values.collectRoyalFee = !values.collectRoyalFee;
+                        setIsSetRoyal(!isSetRoyal);
+                      }}
+                      label="Collect Royal Fee"
+                      name="collectRoyalFee"
+                    />
+                  </Box>
 
-                <AddCollectionNumberInput
-                  isDisabled={!isSetRoyal}
-                  isDisplay={isSetRoyal}
-                  label="Royal Fee %"
-                  name="royalFee"
-                  type="number"
-                  placeholder="Royal Fee"
-                />
-                <Spacer />
-              </Flex>
+                  <AddCollectionNumberInput
+                    isDisabled={!isSetRoyal}
+                    isDisplay={isSetRoyal}
+                    label="Royal Fee %"
+                    name="royalFee"
+                    type="number"
+                    placeholder="Royal Fee"
+                  />
+                  <Spacer />
+                </Flex>
+              )}
 
               <Button
                 variant="solid"

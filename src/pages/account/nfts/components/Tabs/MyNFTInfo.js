@@ -6,15 +6,14 @@ import {
   Grid,
   GridItem,
   Heading,
-  HStack,
   Spacer,
   Text,
-  VStack,
   Input,
   Image,
   InputGroup,
   InputRightElement,
   Progress,
+  Skeleton,
 } from "@chakra-ui/react";
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -45,12 +44,12 @@ function NFTTabInfo({
   const [askPrice, setAskPrice] = useState(10);
   const [isAllownceMarketplaceContract, setIsAllownceMarketplaceContract] =
     useState(false);
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     await checkAllowMarketplaceContract();
   }, [currentAccount]);
 
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkAllowMarketplaceContract = async () => {
     if (contractType === "2") {
       const nft721_psp34_standard_contract = new ContractPromise(
@@ -73,8 +72,8 @@ function NFTTabInfo({
       setIsAllownceMarketplaceContract(isAllownceMarketplaceContract);
     }
   };
- 
-  
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     await checkAllowMarketplaceContract();
   }, [checkAllowMarketplaceContract, currentAccount]);
@@ -126,23 +125,25 @@ function NFTTabInfo({
   };
 
   return (
-    <HStack>
-      <Image
-        boxShadow="lg"
-        boxSize="26rem"
-        alt="nft-img"
-        objectFit="cover"
-        src={`${IPFS_BASE_URL}/${avatar}`}
-        fallbackSrc="https://via.placeholder.com/480"
-      />
-      {console.log("is_for_sale", is_for_sale)}
-      <VStack
-        minH="30rem"
+    <Flex h="full">
+      <Box minW="30rem" bg="#372648">
+        <Image
+          w="full"
+          h="full"
+          boxShadow="lg"
+          alt="nft-img"
+          objectFit="cover"
+          src={`${IPFS_BASE_URL}/${avatar}`}
+          fallback={<Skeleton minW="30rem" />}
+        />
+      </Box>
+
+      <Flex
         w="full"
-        pl={10}
-        py={0}
-        justifyContent="start"
-        alignItems={"start"}
+        ml={10}
+        direction={"column"}
+        justifyContent="flex-start"
+        alignItems="flex-start"
       >
         <Box w="full">
           <Flex>
@@ -150,12 +151,12 @@ function NFTTabInfo({
             <Spacer />
           </Flex>
           <Heading size="h6" py={3} color="brand.grayLight">
-            {description} <br></br>
-            {owner}
+            {description}
           </Heading>
         </Box>
 
         <Grid
+          minH="10rem"
           pr={"0.25rem"}
           overflowY="auto"
           w="full"
@@ -177,12 +178,7 @@ function NFTTabInfo({
                 .filter((i) => !JSON.stringify(Object.values(i)).includes("|"))
                 .map((item) => {
                   return (
-                    <GridItem
-                      id="abc"
-                      w="100%"
-                      h="100%"
-                      _hover={{ bg: "brand.blue" }}
-                    >
+                    <GridItem w="100%" h="100%">
                       <Box
                         w="full"
                         textAlign="left"
@@ -192,9 +188,10 @@ function NFTTabInfo({
                         py={3}
                       >
                         <Flex w="full">
-                          <Text color="brand.grayLight">
+                          <Text color="brand.grayLight" w="full">
                             <Text>{Object.keys(item)[0]}</Text>
                             <Heading
+                              textAlign="right"
                               size="h6"
                               mt={1}
                               isTruncated
@@ -215,49 +212,49 @@ function NFTTabInfo({
                 })
             : ""}
         </Grid>
-        {console.log(
-          "isAllownceMarketplaceContract:",
-          isAllownceMarketplaceContract
-        )}
 
-        {attrsList?.length
-          ? attrsList
-              .filter((i) => JSON.stringify(Object.values(i)).includes("|"))
-              .map((item, idx) => {
-                return (
-                  <React.Fragment key={idx}>
-                    <Box
-                      w="full"
-                      textAlign="left"
-                      alignItems="end"
-                      bg="brand.semiBlack"
-                      p={5}
-                      mb={3}
-                    >
-                      <Flex w="full" mb={3}>
-                        <Heading size="h6" mt={1} color="#fff">
-                          {Object.keys(item)[0]}
-                        </Heading>
-                        <Spacer />
-                        <Text color="#fff">
-                          {Object.values(item)[0].slice(0, 1)} of{" "}
-                          {Object.values(item)[0].slice(-1)}
-                        </Text>
-                      </Flex>
-                      <Progress
-                        colorScheme="telegram"
-                        size="sm"
-                        value={Number(
-                          (Object.values(item)[0].slice(0, 1) * 100) /
-                            Object.values(item)[0].slice(-1)
-                        )}
-                        height="6px"
-                      />
-                    </Box>
-                  </React.Fragment>
-                );
-              })
-          : null}
+        <Flex w="full" justifyContent="space-around">
+          {attrsList?.length
+            ? attrsList
+                .filter((i) => JSON.stringify(Object.values(i)).includes("|"))
+                .map((item, idx) => {
+                  return (
+                    <React.Fragment key={idx}>
+                      <Box
+                        w="full"
+                        textAlign="left"
+                        alignItems="end"
+                        bg="brand.semiBlack"
+                        p={5}
+                        mb={3}
+                        mx={1}
+                      >
+                        <Flex w="full" mb={3}>
+                          <Heading size="h6" mt={1} color="#fff">
+                            {Object.keys(item)[0]}
+                          </Heading>
+                          <Spacer />
+                          <Text color="#fff">
+                            {Object.values(item)[0].slice(0, 1)} of{" "}
+                            {Object.values(item)[0].slice(-1)}
+                          </Text>
+                        </Flex>
+                        <Progress
+                          colorScheme="telegram"
+                          size="sm"
+                          value={Number(
+                            (Object.values(item)[0].slice(0, 1) * 100) /
+                              Object.values(item)[0].slice(-1)
+                          )}
+                          height="6px"
+                        />
+                      </Box>
+                    </React.Fragment>
+                  );
+                })
+            : null}
+        </Flex>
+
         {!is_for_sale && !isAllownceMarketplaceContract ? (
           <Flex w="full" py={2} alignItems="center" justifyContent="start">
             <Spacer />
@@ -326,7 +323,7 @@ function NFTTabInfo({
               <Text color="brand.grayLight">For Sale At</Text>
 
               <Text color="#fff" mx={2}>
-                {price / (10 ** 12)}
+                {price / 10 ** 12}
               </Text>
               <AzeroIcon />
             </Flex>
@@ -356,8 +353,8 @@ function NFTTabInfo({
             </Button>
           </Flex>
         )}
-      </VStack>
-    </HStack>
+      </Flex>
+    </Flex>
   );
 }
 
