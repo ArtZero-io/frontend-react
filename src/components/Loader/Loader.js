@@ -1,6 +1,6 @@
 import { Heading, Center, Spinner, Stack } from "@chakra-ui/react";
 
-const Loader = ({ addText = "", ...rest }) => {
+const CommonLoader = ({ addText = "", ...rest }) => {
   return (
     <Center width="100%" height="100%" minH="xl">
       <Stack direction="row" alignItems="center" spacing={2}>
@@ -20,4 +20,4 @@ const Loader = ({ addText = "", ...rest }) => {
   );
 };
 
-export default Loader;
+export default CommonLoader;

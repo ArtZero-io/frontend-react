@@ -130,9 +130,13 @@ const MintPage = () => {
             ))} */}
           </TabList>
           <TabPanels bg="#171717">
-            <TabPanel px={12} py={8}>
-              {loading ? <Loader /> : <NFTMintTab myAZNFTs={myAZNFTs} />}
-            </TabPanel>
+            {loading ? (
+              <Loader />
+            ) : (
+              <TabPanel px={12} py={8}>
+                <NFTMintTab myAZNFTs={myAZNFTs} />
+              </TabPanel>
+            )}
 
             {/* {tabData.map((tab, index) => (
               <TabPanel px={12} py={8} key={index}>

@@ -26,7 +26,8 @@ function MyNFTGroupCard({ name, avatarImage, listNFT, contractType }) {
     !item?.isStaked && onOpen();
   }
   useEffect(() => {
-    const data = listNFT.map((item) => {
+    const data = listNFT?.map((item) => {
+      console.log("MyNFTGroupCard item", item);
       const itemData = createObjAttrsNFT(item.attributes, item.attributesValue);
 
       return { ...item, ...itemData };
@@ -35,8 +36,7 @@ function MyNFTGroupCard({ name, avatarImage, listNFT, contractType }) {
     setListNFTFormatted(data);
   }, [listNFT]);
 
-
-console.log('listNFT', listNFT)
+  console.log("listNFT", listNFT);
 
   return (
     <Box my={10}>

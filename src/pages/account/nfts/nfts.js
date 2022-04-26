@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Flex,
@@ -9,38 +8,31 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+// import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+// import { delay } from "@utils";
+// import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+// import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
+// import { numberToU8a, stringToHex } from "@polkadot/util";
+// import { IPFS_BASE_URL } from "@constants/index";
+// import { ContractPromise } from "@polkadot/api-contract";
+// import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+// import { TypeRegistry, U64 } from "@polkadot/types";
+// import toast from "react-hot-toast";
 import React, { useEffect, useState } from "react";
-import { delay } from "@utils";
 import MyNFTGroupCard from "../components/Card/MyNFTGroup";
 import { useSubstrateState } from "@utils/substrate";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
-import { numberToU8a, stringToHex } from "@polkadot/util";
-import { IPFS_BASE_URL } from "@constants/index";
-import { ContractPromise } from "@polkadot/api-contract";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
-import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import { TypeRegistry, U64 } from "@polkadot/types";
 import { clientAPI } from "@api/client";
-import toast from "react-hot-toast";
 
 const MyNFTsPage = () => {
-  const { api, currentAccount } = useSubstrateState();
+  const { currentAccount } = useSubstrateState();
 
   const [myCollections, setMyCollections] = useState([]);
 
   const [filterSelected, setFilterSelected] = useState(0);
 
   function onClickHandler(v) {
-    //   const id = e.target.getAttribute("id");
-    //   let data;
-    // if (id === "collected") data = fakeAPI.collected;
-    // if (id === "listed") data = fakeAPI.listed;
-    // if (id === "bid") data = fakeAPI.bid;
-    //   setMyCollections(data);
-    //   setSelectedCollectionNo(id);
-
+    console.log("onClickHandler", v);
     setFilterSelected(v);
   }
 
@@ -53,7 +45,6 @@ const MyNFTsPage = () => {
           owner: currentAccount.address,
         }
       );
-
       const data = await Promise.all(
         allCollectionsOwned.map(async (collection) => {
           const options = {
@@ -63,8 +54,12 @@ const MyNFTsPage = () => {
             sort: -1,
           };
 
-          const dataList = await clientAPI("post", "/getNFTs", options);
-          console.log('getNFTs...')
+          let dataList = await clientAPI("post", "/getNFTs", options);
+
+          if (filterSelected === 1) {
+            dataList = dataList.filter((item) => item.is_for_sale === true);
+          }
+
           collection.listNFT = dataList;
 
           return collection;
@@ -75,7 +70,7 @@ const MyNFTsPage = () => {
     };
 
     fetchMyCollections();
-  }, [currentAccount.address]);
+  }, [currentAccount.address, filterSelected]);
 
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">
