@@ -18,10 +18,12 @@ import { useSubstrateState } from "@utils/substrate";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
 // import { IPFS_BASE_URL } from "@constants/index";
+import axios from 'axios';
 import { ContractPromise } from "@polkadot/api-contract";
 import BN from "bn.js";
 import { createObjAttrsNFT } from "@utils/index";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import process from "process";
 
 function CollectionPage() {
   const { collection_address } = useParams();
@@ -84,16 +86,18 @@ function CollectionPage() {
           }
         );
         console.log("2");
-        const [floorPrice] = await clientAPI("post", "/getFloorPrice", {
-          collection_address,
-        });
-
-        collectionDetail.floorPrice = floorPrice || 0;
-
-        const NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
-        console.log('xxx NFTList', NFTList)
-        collectionDetail.floorPrice = floorPrice?.price || 0;
-        collectionDetail.nftTotalCount = NFTList?.length;
+        console.log(collectionDetail);
+       
+          const [floorPrice] = await clientAPI("post", "/getFloorPrice", {
+            collection_address,
+          });
+  
+          collectionDetail.floorPrice = floorPrice || 0;
+  
+          const NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
+  
+          collectionDetail.floorPrice = floorPrice?.price || 0;
+          collectionDetail.nftTotalCount = NFTList?.length;
         if (collectionDetail.contractType == 2) {
           Promise.all(
             NFTList.map((item) => {
@@ -118,14 +122,18 @@ function CollectionPage() {
           const gasLimit = -1;
           const azero_value = 0;
           const { result, output } = await nft_contract.query['getTokenCount'](currentAccount.address, { value: azero_value, gasLimit });
+          console.log(result, output);
           if (result.isOk) {
             const token_count = new BN(output, 10, "le").toNumber();
             console.log(token_count);
             collectionDetail.nftTotalCount = token_count;
             if (token_count) {
-              let NFTListFormattedAdv = [];
               for (let i = 1; i <= token_count; i++) {
+                console.log(nft_contract.query);
+                console.log(i);
                const token_id = new U64(new TypeRegistry(), i);
+               console.log(token_id);
+               console.log(nft_contract.query);
                 const { result, output } = await nft_contract.query["psp34Traits::tokenUri"](
                   currentAccount.address,
                   { value: azero_value, gasLimit },
@@ -134,35 +142,15 @@ function CollectionPage() {
                 
                 if (result.isOk) {
                   const token_uri = output.toHuman();
-                  const metadata = await clientAPI(
-                    "get",
-                    "/getJSON?input=" +
-                      token_uri,
-                    {}
-                  );
-                  let nftItem = NFTList[i-1];
-                  let attributeLabels = [];
-                  let attributeVals = [];
-                  let attrsList = [];
-                  for (let attribute of metadata.attributes) {
-                    attributeLabels.push(attribute.trait_type);
-                    attributeVals.push(attribute.value);
-                    attrsList.push(createObjAttrsNFT(
-                      attributeLabels,
-                      attributeVals
-                    ));
-                  }
-                  nftItem.attributes = attributeLabels;
-                  nftItem.attributesValue = attributeLabels;
-                  nftItem.attrsList = attrsList;
-                  nftItem.nftName = metadata.name;
-                  nftItem.description = metadata.description;
-                  nftItem.avatar = metadata.image.replace("ipfs://", "");
-                  NFTListFormattedAdv.push(nftItem);
+                  const token_info_api = process.env.REACT_APP_API_BASE_URL + '/getJSON?input=' + token_uri; 
+                  axios.get(token_info_api)
+                  .then(async (response) => {
+                    console.log(response);
+                    console.log(collectionDetail);
+                    
+                  })
                 }
-                collectionDetail.NFTListFormatted = NFTListFormattedAdv;
               }
-              setFormattedCollection(collectionDetail);
             }
           }
         }
@@ -182,6 +170,7 @@ function CollectionPage() {
       formattedCollection?.nftList?.filter((i) => i.is_for_sale === false);
   }, [formattedCollection, isShowUnlisted]);
 
+  console.log("xx> formattedCollection", formattedCollection);
 
   const tabData = [
     {
