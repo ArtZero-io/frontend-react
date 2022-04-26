@@ -31,6 +31,8 @@ import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
 
 import staking_calls from "@utils/blockchain/staking_calls";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+import BN from "bn.js";
 
 function GeneralPage() {
   const history = useHistory();
@@ -40,7 +42,7 @@ function GeneralPage() {
   const [nftList, setNftList] = useState(null);
   const [totalStaked, setTotalStaked] = useState(null);
   const [dashboardInfo, setDashboardInfo] = useState(null);
-
+  const [tradeFee,setTradeFee] = useState(3);
   useEffect(() => {
     const fetchAllNfts = async () => {
       const options = {
@@ -92,6 +94,23 @@ function GeneralPage() {
     ) {
       fetchAllNfts();
     }
+    const getTradeFee = async () =>{
+      let my_total_staked_az_nfts = await staking_calls.getTotalStakedByAccount(currentAccount,currentAccount.address);
+      let stakingDiscountCriteria = await marketplace_contract_calls.getStakingDiscountCriteria(currentAccount);
+      let stakingDiscountRate = await marketplace_contract_calls.getStakingDiscountRate(currentAccount);
+      let my_discount_rate = await marketplace_contract_calls.getPlatformFee(currentAccount)/100;
+      let length = stakingDiscountRate.length;
+
+      for (var index= 0;index<length;index++) {
+          if (my_total_staked_az_nfts >= new BN(stakingDiscountCriteria[index]).toNumber()){
+               my_discount_rate = my_discount_rate * (10000 - new BN(stakingDiscountRate[index]).toNumber())/10000;
+               break;
+          }
+      }
+      setTradeFee(my_discount_rate);
+    }
+    getTradeFee();
+
   }, [currentAccount, dashboardInfo, nftList]);
 
   return (
@@ -225,10 +244,7 @@ function GeneralPage() {
               <Spacer />
               <Box variant="outline" h={32} w={36}>
                 <Tag variant="outline" h={6} w={40} mt={3}>
-                  <TagLabel>Market Fees: 3.0%</TagLabel>
-                </Tag>
-                <Tag variant="outline" h={6} w={40} mt={3}>
-                  <TagLabel>Discount Fees: 2.1%</TagLabel>
+                  <TagLabel>Trade Fees: {tradeFee}%</TagLabel>
                 </Tag>
               </Box>
             </Flex>

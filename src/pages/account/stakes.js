@@ -59,11 +59,12 @@ const MyStakesPage = () => {
 
     let stakingDiscountCriteria = await marketplace_contract_calls.getStakingDiscountCriteria(currentAccount);
     let stakingDiscountRate = await marketplace_contract_calls.getStakingDiscountRate(currentAccount);
-    let my_discount_rate = 0;
+    let my_discount_rate = await marketplace_contract_calls.getPlatformFee(currentAccount)/100;
     let length = stakingDiscountRate.length;
+
     for (var index= 0;index<length;index++) {
         if (my_total_staked_az_nfts >= new BN(stakingDiscountCriteria[index]).toNumber()){
-             my_discount_rate = (10000 - new BN(stakingDiscountRate[index]).toNumber())/100;
+             my_discount_rate = my_discount_rate * (10000 - new BN(stakingDiscountRate[index]).toNumber())/10000;
              break;
         }
     }
