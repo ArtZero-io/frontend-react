@@ -10,15 +10,18 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+// eslint-disable-next-line no-unused-vars
 import NFTModal from "../../nfts/components/Modal/MyNFT";
 import MyNFTCard from "./MyNFT";
 import { IPFS_BASE_URL } from "@constants/index";
 import { createObjAttrsNFT } from "@utils/index";
+import ResponsivelySizedModal from "../../../../components/Modal/Modal";
 
 function MyNFTGroupCard({ name, avatarImage, listNFT, contractType }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedNFT, setSelectedNFT] = useState(null);
+
   const [listNFTFormatted, setListNFTFormatted] = useState(null);
 
   function onClickHandler(item) {
@@ -36,19 +39,26 @@ function MyNFTGroupCard({ name, avatarImage, listNFT, contractType }) {
     setListNFTFormatted(data);
   }, [listNFT]);
 
-  console.log("listNFT", listNFT);
-
   return (
     <Box my={10}>
-      <NFTModal
+      {/* <NFTModal
+        contractType={contractType}
+        {...selectedNFT}
+        isOpen={isOpen}
+        onClose={onClose}
+      /> */}
+      <ResponsivelySizedModal
         contractType={contractType}
         {...selectedNFT}
         isOpen={isOpen}
         onClose={onClose}
       />
-
       <Flex>
-        <Avatar size={"lg"} src={`${IPFS_BASE_URL}/${avatarImage}`} />
+        <Avatar
+          size={"lg"}
+          src={`${IPFS_BASE_URL}/${avatarImage}`}
+          bg="#372648"
+        />
         <VStack align="start" ml={3} justifyContent="center">
           <Heading size="h6">{name}</Heading>
           <Text textAlign="left" color="brand.grayLight" size="2xs">

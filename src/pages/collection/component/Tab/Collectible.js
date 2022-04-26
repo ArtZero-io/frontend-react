@@ -280,7 +280,7 @@ const NFTTabCollectible = ({
   };
 
   return (
-    <HStack justifyContent='space-between'>
+    <HStack justifyContent="space-between">
       <Image
         alt={nftName}
         boxShadow="lg"
@@ -454,7 +454,7 @@ const NFTTabCollectible = ({
                 .filter((i) => !JSON.stringify(Object.values(i)).includes("|"))
                 .map((item) => {
                   return (
-                    <GridItem id="abc" w="100%" h="100%">
+                    <GridItem w="100%" h="100%">
                       <Box
                         w="full"
                         textAlign="left"

@@ -125,12 +125,7 @@ const NFTTabInfo = ({
         >
           {nft_detail.atts.map((item) => {
             return (
-              <GridItem
-                id="abc"
-                w="100%"
-                h="100%"
-                _hover={{ bg: "brand.blue" }}
-              >
+              <GridItem w="100%" h="100%">
                 <Box w="full" textAlign="left" bg="black" px={4} py={3}>
                   <Flex w="full">
                     <Text color="brand.grayLight">

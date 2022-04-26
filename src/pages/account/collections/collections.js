@@ -48,6 +48,9 @@ function MyCollectionsPage() {
     const fetchCollectionsOwned = async () => {
       const options = {
         owner: currentAccount.address,
+        limit: 6,
+        sort: -1,
+        offset: 0,
       };
 
       try {

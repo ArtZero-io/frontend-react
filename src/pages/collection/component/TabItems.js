@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Input,
-  Text,
-  Spacer,
-  IconButton,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Text, Spacer, IconButton } from "@chakra-ui/react";
 
 import React, { useState } from "react";
 
@@ -54,13 +46,13 @@ const CollectionItems = ({
         >
           {isShowUnlisted ? "Show all" : "Show unlisted"}
         </Button>
-
+        {/* 
         <Input
           ml={1.5}
           mr={3}
           placeholder="Search items, collections, and accounts"
-        />
-
+        /> */}
+        <Spacer />
         <Dropdown
           mx={1.5}
           options={options}
