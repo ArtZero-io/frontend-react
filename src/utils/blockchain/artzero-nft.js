@@ -1,8 +1,8 @@
 const artzero_nft = {
-  CONTRACT_ADDRESS: "5Fh3mCpEwqbSRp6maQdu4fCsDCNXnpk7Yj124vBg9ntTK5wM",
+  CONTRACT_ADDRESS: "5EY8p1EZcP45iJdXvBvoAp7dsxCE8jusnXKda1BtsVPuDRMF",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xbe4d05af6a58351d7e542d3353921ce7985d6e4dffe38ea85f3681e61bddbeda",
+      "hash": "0xee31bc8e91dc70d96e1a21f040dcb8249bb98b1282f1cdb7461d47c8d14b1130",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -276,32 +276,6 @@ const artzero_nft = {
           {
             "args": [
               {
-                "label": "uri",
-                "type": {
-                  "displayName": [
-                    "String"
-                  ],
-                  "type": 27
-                }
-              }
-            ],
-            "docs": [
-              " Change baseURI"
-            ],
-            "label": "set_base_uri",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "Result"
-              ],
-              "type": 28
-            },
-            "selector": "0xec403dee"
-          },
-          {
-            "args": [
-              {
                 "label": "mint_amount",
                 "type": {
                   "displayName": [
@@ -338,32 +312,6 @@ const artzero_nft = {
               "type": 28
             },
             "selector": "0xe4daf8b8"
-          },
-          {
-            "args": [
-              {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "u64"
-                  ],
-                  "type": 5
-                }
-              }
-            ],
-            "docs": [
-              " Get URI from token ID"
-            ],
-            "label": "token_uri",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "String"
-              ],
-              "type": 27
-            },
-            "selector": "0x5b64e66a"
           },
           {
             "args": [],
@@ -548,125 +496,6 @@ const artzero_nft = {
           {
             "args": [
               {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "Id"
-                  ],
-                  "type": 1
-                }
-              },
-              {
-                "label": "attributes",
-                "type": {
-                  "displayName": [
-                    "Vec"
-                  ],
-                  "type": 30
-                }
-              },
-              {
-                "label": "values",
-                "type": {
-                  "displayName": [
-                    "Vec"
-                  ],
-                  "type": 30
-                }
-              }
-            ],
-            "docs": [
-              "Only Owner can set multiple attributes to a token"
-            ],
-            "label": "set_multiple_attributes",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "Result"
-              ],
-              "type": 28
-            },
-            "selector": "0x8119d25e"
-          },
-          {
-            "args": [
-              {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "Id"
-                  ],
-                  "type": 1
-                }
-              },
-              {
-                "label": "attributes",
-                "type": {
-                  "displayName": [
-                    "Vec"
-                  ],
-                  "type": 30
-                }
-              }
-            ],
-            "docs": [],
-            "label": "get_attributes",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "Vec"
-              ],
-              "type": 30
-            },
-            "selector": "0x8d76b3fe"
-          },
-          {
-            "args": [],
-            "docs": [
-              "Get Attribute Count"
-            ],
-            "label": "get_attribute_count",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 5
-            },
-            "selector": "0x0f130254"
-          },
-          {
-            "args": [
-              {
-                "label": "index",
-                "type": {
-                  "displayName": [
-                    "u64"
-                  ],
-                  "type": 5
-                }
-              }
-            ],
-            "docs": [
-              "Get Attribute Name"
-            ],
-            "label": "get_attribute_name",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "String"
-              ],
-              "type": 27
-            },
-            "selector": "0x560b979d"
-          },
-          {
-            "args": [
-              {
                 "label": "value",
                 "type": {
                   "displayName": [
@@ -701,9 +530,24 @@ const artzero_nft = {
                 "ownable_external",
                 "RenounceOwnershipOutput"
               ],
-              "type": 31
+              "type": 30
             },
             "selector": "0x5e228753"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 8
+            },
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [
@@ -727,24 +571,157 @@ const artzero_nft = {
                 "ownable_external",
                 "TransferOwnershipOutput"
               ],
-              "type": 31
+              "type": 30
             },
             "selector": "0x11f43efd"
           },
           {
-            "args": [],
+            "args": [
+              {
+                "label": "owner",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "BalanceOfInput1"
+                  ],
+                  "type": 8
+                }
+              }
+            ],
             "docs": [],
-            "label": "Ownable::owner",
+            "label": "PSP34::balance_of",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "ownable_external",
-                "OwnerOutput"
+                "psp34_external",
+                "BalanceOfOutput"
               ],
-              "type": 8
+              "type": 4
             },
-            "selector": "0x4fa43c8c"
+            "selector": "0xcde7e55f"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "PSP34::collection_id",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "CollectionIdOutput"
+              ],
+              "type": 1
+            },
+            "selector": "0xffa27a5f"
+          },
+          {
+            "args": [
+              {
+                "label": "owner",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput1"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "operator",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput2"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput3"
+                  ],
+                  "type": 14
+                }
+              }
+            ],
+            "docs": [],
+            "label": "PSP34::allowance",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "AllowanceOutput"
+              ],
+              "type": 32
+            },
+            "selector": "0x4790f55a"
+          },
+          {
+            "args": [
+              {
+                "label": "operator",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput1"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput2"
+                  ],
+                  "type": 14
+                }
+              },
+              {
+                "label": "approved",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput3"
+                  ],
+                  "type": 32
+                }
+              }
+            ],
+            "docs": [],
+            "label": "PSP34::approve",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "ApproveOutput"
+              ],
+              "type": 33
+            },
+            "selector": "0x1932a8b0"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "PSP34::total_supply",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "TotalSupplyOutput"
+              ],
+              "type": 6
+            },
+            "selector": "0x628413fe"
           },
           {
             "args": [
@@ -793,21 +770,6 @@ const artzero_nft = {
             "selector": "0x3128d61b"
           },
           {
-            "args": [],
-            "docs": [],
-            "label": "PSP34::total_supply",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "TotalSupplyOutput"
-              ],
-              "type": 6
-            },
-            "selector": "0x628413fe"
-          },
-          {
             "args": [
               {
                 "label": "id",
@@ -832,139 +794,6 @@ const artzero_nft = {
               "type": 20
             },
             "selector": "0x1168624d"
-          },
-          {
-            "args": [
-              {
-                "label": "owner",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "BalanceOfInput1"
-                  ],
-                  "type": 8
-                }
-              }
-            ],
-            "docs": [],
-            "label": "PSP34::balance_of",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "BalanceOfOutput"
-              ],
-              "type": 4
-            },
-            "selector": "0xcde7e55f"
-          },
-          {
-            "args": [
-              {
-                "label": "owner",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput1"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "operator",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput2"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput3"
-                  ],
-                  "type": 14
-                }
-              }
-            ],
-            "docs": [],
-            "label": "PSP34::allowance",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "AllowanceOutput"
-              ],
-              "type": 35
-            },
-            "selector": "0x4790f55a"
-          },
-          {
-            "args": [
-              {
-                "label": "operator",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput1"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput2"
-                  ],
-                  "type": 14
-                }
-              },
-              {
-                "label": "approved",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput3"
-                  ],
-                  "type": 35
-                }
-              }
-            ],
-            "docs": [],
-            "label": "PSP34::approve",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "ApproveOutput"
-              ],
-              "type": 33
-            },
-            "selector": "0x1932a8b0"
-          },
-          {
-            "args": [],
-            "docs": [],
-            "label": "PSP34::collection_id",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "CollectionIdOutput"
-              ],
-              "type": 1
-            },
-            "selector": "0xffa27a5f"
           },
           {
             "args": [
@@ -1034,9 +863,35 @@ const artzero_nft = {
                 "psp34metadata_external",
                 "GetAttributeOutput"
               ],
-              "type": 36
+              "type": 35
             },
             "selector": "0xf19d48d1"
+          },
+          {
+            "args": [
+              {
+                "label": "index",
+                "type": {
+                  "displayName": [
+                    "psp34enumerable_external",
+                    "TokenByIndexInput1"
+                  ],
+                  "type": 6
+                }
+              }
+            ],
+            "docs": [],
+            "label": "PSP34Enumerable::token_by_index",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34enumerable_external",
+                "TokenByIndexOutput"
+              ],
+              "type": 36
+            },
+            "selector": "0xcd0340d0"
           },
           {
             "args": [
@@ -1070,9 +925,166 @@ const artzero_nft = {
                 "psp34enumerable_external",
                 "OwnersTokenByIndexOutput"
               ],
-              "type": 37
+              "type": 36
             },
             "selector": "0x3bcfb511"
+          },
+          {
+            "args": [
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "SetMultipleAttributesInput1"
+                  ],
+                  "type": 1
+                }
+              },
+              {
+                "label": "attributes",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "SetMultipleAttributesInput2"
+                  ],
+                  "type": 37
+                }
+              },
+              {
+                "label": "values",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "SetMultipleAttributesInput3"
+                  ],
+                  "type": 37
+                }
+              }
+            ],
+            "docs": [
+              "Only Owner can set multiple attributes to a token"
+            ],
+            "label": "Psp34Traits::set_multiple_attributes",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "SetMultipleAttributesOutput"
+              ],
+              "type": 28
+            },
+            "selector": "0x5bf8416b"
+          },
+          {
+            "args": [
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "TokenUriInput1"
+                  ],
+                  "type": 5
+                }
+              }
+            ],
+            "docs": [
+              " Get URI from token ID"
+            ],
+            "label": "Psp34Traits::token_uri",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "TokenUriOutput"
+              ],
+              "type": 27
+            },
+            "selector": "0x249dfd4f"
+          },
+          {
+            "args": [],
+            "docs": [
+              "Get Attribute Count"
+            ],
+            "label": "Psp34Traits::get_attribute_count",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "GetAttributeCountOutput"
+              ],
+              "type": 4
+            },
+            "selector": "0x61c50d69"
+          },
+          {
+            "args": [
+              {
+                "label": "uri",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "SetBaseUriInput1"
+                  ],
+                  "type": 27
+                }
+              }
+            ],
+            "docs": [
+              " Change baseURI"
+            ],
+            "label": "Psp34Traits::set_base_uri",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "SetBaseUriOutput"
+              ],
+              "type": 28
+            },
+            "selector": "0x4de6850b"
+          },
+          {
+            "args": [
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "GetAttributesInput1"
+                  ],
+                  "type": 1
+                }
+              },
+              {
+                "label": "attributes",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "GetAttributesInput2"
+                  ],
+                  "type": 37
+                }
+              }
+            ],
+            "docs": [],
+            "label": "Psp34Traits::get_attributes",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "GetAttributesOutput"
+              ],
+              "type": 37
+            },
+            "selector": "0x18209102"
           },
           {
             "args": [
@@ -1080,25 +1092,27 @@ const artzero_nft = {
                 "label": "index",
                 "type": {
                   "displayName": [
-                    "psp34enumerable_external",
-                    "TokenByIndexInput1"
+                    "psp34traits_external",
+                    "GetAttributeNameInput1"
                   ],
-                  "type": 6
+                  "type": 4
                 }
               }
             ],
-            "docs": [],
-            "label": "PSP34Enumerable::token_by_index",
+            "docs": [
+              "Get Attribute Name"
+            ],
+            "label": "Psp34Traits::get_attribute_name",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "psp34enumerable_external",
-                "TokenByIndexOutput"
+                "psp34traits_external",
+                "GetAttributeNameOutput"
               ],
-              "type": 37
+              "type": 27
             },
-            "selector": "0xcd0340d0"
+            "selector": "0xfcfe34de"
           }
         ]
       },
@@ -1348,7 +1362,7 @@ const artzero_nft = {
               "layout": {
                 "cell": {
                   "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 5
+                  "ty": 4
                 }
               },
               "name": "attribute_count"
@@ -1944,7 +1958,7 @@ const artzero_nft = {
             "params": [
               {
                 "name": "K",
-                "type": 5
+                "type": 4
               },
               {
                 "name": "V",
@@ -2193,16 +2207,6 @@ const artzero_nft = {
           "id": 30,
           "type": {
             "def": {
-              "sequence": {
-                "type": 27
-              }
-            }
-          }
-        },
-        {
-          "id": 31,
-          "type": {
-            "def": {
               "variant": {
                 "variants": [
                   {
@@ -2217,7 +2221,7 @@ const artzero_nft = {
                   {
                     "fields": [
                       {
-                        "type": 32
+                        "type": 31
                       }
                     ],
                     "index": 1,
@@ -2233,7 +2237,7 @@ const artzero_nft = {
               },
               {
                 "name": "E",
-                "type": 32
+                "type": 31
               }
             ],
             "path": [
@@ -2242,7 +2246,7 @@ const artzero_nft = {
           }
         },
         {
-          "id": 32,
+          "id": 31,
           "type": {
             "def": {
               "variant": {
@@ -2265,6 +2269,14 @@ const artzero_nft = {
               "ownable",
               "OwnableError"
             ]
+          }
+        },
+        {
+          "id": 32,
+          "type": {
+            "def": {
+              "primitive": "bool"
+            }
           }
         },
         {
@@ -2367,14 +2379,6 @@ const artzero_nft = {
           "id": 35,
           "type": {
             "def": {
-              "primitive": "bool"
-            }
-          }
-        },
-        {
-          "id": 36,
-          "type": {
-            "def": {
               "variant": {
                 "variants": [
                   {
@@ -2405,7 +2409,7 @@ const artzero_nft = {
           }
         },
         {
-          "id": 37,
+          "id": 36,
           "type": {
             "def": {
               "variant": {
@@ -2444,6 +2448,16 @@ const artzero_nft = {
             "path": [
               "Result"
             ]
+          }
+        },
+        {
+          "id": 37,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 27
+              }
+            }
           }
         }
       ]
