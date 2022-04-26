@@ -17,10 +17,10 @@ export function isValidImage(imageUrl) {
 
 export function convertStringToPrice(stringPrice) {
   try {
-     /* eslint-disable no-useless-escape */
-     const a = stringPrice.replace(/\,/g,'');
-     let price = new BN(a, 10).toNumber();
-     return price / (10 ** 12);
+    /* eslint-disable no-useless-escape */
+    const a = stringPrice.replace(/\,/g, "");
+    let price = new BN(a, 10).toNumber();
+    return price / 10 ** 12;
   } catch (error) {
     console.log(error);
     return 0;
@@ -29,9 +29,9 @@ export function convertStringToPrice(stringPrice) {
 
 export function convertStringToDateTime(stringTimeStamp) {
   /* eslint-disable no-useless-escape */
-  const a = stringTimeStamp.replace(/\,/g,'');
-  const dateObject = new Date(a)
-  return dateObject.toLocaleString() //2019-12-9 10:30:15
+  const a = stringTimeStamp.replace(/\,/g, "");
+  const dateObject = new Date(a);
+  return dateObject.toLocaleString(); //2019-12-9 10:30:15
 }
 
 export function isValidAddressPolkadotAddress(address) {
@@ -151,6 +151,8 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
 }
 
 export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
+  console.log("createObjAttrsNFT attrsArr", attrsArr);
+  console.log("createObjAttrsNFT attrsValArr", attrsValArr);
   if (attrsArr.length !== 0 && attrsArr.length === attrsValArr.length) {
     let result = {};
 
@@ -159,8 +161,8 @@ export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
     result.avatar = attrsValArr[2];
 
     const attrsList = attrsArr.slice(3, attrsArr.length);
-    const attrsValList = attrsValArr.slice(2, attrsArr.length);
-    
+    const attrsValList = attrsValArr.slice(3, attrsArr.length);
+
     const formatList = Object.assign(
       [...attrsList].map((v, i) => ({ [v]: attrsValList[i] }))
     );

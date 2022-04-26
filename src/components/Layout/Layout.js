@@ -8,15 +8,15 @@ const Layout = ({ backdrop, children }) => {
     <Container
       id="layout-container"
       maxW="container.3xl"
-      height="100vh"
+      minH="100vh"
       px={{ sm: "0" }}
       position="relative"
     >
       <Flex
         id="image-wrapper"
         position="absolute"
+        top={30}
         insetX="0"
-        insetY="0"
         w="full"
         h={backdrop ? "xl" : "full"}
         overflow="hidden"
@@ -29,15 +29,12 @@ const Layout = ({ backdrop, children }) => {
             alt="bg-heroFull"
             w="full"
             h="full"
-            objectFit="cover"
-            objectPosition="top bottom"
-            position="absolute"
           />
           <Box position="absolute" w="full" h="full" bg="blackAlpha.600" />
         </Box>
       </Flex>
 
-      <Navbar/>
+      <Navbar />
 
       <Fade in="true" delay={0.15}>
         {children}
