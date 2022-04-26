@@ -62,6 +62,7 @@ function MintHeader() {
       else setBalance(0);
     };
     onGetBalance();
+    onGetWhiteList();
   }, [currentAccount]);
 
   const onGetWhiteList = async (e) => {
@@ -105,7 +106,7 @@ function MintHeader() {
       toast.error("Your balance is low.");
       return;
     }
-    await artzero_nft_calls.whitelistMint(currentAccount, whitelistAmount);
+    await artzero_nft_calls.whitelistMint(currentAccount, whitelistAmount, dispatch);
     await delay(10000);
     await onRefresh();
   };
