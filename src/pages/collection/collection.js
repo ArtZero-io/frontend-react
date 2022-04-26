@@ -18,14 +18,15 @@ import { useSubstrateState } from "@utils/substrate";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
 // import { IPFS_BASE_URL } from "@constants/index";
-import axios from "axios";
+
 import { ContractPromise } from "@polkadot/api-contract";
 import BN from "bn.js";
 import { createObjAttrsNFT } from "@utils/index";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import process from "process";
+// import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+
 import { delay } from "../../utils";
 import Loader from "@components/Loader/Loader";
+import artzero_nft from "@utils/blockchain/artzero-nft";
 
 function CollectionPage() {
   const { collection_address } = useParams();
@@ -100,7 +101,7 @@ function CollectionPage() {
         console.log("xxx NFTList", NFTList);
         collectionDetail.floorPrice = floorPrice?.price || 0;
         collectionDetail.nftTotalCount = NFTList?.length;
-        if (collectionDetail.contractType === "2") {
+        if (collectionDetail.contractType == "2") {
           Promise.all(
             NFTList.map((item) => {
               const itemData = createObjAttrsNFT(
@@ -116,12 +117,12 @@ function CollectionPage() {
             setFormattedCollection(collectionDetail);
           });
         } else if (
-          collectionDetail.contractType === "1" &&
+          collectionDetail.contractType == "1" &&
           !collectionDetail.showOnChainMetadata
         ) {
           const nft_contract = new ContractPromise(
             api,
-            nft721_psp34_standard.CONTRACT_ABI,
+            artzero_nft.CONTRACT_ABI,
             collectionDetail.nftContractAddress
           );
           const gasLimit = -1;
@@ -130,38 +131,54 @@ function CollectionPage() {
             currentAccount.address,
             { value: azero_value, gasLimit }
           );
-          console.log(result, output);
           if (result.isOk) {
             const token_count = new BN(output, 10, "le").toNumber();
-            console.log(token_count);
             collectionDetail.nftTotalCount = token_count;
             if (token_count) {
+              let NFTListFormattedAdv = [];
               for (let i = 1; i <= token_count; i++) {
-                console.log(nft_contract.query);
-                console.log(i);
                 const token_id = new U64(new TypeRegistry(), i);
-                console.log(token_id);
-                console.log(nft_contract.query);
-                const { result, output } = await nft_contract.query[
-                  "psp34Traits::tokenUri"
-                ](
+                const { result, output } = await nft_contract.query["tokenUri"](
                   currentAccount.address,
                   { value: azero_value, gasLimit },
                   token_id
                 );
-
                 if (result.isOk) {
                   const token_uri = output.toHuman();
-                  const token_info_api =
-                    process.env.REACT_APP_API_BASE_URL +
+                  const metadata = await clientAPI(
+                    "get",
                     "/getJSON?input=" +
-                    token_uri;
-                  axios.get(token_info_api).then(async (response) => {
-                    console.log(response);
-                    console.log(collectionDetail);
-                  });
+                      token_uri,
+                    {}
+                  );
+                  if (metadata) {
+                    let nftItem = NFTList[i-1];
+                    let attributeLabels = [];
+                    let attributeVals = [];
+                    let attrsList = [];
+                    if (metadata.attributes.length) {
+                      for (let attribute of metadata.attributes) {
+                        attributeLabels.push(attribute.trait_type);
+                        attributeVals.push(attribute.value);
+                        attrsList.push(createObjAttrsNFT(
+                          attributeLabels,
+                          attributeVals
+                        ));
+                      }
+                    }
+                    
+                    nftItem.attributes = attributeLabels;
+                    nftItem.attributesValue = attributeLabels;
+                    nftItem.attrsList = attrsList;
+                    nftItem.nftName = metadata.name;
+                    nftItem.description = metadata.description;
+                    nftItem.avatar = metadata.image.replace("ipfs://", "");
+                    NFTListFormattedAdv.push(nftItem);
+                  }
                 }
+                collectionDetail.NFTListFormatted = NFTListFormattedAdv;
               }
+              setFormattedCollection(collectionDetail);
             }
           }
         }
