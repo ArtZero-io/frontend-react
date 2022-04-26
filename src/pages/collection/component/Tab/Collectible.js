@@ -82,17 +82,20 @@ const NFTTabCollectible = ({
         nftContractAddress,
         { u64: tokenID }
       );
-      console.log(sale_info);
-      const listBidder = await marketplace_contract_calls.getAllBids(
-        currentAccount,
-        nftContractAddress,
-        sale_info.nftOwner,
-        { u64: tokenID }
-      );
-      for (const item of listBidder) {
-        if (item.bidder == currentAccount.address) {
-          setIsBided(true);
-          setBidPrice(convertStringToPrice(item.bidValue));
+      if (sale_info) {
+        const listBidder = await marketplace_contract_calls.getAllBids(
+          currentAccount,
+          nftContractAddress,
+          sale_info.nftOwner,
+          { u64: tokenID }
+        );
+        if (listBidder.length) {
+          for (const item of listBidder) {
+            if (item.bidder == currentAccount.address) {
+              setIsBided(true);
+              setBidPrice(convertStringToPrice(item.bidValue));
+            }
+          }
         }
       }
       setIsLoaded(true);
@@ -104,22 +107,31 @@ const NFTTabCollectible = ({
     const { data: balance } = await api.query.system.account(
       currentAccount.address
     );
-
-    marketplace_contract_calls.setMarketplaceContract(
-      api,
-      contractData.marketplace
+    const sale_info = await marketplace_contract_calls.getNftSaleInfo(
+      currentAccount,
+      nftContractAddress,
+      { u64: tokenID }
     );
-
-    if (balance.free.toNumber() > price) {
-      await marketplace_contract_calls.buy(
-        currentAccount,
-        nftContractAddress,
-        { u64: tokenID },
-        price
+    if (sale_info) {
+      marketplace_contract_calls.setMarketplaceContract(
+        api,
+        contractData.marketplace
       );
+  
+      if (balance.free.toNumber() > price) {
+        await marketplace_contract_calls.buy(
+          currentAccount,
+          nftContractAddress,
+          { u64: tokenID },
+          price
+        );
+      } else {
+        toast.error(`Your balance not enough!`);
+      }
     } else {
-      toast.error(`Your balance not enough!`);
+      toast.error(`This NFT not listed!`);
     }
+    
   };
 
   // const loadNFT = async () => {

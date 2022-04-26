@@ -1,8 +1,8 @@
 const artzero_nft = {
-  CONTRACT_ADDRESS: "5D713Ab5UQN636PfBcTeie18mvnxLmsTPrg8W8M5n7UZh9SS",
+  CONTRACT_ADDRESS: "5Fh3mCpEwqbSRp6maQdu4fCsDCNXnpk7Yj124vBg9ntTK5wM",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x573e433b7290c3314b011a0c876a7d44ac2ffcc578856bd9441861513f6ab08e",
+      "hash": "0xbe4d05af6a58351d7e542d3353921ce7985d6e4dffe38ea85f3681e61bddbeda",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -416,6 +416,22 @@ const artzero_nft = {
           {
             "args": [],
             "docs": [
+              " token_count: get token count"
+            ],
+            "label": "get_token_count",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 5
+            },
+            "selector": "0x744362af"
+          },
+          {
+            "args": [],
+            "docs": [
               " amount_1: To what amount the fee_1 is applied, after that fee_2"
             ],
             "label": "get_amount_1",
@@ -675,6 +691,21 @@ const artzero_nft = {
             "selector": "0x07fdb555"
           },
           {
+            "args": [],
+            "docs": [],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 31
+            },
+            "selector": "0x5e228753"
+          },
+          {
             "args": [
               {
                 "label": "new_owner",
@@ -714,36 +745,6 @@ const artzero_nft = {
               "type": 8
             },
             "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [],
-            "docs": [],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 31
-            },
-            "selector": "0x5e228753"
-          },
-          {
-            "args": [],
-            "docs": [],
-            "label": "PSP34::collection_id",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "CollectionIdOutput"
-              ],
-              "type": 1
-            },
-            "selector": "0xffa27a5f"
           },
           {
             "args": [
@@ -809,6 +810,32 @@ const artzero_nft = {
           {
             "args": [
               {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "OwnerOfInput1"
+                  ],
+                  "type": 1
+                }
+              }
+            ],
+            "docs": [],
+            "label": "PSP34::owner_of",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "OwnerOfOutput"
+              ],
+              "type": 20
+            },
+            "selector": "0x1168624d"
+          },
+          {
+            "args": [
+              {
                 "label": "owner",
                 "type": {
                   "displayName": [
@@ -831,52 +858,6 @@ const artzero_nft = {
               "type": 4
             },
             "selector": "0xcde7e55f"
-          },
-          {
-            "args": [
-              {
-                "label": "operator",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput1"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput2"
-                  ],
-                  "type": 14
-                }
-              },
-              {
-                "label": "approved",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput3"
-                  ],
-                  "type": 35
-                }
-              }
-            ],
-            "docs": [],
-            "label": "PSP34::approve",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "ApproveOutput"
-              ],
-              "type": 33
-            },
-            "selector": "0x1932a8b0"
           },
           {
             "args": [
@@ -927,28 +908,63 @@ const artzero_nft = {
           {
             "args": [
               {
+                "label": "operator",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput1"
+                  ],
+                  "type": 8
+                }
+              },
+              {
                 "label": "id",
                 "type": {
                   "displayName": [
                     "psp34_external",
-                    "OwnerOfInput1"
+                    "ApproveInput2"
                   ],
-                  "type": 1
+                  "type": 14
+                }
+              },
+              {
+                "label": "approved",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput3"
+                  ],
+                  "type": 35
                 }
               }
             ],
             "docs": [],
-            "label": "PSP34::owner_of",
+            "label": "PSP34::approve",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "ApproveOutput"
+              ],
+              "type": 33
+            },
+            "selector": "0x1932a8b0"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "PSP34::collection_id",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34_external",
-                "OwnerOfOutput"
+                "CollectionIdOutput"
               ],
-              "type": 20
+              "type": 1
             },
-            "selector": "0x1168624d"
+            "selector": "0xffa27a5f"
           },
           {
             "args": [
@@ -1025,32 +1041,6 @@ const artzero_nft = {
           {
             "args": [
               {
-                "label": "index",
-                "type": {
-                  "displayName": [
-                    "psp34enumerable_external",
-                    "TokenByIndexInput1"
-                  ],
-                  "type": 6
-                }
-              }
-            ],
-            "docs": [],
-            "label": "PSP34Enumerable::token_by_index",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34enumerable_external",
-                "TokenByIndexOutput"
-              ],
-              "type": 37
-            },
-            "selector": "0xcd0340d0"
-          },
-          {
-            "args": [
-              {
                 "label": "owner",
                 "type": {
                   "displayName": [
@@ -1083,6 +1073,32 @@ const artzero_nft = {
               "type": 37
             },
             "selector": "0x3bcfb511"
+          },
+          {
+            "args": [
+              {
+                "label": "index",
+                "type": {
+                  "displayName": [
+                    "psp34enumerable_external",
+                    "TokenByIndexInput1"
+                  ],
+                  "type": 6
+                }
+              }
+            ],
+            "docs": [],
+            "label": "PSP34Enumerable::token_by_index",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34enumerable_external",
+                "TokenByIndexOutput"
+              ],
+              "type": 37
+            },
+            "selector": "0xcd0340d0"
           }
         ]
       },

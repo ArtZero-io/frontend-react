@@ -113,11 +113,13 @@ function CollectionPage() {
           const nft_contract = new ContractPromise(
             api,
             nft721_psp34_standard.CONTRACT_ABI,
-            collectionDetail.nftContractAddress
+            '5D713Ab5UQN636PfBcTeie18mvnxLmsTPrg8W8M5n7UZh9SS'
           );
+          //collectionDetail.nftContractAddress
           const gasLimit = -1;
           const azero_value = 0;
-          const { result, output } = await nft_contract.query['getTokenCount'](currentAccount.address, { value: azero_value, gasLimit });
+          const { result, output } = await nft_contract.query['psp34::totalSupply'](currentAccount.address, { value: azero_value, gasLimit });
+
           if (result.isOk) {
             const token_count = new BN(output, 10, "le").toNumber();
             console.log(token_count);
@@ -131,9 +133,10 @@ function CollectionPage() {
                   { value: azero_value, gasLimit },
                   token_id
                 );
-                
+                  console.log('output.toHuman()', output);
                 if (result.isOk) {
                   const token_uri = output.toHuman();
+                  console.log('token_uri', token_uri);
                   const metadata = await clientAPI(
                     "get",
                     "/getJSON?input=" +
