@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tfoot, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
-import Loader from "../../components/Loader/Loader";
+import Loader from "../../components/Loader/CommonLoader";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import collection_manager from "@utils/blockchain/collection-manager";

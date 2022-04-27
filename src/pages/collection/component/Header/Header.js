@@ -111,7 +111,7 @@ function CollectionHeader({
             <VStack textAlign="center">
               <Flex alignItems="center" justifyContent="center">
                 <Text fontFamily="DS-Digital" fontSize="6xl" lineHeight="none">
-                  {floorPrice || 0}
+                  {floorPrice / 10 ** 12 || 0}
                 </Text>
                 <Avatar
                   src={AzeroIcon}

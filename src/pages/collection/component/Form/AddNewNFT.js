@@ -133,7 +133,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                     value: level.level + "|" + level.levelMax,
                   });
                 }
-              } 
+              }
 
               const nft721_psp34_standard_contract = new ContractPromise(
                 api,
@@ -143,7 +143,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
               nft721_psp34_standard_calls.setContract(
                 nft721_psp34_standard_contract
               );
-              console.log("xxxattributes before mintWithAttributes", attributes);
+
               await nft721_psp34_standard_calls.mintWithAttributes(
                 currentAccount,
                 collection_address,
@@ -159,7 +159,6 @@ const AddNewNFTForm = ({ collectionOwner }) => {
       >
         {({ values }) => (
           <div>
-            {console.log("values", values)}
             <Form>
               <HStack>
                 <AddNewNFTInput

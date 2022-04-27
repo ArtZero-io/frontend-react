@@ -8,32 +8,34 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-// import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-// import { delay } from "@utils";
-// import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-// import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
-// import { numberToU8a, stringToHex } from "@polkadot/util";
-// import { IPFS_BASE_URL } from "@constants/index";
-// import { ContractPromise } from "@polkadot/api-contract";
-// import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-// import { TypeRegistry, U64 } from "@polkadot/types";
-// import toast from "react-hot-toast";
+
 import React, { useEffect, useState } from "react";
 import MyNFTGroupCard from "../components/Card/MyNFTGroup";
 import { useSubstrateState } from "@utils/substrate";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import { clientAPI } from "@api/client";
+import { useDispatch, useSelector } from "react-redux";
+import CommonLoader from "../../../components/Loader/CommonLoader";
+import { delay } from "../../../utils";
+import { AccountActionTypes } from "../../../store/types/account.types";
+import toast from "react-hot-toast";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
 
-  const [myCollections, setMyCollections] = useState([]);
+  const [myCollections, setMyCollections] = useState(null);
 
   const [filterSelected, setFilterSelected] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
+  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
 
   function onClickHandler(v) {
-    console.log("onClickHandler", v);
-    setFilterSelected(v);
+    if (filterSelected !== v) {
+      setFilterSelected(v);
+      setMyCollections(null);
+    }
   }
 
   useEffect(() => {
@@ -45,6 +47,7 @@ const MyNFTsPage = () => {
           owner: currentAccount.address,
         }
       );
+
       const data = await Promise.all(
         allCollectionsOwned.map(async (collection) => {
           const options = {
@@ -56,7 +59,11 @@ const MyNFTsPage = () => {
 
           let dataList = await clientAPI("post", "/getNFTs", options);
 
-          if (filterSelected === 1) {
+          if (Number(filterSelected) === 0) {
+            dataList = dataList.filter((item) => item.is_for_sale !== true);
+          }
+
+          if (Number(filterSelected) === 1) {
             dataList = dataList.filter((item) => item.is_for_sale === true);
           }
 
@@ -66,12 +73,47 @@ const MyNFTsPage = () => {
         })
       );
 
-      setMyCollections(data);
+      data.length ? setMyCollections(data) : setMyCollections({});
     };
 
-    fetchMyCollections();
-  }, [currentAccount.address, filterSelected]);
+    if (!myCollections) {
+      fetchMyCollections();
+      setLoading(false);
+    }
+  }, [
+    currentAccount.address,
+    filterSelected,
+    myCollections,
+    tnxStatus?.status,
+  ]);
 
+  useEffect(() => {
+    const forceUpdateAfterMint = async () => {
+      if (tnxStatus?.status === "Finalized") {
+        dispatch({
+          type: AccountActionTypes.SET_TNX_STATUS,
+          payload: null,
+        });
+
+        setLoading(true);
+        toast.promise(
+          delay(9000).then(() => {
+            setMyCollections(null);
+            setLoading(false);
+          }),
+          {
+            loading: "Loading new data...",
+            success: `Done!`,
+            error: "Could not load data.",
+          }
+        );
+      }
+    };
+
+    forceUpdateAfterMint();
+  }, [tnxStatus, dispatch]);
+
+  console.log("myCollections", myCollections);
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">
       <Box
@@ -82,7 +124,9 @@ const MyNFTsPage = () => {
       >
         <Flex w="full" alignItems="start" pb={12}>
           <Heading size="h2">My NFTs</Heading>
+
           <Spacer />
+
           <Button
             isActive={filterSelected === 0}
             variant="outline"
@@ -92,6 +136,7 @@ const MyNFTsPage = () => {
           >
             Collected
           </Button>
+
           <Button
             isActive={filterSelected === 1}
             variant="outline"
@@ -101,6 +146,7 @@ const MyNFTsPage = () => {
           >
             My Listing
           </Button>
+
           <Button
             isActive={filterSelected === 2}
             variant="outline"
@@ -110,6 +156,7 @@ const MyNFTsPage = () => {
           >
             My Bids
           </Button>
+
           <IconButton
             mx={1}
             aria-label="refresh"
@@ -119,28 +166,27 @@ const MyNFTsPage = () => {
             onClick={() => setMyCollections(null)}
           />
         </Flex>
-        {/* {loading && (
-          <Center>
-            <Spinner
-              thickness="4px"
-              speed="0.65s"
-              emptyColor="gray.200"
-              color="blue.500"
-              size="xl"
-            />
-          </Center>
-        )} */}
 
-        {myCollections?.length === 0 ? (
-          <VStack py={10} align="start" ml={3} justifyContent="center">
-            <Text textAlign="center" color="brand.grayLight" size="2xs">
-              You don't have any NFT yet.
-            </Text>
-          </VStack>
+        {loading ? (
+          <CommonLoader
+            addText={`Please wait a moment...`}
+            size="md"
+            maxH={"4.125rem"}
+          />
         ) : (
-          myCollections?.map((item) => {
-            return <MyNFTGroupCard {...item} />;
-          })
+          <>
+            {myCollections?.length === 0 ? (
+              <VStack py={10} align="start" ml={3} justifyContent="center">
+                <Text textAlign="center" color="brand.grayLight" size="2xs">
+                  You don't have any NFT yet.
+                </Text>
+              </VStack>
+            ) : (
+              myCollections?.map((item) => {
+                return <MyNFTGroupCard {...item} />;
+              })
+            )}
+          </>
         )}
       </Box>
     </Box>

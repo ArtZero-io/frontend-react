@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
 import toast from "react-hot-toast";
 import { delay } from "../../utils";
-import Loader from "@components/Loader/Loader";
+import Loader from "@components/Loader/CommonLoader";
 const MintPage = () => {
   const { currentAccount } = useSubstrateState();
   const [myAZNFTs, setMyAZNFTs] = useState(null);

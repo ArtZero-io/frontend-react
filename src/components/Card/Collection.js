@@ -28,7 +28,12 @@ export const CollectionCard = ({
   variant,
 }) => {
   return (
-    <Box h="full" borderColor="transparent" borderWidth={"2px"} _hover={{ borderColor: "brand.blue" }}>
+    <Box
+      h="full"
+      borderColor="transparent"
+      borderWidth={"2px"}
+      _hover={{ borderColor: "brand.blue" }}
+    >
       <Flex
         direction="column"
         align="center"
@@ -65,7 +70,6 @@ export const CollectionCard = ({
             rounded="full"
             objectFit="cover"
             src={`${IPFS_BASE_URL}/${avatarImage}`}
-            fallbackSrc="https://via.placeholder.com/84"
             fallback={<Skeleton w={16} h={16} rounded="full" />}
           />
         </Center>

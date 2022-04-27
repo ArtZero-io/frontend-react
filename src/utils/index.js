@@ -146,13 +146,14 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
           value: truncateStr(statusToHuman[0][1], 6),
         },
       });
+      console.log("handleContractCall statusToHuman", statusToHuman[0]);
     }
   }
 }
 
 export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
-  console.log("createObjAttrsNFT attrsArr", attrsArr);
-  console.log("createObjAttrsNFT attrsValArr", attrsValArr);
+  // console.log("createObjAttrsNFT attrsArr", attrsArr);
+  // console.log("createObjAttrsNFT attrsValArr", attrsValArr);
   if (attrsArr.length !== 0 && attrsArr.length === attrsValArr.length) {
     let result = {};
 
@@ -167,23 +168,20 @@ export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
       [...attrsList].map((v, i) => ({ [v]: attrsValList[i] }))
     );
 
-    result.attrsList = formatList;
+    result.attrsList = formatList.filter((obj) => !!Object.values(obj)[0]);
 
+    // console.log("createObjAttrsNFT formatList", result.formatList);
     return result;
   }
-
+  console.log("createObjAttrsNFT attrsArr", attrsArr);
+  console.log("createObjAttrsNFT attrsValArr", attrsValArr);
   return console.log("Can not create attributes Object");
 };
 
 export const createLevelAttribute = (levelString) => {
-  // eslint-disable-next-line no-unused-vars
   const location = Number(levelString.indexOf("|"));
-  // eslint-disable-next-line no-unused-vars
-  const leftNumber = levelString.slice(0, location);
-  const rightNumber = levelString.slice(-(location + 1));
+  const level = levelString.slice(0, location);
+  const levelMax = levelString.slice(location + 1, levelString.length);
 
-  console.log("levelString", levelString);
-  console.log("location", location);
-  console.log("leftNumber", leftNumber);
-  console.log("rightNumber", rightNumber);
+  return { level, levelMax };
 };

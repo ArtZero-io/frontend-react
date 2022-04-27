@@ -3,7 +3,7 @@ import {
   Box, Text, Button
 } from '@chakra-ui/react'
 import { useSubstrateState } from '@utils/substrate'
-import Loader from '../../components/Loader/Loader'
+import Loader from '../../components/Loader/CommonLoader'
 //import { ContractPromise } from "@polkadot/api-contract";
 import {  useSelector } from "react-redux";
 import { useEffect,useState } from "react";

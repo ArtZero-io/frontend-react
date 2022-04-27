@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import NFTTabInfo from "../Tabs/MyNFTInfo";
-import NFTTabOffers from "../Tabs/MyNFTOffers";
+// import NFTTabOffers from "../Tabs/MyNFTOffers";
 
 function MyNFTModal(props) {
   const tabData = [
@@ -19,10 +19,10 @@ function MyNFTModal(props) {
       label: "NFT info",
       content: <NFTTabInfo {...props} />,
     },
-    {
-      label: "Offers",
-      content: <NFTTabOffers {...props} />,
-    },
+    // {
+    //   label: "Offers",
+    //   content: <NFTTabOffers {...props} />,
+    // },
   ];
 
   return (

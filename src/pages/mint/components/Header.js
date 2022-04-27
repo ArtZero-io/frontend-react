@@ -52,6 +52,15 @@ function MintHeader() {
     [currentAccount]
   );
 
+  const onGetWhiteList = async (e) => {
+    let whitelist = await artzero_nft_calls.getWhitelist(
+      currentAccount,
+      currentAccount.address
+    );
+    if (whitelist) setWhitelist(whitelist);
+    else setWhitelist(null);
+  };
+
   useEffect(() => {
     const onGetBalance = async (e) => {
       let res = await artzero_nft_calls.balanceOf(
@@ -63,16 +72,7 @@ function MintHeader() {
     };
     onGetBalance();
     onGetWhiteList();
-  }, [currentAccount]);
-
-  const onGetWhiteList = async (e) => {
-    let whitelist = await artzero_nft_calls.getWhitelist(
-      currentAccount,
-      currentAccount.address
-    );
-    if (whitelist) setWhitelist(whitelist);
-    else setWhitelist(null);
-  };
+  }, [currentAccount, onGetWhiteList]);
 
   const onGetMintMode = async (e) => {
     let mintMode = await artzero_nft_calls.getMintMode(currentAccount);
@@ -106,7 +106,11 @@ function MintHeader() {
       toast.error("Your balance is low.");
       return;
     }
-    await artzero_nft_calls.whitelistMint(currentAccount, whitelistAmount, dispatch);
+    await artzero_nft_calls.whitelistMint(
+      currentAccount,
+      whitelistAmount,
+      dispatch
+    );
     await delay(10000);
     await onRefresh();
   };
@@ -148,7 +152,7 @@ function MintHeader() {
 
   const fetchMintData = useCallback(async () => {
     await onRefresh();
-  },[]);
+  }, []);
 
   // useEffect(() => {
   //   apiState && keyringState && currentAccount.address && fetchMintData();

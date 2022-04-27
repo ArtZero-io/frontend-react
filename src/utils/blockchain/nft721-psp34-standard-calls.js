@@ -13,7 +13,7 @@ function setContract(c) {
 }
 
 async function getTotalSupply(caller_account) {
-  console.log('getTotalSupply before check', (!caller_account));
+  console.log("getTotalSupply before check", !caller_account);
   if (!contract || !caller_account) {
     return null;
   }
@@ -109,14 +109,18 @@ async function getAttributeCount(caller_account) {
   return null;
 }
 
-async function mintWithAttributes(caller_account, nft_address, attributes, dispatch) {
+async function mintWithAttributes(
+  caller_account,
+  nft_address,
+  attributes,
+  dispatch
+) {
   if (!contract || !caller_account) {
     return null;
   }
   let unsubscribe;
 
-
-  console.log('mintWithAttributes attributes', attributes)
+  console.log("mintWithAttributes attributes", attributes);
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
@@ -130,7 +134,7 @@ async function mintWithAttributes(caller_account, nft_address, attributes, dispa
     attribute_label.push(attribute.name);
     attribute_value.push(attribute.value);
   }
-console.log('mintWithAttributes xxxattributes', attributes)
+
   if (attribute_label.length === attribute_value.length) {
     contract.tx
       .mintWithAttributes(
@@ -151,23 +155,18 @@ console.log('mintWithAttributes xxxattributes', attributes)
               console.log("dispatchError", dispatchError.toString());
             }
           }
-          console.log('mintWithAttributes output:', output);
+          console.log("mintWithAttributes output:", output);
           if (status) {
             if (status.isFinalized === true) {
               toast.success(`Okay`);
               const token_id = await getTotalSupply(address);
-              console.log('token_id', token_id);
-              const update_nft_api_res = await clientAPI(
-                "post",
-                "/updateNFT",
-                {
-                  collection_address: nft_address,
-                  token_id: token_id
-                }
-              );
+              console.log("token_id", token_id);
+              const update_nft_api_res = await clientAPI("post", "/updateNFT", {
+                collection_address: nft_address,
+                token_id: token_id,
+              });
               console.log("update_nft_api_res", update_nft_api_res);
             }
-            
           }
         }
       )
@@ -243,7 +242,12 @@ async function getOwnerAddressByTokenId(caller_account, token_id) {
   return null;
 }
 
-async function allowance(caller_account, owner_address, operator_address, token_id) {
+async function allowance(
+  caller_account,
+  owner_address,
+  operator_address,
+  token_id
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -267,7 +271,13 @@ async function allowance(caller_account, owner_address, operator_address, token_
   return null;
 }
 
-async function approve(caller_account, operator_address, token_id, is_approve) {
+async function approve(
+  caller_account,
+  operator_address,
+  token_id,
+  is_approve,
+  dispatch
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -282,22 +292,35 @@ async function approve(caller_account, operator_address, token_id, is_approve) {
     operator_address,
     token_id,
     is_approve
-  ).signAndSend(address, { signer: injector.signer }, ({ status, output }) => {
-    console.log(output);
-    if (status) {
-      const statusText = Object.keys(status.toHuman())[0];
-      if (status.isFinalized) {
-        console.log(status.toHuman());
-        console.log(status);
-        toast.success(
-          `Approve ${
-            statusText === "0" ? "started" : statusText.toLowerCase()
-          }.`
-        );
-        res = true;
+  ).signAndSend(
+    address,
+    { signer: injector.signer },
+    ({ status, dispatchError }) => {
+      handleContractCall(status, dispatchError, dispatch, contract);
+
+      if (dispatchError) {
+        if (dispatchError.isModule) {
+          toast.error(`There is some error with your request`);
+        } else {
+          console.log("dispatchError ", dispatchError.toString());
+        }
+      }
+
+      if (status) {
+        const statusText = Object.keys(status.toHuman())[0];
+        if (status.isFinalized) {
+          console.log(status.toHuman());
+          console.log(status);
+          toast.success(
+            `Approve ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+          res = true;
+        }
       }
     }
-  });
+  );
   return res;
 }
 

@@ -29,7 +29,7 @@ const theme = extendTheme({
   styles: {
     global: {
       "*": {
-        // border: "1px yellow dotted",
+        // border: "1px yellow dotted",  
       },
       html: {
         minHeight: "100vh",

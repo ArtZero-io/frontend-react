@@ -15,7 +15,7 @@ import {
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { IPFS_BASE_URL } from "@constants/index";
 
-export default function NFTChangeSize({
+export default function NFTChangeSizeCard({
   bidPrice,
   is_for_sale,
   price,
@@ -52,13 +52,14 @@ export default function NFTChangeSize({
           justifyContent="space-between"
           alignItems="start"
           flexGrow="1"
+          minH="8.125rem"
         >
           <Heading size="h6">{nftName}</Heading>
 
-          {is_for_sale && (
+          {is_for_sale ? (
             <Flex w="full">
               <Tag h={10}>
-                <TagLabel>{price}</TagLabel>
+                <TagLabel>{price / 10 ** 12}</TagLabel>
                 <TagRightIcon as={AzeroIcon} />
               </Tag>
 
@@ -68,13 +69,23 @@ export default function NFTChangeSize({
                 <Spacer />
                 <Text textAlign="right" color="brand.grayLight" mt="5">
                   <Text mr="2.5">Offer</Text>
-                  <Tag h={10} bg="transparent">
-                    <TagLabel bg="transparent">{bidPrice}</TagLabel>
-                    <TagRightIcon as={AzeroIcon} />
-                  </Tag>
+                  {bidPrice ? (
+                    <Tag h={10} bg="transparent">
+                      <TagLabel bg="transparent">
+                        {bidPrice / 10 ** 12}
+                      </TagLabel>
+                      <TagRightIcon as={AzeroIcon} />
+                    </Tag>
+                  ) : (
+                    <>No offer yet</>
+                  )}
                 </Text>
               </Flex>
             </Flex>
+          ) : (
+            <Text textAlign="center" fontSize="lg">
+              Not for sale
+            </Text>
           )}
         </VStack>
       </Flex>

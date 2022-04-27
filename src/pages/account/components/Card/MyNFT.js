@@ -72,7 +72,7 @@ const MyNFTCard = ({
                 </Text>
                 <Tag>
                   <TagLabel>
-                    {price}
+                    {price / 10 ** 12}
                     {isBid?.bidPrice}
                   </TagLabel>
                   <TagRightIcon as={AzeroIcon} />

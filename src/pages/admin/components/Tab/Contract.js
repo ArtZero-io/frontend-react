@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
-import Loader from "@components/Loader/Loader";
+import Loader from "@components/Loader/CommonLoader";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import artzero_nft from "@utils/blockchain/artzero-nft";
 import { useSelector } from "react-redux";

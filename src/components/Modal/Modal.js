@@ -8,16 +8,20 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  useBreakpointValue,
 } from "@chakra-ui/react";
+
 import NFTTabInfo from "../../pages/account/nfts/components/Tabs/MyNFTInfo";
 
 export default function ResponsivelySizedModal({
   children,
   onClose,
   isOpen,
-  hasTabs = true,
+  hasTabs,
   ...rest
 }) {
+  const tabHeight = useBreakpointValue({ base: `2.5rem`, "2xl": `4.5rem` });
+
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen} size={"7xl"}>
       <ModalOverlay
@@ -42,48 +46,73 @@ export default function ResponsivelySizedModal({
           borderWidth={2}
           borderRadius="0"
         />
-        {hasTabs ? <TabOfModal {...rest} /> : children}
+        {!hasTabs ? (
+          children
+        ) : (
+          <Tabs isLazy align="left" h="full">
+            <TabList bg="#171717">
+              <Tab
+                ml={12}
+                fontSize="md"
+                fontFamily="Evogria Italic"
+                minH={tabHeight}
+              >
+                {`NFT info`}
+              </Tab>
+            </TabList>
+
+            <TabPanels style={{ height: `calc(100% - ${tabHeight})` }}>
+              <TabPanel px={{ base: 6, "2xl": 12 }} py={8} h="full">
+                <NFTTabInfo {...rest} />{" "}
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        )}
       </ModalContent>
     </Modal>
   );
 }
 
-const TabOfModal = (props) => {
-  console.log("TabOfModal props", props);
-  const tabData = [
-    {
-      label: "NFT info",
-      content: <NFTTabInfo {...props} />,
-    },
-    // {
-    //   label: "Offers",
-    //   content: <NFTTabOffers {...props} />,
-    // },
-  ];
+// const TabOfModal = (props) => {
+// const tabData = [
+//   {
+//     label: "NFT info",
+//     content: <NFTTabInfo {...props} />,
+//   },
+//   {
+//     label: "Offers",
+//     content: <NFTTabOffers {...props} />,
+//   },
+// ];
 
-  return (
-    <Tabs isLazy align="left" h="full">
-      <TabList bg="#171717">
-        {tabData.map((tab, index) => (
-          <Tab
-            key={index}
-            ml={12}
-            fontSize="md"
-            fontFamily="Evogria Italic"
-            minH="4.5rem"
-          >
-            {tab.label}
-          </Tab>
-        ))}
-      </TabList>
+//   const tabHeight = useBreakpointValue({ base: `2.5rem`, "2xl": `4.5rem` });
 
-      <TabPanels style={{ height: `calc(100% - 4.5rem)` }} if="asd">
-        {tabData.map((tab, index) => (
-          <TabPanel px={12} py={8} key={index} h="full">
-            {tab.content}
-          </TabPanel>
-        ))}
-      </TabPanels>
-    </Tabs>
-  );
-};
+//   return (
+//     <Tabs isLazy align="left" h="full">
+//
+
+//         {tabData.map((tab, index) => (
+//           <Tab
+//             key={index}
+//             ml={12}
+//             fontSize="md"
+//             fontFamily="Evogria Italic"
+//             minH={tabHeight}
+//           >
+//             {tab.label}
+//           </Tab>
+//         ))}
+//       </TabList>
+
+//       <TabPanels style={{ height: `calc(100% - ${tabHeight})` }} if="asd">
+//
+
+//         {tabData.map((tab, index) => (
+//           <TabPanel px={{ base: 6, "2xl": 12 }} py={8} key={index} h="full">
+//             {tab.content}
+//           </TabPanel>
+//         ))}
+//       </TabPanels>
+//     </Tabs>
+//   );
+// }

@@ -123,9 +123,9 @@ const NFTTabInfo = ({
           templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
           gap={6}
         >
-          {nft_detail.atts.map((item) => {
+          {nft_detail.atts.map((item, idx) => {
             return (
-              <GridItem w="100%" h="100%">
+              <GridItem key={idx} w="100%" h="100%">
                 <Box w="full" textAlign="left" bg="black" px={4} py={3}>
                   <Flex w="full">
                     <Text color="brand.grayLight">
@@ -148,14 +148,6 @@ const NFTTabInfo = ({
 
         {!isSale && (
           <Flex w="full" py={2} alignItems="center" justifyContent="start">
-            {/* <Input
-              flexGrow={1}
-              id="price-azero"
-              type="text"
-              bg="black"
-              placeholder="100"
-              onChange={(val) => setSalePrice(val)}
-            /> */}
             <Input
               flexGrow={1}
               id="price-use"
@@ -196,12 +188,3 @@ const NFTTabInfo = ({
 };
 
 export default NFTTabInfo;
-
-// const atts = [
-//   { name: "Background", text: "Blue", value: "21.6%" },
-//   { name: "Fur / Skin", text: "Albino / Blue", value: "21.6%" },
-//   { name: "Head", text: "Sun Hat  ", value: "21.6%" },
-//   { name: "Mouth", text: "Banana", value: "21.6%" },
-//   { name: "generation", text: "1", value: "21.6%" },
-//   { name: "Background", text: "Blue", value: "21.6%" },
-// ];

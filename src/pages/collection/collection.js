@@ -6,26 +6,20 @@ import toast from "react-hot-toast";
 import Layout from "@components/Layout/Layout";
 import { TypeRegistry, U64 } from "@polkadot/types";
 import { clientAPI } from "@api/client";
-// import TabActivity from "./component/TabActivity";
+
 import TabCollectionItems from "./component/TabItems";
 import CollectionHero from "./component/Header/Header";
-// import contractData from "@utils/blockchain/index";
-// import {
-//   setNft721Psp34Contract,
-//   setAccount as setAccountNft721Psp34Module,
-// } from "@utils/blockchain/nft721-psp34-standard-calls";
+
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
-// import { IPFS_BASE_URL } from "@constants/index";
 
 import { ContractPromise } from "@polkadot/api-contract";
 import BN from "bn.js";
 import { createObjAttrsNFT } from "@utils/index";
-// import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 
 import { delay } from "../../utils";
-import Loader from "@components/Loader/Loader";
+import Loader from "@components/Loader/CommonLoader";
 import artzero_nft from "@utils/blockchain/artzero-nft";
 
 function CollectionPage() {
@@ -97,8 +91,8 @@ function CollectionPage() {
 
         const NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
 
-        console.log("xxx NFTList", NFTList);
 
+        
         collectionDetail.floorPrice = floorPrice?.price || 0;
 
         collectionDetail.nftTotalCount = NFTList?.length;
@@ -117,7 +111,7 @@ function CollectionPage() {
             })
           ).then((NFTListFormatted) => {
             collectionDetail.NFTListFormatted = NFTListFormatted;
-            console.log("xxx collectionDetail ", collectionDetail);
+
             setFormattedCollection(collectionDetail);
           });
         }

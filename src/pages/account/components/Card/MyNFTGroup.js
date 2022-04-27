@@ -11,11 +11,13 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 // eslint-disable-next-line no-unused-vars
-import NFTModal from "../../nfts/components/Modal/MyNFT";
+// import NFTModal from "../../nfts/components/Modal/MyNFT";
 import MyNFTCard from "./MyNFT";
 import { IPFS_BASE_URL } from "@constants/index";
 import { createObjAttrsNFT } from "@utils/index";
-import ResponsivelySizedModal from "../../../../components/Modal/Modal";
+import ResponsivelySizedModal from "@components/Modal/Modal";
+// eslint-disable-next-line no-unused-vars
+import NFTTabInfo from "@pages/account/nfts/components/Tabs/MyNFTInfo";
 
 function MyNFTGroupCard({ name, avatarImage, listNFT, contractType }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -30,7 +32,6 @@ function MyNFTGroupCard({ name, avatarImage, listNFT, contractType }) {
   }
   useEffect(() => {
     const data = listNFT?.map((item) => {
-      console.log("MyNFTGroupCard item", item);
       const itemData = createObjAttrsNFT(item.attributes, item.attributesValue);
 
       return { ...item, ...itemData };
@@ -52,7 +53,9 @@ function MyNFTGroupCard({ name, avatarImage, listNFT, contractType }) {
         {...selectedNFT}
         isOpen={isOpen}
         onClose={onClose}
+        hasTabs={true}
       />
+
       <Flex>
         <Avatar
           size={"lg"}

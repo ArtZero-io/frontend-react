@@ -9,6 +9,7 @@ import {
   useDisclosure,
   IconButton,
   Link,
+  Skeleton,
 } from "@chakra-ui/react";
 import { FaInstagram, FaTwitter, FaTelegram, FaFacebook } from "react-icons/fa";
 import EditIcon from "@theme/assets/icon/Edit.js";
@@ -83,6 +84,7 @@ function ProfileHeader() {
               rounded="full"
               objectFit="cover"
               src={`${IPFS_BASE_URL}/${profile?.avatar}`}
+              fallback={<Skeleton w={32} h={32} rounded="full" />}
             />
           )}
           {!profile?.avatar && <IdenticonAvatar size={120} />}

@@ -3,7 +3,7 @@ import { Route, Redirect } from "react-router-dom";
 import * as ROUTES from "@constants/routes";
 import { useSubstrateState } from "@utils/substrate";
 
-import Loader from "../Loader/Loader";
+import CommonLoader from "../Loader/CommonLoader";
 import { Heading, Modal, ModalContent, ModalOverlay } from "@chakra-ui/react";
 import contractData from "@utils/blockchain/index";
 
@@ -46,7 +46,7 @@ const PrivateRoute = ({ ...rest }) => {
           justifyContent="center"
           alignItems="center"
         >
-          <Loader color="#7ae7ff" size={15} margin={3} speedMultiplier={1.5} />
+          <CommonLoader color="#7ae7ff" size={15} margin={3} speedMultiplier={1.5} />
           <Heading size="h6" my={14}>
             Re - connecting to network . . .
           </Heading>

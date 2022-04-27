@@ -46,7 +46,7 @@ const FeeInfoModal = ({
     console.log(sale_price);
     console.log(nft_detail.id);
     console.log(collection_detail);
-    if ( Number(collection_detail.contractType) === 2) {
+    if (Number(collection_detail.contractType) === 2) {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
         nft721_psp34_standard.CONTRACT_ABI,
@@ -103,7 +103,8 @@ const FeeInfoModal = ({
       <Button
         variant="filled"
         bg="transparent"
-        color="#fff" ml={3}
+        color="#fff"
+        ml={3}
         onClick={() => onOpen()}
       >
         more information
@@ -235,91 +236,3 @@ const feeChart = [
     percent: 90,
   },
 ];
-/* <VStack w="full" px={10} py={2}>
-          <Box w="full">
-            <Flex>
-              <Heading size="h4">{nft_detail.name}</Heading>
-              <Spacer />
-              <Button variant="icon">
-                <Square size="3.125rem">
-                  <FiRefreshCw size="24px" />
-                </Square>
-              </Button>
-              <Button variant="icon">
-                <Square size="3.125rem">
-                  <FiUpload size="24px" />
-                </Square>
-              </Button>
-            </Flex>
-            <Heading size="h6" color="brand.grayLight">
-              {nft_detail.name}
-            </Heading>
-          </Box>
-
-          <Grid
-            w="full"
-            templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
-            gap={6}
-          >
-            {nft_detail.atts.map((item) => {
-              return (
-                <GridItem
-                    w="100%"
-                  h="100%"
-                  _hover={{ bg: "brand.blue" }}
-                >
-                  <Box w="full" textAlign="left" bg="black" px={4} py={3}>
-                    <Flex w="full">
-                      <Text color="brand.grayLight">
-                        <Text>{item.name}</Text>
-                        <Heading size="h6" mt={1}>
-                          {item.value}
-                        </Heading>
-                      </Text>
-                      <Spacer />
-                    </Flex>
-                   
-                  </Box>
-                </GridItem>
-              );
-            })}
-          </Grid>
-
-          {!isSale && (
-            <Flex w="full" py={2} alignItems="center" justifyContent="start">
-               
-              <Input
-                flexGrow={1}
-                id="price-use"
-                type="text"
-                bg="black"
-                placeholder="100"
-                onChange={({ target }) => setSalePrice(target.value)}
-              />
-              <Button ml={2} variant="solid" onClick={listToken}>
-                Push for sale
-              </Button>
-            </Flex>
-          )}
-          {isSale && (
-            <Flex w="full" py={2} alignItems="center" justifyContent="start">
-              <Spacer />
-              <Flex alignItems="center" justifyContent="start">
-                <Text color="brand.grayLight">For Sale At</Text>
-
-                <Text mx={2}>72.00</Text>
-                <Avatar
-                  src={AzeroIcon}
-                  h={4}
-                  w={4}
-                  mx={1}
-                  name="AzeroLogo"
-                  bg="transparent"
-                />
-              </Flex>
-              <Button ml={2} variant="solid">
-                remove from sale
-              </Button>
-            </Flex>
-          )}
-        </VStack>  */

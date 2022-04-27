@@ -1,6 +1,6 @@
 import { Box, Text, Grid, GridItem, Image } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
-import Loader from "../../components/Loader/Loader";
+import Loader from "../../components/Loader/CommonLoader";
 import { useEffect, useState } from "react";
 import { delay, isValidImage } from "@utils";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";

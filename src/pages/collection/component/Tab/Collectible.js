@@ -71,33 +71,36 @@ const NFTTabCollectible = ({
   // const onRefresh = async () => {
 
   //};
-  useEffect(async () => {
-    if (isLoaded === false) {
-      marketplace_contract_calls.setMarketplaceContract(
-        api,
-        contractData.marketplace
-      );
-      const sale_info = await marketplace_contract_calls.getNftSaleInfo(
-        currentAccount,
-        nftContractAddress,
-        { u64: tokenID }
-      );
-      console.log(sale_info);
-      const listBidder = await marketplace_contract_calls.getAllBids(
-        currentAccount,
-        nftContractAddress,
-        sale_info?.nftOwner,
-        { u64: tokenID }
-      );
-      for (const item of listBidder) {
-        if (item.bidder == currentAccount?.address) {
-          setIsBided(true);
-          setBidPrice(convertStringToPrice(item.bidValue));
+  useEffect(() => {
+    const doLoad = async () => {
+      if (isLoaded === false) {
+        marketplace_contract_calls.setMarketplaceContract(
+          api,
+          contractData.marketplace
+        );
+        const sale_info = await marketplace_contract_calls.getNftSaleInfo(
+          currentAccount,
+          nftContractAddress,
+          { u64: tokenID }
+        );
+        console.log(sale_info);
+        const listBidder = await marketplace_contract_calls.getAllBids(
+          currentAccount,
+          nftContractAddress,
+          sale_info?.nftOwner,
+          { u64: tokenID }
+        );
+        for (const item of listBidder) {
+          if (item.bidder == currentAccount?.address) {
+            setIsBided(true);
+            setBidPrice(convertStringToPrice(item.bidValue));
+          }
         }
+        setIsLoaded(true);
       }
-      setIsLoaded(true);
-    }
-  }, [isLoaded]);
+    };
+    doLoad();
+  }, [api, currentAccount, isLoaded, nftContractAddress, tokenID]);
 
   const buyToken = async () => {
     setNFT({});
@@ -507,18 +510,22 @@ const NFTTabCollectible = ({
                         </Heading>
                         <Spacer />
                         <Text color="#fff">
-                          {createLevelAttribute(Object.values(item)[0])}
-                          {console.log('Object.values(item)[0]', Object.values(item)[0])}
-                          {Object.values(item)[0].slice(0, 1)} of{" "}
-                          {Object.values(item)[0].slice(-1)}
+                          {createLevelAttribute(Object.values(item)[0]).level}{" "}
+                          of{" "}
+                          {
+                            createLevelAttribute(Object.values(item)[0])
+                              .levelMax
+                          }
                         </Text>
                       </Flex>
                       <Progress
                         colorScheme="telegram"
                         size="sm"
                         value={Number(
-                          (Object.values(item)[0].slice(0, 1) * 100) /
-                            Object.values(item)[0].slice(-1)
+                          (createLevelAttribute(Object.values(item)[0]).level *
+                            100) /
+                            createLevelAttribute(Object.values(item)[0])
+                              .levelMax
                         )}
                         height="6px"
                       />

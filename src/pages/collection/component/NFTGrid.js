@@ -1,6 +1,6 @@
 import { Grid, GridItem, useDisclosure } from "@chakra-ui/react";
 import React, { useState } from "react";
-import NFTChangeSize from "@components/Card/NFTChangeSize";
+import NFTChangeSizeCard from "@components/Card/NFTChangeSize";
 import NFTDetailModal from "./Modal/NFTDetail";
 // eslint-disable-next-line no-unused-vars
 import ResponsivelySizedModal from "../../../components/Modal/Modal";
@@ -40,7 +40,7 @@ const NFTGrid = ({ bigCard, nftList }) => {
                 cursor="pointer"
                 onClick={() => handleOnClick(item)}
               >
-                <NFTChangeSize {...item} />
+                <NFTChangeSizeCard {...item} />
               </GridItem>
             </React.Fragment>
           );
