@@ -32,8 +32,6 @@ const ImageUploadCollection = ({
 
   const [newAvatarData, setNewAvatarData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
-  console.log("imageIPFSUrl", imageIPFSUrl);
-  console.log("mode,", mode);
 
   useEffect(() => {
     mode === "edit" && setImagePreviewUrl(imageIPFSUrl);

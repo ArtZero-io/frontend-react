@@ -74,18 +74,20 @@ const AddNewNFTForm = ({ collectionOwner }) => {
           )
             .min(1)
             .max(9),
-          level: Yup.array(
+          levels: Yup.array(
             Yup.object().shape({
               name: Yup.string()
                 .min(3, "Must be longer than 3 characters")
                 .max(30, "Must be less than 30 characters")
                 .required("Required"),
+
               level: Yup.number()
                 .min(1, "Must be bigger than 0")
-                .max(10, "Must be smaller than 10")
+                .max(Yup.ref("level"), "Must smaller than max")
                 .required("Required"),
+
               levelMax: Yup.number()
-                .min(1, "Must be bigger than 0")
+                .min(Yup.ref("level"), "Must greater than level")
                 .max(10, "Must be smaller than 10")
                 .required("Required"),
             })
@@ -124,14 +126,14 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                 }
               }
 
-              if (values?.properties[0]?.name) {
+              if (values?.levels[0]?.name) {
                 for (const level of values.levels) {
                   attributes.push({
                     name: level.name,
                     value: level.level + "|" + level.levelMax,
                   });
                 }
-              }
+              } 
 
               const nft721_psp34_standard_contract = new ContractPromise(
                 api,
@@ -141,7 +143,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
               nft721_psp34_standard_calls.setContract(
                 nft721_psp34_standard_contract
               );
-              console.log("attributes before mintWithAttributes", attributes);
+              console.log("xxxattributes before mintWithAttributes", attributes);
               await nft721_psp34_standard_calls.mintWithAttributes(
                 currentAccount,
                 collection_address,
@@ -157,9 +159,11 @@ const AddNewNFTForm = ({ collectionOwner }) => {
       >
         {({ values }) => (
           <div>
+            {console.log("values", values)}
             <Form>
               <HStack>
                 <AddNewNFTInput
+                  mode="add"
                   label="NFT Name"
                   name="NFTName"
                   type="NFTName"
@@ -219,9 +223,14 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                               py={3}
                             >
                               <Flex w="full">
-                                <Box color="brand.grayLight">
+                                <Box color="brand.grayLight" w="full">
                                   <Text>{item.type}</Text>
-                                  <Heading size="h6" mt={1} noOfLines={[1, 2]}>
+                                  <Heading
+                                    size="h6"
+                                    mt={1}
+                                    noOfLines={[1, 2]}
+                                    textAlign="right"
+                                  >
                                     {item.name}
                                   </Heading>
                                 </Box>

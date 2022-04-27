@@ -130,7 +130,7 @@ async function mintWithAttributes(caller_account, nft_address, attributes, dispa
     attribute_label.push(attribute.name);
     attribute_value.push(attribute.value);
   }
-
+console.log('mintWithAttributes xxxattributes', attributes)
   if (attribute_label.length === attribute_value.length) {
     contract.tx
       .mintWithAttributes(

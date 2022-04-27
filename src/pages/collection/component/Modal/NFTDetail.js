@@ -7,7 +7,7 @@ import {
 import React from "react";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import NFTTabCollectible from "../Tab/Collectible";
-import NFTTabActivity from "../Tab/Activity";
+// import NFTTabActivity from "../Tab/Activity";
 
 function NFTDetailModal({ isOpen, onClose, ...rest }) {
   const tabData = [
@@ -15,10 +15,10 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
       label: "Collectible",
       content: <NFTTabCollectible {...rest} />,
     },
-    {
-      label: "Activity",
-      content: <NFTTabActivity {...rest} />,
-    },
+    // {
+    //   label: "Activity",
+    //   content: <NFTTabActivity {...rest} />,
+    // },
   ];
 
   return (

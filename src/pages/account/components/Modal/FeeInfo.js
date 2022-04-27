@@ -46,7 +46,7 @@ const FeeInfoModal = ({
     console.log(sale_price);
     console.log(nft_detail.id);
     console.log(collection_detail);
-    if (collection_detail.contractType === "2") {
+    if ( Number(collection_detail.contractType) === 2) {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
         nft721_psp34_standard.CONTRACT_ABI,

@@ -29,21 +29,16 @@ import Loader from "@components/Loader/Loader";
 import artzero_nft from "@utils/blockchain/artzero-nft";
 
 function CollectionPage() {
-  const { collection_address } = useParams();
-  const { currentAccount, api } = useSubstrateState();
-
-  const [isShowUnlisted, setIsShowUnlisted] = useState(false);
   const [formattedCollection, setFormattedCollection] = useState(null);
-
+  const [isShowUnlisted, setIsShowUnlisted] = useState(false);
   const [loading, setLoading] = useState(null);
 
   const dispatch = useDispatch();
-
+  const { collection_address } = useParams();
+  const { currentAccount, api } = useSubstrateState();
   const { tnxStatus } = useSelector((state) => state.account.accountLoaders);
 
-  const forceUpdate = useCallback(() => {
-    setFormattedCollection(null);
-  }, []);
+  const forceUpdate = useCallback(() => setFormattedCollection(null), []);
 
   useEffect(() => {
     async function onCloseHandler() {
@@ -56,7 +51,7 @@ function CollectionPage() {
         setLoading(true);
 
         toast.promise(
-          delay(3000).then(() => {
+          delay(5000).then(() => {
             setFormattedCollection(null);
             setLoading(false);
           }),
@@ -83,6 +78,7 @@ function CollectionPage() {
 
       try {
         console.log("1");
+
         const [collectionDetail] = await clientAPI(
           "post",
           "/getCollectionByAddress",
@@ -90,7 +86,9 @@ function CollectionPage() {
             collection_address,
           }
         );
+
         console.log("2");
+
         const [floorPrice] = await clientAPI("post", "/getFloorPrice", {
           collection_address,
         });
@@ -98,11 +96,17 @@ function CollectionPage() {
         collectionDetail.floorPrice = floorPrice || 0;
 
         const NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
+
         console.log("xxx NFTList", NFTList);
+
         collectionDetail.floorPrice = floorPrice?.price || 0;
+
         collectionDetail.nftTotalCount = NFTList?.length;
-        if (collectionDetail.contractType == "2") {
-          Promise.all(
+
+        console.log(Number(collectionDetail.contractType) === 2);
+
+        if (Number(collectionDetail.contractType) === 2) {
+          return Promise.all(
             NFTList.map((item) => {
               const itemData = createObjAttrsNFT(
                 item.attributes,
@@ -113,11 +117,13 @@ function CollectionPage() {
             })
           ).then((NFTListFormatted) => {
             collectionDetail.NFTListFormatted = NFTListFormatted;
-
+            console.log("xxx collectionDetail ", collectionDetail);
             setFormattedCollection(collectionDetail);
           });
-        } else if (
-          collectionDetail.contractType == "1" &&
+        }
+
+        if (
+          Number(collectionDetail.contractType) === 1 &&
           !collectionDetail.showOnChainMetadata
         ) {
           const nft_contract = new ContractPromise(
@@ -125,34 +131,42 @@ function CollectionPage() {
             artzero_nft.CONTRACT_ABI,
             collectionDetail.nftContractAddress
           );
+
           const gasLimit = -1;
           const azero_value = 0;
+
           const { result, output } = await nft_contract.query["getTokenCount"](
             currentAccount.address,
             { value: azero_value, gasLimit }
           );
+
           if (result.isOk) {
             const token_count = new BN(output, 10, "le").toNumber();
+
             collectionDetail.nftTotalCount = token_count;
+
             if (token_count) {
               let NFTListFormattedAdv = [];
+
               for (let i = 1; i <= token_count; i++) {
                 const token_id = new U64(new TypeRegistry(), i);
-                const { result, output } = await nft_contract.query["psp34Traits::tokenUri"](
+                const { result, output } = await nft_contract.query[
+                  "psp34Traits::tokenUri"
+                ](
                   currentAccount.address,
                   { value: azero_value, gasLimit },
                   token_id
                 );
+
                 if (result.isOk) {
                   const token_uri = output.toHuman();
                   const metadata = await clientAPI(
                     "get",
-                    "/getJSON?input=" +
-                      token_uri,
+                    "/getJSON?input=" + token_uri,
                     {}
                   );
                   if (metadata) {
-                    let nftItem = NFTList[i-1];
+                    let nftItem = NFTList[i - 1];
                     let attributeLabels = [];
                     let attributeVals = [];
                     let attrsList = [];
@@ -160,13 +174,12 @@ function CollectionPage() {
                       for (let attribute of metadata.attributes) {
                         attributeLabels.push(attribute.trait_type);
                         attributeVals.push(attribute.value);
-                        attrsList.push(createObjAttrsNFT(
-                          attributeLabels,
-                          attributeVals
-                        ));
+                        attrsList.push(
+                          createObjAttrsNFT(attributeLabels, attributeVals)
+                        );
                       }
                     }
-                    
+
                     nftItem.attributes = attributeLabels;
                     nftItem.attributesValue = attributeLabels;
                     nftItem.attrsList = attrsList;
@@ -193,11 +206,12 @@ function CollectionPage() {
   }, [currentAccount, formattedCollection, collection_address, api]);
 
   useEffect(() => {
+    console.log("formattedCollection1", formattedCollection);
     isShowUnlisted &&
       formattedCollection?.nftList?.filter((i) => i.is_for_sale === false);
+    console.log("formattedCollection2", formattedCollection);
   }, [formattedCollection, isShowUnlisted]);
-
-
+  console.log("formattedCollection", formattedCollection);
   const tabData = [
     {
       label: "Items",

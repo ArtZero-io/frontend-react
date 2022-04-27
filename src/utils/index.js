@@ -174,3 +174,16 @@ export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
 
   return console.log("Can not create attributes Object");
 };
+
+export const createLevelAttribute = (levelString) => {
+  // eslint-disable-next-line no-unused-vars
+  const location = Number(levelString.indexOf("|"));
+  // eslint-disable-next-line no-unused-vars
+  const leftNumber = levelString.slice(0, location);
+  const rightNumber = levelString.slice(-(location + 1));
+
+  console.log("levelString", levelString);
+  console.log("location", location);
+  console.log("leftNumber", leftNumber);
+  console.log("rightNumber", rightNumber);
+};

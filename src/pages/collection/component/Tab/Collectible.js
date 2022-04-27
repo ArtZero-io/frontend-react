@@ -30,7 +30,7 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 // import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 // import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "@utils/substrate";
-import { convertStringToPrice } from "@utils";
+import { convertStringToPrice, createLevelAttribute } from "@utils";
 // import artzero_nft from "@utils/blockchain/artzero-nft";
 // import { ContractPromise } from "@polkadot/api-contract";
 // import axios from "axios";
@@ -86,11 +86,11 @@ const NFTTabCollectible = ({
       const listBidder = await marketplace_contract_calls.getAllBids(
         currentAccount,
         nftContractAddress,
-        sale_info.nftOwner,
+        sale_info?.nftOwner,
         { u64: tokenID }
       );
       for (const item of listBidder) {
-        if (item.bidder == currentAccount.address) {
+        if (item.bidder == currentAccount?.address) {
           setIsBided(true);
           setBidPrice(convertStringToPrice(item.bidValue));
         }
@@ -335,13 +335,13 @@ const NFTTabCollectible = ({
 
                 <Flex w="full">
                   <Spacer />
-                  <Text textAlign="right" color="brand.grayLight">
+                  <Box textAlign="right" color="brand.grayLight">
                     <Text>Current price</Text>
                     <Tag h={4} pr={0} bg="transparent">
                       <TagLabel bg="transparent">{price / 10 ** 12}</TagLabel>
                       <TagRightIcon as={AzeroIcon} />
                     </Tag>
-                  </Text>
+                  </Box>
                 </Flex>
               </Flex>
 
@@ -413,13 +413,13 @@ const NFTTabCollectible = ({
 
                 <Flex w="full">
                   <Spacer />
-                  <Text textAlign="right" color="brand.grayLight">
+                  <Box textAlign="right" color="brand.grayLight">
                     <Text>Current offer</Text>
                     <Tag pr={0} bg="transparent">
                       <TagLabel bg="transparent">{bidPrice}</TagLabel>
                       <TagRightIcon as={AzeroIcon} />
                     </Tag>
-                  </Text>
+                  </Box>
                 </Flex>
               </Flex>
             </>
@@ -452,9 +452,9 @@ const NFTTabCollectible = ({
           {attrsList?.length
             ? attrsList
                 .filter((i) => !JSON.stringify(Object.values(i)).includes("|"))
-                .map((item) => {
+                .map((item, idx) => {
                   return (
-                    <GridItem w="100%" h="100%">
+                    <GridItem key={idx} w="100%" h="100%">
                       <Box
                         w="full"
                         textAlign="left"
@@ -507,6 +507,8 @@ const NFTTabCollectible = ({
                         </Heading>
                         <Spacer />
                         <Text color="#fff">
+                          {createLevelAttribute(Object.values(item)[0])}
+                          {console.log('Object.values(item)[0]', Object.values(item)[0])}
                           {Object.values(item)[0].slice(0, 1)} of{" "}
                           {Object.values(item)[0].slice(-1)}
                         </Text>

@@ -1,31 +1,20 @@
-/* eslint-disable no-unused-vars */
 import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   Flex,
-  FormLabel,
   Heading,
   IconButton,
-  Input,
   Modal,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Text,
 } from "@chakra-ui/react";
-import { Field, FieldArray, useField } from "formik";
+import { FieldArray, useField } from "formik";
 import toast from "react-hot-toast";
 import AddLevelsInput from "@components/Input/Input";
-// import AddCollectionNumberInput from "../../../account/collections/components/NumberInput";
-import { FormControl } from "formik-chakra-ui";
-import LevelsNumberInput from "../LevelsNumberInput";
 
 function AddLevelsModal({ name, isOpen, onClose }) {
   const [{ value }] = useField(name);
@@ -78,7 +67,7 @@ function AddLevelsModal({ name, isOpen, onClose }) {
               Level
             </Text>
           </Box>
-          <Box mb={4} flexGrow={2} textAlign="left" pl={3} minW={16} w={16}>
+          <Box mb={4} flexGrow={2} textAlign="left" pl={3} minW={16} w={20}>
             <Text fontSize={"lg"} color="#fff">
               Level Max
             </Text>
@@ -125,7 +114,7 @@ function AddLevelsModal({ name, isOpen, onClose }) {
                         flexGrow={1}
                         mx={5}
                         height={16}
-                        width={28}
+                        width={36}
                         autoComplete="off"
                         name={`levels.${index}.levelMax`}
                         type="number"
@@ -163,7 +152,9 @@ function AddLevelsModal({ name, isOpen, onClose }) {
                       !arrayHelpers?.form?.dirty ||
                       arrayHelpers.form?.errors?.levels
                     }
-                    onClick={() => arrayHelpers.push({ type: "", name: "" })}
+                    onClick={() =>
+                      arrayHelpers.push({ name: "", level: "", levelMax: "" })
+                    }
                   >
                     Add more
                   </Button>

@@ -70,8 +70,8 @@ const SimpleModeForm = ({ mode, id }) => {
         });
         console.log("dataList", dataList);
         newInitialValues = {
-          nftName: "NOT RET YET",
-          nftSymbol: "NOT RET YET",
+          nftName: "",
+          nftSymbol: "",
           collectionName: dataList[0].name,
           collectionDescription: dataList[0].description,
           collectRoyalFee: dataList[0].isCollectRoyalFee,
