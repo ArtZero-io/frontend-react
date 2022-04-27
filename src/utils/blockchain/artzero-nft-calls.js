@@ -233,7 +233,7 @@ async function tokenUri(caller_account, tokenId) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query.tokenUri(
+  const { result, output } = await contract.query["psp34Traits::tokenUri"](
     address,
     {
       value: azero_value,
