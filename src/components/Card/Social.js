@@ -13,8 +13,6 @@ import { MdEmail } from "react-icons/md";
 import { BsMedium } from "react-icons/bs";
 
 function SocialCard({ profile, pos, right, top }) {
-  console.log("profile", profile);
-
   const iconList = {
     website: <FaGlobe size="1.5rem" />,
     telegram: <FaTelegram size="1.5rem" />,

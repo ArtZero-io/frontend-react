@@ -45,23 +45,22 @@ function MintHeader() {
   const onGetTotalMinted = useCallback(
     async (e) => {
       let res = await artzero_nft_calls.totalSupply(currentAccount);
-      console.log("res", res);
+
       if (res) setTotalMinted(res);
       else setTotalMinted(0);
     },
     [currentAccount]
   );
 
-  const onGetWhiteList = async (e) => {
-    let whitelist = await artzero_nft_calls.getWhitelist(
-      currentAccount,
-      currentAccount.address
-    );
-    if (whitelist) setWhitelist(whitelist);
-    else setWhitelist(null);
-  };
-
   useEffect(() => {
+    const onGetWhiteList = async (e) => {
+      let whitelist = await artzero_nft_calls.getWhitelist(
+        currentAccount,
+        currentAccount.address
+      );
+      if (whitelist) setWhitelist(whitelist);
+      else setWhitelist(null);
+    };
     const onGetBalance = async (e) => {
       let res = await artzero_nft_calls.balanceOf(
         currentAccount,
@@ -72,7 +71,7 @@ function MintHeader() {
     };
     onGetBalance();
     onGetWhiteList();
-  }, [currentAccount, onGetWhiteList]);
+  }, [currentAccount]);
 
   const onGetMintMode = async (e) => {
     let mintMode = await artzero_nft_calls.getMintMode(currentAccount);
@@ -119,8 +118,6 @@ function MintHeader() {
     const { data } = await api.query.system.account(currentAccount.address);
 
     const balance = new BN(data.free, 10, "le") / 10 ** 12;
-
-    console.log("data", balance);
 
     if (mintMode === "1") {
       if (balance < fee1 + 0.01) {

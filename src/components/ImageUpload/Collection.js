@@ -8,7 +8,8 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+
+import { useState } from "react";
 import { HiCloudUpload } from "react-icons/hi";
 
 import { create } from "ipfs-http-client";
@@ -32,10 +33,6 @@ const ImageUploadCollection = ({
 
   const [newAvatarData, setNewAvatarData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
-
-  useEffect(() => {
-    mode === "edit" && setImagePreviewUrl(imageIPFSUrl);
-  }, [imageIPFSUrl, mode]);
 
   const retrieveNewAvatar = (e) => {
     setImgURL(null);
@@ -124,18 +121,18 @@ const ImageUploadCollection = ({
           </label>
         </HStack>
 
+        {mode === "edit" && !imagePreviewUrl && (
+          <Avatar
+            minH={16}
+            minW={16}
+            ml={2}
+            src={`${IPFS_BASE_URL}/${imageIPFSUrl}`}
+          />
+        )}
+
         {imagePreviewUrl && (
           <HStack justifyContent="center" minH={16}>
-            {mode === "edit" ? (
-              <Avatar
-                minH={16}
-                minW={16}
-                ml={2}
-                src={`${IPFS_BASE_URL}/${imageIPFSUrl}`}
-              />
-            ) : (
-              <Avatar minH={16} minW={16} ml={2} src={imagePreviewUrl} />
-            )}
+            <Avatar minH={16} minW={16} ml={2} src={imagePreviewUrl} />
 
             {imgURL ? (
               <Text minW={28} color="brand.blue">

@@ -125,120 +125,6 @@ const NFTTabCollectible = ({
     }
   };
 
-  // const loadNFT = async () => {
-  //   let currentCollection =
-  //     await collection_manager_calls.getCollectionByAddress(
-  //       currentAccount,
-  //       collection_address
-  //     );
-
-  //   if (currentCollection?.showOnChainMetadata) {
-  //     const nft721_psp34_standard_contract = new ContractPromise(
-  //       api,
-  //       nft721_psp34_standard.CONTRACT_ABI,
-  //       collection_address
-  //     );
-  //     nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-  //     const attribute_count =
-  //       await nft721_psp34_standard_calls.getAttributeCount(currentAccount);
-  //     let atts = [];
-  //     const tokenId = nft721_psp34_standard_contract.api.createType(
-  //       "ContractsPsp34Id",
-  //       { U8: numberToU8a(address) }
-  //     );
-  //     const tokenName = await nft721_psp34_standard_calls.getAttribute(
-  //       currentAccount,
-  //       tokenId,
-  //       stringToHex("nft_name")
-  //     );
-  //     const tokenAvatar = await nft721_psp34_standard_calls.getAttribute(
-  //       currentAccount,
-  //       tokenId,
-  //       stringToHex("avatar")
-  //     );
-  //     console.log(tokenAvatar);
-  //     const base_attributes = ["nft_name", "description", "avatar"];
-  //     for (let j = 1; j <= attribute_count; j++) {
-  //       const attribute_name =
-  //         await nft721_psp34_standard_calls.getAttributeName(currentAccount, j);
-
-  //       if (attribute_name && !base_attributes.includes(attribute_name)) {
-  //         const attribute_val = await nft721_psp34_standard_calls.getAttribute(
-  //           currentAccount,
-  //           tokenId,
-  //           stringToHex(attribute_name)
-  //         );
-  //         if (attribute_val) {
-  //           atts.push({ name: attribute_name, value: attribute_val });
-  //         }
-  //       }
-  //     }
-  //     const tokenIdU64 = nft721_psp34_standard_contract.api.createType(
-  //       "ContractsPsp34Id",
-  //       { U64: new U64(new TypeRegistry(), address) }
-  //     );
-  //     const nftSaleInfo = await marketplace_contract_calls.getNftSaleInfo(
-  //       currentAccount,
-  //       collection_address,
-  //       tokenIdU64
-  //     );
-  //     console.log('nftSaleInfo', nftSaleInfo);
-  //     const nft = {
-  //       id: address,
-  //       askPrice: nftSaleInfo.price,
-  //       bidPrice: "12.3",
-  //       name: tokenName,
-  //       img: `${IPFS_BASE_URL}/${tokenAvatar}`,
-  //       atts: atts,
-  //     };
-  //     console.log(nft);
-  //     setNFT(nft);
-  //     // const tokenId = nft721_psp34_standard_contract.api.createType('ContractsPsp34Id', {'U8': numberToU8a(i)});
-  //     // const attributeVals = await nft721_psp34_standard_calls.getAttributes(currentAccount, tokenId, attributes);
-  //     // console.log(attributeVals);
-  //   } else {
-  //     if (nftContractAddress === artzero_nft.CONTRACT_ADDRESS) {
-  //       if (!artzero_nft_calls.isLoaded()) {
-  //         const artzero_nft_contract = new ContractPromise(
-  //           api,
-  //           artzero_nft.CONTRACT_ABI,
-  //           artzero_nft.CONTRACT_ADDRESS
-  //         );
-  //         artzero_nft_calls.setContract(artzero_nft_contract);
-  //       }
-  //       const res = await artzero_nft_calls.tokenUri(currentAccount, address);
-  //       axios
-  //         .get(res)
-  //         .then((response) => {
-  //           if (response.status === 200) {
-  //             let atts = [];
-  //             console.log(response.data.attributes);
-  //             for (const attribute of response.data.attributes) {
-  //               atts.push({
-  //                 name: attribute.trait_type,
-  //                 value: attribute.value,
-  //               });
-  //             }
-  //             const nft = {
-  //               id: address,
-  //               askPrice: "12.3",
-  //               bidPrice: "12.3",
-  //               name: response.data.name,
-  //               img: response.data.image,
-  //               atts: atts,
-  //             };
-  //             console.log(nft);
-  //             setNFT(nft);
-  //           }
-  //         })
-  //         .catch((error) => {
-  //           console.log(error);
-  //         });
-  //     }
-  //   }
-  //   console.log(NFT);
-  // };
-
   const removeBid = async () => {
     const res = await marketplace_contract_calls.removeBid(
       currentAccount,
@@ -251,10 +137,6 @@ const NFTTabCollectible = ({
   };
 
   const placeOffer = async () => {
-    console.log("placeOffer", bidPrice, "AZERO");
-
-    //TODO Handle validate price
-
     const { data: balance } = await api.query.system.account(
       currentAccount.address
     );

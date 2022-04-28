@@ -53,8 +53,8 @@ export default function App() {
       </Modal>
 
       <Toaster
-        position="top-right"
-        reverseOrder={false}
+        position="bottom-left"
+        reverseOrder={true}
         toastOptions={{
           style: {
             marginRight: "2rem",

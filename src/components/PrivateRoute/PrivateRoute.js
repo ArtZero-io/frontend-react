@@ -46,7 +46,12 @@ const PrivateRoute = ({ ...rest }) => {
           justifyContent="center"
           alignItems="center"
         >
-          <CommonLoader color="#7ae7ff" size={15} margin={3} speedMultiplier={1.5} />
+          <CommonLoader
+            color="#7ae7ff"
+            size={15}
+            margin={3}
+            speedMultiplier={1.5}
+          />
           <Heading size="h6" my={14}>
             Re - connecting to network . . .
           </Heading>
@@ -56,24 +61,21 @@ const PrivateRoute = ({ ...rest }) => {
   }
 
   if (!currentAccount?.address) return <Redirect to={ROUTES.HOME} />;
-  console.log("Init setProfileContract");
+  
   setAccountProfileModule(currentAccount);
   setProfileContract(api, contractData.profile);
 
-  console.log("Init setStakingContract");
   setAccountStakingModule(currentAccount);
   setStakingContract(api, contractData.staking);
 
-  console.log("Init setCollectionContract");
   setAccountCollectionModule(currentAccount);
   setCollectionContract(api, contractData.collection);
 
-  console.log("Init setMarketplaceContract");
   setAccountMarketplaceModule(currentAccount);
   setMarketplaceContract(api, contractData.marketplace);
 
   setAccountAZNFTModule(currentAccount);
-  setAZNFTContract(api,contractData.artzeroNft);
+  setAZNFTContract(api, contractData.artzeroNft);
 
   return <Route {...rest} />;
 };

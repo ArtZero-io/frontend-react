@@ -13,10 +13,10 @@ let contract;
 
 export const setAccount = (newAccount) => (account = newAccount);
 
-function isLoaded() {
-  if (contract) return true;
-  else return false;
-}
+// function isLoaded() {
+//   if (contract) return true;
+//   else return false;
+// }
 
 export const setMarketplaceContract = (api, data) => {
   contract = new ContractPromise(

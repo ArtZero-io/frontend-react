@@ -39,8 +39,9 @@ function AddNewCollection({ forceUpdate, mode, id }) {
           type: AccountActionTypes.SET_TNX_STATUS,
           payload: null,
         });
+
         forceUpdate();
-        console.log("forceUpdate...");
+
         onCloseAddNew();
       }
     }
@@ -65,7 +66,7 @@ function AddNewCollection({ forceUpdate, mode, id }) {
           top="1.5rem"
           right="1rem"
           aria-label="edit"
-          icon={<EditIcon color="#7ae7ff" fontSize='1.5rem'/>}
+          icon={<EditIcon color="#7ae7ff" fontSize="1.5rem" />}
           size="icon"
           borderWidth={0}
           variant="iconOutline"

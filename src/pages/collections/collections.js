@@ -167,20 +167,22 @@ const CollectionsPage = () => {
                     columns={{ base: 1, md: 2, lg: 3 }}
                     spacing="8"
                   >
-                    {collections?.map((item) => (
-                      <React.Fragment key={item?.index}>
-                        <Link
-                          id="asd"
-                          minW="full"
-                          maxW="full"
-                          as={ReactRouterLink}
-                          to={`collection/${item?.nftContractAddress}`}
-                          style={{ textDecoration: "none" }}
-                        >
-                          <CollectionCard {...item} />
-                        </Link>
-                      </React.Fragment>
-                    ))}
+                    {collections
+                      ?.filter((i) => i.isActive)
+                      .map((item) => (
+                        <React.Fragment key={item?.index}>
+                          <Link
+                            id="asd"
+                            minW="full"
+                            maxW="full"
+                            as={ReactRouterLink}
+                            to={`collection/${item?.nftContractAddress}`}
+                            style={{ textDecoration: "none" }}
+                          >
+                            <CollectionCard {...item} />
+                          </Link>
+                        </React.Fragment>
+                      ))}
                   </SimpleGrid>
 
                   <Flex w="full" alignItems="end">

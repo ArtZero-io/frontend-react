@@ -1,6 +1,8 @@
+import { EditIcon } from "@chakra-ui/icons";
 import {
   Button,
   Heading,
+  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,14 +14,36 @@ import {
 import React from "react";
 import AdvancedModeForm from "../Form/AdvancedMode";
 
-function AdvancedModeModal() {
+function AdvancedModeModal({ mode = "add", id }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-        Advanced Mode
-      </Button>
+      {mode === "add" && (
+        <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
+          Advanced Mode
+        </Button>
+      )}
+      {mode === "edit" && (
+        <IconButton
+          pos="absolute"
+          top="1.5rem"
+          right="1rem"
+          aria-label="edit"
+          icon={<EditIcon color="#7ae7ff" fontSize="1.5rem" />}
+          size="icon"
+          borderWidth={0}
+          variant="iconOutline"
+          onClick={() => onOpen()}
+          h={0}
+          _hover={{
+            h: 0,
+          }}
+          _focus={{
+            h: 0,
+          }}
+        />
+      )}
 
       <Modal isCentered isOpen={isOpen} onClose={onClose} size="4xl">
         <ModalOverlay
@@ -42,11 +66,11 @@ function AdvancedModeModal() {
           />
           <ModalHeader>
             <Heading size="h4" my={2}>
-              Advanced Mode
+              {mode === "add" ? "Advanced Mode" : "Edit Collection"}
             </Heading>
           </ModalHeader>
           <ModalBody>
-            <AdvancedModeForm onClose={onClose} />
+            <AdvancedModeForm onClose={onClose} mode={mode} id={id} />
           </ModalBody>
         </ModalContent>
       </Modal>

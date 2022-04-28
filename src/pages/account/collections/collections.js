@@ -6,51 +6,67 @@ import {
   Link,
   SimpleGrid,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 
 import React, { useEffect, useState, useCallback } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
-// import { usePagination } from "@ajna/pagination";
+import { usePagination } from "@ajna/pagination";
 import toast from "react-hot-toast";
 
+import { NUMBER_PER_PAGE } from "@constants/index";
 import { CollectionCard } from "@components/Card/Collection";
-// import PaginationMP from "@components/Pagination/Pagination";
-import * as ROUTES from "@constants/routes";
+import PaginationMP from "@components/Pagination/Pagination";
 
 import { clientAPI } from "@api/client";
+import * as ROUTES from "@constants/routes";
 import { useSubstrateState } from "@utils/substrate";
-// import { NUMBER_PER_PAGE } from "@constants/index";
 
+import SimpleModeModal from "./components/Modal/SimpleMode";
+import AdvancedModeModal from "./components/Modal/AdvancedMode";
 import AddNewCollectionModal from "./components/Modal/AddNew";
 
 function MyCollectionsPage() {
   const [collections, setCollections] = useState(null);
   const [owner, setOwner] = useState(null);
   const { currentAccount } = useSubstrateState();
+  const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
 
-  // const {
-  //   pagesCount,
-  //   currentPage,
-  //   setCurrentPage,
-  //   isDisabled,
-  //   offset,
-  //   pageSize,
-  // } = usePagination({
-  //   total: totalCollectionsCount,
-  //   initialState: {
-  //     pageSize: NUMBER_PER_PAGE,
-  //     isDisabled: false,
-  //     currentPage: 1,
-  //   },
-  // });
+  const {
+    isOpen: isOpenSimpleMode,
+    // onOpen: onOpenSimpleMode,
+    onClose: onCloseSimpleMode,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenAdvancedMode,
+    // onOpen: onOpenAdvancedMode,
+    onClose: onCloseAdvancedMode,
+  } = useDisclosure();
+
+  const {
+    pagesCount,
+    currentPage,
+    setCurrentPage,
+    isDisabled,
+    offset,
+    pageSize,
+  } = usePagination({
+    total: totalCollectionsCount,
+    initialState: {
+      pageSize: NUMBER_PER_PAGE,
+      isDisabled: false,
+      currentPage: 1,
+    },
+  });
 
   useEffect(() => {
     const fetchCollectionsOwned = async () => {
       const options = {
         owner: currentAccount.address,
-        limit: 6,
+        limit: pageSize,
+        offset: offset,
         sort: -1,
-        offset: 0,
       };
 
       try {
@@ -60,9 +76,14 @@ function MyCollectionsPage() {
           options
         );
 
-        dataList?.length ? setCollections(dataList) : setCollections(null);
-        dataList?.length &&
+        if (dataList?.length) {
           setOwner(dataList[0].collectionOwner || options.owner);
+          setTotalCollectionsCount(dataList?.length);
+
+          return setCollections(dataList);
+        }
+
+        setCollections(null);
       } catch (error) {
         console.log(error);
 
@@ -72,7 +93,7 @@ function MyCollectionsPage() {
 
     (!collections || owner !== currentAccount?.address) &&
       fetchCollectionsOwned();
-  }, [collections, currentAccount, owner]);
+  }, [collections, currentAccount, offset, owner, pageSize]);
 
   const forceUpdate = useCallback(() => {
     setCollections(null);
@@ -88,7 +109,9 @@ function MyCollectionsPage() {
       >
         <Flex w="full" alignItems="start" pb={12}>
           <Heading size="h2">My collections</Heading>
+
           <Spacer />
+
           <AddNewCollectionModal forceUpdate={forceUpdate} mode="add" />
         </Flex>
         {/* {loading && (
@@ -117,6 +140,22 @@ function MyCollectionsPage() {
                       mode="edit"
                       id={item.index}
                     />
+                    {Number(item.contractType) === 2 && (
+                      <SimpleModeModal
+                        mode="edit"
+                        id={item.index}
+                        isOpen={isOpenSimpleMode}
+                        onClose={onCloseSimpleMode}
+                      />
+                    )}
+                    {Number(item.contractType) === 1 && (
+                      <AdvancedModeModal
+                        mode="edit"
+                        id={item.index}
+                        isOpen={isOpenAdvancedMode}
+                        onClose={onCloseAdvancedMode}
+                      />
+                    )}
                     <Link
                       minW={{ base: "auto", "2xl": "25rem" }}
                       as={ReactRouterLink}
@@ -130,7 +169,7 @@ function MyCollectionsPage() {
                 </React.Fragment>
               ))}
             </SimpleGrid>
-            {/* <Flex w="full">
+            <Flex w="full">
               <PaginationMP
                 isDisabled={isDisabled}
                 currentPage={currentPage}
@@ -138,7 +177,7 @@ function MyCollectionsPage() {
                 setCurrentPage={setCurrentPage}
               />
               <Spacer />
-            </Flex> */}
+            </Flex>
           </>
         ) : null}
       </Box>

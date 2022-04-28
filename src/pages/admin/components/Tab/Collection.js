@@ -67,7 +67,7 @@ function CollectionAdmin() {
     };
 
     const collections = await clientAPI("post", "/getCollections", options);
-    //console.log(collections)
+
     setCollections(collections);
   };
   const onSetStatusCollection = async (collection_contract, isActive) => {

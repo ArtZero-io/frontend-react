@@ -152,8 +152,7 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
 }
 
 export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
-  // console.log("createObjAttrsNFT attrsArr", attrsArr);
-  // console.log("createObjAttrsNFT attrsValArr", attrsValArr);
+   
   if (attrsArr.length !== 0 && attrsArr.length === attrsValArr.length) {
     let result = {};
 

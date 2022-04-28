@@ -56,22 +56,22 @@ async function addNewCollection(caller_account, data, dispatch) {
           );
           console.log("update_collection_api_res", update_collection_api_res);
         }
-        // if (dispatchError) {
-        //   if (dispatchError.isModule) {
-        //     toast.error(`There is some error with your request`);
-        //   } else {
-        //     console.log("dispatchError ", dispatchError.toString());
-        //   }
-        // }
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError ", dispatchError.toString());
+          }
+        }
 
-        // if (status) {
-        //   const statusText = Object.keys(status.toHuman())[0];
-        //   toast.success(
-        //     `Add New Collection ${
-        //       statusText === "0" ? "started" : statusText.toLowerCase()
-        //     }.`
-        //   );
-        // }
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+          toast.success(
+            `Add New Collection ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
       }
     )
     .then((unsub) => {

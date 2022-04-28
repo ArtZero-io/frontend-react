@@ -9,7 +9,7 @@ const DesktopNavLink = ({ label, to, ...props }) => {
   const [path, setPath] = useState(location.pathname);
   useEffect(() => {
     setPath(location.pathname);
-    //console.log(path,ReactRouterLink,to);
+
   }, [location.pathname]);
   return (
     <Link

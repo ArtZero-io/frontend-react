@@ -91,8 +91,6 @@ function CollectionPage() {
 
         const NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
 
-
-        
         collectionDetail.floorPrice = floorPrice?.price || 0;
 
         collectionDetail.nftTotalCount = NFTList?.length;
@@ -200,12 +198,10 @@ function CollectionPage() {
   }, [currentAccount, formattedCollection, collection_address, api]);
 
   useEffect(() => {
-    console.log("formattedCollection1", formattedCollection);
     isShowUnlisted &&
       formattedCollection?.nftList?.filter((i) => i.is_for_sale === false);
-    console.log("formattedCollection2", formattedCollection);
   }, [formattedCollection, isShowUnlisted]);
-  console.log("formattedCollection", formattedCollection);
+
   const tabData = [
     {
       label: "Items",

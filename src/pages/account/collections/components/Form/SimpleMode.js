@@ -58,7 +58,7 @@ const SimpleModeForm = ({ mode, id }) => {
       collectionName: "",
       collectionDescription: "",
       collectRoyalFee: "",
-      royalFee: "",
+      royalFee: 5,
       website: "",
       twitter: "",
       discord: "",
@@ -68,7 +68,7 @@ const SimpleModeForm = ({ mode, id }) => {
         const dataList = await clientAPI("post", "/getCollectionByID", {
           id,
         });
-        console.log("dataList", dataList);
+
         newInitialValues = {
           nftName: "",
           nftSymbol: "",
@@ -178,7 +178,6 @@ const SimpleModeForm = ({ mode, id }) => {
                     : 0,
                 };
 
-                console.log("data", data);
                 await collection_manager_calls.autoNewCollection(
                   currentAccount,
                   data,

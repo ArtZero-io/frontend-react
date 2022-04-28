@@ -8,11 +8,13 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
+  IconButton,
 } from "@chakra-ui/react";
+import { EditIcon } from "@chakra-ui/icons";
 
 import SimpleModeForm from "../Form/SimpleMode";
 
-function SimpleModeModal({ mode, id }) {
+function SimpleModeModal({ mode = "add", id }) {
   const {
     isOpen: isOpenSimpleMode,
     onOpen: onOpenSimpleMode,
@@ -21,16 +23,37 @@ function SimpleModeModal({ mode, id }) {
 
   return (
     <>
-      <Button
-        variant="outline"
-        color="brand.blue"
-        onClick={() => {
-          onOpenSimpleMode();
-        }}
-      >
-        Simple Mode
-      </Button>
-
+      {mode === "add" && (
+        <Button
+          variant="outline"
+          color="brand.blue"
+          onClick={() => {
+            onOpenSimpleMode();
+          }}
+        >
+          Simple Mode
+        </Button>
+      )}
+      {mode === "edit" && (
+        <IconButton
+          pos="absolute"
+          top="1.5rem"
+          right="1rem"
+          aria-label="edit"
+          icon={<EditIcon color="#7ae7ff" fontSize="1.5rem" />}
+          size="icon"
+          borderWidth={0}
+          variant="iconOutline"
+          onClick={() => onOpenSimpleMode()}
+          h={0}
+          _hover={{
+            h: 0,
+          }}
+          _focus={{
+            h: 0,
+          }}
+        />
+      )}
       <Modal
         isCentered
         isOpen={isOpenSimpleMode}

@@ -106,7 +106,7 @@ const MyStakesPage = () => {
 
   const getMyStakedAZNFTs = async (total_staked) =>{
 
-    if (total_staked == 0) return;
+    if (total_staked === 0) return;
 
     let tokens = [];
     for (var i=1;i<=total_staked;i++){
@@ -123,7 +123,7 @@ const MyStakesPage = () => {
 
   const getMyPendingUnstakeAZNFTs = async (total_pending) =>{
     console.log('getMyPendingUnstakeAZNFTs');
-    if (total_pending == 0) return;
+    if (total_pending === 0) return;
 
     let tokens = [];
     for (var i=1;i<=total_pending;i++){
@@ -157,9 +157,9 @@ const MyStakesPage = () => {
   const onClickHandler = async (e) => {
     const id = e.target.getAttribute("id").toString();
 
-    if (id == "staked") az_collection[0].listNFT = my_staked_az_nfts;
-    else if (id == "notStaked") az_collection[0].listNFT = my_az_nfts;
-    else if (id == "pending") az_collection[0].listNFT = my_pending_az_nfts;
+    if (id === "staked") az_collection[0].listNFT = my_staked_az_nfts;
+    else if (id === "notStaked") az_collection[0].listNFT = my_az_nfts;
+    else if (id === "pending") az_collection[0].listNFT = my_pending_az_nfts;
     console.log(az_collection);
     setCurrentTabList(az_collection);
     setCurrentTab(id);
@@ -178,7 +178,7 @@ const MyStakesPage = () => {
           <Heading size="h2">My Stakes</Heading>
           <Spacer />
           <Button
-            isActive={"notStaked" == currentTab}
+            isActive={"notStaked" === currentTab}
             id="notStaked"
             variant="outline"
             mx={1}
@@ -187,7 +187,7 @@ const MyStakesPage = () => {
             Not Staked
           </Button>
           <Button
-            isActive={"pending" == currentTab}
+            isActive={"pending" === currentTab}
             id="pending"
             variant="outline"
             mx={1}
@@ -196,7 +196,7 @@ const MyStakesPage = () => {
             Pending Unstake
           </Button>
           <Button
-            isActive={"staked" == currentTab}
+            isActive={"staked" === currentTab}
             id="staked"
             variant="outline"
             mx={1}
