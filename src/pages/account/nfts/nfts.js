@@ -72,8 +72,7 @@ const MyNFTsPage = () => {
           return collection;
         })
       );
-
-      data.length ? setMyCollections(data) : setMyCollections({});
+      data.length ? setMyCollections(data) : setMyCollections(null);
     };
 
     if (!myCollections) {

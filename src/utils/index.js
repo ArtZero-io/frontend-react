@@ -3,6 +3,10 @@ import { hexToU8a, isHex } from "@polkadot/util";
 import { AccountActionTypes } from "../store/types/account.types";
 import BN from "bn.js";
 
+export function shortenNumber(number){
+  let formatter = Intl.NumberFormat('en', { notation: 'compact' });
+  return formatter.format(number);
+}
 export function isValidImage(imageUrl) {
   try {
     fetch(imageUrl).then((res) => {
@@ -152,7 +156,7 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
 }
 
 export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
-   
+
   if (attrsArr.length !== 0 && attrsArr.length === attrsValArr.length) {
     let result = {};
 

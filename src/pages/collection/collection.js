@@ -21,6 +21,8 @@ import { createObjAttrsNFT } from "@utils/index";
 import { delay } from "../../utils";
 import Loader from "@components/Loader/CommonLoader";
 import artzero_nft from "@utils/blockchain/artzero-nft";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+
 
 function CollectionPage() {
   const [formattedCollection, setFormattedCollection] = useState(null);
@@ -71,7 +73,7 @@ function CollectionPage() {
       };
 
       try {
-        console.log("1");
+        // console.log("1");
 
         const [collectionDetail] = await clientAPI(
           "post",
@@ -81,7 +83,7 @@ function CollectionPage() {
           }
         );
 
-        console.log("2");
+        // console.log("2");
 
         const [floorPrice] = await clientAPI("post", "/getFloorPrice", {
           collection_address,
@@ -95,7 +97,21 @@ function CollectionPage() {
 
         collectionDetail.nftTotalCount = NFTList?.length;
 
-        console.log(Number(collectionDetail.contractType) === 2);
+        collectionDetail.totalListed = await marketplace_contract_calls.getListedTokenCountByCollectionAddress(
+          currentAccount, collection_address
+        );
+        try {
+          collectionDetail.volume = await marketplace_contract_calls.getVolumeByCollection(
+            currentAccount, collection_address
+          );
+        }
+        catch (e) {
+          collectionDetail.volume = 0;
+        }
+
+        // console.log('totalListed',currentAccount,collection_address,collectionDetail.totalListed);
+        //
+        // console.log(Number(collectionDetail.contractType) === 2);
 
         if (Number(collectionDetail.contractType) === 2) {
           return Promise.all(
@@ -194,8 +210,8 @@ function CollectionPage() {
       }
     };
 
-    !formattedCollection && fetchCollectionDetail();
-  }, [currentAccount, formattedCollection, collection_address, api]);
+    fetchCollectionDetail();
+  }, [currentAccount]);
 
   useEffect(() => {
     isShowUnlisted &&
