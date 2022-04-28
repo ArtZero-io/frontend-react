@@ -545,10 +545,6 @@ async function removeBid(caller_account, nft_contract_address, token_id) {
 }
 
 async function buy(caller_account, nft_contract_address, token_id, price) {
-  console.log(contract);
-  console.log(!contract);
-  console.log(!caller_account);
-  console.log(!isValidAddressPolkadotAddress(nft_contract_address));
   if (
     !contract ||
     !caller_account ||
@@ -561,10 +557,10 @@ async function buy(caller_account, nft_contract_address, token_id, price) {
 
   const address = caller_account?.address;
   const gasLimit = -1;
-  const azero_value = new U128(new TypeRegistry(), price);
+  //const azero_value = new U128(new TypeRegistry(), price);
   const injector = await web3FromSource(caller_account?.meta?.source);
   contract.tx
-    .buy({ gasLimit, value: azero_value }, nft_contract_address, token_id)
+    .buy({ gasLimit, value: price }, nft_contract_address, token_id)
     .signAndSend(
       address,
       { signer: injector.signer },
