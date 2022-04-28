@@ -42,7 +42,7 @@ const theme = extendTheme({
         color: "#888",
         fontWeight: "normal",
         fontSize: "16px",
-        "-msOverflowStyle": "none",
+        // "-msOverflowStyle": "none",
         scrollbarWidth: "none",
       },
       "body::-webkit-scrollbar": {

@@ -18,10 +18,12 @@ import { ContractPromise } from "@polkadot/api-contract";
 import BN from "bn.js";
 import { createObjAttrsNFT } from "@utils/index";
 
-import { delay } from "../../utils";
+import { delay, getPublicCurrentAccount } from "../../utils";
 import Loader from "@components/Loader/CommonLoader";
 import artzero_nft from "@utils/blockchain/artzero-nft";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+import contractData from "@utils/blockchain/index";
+import { setMarketplaceContract } from "@utils/blockchain/marketplace_contract_calls";
 
 function CollectionPage() {
   const [formattedCollection, setFormattedCollection] = useState(null);
@@ -92,24 +94,28 @@ function CollectionPage() {
 
         collectionDetail.nftTotalCount = NFTList?.length;
 
-        collectionDetail.totalListed =
+        //Get fake public CurrentAccount
+        const publicCurrentAccount = getPublicCurrentAccount();
+
+        // Create MP contract for public call
+        setMarketplaceContract(api, contractData.marketplace);
+
+        const totalListedData =
           await marketplace_contract_calls.getListedTokenCountByCollectionAddress(
-            currentAccount,
+            publicCurrentAccount,
             collection_address
           );
-        try {
-          collectionDetail.volume =
-            await marketplace_contract_calls.getVolumeByCollection(
-              currentAccount,
-              collection_address
-            );
-        } catch (e) {
-          collectionDetail.volume = 0;
-        }
 
-        // console.log('totalListed',currentAccount,collection_address,collectionDetail.totalListed);
-        //
-        // console.log(Number(collectionDetail.contractType) === 2);
+        collectionDetail.totalListed = totalListedData || 0;
+
+        // const volumeData =
+        //   await marketplace_contract_calls.getVolumeByCollection(
+        //     publicCurrentAccount,
+        //     collection_address
+        //   );
+        // console.log("volumeData", volumeData);
+        // collectionDetail.volume = volumeData || 0;
+        collectionDetail.volume = 999;
 
         if (Number(collectionDetail.contractType) === 2) {
           return Promise.all(

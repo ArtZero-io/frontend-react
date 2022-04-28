@@ -2,9 +2,10 @@ import { decodeAddress, encodeAddress } from "@polkadot/keyring";
 import { hexToU8a, isHex } from "@polkadot/util";
 import { AccountActionTypes } from "../store/types/account.types";
 import BN from "bn.js";
+import Keyring from "@polkadot/keyring";
 
-export function shortenNumber(number){
-  let formatter = Intl.NumberFormat('en', { notation: 'compact' });
+export function shortenNumber(number) {
+  let formatter = Intl.NumberFormat("en", { notation: "compact" });
   return formatter.format(number);
 }
 export function isValidImage(imageUrl) {
@@ -156,7 +157,6 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
 }
 
 export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
-
   if (attrsArr.length !== 0 && attrsArr.length === attrsValArr.length) {
     let result = {};
 
@@ -187,4 +187,22 @@ export const createLevelAttribute = (levelString) => {
   const levelMax = levelString.slice(location + 1, levelString.length);
 
   return { level, levelMax };
+};
+
+export const getPublicCurrentAccount = () => {
+  const keyring = new Keyring({ type: "sr25519" });
+  const PHRASE =
+    "entire material egg meadow latin bargain dutch coral blood melt acoustic thought";
+
+  keyring.addFromUri(PHRASE, { name: "Nobody" });
+
+  const keyringOptions = keyring
+    .getPairs()
+    .map(({ address, meta: { name } }) => ({
+      key: address,
+      address,
+      name,
+    }));
+
+  return keyringOptions[0];
 };

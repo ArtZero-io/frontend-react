@@ -82,8 +82,7 @@ async function getVolumeByCollection(caller_account, nft_contract_address) {
     nft_contract_address
   );
   if (result.isOk) {
-    if (output)
-      return new BN(output, 10, "le").toNumber();
+    if (output) return new BN(output, 10, "le").toNumber();
     else return 0;
   }
   return 0;
@@ -304,9 +303,15 @@ async function getTotalProfit(caller_account) {
   }
   return null;
 }
-async function getListedTokenCountByCollectionAddress(caller_account, nft_contract_address){
-  console.log(contract,caller_account,nft_contract_address);
-  if (!contract || !caller_account || !isValidAddressPolkadotAddress(nft_contract_address)) {
+async function getListedTokenCountByCollectionAddress(
+  caller_account,
+  nft_contract_address
+) {
+  if (
+    !contract ||
+    !caller_account ||
+    !isValidAddressPolkadotAddress(nft_contract_address)
+  ) {
     console.log("invalid inputs");
     return null;
   }
@@ -315,11 +320,12 @@ async function getListedTokenCountByCollectionAddress(caller_account, nft_contra
   const azero_value = 0;
   //console.log(contract);
 
-  const { result, output } = await contract.query.getListedTokenCountByCollectionAddress(
-    address,
-    { value: azero_value, gasLimit },
-    nft_contract_address,
-  );
+  const { result, output } =
+    await contract.query.getListedTokenCountByCollectionAddress(
+      address,
+      { value: azero_value, gasLimit },
+      nft_contract_address
+    );
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }

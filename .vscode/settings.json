@@ -1,7 +1,9 @@
 {
   "thunder-client.codeSnippetLanguage": "js-axios",
   "cSpell.words": [
+    "AZNFT",
     "AZNFTs",
-    "isexternal"
+    "isexternal",
+    "unlist"
   ]
 }
