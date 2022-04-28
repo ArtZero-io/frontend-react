@@ -21,6 +21,7 @@ import { createObjAttrsNFT } from "@utils/index";
 import { delay } from "../../utils";
 import Loader from "@components/Loader/CommonLoader";
 import artzero_nft from "@utils/blockchain/artzero-nft";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
 function CollectionPage() {
   const [formattedCollection, setFormattedCollection] = useState(null);
@@ -90,6 +91,25 @@ function CollectionPage() {
         collectionDetail.floorPrice = floorPrice?.price || 0;
 
         collectionDetail.nftTotalCount = NFTList?.length;
+
+        collectionDetail.totalListed =
+          await marketplace_contract_calls.getListedTokenCountByCollectionAddress(
+            currentAccount,
+            collection_address
+          );
+        try {
+          collectionDetail.volume =
+            await marketplace_contract_calls.getVolumeByCollection(
+              currentAccount,
+              collection_address
+            );
+        } catch (e) {
+          collectionDetail.volume = 0;
+        }
+
+        // console.log('totalListed',currentAccount,collection_address,collectionDetail.totalListed);
+        //
+        // console.log(Number(collectionDetail.contractType) === 2);
 
         if (Number(collectionDetail.contractType) === 2) {
           return Promise.all(
@@ -188,8 +208,8 @@ function CollectionPage() {
       }
     };
 
-    !formattedCollection && fetchCollectionDetail();
-  }, [currentAccount, formattedCollection, collection_address, api]);
+    fetchCollectionDetail();
+  }, [api, collection_address, currentAccount]);
 
   useEffect(() => {
     isShowUnlisted &&

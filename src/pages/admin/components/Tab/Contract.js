@@ -285,7 +285,6 @@ function ContractTab() {
                               bg="black"
                               defaultValue={1}
                               min={1}
-                              max={5}
                               onChange={(valueString) =>
                                 setWhitelistAmount(valueString)
                               }

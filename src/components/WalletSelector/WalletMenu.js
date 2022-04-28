@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import BN from "bn.js";
+import {shortenNumber} from "@utils";
 
 function WalletMenu() {
   const { api, currentAccount } = useSubstrateState();
@@ -24,8 +25,7 @@ function WalletMenu() {
           else
             balSZERO = balSZERO.toNumber() / (10 ** 12);
 
-          let formatter = Intl.NumberFormat('en', { notation: 'compact' });
-          if (balSZERO >= 1) balSZERO = formatter.format(balSZERO);
+          if (balSZERO >= 1) shortenNumber(balSZERO);
           else balSZERO = parseFloat(balSZERO).toFixed(3)
           setAccountBalance(balSZERO);
         })
