@@ -18,7 +18,7 @@ import SimpleMode from "./SimpleMode";
 import AddCollectionIcon from "@theme/assets/icon/AddCollection";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { AccountActionTypes } from "@store/types/account.types";
+// import { AccountActionTypes } from "@store/types/account.types";
 import { EditIcon } from "@chakra-ui/icons";
 
 function AddNewCollection({ forceUpdate, mode, id }) {
@@ -35,12 +35,12 @@ function AddNewCollection({ forceUpdate, mode, id }) {
   useEffect(() => {
     function onCloseHandler() {
       if (tnxStatus?.status === "Finalized") {
-        dispatch({
-          type: AccountActionTypes.SET_TNX_STATUS,
-          payload: null,
-        });
-
-        forceUpdate();
+        // dispatch({
+        //   type: AccountActionTypes.SET_TNX_STATUS,
+        //   payload: null,
+        // });
+        console.log("AddNewCollection onCloseHandler");
+        // forceUpdate();
 
         onCloseAddNew();
       }

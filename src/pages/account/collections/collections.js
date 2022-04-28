@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { usePagination } from "@ajna/pagination";
 import toast from "react-hot-toast";
@@ -25,6 +25,10 @@ import { useSubstrateState } from "@utils/substrate";
 import SimpleModeModal from "./components/Modal/SimpleMode";
 import AdvancedModeModal from "./components/Modal/AdvancedMode";
 import AddNewCollectionModal from "./components/Modal/AddNew";
+import { AccountActionTypes } from "../../../store/types/account.types";
+import { delay } from "../../../utils";
+import { useDispatch, useSelector } from "react-redux";
+import CommonLoader from "../../../components/Loader/CommonLoader";
 
 function MyCollectionsPage() {
   const [collections, setCollections] = useState(null);
@@ -95,9 +99,40 @@ function MyCollectionsPage() {
       fetchCollectionsOwned();
   }, [collections, currentAccount, offset, owner, pageSize]);
 
-  const forceUpdate = useCallback(() => {
-    setCollections(null);
-  }, []);
+  // const forceUpdate = useCallback(() => {
+  //   console.log('MyCollectionsPage fforceUpdateirst')
+  //   setCollections(null);
+  // }, []);
+
+  const dispatch = useDispatch();
+  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const forceUpdateAfterMint = async () => {
+      if (tnxStatus?.status === "Finalized") {
+        dispatch({
+          type: AccountActionTypes.SET_TNX_STATUS,
+          payload: null,
+        });
+
+        setLoading(true);
+        toast.promise(
+          delay(1000).then(() => {
+            setCollections(null);
+            setLoading(false);
+          }),
+          {
+            loading: "Loading new data...",
+            success: `Done!`,
+            error: "Could not load data.",
+          }
+        );
+      }
+    };
+
+    forceUpdateAfterMint();
+  }, [tnxStatus, dispatch]);
 
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">
@@ -112,7 +147,7 @@ function MyCollectionsPage() {
 
           <Spacer />
 
-          <AddNewCollectionModal forceUpdate={forceUpdate} mode="add" />
+          <AddNewCollectionModal mode="add" />
         </Flex>
         {/* {loading && (
           <Center>
@@ -126,60 +161,70 @@ function MyCollectionsPage() {
           </Center>
         )} */}
 
-        <Text textAlign="left" color="brand.grayLight">
-          There are {collections?.length || 0} collections
-        </Text>
-        {collections?.length ? (
+        {loading ? (
+          <CommonLoader
+            addText={`Please wait a moment...`}
+            size="md"
+            maxH={"4.125rem"}
+          />
+        ) : (
           <>
-            <SimpleGrid py={10} columns={{ base: 1, md: 2, lg: 3 }} spacing="7">
-              {collections?.map((item, idx) => (
-                <React.Fragment key={idx}>
-                  <Box pos="relative">
-                    <AddNewCollectionModal
-                      forceUpdate={forceUpdate}
-                      mode="edit"
-                      id={item.index}
-                    />
-                    {Number(item.contractType) === 2 && (
-                      <SimpleModeModal
-                        mode="edit"
-                        id={item.index}
-                        isOpen={isOpenSimpleMode}
-                        onClose={onCloseSimpleMode}
-                      />
-                    )}
-                    {Number(item.contractType) === 1 && (
-                      <AdvancedModeModal
-                        mode="edit"
-                        id={item.index}
-                        isOpen={isOpenAdvancedMode}
-                        onClose={onCloseAdvancedMode}
-                      />
-                    )}
-                    <Link
-                      minW={{ base: "auto", "2xl": "25rem" }}
-                      as={ReactRouterLink}
-                      to={`${ROUTES.DETAIL_COLLECTION_BASE}/${item?.nftContractAddress}`}
-                      className="collection-card-hover"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <CollectionCard {...item} variant="my-collection" />
-                    </Link>
-                  </Box>
-                </React.Fragment>
-              ))}
-            </SimpleGrid>
-            <Flex w="full">
-              <PaginationMP
-                isDisabled={isDisabled}
-                currentPage={currentPage}
-                pagesCount={pagesCount}
-                setCurrentPage={setCurrentPage}
-              />
-              <Spacer />
-            </Flex>
+            <Text textAlign="left" color="brand.grayLight">
+              There are {collections?.length || 0} collections
+            </Text>
+            {collections?.length ? (
+              <>
+                <SimpleGrid
+                  py={10}
+                  columns={{ base: 1, md: 2, lg: 3 }}
+                  spacing="7"
+                >
+                  {collections?.map((item, idx) => (
+                    <React.Fragment key={idx}>
+                      <Box pos="relative">
+                        <AddNewCollectionModal mode="edit" id={item.index} />
+                        {Number(item.contractType) === 2 && (
+                          <SimpleModeModal
+                            mode="edit"
+                            id={item.index}
+                            isOpen={isOpenSimpleMode}
+                            onClose={onCloseSimpleMode}
+                          />
+                        )}
+                        {Number(item.contractType) === 1 && (
+                          <AdvancedModeModal
+                            mode="edit"
+                            id={item.index}
+                            isOpen={isOpenAdvancedMode}
+                            onClose={onCloseAdvancedMode}
+                          />
+                        )}
+                        <Link
+                          minW={{ base: "auto", "2xl": "25rem" }}
+                          as={ReactRouterLink}
+                          to={`${ROUTES.DETAIL_COLLECTION_BASE}/${item?.nftContractAddress}`}
+                          className="collection-card-hover"
+                          style={{ textDecoration: "none" }}
+                        >
+                          <CollectionCard {...item} variant="my-collection" />
+                        </Link>
+                      </Box>
+                    </React.Fragment>
+                  ))}
+                </SimpleGrid>
+                <Flex w="full">
+                  <PaginationMP
+                    isDisabled={isDisabled}
+                    currentPage={currentPage}
+                    pagesCount={pagesCount}
+                    setCurrentPage={setCurrentPage}
+                  />
+                  <Spacer />
+                </Flex>
+              </>
+            ) : null}
           </>
-        ) : null}
+        )}
       </Box>
     </Box>
   );

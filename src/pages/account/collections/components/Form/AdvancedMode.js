@@ -1,4 +1,4 @@
-import { Button, HStack, Stack } from "@chakra-ui/react";
+import { Button, HStack, Stack, Spacer, Flex, Text } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
@@ -16,6 +16,7 @@ import AdvancedModeTextArea from "@components/TextArea/TextArea";
 
 import AddCollectionNumberInput from "../NumberInput";
 import { clientAPI } from "@api/client";
+import CommonCheckbox from "../../../../../components/Checkbox/Checkbox";
 
 const AdvancedModeForm = ({ mode, id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -35,7 +36,7 @@ const AdvancedModeForm = ({ mode, id }) => {
           currentAccount
         );
 
-        console.log('AdvancedModeForm addingFeeData', addingFeeData)
+        console.log("AdvancedModeForm addingFeeData", addingFeeData);
 
         setAddingFee(addingFeeData / 10 ** 12);
       }
@@ -86,6 +87,7 @@ const AdvancedModeForm = ({ mode, id }) => {
           collectionDescription,
           collectRoyalFee,
           royalFee: royalFee / 100,
+          agreeTosCheckbox: false,
         };
 
         if (dataList) {
@@ -112,8 +114,6 @@ const AdvancedModeForm = ({ mode, id }) => {
     <>
       {initialValues && (
         <>
-          <>{addingFee}</>
-
           <Formik
             initialValues={initialValues}
             validationSchema={Yup.object({
@@ -130,6 +130,9 @@ const AdvancedModeForm = ({ mode, id }) => {
                 .max(150, "Must be less than 150 characters")
                 .required("Required"),
               collectRoyalFee: Yup.boolean(),
+              agreeTosCheckbox: Yup.boolean()
+                .required("The terms and conditions must be accepted.")
+                .oneOf([true], "The terms and conditions must be accepted."),
             })}
             onSubmit={async (values, { setSubmitting }) => {
               (!headerIPFSUrl || !avatarIPFSUrl) &&
@@ -157,8 +160,8 @@ const AdvancedModeForm = ({ mode, id }) => {
                     ],
 
                     attributeVals: [
-                      values.collectionName,
-                      values.collectionDescription,
+                      values.collectionName.trim(),
+                      values.collectionDescription.trim(),
                       values.avatarIPFSUrl,
                       values.headerIPFSUrl,
                     ],
@@ -255,6 +258,26 @@ const AdvancedModeForm = ({ mode, id }) => {
                         placeholder="Royal Fee"
                       />
                     </Stack>
+
+                    <Spacer />
+
+                    <Flex
+                      direction="column"
+                      justifyContent="flex-start"
+                      alignItems="flex-start"
+                      textAlign="left"
+                    >
+                      <Text color="#fff">
+                        Create new collection you will pay
+                        <strong> {addingFee} $AZERO </strong> in fee to
+                        ArtZero.io
+                      </Text>
+
+                      <CommonCheckbox
+                        name="agreeTosCheckbox"
+                        content="I agree to ArtZero's Terms of Service"
+                      />
+                    </Flex>
                   </Stack>
                 )}
 

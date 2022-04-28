@@ -1,4 +1,12 @@
-import { Box, Button, Flex, HStack, Spacer, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Spacer,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
@@ -15,6 +23,7 @@ import collection_manager_calls from "@utils/blockchain/collection-manager-calls
 
 import AddCollectionNumberInput from "../NumberInput";
 import { clientAPI } from "@api/client";
+import CommonCheckbox from "../../../../../components/Checkbox/Checkbox";
 
 const SimpleModeForm = ({ mode, id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -64,6 +73,7 @@ const SimpleModeForm = ({ mode, id }) => {
       website: "",
       twitter: "",
       discord: "",
+      agreeTosCheckbox: false,
     };
     const fetchCollectionsByID = async () => {
       try {
@@ -107,7 +117,6 @@ const SimpleModeForm = ({ mode, id }) => {
     <>
       {initialValues && (
         <>
-          <>{addingFee}</>
           <Formik
             initialValues={initialValues}
             validationSchema={Yup.object({
@@ -140,6 +149,9 @@ const SimpleModeForm = ({ mode, id }) => {
                 .url("This must be a valid URL")
                 .min(3, "Must be longer than 3 characters")
                 .max(50, "Must be less than 50 characters"),
+              agreeTosCheckbox: Yup.boolean()
+                .required("The terms and conditions must be accepted.")
+                .oneOf([true], "The terms and conditions must be accepted."),
             })}
             onSubmit={async (values, { setSubmitting }) => {
               (!headerIPFSUrl || !avatarIPFSUrl) &&
@@ -167,8 +179,8 @@ const SimpleModeForm = ({ mode, id }) => {
                     ],
 
                     attributeVals: [
-                      values.collectionName,
-                      values.collectionDescription,
+                      values.collectionName.trim(),
+                      values.collectionDescription.trim(),
                       values.avatarIPFSUrl,
                       values.headerIPFSUrl,
                       values.website,
@@ -272,7 +284,7 @@ const SimpleModeForm = ({ mode, id }) => {
 
                 {mode === "add" && (
                   <Flex alignItems="center" minH={20} mt={5}>
-                    <Box w="15rem">
+                    <Box w="12rem">
                       <SimpleModeSwitch
                         onChange={() => {
                           values.collectRoyalFee = !values.collectRoyalFee;
@@ -282,7 +294,6 @@ const SimpleModeForm = ({ mode, id }) => {
                         name="collectRoyalFee"
                       />
                     </Box>
-
                     <AddCollectionNumberInput
                       isDisabled={!isSetRoyal}
                       isDisplay={isSetRoyal}
@@ -291,7 +302,26 @@ const SimpleModeForm = ({ mode, id }) => {
                       type="number"
                       placeholder="Royal Fee"
                     />
+
                     <Spacer />
+
+                    <Flex
+                      direction="column"
+                      justifyContent="flex-start"
+                      alignItems="flex-start"
+                      textAlign="left"
+                    >
+                      <Text color="#fff">
+                        Create new collection you will pay
+                        <strong> {addingFee} $AZERO </strong> in fee to
+                        ArtZero.io
+                      </Text>
+
+                      <CommonCheckbox
+                        name="agreeTosCheckbox"
+                        content="I agree to ArtZero's Terms of Service"
+                      />
+                    </Flex>
                   </Flex>
                 )}
 

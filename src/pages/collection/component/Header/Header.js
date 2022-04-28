@@ -63,7 +63,7 @@ function CollectionHeader({
               h="full"
               rounded="full"
               objectFit="cover"
-              src={`${IPFS_BASE_URL}/${avatarImage}`}
+              src={avatarImage && `${IPFS_BASE_URL}/${avatarImage}`}
               fallback={<Skeleton w={40} h={40} borderRadius="full" />}
             />
           </Center>

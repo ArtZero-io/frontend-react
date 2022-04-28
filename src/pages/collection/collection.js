@@ -71,8 +71,6 @@ function CollectionPage() {
       };
 
       try {
-        console.log("1");
-
         const [collectionDetail] = await clientAPI(
           "post",
           "/getCollectionByAddress",
@@ -80,8 +78,6 @@ function CollectionPage() {
             collection_address,
           }
         );
-
-        console.log("2");
 
         const [floorPrice] = await clientAPI("post", "/getFloorPrice", {
           collection_address,
@@ -94,8 +90,6 @@ function CollectionPage() {
         collectionDetail.floorPrice = floorPrice?.price || 0;
 
         collectionDetail.nftTotalCount = NFTList?.length;
-
-        console.log(Number(collectionDetail.contractType) === 2);
 
         if (Number(collectionDetail.contractType) === 2) {
           return Promise.all(
