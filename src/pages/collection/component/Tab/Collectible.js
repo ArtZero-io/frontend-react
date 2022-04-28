@@ -43,6 +43,8 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 import toast from "react-hot-toast";
 import { FaTelegram } from "react-icons/fa";
 import contractData from "@utils/blockchain/index";
+import {truncateStr} from "@utils";
+import BN from "bn.js";
 
 const NFTTabCollectible = ({
   nftContractAddress,
@@ -63,7 +65,7 @@ const NFTTabCollectible = ({
   const [isLoaded, setIsLoaded] = useState(false);
   const { api, currentAccount } = useSubstrateState();
   const [isBided, setIsBided] = useState(false);
-
+  const [saleInfo,setSaleInfo] = useState(null);
   // useEffect(async () => {
   //   await onRefresh();
   // }, [artzero_nft_calls.isLoaded()]);
@@ -83,6 +85,7 @@ const NFTTabCollectible = ({
           nftContractAddress,
           { u64: tokenID }
         );
+        setSaleInfo(sale_info);
         console.log(sale_info);
         const listBidder = await marketplace_contract_calls.getAllBids(
           currentAccount,
@@ -112,8 +115,13 @@ const NFTTabCollectible = ({
       api,
       contractData.marketplace
     );
+    //check owner of the NFT from marketplace
+    if (saleInfo.nftOwner == currentAccount.address){
+      toast.error(`Cant buy your own NFT!`);
+      return;
+    }
 
-    if (balance.free.toNumber() > price) {
+    if (balance.free.gte(new BN(price))) {
       await marketplace_contract_calls.buy(
         currentAccount,
         nftContractAddress,
@@ -121,7 +129,7 @@ const NFTTabCollectible = ({
         price
       );
     } else {
-      toast.error(`Your balance not enough!`);
+      toast.error(`Not Enough Balance!`);
     }
   };
 
@@ -140,6 +148,12 @@ const NFTTabCollectible = ({
     const { data: balance } = await api.query.system.account(
       currentAccount.address
     );
+
+    //check owner of the NFT from marketplace
+    if (saleInfo.nftOwner == currentAccount.address){
+      toast.error(`Cant bid your own NFT!`);
+      return;
+    }
 
     marketplace_contract_calls.setMarketplaceContract(
       api,
@@ -197,7 +211,7 @@ const NFTTabCollectible = ({
           </Heading>
 
           <Text color="#fff">
-            Owned by <Link color="#7AE7FF">{owner}</Link>
+            For Sale by <Link color="#7AE7FF">{saleInfo ? truncateStr(saleInfo.nftOwner,5) : ""}</Link>
           </Text>
         </Box>
 
