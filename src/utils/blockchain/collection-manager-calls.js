@@ -436,7 +436,7 @@ async function getActiveCollectionCount(caller_account) {
   return null;
 }
 
-async function getAttributes(caller_account, nft_contract_address, attributes) {
+async function getAttributes(caller_account, collection_address, attributes) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -447,13 +447,67 @@ async function getAttributes(caller_account, nft_contract_address, attributes) {
   const { result, output } = await contract.query.getAttributes(
     address,
     { value: azero_value, gasLimit },
-    nft_contract_address,
+    collection_address,
     attributes
   );
   if (result.isOk) {
     attributeVals = output.toHuman();
   }
   return attributeVals;
+}
+
+export async function setMultipleAttributes(
+  collection_address,
+  attributes,
+  values,
+  dispatch
+) {
+  let unsubscribe;
+
+  const address = account?.address;
+  const gasLimit = -1;
+  const value = 0;
+
+  const injector = await web3FromSource(account?.meta?.source);
+
+  account &&
+    contract.tx
+      .setMultipleAttributes({ gasLimit, value }, collection_address, attributes, values)
+      .signAndSend(
+        address,
+        { signer: injector.signer },
+        async ({ status, dispatchError }) => {
+          if (dispatchError) {
+            if (dispatchError.isModule) {
+              toast.error(`There is some error with your request`);
+            } else {
+              console.log("dispatchError ", dispatchError.toString());
+            }
+          }
+
+          if (status) {
+            const statusText = Object.keys(status.toHuman())[0];
+            toast.success(
+              `Update Collection Attributes ${
+                statusText === "0" ? "started" : statusText.toLowerCase()
+              }.`
+            );
+            if (status.isFinalized === true) {
+              const update_collection_api_res = await clientAPI(
+                "post",
+                "/updateCollection",
+                {
+                  collection_address: collection_address,
+                }
+              );
+              console.log("update_collection_api_res", update_collection_api_res);
+            }
+          }
+        }
+      )
+      .then((unsub) => (unsubscribe = unsub))
+      .catch((e) => console.log("e", e));
+    return unsubscribe;
 }
 
 const collection_manager_calls = {
