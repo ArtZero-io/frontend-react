@@ -1,27 +1,38 @@
-import { Box, Tab, TabList, TabPanels, Tabs, TabPanel } from "@chakra-ui/react";
+import {
+  Box,
+  Tab,
+  TabList,
+  TabPanels,
+  Tabs,
+  TabPanel,
+  Heading,
+  Center,
+} from "@chakra-ui/react";
 
-import MintHeader from "@pages/mint/components/Header";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 import Layout from "@components/Layout/Layout";
+import Loader from "@components/Loader/CommonLoader";
+
+import MintHeader from "./components/Header";
 import NFTMintTab from "./components/Tab/NFTMint";
 
-import { useSubstrateState } from "@utils/substrate";
-import { useEffect, useState } from "react";
+import { delay } from "@utils";
 import { clientAPI } from "@api/client";
+import { AccountActionTypes } from "@store/types/account.types";
+
+import { useSubstrateState } from "@utils/substrate";
 import artzero_nft from "@utils/blockchain/artzero-nft";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
-import { useDispatch, useSelector } from "react-redux";
 
-import { AccountActionTypes } from "@store/types/account.types";
-import toast from "react-hot-toast";
-import { delay } from "../../utils";
-import Loader from "@components/Loader/CommonLoader";
 const MintPage = () => {
-  const { currentAccount } = useSubstrateState();
+  const { currentAccount, keyringState } = useSubstrateState();
   const [myAZNFTs, setMyAZNFTs] = useState(null);
   const [owner, setOwner] = useState(null);
   const [loading, setLoading] = useState(null);
-
+  console.log("useSubstrateState()", useSubstrateState());
   const dispatch = useDispatch();
 
   const { tnxStatus } = useSelector((state) => state.account.accountLoaders);
@@ -55,14 +66,14 @@ const MintPage = () => {
   useEffect(() => {
     const fetchMyAZNFTs = async () => {
       let tokenUri = await artzero_nft_calls.tokenUri(
-        currentAccount.address,
+        currentAccount?.address,
         1
       );
-      tokenUri = tokenUri.replace("1.json", "");
+      tokenUri = tokenUri?.replace("1.json", "");
 
       const options = {
         collection_address: artzero_nft.CONTRACT_ADDRESS,
-        owner: currentAccount.address,
+        owner: currentAccount?.address,
         limit: 10000,
         offset: 0,
         sort: -1,
@@ -82,7 +93,7 @@ const MintPage = () => {
           "get",
           "/getJSON?input=" +
             tokenUri +
-            dataList[i].tokenID.toString() +
+            dataList[i].tokenID?.toString() +
             ".json",
           {}
         );
@@ -91,7 +102,7 @@ const MintPage = () => {
         var obj = {
           is_for_sale: dataList[i].is_for_sale,
           price: dataList[i].price,
-          avatar: metadata.image.replace("ipfs://", ""),
+          avatar: metadata.image?.replace("ipfs://", ""),
           nftName: metadata.name,
           isStaked: false,
           isBid: false,
@@ -99,14 +110,15 @@ const MintPage = () => {
         myNFTs.push(obj);
       }
       setMyAZNFTs(myNFTs);
-      setOwner(currentAccount.address);
+      setOwner(currentAccount?.address);
 
       console.log(myNFTs);
     };
 
-    (myAZNFTs === null || owner !== currentAccount.address) && fetchMyAZNFTs();
+    (myAZNFTs === null || owner !== currentAccount?.address) && currentAccount?.address && fetchMyAZNFTs();
   }, [currentAccount, myAZNFTs, owner]);
 
+  console.log("MintPage currentAccount", currentAccount);
   return (
     <Layout>
       <Box as="section" maxW="container.3xl" position="relative">
@@ -129,21 +141,29 @@ const MintPage = () => {
               </Tab>
             ))} */}
           </TabList>
-          <TabPanels bg="#171717">
-            {loading ? (
-              <Loader />
-            ) : (
-              <TabPanel px={12} py={8}>
-                <NFTMintTab myAZNFTs={myAZNFTs} />
-              </TabPanel>
-            )}
+          {keyringState === "READY" ? (
+            <TabPanels bg="#171717">
+              {loading ? (
+                <Loader />
+              ) : (
+                <TabPanel px={12} py={8}>
+                  <NFTMintTab myAZNFTs={myAZNFTs} />
+                </TabPanel>
+              )}
 
-            {/* {tabData.map((tab, index) => (
+              {/* {tabData.map((tab, index) => (
               <TabPanel px={12} py={8} key={index}>
                 {tab.content}
               </TabPanel>
             ))} */}
-          </TabPanels>
+            </TabPanels>
+          ) : (
+            <Center>
+              <Heading size="h6" my={10}>
+                Please connect wallet to view your ArtZero NFTs.
+              </Heading>
+            </Center>
+          )}
         </Tabs>
       </Box>
     </Layout>

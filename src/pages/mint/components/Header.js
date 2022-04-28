@@ -56,7 +56,7 @@ function MintHeader() {
     const onGetWhiteList = async (e) => {
       let whitelist = await artzero_nft_calls.getWhitelist(
         currentAccount,
-        currentAccount.address
+        currentAccount?.address
       );
       if (whitelist) setWhitelist(whitelist);
       else setWhitelist(null);
@@ -64,7 +64,7 @@ function MintHeader() {
     const onGetBalance = async (e) => {
       let res = await artzero_nft_calls.balanceOf(
         currentAccount,
-        currentAccount.address
+        currentAccount?.address
       );
       if (res) setBalance(res);
       else setBalance(0);
@@ -99,7 +99,7 @@ function MintHeader() {
 
   const onWhiteListMint = async () => {
     const { data: balance } = await api.query.system.account(
-      currentAccount.address
+      currentAccount?.address
     );
     if (balance.free.div(new BN(10 ** 12)).toNumber() < 0.01) {
       toast.error("Your balance is low.");
@@ -152,12 +152,12 @@ function MintHeader() {
   }, []);
 
   // useEffect(() => {
-  //   apiState && keyringState && currentAccount.address && fetchMintData();
-  // }, [apiState, currentAccount.address, fetchMintData, keyringState]);
+  //   apiState && keyringState && currentAccount?.address && fetchMintData();
+  // }, [apiState, currentAccount?.address, fetchMintData, keyringState]);
 
   useEffect(() => {
-    apiState && keyringState && currentAccount.address && fetchMintData();
-  }, [apiState, currentAccount.address, fetchMintData, keyringState]);
+    apiState && keyringState && currentAccount?.address && fetchMintData();
+  }, [apiState, currentAccount?.address, fetchMintData, keyringState]);
 
   return (
     <>
@@ -191,7 +191,7 @@ function MintHeader() {
                 <Text mt={3}>
                   Your address:{" "}
                   <span style={{ color: "#7ae7ff" }}>
-                    {truncateStr(currentAccount.address, 9)}
+                    {truncateStr(currentAccount?.address, 9) || 'n/a'}
                   </span>
                 </Text>
                 <Text mt={3}>

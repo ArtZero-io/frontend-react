@@ -17,8 +17,8 @@ const CollectionItems = ({
   NFTListFormatted,
   collectionOwner,
   contractType,
-  setIsShowUnlisted,
   isShowUnlisted,
+  handleShowUnlisted,
   forceUpdate,
 }) => {
   const { currentAccount } = useSubstrateState();
@@ -31,7 +31,7 @@ const CollectionItems = ({
     <Box w="full" textAlign="left" minH={"54rem"}>
       <Flex w="full">
         <IconButton
-          aria-label="download"
+          aria-label="refresh"
           icon={<RefreshIcon fontSize="1.5rem" />}
           size="icon"
           variant="iconSolid"
@@ -42,7 +42,7 @@ const CollectionItems = ({
           mx={1.5}
           variant="outline"
           minW={"11rem"}
-          onClick={() => setIsShowUnlisted(!isShowUnlisted)}
+          onClick={() => handleShowUnlisted()}
         >
           {isShowUnlisted ? "Show all" : "Show unlisted"}
         </Button>

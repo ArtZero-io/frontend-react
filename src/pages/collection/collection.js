@@ -35,7 +35,10 @@ function CollectionPage() {
   const { currentAccount, api } = useSubstrateState();
   const { tnxStatus } = useSelector((state) => state.account.accountLoaders);
 
-  const forceUpdate = useCallback(() => setFormattedCollection(null), []);
+  const forceUpdate = useCallback(() => {
+    setFormattedCollection(null);
+    setLoading(false);
+  }, []);
 
   useEffect(() => {
     async function onCloseHandler() {
@@ -113,8 +116,9 @@ function CollectionPage() {
         //     publicCurrentAccount,
         //     collection_address
         //   );
-        // console.log("volumeData", volumeData);
-        // collectionDetail.volume = volumeData || 0;
+        //   collectionDetail.volume = volumeData || 0;
+
+        //   console.log("volumeData", volumeData);
         collectionDetail.volume = 999;
 
         if (Number(collectionDetail.contractType) === 2) {
@@ -128,6 +132,12 @@ function CollectionPage() {
               return { ...item, ...itemData };
             })
           ).then((NFTListFormatted) => {
+            if (isShowUnlisted) {
+              NFTListFormatted = NFTListFormatted?.filter(
+                (i) => i.is_for_sale === false
+              );
+            }
+
             collectionDetail.NFTListFormatted = NFTListFormatted;
 
             setFormattedCollection(collectionDetail);
@@ -148,7 +158,7 @@ function CollectionPage() {
           const azero_value = 0;
 
           const { result, output } = await nft_contract.query["getTokenCount"](
-            currentAccount.address,
+            currentAccount?.address,
             { value: azero_value, gasLimit }
           );
 
@@ -165,7 +175,7 @@ function CollectionPage() {
                 const { result, output } = await nft_contract.query[
                   "psp34Traits::tokenUri"
                 ](
-                  currentAccount.address,
+                  currentAccount?.address,
                   { value: azero_value, gasLimit },
                   token_id
                 );
@@ -201,6 +211,13 @@ function CollectionPage() {
                     NFTListFormattedAdv.push(nftItem);
                   }
                 }
+
+                if (isShowUnlisted) {
+                  NFTListFormattedAdv = NFTListFormattedAdv?.filter(
+                    (i) => i.is_for_sale === false
+                  );
+                }
+
                 collectionDetail.NFTListFormatted = NFTListFormattedAdv;
               }
               setFormattedCollection(collectionDetail);
@@ -214,13 +231,19 @@ function CollectionPage() {
       }
     };
 
-    fetchCollectionDetail();
-  }, [api, collection_address, currentAccount]);
+    !formattedCollection && fetchCollectionDetail();
+  }, [
+    api,
+    collection_address,
+    currentAccount,
+    formattedCollection,
+    isShowUnlisted,
+  ]);
 
-  useEffect(() => {
-    isShowUnlisted &&
-      formattedCollection?.nftList?.filter((i) => i.is_for_sale === false);
-  }, [formattedCollection, isShowUnlisted]);
+  const handleShowUnlisted = () => {
+    setIsShowUnlisted(!isShowUnlisted);
+    forceUpdate();
+  };
 
   const tabData = [
     {
@@ -230,6 +253,7 @@ function CollectionPage() {
           {...formattedCollection}
           isShowUnlisted={isShowUnlisted}
           setIsShowUnlisted={setIsShowUnlisted}
+          handleShowUnlisted={handleShowUnlisted}
           forceUpdate={forceUpdate}
         />
       ),

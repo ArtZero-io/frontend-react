@@ -54,7 +54,7 @@ const MyStakesPage = () => {
     setLoading(true);
     let my_total_staked_az_nfts = await staking_calls.getTotalStakedByAccount(currentAccount,currentAccount.address);
     let my_total_pending_az_nfts = await staking_calls.getTotalPendingUnstakedByAccount(currentAccount,currentAccount.address);
-    let my_total_unstaked_az_nfts = await artzero_nft_calls.balanceOf(currentAccount, currentAccount.address);
+    let my_total_unstaked_az_nfts = await artzero_nft_calls.balanceOf(currentAccount, currentAccount?.address);
     let my_total_az_nfts = my_total_staked_az_nfts + my_total_pending_az_nfts + my_total_unstaked_az_nfts;
 
     let stakingDiscountCriteria = await marketplace_contract_calls.getStakingDiscountCriteria(currentAccount);

@@ -67,7 +67,7 @@ function MyCollectionsPage() {
   useEffect(() => {
     const fetchCollectionsOwned = async () => {
       const options = {
-        owner: currentAccount.address,
+        owner: currentAccount?.address,
         limit: pageSize,
         offset: offset,
         sort: -1,

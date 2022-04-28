@@ -44,7 +44,7 @@ function ProfileHeader() {
         setProfile((prev) => {
           return {
             ...data,
-            address: currentAccount.address,
+            address: currentAccount?.address,
           };
         });
       }
