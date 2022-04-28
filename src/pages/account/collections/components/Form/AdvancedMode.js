@@ -34,6 +34,9 @@ const AdvancedModeForm = ({ mode, id }) => {
         const addingFeeData = await collection_manager_calls.getAddingFee(
           currentAccount
         );
+
+        console.log('AdvancedModeForm addingFeeData', addingFeeData)
+
         setAddingFee(addingFeeData / 10 ** 12);
       }
     };
@@ -66,7 +69,6 @@ const AdvancedModeForm = ({ mode, id }) => {
         const [dataList] = await clientAPI("post", "/getCollectionByID", {
           id,
         });
-
 
         const {
           nftContractAddress,
@@ -109,165 +111,169 @@ const AdvancedModeForm = ({ mode, id }) => {
   return (
     <>
       {initialValues && (
-        <Formik
-          initialValues={initialValues}
-          validationSchema={Yup.object({
-            nftContractAddress: Yup.string()
-              .min(3, "Must be longer than 3 characters")
-              .max(48, "Must be less than 48 characters")
-              .required("Required"),
-            collectionName: Yup.string()
-              .min(3, "Must be longer than 3 characters")
-              .max(50, "Must be less than 50 characters")
-              .required("Required"),
-            collectionDescription: Yup.string()
-              .min(3, "Must be longer than 3 characters")
-              .max(150, "Must be less than 150 characters")
-              .required("Required"),
-            collectRoyalFee: Yup.boolean(),
-          })}
-          onSubmit={async (values, { setSubmitting }) => {
-            (!headerIPFSUrl || !avatarIPFSUrl) &&
-              toast.error("Upload images first");
+        <>
+          <>{addingFee}</>
 
-            if (avatarIPFSUrl && headerIPFSUrl) {
-              values.avatarIPFSUrl = avatarIPFSUrl;
-              values.headerIPFSUrl = headerIPFSUrl;
+          <Formik
+            initialValues={initialValues}
+            validationSchema={Yup.object({
+              nftContractAddress: Yup.string()
+                .min(3, "Must be longer than 3 characters")
+                .max(48, "Must be less than 48 characters")
+                .required("Required"),
+              collectionName: Yup.string()
+                .min(3, "Must be longer than 3 characters")
+                .max(50, "Must be less than 50 characters")
+                .required("Required"),
+              collectionDescription: Yup.string()
+                .min(3, "Must be longer than 3 characters")
+                .max(150, "Must be less than 150 characters")
+                .required("Required"),
+              collectRoyalFee: Yup.boolean(),
+            })}
+            onSubmit={async (values, { setSubmitting }) => {
+              (!headerIPFSUrl || !avatarIPFSUrl) &&
+                toast.error("Upload images first");
 
-              if (!checkCurrentBalance) {
-                return toast.error(`Your balance not enough!`);
+              if (avatarIPFSUrl && headerIPFSUrl) {
+                values.avatarIPFSUrl = avatarIPFSUrl;
+                values.headerIPFSUrl = headerIPFSUrl;
+
+                if (!checkCurrentBalance) {
+                  return toast.error(`Your balance not enough!`);
+                }
+
+                if (!isValidAddressPolkadotAddress(values.nftContractAddress)) {
+                  toast.error(`The NFT contract address must be an address!`);
+                } else {
+                  const data = {
+                    nftContractAddress: values.nftContractAddress,
+
+                    attributes: [
+                      "name",
+                      "description",
+                      "avatar_image",
+                      "header_image",
+                    ],
+
+                    attributeVals: [
+                      values.collectionName,
+                      values.collectionDescription,
+                      values.avatarIPFSUrl,
+                      values.headerIPFSUrl,
+                    ],
+
+                    collectionAllowRoyalFee: values.collectRoyalFee,
+                    collectionRoyalFeeData: values.collectRoyalFee
+                      ? Math.round(values.royalFee * 100)
+                      : 0,
+                  };
+
+                  await collection_manager_calls.addNewCollection(
+                    currentAccount,
+                    data,
+                    dispatch
+                  );
+                }
               }
+            }}
+          >
+            {({ values }) => (
+              <Form>
+                <HStack>
+                  <AdvancedModeInput
+                    label="NFT Contract Address"
+                    name="nftContractAddress"
+                    type="text"
+                    placeholder="NFT Contract Address"
+                  />
+                  <AdvancedModeInput
+                    label="Collection Name"
+                    name="collectionName"
+                    type="collectionName"
+                    placeholder="Collection Name"
+                  />
+                </HStack>
 
-              if (!isValidAddressPolkadotAddress(values.nftContractAddress)) {
-                toast.error(`The NFT contract address must be an address!`);
-              } else {
-                const data = {
-                  nftContractAddress: values.nftContractAddress,
-
-                  attributes: [
-                    "name",
-                    "description",
-                    "avatar_image",
-                    "header_image",
-                  ],
-
-                  attributeVals: [
-                    values.collectionName,
-                    values.collectionDescription,
-                    values.avatarIPFSUrl,
-                    values.headerIPFSUrl,
-                  ],
-
-                  collectionAllowRoyalFee: values.collectRoyalFee,
-                  collectionRoyalFeeData: values.collectRoyalFee
-                    ? Math.round(values.royalFee * 100)
-                    : 0,
-                };
-
-                await collection_manager_calls.addNewCollection(
-                  currentAccount,
-                  data,
-                  dispatch
-                );
-              }
-            }
-          }}
-        >
-          {({ values }) => (
-            <Form>
-              <HStack>
-                <AdvancedModeInput
-                  label="NFT Contract Address"
-                  name="nftContractAddress"
+                <AdvancedModeTextArea
+                  label="Collection Description"
+                  name="collectionDescription"
                   type="text"
-                  placeholder="NFT Contract Address"
+                  placeholder="Collection Description"
                 />
-                <AdvancedModeInput
-                  label="Collection Name"
-                  name="collectionName"
-                  type="collectionName"
-                  placeholder="Collection Name"
-                />
-              </HStack>
 
-              <AdvancedModeTextArea
-                label="Collection Description"
-                name="collectionDescription"
-                type="text"
-                placeholder="Collection Description"
-              />
-
-              <Stack
-                direction={{ xl: "row", "2xl": "column" }}
-                alignItems="start"
-                justifyContent="space-between"
-              >
-                <ImageUpload
-                  mode={mode}
-                  id="collection-avatar"
-                  imageIPFSUrl={avatarIPFSUrl}
-                  setImageIPFSUrl={setAvatarIPFSUrl}
-                  title="Collection Avatar Image"
-                  limitedSize={{ width: "64", height: "64" }}
-                />
-                <ImageUpload
-                  mode={mode}
-                  id="collection-header"
-                  imageIPFSUrl={headerIPFSUrl}
-                  setImageIPFSUrl={setHeaderIPFSUrl}
-                  title="Collection Header Image"
-                  limitedSize={{ width: "400", height: "260" }}
-                />{" "}
-              </Stack>
-
-              {mode === "add" && (
                 <Stack
                   direction={{ xl: "row", "2xl": "column" }}
                   alignItems="start"
                   justifyContent="space-between"
                 >
-                  <Stack
-                    direction={{ base: "column", "2xl": "row" }}
-                    alignItems="end"
-                    minH={20}
-                    minW={52}
-                  >
-                    <AdvancedModeSwitch
-                      onChange={() => {
-                        values.collectRoyalFee = !values.collectRoyalFee;
-                        setIsSetRoyal(!isSetRoyal);
-                      }}
-                      label="Collect Royal Fee"
-                      name="collectRoyalFee"
-                    />
-
-                    <AddCollectionNumberInput
-                      isDisabled={!isSetRoyal}
-                      isDisplay={isSetRoyal}
-                      label="Royal Fee %"
-                      name="royalFee"
-                      type="number"
-                      placeholder="Royal Fee"
-                    />
-                  </Stack>
+                  <ImageUpload
+                    mode={mode}
+                    id="collection-avatar"
+                    imageIPFSUrl={avatarIPFSUrl}
+                    setImageIPFSUrl={setAvatarIPFSUrl}
+                    title="Collection Avatar Image"
+                    limitedSize={{ width: "64", height: "64" }}
+                  />
+                  <ImageUpload
+                    mode={mode}
+                    id="collection-header"
+                    imageIPFSUrl={headerIPFSUrl}
+                    setImageIPFSUrl={setHeaderIPFSUrl}
+                    title="Collection Header Image"
+                    limitedSize={{ width: "400", height: "260" }}
+                  />{" "}
                 </Stack>
-              )}
 
-              <Button
-                spinnerPlacement="start"
-                isLoading={tnxStatus}
-                loadingText={`${tnxStatus?.status}`}
-                variant="solid"
-                w="full"
-                type="submit"
-                mt={8}
-                mb={{ xl: "16px", "2xl": "32px" }}
-              >
-                {mode === "add" ? "Add new collection" : "Submit change"}
-              </Button>
-            </Form>
-          )}
-        </Formik>
+                {mode === "add" && (
+                  <Stack
+                    direction={{ xl: "row", "2xl": "column" }}
+                    alignItems="start"
+                    justifyContent="space-between"
+                  >
+                    <Stack
+                      direction={{ base: "column", "2xl": "row" }}
+                      alignItems="end"
+                      minH={20}
+                      minW={52}
+                    >
+                      <AdvancedModeSwitch
+                        onChange={() => {
+                          values.collectRoyalFee = !values.collectRoyalFee;
+                          setIsSetRoyal(!isSetRoyal);
+                        }}
+                        label="Collect Royal Fee"
+                        name="collectRoyalFee"
+                      />
+
+                      <AddCollectionNumberInput
+                        isDisabled={!isSetRoyal}
+                        isDisplay={isSetRoyal}
+                        label="Royal Fee %"
+                        name="royalFee"
+                        type="number"
+                        placeholder="Royal Fee"
+                      />
+                    </Stack>
+                  </Stack>
+                )}
+
+                <Button
+                  spinnerPlacement="start"
+                  isLoading={tnxStatus}
+                  loadingText={`${tnxStatus?.status}`}
+                  variant="solid"
+                  w="full"
+                  type="submit"
+                  mt={8}
+                  mb={{ xl: "16px", "2xl": "32px" }}
+                >
+                  {mode === "add" ? "Add new collection" : "Submit change"}
+                </Button>
+              </Form>
+            )}
+          </Formik>
+        </>
       )}
     </>
   );

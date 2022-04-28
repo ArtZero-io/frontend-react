@@ -28,7 +28,7 @@ const DesktopNavLink = ({ label, to, ...props }) => {
         borderColor: "currentcolor",
         color: "brand.blue",
       }}
-      color= {path == to ? "white" : null}
+      color= {path === to ? "white" : null}
     >
       {label}
     </Link>
@@ -51,7 +51,7 @@ const MobileNavLink = ({ label = "", to = "", ...props }) => {
       borderBottom="2px"
       borderColor="transparent"
       transition="all 0.2s"
-      color= {path == to ? "white" : null}
+      color= {path === to ? "white" : null}
       // _hover={{
       //   borderColor: 'currentcolor',
       //   color: useColorModeValue('blue.600', 'blue.200'),

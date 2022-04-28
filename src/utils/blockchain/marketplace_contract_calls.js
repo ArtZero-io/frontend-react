@@ -372,7 +372,12 @@ async function list(
     .catch((e) => console.log("e", e));
   return unsubscribe;
 }
-async function unlist(caller_account, nft_contract_address, token_id,dispatch) {
+async function unlist(
+  caller_account,
+  nft_contract_address,
+  token_id,
+  dispatch
+) {
   if (
     !contract ||
     !caller_account ||
@@ -653,7 +658,6 @@ const marketplace_contract_calls = {
   buy,
   acceptBid,
   setContract,
-  isLoaded,
   setMarketplaceContract,
   setAccount,
   removeBid,

@@ -139,7 +139,7 @@ function MintHeader() {
 
   const onRefresh = useCallback(async () => {
     // await onGetBalance();
-    await onGetWhiteList();
+    // await onGetWhiteList();
     await onGetMintMode();
     await onGetFee1();
     await onGetFee2();

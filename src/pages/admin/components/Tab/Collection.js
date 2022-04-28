@@ -4,7 +4,7 @@ import { useSubstrateState } from "@utils/substrate";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import collection_manager from "@utils/blockchain/collection-manager";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { delay, truncateStr } from "@utils";
 import toast from "react-hot-toast";
 import BN from "bn.js";
@@ -22,17 +22,22 @@ function CollectionAdmin() {
   const [collectionContractOwner, setCollectionContractOwner] = useState("");
   const [collectionContractAdmin, setCollectionContractAdmin] = useState("");
   const [collectionContractBalance, setCollectionContractBalance] = useState(0);
-  const onRefreshCollection = async () => {
+
+  const onRefreshCollection = useCallback(async () => {
     await getCollectionContractBalance();
     await onGetCollectionContractOwner();
     await onGetCollectionContractAdmin();
     await onGetCollectionCount();
     await delay(1000);
     await getAllCollections();
-  };
-  useEffect(async () => {
-    onRefreshCollection();
-  }, [currentAccount]);
+  }, []);
+
+  useEffect(() => {
+    const doRefresh = async () => {
+      await onRefreshCollection();
+    };
+    doRefresh();
+  }, [currentAccount, onRefreshCollection]);
 
   const getCollectionContractBalance = async () => {
     const { data: balance } = await api.query.system.account(
