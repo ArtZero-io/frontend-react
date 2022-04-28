@@ -27,7 +27,7 @@ import HomePageBg2 from "@theme/assets/bg-homepage-2.png";
 import HomePageBg3 from "@theme/assets/bg-homepage-3.png";
 
 function HomePage() {
-  const [emailSubscribed, setEmailSubscribed] = useState(null);
+  const [emailSubscribed, setEmailSubscribed] = useState('');
 
   const profile = [
     { discord: "https://discord.gg/wzkZ2JTvN4" },
@@ -331,8 +331,8 @@ function HomePage() {
               borderRadius="0"
             >
               <InputRightElement
-                isLoading={true}
-                colorScheme="blue"
+                // isLoading={true}
+                // colorScheme="blue"
                 spinner={<BeatLoader size={8} color="white" />}
                 onClick={onClickHandler}
                 cursor="pointer"

@@ -108,7 +108,7 @@ const NFTTabCollectible = ({
   const buyToken = async () => {
     setNFT({});
     const { data: balance } = await api.query.system.account(
-      currentAccount.address
+      currentAccount?.address
     );
 
     marketplace_contract_calls.setMarketplaceContract(
@@ -116,7 +116,7 @@ const NFTTabCollectible = ({
       contractData.marketplace
     );
     //check owner of the NFT from marketplace
-    if (saleInfo.nftOwner == currentAccount.address){
+    if (saleInfo.nftOwner == currentAccount?.address){
       toast.error(`Cant buy your own NFT!`);
       return;
     }
@@ -146,11 +146,11 @@ const NFTTabCollectible = ({
 
   const placeOffer = async () => {
     const { data: balance } = await api.query.system.account(
-      currentAccount.address
+      currentAccount?.address
     );
 
     //check owner of the NFT from marketplace
-    if (saleInfo.nftOwner == currentAccount.address){
+    if (saleInfo.nftOwner == currentAccount?.address){
       toast.error(`Cant bid your own NFT!`);
       return;
     }

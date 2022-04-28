@@ -48,7 +48,7 @@ function GeneralPage() {
   useEffect(() => {
     const fetchAllNfts = async () => {
       const options = {
-        owner: currentAccount.address,
+        owner: currentAccount?.address,
       };
 
       try {
@@ -62,7 +62,7 @@ function GeneralPage() {
 
         const totalStakedPromise = await staking_calls.getTotalStakedByAccount(
           currentAccount,
-          currentAccount.address
+          currentAccount?.address
         );
 
         const currentProfit = await marketplace_contract_calls.getCurrentProfit(currentAccount);
@@ -75,7 +75,7 @@ function GeneralPage() {
               return (a.is_for_sale & 1) + (b.is_for_sale & 1);
             }, 0);
 
-            let info = [{ address: currentAccount.address }];
+            let info = [{ address: currentAccount?.address }];
 
             info = [
               ...info,
@@ -98,7 +98,7 @@ function GeneralPage() {
     if (
       !nftList ||
       (dashboardInfo?.length &&
-        dashboardInfo[0].address !== currentAccount.address)
+        dashboardInfo[0].address !== currentAccount?.address)
     ) {
       fetchAllNfts();
     }

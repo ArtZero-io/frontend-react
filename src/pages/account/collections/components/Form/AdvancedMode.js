@@ -46,7 +46,7 @@ const AdvancedModeForm = ({ mode, id }) => {
 
   const checkCurrentBalance = async () => {
     const { data: balance } = await api.query.system.account(
-      currentAccount.address
+      currentAccount?.address
     );
     console.log(balance.free);
     if (balance.free.toNumber() > addingFee) {

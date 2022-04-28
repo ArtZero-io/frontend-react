@@ -64,7 +64,7 @@ function NFTTabInfo({
 
         const isAllowance = await nft721_psp34_standard_calls.allowance(
           currentAccount,
-          currentAccount.address,
+          currentAccount?.address,
           marketplace_contract.CONTRACT_ADDRESS,
           { u64: tokenID },
           dispatch
@@ -95,7 +95,7 @@ function NFTTabInfo({
 
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
 
-      if (owner === currentAccount.address) {
+      if (owner === currentAccount?.address) {
         await marketplace_contract_calls.list(
           currentAccount,
           nftContractAddress,
@@ -119,7 +119,7 @@ function NFTTabInfo({
   };
 
   const approveMarketplaceContract = async () => {
-    if (owner === currentAccount.address) {
+    if (owner === currentAccount?.address) {
       const is_approve = await nft721_psp34_standard_calls.approve(
         currentAccount,
         marketplace.CONTRACT_ADDRESS,

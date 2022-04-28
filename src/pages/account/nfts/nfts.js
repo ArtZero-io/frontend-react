@@ -44,7 +44,7 @@ const MyNFTsPage = () => {
         "post",
         "/getCollectionsByOwner",
         {
-          owner: currentAccount.address,
+          owner: currentAccount?.address,
         }
       );
 
@@ -80,7 +80,7 @@ const MyNFTsPage = () => {
       setLoading(false);
     }
   }, [
-    currentAccount.address,
+    currentAccount?.address,
     filterSelected,
     myCollections,
     tnxStatus?.status,

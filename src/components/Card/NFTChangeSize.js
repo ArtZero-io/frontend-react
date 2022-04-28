@@ -67,7 +67,7 @@ export default function NFTChangeSizeCard({
 
               <Flex w="full">
                 <Spacer />
-                <Text textAlign="right" color="brand.grayLight" mt="5">
+                <Box textAlign="right" color="brand.grayLight" mt="5">
                   <Text mr="2.5">Offer</Text>
                   {bidPrice ? (
                     <Tag h={10} bg="transparent">
@@ -79,7 +79,7 @@ export default function NFTChangeSizeCard({
                   ) : (
                     <>No offer yet</>
                   )}
-                </Text>
+                </Box>
               </Flex>
             </Flex>
           ) : (
