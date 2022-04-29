@@ -25,15 +25,15 @@ function WalletMenu() {
           else
             balSZERO = balSZERO.toNumber() / (10 ** 12);
 
-          if (balSZERO >= 1) shortenNumber(balSZERO);
-          else balSZERO = parseFloat(balSZERO).toFixed(3)
+          if (balSZERO >= 1) balSZERO = shortenNumber(balSZERO);
+          else balSZERO = parseFloat(balSZERO).toFixed(3);
           setAccountBalance(balSZERO);
         })
         .then((unsub) => (unsubscribe = unsub))
         .catch(console.error);
 
     return () => unsubscribe && unsubscribe();
-  }, [api, currentAccount, activeAddress, accountBalance]);
+  }, [activeAddress]);
 
   return currentAccount ? (
     <Tag variant="grayBg" size="2xl" minW={24} justifyContent="end">
