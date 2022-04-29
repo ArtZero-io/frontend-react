@@ -261,7 +261,7 @@ async function getPlatformFee(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return (new BN(output, 10, "le")).div(new BN(10**6)).toNumber() / (10**6);
+    return (new BN(output, 10, "le"));
   }
   return null;
 }
