@@ -135,9 +135,10 @@ const AdvancedModeForm = ({ mode, id }) => {
                 .oneOf([true], "The terms and conditions must be accepted."),
             })}
             onSubmit={async (values, { setSubmitting }) => {
+              console.log('xzczxc');
               (!headerIPFSUrl || !avatarIPFSUrl) &&
                 toast.error("Upload images first");
-
+              console.log('xxxx');
               if (avatarIPFSUrl && headerIPFSUrl) {
                 values.avatarIPFSUrl = avatarIPFSUrl;
                 values.headerIPFSUrl = headerIPFSUrl;
@@ -171,12 +172,17 @@ const AdvancedModeForm = ({ mode, id }) => {
                       ? Math.round(values.royalFee * 100)
                       : 0,
                   };
+                  if (mode === "add") {
+                    await collection_manager_calls.addNewCollection(
+                      currentAccount,
+                      data,
+                      dispatch
+                    );
+                  } else {
+                    console.log(data);
+                  }
 
-                  await collection_manager_calls.addNewCollection(
-                    currentAccount,
-                    data,
-                    dispatch
-                  );
+                  
                 }
               }
             }}
@@ -291,7 +297,7 @@ const AdvancedModeForm = ({ mode, id }) => {
                   mt={8}
                   mb={{ xl: "16px", "2xl": "32px" }}
                 >
-                  {mode === "add" ? "Add new collection" : "Submit change"}
+                  {mode === "add" ? "Add new collection" : "Submitxxx change"}
                 </Button>
               </Form>
             )}
