@@ -21,16 +21,11 @@ export default function App() {
     <ChakraProvider theme={theme}>
       {apiState === "ERROR" ? (
         <InitModal
-          isCentered
           apiState={apiState}
           loadingErrorMess={` ${apiError.target.url} failed.`}
         />
       ) : apiState !== "READY" ? (
-        <InitModal
-          isCentered
-          apiState={apiState}
-          loadingErrorMess={`to network ...`}
-        />
+        <InitModal apiState={apiState} loadingErrorMess={`to network ...`} />
       ) : (
         <>
           <Toaster
@@ -55,7 +50,7 @@ export default function App() {
 
 const InitModal = ({ apiState, loadingErrorMess }) => {
   return (
-    <Modal isCentered isOpen={apiState !== "READY"}>
+    <Modal size="full" isCentered isOpen={apiState !== "READY"}>
       <ModalOverlay
         bg="#33333330"
         backdropFilter="blur(50px) hue-rotate(90deg)"

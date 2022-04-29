@@ -118,7 +118,7 @@ function MyCollectionsPage() {
 
         setLoading(true);
         toast.promise(
-          delay(1000).then(() => {
+          delay(3000).then(() => {
             setCollections(null);
             setLoading(false);
           }),

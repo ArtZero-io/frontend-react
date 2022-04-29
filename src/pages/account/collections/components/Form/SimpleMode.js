@@ -25,7 +25,7 @@ import AddCollectionNumberInput from "../NumberInput";
 import { clientAPI } from "@api/client";
 import CommonCheckbox from "../../../../../components/Checkbox/Checkbox";
 
-const SimpleModeForm = ({ mode, id }) => {
+const SimpleModeForm = ({ mode = "add", id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
   const [addingFee, setAddingFee] = useState(0);
@@ -119,40 +119,65 @@ const SimpleModeForm = ({ mode, id }) => {
         <>
           <Formik
             initialValues={initialValues}
-            validationSchema={Yup.object({
-              nftName: Yup.string()
-                .min(3, "Must be longer than 3 characters")
-                .max(25, "Must be less than 25 characters")
-                .required("Required"),
-              nftSymbol: Yup.string()
-                .min(3, "Must be longer than 3 characters")
-                .max(8, "Must be less than 8 characters")
-                .required("Required"),
-              collectionName: Yup.string()
-                .min(3, "Must be longer than 3 characters")
-                .max(50, "Must be less than 50 characters")
-                .required("Required"),
-              collectionDescription: Yup.string()
-                .min(3, "Must be longer than 3 characters")
-                .max(150, "Must be less than 150 characters")
-                .required("Required"),
-              collectRoyalFee: Yup.boolean(),
-              website: Yup.string()
-                .url("This must be a valid URL")
-                .min(3, "Must be longer than 3 characters")
-                .max(50, "Must be less than 50 characters"),
-              twitter: Yup.string()
-                .url("This must be a valid URL")
-                .min(3, "Must be longer than 3 characters")
-                .max(50, "Must be less than 50 characters"),
-              discord: Yup.string()
-                .url("This must be a valid URL")
-                .min(3, "Must be longer than 3 characters")
-                .max(50, "Must be less than 50 characters"),
-              agreeTosCheckbox: Yup.boolean()
-                .required("The terms and conditions must be accepted.")
-                .oneOf([true], "The terms and conditions must be accepted."),
-            })}
+            validationSchema={(mode) => {
+              let result = Yup.object({
+                collectionName: Yup.string()
+                  .min(3, "Must be longer than 3 characters")
+                  .max(50, "Must be less than 50 characters")
+                  .required("Required"),
+                collectionDescription: Yup.string()
+                  .min(3, "Must be longer than 3 characters")
+                  .max(150, "Must be less than 150 characters")
+                  .required("Required"),
+                collectRoyalFee: Yup.boolean(),
+                website: Yup.string()
+                  .url("This must be a valid URL")
+                  .min(3, "Must be longer than 3 characters")
+                  .max(50, "Must be less than 50 characters"),
+                twitter: Yup.string()
+                  .url("This must be a valid URL")
+                  .min(3, "Must be longer than 3 characters")
+                  .max(50, "Must be less than 50 characters"),
+                discord: Yup.string()
+                  .url("This must be a valid URL")
+                  .min(3, "Must be longer than 3 characters")
+                  .max(50, "Must be less than 50 characters"),
+              });
+
+              if (mode === "add") {
+                const modeAdd = Yup.object({
+                  nftName: Yup.string()
+                    .min(3, "Must be longer than 3 characters")
+                    .max(25, "Must be less than 25 characters")
+                    .required("Required"),
+
+                  nftSymbol: Yup.string()
+                    .min(3, "Must be longer than 3 characters")
+                    .max(8, "Must be less than 8 characters")
+                    .required("Required"),
+                  agreeTosCheckbox: Yup.boolean()
+                    .required("The terms and conditions must be accepted.")
+                    .oneOf(
+                      [true],
+                      "The terms and conditions must be accepted."
+                    ),
+                });
+
+                result = result.concat(modeAdd);
+              }
+
+              if (mode === "edit") {
+                const modeEdit = Yup.object({
+                  nftName: Yup.string(),
+                  nftSymbol: Yup.string(),
+                  agreeTosCheckbox: Yup.boolean(),
+                });
+
+                result = result.concat(modeEdit);
+              }
+
+              return result;
+            }}
             onSubmit={async (values, { setSubmitting }) => {
               (!headerIPFSUrl || !avatarIPFSUrl) &&
                 toast.error("Upload avatar or header too");
@@ -193,6 +218,9 @@ const SimpleModeForm = ({ mode, id }) => {
                       ? Math.round(values.royalFee * 100)
                       : 0,
                   };
+
+                  console.log("111data before new ", data);
+                  console.log("111data before old", initialValues);
 
                   await collection_manager_calls.autoNewCollection(
                     currentAccount,

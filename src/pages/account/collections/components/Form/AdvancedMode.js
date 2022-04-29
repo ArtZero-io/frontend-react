@@ -18,7 +18,7 @@ import AddCollectionNumberInput from "../NumberInput";
 import { clientAPI } from "@api/client";
 import CommonCheckbox from "../../../../../components/Checkbox/Checkbox";
 
-const AdvancedModeForm = ({ mode, id }) => {
+const AdvancedModeForm = ({ mode = "add", id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
   const [addingFee, setAddingFee] = useState(0);
@@ -116,29 +116,53 @@ const AdvancedModeForm = ({ mode, id }) => {
         <>
           <Formik
             initialValues={initialValues}
-            validationSchema={Yup.object({
-              nftContractAddress: Yup.string()
-                .min(3, "Must be longer than 3 characters")
-                .max(48, "Must be less than 48 characters")
-                .required("Required"),
-              collectionName: Yup.string()
-                .min(3, "Must be longer than 3 characters")
-                .max(50, "Must be less than 50 characters")
-                .required("Required"),
-              collectionDescription: Yup.string()
-                .min(3, "Must be longer than 3 characters")
-                .max(150, "Must be less than 150 characters")
-                .required("Required"),
-              collectRoyalFee: Yup.boolean(),
-              agreeTosCheckbox: Yup.boolean()
-                .required("The terms and conditions must be accepted.")
-                .oneOf([true], "The terms and conditions must be accepted."),
-            })}
+            validationSchema={(mode) => {
+              let result = Yup.object({
+                nftContractAddress: Yup.string()
+                  .min(3, "Must be longer than 3 characters")
+                  .max(48, "Must be less than 48 characters")
+                  .required("Required"),
+                collectionName: Yup.string()
+                  .min(3, "Must be longer than 3 characters")
+                  .max(50, "Must be less than 50 characters")
+                  .required("Required"),
+                collectionDescription: Yup.string()
+                  .min(3, "Must be longer than 3 characters")
+                  .max(150, "Must be less than 150 characters")
+                  .required("Required"),
+                collectRoyalFee: Yup.boolean(),
+              });
+
+              if (mode === "add") {
+                const modeAdd = Yup.object({
+                  agreeTosCheckbox: Yup.boolean()
+                    .required("The terms and conditions must be accepted.")
+                    .oneOf(
+                      [true],
+                      "The terms and conditions must be accepted."
+                    ),
+                });
+
+                result = result.concat(modeAdd);
+              }
+
+              if (mode === "edit") {
+                const modeEdit = Yup.object({
+                  agreeTosCheckbox: Yup.boolean().oneOf(
+                    [true],
+                    "The terms and conditions must be accepted."
+                  ),
+                });
+
+                result = result.concat(modeEdit);
+              }
+
+              return result;
+            }}
             onSubmit={async (values, { setSubmitting }) => {
-              console.log('xzczxc');
               (!headerIPFSUrl || !avatarIPFSUrl) &&
                 toast.error("Upload images first");
-              console.log('xxxx');
+              console.log("xxxx");
               if (avatarIPFSUrl && headerIPFSUrl) {
                 values.avatarIPFSUrl = avatarIPFSUrl;
                 values.headerIPFSUrl = headerIPFSUrl;
@@ -172,6 +196,9 @@ const AdvancedModeForm = ({ mode, id }) => {
                       ? Math.round(values.royalFee * 100)
                       : 0,
                   };
+
+                  console.log("111 ADVMODE data before new ", data);
+                  console.log("111 ADVMODE data before old", initialValues);
                   if (mode === "add") {
                     await collection_manager_calls.addNewCollection(
                       currentAccount,
@@ -179,10 +206,9 @@ const AdvancedModeForm = ({ mode, id }) => {
                       dispatch
                     );
                   } else {
-                    console.log(data);
+                    console.log("else mode", mode);
+                    console.log("else data", data);
                   }
-
-                  
                 }
               }
             }}
