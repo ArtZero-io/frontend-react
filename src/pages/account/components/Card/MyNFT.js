@@ -24,7 +24,7 @@ const MyNFTCard = ({
   isStaked = false,
   isBid,
 }) => {
-  let image_href = getCachedImage(avatar,500,IPFS_BASE_URL +"/"+ avatar.replace("ipfs://",""));
+  console.log(avatar)
   return (
     <Box
       minW="14.25rem"
@@ -47,7 +47,7 @@ const MyNFTCard = ({
             h="full"
             w="full"
             objectFit="cover"
-            src={image_href}
+            src={avatar ? getCachedImage(avatar,500,IPFS_BASE_URL +"/"+ avatar.replace("ipfs://","")) : ""}
             fallback={<Skeleton w="full" h="full" minH={56} minW={56} />}
           />
         </Square>
