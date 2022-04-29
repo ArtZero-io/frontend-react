@@ -97,12 +97,12 @@ const MintPage = () => {
             ".json",
           {}
         );
-        //console.log(tokenUri + (i+1).toString() + ".json",metadata);
+        console.log(tokenUri + dataList[i].tokenID + ".json",metadata);
 
         var obj = {
           is_for_sale: dataList[i].is_for_sale,
           price: dataList[i].price,
-          avatar: metadata.image?.replace("ipfs://", ""),
+          avatar: metadata.image,
           nftName: metadata.name,
           isStaked: false,
           isBid: false,

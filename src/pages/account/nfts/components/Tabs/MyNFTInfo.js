@@ -30,6 +30,7 @@ import marketplace_contract from "@utils/blockchain/marketplace";
 import { createLevelAttribute } from "@utils";
 import { useDispatch, useSelector } from "react-redux";
 import CommonLoader from "../../../../../components/Loader/CommonLoader";
+import {getCachedImage} from "@utils";
 
 function NFTTabInfo({
   avatar,
@@ -147,7 +148,7 @@ function NFTTabInfo({
           boxShadow="lg"
           alt="nft-img"
           objectFit="cover"
-          src={`${IPFS_BASE_URL}/${avatar}`}
+          src={avatar ? getCachedImage(avatar,500,IPFS_BASE_URL +"/"+ avatar.replace("ipfs://","")) : ""}
           fallback={<Skeleton minW={{ base: "20rem", "2xl": "30rem" }} />}
         />
       </Box>

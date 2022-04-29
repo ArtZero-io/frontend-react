@@ -15,7 +15,7 @@ import {
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { IPFS_BASE_URL } from "@constants/index";
-
+import {getCachedImage} from "@utils";
 const MyNFTCard = ({
   is_for_sale,
   price,
@@ -24,6 +24,7 @@ const MyNFTCard = ({
   isStaked = false,
   isBid,
 }) => {
+  console.log(avatar)
   return (
     <Box
       minW="14.25rem"
@@ -46,7 +47,7 @@ const MyNFTCard = ({
             h="full"
             w="full"
             objectFit="cover"
-            src={`${IPFS_BASE_URL}/${avatar}`}
+            src={avatar ? getCachedImage(avatar,500,IPFS_BASE_URL +"/"+ avatar.replace("ipfs://","")) : ""}
             fallback={<Skeleton w="full" h="full" minH={56} minW={56} />}
           />
         </Square>
