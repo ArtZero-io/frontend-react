@@ -1,8 +1,8 @@
 const marketplace = {
-  CONTRACT_ADDRESS: "5CctxTKm5kwvwE1s59YwhCTasrbRcDoZKHSNmkJbTfQfPWJ8",
+  CONTRACT_ADDRESS: "5GPq2VLhdNnNe9KAD6UzHEe9KxKuAy6H6T7tqZFHASpsBNPc",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xba27e8fe1040f135d4e7c3bd6dae472bd8b2dbbed8f02adf56e11d9ed96185fd",
+      "hash": "0x4b28fc1ae29a9a36b482572487722796228214c7e49407e61e290a549ecf8d56",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -968,9 +968,9 @@ const marketplace = {
             "payable": false,
             "returnType": {
               "displayName": [
-                "Option"
+                "Balance"
               ],
-              "type": 34
+              "type": 10
             },
             "selector": "0xc4fd2cdc"
           },
@@ -1083,6 +1083,21 @@ const marketplace = {
             "selector": "0x4fa43c8c"
           },
           {
+            "args": [],
+            "docs": [],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 34
+            },
+            "selector": "0x5e228753"
+          },
+          {
             "args": [
               {
                 "label": "new_owner",
@@ -1104,24 +1119,9 @@ const marketplace = {
                 "ownable_external",
                 "TransferOwnershipOutput"
               ],
-              "type": 35
+              "type": 34
             },
             "selector": "0x11f43efd"
-          },
-          {
-            "args": [],
-            "docs": [],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 35
-            },
-            "selector": "0x5e228753"
           }
         ]
       },
@@ -2102,39 +2102,6 @@ const marketplace = {
               "variant": {
                 "variants": [
                   {
-                    "index": 0,
-                    "name": "None"
-                  },
-                  {
-                    "fields": [
-                      {
-                        "type": 10
-                      }
-                    ],
-                    "index": 1,
-                    "name": "Some"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "T",
-                "type": 10
-              }
-            ],
-            "path": [
-              "Option"
-            ]
-          }
-        },
-        {
-          "id": 35,
-          "type": {
-            "def": {
-              "variant": {
-                "variants": [
-                  {
                     "fields": [
                       {
                         "type": 3
@@ -2146,7 +2113,7 @@ const marketplace = {
                   {
                     "fields": [
                       {
-                        "type": 36
+                        "type": 35
                       }
                     ],
                     "index": 1,
@@ -2162,7 +2129,7 @@ const marketplace = {
               },
               {
                 "name": "E",
-                "type": 36
+                "type": 35
               }
             ],
             "path": [
@@ -2171,7 +2138,7 @@ const marketplace = {
           }
         },
         {
-          "id": 36,
+          "id": 35,
           "type": {
             "def": {
               "variant": {
