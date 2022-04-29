@@ -4,6 +4,13 @@ import { AccountActionTypes } from "../store/types/account.types";
 import BN from "bn.js";
 import Keyring from "@polkadot/keyring";
 
+const baseURL = process.env.REACT_APP_API_BASE_URL;
+
+export function getCachedImage (imageHash, size, url) {
+  console.log('getImage',imageHash, size, url)
+  return baseURL + '/getImage?input=' + imageHash + '&size=' + size + '&url=' + url;
+}
+
 export function shortenNumber(number) {
   return nFormatter(number,1);
 }
