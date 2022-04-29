@@ -72,6 +72,7 @@ const ImageUploadCollection = ({
             setImgURL(created?.path);
             const update_nft_api_res = clientAPI("post", "/cacheImage", {
               input: created?.path,
+              is1024: true
             });
             console.log("update_nft_api_res", update_nft_api_res);
           }),

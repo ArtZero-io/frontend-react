@@ -17,6 +17,8 @@ import SocialCard from "@components/Card/Social";
 
 import { IPFS_BASE_URL } from "@constants/index";
 import {shortenNumber} from "@utils";
+import process from "process";
+const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 const overlay =
   "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.9) 45%, rgba(0,0,0,0.0) 70%, rgba(0,0,0,0) 100%)";
@@ -31,8 +33,15 @@ function CollectionHeader({
   volume,
   floorPrice,
   nftTotalCount,
-  totalListed
+  totalListed,
+  headerImage
 }) {
+
+  const getCollectionImage = (imageHash, size) => {
+    const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
+    return baseURL + '/getImage?input=' + imageHash + '&size=' + size + '&url=' + callbackUrl;
+  }
+
   return (
     <Box
       maxH={"34rem"}
@@ -65,7 +74,7 @@ function CollectionHeader({
               h="full"
               rounded="full"
               objectFit="cover"
-              src={avatarImage && `${IPFS_BASE_URL}/${avatarImage}`}
+              src={getCollectionImage(avatarImage, 500)}
               fallback={<Skeleton w={40} h={40} borderRadius="full" />}
             />
           </Center>

@@ -20,6 +20,7 @@ import { IPFS_CLIENT_URL } from "@constants/index";
 import { Buffer } from "buffer";
 import { IPFS_BASE_URL } from "@constants/index";
 import IdenticonAvatar from "@components/IdenticonAvatar/IdenticonAvatar/";
+import { clientAPI } from "@api/client";
 
 const client = create(IPFS_CLIENT_URL);
 
@@ -64,7 +65,11 @@ export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
           uploadPromise().then((created) => {
             setImageIPFSUrl(created?.path);
             setImgURL(created?.path);
-
+            const update_nft_api_res = clientAPI("post", "/cacheImage", {
+              input: created?.path,
+              is1024: true
+            });
+            console.log("update_nft_api_res", update_nft_api_res);
           }),
           {
             loading: "Uploading...",

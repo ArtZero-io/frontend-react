@@ -271,7 +271,7 @@ function CollectionPage() {
       ) : (
         <>
           <CollectionHero {...formattedCollection} />
-
+          {console.log('formattedCollection?.headerImage', formattedCollection?.headerImage)}
           <Tabs isLazy align="center">
             <TabList>
               {tabData.map((tab, index) => (
