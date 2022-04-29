@@ -38,8 +38,12 @@ function CollectionHeader({
 }) {
 
   const getCollectionImage = (imageHash, size) => {
-    const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
-    return baseURL + '/getImage?input=' + imageHash + '&size=' + size + '&url=' + callbackUrl;
+    if (imageHash) {
+      const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
+      return baseURL + '/getImage?input=' + imageHash + '&size=' + size + '&url=' + callbackUrl;
+    } else {
+      return '';
+    }
   }
 
   return (

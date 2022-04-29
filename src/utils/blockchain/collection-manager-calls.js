@@ -456,7 +456,7 @@ async function getAttributes(caller_account, collection_address, attributes) {
   return attributeVals;
 }
 
-export async function setMultipleAttributes(
+async function setMultipleAttributes(
   account,
   collection_address,
   attributes,
@@ -530,6 +530,7 @@ const collection_manager_calls = {
   getAttributes,
   setCollectionContract,
   setAccount,
+  setMultipleAttributes
 };
 
 export default collection_manager_calls;

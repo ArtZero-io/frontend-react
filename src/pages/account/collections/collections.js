@@ -179,12 +179,14 @@ function MyCollectionsPage() {
                   columns={{ base: 1, md: 2, lg: 3 }}
                   spacing="7"
                 >
+                  
                   {collections?.map((item, idx) => (
                     <React.Fragment key={idx}>
                       <Box pos="relative">
                         <AddNewCollectionModal mode="edit" id={item.index} />
                         {Number(item.contractType) === 2 && (
                           <SimpleModeModal
+                            nftContractAddress={item.nftContractAddress}
                             mode="edit"
                             id={item.index}
                             isOpen={isOpenSimpleMode}

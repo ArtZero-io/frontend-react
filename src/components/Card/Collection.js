@@ -16,7 +16,7 @@ import {
 import ActiveIcon from "@theme/assets/icon/Active.js";
 import InActiveIcon from "@theme/assets/icon/InActive.js";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-// import { IPFS_BASE_URL } from "@constants/index";
+import { IPFS_BASE_URL } from "@constants/index";
 import process from "process";
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
@@ -32,7 +32,8 @@ export const CollectionCard = ({
 }) => {
 
   const getCollectionImage = (imageHash, size) => {
-    return baseURL + '/getImage?input=' + imageHash + '&size=' + size;
+    const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
+    return baseURL + '/getImage?input=' + imageHash + '&size=' + size + '&url=' + callbackUrl;
   }
 
   return (

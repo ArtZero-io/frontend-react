@@ -200,6 +200,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       dispatch
                     );
                   } else {
+                    console.log(collection_manager_calls);
                     await collection_manager_calls.setMultipleAttributes(
                       currentAccount,
                       data.nftContractAddress,
@@ -243,6 +244,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 >
                   <ImageUpload
                     mode={mode}
+                    isBanner={false}
                     id="collection-avatar"
                     imageIPFSUrl={avatarIPFSUrl}
                     setImageIPFSUrl={setAvatarIPFSUrl}
@@ -251,6 +253,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   />
                   <ImageUpload
                     mode={mode}
+                    isBanner={true}
                     id="collection-header"
                     imageIPFSUrl={headerIPFSUrl}
                     setImageIPFSUrl={setHeaderIPFSUrl}

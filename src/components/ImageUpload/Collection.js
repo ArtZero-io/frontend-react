@@ -24,6 +24,7 @@ const client = create(IPFS_CLIENT_URL);
 const ImageUploadCollection = ({
   id,
   mode,
+  isBanner,
   imageIPFSUrl,
   setImageIPFSUrl,
   title = "Upload Image",
@@ -72,7 +73,7 @@ const ImageUploadCollection = ({
             setImgURL(created?.path);
             const update_nft_api_res = clientAPI("post", "/cacheImage", {
               input: created?.path,
-              is1024: true
+              is1024: isBanner
             });
             console.log("update_nft_api_res", update_nft_api_res);
           }),
