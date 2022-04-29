@@ -118,8 +118,8 @@ async function getPendingUnstakedId(caller_account, account, index){
   }
   return null;
 }
-async function getRequestUnstakeTime(caller_account, account, index){
-  if (!contract || !caller_account || !isValidAddressPolkadotAddress(account) || !index) {
+async function getRequestUnstakeTime(caller_account, account, token_id){
+  if (!contract || !caller_account || !isValidAddressPolkadotAddress(account) || !token_id) {
     console.log("invalid inputs");
     return null;
   }
@@ -132,13 +132,15 @@ async function getRequestUnstakeTime(caller_account, account, index){
     address,
     { value: azero_value, gasLimit },
     account,
-    index
+    token_id
   );
+  console.log(output);
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return new BN(output.value, 10, "le").toNumber();
   }
   return null;
 }
+
 //SETTERS
 async function stake(caller_account, token_ids) {
   if (!contract || !caller_account) {
@@ -220,8 +222,90 @@ async function unstake(caller_account, token_ids) {
     .catch((e) => console.log("e", e));
   return unsubscribe;
 }
+async function requestUnstake(caller_account, token_ids) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+
+  contract.tx
+    .requestUnstake({ gasLimit, value: azero_value }, token_ids)
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError ", dispatchError.toString());
+          }
+        }
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+          toast.success(
+            `Request Unstake Artzero NFTs ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
+  return unsubscribe;
+}
+async function cancelRequestUnstake(caller_account, token_ids) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+
+  contract.tx
+    .cancelRequestUnstake({ gasLimit, value: azero_value }, token_ids)
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError ", dispatchError.toString());
+          }
+        }
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+          toast.success(
+            `Cancel Request Unstake Artzero NFTs ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
+  return unsubscribe;
+}
 
 const staking_calls = {
+  cancelRequestUnstake,
+  requestUnstake,
   getPendingUnstakedId,
   getRequestUnstakeTime,
   getTotalStaked,

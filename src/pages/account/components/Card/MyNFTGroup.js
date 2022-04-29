@@ -31,7 +31,7 @@ function MyNFTGroupCard({ name, avatarImage, listNFT, contractType, showOnChainM
 
   function onClickHandler(item) {
     setSelectedNFT(item);
-    !item?.isStaked && onOpen();
+    (item?.stakeStatus == 0) && onOpen();
   }
   const getAttributesData = async () =>{
     if (showOnChainMetadata){

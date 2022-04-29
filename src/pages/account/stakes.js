@@ -30,7 +30,6 @@ import BN from "bn.js";
 import { clientAPI } from "@api/client";
 import toast from "react-hot-toast";
 
-
 let az_collection = [];
 let my_az_nfts = [];
 let my_staked_az_nfts = [];
@@ -97,7 +96,10 @@ const MyStakesPage = () => {
     const dataList = await clientAPI("post", "/getNFTsByOwnerAndCollection", options);
     console.log(dataList);
     if (dataList){
-      my_az_nfts = dataList;
+      const data = dataList?.map((item) => {
+        return { ...item, stakeStatus:1 };
+      });
+      my_az_nfts = data;
       az_collection[0].listNFT = my_az_nfts;
       setCurrentTabList(az_collection);
     }
@@ -116,6 +118,7 @@ const MyStakesPage = () => {
       };
 
       const token_info = await clientAPI("post", "/getNFTByID", options);
+      token_info[0].stakeStatus = 2;
       tokens.push(token_info[0]);
     }
     my_staked_az_nfts = tokens;
@@ -133,7 +136,7 @@ const MyStakesPage = () => {
       };
 
       const token_info = await clientAPI("post", "/getNFTByID", options);
-
+      token_info[0].stakeStatus = 3;
       tokens.push(token_info[0]);
     }
     my_pending_az_nfts = tokens;
