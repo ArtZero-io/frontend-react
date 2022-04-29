@@ -36,8 +36,6 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           currentAccount
         );
 
-        console.log("AdvancedModeForm addingFeeData", addingFeeData);
-
         setAddingFee(addingFeeData / 10 ** 12);
       }
     };
@@ -162,7 +160,6 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
             onSubmit={async (values, { setSubmitting }) => {
               (!headerIPFSUrl || !avatarIPFSUrl) &&
                 toast.error("Upload images first");
-              console.log("xxxx");
               if (avatarIPFSUrl && headerIPFSUrl) {
                 values.avatarIPFSUrl = avatarIPFSUrl;
                 values.headerIPFSUrl = headerIPFSUrl;
@@ -196,9 +193,6 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       ? Math.round(values.royalFee * 100)
                       : 0,
                   };
-
-                  console.log("111 ADVMODE data before new ", data);
-                  console.log("111 ADVMODE data before old", initialValues);
                   if (mode === "add") {
                     await collection_manager_calls.addNewCollection(
                       currentAccount,
@@ -206,8 +200,13 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       dispatch
                     );
                   } else {
-                    console.log("else mode", mode);
-                    console.log("else data", data);
+                    await collection_manager_calls.setMultipleAttributes(
+                      currentAccount,
+                      data.nftContractAddress,
+                      data.attributes,
+                      data.attributeVals,
+                      dispatch
+                    );
                   }
                 }
               }
@@ -323,7 +322,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   mt={8}
                   mb={{ xl: "16px", "2xl": "32px" }}
                 >
-                  {mode === "add" ? "Add new collection" : "Submitxxx change"}
+                  {mode === "add" ? "Add new collection" : "Submit change"}
                 </Button>
               </Form>
             )}

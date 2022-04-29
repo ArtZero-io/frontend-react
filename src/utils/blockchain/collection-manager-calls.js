@@ -457,6 +457,7 @@ async function getAttributes(caller_account, collection_address, attributes) {
 }
 
 export async function setMultipleAttributes(
+  account,
   collection_address,
   attributes,
   values,
