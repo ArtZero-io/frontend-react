@@ -182,7 +182,7 @@ async function getFee1(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber() / 10 ** 12;
+    return new BN(output, 10, "le").div(new BN(10**6)).toNumber() / (10**6);
   }
   return null;
 }
@@ -201,7 +201,7 @@ async function getFee2(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber() / 10 ** 12;
+    return new BN(output, 10, "le").div(new BN(10**6)).toNumber() / (10**6);
   }
   return null;
 }
