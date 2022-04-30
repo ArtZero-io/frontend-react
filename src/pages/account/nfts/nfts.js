@@ -66,8 +66,11 @@ const MyNFTsPage = () => {
           if (Number(filterSelected) === 1) {
             dataList = dataList.filter((item) => item.is_for_sale === true);
           }
+          const data = dataList?.map((item) => {
+            return { ...item, stakeStatus:0 };
+          });
 
-          collection.listNFT = dataList;
+          collection.listNFT = data;
 
           return collection;
         })

@@ -104,7 +104,7 @@ const MintPage = () => {
           price: dataList[i].price,
           avatar: metadata.image,
           nftName: metadata.name,
-          isStaked: false,
+          stakeStatus:0,
           isBid: false,
         };
         myNFTs.push(obj);
