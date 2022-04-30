@@ -112,13 +112,6 @@ function MyNFTCard({
         await staking_calls.cancelRequestUnstake(currentAccount,[tokenID],dispatch);
       }
     }
-    await delay(10000);
-    console.log('request update',nftContractAddress,tokenID);
-    await clientAPI("post", "/updateNFT", {
-      collection_address: nftContractAddress,
-      token_id: tokenID,
-    });
-
  }
 
   return (

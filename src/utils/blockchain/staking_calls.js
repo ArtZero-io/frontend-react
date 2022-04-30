@@ -1,11 +1,10 @@
 import { ContractPromise } from "@polkadot/api-contract";
 import toast from "react-hot-toast";
 import BN from "bn.js";
-
 import { web3FromSource } from "../wallets/extension-dapp";
-
-import { isValidAddressPolkadotAddress, handleContractCall } from "@utils";
-
+import { isValidAddressPolkadotAddress, handleContractCall, delay } from "@utils";
+import artzero_nft from "@utils/blockchain/artzero-nft";
+import { clientAPI } from "@api/client";
 // eslint-disable-next-line no-unused-vars
 let account;
 let contract;
@@ -170,6 +169,14 @@ async function stake(caller_account, token_ids, dispatch) {
         }
 
         if (status) {
+          for (var i=0;i<token_ids.length;i++){
+            await clientAPI("post", "/updateNFT", {
+              collection_address: artzero_nft.CONTRACT_ADDRESS,
+              token_id: token_ids[i],
+            });
+            await delay(300);
+          }
+
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Stake Artzero NFTs ${
@@ -211,6 +218,13 @@ async function unstake(caller_account, token_ids, dispatch) {
         }
 
         if (status) {
+          for (var i=0;i<token_ids.length;i++){
+            await clientAPI("post", "/updateNFT", {
+              collection_address: artzero_nft.CONTRACT_ADDRESS,
+              token_id: token_ids[i],
+            });
+            await delay(300);
+          }
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Unstake Artzero NFTs ${
@@ -252,6 +266,13 @@ async function requestUnstake(caller_account, token_ids, dispatch) {
         }
 
         if (status) {
+          for (var i=0;i<token_ids.length;i++){
+            await clientAPI("post", "/updateNFT", {
+              collection_address: artzero_nft.CONTRACT_ADDRESS,
+              token_id: token_ids[i],
+            });
+            await delay(300);
+          }
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Request Unstake Artzero NFTs ${
@@ -293,6 +314,13 @@ async function cancelRequestUnstake(caller_account, token_ids, dispatch) {
         }
 
         if (status) {
+          for (var i=0;i<token_ids.length;i++){
+            await clientAPI("post", "/updateNFT", {
+              collection_address: artzero_nft.CONTRACT_ADDRESS,
+              token_id: token_ids[i],
+            });
+            await delay(300);
+          }
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Cancel Request Unstake Artzero NFTs ${

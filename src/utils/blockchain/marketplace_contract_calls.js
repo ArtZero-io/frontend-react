@@ -162,7 +162,7 @@ async function getForSaleTokenId(
   }
   return null;
 }
-async function getAllBids(caller_account, nft_contract_address, seller, index) {
+async function getAllBids(caller_account, nft_contract_address, seller, token_id) {
   if (
     !contract ||
     !caller_account ||
@@ -182,8 +182,9 @@ async function getAllBids(caller_account, nft_contract_address, seller, index) {
     { value: azero_value, gasLimit },
     nft_contract_address,
     seller,
-    index
+    token_id
   );
+  console.log(output);
   if (result.isOk) {
     return output.toHuman();
   }

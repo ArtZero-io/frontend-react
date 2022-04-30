@@ -36,7 +36,7 @@ let my_staked_az_nfts = [];
 let my_pending_az_nfts = [];
 
 const MyStakesPage = () => {
-  
+
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
 
   const { api, currentAccount } = useSubstrateState();
@@ -79,6 +79,7 @@ const MyStakesPage = () => {
       my_discount_rate
     }
     setGeneralStats(obj);
+    await delay(3000);
     await getAZCollection();
     await getMyAZNFTs();
     await getMyStakedAZNFTs(my_total_staked_az_nfts);

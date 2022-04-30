@@ -21,7 +21,7 @@ import { clientAPI } from "@api/client";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "@utils/substrate";
 
-function MyNFTGroupCard({ name, avatarImage, listNFT, contractType, showOnChainMetadata}) {
+function MyNFTGroupCard({ name, avatarImage, listNFT, contractType, showOnChainMetadata, showMyListing}) {
   const { currentAccount } = useSubstrateState();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -89,6 +89,16 @@ function MyNFTGroupCard({ name, avatarImage, listNFT, contractType, showOnChainM
       console.log(data);
       setListNFTFormatted(data);
     }
+
+    // if (showMyListing === 1){
+    //   console.log('showMyListing only')
+    //   let mylistNFT = listNFT.filter(
+    //
+    //     (nft) => nft.is_for_sale
+    //
+    //   );
+    //   setListNFTFormatted(mylistNFT);
+    //}
   }
 
   useEffect(() => {
@@ -148,7 +158,8 @@ function MyNFTGroupCard({ name, avatarImage, listNFT, contractType, showOnChainM
           py={10}
           px={1}
         >
-          {listNFTFormatted?.map((item, idx) => (
+          {listNFTFormatted.length >0 && listNFTFormatted?.map((item, idx) => (
+
             <React.Fragment key={idx}>
               <GridItem
                 shadow="lg"
@@ -160,6 +171,7 @@ function MyNFTGroupCard({ name, avatarImage, listNFT, contractType, showOnChainM
                 <MyNFTCard {...item} />
               </GridItem>
             </React.Fragment>
+
           ))}
         </Grid>
       )}

@@ -19,11 +19,13 @@ import CommonLoader from "../../../components/Loader/CommonLoader";
 import { delay } from "../../../utils";
 import { AccountActionTypes } from "../../../store/types/account.types";
 import toast from "react-hot-toast";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
 
   const [myCollections, setMyCollections] = useState(null);
+  // const [myListings, setMyListings] = useState(null);
 
   const [filterSelected, setFilterSelected] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -37,51 +39,61 @@ const MyNFTsPage = () => {
       setMyCollections(null);
     }
   }
+  const fetchMyCollections = async () => {
+    const allCollectionsOwned = await clientAPI(
+      "post",
+      "/getCollectionsByOwner",
+      {
+        owner: currentAccount?.address,
+      }
+    );
 
-  useEffect(() => {
-    const fetchMyCollections = async () => {
-      const allCollectionsOwned = await clientAPI(
-        "post",
-        "/getCollectionsByOwner",
-        {
+    let data = await Promise.all(
+      allCollectionsOwned.map(async (collection) => {
+        const options = {
+          collection_address: collection.nftContractAddress,
           owner: currentAccount?.address,
+          limit: 10000,
+          offset: 0,
+          sort: -1,
+        };
+
+        let dataList = await clientAPI("post", "/getNFTsByOwnerAndCollection", options);
+
+        if (Number(filterSelected) === 0) {
+          dataList = dataList.filter((item) => item.is_for_sale !== true);
         }
-      );
 
-      const data = await Promise.all(
-        allCollectionsOwned.map(async (collection) => {
-          const options = {
-            collection_address: collection.nftContractAddress,
-            limit: 100,
-            offset: 0,
-            sort: -1,
-          };
-
-          let dataList = await clientAPI("post", "/getNFTs", options);
-
-          if (Number(filterSelected) === 0) {
-            dataList = dataList.filter((item) => item.is_for_sale !== true);
-          }
-
-          if (Number(filterSelected) === 1) {
-            dataList = dataList.filter((item) => item.is_for_sale === true);
-          }
-          const data = dataList?.map((item) => {
+        if (Number(filterSelected) === 1) {
+          dataList = dataList.filter((item) => item.is_for_sale === true);
+        }
+        const data = dataList?.map((item) => {
             return { ...item, stakeStatus:0 };
-          });
+        });
 
-          collection.listNFT = data;
+        collection.listNFT = data;
 
-          return collection;
-        })
-      );
-      data.length ? setMyCollections(data) : setMyCollections(null);
-    };
+        return collection;
+      })
+    );
+    //Dont Display Collection with no NFT
+    data = data.filter((item) => item.listNFT?.length>0);
+    data.length ? setMyCollections(data) : setMyCollections(null);
 
-    if (!myCollections) {
+  };
+  const fetchMyBids = async () => {
+    let mybids = marketplace_contract_calls.getAllBids(currentAccount,)
+  }
+  useEffect(() => {
+
+    if (!myCollections & filterSelected !== 3) {
       fetchMyCollections();
       setLoading(false);
     }
+    else{
+      fetchMyBids();
+    }
+
   }, [
     currentAccount?.address,
     filterSelected,
@@ -115,7 +127,6 @@ const MyNFTsPage = () => {
     forceUpdateAfterMint();
   }, [tnxStatus, dispatch]);
 
-  console.log("myCollections", myCollections);
   return (
     <Box as="section" maxW="container.3xl" px={5} minH="60rem">
       <Box
@@ -180,7 +191,7 @@ const MyNFTsPage = () => {
             {myCollections?.length === 0 ? (
               <VStack py={10} align="start" ml={3} justifyContent="center">
                 <Text textAlign="center" color="brand.grayLight" size="2xs">
-                  You don't have any NFT yet.
+                  No NFT found
                 </Text>
               </VStack>
             ) : (
