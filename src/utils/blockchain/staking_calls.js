@@ -4,7 +4,7 @@ import BN from "bn.js";
 
 import { web3FromSource } from "../wallets/extension-dapp";
 
-import { isValidAddressPolkadotAddress } from "@utils";
+import { isValidAddressPolkadotAddress, handleContractCall } from "@utils";
 
 // eslint-disable-next-line no-unused-vars
 let account;
@@ -142,7 +142,7 @@ async function getRequestUnstakeTime(caller_account, account, token_id){
 }
 
 //SETTERS
-async function stake(caller_account, token_ids) {
+async function stake(caller_account, token_ids, dispatch) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -160,6 +160,7 @@ async function stake(caller_account, token_ids) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
+        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -182,7 +183,7 @@ async function stake(caller_account, token_ids) {
     .catch((e) => console.log("e", e));
   return unsubscribe;
 }
-async function unstake(caller_account, token_ids) {
+async function unstake(caller_account, token_ids, dispatch) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -200,6 +201,7 @@ async function unstake(caller_account, token_ids) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
+        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -222,7 +224,7 @@ async function unstake(caller_account, token_ids) {
     .catch((e) => console.log("e", e));
   return unsubscribe;
 }
-async function requestUnstake(caller_account, token_ids) {
+async function requestUnstake(caller_account, token_ids, dispatch) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -240,6 +242,7 @@ async function requestUnstake(caller_account, token_ids) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
+        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -262,7 +265,7 @@ async function requestUnstake(caller_account, token_ids) {
     .catch((e) => console.log("e", e));
   return unsubscribe;
 }
-async function cancelRequestUnstake(caller_account, token_ids) {
+async function cancelRequestUnstake(caller_account, token_ids, dispatch) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -280,6 +283,7 @@ async function cancelRequestUnstake(caller_account, token_ids) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
+        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);

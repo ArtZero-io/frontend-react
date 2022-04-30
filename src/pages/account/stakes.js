@@ -29,13 +29,16 @@ import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import BN from "bn.js";
 import { clientAPI } from "@api/client";
 import toast from "react-hot-toast";
-
+import { useSelector } from "react-redux";
 let az_collection = [];
 let my_az_nfts = [];
 let my_staked_az_nfts = [];
 let my_pending_az_nfts = [];
 
 const MyStakesPage = () => {
+  
+  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+
   const { api, currentAccount } = useSubstrateState();
 
   const [generalStats, setGeneralStats] = useState({
@@ -155,7 +158,7 @@ const MyStakesPage = () => {
 
   useEffect(() => {
     getGeneralStats();
-  }, [currentAccount.address]);
+  }, [currentAccount.address,tnxStatus]);
 
   const onClickHandler = async (e) => {
     const id = e.target.getAttribute("id").toString();

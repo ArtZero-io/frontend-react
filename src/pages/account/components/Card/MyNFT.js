@@ -17,15 +17,15 @@ import React, { useEffect, useState } from "react";
 import { clientAPI } from "@api/client";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { IPFS_BASE_URL } from "@constants/index";
-import {getCachedImage,secondsToTime} from "@utils";
+import {getCachedImage,secondsToTime,delay} from "@utils";
 import staking_calls from "@utils/blockchain/staking_calls";
 import staking from "@utils/blockchain/staking";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
 import useInterval from 'use-interval'
-
-const MyNFTCard = ({
+import { useDispatch } from "react-redux";
+function MyNFTCard({
   nftContractAddress,
   is_for_sale,
   price,
@@ -34,7 +34,8 @@ const MyNFTCard = ({
   nftName,
   stakeStatus,  //0 not show, 1 not staked, 2 staked , 3 pending unstake
   isBid,
-}) => {
+}){
+  const dispatch = useDispatch();
   const {currentAccount } = useSubstrateState();
   const [unstakeRequestTime,setUnstakeRequestTime] = useState(0);
   const [countdownTime,setCountdownTime] = useState(0);
@@ -45,6 +46,13 @@ const MyNFTCard = ({
     console.log(time);
     setUnstakeRequestTime(time);
 
+  }
+  const requestUpdateNFT = async () =>{
+    console.log('request update',nftContractAddress,tokenID);
+    await clientAPI("post", "/updateNFT", {
+      collection_address: nftContractAddress,
+      token_id: tokenID,
+    });
   }
   useInterval(() => {
     if (unstakeRequestTime){
@@ -65,6 +73,7 @@ const MyNFTCard = ({
     if (stakeStatus == 3)
       getRequestTime();
     //console.log(listNFT,'showOnChainMetadata',showOnChainMetadata);
+    requestUpdateNFT();
   }, [stakeStatus]);
 
   async function stakeAction(stakeStatus){
@@ -80,28 +89,30 @@ const MyNFTCard = ({
         await artzero_nft_calls.approve(currentAccount,
         staking.CONTRACT_ADDRESS,
         { u64: tokenID },true);
+        await delay(3000)
       }
 
       //Token is unstaked, Stake Now
       toast('Staking NFT...')
-      await staking_calls.stake(currentAccount,[tokenID]);
+      await staking_calls.stake(currentAccount,[tokenID],dispatch);
 
     }
     else if (stakeStatus == 2){
       //Token is staked, Request Unstake Now
       toast('Request Unstaking NFT...')
-      await staking_calls.requestUnstake(currentAccount,[tokenID]);
+      await staking_calls.requestUnstake(currentAccount,[tokenID],dispatch);
     }
     else if (stakeStatus == 3){
       if (isUnstakeTime){
         toast('Unstaking NFT...')
-        await staking_calls.unstake(currentAccount,[tokenID]);
+        await staking_calls.unstake(currentAccount,[tokenID],dispatch);
       }
       else {
         toast('Cancel Unstaking Request...')
-        await staking_calls.cancelRequestUnstake(currentAccount,[tokenID]);
+        await staking_calls.cancelRequestUnstake(currentAccount,[tokenID],dispatch);
       }
     }
+    await delay(10000);
     console.log('request update',nftContractAddress,tokenID);
     await clientAPI("post", "/updateNFT", {
       collection_address: nftContractAddress,
