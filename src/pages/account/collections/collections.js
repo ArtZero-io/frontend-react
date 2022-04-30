@@ -29,6 +29,7 @@ import { AccountActionTypes } from "../../../store/types/account.types";
 import { delay } from "../../../utils";
 import { useDispatch, useSelector } from "react-redux";
 import CommonLoader from "../../../components/Loader/CommonLoader";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
 function MyCollectionsPage() {
   const [collections, setCollections] = useState(null);
@@ -83,8 +84,12 @@ function MyCollectionsPage() {
         if (dataList?.length) {
           setOwner(dataList[0].collectionOwner || options.owner);
           setTotalCollectionsCount(dataList?.length);
-
-          return setCollections(dataList);
+          const listCollection = [];
+          for (let item of dataList) {
+            item.volume = await marketplace_contract_calls.getVolumeByCollection(currentAccount, item.nftContractAddress);
+            listCollection.push(item);
+          }
+          return setCollections(listCollection);
         }
 
         setCollections(null);
@@ -179,7 +184,7 @@ function MyCollectionsPage() {
                   columns={{ base: 1, md: 2, lg: 3 }}
                   spacing="7"
                 >
-                  
+                  {console.log(collections)}
                   {collections?.map((item, idx) => (
                     <React.Fragment key={idx}>
                       <Box pos="relative">

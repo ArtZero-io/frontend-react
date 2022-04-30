@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import * as Yup from "yup";
 
 import { useSubstrateState } from "@utils/substrate";
-import { isValidAddressPolkadotAddress } from "@utils";
+import { delay, isValidAddressPolkadotAddress } from "@utils";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 
 import ImageUpload from "@components/ImageUpload/Collection";
@@ -209,6 +209,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       dispatch
                     );
                   }
+                  await delay(10000);
+                  // await onRefresh();
                 }
               }
             }}

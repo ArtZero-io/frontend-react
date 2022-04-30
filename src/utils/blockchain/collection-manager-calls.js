@@ -478,6 +478,7 @@ async function setMultipleAttributes(
         address,
         { signer: injector.signer },
         async ({ status, dispatchError }) => {
+          handleContractCall(status, dispatchError, dispatch, contract);
           if (dispatchError) {
             if (dispatchError.isModule) {
               toast.error(`There is some error with your request`);
