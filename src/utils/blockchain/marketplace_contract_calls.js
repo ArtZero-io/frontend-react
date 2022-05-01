@@ -184,9 +184,12 @@ async function getAllBids(caller_account, nft_contract_address, seller, token_id
     seller,
     token_id
   );
-  console.log(output);
   if (result.isOk) {
-    return output.toHuman();
+    if (output.isSome)
+      return output.toHuman();
+    else {
+      return null;
+    }
   }
   return null;
 }

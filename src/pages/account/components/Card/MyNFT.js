@@ -10,7 +10,8 @@ import {
   TagLabel,
   TagRightIcon,
   Text,
-  VStack
+  VStack,
+  Spacer
 } from "@chakra-ui/react";
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from "react";
@@ -25,6 +26,8 @@ import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
 import useInterval from 'use-interval'
 import { useDispatch } from "react-redux";
+import BN from "bn.js";
+
 function MyNFTCard({
   nftContractAddress,
   is_for_sale,
@@ -179,12 +182,22 @@ function MyNFTCard({
               <VStack align="start">
                 <Text ml={1} color="brand.grayLight">
                   {is_for_sale && "For sale at"}
+                </Text>
+                <Tag>
+                  <TagLabel>
+                    {new BN(price).div(new BN(10**6)).toNumber() / (10 ** 6)}
+                  </TagLabel>
+                  <TagRightIcon as={AzeroIcon} />
+                </Tag>
+              </VStack>
+              <Spacer />
+              <VStack align="start">
+                <Text ml={1} color="brand.grayLight">
                   {isBid?.status && "My offer"}
                 </Text>
                 <Tag>
                   <TagLabel>
-                    {price / 10 ** 12}
-                    {isBid?.bidPrice}
+                    {new BN(isBid?.bidPrice).div(new BN(10**6)).toNumber() / (10 ** 6)}
                   </TagLabel>
                   <TagRightIcon as={AzeroIcon} />
                 </Tag>

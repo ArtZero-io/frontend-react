@@ -19,7 +19,7 @@ import CommonLoader from "../../../components/Loader/CommonLoader";
 import { delay } from "../../../utils";
 import { AccountActionTypes } from "../../../store/types/account.types";
 import toast from "react-hot-toast";
-import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+// import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
@@ -82,16 +82,83 @@ const MyNFTsPage = () => {
 
   };
   const fetchMyBids = async () => {
-    let mybids = marketplace_contract_calls.getAllBids(currentAccount,)
+
+    const options = {
+      bidder: currentAccount?.address,
+      limit: 10000,
+      offset: 0,
+      sort: -1,
+    };
+
+    let Bids = await clientAPI("post", "/getBidsByBidderAddress", options);
+    //let ret = await marketplace_contract_calls.getAllBids(currentAccount,"5EHiDZu9MUFg7TtmZuGnfpq4DHhDSX2EJSuaTfn25U6eWnXW",currentAccount.address,{u64:2});
+    console.log('getBidsByBidderAddress',Bids);
+    let length = Bids.length;
+    console.log(length);
+    // let data = await Promise.all(
+    //   Bids.map(async (bid) => {
+    //     const options = {
+    //       collection_address: bid.nftContractAddress,
+    //       owner: bid.seller,
+    //       limit: 10000,
+    //       offset: 0,
+    //       sort: -1,
+    //     };
+    //
+    //     let dataList = await clientAPI("post", "/getNFTsByOwnerAndCollection", options);
+    //     dataList = dataList.filter((item) => item.tokenID == bid.tokenID);
+    //
+    //     collection.listNFT = data;
+    //
+    //     return collection;
+    //   })
+    // );
+    // //Dont Display Collection with no NFT
+    // data = data.filter((item) => item.listNFT?.length>0);
+    // data.length ? setMyCollections(data) : setMyCollections(null);
+
+    //getCollectionByAddress
+    let collections = [];
+    for (var i=0;i<length;i++){
+      let bid = Bids[i];
+
+      let collection = await clientAPI("post", "/getCollectionByAddress", {
+        collection_address: bid.nftContractAddress
+      });
+
+      const options = {
+        collection_address: bid.nftContractAddress,
+        token_id: bid.tokenID
+      };
+
+      let dataList = await clientAPI("post", "/getNFTByID", options);
+      const data = dataList?.map((item) => {
+          return { ...item, stakeStatus:0,isBid: {
+            status: true,
+            bidPrice: bid.bid_value
+          }
+        };
+      });
+
+      collection[0].listNFT = data;
+
+      console.log('collection',collection[0]);
+      collections.push(collection[0]);
+    }
+
+    collections = collections.filter((item) => item.listNFT?.length>0);
+    collections.length ? setMyCollections(collections) : setMyCollections(null);
+
   }
   useEffect(() => {
 
-    if (!myCollections & filterSelected !== 3) {
+    if (!myCollections & filterSelected !== 2) {
       fetchMyCollections();
       setLoading(false);
     }
-    else{
+    else if (!myCollections & filterSelected == 2){
       fetchMyBids();
+      setLoading(false);
     }
 
   }, [
