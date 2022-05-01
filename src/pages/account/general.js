@@ -33,6 +33,7 @@ import toast from "react-hot-toast";
 import staking_calls from "@utils/blockchain/staking_calls";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import BN from "bn.js";
+import { motion, AnimatePresence } from "framer-motion";
 
 function GeneralPage() {
   const history = useHistory();
@@ -42,9 +43,9 @@ function GeneralPage() {
   const [nftList, setNftList] = useState(null);
   const [totalStaked, setTotalStaked] = useState(null);
   const [dashboardInfo, setDashboardInfo] = useState(null);
-  const [tradeFee,setTradeFee] = useState(3);
+  const [tradeFee, setTradeFee] = useState(null);
   //const [platformTotalStaked,setPlatformTotalStaked] = useState(3);
-  const [estimatedEarning,setEstimatedEarning] = useState(0);
+  const [estimatedEarning, setEstimatedEarning] = useState(0);
   useEffect(() => {
     const fetchAllNfts = async () => {
       const options = {
@@ -57,7 +58,9 @@ function GeneralPage() {
           "/getNFTsByOwner",
           options
         );
-        const platformTotalStaked = await staking_calls.getTotalStaked(currentAccount);
+        const platformTotalStaked = await staking_calls.getTotalStaked(
+          currentAccount
+        );
         //setPlatformTotalStaked(platformTotalStaked);
 
         const totalStakedPromise = await staking_calls.getTotalStakedByAccount(
@@ -65,9 +68,13 @@ function GeneralPage() {
           currentAccount?.address
         );
 
-        const currentProfit = await marketplace_contract_calls.getCurrentProfit(currentAccount);
+        const currentProfit = await marketplace_contract_calls.getCurrentProfit(
+          currentAccount
+        );
 
-        setEstimatedEarning(currentProfit * 0.3 * totalStakedPromise / platformTotalStaked);
+        setEstimatedEarning(
+          (currentProfit * 0.3 * totalStakedPromise) / platformTotalStaked
+        );
 
         Promise.all([nftListPromise, totalStakedPromise]).then(
           ([nftList, totalStaked]) => {
@@ -102,27 +109,40 @@ function GeneralPage() {
     ) {
       fetchAllNfts();
     }
-    const getTradeFee = async () =>{
-      let my_total_staked_az_nfts = await staking_calls.getTotalStakedByAccount(currentAccount,currentAccount.address);
-      let stakingDiscountCriteria = await marketplace_contract_calls.getStakingDiscountCriteria(currentAccount);
-      let stakingDiscountRate = await marketplace_contract_calls.getStakingDiscountRate(currentAccount);
-      let my_discount_rate = await marketplace_contract_calls.getPlatformFee(currentAccount)/100;
+    const getTradeFee = async () => {
+      let my_total_staked_az_nfts = await staking_calls.getTotalStakedByAccount(
+        currentAccount,
+        currentAccount.address
+      );
+      let stakingDiscountCriteria =
+        await marketplace_contract_calls.getStakingDiscountCriteria(
+          currentAccount
+        );
+      let stakingDiscountRate =
+        await marketplace_contract_calls.getStakingDiscountRate(currentAccount);
+      let my_discount_rate =
+        (await marketplace_contract_calls.getPlatformFee(currentAccount)) / 100;
       let length = stakingDiscountRate.length;
 
-      for (var index= 0;index<length;index++) {
-          if (my_total_staked_az_nfts >= new BN(stakingDiscountCriteria[index]).toNumber()){
-               my_discount_rate = my_discount_rate * (10000 - new BN(stakingDiscountRate[index]).toNumber())/10000;
-               break;
-          }
+      for (var index = 0; index < length; index++) {
+        if (
+          my_total_staked_az_nfts >=
+          new BN(stakingDiscountCriteria[index]).toNumber()
+        ) {
+          my_discount_rate =
+            (my_discount_rate *
+              (10000 - new BN(stakingDiscountRate[index]).toNumber())) /
+            10000;
+          break;
+        }
       }
       setTradeFee(my_discount_rate);
-    }
+    };
     getTradeFee();
-
   }, [currentAccount]);
 
   return (
-    <Box as="section" maxW="container.3xl" px={5} minH="60rem">
+    <Box as="section" maxW="container.3xl" minH="60rem">
       <Box
         mx="auto"
         maxW={{ base: "6xl", "2xl": "7xl" }}
@@ -189,30 +209,41 @@ function GeneralPage() {
                       py={3}
                       fontSize="lg"
                     >
-                      <Flex w="full">
-                        <Box>
-                          <Text>{item.name}</Text>
-                          <Flex alignItems="center">
-                            <Tag bg="transparent" pl={0}>
-                              <TagLabel
-                                bg="transparent"
-                                fontSize="5xl"
-                                fontFamily="DS-Digital"
-                              >
-                                {item.value}
-                              </TagLabel>
-                              {item.name === "Amount Trades" && (
-                                <TagRightIcon fontSize="2xl" as={AzeroIcon} />
-                              )}
-                            </Tag>
+                      <AnimatePresence>
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                        >
+                          <Flex w="full">
+                            <Box>
+                              <Text>{item.name}</Text>
+                              <Flex alignItems="center">
+                                <Tag bg="transparent" pl={0}>
+                                  <TagLabel
+                                    bg="transparent"
+                                    fontSize="5xl"
+                                    fontFamily="DS-Digital"
+                                  >
+                                    {item.value}
+                                  </TagLabel>
+                                  {item.name === "Amount Trades" && (
+                                    <TagRightIcon
+                                      fontSize="2xl"
+                                      as={AzeroIcon}
+                                    />
+                                  )}
+                                </Tag>
+                              </Flex>
+                            </Box>
+                            <Spacer />
                           </Flex>
-                        </Box>
-                        <Spacer />
-                      </Flex>
-                      <Flex w="full" textAlign="left">
-                        <Spacer />
-                        {/* <Text color="brand.blue"> $ {item.text1}</Text> */}
-                      </Flex>
+                          <Flex w="full" textAlign="left">
+                            <Spacer />
+                            {/* <Text color="brand.blue"> $ {item.text1}</Text> */}
+                          </Flex>
+                        </motion.div>
+                      </AnimatePresence>
                     </Box>
                   </GridItem>
                 );
@@ -252,16 +283,18 @@ function GeneralPage() {
                 <span style={{ color: "#7AE7FF" }}>AZERO</span>
               </Box>
               <Spacer />
-              <Box variant="outline" h={32} w={36}>
-                <Tag variant="outline" h={6} w={40} mt={3}>
-                  <TagLabel>Trade Fees: {tradeFee}%</TagLabel>
+              <Box variant="outline" h={32} w={32}>
+                <Tag variant="outline" h={6} w={32} mt={3}>
+                  {
+                    <TagLabel>
+                      Trade Fees: {tradeFee && `${tradeFee}%`}
+                    </TagLabel>
+                  }
                 </Tag>
               </Box>
             </Flex>
 
-
             <Flex w="full">
-
               <Text mt={0} mb={1} fontSize="lg" color="#fff">
                 Your Total Stake:{" "}
                 <span style={{ color: "#7AE7FF" }}>
@@ -270,19 +303,15 @@ function GeneralPage() {
               </Text>
             </Flex>
             <Flex w="full">
-
               <Text mt={0} mb={1} fontSize="lg" color="#fff">
                 Your Estimated Earning:{" "}
                 <span style={{ color: "#7AE7FF" }}>
                   {estimatedEarning || 0} AZERO{" "}
                 </span>
                 &nbsp;&nbsp;&nbsp;Next Payout:{" "}
-                <span style={{ color: "#7AE7FF" }}>
-                  July 01, 2022
-                </span>
+                <span style={{ color: "#7AE7FF" }}>July 01, 2022</span>
               </Text>
             </Flex>
-
 
             <Flex w="full" alignItems="center">
               <Button

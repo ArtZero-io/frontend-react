@@ -30,14 +30,15 @@ export const CollectionCard = ({
   isActive,
   variant,
 }) => {
-
   const getCollectionImage = (imageHash, size) => {
-    return baseURL + '/getImage?input=' + imageHash + '&size=' + size;
-  }
+    return baseURL + "/getImage?input=" + imageHash + "&size=" + size;
+  };
 
   return (
     <Box
       h="full"
+      w="full"
+      maxW="24.5625rem"
       borderColor="transparent"
       borderWidth={"2px"}
       _hover={{ borderColor: "brand.blue" }}
@@ -48,18 +49,15 @@ export const CollectionCard = ({
         textAlign="center"
         bg="brand.grayDark"
         shadow="lg"
-        minH="30rem"
         h="full"
       >
         <Image
           alt={`header-img-${name}`}
-          h={64}
           w="full"
-          maxH={64}
-          minH={"20rem"}
+          h={"16.25rem"}
           objectFit="cover"
           src={getCollectionImage(headerImage, 500)}
-          fallback={<Skeleton w="full" h="full" minH={"20rem"} />}
+          fallback={<Skeleton w="full" h="full" maxH={"16.25rem"} />}
         />
 
         <Center
@@ -68,8 +66,7 @@ export const CollectionCard = ({
           h={16}
           mt={-8}
           p="-px"
-          border="2px solid"
-          borderColor="white "
+          border="2px solid white"
         >
           <Image
             alt={`avatar-img-${name}`}
@@ -77,7 +74,8 @@ export const CollectionCard = ({
             h="full"
             rounded="full"
             objectFit="cover"
-            src={getCollectionImage(avatarImage, 500)}
+            filter="drop-shadow(0px 4px 4px #ffffff25)"
+            src={getCollectionImage(avatarImage, 1000)}
             fallback={<Skeleton w={16} h={16} rounded="full" />}
           />
         </Center>
@@ -87,16 +85,18 @@ export const CollectionCard = ({
           justifyContent="space-between"
           flexGrow="1"
           w="full"
-          px={4}
+          px={5}
+          // h="full"
+          // minH="15rem"
         >
           <Box mt="4">
             <Heading size="h6">{name}</Heading>
           </Box>
 
           <Text
-            noOfLines={[1, 2]}
+            noOfLines={[1, 3]}
             maxW={{ base: "unset", md: "20rem" }}
-            minH={"3rem"}
+            minH={"4.5rem"}
           >
             {description}
           </Text>

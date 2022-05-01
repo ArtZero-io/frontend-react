@@ -16,7 +16,7 @@ function TabActivity() {
     <>
       <DataTable />
     </>
-    // <Box as="section" maxW="container.3xl" px={5} position="relative">
+    // <Box as="section" maxW="container.3xl" position="relative">
     //   <TableContainer>
     //     <Table>
     //       <Thead>

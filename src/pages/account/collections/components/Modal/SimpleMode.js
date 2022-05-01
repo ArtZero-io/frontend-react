@@ -37,10 +37,19 @@ function SimpleModeModal({ mode = "add", id }) {
       {mode === "edit" && (
         <IconButton
           pos="absolute"
-          top="1.5rem"
-          right="1rem"
+          top="2rem"
+          right="1.5rem"
           aria-label="edit"
-          icon={<EditIcon color="#7ae7ff" fontSize="1.5rem" />}
+          icon={
+            <EditIcon
+              color="#7ae7ff"
+              fontSize="1.5rem"
+              _hover={{
+                bg: "#171717",
+              }}
+              p={1}
+            />
+          }
           size="icon"
           borderWidth={0}
           variant="iconOutline"

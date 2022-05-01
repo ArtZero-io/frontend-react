@@ -97,7 +97,7 @@ const CollectionsPage = () => {
         </Center>
       ) : (
         <>
-          <Box as="section" maxW="container.3xl" px={5} position="relative">
+          <Box as="section" maxW="container.3xl" position="relative">
             <Box
               mx="auto"
               maxW={{ base: "3xl", "2xl": "7xl" }}
@@ -137,7 +137,7 @@ const CollectionsPage = () => {
             </Box>
           </Box>
 
-          <Box as="section" maxW="container.3xl" px={5}>
+          <Box as="section" maxW="container.3xl" >
             <Box
               mx="auto"
               maxW={{ base: "auto", "2xl": "7xl" }}

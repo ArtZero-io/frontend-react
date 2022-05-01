@@ -167,7 +167,7 @@ const MyStakesPage = () => {
   }
 
   return (
-    <Box as="section" maxW="container.3xl" px={5} minH="60rem">
+    <Box as="section" maxW="container.3xl" minH="60rem">
       <Box
         mx="auto"
         maxW={{ base: "6xl", "2xl": "7xl" }}

@@ -15,7 +15,6 @@ const Layout = ({ backdrop, children }) => {
       <Flex
         id="image-wrapper"
         position="absolute"
-        top={30}
         insetX="0"
         w="full"
         h={backdrop ? "xl" : "full"}
