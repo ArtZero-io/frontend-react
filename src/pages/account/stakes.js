@@ -112,7 +112,10 @@ const MyStakesPage = () => {
 
   const getMyStakedAZNFTs = async (total_staked) =>{
 
-    if (total_staked === 0) return;
+    if (total_staked === 0) {
+      my_staked_az_nfts = [];
+      return;
+    }
 
     let tokens = [];
     for (var i=1;i<=total_staked;i++){
@@ -129,8 +132,11 @@ const MyStakesPage = () => {
   }
 
   const getMyPendingUnstakeAZNFTs = async (total_pending) =>{
-    console.log('getMyPendingUnstakeAZNFTs');
-    if (total_pending === 0) return;
+    console.log('getMyPendingUnstakeAZNFTs',total_pending);
+    if (total_pending === 0) {
+      my_pending_az_nfts = [];
+      return;
+    }
 
     let tokens = [];
     for (var i=1;i<=total_pending;i++){
@@ -167,7 +173,7 @@ const MyStakesPage = () => {
     if (id === "staked") az_collection[0].listNFT = my_staked_az_nfts;
     else if (id === "notStaked") az_collection[0].listNFT = my_az_nfts;
     else if (id === "pending") az_collection[0].listNFT = my_pending_az_nfts;
-    console.log(az_collection);
+    // console.log(az_collection);
     setCurrentTabList(az_collection);
     setCurrentTab(id);
 

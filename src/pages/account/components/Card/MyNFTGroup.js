@@ -86,7 +86,7 @@ function MyNFTGroupCard({ name, avatarImage, listNFT, contractType, showOnChainM
 
         data.push({ ...item, ...itemData });
       }
-      console.log(data);
+      // console.log(data);
       setListNFTFormatted(data);
     }
 
@@ -147,7 +147,7 @@ function MyNFTGroupCard({ name, avatarImage, listNFT, contractType, showOnChainM
           borderBottomWidth={1}
         >
           <Text textAlign="center" color="brand.grayLight" size="2xs">
-            You don't have any NFT yet.
+            No NFT found
           </Text>
         </VStack>
       ) : (
