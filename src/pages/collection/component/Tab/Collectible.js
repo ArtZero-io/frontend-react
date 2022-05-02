@@ -34,8 +34,11 @@ import { FaTelegram } from "react-icons/fa";
 import contractData from "@utils/blockchain/index";
 import { truncateStr } from "@utils";
 import BN from "bn.js";
+import process from "process";
+const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 const NFTTabCollectible = ({
+
   nftContractAddress,
   description,
   nftName,
@@ -86,6 +89,11 @@ const NFTTabCollectible = ({
     };
     doLoad();
   }, [api, currentAccount, isLoaded, nftContractAddress, tokenID]);
+
+  const getNFTImage = (imageHash, size) => {
+    const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
+    return baseURL + '/getImage?input=' + imageHash + '&size=' + size + '&url=' + callbackUrl;
+  }
 
   const buyToken = async () => {
     setNFT({});
@@ -167,7 +175,7 @@ const NFTTabCollectible = ({
         boxShadow="lg"
         boxSize={{ base: "16rem", "2xl": "28rem" }}
         objectFit="cover"
-        src={`${IPFS_BASE_URL}/${avatar}`}
+        src={getNFTImage(avatar, 500)}
         fallback={
           <Skeleton w="30rem" boxSize={{ base: "16rem", "2xl": "28rem" }} />
         }

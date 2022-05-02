@@ -287,7 +287,7 @@ async function approve(
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  contract.tx["psp34::approve"](
+  await contract.tx["psp34::approve"](
     { gasLimit, value: azero_value },
     operator_address,
     token_id,

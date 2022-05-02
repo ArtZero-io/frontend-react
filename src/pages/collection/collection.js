@@ -98,7 +98,7 @@ function CollectionPage() {
         collectionDetail.nftTotalCount = NFTList?.length;
 
         //Get fake public CurrentAccount
-        const publicCurrentAccount = getPublicCurrentAccount();
+        const publicCurrentAccount = (currentAccount) ? currentAccount : getPublicCurrentAccount();
 
         // Create MP contract for public call
         setMarketplaceContract(api, contractData.marketplace);
@@ -188,27 +188,25 @@ function CollectionPage() {
                     {}
                   );
                   if (metadata) {
-                    let nftItem = NFTList[i - 1];
-                    let attributeLabels = [];
-                    let attributeVals = [];
-                    let attrsList = [];
-                    if (metadata.attributes.length) {
-                      for (let attribute of metadata.attributes) {
-                        attributeLabels.push(attribute.trait_type);
-                        attributeVals.push(attribute.value);
-                        attrsList.push(
-                          createObjAttrsNFT(attributeLabels, attributeVals)
-                        );
-                      }
-                    }
+                    let item = NFTList[i];
+                    let attributes = [];
+                    let attributeValues = [];
+                    attributes.push("nftName");
+                    attributes.push("description");
+                    attributes.push("avatar");
 
-                    nftItem.attributes = attributeLabels;
-                    nftItem.attributesValue = attributeLabels;
-                    nftItem.attrsList = attrsList;
-                    nftItem.nftName = metadata.name;
-                    nftItem.description = metadata.description;
-                    nftItem.avatar = metadata.image.replace("ipfs://", "");
-                    NFTListFormattedAdv.push(nftItem);
+                    attributeValues.push(metadata.name);
+                    attributeValues.push(metadata.description);
+                    attributeValues.push(metadata.image);
+
+                    let length = metadata.attributes.length;
+                    for (var index=0;index<length;index++){
+                      attributes.push(metadata.attributes[index].trait_type);
+                      attributeValues.push(metadata.attributes[index].value);
+                    }
+                    const itemData = createObjAttrsNFT(attributes, attributeValues);
+
+                    NFTListFormattedAdv.push({ ...item, ...itemData });
                   }
                 }
 

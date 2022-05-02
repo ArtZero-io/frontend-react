@@ -456,7 +456,7 @@ async function getAttributes(caller_account, collection_address, attributes) {
   return attributeVals;
 }
 
-export async function setMultipleAttributes(
+async function setMultipleAttributes(
   account,
   collection_address,
   attributes,
@@ -483,6 +483,7 @@ export async function setMultipleAttributes(
         address,
         { signer: injector.signer },
         async ({ status, dispatchError }) => {
+          handleContractCall(status, dispatchError, dispatch, contract);
           if (dispatchError) {
             if (dispatchError.isModule) {
               toast.error(`There is some error with your request`);
@@ -538,6 +539,7 @@ const collection_manager_calls = {
   getAttributes,
   setCollectionContract,
   setAccount,
+  setMultipleAttributes
 };
 
 export default collection_manager_calls;

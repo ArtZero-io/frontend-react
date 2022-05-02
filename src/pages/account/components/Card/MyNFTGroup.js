@@ -24,6 +24,7 @@ function MyNFTGroupCard({
   listNFT,
   contractType,
   showOnChainMetadata,
+  showMyListing,
 }) {
   const { currentAccount } = useSubstrateState();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -34,7 +35,7 @@ function MyNFTGroupCard({
 
   function onClickHandler(item) {
     setSelectedNFT(item);
-    !item?.isStaked && onOpen();
+    item?.stakeStatus == 0 && onOpen();
   }
 
   useEffect(() => {
@@ -90,15 +91,25 @@ function MyNFTGroupCard({
 
           data.push({ ...item, ...itemData });
         }
-        console.log(data);
+        // console.log(data);
         setListNFTFormatted(data);
       }
+
+      // if (showMyListing === 1){
+      //   console.log('showMyListing only')
+      //   let mylistNFT = listNFT.filter(
+      //
+      //     (nft) => nft.is_for_sale
+      //
+      //   );
+      //   setListNFTFormatted(mylistNFT);
+      //}
     };
 
     getAttributesData();
 
     //console.log(listNFT,'showOnChainMetadata',showOnChainMetadata);
-  }, [listNFT, currentAccount, showOnChainMetadata]);
+  }, [listNFT]);
 
   return (
     <Box my={10}>
@@ -154,7 +165,7 @@ function MyNFTGroupCard({
           borderBottomWidth={1}
         >
           <Text textAlign="center" color="brand.grayLight" size="2xs">
-            You don't have any NFT yet.
+            No NFT found
           </Text>
         </VStack>
       ) : (
@@ -223,18 +234,19 @@ function GridNftA({
         borderBottom: "0.125rem",
       }}
     >
-      {listNFTFormatted?.map((c, i) => (
-        <GridItemA
-          key={i}
-          i={i}
-          delayPerPixel={delayPerPixel}
-          originOffset={originOffset}
-          id="grid-item-a"
-          onClick={() => onClickHandler(c)}
-        >
-          <MyNFTCard {...c} />
-        </GridItemA>
-      ))}
+      {listNFTFormatted.length > 0 &&
+        listNFTFormatted?.map((c, i) => (
+          <GridItemA
+            key={i}
+            i={i}
+            delayPerPixel={delayPerPixel}
+            originOffset={originOffset}
+            id="grid-item-a"
+            onClick={() => onClickHandler(c)}
+          >
+            <MyNFTCard {...c} />
+          </GridItemA>
+        ))}
     </motion.div>
   );
 }

@@ -25,7 +25,7 @@ import AddCollectionNumberInput from "../NumberInput";
 import { clientAPI } from "@api/client";
 import CommonCheckbox from "../../../../../components/Checkbox/Checkbox";
 
-const SimpleModeForm = ({ mode = "add", id }) => {
+const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
   const [addingFee, setAddingFee] = useState(0);
@@ -219,14 +219,26 @@ const SimpleModeForm = ({ mode = "add", id }) => {
                       : 0,
                   };
 
-                  console.log("111data before new ", data);
+                  if (mode === 'add') {
+                    await collection_manager_calls.autoNewCollection(
+                      currentAccount,
+                      data,
+                      dispatch
+                    );
+                  } else {
+                    console.log(data);
+                    console.log("111data before new ", data);
                   console.log("111data before old", initialValues);
-
-                  await collection_manager_calls.autoNewCollection(
-                    currentAccount,
-                    data,
-                    dispatch
-                  );
+                  console.log(nftContractAddress);
+                    await collection_manager_calls.setMultipleAttributes(
+                      currentAccount,
+                      nftContractAddress,
+                      data.attributes,
+                      data.attributeVals,
+                      dispatch
+                    );
+                  }
+                  
                 }
               }
             }}
@@ -294,6 +306,7 @@ const SimpleModeForm = ({ mode = "add", id }) => {
                   <CollectionImageUpload
                     id="avatar"
                     mode={mode}
+                    isBanner={false}
                     imageIPFSUrl={avatarIPFSUrl}
                     setImageIPFSUrl={setAvatarIPFSUrl}
                     title="Collection Avatar Image"
@@ -303,6 +316,7 @@ const SimpleModeForm = ({ mode = "add", id }) => {
                   <CollectionImageUpload
                     id="header"
                     mode={mode}
+                    isBanner={true}
                     imageIPFSUrl={headerIPFSUrl}
                     setImageIPFSUrl={setHeaderIPFSUrl}
                     title="Collection Header Image"

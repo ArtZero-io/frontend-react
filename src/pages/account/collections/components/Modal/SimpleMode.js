@@ -14,7 +14,7 @@ import { EditIcon } from "@chakra-ui/icons";
 
 import SimpleModeForm from "../Form/SimpleMode";
 
-function SimpleModeModal({ mode = "add", id }) {
+function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
   const {
     isOpen: isOpenSimpleMode,
     onOpen: onOpenSimpleMode,
@@ -93,7 +93,7 @@ function SimpleModeModal({ mode = "add", id }) {
             </Heading>
           </ModalHeader>
           <ModalBody>
-            <SimpleModeForm onClose={onCloseSimpleMode} mode={mode} id={id} />
+            <SimpleModeForm onClose={onCloseSimpleMode} mode={mode} id={id} nftContractAddress={nftContractAddress} />
           </ModalBody>
         </ModalContent>
       </Modal>

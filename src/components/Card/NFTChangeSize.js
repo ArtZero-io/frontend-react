@@ -13,6 +13,8 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { IPFS_BASE_URL } from "@constants/index";
+import process from "process";
+const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 export default function NFTChangeSizeCard({
   bidPrice,
@@ -21,6 +23,12 @@ export default function NFTChangeSizeCard({
   avatar,
   nftName,
 }) {
+
+  const getNFTImage = (imageHash, size) => {
+    const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
+    return baseURL + '/getImage?input=' + imageHash + '&size=' + size + '&url=' + callbackUrl;
+  }
+
   return (
     <Box
       h="full"
@@ -40,7 +48,7 @@ export default function NFTChangeSizeCard({
           bg="#372648"
           alt={nftName}
           objectFit="cover"
-          src={`${IPFS_BASE_URL}/${avatar}`}
+          src={getNFTImage(avatar, 500)}
           minH="21rem"
           fallback={<Skeleton w="full" h="full" minH={"21rem"} />}
         />

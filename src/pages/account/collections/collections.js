@@ -15,6 +15,7 @@ import { AccountActionTypes } from "../../../store/types/account.types";
 import { delay } from "../../../utils";
 import { useDispatch, useSelector } from "react-redux";
 import CommonLoader from "../../../components/Loader/CommonLoader";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
 import GridA from "../../../components/Grid/GridA";
 
@@ -59,8 +60,16 @@ function MyCollectionsPage() {
         if (dataList?.length) {
           setOwner(dataList[0].collectionOwner || options.owner);
           setTotalCollectionsCount(dataList?.length);
-
-          return setCollections(dataList);
+          const listCollection = [];
+          for (let item of dataList) {
+            item.volume =
+              await marketplace_contract_calls.getVolumeByCollection(
+                currentAccount,
+                item.nftContractAddress
+              );
+            listCollection.push(item);
+          }
+          return setCollections(listCollection);
         }
 
         setCollections(null);
@@ -141,7 +150,7 @@ function MyCollectionsPage() {
             {collections?.length ? (
               <>
                 <GridA collections={collections} />
-                
+
                 <Flex w="full">
                   <PaginationMP
                     isDisabled={isDisabled}

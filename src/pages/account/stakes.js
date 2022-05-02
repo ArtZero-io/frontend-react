@@ -21,13 +21,17 @@ import BN from "bn.js";
 import { clientAPI } from "@api/client";
 import MyNFTGroupCard from "../account/components/Card/MyNFTGroup";
 
+ import { useSelector } from "react-redux";
+import { delay } from "../../utils";
 let az_collection = [];
 let my_az_nfts = [];
 let my_staked_az_nfts = [];
 let my_pending_az_nfts = [];
 
 const MyStakesPage = () => {
-  const { currentAccount } = useSubstrateState();
+  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+
+  const {   currentAccount } = useSubstrateState();
 
   const [generalStats, setGeneralStats] = useState({
     my_total_az_nfts: 0,
@@ -91,6 +95,7 @@ const MyStakesPage = () => {
       my_discount_rate,
     };
     setGeneralStats(obj);
+    await delay(3000);
     await getAZCollection();
     await getMyAZNFTs();
     await getMyStakedAZNFTs(my_total_staked_az_nfts);
@@ -114,14 +119,20 @@ const MyStakesPage = () => {
     );
     console.log(dataList);
     if (dataList) {
-      my_az_nfts = dataList;
+      const data = dataList?.map((item) => {
+        return { ...item, stakeStatus: 1 };
+      });
+      my_az_nfts = data;
       az_collection[0].listNFT = my_az_nfts;
       setCurrentTabList(az_collection);
     }
   };
 
   const getMyStakedAZNFTs = async (total_staked) => {
-    if (total_staked === 0) return;
+    if (total_staked === 0) {
+      my_staked_az_nfts = [];
+      return;
+    }
 
     let tokens = [];
     for (var i = 1; i <= total_staked; i++) {
@@ -135,14 +146,18 @@ const MyStakesPage = () => {
       };
 
       const token_info = await clientAPI("post", "/getNFTByID", options);
+      token_info[0].stakeStatus = 2;
       tokens.push(token_info[0]);
     }
     my_staked_az_nfts = tokens;
   };
 
   const getMyPendingUnstakeAZNFTs = async (total_pending) => {
-    console.log("getMyPendingUnstakeAZNFTs");
-    if (total_pending === 0) return;
+    console.log("getMyPendingUnstakeAZNFTs", total_pending);
+    if (total_pending === 0) {
+      my_pending_az_nfts = [];
+      return;
+    }
 
     let tokens = [];
     for (var i = 1; i <= total_pending; i++) {
@@ -156,7 +171,7 @@ const MyStakesPage = () => {
       };
 
       const token_info = await clientAPI("post", "/getNFTByID", options);
-
+      token_info[0].stakeStatus = 3;
       tokens.push(token_info[0]);
     }
     my_pending_az_nfts = tokens;
@@ -171,7 +186,7 @@ const MyStakesPage = () => {
 
   useEffect(() => {
     getGeneralStats();
-  }, [currentAccount.address]);
+  }, [currentAccount.address, tnxStatus]);
 
   const onClickHandler = async (e) => {
     const id = e.target.getAttribute("id").toString();
@@ -179,7 +194,7 @@ const MyStakesPage = () => {
     if (id === "staked") az_collection[0].listNFT = my_staked_az_nfts;
     else if (id === "notStaked") az_collection[0].listNFT = my_az_nfts;
     else if (id === "pending") az_collection[0].listNFT = my_pending_az_nfts;
-    console.log(az_collection);
+    // console.log(az_collection);
     setCurrentTabList(az_collection);
     setCurrentTab(id);
   };

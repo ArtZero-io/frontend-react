@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import * as Yup from "yup";
 
 import { useSubstrateState } from "@utils/substrate";
-import { isValidAddressPolkadotAddress } from "@utils";
+import { delay, isValidAddressPolkadotAddress } from "@utils";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 
 import ImageUpload from "@components/ImageUpload/Collection";
@@ -200,6 +200,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       dispatch
                     );
                   } else {
+                    console.log(collection_manager_calls);
                     await collection_manager_calls.setMultipleAttributes(
                       currentAccount,
                       data.nftContractAddress,
@@ -208,6 +209,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       dispatch
                     );
                   }
+                  await delay(10000);
+                  // await onRefresh();
                 }
               }
             }}
@@ -243,6 +246,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 >
                   <ImageUpload
                     mode={mode}
+                    isBanner={false}
                     id="collection-avatar"
                     imageIPFSUrl={avatarIPFSUrl}
                     setImageIPFSUrl={setAvatarIPFSUrl}
@@ -251,6 +255,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   />
                   <ImageUpload
                     mode={mode}
+                    isBanner={true}
                     id="collection-header"
                     imageIPFSUrl={headerIPFSUrl}
                     setImageIPFSUrl={setHeaderIPFSUrl}
