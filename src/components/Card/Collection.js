@@ -16,7 +16,7 @@ import {
 import ActiveIcon from "@theme/assets/icon/Active.js";
 import InActiveIcon from "@theme/assets/icon/InActive.js";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-// import { IPFS_BASE_URL } from "@constants/index";
+
 import process from "process";
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
@@ -38,6 +38,7 @@ export const CollectionCard = ({
     <Box
       h="full"
       w="full"
+      mx="auto"
       maxW="24.5625rem"
       borderColor="transparent"
       borderWidth={"2px"}
@@ -86,8 +87,6 @@ export const CollectionCard = ({
           flexGrow="1"
           w="full"
           px={5}
-          // h="full"
-          // minH="15rem"
         >
           <Box mt="4">
             <Heading size="h6">{name}</Heading>
@@ -104,6 +103,7 @@ export const CollectionCard = ({
           <Flex
             w={variant === "my-collection" ? "full" : 36}
             alignItems="center"
+            justify="center"
           >
             <Tag>
               <TagLeftIcon>

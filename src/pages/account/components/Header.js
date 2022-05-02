@@ -55,7 +55,7 @@ function ProfileHeader() {
   }, [currentAccount, dispatch, profile]);
 
   return (
-    <Box
+    <Box 
       mx="auto"
       px={{ base: "6", "2xl": "8" }}
       py={{ base: "8", "2xl": "14" }}

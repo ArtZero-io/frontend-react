@@ -79,7 +79,7 @@ const DesktopNavContent = (props) => {
       align="stretch"
       {...props}
       overflowX="hidden"
-      alignItems="center"
+      alignItems="center" pl={1}
     >
       {links.map((link, index) => (
         <NavLink.Desktop key={index} label={link.label} to={link.href} />
@@ -133,7 +133,7 @@ const MyAccountDropdown = () => {
             m={0}
             fontFamily="Evogria, sans-serif"
             fontWeight="medium"
-            color={path.includes('/account/') ? "white" : '#888'}
+            color={path.includes('/account/') ? "brand.blue" : '#ccc'}
           >
             My Account
           </Heading>

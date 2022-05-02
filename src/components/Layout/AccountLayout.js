@@ -34,7 +34,7 @@ const AccountLayout = ({ children }) => {
 
   return (
     <Layout>
-      <Box as="section" maxW="container.3xl" position="relative">
+      <Box as="section" maxW="container.3xl" position="relative" bg="#000">
         <ProfileHeader />
 
         <Tabs

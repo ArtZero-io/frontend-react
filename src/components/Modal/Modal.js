@@ -10,14 +10,13 @@ import {
   Tabs,
   useBreakpointValue,
 } from "@chakra-ui/react";
-
-import NFTTabInfo from "../../pages/account/nfts/components/Tabs/MyNFTInfo";
+import MyNFTTabInfo from "@pages/account/nfts/components/Tabs/MyNFTInfo";
 
 export default function ResponsivelySizedModal({
-  children,
   onClose,
   isOpen,
   hasTabs,
+  children,
   ...rest
 }) {
   const tabHeight = useBreakpointValue({ base: `2.5rem`, "2xl": `4.5rem` });
@@ -46,73 +45,26 @@ export default function ResponsivelySizedModal({
           borderWidth={2}
           borderRadius="0"
         />
-        {!hasTabs ? (
-          children
-        ) : (
-          <Tabs isLazy align="left" h="full">
-            <TabList bg="#171717">
-              <Tab
-                ml={12}
-                fontSize="md"
-                fontFamily="Evogria Italic"
-                minH={tabHeight}
-              >
-                {`NFT info`}
-              </Tab>
-            </TabList>
 
-            <TabPanels style={{ height: `calc(100% - ${tabHeight})` }}>
-              <TabPanel px={{ base: 6, "2xl": 12 }} py={8} h="full">
-                <NFTTabInfo {...rest} />{" "}
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        )}
+        <Tabs isLazy align="left" h="full">
+          <TabList bg="#171717">
+            <Tab
+              ml={12}
+              fontSize="md"
+              fontFamily="Evogria Italic"
+              minH={tabHeight}
+            >
+              {`NFT info`}
+            </Tab>
+          </TabList>
+
+          <TabPanels style={{ height: `calc(100% - ${tabHeight})` }}>
+            <TabPanel px={{ base: 6, "2xl": 12 }} py={8} h="full">
+              <MyNFTTabInfo {...rest} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </ModalContent>
     </Modal>
   );
 }
-
-// const TabOfModal = (props) => {
-// const tabData = [
-//   {
-//     label: "NFT info",
-//     content: <NFTTabInfo {...props} />,
-//   },
-//   {
-//     label: "Offers",
-//     content: <NFTTabOffers {...props} />,
-//   },
-// ];
-
-//   const tabHeight = useBreakpointValue({ base: `2.5rem`, "2xl": `4.5rem` });
-
-//   return (
-//     <Tabs isLazy align="left" h="full">
-//
-
-//         {tabData.map((tab, index) => (
-//           <Tab
-//             key={index}
-//             ml={12}
-//             fontSize="md"
-//             fontFamily="Evogria Italic"
-//             minH={tabHeight}
-//           >
-//             {tab.label}
-//           </Tab>
-//         ))}
-//       </TabList>
-
-//       <TabPanels style={{ height: `calc(100% - ${tabHeight})` }} if="asd">
-//
-
-//         {tabData.map((tab, index) => (
-//           <TabPanel px={{ base: 6, "2xl": 12 }} py={8} key={index} h="full">
-//             {tab.content}
-//           </TabPanel>
-//         ))}
-//       </TabPanels>
-//     </Tabs>
-//   );
-// }

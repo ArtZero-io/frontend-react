@@ -265,7 +265,10 @@ function CollectionPage() {
   ];
 
   return (
-    <Layout backdrop={formattedCollection?.headerImage}>
+    <Layout
+      backdrop={formattedCollection?.headerImage}
+      variant="collection-detail"
+    >
       {loading ? (
         <Loader />
       ) : (
@@ -273,7 +276,7 @@ function CollectionPage() {
           <CollectionHero {...formattedCollection} />
 
           <Tabs isLazy align="center">
-            <TabList>
+            <TabList bg="#000">
               {tabData.map((tab, index) => (
                 <Tab key={index}>{tab.label}</Tab>
               ))}

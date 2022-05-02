@@ -9,11 +9,11 @@ const DesktopNavLink = ({ label, to, ...props }) => {
   const [path, setPath] = useState(location.pathname);
   useEffect(() => {
     setPath(location.pathname);
-
   }, [location.pathname]);
   return (
     <Link
-      size="sm" fontFamily='Evogria, sans-serif'
+      size="sm"
+      fontFamily="Evogria, sans-serif"
       as={ReactRouterLink}
       to={to}
       fontWeight="medium"
@@ -24,11 +24,12 @@ const DesktopNavLink = ({ label, to, ...props }) => {
       borderColor="transparent"
       transition="all 0.2s"
       textTransform="uppercase"
+      shadow="0px 4px 4px rgba(0, 0, 0, 0.75"
       _hover={{
         borderColor: "currentcolor",
         color: "brand.blue",
       }}
-      color= {path === to ? "white" : null}
+      color={path === to ? "brand.blue" : "#ccc"}
     >
       {label}
     </Link>
@@ -51,11 +52,7 @@ const MobileNavLink = ({ label = "", to = "", ...props }) => {
       borderBottom="2px"
       borderColor="transparent"
       transition="all 0.2s"
-      color= {path === to ? "white" : null}
-      // _hover={{
-      //   borderColor: 'currentcolor',
-      //   color: useColorModeValue('blue.600', 'blue.200'),
-      // }}
+      color={path === to ? "brand.blue" : "#ccc"}
     >
       {label}
     </Link>

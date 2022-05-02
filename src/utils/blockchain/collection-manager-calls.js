@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
@@ -6,6 +5,7 @@ import { handleContractCall, isValidAddressPolkadotAddress } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
 
+// eslint-disable-next-line no-unused-vars
 let account;
 let contract;
 
@@ -473,7 +473,12 @@ export async function setMultipleAttributes(
 
   account &&
     contract.tx
-      .setMultipleAttributes({ gasLimit, value }, collection_address, attributes, values)
+      .setMultipleAttributes(
+        { gasLimit, value },
+        collection_address,
+        attributes,
+        values
+      )
       .signAndSend(
         address,
         { signer: injector.signer },
@@ -501,14 +506,17 @@ export async function setMultipleAttributes(
                   collection_address: collection_address,
                 }
               );
-              console.log("update_collection_api_res", update_collection_api_res);
+              console.log(
+                "update_collection_api_res",
+                update_collection_api_res
+              );
             }
           }
         }
       )
       .then((unsub) => (unsubscribe = unsub))
       .catch((e) => console.log("e", e));
-    return unsubscribe;
+  return unsubscribe;
 }
 
 const collection_manager_calls = {

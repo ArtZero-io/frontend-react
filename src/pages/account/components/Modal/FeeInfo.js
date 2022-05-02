@@ -1,19 +1,11 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import {
-  Avatar,
   Box,
   Button,
   Flex,
   Grid,
-  GridItem,
   Heading,
-  HStack,
-  Spacer,
   Text,
-  Square,
-  VStack,
-  Input,
   useDisclosure,
   Modal,
   ModalOverlay,
@@ -22,8 +14,7 @@ import {
   ModalHeader,
   ModalBody,
 } from "@chakra-ui/react";
-import AzeroIcon from "@theme/assets/icon/Azero.png";
-import { FiUpload, FiRefreshCw } from "react-icons/fi";
+
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { useSubstrateState } from "@utils/substrate";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
@@ -39,8 +30,10 @@ const FeeInfoModal = ({
   isSale = false,
 }) => {
   const { api, currentAccount } = useSubstrateState();
+  // eslint-disable-next-line no-unused-vars
   const [sale_price, setSalePrice] = useState(0);
 
+  // eslint-disable-next-line no-unused-vars
   const listToken = async () => {
     console.log(nft_contract_address);
     console.log(sale_price);

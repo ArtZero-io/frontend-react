@@ -5,7 +5,6 @@ import {
   Heading,
   Image,
   Skeleton,
-  Square,
   Tag,
   TagLabel,
   TagRightIcon,
@@ -15,7 +14,8 @@ import {
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { IPFS_BASE_URL } from "@constants/index";
-import {getCachedImage} from "@utils";
+import { getCachedImage } from "@utils";
+
 const MyNFTCard = ({
   is_for_sale,
   price,
@@ -24,33 +24,40 @@ const MyNFTCard = ({
   isStaked = false,
   isBid,
 }) => {
-  console.log(avatar)
   return (
     <Box
-      minW="14.25rem"
-      borderWidth={"2px"}
-      borderColor="transparent"
-      _hover={{ borderColor: "brand.blue" }}
       h="full"
+      w="full"
+      mx="auto"
+      maxW="14rem"
+      borderColor="transparent"
+      borderWidth={"2px"}
+      _hover={{ borderColor: "brand.blue" }}
     >
       <Flex
-        minW={56}
         direction="column"
         align="center"
         textAlign="center"
         bg="brand.grayDark"
         h="full"
+        shadow="lg"
       >
-        <Square minW={56} bg="#372648">
-          <Image
-            alt={nftName}
-            h="full"
-            w="full"
-            objectFit="cover"
-            src={avatar ? getCachedImage(avatar,500,IPFS_BASE_URL +"/"+ avatar.replace("ipfs://","")) : ""}
-            fallback={<Skeleton w="full" h="full" minH={56} minW={56} />}
-          />
-        </Square>
+        <Image
+          alt={nftName}
+          w="full"
+          h={"14rem"}
+          objectFit="cover"
+          src={
+            avatar
+              ? getCachedImage(
+                  avatar,
+                  500,
+                  IPFS_BASE_URL + "/" + avatar.replace("ipfs://", "")
+                )
+              : ""
+          }
+          fallback={<Skeleton w="full" h="full" minH={56} minW={56} />}
+        />
 
         <Box w="full" p={3}>
           <Heading mb={3} size="h6" textAlign="left">

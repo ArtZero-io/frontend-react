@@ -32,7 +32,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CommonLoader from "../../../../../components/Loader/CommonLoader";
 import {getCachedImage} from "@utils";
 
-function NFTTabInfo({
+function MyNFTTabInfo({
   avatar,
   nftName,
   description,
@@ -223,9 +223,10 @@ function NFTTabInfo({
                               textAlign="right"
                               size="h6"
                               mt={1}
+                              minH='2.5rem'
                               // isTruncated
                               maxW={"10rem"}
-                              fontSize={{ base: "1rem", "2xl": "1.125rem" }}
+                              fontSize={{ base: "0.875rem", "2xl": "1rem" }}
                             >
                               {Object.values(item)[0]}
                             </Heading>
@@ -471,4 +472,4 @@ function NFTTabInfo({
   );
 }
 
-export default NFTTabInfo;
+export default MyNFTTabInfo;

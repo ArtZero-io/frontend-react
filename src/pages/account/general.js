@@ -142,7 +142,7 @@ function GeneralPage() {
   }, [currentAccount]);
 
   return (
-    <Box as="section" maxW="container.3xl" minH="60rem">
+    <Box as="section" maxW="container.3xl">
       <Box
         mx="auto"
         maxW={{ base: "6xl", "2xl": "7xl" }}
@@ -151,43 +151,51 @@ function GeneralPage() {
       >
         <VStack as="section" w="full">
           <Box w="full" textAlign="left" mb={6}>
-            <Heading size="h2">DASHBOARD</Heading>
-
-            <Flex alignItems="center">
-              <Button
-                variant="outline"
-                onClick={onCopy}
-                borderWidth={1}
-                borderColor="#7AE7FF"
-                p={2}
-                my={3}
-                mr={3}
-                h={9}
+            <AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
               >
-                <Text fontFamily="Oswald">{currentAccount.address}</Text>
-                <Input
-                  display="none"
-                  defaultValue={currentAccount.address}
-                  px={2}
-                  h={8}
-                  mx={0}
-                  minW={"sm"}
-                  readOnly={true}
-                  cursor="pointer"
-                  color="brand.blue"
-                  borderWidth={1}
-                  borderColor="brand.blue"
-                />
-              </Button>
-              {hasCopied ? (
-                <Tag variant="outline">
-                  <TagLabel>Copied</TagLabel>
-                </Tag>
-              ) : (
-                ""
-              )}
-              <Spacer />
-            </Flex>
+                <Heading size="h2">DASHBOARD</Heading>
+
+                <Flex alignItems="center">
+                  <Button
+                    variant="outline"
+                    onClick={onCopy}
+                    borderWidth={1}
+                    borderColor="#7AE7FF"
+                    p={2}
+                    my={3}
+                    mr={3}
+                    h={9}
+                  >
+                    <Text fontFamily="Oswald">{currentAccount.address}</Text>
+                    <Input
+                      display="none"
+                      defaultValue={currentAccount.address}
+                      px={2}
+                      h={8}
+                      mx={0}
+                      minW={"sm"}
+                      readOnly={true}
+                      cursor="pointer"
+                      color="brand.blue"
+                      borderWidth={1}
+                      borderColor="brand.blue"
+                    />
+                  </Button>
+                  {hasCopied ? (
+                    <Tag variant="outline">
+                      <TagLabel>Copied</TagLabel>
+                    </Tag>
+                  ) : (
+                    ""
+                  )}
+                  <Spacer />
+                </Flex>
+              </motion.div>
+            </AnimatePresence>
           </Box>
 
           <Grid
@@ -218,7 +226,7 @@ function GeneralPage() {
                           <Flex w="full">
                             <Box>
                               <Text>{item.name}</Text>
-                              <Flex alignItems="center">
+                              {/* <Flex alignItems="center">
                                 <Tag bg="transparent" pl={0}>
                                   <TagLabel
                                     bg="transparent"
@@ -234,12 +242,26 @@ function GeneralPage() {
                                     />
                                   )}
                                 </Tag>
-                              </Flex>
+                              </Flex> */}
                             </Box>
                             <Spacer />
                           </Flex>
                           <Flex w="full" textAlign="left">
                             <Spacer />
+                            <Flex alignItems="center">
+                              <Tag bg="transparent" pl={0}>
+                                <TagLabel
+                                  bg="transparent"
+                                  fontSize="5xl"
+                                  fontFamily="DS-Digital"
+                                >
+                                  {item.value}
+                                </TagLabel>
+                                {item.name === "Amount Trades" && (
+                                  <TagRightIcon fontSize="2xl" as={AzeroIcon} />
+                                )}
+                              </Tag>
+                            </Flex>
                             {/* <Text color="brand.blue"> $ {item.text1}</Text> */}
                           </Flex>
                         </motion.div>

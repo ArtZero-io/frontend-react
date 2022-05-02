@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { HStack, IconButton, Link } from "@chakra-ui/react";
 import React, { Fragment } from "react";
 import {

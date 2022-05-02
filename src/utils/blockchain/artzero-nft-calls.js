@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
@@ -6,6 +5,7 @@ import { isValidAddressPolkadotAddress } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
 import { handleContractCall } from "@utils";
 
+// eslint-disable-next-line no-unused-vars
 let account;
 let contract;
 
@@ -37,10 +37,10 @@ async function owner(caller_account) {
   const azero_value = 0;
   //console.log(contract);
 
-  const { result, output } = await contract.query["ownable::owner"](
-    address,
-    { value: azero_value, gasLimit }
-  );
+  const { result, output } = await contract.query["ownable::owner"](address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return output.toHuman();
   }
@@ -119,10 +119,10 @@ async function getWhitelistCount(caller_account) {
   const azero_value = 0;
   //console.log(contract);
 
-  const { result, output } = await contract.query.getWhitelistCount(
-    address,
-    { value: azero_value, gasLimit }
-  );
+  const { result, output } = await contract.query.getWhitelistCount(address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
@@ -182,7 +182,7 @@ async function getFee1(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").div(new BN(10**6)).toNumber() / (10**6);
+    return new BN(output, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6;
   }
   return null;
 }
@@ -201,7 +201,7 @@ async function getFee2(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").div(new BN(10**6)).toNumber() / (10**6);
+    return new BN(output, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6;
   }
   return null;
 }
@@ -247,7 +247,7 @@ async function tokenUri(caller_account, tokenId) {
   return null;
 }
 
-async function whitelistMint(caller_account, mint_amount,dispatch) {
+async function whitelistMint(caller_account, mint_amount, dispatch) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -289,7 +289,7 @@ async function whitelistMint(caller_account, mint_amount,dispatch) {
   return unsubscribe;
 }
 
-async function paidMint(caller_account, fee,dispatch) {
+async function paidMint(caller_account, fee, dispatch) {
   if (!contract || !caller_account) {
     return null;
   }

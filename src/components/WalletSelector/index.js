@@ -83,8 +83,8 @@ function WalletSelector(props) {
         <Menu autoSelect={false} placement="bottom-end" offset={[-0.5, -1]}>
           <MenuButton
             _hover={{ bg: "brand.grayDark" }}
-            _active={{ bg: "transparent", borderBottom: 0 }}
-            bg="transparent"
+            _active={{ bg: "black", borderBottom: 0 }}
+            bg="black"
             borderRadius="0"
             borderWidth={2}
             borderColor="brand.blue"
@@ -114,7 +114,7 @@ function WalletSelector(props) {
             borderRadius="0"
             borderWidth={2}
             borderColor="brand.blue"
-            bg="transparent"
+            bg="black"
             borderTop="0"
             px={2}
           >

@@ -6,7 +6,7 @@ import {
   Button,
   IconButton,
   Text,
-  VStack,
+  HStack,
 } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
@@ -15,9 +15,9 @@ import { useSubstrateState } from "@utils/substrate";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import { clientAPI } from "@api/client";
 import { useDispatch, useSelector } from "react-redux";
-import CommonLoader from "../../../components/Loader/CommonLoader";
-import { delay } from "../../../utils";
-import { AccountActionTypes } from "../../../store/types/account.types";
+import CommonLoader from "@components/Loader/CommonLoader";
+import { delay } from "@utils";
+import { AccountActionTypes } from "@store/types/account.types";
 import toast from "react-hot-toast";
 
 const MyNFTsPage = () => {
@@ -166,27 +166,34 @@ const MyNFTsPage = () => {
           />
         </Flex>
 
-        {loading ? (
+        {loading && (
           <CommonLoader
             addText={`Please wait a moment...`}
             size="md"
             maxH={"4.125rem"}
           />
-        ) : (
-          <>
-            {myCollections?.length === 0 ? (
-              <VStack py={10} align="start" ml={3} justifyContent="center">
-                <Text textAlign="center" color="brand.grayLight" size="2xs">
-                  You don't have any NFT yet.
-                </Text>
-              </VStack>
-            ) : (
-              myCollections?.map((item) => {
-                return <MyNFTGroupCard {...item} />;
-              })
-            )}
-          </>
         )}
+
+        <>
+          {(!myCollections || myCollections?.length === 0) && (
+            <HStack
+              py={10}
+              align="start"
+              ml={3}
+              justifyContent="center"
+              w={"full"}
+            >
+              <Text textAlign="center" color="brand.grayLight" size="2xs">
+                You don't have any NFT yet.
+              </Text>
+            </HStack>
+          )}
+
+          {myCollections &&
+            myCollections?.map((item) => {
+              return <MyNFTGroupCard {...item} />;
+            })}
+        </>
       </Box>
     </Box>
   );

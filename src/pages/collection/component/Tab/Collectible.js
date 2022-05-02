@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -10,13 +9,11 @@ import {
   HStack,
   Spacer,
   Text,
-  VStack,
   Link,
   Image,
   Tag,
   TagLabel,
   TagRightIcon,
-  // Skeleton,
   InputGroup,
   InputRightElement,
   IconButton,
@@ -26,24 +23,16 @@ import {
 } from "@chakra-ui/react";
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-// import { useParams } from "react-router-dom";
-// import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-// import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "@utils/substrate";
 import { convertStringToPrice, createLevelAttribute } from "@utils";
-// import artzero_nft from "@utils/blockchain/artzero-nft";
-// import { ContractPromise } from "@polkadot/api-contract";
-// import axios from "axios";
-// import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-// import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
-// import { numberToU8a, stringToHex } from "@polkadot/util";
+
 import { IPFS_BASE_URL } from "@constants/index";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-// import { TypeRegistry, U64 } from "@polkadot/types";
+
 import toast from "react-hot-toast";
 import { FaTelegram } from "react-icons/fa";
 import contractData from "@utils/blockchain/index";
-import {truncateStr} from "@utils";
+import { truncateStr } from "@utils";
 import BN from "bn.js";
 
 const NFTTabCollectible = ({
@@ -57,22 +46,15 @@ const NFTTabCollectible = ({
   price,
   attrsList,
 }) => {
+  // eslint-disable-next-line no-unused-vars
   const [NFT, setNFT] = useState({});
   const [doOffer, setDoOffer] = useState(false);
-  // const [onLoad, setOnLoad] = useState(false);
   const [bidPrice, setBidPrice] = useState(0);
-  // const { collection_address } = useParams();
   const [isLoaded, setIsLoaded] = useState(false);
   const { api, currentAccount } = useSubstrateState();
   const [isBided, setIsBided] = useState(false);
-  const [saleInfo,setSaleInfo] = useState(null);
-  // useEffect(async () => {
-  //   await onRefresh();
-  // }, [artzero_nft_calls.isLoaded()]);
+  const [saleInfo, setSaleInfo] = useState(null);
 
-  // const onRefresh = async () => {
-
-  //};
   useEffect(() => {
     const doLoad = async () => {
       if (isLoaded === false) {
@@ -116,7 +98,7 @@ const NFTTabCollectible = ({
       contractData.marketplace
     );
     //check owner of the NFT from marketplace
-    if (saleInfo.nftOwner == currentAccount?.address){
+    if (saleInfo.nftOwner === currentAccount?.address) {
       toast.error(`Cant buy your own NFT!`);
       return;
     }
@@ -150,7 +132,7 @@ const NFTTabCollectible = ({
     );
 
     //check owner of the NFT from marketplace
-    if (saleInfo.nftOwner == currentAccount?.address){
+    if (saleInfo.nftOwner === currentAccount?.address) {
       toast.error(`Cant bid your own NFT!`);
       return;
     }
@@ -194,7 +176,6 @@ const NFTTabCollectible = ({
       <Flex
         direction={"column"}
         justify="start"
-        // maxH="30rem"
         w="full"
         h="full"
         pl={10}
@@ -211,7 +192,10 @@ const NFTTabCollectible = ({
           </Heading>
 
           <Text color="#fff">
-            For Sale by <Link color="#7AE7FF">{saleInfo ? truncateStr(saleInfo.nftOwner,5) : ""}</Link>
+            For Sale by{" "}
+            <Link color="#7AE7FF">
+              {saleInfo ? truncateStr(saleInfo.nftOwner, 5) : ""}
+            </Link>
           </Text>
         </Box>
 

@@ -19,7 +19,7 @@ function Dropdown({ options, selectedItem, setSelectedItem }) {
           _active={{ bg: "brand.grayDark" }}
           fontFamily="Oswald"
           ring={0}
-          minW={{ xl: "max", "2xl": "3xs" }}
+          minW="10rems"
           textAlign="left"
           px={4}
           variant="outline"
@@ -28,11 +28,7 @@ function Dropdown({ options, selectedItem, setSelectedItem }) {
         >
           {options[selectedItem]}
         </MenuButton>
-        <MenuList
-          minW={{ xl: "max", "2xl": "3xs" }}
-          bg="brand.grayDark"
-          borderRadius="0"
-        >
+        <MenuList minW="10rem" bg="brand.grayDark" borderRadius="0">
           {[0, 1].map((item, idx) => {
             return (
               <MenuItem

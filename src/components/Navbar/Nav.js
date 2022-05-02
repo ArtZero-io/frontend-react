@@ -3,12 +3,9 @@ import { Box, Flex, Image, VisuallyHidden } from "@chakra-ui/react";
 import { NavContent } from "./NavContent";
 import AzeroLogo from "../../theme/assets/logo/ArtZeroFull_Logo.png";
 
-function Nav() {
+function Nav({ variant = null }) {
   return (
-    <Box
-      minHeight={28}
-      bg="linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(23,23,23,0.8827906162464986) 31%, rgba(23,23,23,0.7) 52%, rgba(23,23,23,0.35898109243697474) 69%, rgba(23,23,23,0) 100%)"
-    >
+    <Box minHeight={28}>
       <Flex
         id="image-wrapper"
         position="absolute"

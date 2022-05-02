@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Avatar,
   Box,
@@ -16,12 +15,13 @@ import AzeroIcon from "@theme/assets/icon/Azero.png";
 import SocialCard from "@components/Card/Social";
 
 import { IPFS_BASE_URL } from "@constants/index";
-import {shortenNumber} from "@utils";
+import { shortenNumber } from "@utils";
 import process from "process";
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
+// eslint-disable-next-line no-unused-vars
 const overlay =
-  "linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.9) 45%, rgba(0,0,0,0.0) 70%, rgba(0,0,0,0) 100%)";
+  "linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)";
 
 function CollectionHeader({
   avatarImage,
@@ -34,13 +34,20 @@ function CollectionHeader({
   floorPrice,
   nftTotalCount,
   totalListed,
-  headerImage
+  headerImage,
 }) {
-
   const getCollectionImage = (imageHash, size) => {
     const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
-    return baseURL + '/getImage?input=' + imageHash + '&size=' + size + '&url=' + callbackUrl;
-  }
+    return (
+      baseURL +
+      "/getImage?input=" +
+      imageHash +
+      "&size=" +
+      size +
+      "&url=" +
+      callbackUrl
+    );
+  };
 
   return (
     <Box
@@ -49,24 +56,24 @@ function CollectionHeader({
       as="section"
       position="relative"
       maxW="container.3xl"
-      px={5}
       bg={overlay}
     >
       <Box
         mx="auto"
         px={{ base: "6", "2xl": "8" }}
-        pt={{ base: "12", "2xl": "6" }}
+        pt={{ base: "12", "2xl": "3.75rem" }}
         pb={{ base: "12", "2xl": "18" }}
       >
         <VStack>
           <Center
             rounded="full"
-            w={40}
-            h={40}
+            w="7.5rem"
+            h="7.5rem"
             mt={-8}
             p="-px"
             border="4px solid"
             borderColor="whiteAlpha.900"
+            filter="drop-shadow(0px 4px 4px #00320025)"
           >
             <Image
               alt={name}
@@ -75,35 +82,31 @@ function CollectionHeader({
               rounded="full"
               objectFit="cover"
               src={getCollectionImage(avatarImage, 500)}
-              fallback={<Skeleton w={40} h={40} borderRadius="full" />}
+              fallback={
+                <Skeleton w={"7.5rem"} h={"7.5rem"} borderRadius="full" />
+              }
             />
           </Center>
 
-          <HStack w="full" justifyContent="space-around" py={9} pos="relative">
+          <HStack w="full" justifyContent="space-around" py={9}>
             <VStack textAlign="center" justifyContent="space-between">
               <Heading size="h2">{name}</Heading>
 
-              <Text maxW="md" color="#fff">
+              <Text maxW="md" color="#fff" fontSize={"lg"}>
                 {description}
               </Text>
             </VStack>
-
-            <SocialCard
-              profile={[{ website }, { twitter }, { discord }]}
-              pos={"absolute"}
-              right={"3rem"}
-              top={"50%"}
-            />
           </HStack>
 
           <HStack
             color="brand.blue"
             minW="container.md"
-            borderWidth={1}
-            borderColor="brand.grayDark"
+            borderWidth={2}
+            borderColor="brand.blue"
             px="16"
-            py="5"
+            py="1.125rem"
             justifyContent="space-between"
+            bg="black"
           >
             <VStack textAlign="center">
               <Text fontFamily="DS-Digital" fontSize="6xl" lineHeight="none">
@@ -155,6 +158,13 @@ function CollectionHeader({
           </HStack>
         </VStack>
       </Box>
+
+      <SocialCard
+        profile={[{ website }, { twitter }, { discord }]}
+        pos="absolute"
+        right={"6.3125rem"}
+        bottom={"2.375rem"}
+      />
     </Box>
   );
 }

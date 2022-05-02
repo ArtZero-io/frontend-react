@@ -1,15 +1,6 @@
-import {
-  Box,
-  Center,
-  Flex,
-  Heading,
-  Link,
-  SimpleGrid,
-  Spacer,
-} from "@chakra-ui/react";
+import { Box, Center, Flex, Heading, Spacer } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
-import { Link as ReactRouterLink } from "react-router-dom";
 import { usePagination } from "@ajna/pagination";
 import toast from "react-hot-toast";
 
@@ -17,10 +8,10 @@ import Layout from "@components/Layout/Layout";
 
 import Dropdown from "@components/Dropdown/Dropdown";
 import PaginationMP from "@components/Pagination/Pagination";
-import { CollectionCard } from "@components/Card/Collection";
 
 import { NUMBER_PER_PAGE } from "@constants/index";
 import { clientAPI } from "@api/client";
+import GridA from "../../components/Grid/GridA";
 
 const CollectionsPage = () => {
   const [collections, setCollections] = useState([]);
@@ -86,7 +77,7 @@ const CollectionsPage = () => {
   }, [offset, pageSize, selectedItem]);
 
   return (
-    <Layout>
+    <Layout variant="marketplace">
       {!collections || (collections && collections.length <= 0) ? (
         <Center mt={"20"}>
           {/* <Heading size="h5" color="lightOrange">
@@ -100,8 +91,8 @@ const CollectionsPage = () => {
           <Box as="section" maxW="container.3xl" position="relative">
             <Box
               mx="auto"
-              maxW={{ base: "3xl", "2xl": "7xl" }}
-              px={{ base: "6", "2xl": "8" }}
+              maxW={{ base: "auto", "2xl": "7xl" }}
+              px={{ base: "8", "2xl": "4" }}
               py={{ base: "8", "2xl": "20" }}
             >
               <Box textAlign="center" mt={"10"}>
@@ -137,11 +128,11 @@ const CollectionsPage = () => {
             </Box>
           </Box>
 
-          <Box as="section" maxW="container.3xl" >
+          <Box as="section" maxW="container.3xl">
             <Box
               mx="auto"
               maxW={{ base: "auto", "2xl": "7xl" }}
-              px={{ base: "6", "2xl": "8" }}
+              px={{ base: "8", "2xl": "4" }}
               py={{ base: "12", "2xl": "20" }}
             >
               {collections?.length ? (
@@ -158,11 +149,17 @@ const CollectionsPage = () => {
                       options={options}
                       selectedItem={selectedItem}
                       setSelectedItem={setSelectedItem}
-                      maxW="3xs"
                     />
                   </Flex>
 
-                  <SimpleGrid
+                  {collections?.length ? (
+                    <GridA
+                      collections={collections}
+                      variant="marketplace-collection"
+                    />
+                  ) : null}
+
+                  {/* <SimpleGrid
                     py={16}
                     columns={{ base: 1, md: 2, lg: 3 }}
                     spacing="8"
@@ -172,18 +169,15 @@ const CollectionsPage = () => {
                       .map((item) => (
                         <React.Fragment key={item?.index}>
                           <Link
-                            id="asd"
-                            minW="full"
-                            maxW="full"
                             as={ReactRouterLink}
-                            to={`collection/${item?.nftContractAddress}`}
+                            to={`${ROUTES.DETAIL_COLLECTION_BASE}/${item?.nftContractAddress}`}
                             style={{ textDecoration: "none" }}
                           >
                             <CollectionCard {...item} />
                           </Link>
                         </React.Fragment>
                       ))}
-                  </SimpleGrid>
+                  </SimpleGrid> */}
 
                   <Flex w="full" alignItems="end">
                     <PaginationMP
