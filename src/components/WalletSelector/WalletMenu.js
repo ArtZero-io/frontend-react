@@ -4,7 +4,8 @@ import { useSelector } from "react-redux";
 import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import BN from "bn.js";
-import {shortenNumber} from "@utils";
+import { shortenNumber } from "@utils";
+import { AnimatePresence, motion } from "framer-motion";
 
 function WalletMenu() {
   const { api, currentAccount } = useSubstrateState();
@@ -22,8 +23,7 @@ function WalletMenu() {
           let balSZERO = new BN(balance.data.free, 10, "le");
           if (balSZERO.gt(oneSZERO))
             balSZERO = balSZERO.div(new BN(10 ** 12)).toNumber();
-          else
-            balSZERO = balSZERO.toNumber() / (10 ** 12);
+          else balSZERO = balSZERO.toNumber() / 10 ** 12;
 
           if (balSZERO >= 1) balSZERO = shortenNumber(balSZERO);
           else balSZERO = parseFloat(balSZERO).toFixed(3);
@@ -33,13 +33,21 @@ function WalletMenu() {
         .catch(console.error);
 
     return () => unsubscribe && unsubscribe();
-  }, [activeAddress]);
+  }, [activeAddress, api, currentAccount]);
 
   return currentAccount ? (
-    <Tag variant="grayBg" size="2xl" minW={24} justifyContent="end">
-      <TagLabel>{accountBalance}</TagLabel>
-      <TagRightIcon as={AzeroIcon} />
-    </Tag>
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        <Tag variant="grayBg" size="2xl" minW={24} justifyContent="end">
+          <TagLabel>{accountBalance}</TagLabel>
+          <TagRightIcon as={AzeroIcon} />
+        </Tag>
+      </motion.div>
+    </AnimatePresence>
   ) : null;
 }
 

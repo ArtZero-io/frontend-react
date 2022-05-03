@@ -143,6 +143,7 @@ function GridNftA({ listNFTFormatted, bigCard }) {
         hasTabs={true}
       /> */}
       <NFTDetailModal {...selectedNft} isOpen={isOpen} onClose={onClose} />
+
       <motion.div
         initial="hidden"
         animate={controls}

@@ -223,8 +223,8 @@ function MyNFTTabInfo({
                               textAlign="right"
                               size="h6"
                               mt={1}
-                              minH='2.5rem'
-                              // isTruncated
+                              // minH='2.5rem'
+                              isTruncated
                               maxW={"10rem"}
                               fontSize={{ base: "0.875rem", "2xl": "1rem" }}
                             >

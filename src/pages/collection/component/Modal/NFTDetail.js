@@ -45,13 +45,13 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
               fontFamily="Evogria Italic"
               minH={tabHeight}
             >
-              {`NFT info`}
+              {`Collectible`}
             </Tab>
           </TabList>
 
           <TabPanels style={{ height: `calc(100% - ${tabHeight})` }}>
             <TabPanel px={{ base: 6, "2xl": 12 }} py={8} h="full">
-              <NFTTabCollectible {...rest} />
+              <NFTTabCollectible {...rest} /> 
             </TabPanel>
           </TabPanels>
         </Tabs>
