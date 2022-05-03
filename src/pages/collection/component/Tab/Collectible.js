@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -238,89 +239,98 @@ const NFTTabCollectible = ({
           </Text>
         </Box>
 
-        <HStack w="full" py={2}>
-          {is_for_sale ? (
-            <>
-              <Flex
-                w="full"
-                alignItems="center"
-                borderColor="#343333"
-                px={4}
-                py={1}
-                borderWidth={2}
-              >
-                <Button h={10} maxW={32} variant="solid" onClick={buyToken}>
-                  Buy now
-                </Button>
+        {owner !== currentAccount?.address && (
+          <HStack w="full" py={2}>
+            {is_for_sale ? (
+              <>
+                <Flex
+                  w="full"
+                  alignItems="center"
+                  borderColor="#343333"
+                  px={4}
+                  py={1}
+                  borderWidth={2}
+                  minH="4.75rem"
+                >
+                  <Button h={10} maxW={32} variant="solid" onClick={buyToken}>
+                    Buy now
+                  </Button>
 
-                <Spacer />
-
-                <Flex w="full">
                   <Spacer />
-                  <Box textAlign="right" color="brand.grayLight">
-                    <Text>Current price</Text>
-                    <Tag h={4} pr={0} bg="transparent">
-                      <TagLabel bg="transparent">{price / 10 ** 12}</TagLabel>
-                      <TagRightIcon as={AzeroIcon} />
-                    </Tag>
-                  </Box>
+
+                  <Flex w="full">
+                    <Spacer />
+                    <Box textAlign="right" color="brand.grayLight">
+                      <Text>Current price</Text>
+                      <Tag h={4} pr={0} bg="transparent">
+                        <TagLabel bg="transparent">{price / 10 ** 12}</TagLabel>
+                        <TagRightIcon as={AzeroIcon} />
+                      </Tag>
+                    </Box>
+                  </Flex>
                 </Flex>
-              </Flex>
 
-              <Flex
-                w="full"
-                alignItems="center"
-                borderColor="#343333"
-                px={4}
-                py={1}
-                borderWidth={2}
-              >
-                {!doOffer && !isBided && (
-                  <Button
-                    h={10}
-                    maxW={32}
-                    variant="solid"
-                    onClick={() => setDoOffer(true)}
-                  >
-                    Make offer
-                  </Button>
-                )}
+                <Flex
+                  w="full"
+                  alignItems="center"
+                  borderColor="#343333"
+                  px={4}
+                  py={1}
+                  borderWidth={2}
+                  minH="4.75rem"
+                >
+                  {!doOffer && !isBided && (
+                    <Button
+                      h={10}
+                      maxW={32}
+                      variant="solid"
+                      onClick={placeOffer}
+                    >
+                      Make offer
+                    </Button>
+                  )}
 
-                {!doOffer && isBided && (
-                  <Button h={10} maxW={32} variant="solid" onClick={removeBid}>
-                    Remove Bid
-                  </Button>
-                )}
+                  {!doOffer && isBided && (
+                    <Button
+                      h={10}
+                      maxW={32}
+                      variant="solid"
+                      onClick={removeBid}
+                    >
+                      Remove Bid
+                    </Button>
+                  )}
 
-                {doOffer && (
+                  <Spacer />
+
                   <InputGroup
-                    w={32}
+                    w={24}
                     bg="black"
                     h={10}
                     py={1}
                     color="black"
                     borderRadius="0"
                   >
-                    <InputRightElement bg="transparent" h={10} w="48px">
-                      <IconButton
-                        aria-label="telegram"
-                        icon={<FaTelegram size="1.5rem" />}
-                        size="icon"
-                        variant="outline"
-                        borderWidth={0}
-                        h={10}
-                        onClick={placeOffer}
-                      />
-                    </InputRightElement>
+                    {/* <InputRightElement bg="transparent" h={10} w="3rem">
+                    <IconButton
+                      aria-label="telegram"
+                      icon={<AzeroIcon size="1.5rem" />}
+                      size="icon"
+                      variant="outline"
+                      borderWidth={0}
+                      h={10}
+                      onClick={placeOffer}
+                    />
+                  </InputRightElement> */}
                     <Input
                       bg="black"
                       color="white"
                       variant="unstyled"
                       my={1}
-                      pl={1.5}
+                      pl={3}
                       placeholder="0"
                       _placeholder={{
-                        color: "brand.grayLight",
+                        color: "brand.grayDark",
                         fontSize: "lg",
                       }}
                       onChange={({ target }) => {
@@ -328,35 +338,24 @@ const NFTTabCollectible = ({
                       }}
                       value={bidPrice}
                     />
+                    <AzeroIcon size="1.5rem" m={2} />
                   </InputGroup>
-                )}
-
-                <Spacer />
-
-                <Flex w="full">
-                  <Spacer />
-                  <Box textAlign="right" color="brand.grayLight">
-                    <Text>Current offer</Text>
-                    <Tag pr={0} bg="transparent">
-                      <TagLabel bg="transparent">{bidPrice}</TagLabel>
-                      <TagRightIcon as={AzeroIcon} />
-                    </Tag>
-                  </Box>
                 </Flex>
-              </Flex>
-            </>
-          ) : (
-            <>
-              <Heading size="h6">Not for sale</Heading>
-            </>
-          )}
-        </HStack>
+              </>
+            ) : (
+              <>
+                <Heading size="h6">Not for sale</Heading>
+              </>
+            )}
+          </HStack>
+        )}
 
         <Grid
           boxShadow="lg"
           my={2}
           minH="10rem"
           w="full"
+          h="full"
           templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
           gap={5}
           pr={"0.25rem"}
