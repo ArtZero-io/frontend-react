@@ -37,7 +37,7 @@ import contractData from "@utils/blockchain/index";
 import { truncateStr } from "@utils";
 import BN from "bn.js";
 import process from "process";
-
+import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { getPublicCurrentAccount } from "../../../../utils";
 
@@ -64,6 +64,9 @@ const NFTTabCollectible = ({
   const [saleInfo, setSaleInfo] = useState(null);
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
   const publicCurrentAccount = getPublicCurrentAccount();
+
+  const dispatch = useDispatch();
+  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
 
   useEffect(() => {
     const doLoad = async () => {
@@ -145,7 +148,8 @@ const NFTTabCollectible = ({
         currentAccount,
         nftContractAddress,
         { u64: tokenID },
-        price
+        price,
+        dispatch
       );
     } else {
       toast.error(`Not Enough Balance!`);
@@ -268,7 +272,15 @@ const NFTTabCollectible = ({
                   borderWidth={2}
                   minH="4.75rem"
                 >
-                  <Button h={10} maxW={32} variant="solid" onClick={buyToken}>
+                  <Button
+                    spinnerPlacement="start"
+                    isLoading={tnxStatus}
+                    loadingText={`${tnxStatus?.status}`}
+                    h={10}
+                    maxW={32}
+                    variant="solid"
+                    onClick={buyToken}
+                  >
                     Buy now
                   </Button>
 
@@ -276,58 +288,63 @@ const NFTTabCollectible = ({
 
                   <Flex w="full">
                     <Spacer />
-                    <Box textAlign="right" color="brand.grayLight">
-                      <Text>Current price</Text>
-                      <Tag h={4} pr={0} bg="transparent">
-                        <TagLabel bg="transparent">{price / 10 ** 12}</TagLabel>
-                        <TagRightIcon as={AzeroIcon} />
-                      </Tag>
-                    </Box>
+
+                    <Flex w="full">
+                      <Spacer />
+                      <Box textAlign="right" color="brand.grayLight">
+                        <Text>Current price</Text>
+                        <Tag h={4} pr={0} bg="transparent">
+                          <TagLabel bg="transparent">
+                            {price / 10 ** 12}
+                          </TagLabel>
+                          <TagRightIcon as={AzeroIcon} />
+                        </Tag>
+                      </Box>
+                    </Flex>
                   </Flex>
-                </Flex>
 
-                <Flex
-                  w="full"
-                  alignItems="center"
-                  borderColor="#343333"
-                  px={4}
-                  py={1}
-                  borderWidth={2}
-                  minH="4.75rem"
-                >
-                  {!doOffer && !isBided && (
-                    <Button
-                      h={10}
-                      maxW={32}
-                      variant="solid"
-                      onClick={placeOffer}
-                    >
-                      Make offer
-                    </Button>
-                  )}
-
-                  {!doOffer && isBided && (
-                    <Button
-                      h={10}
-                      maxW={32}
-                      variant="solid"
-                      onClick={removeBid}
-                    >
-                      Remove Bid
-                    </Button>
-                  )}
-
-                  <Spacer />
-
-                  <InputGroup
-                    w={24}
-                    bg="black"
-                    h={10}
+                  <Flex
+                    w="full"
+                    alignItems="center"
+                    borderColor="#343333"
+                    px={4}
                     py={1}
-                    color="black"
-                    borderRadius="0"
+                    borderWidth={2}
+                    minH="4.75rem"
                   >
-                    {/* <InputRightElement bg="transparent" h={10} w="3rem">
+                    {!doOffer && !isBided && (
+                      <Button
+                        h={10}
+                        maxW={32}
+                        variant="solid"
+                        onClick={placeOffer}
+                      >
+                        Make offer
+                      </Button>
+                    )}
+
+                    {!doOffer && isBided && (
+                      <Button
+                        h={10}
+                        maxW={32}
+                        variant="solid"
+                        onClick={removeBid}
+                      >
+                        Remove Bid
+                      </Button>
+                    )}
+
+                    <Spacer />
+
+                    <InputGroup
+                      w={24}
+                      bg="black"
+                      h={10}
+                      py={1}
+                      color="black"
+                      borderRadius="0"
+                    >
+                      {/* <InputRightElement bg="transparent" h={10} w="3rem">
                     <IconButton
                       aria-label="telegram"
                       icon={<AzeroIcon size="1.5rem" />}
@@ -338,24 +355,25 @@ const NFTTabCollectible = ({
                       onClick={placeOffer}
                     />
                   </InputRightElement> */}
-                    <Input
-                      bg="black"
-                      color="white"
-                      variant="unstyled"
-                      my={1}
-                      pl={3}
-                      placeholder="0"
-                      _placeholder={{
-                        color: "brand.grayDark",
-                        fontSize: "lg",
-                      }}
-                      onChange={({ target }) => {
-                        setBidPrice(target.value);
-                      }}
-                      value={bidPrice}
-                    />
-                    <AzeroIcon size="1.5rem" m={2} />
-                  </InputGroup>
+                      <Input
+                        bg="black"
+                        color="white"
+                        variant="unstyled"
+                        my={1}
+                        pl={3}
+                        placeholder="0"
+                        _placeholder={{
+                          color: "brand.grayDark",
+                          fontSize: "lg",
+                        }}
+                        onChange={({ target }) => {
+                          setBidPrice(target.value);
+                        }}
+                        value={bidPrice}
+                      />
+                      <AzeroIcon size="1.5rem" m={2} />
+                    </InputGroup>
+                  </Flex>
                 </Flex>
               </>
             ) : (
@@ -365,7 +383,6 @@ const NFTTabCollectible = ({
             )}
           </HStack>
         )}
-
         <Grid
           boxShadow="lg"
           my={2}
@@ -485,262 +502,6 @@ const NFTTabCollectible = ({
         </Grid>
       </Flex>
     </Flex>
-
-    // <HStack justifyContent="space-between">
-    //   <Image
-    //     alt={nftName}
-    //     boxShadow="lg"
-    //     boxSize={{ base: "16rem", "2xl": "28rem" }}
-    //     objectFit="cover"
-    //     src={getNFTImage(avatar, 500)}
-    //     fallback={
-    //       <Skeleton w="30rem" boxSize={{ base: "16rem", "2xl": "28rem" }} />
-    //     }
-    //   />
-
-    //   <Flex
-    //     direction={"column"}
-    //     justify="start"
-    //     w="full"
-    //     h="full"
-    //     pl={10}
-    //     py={0}
-    //     maxW="38rem"
-    //   >
-    //     <Box w="full">
-    //       <Flex>
-    //         <Heading size="h4">{nftName || "unknown name"}</Heading>
-    //       </Flex>
-
-    //       <Heading size="h6" color="brand.grayLight" noOfLines={[0, 1]} my={2}>
-    //         {description || "unknown description"}
-    //       </Heading>
-
-    //       <Text color="#fff">
-    //         For Sale by{" "}
-    //         <Link color="#7AE7FF">
-    //           {saleInfo ? truncateStr(saleInfo.nftOwner, 5) : ""}
-    //         </Link>
-    //       </Text>
-    //     </Box>
-
-    //     <HStack w="full" py={2}>
-    //       {is_for_sale ? (
-    //         <>
-    //           <Flex
-    //             w="full"
-    //             alignItems="center"
-    //             borderColor="#343333"
-    //             px={4}
-    //             py={1}
-    //             borderWidth={2}
-    //           >
-    //             <Button h={10} maxW={32} variant="solid" onClick={buyToken}>
-    //               Buy now
-    //             </Button>
-
-    //             <Spacer />
-
-    //             <Flex w="full">
-    //               <Spacer />
-    //               <Box textAlign="right" color="brand.grayLight">
-    //                 <Text>Current price</Text>
-    //                 <Tag h={4} pr={0} bg="transparent">
-    //                   <TagLabel bg="transparent">{price / 10 ** 12}</TagLabel>
-    //                   <TagRightIcon as={AzeroIcon} />
-    //                 </Tag>
-    //               </Box>
-    //             </Flex>
-    //           </Flex>
-
-    //           <Flex
-    //             w="full"
-    //             alignItems="center"
-    //             borderColor="#343333"
-    //             px={4}
-    //             py={1}
-    //             borderWidth={2}
-    //           >
-    //             {!doOffer && !isBided && (
-    //               <Button
-    //                 h={10}
-    //                 maxW={32}
-    //                 variant="solid"
-    //                 onClick={() => setDoOffer(true)}
-    //               >
-    //                 Make offer
-    //               </Button>
-    //             )}
-
-    //             {!doOffer && isBided && (
-    //               <Button h={10} maxW={32} variant="solid" onClick={removeBid}>
-    //                 Remove Bid
-    //               </Button>
-    //             )}
-
-    //             {doOffer && (
-    //               <InputGroup
-    //                 w={32}
-    //                 bg="black"
-    //                 h={10}
-    //                 py={1}
-    //                 color="black"
-    //                 borderRadius="0"
-    //               >
-    //                 <InputRightElement bg="transparent" h={10} w="48px">
-    //                   <IconButton
-    //                     aria-label="telegram"
-    //                     icon={<FaTelegram size="1.5rem" />}
-    //                     size="icon"
-    //                     variant="outline"
-    //                     borderWidth={0}
-    //                     h={10}
-    //                     onClick={placeOffer}
-    //                   />
-    //                 </InputRightElement>
-    //                 <Input
-    //                   bg="black"
-    //                   color="white"
-    //                   variant="unstyled"
-    //                   my={1}
-    //                   pl={1.5}
-    //                   placeholder="0"
-    //                   _placeholder={{
-    //                     color: "brand.grayLight",
-    //                     fontSize: "lg",
-    //                   }}
-    //                   onChange={({ target }) => {
-    //                     setBidPrice(target.value);
-    //                   }}
-    //                   value={bidPrice}
-    //                 />
-    //               </InputGroup>
-    //             )}
-
-    //             <Spacer />
-
-    //             <Flex w="full">
-    //               <Spacer />
-    //               <Box textAlign="right" color="brand.grayLight">
-    //                 <Text>Current offer</Text>
-    //                 <Tag pr={0} bg="transparent">
-    //                   <TagLabel bg="transparent">{bidPrice}</TagLabel>
-    //                   <TagRightIcon as={AzeroIcon} />
-    //                 </Tag>
-    //               </Box>
-    //             </Flex>
-    //           </Flex>
-    //         </>
-    //       ) : (
-    //         <>
-    //           <Heading size="h6">Not for sale</Heading>
-    //         </>
-    //       )}
-    //     </HStack>
-
-    //     <Grid
-    //       maxH="28"
-    //       pr={"0.25rem"}
-    //       w="100%"
-    //       templateColumns="repeat(auto-fill, minmax(min(100%, 10rem), 1fr))"
-    //       gap={3}
-    //       overflowY="auto"
-    //       overflowX="hidden"
-    //       sx={{
-    //         "&::-webkit-scrollbar": {
-    //           width: "0.3rem",
-    //           borderRadius: "1px",
-    //           backgroundColor: `#7ae7ff`,
-    //         },
-    //         "&::-webkit-scrollbar-thumb": {
-    //           backgroundColor: `#7ae7ff`,
-    //         },
-    //       }}
-    //     >
-    //       {attrsList?.length
-    //         ? attrsList
-    //             .filter((i) => !JSON.stringify(Object.values(i)).includes("|"))
-    //             .map((item, idx) => {
-    //               return (
-    //                 <GridItem key={idx} w="100%" h="100%">
-    //                   <Box
-    //                     w="full"
-    //                     textAlign="left"
-    //                     alignItems="end"
-    //                     bg="brand.semiBlack"
-    //                     p={3}
-    //                   >
-    //                     <Flex w="full">
-    //                       <Text color="brand.grayLight">
-    //                         <Text>{Object.keys(item)[0]}</Text>
-    //                         <Heading
-    //                           size="h6"
-    //                           mt={1}
-    //                           isTruncated
-    //                           maxW={"10rem"}
-    //                         >
-    //                           {Object.values(item)[0]}
-    //                         </Heading>
-    //                       </Text>
-    //                       <Spacer />
-    //                     </Flex>
-    //                     <Flex w="full" color="#7AE7FF">
-    //                       <Spacer />
-    //                       <Text> </Text>
-    //                     </Flex>
-    //                   </Box>
-    //                 </GridItem>
-    //               );
-    //             })
-    //         : ""}
-    //     </Grid>
-
-    //     {attrsList?.length
-    //       ? attrsList
-    //           .filter((i) => JSON.stringify(Object.values(i)).includes("|"))
-    //           .map((item, idx) => {
-    //             return (
-    //               <React.Fragment key={idx}>
-    //                 <Box
-    //                   w="full"
-    //                   textAlign="left"
-    //                   alignItems="end"
-    //                   bg="brand.semiBlack"
-    //                   p={2}
-    //                   mt={2}
-    //                 >
-    //                   <Flex w="full" mb={2}>
-    //                     <Heading size="h6" mt={1} color="#fff">
-    //                       {Object.keys(item)[0]}
-    //                     </Heading>
-    //                     <Spacer />
-    //                     <Text color="#fff">
-    //                       {createLevelAttribute(Object.values(item)[0]).level}{" "}
-    //                       of{" "}
-    //                       {
-    //                         createLevelAttribute(Object.values(item)[0])
-    //                           .levelMax
-    //                       }
-    //                     </Text>
-    //                   </Flex>
-    //                   <Progress
-    //                     colorScheme="telegram"
-    //                     size="sm"
-    //                     value={Number(
-    //                       (createLevelAttribute(Object.values(item)[0]).level *
-    //                         100) /
-    //                         createLevelAttribute(Object.values(item)[0])
-    //                           .levelMax
-    //                     )}
-    //                     height="6px"
-    //                   />
-    //                 </Box>
-    //               </React.Fragment>
-    //             );
-    //           })
-    //       : null}
-    //   </Flex>
-    // </HStack>
   );
 };
 

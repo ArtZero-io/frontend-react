@@ -28,6 +28,7 @@ import CommonCheckbox from "../../../../../components/Checkbox/Checkbox";
 const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
+  const [headerSquareIPFSUrl, setHeaderSquareIPFSUrl] = useState("");
   const [addingFee, setAddingFee] = useState(0);
   const [isSetRoyal, setIsSetRoyal] = useState(false);
   const [initialValues, setInitialValues] = useState(null);
@@ -96,6 +97,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
         if (dataList?.length) {
           setAvatarIPFSUrl(dataList[0].avatarImage);
           setHeaderIPFSUrl(dataList[0].headerImage);
+          setHeaderSquareIPFSUrl(dataList[0].headerSquareImage);
           setIsSetRoyal(dataList[0].isCollectRoyalFee);
           setInitialValues(newInitialValues);
         } else {
@@ -179,13 +181,13 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
               return result;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-              (!headerIPFSUrl || !avatarIPFSUrl) &&
+              (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl) &&
                 toast.error("Upload avatar or header too");
 
-              if (avatarIPFSUrl && headerIPFSUrl) {
+              if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
                 values.avatarIPFSUrl = avatarIPFSUrl;
                 values.headerIPFSUrl = headerIPFSUrl;
-
+                values.headerSquareIPFSUrl = headerSquareIPFSUrl;
                 if (!checkCurrentBalance) {
                   toast.error(`Your balance not enough`);
                 } else {
@@ -198,6 +200,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                       "description",
                       "avatar_image",
                       "header_image",
+                      "header_square_image",
                       "website",
                       "twitter",
                       "discord",
@@ -208,6 +211,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                       values.collectionDescription.trim(),
                       values.avatarIPFSUrl,
                       values.headerIPFSUrl,
+                      values.headerSquareIPFSUrl,
                       values.website,
                       values.twitter,
                       values.discord,
@@ -321,6 +325,16 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     setImageIPFSUrl={setHeaderIPFSUrl}
                     title="Collection Header Image"
                     limitedSize={{ width: "400", height: "260" }}
+                  />
+
+                  <CollectionImageUpload
+                    id="header_square"
+                    mode={mode}
+                    isBanner={false}
+                    imageIPFSUrl={headerSquareIPFSUrl}
+                    setImageIPFSUrl={setHeaderSquareIPFSUrl}
+                    title="Collection Header Square"
+                    limitedSize={{ width: "500", height: "500" }}
                   />
                 </Stack>
 
