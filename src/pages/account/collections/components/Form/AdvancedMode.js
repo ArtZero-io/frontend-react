@@ -273,8 +273,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     id="collection-header"
                     imageIPFSUrl={headerSquareIPFSUrl}
                     setImageIPFSUrl={setHeaderSquareIPFSUrl}
-                    title="Collection Header Image"
-                    limitedSize={{ width: "400", height: "260" }}
+                    title="Collection Header Square Image"
+                    limitedSize={{ width: "500", height: "500" }}
                   />{" "}
                 </Stack>
 
