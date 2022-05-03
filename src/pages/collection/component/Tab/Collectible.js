@@ -302,78 +302,67 @@ const NFTTabCollectible = ({
                       </Box>
                     </Flex>
                   </Flex>
+                </Flex>
 
-                  <Flex
-                    w="full"
-                    alignItems="center"
-                    borderColor="#343333"
-                    px={4}
-                    py={1}
-                    borderWidth={2}
-                    minH="4.75rem"
-                  >
-                    {!doOffer && !isBided && (
-                      <Button
-                        h={10}
-                        maxW={32}
-                        variant="solid"
-                        onClick={placeOffer}
-                      >
-                        Make offer
-                      </Button>
-                    )}
-
-                    {!doOffer && isBided && (
-                      <Button
-                        h={10}
-                        maxW={32}
-                        variant="solid"
-                        onClick={removeBid}
-                      >
-                        Remove Bid
-                      </Button>
-                    )}
-
-                    <Spacer />
-
-                    <InputGroup
-                      w={24}
-                      bg="black"
+                <Flex
+                  w="full"
+                  alignItems="center"
+                  borderColor="#343333"
+                  px={4}
+                  py={1}
+                  borderWidth={2}
+                  minH="4.75rem"
+                >
+                  {!doOffer && !isBided && (
+                    <Button
                       h={10}
-                      py={1}
-                      color="black"
-                      borderRadius="0"
-                    >
-                      {/* <InputRightElement bg="transparent" h={10} w="3rem">
-                    <IconButton
-                      aria-label="telegram"
-                      icon={<AzeroIcon size="1.5rem" />}
-                      size="icon"
-                      variant="outline"
-                      borderWidth={0}
-                      h={10}
+                      maxW={32}
+                      variant="solid"
                       onClick={placeOffer}
+                    >
+                      Make offer
+                    </Button>
+                  )}
+
+                  {!doOffer && isBided && (
+                    <Button
+                      h={10}
+                      maxW={32}
+                      variant="solid"
+                      onClick={removeBid}
+                    >
+                      Remove Bid
+                    </Button>
+                  )}
+
+                  <Spacer />
+
+                  <InputGroup
+                    w={24}
+                    bg="black"
+                    h={10}
+                    py={1}
+                    color="black"
+                    borderRadius="0"
+                  >
+                    <Input
+                      bg="black"
+                      color="white"
+                      variant="unstyled"
+                      my={1}
+                      pl={3}
+                      placeholder="0"
+                      _placeholder={{
+                        color: "brand.grayDark",
+                        fontSize: "lg",
+                      }}
+                      onChange={({ target }) => {
+                        setBidPrice(target.value);
+                      }}
+                      value={bidPrice}
                     />
-                  </InputRightElement> */}
-                      <Input
-                        bg="black"
-                        color="white"
-                        variant="unstyled"
-                        my={1}
-                        pl={3}
-                        placeholder="0"
-                        _placeholder={{
-                          color: "brand.grayDark",
-                          fontSize: "lg",
-                        }}
-                        onChange={({ target }) => {
-                          setBidPrice(target.value);
-                        }}
-                        value={bidPrice}
-                      />
-                      <AzeroIcon size="1.5rem" m={2} />
-                    </InputGroup>
-                  </Flex>
+                    <AzeroIcon size="1.5rem" m={2} />
+                  </InputGroup>
                 </Flex>
               </>
             ) : (
