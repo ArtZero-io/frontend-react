@@ -27,7 +27,7 @@ import { setMarketplaceContract } from "@utils/blockchain/marketplace_contract_c
 
 function CollectionPage() {
   const [formattedCollection, setFormattedCollection] = useState(null);
-  const [isShowUnlisted, setIsShowUnlisted] = useState(false);
+  // const [isShowUnlisted, setIsShowUnlisted] = useState(false);
   const [loading, setLoading] = useState(null);
 
   const dispatch = useDispatch();
@@ -98,7 +98,9 @@ function CollectionPage() {
         collectionDetail.nftTotalCount = NFTList?.length;
 
         //Get fake public CurrentAccount
-        const publicCurrentAccount = (currentAccount) ? currentAccount : getPublicCurrentAccount();
+        const publicCurrentAccount = currentAccount
+          ? currentAccount
+          : getPublicCurrentAccount();
 
         // Create MP contract for public call
         setMarketplaceContract(api, contractData.marketplace);
@@ -132,11 +134,11 @@ function CollectionPage() {
               return { ...item, ...itemData };
             })
           ).then((NFTListFormatted) => {
-            if (isShowUnlisted) {
-              NFTListFormatted = NFTListFormatted?.filter(
-                (i) => i.is_for_sale === false
-              );
-            }
+            // if (isShowUnlisted) {
+            //   NFTListFormatted = NFTListFormatted?.filter(
+            //     (i) => i.is_for_sale === false
+            //   );
+            // }
 
             collectionDetail.NFTListFormatted = NFTListFormatted;
 
@@ -200,21 +202,24 @@ function CollectionPage() {
                     attributeValues.push(metadata.image);
 
                     let length = metadata.attributes.length;
-                    for (var index=0;index<length;index++){
+                    for (var index = 0; index < length; index++) {
                       attributes.push(metadata.attributes[index].trait_type);
                       attributeValues.push(metadata.attributes[index].value);
                     }
-                    const itemData = createObjAttrsNFT(attributes, attributeValues);
+                    const itemData = createObjAttrsNFT(
+                      attributes,
+                      attributeValues
+                    );
 
                     NFTListFormattedAdv.push({ ...item, ...itemData });
                   }
                 }
 
-                if (isShowUnlisted) {
-                  NFTListFormattedAdv = NFTListFormattedAdv?.filter(
-                    (i) => i.is_for_sale === false
-                  );
-                }
+                // if (isShowUnlisted) {
+                //   NFTListFormattedAdv = NFTListFormattedAdv?.filter(
+                //     (i) => i.is_for_sale === false
+                //   );
+                // }
 
                 collectionDetail.NFTListFormatted = NFTListFormattedAdv;
               }
@@ -230,18 +235,12 @@ function CollectionPage() {
     };
 
     !formattedCollection && fetchCollectionDetail();
-  }, [
-    api,
-    collection_address,
-    currentAccount,
-    formattedCollection,
-    isShowUnlisted,
-  ]);
+  }, [api, collection_address, currentAccount, formattedCollection]);
 
-  const handleShowUnlisted = () => {
-    setIsShowUnlisted(!isShowUnlisted);
-    forceUpdate();
-  };
+  // const handleShowUnlisted = () => {
+  //   setIsShowUnlisted(!isShowUnlisted);
+  //   forceUpdate();
+  // };
 
   const tabData = [
     {
@@ -249,9 +248,9 @@ function CollectionPage() {
       content: (
         <TabCollectionItems
           {...formattedCollection}
-          isShowUnlisted={isShowUnlisted}
-          setIsShowUnlisted={setIsShowUnlisted}
-          handleShowUnlisted={handleShowUnlisted}
+          // isShowUnlisted={isShowUnlisted}
+          // setIsShowUnlisted={setIsShowUnlisted}
+          // handleShowUnlisted={handleShowUnlisted}
           forceUpdate={forceUpdate}
         />
       ),
@@ -271,10 +270,10 @@ function CollectionPage() {
         <Loader />
       ) : (
         <>
-          <CollectionHero {...formattedCollection} />
+          <CollectionHero {...formattedCollection} loading={loading} />
 
           <Tabs isLazy align="center">
-            <TabList bg="#000">
+            <TabList bg="#000" borderBottomColor="#000">
               {tabData.map((tab, index) => (
                 <Tab key={index}>{tab.label}</Tab>
               ))}

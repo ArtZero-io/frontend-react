@@ -21,7 +21,7 @@ import BN from "bn.js";
 import { clientAPI } from "@api/client";
 import MyNFTGroupCard from "../account/components/Card/MyNFTGroup";
 
- import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { delay } from "../../utils";
 let az_collection = [];
 let my_az_nfts = [];
@@ -31,7 +31,7 @@ let my_pending_az_nfts = [];
 const MyStakesPage = () => {
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
 
-  const {   currentAccount } = useSubstrateState();
+  const { currentAccount } = useSubstrateState();
 
   const [generalStats, setGeneralStats] = useState({
     my_total_az_nfts: 0,
@@ -292,10 +292,11 @@ const MyStakesPage = () => {
         ) : (
           currentTabList?.map((item) => <MyNFTGroupCard {...item} />)
           )} */}
-        {currentTabList?.map((item) => (
-          <MyNFTGroupCard {...item} />
-        ))}
-        {currentTabList?.length === 0 && <Text>No NFTs found</Text>}
+        {currentTabList?.length === 0 ? (
+          <Text>No NFTs found</Text>
+        ) : (
+          currentTabList?.map((item) => <MyNFTGroupCard {...item} />)
+        )}
       </Box>
     </Box>
   );

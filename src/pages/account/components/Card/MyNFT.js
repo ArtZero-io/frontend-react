@@ -25,7 +25,7 @@ import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import BN from "bn.js";
-import useInterval from 'use-interval'
+import useInterval from "use-interval";
 
 function MyNFTCard({
   nftContractAddress,

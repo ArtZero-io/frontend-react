@@ -18,7 +18,8 @@ const CollectionsPage = () => {
   const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
   const [selectedItem, setSelectedItem] = useState(0);
 
-  const options = ["All collections", "Trending"];
+  const options = ["All collections", "Trending"]; 
+  // 0 All, 1 Vol
 
   const {
     pagesCount,

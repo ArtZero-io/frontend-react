@@ -29,16 +29,16 @@ function Dropdown({ options, selectedItem, setSelectedItem }) {
           {options[selectedItem]}
         </MenuButton>
         <MenuList minW="10rem" bg="brand.grayDark" borderRadius="0">
-          {[0, 1].map((item, idx) => {
+          {options?.map((_, idx) => {
             return (
               <MenuItem
                 _hover={{ bg: "brand.grayLight", color: "white" }}
                 fontFamily="Oswald"
-                onClick={() => onClickHandler(item)}
+                onClick={() => onClickHandler(idx)}
                 key={idx}
-                isDisabled={item === selectedItem ? true : false}
+                isDisabled={idx === selectedItem ? true : false}
               >
-                {options[item]}
+                {options[idx]}
               </MenuItem>
             );
           })}

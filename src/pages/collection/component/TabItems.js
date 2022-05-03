@@ -18,7 +18,7 @@ import AddNewNFTModal from "./Modal/AddNewNFT";
 import Dropdown from "@components/Dropdown/Dropdown";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import { useSubstrateState } from "@utils/substrate/SubstrateContext";
-import { motion, useAnimation } from "framer-motion";
+import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import NFTDetailModal from "./Modal/NFTDetail";
 import NFTChangeSizeCard from "@components/Card/NFTChangeSize";
 
@@ -27,15 +27,47 @@ const CollectionItems = ({
   NFTListFormatted,
   collectionOwner,
   contractType,
-  isShowUnlisted,
-  handleShowUnlisted,
+  // isShowUnlisted,
+  // handleShowUnlisted,
   forceUpdate,
 }) => {
   const { currentAccount } = useSubstrateState();
 
   const [bigCard, setBigCard] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
-  const options = ["Price: Oldest", "Price: Low to High", "Price: High to Low"];
+
+  const [isShowUnlisted, setIsShowUnlisted] = useState(false);
+
+  const options = [
+    // "Price: Newest",
+    "Price: Low to High",
+    "Price: High to Low",
+  ];
+  //  0 Low first, 1 High first, 3 Newest
+
+  const getUnListedNFT = () => {
+    if (!NFTListFormatted) return [];
+
+    let result = NFTListFormatted;
+
+    if (selectedItem === 0) {
+      result = result.sort((a, b) => a.price - b.price);
+    }
+
+    if (selectedItem === 1) {
+      result = result.sort((a, b) => b.price - a.price);
+    }
+
+    // if (!isShowUnlisted) result = NFTListFormatted;
+
+    if (isShowUnlisted) {
+      result = result.filter((i) => i.is_for_sale === !isShowUnlisted);
+    }
+
+    return result;
+  };
+
+  const unListNFT = getUnListedNFT();
 
   return (
     <Box w="full" textAlign="left" minH={"54rem"}>
@@ -52,7 +84,7 @@ const CollectionItems = ({
           mx={1.5}
           variant="outline"
           minW={"11rem"}
-          onClick={() => handleShowUnlisted()}
+          onClick={() => setIsShowUnlisted(!isShowUnlisted)}
         >
           {isShowUnlisted ? "Show all" : "Show unlisted"}
         </Button>
@@ -63,6 +95,7 @@ const CollectionItems = ({
           placeholder="Search items, collections, and accounts"
         /> */}
         <Spacer />
+
         <Dropdown
           mx={1.5}
           options={options}
@@ -95,7 +128,7 @@ const CollectionItems = ({
       </Flex>
 
       <Flex align="center" py={4} minH={24}>
-        <Text px={2}>{nftTotalCount || 0} items</Text>
+        <Text px={2}>{unListNFT.length || 0} items</Text>
 
         <Spacer />
 
@@ -107,7 +140,7 @@ const CollectionItems = ({
         ) : null}
       </Flex>
 
-      <GridNftA bigCard={bigCard} listNFTFormatted={NFTListFormatted} />
+      <GridNftA bigCard={bigCard} listNFTFormatted={unListNFT} />
 
       {/* <CollectionNFTGrid bigCard={bigCard} nftList={NFTListFormatted} /> */}
     </Box>
@@ -143,36 +176,38 @@ function GridNftA({ listNFTFormatted, bigCard }) {
         hasTabs={true}
       /> */}
       <NFTDetailModal {...selectedNft} isOpen={isOpen} onClose={onClose} />
-
-      <motion.div
-        initial="hidden"
-        animate={controls}
-        variants={{}}
-        id="grid-item-div"
-        style={{
-          display: "grid",
-          gridGap: "1.875rem",
-          // gridAutoRows: "20.625rem",
-          gridAutoFlow: "dense",
-          gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${
-            bigCard ? "25rem" : "20rem"
-          }), 1fr))`,
-          borderBottom: "0.125rem",
-        }}
-      >
-        {listNFTFormatted?.map((c, i) => (
-          <GridItemA
-            key={i}
-            i={i}
-            delayPerPixel={delayPerPixel}
-            originOffset={originOffset}
-            id="grid-item-a"
-            onClick={() => handleOnClick(c)}
-          >
-            <NFTChangeSizeCard {...c} />
-          </GridItemA>
-        ))}
-      </motion.div>
+      <AnimatePresence>
+        <motion.div
+          initial="hidden"
+          animate={controls}
+          variants={{}}
+          id="grid-item-div"
+          style={{
+            display: "grid",
+            gridGap: "1.875rem",
+            // gridAutoRows: "20.625rem",
+            gridAutoFlow: "dense",
+            gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${
+              bigCard ? "25rem" : "20rem"
+            }), 1fr))`,
+            borderBottom: "0.125rem",
+          }}
+        >
+          {listNFTFormatted?.map((c, i) => (
+            <GridItemA
+              key={i}
+              i={i}
+              delayPerPixel={delayPerPixel}
+              originOffset={originOffset}
+              id="grid-item-a"
+              onClick={() => handleOnClick(c)}
+            >
+              {console.log("c", c)}
+              <NFTChangeSizeCard {...c} />
+            </GridItemA>
+          ))}
+        </motion.div>
+      </AnimatePresence>
     </>
   );
 }
@@ -184,6 +219,7 @@ function GridItemA({
   originOffset,
   children,
   onClick,
+  tokenID,
 }) {
   const delayRef = useRef(0);
   const offset = useRef({ top: 0, left: 0 });
@@ -223,17 +259,22 @@ function GridItemA({
   }, [children, delayPerPixel, originOffset]);
 
   return (
-    <motion.div
-      ref={ref}
-      variants={itemVariants}
-      custom={delayRef}
-      style={{
-        position: "relative",
-        cursor: "pointer",
-      }}
-      onClick={() => onClick()}
-    >
-      {children}
-    </motion.div>
+    <AnimatePresence>
+      {!tokenID && (
+        <motion.div
+          exit={{ opacity: 0, scale: 0 }}
+          ref={ref}
+          variants={itemVariants}
+          custom={delayRef}
+          style={{
+            position: "relative",
+            cursor: "pointer",
+          }}
+          onClick={() => onClick()}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
