@@ -2,14 +2,15 @@ import { ContractPromise } from "@polkadot/api-contract";
 import toast from "react-hot-toast";
 import BN from "bn.js";
 import { web3FromSource } from "../wallets/extension-dapp";
-import { isValidAddressPolkadotAddress, handleContractCall, delay } from "@utils";
+import {
+  isValidAddressPolkadotAddress,
+  handleContractCall,
+  delay,
+} from "@utils";
 import artzero_nft from "@utils/blockchain/artzero-nft";
 import { clientAPI } from "@api/client";
-// eslint-disable-next-line no-unused-vars
-let account;
-let contract;
 
-export const setAccount = (newAccount) => (account = newAccount);
+let contract;
 
 export const setStakingContract = (api, data) => {
   contract = new ContractPromise(
@@ -17,6 +18,7 @@ export const setStakingContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
+  console.log("contract setStakingContract", contract);
 };
 
 //GETTERS
@@ -76,7 +78,12 @@ async function getTotalPendingUnstakedByAccount(caller_account, account) {
   return null;
 }
 async function getStakedId(caller_account, account, index) {
-  if (!contract || !caller_account || !isValidAddressPolkadotAddress(account) || !index) {
+  if (
+    !contract ||
+    !caller_account ||
+    !isValidAddressPolkadotAddress(account) ||
+    !index
+  ) {
     console.log("invalid inputs");
     return null;
   }
@@ -96,8 +103,13 @@ async function getStakedId(caller_account, account, index) {
   }
   return null;
 }
-async function getPendingUnstakedId(caller_account, account, index){
-  if (!contract || !caller_account || !isValidAddressPolkadotAddress(account) || !index) {
+async function getPendingUnstakedId(caller_account, account, index) {
+  if (
+    !contract ||
+    !caller_account ||
+    !isValidAddressPolkadotAddress(account) ||
+    !index
+  ) {
     console.log("invalid inputs");
     return null;
   }
@@ -117,8 +129,13 @@ async function getPendingUnstakedId(caller_account, account, index){
   }
   return null;
 }
-async function getRequestUnstakeTime(caller_account, account, token_id){
-  if (!contract || !caller_account || !isValidAddressPolkadotAddress(account) || !token_id) {
+async function getRequestUnstakeTime(caller_account, account, token_id) {
+  if (
+    !contract ||
+    !caller_account ||
+    !isValidAddressPolkadotAddress(account) ||
+    !token_id
+  ) {
     console.log("invalid inputs");
     return null;
   }
@@ -169,7 +186,7 @@ async function stake(caller_account, token_ids, dispatch) {
         }
 
         if (status) {
-          for (var i=0;i<token_ids.length;i++){
+          for (var i = 0; i < token_ids.length; i++) {
             await clientAPI("post", "/updateNFT", {
               collection_address: artzero_nft.CONTRACT_ADDRESS,
               token_id: token_ids[i],
@@ -218,7 +235,7 @@ async function unstake(caller_account, token_ids, dispatch) {
         }
 
         if (status) {
-          for (var i=0;i<token_ids.length;i++){
+          for (var i = 0; i < token_ids.length; i++) {
             await clientAPI("post", "/updateNFT", {
               collection_address: artzero_nft.CONTRACT_ADDRESS,
               token_id: token_ids[i],
@@ -266,7 +283,7 @@ async function requestUnstake(caller_account, token_ids, dispatch) {
         }
 
         if (status) {
-          for (var i=0;i<token_ids.length;i++){
+          for (var i = 0; i < token_ids.length; i++) {
             await clientAPI("post", "/updateNFT", {
               collection_address: artzero_nft.CONTRACT_ADDRESS,
               token_id: token_ids[i],
@@ -314,7 +331,7 @@ async function cancelRequestUnstake(caller_account, token_ids, dispatch) {
         }
 
         if (status) {
-          for (var i=0;i<token_ids.length;i++){
+          for (var i = 0; i < token_ids.length; i++) {
             await clientAPI("post", "/updateNFT", {
               collection_address: artzero_nft.CONTRACT_ADDRESS,
               token_id: token_ids[i],
@@ -346,8 +363,7 @@ const staking_calls = {
   stake,
   unstake,
   setStakingContract,
-  setAccount,
-  getTotalPendingUnstakedByAccount
+  getTotalPendingUnstakedByAccount,
 };
 
 export default staking_calls;

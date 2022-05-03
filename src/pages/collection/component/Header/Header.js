@@ -135,7 +135,7 @@ function CollectionHeader({
             bg="black"
             minH="7.75rem"
           >
-            {nftTotalCount && (
+            {nftTotalCount ? (
               <VStack textAlign="center">
                 <AnimatePresence>
                   <motion.div
@@ -154,8 +154,27 @@ function CollectionHeader({
                   </motion.div>
                 </AnimatePresence>
               </VStack>
+            ) : (
+              <VStack textAlign="center">
+                <AnimatePresence>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Text
+                      fontFamily="DS-Digital"
+                      fontSize="6xl"
+                      lineHeight="none"
+                    >
+                      0
+                    </Text>
+                    <Text>Items</Text>
+                  </motion.div>
+                </AnimatePresence>
+              </VStack>
             )}
-            {totalListed && (
+            {totalListed ? (
               <VStack textAlign="center">
                 <AnimatePresence>
                   <motion.div
@@ -174,8 +193,27 @@ function CollectionHeader({
                   </motion.div>
                 </AnimatePresence>
               </VStack>
+            ) : (
+              <VStack textAlign="center">
+                <AnimatePresence>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Text
+                      fontFamily="DS-Digital"
+                      fontSize="6xl"
+                      lineHeight="none"
+                    >
+                      0
+                    </Text>
+                    <Text>Listed</Text>{" "}
+                  </motion.div>
+                </AnimatePresence>
+              </VStack>
             )}
-            {floorPrice && (
+            {floorPrice ? (
               <VStack textAlign="center">
                 <AnimatePresence>
                   <motion.div
@@ -204,9 +242,38 @@ function CollectionHeader({
                   </motion.div>
                 </AnimatePresence>
               </VStack>
+            ) : (
+              <VStack textAlign="center">
+                <AnimatePresence>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Flex alignItems="center" justifyContent="center">
+                      <Text
+                        fontFamily="DS-Digital"
+                        fontSize="6xl"
+                        lineHeight="none"
+                      >
+                        0
+                      </Text>
+                      <Avatar
+                        src={AzeroIcon}
+                        h={7}
+                        w={7}
+                        ml={3}
+                        name="AzeroLogo"
+                        bg="transparent"
+                      />
+                    </Flex>
+                    <Text>Floor price</Text>{" "}
+                  </motion.div>
+                </AnimatePresence>
+              </VStack>
             )}
 
-            {volume && (
+            {volume ? (
               <VStack textAlign="center">
                 <AnimatePresence>
                   <motion.div
@@ -221,6 +288,35 @@ function CollectionHeader({
                         lineHeight="none"
                       >
                         {shortenNumber(volume) || 0}
+                      </Text>
+                      <Avatar
+                        src={AzeroIcon}
+                        h={7}
+                        w={7}
+                        ml={3}
+                        name="AzeroLogo"
+                        bg="transparent"
+                      />
+                    </Flex>
+                    <Text mt={0}>Volume traded</Text>{" "}
+                  </motion.div>
+                </AnimatePresence>
+              </VStack>
+            ) : (
+              <VStack textAlign="center">
+                <AnimatePresence>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Flex alignItems="center" justifyContent="center">
+                      <Text
+                        fontFamily="DS-Digital"
+                        fontSize="6xl"
+                        lineHeight="none"
+                      >
+                        0
                       </Text>
                       <Avatar
                         src={AzeroIcon}

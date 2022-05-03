@@ -22,8 +22,8 @@ import { delay, getPublicCurrentAccount } from "../../utils";
 import Loader from "@components/Loader/CommonLoader";
 import artzero_nft from "@utils/blockchain/artzero-nft";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import contractData from "@utils/blockchain/index";
-import { setMarketplaceContract } from "@utils/blockchain/marketplace_contract_calls";
+// import contractData from "@utils/blockchain/index";
+// import { setMarketplaceContract } from "@utils/blockchain/marketplace_contract_calls";
 
 function CollectionPage() {
   const [formattedCollection, setFormattedCollection] = useState(null);
@@ -103,7 +103,7 @@ function CollectionPage() {
           : getPublicCurrentAccount();
 
         // Create MP contract for public call
-        setMarketplaceContract(api, contractData.marketplace);
+        // setMarketplaceContract(api, contractData.marketplace);
 
         const totalListedData =
           await marketplace_contract_calls.getListedTokenCountByCollectionAddress(

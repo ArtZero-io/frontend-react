@@ -39,6 +39,7 @@ import BN from "bn.js";
 import process from "process";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { getPublicCurrentAccount } from "../../../../utils";
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
@@ -62,38 +63,52 @@ const NFTTabCollectible = ({
   const [isBided, setIsBided] = useState(false);
   const [saleInfo, setSaleInfo] = useState(null);
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
+  const publicCurrentAccount = getPublicCurrentAccount();
 
   useEffect(() => {
     const doLoad = async () => {
-      if (isLoaded === false) {
-        marketplace_contract_calls.setMarketplaceContract(
-          api,
-          contractData.marketplace
-        );
-        const sale_info = await marketplace_contract_calls.getNftSaleInfo(
-          currentAccount,
-          nftContractAddress,
-          { u64: tokenID }
-        );
-        setSaleInfo(sale_info);
-        console.log(sale_info);
+      const sale_info = await marketplace_contract_calls.getNftSaleInfo(
+        currentAccount || publicCurrentAccount,
+        nftContractAddress,
+        { u64: tokenID }
+      );
+
+      setSaleInfo(sale_info);
+
+      if (sale_info) {
         const listBidder = await marketplace_contract_calls.getAllBids(
-          currentAccount,
+          currentAccount || publicCurrentAccount,
           nftContractAddress,
           sale_info?.nftOwner,
           { u64: tokenID }
         );
-        for (const item of listBidder) {
-          if (item.bidder === currentAccount?.address) {
-            setIsBided(true);
-            setBidPrice(convertStringToPrice(item.bidValue));
+
+        if (listBidder) {
+          for (const item of listBidder) {
+            if (item.bidder === currentAccount?.address) {
+              setIsBided(true);
+              setBidPrice(convertStringToPrice(item.bidValue));
+            }
           }
+        } else {
+          console.log(
+            "Detail NFTTabCollectible doLoad. => listBidder is: ",
+            listBidder
+          );
         }
-        setIsLoaded(true);
       }
+
+      setIsLoaded(true);
     };
-    doLoad();
-  }, [api, currentAccount, isLoaded, nftContractAddress, tokenID]);
+    !saleInfo && doLoad();
+  }, [
+    api,
+    currentAccount,
+    nftContractAddress,
+    publicCurrentAccount,
+    saleInfo,
+    tokenID,
+  ]);
 
   const getNFTImage = (imageHash, size) => {
     const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
@@ -114,10 +129,11 @@ const NFTTabCollectible = ({
       currentAccount?.address
     );
 
-    marketplace_contract_calls.setMarketplaceContract(
-      api,
-      contractData.marketplace
-    );
+    // marketplace_contract_calls.setMarketplaceContract(
+    //   api,
+    //   contractData.marketplace
+    // );
+
     //check owner of the NFT from marketplace
     if (saleInfo.nftOwner === currentAccount?.address) {
       toast.error(`Cant buy your own NFT!`);
@@ -158,10 +174,10 @@ const NFTTabCollectible = ({
       return;
     }
 
-    marketplace_contract_calls.setMarketplaceContract(
-      api,
-      contractData.marketplace
-    );
+    // marketplace_contract_calls.setMarketplaceContract(
+    //   api,
+    //   contractData.marketplace
+    // );
 
     if (balance.free.toNumber() / 10 ** 12 > bidPrice) {
       if (price >= bidPrice) {
@@ -223,20 +239,20 @@ const NFTTabCollectible = ({
             {description}
           </Heading>
 
-          <Text color="#fff" pb={2}>
-            <AnimatePresence>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <Text color="#fff" pb={2}>
                 Owned by{" "}
                 <Link color="#7AE7FF">
                   {saleInfo ? truncateStr(saleInfo.nftOwner, 6) : ""}
                 </Link>
-              </motion.div>
-            </AnimatePresence>
-          </Text>
+              </Text>
+            </motion.div>
+          </AnimatePresence>
         </Box>
 
         {owner !== currentAccount?.address && (
@@ -374,9 +390,9 @@ const NFTTabCollectible = ({
           {attrsList?.length
             ? attrsList
                 .filter((i) => !JSON.stringify(Object.values(i)).includes("|"))
-                .map((item) => {
+                .map((item, idx) => {
                   return (
-                    <GridItem w="100%" h="100%">
+                    <GridItem w="100%" h="100%" key={idx}>
                       <Box
                         w="full"
                         textAlign="left"

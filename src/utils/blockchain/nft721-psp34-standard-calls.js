@@ -4,13 +4,18 @@ import BN from "bn.js";
 import { TypeRegistry, U64 } from "@polkadot/types";
 import { handleContractCall } from "@utils";
 import { clientAPI } from "@api/client";
+import { ContractPromise } from "@polkadot/api-contract";
 
 let contract;
 
-function setContract(c) {
-  // console.log(`Setting contract in blockchain module`, c);
-  contract = c;
-}
+export const setNft721Psp34StandardContract = (api, data) => {
+  contract = new ContractPromise(
+    api,
+    data?.CONTRACT_ABI,
+    data?.CONTRACT_ADDRESS
+  );
+  console.log("contract setMarketplaceContract", contract);
+};
 
 async function getTotalSupply(caller_account) {
   console.log("getTotalSupply before check", !caller_account);
@@ -328,7 +333,7 @@ const nft721_psp34_standard_calls = {
   mint,
   mintWithAttributes,
   getTotalSupply,
-  setContract,
+  setNft721Psp34StandardContract,
   getAttributeCount,
   getAttributeName,
   getAttributes,

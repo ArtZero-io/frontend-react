@@ -32,7 +32,7 @@ const MintPage = () => {
   const [myAZNFTs, setMyAZNFTs] = useState(null);
   const [owner, setOwner] = useState(null);
   const [loading, setLoading] = useState(null);
-  console.log("useSubstrateState()", useSubstrateState());
+
   const dispatch = useDispatch();
 
   const { tnxStatus } = useSelector((state) => state.account.accountLoaders);
@@ -97,14 +97,14 @@ const MintPage = () => {
             ".json",
           {}
         );
-        console.log(tokenUri + dataList[i].tokenID + ".json",metadata);
+        console.log(tokenUri + dataList[i].tokenID + ".json", metadata);
 
         var obj = {
           is_for_sale: dataList[i].is_for_sale,
           price: dataList[i].price,
           avatar: metadata.image,
           nftName: metadata.name,
-          stakeStatus:0,
+          stakeStatus: 0,
           isBid: false,
         };
         myNFTs.push(obj);
@@ -115,10 +115,11 @@ const MintPage = () => {
       console.log(myNFTs);
     };
 
-    (myAZNFTs === null || owner !== currentAccount?.address) && currentAccount?.address && fetchMyAZNFTs();
+    (myAZNFTs === null || owner !== currentAccount?.address) &&
+      currentAccount?.address &&
+      fetchMyAZNFTs();
   }, [currentAccount, myAZNFTs, owner]);
 
-  console.log("MintPage currentAccount", currentAccount);
   return (
     <Layout>
       <Box as="section" maxW="container.3xl" position="relative">

@@ -13,6 +13,14 @@ import theme from "@theme/theme";
 
 import Router from "@components/Router";
 import { useSubstrateState } from "@utils/substrate";
+import contractData from "@utils/blockchain/";
+
+import { setAZNFTContract } from "@utils/blockchain/artzero-nft-calls";
+import { setCollectionContract } from "@utils/blockchain/collection-manager-calls";
+import { setMarketplaceContract } from "@utils/blockchain/marketplace_contract_calls";
+import { setProfileContract } from "@utils/blockchain/profile_calls";
+import { setStakingContract } from "@utils/blockchain/staking_calls";
+import { Fragment, useEffect } from "react";
 
 export default function App() {
   const { apiState, apiError } = useSubstrateState();
@@ -27,22 +35,7 @@ export default function App() {
       ) : apiState !== "READY" ? (
         <InitModal apiState={apiState} loadingErrorMess={`to network ...`} />
       ) : (
-        <>
-          <Toaster
-            position="bottom-left"
-            reverseOrder={true}
-            toastOptions={{
-              style: {
-                marginRight: "2rem",
-                borderRadius: 0,
-                padding: "16px",
-                color: "#000",
-                background: "#7AE7FF",
-              },
-            }}
-          />
-          <Router />
-        </>
+        <Main />
       )}
     </ChakraProvider>
   );
@@ -72,5 +65,49 @@ const InitModal = ({ apiState, loadingErrorMess }) => {
         </Heading>
       </ModalContent>
     </Modal>
+  );
+};
+
+const Main = () => {
+  const { api, apiState } = useSubstrateState();
+  const { artzeroNft, collection, marketplace, profile, staking } =
+    contractData;
+  
+    useEffect(() => {
+    const initContract = async () => {
+      try {
+        if (apiState === "READY") {
+          setAZNFTContract(api, artzeroNft);
+          setCollectionContract(api, collection);
+          setMarketplaceContract(api, marketplace);
+          setProfileContract(api, profile);
+          setStakingContract(api, staking);
+        }
+      } catch (e) {
+        return console.log("err iniContract", e);
+      }
+    };
+
+    initContract();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api, apiState]);
+
+  return (
+    <Fragment>
+      <Toaster
+        position="bottom-left"
+        reverseOrder={true}
+        toastOptions={{
+          style: {
+            marginRight: "2rem",
+            borderRadius: 0,
+            padding: "16px",
+            color: "#000",
+            background: "#7AE7FF",
+          },
+        }}
+      />
+      <Router />
+    </Fragment>
   );
 };

@@ -43,7 +43,7 @@ const CollectionItems = ({
     "Price: Low to High",
     "Price: High to Low",
   ];
-  //  0 Low first, 1 High first, 3 Newest
+  //  0 Low first, 1 High first, 2 Newest
 
   const getUnListedNFT = () => {
     if (!NFTListFormatted) return [];
@@ -202,7 +202,6 @@ function GridNftA({ listNFTFormatted, bigCard }) {
               id="grid-item-a"
               onClick={() => handleOnClick(c)}
             >
-              {console.log("c", c)}
               <NFTChangeSizeCard {...c} />
             </GridItemA>
           ))}

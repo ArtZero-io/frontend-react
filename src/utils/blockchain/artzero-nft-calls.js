@@ -5,11 +5,7 @@ import { isValidAddressPolkadotAddress } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
 import { handleContractCall } from "@utils";
 
-// eslint-disable-next-line no-unused-vars
-let account;
 let contract;
-
-export const setAccount = (newAccount) => (account = newAccount);
 
 export const setAZNFTContract = (api, data) => {
   contract = new ContractPromise(
@@ -17,12 +13,8 @@ export const setAZNFTContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
+  console.log("contract setAZNFTContract", contract);
 };
-
-// function isLoaded() {
-//   if (contract) return true;
-//   else return false;
-// }
 
 /*
   PSP34 functions
@@ -495,12 +487,7 @@ async function allowance(
   return null;
 }
 
-async function approve(
-  caller_account,
-  operator_address,
-  token_id,
-  is_approve
-) {
+async function approve(caller_account, operator_address, token_id, is_approve) {
   if (!contract || !caller_account) {
     return null;
   }

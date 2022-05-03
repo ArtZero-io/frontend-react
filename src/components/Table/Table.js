@@ -35,34 +35,41 @@ function DataTable({
   const [isLoaded, setIsLoaded] = useState(false);
   const { api, currentAccount } = useSubstrateState();
 
-  useEffect(async () => {
-    if (isLoaded === false) {
-      marketplace_contract_calls.setMarketplaceContract(
-        api,
-        contractData.marketplace
-      );
+  useEffect(() => {
+    const fetchBidder = async () => {
+      // if (isLoaded === false) {
+      // marketplace_contract_calls.setMarketplaceContract(
+      //   api,
+      //   contractData.marketplace
+      // );
       const sale_info = await marketplace_contract_calls.getNftSaleInfo(
         currentAccount,
         nftContractAddress,
         { u64: tokenID }
       );
+
       console.log(sale_info);
+
       const listBidder = await marketplace_contract_calls.getAllBids(
         currentAccount,
         nftContractAddress,
         sale_info?.nftOwner,
         { u64: tokenID }
       );
+
       setBidders(listBidder);
       setIsLoaded(true);
-    }
+      // }
+    };
+
+    fetchBidder();
   }, [isLoaded]);
 
   const acceptBid = async (bidId) => {
-    marketplace_contract_calls.setMarketplaceContract(
-      api,
-      contractData.marketplace
-    );
+    // marketplace_contract_calls.setMarketplaceContract(
+    //   api,
+    //   contractData.marketplace
+    // );
     await marketplace_contract_calls.acceptBid(
       currentAccount,
       nftContractAddress,

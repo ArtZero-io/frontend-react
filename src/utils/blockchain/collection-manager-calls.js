@@ -5,11 +5,7 @@ import { handleContractCall, isValidAddressPolkadotAddress } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
 
-// eslint-disable-next-line no-unused-vars
-let account;
 let contract;
-
-export const setAccount = (newAccount) => (account = newAccount);
 
 export const setCollectionContract = (api, data) => {
   contract = new ContractPromise(
@@ -17,6 +13,7 @@ export const setCollectionContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
+  console.log("contract setCollectionContract", contract);
 };
 
 //SETTERS
@@ -538,8 +535,7 @@ const collection_manager_calls = {
   getActiveCollectionCount,
   getAttributes,
   setCollectionContract,
-  setAccount,
-  setMultipleAttributes
+  setMultipleAttributes,
 };
 
 export default collection_manager_calls;
