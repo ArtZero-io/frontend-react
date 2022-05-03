@@ -88,15 +88,21 @@ function MyNFTTabInfo({
 
   const listToken = async () => {
     if (Number(contractType) === 2) {
-      const nft721_psp34_standard_contract = new ContractPromise(
-        api,
-        nft721_psp34_standard.CONTRACT_ABI,
-        nftContractAddress
-      );
-
-      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-
       if (owner === currentAccount?.address) {
+        const nft721_psp34_standard_contract = new ContractPromise(
+          api,
+          nft721_psp34_standard.CONTRACT_ABI,
+          nftContractAddress
+        );
+
+        nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+        await nft721_psp34_standard_calls.approve(
+          currentAccount,
+          marketplace.CONTRACT_ADDRESS,
+          { u64: tokenID },
+          true,
+          dispatch
+        );
         await marketplace_contract_calls.list(
           currentAccount,
           nftContractAddress,
@@ -119,23 +125,17 @@ function MyNFTTabInfo({
     );
   };
 
-  const approveMarketplaceContract = async () => {
-    if (owner === currentAccount?.address) {
-      const is_approve = await nft721_psp34_standard_calls.approve(
-        currentAccount,
-        marketplace.CONTRACT_ADDRESS,
-        { u64: tokenID },
-        true,
-        dispatch
-      );
+  // const approveMarketplaceContract = async () => {
+  //   if (owner === currentAccount?.address) {
+      // const is_approve = 
 
-      if (is_approve) {
-        setIsAllowanceMarketplaceContract(true);
-      }
-    } else {
-      toast.error(`This token is not yours!`);
-    }
-  };
+  //     if (is_approve) {
+  //       setIsAllowanceMarketplaceContract(true);
+  //     }
+  //   } else {
+  //     toast.error(`This token is not yours!`);
+  //   }
+  // };
 
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
 
@@ -361,7 +361,7 @@ function MyNFTTabInfo({
           />
         ) : (
           <>
-            {!is_for_sale && !isAllowanceMarketplaceContract ? (
+            {/* {!is_for_sale && !isAllowanceMarketplaceContract ? (
               <Flex w="full" py={2} alignItems="center" justifyContent="start">
                 <Spacer />
                 <Text>
@@ -377,9 +377,9 @@ function MyNFTTabInfo({
               </Flex>
             ) : (
               ""
-            )}
+            )} */}
 
-            {isAllowanceMarketplaceContract && !is_for_sale && (
+            {!is_for_sale && (
               <Flex
                 w="full"
                 py={2}

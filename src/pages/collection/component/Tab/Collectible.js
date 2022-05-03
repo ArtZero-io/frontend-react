@@ -36,7 +36,7 @@ import contractData from "@utils/blockchain/index";
 import { truncateStr } from "@utils";
 import BN from "bn.js";
 import process from "process";
-
+import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
@@ -61,7 +61,9 @@ const NFTTabCollectible = ({
   const [isBided, setIsBided] = useState(false);
   const [saleInfo, setSaleInfo] = useState(null);
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
-
+  const dispatch = useDispatch();
+  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+  
   useEffect(() => {
     const doLoad = async () => {
       if (isLoaded === false) {
@@ -128,7 +130,8 @@ const NFTTabCollectible = ({
         currentAccount,
         nftContractAddress,
         { u64: tokenID },
-        price
+        price,
+        dispatch
       );
     } else {
       toast.error(`Not Enough Balance!`);
@@ -249,7 +252,11 @@ const NFTTabCollectible = ({
                 py={1}
                 borderWidth={2}
               >
-                <Button h={10} maxW={32} variant="solid" onClick={buyToken}>
+                <Button 
+                  spinnerPlacement="start"
+                  isLoading={tnxStatus}
+                  loadingText={`${tnxStatus?.status}`}
+                  h={10} maxW={32} variant="solid" onClick={buyToken}>
                   Buy now
                 </Button>
 

@@ -555,7 +555,7 @@ async function removeBid(caller_account, nft_contract_address, token_id) {
   return unsubscribe;
 }
 
-async function buy(caller_account, nft_contract_address, token_id, price) {
+async function buy(caller_account, nft_contract_address, token_id, price, dispatch) {
   if (
     !contract ||
     !caller_account ||
@@ -568,17 +568,19 @@ async function buy(caller_account, nft_contract_address, token_id, price) {
 
   const address = caller_account?.address;
   const gasLimit = -1;
-  const azero_value = (new BN(price, 10, "le")).mul(new BN(10**12)).toString();
+
+  // const azero_value = (new BN(price, 10, "le")).toString();
   const injector = await web3FromSource(caller_account?.meta?.source);
   contract.tx
-    .buy({ gasLimit, value: azero_value }, nft_contract_address, token_id)
+    .buy({ gasLimit, value: price }, nft_contract_address, token_id)
     .signAndSend(
       address,
       { signer: injector.signer },
-      async ({ status, dispatchError }) => {
+      async ({ status, dispatchError, events }) => {
+        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
+            toast.error(dispatchError.toString());
           } else {
             console.log("dispatchError ", dispatchError.toString());
           }
@@ -587,6 +589,19 @@ async function buy(caller_account, nft_contract_address, token_id, price) {
         if (status) {
           const statusText = Object.keys(status.toHuman())[0];
           if (status.isFinalized === true) {
+            events.forEach(record => {
+              const { event, phase } = record;
+              const types = event.typeDef;
+              console.log('1');
+              // Show what we are busy with
+              console.log(`\t${event.section}:${event.method}:: (phase=${phase.toString()})`);
+              
+              console.log('3');
+              // Loop through each of the parameters, displaying the type and data
+              event.data.forEach((data, index) => {
+                console.log(`\t\t\t${types[index].type}: ${data.toString()}`);
+              });
+            });
             toast.success(`Okay`);
             console.log("token_id", token_id);
             const update_nft_api_res = await clientAPI("post", "/updateNFT", {
