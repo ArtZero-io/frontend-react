@@ -21,6 +21,7 @@ import CommonCheckbox from "../../../../../components/Checkbox/Checkbox";
 const AdvancedModeForm = ({ mode = "add", id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
+  const [headerSquareIPFSUrl, setHeaderSquareIPFSUrl] = useState("");
   const [addingFee, setAddingFee] = useState(0);
   const [isSetRoyal, setIsSetRoyal] = useState(false);
   const [initialValues, setInitialValues] = useState(null);
@@ -77,6 +78,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           royalFee,
           avatarImage,
           headerImage,
+          headerSquareImage
         } = dataList;
 
         newInitialValues = {
@@ -91,6 +93,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
         if (dataList) {
           setAvatarIPFSUrl(avatarImage);
           setHeaderIPFSUrl(headerImage);
+          setHeaderSquareIPFSUrl(headerSquareImage);
           setIsSetRoyal(collectRoyalFee);
           setInitialValues(newInitialValues);
         } else {
@@ -158,12 +161,12 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               return result;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-              (!headerIPFSUrl || !avatarIPFSUrl) &&
+              (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl) &&
                 toast.error("Upload images first");
-              if (avatarIPFSUrl && headerIPFSUrl) {
+              if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
                 values.avatarIPFSUrl = avatarIPFSUrl;
                 values.headerIPFSUrl = headerIPFSUrl;
-
+                values.headerSquareIPFSUrl = headerSquareIPFSUrl;
                 if (!checkCurrentBalance) {
                   return toast.error(`Your balance not enough!`);
                 }
@@ -179,6 +182,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       "description",
                       "avatar_image",
                       "header_image",
+                      "header_square_image"
                     ],
 
                     attributeVals: [
@@ -186,6 +190,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       values.collectionDescription.trim(),
                       values.avatarIPFSUrl,
                       values.headerIPFSUrl,
+                      values.headerSquareIPFSUrl
                     ],
 
                     collectionAllowRoyalFee: values.collectRoyalFee,
@@ -259,6 +264,15 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     id="collection-header"
                     imageIPFSUrl={headerIPFSUrl}
                     setImageIPFSUrl={setHeaderIPFSUrl}
+                    title="Collection Header Image"
+                    limitedSize={{ width: "400", height: "260" }}
+                  />{" "}
+                  <ImageUpload
+                    mode={mode}
+                    isBanner={true}
+                    id="collection-header"
+                    imageIPFSUrl={headerSquareIPFSUrl}
+                    setImageIPFSUrl={setHeaderSquareIPFSUrl}
                     title="Collection Header Image"
                     limitedSize={{ width: "400", height: "260" }}
                   />{" "}
