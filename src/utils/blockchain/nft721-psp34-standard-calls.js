@@ -8,13 +8,13 @@ import { ContractPromise } from "@polkadot/api-contract";
 
 let contract;
 
-export const setNft721Psp34StandardContract = (api, data) => {
+export const setContract = (api, data) => {
   contract = new ContractPromise(
     api,
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
-  console.log("contract setMarketplaceContract", contract);
+  console.log("contract setPsp34Contract", contract);
 };
 
 async function getTotalSupply(caller_account) {
@@ -333,7 +333,7 @@ const nft721_psp34_standard_calls = {
   mint,
   mintWithAttributes,
   getTotalSupply,
-  setNft721Psp34StandardContract,
+  setContract,
   getAttributeCount,
   getAttributeName,
   getAttributes,

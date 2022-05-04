@@ -25,6 +25,8 @@ function Dropdown({ options, selectedItem, setSelectedItem }) {
           variant="outline"
           as={Button}
           rightIcon={<ChevronDownIcon />}
+          bg="brand.grayDark"
+          borderColor="transparent"
         >
           {options[selectedItem]}
         </MenuButton>

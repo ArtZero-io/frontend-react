@@ -30,7 +30,7 @@ import marketplace_contract from "@utils/blockchain/marketplace";
 import { createLevelAttribute } from "@utils";
 import { useDispatch, useSelector } from "react-redux";
 import CommonLoader from "../../../../../components/Loader/CommonLoader";
-import {getCachedImage} from "@utils";
+import { getCachedImage } from "@utils";
 
 function MyNFTTabInfo({
   avatar,
@@ -127,7 +127,7 @@ function MyNFTTabInfo({
 
   // const approveMarketplaceContract = async () => {
   //   if (owner === currentAccount?.address) {
-      // const is_approve = 
+  // const is_approve =
 
   //     if (is_approve) {
   //       setIsAllowanceMarketplaceContract(true);
@@ -138,7 +138,6 @@ function MyNFTTabInfo({
   // };
 
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
-
   return (
     <Flex h="full">
       <Box minW={{ base: "20rem", "2xl": "30rem" }} bg="#372648">
@@ -148,7 +147,15 @@ function MyNFTTabInfo({
           boxShadow="lg"
           alt="nft-img"
           objectFit="cover"
-          src={avatar ? getCachedImage(avatar,500,IPFS_BASE_URL +"/"+ avatar.replace("ipfs://","")) : ""}
+          src={
+            avatar
+              ? getCachedImage(
+                  avatar,
+                  500,
+                  IPFS_BASE_URL + "/" + avatar.replace("ipfs://", "")
+                )
+              : ""
+          }
           fallback={<Skeleton minW={{ base: "20rem", "2xl": "30rem" }} />}
         />
       </Box>
@@ -212,7 +219,7 @@ function MyNFTTabInfo({
                         w="full"
                         textAlign="left"
                         alignItems="end"
-                        bg="black"
+                        bg="brand.semiBlack"
                         px={4}
                         py={3}
                       >
@@ -227,15 +234,15 @@ function MyNFTTabInfo({
                               isTruncated
                               maxW={"10rem"}
                               fontSize={{ base: "0.875rem", "2xl": "1rem" }}
-                            >
-                              {Object.values(item)[0]}
-                            </Heading>
+                            ></Heading>
                           </Box>
                           <Spacer />
                         </Flex>
                         <Flex w="full" color="#7AE7FF">
                           <Spacer />
-                          <Text> </Text>
+                          <Text fontStyle="italic">
+                            {Object.values(item)[0]}
+                          </Text>
                         </Flex>
                       </Box>
                     </GridItem>
@@ -299,60 +306,6 @@ function MyNFTTabInfo({
             : null}
         </Grid>
 
-        {/* <Flex w="full" justifyContent="space-between" px="0">
-          {attrsList?.length
-            ? attrsList
-                .filter((i) => JSON.stringify(Object.values(i)).includes("|"))
-                .map((item, idx) => {
-                  return (
-                    <React.Fragment key={idx}>
-                      <Box
-                        w="full"
-                        textAlign="left"
-                        alignItems="end"
-                        bg="brand.semiBlack"
-                        p={2}
-                        my={2}
-                        minW="30%"
-                      >
-                        <Flex w="full" mb={3}>
-                          <Heading
-                            size="h6"
-                            mt={1}
-                            color="#fff"
-                            fontSize={{ base: "1rem", "2xl": "1.125rem" }}
-                          >
-                            {Object.keys(item)[0]}
-                          </Heading>
-                          <Spacer />
-                          <Text color="#fff">
-                            {createLevelAttribute(Object.values(item)[0]).level}{" "}
-                            of{" "}
-                            {
-                              createLevelAttribute(Object.values(item)[0])
-                                .levelMax
-                            }
-                          </Text>
-                        </Flex>
-                        <Progress
-                          colorScheme="telegram"
-                          size="sm"
-                          value={Number(
-                            (createLevelAttribute(Object.values(item)[0])
-                              .level *
-                              100) /
-                              createLevelAttribute(Object.values(item)[0])
-                                .levelMax
-                          )}
-                          height="6px"
-                        />
-                      </Box>
-                    </React.Fragment>
-                  );
-                })
-            : null}
-        </Flex> */}
-
         {tnxStatus ? (
           <CommonLoader
             addText={`${tnxStatus?.status}`}
@@ -392,7 +345,7 @@ function MyNFTTabInfo({
                   mr={2}
                   px={0}
                   w="full"
-                  bg="black"
+                  bg="brand.semiBlack"
                   h={14}
                   py={0}
                   color="#fff "

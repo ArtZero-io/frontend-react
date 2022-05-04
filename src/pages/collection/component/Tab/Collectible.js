@@ -57,7 +57,7 @@ const NFTTabCollectible = ({
   // eslint-disable-next-line no-unused-vars
   const [NFT, setNFT] = useState({});
   const [doOffer, setDoOffer] = useState(false);
-  const [bidPrice, setBidPrice] = useState(0);
+  const [bidPrice, setBidPrice] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const { api, currentAccount } = useSubstrateState();
   const [isBided, setIsBided] = useState(false);
@@ -85,7 +85,7 @@ const NFTTabCollectible = ({
           sale_info?.nftOwner,
           { u64: tokenID }
         );
-
+        console.log("listBidder", listBidder);
         if (listBidder) {
           for (const item of listBidder) {
             if (item.bidder === currentAccount?.address) {
@@ -252,16 +252,18 @@ const NFTTabCollectible = ({
               <Text color="#fff" pb={2}>
                 Owned by{" "}
                 <Link color="#7AE7FF">
-                  {saleInfo ? truncateStr(saleInfo.nftOwner, 6) : ""}
+                  {saleInfo ? truncateStr(saleInfo.nftOwner, 6) : owner}
                 </Link>
               </Text>
             </motion.div>
           </AnimatePresence>
         </Box>
 
-        {owner !== currentAccount?.address && (
+        {!saleInfo?.nftOwner ? (
+          <Heading size="h6">Not for sale</Heading>
+        ) : (
           <HStack w="full" py={2}>
-            {is_for_sale ? (
+            {currentAccount?.address !== saleInfo?.nftOwner && (
               <>
                 <Flex
                   w="full"
@@ -304,80 +306,91 @@ const NFTTabCollectible = ({
                   </Flex>
                 </Flex>
 
-                <Flex
-                  w="full"
-                  alignItems="center"
-                  borderColor="#343333"
-                  px={4}
-                  py={1}
-                  borderWidth={2}
-                  minH="4.75rem"
-                >
-                  {!doOffer && !isBided && (
-                    <Button
-                      h={10}
-                      maxW={32}
-                      variant="solid"
-                      onClick={placeOffer}
-                    >
-                      Make offer
-                    </Button>
-                  )}
-
-                  {!doOffer && isBided && (
-                    <Button
-                      h={10}
-                      maxW={32}
-                      variant="solid"
-                      onClick={removeBid}
-                    >
-                      Remove Bid
-                    </Button>
-                  )}
-
-                  <Spacer />
-
-                  <InputGroup
-                    w={24}
-                    bg="black"
-                    h={10}
+                {!doOffer && (
+                  <Flex
+                    w="full"
+                    alignItems="center"
+                    borderColor="#343333"
+                    px={4}
                     py={1}
-                    color="black"
-                    borderRadius="0"
+                    borderWidth={2}
+                    minH="4.75rem"
                   >
-                    <Input
-                      bg="black"
-                      color="white"
-                      variant="unstyled"
-                      my={1}
-                      pl={3}
-                      placeholder="0"
-                      _placeholder={{
-                        color: "brand.grayDark",
-                        fontSize: "lg",
-                      }}
-                      onChange={({ target }) => {
-                        setBidPrice(target.value);
-                      }}
-                      value={bidPrice}
-                    />
-                    <AzeroIcon size="1.5rem" m={2} />
-                  </InputGroup>
-                </Flex>
-              </>
-            ) : (
-              <>
-                <Heading size="h6">Not for sale</Heading>
+                    {!bidPrice && (
+                      <>
+                        <Button
+                          h={10}
+                          maxW={32}
+                          variant="solid"
+                          onClick={placeOffer}
+                        >
+                          Make offer
+                        </Button>
+                        <Spacer />
+                        <InputGroup
+                          w={24}
+                          bg="black"
+                          h={10}
+                          py={1}
+                          color="black"
+                          borderRadius="0"
+                        >
+                          <Input
+                            bg="black"
+                            color="white"
+                            variant="unstyled"
+                            my={1}
+                            pl={3}
+                            placeholder="0"
+                            _placeholder={{
+                              color: "brand.grayDark",
+                              fontSize: "lg",
+                            }}
+                            onChange={({ target }) => {
+                              setBidPrice(target.value);
+                            }}
+                            value={bidPrice}
+                          />
+                          <AzeroIcon size="1.5rem" m={2} />
+                        </InputGroup>
+                      </>
+                    )}
+
+                    {bidPrice && (
+                      <>
+                        <Button
+                          h={10}
+                          maxW={32}
+                          variant="solid"
+                          onClick={removeBid}
+                        >
+                          Remove Bid
+                        </Button>
+
+                        <Spacer />
+                        <Box textAlign="right" color="brand.grayLight">
+                          <Text>Your offer</Text>
+                          <Tag h={4} pr={0} bg="transparent">
+                            <TagLabel bg="transparent">{bidPrice}</TagLabel>
+                            <TagRightIcon as={AzeroIcon} />
+                          </Tag>
+                        </Box>
+                      </>
+                    )}
+                  </Flex>
+                )}
               </>
             )}
           </HStack>
         )}
+
         <Grid
           boxShadow="lg"
           my={2}
-          minH="10rem"
+          // minH="10rem"
           w="full"
-          h="full"
+          // h="full"
+
           templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
           gap={5}
           pr={"0.25rem"}
@@ -403,7 +416,7 @@ const NFTTabCollectible = ({
                         w="full"
                         textAlign="left"
                         alignItems="end"
-                        bg="black"
+                        bg="brand.semiBlack"
                         px={4}
                         py={3}
                       >
@@ -418,15 +431,15 @@ const NFTTabCollectible = ({
                               isTruncated
                               maxW={"10rem"}
                               fontSize={{ base: "0.875rem", "2xl": "1rem" }}
-                            >
-                              {Object.values(item)[0]}
-                            </Heading>
+                            ></Heading>
                           </Box>
                           <Spacer />
                         </Flex>
                         <Flex w="full" color="#7AE7FF">
                           <Spacer />
-                          <Text> </Text>
+                          <Text fontStyle="italic">
+                            {Object.values(item)[0]}
+                          </Text>
                         </Flex>
                       </Box>
                     </GridItem>
