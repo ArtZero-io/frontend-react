@@ -12,7 +12,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { convertStringToPrice } from "@utils";
+import { convertStringToPrice,convertStringToDateTime } from "@utils";
 
 function DataTable({ tableHeaders, tableData, onClickHandler }) {
   return (
@@ -65,7 +65,7 @@ function DataTable({ tableHeaders, tableData, onClickHandler }) {
                 </Td>
 
                 <Td py={{ base: "1rem", "2xl": "1.75rem" }} textAlign="center">
-                  {item.bidDate}
+                  {convertStringToDateTime(item.bidDate)}
                 </Td>
 
                 <Td py={{ base: "1rem", "2xl": "1.75rem" }} isNumeric>

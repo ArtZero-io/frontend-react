@@ -49,7 +49,7 @@ export function convertStringToPrice(stringPrice) {
   try {
     /* eslint-disable no-useless-escape */
     const a = stringPrice.replace(/\,/g, "");
-    let price = (new BN(a, 10)).div(10**6).toNumber();
+    let price = (new BN(a, 10)).div(new BN(10**6)).toNumber();
     return price / 10 ** 6;
   } catch (error) {
     console.log(error);
@@ -60,7 +60,7 @@ export function convertStringToPrice(stringPrice) {
 export function convertStringToDateTime(stringTimeStamp) {
   /* eslint-disable no-useless-escape */
   const a = stringTimeStamp.replace(/\,/g, "");
-  const dateObject = new Date(a);
+  const dateObject = new Date(parseInt(a));
   return dateObject.toLocaleString(); //2019-12-9 10:30:15
 }
 
@@ -83,7 +83,8 @@ export function delay(timeout) {
   });
 }
 
-export const convertTimeStamp = (time) => {
+export const convertTimeStamp = (input) => {
+  let time = input.replace(/\,/g, "");
   if (time <= 0) return "";
   var d = new Date(time);
   return (
@@ -118,7 +119,8 @@ export const secondsToTime = (secs) => {
   return obj;
 };
 
-export const convertTimeStampNoTime = (time) => {
+export const convertTimeStampNoTime = (input) => {
+  let time = input.replace(/\,/g, "");
   if (time <= 0) return "";
   var d = new Date(time);
   return (
