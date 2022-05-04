@@ -33,11 +33,20 @@ export const CollectionCard = ({
 }) => {
   const getCollectionImage = (imageHash, size) => {
     const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
-    return baseURL + '/getImage?input=' + imageHash + '&size=' + size + '&url=' + callbackUrl;
-  }
+    return (
+      baseURL +
+      "/getImage?input=" +
+      imageHash +
+      "&size=" +
+      size +
+      "&url=" +
+      callbackUrl
+    );
+  };
 
   return (
     <Box
+      className="my-collection-card"
       h="full"
       w="full"
       mx="auto"
@@ -54,14 +63,32 @@ export const CollectionCard = ({
         shadow="lg"
         h="full"
       >
-        <Image
-          alt={`header-img-${name}`}
-          w="full"
-          h={"16.25rem"}
-          objectFit="cover"
-          src={getCollectionImage(headerImage, 500)}
-          fallback={<Skeleton w="full" h="full" maxH={"16.25rem"} />}
-        />
+        <Box
+          pos="relative"
+          sx={{
+            ".my-collection-card:hover &": {
+              _before: {
+                content: '""',
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "full",
+                height: "6rem",
+                backgroundImage:
+                  "linear-gradient(180deg, #7ae7ff00 25%, #7AE7FF 100%)",
+              },
+            },
+          }}
+        >
+          <Image
+            alt={`header-img-${name}`}
+            w="full"
+            h={"16.25rem"}
+            objectFit="cover"
+            src={getCollectionImage(headerImage, 500)}
+            fallback={<Skeleton w="full" h="full" maxH={"16.25rem"} />}
+          />
+        </Box>
 
         <Center
           rounded="full"
@@ -70,6 +97,7 @@ export const CollectionCard = ({
           mt={-8}
           p="-px"
           border="2px solid white"
+          filter="drop-shadow(0px 4px 4px #ffffff25)"
         >
           <Image
             alt={`avatar-img-${name}`}
@@ -77,7 +105,6 @@ export const CollectionCard = ({
             h="full"
             rounded="full"
             objectFit="cover"
-            filter="drop-shadow(0px 4px 4px #ffffff25)"
             src={getCollectionImage(avatarImage, 1000)}
             fallback={<Skeleton w={16} h={16} rounded="full" />}
           />

@@ -9,6 +9,7 @@ const baseURL = process.env.REACT_APP_API_BASE_URL;
 const Layout = ({ backdrop, children, variant = null }) => {
   const getCollectionImage = (imageHash, size) => {
     const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
+
     return (
       baseURL +
       "/getImage?input=" +
@@ -49,7 +50,7 @@ const Layout = ({ backdrop, children, variant = null }) => {
         >
           <Box position="relative" w="full" h="full" overflow="hidden">
             <Image
-              src={backdrop && getCollectionImage(backdrop, 1024)}
+              src={backdrop && getCollectionImage(backdrop, 1920)}
               alt="bg-heroFull"
               w="full"
               h="full"

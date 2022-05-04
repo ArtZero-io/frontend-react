@@ -27,7 +27,7 @@ export default function GridA({ collections, variant = "my-collection" }) {
         margin: "2.5rem auto",
         display: "grid",
         gridGap: "1.875rem",
-        gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, 24.5625rem), 1fr))`,
+        gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, 24.5625rem), 1fr))`,
         gridAutoRows: "31.25rem",
         gridAutoFlow: "dense",
       }}

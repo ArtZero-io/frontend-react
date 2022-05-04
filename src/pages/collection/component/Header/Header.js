@@ -95,17 +95,17 @@ function CollectionHeader({
             />
           </Center>
           <HStack w="full" justifyContent="space-around" py={9}>
-            <VStack
-              textAlign="center"
-              justifyContent="space-between"
-              minH="7.125rem"
-            >
-              {name && (
-                <AnimatePresence>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
+            {name && (
+              <AnimatePresence>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <VStack
+                    textAlign="center"
+                    justifyContent="space-between"
+                    minH="7.125rem"
                   >
                     <Heading size="h2" minH="3.75rem">
                       {name}
@@ -118,10 +118,10 @@ function CollectionHeader({
                     >
                       {description}
                     </Text>
-                  </motion.div>
-                </AnimatePresence>
-              )}
-            </VStack>
+                   </VStack>
+                </motion.div>
+              </AnimatePresence>
+            )}
           </HStack>
 
           <HStack
