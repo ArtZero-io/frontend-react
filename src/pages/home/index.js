@@ -254,7 +254,7 @@ function HomePage() {
                 </ListItem>
                 <ListItem>
                   <ListIcon as={BulletPointIcon} />
-                  Stake ArtZero NFTs for trade discount
+                  Stake ArtZero NFTs for trade discount and profit share
                 </ListItem>
               </List>
             </Box>

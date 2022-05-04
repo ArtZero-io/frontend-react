@@ -14,7 +14,7 @@ function NFTMintTab({ myAZNFTs }) {
         Refresh
       </Button> */}
       {myAZNFTs?.length === 0 ? (
-        <Text>You don't have any NFT minted yet!</Text>
+        <Text>No NFT found!</Text>
       ) : (
         <Grid
           templateColumns="repeat(auto-fill, minmax(min(100%, 224px), 1fr))"

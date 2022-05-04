@@ -84,9 +84,9 @@ const DesktopNavContent = (props) => {
       {links.map((link, index) => (
         <NavLink.Desktop key={index} label={link.label} to={link.href} />
       ))}
-      {currentAccount && currentAccount?.address && (
+      {/*currentAccount && currentAccount?.address && (
         <NavLink.Desktop label="Admin" to={ROUTES.ACCOUNT_ADMIN} />
-      )}
+      )*/}
       {currentAccount && currentAccount?.address && <MyAccountDropdown />}
       <WalletSelector />
     </HStack>
