@@ -113,15 +113,15 @@ function CollectionPage() {
 
         collectionDetail.totalListed = totalListedData || 0;
 
-        // const volumeData =
-        //   await marketplace_contract_calls.getVolumeByCollection(
-        //     publicCurrentAccount,
-        //     collection_address
-        //   );
-        //   collectionDetail.volume = volumeData || 0;
+        const volumeData =
+          await marketplace_contract_calls.getVolumeByCollection(
+            publicCurrentAccount,
+            collection_address
+          );
+          collectionDetail.volume = volumeData || 0;
 
-        //   console.log("volumeData", volumeData);
-        collectionDetail.volume = 999;
+          console.log("volumeData", volumeData);
+        //collectionDetail.volume = 999;
 
         if (Number(collectionDetail.contractType) === 2) {
           return Promise.all(

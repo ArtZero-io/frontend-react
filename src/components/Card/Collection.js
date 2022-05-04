@@ -112,7 +112,7 @@ export const CollectionCard = ({
                 <AzeroIcon fill={isActive ? "#7AE7FF" : "#888"} />
               </TagLeftIcon>
               <TagLabel color={isActive ? "#fff" : "#888"}>
-                Volume {volume || 0} m
+                Volume {volume || 0}
               </TagLabel>
             </Tag>
 
