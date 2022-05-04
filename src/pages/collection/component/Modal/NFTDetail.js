@@ -8,10 +8,21 @@ import {
 import React from "react";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import NFTTabCollectible from "../Tab/Collectible";
-
-function NFTDetailModal({ isOpen, onClose, ...rest }) {
+import NFTTabActivity from "../Tab/Activity";
  
+function NFTDetailModal({ isOpen, onClose, ...rest }) {
   const tabHeight = useBreakpointValue({ base: `2.5rem`, "2xl": `4.5rem` });
+
+  const tabData = [
+    {
+      label: "Collectible",
+      content: <NFTTabCollectible {...rest} />,
+    },
+    {
+      label: "Activity",
+      content: <NFTTabActivity {...rest} />,
+    },
+  ];
 
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen} size={"7xl"}>
@@ -37,25 +48,8 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
           borderWidth={2}
           borderRadius="0"
         />
-        <Tabs isLazy align="left" h="full">
-          <TabList bg="#171717">
-            <Tab
-              ml={12}
-              fontSize="md"
-              fontFamily="Evogria Italic"
-              minH={tabHeight}
-            >
-              {`Collectible`}
-            </Tab>
-          </TabList>
 
-          <TabPanels style={{ height: `calc(100% - ${tabHeight})` }}>
-            <TabPanel px={{ base: 6, "2xl": 12 }} py={8} h="full">
-              <NFTTabCollectible {...rest} /> 
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-        {/* <Tabs isLazy align="left">
+        <Tabs isLazy align="left">
           <TabList bg="#171717">
             {tabData.map((tab, index) => (
               <Tab
@@ -63,35 +57,24 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
                 ml={12}
                 fontSize="md"
                 fontFamily="Evogria Italic"
-                minH="4.5rem"
+                minH={tabHeight}
               >
                 {tab.label}
               </Tab>
             ))}
           </TabList>
 
-          <TabPanels>
+          <TabPanels style={{ height: `calc(100% - ${tabHeight})` }}>
             {tabData.map((tab, index) => (
-              <TabPanel px={{ base: 8, "2xl": 12 }} py={8} key={index}>
+              <TabPanel px={{ base: 6, "2xl": 12 }} py={8} key={index} h="full">
                 {tab.content}
               </TabPanel>
             ))}
           </TabPanels>
-        </Tabs> */}
+        </Tabs>
       </ModalContent>
     </Modal>
   );
 }
 
 export default NFTDetailModal;
-
-// const tabData = [
-//   {
-//     label: "Collectible",
-//     content: <NFTTabCollectible {...rest} />,
-//   },
-//   {
-//     label: "Activity",
-//     content: <NFTTabActivity {...rest} />,
-//   },
-// ];

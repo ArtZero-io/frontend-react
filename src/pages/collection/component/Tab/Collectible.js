@@ -22,6 +22,7 @@ import {
   Progress,
   Skeleton,
   useBreakpointValue,
+  Square,
 } from "@chakra-ui/react";
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -203,7 +204,11 @@ const NFTTabCollectible = ({
 
   return (
     <Flex h="full">
-      <Box minW={{ base: "20rem", "2xl": "30rem" }} bg="#372648">
+      <Square
+        w={{ base: "20rem", "2xl": "30rem" }}
+        h={{ base: "20rem", "2xl": "30rem" }}
+        bg="#372648"
+      >
         <Image
           w="full"
           h="full"
@@ -213,7 +218,7 @@ const NFTTabCollectible = ({
           src={getNFTImage(avatar, 500)}
           fallback={<Skeleton minW={{ base: "20rem", "2xl": "30rem" }} />}
         />
-      </Box>
+      </Square>
 
       <Flex
         w="full"
@@ -387,10 +392,9 @@ const NFTTabCollectible = ({
         <Grid
           boxShadow="lg"
           my={2}
-          // minH="10rem"
+          maxH={{ base: "8rem", "2xl": "15rem" }}
           w="full"
-          // h="full"
-
+          h="full"
           templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
           gap={5}
           pr={"0.25rem"}
@@ -437,7 +441,10 @@ const NFTTabCollectible = ({
                         </Flex>
                         <Flex w="full" color="#7AE7FF">
                           <Spacer />
-                          <Text fontStyle="italic">
+                          <Text
+                            fontStyle="italic"
+                            fontSize={{ base: "0.875rem", "2xl": "1rem" }}
+                          >
                             {Object.values(item)[0]}
                           </Text>
                         </Flex>
