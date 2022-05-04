@@ -4,16 +4,12 @@ import BN from "bn.js";
 import { TypeRegistry, U64 } from "@polkadot/types";
 import { handleContractCall } from "@utils";
 import { clientAPI } from "@api/client";
-import { ContractPromise } from "@polkadot/api-contract";
+// import { ContractPromise } from "@polkadot/api-contract";
 
 let contract;
 
-export const setContract = (api, data) => {
-  contract = new ContractPromise(
-    api,
-    data?.CONTRACT_ABI,
-    data?.CONTRACT_ADDRESS
-  );
+export const setContract = (c) => {
+  contract = c;
   console.log("contract setPsp34Contract", contract);
 };
 

@@ -242,7 +242,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                       dispatch
                     );
                   }
-                  
+
                 }
               }
             }}
@@ -314,7 +314,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     imageIPFSUrl={avatarIPFSUrl}
                     setImageIPFSUrl={setAvatarIPFSUrl}
                     title="Collection Avatar Image"
-                    limitedSize={{ width: "64", height: "64" }}
+                    limitedSize={{ width: "100", height: "100" }}
                   />
 
                   <CollectionImageUpload
@@ -323,8 +323,8 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     isBanner={true}
                     imageIPFSUrl={headerIPFSUrl}
                     setImageIPFSUrl={setHeaderIPFSUrl}
-                    title="Collection Header Image"
-                    limitedSize={{ width: "400", height: "260" }}
+                    title="Collection Main Header"
+                    limitedSize={{ width: "1920", height: "600" }}
                   />
 
                   <CollectionImageUpload
@@ -333,7 +333,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     isBanner={false}
                     imageIPFSUrl={headerSquareIPFSUrl}
                     setImageIPFSUrl={setHeaderSquareIPFSUrl}
-                    title="Collection Header Square"
+                    title="Collection Square Header"
                     limitedSize={{ width: "500", height: "500" }}
                   />
                 </Stack>
@@ -353,7 +353,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     <AddCollectionNumberInput
                       isDisabled={!isSetRoyal}
                       isDisplay={isSetRoyal}
-                      label="Royal Fee %"
+                      label="Royal Fee (max 5%)"
                       name="royalFee"
                       type="number"
                       placeholder="Royal Fee"

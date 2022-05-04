@@ -256,7 +256,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     imageIPFSUrl={avatarIPFSUrl}
                     setImageIPFSUrl={setAvatarIPFSUrl}
                     title="Collection Avatar Image"
-                    limitedSize={{ width: "64", height: "64" }}
+                    limitedSize={{ width: "100", height: "100" }}
                   />
                   <ImageUpload
                     mode={mode}
@@ -264,8 +264,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     id="collection-header"
                     imageIPFSUrl={headerIPFSUrl}
                     setImageIPFSUrl={setHeaderIPFSUrl}
-                    title="Collection Header Image"
-                    limitedSize={{ width: "400", height: "260" }}
+                    title="Collection Main Header"
+                    limitedSize={{ width: "1920", height: "600" }}
                   />{" "}
                   <ImageUpload
                     mode={mode}
@@ -273,7 +273,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     id="collection-header"
                     imageIPFSUrl={headerSquareIPFSUrl}
                     setImageIPFSUrl={setHeaderSquareIPFSUrl}
-                    title="Collection Header Square Image"
+                    title="Collection Square Header"
                     limitedSize={{ width: "500", height: "500" }}
                   />{" "}
                 </Stack>
@@ -302,7 +302,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       <AddCollectionNumberInput
                         isDisabled={!isSetRoyal}
                         isDisplay={isSetRoyal}
-                        label="Royal Fee %"
+                        label="Royal Fee (max 5%)"
                         name="royalFee"
                         type="number"
                         placeholder="Royal Fee"
