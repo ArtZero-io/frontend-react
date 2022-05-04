@@ -49,8 +49,8 @@ export function convertStringToPrice(stringPrice) {
   try {
     /* eslint-disable no-useless-escape */
     const a = stringPrice.replace(/\,/g, "");
-    let price = new BN(a, 10).toNumber();
-    return price / 10 ** 12;
+    let price = (new BN(a, 10)).div(10**6).toNumber();
+    return price / 10 ** 6;
   } catch (error) {
     console.log(error);
     return 0;

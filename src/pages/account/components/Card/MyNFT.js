@@ -169,7 +169,7 @@ function MyNFTCard({
               </Text>
             ) : null}
           </Flex>
-          {stakeStatus != 0 ? (
+          {!is_for_sale && stakeStatus != 0 ? (
             <Flex align="center" justify="start" w="full">
               <Button
                 variant="outline"
@@ -202,15 +202,17 @@ function MyNFTCard({
               <Spacer />
               <VStack align="start">
                 <Text ml={1} color="brand.grayLight">
-                  {isBid?.status && "My offer"}
+                  {isBid?.status && "My Offer"}
                 </Text>
+                {isBid?.status ?
                 <Tag>
                   <TagLabel>
-                    {new BN(isBid?.bidPrice).div(new BN(10 ** 6)).toNumber() /
+                    {isBid?.status && new BN(isBid?.bidPrice).div(new BN(10 ** 6)).toNumber() /
                       10 ** 6}
                   </TagLabel>
-                  <TagRightIcon as={AzeroIcon} />
+                   <TagRightIcon as={AzeroIcon} />
                 </Tag>
+                 : null }
               </VStack>
             </Flex>
           )}
