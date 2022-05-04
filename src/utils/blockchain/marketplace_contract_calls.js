@@ -478,7 +478,7 @@ async function unlist(
     .catch((e) => console.log("e", e));
   return unsubscribe;
 }
-async function bid(caller_account, nft_contract_address, token_id, bid_amount) {
+async function bid(caller_account, nft_contract_address, token_id, bid_amount, dispatch) {
   if (
     !contract ||
     !caller_account ||
@@ -491,17 +491,18 @@ async function bid(caller_account, nft_contract_address, token_id, bid_amount) {
 
   const address = caller_account?.address;
   const gasLimit = -1;
+  
+  const injector = await web3FromSource(caller_account?.meta?.source);
   const azero_value = new BN(bid_amount, 10, "le")
     .mul(new BN(10 ** 12))
     .toString();
-  const injector = await web3FromSource(caller_account?.meta?.source);
-
   contract.tx
     .bid({ gasLimit, value: azero_value }, nft_contract_address, token_id)
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
+        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -512,6 +513,12 @@ async function bid(caller_account, nft_contract_address, token_id, bid_amount) {
 
         if (status) {
           const statusText = Object.keys(status.toHuman())[0];
+          const update_bid_api_res = await clientAPI("post", "/updateBid", {
+            collection_address: nft_contract_address,
+            seller: address,
+            token_id: token_id.u64,
+          });
+          console.log("update_bid_api_res", update_bid_api_res);
           toast.success(
             `Bid NFT ${
               statusText === "0" ? "started" : statusText.toLowerCase()
@@ -525,7 +532,7 @@ async function bid(caller_account, nft_contract_address, token_id, bid_amount) {
   return unsubscribe;
 }
 
-async function removeBid(caller_account, nft_contract_address, token_id) {
+async function removeBid(caller_account, nft_contract_address, token_id, dispatch) {
   if (
     !contract ||
     !caller_account ||
@@ -547,6 +554,7 @@ async function removeBid(caller_account, nft_contract_address, token_id) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
+        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -556,6 +564,12 @@ async function removeBid(caller_account, nft_contract_address, token_id) {
         }
 
         if (status) {
+          const update_bid_api_res = await clientAPI("post", "/updateBid", {
+            collection_address: nft_contract_address,
+            seller: address,
+            token_id: token_id.u64,
+          });
+          console.log("update_bid_api_res", update_bid_api_res);
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Remove Bid NFT ${
@@ -641,7 +655,7 @@ async function acceptBid(
   caller_account,
   nft_contract_address,
   token_id,
-  bidIndex
+  bidIndex,dispatch
 ) {
   if (
     !contract ||
@@ -669,6 +683,7 @@ async function acceptBid(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
+        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -687,6 +702,12 @@ async function acceptBid(
               token_id: token_id.u64,
             });
             console.log("update_nft_api_res", update_nft_api_res);
+            const update_bid_api_res = await clientAPI("post", "/updateBid", {
+              collection_address: nft_contract_address,
+              seller: address,
+              token_id: token_id.u64,
+            });
+            console.log("update_bid_api_res", update_bid_api_res);
           }
           toast.success(
             `Accept Bid NFT ${

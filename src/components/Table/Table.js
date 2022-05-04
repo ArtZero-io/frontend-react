@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Table,
   TableContainer,
@@ -13,8 +14,14 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { convertStringToPrice,convertStringToDateTime } from "@utils";
+import { useSubstrateState } from "@utils/substrate";
+import { useDispatch, useSelector } from "react-redux";
 
-function DataTable({ tableHeaders, tableData, onClickHandler }) {
+function DataTable({ tableHeaders, tableData, onClickHandler, saleInfo }) {
+  const { api, currentAccount } = useSubstrateState();
+  const dispatch = useDispatch();
+  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+
   return (
     <TableContainer
       maxW="6xl-mid"
@@ -76,11 +83,15 @@ function DataTable({ tableHeaders, tableData, onClickHandler }) {
                     <TagRightIcon as={AzeroIcon} />
                   </Tag>
                 </Td>
-                <Td py={{ base: "1rem", "2xl": "1.75rem" }} textAlign="center">
-                  <Button size="sm" onClick={() => onClickHandler(idx)}>
+                {console.log(saleInfo)}
+                {currentAccount?.address ==  saleInfo.nftOwner ? <Td py={{ base: "1rem", "2xl": "1.75rem" }} textAlign="center">
+                  <Button spinnerPlacement="start"
+                          isLoading={tnxStatus}
+                          loadingText={`${tnxStatus?.status}`} size="sm" onClick={() => onClickHandler(idx)}>
                     Accept Bid
                   </Button>
-                </Td>
+                </Td> : ''}
+                
               </Tr>
             </>
           ))}

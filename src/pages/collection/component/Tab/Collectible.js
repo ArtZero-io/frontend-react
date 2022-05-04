@@ -161,7 +161,8 @@ const NFTTabCollectible = ({
     const res = await marketplace_contract_calls.removeBid(
       currentAccount,
       nftContractAddress,
-      { u64: tokenID }
+      { u64: tokenID },
+      dispatch
     );
     console.log(res);
     setIsBided(false);
@@ -179,18 +180,30 @@ const NFTTabCollectible = ({
       return;
     }
 
+    if (bidPrice <= 0) {
+      toast.error(`The bid price must greater than 0!`);
+      return;
+    }
+    
     // marketplace_contract_calls.setMarketplaceContract(
     //   api,
     //   contractData.marketplace
     // );
 
-    if (balance.free.toNumber() / 10 ** 12 > bidPrice) {
-      if (price >= bidPrice) {
+    const free_balance = new BN(balance.free, 10, "le")
+    .div(new BN(10 ** 12))
+    .toString();
+    
+    const price_amount = price / (10 ** 12);
+
+    if (Number(free_balance) > Number(bidPrice)) {
+      if (price_amount >= bidPrice) {
         await marketplace_contract_calls.bid(
           currentAccount,
           nftContractAddress,
           { u64: tokenID },
-          bidPrice
+          bidPrice,
+          dispatch
         );
       } else {
         toast.error(`Must to bid an amount less the price token!`);
@@ -321,9 +334,12 @@ const NFTTabCollectible = ({
                     borderWidth={2}
                     minH="4.75rem"
                   >
-                    {!bidPrice && (
+                    {!isBided && (
                       <>
                         <Button
+                          spinnerPlacement="start"
+                          isLoading={tnxStatus}
+                          loadingText={`${tnxStatus?.status}`}
                           h={10}
                           maxW={32}
                           variant="solid"
@@ -361,9 +377,12 @@ const NFTTabCollectible = ({
                       </>
                     )}
 
-                    {bidPrice && (
+                    {isBided && (
                       <>
                         <Button
+                          spinnerPlacement="start"
+                          isLoading={tnxStatus}
+                          loadingText={`${tnxStatus?.status}`}
                           h={10}
                           maxW={32}
                           variant="solid"
