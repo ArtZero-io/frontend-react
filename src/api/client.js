@@ -9,22 +9,22 @@ export const clientAPI = async (method, url, options) => {
     url,
     method,
     data: options,
+    headers: {
+      Accept: "*/*",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
   });
-  if (method.toLowerCase() == "post"){
+  if (method.toLowerCase() === "post") {
     if (data?.status === "OK") {
       return data?.ret;
     } else {
       return data?.message;
     }
-  }
-  else if (method.toLowerCase() == "get"){
+  } else if (method.toLowerCase() === "get") {
     if (data?.status === "OK") {
       return data?.ret;
     } else if (data?.status === "FAILED") {
       return data?.message;
-    }
-    else
-      return data;
+    } else return data;
   }
-
 };

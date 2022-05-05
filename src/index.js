@@ -9,7 +9,7 @@ import { SubstrateContextProvider } from "@utils/substrate";
 import App from "@components/App";
 
 ReactDOM.render(
-  <React.StrictMode>
+  <>
     <SubstrateContextProvider>
       <Provider store={store}>
         <BrowserRouter>
@@ -17,6 +17,6 @@ ReactDOM.render(
         </BrowserRouter>
       </Provider>
     </SubstrateContextProvider>
-  </React.StrictMode>,
+  </>,
   document.getElementById("root")
 );
