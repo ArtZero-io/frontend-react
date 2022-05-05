@@ -9,9 +9,11 @@ import { setMultipleAttributes } from "@actions/account";
 import SimpleModeInput from "@components/Input/Input";
 import ImageUpload from "@components/ImageUpload/Avatar";
 import SimpleModeTextarea from "@components/TextArea/TextArea";
+import { useSubstrateState } from "@utils/substrate";
 
 const ProfileForm = ({ profile }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState(null);
+  const { currentAccount } = useSubstrateState();
 
   const dispatch = useDispatch();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
@@ -57,7 +59,7 @@ const ProfileForm = ({ profile }) => {
           const a = objArr.map((item) => item[0]);
           const v = objArr.map((item) => item[1]);
 
-          dispatch(setMultipleAttributes(a, v));
+          dispatch(setMultipleAttributes(currentAccount, a, v));
         }}
       >
         <Form>
