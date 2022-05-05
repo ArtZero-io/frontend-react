@@ -16,6 +16,7 @@ export default function AddCollectionNumberInput({
   name,
   isDisabled,
   isDisplay,
+  inputWidth,
   ...props
 }) {
   return (
@@ -27,6 +28,7 @@ export default function AddCollectionNumberInput({
               {label}
             </FormLabel>
             <NumberInput
+              w={inputWidth}
               isDisabled={isDisabled}
               id={name}
               min={0}

@@ -223,7 +223,11 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                       : 0,
                   };
 
-                  if (mode === 'add') {
+                  if (mode === "add") {
+                    console.log(data);
+                    console.log("111data add before new ", data);
+                    console.log("111data add before old", initialValues);
+                    console.log(nftContractAddress);
                     await collection_manager_calls.autoNewCollection(
                       currentAccount,
                       data,
@@ -232,8 +236,8 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                   } else {
                     console.log(data);
                     console.log("111data before new ", data);
-                  console.log("111data before old", initialValues);
-                  console.log(nftContractAddress);
+                    console.log("111data before old", initialValues);
+                    console.log(nftContractAddress);
                     await collection_manager_calls.setMultipleAttributes(
                       currentAccount,
                       nftContractAddress,
@@ -242,7 +246,6 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                       dispatch
                     );
                   }
-
                 }
               }
             }}
@@ -307,35 +310,47 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                   alignItems="start"
                   justifyContent="space-around"
                 >
-                  <CollectionImageUpload
-                    id="avatar"
-                    mode={mode}
-                    isBanner={false}
-                    imageIPFSUrl={avatarIPFSUrl}
-                    setImageIPFSUrl={setAvatarIPFSUrl}
-                    title="Collection Avatar Image"
-                    limitedSize={{ width: "100", height: "100" }}
-                  />
+                  <Stack
+                    direction="column"
+                    alignItems="start"
+                    justifyContent="end"
+                  >
+                    <CollectionImageUpload
+                      id="avatar"
+                      mode={mode}
+                      isBanner={false}
+                      imageIPFSUrl={avatarIPFSUrl}
+                      setImageIPFSUrl={setAvatarIPFSUrl}
+                      title="Collection Avatar Image"
+                      limitedSize={{ width: "100", height: "100" }}
+                    />
 
-                  <CollectionImageUpload
-                    id="header"
-                    mode={mode}
-                    isBanner={true}
-                    imageIPFSUrl={headerIPFSUrl}
-                    setImageIPFSUrl={setHeaderIPFSUrl}
-                    title="Collection Main Header"
-                    limitedSize={{ width: "1920", height: "600" }}
-                  />
+                    <CollectionImageUpload
+                      id="header"
+                      mode={mode}
+                      isBanner={true}
+                      imageIPFSUrl={headerIPFSUrl}
+                      setImageIPFSUrl={setHeaderIPFSUrl}
+                      title="Collection Main Header"
+                      limitedSize={{ width: "1920", height: "600" }}
+                    />
+                  </Stack>
 
-                  <CollectionImageUpload
-                    id="header_square"
-                    mode={mode}
-                    isBanner={false}
-                    imageIPFSUrl={headerSquareIPFSUrl}
-                    setImageIPFSUrl={setHeaderSquareIPFSUrl}
-                    title="Collection Square Header"
-                    limitedSize={{ width: "500", height: "500" }}
-                  />
+                  <Stack
+                    direction="column"
+                    alignItems="start"
+                    justifyContent="end"
+                  >
+                    <CollectionImageUpload
+                      id="header_square"
+                      mode={mode}
+                      isBanner={false}
+                      imageIPFSUrl={headerSquareIPFSUrl}
+                      setImageIPFSUrl={setHeaderSquareIPFSUrl}
+                      title="Collection Square Header"
+                      limitedSize={{ width: "500", height: "500" }}
+                    />
+                  </Stack>
                 </Stack>
 
                 {mode === "add" && (
@@ -357,6 +372,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                       name="royalFee"
                       type="number"
                       placeholder="Royal Fee"
+                      inputWidth={"8rem"}
                     />
 
                     <Spacer />

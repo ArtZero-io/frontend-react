@@ -14,8 +14,7 @@ export default function GridA({ collections, variant = "my-collection" }) {
 
   useEffect(() => {
     controls.start("visible");
-
-  }, [collections,controls]);
+  }, [collections, controls]);
 
   return (
     <motion.div
@@ -40,11 +39,11 @@ export default function GridA({ collections, variant = "my-collection" }) {
           originOffset={originOffset}
           id="grid-item-a"
         >
-          {(variant === "my-collection" && Number(c.contractType) === 2) && (
-            <SimpleModeModal mode="edit" id={c.index} />
+          {variant === "my-collection" && Number(c.contractType) === 2 && (
+            <SimpleModeModal mode="edit" id={c.index} pos={"absolute"} />
           )}
 
-          {(variant === "my-collection" && Number(c.contractType) === 1) && (
+          {variant === "my-collection" && Number(c.contractType) === 1 && (
             <AdvancedModeModal mode="edit" id={c.index} />
           )}
           <Link
@@ -89,7 +88,6 @@ function GridItemA({ delayPerPixel, i, originIndex, originOffset, children }) {
     if (i === originIndex) {
       originOffset.current = offset.current;
     }
-
   }, [i, originIndex, originOffset]);
 
   useEffect(() => {
@@ -97,7 +95,6 @@ function GridItemA({ delayPerPixel, i, originIndex, originOffset, children }) {
     const dy = Math.abs(offset.current.top - originOffset.current.top);
     const d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
     delayRef.current = d * delayPerPixel;
-
   }, [children, delayPerPixel, originOffset]);
 
   return (
@@ -105,7 +102,7 @@ function GridItemA({ delayPerPixel, i, originIndex, originOffset, children }) {
       ref={ref}
       variants={itemVariants}
       custom={delayRef}
-      style={{ position: "relative" }}
+      style={{ position: "relative", maxWidth: "24.5625rem" }}
     >
       {children}
     </motion.div>

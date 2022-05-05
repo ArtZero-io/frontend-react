@@ -105,7 +105,7 @@ export const CollectionCard = ({
             h="full"
             rounded="full"
             objectFit="cover"
-            src={getCollectionImage(avatarImage, 1000)}
+            src={getCollectionImage(avatarImage, 100)}
             fallback={<Skeleton w={16} h={16} rounded="full" />}
           />
         </Center>

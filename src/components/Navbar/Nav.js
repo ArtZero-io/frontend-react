@@ -1,8 +1,9 @@
 import React from "react";
-import { Box, Flex, VisuallyHidden } from "@chakra-ui/react";
+import { Box, Flex, Link, VisuallyHidden } from "@chakra-ui/react";
 import { NavContent } from "./NavContent";
 import AzeroLogo from "../../theme/assets/logo/ArtZeroFull_Logo.png";
 import { ArtZeroLogo } from "../../theme/assets/logo/ArtZeroLogo";
+import { Link as ReactRouterLink } from "react-router-dom";
 
 function Nav({ variant = null }) {
   return (
@@ -29,11 +30,11 @@ function Nav({ variant = null }) {
             justify="space-between"
             height="100%"
           >
-            <Box as="a" href="/" rel="home" ml="2">
+            <Link as={ReactRouterLink} to="/" rel="home" ml="2">
               <VisuallyHidden>ArtZero.io</VisuallyHidden>
 
               <ArtZeroLogo alt={AzeroLogo} />
-            </Box>
+            </Link>
             <NavContent.Desktop display={{ base: "none", md: "flex" }} />
             <NavContent.Mobile display={{ base: "flex", md: "none" }} />
           </Flex>

@@ -36,6 +36,7 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
       )}
       {mode === "edit" && (
         <IconButton
+          zIndex={"1"}
           pos="absolute"
           top="2rem"
           right="1.5rem"
@@ -45,7 +46,7 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
               color="#7ae7ff"
               fontSize="1.5rem"
               _hover={{
-                bg: "#171717",
+                border: "1px solid #171717",
               }}
               p={1}
             />
@@ -64,6 +65,7 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
         />
       )}
       <Modal
+        scrollBehavior={"inside"}
         isCentered
         isOpen={isOpenSimpleMode}
         onClose={onCloseSimpleMode}
@@ -77,6 +79,7 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
           position="relative"
           bg="brand.grayDark"
           px={6}
+          pb={8}
           borderRadius="0"
           textAlign="center"
         >
@@ -92,8 +95,28 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
               {mode === "add" ? "Simple Mode" : "Edit Collection"}
             </Heading>
           </ModalHeader>
-          <ModalBody>
-            <SimpleModeForm onClose={onCloseSimpleMode} mode={mode} id={id} nftContractAddress={nftContractAddress} />
+
+          <ModalBody
+            shadow="lg"
+            overflowY="auto"
+            sx={{
+              "&::-webkit-scrollbar": {
+                width: "0.3rem",
+                borderRadius: "1px",
+                backgroundColor: `#7ae7ff`,
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: `#7ae7ff`,
+              },
+            }}
+          >
+            <SimpleModeForm
+              maxH="60rem"
+              onClose={onCloseSimpleMode}
+              mode={mode}
+              id={id}
+              nftContractAddress={nftContractAddress}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>
