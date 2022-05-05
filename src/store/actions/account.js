@@ -1,7 +1,7 @@
 import profile_calls from "@utils/blockchain/profile_calls";
 import { AccountActionTypes } from "../types/account.types";
 
-export function getProfile() {
+export function getProfile(currentAccount) {
   return async function (dispatch) {
     const loadingName = "getProfile";
     dispatch({
@@ -10,7 +10,7 @@ export function getProfile() {
     });
 
     try {
-      const profile = await profile_calls.getProfileOnChain();
+      const profile = await profile_calls.getProfileOnChain(currentAccount);
 
       dispatch({
         type: AccountActionTypes.GET_PROFILE,
@@ -45,7 +45,7 @@ export function setProfileAttribute(data) {
   };
 }
 
-export function setMultipleAttributes(attributes, values) {
+export function setMultipleAttributes(currentAccount, attributes, values) {
   return async function (dispatch) {
     const loadingName = "setProfileAttribute";
 
@@ -55,7 +55,7 @@ export function setMultipleAttributes(attributes, values) {
     });
 
     try {
-      await profile_calls.setMultipleAttributesProfileOnChain(
+      await profile_calls.setMultipleAttributesProfileOnChain(currentAccount,
         attributes,
         values,
         dispatch

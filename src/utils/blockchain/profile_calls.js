@@ -4,13 +4,13 @@ import { web3FromSource } from "../wallets/extension-dapp";
 import { AccountActionTypes } from "@store/types/account.types";
 import { truncateStr } from "..";
 
-let account;
+// let account;
 let contract;
 
 const value = 0;
 const gasLimit = -1;
 
-export const setAccount = (newAccount) => (account = newAccount);
+// export const setAccount = (newAccount) => (account = newAccount);
 
 export const setProfileContract = (api, data) => {
   contract = new ContractPromise(
@@ -19,22 +19,21 @@ export const setProfileContract = (api, data) => {
     data?.CONTRACT_ADDRESS
   );
   console.log("contract setProfileContract", contract);
-
 };
 
-async function getWalletAddress() {
-  const address = account?.address;
+// async function getWalletAddress() {
+//   const address = account?.address;
 
-  if (address) {
-    return address;
-  } else {
-    console.log(`Unable to get wallet address.`);
-    return "";
-  }
-}
+//   if (address) {
+//     return address;
+//   } else {
+//     console.log(`Unable to get wallet address.`);
+//     return "";
+//   }
+// }
 
-export async function getProfileOnChain() {
-  const address = await getWalletAddress();
+export async function getProfileOnChain(currentAccount) {
+  const address = currentAccount?.address;
 
   let profileInfo;
 
@@ -68,16 +67,16 @@ export async function getProfileOnChain() {
   return profileInfo;
 }
 
-export async function setSingleAttributeProfileOnChain(data) {
+export async function setSingleAttributeProfileOnChain(currentAccount, data) {
   let unsubscribe;
 
-  const address = account?.address;
+  const address = currentAccount?.address;
   const gasLimit = -1;
   const value = 0;
 
-  const injector = await web3FromSource(account?.meta?.source);
+  const injector = await web3FromSource(currentAccount?.meta?.source);
 
-  account &&
+  currentAccount &&
     contract.tx
       .setProfileAttribute({ gasLimit, value }, data?.attribute, data?.value)
       .signAndSend(
@@ -102,6 +101,12 @@ export async function setSingleAttributeProfileOnChain(data) {
 
           if (status) {
             const statusText = Object.keys(status.toHuman())[0];
+
+            console.log(
+              `Profile update ${
+                statusText === "0" ? "start" : statusText.toLowerCase()
+              }.`
+            );
             toast.success(
               `Profile update ${
                 statusText === "0" ? "start" : statusText.toLowerCase()
@@ -117,19 +122,20 @@ export async function setSingleAttributeProfileOnChain(data) {
 }
 
 export async function setMultipleAttributesProfileOnChain(
+  currentAccount,
   attributes,
   values,
   dispatch
 ) {
   let unsubscribe;
 
-  const address = account?.address;
+  const address = currentAccount?.address;
   const gasLimit = -1;
   const value = 0;
 
-  const injector = await web3FromSource(account?.meta?.source);
+  const injector = await web3FromSource(currentAccount?.meta?.source);
 
-  account &&
+  currentAccount &&
     contract.tx
       .setMultipleAttributes({ gasLimit, value }, attributes, values)
       .signAndSend(
@@ -186,11 +192,9 @@ export async function setMultipleAttributesProfileOnChain(
 
 const blockchainModule = {
   getProfileOnChain,
-  setAccount,
   setProfileContract,
   setSingleAttributeProfileOnChain,
   setMultipleAttributesProfileOnChain,
-  // isLoaded,
 };
 
 export default blockchainModule;

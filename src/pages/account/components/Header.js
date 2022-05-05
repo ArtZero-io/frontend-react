@@ -33,13 +33,15 @@ function ProfileHeader() {
   const [profile, setProfile] = useState(null);
 
   const forceUpdate = useCallback(() => {
+    console.log("setProfile(null");
+
     setProfile(null);
   }, []);
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const data = await dispatch(getProfile());
-
+      const data = await dispatch(getProfile(currentAccount));
+      console.log("data", data);
       if (data.username) {
         setProfile((prev) => {
           return {
@@ -55,7 +57,7 @@ function ProfileHeader() {
   }, [currentAccount, dispatch, profile]);
 
   return (
-    <Box 
+    <Box
       mx="auto"
       px={{ base: "6", "2xl": "8" }}
       py={{ base: "8", "2xl": "14" }}
