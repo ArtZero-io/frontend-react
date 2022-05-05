@@ -4,12 +4,12 @@ import process from "process";
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 export const clientAPI = async (method, url, options) => {
-
+  if (!options) options = {};
   let urlencodedOptions = new URLSearchParams(
     Object.entries(options)
   ).toString();
 
-  
+
   const { data } = await axios({
     baseURL,
     url,
@@ -20,7 +20,7 @@ export const clientAPI = async (method, url, options) => {
       "Content-Type": "application/x-www-form-urlencoded",
     },
   });
-  
+
   if (method.toLowerCase() === "post") {
     if (data?.status === "OK") {
       return data?.ret;
