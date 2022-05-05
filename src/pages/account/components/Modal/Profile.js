@@ -8,6 +8,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
 import ProfileForm from "../Form/Profile";
+import { delay } from "@utils";
 
 export default function ProfileModal({
   profile,
@@ -21,14 +22,16 @@ export default function ProfileModal({
   useEffect(() => {
     function onCloseHandler() {
       if (tnxStatus?.status === "Finalized") {
+        console.log('Date.now()', Date.now())
         dispatch({
           type: AccountActionTypes.SET_TNX_STATUS,
           payload: null,
         });
 
-        forceUpdate();
-
-        onClose();
+        delay(3000).then(() => {
+          forceUpdate();
+          onClose();
+        });
       }
     }
 

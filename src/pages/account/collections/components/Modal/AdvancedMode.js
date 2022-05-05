@@ -26,6 +26,7 @@ function AdvancedModeModal({ mode = "add", id }) {
       )}
       {mode === "edit" && (
         <IconButton
+          zIndex={"1"}
           pos="absolute"
           top="2rem"
           right="1.5rem"
@@ -78,7 +79,20 @@ function AdvancedModeModal({ mode = "add", id }) {
               {mode === "add" ? "Advanced Mode" : "Edit Collection"}
             </Heading>
           </ModalHeader>
-          <ModalBody>
+          <ModalBody
+            shadow="lg"
+            overflowY="auto"
+            sx={{
+              "&::-webkit-scrollbar": {
+                width: "0.3rem",
+                borderRadius: "1px",
+                backgroundColor: `#7ae7ff`,
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: `#7ae7ff`,
+              },
+            }}
+          >
             <AdvancedModeForm onClose={onClose} mode={mode} id={id} />
           </ModalBody>
         </ModalContent>
