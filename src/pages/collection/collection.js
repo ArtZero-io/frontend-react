@@ -171,7 +171,7 @@ function CollectionPage() {
 
             if (token_count) {
               let NFTListFormattedAdv = [];
-
+              //console.log('token_count',token_count);
               for (let i = 1; i <= token_count; i++) {
                 const token_id = new U64(new TypeRegistry(), i);
                 const { result, output } = await nft_contract.query[
@@ -184,13 +184,14 @@ function CollectionPage() {
 
                 if (result.isOk) {
                   const token_uri = output.toHuman();
+                  //console.log('token_uri',token_uri);
                   const metadata = await clientAPI(
                     "get",
                     "/getJSON?input=" + token_uri,
                     {}
                   );
                   if (metadata) {
-                    let item = NFTList[i];
+                    let item = NFTList[i-1];
                     let attributes = [];
                     let attributeValues = [];
                     attributes.push("nftName");
@@ -223,6 +224,7 @@ function CollectionPage() {
 
                 collectionDetail.NFTListFormatted = NFTListFormattedAdv;
               }
+              console.log(collectionDetail);
               setFormattedCollection(collectionDetail);
             }
           }

@@ -328,7 +328,7 @@ function GeneralPage() {
               <Text mt={0} mb={1} fontSize="lg" color="#fff">
                 Your Estimated Earning:{" "}
                 <span style={{ color: "#7AE7FF" }}>
-                  {estimatedEarning || 0} AZERO{" "}
+                  {parseFloat(estimatedEarning).toFixed(3) || 0} AZERO{" "}
                 </span>
                 &nbsp;&nbsp;&nbsp;Next Payout:{" "}
                 <span style={{ color: "#7AE7FF" }}>July 01, 2022</span>
