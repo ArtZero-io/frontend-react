@@ -61,7 +61,7 @@ const Layout = ({ backdrop, children, variant = null }) => {
 
       <Navbar variant={variant} />
 
-      <Fade in="true" delay={0.25}>
+      <Fade in="true" delay={0.25} style={{ minHeight: "calc(100vh - 7rem)" }}>
         {children}
       </Fade>
     </Container>

@@ -4,6 +4,7 @@ import { Box, Tab, TabList, TabPanels, Tabs } from "@chakra-ui/react";
 import * as ROUTES from "@constants/routes";
 import Layout from "@components/Layout/Layout";
 import ProfileHeader from "@pages/account/components/Header";
+import { useEffect } from "react";
 
 const AccountLayout = ({ children }) => {
   const history = useHistory();
@@ -32,6 +33,10 @@ const AccountLayout = ({ children }) => {
     history.push(tabData[index].value);
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <Layout>
       <Box as="section" maxW="container.3xl" position="relative" bg="#000">
@@ -58,8 +63,13 @@ const AccountLayout = ({ children }) => {
               </Tab>
             ))}
           </TabList>
-
-          <TabPanels className="TabPanels" bg="#171717" p={0}>
+          <TabPanels
+            className="TabPanels"
+            bg="#171717"
+            // bg="blue"
+            p={0}
+            minH="calc(100vh - 49px)"
+          >
             {children}
           </TabPanels>
         </Tabs>
