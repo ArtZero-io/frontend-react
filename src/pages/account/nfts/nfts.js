@@ -49,7 +49,7 @@ const MyNFTsPage = () => {
     );
 
     let data = await Promise.all(
-      allCollectionsOwned.map(async (collection) => {
+      allCollectionsOwned?.map(async (collection) => {
         const options = {
           collection_address: collection.nftContractAddress,
           owner: currentAccount?.address,

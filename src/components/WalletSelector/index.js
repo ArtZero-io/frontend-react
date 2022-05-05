@@ -47,6 +47,7 @@ function WalletSelector(props) {
         type: AccountActionTypes.SET_ACTIVE_ADDRESS,
         payload: initialAddress,
       });
+
       setActiveAddressLocal(initialAddress);
     }
   }, [
