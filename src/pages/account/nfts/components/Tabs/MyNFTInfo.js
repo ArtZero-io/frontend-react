@@ -87,7 +87,7 @@ function MyNFTTabInfo({
   ]);
 
   const listToken = async () => {
-    if (Number(contractType) === 2) {
+    // if (Number(contractType) === 2) {
       if (owner === currentAccount?.address) {
         const nft721_psp34_standard_contract = new ContractPromise(
           api,
@@ -96,13 +96,24 @@ function MyNFTTabInfo({
         );
 
         nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-        await nft721_psp34_standard_calls.approve(
+        const isAllowance = await nft721_psp34_standard_calls.allowance(
           currentAccount,
-          marketplace.CONTRACT_ADDRESS,
+          currentAccount?.address,
+          marketplace_contract.CONTRACT_ADDRESS,
           { u64: tokenID },
-          true,
           dispatch
         );
+        if (!isAllowance){
+          toast('Approve...');
+          await nft721_psp34_standard_calls.approve(
+            currentAccount,
+            marketplace.CONTRACT_ADDRESS,
+            { u64: tokenID },
+            true,
+            dispatch
+          );
+        }
+        toast('Listing ...');
         await marketplace_contract_calls.list(
           currentAccount,
           nftContractAddress,
@@ -113,7 +124,7 @@ function MyNFTTabInfo({
       } else {
         toast.error(`This token is not yours!`);
       }
-    }
+    // }
   };
 
   const unlistToken = async () => {

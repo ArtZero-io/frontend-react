@@ -145,6 +145,7 @@ const NFTTabCollectible = ({
     }
 
     if (balance.free.gte(new BN(price))) {
+      //console.log('buy',tokenID,price);
       await marketplace_contract_calls.buy(
         currentAccount,
         nftContractAddress,
@@ -180,24 +181,17 @@ const NFTTabCollectible = ({
       return;
     }
 
-    if (bidPrice <= 0) {
+    if (parseFloat(bidPrice) <= 0) {
       toast.error(`The bid price must greater than 0!`);
       return;
     }
-    
-    // marketplace_contract_calls.setMarketplaceContract(
-    //   api,
-    //   contractData.marketplace
-    // );
 
-    const free_balance = new BN(balance.free, 10, "le")
-    .div(new BN(10 ** 12))
-    .toString();
-    
-    const price_amount = price / (10 ** 12);
-
-    if (Number(free_balance) > Number(bidPrice)) {
-      if (price_amount >= bidPrice) {
+    if (balance.free.gte(new BN(bidPrice).mul(new BN(10 ** 12)))) {
+      if ( (new BN(bidPrice)).mul(new BN(10 ** 12)).gte(new BN (price)) )
+        {
+          toast.error(`Bid Amount must less than Selling Price`);
+          return;
+        }
         await marketplace_contract_calls.bid(
           currentAccount,
           nftContractAddress,
@@ -205,11 +199,8 @@ const NFTTabCollectible = ({
           bidPrice,
           dispatch
         );
-      } else {
-        toast.error(`Must to bid an amount less the price token!`);
-      }
     } else {
-      toast.error(`Your balance not enough!`);
+      toast.error(`Not Enough Balance!`);
     }
 
     setDoOffer(false);

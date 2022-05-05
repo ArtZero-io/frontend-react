@@ -224,7 +224,7 @@ function CollectionPage() {
 
                 collectionDetail.NFTListFormatted = NFTListFormattedAdv;
               }
-              console.log(collectionDetail);
+              //console.log(collectionDetail);
               setFormattedCollection(collectionDetail);
             }
           }
