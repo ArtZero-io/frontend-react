@@ -160,7 +160,6 @@ async function mintWithAttributes(
             handleContractCall(status, dispatchError, dispatch, contract);
 
             if (status.isFinalized === true) {
-              toast.success(`Okay`);
               const token_id = await getTotalSupply(address);
               console.log("token_id", token_id);
               const update_nft_api_res = await clientAPI("post", "/updateNFT", {

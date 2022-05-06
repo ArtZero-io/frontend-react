@@ -174,6 +174,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                 setImageIPFSUrl={setAvatarIPFSUrl}
                 title="Avatar Image"
                 limitedSize={{ width: "64", height: "64" }}
+                isBanner={false}
               />
 
               {/* Add Props  */}
