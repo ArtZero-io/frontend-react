@@ -130,7 +130,7 @@ function CollectionPage() {
             setFormattedCollection(collectionDetail);
           });
         }
-
+        
         if (
           Number(collectionDetail.contractType) === 1 &&
           !collectionDetail.showOnChainMetadata
@@ -206,9 +206,10 @@ function CollectionPage() {
 
                 collectionDetail.NFTListFormatted = NFTListFormattedAdv;
               }
-              //console.log(collectionDetail);
-              setFormattedCollection(collectionDetail);
+              console.log('collectionDetail', collectionDetail);
+              
             }
+            setFormattedCollection(collectionDetail);
           }
         }
       } catch (error) {
@@ -242,6 +243,7 @@ function CollectionPage() {
       backdrop={formattedCollection?.headerImage}
       variant="collection-detail"
     >
+      {console.log('formattedCollection', formattedCollection)}
       {
         <>
           <CollectionHero {...formattedCollection} loading={loading} />
