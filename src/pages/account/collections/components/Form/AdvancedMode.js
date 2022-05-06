@@ -16,7 +16,7 @@ import AdvancedModeTextArea from "@components/TextArea/TextArea";
 
 import AddCollectionNumberInput from "../NumberInput";
 import { clientAPI } from "@api/client";
-import CommonCheckbox from "../../../../../components/Checkbox/Checkbox";
+import CommonCheckbox from "@components/Checkbox/Checkbox";
 
 const AdvancedModeForm = ({ mode = "add", id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -78,7 +78,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           royalFee,
           avatarImage,
           headerImage,
-          headerSquareImage
+          headerSquareImage,
         } = dataList;
 
         newInitialValues = {
@@ -161,18 +161,24 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               return result;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-              (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl) &&
-                toast.error("Upload images first");
+              if (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl) {
+                toast.error("Upload images first.");
+              }
+
               if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
+
                 values.avatarIPFSUrl = avatarIPFSUrl;
                 values.headerIPFSUrl = headerIPFSUrl;
                 values.headerSquareIPFSUrl = headerSquareIPFSUrl;
+
                 if (!checkCurrentBalance) {
                   return toast.error(`Your balance not enough!`);
                 }
 
                 if (!isValidAddressPolkadotAddress(values.nftContractAddress)) {
+
                   toast.error(`The NFT contract address must be an address!`);
+
                 } else {
                   const data = {
                     nftContractAddress: values.nftContractAddress,
@@ -182,7 +188,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       "description",
                       "avatar_image",
                       "header_image",
-                      "header_square_image"
+                      "header_square_image",
                     ],
 
                     attributeVals: [
@@ -190,14 +196,16 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       values.collectionDescription.trim(),
                       values.avatarIPFSUrl,
                       values.headerIPFSUrl,
-                      values.headerSquareIPFSUrl
+                      values.headerSquareIPFSUrl,
                     ],
 
                     collectionAllowRoyalFee: values.collectRoyalFee,
+
                     collectionRoyalFeeData: values.collectRoyalFee
                       ? Math.round(values.royalFee * 100)
                       : 0,
                   };
+
                   if (mode === "add") {
                     await collection_manager_calls.addNewCollection(
                       currentAccount,
@@ -270,7 +278,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   <ImageUpload
                     mode={mode}
                     isBanner={true}
-                    id="collection-header"
+                    id="collection-header-square"
                     imageIPFSUrl={headerSquareIPFSUrl}
                     setImageIPFSUrl={setHeaderSquareIPFSUrl}
                     title="Collection Square Header"

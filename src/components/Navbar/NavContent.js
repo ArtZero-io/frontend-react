@@ -33,7 +33,6 @@ const links = [
 ];
 
 const MobileNavContent = (props) => {
-
   const { isOpen, onToggle } = useDisclosure();
   return (
     <Box {...props}>
@@ -79,14 +78,15 @@ const DesktopNavContent = (props) => {
       align="stretch"
       {...props}
       overflowX="hidden"
-      alignItems="center" pl={1}
+      alignItems="center"
+      pl={1}
     >
       {links.map((link, index) => (
         <NavLink.Desktop key={index} label={link.label} to={link.href} />
       ))}
-      {/*currentAccount && currentAccount?.address && (
+      {currentAccount && currentAccount?.address && (
         <NavLink.Desktop label="Admin" to={ROUTES.ACCOUNT_ADMIN} />
-      )*/}
+      )}
       {currentAccount && currentAccount?.address && <MyAccountDropdown />}
       <WalletSelector />
     </HStack>
@@ -133,7 +133,7 @@ const MyAccountDropdown = () => {
             m={0}
             fontFamily="Evogria, sans-serif"
             fontWeight="medium"
-            color={path.includes('/account/') ? "brand.blue" : '#ccc'}
+            color={path.includes("/account/") ? "brand.blue" : "#ccc"}
           >
             My Account
           </Heading>

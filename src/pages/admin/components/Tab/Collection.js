@@ -165,7 +165,9 @@ function CollectionAdmin() {
           </Thead>
           <Tbody>
             {collectionCount === 0 ? (
-              <Center py={7}>There is no data.</Center>
+              <Tr>
+                <Center py={7}>There is no data.</Center>
+              </Tr>
             ) : (
               collections.map((collection, index) => (
                 <Tr key={index}>

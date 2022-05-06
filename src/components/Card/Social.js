@@ -11,7 +11,7 @@ import {
 import { MdEmail } from "react-icons/md";
 import { BsMedium } from "react-icons/bs";
 
-function SocialCard({ profile, pos, right, top }) {
+function SocialCard({ profile, pos, right, top, bottom }) {
   const iconList = {
     website: <FaGlobe size="1.5rem" />,
     telegram: <FaTelegram size="1.5rem" />,
@@ -24,7 +24,7 @@ function SocialCard({ profile, pos, right, top }) {
   };
 
   return (
-    <HStack textAlign="center" pos={pos} right={right} top={top}>
+    <HStack textAlign="center" pos={pos} right={right} top={top} bottom={bottom}>
       {profile.map((i, idx) => {
         return (
           <Fragment key={idx}>

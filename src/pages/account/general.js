@@ -71,10 +71,10 @@ function GeneralPage() {
         const currentProfit = await marketplace_contract_calls.getCurrentProfit(
           currentAccount
         );
-
-        setEstimatedEarning(
-          (currentProfit * 0.3 * totalStakedPromise) / platformTotalStaked
-        );
+        const estimatedEarning = platformTotalStaked
+          ? (currentProfit * 0.3 * totalStakedPromise) / platformTotalStaked
+          : 0;
+        setEstimatedEarning(estimatedEarning);
 
         Promise.all([nftListPromise, totalStakedPromise]).then(
           ([nftList, totalStaked]) => {
