@@ -24,8 +24,14 @@ function SocialCard({ profile, pos, right, top, bottom }) {
   };
 
   return (
-    <HStack textAlign="center" pos={pos} right={right} top={top} bottom={bottom}>
-      {profile.map((i, idx) => {
+    <HStack
+      textAlign="center"
+      pos={pos}
+      right={right}
+      top={top}
+      bottom={bottom}
+    >
+      {profile?.map((i, idx) => {
         return (
           <Fragment key={idx}>
             <Link isexternal="true" href={`${Object.values(i)[0]}`}>
@@ -34,6 +40,11 @@ function SocialCard({ profile, pos, right, top, bottom }) {
                 icon={iconList[Object.keys(i)[0]]}
                 size="icon"
                 variant="iconOutline"
+                _hover={{
+                  bg: "#7ae7ff",
+                  color: "black",
+                  borderWidth: "0",
+                }}
               />
             </Link>
           </Fragment>

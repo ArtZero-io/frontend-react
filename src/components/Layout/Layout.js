@@ -4,6 +4,7 @@ import Navbar from "../Navbar/Nav";
 import bgHeroFull from "@theme/assets/bg-hero-full.png";
 import { IPFS_BASE_URL } from "@constants/index";
 import process from "process";
+import { Footer } from "../Footer/Footer";
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 const Layout = ({ backdrop, children, variant = null }) => {
@@ -64,6 +65,7 @@ const Layout = ({ backdrop, children, variant = null }) => {
       <Fade in="true" delay={0.25} style={{ minHeight: "calc(100vh - 7rem)" }}>
         {children}
       </Fade>
+      <Footer />
     </Container>
   );
 };
