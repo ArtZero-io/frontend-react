@@ -25,7 +25,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
   const [addingFee, setAddingFee] = useState(0);
   const [isSetRoyal, setIsSetRoyal] = useState(false);
   const [initialValues, setInitialValues] = useState(null);
-
+  const [maxRoyalFeeRate, setMaxRoyalFeeRate] = useState(0);
+  
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
@@ -42,6 +43,19 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
     };
     fetchFee();
   }, [addingFee, currentAccount]);
+
+  useEffect(() => {
+    const fetchFee = async () => {
+      if (maxRoyalFeeRate === 0) {
+        const maxRoyalFeeRateData = await collection_manager_calls.getMaxRoyalFeeRate(
+          currentAccount
+        );
+        console.log('maxRoyalFeeRateData:', maxRoyalFeeRateData);
+        setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
+      }
+    };
+    fetchFee();
+  }, [maxRoyalFeeRate, currentAccount]);
 
   const checkCurrentBalance = async () => {
     const { data: balance } = await api.query.system.account(
@@ -310,7 +324,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       <AddCollectionNumberInput
                         isDisabled={!isSetRoyal}
                         isDisplay={isSetRoyal}
-                        label="Royal Fee (max 5%)"
+                        maxRoyalFeeRate={maxRoyalFeeRate}
+                        label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
                         name="royalFee"
                         type="number"
                         placeholder="Royal Fee"

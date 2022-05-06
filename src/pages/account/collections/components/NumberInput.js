@@ -17,6 +17,7 @@ export default function AddCollectionNumberInput({
   isDisabled,
   isDisplay,
   inputWidth,
+  maxRoyalFeeRate,
   ...props
 }) {
   return (
@@ -32,7 +33,7 @@ export default function AddCollectionNumberInput({
               isDisabled={isDisabled}
               id={name}
               min={0}
-              max={5}
+              max={maxRoyalFeeRate}
               precision={2}
               step={0.5}
               bg="black"

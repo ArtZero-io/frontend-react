@@ -218,6 +218,7 @@ async function getCollectionCount(caller_account) {
   }
   return null;
 }
+
 async function getCollectionsByOwner(caller_account, owner) {
   if (!contract || !caller_account || !isValidAddressPolkadotAddress(owner)) {
     return null;
@@ -236,6 +237,7 @@ async function getCollectionsByOwner(caller_account, owner) {
   }
   return null;
 }
+
 async function getContractById(caller_account, collection_id) {
   if (!contract || !caller_account) {
     return null;
@@ -255,6 +257,7 @@ async function getContractById(caller_account, collection_id) {
   }
   return null;
 }
+
 async function getAdminAddress(caller_account) {
   if (!contract || !caller_account) {
     return null;
@@ -273,6 +276,7 @@ async function getAdminAddress(caller_account) {
   }
   return null;
 }
+
 async function isActive(caller_account, collection_address) {
   if (
     !contract ||
@@ -294,6 +298,7 @@ async function isActive(caller_account, collection_address) {
   }
   return null;
 }
+
 async function getRoyalFee(caller_account, collection_address) {
   if (
     !contract ||
@@ -315,6 +320,7 @@ async function getRoyalFee(caller_account, collection_address) {
   }
   return null;
 }
+
 async function getContractType(caller_account, collection_address) {
   if (
     !contract ||
@@ -382,6 +388,7 @@ async function getCollectionByAddress(caller_account, collection_address) {
   }
   return null;
 }
+
 async function getAddingFee(caller_account) {
   const gasLimit = -1;
   const address = caller_account?.address;
@@ -393,6 +400,19 @@ async function getAddingFee(caller_account) {
   }
   return null;
 }
+
+async function getMaxRoyalFeeRate(caller_account) {
+  const gasLimit = -1;
+  const address = caller_account?.address;
+  const { result, output } = await contract.query.getMaxRoyalFeeRate(address, {
+    gasLimit,
+  });
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+
 async function owner(caller_account) {
   if (!contract || !caller_account) {
     return null;
@@ -538,6 +558,7 @@ const collection_manager_calls = {
   getAttributes,
   setCollectionContract,
   setMultipleAttributes,
+  getMaxRoyalFeeRate
 };
 
 export default collection_manager_calls;
