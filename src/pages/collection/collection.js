@@ -22,12 +22,9 @@ import { delay, getPublicCurrentAccount } from "../../utils";
 import Loader from "@components/Loader/CommonLoader";
 import artzero_nft from "@utils/blockchain/artzero-nft";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-// import contractData from "@utils/blockchain/index";
-// import { setMarketplaceContract } from "@utils/blockchain/marketplace_contract_calls";
 
 function CollectionPage() {
   const [formattedCollection, setFormattedCollection] = useState(null);
-  // const [isShowUnlisted, setIsShowUnlisted] = useState(false);
   const [loading, setLoading] = useState(null);
 
   const dispatch = useDispatch();
@@ -51,7 +48,7 @@ function CollectionPage() {
         setLoading(true);
 
         toast.promise(
-          delay(5000).then(() => {
+          delay(9000).then(() => {
             setFormattedCollection(null);
             setLoading(false);
           }),
@@ -102,9 +99,6 @@ function CollectionPage() {
           ? currentAccount
           : getPublicCurrentAccount();
 
-        // Create MP contract for public call
-        // setMarketplaceContract(api, contractData.marketplace);
-
         const totalListedData =
           await marketplace_contract_calls.getListedTokenCountByCollectionAddress(
             publicCurrentAccount,
@@ -118,10 +112,7 @@ function CollectionPage() {
             publicCurrentAccount,
             collection_address
           );
-          collectionDetail.volume = volumeData || 0;
-
-          console.log("volumeData", volumeData);
-        //collectionDetail.volume = 999;
+        collectionDetail.volume = volumeData || 0;
 
         if (Number(collectionDetail.contractType) === 2) {
           return Promise.all(
@@ -134,12 +125,6 @@ function CollectionPage() {
               return { ...item, ...itemData };
             })
           ).then((NFTListFormatted) => {
-            // if (isShowUnlisted) {
-            //   NFTListFormatted = NFTListFormatted?.filter(
-            //     (i) => i.is_for_sale === false
-            //   );
-            // }
-
             collectionDetail.NFTListFormatted = NFTListFormatted;
 
             setFormattedCollection(collectionDetail);
@@ -191,9 +176,10 @@ function CollectionPage() {
                     {}
                   );
                   if (metadata) {
-                    let item = NFTList[i-1];
+                    let item = NFTList[i - 1];
                     let attributes = [];
                     let attributeValues = [];
+
                     attributes.push("nftName");
                     attributes.push("description");
                     attributes.push("avatar");
@@ -203,10 +189,12 @@ function CollectionPage() {
                     attributeValues.push(metadata.image);
 
                     let length = metadata.attributes.length;
+
                     for (var index = 0; index < length; index++) {
                       attributes.push(metadata.attributes[index].trait_type);
                       attributeValues.push(metadata.attributes[index].value);
                     }
+
                     const itemData = createObjAttrsNFT(
                       attributes,
                       attributeValues
@@ -215,12 +203,6 @@ function CollectionPage() {
                     NFTListFormattedAdv.push({ ...item, ...itemData });
                   }
                 }
-
-                // if (isShowUnlisted) {
-                //   NFTListFormattedAdv = NFTListFormattedAdv?.filter(
-                //     (i) => i.is_for_sale === false
-                //   );
-                // }
 
                 collectionDetail.NFTListFormatted = NFTListFormattedAdv;
               }
@@ -239,20 +221,12 @@ function CollectionPage() {
     !formattedCollection && fetchCollectionDetail();
   }, [api, collection_address, currentAccount, formattedCollection]);
 
-  // const handleShowUnlisted = () => {
-  //   setIsShowUnlisted(!isShowUnlisted);
-  //   forceUpdate();
-  // };
-
   const tabData = [
     {
       label: "Collection Items",
       content: (
         <TabCollectionItems
           {...formattedCollection}
-          // isShowUnlisted={isShowUnlisted}
-          // setIsShowUnlisted={setIsShowUnlisted}
-          // handleShowUnlisted={handleShowUnlisted}
           forceUpdate={forceUpdate}
         />
       ),
@@ -268,9 +242,7 @@ function CollectionPage() {
       backdrop={formattedCollection?.headerImage}
       variant="collection-detail"
     >
-      {loading ? (
-        <Loader />
-      ) : (
+      {
         <>
           <CollectionHero {...formattedCollection} loading={loading} />
 
@@ -291,13 +263,13 @@ function CollectionPage() {
                   h="full"
                   flexGrow="1"
                 >
-                  {tab.content}
+                  {loading ? <Loader /> : tab.content}
                 </TabPanel>
               ))}
             </TabPanels>
           </Tabs>
         </>
-      )}
+      }
     </Layout>
   );
 }

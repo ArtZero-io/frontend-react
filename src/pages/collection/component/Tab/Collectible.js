@@ -187,18 +187,17 @@ const NFTTabCollectible = ({
     }
 
     if (balance.free.gte(new BN(bidPrice).mul(new BN(10 ** 12)))) {
-      if ( (new BN(bidPrice)).mul(new BN(10 ** 12)).gte(new BN (price)) )
-        {
-          toast.error(`Bid Amount must less than Selling Price`);
-          return;
-        }
-        await marketplace_contract_calls.bid(
-          currentAccount,
-          nftContractAddress,
-          { u64: tokenID },
-          bidPrice,
-          dispatch
-        );
+      if (new BN(bidPrice).mul(new BN(10 ** 12)).gte(new BN(price))) {
+        toast.error(`Bid Amount must less than Selling Price`);
+        return;
+      }
+      await marketplace_contract_calls.bid(
+        currentAccount,
+        nftContractAddress,
+        { u64: tokenID },
+        bidPrice,
+        dispatch
+      );
     } else {
       toast.error(`Not Enough Balance!`);
     }
@@ -398,127 +397,141 @@ const NFTTabCollectible = ({
             )}
           </HStack>
         )}
-
-        <Grid
-          boxShadow="lg"
-          my={2}
-          maxH={{ base: "8rem", "2xl": "15rem" }}
-          w="full"
-          h="full"
-          templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
-          gap={5}
-          pr={"0.25rem"}
-          overflowY="auto"
-          sx={{
-            "&::-webkit-scrollbar": {
-              width: "0.3rem",
-              borderRadius: "1px",
-              backgroundColor: `#7ae7ff`,
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: `#7ae7ff`,
-            },
-          }}
-        >
-          {attrsList?.length
-            ? attrsList
-                .filter((i) => !JSON.stringify(Object.values(i)).includes("|"))
-                .map((item, idx) => {
-                  return (
-                    <GridItem w="100%" h="100%" key={idx}>
-                      <Box
-                        w="full"
-                        textAlign="left"
-                        alignItems="end"
-                        bg="brand.semiBlack"
-                        px={4}
-                        py={3}
-                      >
-                        <Flex w="full">
-                          <Box color="brand.grayLight" w="full">
-                            <Text>{Object.keys(item)[0]}</Text>
-                            <Heading
-                              textAlign="right"
-                              size="h6"
-                              mt={1}
-                              // minH="2.5rem"
-                              isTruncated
-                              maxW={"10rem"}
-                              fontSize={{ base: "0.875rem", "2xl": "1rem" }}
-                            ></Heading>
+        {attrsList?.length === 0 ? (
+          <>
+            <Text my="3">This NFT have no props/ levels.</Text>
+          </>
+        ) : (
+          <>
+            <Grid
+              boxShadow="lg"
+              my={2}
+              maxH={{ base: "8rem", "2xl": "15rem" }}
+              w="full"
+              h="full"
+              templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
+              gap={5}
+              pr={"0.25rem"}
+              overflowY="auto"
+              sx={{
+                "&::-webkit-scrollbar": {
+                  width: "0.3rem",
+                  borderRadius: "1px",
+                  backgroundColor: `#7ae7ff`,
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: `#7ae7ff`,
+                },
+              }}
+            >
+              {attrsList?.length
+                ? attrsList
+                    .filter(
+                      (i) => !JSON.stringify(Object.values(i)).includes("|")
+                    )
+                    .map((item, idx) => {
+                      return (
+                        <GridItem w="100%" h="100%" key={idx}>
+                          <Box
+                            w="full"
+                            textAlign="left"
+                            alignItems="end"
+                            bg="brand.semiBlack"
+                            px={4}
+                            py={3}
+                          >
+                            <Flex w="full">
+                              <Box color="brand.grayLight" w="full">
+                                <Text>{Object.keys(item)[0]}</Text>
+                                <Heading
+                                  textAlign="right"
+                                  size="h6"
+                                  mt={1}
+                                  // minH="2.5rem"
+                                  isTruncated
+                                  maxW={"10rem"}
+                                  fontSize={{ base: "0.875rem", "2xl": "1rem" }}
+                                ></Heading>
+                              </Box>
+                              <Spacer />
+                            </Flex>
+                            <Flex w="full" color="#7AE7FF">
+                              <Spacer />
+                              <Text
+                                fontStyle="italic"
+                                fontSize={{ base: "0.875rem", "2xl": "1rem" }}
+                              >
+                                {Object.values(item)[0]}
+                              </Text>
+                            </Flex>
                           </Box>
-                          <Spacer />
-                        </Flex>
-                        <Flex w="full" color="#7AE7FF">
-                          <Spacer />
-                          <Text
-                            fontStyle="italic"
-                            fontSize={{ base: "0.875rem", "2xl": "1rem" }}
+                        </GridItem>
+                      );
+                    })
+                : ""}
+
+              {attrsList?.length
+                ? attrsList
+                    .filter((i) =>
+                      JSON.stringify(Object.values(i)).includes("|")
+                    )
+                    .map((item, idx) => {
+                      return (
+                        <React.Fragment key={idx}>
+                          <Box
+                            w="full"
+                            textAlign="left"
+                            alignItems="end"
+                            bg="brand.semiBlack"
+                            p={2}
+                            // my={2}
+                            minW="30%"
+                            maxH={"4.625rem"}
                           >
-                            {Object.values(item)[0]}
-                          </Text>
-                        </Flex>
-                      </Box>
-                    </GridItem>
-                  );
-                })
-            : ""}
+                            <Flex w="full" my={2}>
+                              <Heading
+                                size="h6"
+                                mt={1}
+                                color="#fff"
+                                fontSize={{ base: "1rem", "2xl": "1.125rem" }}
+                              >
+                                {Object.keys(item)[0]}
+                              </Heading>
 
-          {attrsList?.length
-            ? attrsList
-                .filter((i) => JSON.stringify(Object.values(i)).includes("|"))
-                .map((item, idx) => {
-                  return (
-                    <React.Fragment key={idx}>
-                      <Box
-                        w="full"
-                        textAlign="left"
-                        alignItems="end"
-                        bg="brand.semiBlack"
-                        p={2}
-                        // my={2}
-                        minW="30%"
-                        maxH={"4.625rem"}
-                      >
-                        <Flex w="full" my={2}>
-                          <Heading
-                            size="h6"
-                            mt={1}
-                            color="#fff"
-                            fontSize={{ base: "1rem", "2xl": "1.125rem" }}
-                          >
-                            {Object.keys(item)[0]}
-                          </Heading>
+                              <Spacer />
+                              <Text color="#fff">
+                                {
+                                  createLevelAttribute(Object.values(item)[0])
+                                    .level
+                                }{" "}
+                                of{" "}
+                                {
+                                  createLevelAttribute(Object.values(item)[0])
+                                    .levelMax
+                                }
+                              </Text>
+                            </Flex>
 
-                          <Spacer />
-                          <Text color="#fff">
-                            {createLevelAttribute(Object.values(item)[0]).level}{" "}
-                            of{" "}
-                            {
-                              createLevelAttribute(Object.values(item)[0])
-                                .levelMax
-                            }
-                          </Text>
-                        </Flex>
-
-                        <Progress
-                          colorScheme="telegram"
-                          size="sm"
-                          value={Number(
-                            (createLevelAttribute(Object.values(item)[0])
-                              .level *
-                              100) /
-                              createLevelAttribute(Object.values(item)[0])
-                                .levelMax
-                          )}
-                          height="6px"
-                        />
-                      </Box>
-                    </React.Fragment>
-                  );
-                })
-            : null}
-        </Grid>
+                            <Progress
+                              colorScheme="telegram"
+                              size="sm"
+                              value={Number(
+                                (createLevelAttribute(Object.values(item)[0])
+                                  .level *
+                                  100) /
+                                  createLevelAttribute(Object.values(item)[0])
+                                    .levelMax
+                              )}
+                              height="6px"
+                            />
+                          </Box>
+                        </React.Fragment>
+                      );
+                    })
+                : null}
+            </Grid>
+          </>
+        )}
       </Flex>
     </Flex>
   );

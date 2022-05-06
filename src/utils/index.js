@@ -6,23 +6,25 @@ import Keyring from "@polkadot/keyring";
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
-export function getCachedImage (imageHash, size, url) {
+export function getCachedImage(imageHash, size, url) {
   // console.log('getImage',imageHash, size, url)
-  return baseURL + '/getImage?input=' + imageHash + '&size=' + size + '&url=' + url;
+  return (
+    baseURL + "/getImage?input=" + imageHash + "&size=" + size + "&url=" + url
+  );
 }
 
 export function shortenNumber(number) {
-  return nFormatter(number,1);
+  return nFormatter(number, 1);
 }
 function nFormatter(num, digits) {
   var si = [
     { value: 1, symbol: "" },
-    { value: 1E3, symbol: "k" },
-    { value: 1E6, symbol: "M" },
-    { value: 1E9, symbol: "G" },
-    { value: 1E12, symbol: "T" },
-    { value: 1E15, symbol: "P" },
-    { value: 1E18, symbol: "E" }
+    { value: 1e3, symbol: "k" },
+    { value: 1e6, symbol: "M" },
+    { value: 1e9, symbol: "G" },
+    { value: 1e12, symbol: "T" },
+    { value: 1e15, symbol: "P" },
+    { value: 1e18, symbol: "E" },
   ];
   var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
   var i;
@@ -49,7 +51,7 @@ export function convertStringToPrice(stringPrice) {
   try {
     /* eslint-disable no-useless-escape */
     const a = stringPrice.replace(/\,/g, "");
-    let price = (new BN(a, 10)).div(new BN(10**6)).toNumber();
+    let price = new BN(a, 10).div(new BN(10 ** 6)).toNumber();
     return price / 10 ** 6;
   } catch (error) {
     console.log(error);
@@ -71,7 +73,7 @@ export function isValidAddressPolkadotAddress(address) {
     return true;
   } catch (error) {
     console.log(error);
-    console.log('address',address);
+    console.log("address", address);
 
     return false;
   }

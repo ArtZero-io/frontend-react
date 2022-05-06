@@ -9,7 +9,7 @@ import React from "react";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import NFTTabCollectible from "../Tab/Collectible";
 import NFTTabActivity from "../Tab/Activity";
- 
+
 function NFTDetailModal({ isOpen, onClose, ...rest }) {
   const tabHeight = useBreakpointValue({ base: `2.5rem`, "2xl": `4.5rem` });
 
@@ -19,7 +19,8 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
       content: <NFTTabCollectible {...rest} />,
     },
     {
-      label: "Activity",
+      // Before is label: "Activity",
+      label: "Offers",
       content: <NFTTabActivity {...rest} />,
     },
   ];

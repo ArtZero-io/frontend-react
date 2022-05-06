@@ -40,8 +40,6 @@ async function addNewCollection(caller_account, data, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(status, dispatchError, dispatch, contract);
-
         if (status.isFinalized === true) {
           console.log("status", status);
           const update_collection_api_res = await clientAPI(
@@ -62,6 +60,8 @@ async function addNewCollection(caller_account, data, dispatch) {
         }
 
         if (status) {
+          handleContractCall(status, dispatchError, dispatch, contract);
+
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Add New Collection ${
@@ -107,23 +107,24 @@ async function autoNewCollection(caller_account, data, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(status, dispatchError, dispatch, contract);
-        // if (dispatchError) {
-        //   if (dispatchError.isModule) {
-        //     toast.error(`There is some error with your request`);
-        //   } else {
-        //     console.log("dispatchError ", dispatchError.toString());
-        //   }
-        // }
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError ", dispatchError.toString());
+          }
+        }
 
-        // if (status) {
-        //   const statusText = Object.keys(status.toHuman())[0];
-        //   toast.success(
-        //     `Add New Collection ${
-        //       statusText === "0" ? "started" : statusText.toLowerCase()
-        //     }.`
-        //   );
-        // }
+        if (status) {
+          handleContractCall(status, dispatchError, dispatch, contract);
+
+          const statusText = Object.keys(status.toHuman())[0];
+          toast.success(
+            `Add New Collection ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
       }
     )
     .then((unsub) => {
@@ -480,7 +481,6 @@ async function setMultipleAttributes(
         address,
         { signer: injector.signer },
         async ({ status, dispatchError }) => {
-          handleContractCall(status, dispatchError, dispatch, contract);
           if (dispatchError) {
             if (dispatchError.isModule) {
               toast.error(`There is some error with your request`);
@@ -490,6 +490,8 @@ async function setMultipleAttributes(
           }
 
           if (status) {
+            handleContractCall(status, dispatchError, dispatch, contract);
+
             const statusText = Object.keys(status.toHuman())[0];
             toast.success(
               `Update Collection Attributes ${

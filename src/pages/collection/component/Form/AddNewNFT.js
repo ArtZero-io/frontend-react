@@ -64,36 +64,29 @@ const AddNewNFTForm = ({ collectionOwner }) => {
             Yup.object().shape({
               type: Yup.string()
                 .min(3, "Must be longer than 3 characters")
-                .max(30, "Must be less than 30 characters")
-                .required("Required"),
+                .max(30, "Must be less than 30 characters"),
               name: Yup.string()
                 .min(3, "Must be longer than 3 characters")
-                .max(30, "Must be less than 30 characters")
-                .required("Required"),
+                .max(30, "Must be less than 30 characters"),
             })
           )
-            .min(1)
-            .max(9),
+            .min(0)
+            .max(6),
           levels: Yup.array(
             Yup.object().shape({
               name: Yup.string()
                 .min(3, "Must be longer than 3 characters")
-                .max(30, "Must be less than 30 characters")
-                .required("Required"),
-
+                .max(30, "Must be less than 30 characters"),
               level: Yup.number()
                 .min(1, "Must be bigger than 0")
-                .max(Yup.ref("level"), "Must smaller than max")
-                .required("Required"),
-
+                .max(Yup.ref("level"), "Must smaller than max"),
               levelMax: Yup.number()
                 .min(Yup.ref("level"), "Must greater than level")
-                .max(10, "Must be smaller than 10")
-                .required("Required"),
+                .max(10, "Must be smaller than 10"),
             })
           )
-            .min(1)
-            .max(9),
+            .min(0)
+            .max(6),
         })}
         onSubmit={async (values, { setSubmitting }) => {
           !avatarIPFSUrl && toast.error("Upload images first");

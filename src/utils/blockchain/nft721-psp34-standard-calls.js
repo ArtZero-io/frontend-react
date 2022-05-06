@@ -147,7 +147,6 @@ async function mintWithAttributes(
         address,
         { signer: injector.signer },
         async ({ status, dispatchError, output }) => {
-          handleContractCall(status, dispatchError, dispatch, contract);
 
           if (dispatchError) {
             if (dispatchError.isModule) {
@@ -158,6 +157,8 @@ async function mintWithAttributes(
           }
           console.log("mintWithAttributes output:", output);
           if (status) {
+            handleContractCall(status, dispatchError, dispatch, contract);
+
             if (status.isFinalized === true) {
               toast.success(`Okay`);
               const token_id = await getTotalSupply(address);
@@ -297,7 +298,6 @@ async function approve(
     address,
     { signer: injector.signer },
     ({ status, dispatchError }) => {
-      handleContractCall(status, dispatchError, dispatch, contract);
 
       if (dispatchError) {
         if (dispatchError.isModule) {
@@ -308,6 +308,8 @@ async function approve(
       }
 
       if (status) {
+        handleContractCall(status, dispatchError, dispatch, contract);
+
         const statusText = Object.keys(status.toHuman())[0];
         if (status.isFinalized) {
           console.log(status.toHuman());

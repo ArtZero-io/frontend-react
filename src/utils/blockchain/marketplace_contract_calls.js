@@ -386,7 +386,6 @@ async function list(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(status, dispatchError, dispatch, contract);
 
         if (dispatchError) {
           if (dispatchError.isModule) {
@@ -397,6 +396,8 @@ async function list(
         }
 
         if (status) {
+          handleContractCall(status, dispatchError, dispatch, contract);
+
           const statusText = Object.keys(status.toHuman())[0];
           if (status.isFinalized === true) {
             // toast.success(`Okay`);
@@ -445,7 +446,6 @@ async function unlist(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(status, dispatchError, dispatch, contract);
 
         if (dispatchError) {
           if (dispatchError.isModule) {
@@ -456,6 +456,8 @@ async function unlist(
         }
 
         if (status) {
+          handleContractCall(status, dispatchError, dispatch, contract);
+
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Unlist NFT ${
@@ -478,7 +480,13 @@ async function unlist(
     .catch((e) => console.log("e", e));
   return unsubscribe;
 }
-async function bid(caller_account, nft_contract_address, token_id, bid_amount, dispatch) {
+async function bid(
+  caller_account,
+  nft_contract_address,
+  token_id,
+  bid_amount,
+  dispatch
+) {
   if (
     !contract ||
     !caller_account ||
@@ -502,7 +510,6 @@ async function bid(caller_account, nft_contract_address, token_id, bid_amount, d
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -512,6 +519,8 @@ async function bid(caller_account, nft_contract_address, token_id, bid_amount, d
         }
 
         if (status) {
+          handleContractCall(status, dispatchError, dispatch, contract);
+
           const statusText = Object.keys(status.toHuman())[0];
           const update_bid_api_res = await clientAPI("post", "/updateBids", {
             collection_address: nft_contract_address,
@@ -532,7 +541,12 @@ async function bid(caller_account, nft_contract_address, token_id, bid_amount, d
   return unsubscribe;
 }
 
-async function removeBid(caller_account, nft_contract_address, token_id, dispatch) {
+async function removeBid(
+  caller_account,
+  nft_contract_address,
+  token_id,
+  dispatch
+) {
   if (
     !contract ||
     !caller_account ||
@@ -554,7 +568,6 @@ async function removeBid(caller_account, nft_contract_address, token_id, dispatc
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -564,6 +577,8 @@ async function removeBid(caller_account, nft_contract_address, token_id, dispatc
         }
 
         if (status) {
+          handleContractCall(status, dispatchError, dispatch, contract);
+
           const update_bid_api_res = await clientAPI("post", "/updateBids", {
             collection_address: nft_contract_address,
             seller: address,
@@ -584,7 +599,13 @@ async function removeBid(caller_account, nft_contract_address, token_id, dispatc
   return unsubscribe;
 }
 
-async function buy(caller_account, nft_contract_address, token_id, price, dispatch) {
+async function buy(
+  caller_account,
+  nft_contract_address,
+  token_id,
+  price,
+  dispatch
+) {
   if (
     !contract ||
     !caller_account ||
@@ -606,7 +627,6 @@ async function buy(caller_account, nft_contract_address, token_id, price, dispat
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -629,7 +649,6 @@ async function buy(caller_account, nft_contract_address, token_id, price, dispat
             }.`
           );
         }
-
       }
     )
     .then((unsub) => (unsubscribe = unsub))
@@ -640,7 +659,8 @@ async function acceptBid(
   caller_account,
   nft_contract_address,
   token_id,
-  bidIndex,dispatch
+  bidIndex,
+  dispatch
 ) {
   if (
     !contract ||
@@ -668,7 +688,6 @@ async function acceptBid(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -678,6 +697,8 @@ async function acceptBid(
         }
 
         if (status) {
+          handleContractCall(status, dispatchError, dispatch, contract);
+
           const statusText = Object.keys(status.toHuman())[0];
           if (status.isFinalized === true) {
             toast.success(`Okay`);

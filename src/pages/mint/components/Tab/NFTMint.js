@@ -5,7 +5,7 @@ import MyNFTCard from "../../../account/components/Card/MyNFT";
 function NFTMintTab({ myAZNFTs }) {
   return (
     <Box
-      // minH={"xl"}
+      minH={"xs"}
       mx="auto"
       px={{ base: "6", "2xl": "8" }}
       py={{ base: "8", "2xl": "4" }}

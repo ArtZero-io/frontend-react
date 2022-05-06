@@ -256,7 +256,6 @@ async function whitelistMint(caller_account, mint_amount, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(status, dispatchError, dispatch, contract);
 
         if (dispatchError) {
           if (dispatchError.isModule) {
@@ -267,6 +266,8 @@ async function whitelistMint(caller_account, mint_amount, dispatch) {
         }
 
         if (status) {
+          handleContractCall(status, dispatchError, dispatch, contract);
+
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Whitelist minting ${
@@ -298,7 +299,6 @@ async function paidMint(caller_account, fee, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(status, dispatchError, dispatch, contract);
 
         if (dispatchError) {
           if (dispatchError.isModule) {
@@ -309,6 +309,8 @@ async function paidMint(caller_account, fee, dispatch) {
         }
 
         if (status) {
+          handleContractCall(status, dispatchError, dispatch, contract);
+
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Public Minting ${

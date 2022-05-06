@@ -176,7 +176,6 @@ async function stake(caller_account, token_ids, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -186,6 +185,8 @@ async function stake(caller_account, token_ids, dispatch) {
         }
 
         if (status) {
+          handleContractCall(status, dispatchError, dispatch, contract);
+
           for (var i = 0; i < token_ids.length; i++) {
             await clientAPI("post", "/updateNFT", {
               collection_address: artzero_nft.CONTRACT_ADDRESS,
@@ -225,7 +226,6 @@ async function unstake(caller_account, token_ids, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -235,6 +235,8 @@ async function unstake(caller_account, token_ids, dispatch) {
         }
 
         if (status) {
+          handleContractCall(status, dispatchError, dispatch, contract);
+
           for (var i = 0; i < token_ids.length; i++) {
             await clientAPI("post", "/updateNFT", {
               collection_address: artzero_nft.CONTRACT_ADDRESS,
@@ -273,7 +275,6 @@ async function requestUnstake(caller_account, token_ids, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -283,6 +284,8 @@ async function requestUnstake(caller_account, token_ids, dispatch) {
         }
 
         if (status) {
+          handleContractCall(status, dispatchError, dispatch, contract);
+
           for (var i = 0; i < token_ids.length; i++) {
             await clientAPI("post", "/updateNFT", {
               collection_address: artzero_nft.CONTRACT_ADDRESS,
@@ -321,7 +324,6 @@ async function cancelRequestUnstake(caller_account, token_ids, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        handleContractCall(status, dispatchError, dispatch, contract);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -331,6 +333,8 @@ async function cancelRequestUnstake(caller_account, token_ids, dispatch) {
         }
 
         if (status) {
+          handleContractCall(status, dispatchError, dispatch, contract);
+
           for (var i = 0; i < token_ids.length; i++) {
             await clientAPI("post", "/updateNFT", {
               collection_address: artzero_nft.CONTRACT_ADDRESS,
