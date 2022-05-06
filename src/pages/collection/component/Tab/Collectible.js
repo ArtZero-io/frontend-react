@@ -260,7 +260,7 @@ const NFTTabCollectible = ({
               <Text color="#fff" pb={2}>
                 Owned by{" "}
                 <Link color="#7AE7FF">
-                  {saleInfo ? truncateStr(saleInfo.nftOwner, 6) : owner}
+                  {truncateStr(owner, 6)}
                 </Link>
               </Text>
             </motion.div>
@@ -271,7 +271,7 @@ const NFTTabCollectible = ({
           <Heading size="h6">Not for sale</Heading>
         ) : (
           <HStack w="full" py={2}>
-            {currentAccount?.address !== saleInfo?.nftOwner && (
+            {currentAccount?.address !== saleInfo?.nftOwner && is_for_sale && (
               <>
                 <Flex
                   w="full"
@@ -314,7 +314,7 @@ const NFTTabCollectible = ({
                   </Flex>
                 </Flex>
 
-                {!doOffer && (
+                {!doOffer && is_for_sale && (
                   <Flex
                     w="full"
                     alignItems="center"
