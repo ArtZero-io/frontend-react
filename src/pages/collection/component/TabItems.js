@@ -36,7 +36,7 @@ const CollectionItems = ({
   const [bigCard, setBigCard] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
 
-  const [isShowUnlisted, setIsShowUnlisted] = useState(false);
+  const [isShowUnlisted, setIsShowUnlisted] = useState(3);
 
   const options = [
     // "Price: Newest",
@@ -60,8 +60,14 @@ const CollectionItems = ({
 
     // if (!isShowUnlisted) result = NFTListFormatted;
 
-    if (isShowUnlisted) {
-      result = result.filter((i) => i.is_for_sale === !isShowUnlisted);
+    if (isShowUnlisted % 3 === 0) {
+      return result;
+    }
+    if (isShowUnlisted % 3 === 1) {
+      result = result.filter((i) => i.is_for_sale === true);
+    }
+    if (isShowUnlisted % 3 === 2) {
+      result = result.filter((i) => i.is_for_sale === false);
     }
 
     return result;
@@ -84,9 +90,17 @@ const CollectionItems = ({
           mx={1.5}
           variant="outline"
           minW={"11rem"}
-          onClick={() => setIsShowUnlisted(!isShowUnlisted)}
+          onClick={() =>
+            setIsShowUnlisted((isShowUnlisted) => isShowUnlisted + 1)
+          }
         >
-          {isShowUnlisted ? "Show all" : "Show unlisted"}
+          {isShowUnlisted % 3 === 0
+            ? "Show all"
+            : isShowUnlisted % 3 === 1
+            ? "Show listed"
+            : isShowUnlisted % 3 === 2
+            ? "Show unlisted"
+            : ""}
         </Button>
         {/* 
         <Input
@@ -128,7 +142,16 @@ const CollectionItems = ({
       </Flex>
 
       <Flex align="center" py={4} minH={24}>
-        <Text px={2}>{unListNFT.length || 0} items</Text>
+        <Text px={2}>
+          {unListNFT.length || 0} items{" "}
+          {isShowUnlisted % 3 === 0
+            ? "in total"
+            : isShowUnlisted % 3 === 1
+            ? "listed"
+            : isShowUnlisted % 3 === 2
+            ? "unlisted"
+            : ""}
+        </Text>
 
         <Spacer />
 
@@ -141,8 +164,6 @@ const CollectionItems = ({
       </Flex>
 
       <GridNftA bigCard={bigCard} listNFTFormatted={unListNFT} />
-
-      {/* <CollectionNFTGrid bigCard={bigCard} nftList={NFTListFormatted} /> */}
     </Box>
   );
 };

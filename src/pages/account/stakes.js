@@ -126,6 +126,7 @@ const MyStakesPage = () => {
       if (az_collection?.length) {
         az_collection[0].listNFT = my_az_nfts;
       }
+      console.log('az_collection', az_collection)
       setCurrentTabList(az_collection);
     }
   };
@@ -296,7 +297,8 @@ if(az_collection.length){
         ) : (
           currentTabList?.map((item) => <MyNFTGroupCard {...item} />)
           )} */}
-        {currentTabList?.length === 0 ? (
+          {console.log('currentTabList', currentTabList)}
+        {currentTabList?.listNFT?.length === 0 ? (
           <Text>No NFTs found</Text>
         ) : (
           currentTabList?.map((item, idx) => <MyNFTGroupCard {...item} key={idx}/>)

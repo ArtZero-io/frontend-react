@@ -12,6 +12,7 @@ import {
   Input,
   HStack,
   Heading,
+  Center,
 } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
@@ -379,7 +380,7 @@ function ContractTab() {
                 <Tbody>
                   {whitelist.length === 0 ? (
                     <Tr color="#fff">
-                      <Td py={7}>There is no data.</Td>
+                      <Center py={7}>There is no data.</Center>
                     </Tr>
                   ) : (
                     whitelist.map((wl, index) => (

@@ -1,4 +1,4 @@
-import { Box, Flex, Text, HStack, Center, Button } from "@chakra-ui/react";
+import { Box, Flex, Text, HStack, Button } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
@@ -116,7 +116,7 @@ function CollectionAdmin() {
             </Text>
           </Flex>
         </HStack>
-        <HStack pb={5} borderBottomWidth={1}>
+        <HStack py={5} borderBottomWidth={1}>
           <Flex alignItems="start" pr={20}>
             <Text ml={1} color="brand.grayLight">
               Collection Contract Owner:{" "}
@@ -166,7 +166,7 @@ function CollectionAdmin() {
           <Tbody>
             {collectionCount === 0 ? (
               <Tr>
-                <Center py={7}>There is no data.</Center>
+                <Td py={7}>There is no data.</Td>
               </Tr>
             ) : (
               collections.map((collection, index) => (
@@ -220,29 +220,6 @@ function CollectionAdmin() {
             )}
           </Tbody>
         </Table>
-
-        {/* next tab */}
-        <Box as="section" pt="20" pb="12" position="relative">
-          <Flex color="white">
-            <Box hidden flex="1" bg="blue.500" margin="2" padding="2">
-              <Text>
-                {" "}
-                <strong>Quản lý Collection:</strong>
-              </Text>
-              <Text>
-                Total Collection: <strong>{collectionCount}</strong>
-              </Text>
-              <Text>
-                Collection Contract Owner:{" "}
-                <strong>{truncateStr(collectionContractOwner, 9)}</strong>
-              </Text>
-              <Text>
-                Collection Contract Balance:{" "}
-                <strong>{collectionContractBalance} SZERO</strong>
-              </Text>
-            </Box>
-          </Flex>
-        </Box>
       </Box>
     </Box>
   );

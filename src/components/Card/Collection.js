@@ -66,6 +66,7 @@ export const CollectionCard = ({
         <Box
           pos="relative"
           width="full"
+          h={"16.25rem"}
           sx={{
             ".my-collection-card:hover &": {
               _before: {
