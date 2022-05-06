@@ -10,12 +10,15 @@ export function getProfile(currentAccount) {
     });
 
     try {
-      const profile = await profile_calls.getProfileOnChain(currentAccount);
+      const res = await profile_calls.getProfileOnChain(currentAccount);
 
+      
       dispatch({
         type: AccountActionTypes.GET_PROFILE,
       });
-      return profile;
+
+      return res;
+      
     } catch (error) {
       dispatch({
         type: AccountActionTypes.ACCOUNT_ERROR,

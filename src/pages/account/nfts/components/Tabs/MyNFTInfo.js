@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -88,42 +88,42 @@ function MyNFTTabInfo({
 
   const listToken = async () => {
     // if (Number(contractType) === 2) {
-      if (owner === currentAccount?.address) {
-        const nft721_psp34_standard_contract = new ContractPromise(
-          api,
-          nft721_psp34_standard.CONTRACT_ABI,
-          nftContractAddress
-        );
+    if (owner === currentAccount?.address) {
+      const nft721_psp34_standard_contract = new ContractPromise(
+        api,
+        nft721_psp34_standard.CONTRACT_ABI,
+        nftContractAddress
+      );
 
-        nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-        const isAllowance = await nft721_psp34_standard_calls.allowance(
+      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+      const isAllowance = await nft721_psp34_standard_calls.allowance(
+        currentAccount,
+        currentAccount?.address,
+        marketplace_contract.CONTRACT_ADDRESS,
+        { u64: tokenID },
+        dispatch
+      );
+      if (!isAllowance) {
+        toast("Approve...");
+        await nft721_psp34_standard_calls.approve(
           currentAccount,
-          currentAccount?.address,
-          marketplace_contract.CONTRACT_ADDRESS,
+          marketplace.CONTRACT_ADDRESS,
           { u64: tokenID },
+          true,
           dispatch
         );
-        if (!isAllowance){
-          toast('Approve...');
-          await nft721_psp34_standard_calls.approve(
-            currentAccount,
-            marketplace.CONTRACT_ADDRESS,
-            { u64: tokenID },
-            true,
-            dispatch
-          );
-        }
-        toast('Listing ...');
-        await marketplace_contract_calls.list(
-          currentAccount,
-          nftContractAddress,
-          { u64: tokenID },
-          askPrice,
-          dispatch
-        );
-      } else {
-        toast.error(`This token is not yours!`);
       }
+      toast("Listing ...");
+      await marketplace_contract_calls.list(
+        currentAccount,
+        nftContractAddress,
+        { u64: tokenID },
+        askPrice,
+        dispatch
+      );
+    } else {
+      toast.error(`This token is not yours!`);
+    }
     // }
   };
 
@@ -223,40 +223,42 @@ function MyNFTTabInfo({
           {attrsList?.length
             ? attrsList
                 .filter((i) => !JSON.stringify(Object.values(i)).includes("|"))
-                .map((item) => {
+                .map((item, idx) => {
                   return (
-                    <GridItem w="100%" h="100%">
-                      <Box
-                        w="full"
-                        textAlign="left"
-                        alignItems="end"
-                        bg="brand.semiBlack"
-                        px={4}
-                        py={3}
-                      >
-                        <Flex w="full">
-                          <Box color="brand.grayLight" w="full">
-                            <Text>{Object.keys(item)[0]}</Text>
-                            <Heading
-                              textAlign="right"
-                              size="h6"
-                              mt={1}
-                              // minH='2.5rem'
-                              isTruncated
-                              maxW={"10rem"}
-                              fontSize={{ base: "0.875rem", "2xl": "1rem" }}
-                            ></Heading>
-                          </Box>
-                          <Spacer />
-                        </Flex>
-                        <Flex w="full" color="#7AE7FF">
-                          <Spacer />
-                          <Text fontStyle="italic">
-                            {Object.values(item)[0]}
-                          </Text>
-                        </Flex>
-                      </Box>
-                    </GridItem>
+                    <Fragment key={idx}>
+                      <GridItem w="100%" h="100%">
+                        <Box
+                          w="full"
+                          textAlign="left"
+                          alignItems="end"
+                          bg="brand.semiBlack"
+                          px={4}
+                          py={3}
+                        >
+                          <Flex w="full">
+                            <Box color="brand.grayLight" w="full">
+                              <Text>{Object.keys(item)[0]}</Text>
+                              <Heading
+                                textAlign="right"
+                                size="h6"
+                                mt={1}
+                                // minH='2.5rem'
+                                isTruncated
+                                maxW={"10rem"}
+                                fontSize={{ base: "0.875rem", "2xl": "1rem" }}
+                              ></Heading>
+                            </Box>
+                            <Spacer />
+                          </Flex>
+                          <Flex w="full" color="#7AE7FF">
+                            <Spacer />
+                            <Text fontStyle="italic">
+                              {Object.values(item)[0]}
+                            </Text>
+                          </Flex>
+                        </Box>
+                      </GridItem>
+                    </Fragment>
                   );
                 })
             : ""}

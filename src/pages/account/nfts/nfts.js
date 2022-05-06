@@ -272,8 +272,8 @@ const MyNFTsPage = () => {
           )}
 
           {myCollections &&
-            myCollections?.map((item) => {
-              return <MyNFTGroupCard {...item} />;
+            myCollections?.map((item, idx) => {
+              return <MyNFTGroupCard {...item} key={idx} />;
             })}
         </>
       </Box>

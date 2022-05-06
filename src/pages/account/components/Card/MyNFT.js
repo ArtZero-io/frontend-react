@@ -53,7 +53,7 @@ function MyNFTCard({
     setUnstakeRequestTime(time);
   };
   const requestUpdateNFT = async () => {
-    console.log("request update", nftContractAddress, tokenID);
+    console.log("MyNFTCard request updateNFT", nftContractAddress, tokenID);
     await clientAPI("post", "/updateNFT", {
       collection_address: nftContractAddress,
       token_id: tokenID,

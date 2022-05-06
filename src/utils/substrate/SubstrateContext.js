@@ -2,27 +2,12 @@ import React, { useReducer, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import jsonrpc from "@polkadot/types/interfaces/jsonrpc";
 import { ApiPromise, WsProvider } from "@polkadot/api";
-// import { ContractPromise } from "@polkadot/api-contract";
 import { web3Accounts, web3Enable } from "../wallets/extension-dapp";
 import { keyring as Keyring } from "@polkadot/ui-keyring";
 import { isTestChain } from "@polkadot/util";
 import { TypeRegistry } from "@polkadot/types/create";
 
 import config from "./config";
-import blockchainModule from "../blockchain/profile_calls";
-// import profile from "../blockchain/profile";
-
-// import artzero_nft from "../blockchain/artzero-nft";
-// import artzero_nft_calls from "../blockchain/artzero-nft-calls";
-
-// import marketplace from "../blockchain/marketplace";
-// import marketplace_contract_calls from "../blockchain/marketplace_contract_calls";
-
-// import staking from "../blockchain/staking";
-// import staking_calls from "../blockchain/staking_calls";
-
-// import collection_manager from "../blockchain/collection-manager";
-// import collection_manager_calls from "../blockchain/collection-manager-calls";
 
 const parsedQuery = new URLSearchParams(window.location.search);
 const connectedSocket = parsedQuery.get("rpc") || config.PROVIDER_SOCKET;
@@ -209,7 +194,7 @@ const SubstrateContextProvider = (props) => {
 
   function setCurrentAccount(acct) {
     dispatch({ type: "SET_CURRENT_ACCOUNT", payload: acct });
-    blockchainModule.setAccount(acct);
+    // blockchainModule.setAccount(acct);
     window.localStorage.setItem("currentAccount", JSON.stringify(acct));
   }
 

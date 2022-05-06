@@ -123,7 +123,9 @@ const MyStakesPage = () => {
         return { ...item, stakeStatus: 1 };
       });
       my_az_nfts = data;
-      az_collection[0].listNFT = my_az_nfts;
+      if (az_collection?.length) {
+        az_collection[0].listNFT = my_az_nfts;
+      }
       setCurrentTabList(az_collection);
     }
   };
@@ -190,11 +192,13 @@ const MyStakesPage = () => {
 
   const onClickHandler = async (e) => {
     const id = e.target.getAttribute("id").toString();
+if(az_collection.length){
 
-    if (id === "staked") az_collection[0].listNFT = my_staked_az_nfts;
-    else if (id === "notStaked") az_collection[0].listNFT = my_az_nfts;
-    else if (id === "pending") az_collection[0].listNFT = my_pending_az_nfts;
-    // console.log(az_collection);
+  if (id === "staked") az_collection[0].listNFT = my_staked_az_nfts;
+  else if (id === "notStaked") az_collection[0].listNFT = my_az_nfts;
+  else if (id === "pending") az_collection[0].listNFT = my_pending_az_nfts;
+  // console.log(az_collection);
+}
     setCurrentTabList(az_collection);
     setCurrentTab(id);
   };
@@ -295,7 +299,7 @@ const MyStakesPage = () => {
         {currentTabList?.length === 0 ? (
           <Text>No NFTs found</Text>
         ) : (
-          currentTabList?.map((item) => <MyNFTGroupCard {...item} />)
+          currentTabList?.map((item, idx) => <MyNFTGroupCard {...item} key={idx}/>)
         )}
       </Box>
     </Box>

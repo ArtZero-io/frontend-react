@@ -23,6 +23,7 @@ import { IPFS_BASE_URL } from "@constants/index";
 import { useSubstrateState } from "@utils/substrate";
 
 import ProfileModal from "./Modal/Profile";
+import toast from "react-hot-toast";
 
 function ProfileHeader() {
   const dispatch = useDispatch();
@@ -40,20 +41,23 @@ function ProfileHeader() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const data = await dispatch(getProfile(currentAccount));
-      console.log("data", data);
-      if (data.username) {
+      const res = await dispatch(getProfile(currentAccount));
+
+      if (res.status === "OK") {
         setProfile((prev) => {
           return {
-            ...data,
+            ...res.data,
             address: currentAccount?.address,
           };
         });
+      } else {
+        toast.error(res.message);
       }
     };
 
-    (!profile?.address || profile?.address !== currentAccount?.address) &&
+    if (!profile?.address || profile?.address !== currentAccount?.address) {
       fetchProfile();
+    }
   }, [currentAccount, dispatch, profile]);
 
   return (
