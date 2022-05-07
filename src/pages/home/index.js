@@ -27,7 +27,7 @@ import HomePageBg2 from "@theme/assets/bg-homepage-2.png";
 import HomePageBg3 from "@theme/assets/bg-homepage-3.png";
 
 function HomePage() {
-  const [emailSubscribed, setEmailSubscribed] = useState('');
+  const [emailSubscribed, setEmailSubscribed] = useState("");
 
   const profile = [
     { discord: "https://discord.gg/wzkZ2JTvN4" },
@@ -83,14 +83,18 @@ function HomePage() {
             maxW={{ base: "6xl", "2xl": "7xl" }}
             py={{ base: "20", "2xl": "56" }}
           >
-            <Center w="full" textAlign="center" mb="2rem">
-              <Heading size="h1" fontSize="100px" lineHeight="120px">
+            <Center w="full" textAlign="center" mb="2rem" px={4}>
+              <Heading
+                size="h1"
+                fontSize={{ base: "48px", xl: "80px", "2xl": "100px" }}
+                lineHeight={{ base: "60px", xl: "100px", "2xl": "120px" }}
+              >
                 Artzero <br />
                 Smartnet Demo
               </Heading>
             </Center>
 
-            <Center w="full" textAlign="center">
+            <Center w="full" textAlign="center" px={4}>
               <Text
                 fontFamily="Evogria"
                 fontSize="18px"
@@ -125,20 +129,41 @@ function HomePage() {
               <Heading size="h2">how to start?</Heading>
             </Center>
 
-            <Center w="full" textAlign="center" mb="2rem">
+            <Center w="full" textAlign="center" mb="2rem" px={4}>
               <Text size="h6" maxW="2xl" lineHeight="30px">
-                This version currently work with <Link
+                This version currently work with{" "}
+                <Link
                   color="#7ae7ff"
-                  textDecoration="underline" href="https://subwallet.app/" target="_blank">SubWallet</Link>, <Link
-                    color="#7ae7ff"
-                    textDecoration="underline" href="https://polkadot.js.org/extension/" target="_blank">Polkadot JS</Link> and <Link
-                      color="#7ae7ff"
-                      textDecoration="underline"
-                      href="https://chrome.google.com/webstore/detail/talisman-wallet/fijngjgcjhjmmpcmkeiomlglpeiijkld" target="_blank">Talisman</Link>. Please make sure you installed at least one of these wallets and create an account.
+                  textDecoration="underline"
+                  href="https://subwallet.app/"
+                  target="_blank"
+                >
+                  SubWallet
+                </Link>
+                ,{" "}
+                <Link
+                  color="#7ae7ff"
+                  textDecoration="underline"
+                  href="https://polkadot.js.org/extension/"
+                  target="_blank"
+                >
+                  Polkadot JS
+                </Link>{" "}
+                and{" "}
+                <Link
+                  color="#7ae7ff"
+                  textDecoration="underline"
+                  href="https://chrome.google.com/webstore/detail/talisman-wallet/fijngjgcjhjmmpcmkeiomlglpeiijkld"
+                  target="_blank"
+                >
+                  Talisman
+                </Link>
+                . Please make sure you installed at least one of these wallets
+                and create an account.
               </Text>
             </Center>
 
-            <Center w="full" textAlign="center" mb="4rem">
+            <Center w="full" textAlign="center" mb="4rem" px={4}>
               <Text size="h6" maxW="2xl" lineHeight="30px">
                 You will need some Smartnet AZero (SZERO) to start. Get free
                 SZERO from{" "}
@@ -153,6 +178,7 @@ function HomePage() {
             </Center>
 
             <AspectRatio
+              px={4}
               mx="auto"
               w="full"
               maxW="77rem"
@@ -168,13 +194,7 @@ function HomePage() {
           </Box>
         </Box>
 
-        <Box
-          pos="relative"
-          w="full"
-          // bgImage={HomePageBg2}
-          // bgPosition="50% 250%"
-          // bgRepeat="no-repeat"
-        >
+        <Box pos="relative" w="full">
           <Flex
             id="image-wrapper"
             position="absolute"
@@ -202,7 +222,7 @@ function HomePage() {
             maxW={{ base: "6xl", "2xl": "7xl" }}
             py={{ base: "20", "2xl": "24" }}
           >
-            <Center w="full" textAlign="center" mb="3rem">
+            <Center w="full" textAlign="center" mb="3rem" px={4}>
               <Heading size="h2">Available features</Heading>
             </Center>
 
@@ -211,11 +231,11 @@ function HomePage() {
               mx="auto"
               mb={36}
               w="full"
-              p={14}
+              p={{ base: 6, xl: 14 }}
               fontFamily="Evogria"
               fontSize="18px"
               textAlign="left"
-              bgImage={FrameHomepage}
+              bgImage={{ base: "", xl: FrameHomepage }}
               bgPosition="center"
               bgRepeat="no-repeat"
             >
@@ -259,7 +279,7 @@ function HomePage() {
               </List>
             </Box>
 
-            <Center w="full" textAlign="center" mb="3rem">
+            <Center w="full" textAlign="center" mb="3rem" px={4}>
               <Heading size="h2">Up-coming Features</Heading>
             </Center>
 
@@ -267,11 +287,11 @@ function HomePage() {
               maxW="container.md"
               mx="auto"
               w="full"
-              p={14}
+              p={{ base: 6, xl: 14 }}
               fontFamily="Evogria"
               fontSize="18px"
               textAlign="left"
-              bgImage={FrameHomepageSmall}
+              bgImage={{ base: "", xl: FrameHomepageSmall }}
               bgPosition="center"
               bgRepeat="no-repeat"
             >
@@ -306,6 +326,7 @@ function HomePage() {
         >
           <Box
             mx="auto"
+            px={4}
             maxW={{ base: "6xl", "2xl": "7xl" }}
             py={{ base: "20", "2xl": "24" }}
             fontFamily="Evogria"
@@ -331,8 +352,6 @@ function HomePage() {
               borderRadius="0"
             >
               <InputRightElement
-                // isLoading={true}
-                // colorScheme="blue"
                 spinner={<BeatLoader size={8} color="white" />}
                 onClick={onClickHandler}
                 cursor="pointer"
@@ -390,101 +409,6 @@ function HomePage() {
             </Center>
           </Box>
         </Box>
-
-        {/* <Box>
-          <Flex w="full" justify="start" p={4}>
-            <Stack p={10} bg="#464646">
-              <Tag>
-                <TagLeftIcon as={AzeroIcon} />
-                <TagLabel>Volume 1.11m</TagLabel>
-              </Tag>
-              <Tag>
-                <TagLabel>Unlisted</TagLabel>
-              </Tag>
-              <Tag>
-                <TagLabel>82.00</TagLabel>
-                <TagRightIcon as={AzeroIcon} />
-              </Tag>
-
-              <Tag variant="outline">
-                <TagLabel>Fees: 3%</TagLabel>
-              </Tag>
-
-              <Tag variant="grayBg" size="2xl">
-                <TagLabel>8,999</TagLabel>
-                <TagRightIcon as={AzeroIcon} />
-              </Tag>
-
-              <Tag variant="active">
-                <TagLeftIcon as={ActiveIcon} />
-                <TagLabel>Active</TagLabel>
-              </Tag>
-
-              <Tag variant="inActive">
-                <TagLeftIcon as={InActiveIcon} />
-                <TagLabel>Inactive</TagLabel>
-              </Tag>
-            </Stack>
-
-            <Flex direction="column" mx={20} justify="space-between">
-              <Button variant="outline">Outline</Button>
-              <br />
-              <Button variant="outline" isDisabled>
-                isDisabled
-              </Button>
-              <br />
-              <Button variant="solid">Default - Solid</Button>
-              <br />
-              <Button variant="solid" isDisabled>
-                isDisabled
-              </Button>
-              <br />
-
-              <IconButton
-                aria-label="download"
-                icon={<DownloadIcon />}
-                size="icon"
-                variant="iconOutline"
-              />
-              <br />
-              <IconButton
-                aria-label="download"
-                icon={<DownloadIcon />}
-                size="icon"
-                variant="iconOutline"
-                isDisabled
-              />
-              <br />
-              <IconButton
-                aria-label="download"
-                icon={<DownloadIcon />}
-                size="icon"
-                variant="iconSolid"
-              />
-              <br />
-              <IconButton
-                aria-label="download"
-                icon={<DownloadIcon />}
-                size="icon"
-                variant="iconSolid"
-                isDisabled
-              />
-            </Flex>
-
-            <Stack spacing={6}>
-              <Text>Body text</Text>
-              <Text fontSize="lg">Body text</Text>
-              <Heading size="h1" isTruncated>
-                heading 1 56/70
-              </Heading>
-              <Heading size="h2">heading 2 48/60</Heading>
-              <Heading size="h3">heading 3 40/50</Heading>
-              <Heading size="h4">heading 4 32/40</Heading>
-              <Heading size="h5">heading 5 24/30</Heading>
-              <Heading size="h6">heading 6 18/22.5</Heading>
-            </Stack>
-          </Flex>
-        </Box> */}
       </Box>
     </HomeLayout>
   );
