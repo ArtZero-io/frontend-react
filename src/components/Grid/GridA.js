@@ -29,6 +29,7 @@ export default function GridA({ collections, variant = "my-collection" }) {
         gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, 24.5625rem), 1fr))`,
         gridAutoRows: "31.25rem",
         gridAutoFlow: "dense",
+        justifyItems: "center",
       }}
     >
       {collections?.map((c, i) => (

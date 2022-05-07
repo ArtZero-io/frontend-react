@@ -222,6 +222,7 @@ function GridNftA({ listNFTFormatted, bigCard }) {
               bigCard ? "25rem" : "20rem"
             }), 1fr))`,
             borderBottom: "0.125rem",
+            justifyItems: "center",
           }}
         >
           {listNFTFormatted?.map((c, i) => (

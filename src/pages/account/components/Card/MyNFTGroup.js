@@ -35,7 +35,7 @@ function MyNFTGroupCard({
 
   function onClickHandler(item) {
     setSelectedNFT(item);
-    item?.stakeStatus == 0 && onOpen();
+    item?.stakeStatus === 0 && onOpen();
   }
 
   useEffect(() => {
@@ -109,7 +109,7 @@ function MyNFTGroupCard({
     getAttributesData();
 
     //console.log(listNFT,'showOnChainMetadata',showOnChainMetadata);
-  }, [listNFT]);
+  }, [currentAccount, listNFT, showOnChainMetadata]);
 
   return (
     <Box my={10}>
@@ -231,7 +231,7 @@ function GridNftA({
         // gridAutoRows: "20.625rem",
         gridAutoFlow: "dense",
         gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, 224px), 1fr))`,
-        borderBottom: "0.125rem",
+        borderBottom: "0.125rem", justifyItems: "center",
       }}
     >
       {listNFTFormatted.length > 0 &&

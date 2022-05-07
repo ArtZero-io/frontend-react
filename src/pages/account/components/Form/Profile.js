@@ -10,6 +10,7 @@ import SimpleModeInput from "@components/Input/Input";
 import ImageUpload from "@components/ImageUpload/Avatar";
 import SimpleModeTextarea from "@components/TextArea/TextArea";
 import { useSubstrateState } from "@utils/substrate";
+import toast from "react-hot-toast";
 
 const ProfileForm = ({ profile }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState(null);
@@ -32,7 +33,7 @@ const ProfileForm = ({ profile }) => {
         validationSchema={Yup.object({
           username: Yup.string()
             .min(3, "Must be longer than 3 characters")
-            .max(30, "Must be less than 30 characters").required(),
+            .max(30, "Must be less than 30 characters"),
           bio: Yup.string()
             .min(3, "Must be longer than 3 characters")
             .max(150, "Must be less than 150 characters"),
@@ -59,6 +60,10 @@ const ProfileForm = ({ profile }) => {
           const a = objArr.map((item) => item[0]);
           const v = objArr.map((item) => item[1]);
 
+          console.log(" a, v", a, v);
+
+          if (!a.length || !v.length) return toast.error("Please check again.");
+          
           dispatch(setMultipleAttributes(currentAccount, a, v));
         }}
       >

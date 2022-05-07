@@ -26,7 +26,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
   const [isSetRoyal, setIsSetRoyal] = useState(false);
   const [initialValues, setInitialValues] = useState(null);
   const [maxRoyalFeeRate, setMaxRoyalFeeRate] = useState(0);
-  
+
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
@@ -47,10 +47,9 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
   useEffect(() => {
     const fetchFee = async () => {
       if (maxRoyalFeeRate === 0) {
-        const maxRoyalFeeRateData = await collection_manager_calls.getMaxRoyalFeeRate(
-          currentAccount
-        );
-        console.log('maxRoyalFeeRateData:', maxRoyalFeeRateData);
+        const maxRoyalFeeRateData =
+          await collection_manager_calls.getMaxRoyalFeeRate(currentAccount);
+        console.log("maxRoyalFeeRateData:", maxRoyalFeeRateData);
         setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
       }
     };
@@ -175,12 +174,14 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               return result;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-              if (mode === "add" && (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl)) {
+              if (
+                mode === "add" &&
+                (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl)
+              ) {
                 toast.error("Upload images first.");
               }
 
               if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
-
                 values.avatarIPFSUrl = avatarIPFSUrl;
                 values.headerIPFSUrl = headerIPFSUrl;
                 values.headerSquareIPFSUrl = headerSquareIPFSUrl;
@@ -190,9 +191,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 }
 
                 if (!isValidAddressPolkadotAddress(values.nftContractAddress)) {
-
                   toast.error(`The NFT contract address must be an address!`);
-
                 } else {
                   const data = {
                     nftContractAddress: values.nftContractAddress,
@@ -267,45 +266,53 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 />
 
                 <Stack
-                  direction={{ xl: "row", "2xl": "column" }}
+                  direction="row"
                   alignItems="start"
-                  justifyContent="space-between"
+                  justifyContent="space-around"
                 >
-                  <ImageUpload
-                    mode={mode}
-                    isBanner={false}
-                    id="collection-avatar"
-                    imageIPFSUrl={avatarIPFSUrl}
-                    setImageIPFSUrl={setAvatarIPFSUrl}
-                    title="Collection Avatar Image"
-                    limitedSize={{ width: "100", height: "100" }}
-                  />
-                  <ImageUpload
-                    mode={mode}
-                    isBanner={true}
-                    id="collection-header"
-                    imageIPFSUrl={headerIPFSUrl}
-                    setImageIPFSUrl={setHeaderIPFSUrl}
-                    title="Collection Main Header"
-                    limitedSize={{ width: "1920", height: "600" }}
-                  />{" "}
-                  <ImageUpload
-                    mode={mode}
-                    isBanner={true}
-                    id="collection-header-square"
-                    imageIPFSUrl={headerSquareIPFSUrl}
-                    setImageIPFSUrl={setHeaderSquareIPFSUrl}
-                    title="Collection Square Header"
-                    limitedSize={{ width: "500", height: "500" }}
-                  />{" "}
+                  <Stack
+                    direction="column"
+                    alignItems="start"
+                    justifyContent="end"
+                  >
+                    <ImageUpload
+                      mode={mode}
+                      isBanner={false}
+                      id="collection-avatar"
+                      imageIPFSUrl={avatarIPFSUrl}
+                      setImageIPFSUrl={setAvatarIPFSUrl}
+                      title="Collection Avatar Image"
+                      limitedSize={{ width: "100", height: "100" }}
+                    />
+                    <ImageUpload
+                      mode={mode}
+                      isBanner={true}
+                      id="collection-header"
+                      imageIPFSUrl={headerIPFSUrl}
+                      setImageIPFSUrl={setHeaderIPFSUrl}
+                      title="Collection Main Header"
+                      limitedSize={{ width: "1920", height: "600" }}
+                    />
+                  </Stack>
+                  <Stack
+                    direction="column"
+                    alignItems="start"
+                    justifyContent="end"
+                  >
+                    <ImageUpload
+                      mode={mode}
+                      isBanner={true}
+                      id="collection-header-square"
+                      imageIPFSUrl={headerSquareIPFSUrl}
+                      setImageIPFSUrl={setHeaderSquareIPFSUrl}
+                      title="Collection Square Header"
+                      limitedSize={{ width: "500", height: "500" }}
+                    />
+                  </Stack>
                 </Stack>
 
                 {mode === "add" && (
-                  <Stack
-                    direction={{ xl: "row", "2xl": "column" }}
-                    alignItems="start"
-                    justifyContent="space-between"
-                  >
+                  <Flex alignItems="center" minH={20} mt={5}>
                     <Stack
                       direction={{ base: "column", "2xl": "row" }}
                       alignItems="end"
@@ -320,17 +327,17 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                         label="Collect Royal Fee"
                         name="collectRoyalFee"
                       />
-
-                      <AddCollectionNumberInput
-                        isDisabled={!isSetRoyal}
-                        isDisplay={isSetRoyal}
-                        maxRoyalFeeRate={maxRoyalFeeRate}
-                        label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
-                        name="royalFee"
-                        type="number"
-                        placeholder="Royal Fee"
-                      />
                     </Stack>
+                    <AddCollectionNumberInput
+                      isDisabled={!isSetRoyal}
+                      isDisplay={isSetRoyal}
+                      maxRoyalFeeRate={maxRoyalFeeRate}
+                      label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
+                      name="royalFee"
+                      type="number"
+                      placeholder="Royal Fee"
+                      inputWidth={"8rem"}
+                    />
 
                     <Spacer />
 
@@ -351,7 +358,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                         content="I agree to ArtZero's Terms of Service"
                       />
                     </Flex>
-                  </Stack>
+                  </Flex>
                 )}
 
                 <Button

@@ -11,7 +11,6 @@ const theme = extendTheme({
     "4xl-mid": "2.5rem",
     "5xl-mid": "3.5rem",
   },
-  // space: { 88: "22.5rem", 80: "20rem" },
   colors: {
     brand: {
       blue: "#7AE7FF",

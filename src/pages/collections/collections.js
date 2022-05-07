@@ -154,7 +154,7 @@ const CollectionsPage = () => {
                   </Flex>
 
                   {collections?.length ? (
-                    <GridA
+                    <GridA bg='yellow'
                       collections={collections}
                       variant="marketplace-collection"
                     />

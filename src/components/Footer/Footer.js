@@ -18,7 +18,7 @@ export const Footer = () => (
         md: "full",
       }}
       mx="auto"
-      px={{ xl: "1", "2xl": "24" }}
+      px={{ xl: "3", "2xl": "24" }}
     >
       <Flex
         borderTopWidth="2px"
@@ -31,12 +31,12 @@ export const Footer = () => (
           base: "flex-start",
           lg: "center",
         }}
-        justify="space-between"
-        fontSize="sm"
         py={{
           base: "12",
           md: "2.875rem",
         }}
+        justify="space-between"
+        fontSize="sm"
       >
         <Stack
           direction={{

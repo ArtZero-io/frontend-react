@@ -206,7 +206,7 @@ function MyNFTTabInfo({
           minH="10rem"
           w="full"
           templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
-          gap={5}
+          gap={{ base: "0.5rem", "2xl": "1.25rem" }}
           pr={"0.25rem"}
           overflowY="auto"
           sx={{
@@ -232,7 +232,7 @@ function MyNFTTabInfo({
                           textAlign="left"
                           alignItems="end"
                           bg="brand.semiBlack"
-                          px={4}
+                          px={{ base: "0.5rem", "2xl": "1rem" }}
                           py={3}
                         >
                           <Flex w="full">
@@ -274,7 +274,9 @@ function MyNFTTabInfo({
                         textAlign="left"
                         alignItems="end"
                         bg="brand.semiBlack"
-                        p={2}
+                        px={{ base: "0.5rem", "2xl": "1rem" }}
+
+                        py={2}
                         // my={2}
                         minW="30%"
                         maxH={"4.625rem"}
