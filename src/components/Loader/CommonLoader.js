@@ -2,7 +2,7 @@ import { Heading, Center, Spinner, Stack } from "@chakra-ui/react";
 
 const CommonLoader = ({ addText = "", size = "xl", minH, maxH, ...rest }) => {
   return (
-    <Center width="100%" height="100%" maxH={maxH} minH={minH}>
+    <Center width="full" height="full" maxH={maxH} minH={minH} bg='yellow'>
       <Stack direction="row" alignItems="center" spacing={2}>
         <Spinner
           thickness="4px"

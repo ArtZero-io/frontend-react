@@ -19,9 +19,9 @@ import BN from "bn.js";
 import { createObjAttrsNFT } from "@utils/index";
 
 import { delay, getPublicCurrentAccount } from "../../utils";
-import Loader from "@components/Loader/CommonLoader";
 import artzero_nft from "@utils/blockchain/artzero-nft";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+import CommonLoader from "../../components/Loader/CommonLoader";
 
 function CollectionPage() {
   const [formattedCollection, setFormattedCollection] = useState(null);
@@ -66,6 +66,8 @@ function CollectionPage() {
 
   useEffect(() => {
     const fetchCollectionDetail = async () => {
+      console.log("fetchCollectionDetail start", Date.now());
+
       const NFTListOptions = {
         limit: 12,
         offset: 0,
@@ -113,8 +115,11 @@ function CollectionPage() {
             collection_address
           );
         collectionDetail.volume = volumeData || 0;
+        console.log("fetchCollectionDetail start check contractType 2", Date.now());
 
         if (Number(collectionDetail.contractType) === 2) {
+          console.log("fetchCollectionDetail start contractType 2", Date.now());
+
           return Promise.all(
             NFTList.map((item) => {
               const itemData = createObjAttrsNFT(
@@ -126,15 +131,19 @@ function CollectionPage() {
             })
           ).then((NFTListFormatted) => {
             collectionDetail.NFTListFormatted = NFTListFormatted;
+            console.log("collectionDetail contractType 2 Done ", Date.now());
 
             setFormattedCollection(collectionDetail);
           });
         }
-        
+        console.log("fetchCollectionDetail start check contractType 1", Date.now());
+
         if (
           Number(collectionDetail.contractType) === 1 &&
           !collectionDetail.showOnChainMetadata
         ) {
+          console.log("fetchCollectionDetail start contractType 1", Date.now());
+
           const nft_contract = new ContractPromise(
             api,
             artzero_nft.CONTRACT_ABI,
@@ -206,12 +215,12 @@ function CollectionPage() {
 
                 collectionDetail.NFTListFormatted = NFTListFormattedAdv;
               }
-              console.log('collectionDetail', collectionDetail);
-              
+              console.log("collectionDetail contractType 1 Done ", Date.now());
             }
             setFormattedCollection(collectionDetail);
           }
         }
+        console.log("fetchCollectionDetail end", Date.now());
       } catch (error) {
         console.log("fetchCollectionDetail error", error);
 
@@ -243,11 +252,9 @@ function CollectionPage() {
       backdrop={formattedCollection?.headerImage}
       variant="collection-detail"
     >
-      {console.log('formattedCollection', formattedCollection)}
       {
         <>
           <CollectionHero {...formattedCollection} loading={loading} />
-
           <Tabs isLazy align="center">
             <TabList bg="#000" borderBottomColor="#000">
               {tabData.map((tab, index) => (
@@ -255,7 +262,7 @@ function CollectionPage() {
               ))}
             </TabList>
 
-            <TabPanels h="full">
+            <TabPanels h="full" minH="xs">
               {tabData.map((tab, index) => (
                 <TabPanel
                   pt={4}
@@ -265,7 +272,7 @@ function CollectionPage() {
                   h="full"
                   flexGrow="1"
                 >
-                  {loading ? <Loader /> : tab.content}
+                  {loading ? <CommonLoader /> : tab.content}
                 </TabPanel>
               ))}
             </TabPanels>

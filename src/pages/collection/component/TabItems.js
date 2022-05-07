@@ -37,6 +37,7 @@ const CollectionItems = ({
   const [selectedItem, setSelectedItem] = useState(0);
 
   const [isShowUnlisted, setIsShowUnlisted] = useState(3);
+  // const [loading, setLoading] = useState(null);
 
   const options = [
     // "Price: Newest",
@@ -46,6 +47,10 @@ const CollectionItems = ({
   //  0 Low first, 1 High first, 2 Newest
 
   const getUnListedNFT = () => {
+    console.log(
+      "CollectionItems getUnListedNFT filter start",
+      Date.now()
+    );
     if (!NFTListFormatted) return [];
 
     let result = NFTListFormatted;
@@ -69,6 +74,7 @@ const CollectionItems = ({
     if (isShowUnlisted % 3 === 2) {
       result = result.filter((i) => i.is_for_sale === false);
     }
+    console.log("CollectionItems getUnListedNFT filter end", Date.now());
 
     return result;
   };
@@ -173,7 +179,7 @@ export default CollectionItems;
 function GridNftA({ listNFTFormatted, bigCard }) {
   const originOffset = useRef({ top: 0, left: 0 });
   const controls = useAnimation();
-  const delayPerPixel = 0.0008;
+  const delayPerPixel = 0.0004;
 
   useEffect(() => {
     controls.start("visible");

@@ -39,6 +39,8 @@ function CollectionHeader({
   headerImage,
   loading,
 }) {
+  console.log("CollectionHeader", Date.now());
+
   const getCollectionImage = (imageHash, size) => {
     if (imageHash) {
       const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
