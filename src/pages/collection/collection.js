@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import Layout from "@components/Layout/Layout";
-import { TypeRegistry, U64 } from "@polkadot/types";
+// import { TypeRegistry, U64 } from "@polkadot/types";
 import { clientAPI } from "@api/client";
 
 import TabCollectionItems from "./component/TabItems";
@@ -19,9 +19,10 @@ import BN from "bn.js";
 import { createObjAttrsNFT } from "@utils/index";
 
 import { delay, getPublicCurrentAccount } from "../../utils";
-import artzero_nft from "@utils/blockchain/artzero-nft";
+// import artzero_nft from "@utils/blockchain/artzero-nft";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import CommonLoader from "../../components/Loader/CommonLoader";
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 
 function CollectionPage() {
   const [formattedCollection, setFormattedCollection] = useState(null);
@@ -146,7 +147,7 @@ function CollectionPage() {
 
           const nft_contract = new ContractPromise(
             api,
-            artzero_nft.CONTRACT_ABI,
+            nft721_psp34_standard.CONTRACT_ABI,
             collectionDetail.nftContractAddress
           );
 
@@ -165,23 +166,22 @@ function CollectionPage() {
 
             if (token_count) {
               let NFTListFormattedAdv = [];
-              //console.log('token_count',token_count);
+              let token_uri = null;
+              const { result, output } = await nft_contract.query[
+                "psp34Traits::tokenUri"
+              ](
+                currentAccount?.address,
+                { value: azero_value, gasLimit },
+                1
+              );
+              if (result.isOk) {
+                token_uri = output.toHuman()?.replace("1.json", ""); 
+              }
+              
               for (let i = 1; i <= token_count; i++) {
-                const token_id = new U64(new TypeRegistry(), i);
-                const { result, output } = await nft_contract.query[
-                  "psp34Traits::tokenUri"
-                ](
-                  currentAccount?.address,
-                  { value: azero_value, gasLimit },
-                  token_id
-                );
-
-                if (result.isOk) {
-                  const token_uri = output.toHuman();
-                  //console.log('token_uri',token_uri);
                   const metadata = await clientAPI(
                     "get",
-                    "/getJSON?input=" + token_uri,
+                    "/getJSON?input=" + token_uri + i.toString() + '.json', 
                     {}
                   );
                   if (metadata) {
@@ -211,7 +211,7 @@ function CollectionPage() {
 
                     NFTListFormattedAdv.push({ ...item, ...itemData });
                   }
-                }
+                
 
                 collectionDetail.NFTListFormatted = NFTListFormattedAdv;
               }
