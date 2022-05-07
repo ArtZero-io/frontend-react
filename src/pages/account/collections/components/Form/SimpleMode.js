@@ -44,7 +44,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
         const addingFeeData = await collection_manager_calls.getAddingFee(
           currentAccount
         );
-        
+
         setAddingFee(addingFeeData / 10 ** 12);
       }
     };
@@ -54,10 +54,9 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
   useEffect(() => {
     const fetchFee = async () => {
       if (maxRoyalFeeRate === 0) {
-        const maxRoyalFeeRateData = await collection_manager_calls.getMaxRoyalFeeRate(
-          currentAccount
-        );
-        console.log('maxRoyalFeeRateData:', maxRoyalFeeRateData);
+        const maxRoyalFeeRateData =
+          await collection_manager_calls.getMaxRoyalFeeRate(currentAccount);
+        console.log("maxRoyalFeeRateData:", maxRoyalFeeRateData);
         setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
       }
     };
@@ -194,8 +193,12 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
               return result;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-              (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl) &&
+              if (
+                mode === "add" &&
+                (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl)
+              ) {
                 toast.error("Upload avatar or header too");
+              }
 
               if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
                 values.avatarIPFSUrl = avatarIPFSUrl;

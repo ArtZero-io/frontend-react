@@ -175,7 +175,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               return result;
             }}
             onSubmit={async (values, { setSubmitting }) => {
-              if (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl) {
+              if (mode === "add" && (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl)) {
                 toast.error("Upload images first.");
               }
 
