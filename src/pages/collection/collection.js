@@ -1,28 +1,24 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import BN from "bn.js";
 
-import Layout from "@components/Layout/Layout";
-// import { TypeRegistry, U64 } from "@polkadot/types";
 import { clientAPI } from "@api/client";
+import Layout from "@components/Layout/Layout";
 
 import TabCollectionItems from "./component/TabItems";
 import CollectionHero from "./component/Header/Header";
 
-import { useSubstrateState } from "@utils/substrate";
-import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
 
 import { ContractPromise } from "@polkadot/api-contract";
-import BN from "bn.js";
-import { createObjAttrsNFT } from "@utils/index";
 
-import { delay, getPublicCurrentAccount } from "../../utils";
-// import artzero_nft from "@utils/blockchain/artzero-nft";
-import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import CommonLoader from "../../components/Loader/CommonLoader";
+import { useSubstrateState } from "@utils/substrate";
+import { createObjAttrsNFT, delay, getPublicCurrentAccount } from "@utils";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
 function CollectionPage() {
   const [formattedCollection, setFormattedCollection] = useState(null);
@@ -116,11 +112,14 @@ function CollectionPage() {
             collection_address
           );
         collectionDetail.volume = volumeData || 0;
-        console.log("fetchCollectionDetail start check contractType 2", Date.now());
+        console.log(
+          "fetchCollectionDetail start check contractType 2",
+          Date.now()
+        );
 
         if (Number(collectionDetail.contractType) === 2) {
           console.log("fetchCollectionDetail start contractType 2", Date.now());
-
+          console.log('1 NFTList', NFTList)
           return Promise.all(
             NFTList.map((item) => {
               const itemData = createObjAttrsNFT(
@@ -131,13 +130,18 @@ function CollectionPage() {
               return { ...item, ...itemData };
             })
           ).then((NFTListFormatted) => {
+            console.log('2 NFTList', NFTList)
+
             collectionDetail.NFTListFormatted = NFTListFormatted;
             console.log("collectionDetail contractType 2 Done ", Date.now());
-
+            console.log('collectionDetail - formatted', collectionDetail)
             setFormattedCollection(collectionDetail);
           });
         }
-        console.log("fetchCollectionDetail start check contractType 1", Date.now());
+        console.log(
+          "fetchCollectionDetail start check contractType 1",
+          Date.now()
+        );
 
         if (
           Number(collectionDetail.contractType) === 1 &&
@@ -169,49 +173,44 @@ function CollectionPage() {
               let token_uri = null;
               const { result, output } = await nft_contract.query[
                 "psp34Traits::tokenUri"
-              ](
-                currentAccount?.address,
-                { value: azero_value, gasLimit },
-                1
-              );
+              ](currentAccount?.address, { value: azero_value, gasLimit }, 1);
               if (result.isOk) {
-                token_uri = output.toHuman()?.replace("1.json", ""); 
+                token_uri = output.toHuman()?.replace("1.json", "");
               }
-              
+
               for (let i = 1; i <= token_count; i++) {
-                  const metadata = await clientAPI(
-                    "get",
-                    "/getJSON?input=" + token_uri + i.toString() + '.json', 
-                    {}
-                  );
-                  if (metadata) {
-                    let item = NFTList[i - 1];
-                    let attributes = [];
-                    let attributeValues = [];
+                const metadata = await clientAPI(
+                  "get",
+                  "/getJSON?input=" + token_uri + i.toString() + ".json",
+                  {}
+                );
+                if (metadata) {
+                  let item = NFTList[i - 1];
+                  let attributes = [];
+                  let attributeValues = [];
 
-                    attributes.push("nftName");
-                    attributes.push("description");
-                    attributes.push("avatar");
+                  attributes.push("nftName");
+                  attributes.push("description");
+                  attributes.push("avatar");
 
-                    attributeValues.push(metadata.name);
-                    attributeValues.push(metadata.description);
-                    attributeValues.push(metadata.image);
+                  attributeValues.push(metadata.name);
+                  attributeValues.push(metadata.description);
+                  attributeValues.push(metadata.image);
 
-                    let length = metadata.attributes.length;
+                  let length = metadata.attributes.length;
 
-                    for (var index = 0; index < length; index++) {
-                      attributes.push(metadata.attributes[index].trait_type);
-                      attributeValues.push(metadata.attributes[index].value);
-                    }
-
-                    const itemData = createObjAttrsNFT(
-                      attributes,
-                      attributeValues
-                    );
-
-                    NFTListFormattedAdv.push({ ...item, ...itemData });
+                  for (var index = 0; index < length; index++) {
+                    attributes.push(metadata.attributes[index].trait_type);
+                    attributeValues.push(metadata.attributes[index].value);
                   }
-                
+
+                  const itemData = createObjAttrsNFT(
+                    attributes,
+                    attributeValues
+                  );
+
+                  NFTListFormattedAdv.push({ ...item, ...itemData });
+                }
 
                 collectionDetail.NFTListFormatted = NFTListFormattedAdv;
               }
@@ -238,6 +237,7 @@ function CollectionPage() {
         <TabCollectionItems
           {...formattedCollection}
           forceUpdate={forceUpdate}
+          loading={loading}
         />
       ),
     },
@@ -272,7 +272,7 @@ function CollectionPage() {
                   h="full"
                   flexGrow="1"
                 >
-                  {loading ? <CommonLoader /> : tab.content}
+                  {tab.content}
                 </TabPanel>
               ))}
             </TabPanels>

@@ -79,8 +79,8 @@ const ImageUploadCollection = ({
           }),
           {
             loading: "Uploading...",
-            success: () => `Upload Avatar successful.!`,
-            error: "Could not upload Avatar.",
+            success: () => `Upload successful.`,
+            error: "Could not upload your image!!!.",
           }
         );
       }

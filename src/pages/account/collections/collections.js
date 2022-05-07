@@ -146,7 +146,7 @@ function MyCollectionsPage() {
             <Text textAlign="left" color="brand.grayLight">
               There are {collections?.length || 0} collections
             </Text>
-
+ 
             {collections?.length ? (
               <>
                 <GridA collections={collections} />

@@ -251,8 +251,8 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     );
                   } else {
                     console.log(data);
-                    console.log("111data before new ", data);
-                    console.log("111data before old", initialValues);
+                    console.log("111data edit before new ", data);
+                    console.log("111data edit before old", initialValues);
                     console.log(nftContractAddress);
                     await collection_manager_calls.setMultipleAttributes(
                       currentAccount,

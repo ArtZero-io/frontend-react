@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -16,13 +15,11 @@ import {
   TagLabel,
   TagRightIcon,
   InputGroup,
-  InputRightElement,
-  IconButton,
-  Input,
   Progress,
   Skeleton,
   useBreakpointValue,
   Square,
+  Input,
 } from "@chakra-ui/react";
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -33,8 +30,6 @@ import { IPFS_BASE_URL } from "@constants/index";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
 import toast from "react-hot-toast";
-import { FaTelegram } from "react-icons/fa";
-import contractData from "@utils/blockchain/index";
 import { truncateStr } from "@utils";
 import BN from "bn.js";
 import process from "process";
@@ -59,7 +54,7 @@ const NFTTabCollectible = ({
   const [NFT, setNFT] = useState({});
   const [doOffer, setDoOffer] = useState(false);
   const [bidPrice, setBidPrice] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [, setIsLoaded] = useState(false);
   const { api, currentAccount } = useSubstrateState();
   const [isBided, setIsBided] = useState(false);
   const [saleInfo, setSaleInfo] = useState(null);
@@ -71,6 +66,7 @@ const NFTTabCollectible = ({
 
   useEffect(() => {
     const doLoad = async () => {
+      console.log(" NFTTabCollectible doLoad");
       const sale_info = await marketplace_contract_calls.getNftSaleInfo(
         currentAccount || publicCurrentAccount,
         nftContractAddress,
@@ -132,11 +128,6 @@ const NFTTabCollectible = ({
     const { data: balance } = await api.query.system.account(
       currentAccount?.address
     );
-
-    // marketplace_contract_calls.setMarketplaceContract(
-    //   api,
-    //   contractData.marketplace
-    // );
 
     //check owner of the NFT from marketplace
     if (saleInfo.nftOwner === currentAccount?.address) {
@@ -258,10 +249,7 @@ const NFTTabCollectible = ({
               exit={{ opacity: 0 }}
             >
               <Text color="#fff" pb={2}>
-                Owned by{" "}
-                <Link color="#7AE7FF">
-                  {truncateStr(owner, 6)}
-                </Link>
+                Owned by <Link color="#7AE7FF">{truncateStr(owner, 6)}</Link>
               </Text>
             </motion.div>
           </AnimatePresence>

@@ -10,6 +10,7 @@ import {
   TagRightIcon,
   Text,
   VStack,
+  Square,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { IPFS_BASE_URL } from "@constants/index";
@@ -22,12 +23,20 @@ export default function NFTChangeSizeCard({
   price,
   avatar,
   nftName,
+  bigCard,
 }) {
-
   const getNFTImage = (imageHash, size) => {
     const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
-    return baseURL + '/getImage?input=' + imageHash + '&size=' + size + '&url=' + callbackUrl;
-  }
+    return (
+      baseURL +
+      "/getImage?input=" +
+      imageHash +
+      "&size=" +
+      size +
+      "&url=" +
+      callbackUrl
+    );
+  };
 
   return (
     <Box
@@ -37,22 +46,34 @@ export default function NFTChangeSizeCard({
       _hover={{ borderColor: "brand.blue" }}
     >
       <Flex
-        m="0.5"
         direction="column"
         align="center"
         textAlign="center"
         bg="brand.grayDark"
         minH="25rem"
       >
-        <Image
+        <Square
+          w={bigCard ? "405.5px" : "317.6px"}
+          h={bigCard ? "25rem" : "20rem"}
           bg="#372648"
-          alt={nftName}
-          objectFit="cover"
-          src={getNFTImage(avatar, 500)}
-          minH="21rem"
-          fallback={<Skeleton w="full" h="full" minH={"21rem"} />}
-        />
-
+        >
+          <Image
+            borderWidth={"2px"}
+            borderColor="transparent"
+            bg="#372648"
+            alt={nftName}
+            objectFit="cover"
+            src={getNFTImage(avatar, 500)}
+            h="full"
+            w="full"
+            fallback={
+              <Skeleton
+                w={bigCard ? "405.5px" : "317.6px"}
+                h={bigCard ? "25rem" : "20rem"}
+              />
+            }
+          />
+        </Square>
         <VStack
           p={4}
           w="full"

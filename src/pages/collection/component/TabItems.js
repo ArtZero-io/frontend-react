@@ -21,14 +21,13 @@ import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import NFTDetailModal from "./Modal/NFTDetail";
 import NFTChangeSizeCard from "@components/Card/NFTChangeSize";
+import CommonLoader from "../../../components/Loader/CommonLoader";
 
 const CollectionItems = ({
-  nftTotalCount,
   NFTListFormatted,
   collectionOwner,
   contractType,
-  // isShowUnlisted,
-  // handleShowUnlisted,
+  loading,
   forceUpdate,
 }) => {
   const { currentAccount } = useSubstrateState();
@@ -47,10 +46,7 @@ const CollectionItems = ({
   //  0 Low first, 1 High first, 2 Newest
 
   const getUnListedNFT = () => {
-    console.log(
-      "CollectionItems getUnListedNFT filter start",
-      Date.now()
-    );
+    console.log("CollectionItems getUnListedNFT filter start", Date.now());
     if (!NFTListFormatted) return [];
 
     let result = NFTListFormatted;
@@ -169,7 +165,15 @@ const CollectionItems = ({
         ) : null}
       </Flex>
 
-      <GridNftA bigCard={bigCard} listNFTFormatted={unListNFT} />
+      {loading ? (
+        <CommonLoader
+          addText={`Please wait a moment...`}
+          size="md"
+          maxH={"4.125rem"}
+        />
+      ) : (
+        <GridNftA bigCard={bigCard} listNFTFormatted={unListNFT} />
+      )}
     </Box>
   );
 };
@@ -229,7 +233,7 @@ function GridNftA({ listNFTFormatted, bigCard }) {
               id="grid-item-a"
               onClick={() => handleOnClick(c)}
             >
-              <NFTChangeSizeCard {...c} />
+              <NFTChangeSizeCard {...c} bigCard={bigCard} />
             </GridItemA>
           ))}
         </motion.div>

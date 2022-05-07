@@ -136,7 +136,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
               nft721_psp34_standard_calls.setContract(
                 nft721_psp34_standard_contract
               );
-
+              console.log("attributes before mintWithAttributes", attributes);
               await nft721_psp34_standard_calls.mintWithAttributes(
                 currentAccount,
                 collection_address,
@@ -172,7 +172,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
 
               <AddNewNFTImageUpload
                 setImageIPFSUrl={setAvatarIPFSUrl}
-                title="Avatar Image"
+                title="NFT Image"
                 limitedSize={{ width: "64", height: "64" }}
                 isBanner={false}
               />
