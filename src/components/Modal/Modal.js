@@ -11,6 +11,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import MyNFTTabInfo from "@pages/account/nfts/components/Tabs/MyNFTInfo";
+import MyNFTTabOffers from "@pages/account/nfts/components/Tabs/MyNFTOffers";
 
 export default function ResponsivelySizedModal({
   onClose,
@@ -20,7 +21,17 @@ export default function ResponsivelySizedModal({
   ...rest
 }) {
   const tabHeight = useBreakpointValue({ base: `2.5rem`, "2xl": `4.5rem` });
-
+  const tabData = [
+    {
+      label: "NFT info",
+      content: <MyNFTTabInfo {...rest} />,
+    },
+    {
+      label: "Offers",
+      content: <MyNFTTabOffers {...rest} />,
+    },
+  ];
+  console.log("tabData", tabData);
   return (
     <Modal isCentered onClose={onClose} isOpen={isOpen} size={"7xl"}>
       <ModalOverlay
@@ -48,20 +59,25 @@ export default function ResponsivelySizedModal({
 
         <Tabs isLazy align="left" h="full">
           <TabList bg="#171717">
-            <Tab
-              ml={12}
-              fontSize="md"
-              fontFamily="Evogria Italic"
-              minH={tabHeight}
-            >
-              {`NFT info`}
-            </Tab>
+            {tabData.map((tab, index) => (
+              <Tab
+                ml={12}
+                key={index}
+                fontSize="md"
+                fontFamily="Evogria Italic"
+                minH={tabHeight}
+              >
+                {tab.label}
+              </Tab>
+            ))}
           </TabList>
 
           <TabPanels style={{ height: `calc(100% - ${tabHeight})` }}>
-            <TabPanel px={{ base: 6, "2xl": 12 }} py={8} h="full">
-              <MyNFTTabInfo {...rest} />
-            </TabPanel>
+            {tabData.map((tab, index) => (
+              <TabPanel px={{ base: 6, "2xl": 12 }} py={8} h="full" key={index}>
+                {tab.content}
+              </TabPanel>
+            ))}
           </TabPanels>
         </Tabs>
       </ModalContent>

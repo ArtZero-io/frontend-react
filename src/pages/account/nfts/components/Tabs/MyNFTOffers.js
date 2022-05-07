@@ -1,48 +1,65 @@
-// import {
-//   Box,
-//   Table,
-//   TableContainer,
-//   Tbody,
-//   Td,
-//   Th,
-//   Thead,
-//   Tr,
-// } from "@chakra-ui/react";
-import React from "react";
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from "react";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+import { useSubstrateState } from "@utils/substrate";
 import DataTable from "@components/Table/Table";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 
-function NFTTabActivity(props) {
+function MyNFTTabOffers({ nftContractAddress, tokenID }) {
+  const [bidders, setBidders] = useState([]);
+  const { currentAccount } = useSubstrateState();
+  const headers = ["Address", "Time", "Price", "Action"];
+  const [saleInfo, setSaleInfo] = useState({});
+  const dispatch = useDispatch();
+  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
   
-  return (
-    <DataTable  {...props} />
+  const acceptBid = async (bidId) => {
+    if (currentAccount.address == saleInfo.nftOwner) {
+      await marketplace_contract_calls.acceptBid(
+        currentAccount,
+        nftContractAddress,
+        { u64: tokenID },
+        bidId,
+        dispatch
+      );
+    } else {
+      toast.error(`You not owner of token`);
+    }
+    
+  };
 
-    // <Box minH="30rem" as="section" maxW="container.3xl" position="relative">
-    //   <TableContainer>
-    //     <Table>
-    //       <Thead>
-    //         <Tr>
-    //           <Th>Type</Th>
-    //           <Th isNumeric>Price</Th>
-    //           <Th>From</Th>
-    //           <Th>To</Th>
-    //           <Th>Time</Th>
-    //         </Tr>
-    //       </Thead>
-    //       <Tbody>
-    //         {[...Array(5)].map((i) => (
-    //           <Tr key={i}>
-    //             <Td>Sale</Td>
-    //             <Td isNumeric>25.41</Td>
-    //             <Td>FjSn...WXGd</Td>
-    //             <Td>FjSn...WXGd</Td>
-    //             <Td>2 hours ago</Td>
-    //           </Tr>
-    //         ))}
-    //       </Tbody>
-    //     </Table>
-    //   </TableContainer>
-    // </Box>
+  useEffect(() => {
+    const fetchBidder = async () => {
+      const sale_info = await marketplace_contract_calls.getNftSaleInfo(
+        currentAccount,
+        nftContractAddress,
+        { u64: tokenID }
+      );
+
+      setSaleInfo(sale_info);
+
+      const listBidder = await marketplace_contract_calls.getAllBids(
+        currentAccount,
+        nftContractAddress,
+        sale_info?.nftOwner,
+        { u64: tokenID }
+      );
+
+      setBidders(listBidder);
+    };
+
+    fetchBidder();
+  }, [currentAccount, nftContractAddress, tokenID]);
+
+  return (
+    <DataTable
+      tableHeaders={headers}
+      tableData={bidders}
+      saleInfo={saleInfo}
+      onClickHandler={acceptBid}
+    />
   );
 }
 
-export default NFTTabActivity;
+export default MyNFTTabOffers;
