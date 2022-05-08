@@ -1,4 +1,11 @@
-import { Box, Flex, Text, HStack, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Text,
+  Button,
+  TableContainer,
+  Stack,
+} from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
@@ -98,7 +105,11 @@ function CollectionAdmin() {
       py={{ base: "8", "2xl": "4" }}
     >
       <Box maxW="6xl-mid" fontSize="lg" minH="50rem">
-        <HStack pb={5} borderBottomWidth={1}>
+        <Stack
+          direction={{ base: "column", xl: "row" }}
+          pb={5}
+          borderBottomWidth={1}
+        >
           <Flex alignItems="start" pr={20}>
             <Text ml={1} color="brand.grayLight">
               Total Collection:{" "}
@@ -107,7 +118,7 @@ function CollectionAdmin() {
               {collectionCount}{" "}
             </Text>
           </Flex>
-          <Flex alignItems="start" pr={20}>
+          <Flex alignItems="start" pr={{ base: 0, xl: 20 }}>
             <Text ml={1} color="brand.grayLight">
               Collection Contract Balance:
             </Text>
@@ -115,111 +126,181 @@ function CollectionAdmin() {
               {collectionContractBalance} SZERO
             </Text>
           </Flex>
-        </HStack>
-        <HStack py={5} borderBottomWidth={1}>
-          <Flex alignItems="start" pr={20}>
+        </Stack>
+
+        <Stack
+          direction={{ base: "column", xl: "row" }}
+          py={5}
+          borderBottomWidth={1}
+        >
+          <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>
             <Text ml={1} color="brand.grayLight">
               Collection Contract Owner:{" "}
             </Text>
             <Text color="#fff" ml={2}>
               {truncateStr(collectionContractOwner, 9)}
             </Text>
-          </Flex>
-          <Flex alignItems="start" pr={20}>
+          </Stack>
+          <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>
             <Text ml={1} color="brand.grayLight">
               Collection Contract Admin:{" "}
             </Text>
             <Text color="#fff" ml={2}>
               {truncateStr(collectionContractAdmin, 9)}
             </Text>
-          </Flex>
-        </HStack>
-        <Table variant="striped" colorScheme="blackAlpha">
-          <Thead>
-            <Tr>
-              <Th fontFamily="Evogria" fontSize="sm" fontWeight="normal" py={7}>
-                Index
-              </Th>
-              <Th fontFamily="Evogria" fontSize="sm" fontWeight="normal" py={7}>
-                Address
-              </Th>
-              <Th fontFamily="Evogria" fontSize="sm" fontWeight="normal" py={7}>
-                Owner
-              </Th>
-              <Th fontFamily="Evogria" fontSize="sm" fontWeight="normal" py={7}>
-                Type
-              </Th>
-              <Th fontFamily="Evogria" fontSize="sm" fontWeight="normal" py={7}>
-                Status
-              </Th>
-              <Th fontFamily="Evogria" fontSize="sm" fontWeight="normal" py={7}>
-                Royal Fee
-              </Th>
-              <Th fontFamily="Evogria" fontSize="sm" fontWeight="normal" py={7}>
-                Metadata
-              </Th>
-              <Th fontFamily="Evogria" fontSize="sm" fontWeight="normal" py={7}>
-                Action
-              </Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {collectionCount === 0 ? (
+          </Stack>
+        </Stack>
+        <TableContainer
+          maxW="6xl-mid"
+          maxH={{ base: "20rem", "2xl": "30rem" }}
+          fontSize="lg"
+          h="full"
+          overflow="auto"
+          sx={{
+            "&::-webkit-scrollbar": {
+              width: "0.3rem",
+              height: "0.3rem",
+              borderRadius: "1px",
+              backgroundColor: `#7ae7ff`,
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: `#7ae7ff`,
+            },
+          }}
+        >
+          <Table variant="striped" colorScheme="blackAlpha" overflow="auto">
+            <Thead>
               <Tr>
-                <Td py={7}>There is no data.</Td>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  Index
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  Address
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  Owner
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  Type
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  Status
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  Royal Fee
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  Metadata
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  Action
+                </Th>
               </Tr>
-            ) : (
-              collections.map((collection, index) => (
-                <Tr key={index}>
-                  <Td py={7}>{collection.index}</Td>
-                  <Td py={7}>
-                    {truncateStr(collection.nftContractAddress, 5)}
-                  </Td>
-                  <Td py={7}>{truncateStr(collection.collectionOwner, 5)}</Td>
-                  <Td>{collection.contractType === 2 ? "Auto" : "Manual"} </Td>
-                  <Td py={7}>{collection.isActive ? "Active" : "Inactive"} </Td>
-                  <Td py={7}>
-                    {collection.isCollectRoyalFee
-                      ? collection.royalFee / 100 + "%"
-                      : "N/A"}{" "}
-                  </Td>
-                  <Td py={7}>
-                    {collection.showOnChainMetadata ? "On-chain" : "Off-chain"}{" "}
-                  </Td>
-                  <Td>
-                    {!collection.isActive ? (
-                      <Button
-                        size="sm"
-                        color="black"
-                        onClick={() =>
-                          onSetStatusCollection(
-                            collection.nftContractAddress,
-                            true
-                          )
-                        }
-                      >
-                        Enable
-                      </Button>
-                    ) : (
-                      <Button
-                        size="sm"
-                        color="black"
-                        onClick={() =>
-                          onSetStatusCollection(
-                            collection.nftContractAddress,
-                            false
-                          )
-                        }
-                      >
-                        Disable
-                      </Button>
-                    )}
-                  </Td>
+            </Thead>
+            <Tbody>
+              {collectionCount === 0 ? (
+                <Tr>
+                  <Td py={7}>There is no data.</Td>
                 </Tr>
-              ))
-            )}
-          </Tbody>
-        </Table>
+              ) : (
+                collections.map((collection, index) => (
+                  <Tr key={index}>
+                    <Td py={7}>{collection.index}</Td>
+                    <Td py={7}>
+                      {truncateStr(collection.nftContractAddress, 5)}
+                    </Td>
+                    <Td py={7}>{truncateStr(collection.collectionOwner, 5)}</Td>
+                    <Td>
+                      {collection.contractType === 2 ? "Auto" : "Manual"}{" "}
+                    </Td>
+                    <Td py={7}>
+                      {collection.isActive ? "Active" : "Inactive"}{" "}
+                    </Td>
+                    <Td py={7}>
+                      {collection.isCollectRoyalFee
+                        ? collection.royalFee / 100 + "%"
+                        : "N/A"}{" "}
+                    </Td>
+                    <Td py={7}>
+                      {collection.showOnChainMetadata
+                        ? "On-chain"
+                        : "Off-chain"}{" "}
+                    </Td>
+                    <Td>
+                      {!collection.isActive ? (
+                        <Button
+                          size="sm"
+                          color="black"
+                          onClick={() =>
+                            onSetStatusCollection(
+                              collection.nftContractAddress,
+                              true
+                            )
+                          }
+                        >
+                          Enable
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          color="black"
+                          onClick={() =>
+                            onSetStatusCollection(
+                              collection.nftContractAddress,
+                              false
+                            )
+                          }
+                        >
+                          Disable
+                        </Button>
+                      )}
+                    </Td>
+                  </Tr>
+                ))
+              )}
+            </Tbody>
+          </Table>
+        </TableContainer>
       </Box>
     </Box>
   );

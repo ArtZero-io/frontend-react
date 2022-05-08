@@ -40,9 +40,9 @@ const AdminLayout = () => {
             ))}
           </TabList>
 
-          <TabPanels bg="#171717">
+          <TabPanels h="full" minH="xs" bg="#171717">
             {tabData.map((tab, index) => (
-              <TabPanel px={12} py={8} key={index}>
+              <TabPanel pt={4} px={{ base: 2, "2xl": 24 }} key={index} h="full">
                 {tab.content}
               </TabPanel>
             ))}

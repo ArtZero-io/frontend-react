@@ -1,4 +1,3 @@
-
 import {
   Button,
   Box,
@@ -13,6 +12,8 @@ import {
   HStack,
   Heading,
   Center,
+  Stack,
+  TableContainer,
 } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
@@ -39,7 +40,7 @@ function ContractTab() {
   const [azNFTContractBalance, setAzNFTContractBalance] = useState(0);
 
   const onRefreshAZNFT = async () => {
-    console.log('onRefreshAZNFT',currentAccount);
+    console.log("onRefreshAZNFT", currentAccount);
     await getAZNFTContractBalance();
 
     await onGetOwner();
@@ -143,8 +144,16 @@ function ContractTab() {
             py={{ base: "8", "2xl": "4" }}
           >
             <Box maxW="6xl-mid" fontSize="lg">
-              <HStack pb={5} borderBottomWidth={1}>
-                <Flex alignItems="start" pr={20}>
+              <Stack
+                direction={{ base: "column", xl: "row" }}
+                pb={5}
+                borderBottomWidth={1}
+              >
+                <Flex
+                  alignItems="start"
+                  pr={{ base: 0, xl: 20 }}
+                  // pr={20}
+                >
                   <Text ml={1} color="brand.grayLight">
                     Contract Owner:
                   </Text>
@@ -161,9 +170,10 @@ function ContractTab() {
                     {azNFTContractBalance} SZERO
                   </Text>
                 </Flex>
-              </HStack>
+              </Stack>
 
               <Flex
+                direction={{ base: "column", xl: "row" }}
                 align="start"
                 justify="space-between"
                 w="full"
@@ -306,7 +316,11 @@ function ContractTab() {
                                 <NumberDecrementStepper />
                               </NumberInputStepper>
                             </NumberInput>
-                            <Flex justify="space-between" alignItems="center">
+                            <Flex
+                              direction={{ base: "column", xl: "row" }}
+                              justify="space-between"
+                              alignItems="center"
+                            >
                               <Button
                                 mt={7}
                                 variant="solid"
@@ -346,57 +360,79 @@ function ContractTab() {
                   </Text>
                 </Flex>
               </HStack>
-
-              <Table variant="striped" colorScheme="blackAlpha">
-                <Thead>
-                  <Tr>
-                    <Th
-                      fontFamily="Evogria"
-                      fontSize="sm"
-                      fontWeight="normal"
-                      py={7}
-                    >
-                      Address
-                    </Th>
-                    <Th
-                      fontFamily="Evogria"
-                      fontSize="sm"
-                      fontWeight="normal"
-                      py={7}
-                    >
-                      Amount
-                    </Th>
-                    <Th
-                      fontFamily="Evogria"
-                      fontSize="sm"
-                      fontWeight="normal"
-                      py={7}
-                      isNumeric
-                    >
-                      Claimed
-                    </Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {whitelist.length === 0 ? (
-                    <Tr color="#fff">
-                      <Center py={7}>There is no data.</Center>
+              <TableContainer
+                maxW="6xl-mid"
+                maxH={{ base: "20rem", "2xl": "30rem" }}
+                fontSize="lg"
+                h="full"
+                overflow="auto"
+                sx={{
+                  "&::-webkit-scrollbar": {
+                    width: "0.3rem",
+                    height: "0.3rem",
+                    borderRadius: "1px",
+                    backgroundColor: `#7ae7ff`,
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    backgroundColor: `#7ae7ff`,
+                  },
+                }}
+              >
+                <Table
+                  variant="striped"
+                  colorScheme="blackAlpha"
+                  overflow="auto"
+                >
+                  <Thead>
+                    <Tr>
+                      <Th
+                        fontFamily="Evogria"
+                        fontSize="sm"
+                        fontWeight="normal"
+                        py={7}
+                      >
+                        Address
+                      </Th>
+                      <Th
+                        fontFamily="Evogria"
+                        fontSize="sm"
+                        fontWeight="normal"
+                        py={7}
+                      >
+                        Amount
+                      </Th>
+                      <Th
+                        fontFamily="Evogria"
+                        fontSize="sm"
+                        fontWeight="normal"
+                        py={7}
+                        isNumeric
+                      >
+                        Claimed
+                      </Th>
                     </Tr>
-                  ) : (
-                    whitelist.map((wl, index) => (
-                      <Tr key={index} color="#fff">
-                        <Td py={7}>{truncateStr(wl.account, 5)}</Td>
-                        <Td py={7} isNumeric>
-                          {wl.whitelistAmount}
-                        </Td>
-                        <Td py={7} isNumeric>
-                          {wl.claimedAmount}
-                        </Td>
+                  </Thead>
+                  <Tbody>
+                    {whitelist.length === 0 ? (
+                      <Tr color="#fff">
+                        <Center py={7}>There is no data.</Center>
                       </Tr>
-                    ))
-                  )}
-                </Tbody>
-              </Table>
+                    ) : (
+                      whitelist.map((wl, index) => (
+                        <Tr key={index} color="#fff">
+                          <Td py={7}>{truncateStr(wl.account, 5)}</Td>
+                          <Td py={7} isNumeric>
+                            {wl.whitelistAmount}
+                          </Td>
+                          <Td py={7} isNumeric>
+                            {wl.claimedAmount}
+                          </Td>
+                        </Tr>
+                      ))
+                    )}
+                  </Tbody>
+                </Table>
+              </TableContainer>
             </Box>
           </Box>
         </>

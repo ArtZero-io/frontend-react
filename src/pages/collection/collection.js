@@ -270,7 +270,6 @@ function CollectionPage() {
                   px={{ base: 2, "2xl": 24 }}
                   key={index}
                   h="full"
-                  flexGrow="1"
                 >
                   {tab.content}
                 </TabPanel>
