@@ -142,17 +142,17 @@ async function getRequestUnstakeTime(caller_account, account, token_id) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  console.log('address', address);
 
   const { result, output } = await contract.query.getRequestUnstakeTime(
     address,
     { value: azero_value, gasLimit },
-    account,
+    address,
     token_id
   );
   console.log(output);
   if (result.isOk) {
-    return new BN(output.value, 10, "le").toNumber();
+    return output.toHuman();
   }
   return null;
 }

@@ -50,7 +50,9 @@ function MyNFTCard({
       tokenID
     );
     console.log(time);
-    setUnstakeRequestTime(time);
+    /* eslint-disable no-useless-escape */
+    const unstakeRequestTime = time.replace(/\,/g, "");
+    setUnstakeRequestTime(unstakeRequestTime);
   };
   const requestUpdateNFT = async () => {
     console.log("MyNFTCard request updateNFT", nftContractAddress, tokenID);
