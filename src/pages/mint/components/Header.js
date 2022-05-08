@@ -178,7 +178,7 @@ function MintHeader() {
         </VStack>
 
         <Grid
-          templateColumns="repeat(auto-fill, minmax(min(100%, 25rem), 1fr))"
+          templateColumns="repeat(auto-fill, minmax(min(100%, 24rem), 1fr))"
           gap={6}
           maxW="6xl-mid"
           mx="auto"

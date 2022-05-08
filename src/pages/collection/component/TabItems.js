@@ -6,6 +6,7 @@ import {
   Spacer,
   IconButton,
   useDisclosure,
+  Stack,
 } from "@chakra-ui/react";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -79,8 +80,9 @@ const CollectionItems = ({
 
   return (
     <Box w="full" textAlign="left" minH={"54rem"}>
-      <Flex w="full">
+      <Stack direction={{ base: "column", xl: "row" }} w="full">
         <IconButton
+          display={{ base: "none", xl: "block" }}
           aria-label="refresh"
           icon={<RefreshIcon fontSize="1.5rem" />}
           size="icon"
@@ -88,22 +90,34 @@ const CollectionItems = ({
           mx={1.5}
           onClick={() => forceUpdate()}
         />
-        <Button
-          mx={1.5}
-          variant="outline"
-          minW={"11rem"}
-          onClick={() =>
-            setIsShowUnlisted((isShowUnlisted) => isShowUnlisted + 1)
-          }
-        >
-          {isShowUnlisted % 3 === 0
-            ? "Show all"
-            : isShowUnlisted % 3 === 1
-            ? "Show listed"
-            : isShowUnlisted % 3 === 2
-            ? "Show unlisted"
-            : ""}
-        </Button>
+        <Flex justifyContent="space-between">
+          <IconButton
+            display={{ base: "block", xl: "none" }}
+            aria-label="refresh"
+            icon={<RefreshIcon fontSize="1.5rem" />}
+            size="icon"
+            variant="iconSolid"
+            mx={1.5}
+            onClick={() => forceUpdate()}
+          />
+
+          <Button
+            mx={1.5}
+            variant="outline"
+            minW={"11rem"}
+            onClick={() =>
+              setIsShowUnlisted((isShowUnlisted) => isShowUnlisted + 1)
+            }
+          >
+            {isShowUnlisted % 3 === 0
+              ? "Show all"
+              : isShowUnlisted % 3 === 1
+              ? "Show listed"
+              : isShowUnlisted % 3 === 2
+              ? "Show unlisted"
+              : ""}
+          </Button>
+        </Flex>
         {/* 
         <Input
           ml={1.5}
@@ -111,15 +125,27 @@ const CollectionItems = ({
           placeholder="Search items, collections, and accounts"
         /> */}
         <Spacer />
-
-        <Dropdown
-          mx={1.5}
-          options={options}
-          selectedItem={selectedItem}
-          setSelectedItem={setSelectedItem}
-        />
+        <Flex justifyContent="space-between" align="center" pr="2">
+          <Text px={2} display={{ base: "block", xl: "none" }}>
+            {unListNFT.length || 0} items{" "}
+            {isShowUnlisted % 3 === 0
+              ? "in total"
+              : isShowUnlisted % 3 === 1
+              ? "listed"
+              : isShowUnlisted % 3 === 2
+              ? "unlisted"
+              : ""}
+          </Text>
+          <Dropdown
+            mx={1.5}
+            options={options}
+            selectedItem={selectedItem}
+            setSelectedItem={setSelectedItem}
+          />
+        </Flex>
 
         <IconButton
+          display={{ base: "none", xl: "flex" }}
           bg={bigCard ? "#7ae7ff" : "#222"}
           color={bigCard ? "#000" : "#fff"}
           aria-label="big-card"
@@ -132,6 +158,7 @@ const CollectionItems = ({
         />
 
         <IconButton
+          display={{ base: "none", xl: "flex" }}
           bg={!bigCard ? "#7ae7ff" : "#222"}
           color={!bigCard ? "#000" : "#fff"}
           aria-label="small-card"
@@ -141,10 +168,15 @@ const CollectionItems = ({
           mx={1.5}
           onClick={() => setBigCard(false)}
         />
-      </Flex>
+      </Stack>
 
-      <Flex align="center" py={4} minH={24}>
-        <Text px={2}>
+      <Flex
+        align="center"
+        py={{ base: 2, "2xl": 4 }}
+        minH={{ base: 14, "2xl": 24 }}
+        w="full"
+      >
+        <Text px={2} display={{ base: "none", xl: "block" }}>
           {unListNFT.length || 0} items{" "}
           {isShowUnlisted % 3 === 0
             ? "in total"
@@ -207,6 +239,7 @@ function GridNftA({ listNFTFormatted, bigCard }) {
         hasTabs={true}
       /> */}
       <NFTDetailModal {...selectedNft} isOpen={isOpen} onClose={onClose} />
+
       <AnimatePresence>
         <motion.div
           initial="hidden"

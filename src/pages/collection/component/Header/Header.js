@@ -100,7 +100,7 @@ function CollectionHeader({
           <HStack
             w="full"
             justifyContent="space-around"
-            py={{ base: "1rem", "2xl": "2.25rem" }}
+            py={{ base: "0.5rem", "2xl": "2.25rem" }}
           >
             {
               <AnimatePresence>
@@ -112,9 +112,15 @@ function CollectionHeader({
                   <VStack
                     textAlign="center"
                     justifyContent="space-between"
-                    minH={{ base: "4.75rem", "2xl": "7.125rem" }}
+                    minH={{ base: "3.5rem", "2xl": "7.125rem" }}
                   >
-                    <Heading size="h2" minH="3.75rem">
+                    <Heading
+                      // size="h2"
+                      color="#fff"
+                      fontSize={{ base: "2rem", "2xl": "3rem" }}
+                      minH={{ base: "2.5rem", "2xl": "3.75rem" }}
+                      // minH="3.75rem"
+                    >
                       {name}
                     </Heading>
                     <Text
@@ -133,17 +139,18 @@ function CollectionHeader({
 
           <HStack
             color="brand.blue"
-            minW="container.md"
+            // minW="container.md"
+            minW={{ base: "auto", xl: "auto", "2xl": "container.md" }}
             borderWidth={2}
             borderColor="brand.blue"
-            px="16"
-            py={{ base: "0.75rem", "2xl": "1.125rem" }}
+            px={{ base: 1, xl: 12, "2xl": 16 }}
+            py={{ base: "0.5rem", "2xl": "1.125rem" }}
             justifyContent="space-between"
             bg="black"
-            minH={{ base: "6.75rem", "2xl": "7.75rem" }}
+            minH={{ base: "5.75rem", "2xl": "7.75rem" }}
           >
             {nftTotalCount ? (
-              <VStack textAlign="center">
+              <VStack textAlign="center" px={3}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -152,7 +159,7 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "5xl", "2xl": "6xl" }}
+                      fontSize={{ base: "4xl", "2xl": "6xl" }}
                       lineHeight="none"
                     >
                       {nftTotalCount || 0}
@@ -162,7 +169,7 @@ function CollectionHeader({
                 </AnimatePresence>
               </VStack>
             ) : (
-              <VStack textAlign="center">
+              <VStack textAlign="center" px={3}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -171,7 +178,7 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "5xl", "2xl": "6xl" }}
+                      fontSize={{ base: "4xl", "2xl": "6xl" }}
                       lineHeight="none"
                     >
                       0
@@ -182,7 +189,7 @@ function CollectionHeader({
               </VStack>
             )}
             {totalListed ? (
-              <VStack textAlign="center">
+              <VStack textAlign="center" px={3}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -191,7 +198,7 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "5xl", "2xl": "6xl" }}
+                      fontSize={{ base: "4xl", "2xl": "6xl" }}
                       lineHeight="none"
                     >
                       {totalListed || 0}
@@ -201,7 +208,7 @@ function CollectionHeader({
                 </AnimatePresence>
               </VStack>
             ) : (
-              <VStack textAlign="center">
+              <VStack textAlign="center" px={3}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -210,7 +217,7 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "5xl", "2xl": "6xl" }}
+                      fontSize={{ base: "4xl", "2xl": "6xl" }}
                       lineHeight="none"
                     >
                       0
@@ -221,7 +228,7 @@ function CollectionHeader({
               </VStack>
             )}
             {floorPrice ? (
-              <VStack textAlign="center">
+              <VStack textAlign="center" px={3}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -231,7 +238,7 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "5xl", "2xl": "6xl" }}
+                        fontSize={{ base: "4xl", "2xl": "6xl" }}
                         lineHeight="none"
                       >
                         {floorPrice / 10 ** 12 || 0}
@@ -250,7 +257,7 @@ function CollectionHeader({
                 </AnimatePresence>
               </VStack>
             ) : (
-              <VStack textAlign="center">
+              <VStack textAlign="center" px={3}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -260,7 +267,7 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "5xl", "2xl": "6xl" }}
+                        fontSize={{ base: "4xl", "2xl": "6xl" }}
                         lineHeight="none"
                       >
                         0
@@ -281,7 +288,7 @@ function CollectionHeader({
             )}
 
             {volume ? (
-              <VStack textAlign="center">
+              <VStack textAlign="center" px={3}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -291,7 +298,7 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "5xl", "2xl": "6xl" }}
+                        fontSize={{ base: "4xl", "2xl": "6xl" }}
                         lineHeight="none"
                       >
                         {shortenNumber(volume) || 0}
@@ -305,12 +312,17 @@ function CollectionHeader({
                         bg="transparent"
                       />
                     </Flex>
-                    <Text mt={0}>Volume traded</Text>{" "}
+                    <Text mt={0}>
+                      Volume{" "}
+                      <Text display={{ base: "none", xl: "inline" }}>
+                        traded
+                      </Text>
+                    </Text>{" "}
                   </motion.div>
                 </AnimatePresence>
               </VStack>
             ) : (
-              <VStack textAlign="center">
+              <VStack textAlign="center" px={3}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -320,7 +332,7 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "5xl", "2xl": "6xl" }}
+                        fontSize={{ base: "4xl", "2xl": "6xl" }}
                         lineHeight="none"
                       >
                         0
@@ -334,7 +346,12 @@ function CollectionHeader({
                         bg="transparent"
                       />
                     </Flex>
-                    <Text mt={0}>Volume traded</Text>{" "}
+                    <Text mt={0}>
+                      Volume{" "}
+                      <Text display={{ base: "none", xl: "inline" }}>
+                        traded
+                      </Text>
+                    </Text>
                   </motion.div>
                 </AnimatePresence>
               </VStack>
@@ -344,10 +361,11 @@ function CollectionHeader({
       </Box>
 
       <SocialCard
+        justifyContent="center"
         profile={[{ website }, { twitter }, { discord }]}
-        pos="absolute"
+        pos={{ base: "", "xl": "absolute" }}
         right={"6.3125rem"}
-        bottom={"2.375rem"}
+        bottom={{ base: "1.375rem", "2xl": "2.375rem" }}
       />
     </Box>
   );

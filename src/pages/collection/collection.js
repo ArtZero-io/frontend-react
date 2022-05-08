@@ -119,7 +119,7 @@ function CollectionPage() {
 
         if (Number(collectionDetail.contractType) === 2) {
           console.log("fetchCollectionDetail start contractType 2", Date.now());
-          console.log('1 NFTList', NFTList)
+          console.log("1 NFTList", NFTList);
           return Promise.all(
             NFTList.map((item) => {
               const itemData = createObjAttrsNFT(
@@ -130,11 +130,11 @@ function CollectionPage() {
               return { ...item, ...itemData };
             })
           ).then((NFTListFormatted) => {
-            console.log('2 NFTList', NFTList)
+            console.log("2 NFTList", NFTList);
 
             collectionDetail.NFTListFormatted = NFTListFormatted;
             console.log("collectionDetail contractType 2 Done ", Date.now());
-            console.log('collectionDetail - formatted', collectionDetail)
+            console.log("collectionDetail - formatted", collectionDetail);
             setFormattedCollection(collectionDetail);
           });
         }
@@ -255,6 +255,7 @@ function CollectionPage() {
       {
         <>
           <CollectionHero {...formattedCollection} loading={loading} />
+
           <Tabs isLazy align="center">
             <TabList bg="#000" borderBottomColor="#000">
               {tabData.map((tab, index) => (
@@ -262,12 +263,11 @@ function CollectionPage() {
               ))}
             </TabList>
 
-            <TabPanels h="full" minH="xs">
+            <TabPanels h="full" minH="xs" bg="#171717">
               {tabData.map((tab, index) => (
                 <TabPanel
                   pt={4}
-                  px={24}
-                  bg="#171717"
+                  px={{ base: 2, "2xl": 24 }}
                   key={index}
                   h="full"
                   flexGrow="1"

@@ -126,7 +126,7 @@ const MintPage = () => {
         <MintHeader setMyAZNFTs={setMyAZNFTs} />
 
         <Tabs isLazy align="center">
-          <TabList>
+          <TabList bg="#000" borderBottomColor="#000">
             <Tab>My Artzero Nfts</Tab>
             {/* {tabData.map((tab) => (
               <Tab
@@ -143,11 +143,16 @@ const MintPage = () => {
             ))} */}
           </TabList>
           {keyringState === "READY" ? (
-            <TabPanels bg="#171717">
+            <TabPanels h="full" minH="xs">
               {loading ? (
                 <Loader />
               ) : (
-                <TabPanel px={12} py={8}>
+                <TabPanel
+                  pt={4}
+                  px={{ base: 2, "2xl": 24 }}
+                  bg="#171717"
+                  h="full"
+                >
                   <NFTMintTab myAZNFTs={myAZNFTs} />
                 </TabPanel>
               )}
@@ -159,11 +164,15 @@ const MintPage = () => {
             ))} */}
             </TabPanels>
           ) : (
-            <Center>
-              <Heading size="h6" my={10}>
-                Please connect wallet to view your ArtZero NFTs.
-              </Heading>
-            </Center>
+            <TabPanels h="full" minH="xs" id="abc" bg="#171717">
+              <TabPanel id="abc1" pt={4} px={{ base: 2, "2xl": 24 }} h="full">
+                <Center h="full">
+                  <Heading size="h6" my={10}>
+                    Please connect wallet to view your ArtZero NFTs.
+                  </Heading>
+                </Center>
+              </TabPanel>
+            </TabPanels>
           )}
         </Tabs>
       </Box>
