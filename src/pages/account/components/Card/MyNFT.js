@@ -43,6 +43,7 @@ function MyNFTCard({
   const [countdownTime, setCountdownTime] = useState(0);
   const [isUnstakeTime, setIsUnstakeTime] = useState(false);
   const [nftImage, setNftImage] = useState(null);
+  const [limitUnstakeTime, setLimitUnstakeTime] = useState(0);
   const getRequestTime = async () => {
     let time = await staking_calls.getRequestUnstakeTime(
       currentAccount,
@@ -50,7 +51,12 @@ function MyNFTCard({
       tokenID
     );
     console.log(time);
-    setUnstakeRequestTime(time);
+    /* eslint-disable no-useless-escape */
+    const unstakeRequestTimeTmp = time.replace(/\,/g, "");
+    setUnstakeRequestTime(unstakeRequestTimeTmp);
+
+    let limitUnstakeTimeTmp = await staking_calls.getLimitUnstakeTime(currentAccount);
+    setLimitUnstakeTime(limitUnstakeTimeTmp);
   };
   const requestUpdateNFT = async () => {
     console.log("MyNFTCard request updateNFT", nftContractAddress, tokenID);
@@ -62,7 +68,7 @@ function MyNFTCard({
   useInterval(() => {
     if (unstakeRequestTime) {
       let now = new Date().getTime() / 1000;
-      let valid_time = unstakeRequestTime / 1000 + 5 * 60;
+      let valid_time = unstakeRequestTime / 1000 + limitUnstakeTime * 60;
       if (valid_time - now > 0)
         setCountdownTime(secondsToTime(valid_time - now));
       else {
