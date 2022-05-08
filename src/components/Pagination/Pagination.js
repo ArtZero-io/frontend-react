@@ -35,7 +35,11 @@ const PaginationMP = ({
   };
 
   return (
-    <Stack maxW="25rem" textAlign="left">
+    <Stack
+      maxW="25rem"
+      textAlign="left"
+      align={{ base: "start", "xl": "space-between" }}
+    >
       <Text color="brand.grayLight" ml="1">
         Page {currentPage} of {pagesCount}
       </Text>
@@ -131,7 +135,11 @@ const PaginationMP = ({
               },
             }}
           />
-          <Input placeholder="Go to page" onKeyPress={onEnterHandler} />
+          <Input
+            placeholder="Go to page"
+            onKeyPress={onEnterHandler}
+            display={{ base: "none", "xl": "block" }}
+          />
         </PaginationContainer>
       </Pagination>
     </Stack>

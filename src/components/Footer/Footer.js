@@ -18,7 +18,7 @@ export const Footer = () => (
         md: "full",
       }}
       mx="auto"
-      px={{ xl: "3", "2xl": "24" }}
+      px={{ base: "3", "2xl": "24" }}
     >
       <Flex
         borderTopWidth="2px"
@@ -47,10 +47,6 @@ export const Footer = () => (
             base: "4",
             md: "12",
           }}
-          mt={{
-            base: "8",
-            lg: 0,
-          }}
           w={{
             base: "full",
             lg: "full",
@@ -59,36 +55,42 @@ export const Footer = () => (
             base: "space-between",
             lg: "flex-start",
           }}
-          align={{
-            base: "flex-start",
-            md: "center",
-          }}
+          align="center"
         >
           <Box h="1.75rem" minW="12.0625rem">
             <ArtZeroLogo alt="AzeroLogo" />
+          </Box>
+          <Box pt={5} display={{ base: "block", xl: "none" }}>
+            <SocialCard profile={profile} mt={3} />
           </Box>
 
           <VStack w="full">
             <Heading size="h6" color="brand.blue" mt="2">
               Discover, collect and trade NFTs on artzero
             </Heading>
-            <Text>
+            <Text pt={{ base: 3, xl: "auto" }}>
               &copy; Copyright {new Date().getFullYear()} artZero. All Rights
               Reserved
             </Text>
           </VStack>
         </Stack>
-        <Box>
-          <Flex justifyContent="space-between" align="center">
-            <Heading
-              display={{ base: "none", xl: "block" }}
-              size="h6"
-              mr="4"
-              fontSize="15px"
-              fontStyle="normal"
-            >
+
+        <Box
+          mx="auto"
+          pt={{ base: 5, "2xl": "auto" }}
+          display={{ base: "none", xl: "block" }}
+        >
+          <Flex
+            justifyContent={{
+              base: "center",
+              lg: "space-between",
+            }}
+            align="center"
+          >
+            <Heading size="h6" mr="4" fontSize="15px" fontStyle="normal">
               Contact
             </Heading>
+
             <SocialCard profile={profile} />
           </Flex>
         </Box>

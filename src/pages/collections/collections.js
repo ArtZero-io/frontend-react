@@ -18,7 +18,7 @@ const CollectionsPage = () => {
   const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
   const [selectedItem, setSelectedItem] = useState(0);
 
-  const options = ["All collections", "Trending"]; 
+  const options = ["All collections", "Trending"];
   // 0 All, 1 Vol
 
   const {
@@ -138,14 +138,18 @@ const CollectionsPage = () => {
             >
               {collections?.length ? (
                 <>
-                  <Flex w="full" alignItems="end">
+                  <Flex
+                    w="full"
+                    alignItems={{ base: "start", xl: "end" }}
+                    direction={{ base: "column", xl: "row" }}
+                  >
                     <PaginationMP
                       pagesCount={pagesCount}
                       isDisabled={isDisabled}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
                     />
-                    <Spacer />
+                    <Spacer my={{ base: "3", "2xl": "auto" }} />
                     <Dropdown
                       options={options}
                       selectedItem={selectedItem}
@@ -154,7 +158,8 @@ const CollectionsPage = () => {
                   </Flex>
 
                   {collections?.length ? (
-                    <GridA bg='yellow'
+                    <GridA
+                      bg="yellow"
                       collections={collections}
                       variant="marketplace-collection"
                     />
