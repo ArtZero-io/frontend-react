@@ -43,6 +43,7 @@ const CollectionsPage = () => {
         limit: pageSize,
         offset: offset,
         sort: -1,
+        isActive: true
       };
 
       try {
