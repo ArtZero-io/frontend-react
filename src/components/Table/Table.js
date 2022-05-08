@@ -13,7 +13,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { convertStringToPrice,convertStringToDateTime } from "@utils";
+import { convertStringToPrice, convertStringToDateTime } from "@utils";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -28,11 +28,11 @@ function DataTable({ tableHeaders, tableData, onClickHandler, saleInfo }) {
       maxH={{ base: "20rem", "2xl": "30rem" }}
       fontSize="lg"
       h="full"
-      overflowX="hidden"
-      overflowY="auto"
+      overflow="auto"
       sx={{
         "&::-webkit-scrollbar": {
           width: "0.3rem",
+          height: "0.3rem",
           borderRadius: "1px",
           backgroundColor: `#7ae7ff`,
         },
@@ -84,14 +84,24 @@ function DataTable({ tableHeaders, tableData, onClickHandler, saleInfo }) {
                   </Tag>
                 </Td>
                 {console.log(saleInfo)}
-                {currentAccount?.address ==  saleInfo.nftOwner ? <Td py={{ base: "1rem", "2xl": "1.75rem" }} textAlign="center">
-                  <Button spinnerPlacement="start"
-                          isLoading={tnxStatus}
-                          loadingText={`${tnxStatus?.status}`} size="sm" onClick={() => onClickHandler(idx)}>
-                    Accept Bid
-                  </Button>
-                </Td> : ''}
-                
+                {currentAccount?.address == saleInfo.nftOwner ? (
+                  <Td
+                    py={{ base: "1rem", "2xl": "1.75rem" }}
+                    textAlign="center"
+                  >
+                    <Button
+                      spinnerPlacement="start"
+                      isLoading={tnxStatus}
+                      loadingText={`${tnxStatus?.status}`}
+                      size="sm"
+                      onClick={() => onClickHandler(idx)}
+                    >
+                      Accept Bid
+                    </Button>
+                  </Td>
+                ) : (
+                  ""
+                )}
               </Tr>
             </>
           ))}

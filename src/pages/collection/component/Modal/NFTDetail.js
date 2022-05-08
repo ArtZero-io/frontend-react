@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Modal,
   ModalCloseButton,
@@ -26,7 +27,12 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
   ];
 
   return (
-    <Modal isCentered onClose={onClose} isOpen={isOpen} size={"7xl"}>
+    <Modal
+      isCentered
+      onClose={onClose}
+      isOpen={isOpen}
+      size={{ base: "sm", xl: "7xl" }}
+    >
       <ModalOverlay
         bg="blackAlpha.300"
         backdropFilter="blur(10px) hue-rotate(90deg)"
@@ -39,10 +45,11 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
         p={0}
         h="full"
         w="full"
-        maxH={{ base: "28rem", "2xl": "40rem" }}
+        maxH={{ base: "auto", xl: "28rem", "2xl": "40rem" }}
         maxW={{ base: "58rem", "2xl": "78rem" }}
       >
         <ModalCloseButton
+          display={{ base: "none", xl: "block" }}
           position="absolute"
           top="-8"
           right="-8"
@@ -67,7 +74,12 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
 
           <TabPanels style={{ height: `calc(100% - ${tabHeight})` }}>
             {tabData.map((tab, index) => (
-              <TabPanel px={{ base: 6, "2xl": 12 }} py={8} key={index} h="full">
+              <TabPanel
+                px={{ base: 6, "2xl": 12 }}
+                py={{ base: 4, "2xl": 8 }}
+                key={index}
+                h="full"
+              >
                 {tab.content}
               </TabPanel>
             ))}

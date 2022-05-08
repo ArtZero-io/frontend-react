@@ -6,7 +6,6 @@ import {
   Grid,
   GridItem,
   Heading,
-  HStack,
   Spacer,
   Text,
   Link,
@@ -20,6 +19,7 @@ import {
   useBreakpointValue,
   Square,
   Input,
+  Stack,
 } from "@chakra-ui/react";
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -197,7 +197,12 @@ const NFTTabCollectible = ({
   };
 
   return (
-    <Flex h="full">
+    <Flex
+      h="full"
+      direction={{ base: "column", xl: "row" }}
+      justifyContent="center"
+      alignItems="center"
+    >
       <Square
         w={{ base: "20rem", "2xl": "30rem" }}
         h={{ base: "20rem", "2xl": "30rem" }}
@@ -216,7 +221,8 @@ const NFTTabCollectible = ({
 
       <Flex
         w="full"
-        ml={10}
+        ml={{ base: 0, xl: 8 }}
+        py={{ base: 2, xl: 0 }}
         direction={"column"}
         justifyContent="flex-start"
         alignItems="flex-start"
@@ -258,7 +264,7 @@ const NFTTabCollectible = ({
         {!saleInfo?.nftOwner ? (
           <Heading size="h6">Not for sale</Heading>
         ) : (
-          <HStack w="full" py={2}>
+          <Stack direction={{ base: "column", xl: "row" }} w="full" py={2}>
             {currentAccount?.address !== saleInfo?.nftOwner && is_for_sale && (
               <>
                 <Flex
@@ -275,7 +281,7 @@ const NFTTabCollectible = ({
                     isLoading={tnxStatus}
                     loadingText={`${tnxStatus?.status}`}
                     h={10}
-                    maxW={32}
+                    maxW={"7rem"}
                     variant="solid"
                     onClick={buyToken}
                   >
@@ -319,7 +325,7 @@ const NFTTabCollectible = ({
                           isLoading={tnxStatus}
                           loadingText={`${tnxStatus?.status}`}
                           h={10}
-                          maxW={32}
+                          maxW={"7rem"}
                           variant="solid"
                           onClick={placeOffer}
                         >
@@ -362,7 +368,7 @@ const NFTTabCollectible = ({
                           isLoading={tnxStatus}
                           loadingText={`${tnxStatus?.status}`}
                           h={10}
-                          maxW={32}
+                          maxW={"7rem"}
                           variant="solid"
                           onClick={removeBid}
                         >
@@ -383,15 +389,18 @@ const NFTTabCollectible = ({
                 )}
               </>
             )}
-          </HStack>
+          </Stack>
         )}
         {attrsList?.length === 0 ? (
           <>
-            <Text my="3">This NFT have no props/ levels.</Text>
+            <Text my="3" display={{ base: "none", xl: "block" }}>
+              This NFT have no props/ levels.
+            </Text>
           </>
         ) : (
           <>
             <Grid
+              display={{ base: "none", xl: "grid" }}
               boxShadow="lg"
               my={2}
               maxH={{ base: "8rem", "2xl": "15rem" }}
@@ -472,7 +481,6 @@ const NFTTabCollectible = ({
                             alignItems="end"
                             bg="brand.semiBlack"
                             px={{ base: "0.5rem", "2xl": "1rem" }}
-
                             py={2}
                             // my={2}
                             minW="30%"
