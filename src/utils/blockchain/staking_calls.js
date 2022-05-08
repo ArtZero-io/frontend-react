@@ -142,7 +142,6 @@ async function getRequestUnstakeTime(caller_account, account, token_id) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  console.log('address', address);
 
   const { result, output } = await contract.query.getRequestUnstakeTime(
     address,
@@ -153,6 +152,29 @@ async function getRequestUnstakeTime(caller_account, account, token_id) {
   console.log(output);
   if (result.isOk) {
     return output.toHuman();
+  }
+  return null;
+}
+
+async function getLimitUnstakeTime(caller_account) {
+  if (
+    !contract ||
+    !caller_account
+  ) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const { result, output } = await contract.query.getLimitUnstakeTime(
+    address,
+    { value: azero_value, gasLimit }
+  );
+  console.log(output);
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
@@ -368,6 +390,7 @@ const staking_calls = {
   unstake,
   setStakingContract,
   getTotalPendingUnstakedByAccount,
+  getLimitUnstakeTime
 };
 
 export default staking_calls;
