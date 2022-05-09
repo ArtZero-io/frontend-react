@@ -231,7 +231,8 @@ function GridNftA({
         // gridAutoRows: "20.625rem",
         gridAutoFlow: "dense",
         gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, 224px), 1fr))`,
-        borderBottom: "0.125rem", justifyItems: "center",
+        borderBottom: "0.125rem",
+        justifyItems: "center",
       }}
     >
       {listNFTFormatted.length > 0 &&
@@ -304,6 +305,7 @@ function GridItemA({
       style={{
         position: "relative",
         cursor: "pointer",
+        marginBottom: "1rem",
       }}
       onClick={() => onClick()}
     >

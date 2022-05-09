@@ -10,7 +10,7 @@ function StatusButton({ isLoading, loadingText, mode, onClose }) {
     const endTimeStamp = Date.now();
 
     dispatch({
-      type: AccountActionTypes.SET_TNX_STATUS,
+      type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
       payload: {
         status: "End",
         endTimeStamp,

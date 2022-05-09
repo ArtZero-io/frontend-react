@@ -56,7 +56,7 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
       tableData={bidders}
       saleInfo={saleInfo}
       onClickHandler={acceptBid}
-      isOwner={currentAccount.address === saleInfo.nftOwner}
+      isOwner={currentAccount?.address === saleInfo?.nftOwner}
     />
   );
 }

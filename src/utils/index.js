@@ -175,14 +175,11 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
         payload: { status: "Ready" },
       });
     } else {
-      const finalizedTimeStamp = Date.now();
-
       dispatch({
         type: AccountActionTypes.SET_TNX_STATUS,
         payload: {
           status: statusToHuman[0][0],
           value: truncateStr(statusToHuman[0][1], 6),
-          timeStamp: finalizedTimeStamp,
         },
       });
     }
@@ -239,3 +236,43 @@ export const getPublicCurrentAccount = () => {
 
   return keyringOptions[0];
 };
+
+export function handleContractCallAnimation(
+  status,
+  dispatchError,
+  dispatch,
+  contract
+) {
+  if (dispatchError) {
+    if (dispatchError.isModule) {
+      const decoded = contract.registry.findMetaError(dispatchError.asModule);
+      const { docs, name, section } = decoded;
+
+      console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
+    } else {
+      console.log(dispatchError.toString());
+    }
+  }
+
+  if (status) {
+    const statusToHuman = Object.entries(status.toHuman());
+
+    if (Object.keys(status.toHuman())[0] === "0") {
+      dispatch({
+        type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
+        payload: { status: "Ready" },
+      });
+    } else {
+      const finalizedTimeStamp = Date.now();
+
+      dispatch({
+        type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
+        payload: {
+          status: statusToHuman[0][0],
+          value: truncateStr(statusToHuman[0][1], 6),
+          timeStamp: finalizedTimeStamp,
+        },
+      });
+    }
+  }
+}

@@ -12,13 +12,13 @@ import { clientAPI } from "@api/client";
 import { useSubstrateState } from "@utils/substrate";
 
 import AddNewCollectionModal from "./components/Modal/AddNew";
-import { AccountActionTypes } from "../../../store/types/account.types";
-import { delay } from "../../../utils";
+import { AccountActionTypes } from "@store/types/account.types";
+import { delay } from "@utils";
 import { useDispatch, useSelector } from "react-redux";
-import CommonLoader from "../../../components/Loader/CommonLoader";
+import AnimationLoader from "@components/Loader/AnimationLoader";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
-import GridA from "../../../components/Grid/GridA";
+import GridA from "@components/Grid/GridA";
 
 function MyCollectionsPage() {
   const [collections, setCollections] = useState(null);
@@ -85,21 +85,22 @@ function MyCollectionsPage() {
       fetchCollectionsOwned();
   }, [collections, currentAccount, offset, owner, pageSize]);
 
-  // const forceUpdate = useCallback(() => {
-  //   console.log('MyCollectionsPage forceUpdate')
-  //   setCollections(null);
-  // }, []);
-
   const dispatch = useDispatch();
-  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const { addCollectionTnxStatus } = useSelector(
+    (s) => s.account.accountLoaders
+  );
   const [loading, setLoading] = useState(false);
   const [loadingTime, setLoadingTime] = useState(null);
 
   useEffect(() => {
     const forceUpdateAfterMint = async () => {
-      if (tnxStatus?.status === "End") {
+      if (addCollectionTnxStatus?.status === "End") {
         const delayTime =
-          9000 - Number(tnxStatus?.endTimeStamp - tnxStatus?.timeStamp);
+          9000 -
+          Number(
+            addCollectionTnxStatus?.endTimeStamp -
+              addCollectionTnxStatus?.timeStamp
+          );
 
         if (delayTime >= 0) {
           setLoading(true);
@@ -107,7 +108,7 @@ function MyCollectionsPage() {
 
           delay(delayTime).then(() => {
             dispatch({
-              type: AccountActionTypes.SET_TNX_STATUS,
+              type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
               payload: null,
             });
             setCollections(null);
@@ -115,7 +116,7 @@ function MyCollectionsPage() {
           });
         } else {
           dispatch({
-            type: AccountActionTypes.SET_TNX_STATUS,
+            type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
             payload: null,
           });
           setCollections(null);
@@ -126,10 +127,10 @@ function MyCollectionsPage() {
 
     forceUpdateAfterMint();
   }, [
-    tnxStatus?.status,
+    addCollectionTnxStatus?.status,
     dispatch,
-    tnxStatus?.endTimeStamp,
-    tnxStatus?.timeStamp,
+    addCollectionTnxStatus?.endTimeStamp,
+    addCollectionTnxStatus?.timeStamp,
   ]);
 
   return (
@@ -149,7 +150,7 @@ function MyCollectionsPage() {
         </Flex>
 
         {loading ? (
-          <CommonLoader
+          <AnimationLoader
             addText={`Please wait a moment...`}
             size="md"
             maxH={"4.125rem"}

@@ -11,6 +11,7 @@ import {
   Text,
   VStack,
   Spacer,
+  Square,
 } from "@chakra-ui/react";
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from "react";
@@ -155,14 +156,16 @@ function MyNFTCard({
         h="full"
         shadow="lg"
       >
-        <Image
-          alt={nftName}
-          w="full"
-          h={"14rem"}
-          objectFit="cover"
-          src={nftImage}
-          fallback={<Skeleton w="full" h={"14rem"} minW={56} />}
-        />
+        <Square h="13.75rem" w="13.75rem">
+          <Image
+            alt={nftName}
+            w="full"
+            h="full"
+            objectFit="cover"
+            src={nftImage}
+            fallback={<Skeleton w="13.75rem" h="13.75rem" />}
+          />
+        </Square>
 
         <Box w="full" p={3}>
           <Heading mb={3} size="h6" textAlign="left">

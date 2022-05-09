@@ -10,6 +10,7 @@ const initialState = {
     getProfile: false,
     setProfileAttribute: false,
     tnxStatus: null,
+    addCollectionTnxStatus: null,
   },
   accountErrors: null,
 };
@@ -44,6 +45,17 @@ const accountReducer = (state = initialState, action) => {
           ...state.accountLoaders,
           tnxStatus: {
             ...state.accountLoaders.tnxStatus,
+            ...action.payload
+          },
+        },
+      };
+    case AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS:
+      return {
+        ...state,
+        accountLoaders: {
+          ...state.accountLoaders,
+          addCollectionTnxStatus: {
+            ...state.accountLoaders.addCollectionTnxStatus,
             ...action.payload
           },
         },

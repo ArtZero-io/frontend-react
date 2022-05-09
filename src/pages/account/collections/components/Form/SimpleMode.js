@@ -43,7 +43,9 @@ const SimpleModeForm = ({
 
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
-  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const { addCollectionTnxStatus } = useSelector(
+    (s) => s.account.accountLoaders
+  );
 
   useEffect(() => {
     const fetchFee = async () => {
@@ -253,7 +255,7 @@ const SimpleModeForm = ({
                     console.log(nftContractAddress);
 
                     dispatch({
-                      type: AccountActionTypes.SET_TNX_STATUS,
+                      type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
                       payload: {
                         status: "Start",
                         value: null,
@@ -432,8 +434,8 @@ const SimpleModeForm = ({
                 )}
                 <StatusButton
                   onClose={onCloseParent}
-                  isLoading={tnxStatus}
-                  loadingText={`${tnxStatus?.status}`}
+                  isLoading={addCollectionTnxStatus}
+                  loadingText={`${addCollectionTnxStatus?.status}`}
                   mode={mode}
                 />
                 {/* <Button
