@@ -1,10 +1,9 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { useSubstrateState } from "@utils/substrate";
 import DataTable from "../../../../components/Table/Table";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 function NFTTabActivity({ nftContractAddress, tokenID }) {
   const [bidders, setBidders] = useState([]);
@@ -12,10 +11,10 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
   const headers = ["Address", "Time", "Price", "Action"];
   const [saleInfo, setSaleInfo] = useState({});
   const dispatch = useDispatch();
-  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
-  
+  // const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+
   const acceptBid = async (bidId) => {
-    if (currentAccount.address == saleInfo.nftOwner) {
+    if (currentAccount.address === saleInfo.nftOwner) {
       await marketplace_contract_calls.acceptBid(
         currentAccount,
         nftContractAddress,
@@ -26,7 +25,6 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
     } else {
       toast.error(`You not owner of token`);
     }
-    
   };
 
   useEffect(() => {
@@ -58,6 +56,7 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
       tableData={bidders}
       saleInfo={saleInfo}
       onClickHandler={acceptBid}
+      isOwner={currentAccount.address === saleInfo.nftOwner}
     />
   );
 }

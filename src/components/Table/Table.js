@@ -17,7 +17,7 @@ import { convertStringToPrice, convertStringToDateTime } from "@utils";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch, useSelector } from "react-redux";
 
-function DataTable({ tableHeaders, tableData, onClickHandler, saleInfo }) {
+function DataTable({ tableHeaders, tableData, onClickHandler, saleInfo, isOwner }) {
   const { api, currentAccount } = useSubstrateState();
   const dispatch = useDispatch();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
@@ -52,6 +52,7 @@ function DataTable({ tableHeaders, tableData, onClickHandler, saleInfo }) {
                 fontSize="sm"
                 fontWeight="normal"
                 py={{ base: "1rem", "2xl": "1.75rem" }}
+                display={item === 'Action' && !isOwner && 'none'}
               >
                 {item}
               </Th>
@@ -84,7 +85,7 @@ function DataTable({ tableHeaders, tableData, onClickHandler, saleInfo }) {
                   </Tag>
                 </Td>
                 {console.log(saleInfo)}
-                {currentAccount?.address == saleInfo.nftOwner ? (
+                {isOwner ? (
                   <Td
                     py={{ base: "1rem", "2xl": "1.75rem" }}
                     textAlign="center"
