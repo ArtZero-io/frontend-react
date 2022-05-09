@@ -135,45 +135,41 @@ const SimpleModeForm = ({
       ? fetchCollectionsByID()
       : setInitialValues(newInitialValues);
   }, [id, mode]);
-
+  console.log("mode", mode);
   return (
     <>
       {initialValues && (
         <>
           <Formik
             initialValues={initialValues}
-            validationSchema={(mode) => {
-              let result = Yup.object({
-                collectionName: Yup.string()
-                  .min(3, "Must be longer than 3 characters")
-                  .max(50, "Must be less than 50 characters")
-                  .required("Required"),
-                collectionDescription: Yup.string()
-                  .min(3, "Must be longer than 3 characters")
-                  .max(150, "Must be less than 150 characters")
-                  .required("Required"),
-                collectRoyalFee: Yup.boolean(),
-                website: Yup.string()
-                  .url("This must be a valid URL")
-                  .min(3, "Must be longer than 3 characters")
-                  .max(50, "Must be less than 50 characters"),
-                twitter: Yup.string()
-                  .url("This must be a valid URL")
-                  .min(3, "Must be longer than 3 characters")
-                  .max(50, "Must be less than 50 characters"),
-                discord: Yup.string()
-                  .url("This must be a valid URL")
-                  .min(3, "Must be longer than 3 characters")
-                  .max(50, "Must be less than 50 characters"),
-              });
-
-              if (mode === "add") {
-                const modeAdd = Yup.object({
+            validationSchema={
+              (mode) => {
+                let result = Yup.object().shape({
+                  collectionName: Yup.string()
+                    .min(3, "Must be longer than 3 characters")
+                    .max(50, "Must be less than 50 characters")
+                    .required("Required"),
+                  collectionDescription: Yup.string()
+                    .min(3, "Must be longer than 3 characters")
+                    .max(150, "Must be less than 150 characters")
+                    .required("Required"),
+                  collectRoyalFee: Yup.boolean(),
+                  website: Yup.string()
+                    .url("This must be a valid URL")
+                    .min(3, "Must be longer than 3 characters")
+                    .max(50, "Must be less than 50 characters"),
+                  twitter: Yup.string()
+                    .url("This must be a valid URL")
+                    .min(3, "Must be longer than 3 characters")
+                    .max(50, "Must be less than 50 characters"),
+                  discord: Yup.string()
+                    .url("This must be a valid URL")
+                    .min(3, "Must be longer than 3 characters")
+                    .max(50, "Must be less than 50 characters"),
                   nftName: Yup.string()
                     .min(3, "Must be longer than 3 characters")
                     .max(25, "Must be less than 25 characters")
                     .required("Required"),
-
                   nftSymbol: Yup.string()
                     .min(3, "Must be longer than 3 characters")
                     .max(8, "Must be less than 8 characters")
@@ -186,21 +182,64 @@ const SimpleModeForm = ({
                     ),
                 });
 
-                result = result.concat(modeAdd);
+                mode === "edit" &&
+                  result.shape({
+                    nftName: Yup.string(),
+                    nftSymbol: Yup.string(),
+                    agreeTosCheckbox: Yup.boolean(),
+                  });
+
+                return result;
+                // console.log("result1", result);
+                // if (mode === "add") {
+                //   // const modeAdd = Yup.object().shape({/
+
+                //   result
+                //     .concat(
+                //       Yup.object({
+                //         nftName: Yup.string()
+                //           .min(3, "Must be longer than 3 characters")
+                //           .max(25, "Must be less than 25 characters")
+                //           .required("Required"),
+                //       })
+                //     )
+                //     .concat(
+                //       Yup.object({
+                //         nftSymbol: Yup.string()
+                //           .min(3, "Must be longer than 3 characters")
+                //           .max(8, "Must be less than 8 characters")
+                //           .required("Required"),
+                //       })
+                //     )
+                //     .concat(
+                //       Yup.object({
+                //         agreeTosCheckbox: Yup.boolean()
+                //           .required(
+                //             "The terms and conditions must be accepted."
+                //           )
+                //           .oneOf(
+                //             [true],
+                //             "The terms and conditions must be accepted."
+                //           ),
+                //       })
+                //     );
+                // }
+
+                // console.log("result2", result);
+
+                // return result;
               }
 
-              if (mode === "edit") {
-                const modeEdit = Yup.object({
-                  nftName: Yup.string(),
-                  nftSymbol: Yup.string(),
-                  agreeTosCheckbox: Yup.boolean(),
-                });
+              // if (mode === "edit") {
+              //   const modeEdit = Yup.object({
+              //     nftName: Yup.string(),
+              //     nftSymbol: Yup.string(),
+              //     // agreeTosCheckbox: Yup.boolean(),
+              //   });
 
-                result = result.concat(modeEdit);
-              }
-
-              return result;
-            }}
+              //   return (result = result.concat(modeEdit));
+              // }       }
+            }
             onSubmit={async (values, { setSubmitting }) => {
               if (
                 mode === "add" &&
@@ -285,7 +324,7 @@ const SimpleModeForm = ({
               }
             }}
           >
-            {({ values }) => (
+            {({ values, dirty, isValid }) => (
               <Form>
                 <HStack>
                   {mode === "add" && (
@@ -433,6 +472,7 @@ const SimpleModeForm = ({
                   </Flex>
                 )}
                 <StatusButton
+                  disabled={!(dirty && isValid)}
                   onClose={onCloseParent}
                   isLoading={addCollectionTnxStatus}
                   loadingText={`${addCollectionTnxStatus?.status}`}

@@ -1,7 +1,11 @@
 import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
-import { handleContractCall, isValidAddressPolkadotAddress } from "@utils";
+import {
+  handleContractCall,
+  handleContractCallAnimation,
+  isValidAddressPolkadotAddress,
+} from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
 
@@ -116,7 +120,12 @@ async function autoNewCollection(caller_account, data, dispatch) {
         }
 
         if (status) {
-          handleContractCall(status, dispatchError, dispatch, contract);
+          handleContractCallAnimation(
+            status,
+            dispatchError,
+            dispatch,
+            contract
+          );
 
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
@@ -558,7 +567,7 @@ const collection_manager_calls = {
   getAttributes,
   setCollectionContract,
   setMultipleAttributes,
-  getMaxRoyalFeeRate
+  getMaxRoyalFeeRate,
 };
 
 export default collection_manager_calls;

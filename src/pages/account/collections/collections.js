@@ -160,18 +160,18 @@ function MyCollectionsPage() {
         ) : (
           <>
             <AnimatePresence>
-              ,motion
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <Text textAlign="left" color="brand.grayLight">
-                  There are {collections?.length || 0} collections
-                </Text>
-              </motion.div>
+              {collections?.length && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <Text textAlign="left" color="brand.grayLight">
+                    There are {collections?.length || 0} collections
+                  </Text>
+                </motion.div>
+              )}
             </AnimatePresence>
-            ,motion
             {collections?.length ? (
               <>
                 <GridA collections={collections} />
