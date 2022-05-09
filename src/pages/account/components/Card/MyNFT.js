@@ -55,7 +55,9 @@ function MyNFTCard({
     const unstakeRequestTimeTmp = time.replace(/\,/g, "");
     setUnstakeRequestTime(unstakeRequestTimeTmp);
 
-    let limitUnstakeTimeTmp = await staking_calls.getLimitUnstakeTime(currentAccount);
+    let limitUnstakeTimeTmp = await staking_calls.getLimitUnstakeTime(
+      currentAccount
+    );
     setLimitUnstakeTime(limitUnstakeTimeTmp);
   };
   const requestUpdateNFT = async () => {
@@ -159,7 +161,7 @@ function MyNFTCard({
           h={"14rem"}
           objectFit="cover"
           src={nftImage}
-          fallback={<Skeleton w="full" h="full" minH={"14rem"} minW={56} />}
+          fallback={<Skeleton w="full" h={"14rem"} minW={56} />}
         />
 
         <Box w="full" p={3}>
@@ -210,15 +212,18 @@ function MyNFTCard({
                 <Text ml={1} color="brand.grayLight">
                   {isBid?.status && "My Offer"}
                 </Text>
-                {isBid?.status ?
-                <Tag>
-                  <TagLabel>
-                    {isBid?.status && new BN(isBid?.bidPrice).div(new BN(10 ** 6)).toNumber() /
-                      10 ** 6}
-                  </TagLabel>
-                   <TagRightIcon as={AzeroIcon} />
-                </Tag>
-                 : null }
+                {isBid?.status ? (
+                  <Tag>
+                    <TagLabel>
+                      {isBid?.status &&
+                        new BN(isBid?.bidPrice)
+                          .div(new BN(10 ** 6))
+                          .toNumber() /
+                          10 ** 6}
+                    </TagLabel>
+                    <TagRightIcon as={AzeroIcon} />
+                  </Tag>
+                ) : null}
               </VStack>
             </Flex>
           )}

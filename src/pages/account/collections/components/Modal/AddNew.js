@@ -33,13 +33,14 @@ function AddNewCollection({ forceUpdate, mode, id }) {
   const { tnxStatus } = useSelector((state) => state.account.accountLoaders);
 
   useEffect(() => {
+    // eslint-disable-next-line no-unused-vars
     function onCloseHandler() {
-      if (tnxStatus?.status === "Finalized") {
+      if (tnxStatus?.status === "End") {
         // dispatch({
         //   type: AccountActionTypes.SET_TNX_STATUS,
         //   payload: null,
         // });
-        console.log("AddNewCollection onCloseHandler");
+        // console.log("AddNewCollection onCloseHandler");
         // forceUpdate();
 
         onCloseAddNew();

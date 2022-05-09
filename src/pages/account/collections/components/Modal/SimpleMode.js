@@ -14,7 +14,12 @@ import { EditIcon } from "@chakra-ui/icons";
 
 import SimpleModeForm from "../Form/SimpleMode";
 
-function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
+function SimpleModeModal({
+  mode = "add",
+  id,
+  nftContractAddress,
+  onCloseParent,
+}) {
   const {
     isOpen: isOpenSimpleMode,
     onOpen: onOpenSimpleMode,
@@ -46,7 +51,7 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
               color="#7ae7ff"
               fontSize="1.5rem"
               _hover={{
-                border: "1px solid #171717",
+                bg: " #171717",
               }}
               p={1}
             />
@@ -65,6 +70,7 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
         />
       )}
       <Modal
+        closeOnOverlayClick={false}
         scrollBehavior={"inside"}
         isCentered
         isOpen={isOpenSimpleMode}
@@ -113,6 +119,7 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
             <SimpleModeForm
               maxH="60rem"
               onClose={onCloseSimpleMode}
+              onCloseParent={onCloseParent}
               mode={mode}
               id={id}
               nftContractAddress={nftContractAddress}

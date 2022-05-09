@@ -1,6 +1,6 @@
 import {
   Box,
-  Button,
+  // Button,
   Flex,
   HStack,
   Spacer,
@@ -23,9 +23,16 @@ import collection_manager_calls from "@utils/blockchain/collection-manager-calls
 
 import AddCollectionNumberInput from "../NumberInput";
 import { clientAPI } from "@api/client";
-import CommonCheckbox from "../../../../../components/Checkbox/Checkbox";
+import CommonCheckbox from "@components/Checkbox/Checkbox";
+import StatusButton from "@components/Button/StatusButton";
+import { AccountActionTypes } from "@store/types/account.types";
 
-const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
+const SimpleModeForm = ({
+  mode = "add",
+  id,
+  nftContractAddress,
+  onCloseParent,
+}) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
   const [headerSquareIPFSUrl, setHeaderSquareIPFSUrl] = useState("");
@@ -244,6 +251,16 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     console.log("111data add before new ", data);
                     console.log("111data add before old", initialValues);
                     console.log(nftContractAddress);
+
+                    dispatch({
+                      type: AccountActionTypes.SET_TNX_STATUS,
+                      payload: {
+                        status: "Start",
+                        value: null,
+                        timeStamp: null,
+                      },
+                    });
+
                     await collection_manager_calls.autoNewCollection(
                       currentAccount,
                       data,
@@ -413,8 +430,14 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     </Flex>
                   </Flex>
                 )}
-
-                <Button
+                <StatusButton
+                  onClose={onCloseParent}
+                  isLoading={tnxStatus}
+                  loadingText={`${tnxStatus?.status}`}
+                  mode={mode}
+                />
+                {/* <Button
+                   
                   variant="solid"
                   spinnerPlacement="start"
                   isLoading={tnxStatus}
@@ -425,7 +448,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                   mb={{ xl: "16px", "2xl": "32px" }}
                 >
                   {mode === "add" ? "Add new collection" : "Submit change"}
-                </Button>
+                </Button> */}
               </Form>
             )}
           </Formik>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Box, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
@@ -92,32 +93,44 @@ function MyCollectionsPage() {
   const dispatch = useDispatch();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
   const [loading, setLoading] = useState(false);
+  const [loadingTime, setLoadingTime] = useState(null);
 
   useEffect(() => {
     const forceUpdateAfterMint = async () => {
-      if (tnxStatus?.status === "Finalized") {
-        dispatch({
-          type: AccountActionTypes.SET_TNX_STATUS,
-          payload: null,
-        });
+      if (tnxStatus?.status === "End") {
+        const delayTime =
+          9000 - Number(tnxStatus?.endTimeStamp - tnxStatus?.timeStamp);
 
-        setLoading(true);
-        toast.promise(
-          delay(9000).then(() => {
+        if (delayTime >= 0) {
+          setLoading(true);
+          setLoadingTime(delayTime / 1000);
+
+          delay(delayTime).then(() => {
+            dispatch({
+              type: AccountActionTypes.SET_TNX_STATUS,
+              payload: null,
+            });
             setCollections(null);
             setLoading(false);
-          }),
-          {
-            loading: "Loading new data...",
-            success: `Done!`,
-            error: "Could not load data.",
-          }
-        );
+          });
+        } else {
+          dispatch({
+            type: AccountActionTypes.SET_TNX_STATUS,
+            payload: null,
+          });
+          setCollections(null);
+          setLoading(false);
+        }
       }
     };
 
     forceUpdateAfterMint();
-  }, [tnxStatus, dispatch]);
+  }, [
+    tnxStatus?.status,
+    dispatch,
+    tnxStatus?.endTimeStamp,
+    tnxStatus?.timeStamp,
+  ]);
 
   return (
     <Box as="section" maxW="container.3xl">
@@ -140,13 +153,14 @@ function MyCollectionsPage() {
             addText={`Please wait a moment...`}
             size="md"
             maxH={"4.125rem"}
+            loadingTime={loadingTime}
           />
         ) : (
           <>
             <Text textAlign="left" color="brand.grayLight">
               There are {collections?.length || 0} collections
             </Text>
- 
+
             {collections?.length ? (
               <>
                 <GridA collections={collections} />

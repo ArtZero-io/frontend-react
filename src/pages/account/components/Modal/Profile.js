@@ -20,6 +20,7 @@ export default function ProfileModal({
   const { tnxStatus } = useSelector((state) => state.account.accountLoaders);
 
   useEffect(() => {
+    // eslint-disable-next-line no-unused-vars
     function onCloseHandler() {
       if (tnxStatus?.status === "Finalized") {
         console.log('Date.now()', Date.now())
@@ -27,7 +28,7 @@ export default function ProfileModal({
           type: AccountActionTypes.SET_TNX_STATUS,
           payload: null,
         });
-
+ 
         delay(3000).then(() => {
           forceUpdate();
           onClose();
@@ -35,7 +36,7 @@ export default function ProfileModal({
       }
     }
 
-    onCloseHandler();
+    // onCloseHandler();
   }, [tnxStatus, dispatch, forceUpdate, onClose]);
 
   return (

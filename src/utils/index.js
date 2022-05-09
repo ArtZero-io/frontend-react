@@ -175,14 +175,16 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
         payload: { status: "Ready" },
       });
     } else {
+      const finalizedTimeStamp = Date.now();
+
       dispatch({
         type: AccountActionTypes.SET_TNX_STATUS,
         payload: {
           status: statusToHuman[0][0],
           value: truncateStr(statusToHuman[0][1], 6),
+          timeStamp: finalizedTimeStamp,
         },
       });
-      console.log("handleContractCall statusToHuman", statusToHuman[0]);
     }
   }
 }
@@ -207,8 +209,8 @@ export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
     // console.log("createObjAttrsNFT formatList", result.formatList);
     return result;
   }
-  console.log("createObjAttrsNFT attrsArr", attrsArr);
-  console.log("createObjAttrsNFT attrsValArr", attrsValArr);
+  // console.log("createObjAttrsNFT attrsArr", attrsArr);
+  // console.log("createObjAttrsNFT attrsValArr", attrsValArr);
   return console.log("Can not create attributes Object");
 };
 
