@@ -117,8 +117,10 @@ function MintHeader() {
   const onPaidMint = async () => {
     const { data } = await api.query.system.account(currentAccount.address);
 
-    const balance = new BN(data.free, 10, "le") / 10 ** 12;
+    // const balance = new BN(data.free, 10, "le") / 10 ** 12;
 
+    const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+    
     if (mintMode === "1") {
       if (balance < fee1 + 0.01) {
         toast.error("Not enough balance to mint");
