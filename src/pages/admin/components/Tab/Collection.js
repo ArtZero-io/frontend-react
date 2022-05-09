@@ -72,15 +72,25 @@ function CollectionAdmin() {
     } else setCollectionCount(0);
   };
   const getAllCollections = async (e) => {
-    const options = {
+    const options_active = {
       limit: collection_count,
       offset: 0,
       sort: -1,
+      isActive:true
     };
 
-    const collections = await clientAPI("post", "/getCollections", options);
+    let collections_actives = await clientAPI("post", "/getCollections", options_active);
 
-    setCollections(collections);
+    const options_inactive = {
+      limit: collection_count,
+      offset: 0,
+      sort: -1,
+      isActive:false
+    };
+
+    const collections_inactives = await clientAPI("post", "/getCollections", options_inactive);
+
+    setCollections(collections_actives.concat(collections_inactives));
   };
   const onSetStatusCollection = async (collection_contract, isActive) => {
     if (collectionContractAdmin !== activeAddress) {
