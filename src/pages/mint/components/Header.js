@@ -101,7 +101,7 @@ function MintHeader() {
     const { data: balance } = await api.query.system.account(
       currentAccount?.address
     );
-    if (balance.free.div(new BN(10 ** 12)).toNumber() < 0.01) {
+    if (balance.free.div(new BN(10 ** 6)).toNumber() / (10**6) < 0.01) {
       toast.error("Your balance is low.");
       return;
     }
@@ -115,9 +115,9 @@ function MintHeader() {
   };
 
   const onPaidMint = async () => {
-    const { data } = await api.query.system.account(currentAccount.address);
+    const { data: balance } = await api.query.system.account(currentAccount.address);
 
-    const balance = new BN(data.free, 10, "le") / 10 ** 12;
+    const balance = balance.free.div(new BN(10 ** 6)).toNumber() / (10**6);
 
     if (mintMode === "1") {
       if (balance < fee1 + 0.01) {
