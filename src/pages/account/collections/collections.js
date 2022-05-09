@@ -19,6 +19,7 @@ import AnimationLoader from "@components/Loader/AnimationLoader";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
 import GridA from "@components/Grid/GridA";
+import { AnimatePresence, motion } from "framer-motion";
 
 function MyCollectionsPage() {
   const [collections, setCollections] = useState(null);
@@ -158,10 +159,19 @@ function MyCollectionsPage() {
           />
         ) : (
           <>
-            <Text textAlign="left" color="brand.grayLight">
-              There are {collections?.length || 0} collections
-            </Text>
-
+            <AnimatePresence>
+              ,motion
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <Text textAlign="left" color="brand.grayLight">
+                  There are {collections?.length || 0} collections
+                </Text>
+              </motion.div>
+            </AnimatePresence>
+            ,motion
             {collections?.length ? (
               <>
                 <GridA collections={collections} />

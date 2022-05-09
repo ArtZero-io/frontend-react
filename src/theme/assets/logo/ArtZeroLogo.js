@@ -1,11 +1,11 @@
 import { chakra } from "@chakra-ui/react";
 import * as React from "react";
 
-export const ArtZeroLogo = (props) => {
+export const ArtZeroLogo = ({display}) => {
   // const { iconColor = "currentColor", ...rest } = props;
   // const color = useToken("colors", iconColor);
   return (
-    <chakra.svg width="194px" height="28px" viewBox="0 0 2490 301" fill="none">
+    <chakra.svg display={display} width="194px" height="28px" viewBox="0 0 2490 301" fill="none">
       <path
         d="M1395.14 238.996V301H1151.73L1213.74 238.996H1395.14Z"
         fill="white"

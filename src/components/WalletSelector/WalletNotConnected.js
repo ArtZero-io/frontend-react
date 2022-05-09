@@ -19,7 +19,7 @@ import TalismanLogo from "@utils/wallets/TalismanLogo.svg";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { loadAccounts } from "@utils/substrate/SubstrateContext";
 
-function WalletNotConnected() {
+function WalletNotConnected(props) {
   const { dispatch, state } = useSubstrate();
   const [, setSelectedExtensionLocal] = useLocalStorage("selectedExtension");
 
@@ -41,7 +41,14 @@ function WalletNotConnected() {
 
   return (
     <>
-      <Box bg="transparent" height="100%" mx="auto" w={["", "28rem", "28rem"]}>
+      <Box
+        display={props.display}
+        // size="sm"
+        bg="transparent"
+        height="100%"
+        mx="auto"
+        w={["12rem", "26rem", "28rem"]}
+      >
         <Flex align="center" justify="end" height="100%">
           <Menu autoSelect={false} placement="bottom-end">
             <MenuButton

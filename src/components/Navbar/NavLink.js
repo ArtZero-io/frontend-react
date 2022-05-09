@@ -38,10 +38,10 @@ const DesktopNavLink = ({ label, to, isExternal, ...props }) => {
       )}
       {!isExternal && (
         <Link
-          size="sm"
-          fontFamily="Evogria, sans-serif"
           as={ReactRouterLink}
           to={to}
+          size="sm"
+          fontFamily="Evogria, sans-serif"
           fontWeight="medium"
           display="flex"
           alignItems="center"
@@ -63,27 +63,67 @@ const DesktopNavLink = ({ label, to, isExternal, ...props }) => {
     </>
   );
 };
-const MobileNavLink = ({ label = "", to = "", ...props }) => {
+const MobileNavLink = ({ label = "", to = "", isExternal, ...props }) => {
   const location = useLocation();
   const [path, setPath] = useState(location.pathname);
   useEffect(() => {
     setPath(location.pathname);
   }, [location.pathname]);
   return (
-    <Link
-      as={ReactRouterLink}
-      to={to}
-      fontWeight="medium"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      borderBottom="2px"
-      borderColor="transparent"
-      transition="all 0.2s"
-      color={path === to ? "brand.blue" : "#ccc"}
-    >
-      {label}
-    </Link>
+    <>
+      {isExternal && (
+        <Link               bg="brand.grayDark"
+
+          py="2rem"
+          href={to}
+          isExternal
+          size="sm"
+          fontFamily="Evogria, sans-serif"
+          fontWeight="medium"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderBottom="0"
+          borderColor="transparent"
+          transition="all 0.2s"
+          textTransform="uppercase"
+          shadow="0px 4px 4px rgba(0, 0, 0, 0.75"
+          _hover={{
+            borderColor: "currentcolor",
+            color: "brand.blue",
+          }}
+          color={path === to ? "brand.blue" : "#ccc"}
+        >
+          {label}
+        </Link>
+      )}
+      {!isExternal && (
+        <Link               bg="brand.grayDark"
+
+          py="2rem"
+          as={ReactRouterLink}
+          to={to}
+          size="sm"
+          fontFamily="Evogria, sans-serif"
+          fontWeight="medium"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          borderBottom="0"
+          borderColor="transparent"
+          transition="all 0.2s"
+          textTransform="uppercase"
+          shadow="0px 4px 4px rgba(0, 0, 0, 0.75"
+          _hover={{
+            borderColor: "currentcolor",
+            color: "brand.blue",
+          }}
+          color={path === to ? "brand.blue" : "#ccc"}
+        >
+          {label}
+        </Link>
+      )}
+    </>
   );
 };
 

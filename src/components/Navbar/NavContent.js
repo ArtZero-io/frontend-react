@@ -3,7 +3,6 @@ import {
   Center,
   HStack,
   Stack,
-  useColorModeValue,
   Menu,
   MenuButton,
   MenuItem,
@@ -39,30 +38,31 @@ const MobileNavContent = (props) => {
       <Center
         as="button"
         p="2"
-        fontSize="2xl"
-        color={useColorModeValue("gray.600", "gray.400")}
+        mx="2"
+        fontSize="3xl"
+        color="brand.blue"
         onClick={onToggle}
       >
         {isOpen ? <HiX /> : <HiOutlineMenu />}
       </Center>
       <NavList
         pos="absolute"
+        zIndex={"99"}
         insetX="0"
-        bg="blue.600"
-        top="64px"
+        top="76px"
+        left="0px"
         animate={isOpen ? "enter" : "exit"}
+        h="full"
+        w="full"
       >
-        <Stack spacing="0">
+        <Stack h="full" w="full" spacing="0">
           {links.map((link, index) => (
-            <NavListItem key={index}>
+            <NavListItem key={index} bg="brand.semiBlack">
               <NavLink.Mobile label={link.label} to={link.href} />
             </NavListItem>
           ))}
-          <NavListItem
-            style={{ flex: "1", display: "flex", flexDirection: "column" }}
-          >
-            <WalletSelector />
-          </NavListItem>
+          {<NavLink.Mobile label="Docs" to={ROUTES.DOCS} isExternal={true} />}
+          {/* {currentAccount && currentAccount?.address && <MyAccountDropdown />} */}
         </Stack>
       </NavList>
     </Box>
@@ -84,10 +84,13 @@ const DesktopNavContent = (props) => {
       {links.map((link, index) => (
         <NavLink.Desktop key={index} label={link.label} to={link.href} />
       ))}
+
       {/* {currentAccount && currentAccount?.address && (
         <NavLink.Desktop label="Admin" to={ROUTES.ACCOUNT_ADMIN} />
       )} */}
+
       {<NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />}
+
       {currentAccount && currentAccount?.address && <MyAccountDropdown />}
       <WalletSelector />
     </HStack>

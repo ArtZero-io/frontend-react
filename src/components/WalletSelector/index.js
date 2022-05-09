@@ -73,7 +73,7 @@ function WalletSelector(props) {
     window.location.assign("/");
   }
   return (
-    <Box color="brand.blue" height="100%" mx="auto" minW={64}>
+    <Box display={props.display} color="brand.blue" height="100%" mx="auto" minW={64}>
       <Flex
         align="center"
         justify="space-between"
@@ -172,6 +172,6 @@ export default function AccountSelector(props) {
   return keyring?.getPairs && api?.query ? (
     <WalletSelector {...props} />
   ) : (
-    <WalletNotConnected />
+    <WalletNotConnected  {...props}/>
   );
 }
