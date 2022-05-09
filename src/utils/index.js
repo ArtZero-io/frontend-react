@@ -166,24 +166,24 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
     }
   }
 
-  if (status) {
-    const statusToHuman = Object.entries(status.toHuman());
+  // if (status) {
+  //   const statusToHuman = Object.entries(status.toHuman());
 
-    if (Object.keys(status.toHuman())[0] === "0") {
-      dispatch({
-        type: AccountActionTypes.SET_TNX_STATUS,
-        payload: { status: "Ready" },
-      });
-    } else {
-      dispatch({
-        type: AccountActionTypes.SET_TNX_STATUS,
-        payload: {
-          status: statusToHuman[0][0],
-          value: truncateStr(statusToHuman[0][1], 6),
-        },
-      });
-    }
-  }
+  //   if (Object.keys(status.toHuman())[0] === "0") {
+  //     dispatch({
+  //       type: AccountActionTypes.SET_TNX_STATUS,
+  //       payload: { status: "Ready" },
+  //     });
+  //   } else {
+  //     dispatch({
+  //       type: AccountActionTypes.SET_TNX_STATUS,
+  //       payload: {
+  //         status: statusToHuman[0][0],
+  //         value: truncateStr(statusToHuman[0][1], 6),
+  //       },
+  //     });
+  //   }
+  // }
 }
 
 export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
