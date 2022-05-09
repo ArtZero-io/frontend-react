@@ -99,8 +99,8 @@ export const NavContent = {
 };
 const myAccountList = [
   { label: "General", href: ROUTES.ACCOUNT },
-  { label: "My Collection", href: ROUTES.ACCOUNT_MY_COLLECTIONS },
-  { label: "My NFT", href: ROUTES.ACCOUNT_MY_NFTS },
+  { label: "My Collections", href: ROUTES.ACCOUNT_MY_COLLECTIONS },
+  { label: "My NFTs", href: ROUTES.ACCOUNT_MY_NFTS },
   { label: "My Stakes", href: ROUTES.ACCOUNT_MY_STAKES },
 ];
 const MyAccountDropdown = () => {
