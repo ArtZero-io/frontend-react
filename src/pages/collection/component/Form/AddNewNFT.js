@@ -173,7 +173,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
               <AddNewNFTImageUpload
                 setImageIPFSUrl={setAvatarIPFSUrl}
                 title="NFT Image"
-                limitedSize={{ width: "64", height: "64" }}
+                limitedSize={{ width: "1000", height: "1000" }}
                 isBanner={false}
               />
 
@@ -183,7 +183,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                   <VStack alignItems="start">
                     <Heading size="h5">properties</Heading>
                     <Text fontSize={"lg"}>
-                      Textural trails that show up as restangles
+                      {/* Textural trails that show up as restangles */}
                     </Text>
                   </VStack>
                   <Spacer />
@@ -250,7 +250,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                   <VStack alignItems="start">
                     <Heading size="h5">Levels</Heading>
                     <Text fontSize={"lg"}>
-                      Textural trails that show up as restangles
+                      {/* Textural trails that show up as restangles */}
                     </Text>
                   </VStack>
                   <Spacer />

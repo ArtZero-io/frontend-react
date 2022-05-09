@@ -17,7 +17,7 @@ export const DETAIL_COLLECTION_BASE = "/collection";
 export const MINTING_EVENT = "/mint";
 
 export const MARKETPLACE = "/marketplace";
-// export const STAKE = "/staking";
+export const DOCS = "https://admin-128.gitbook.io/artzero_io/";
 
 //EXTERNAL LINKS
 export const LANDING_PAGE = "http://artzero.io";

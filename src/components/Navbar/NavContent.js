@@ -87,6 +87,7 @@ const DesktopNavContent = (props) => {
       {/* {currentAccount && currentAccount?.address && (
         <NavLink.Desktop label="Admin" to={ROUTES.ACCOUNT_ADMIN} />
       )} */}
+      {<NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />}
       {currentAccount && currentAccount?.address && <MyAccountDropdown />}
       <WalletSelector />
     </HStack>

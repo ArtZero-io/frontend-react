@@ -45,7 +45,7 @@ function AddLevelsModal({ name, isOpen, onClose }) {
             Add levels
           </Heading>
           <Text fontSize={"sm"}>
-            Textural trails that show up as restangles
+            {/* Textural trails that show up as restangles */}
           </Text>
         </ModalHeader>
 

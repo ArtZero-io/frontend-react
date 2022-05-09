@@ -45,7 +45,7 @@ function AddPropertiesModal({ name, isOpen, onClose }) {
             Add properties
           </Heading>
           <Text fontSize={"sm"}>
-            Textural trails that show up as restangles
+            {/* Textural trails that show up as restangles */}
           </Text>
         </ModalHeader>
 
