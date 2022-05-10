@@ -118,7 +118,7 @@ function MyNFTGroupCard({
 
   return (
     <Box my={10}>
-      <React.Suspense fallback={<div>Loading Component...</div>}>
+      <React.Suspense fallback={<Text>Loading Component...</Text>}>
         <ResponsivelySizedModal
           contractType={contractType}
           {...selectedNFT}
