@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -13,7 +14,6 @@ import {
   Spacer,
   Square,
 } from "@chakra-ui/react";
-// eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from "react";
 import { clientAPI } from "@api/client";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -56,18 +56,23 @@ function MyNFTCard({
     const unstakeRequestTimeTmp = time.replace(/\,/g, "");
     setUnstakeRequestTime(unstakeRequestTimeTmp);
 
-    let limitUnstakeTimeTmp = await staking_calls.getLimitUnstakeTime(currentAccount);
+    let limitUnstakeTimeTmp = await staking_calls.getLimitUnstakeTime(
+      currentAccount
+    );
     setLimitUnstakeTime(limitUnstakeTimeTmp);
   };
-  const requestUpdateNFT = async () => {
-    console.log("MyNFTCard request updateNFT", nftContractAddress, tokenID);
-    await clientAPI("post", "/updateNFT", {
-      collection_address: nftContractAddress,
-      token_id: tokenID,
-    });
-  };
+  // const requestUpdateNFT = async () => {
+  //   console.log("MyNFTCard request updateNFT", nftContractAddress, tokenID);
+  //   const res = await clientAPI("post", "/updateNFT", {
+  //     collection_address: nftContractAddress,
+  //     token_id: tokenID,
+  //   });
+  //   console.log("MyNFTCard requestUpdateNFT res", res);
+  // }
+
   useInterval(() => {
     if (unstakeRequestTime) {
+      console.log("unstakeRequestTime", unstakeRequestTime);
       let now = new Date().getTime() / 1000;
       let valid_time = unstakeRequestTime / 1000 + limitUnstakeTime * 60;
       if (valid_time - now > 0)
@@ -89,13 +94,13 @@ function MyNFTCard({
           )
         : ""
     );
-    if (stakeStatus == 3) getRequestTime();
+    if (stakeStatus === 3) getRequestTime();
     //console.log(listNFT,'showOnChainMetadata',showOnChainMetadata);
-    requestUpdateNFT();
+    // requestUpdateNFT();
   }, [stakeStatus]);
 
   async function stakeAction(stakeStatus) {
-    if (stakeStatus == 1) {
+    if (stakeStatus === 1) {
       let allowance = await artzero_nft_calls.allowance(
         currentAccount,
         currentAccount.address,
@@ -117,11 +122,11 @@ function MyNFTCard({
       //Token is unstaked, Stake Now
       toast("Staking NFT...");
       await staking_calls.stake(currentAccount, [tokenID], dispatch);
-    } else if (stakeStatus == 2) {
+    } else if (stakeStatus === 2) {
       //Token is staked, Request Unstake Now
       toast("Request Unstaking NFT...");
       await staking_calls.requestUnstake(currentAccount, [tokenID], dispatch);
-    } else if (stakeStatus == 3) {
+    } else if (stakeStatus === 3) {
       if (isUnstakeTime) {
         toast("Unstaking NFT...");
         await staking_calls.unstake(currentAccount, [tokenID], dispatch);
@@ -170,7 +175,7 @@ function MyNFTCard({
             {nftName}
           </Heading>
           <Flex align="center" justify="start" w="full" mb={3}>
-            {stakeStatus == 3 ? (
+            {stakeStatus === 3 ? (
               <Text textAlign="center" color="brand.grayLight" size="2xs">
                 Unstake in {countdownTime ? countdownTime.h : 0}h :{" "}
                 {countdownTime ? countdownTime.m : 0}m :{" "}
@@ -178,15 +183,15 @@ function MyNFTCard({
               </Text>
             ) : null}
           </Flex>
-          {!is_for_sale && stakeStatus != 0 ? (
+          {!is_for_sale && stakeStatus !== 0 ? (
             <Flex align="center" justify="start" w="full">
               <Button
                 variant="outline"
                 onClick={() => stakeAction(stakeStatus)}
               >
-                {stakeStatus == 1
+                {stakeStatus === 1
                   ? "Stake"
-                  : stakeStatus == 2
+                  : stakeStatus === 2
                   ? "Request Unstake"
                   : !isUnstakeTime
                   ? "Cancel Unstake"
@@ -213,15 +218,18 @@ function MyNFTCard({
                 <Text ml={1} color="brand.grayLight">
                   {isBid?.status && "My Offer"}
                 </Text>
-                {isBid?.status ?
-                <Tag>
-                  <TagLabel>
-                    {isBid?.status && new BN(isBid?.bidPrice).div(new BN(10 ** 6)).toNumber() /
-                      10 ** 6}
-                  </TagLabel>
-                   <TagRightIcon as={AzeroIcon} />
-                </Tag>
-                 : null }
+                {isBid?.status ? (
+                  <Tag>
+                    <TagLabel>
+                      {isBid?.status &&
+                        new BN(isBid?.bidPrice)
+                          .div(new BN(10 ** 6))
+                          .toNumber() /
+                          10 ** 6}
+                    </TagLabel>
+                    <TagRightIcon as={AzeroIcon} />
+                  </Tag>
+                ) : null}
               </VStack>
             </Flex>
           )}
