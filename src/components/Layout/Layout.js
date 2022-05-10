@@ -45,6 +45,7 @@ const Layout = ({ backdrop, children, variant = null }) => {
           position="absolute"
           insetX="0"
           w="full"
+          h="full"
           overflow="hidden"
           align="center"
           zIndex="hide"
@@ -55,6 +56,7 @@ const Layout = ({ backdrop, children, variant = null }) => {
               alt="bg-heroFull"
               w="full"
               h="full"
+              objectFit="cover"
             />
           </Box>
         </Flex>
