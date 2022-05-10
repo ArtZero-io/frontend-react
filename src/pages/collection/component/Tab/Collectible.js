@@ -220,7 +220,8 @@ const NFTTabCollectible = ({
       </Square>
 
       <Flex
-        w="full"
+        h="full" 
+        w="full" 
         ml={{ base: 0, xl: 8 }}
         py={{ base: 2, xl: 0 }}
         direction={"column"}

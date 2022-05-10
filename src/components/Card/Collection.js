@@ -48,9 +48,10 @@ export const CollectionCard = ({
     <Box
       className="my-collection-card"
       h="full"
-      w="full"
+      // w="full"
+      // maxW="24.5625rem"
       mx="auto"
-      maxW="24.5625rem"
+      w={{ base: "20rem", xl: "24.5625rem" }}
       borderColor="transparent"
       borderWidth={"2px"}
       _hover={{ borderColor: "brand.blue" }}
