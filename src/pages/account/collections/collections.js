@@ -86,36 +86,52 @@ function MyCollectionsPage() {
   }, [collections, currentAccount, offset, owner, pageSize]);
 
   const dispatch = useDispatch();
-  const { tnxStatus } = useSelector(
+  const { addCollectionTnxStatus } = useSelector(
     (s) => s.account.accountLoaders
   );
-  const [loading, setLoading] = useState(false);
+  const [loadingTime, setLoadingTime] = useState(null);
 
   useEffect(() => {
-    const forceUpdateAfterMint = async () => {
-      if (tnxStatus?.status === "Finalized") {
-        dispatch({
-          type: AccountActionTypes.SET_TNX_STATUS,
-          payload: null,
-        });
-
-        setLoading(true);
-        toast.promise(
-          delay(9000).then(() => {
-            setCollections(null);
-            setLoading(false);
-          }),
-          {
-            loading: "Loading new data...",
-            success: `Done!`,
-            error: "Could not load data.",
-          }
+    const forceUpdateAfterMint = async ({ addCollectionTnxStatus }) => {
+      if (!addCollectionTnxStatus) {
+        return console.log(
+          "addCollectionTnxStatus error",
+          addCollectionTnxStatus
         );
+      }
+
+      const { status, timeStamp, endTimeStamp } = addCollectionTnxStatus;
+
+      if (status === "End") {
+        // Get timestamp end
+        const delayTime = 9000 - endTimeStamp - timeStamp || 9000;
+
+        if (delayTime > 0) {
+          setLoadingTime(delayTime / 1000);
+
+          delay(delayTime).then(() => {
+            dispatch({
+              type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
+              payload: null,
+            });
+            setCollections(null);
+            setLoadingTime(null);
+          });
+        }
+
+        if (delayTime <= 0) {
+          dispatch({
+            type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
+            payload: null,
+          });
+          setCollections(null);
+          setLoadingTime(null);
+        }
       }
     };
 
-    forceUpdateAfterMint();
-  }, [tnxStatus, dispatch]);
+    forceUpdateAfterMint({ addCollectionTnxStatus });
+  }, [addCollectionTnxStatus, dispatch]);
 
   return (
     <Box as="section" maxW="container.3xl">
@@ -133,12 +149,8 @@ function MyCollectionsPage() {
           <AddNewCollectionModal mode="add" />
         </Flex>
 
-        {loading ? (
-          <AnimationLoader
-            addText={`Please wait a moment...`}
-            size="md"
-            maxH={"4.125rem"}
-          />
+        {loadingTime ? (
+          <AnimationLoader loadingTime={loadingTime} />
         ) : (
           <>
             <AnimatePresence>

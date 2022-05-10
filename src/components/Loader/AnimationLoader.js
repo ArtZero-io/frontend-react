@@ -3,16 +3,15 @@ import { motion } from "framer-motion";
 
 const AnimationLoader = ({
   loadingTime = 7,
-  addText = "",
-  size = "xl",
-  minH,
-  maxH,
+  addText = "Please wait a moment...",
+  minH = "4rem",
+  maxH = "6rem",
 }) => {
   return (
     <Center width="full" height="full" maxH={maxH} minH={minH}>
-      <Stack direction="row" alignItems="center" spacing={2}>
+      <Stack direction="column" alignItems="center" spacing={2}>
         <AzeroAnimation loadingTime={loadingTime} />
-        <Heading color="#fff" size="h6" px={5}>
+        <Heading color="#7ae7ff" size="h6" px={5}>
           {addText}
         </Heading>
       </Stack>
@@ -22,13 +21,14 @@ const AnimationLoader = ({
 
 export default AnimationLoader;
 
-export const AzeroAnimation = ({ loadingTime }) => {
+export const AzeroAnimation = ({ loadingTime = 7 }) => {
   console.log("AzeroAnimation loadingTime", loadingTime);
+
   const icon = {
     hidden: {
-      opacity: 0.05,
-      pathLength: 0.05,
-      fill: "rgba(255, 255, 255, 0.05)",
+      opacity: 0,
+      pathLength: 0,
+      fill: "#7ae7ff05",
     },
     visible: {
       opacity: 1,
@@ -36,17 +36,17 @@ export const AzeroAnimation = ({ loadingTime }) => {
       fill: "#7ae7ff",
     },
   };
+
   return (
     <div
       className="container"
       style={{
-        width: "70px",
-        height: "70px",
+        width: "4.25rem",
+        height: "4.25rem",
         display: "flex",
         placeContent: "center",
         overflow: "hidden",
-        background: "rgba(255, 255, 255, 0.0)",
-        borderRadius: "30px",
+        background: "transparent",
       }}
     >
       <motion.svg
@@ -54,7 +54,7 @@ export const AzeroAnimation = ({ loadingTime }) => {
         viewBox="0 0 300 300"
         className="item"
         style={{
-          width: "56%",
+          width: "68%",
           overflow: "visible",
           stroke: "#7ae7ff",
           strokeWidth: 2,
@@ -68,8 +68,8 @@ export const AzeroAnimation = ({ loadingTime }) => {
           initial="hidden"
           animate="visible"
           transition={{
-            default: { duration: loadingTime - 2, ease: "easeInOut" },
-            fill: { duration: loadingTime, ease: [1, 0, 0.8, 1] },
+            default: { duration: (loadingTime || 7) - 1, ease: "easeInOut" },
+            fill: { duration: loadingTime || 7, ease: [1, 0, 0.8, 1] },
           }}
         />
       </motion.svg>
