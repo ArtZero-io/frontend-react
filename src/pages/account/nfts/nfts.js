@@ -42,9 +42,12 @@ const MyNFTsPage = () => {
   const fetchMyCollections = async () => {
     const allCollectionsOwned = await clientAPI(
       "post",
-      "/getCollectionsByOwner",
+      "/getCollections",
       {
-        owner: currentAccount?.address,
+        limit: 10000,
+        offset: 0,
+        sort: -1,
+        isActive:true
       }
     );
 
