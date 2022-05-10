@@ -36,9 +36,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
 
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
-  const { tnxStatus } = useSelector(
-    (s) => s.account.accountLoaders
-  );
+  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
 
   useEffect(() => {
     const fetchFee = async () => {
@@ -79,6 +77,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
 
   useEffect(() => {
     let newInitialValues = {
+      isEditMode: false,
       nftName: "",
       nftSymbol: "",
       collectionName: "",
@@ -97,6 +96,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
         });
 
         newInitialValues = {
+          isEditMode: true,
           nftName: "",
           nftSymbol: "",
           collectionName: dataList[0].name,
@@ -128,183 +128,133 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
       ? fetchCollectionsByID()
       : setInitialValues(newInitialValues);
   }, [id, mode]);
-  console.log("mode", mode);
+
   return (
     <>
       {initialValues && (
         <>
           <Formik
             initialValues={initialValues}
-            validationSchema={
-              (mode) => {
-                let result = Yup.object().shape({
-                  collectionName: Yup.string()
-                    .min(3, "Must be longer than 3 characters")
-                    .max(50, "Must be less than 50 characters")
-                    .required("Required"),
-                  collectionDescription: Yup.string()
-                    .min(3, "Must be longer than 3 characters")
-                    .max(150, "Must be less than 150 characters")
-                    .required("Required"),
-                  collectRoyalFee: Yup.boolean(),
-                  website: Yup.string()
-                    .url("This must be a valid URL")
-                    .min(3, "Must be longer than 3 characters")
-                    .max(50, "Must be less than 50 characters"),
-                  twitter: Yup.string()
-                    .url("This must be a valid URL")
-                    .min(3, "Must be longer than 3 characters")
-                    .max(50, "Must be less than 50 characters"),
-                  discord: Yup.string()
-                    .url("This must be a valid URL")
-                    .min(3, "Must be longer than 3 characters")
-                    .max(50, "Must be less than 50 characters"),
-                  nftName: Yup.string()
-                    .min(3, "Must be longer than 3 characters")
-                    .max(25, "Must be less than 25 characters")
-                    .required("Required"),
-                  nftSymbol: Yup.string()
-                    .min(3, "Must be longer than 3 characters")
-                    .max(8, "Must be less than 8 characters")
-                    .required("Required"),
-                  agreeTosCheckbox: Yup.boolean()
-                    .required("The terms and conditions must be accepted.")
-                    .oneOf(
-                      [true],
-                      "The terms and conditions must be accepted."
-                    ),
-                });
+            validationSchema={Yup.object().shape({
+              isEditMode: Yup.boolean(),
 
-                mode === "edit" &&
-                  result.shape({
-                    nftName: Yup.string(),
-                    nftSymbol: Yup.string(),
-                    agreeTosCheckbox: Yup.boolean(),
-                  });
+              collectionName: Yup.string()
+                .min(3, "Must be longer than 3 characters")
+                .max(50, "Must be less than 50 characters")
+                .required("Required"),
+              collectionDescription: Yup.string()
+                .min(3, "Must be longer than 3 characters")
+                .max(150, "Must be less than 150 characters")
+                .required("Required"),
+              collectRoyalFee: Yup.boolean(),
+              website: Yup.string()
+                .url("This must be a valid URL")
+                .min(3, "Must be longer than 3 characters")
+                .max(50, "Must be less than 50 characters"),
+              twitter: Yup.string()
+                .url("This must be a valid URL")
+                .min(3, "Must be longer than 3 characters")
+                .max(50, "Must be less than 50 characters"),
+              discord: Yup.string()
+                .url("This must be a valid URL")
+                .min(3, "Must be longer than 3 characters")
+                .max(50, "Must be less than 50 characters"),
+              nftName: Yup.string().when("isEditMode", {
+                is: false,
+                then: Yup.string()
+                  .min(3, "Must be longer than 3 characters")
+                  .max(25, "Must be less than 25 characters")
+                  .required("Required"),
+              }),
+              nftSymbol: Yup.string().when("isEditMode", {
+                is: false,
+                then: Yup.string()
+                  .min(3, "Must be longer than 3 characters")
+                  .max(8, "Must be less than 8 characters")
+                  .required("Required"),
+              }),
 
-                return result;
-                // console.log("result1", result);
-                // if (mode === "add") {
-                //   // const modeAdd = Yup.object().shape({/
-
-                //   result
-                //     .concat(
-                //       Yup.object({
-                //         nftName: Yup.string()
-                //           .min(3, "Must be longer than 3 characters")
-                //           .max(25, "Must be less than 25 characters")
-                //           .required("Required"),
-                //       })
-                //     )
-                //     .concat(
-                //       Yup.object({
-                //         nftSymbol: Yup.string()
-                //           .min(3, "Must be longer than 3 characters")
-                //           .max(8, "Must be less than 8 characters")
-                //           .required("Required"),
-                //       })
-                //     )
-                //     .concat(
-                //       Yup.object({
-                //         agreeTosCheckbox: Yup.boolean()
-                //           .required(
-                //             "The terms and conditions must be accepted."
-                //           )
-                //           .oneOf(
-                //             [true],
-                //             "The terms and conditions must be accepted."
-                //           ),
-                //       })
-                //     );
-                // }
-
-                // console.log("result2", result);
-
-                // return result;
-              }
-
-              // if (mode === "edit") {
-              //   const modeEdit = Yup.object({
-              //     nftName: Yup.string(),
-              //     nftSymbol: Yup.string(),
-              //     // agreeTosCheckbox: Yup.boolean(),
-              //   });
-
-              //   return (result = result.concat(modeEdit));
-              // }       }
-            }
+              agreeTosCheckbox: Yup.boolean().when("isEditMode", {
+                is: false,
+                then: Yup.boolean()
+                  .required("The terms and conditions must be accepted.")
+                  .oneOf([true], "The terms and conditions must be accepted."),
+              }),
+            })}
             onSubmit={async (values, { setSubmitting }) => {
               if (
-                mode === "add" &&
+                !values.isEditMode &&
                 (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl)
               ) {
-                toast.error("Upload avatar or header too");
+                return toast.error("Upload avatar or header too");
               }
 
-              if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
-                values.avatarIPFSUrl = avatarIPFSUrl;
-                values.headerIPFSUrl = headerIPFSUrl;
-                values.headerSquareIPFSUrl = headerSquareIPFSUrl;
-                if (!checkCurrentBalance) {
-                  toast.error(`Your balance not enough`);
+              // if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
+              values.avatarIPFSUrl = avatarIPFSUrl;
+              values.headerIPFSUrl = headerIPFSUrl;
+              values.headerSquareIPFSUrl = headerSquareIPFSUrl;
+
+              if (!checkCurrentBalance) {
+                toast.error(`Your balance not enough`);
+              } else {
+                const data = {
+                  nftName: values.nftName,
+                  nftSymbol: values.nftSymbol,
+
+                  attributes: [
+                    "name",
+                    "description",
+                    "avatar_image",
+                    "header_image",
+                    "header_square_image",
+                    "website",
+                    "twitter",
+                    "discord",
+                  ],
+
+                  attributeVals: [
+                    values.collectionName.trim(),
+                    values.collectionDescription.trim(),
+                    values.avatarIPFSUrl,
+                    values.headerIPFSUrl,
+                    values.headerSquareIPFSUrl,
+                    values.website,
+                    values.twitter,
+                    values.discord,
+                  ],
+
+                  collectionAllowRoyalFee: values.collectionRoyalFee,
+                  collectionRoyalFeeData: values.collectionRoyalFee
+                    ? Math.round(values.royalFee * 100)
+                    : 0,
+                };
+                console.log("111data add before new mode ", mode);
+
+                if (mode === "add") {
+                  console.log(data);
+                  console.log("111data add before new ", data);
+                  console.log("111data add before old", initialValues);
+                  console.log(nftContractAddress);
+                  await collection_manager_calls.autoNewCollection(
+                    currentAccount,
+                    data,
+                    dispatch
+                  );
                 } else {
-                  const data = {
-                    nftName: values.nftName,
-                    nftSymbol: values.nftSymbol,
-
-                    attributes: [
-                      "name",
-                      "description",
-                      "avatar_image",
-                      "header_image",
-                      "header_square_image",
-                      "website",
-                      "twitter",
-                      "discord",
-                    ],
-
-                    attributeVals: [
-                      values.collectionName.trim(),
-                      values.collectionDescription.trim(),
-                      values.avatarIPFSUrl,
-                      values.headerIPFSUrl,
-                      values.headerSquareIPFSUrl,
-                      values.website,
-                      values.twitter,
-                      values.discord,
-                    ],
-
-                    collectionAllowRoyalFee: values.collectionRoyalFee,
-                    collectionRoyalFeeData: values.collectionRoyalFee
-                      ? Math.round(values.royalFee * 100)
-                      : 0,
-                  };
-
-                  if (mode === "add") {
-                    console.log(data);
-                    console.log("111data add before new ", data);
-                    console.log("111data add before old", initialValues);
-                    console.log(nftContractAddress);
-                    await collection_manager_calls.autoNewCollection(
-                      currentAccount,
-                      data,
-                      dispatch
-                    );
-                  } else {
-                    console.log(data);
-                    console.log("111data edit before new ", data);
-                    console.log("111data edit before old", initialValues);
-                    console.log(nftContractAddress);
-                    await collection_manager_calls.setMultipleAttributes(
-                      currentAccount,
-                      nftContractAddress,
-                      data.attributes,
-                      data.attributeVals,
-                      dispatch
-                    );
-                  }
+                  console.log(data);
+                  console.log("111data edit before new ", data);
+                  console.log("111data edit before old", initialValues);
+                  console.log(nftContractAddress);
+                  await collection_manager_calls.setMultipleAttributes(
+                    currentAccount,
+                    nftContractAddress,
+                    data.attributes,
+                    data.attributeVals,
+                    dispatch
+                  );
                 }
               }
+              // }
             }}
           >
             {({ values, dirty, isValid }) => (
@@ -456,6 +406,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                 )}
 
                 <Button
+                  disabled={!(dirty && isValid)}
                   variant="solid"
                   spinnerPlacement="start"
                   isLoading={tnxStatus}

@@ -131,7 +131,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           <Formik
             initialValues={initialValues}
             validationSchema={(mode) => {
-              let result = Yup.object({
+              let result = Yup.object().shape({
                 nftContractAddress: Yup.string()
                   .min(3, "Must be longer than 3 characters")
                   .max(48, "Must be less than 48 characters")
@@ -145,31 +145,14 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   .max(150, "Must be less than 150 characters")
                   .required("Required"),
                 collectRoyalFee: Yup.boolean(),
+                agreeTosCheckbox: Yup.boolean()
+                  .required("The terms and conditions must be accepted.")
+                  .oneOf([true], "The terms and conditions must be accepted."),
               });
-
-              if (mode === "add") {
-                const modeAdd = Yup.object({
-                  agreeTosCheckbox: Yup.boolean()
-                    .required("The terms and conditions must be accepted.")
-                    .oneOf(
-                      [true],
-                      "The terms and conditions must be accepted."
-                    ),
+              mode === "edit" &&
+                result.shape({
+                  agreeTosCheckbox: Yup.boolean(),
                 });
-
-                result = result.concat(modeAdd);
-              }
-
-              if (mode === "edit") {
-                const modeEdit = Yup.object({
-                  agreeTosCheckbox: Yup.boolean().oneOf(
-                    [true],
-                    "The terms and conditions must be accepted."
-                  ),
-                });
-
-                result = result.concat(modeEdit);
-              }
 
               return result;
             }}
@@ -241,7 +224,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               }
             }}
           >
-            {({ values }) => (
+            {({ values, dirty, isValid }) => (
               <Form>
                 <HStack>
                   <AdvancedModeInput
@@ -362,6 +345,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 )}
 
                 <Button
+                  disabled={!(dirty && isValid)}
                   spinnerPlacement="start"
                   isLoading={tnxStatus}
                   loadingText={`${tnxStatus?.status}`}

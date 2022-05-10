@@ -41,11 +41,11 @@ export default function GridA({ collections, variant = "my-collection" }) {
           id="grid-item-a"
         >
           {variant === "my-collection" && Number(c.contractType) === 2 && (
-            <SimpleModeModal mode="edit" id={c.index} pos={"absolute"} />
+            <SimpleModeModal mode="edit" id={c.index} pos={"absolute"} {...c}/>
           )}
 
           {variant === "my-collection" && Number(c.contractType) === 1 && (
-            <AdvancedModeModal mode="edit" id={c.index} />
+            <AdvancedModeModal mode="edit" id={c.index} {...c}/>
           )}
           <Link
             as={ReactRouterLink}
