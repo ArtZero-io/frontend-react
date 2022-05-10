@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Spacer,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Flex, HStack, Spacer, Stack, Text } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
@@ -23,7 +15,9 @@ import collection_manager_calls from "@utils/blockchain/collection-manager-calls
 
 import AddCollectionNumberInput from "../NumberInput";
 import { clientAPI } from "@api/client";
-import CommonCheckbox from "../../../../../components/Checkbox/Checkbox";
+import CommonCheckbox from "@components/Checkbox/Checkbox";
+import { AccountActionTypes } from "@store/types/account.types";
+import StatusButton from "../../../../../components/Button/StatusButton";
 
 const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -36,7 +30,9 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
 
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
-  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const { addCollectionTnxStatus } = useSelector(
+    (s) => s.account.accountLoaders
+  );
 
   useEffect(() => {
     const fetchFee = async () => {
@@ -67,7 +63,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
     const { data: balance } = await api.query.system.account(
       currentAccount?.address
     );
-    console.log(balance.free);
+    console.log("balance.free", balance.free);
     if (balance.free.toNumber() > addingFee) {
       return true;
     } else {
@@ -159,6 +155,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                 .url("This must be a valid URL")
                 .min(3, "Must be longer than 3 characters")
                 .max(50, "Must be less than 50 characters"),
+
               nftName: Yup.string().when("isEditMode", {
                 is: false,
                 then: Yup.string()
@@ -173,12 +170,11 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                   .max(8, "Must be less than 8 characters")
                   .required("Required"),
               }),
-
               agreeTosCheckbox: Yup.boolean().when("isEditMode", {
                 is: false,
                 then: Yup.boolean()
                   .required("The terms and conditions must be accepted.")
-                  .oneOf([true], "The terms and conditions must be accepted."),
+                  .oneOf([true], "The TOCs must be accepted."),
               }),
             })}
             onSubmit={async (values, { setSubmitting }) => {
@@ -195,7 +191,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
               values.headerSquareIPFSUrl = headerSquareIPFSUrl;
 
               if (!checkCurrentBalance) {
-                toast.error(`Your balance not enough`);
+                return toast.error(`Your balance not enough`);
               } else {
                 const data = {
                   nftName: values.nftName,
@@ -229,6 +225,13 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     : 0,
                 };
                 console.log("111data add before new mode ", mode);
+
+                dispatch({
+                  type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
+                  payload: {
+                    status: "Start",
+                  },
+                });
 
                 if (mode === "add") {
                   console.log(data);
@@ -404,8 +407,13 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     </Flex>
                   </Flex>
                 )}
-
-                <Button
+                <StatusButton
+                  disabled={!(dirty && isValid)}
+                  isLoading={addCollectionTnxStatus}
+                  loadingText={`${addCollectionTnxStatus?.status}`}
+                  mode={mode}
+                />
+                {/* <Button
                   disabled={!(dirty && isValid)}
                   variant="solid"
                   spinnerPlacement="start"
@@ -417,7 +425,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                   mb={{ xl: "16px", "2xl": "32px" }}
                 >
                   {mode === "add" ? "Add new collection" : "Submit change"}
-                </Button>
+                </Button> */}
               </Form>
             )}
           </Formik>

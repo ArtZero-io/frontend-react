@@ -59,6 +59,14 @@ const accountReducer = (state = initialState, action) => {
           },
         },
       };
+    case AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS:
+      return {
+        ...state,
+        accountLoaders: {
+          ...state.accountLoaders,
+          addCollectionTnxStatus: null,
+        },
+      };
     case AccountActionTypes.ACCOUNT_LOADING:
       return {
         ...state,

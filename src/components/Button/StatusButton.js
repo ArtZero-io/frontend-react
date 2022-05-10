@@ -3,7 +3,7 @@ import React from "react";
 import { AccountActionTypes } from "../../store/types/account.types";
 import { useDispatch } from "react-redux";
 
-function StatusButton({ isLoading, loadingText, mode, onClose, disabled }) {
+function StatusButton({ isLoading, loadingText, mode, disabled }) {
   const dispatch = useDispatch();
 
   const onCloseHandler = async () => {
@@ -16,7 +16,6 @@ function StatusButton({ isLoading, loadingText, mode, onClose, disabled }) {
         endTimeStamp,
       },
     });
-    onClose();
   };
 
   //isLoading

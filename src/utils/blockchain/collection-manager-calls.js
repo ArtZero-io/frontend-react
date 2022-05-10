@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import {
   handleContractCall,
-  // handleContractCallAnimation,
+  handleContractCallAnimation,
   isValidAddressPolkadotAddress,
 } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
@@ -120,19 +120,14 @@ async function autoNewCollection(caller_account, data, dispatch) {
         }
 
         if (status) {
-          handleContractCall(
-            status,
-            dispatchError,
-            dispatch,
-            contract
-          );
+          handleContractCallAnimation(status, dispatch);
 
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Add New Collection ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
+          // const statusText = Object.keys(status.toHuman())[0];
+          // toast.success(
+          //   `Add New Collection ${
+          //     statusText === "0" ? "started" : statusText.toLowerCase()
+          //   }.`
+          // );
         }
       }
     )

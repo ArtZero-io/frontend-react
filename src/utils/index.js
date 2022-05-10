@@ -238,23 +238,7 @@ export const getPublicCurrentAccount = () => {
   return keyringOptions[0];
 };
 
-export function handleContractCallAnimation(
-  status,
-  dispatchError,
-  dispatch,
-  contract
-) {
-  if (dispatchError) {
-    if (dispatchError.isModule) {
-      const decoded = contract.registry.findMetaError(dispatchError.asModule);
-      const { docs, name, section } = decoded;
-
-      console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
-    } else {
-      console.log(dispatchError.toString());
-    }
-  }
-
+export function handleContractCallAnimation(status, dispatch) {
   if (status) {
     const statusToHuman = Object.entries(status.toHuman());
 

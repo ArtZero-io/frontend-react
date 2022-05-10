@@ -52,6 +52,14 @@ function MyCollectionsPage() {
       };
 
       try {
+        const totalCollectionsCountData = await clientAPI(
+          "post",
+          "/countCollectionsByOwner",
+          { owner: currentAccount?.address }
+        );
+        console.log("totalCollectionsCountData", totalCollectionsCountData);
+        setTotalCollectionsCount(totalCollectionsCountData);
+
         const dataList = await clientAPI(
           "post",
           "/getCollectionsByOwner",
@@ -59,9 +67,11 @@ function MyCollectionsPage() {
         );
 
         if (dataList?.length) {
+
           setOwner(dataList[0].collectionOwner || options.owner);
-          setTotalCollectionsCount(dataList?.length);
+
           const listCollection = [];
+
           for (let item of dataList) {
             item.volume =
               await marketplace_contract_calls.getVolumeByCollection(
@@ -73,7 +83,7 @@ function MyCollectionsPage() {
           return setCollections(listCollection);
         }
 
-        setCollections(null);
+        setCollections([]);
       } catch (error) {
         console.log(error);
 
@@ -81,57 +91,56 @@ function MyCollectionsPage() {
       }
     };
 
-    (!collections || owner !== currentAccount?.address) &&
-      fetchCollectionsOwned();
-  }, [collections, currentAccount, offset, owner, pageSize]);
+    fetchCollectionsOwned();
+  }, [
+    currentPage,
+    owner,
+    currentAccount?.address,
+    offset,
+    pageSize,
+    currentAccount,
+  ]);
 
   const dispatch = useDispatch();
   const { addCollectionTnxStatus } = useSelector(
     (s) => s.account.accountLoaders
   );
+  const [loading, setLoading] = useState(false);
   const [loadingTime, setLoadingTime] = useState(null);
-
   useEffect(() => {
-    const forceUpdateAfterMint = async ({ addCollectionTnxStatus }) => {
-      if (!addCollectionTnxStatus) {
-        return console.log(
-          "addCollectionTnxStatus error",
-          addCollectionTnxStatus
-        );
+    const forceUpdateAfterMint = async () => {
+      if (addCollectionTnxStatus?.status !== "End") {
+        return;
       }
 
       const { status, timeStamp, endTimeStamp } = addCollectionTnxStatus;
 
-      if (status === "End") {
-        // Get timestamp end
-        const delayTime = 9000 - endTimeStamp - timeStamp || 9000;
+      if (status && timeStamp && endTimeStamp) {
+        const diffTime = 9000 - Number(endTimeStamp - timeStamp);
+        const delayTime = diffTime >= 0 ? diffTime : 500;
 
-        if (delayTime > 0) {
-          setLoadingTime(delayTime / 1000);
+        setLoading(true);
 
-          delay(delayTime).then(() => {
-            dispatch({
-              type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-              payload: null,
-            });
-            setCollections(null);
-            setLoadingTime(null);
-          });
-        }
 
-        if (delayTime <= 0) {
+        setLoadingTime(delayTime / 1000);
+
+        await delay(delayTime).then(() => {
           dispatch({
-            type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-            payload: null,
+            type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
           });
           setCollections(null);
-          setLoadingTime(null);
-        }
+          setLoading(false);
+        });
       }
     };
 
-    forceUpdateAfterMint({ addCollectionTnxStatus });
-  }, [addCollectionTnxStatus, dispatch]);
+    forceUpdateAfterMint();
+  }, [
+    addCollectionTnxStatus,
+    addCollectionTnxStatus?.status,
+    dispatch,
+    loadingTime,
+  ]);
 
   return (
     <Box as="section" maxW="container.3xl">
@@ -149,7 +158,7 @@ function MyCollectionsPage() {
           <AddNewCollectionModal mode="add" />
         </Flex>
 
-        {loadingTime ? (
+        {loading ? (
           <AnimationLoader loadingTime={loadingTime} />
         ) : (
           <>

@@ -16,39 +16,24 @@ import AdvancedMode from "./AdvancedMode";
 import SimpleMode from "./SimpleMode";
 
 import AddCollectionIcon from "@theme/assets/icon/AddCollection";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { EditIcon } from "@chakra-ui/icons";
 
-function AddNewCollection({ forceUpdate, mode, id }) {
+function AddNewCollection({ mode, id }) {
   const {
     isOpen: isOpenAddNew,
     onOpen: onOpenAddNew,
     onClose: onCloseAddNew,
   } = useDisclosure();
 
-  const dispatch = useDispatch();
-
-  const { tnxStatus } = useSelector(
+  const { addCollectionTnxStatus } = useSelector(
     (state) => state.account.accountLoaders
   );
 
   useEffect(() => {
-    function onCloseHandler() {
-      if (tnxStatus?.status === "Finalized") {
-        // dispatch({
-        //   type: AccountActionTypes.SET_TNX_STATUS,
-        //   payload: null,
-        // });
-        console.log("AddNewCollection onCloseHandler");
-        // forceUpdate();
-
-        onCloseAddNew();
-      }
-    }
-
-    onCloseHandler();
-  }, [tnxStatus, dispatch, forceUpdate, onCloseAddNew]);
+    addCollectionTnxStatus?.status === "End" && onCloseAddNew();
+  }, [onCloseAddNew, addCollectionTnxStatus?.status]);
 
   return (
     <>
