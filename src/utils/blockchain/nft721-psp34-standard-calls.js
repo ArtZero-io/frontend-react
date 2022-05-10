@@ -132,9 +132,14 @@ async function mintWithAttributes(
   let attribute_value = [];
 
   for (const attribute of attributes) {
-    attribute_label.push(attribute.name);
-    attribute_value.push(attribute.value);
+    if (attribute_label.includes(attribute.name.trim()) == false) {
+      attribute_label.push(attribute.name.trim());
+      attribute_value.push(attribute.value);
+    }
   }
+
+  console.log('attribute_label', attribute_label);
+  console.log('attribute_value', attribute_value);
 
   if (attribute_label.length === attribute_value.length) {
     contract.tx

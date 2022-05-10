@@ -51,7 +51,7 @@ function MyNFTTabInfo({
     useState(false);
   const dispatch = useDispatch();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
-
+  console.log(attrsList);
   useEffect(() => {
     const checkAllowMarketplaceContract = async () => {
       if (Number(contractType) === 2) {
