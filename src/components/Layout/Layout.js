@@ -45,7 +45,9 @@ const Layout = ({ backdrop, children, variant = null }) => {
           position="absolute"
           insetX="0"
           w="full"
-          h="full"
+          h={{ base: "full", xl: "auto" }}
+          maxH={"41rem"}
+          minH={{ base: "29rem", "2xl": "41rem" }}
           overflow="hidden"
           align="center"
           zIndex="hide"

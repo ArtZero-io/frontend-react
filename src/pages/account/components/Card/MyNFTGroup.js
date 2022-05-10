@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Avatar,
   Box,
@@ -11,12 +12,16 @@ import React, { useEffect, useRef, useState } from "react";
 import MyNFTCard from "./MyNFT";
 import { IPFS_BASE_URL } from "@constants/index";
 import { createObjAttrsNFT } from "@utils/index";
-import ResponsivelySizedModal from "@components/Modal/Modal";
+// import ResponsivelySizedModal from "@components/Modal/Modal";
 import { getCachedImage } from "@utils";
 import { clientAPI } from "@api/client";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "@utils/substrate";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
+
+const ResponsivelySizedModal = React.lazy(() =>
+  import("@components/Modal/Modal")
+);
 
 function MyNFTGroupCard({
   name,
@@ -113,19 +118,15 @@ function MyNFTGroupCard({
 
   return (
     <Box my={10}>
-      {/* <NFTModal
-        contractType={contractType}
-        {...selectedNFT}
-        isOpen={isOpen}
-        onClose={onClose}
-      /> */}
-      <ResponsivelySizedModal
-        contractType={contractType}
-        {...selectedNFT}
-        isOpen={isOpen}
-        onClose={onClose}
-        hasTabs={true}
-      />
+      <React.Suspense fallback={<div>Loading Component...</div>}>
+        <ResponsivelySizedModal
+          contractType={contractType}
+          {...selectedNFT}
+          isOpen={isOpen}
+          onClose={onClose}
+          hasTabs={true}
+        />
+      </React.Suspense>
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0 }}
