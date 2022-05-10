@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import {
   handleContractCall,
-  handleContractCallAnimation,
+  // handleContractCallAnimation,
   isValidAddressPolkadotAddress,
 } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
@@ -120,7 +120,7 @@ async function autoNewCollection(caller_account, data, dispatch) {
         }
 
         if (status) {
-          handleContractCallAnimation(
+          handleContractCall(
             status,
             dispatchError,
             dispatch,

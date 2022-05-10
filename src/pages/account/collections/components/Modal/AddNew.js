@@ -29,19 +29,26 @@ function AddNewCollection({ forceUpdate, mode, id }) {
 
   const dispatch = useDispatch();
 
-  const { addCollectionTnxStatus } = useSelector(
+  const { tnxStatus } = useSelector(
     (state) => state.account.accountLoaders
   );
 
   useEffect(() => {
     function onCloseHandler() {
-      if (addCollectionTnxStatus?.status === "End") {
+      if (tnxStatus?.status === "Finalized") {
+        // dispatch({
+        //   type: AccountActionTypes.SET_TNX_STATUS,
+        //   payload: null,
+        // });
+        console.log("AddNewCollection onCloseHandler");
+        // forceUpdate();
+
         onCloseAddNew();
       }
     }
 
     onCloseHandler();
-  }, [addCollectionTnxStatus, dispatch, forceUpdate, onCloseAddNew]);
+  }, [tnxStatus, dispatch, forceUpdate, onCloseAddNew]);
 
   return (
     <>

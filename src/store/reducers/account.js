@@ -43,10 +43,7 @@ const accountReducer = (state = initialState, action) => {
         ...state,
         accountLoaders: {
           ...state.accountLoaders,
-          tnxStatus: {
-            ...state.accountLoaders.tnxStatus,
-            ...action.payload
-          },
+          tnxStatus: action.payload,
         },
       };
     case AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS:

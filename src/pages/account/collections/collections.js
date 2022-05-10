@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { Box, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
@@ -87,52 +86,36 @@ function MyCollectionsPage() {
   }, [collections, currentAccount, offset, owner, pageSize]);
 
   const dispatch = useDispatch();
-  const { addCollectionTnxStatus } = useSelector(
+  const { tnxStatus } = useSelector(
     (s) => s.account.accountLoaders
   );
   const [loading, setLoading] = useState(false);
-  const [loadingTime, setLoadingTime] = useState(null);
 
   useEffect(() => {
     const forceUpdateAfterMint = async () => {
-      if (addCollectionTnxStatus?.status === "End") {
-        const delayTime =
-          9000 -
-          Number(
-            addCollectionTnxStatus?.endTimeStamp -
-              addCollectionTnxStatus?.timeStamp
-          );
+      if (tnxStatus?.status === "Finalized") {
+        dispatch({
+          type: AccountActionTypes.SET_TNX_STATUS,
+          payload: null,
+        });
 
-        if (delayTime >= 0) {
-          setLoading(true);
-          setLoadingTime(delayTime / 1000);
-
-          delay(delayTime).then(() => {
-            dispatch({
-              type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-              payload: null,
-            });
+        setLoading(true);
+        toast.promise(
+          delay(9000).then(() => {
             setCollections(null);
             setLoading(false);
-          });
-        } else {
-          dispatch({
-            type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-            payload: null,
-          });
-          setCollections(null);
-          setLoading(false);
-        }
+          }),
+          {
+            loading: "Loading new data...",
+            success: `Done!`,
+            error: "Could not load data.",
+          }
+        );
       }
     };
 
     forceUpdateAfterMint();
-  }, [
-    addCollectionTnxStatus?.status,
-    dispatch,
-    addCollectionTnxStatus?.endTimeStamp,
-    addCollectionTnxStatus?.timeStamp,
-  ]);
+  }, [tnxStatus, dispatch]);
 
   return (
     <Box as="section" maxW="container.3xl">
@@ -155,7 +138,6 @@ function MyCollectionsPage() {
             addText={`Please wait a moment...`}
             size="md"
             maxH={"4.125rem"}
-            loadingTime={loadingTime}
           />
         ) : (
           <>

@@ -45,7 +45,7 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
         p={0}
         h="full"
         w="full"
-        maxH={{ base: "34rem", xl: "25rem", "2xl": "40rem" }}
+        maxH={{ base: "auto", xl: "28rem", "2xl": "40rem" }}
         maxW={{ base: "58rem", "2xl": "78rem" }}
       >
         <ModalCloseButton
@@ -76,7 +76,7 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
             {tabData.map((tab, index) => (
               <TabPanel
                 px={{ base: 6, "2xl": 12 }}
-                py={{ base: 5, "2xl": 10 }}
+                py={{ base: 4, "2xl": 8 }}
                 key={index}
                 h="full"
               >

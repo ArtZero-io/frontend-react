@@ -1,6 +1,6 @@
 import {
   Box,
-  // Button,
+  Button,
   Flex,
   HStack,
   Spacer,
@@ -23,16 +23,9 @@ import collection_manager_calls from "@utils/blockchain/collection-manager-calls
 
 import AddCollectionNumberInput from "../NumberInput";
 import { clientAPI } from "@api/client";
-import CommonCheckbox from "@components/Checkbox/Checkbox";
-import StatusButton from "@components/Button/StatusButton";
-import { AccountActionTypes } from "@store/types/account.types";
+import CommonCheckbox from "../../../../../components/Checkbox/Checkbox";
 
-const SimpleModeForm = ({
-  mode = "add",
-  id,
-  nftContractAddress,
-  onCloseParent,
-}) => {
+const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
   const [headerSquareIPFSUrl, setHeaderSquareIPFSUrl] = useState("");
@@ -43,7 +36,7 @@ const SimpleModeForm = ({
 
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
-  const { addCollectionTnxStatus } = useSelector(
+  const { tnxStatus } = useSelector(
     (s) => s.account.accountLoaders
   );
 
@@ -292,16 +285,6 @@ const SimpleModeForm = ({
                     console.log("111data add before new ", data);
                     console.log("111data add before old", initialValues);
                     console.log(nftContractAddress);
-
-                    dispatch({
-                      type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-                      payload: {
-                        status: "Start",
-                        value: null,
-                        timeStamp: null,
-                      },
-                    });
-
                     await collection_manager_calls.autoNewCollection(
                       currentAccount,
                       data,
@@ -471,15 +454,8 @@ const SimpleModeForm = ({
                     </Flex>
                   </Flex>
                 )}
-                <StatusButton
-                  disabled={!(dirty && isValid)}
-                  onClose={onCloseParent}
-                  isLoading={addCollectionTnxStatus}
-                  loadingText={`${addCollectionTnxStatus?.status}`}
-                  mode={mode}
-                />
-                {/* <Button
-                   
+
+                <Button
                   variant="solid"
                   spinnerPlacement="start"
                   isLoading={tnxStatus}
@@ -490,7 +466,7 @@ const SimpleModeForm = ({
                   mb={{ xl: "16px", "2xl": "32px" }}
                 >
                   {mode === "add" ? "Add new collection" : "Submit change"}
-                </Button> */}
+                </Button>
               </Form>
             )}
           </Formik>
