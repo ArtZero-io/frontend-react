@@ -39,6 +39,7 @@
     "@polkadot/util-crypto": "^9.0.1",
     "@yarnpkg/plugin-interactive-tools": "^3.1.2",
     "axios": "^0.26.1",
+    "big-integer": "^1.6.51",
     "buffer": "^6.0.3",
     "formik": "^2.2.9",
     "formik-chakra-ui": "^1.6.0",
