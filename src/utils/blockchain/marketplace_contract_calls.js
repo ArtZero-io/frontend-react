@@ -646,7 +646,7 @@ async function buy(
             "post",
             "/updateCollection",
             {
-              collection_address: data.nftContractAddress,
+              collection_address: nft_contract_address,
             }
           );
           console.log("update_collection_api_res", update_collection_api_res);
@@ -726,7 +726,7 @@ async function acceptBid(
               "post",
               "/updateCollection",
               {
-                collection_address: data.nftContractAddress,
+                collection_address: nft_contract_address,
               }
             );
             console.log("update_collection_api_res", update_collection_api_res);
