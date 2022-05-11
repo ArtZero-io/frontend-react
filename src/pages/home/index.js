@@ -131,7 +131,7 @@ function HomePage() {
 
             <Center w="full" textAlign="center" mb="2rem" px={4}>
               <Text size="h6" maxW="2xl" lineHeight="30px">
-                This version currently work with{" "}
+                This version works with{" "}
                 <Link
                   color="#7ae7ff"
                   textDecoration="underline"
@@ -159,7 +159,7 @@ function HomePage() {
                   Talisman
                 </Link>
                 . Please make sure you installed at least one of these wallets
-                and create an account.
+                and created an account.
               </Text>
             </Center>
 
