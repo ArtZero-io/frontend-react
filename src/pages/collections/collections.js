@@ -78,6 +78,11 @@ const CollectionsPage = () => {
 
     const fetchFeaturedCollections = async () => {
       try {
+        const featuredCollectionsAddressList = await clientAPI(
+          "get",
+          "/getFeaturedCollections"
+        );
+
         Promise.all(
           featuredCollectionsAddressList.map(async (collection_address) => {
             const [collectionByAddress] = await clientAPI(
@@ -212,9 +217,3 @@ const CollectionsPage = () => {
 };
 
 export default CollectionsPage;
-
-const featuredCollectionsAddressList = [
-  "5FRXUSQgW9J7dChjf6vTRDhcENGNDjKd8PqxdNXGtRWCJEjv",
-  "5GdwCoxNDMPbjjkEBcH8iU4dNAb46MocL3eUpyVB5Vmz5idn",
-  "5HqptUW7VeNpYym5Pey46Kg2ekXQgVYMbnRkqw5e7qx3VPxu",
-];
