@@ -12,7 +12,7 @@ ReactDOM.render(
   <>
     <SubstrateContextProvider>
       <Provider store={store}>
-        <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <BrowserRouter basename="/demo">
           <App />
         </BrowserRouter>
       </Provider>

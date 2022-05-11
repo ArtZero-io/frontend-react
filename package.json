@@ -4,7 +4,7 @@
   "private": true,
   "author": "",
   "license": "Unlicense",
-  "keywords": [],
+   "keywords": [],
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
