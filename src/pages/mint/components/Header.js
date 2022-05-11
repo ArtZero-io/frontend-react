@@ -31,7 +31,7 @@ import toast from "react-hot-toast";
 function MintHeader() {
   const dispatch = useDispatch();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
-  const { api, currentAccount, keyringState, apiState } = useSubstrateState();
+  const { api, currentAccount } = useSubstrateState();
 
   const [balance, setBalance] = useState(0);
   const [whitelist, setWhitelist] = useState(null);
@@ -100,8 +100,9 @@ function MintHeader() {
     const { data: balance } = await api.query.system.account(
       currentAccount?.address
     );
-    console.log(balance)
-    const freeBalance = new BN(balance.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+    console.log(balance);
+    const freeBalance =
+      new BN(balance.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
     if (freeBalance < 0.01) {
       toast.error("Your balance is low.");
       return;
@@ -122,13 +123,13 @@ function MintHeader() {
 
     const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
 
-    if (mintMode === "1") {
+    if (Number(mintMode) === 1) {
       if (balance < fee1 + 0.01) {
         toast.error("Not enough balance to mint");
         return;
       }
       await artzero_nft_calls.paidMint(currentAccount, fee1, dispatch);
-    } else if (mintMode === "2") {
+    } else if (Number(mintMode) === 2) {
       if (balance < fee2 + 0.01) {
         toast.error("Not enough balance to mint");
         return;
@@ -141,8 +142,6 @@ function MintHeader() {
   };
 
   const onRefresh = useCallback(async () => {
-    await onGetBalance();
-    await onGetWhiteList();
     await onGetMintMode();
     await onGetFee1();
     await onGetFee2();
@@ -154,13 +153,9 @@ function MintHeader() {
     await onRefresh();
   }, []);
 
-  // useEffect(() => {
-  //   apiState && keyringState && currentAccount?.address && fetchMintData();
-  // }, [apiState, currentAccount?.address, fetchMintData, keyringState]);
-
   useEffect(() => {
-    apiState && keyringState && currentAccount?.address && fetchMintData();
-  }, [apiState, currentAccount?.address, fetchMintData, keyringState]);
+    fetchMintData();
+  }, [currentAccount]);
 
   return (
     <>
@@ -194,7 +189,7 @@ function MintHeader() {
                 <Text mt={3}>
                   Your address:{" "}
                   <span style={{ color: "#7ae7ff" }}>
-                    {truncateStr(currentAccount?.address, 9) || 'n/a'}
+                    {truncateStr(currentAccount?.address, 9) || "n/a"}
                   </span>
                 </Text>
                 <Text mt={3}>
@@ -287,7 +282,7 @@ function MintHeader() {
             <Flex direction="column" justifyContent="space-between" h="full">
               <Box>
                 <Heading size="h6">Public Minting</Heading>
-                {mintMode <= "0" ? (
+                {Number(Number(mintMode)) <= 0 ? (
                   <Flex alignItems="center">
                     <Text>Status:</Text>
                     <Tag variant="inActive">
@@ -304,7 +299,7 @@ function MintHeader() {
                     </Tag>
                   </Flex>
                 )}
-                {mintMode === "1" ? (
+                {Number(Number(mintMode)) === 1 ? (
                   <>
                     <Text alignItems="center" mt={3}>
                       Minting fee: <span style={{ color: "#fff" }}>{fee1}</span>{" "}
@@ -317,7 +312,7 @@ function MintHeader() {
                   </>
                 ) : null}
 
-                {mintMode === "2" ? (
+                {Number(Number(mintMode)) === 2 ? (
                   <>
                     <Text alignItems="center" mt={3}>
                       Minting fee: <span style={{ color: "#fff" }}>{fee2}</span>{" "}
@@ -332,7 +327,7 @@ function MintHeader() {
               </Box>
 
               <Button
-                isDisabled={mintMode <= 0}
+                isDisabled={Number(mintMode) <= 0}
                 spinnerPlacement="start"
                 isLoading={tnxStatus}
                 loadingText={`${tnxStatus?.status}`}
