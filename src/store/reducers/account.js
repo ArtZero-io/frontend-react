@@ -1,6 +1,7 @@
+import { BigInt } from "@polkadot/x-bigint";
 import { AccountActionTypes } from "../types/account.types";
 
-import BigInt from "big-integer";
+// import BigInt from "big-integer";
 console.log("0window", window);
 console.log("0BigInt", BigInt);
 console.log("0window.BigInt", window.BigInt);
