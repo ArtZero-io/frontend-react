@@ -283,6 +283,12 @@ function GeneralPage() {
         >
           <Square size={{ base: "18rem", "2xl": "20rem" }} bg="#222">
             <Image w="full" h="full" src={ImageAccountBanner} />
+            <img
+              src={`${process.env.PUBLIC_URL}/static/media/image-account-banner.png`}
+              className="App-logo"
+              alt="logo"
+              width={400}
+            />
           </Square>
 
           <VStack
@@ -353,12 +359,3 @@ function GeneralPage() {
 }
 
 export default GeneralPage;
-
-// const dashboardInfo = [
-//   { name: "Owned NFTs", text1: "82.00", value: "99" },
-//   { name: "Amount Trades", text1: "82.00", value: "143" },
-//   { name: "Ratio Purchase/Sell", text1: "82.00", value: "30%" },
-//   { name: "NFTs for sale", text1: "82.00", value: "56" },
-//   { name: "NFTs offers placed", text1: "82.00", value: "45" },
-//   { name: "NFTs offers received", text1: "82.00", value: "38" },
-// ];

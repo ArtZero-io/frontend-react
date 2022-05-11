@@ -192,26 +192,6 @@ const CollectionsPage = () => {
                     />
                   ) : null}
 
-                  {/* <SimpleGrid
-                    py={16}
-                    columns={{ base: 1, md: 2, lg: 3 }}
-                    spacing="8"
-                  >
-                    {collections
-                      ?.filter((i) => i.isActive)
-                      .map((item) => (
-                        <React.Fragment key={item?.index}>
-                          <Link
-                            as={ReactRouterLink}
-                            to={`${ROUTES.DETAIL_COLLECTION_BASE}/${item?.nftContractAddress}`}
-                            style={{ textDecoration: "none" }}
-                          >
-                            <CollectionCard {...item} />
-                          </Link>
-                        </React.Fragment>
-                      ))}
-                  </SimpleGrid> */}
-
                   <Flex w="full" alignItems="end">
                     <PaginationMP
                       isDisabled={isDisabled}
