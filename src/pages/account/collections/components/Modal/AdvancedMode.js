@@ -55,7 +55,13 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
         />
       )}
 
-      <Modal isCentered isOpen={isOpen} onClose={onClose} size="4xl">
+      <Modal
+        scrollBehavior={"inside"}
+        isCentered
+        isOpen={isOpen}
+        onClose={onClose}
+        size="4xl"
+      >
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
@@ -64,6 +70,7 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
           position="relative"
           bg="brand.grayDark"
           px={6}
+          pb={8}
           borderRadius="0"
           textAlign="center"
         >

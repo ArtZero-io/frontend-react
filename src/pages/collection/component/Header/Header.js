@@ -21,7 +21,6 @@ import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
-// eslint-disable-next-line no-unused-vars
 const overlay =
   "linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)";
 
@@ -39,7 +38,6 @@ function CollectionHeader({
   headerImage,
   loading,
 }) {
-
   const getCollectionImage = (imageHash, size) => {
     if (imageHash) {
       const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
@@ -56,7 +54,6 @@ function CollectionHeader({
       return "";
     }
   };
-
   return (
     <Box
       maxH={"34rem"}
@@ -114,10 +111,10 @@ function CollectionHeader({
                     minH={{ base: "3.5rem", "2xl": "7.125rem" }}
                   >
                     <Heading
-                      // size="h2"
                       color="#fff"
                       fontSize={{ base: "2rem", "2xl": "3rem" }}
                       minH={{ base: "2.5rem", "2xl": "3.75rem" }}
+                      // size="h2"
                       // minH="3.75rem"
                     >
                       {name}
@@ -311,7 +308,7 @@ function CollectionHeader({
                         bg="transparent"
                       />
                     </Flex>
-                    <Text as='span' mt={0}>
+                    <Text as="span" mt={0}>
                       Volume{" "}
                       <Text display={{ base: "none", xl: "inline" }}>
                         traded
@@ -345,7 +342,7 @@ function CollectionHeader({
                         bg="transparent"
                       />
                     </Flex>
-                    <Text as='span' mt={0}>
+                    <Text as="span" mt={0}>
                       Volume{" "}
                       <Text display={{ base: "none", xl: "inline" }}>
                         traded
@@ -362,7 +359,7 @@ function CollectionHeader({
       <SocialCard
         justifyContent="center"
         profile={[{ website }, { twitter }, { discord }]}
-        pos={{ base: "", "xl": "absolute" }}
+        pos={{ base: "", xl: "absolute" }}
         right={"6.3125rem"}
         bottom={{ base: "1.375rem", "2xl": "2.375rem" }}
       />

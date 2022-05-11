@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Box, Container, Fade, Flex, Image } from "@chakra-ui/react";
+import { Box, Container, Fade, Flex, Image, Skeleton } from "@chakra-ui/react";
 import Navbar from "../Navbar/Nav";
 import bgHeroFull from "@theme/assets/bg-hero-full.png";
 import { IPFS_BASE_URL } from "@constants/index";
@@ -59,6 +59,7 @@ const Layout = ({ backdrop, children, variant = null }) => {
               w="full"
               h="full"
               objectFit="cover"
+              fallback={<Skeleton w="full" h="full" maxH={"16.25rem"} />}
             />
           </Box>
         </Flex>
