@@ -642,6 +642,14 @@ async function buy(
             token_id: token_id.u64,
           });
           console.log("update_nft_api_res", update_nft_api_res);
+          const update_collection_api_res = await clientAPI(
+            "post",
+            "/updateCollection",
+            {
+              collection_address: nft_contract_address,
+            }
+          );
+          console.log("update_collection_api_res", update_collection_api_res);
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Buy NFT ${
@@ -714,6 +722,14 @@ async function acceptBid(
               token_id: token_id.u64,
             });
             console.log("update_bid_api_res", update_bid_api_res);
+            const update_collection_api_res = await clientAPI(
+              "post",
+              "/updateCollection",
+              {
+                collection_address: nft_contract_address,
+              }
+            );
+            console.log("update_collection_api_res", update_collection_api_res);
           }
           toast.success(
             `Accept Bid NFT ${

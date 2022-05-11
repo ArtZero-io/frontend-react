@@ -256,7 +256,8 @@ const NFTTabCollectible = ({
               exit={{ opacity: 0 }}
             >
               <Text color="#fff" pb={2}>
-                Owned by <Link color="#7AE7FF">{truncateStr(owner, 6)}</Link>
+                {console.log('is_for_sale', is_for_sale)}
+                Owned by <Link color="#7AE7FF">{(is_for_sale) ? truncateStr(saleInfo?.nftOwner, 6) : truncateStr(owner, 6)}</Link>
               </Text>
             </motion.div>
           </AnimatePresence>
