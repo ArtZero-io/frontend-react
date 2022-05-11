@@ -66,6 +66,13 @@ const accountReducer = (state = initialState, action) => {
         },
       };
     case AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS:
+      return {
+        ...state,
+        accountLoaders: {
+          ...state.accountLoaders,
+          addCollectionTnxStatus: null,
+        },
+      };
     case AccountActionTypes.SET_ADD_NFT_TNX_STATUS:
       return {
         ...state,

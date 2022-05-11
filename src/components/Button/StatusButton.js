@@ -37,8 +37,8 @@ function StatusButton({ isLoading, loadingText, mode, disabled, text, type }) {
         mt={6}
         mb={{ xl: "16px", "2xl": "32px" }}
       >
-        {mode && (mode === "add" ? "Add new collection" : "Submit change")}
-        {text && "Submit"}
+        {text && "Submit"}{" "}
+        {mode && (mode === "add" ? "Add new collection" : "change")}
       </Button>
 
       <Button
