@@ -51,24 +51,23 @@ function MintHeader() {
     },
     [currentAccount]
   );
-
+  const onGetWhiteList = async (e) => {
+    let whitelist = await artzero_nft_calls.getWhitelist(
+      currentAccount,
+      currentAccount?.address
+    );
+    if (whitelist) setWhitelist(whitelist);
+    else setWhitelist(null);
+  };
+  const onGetBalance = async (e) => {
+    let res = await artzero_nft_calls.balanceOf(
+      currentAccount,
+      currentAccount?.address
+    );
+    if (res) setBalance(res);
+    else setBalance(0);
+  };
   useEffect(() => {
-    const onGetWhiteList = async (e) => {
-      let whitelist = await artzero_nft_calls.getWhitelist(
-        currentAccount,
-        currentAccount?.address
-      );
-      if (whitelist) setWhitelist(whitelist);
-      else setWhitelist(null);
-    };
-    const onGetBalance = async (e) => {
-      let res = await artzero_nft_calls.balanceOf(
-        currentAccount,
-        currentAccount?.address
-      );
-      if (res) setBalance(res);
-      else setBalance(0);
-    };
     onGetBalance();
     onGetWhiteList();
   }, [currentAccount]);
@@ -101,8 +100,8 @@ function MintHeader() {
     const { data: balance } = await api.query.system.account(
       currentAccount?.address
     );
-
-    const freeBalance = new BN(balance).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+    console.log(balance)
+    const freeBalance = new BN(balance.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
     if (freeBalance < 0.01) {
       toast.error("Your balance is low.");
       return;
@@ -122,7 +121,7 @@ function MintHeader() {
     // const balance = new BN(data.free, 10, "le") / 10 ** 12;
 
     const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
-    
+
     if (mintMode === "1") {
       if (balance < fee1 + 0.01) {
         toast.error("Not enough balance to mint");
@@ -142,8 +141,8 @@ function MintHeader() {
   };
 
   const onRefresh = useCallback(async () => {
-    // await onGetBalance();
-    // await onGetWhiteList();
+    await onGetBalance();
+    await onGetWhiteList();
     await onGetMintMode();
     await onGetFee1();
     await onGetFee2();
