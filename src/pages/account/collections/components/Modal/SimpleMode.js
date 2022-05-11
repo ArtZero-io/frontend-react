@@ -46,7 +46,7 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
               color="#7ae7ff"
               fontSize="1.5rem"
               _hover={{
-                border: "1px solid #171717",
+                bg: "#171717",
               }}
               p={1}
             />

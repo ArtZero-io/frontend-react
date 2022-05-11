@@ -67,7 +67,6 @@ function MyCollectionsPage() {
         );
 
         if (dataList?.length) {
-
           setOwner(dataList[0].collectionOwner || options.owner);
 
           const listCollection = [];
@@ -90,6 +89,8 @@ function MyCollectionsPage() {
         toast.error("There was an error while fetching the collections.");
       }
     };
+
+    console.log("fetchCollectionsOwned");
 
     fetchCollectionsOwned();
   }, [
@@ -120,7 +121,6 @@ function MyCollectionsPage() {
         const delayTime = diffTime >= 0 ? diffTime : 500;
 
         setLoading(true);
-
 
         setLoadingTime(delayTime / 1000);
 

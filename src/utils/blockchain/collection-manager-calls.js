@@ -8,6 +8,7 @@ import {
 } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
+import { AccountActionTypes } from "@store/types/account.types";
 
 let contract;
 
@@ -55,6 +56,7 @@ async function addNewCollection(caller_account, data, dispatch) {
           );
           console.log("update_collection_api_res", update_collection_api_res);
         }
+
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -64,14 +66,14 @@ async function addNewCollection(caller_account, data, dispatch) {
         }
 
         if (status) {
-          handleContractCall(status, dispatchError, dispatch, contract);
+          handleContractCallAnimation(status, dispatch);
 
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Add New Collection ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
+          // const statusText = Object.keys(status.toHuman())[0];
+          // toast.success(
+          //   `Add New Collection ${
+          //     statusText === "0" ? "started" : statusText.toLowerCase()
+          //   }.`
+          // );
         }
       }
     )
@@ -80,10 +82,18 @@ async function addNewCollection(caller_account, data, dispatch) {
     })
     .catch((e) => {
       if (e === "Error: Cancelled") {
+        dispatch({
+          type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+        });
+
         toast.error(
           "You cancelled this transaction. Please add new collection again!"
         );
       } else {
+        dispatch({
+          type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+        });
+
         toast.error("Has something wrong in this transaction!");
       }
     });
@@ -115,6 +125,7 @@ async function autoNewCollection(caller_account, data, dispatch) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
           } else {
+            toast.error("dispatchError ", dispatchError.toString());
             console.log("dispatchError ", dispatchError.toString());
           }
         }
@@ -136,10 +147,18 @@ async function autoNewCollection(caller_account, data, dispatch) {
     })
     .catch((e) => {
       if (e === "Error: Cancelled") {
+        dispatch({
+          type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+        });
+
         toast.error(
           "You cancelled this transaction. Please add new collection again!"
         );
       } else {
+        dispatch({
+          type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+        });
+
         toast.error("Has something wrong in this transaction!");
       }
     });

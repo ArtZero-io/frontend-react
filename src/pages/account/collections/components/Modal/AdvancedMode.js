@@ -14,7 +14,7 @@ import {
 import React from "react";
 import AdvancedModeForm from "../Form/AdvancedMode";
 
-function AdvancedModeModal({ mode = "add", id }) {
+function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -93,7 +93,12 @@ function AdvancedModeModal({ mode = "add", id }) {
               },
             }}
           >
-            <AdvancedModeForm onClose={onClose} mode={mode} id={id} />
+            <AdvancedModeForm
+              onClose={onClose}
+              mode={mode}
+              id={id}
+              nftContractAddress={nftContractAddress}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>

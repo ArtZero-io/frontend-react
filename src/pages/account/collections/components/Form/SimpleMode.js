@@ -17,7 +17,7 @@ import AddCollectionNumberInput from "../NumberInput";
 import { clientAPI } from "@api/client";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import { AccountActionTypes } from "@store/types/account.types";
-import StatusButton from "../../../../../components/Button/StatusButton";
+import StatusButton from "@components/Button/StatusButton";
 
 const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -107,7 +107,9 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
         if (dataList?.length) {
           setAvatarIPFSUrl(dataList[0].avatarImage);
           setHeaderIPFSUrl(dataList[0].headerImage);
-          setHeaderSquareIPFSUrl(dataList[0].headerSquareImage);
+          // Todos Update headerSquareImage later
+          // setHeaderSquareIPFSUrl(dataList[0].headerSquareImage);
+          setHeaderSquareIPFSUrl(dataList[0].headerImage);
           setIsSetRoyal(dataList[0].isCollectRoyalFee);
           setInitialValues(newInitialValues);
         } else {
@@ -224,7 +226,6 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     ? Math.round(values.royalFee * 100)
                     : 0,
                 };
-                console.log("111data add before new mode ", mode);
 
                 dispatch({
                   type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
@@ -234,20 +235,13 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                 });
 
                 if (mode === "add") {
-                  console.log(data);
-                  console.log("111data add before new ", data);
-                  console.log("111data add before old", initialValues);
-                  console.log(nftContractAddress);
                   await collection_manager_calls.autoNewCollection(
                     currentAccount,
                     data,
                     dispatch
                   );
                 } else {
-                  console.log(data);
-                  console.log("111data edit before new ", data);
-                  console.log("111data edit before old", initialValues);
-                  console.log(nftContractAddress);
+                  console.log("nftContractAddress", nftContractAddress);
                   await collection_manager_calls.setMultipleAttributes(
                     currentAccount,
                     nftContractAddress,
@@ -407,6 +401,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     </Flex>
                   </Flex>
                 )}
+                
                 <StatusButton
                   disabled={!(dirty && isValid)}
                   isLoading={addCollectionTnxStatus}

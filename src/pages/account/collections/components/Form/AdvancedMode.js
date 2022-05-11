@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Button, HStack, Stack, Spacer, Flex, Text } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
@@ -17,6 +18,8 @@ import AdvancedModeTextArea from "@components/TextArea/TextArea";
 import AddCollectionNumberInput from "../NumberInput";
 import { clientAPI } from "@api/client";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
+import { AccountActionTypes } from "@store/types/account.types";
+import StatusButton from "@components/Button/StatusButton";
 
 const AdvancedModeForm = ({ mode = "add", id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -29,7 +32,9 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
 
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
-  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const { addCollectionTnxStatus } = useSelector(
+    (s) => s.account.accountLoaders
+  );
 
   useEffect(() => {
     const fetchFee = async () => {
@@ -70,6 +75,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
 
   useEffect(() => {
     let newInitialValues = {
+      isEditMode: false,
       nftContractAddress: "",
       collectionName: "",
       collectionDescription: "",
@@ -95,6 +101,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
         } = dataList;
 
         newInitialValues = {
+          isEditMode: true,
           nftContractAddress,
           collectionName,
           collectionDescription,
@@ -106,7 +113,9 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
         if (dataList) {
           setAvatarIPFSUrl(avatarImage);
           setHeaderIPFSUrl(headerImage);
-          setHeaderSquareIPFSUrl(headerSquareImage);
+          // Todos Update headerSquareImage later
+          // setHeaderSquareIPFSUrl(headerSquareImage);
+          setHeaderSquareIPFSUrl(headerImage);
           setIsSetRoyal(collectRoyalFee);
           setInitialValues(newInitialValues);
         } else {
@@ -130,98 +139,101 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
         <>
           <Formik
             initialValues={initialValues}
-            validationSchema={(mode) => {
-              let result = Yup.object().shape({
-                nftContractAddress: Yup.string()
-                  .min(3, "Must be longer than 3 characters")
-                  .max(48, "Must be less than 48 characters")
-                  .required("Required"),
-                collectionName: Yup.string()
-                  .min(3, "Must be longer than 3 characters")
-                  .max(50, "Must be less than 50 characters")
-                  .required("Required"),
-                collectionDescription: Yup.string()
-                  .min(3, "Must be longer than 3 characters")
-                  .max(150, "Must be less than 150 characters")
-                  .required("Required"),
-                collectRoyalFee: Yup.boolean(),
-                agreeTosCheckbox: Yup.boolean()
-                  .required("The terms and conditions must be accepted.")
-                  .oneOf([true], "The terms and conditions must be accepted."),
-              });
-              mode === "edit" &&
-                result.shape({
-                  agreeTosCheckbox: Yup.boolean(),
-                });
+            validationSchema={Yup.object().shape({
+              isEditMode: Yup.boolean(),
 
-              return result;
-            }}
+              nftContractAddress: Yup.string()
+                .min(3, "Must be longer than 3 characters")
+                .max(48, "Must be less than 48 characters")
+                .required("Required"),
+              collectionName: Yup.string()
+                .min(3, "Must be longer than 3 characters")
+                .max(50, "Must be less than 50 characters")
+                .required("Required"),
+              collectionDescription: Yup.string()
+                .min(3, "Must be longer than 3 characters")
+                .max(150, "Must be less than 150 characters")
+                .required("Required"),
+              collectRoyalFee: Yup.boolean(),
+
+              agreeTosCheckbox: Yup.boolean().when("isEditMode", {
+                is: false,
+                then: Yup.boolean()
+                  .required("The terms and conditions must be accepted.")
+                  .oneOf([true], "The TOCs must be accepted."),
+              }),
+            })}
             onSubmit={async (values, { setSubmitting }) => {
               if (
-                mode === "add" &&
+                !values.isEditMode &&
                 (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl)
               ) {
-                toast.error("Upload images first.");
+                return toast.error("Upload avatar or header too");
               }
 
-              if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
-                values.avatarIPFSUrl = avatarIPFSUrl;
-                values.headerIPFSUrl = headerIPFSUrl;
-                values.headerSquareIPFSUrl = headerSquareIPFSUrl;
+              // if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
+              values.avatarIPFSUrl = avatarIPFSUrl;
+              values.headerIPFSUrl = headerIPFSUrl;
+              values.headerSquareIPFSUrl = headerSquareIPFSUrl;
 
-                if (!checkCurrentBalance) {
-                  return toast.error(`Your balance not enough!`);
-                }
+              if (!checkCurrentBalance) {
+                return toast.error(`Your balance not enough!`);
+              }
 
-                if (!isValidAddressPolkadotAddress(values.nftContractAddress)) {
-                  toast.error(`The NFT contract address must be an address!`);
+              if (!isValidAddressPolkadotAddress(values.nftContractAddress)) {
+                toast.error(`The NFT contract address must be an address!`);
+              } else {
+                const data = {
+                  nftContractAddress: values.nftContractAddress,
+
+                  attributes: [
+                    "name",
+                    "description",
+                    "avatar_image",
+                    "header_image",
+                    "header_square_image",
+                  ],
+
+                  attributeVals: [
+                    values.collectionName.trim(),
+                    values.collectionDescription.trim(),
+                    values.avatarIPFSUrl,
+                    values.headerIPFSUrl,
+                    values.headerSquareIPFSUrl,
+                  ],
+
+                  collectionAllowRoyalFee: values.collectRoyalFee,
+
+                  collectionRoyalFeeData: values.collectRoyalFee
+                    ? Math.round(values.royalFee * 100)
+                    : 0,
+                };
+
+                dispatch({
+                  type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
+                  payload: {
+                    status: "Start",
+                  },
+                });
+
+                if (mode === "add") {
+                  await collection_manager_calls.addNewCollection(
+                    currentAccount,
+                    data,
+                    dispatch
+                  );
                 } else {
-                  const data = {
-                    nftContractAddress: values.nftContractAddress,
-
-                    attributes: [
-                      "name",
-                      "description",
-                      "avatar_image",
-                      "header_image",
-                      "header_square_image",
-                    ],
-
-                    attributeVals: [
-                      values.collectionName.trim(),
-                      values.collectionDescription.trim(),
-                      values.avatarIPFSUrl,
-                      values.headerIPFSUrl,
-                      values.headerSquareIPFSUrl,
-                    ],
-
-                    collectionAllowRoyalFee: values.collectRoyalFee,
-
-                    collectionRoyalFeeData: values.collectRoyalFee
-                      ? Math.round(values.royalFee * 100)
-                      : 0,
-                  };
-
-                  if (mode === "add") {
-                    await collection_manager_calls.addNewCollection(
-                      currentAccount,
-                      data,
-                      dispatch
-                    );
-                  } else {
-                    console.log(collection_manager_calls);
-                    await collection_manager_calls.setMultipleAttributes(
-                      currentAccount,
-                      data.nftContractAddress,
-                      data.attributes,
-                      data.attributeVals,
-                      dispatch
-                    );
-                  }
-                  await delay(10000);
-                  // await onRefresh();
+                  console.log("nftContractAddress", data.nftContractAddress);
+                  await collection_manager_calls.setMultipleAttributes(
+                    currentAccount,
+                    data.nftContractAddress,
+                    data.attributes,
+                    data.attributeVals,
+                    dispatch
+                  );
                 }
               }
+              // }
             }}
           >
             {({ values, dirty, isValid }) => (
@@ -344,7 +356,13 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   </Flex>
                 )}
 
-                <Button
+                <StatusButton
+                  disabled={!(dirty && isValid)}
+                  isLoading={addCollectionTnxStatus}
+                  loadingText={`${addCollectionTnxStatus?.status}`}
+                  mode={mode}
+                />
+                {/* <Button
                   disabled={!(dirty && isValid)}
                   spinnerPlacement="start"
                   isLoading={tnxStatus}
@@ -356,7 +374,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   mb={{ xl: "16px", "2xl": "32px" }}
                 >
                   {mode === "add" ? "Add new collection" : "Submit change"}
-                </Button>
+                </Button> */}
               </Form>
             )}
           </Formik>
