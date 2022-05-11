@@ -327,7 +327,7 @@ async function approve(
       }
 
       if (status) {
-        handleContractCall(status, dispatchError, dispatch, contract);
+        // handleContractCall(status, dispatchError, dispatch, contract);
 
         const statusText = Object.keys(status.toHuman())[0];
         if (status.isFinalized) {

@@ -248,7 +248,6 @@ function MintHeader() {
                     bg="black"
                     defaultValue={!whitelist ? "0" : "1"}
                     min={1}
-                    max={5}
                     onChange={(valueString) => setWhitelistAmount(valueString)}
                     value={whitelistAmount}
                     mr={3}

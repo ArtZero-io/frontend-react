@@ -2,7 +2,7 @@ const artzero_nft = {
   CONTRACT_ADDRESS: "5Dcvvt1CoDNrE36Wk3wuqK6VmStAkfN5adqPKBy4x2zeJmcf",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x33017106843108e261c5d4d5e5df77674eb34563f9def8ea4f8359c56fd3b9db",
+      "hash": "0x81cbd19583cc6da6d14aaf1d3012c7b3e2f0922f2c7bb7d5bd119ed10472076e",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -578,11 +578,21 @@ const artzero_nft = {
           {
             "args": [
               {
+                "label": "owner",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput1"
+                  ],
+                  "type": 8
+                }
+              },
+              {
                 "label": "operator",
                 "type": {
                   "displayName": [
                     "psp34_external",
-                    "ApproveInput1"
+                    "AllowanceInput2"
                   ],
                   "type": 8
                 }
@@ -592,34 +602,65 @@ const artzero_nft = {
                 "type": {
                   "displayName": [
                     "psp34_external",
-                    "ApproveInput2"
+                    "AllowanceInput3"
                   ],
                   "type": 14
-                }
-              },
-              {
-                "label": "approved",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput3"
-                  ],
-                  "type": 32
                 }
               }
             ],
             "docs": [],
-            "label": "PSP34::approve",
-            "mutates": true,
+            "label": "PSP34::allowance",
+            "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34_external",
-                "ApproveOutput"
+                "AllowanceOutput"
               ],
-              "type": 33
+              "type": 32
             },
-            "selector": "0x1932a8b0"
+            "selector": "0x4790f55a"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "PSP34::collection_id",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "CollectionIdOutput"
+              ],
+              "type": 1
+            },
+            "selector": "0xffa27a5f"
+          },
+          {
+            "args": [
+              {
+                "label": "owner",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "BalanceOfInput1"
+                  ],
+                  "type": 8
+                }
+              }
+            ],
+            "docs": [],
+            "label": "PSP34::balance_of",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "BalanceOfOutput"
+              ],
+              "type": 4
+            },
+            "selector": "0xcde7e55f"
           },
           {
             "args": [
@@ -670,67 +711,6 @@ const artzero_nft = {
           {
             "args": [],
             "docs": [],
-            "label": "PSP34::collection_id",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "CollectionIdOutput"
-              ],
-              "type": 1
-            },
-            "selector": "0xffa27a5f"
-          },
-          {
-            "args": [
-              {
-                "label": "owner",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput1"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "operator",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput2"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput3"
-                  ],
-                  "type": 14
-                }
-              }
-            ],
-            "docs": [],
-            "label": "PSP34::allowance",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "AllowanceOutput"
-              ],
-              "type": 32
-            },
-            "selector": "0x4790f55a"
-          },
-          {
-            "args": [],
-            "docs": [],
             "label": "PSP34::total_supply",
             "mutates": false,
             "payable": false,
@@ -772,28 +752,48 @@ const artzero_nft = {
           {
             "args": [
               {
-                "label": "owner",
+                "label": "operator",
                 "type": {
                   "displayName": [
                     "psp34_external",
-                    "BalanceOfInput1"
+                    "ApproveInput1"
                   ],
                   "type": 8
+                }
+              },
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput2"
+                  ],
+                  "type": 14
+                }
+              },
+              {
+                "label": "approved",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput3"
+                  ],
+                  "type": 32
                 }
               }
             ],
             "docs": [],
-            "label": "PSP34::balance_of",
-            "mutates": false,
+            "label": "PSP34::approve",
+            "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34_external",
-                "BalanceOfOutput"
+                "ApproveOutput"
               ],
-              "type": 4
+              "type": 33
             },
-            "selector": "0xcde7e55f"
+            "selector": "0x1932a8b0"
           },
           {
             "args": [
@@ -870,32 +870,6 @@ const artzero_nft = {
           {
             "args": [
               {
-                "label": "index",
-                "type": {
-                  "displayName": [
-                    "psp34enumerable_external",
-                    "TokenByIndexInput1"
-                  ],
-                  "type": 6
-                }
-              }
-            ],
-            "docs": [],
-            "label": "PSP34Enumerable::token_by_index",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34enumerable_external",
-                "TokenByIndexOutput"
-              ],
-              "type": 36
-            },
-            "selector": "0xcd0340d0"
-          },
-          {
-            "args": [
-              {
                 "label": "owner",
                 "type": {
                   "displayName": [
@@ -928,6 +902,60 @@ const artzero_nft = {
               "type": 36
             },
             "selector": "0x3bcfb511"
+          },
+          {
+            "args": [
+              {
+                "label": "index",
+                "type": {
+                  "displayName": [
+                    "psp34enumerable_external",
+                    "TokenByIndexInput1"
+                  ],
+                  "type": 6
+                }
+              }
+            ],
+            "docs": [],
+            "label": "PSP34Enumerable::token_by_index",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34enumerable_external",
+                "TokenByIndexOutput"
+              ],
+              "type": 36
+            },
+            "selector": "0xcd0340d0"
+          },
+          {
+            "args": [
+              {
+                "label": "uri",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "SetBaseUriInput1"
+                  ],
+                  "type": 27
+                }
+              }
+            ],
+            "docs": [
+              " Change baseURI"
+            ],
+            "label": "Psp34Traits::set_base_uri",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "SetBaseUriOutput"
+              ],
+              "type": 28
+            },
+            "selector": "0x4de6850b"
           },
           {
             "args": [
@@ -980,34 +1008,6 @@ const artzero_nft = {
           {
             "args": [
               {
-                "label": "index",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "GetAttributeNameInput1"
-                  ],
-                  "type": 4
-                }
-              }
-            ],
-            "docs": [
-              "Get Attribute Name"
-            ],
-            "label": "Psp34Traits::get_attribute_name",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "GetAttributeNameOutput"
-              ],
-              "type": 27
-            },
-            "selector": "0xfcfe34de"
-          },
-          {
-            "args": [
-              {
                 "label": "token_id",
                 "type": {
                   "displayName": [
@@ -1040,34 +1040,6 @@ const artzero_nft = {
               "type": 37
             },
             "selector": "0x18209102"
-          },
-          {
-            "args": [
-              {
-                "label": "uri",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "SetBaseUriInput1"
-                  ],
-                  "type": 27
-                }
-              }
-            ],
-            "docs": [
-              " Change baseURI"
-            ],
-            "label": "Psp34Traits::set_base_uri",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "SetBaseUriOutput"
-              ],
-              "type": 28
-            },
-            "selector": "0x4de6850b"
           },
           {
             "args": [
@@ -1113,6 +1085,34 @@ const artzero_nft = {
               "type": 4
             },
             "selector": "0x61c50d69"
+          },
+          {
+            "args": [
+              {
+                "label": "index",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "GetAttributeNameInput1"
+                  ],
+                  "type": 4
+                }
+              }
+            ],
+            "docs": [
+              "Get Attribute Name"
+            ],
+            "label": "Psp34Traits::get_attribute_name",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "GetAttributeNameOutput"
+              ],
+              "type": 27
+            },
+            "selector": "0xfcfe34de"
           }
         ]
       },
