@@ -6,16 +6,8 @@ import { web3Accounts, web3Enable } from "../wallets/extension-dapp";
 import { keyring as Keyring } from "@polkadot/ui-keyring";
 import { isTestChain } from "@polkadot/util";
 import { TypeRegistry } from "@polkadot/types/create";
-import BigInt from "big-integer";
 
 import config from "./config";
-
-if (!window?.BigInt) {
-  window.BigInt = BigInt;
-}
-console.log("window", window);
-console.log("BigInt", BigInt);
-console.log("window.BigInt", window.BigInt);
 
 const parsedQuery = new URLSearchParams(window.location.search);
 const connectedSocket = parsedQuery.get("rpc") || config.PROVIDER_SOCKET;

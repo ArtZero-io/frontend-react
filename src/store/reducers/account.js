@@ -1,5 +1,16 @@
 import { AccountActionTypes } from "../types/account.types";
 
+import BigInt from "big-integer";
+console.log("0window", window);
+console.log("0BigInt", BigInt);
+console.log("0window.BigInt", window.BigInt);
+if (!window?.BigInt) {
+  window.BigInt = BigInt;
+}
+console.log("window", window);
+console.log("BigInt", BigInt);
+console.log("window.BigInt", window.BigInt);
+
 const activeAddressLocal = JSON.parse(
   window.localStorage.getItem("activeAddress")
 );
