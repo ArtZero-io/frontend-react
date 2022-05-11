@@ -21,7 +21,7 @@ import { useHistory } from "react-router-dom";
 
 import * as ROUTES from "@constants/routes";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import ImageAccountBanner from "@theme/assets/image-account-banner.png";
+// import ImageAccountBanner from "@theme/assets/image-account-banner.png";
 
 import FeeInfoModal from "./components/Modal/FeeInfo";
 
@@ -282,12 +282,10 @@ function GeneralPage() {
           pos="relative"
         >
           <Square size={{ base: "18rem", "2xl": "20rem" }} bg="#222">
-            <Image w="full" h="full" src={ImageAccountBanner} />
-            <img
-              src={`${process.env.PUBLIC_URL}/static/media/image-account-banner.png`}
-              className="App-logo"
-              alt="logo"
-              width={400}
+            <Image
+              w="full"
+              h="full"
+              src="https://bafybeia665snn5queuptbhbe5htc2sovn5gcrwwpwvcq4vb7dhmoui3dri.ipfs.infura-ipfs.io/"
             />
           </Square>
 
