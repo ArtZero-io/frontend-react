@@ -65,11 +65,10 @@ export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
           uploadPromise().then((created) => {
             setImageIPFSUrl(created?.path);
             setImgURL(created?.path);
-            const update_nft_api_res = clientAPI("post", "/cacheImage", {
+            await clientAPI("post", "/cacheImage", {
               input: created?.path,
-              is1024: true
+              is1024: true,
             });
-            console.log("update_nft_api_res", update_nft_api_res);
           }),
           {
             loading: "Uploading...",
@@ -105,7 +104,7 @@ export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
             src={`${IPFS_BASE_URL}/${profile?.avatar}`}
           />
         )}
-        {!imagePreviewUrl && !profile?.avatar && <IdenticonAvatar size={360}/>}
+        {!imagePreviewUrl && !profile?.avatar && <IdenticonAvatar size={360} />}
       </Box>
 
       <Center w="full" justifyContent="center">
@@ -124,9 +123,8 @@ export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
           </label>
         </VStack>
         <Spacer />
-        
-        <HStack justifyContent="center">
 
+        <HStack justifyContent="center">
           {imgURL ? (
             <Tag variant="active">
               <TagLeftIcon as={ActiveIcon} />
