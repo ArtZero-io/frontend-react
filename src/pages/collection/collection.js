@@ -9,7 +9,7 @@ import { clientAPI } from "@api/client";
 import Layout from "@components/Layout/Layout";
 
 import TabCollectionItems from "./component/TabItems";
-import CollectionHero from "./component/Header/Header";
+import CollectionHeader from "./component/Header/Header";
 
 import { AccountActionTypes } from "@store/types/account.types";
 
@@ -22,12 +22,15 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 
 function CollectionPage() {
   const [formattedCollection, setFormattedCollection] = useState(null);
-  const [loading, setLoading] = useState(null);
-
-  const dispatch = useDispatch();
   const { collection_address } = useParams();
   const { currentAccount, api } = useSubstrateState();
-  const { tnxStatus } = useSelector((state) => state.account.accountLoaders);
+
+  const dispatch = useDispatch();
+  const { addNftTnxStatus } = useSelector(
+    (state) => state.account.accountLoaders
+  );
+  const [loading, setLoading] = useState(null);
+  const [loadingTime, setLoadingTime] = useState(null);
 
   const forceUpdate = useCallback(() => {
     setFormattedCollection(null);
@@ -35,31 +38,33 @@ function CollectionPage() {
   }, []);
 
   useEffect(() => {
-    async function onCloseHandler() {
-      if (tnxStatus?.status === "Finalized") {
-        dispatch({
-          type: AccountActionTypes.SET_TNX_STATUS,
-          payload: null,
-        });
+    const forceUpdateAfterCreateNFT = async () => {
+      if (addNftTnxStatus?.status !== "End") {
+        return;
+      }
+
+      const { status, timeStamp, endTimeStamp } = addNftTnxStatus;
+
+      if (status && timeStamp && endTimeStamp) {
+        const diffTime = 9000 - Number(endTimeStamp - timeStamp);
+        const delayTime = diffTime >= 0 ? diffTime : 500;
 
         setLoading(true);
 
-        toast.promise(
-          delay(9000).then(() => {
-            setFormattedCollection(null);
-            setLoading(false);
-          }),
-          {
-            loading: "Loading new data...",
-            success: `Done!`,
-            error: "Could not load data.",
-          }
-        );
-      }
-    }
+        setLoadingTime(delayTime / 1000);
 
-    onCloseHandler();
-  }, [tnxStatus, dispatch, forceUpdate]);
+        await delay(delayTime).then(() => {
+          dispatch({
+            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+          });
+          setFormattedCollection(null);
+          setLoading(false);
+        });
+      }
+    };
+
+    forceUpdateAfterCreateNFT();
+  }, [addNftTnxStatus, addNftTnxStatus?.status, dispatch, loadingTime]);
 
   useEffect(() => {
     const fetchCollectionDetail = async () => {
@@ -236,8 +241,9 @@ function CollectionPage() {
       content: (
         <TabCollectionItems
           {...formattedCollection}
-          forceUpdate={forceUpdate}
+          loadingTime={loadingTime}
           loading={loading}
+          forceUpdate={forceUpdate}
         />
       ),
     },
@@ -247,6 +253,10 @@ function CollectionPage() {
     // },
   ];
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <Layout
       backdrop={formattedCollection?.headerImage}
@@ -254,7 +264,7 @@ function CollectionPage() {
     >
       {
         <>
-          <CollectionHero {...formattedCollection} loading={loading} />
+          <CollectionHeader {...formattedCollection} loading={loading} />
 
           <Tabs isLazy align="center">
             <TabList bg="#000" borderBottomColor="#000">

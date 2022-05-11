@@ -31,6 +31,9 @@ import AddNewNFTImageUpload from "@components/ImageUpload/Collection";
 import AddLevelsModal from "../Modal/AddLevels";
 import AddPropertiesModal from "../Modal/AddProperties";
 
+import { AccountActionTypes } from "@store/types/account.types";
+import StatusButton from "@components/Button/StatusButton";
+
 const AddNewNFTForm = ({ collectionOwner }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const { currentAccount, api } = useSubstrateState();
@@ -38,7 +41,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
   const { collection_address } = useParams();
 
   const dispatch = useDispatch();
-  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const { addNftTnxStatus } = useSelector((s) => s.account.accountLoaders);
 
   const [modifierToEdit, setModifierToEdit] = useState(-1);
 
@@ -137,6 +140,14 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                 nft721_psp34_standard_contract
               );
               console.log("attributes before mintWithAttributes", attributes);
+
+              dispatch({
+                type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+                payload: {
+                  status: "Start",
+                },
+              });
+
               await nft721_psp34_standard_calls.mintWithAttributes(
                 currentAccount,
                 collection_address,
@@ -150,7 +161,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
           }
         }}
       >
-        {({ values }) => (
+        {({ values, dirty, isValid }) => (
           <div>
             <Form>
               <HStack>
@@ -302,8 +313,14 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                   isOpen={modifierToEdit === "levels"}
                 />
               </Box>
-
-              <Button
+              <StatusButton
+                text="NFT"
+                type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                disabled={!(dirty && isValid)}
+                isLoading={addNftTnxStatus}
+                loadingText={`${addNftTnxStatus?.status}`}
+              />
+              {/* <Button
                 spinnerPlacement="start"
                 isLoading={tnxStatus}
                 loadingText={`${tnxStatus?.status}`}
@@ -314,7 +331,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                 mb={{ xl: "16px", "2xl": "32px" }}
               >
                 Add new NFT
-              </Button>
+              </Button> */}
             </Form>
           </div>
         )}

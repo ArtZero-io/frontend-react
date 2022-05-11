@@ -261,3 +261,26 @@ export function handleContractCallAnimation(status, dispatch) {
     }
   }
 }
+export function handleContractCallAddNftAnimation(status, dispatch) {
+  if (status) {
+    const statusToHuman = Object.entries(status.toHuman());
+
+    if (Object.keys(status.toHuman())[0] === "0") {
+      dispatch({
+        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+        payload: { status: "Ready" },
+      });
+    } else {
+      const finalizedTimeStamp = Date.now();
+
+      dispatch({
+        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+        payload: {
+          status: statusToHuman[0][0],
+          value: truncateStr(statusToHuman[0][1], 6),
+          timeStamp: finalizedTimeStamp,
+        },
+      });
+    }
+  }
+}

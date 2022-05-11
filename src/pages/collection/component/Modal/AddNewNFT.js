@@ -10,53 +10,19 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import AddNewNFTForm from "../Form/AddNewNFT";
-// import { useParams } from "react-router-dom";
-// import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-// import { delay } from "@utils";
-// import { useSubstrateState } from "@utils/substrate";
-import { useDispatch, useSelector } from "react-redux";
-import { AccountActionTypes } from "@store/types/account.types";
 
 const AddNewNFTModal = ({ forceUpdate, collectionOwner }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const dispatch = useDispatch();
-
-  const { tnxStatus } = useSelector((state) => state.account.accountLoaders);
+  const { addNftTnxStatus } = useSelector(
+    (state) => state.account.accountLoaders
+  );
 
   useEffect(() => {
-    function onCloseHandler() {
-      if (tnxStatus?.status === "Finalized") {
-        dispatch({
-          type: AccountActionTypes.SET_TNX_STATUS,
-          payload: null,
-        });
-        forceUpdate();
-        onClose();
-      }
-    }
-
-    onCloseHandler();
-  }, [tnxStatus, dispatch, forceUpdate, onClose]);
-
-  // useEffect(async () => {
-  //   await onRefresh();
-  // }, [collection_manager_calls.isLoaded()]);
-
-  // const onRefresh = async () => {
-  //   await getCollectionData();
-  //   await delay(1000);
-  // };
-
-  // const getCollectionData = async () => {
-  //   let data = await collection_manager_calls.getCollectionByAddress(
-  //     currentAccount,
-  //     param.address
-  //   );
-  //   console.log(data);
-  //   setCollectionData(data);
-  // };
+    addNftTnxStatus?.status === "End" && onClose();
+  }, [onClose, addNftTnxStatus?.status]);
 
   return (
     <>
@@ -65,11 +31,11 @@ const AddNewNFTModal = ({ forceUpdate, collectionOwner }) => {
       </Button>
 
       <Modal
+        scrollBehavior="inside"
         isCentered
         isOpen={isOpen}
         onClose={onClose}
         size={"4xl"}
-        scrollBehavior="inside"
       >
         <ModalOverlay
           bg="blackAlpha.300"
@@ -77,11 +43,12 @@ const AddNewNFTModal = ({ forceUpdate, collectionOwner }) => {
         />
         <ModalContent
           position="relative"
+          bg="brand.grayDark"
           px={6}
-          minH={{ xl: "md" }}
+          pb={8}
           borderRadius="0"
           textAlign="center"
-          bg="brand.grayDark"
+          minH={{ xl: "md" }}
         >
           <ModalCloseButton
             position="absolute"
@@ -95,8 +62,22 @@ const AddNewNFTModal = ({ forceUpdate, collectionOwner }) => {
               Add new NFT
             </Heading>
           </ModalHeader>
-          <ModalBody>
-            <AddNewNFTForm collectionOwner={collectionOwner}/>
+
+          <ModalBody
+            shadow="lg"
+            overflowY="auto"
+            sx={{
+              "&::-webkit-scrollbar": {
+                width: "0.3rem",
+                borderRadius: "1px",
+                backgroundColor: `#7ae7ff`,
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: `#7ae7ff`,
+              },
+            }}
+          >
+            <AddNewNFTForm collectionOwner={collectionOwner} />
           </ModalBody>
         </ModalContent>
       </Modal>

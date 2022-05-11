@@ -16,6 +16,7 @@ const initialState = {
     setProfileAttribute: false,
     tnxStatus: null,
     addCollectionTnxStatus: null,
+    addNftTnxStatus: null,
   },
   accountErrors: null,
 };
@@ -65,11 +66,23 @@ const accountReducer = (state = initialState, action) => {
         },
       };
     case AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS:
+    case AccountActionTypes.SET_ADD_NFT_TNX_STATUS:
       return {
         ...state,
         accountLoaders: {
           ...state.accountLoaders,
-          addCollectionTnxStatus: null,
+          addNftTnxStatus: {
+            ...state.accountLoaders.addNftTnxStatus,
+            ...action.payload,
+          },
+        },
+      };
+    case AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS:
+      return {
+        ...state,
+        accountLoaders: {
+          ...state.accountLoaders,
+          addNftTnxStatus: null,
         },
       };
     case AccountActionTypes.ACCOUNT_LOADING:

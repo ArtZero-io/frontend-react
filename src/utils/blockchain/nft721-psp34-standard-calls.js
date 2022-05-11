@@ -4,7 +4,8 @@ import BN from "bn.js";
 import { TypeRegistry, U64 } from "@polkadot/types";
 import { handleContractCall } from "@utils";
 import { clientAPI } from "@api/client";
-// import { ContractPromise } from "@polkadot/api-contract";
+import { handleContractCallAddNftAnimation } from "@utils";
+import { AccountActionTypes } from "@store/types/account.types";
 
 let contract;
 
@@ -132,14 +133,14 @@ async function mintWithAttributes(
   let attribute_value = [];
 
   for (const attribute of attributes) {
-    if (attribute_label.includes(attribute.name.trim()) == false) {
+    if (attribute_label.includes(attribute.name.trim()) === false) {
       attribute_label.push(attribute.name.trim());
       attribute_value.push(attribute.value);
     }
   }
 
-  console.log('attribute_label', attribute_label);
-  console.log('attribute_value', attribute_value);
+  console.log("attribute_label", attribute_label);
+  console.log("attribute_value", attribute_value);
 
   if (attribute_label.length === attribute_value.length) {
     contract.tx
@@ -152,7 +153,6 @@ async function mintWithAttributes(
         address,
         { signer: injector.signer },
         async ({ status, dispatchError, output }) => {
-
           if (dispatchError) {
             if (dispatchError.isModule) {
               toast.error(`There is some error with your request`);
@@ -162,7 +162,7 @@ async function mintWithAttributes(
           }
           console.log("mintWithAttributes output:", output);
           if (status) {
-            handleContractCall(status, dispatchError, dispatch, contract);
+            handleContractCallAddNftAnimation(status, dispatch);
 
             if (status.isFinalized === true) {
               const token_id = await getTotalSupply(address);
@@ -179,7 +179,23 @@ async function mintWithAttributes(
       .then((unsub) => {
         unsubscribe = unsub;
       })
-      .catch((e) => console.log("e", e));
+      .catch((e) => {
+        if (e === "Error: Cancelled") {
+          dispatch({
+            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+          });
+
+          toast.error(
+            "You cancelled this transaction. Please add new collection again!"
+          );
+        } else {
+          dispatch({
+            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+          });
+
+          toast.error("Has something wrong in this transaction!");
+        }
+      });
   }
 
   return resStatus && unsubscribe;
@@ -302,7 +318,6 @@ async function approve(
     address,
     { signer: injector.signer },
     ({ status, dispatchError }) => {
-
       if (dispatchError) {
         if (dispatchError.isModule) {
           toast.error(`There is some error with your request`);

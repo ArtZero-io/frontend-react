@@ -22,7 +22,7 @@ import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import NFTDetailModal from "./Modal/NFTDetail";
 import NFTChangeSizeCard from "@components/Card/NFTChangeSize";
-import CommonLoader from "../../../components/Loader/CommonLoader";
+import AnimationLoader from "@components/Loader/AnimationLoader";
 
 const CollectionItems = ({
   NFTListFormatted,
@@ -30,6 +30,7 @@ const CollectionItems = ({
   contractType,
   loading,
   forceUpdate,
+  loadingTime,
 }) => {
   const { currentAccount } = useSubstrateState();
 
@@ -37,7 +38,6 @@ const CollectionItems = ({
   const [selectedItem, setSelectedItem] = useState(0);
 
   const [isShowUnlisted, setIsShowUnlisted] = useState(3);
-  // const [loading, setLoading] = useState(null);
 
   const options = [
     // "Price: Newest",
@@ -71,7 +71,6 @@ const CollectionItems = ({
     if (isShowUnlisted % 3 === 2) {
       result = result.filter((i) => i.is_for_sale === false);
     }
-    console.log("CollectionItems getUnListedNFT filter end", Date.now());
 
     return result;
   };
@@ -172,37 +171,40 @@ const CollectionItems = ({
 
       <Flex
         align="center"
-        py={{ base: 2, "2xl": 4 }}
+        py={{ base: 2, xl: "1.25rem", "2xl": 4 }}
         minH={{ base: 14, "2xl": 24 }}
         w="full"
       >
-        <Text px={2} display={{ base: "none", xl: "block" }}>
-          {unListNFT.length || 0} items{" "}
-          {isShowUnlisted % 3 === 0
-            ? "in total"
-            : isShowUnlisted % 3 === 1
-            ? "listed"
-            : isShowUnlisted % 3 === 2
-            ? "unlisted"
-            : ""}
-        </Text>
+        <AnimatePresence>
+          {unListNFT?.length && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <Text px={2} display={{ base: "none", xl: "block" }}>
+                {unListNFT?.length || 0} items{" "}
+                {isShowUnlisted % 3 === 0
+                  ? "in total"
+                  : isShowUnlisted % 3 === 1
+                  ? "listed"
+                  : isShowUnlisted % 3 === 2
+                  ? "unlisted"
+                  : ""}
+              </Text>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <Spacer />
 
         {currentAccount?.address === collectionOwner && contractType === 2 ? (
-          <AddNewNFTModal
-            collectionOwner={collectionOwner}
-            forceUpdate={forceUpdate}
-          />
+          <AddNewNFTModal collectionOwner={collectionOwner} />
         ) : null}
       </Flex>
 
       {loading ? (
-        <CommonLoader
-          addText={`Please wait a moment...`}
-          size="md"
-          maxH={"4.125rem"}
-        />
+        <AnimationLoader loadingTime={loadingTime} />
       ) : (
         <GridNftA bigCard={bigCard} listNFTFormatted={unListNFT} />
       )}
