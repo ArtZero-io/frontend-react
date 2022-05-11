@@ -8,9 +8,6 @@ import { SubstrateContextProvider } from "@utils/substrate";
 
 import App from "@components/App";
 
-const BigInt = require("big-integer");
-window.BigInt = BigInt;
-
 ReactDOM.render(
   <>
     <SubstrateContextProvider>
