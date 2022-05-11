@@ -357,6 +357,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 )}
 
                 <StatusButton
+                  type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
+                  text="collection"
                   disabled={!(dirty && isValid)}
                   isLoading={addCollectionTnxStatus}
                   loadingText={`${addCollectionTnxStatus?.status}`}

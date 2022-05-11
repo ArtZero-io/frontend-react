@@ -1,16 +1,15 @@
 import { Button } from "@chakra-ui/react";
 import React from "react";
-import { AccountActionTypes } from "../../store/types/account.types";
 import { useDispatch } from "react-redux";
 
-function StatusButton({ isLoading, loadingText, mode, disabled }) {
+function StatusButton({ isLoading, loadingText, mode, disabled, text, type }) {
   const dispatch = useDispatch();
 
   const onCloseHandler = async () => {
     const endTimeStamp = Date.now();
 
     dispatch({
-      type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
+      type: type,
       payload: {
         status: "End",
         endTimeStamp,
@@ -38,7 +37,8 @@ function StatusButton({ isLoading, loadingText, mode, disabled }) {
         mt={6}
         mb={{ xl: "16px", "2xl": "32px" }}
       >
-        {mode === "add" ? "Add new collection" : "Submit change"}
+        {mode && (mode === "add" ? "Add new collection" : "Submit change")}
+        {text && "Submit"}
       </Button>
 
       <Button
@@ -48,6 +48,7 @@ function StatusButton({ isLoading, loadingText, mode, disabled }) {
         onClick={onCloseHandler}
         mt={6}
         mb={{ xl: "1rem", "2xl": "2rem" }}
+        isDisabled={loadingText !== "Finalized"}
       >
         {loadingText === "Start"
           ? "Please sign Tnx in your wallet"
@@ -56,7 +57,7 @@ function StatusButton({ isLoading, loadingText, mode, disabled }) {
           : loadingText === "InBlock"
           ? "Your Tnx is inblock"
           : loadingText === "Finalized"
-          ? "Your Tnx is finalized! Check your new collection"
+          ? `Your Tnx is finalized! Check new ${text}`
           : ""}
       </Button>
     </>

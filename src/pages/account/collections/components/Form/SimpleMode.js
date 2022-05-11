@@ -401,8 +401,10 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     </Flex>
                   </Flex>
                 )}
-                
+
                 <StatusButton
+                  type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
+                  text="collection"
                   disabled={!(dirty && isValid)}
                   isLoading={addCollectionTnxStatus}
                   loadingText={`${addCollectionTnxStatus?.status}`}
