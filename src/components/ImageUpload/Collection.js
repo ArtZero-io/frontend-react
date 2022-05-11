@@ -31,7 +31,7 @@ const ImageUploadCollection = ({
   limitedSize = { width: "430", height: "430" },
 }) => {
   const [imgURL, setImgURL] = useState("");
-  console.log('imgURL', imgURL)
+
   const [newAvatarData, setNewAvatarData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
 

@@ -238,8 +238,8 @@ export const getPublicCurrentAccount = () => {
   return keyringOptions[0];
 };
 
-export function handleContractCallAnimation(status, dispatch) {
-  if (status) {
+export function handleContractCallAnimation(status, dispatchError, dispatch) {
+  if (!dispatchError && status) {
     const statusToHuman = Object.entries(status.toHuman());
 
     if (Object.keys(status.toHuman())[0] === "0") {
@@ -261,8 +261,12 @@ export function handleContractCallAnimation(status, dispatch) {
     }
   }
 }
-export function handleContractCallAddNftAnimation(status, dispatch) {
-  if (status) {
+export function handleContractCallAddNftAnimation(
+  status,
+  dispatchError,
+  dispatch
+) {
+  if (!dispatchError && status) {
     const statusToHuman = Object.entries(status.toHuman());
 
     if (Object.keys(status.toHuman())[0] === "0") {

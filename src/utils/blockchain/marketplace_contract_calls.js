@@ -386,7 +386,6 @@ async function list(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -446,7 +445,6 @@ async function unlist(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -636,20 +634,14 @@ async function buy(
         }
         if (status) {
           handleContractCall(status, dispatchError, dispatch, contract);
-          //console.log("token_id", token_id);
-          const update_nft_api_res = await clientAPI("post", "/updateNFT", {
+
+          await clientAPI("post", "/updateNFT", {
             collection_address: nft_contract_address,
             token_id: token_id.u64,
           });
-          console.log("update_nft_api_res", update_nft_api_res);
-          const update_collection_api_res = await clientAPI(
-            "post",
-            "/updateCollection",
-            {
-              collection_address: nft_contract_address,
-            }
-          );
-          console.log("update_collection_api_res", update_collection_api_res);
+          await clientAPI("post", "/updateCollection", {
+            collection_address: nft_contract_address,
+          });
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Buy NFT ${
@@ -709,27 +701,18 @@ async function acceptBid(
 
           const statusText = Object.keys(status.toHuman())[0];
           if (status.isFinalized === true) {
-            toast.success(`Okay`);
-            console.log("token_id", token_id);
-            const update_nft_api_res = await clientAPI("post", "/updateNFT", {
+            await clientAPI("post", "/updateNFT", {
               collection_address: nft_contract_address,
               token_id: token_id.u64,
             });
-            console.log("update_nft_api_res", update_nft_api_res);
-            const update_bid_api_res = await clientAPI("post", "/updateBids", {
+            await clientAPI("post", "/updateBids", {
               collection_address: nft_contract_address,
               seller: address,
               token_id: token_id.u64,
             });
-            console.log("update_bid_api_res", update_bid_api_res);
-            const update_collection_api_res = await clientAPI(
-              "post",
-              "/updateCollection",
-              {
-                collection_address: nft_contract_address,
-              }
-            );
-            console.log("update_collection_api_res", update_collection_api_res);
+            await clientAPI("post", "/updateCollection", {
+              collection_address: nft_contract_address,
+            });
           }
           toast.success(
             `Accept Bid NFT ${

@@ -153,15 +153,20 @@ async function mintWithAttributes(
         { signer: injector.signer },
         async ({ status, dispatchError, output }) => {
           if (dispatchError) {
+            dispatch({
+              type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+            });
             if (dispatchError.isModule) {
-              toast.error(`There is some error with your request`);
+              console.log("dispatchError.isModule", dispatchError.isModule);
+              return toast.error(`There is some error with your request`);
             } else {
               console.log("dispatchError", dispatchError.toString());
+              return toast.error("dispatchError", dispatchError.toString());
             }
           }
           console.log("mintWithAttributes output:", output);
           if (status) {
-            handleContractCallAddNftAnimation(status, dispatch);
+            handleContractCallAddNftAnimation(status, dispatchError, dispatch);
 
             if (status.isFinalized === true) {
               const token_id = await getTotalSupply(address);
@@ -183,8 +188,10 @@ async function mintWithAttributes(
           dispatch({
             type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
           });
-
-          toast.error(
+          console.log(
+            "You cancelled this transaction. Please add new collection again!"
+          );
+          return toast.error(
             "You cancelled this transaction. Please add new collection again!"
           );
         } else {
@@ -192,7 +199,8 @@ async function mintWithAttributes(
             type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
           });
 
-          toast.error("Has something wrong in this transaction!");
+          console.log("Has something wrong in this transaction!");
+          return toast.error("Has something wrong in this transaction!");
         }
       });
   }

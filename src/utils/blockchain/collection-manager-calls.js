@@ -46,18 +46,15 @@ async function addNewCollection(caller_account, data, dispatch) {
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
         if (status.isFinalized === true) {
-          console.log("status", status);
-          const update_collection_api_res = await clientAPI(
-            "post",
-            "/updateCollection",
-            {
-              collection_address: data.nftContractAddress,
-            }
-          );
-          console.log("update_collection_api_res", update_collection_api_res);
+          await clientAPI("post", "/updateCollection", {
+            collection_address: data.nftContractAddress,
+          });
         }
 
         if (dispatchError) {
+          dispatch({
+            type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+          });
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
           } else {
@@ -66,7 +63,7 @@ async function addNewCollection(caller_account, data, dispatch) {
         }
 
         if (status) {
-          handleContractCallAnimation(status, dispatch);
+          handleContractCallAnimation(status, dispatchError, dispatch);
 
           // const statusText = Object.keys(status.toHuman())[0];
           // toast.success(
@@ -122,6 +119,9 @@ async function autoNewCollection(caller_account, data, dispatch) {
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
         if (dispatchError) {
+          dispatch({
+            type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+          });
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
           } else {
@@ -131,7 +131,7 @@ async function autoNewCollection(caller_account, data, dispatch) {
         }
 
         if (status) {
-          handleContractCallAnimation(status, dispatch);
+          handleContractCallAnimation(status, dispatchError, dispatch);
 
           // const statusText = Object.keys(status.toHuman())[0];
           // toast.success(
@@ -201,19 +201,14 @@ async function updateIsActive(caller_account, collection_address, isActive) {
         if (status) {
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
-            `Update Colleciont Status ${
+            `Update Collection Status ${
               statusText === "0" ? "started" : statusText.toLowerCase()
             }.`
           );
           if (status.isFinalized === true) {
-            const update_collection_api_res = await clientAPI(
-              "post",
-              "/updateCollection",
-              {
-                collection_address: collection_address,
-              }
-            );
-            console.log("update_collection_api_res", update_collection_api_res);
+            await clientAPI("post", "/updateCollection", {
+              collection_address: collection_address,
+            });
           }
         }
       }

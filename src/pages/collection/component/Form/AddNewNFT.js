@@ -155,8 +155,11 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                 dispatch
               );
             } else {
+              dispatch({
+                type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+              });
               console.log("You aren't the owner of this collection!");
-              toast.error("You aren't the owner of this collection!");
+              return toast.error("You aren't the owner of this collection!");
             }
           }
         }}
