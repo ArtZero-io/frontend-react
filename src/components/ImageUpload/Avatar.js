@@ -62,7 +62,7 @@ export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
           });
 
         toast.promise(
-          uploadPromise().then((created) => {
+          uploadPromise().then(async (created) => {
             setImageIPFSUrl(created?.path);
             setImgURL(created?.path);
             await clientAPI("post", "/cacheImage", {
