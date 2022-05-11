@@ -209,7 +209,7 @@ function HomePage() {
             <Box position="relative" w="full" h="full">
               <Image
                 src={HomePageBg2}
-                alt="bg-heroFull"
+                alt="bg-HomePageBg2"
                 w="full"
                 h="full"
                 objectPosition="center"

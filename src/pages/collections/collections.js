@@ -15,6 +15,7 @@ import GridA from "../../components/Grid/GridA";
 
 const CollectionsPage = () => {
   const [collections, setCollections] = useState([]);
+  const [featuredCollections, setFeaturedCollections] = useState([]);
   const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
   const [selectedItem, setSelectedItem] = useState(0);
 
@@ -43,7 +44,7 @@ const CollectionsPage = () => {
         limit: pageSize,
         offset: offset,
         sort: -1,
-        isActive: true
+        isActive: true,
       };
 
       try {
@@ -75,6 +76,31 @@ const CollectionsPage = () => {
       }
     };
 
+    const fetchFeaturedCollections = async () => {
+      try {
+        Promise.all(
+          featuredCollectionsAddressList.map(async (collection_address) => {
+            const [collectionByAddress] = await clientAPI(
+              "post",
+              "/getCollectionByAddress",
+              { collection_address }
+            );
+            return collectionByAddress;
+          })
+        ).then((resultsArr) => {
+          console.log("resultsArr", resultsArr);
+          return setFeaturedCollections(resultsArr);
+        });
+      } catch (error) {
+        console.log(error);
+
+        toast.error(
+          "There was an error while fetching the featured collections."
+        );
+      }
+    };
+
+    fetchFeaturedCollections();
     fetchCollections();
   }, [offset, pageSize, selectedItem]);
 
@@ -101,32 +127,29 @@ const CollectionsPage = () => {
                 <Heading size="h1" mb="9">
                   Explore collections
                 </Heading>
-                {/* <InputGroup
-                  mx="auto"
-                  maxW="container.md"
-                  w="full"
-                  bg="white"
-                  h={14}
-                  py={1}
-                  color="blackAlpha.900"
-                  borderRadius="0"
-                >
-                  <InputRightElement bg="brand.blue" h="full" w={16}>
-                    <FiSearch size="22px" />
-                  </InputRightElement>
-                  <Input
-                    variant="unstyled"
-                    my={1}
-                    pl={5}
-                    bg="white"
-                    placeholder="Search items, collections, and accounts"
-                    _placeholder={{
-                      color: "blackAlpha.900",
-                      fontSize: "lg",
-                    }}
-                  />
-                </InputGroup> */}
               </Box>
+            </Box>
+          </Box>
+
+          <Box as="section" maxW="container.3xl">
+            <Box
+              mx="auto"
+              maxW={{ base: "auto", "2xl": "7xl" }}
+              px={{ base: "8", "2xl": "4" }}
+              pt={{ base: "12", "2xl": "20" }}
+            >
+              <Heading size="h2" my="5rem" textAlign="center">
+                Featured collections
+              </Heading>
+              <>
+                {featuredCollections?.length ? (
+                  <GridA
+                    bg="yellow"
+                    collections={featuredCollections}
+                    variant="marketplace-collection"
+                  />
+                ) : null}
+              </>
             </Box>
           </Box>
 
@@ -137,6 +160,9 @@ const CollectionsPage = () => {
               px={{ base: "8", "2xl": "4" }}
               py={{ base: "12", "2xl": "20" }}
             >
+              <Heading size="h2" my="5rem" textAlign="center">
+                All collections
+              </Heading>
               {collections?.length ? (
                 <>
                   <Flex
@@ -206,3 +232,9 @@ const CollectionsPage = () => {
 };
 
 export default CollectionsPage;
+
+const featuredCollectionsAddressList = [
+  "5FRXUSQgW9J7dChjf6vTRDhcENGNDjKd8PqxdNXGtRWCJEjv",
+  "5GdwCoxNDMPbjjkEBcH8iU4dNAb46MocL3eUpyVB5Vmz5idn",
+  "5HqptUW7VeNpYym5Pey46Kg2ekXQgVYMbnRkqw5e7qx3VPxu",
+];

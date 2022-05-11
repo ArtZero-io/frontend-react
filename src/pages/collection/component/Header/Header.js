@@ -39,7 +39,6 @@ function CollectionHeader({
   headerImage,
   loading,
 }) {
-  console.log("CollectionHeader", Date.now());
 
   const getCollectionImage = (imageHash, size) => {
     if (imageHash) {
@@ -312,7 +311,7 @@ function CollectionHeader({
                         bg="transparent"
                       />
                     </Flex>
-                    <Text mt={0}>
+                    <Text as='span' mt={0}>
                       Volume{" "}
                       <Text display={{ base: "none", xl: "inline" }}>
                         traded
@@ -346,7 +345,7 @@ function CollectionHeader({
                         bg="transparent"
                       />
                     </Flex>
-                    <Text mt={0}>
+                    <Text as='span' mt={0}>
                       Volume{" "}
                       <Text display={{ base: "none", xl: "inline" }}>
                         traded
