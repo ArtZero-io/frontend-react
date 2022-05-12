@@ -13,8 +13,6 @@ function StatusBuyButton({
 }) {
   const dispatch = useDispatch();
 
-  if (!isDo) return;
-
   const onCloseHandler = async () => {
     const endTimeStamp = Date.now();
 
@@ -35,45 +33,46 @@ function StatusBuyButton({
 
   return (
     <>
-      <Button
-        disabled={disabled}
-        display={!isLoading ? "flex" : "none"}
-        variant="solid"
-        spinnerPlacement="start"
-        isLoading={isLoading}
-        loadingText={loadingText}
-        onClick={onClick}
-        h={10}
-        maxW={"7rem"}
-        // w="full"
-        // mt={6}
-        // mb={{ xl: "16px", "2xl": "32px" }}
-      >
-        {text === "buy" ? "Buy now" : "change"}
-      </Button>
-
-      <Button
-        display={isLoading ? "flex" : "none"}
-        isDisabled={loadingText !== "Finalized"}
-        onClick={onCloseHandler}
-        variant="outline"
-        h={10}
-        maxW={"7rem"}
-        fontSize="md"
-        // w="full"
-        // mt={6}
-        // mb={{ xl: "1rem", "2xl": "2rem" }}
-      >
-        {loadingText === "Start"
-          ? "Please Sign"
-          : loadingText === "Ready"
-          ? "Ready"
-          : loadingText === "InBlock"
-          ? "In block"
-          : loadingText === "Finalized"
-          ? `All Done !`
-          : ""}
-      </Button>
+      <>
+        <Button
+          display={isDo && isLoading ? "none" : "flex"}
+          variant="solid"
+          onClick={onClick}
+          h={10}
+          maxW={"7rem"}
+          isDisabled={loadingText === "Start"}
+        >
+          {text === "buy"
+            ? "Buy now"
+            : text === "offer"
+            ? "Make offer"
+            : text === "remove bid"
+            ? "Remove bid"
+            : "Submit"}
+        </Button>
+        <Button
+          display={isDo && isLoading ? "flex" : "none"}
+          isDisabled={loadingText !== "Finalized"}
+          onClick={onCloseHandler}
+          variant="outline"
+          h={10}
+          maxW={"7rem"}
+          fontSize="md"
+          // w="full"
+          // mt={6}
+          // mb={{ xl: "1rem", "2xl": "2rem" }}
+        >
+          {loadingText === "Start"
+            ? "Please Sign"
+            : loadingText === "Ready"
+            ? "Ready"
+            : loadingText === "InBlock"
+            ? "In block"
+            : loadingText === "Finalized"
+            ? `All Done !`
+            : ""}
+        </Button>
+      </>
     </>
   );
 }

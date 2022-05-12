@@ -18,7 +18,7 @@ import { clientAPI } from "@api/client";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import { AccountActionTypes } from "@store/types/account.types";
 import StatusButton from "@components/Button/StatusButton";
-import BN from "bn.js";
+// import BN from "bn.js";
 
 const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -41,8 +41,8 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
         const addingFeeData = await collection_manager_calls.getAddingFee(
           currentAccount
         );
+        setAddingFee(addingFeeData / 10 ** 12);
 
-        setAddingFee( (new BN(addingFeeData)).div(new BN(10**6)).toNumber() / 10 ** 6);
       }
     };
     fetchFee();

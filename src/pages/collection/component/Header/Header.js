@@ -13,8 +13,7 @@ import {
 
 import AzeroIcon from "@theme/assets/icon/Azero.png";
 import SocialCard from "@components/Card/Social";
-// eslint-disable-next-line no-unused-vars
-import BN from "bn.js";
+// import BN from "bn.js";
 
 import { IPFS_BASE_URL } from "@constants/index";
 import { shortenNumber } from "@utils";
@@ -239,8 +238,7 @@ function CollectionHeader({
                         fontSize={{ base: "4xl", "2xl": "6xl" }}
                         lineHeight="none"
                       >
-                        {floorPrice / 10 ** 12}
-                        {/* {(new BN (floorPrice)).div(new BN(10 ** 6)).toNumber() / (10**6) || 0} */}
+                        {floorPrice / 10 ** 12 || 0}
                       </Text>
                       <Avatar
                         src={AzeroIcon}

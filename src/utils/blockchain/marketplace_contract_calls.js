@@ -9,6 +9,7 @@ import {
 import { TypeRegistry, U32 } from "@polkadot/types";
 import { ContractPromise } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
+import { AccountActionTypes } from "@store/types/account.types";
 
 let contract;
 
@@ -375,8 +376,8 @@ async function list(
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  const sale_price = new BN(price).mul(new BN(10 ** 12)).toString();
-  console.log(sale_price);
+  const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  //console.log(sale_price);
 
   contract.tx
     .list(
@@ -503,8 +504,8 @@ async function bid(
   const gasLimit = -1;
 
   const injector = await web3FromSource(caller_account?.meta?.source);
-  const azero_value = new BN(bid_amount, 10, "le")
-    .mul(new BN(10 ** 12))
+  const azero_value = new BN(bid_amount * 10 ** 6, 10, "le")
+    .mul(new BN(10 ** 6))
     .toString();
   contract.tx
     .bid({ gasLimit, value: azero_value }, nft_contract_address, token_id)
@@ -521,25 +522,33 @@ async function bid(
         }
 
         if (status) {
-          handleContractCall(status, dispatchError, dispatch, contract);
+          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
 
-          const statusText = Object.keys(status.toHuman())[0];
-          const update_bid_api_res = await clientAPI("post", "/updateBids", {
+          await clientAPI("post", "/updateBids", {
             collection_address: nft_contract_address,
             seller: seller,
             token_id: token_id.u64,
           });
-          console.log("update_bid_api_res", update_bid_api_res);
-          toast.success(
-            `Bid NFT ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
+
+          // const statusText = Object.keys(status.toHuman())[0];
+
+          // toast.success(
+          //   `Bid NFT ${
+          //     statusText === "0" ? "started" : statusText.toLowerCase()
+          //   }.`
+          // );
         }
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((e) => {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+      const mess = `Tnx is ${e.message}`;
+      console.log("e.message", e.message);
+      toast.error(mess);
+    });
   return unsubscribe;
 }
 
@@ -580,25 +589,33 @@ async function removeBid(
         }
 
         if (status) {
-          handleContractCall(status, dispatchError, dispatch, contract);
+          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
 
-          const update_bid_api_res = await clientAPI("post", "/updateBids", {
+          await clientAPI("post", "/updateBids", {
             collection_address: nft_contract_address,
             seller: seller,
             token_id: token_id.u64,
           });
-          console.log("update_bid_api_res", update_bid_api_res);
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Remove Bid NFT ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
+
+          // const statusText = Object.keys(status.toHuman())[0];
+          // toast.success(
+          //   `Remove Bid NFT ${
+          //     statusText === "0" ? "started" : statusText.toLowerCase()
+          //   }.`
+          // );
         }
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((e) => {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+      const mess = `Tnx is ${e.message}`;
+      console.log("e.message", e.message);
+      toast.error(mess);
+    });
+
   return unsubscribe;
 }
 
@@ -622,10 +639,10 @@ async function buy(
   const address = caller_account?.address;
   const gasLimit = -1;
 
-  // const azero_value = (new BN(price, 10, "le")).toString();
+  const azero_value = new BN(price / 10 ** 6).mul(new BN(10 ** 6)).toString();
   const injector = await web3FromSource(caller_account?.meta?.source);
   contract.tx
-    .buy({ gasLimit, value: price }, nft_contract_address, token_id)
+    .buy({ gasLimit, value: azero_value }, nft_contract_address, token_id)
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -644,20 +661,29 @@ async function buy(
             collection_address: nft_contract_address,
             token_id: token_id.u64,
           });
+
           await clientAPI("post", "/updateCollection", {
             collection_address: nft_contract_address,
           });
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Buy NFT ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
+
+          // const statusText = Object.keys(status.toHuman())[0];
+          // toast.success(
+          //   `Buy NFT ${
+          //     statusText === "0" ? "started" : statusText.toLowerCase()
+          //   }.`
+          // );
         }
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((e) => {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+      const mess = `Tnx is ${e.message}`;
+      console.log("e.message", e.message);
+      toast.error(mess);
+    });
   return unsubscribe;
 }
 async function acceptBid(
@@ -729,7 +755,11 @@ async function acceptBid(
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((e) => {
+      console.log("e.name", e.name);
+      console.log("e.message", e.message);
+      toast.error(e);
+    });
   return unsubscribe;
 }
 

@@ -31,7 +31,7 @@ import { createLevelAttribute } from "@utils";
 import { useDispatch, useSelector } from "react-redux";
 import CommonLoader from "../../../../../components/Loader/CommonLoader";
 import { getCachedImage } from "@utils";
-import BN from "bn.js";
+// import BN from "bn.js";
 
 function MyNFTTabInfo({
   avatar,
@@ -403,7 +403,7 @@ function MyNFTTabInfo({
                   <Text color="brand.grayLight">For Sale At</Text>
 
                   <Text color="#fff" mx={2}>
-                    {(new BN(price)).div(new BN(10**6)).toNumber() / 10 ** 6}
+                  {price / 10 ** 12}
                   </Text>
                   <AzeroIcon />
                 </Flex>

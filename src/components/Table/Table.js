@@ -117,7 +117,11 @@ function DataTable({ tableHeaders, tableData, onClickHandler, isOwner }) {
               </Tbody>
             </Table>
           </motion.div>
-        ) : <Text textAlign='center' py='2rem'>There is no bid yet.</Text>}
+        ) : (
+          <Text textAlign="center" py="2rem">
+            There is no bid yet.
+          </Text>
+        )}
       </AnimatePresence>
     </TableContainer>
   );

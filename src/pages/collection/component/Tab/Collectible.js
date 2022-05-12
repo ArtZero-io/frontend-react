@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Box,
-  Button,
   Flex,
   Grid,
   GridItem,
@@ -50,10 +49,13 @@ const NFTTabCollectible = ({
   avatar,
   tokenID,
   price,
-  attrsList,
+  attrsList,highest_bid
 }) => {
+
+
+  console.log('highest_bid', highest_bid)
   const [doOffer, setDoOffer] = useState(false);
-  const [bidPrice, setBidPrice] = useState(null);
+  const [bidPrice, setBidPrice] = useState(0);
   const [, setIsLoaded] = useState(false);
   const { api, currentAccount } = useSubstrateState();
   const [isBided, setIsBided] = useState(false);
@@ -134,9 +136,9 @@ const NFTTabCollectible = ({
       return;
     }
 
-    if (balance.free.gte(new BN(price))) {
-      //console.log('buy',tokenID,price);
+    if (balance.free.gte(new BN(price / 10 ** 6).mul(new BN(10 ** 6)))) {
       setAction("buy");
+
       dispatch({
         type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
         payload: {
@@ -154,21 +156,38 @@ const NFTTabCollectible = ({
       dispatch({
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
       });
-      setAction('')
+      setAction("");
       toast.error(`Not Enough Balance!`);
     }
   };
 
   const removeBid = async () => {
-    await marketplace_contract_calls.removeBid(
-      currentAccount,
-      nftContractAddress,
-      saleInfo.nftOwner,
-      { u64: tokenID },
-      dispatch
-    );
-    setIsBided(false);
-    setBidPrice(0);
+    try {
+      setAction("remove bid");
+
+      dispatch({
+        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+        payload: {
+          status: "Start",
+        },
+      });
+
+      await marketplace_contract_calls.removeBid(
+        currentAccount,
+        nftContractAddress,
+        saleInfo.nftOwner,
+        { u64: tokenID },
+        dispatch
+      );
+      // setIsBided(false);
+      // setBidPrice(0);
+    } catch (error) {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+      setAction("");
+      toast.error(error);
+    }
   };
 
   const placeOffer = async () => {
@@ -187,11 +206,24 @@ const NFTTabCollectible = ({
       return;
     }
 
-    if (balance.free.gte(new BN(bidPrice).mul(new BN(10 ** 12)))) {
-      if (new BN(bidPrice).mul(new BN(10 ** 12)).gte(new BN(price))) {
+    if (balance.free.gte(new BN(bidPrice * 10 ** 6).mul(new BN(10 ** 6)))) {
+      if (
+        new BN(bidPrice * 10 ** 6)
+          .mul(new BN(10 ** 6))
+          .gte(new BN(price / 10 ** 6).mul(new BN(10 ** 6)))
+      ) {
         toast.error(`Bid Amount must less than Selling Price`);
         return;
       }
+
+      setAction("offer");
+
+      dispatch({
+        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+        payload: {
+          status: "Start",
+        },
+      });
       await marketplace_contract_calls.bid(
         currentAccount,
         nftContractAddress,
@@ -201,6 +233,10 @@ const NFTTabCollectible = ({
         dispatch
       );
     } else {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+      setAction("");
       toast.error(`Not Enough Balance!`);
     }
 
@@ -340,8 +376,7 @@ const NFTTabCollectible = ({
                         <Text>Current price</Text>
                         <Tag h={4} pr={0} bg="transparent">
                           <TagLabel bg="transparent">
-                            {new BN(price).div(new BN(10 ** 6)).toNumber() /
-                              10 ** 6}
+                            {price / 10 ** 12}
                           </TagLabel>
                           <TagRightIcon as={AzeroIcon} />
                         </Tag>
@@ -362,17 +397,25 @@ const NFTTabCollectible = ({
                   >
                     {!isBided && (
                       <>
-                        <Button
+                        <StatusBuyButton
+                          isDo={action === "offer"}
+                          type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                          text="offer"
+                          isLoading={addNftTnxStatus}
+                          loadingText={`${addNftTnxStatus?.status}`}
+                          onClick={placeOffer}
+                        />
+                        {/* <Button
                           spinnerPlacement="start"
-                          // isLoading={tnxStatus}
-                          // loadingText={`${tnxStatus?.status}`}
+                          isLoading={tnxStatus}
+                          loadingText={`${tnxStatus?.status}`}
                           h={10}
                           maxW={"7rem"}
                           variant="solid"
                           onClick={placeOffer}
                         >
                           Make offer
-                        </Button>
+                        </Button> */}
                         <Spacer />
                         <InputGroup
                           w={24}
@@ -405,17 +448,25 @@ const NFTTabCollectible = ({
 
                     {isBided && (
                       <>
-                        <Button
+                        <StatusBuyButton
+                          isDo={action === "remove bid"}
+                          type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                          text="remove bid"
+                          isLoading={addNftTnxStatus}
+                          loadingText={`${addNftTnxStatus?.status}`}
+                          onClick={removeBid}
+                        />
+                        {/* <Button
                           spinnerPlacement="start"
-                          // isLoading={tnxStatus}
-                          // loadingText={`${tnxStatus?.status}`}
+                          isLoading={tnxStatus}
+                          loadingText={`${tnxStatus?.status}`}
                           h={10}
                           maxW={"7rem"}
                           variant="solid"
                           onClick={removeBid}
                         >
                           Remove Bid
-                        </Button>
+                        </Button> */}
 
                         <Spacer />
                         <Box textAlign="right" color="brand.grayLight">
