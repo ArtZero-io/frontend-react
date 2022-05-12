@@ -68,7 +68,7 @@ export const AzeroAnimation = ({ loadingTime = 7 }) => {
           initial="hidden"
           animate="visible"
           transition={{
-            default: { duration: (loadingTime || 7) - 1, ease: "easeInOut" },
+            default: { duration: (loadingTime || 7) - 5, ease: "easeInOut" },
             fill: { duration: loadingTime || 7, ease: [1, 0, 0.8, 1] },
           }}
         />

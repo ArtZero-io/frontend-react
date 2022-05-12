@@ -35,7 +35,7 @@ import BN from "bn.js";
 import process from "process";
 import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
-import { getPublicCurrentAccount } from "../../../../utils";
+import { getPublicCurrentAccount } from "@utils";
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
@@ -50,8 +50,6 @@ const NFTTabCollectible = ({
   price,
   attrsList,
 }) => {
-  // eslint-disable-next-line no-unused-vars
-  const [NFT, setNFT] = useState({});
   const [doOffer, setDoOffer] = useState(false);
   const [bidPrice, setBidPrice] = useState(null);
   const [, setIsLoaded] = useState(false);
@@ -124,7 +122,6 @@ const NFTTabCollectible = ({
   };
 
   const buyToken = async () => {
-    setNFT({});
     const { data: balance } = await api.query.system.account(
       currentAccount?.address
     );
@@ -150,13 +147,12 @@ const NFTTabCollectible = ({
   };
 
   const removeBid = async () => {
-    const res = await marketplace_contract_calls.removeBid(
+    await marketplace_contract_calls.removeBid(
       currentAccount,
       nftContractAddress,
       { u64: tokenID },
       dispatch
     );
-    console.log(res);
     setIsBided(false);
     setBidPrice(0);
   };
@@ -220,8 +216,8 @@ const NFTTabCollectible = ({
       </Square>
 
       <Flex
-        h="full" 
-        w="full" 
+        h="full"
+        w="full"
         ml={{ base: 0, xl: 8 }}
         py={{ base: 2, xl: 0 }}
         direction={"column"}
@@ -256,15 +252,22 @@ const NFTTabCollectible = ({
               exit={{ opacity: 0 }}
             >
               <Text color="#fff" pb={2}>
-                {console.log('is_for_sale', is_for_sale)}
-                Owned by <Link color="#7AE7FF">{(is_for_sale) ? truncateStr(saleInfo?.nftOwner, 6) : truncateStr(owner, 6)}</Link>
+                {console.log("is_for_sale", is_for_sale)}
+                Owned by{" "}
+                <Link color="#7AE7FF">
+                  {is_for_sale
+                    ? truncateStr(saleInfo?.nftOwner, 6)
+                    : truncateStr(owner, 6)}
+                </Link>
               </Text>
             </motion.div>
           </AnimatePresence>
         </Box>
 
         {!saleInfo?.nftOwner ? (
-          <Heading size="h6">Not for sale</Heading>
+          <Flex minH="4.75rem" my='auto' alignItems={'center'}>
+            <Heading size="h6">Not for sale</Heading>
+          </Flex>
         ) : (
           <Stack direction={{ base: "column", xl: "row" }} w="full" py={2}>
             {currentAccount?.address !== saleInfo?.nftOwner && is_for_sale && (

@@ -92,9 +92,11 @@ function MyCollectionsPage() {
 
     console.log("fetchCollectionsOwned");
 
-    fetchCollectionsOwned();
+    (!collections || owner !== currentAccount?.address) &&
+      fetchCollectionsOwned();
   }, [
     currentPage,
+    collections,
     owner,
     currentAccount?.address,
     offset,
