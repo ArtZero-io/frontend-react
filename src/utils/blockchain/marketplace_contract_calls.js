@@ -500,8 +500,8 @@ async function bid(
   const gasLimit = -1;
 
   const injector = await web3FromSource(caller_account?.meta?.source);
-  const azero_value = new BN(bid_amount, 10, "le")
-    .mul(new BN(10 ** 12))
+  const azero_value = new BN(bid_amount * 10 ** 6, 10, "le")
+    .mul(new BN(10 ** 6))
     .toString();
   contract.tx
     .bid({ gasLimit, value: azero_value }, nft_contract_address, token_id)

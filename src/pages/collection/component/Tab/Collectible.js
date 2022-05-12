@@ -175,7 +175,7 @@ const NFTTabCollectible = ({
     }
 
     if (balance.free.gte(new BN(bidPrice * 10 ** 6).mul(new BN(10 ** 6)))) {
-      if (new BN(bidPrice).mul(new BN(10 ** 12)).gte(new BN(price/(10**6)).mul(new BN(10**6)))) {
+      if (new BN(bidPrice * 10 ** 6).mul(new BN(10 ** 6)).gte(new BN(price/(10**6)).mul(new BN(10**6)))) {
         toast.error(`Bid Amount must less than Selling Price`);
         return;
       }
