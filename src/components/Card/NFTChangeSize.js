@@ -24,7 +24,9 @@ export default function NFTChangeSizeCard({
   avatar,
   nftName,
   bigCard,
+  highest_bid,
 }) {
+  console.log(" highest_bid", highest_bid);
   const getNFTImage = (imageHash, size) => {
     const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
     return (
@@ -95,19 +97,19 @@ export default function NFTChangeSizeCard({
 
               <Flex w="full">
                 <Spacer />
-                <Box textAlign="right" color="brand.grayLight" mt="5">
-                  <Text mr="2.5">Offer</Text>
-                  {bidPrice ? (
+                <Flex align='center' textAlign="right" color="brand.grayLight" mt="5">
+                  <Text mr="1">Highest Offer</Text>
+                  {highest_bid  ? (
                     <Tag h={10} bg="transparent">
                       <TagLabel bg="transparent">
-                        {bidPrice / 10 ** 12}
+                        {highest_bid  / 10 ** 12}
                       </TagLabel>
                       <TagRightIcon as={AzeroIcon} />
                     </Tag>
                   ) : (
                     <>No offer yet</>
                   )}
-                </Box>
+                </Flex>
               </Flex>
             </Flex>
           ) : (

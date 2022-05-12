@@ -16,6 +16,7 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { convertStringToPrice, convertStringToDateTime } from "@utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSelector } from "react-redux";
+import {  truncateStr } from "@utils";
 
 function DataTable({ tableHeaders, tableData, onClickHandler, isOwner }) {
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
@@ -75,7 +76,7 @@ function DataTable({ tableHeaders, tableData, onClickHandler, isOwner }) {
                         py={{ base: "1rem", "2xl": "1.75rem" }}
                         textAlign="center"
                       >
-                        {item.bidder}
+                        {truncateStr(item.bidder,9)}
                       </Td>
 
                       <Td
