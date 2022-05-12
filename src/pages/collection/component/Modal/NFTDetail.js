@@ -23,7 +23,11 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
     addNftTnxStatus?.status === "End" && onClose();
   }, [onClose, addNftTnxStatus?.status]);
 
-  const tabHeight = useBreakpointValue({ base: `2.5rem`, "2xl": `4.5rem` });
+  const tabHeight = useBreakpointValue({
+    base: `2.5rem`,
+    xl: `3.5rem`,
+    "2xl": `4.5rem`,
+  });
 
   const tabData = [
     {
@@ -69,7 +73,7 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
           borderRadius="0"
           onClick={() =>
             onCloseButtonModal({
-              status: addNftTnxStatus.status,
+              status: addNftTnxStatus?.status,
               dispatch,
               type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
             })

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Table,
   TableContainer,
@@ -11,15 +12,24 @@ import {
   TagRightIcon,
   Button,
   Text,
+  Flex,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { convertStringToPrice, convertStringToDateTime } from "@utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSelector } from "react-redux";
-import {  truncateStr } from "@utils";
+import { truncateStr } from "@utils";
+import StatusBuyButton from "../Button/StatusBuyButton";
+import { AccountActionTypes } from "@store/types/account.types";
 
-function DataTable({ tableHeaders, tableData, onClickHandler, isOwner }) {
-  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+function DataTable({
+  tableHeaders,
+  tableData,
+  onClickHandler,
+  isOwner,
+  idSelected,
+}) {
+  const { addNftTnxStatus } = useSelector((s) => s.account.accountLoaders);
 
   return (
     <TableContainer
@@ -76,7 +86,7 @@ function DataTable({ tableHeaders, tableData, onClickHandler, isOwner }) {
                         py={{ base: "1rem", "2xl": "1.75rem" }}
                         textAlign="center"
                       >
-                        {truncateStr(item.bidder,9)}
+                        {truncateStr(item.bidder, 6)}
                       </Td>
 
                       <Td
@@ -99,15 +109,28 @@ function DataTable({ tableHeaders, tableData, onClickHandler, isOwner }) {
                           py={{ base: "1rem", "2xl": "1.75rem" }}
                           textAlign="center"
                         >
-                          <Button
+                          {/* {console.log("item", item)}
+                          {console.log("idx", idx)} */}
+                          {/* <Button
                             spinnerPlacement="start"
-                            isLoading={tnxStatus}
-                            loadingText={`${tnxStatus?.status}`}
+                            // isLoading={tnxStatus}
+                            // loadingText={`${tnxStatus?.status}`}
                             size="sm"
                             onClick={() => onClickHandler(idx)}
                           >
                             Accept Bid
-                          </Button>
+                          </Button> */}
+                          <Flex justifyContent="center" w="full">
+                            <StatusBuyButton
+                              mx="auto"
+                              isDo={idSelected === idx}
+                              type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                              text="accept bid"
+                              isLoading={addNftTnxStatus}
+                              loadingText={`${addNftTnxStatus?.status}`}
+                              onClick={() => onClickHandler(idx)}
+                            />
+                          </Flex>
                         </Td>
                       ) : (
                         ""

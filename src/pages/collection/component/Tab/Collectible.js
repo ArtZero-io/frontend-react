@@ -35,7 +35,7 @@ import process from "process";
 import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { getPublicCurrentAccount } from "@utils";
-import StatusBuyButton from "../../../../components/Button/StatusBuyButton";
+import StatusBuyButton from "@components/Button/StatusBuyButton";
 import { AccountActionTypes } from "@store/types/account.types";
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
@@ -49,11 +49,9 @@ const NFTTabCollectible = ({
   avatar,
   tokenID,
   price,
-  attrsList,highest_bid
+  attrsList,
+  highest_bid,
 }) => {
-
-
-  console.log('highest_bid', highest_bid)
   const [doOffer, setDoOffer] = useState(false);
   const [bidPrice, setBidPrice] = useState(0);
   const [, setIsLoaded] = useState(false);

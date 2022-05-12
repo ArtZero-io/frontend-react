@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux";
 function StatusBuyButton({
   isLoading,
   loadingText,
-  disabled,
   text,
   type,
   onClick,
@@ -48,6 +47,8 @@ function StatusBuyButton({
             ? "Make offer"
             : text === "remove bid"
             ? "Remove bid"
+            : text === "accept bid"
+            ? "Accept bid"
             : "Submit"}
         </Button>
         <Button
@@ -58,9 +59,6 @@ function StatusBuyButton({
           h={10}
           maxW={"7rem"}
           fontSize="md"
-          // w="full"
-          // mt={6}
-          // mb={{ xl: "1rem", "2xl": "2rem" }}
         >
           {loadingText === "Start"
             ? "Please Sign"

@@ -20,7 +20,11 @@ export default function ResponsivelySizedModal({
   children,
   ...rest
 }) {
-  const tabHeight = useBreakpointValue({ base: `2.5rem`, "2xl": `4.5rem` });
+  const tabHeight = useBreakpointValue({
+    base: `2.5rem`,
+    xl: `3.5rem`,
+    "2xl": `4.5rem`,
+  });
   const tabData = [
     {
       label: "NFT info",

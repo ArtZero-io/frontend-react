@@ -4,18 +4,27 @@ import { useSubstrateState } from "@utils/substrate";
 import DataTable from "@components/Table/Table";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
+import { AccountActionTypes } from "@store/types/account.types";
 
 function NFTTabActivity({ nftContractAddress, tokenID }) {
   const [bidders, setBidders] = useState([]);
   const { currentAccount } = useSubstrateState();
   const [saleInfo, setSaleInfo] = useState({});
   const dispatch = useDispatch();
-  // const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
-
+  const [idSelected, setIdSelected] = useState(null);
   const headers = ["Address", "Time", "Price", "Action"];
 
   const acceptBid = async (bidId) => {
     if (currentAccount.address === saleInfo.nftOwner) {
+      setIdSelected(bidId);
+
+      dispatch({
+        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+        payload: {
+          status: "Start",
+        },
+      });
+
       await marketplace_contract_calls.acceptBid(
         currentAccount,
         nftContractAddress,
@@ -25,6 +34,10 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
         dispatch
       );
     } else {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+      setIdSelected(null);
       toast.error(`You not owner of token`);
     }
   };
@@ -55,6 +68,7 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
 
   return (
     <DataTable
+      idSelected={idSelected}
       tableHeaders={headers}
       tableData={bidders}
       saleInfo={saleInfo}
