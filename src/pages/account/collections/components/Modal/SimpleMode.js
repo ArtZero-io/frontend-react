@@ -13,13 +13,26 @@ import {
 import { EditIcon } from "@chakra-ui/icons";
 
 import SimpleModeForm from "../Form/SimpleMode";
+import { useDispatch, useSelector } from "react-redux";
+import { onCloseButtonModal } from "@utils";
+import { AccountActionTypes } from "@store/types/account.types";
 
-function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
+function SimpleModeModal({
+  mode = "add",
+  id,
+  nftContractAddress,
+  onCloseParent,
+}) {
   const {
     isOpen: isOpenSimpleMode,
     onOpen: onOpenSimpleMode,
     onClose: onCloseSimpleMode,
   } = useDisclosure();
+
+  const dispatch = useDispatch();
+  const { addCollectionTnxStatus } = useSelector(
+    (s) => s.account.accountLoaders
+  );
 
   return (
     <>
@@ -66,6 +79,7 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
       )}
       <Modal
         scrollBehavior={"inside"}
+        closeOnOverlayClick={false}
         isCentered
         isOpen={isOpenSimpleMode}
         onClose={onCloseSimpleMode}
@@ -89,6 +103,14 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
             right="-8"
             borderWidth={2}
             borderRadius="0"
+            onClick={() => {
+              onCloseButtonModal({
+                status: addCollectionTnxStatus?.status,
+                dispatch,
+                type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
+              });
+              onCloseParent();
+            }}
           />
           <ModalHeader>
             <Heading size="h4" my={2}>

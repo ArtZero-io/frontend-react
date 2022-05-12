@@ -61,14 +61,15 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
         maxW={{ base: "58rem", "2xl": "78rem" }}
       >
         <ModalCloseButton
-          display={{ base: "none", xl: "block" }}
+          // display={{ base: "none", xl: "block" }}
           position="absolute"
           top="-8"
           right="-8"
           borderWidth={2}
           borderRadius="0"
           onClick={() =>
-            onCloseButtonModal({addNftTnxStatus,
+            onCloseButtonModal({
+              status: addNftTnxStatus.status,
               dispatch,
               type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
             })

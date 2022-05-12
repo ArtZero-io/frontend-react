@@ -13,10 +13,21 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import AdvancedModeForm from "../Form/AdvancedMode";
+import { useDispatch, useSelector } from "react-redux";
+import { onCloseButtonModal } from "@utils";
+import { AccountActionTypes } from "@store/types/account.types";
 
-function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
+function AdvancedModeModal({
+  mode = "add",
+  id,
+  nftContractAddress,
+  onCloseParent,
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const dispatch = useDispatch();
+  const { addCollectionTnxStatus } = useSelector(
+    (s) => s.account.accountLoaders
+  );
   return (
     <>
       {mode === "add" && (
@@ -57,6 +68,7 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
 
       <Modal
         scrollBehavior={"inside"}
+        closeOnOverlayClick={false}
         isCentered
         isOpen={isOpen}
         onClose={onClose}
@@ -80,6 +92,14 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
             right="-8"
             borderWidth={2}
             borderRadius="0"
+            onClick={() => {
+              onCloseButtonModal({
+                status: addCollectionTnxStatus?.status,
+                dispatch,
+                type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
+              });
+              onCloseParent();
+            }}
           />
           <ModalHeader>
             <Heading size="h4" my={2}>

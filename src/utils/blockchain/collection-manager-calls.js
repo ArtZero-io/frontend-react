@@ -2,7 +2,6 @@ import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import {
-  handleContractCall,
   handleContractCallAnimation,
   isValidAddressPolkadotAddress,
 } from "@utils";
@@ -52,9 +51,6 @@ async function addNewCollection(caller_account, data, dispatch) {
         }
 
         if (dispatchError) {
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-          });
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
           } else {
@@ -110,9 +106,6 @@ async function autoNewCollection(caller_account, data, dispatch) {
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
         if (dispatchError) {
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-          });
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
           } else {
@@ -510,32 +503,33 @@ async function setMultipleAttributes(
           }
 
           if (status) {
-            handleContractCall(status, dispatchError, dispatch, contract);
+            handleContractCallAnimation(status, dispatchError, dispatch);
 
-            const statusText = Object.keys(status.toHuman())[0];
-            toast.success(
-              `Update Collection Attributes ${
-                statusText === "0" ? "started" : statusText.toLowerCase()
-              }.`
-            );
             if (status.isFinalized === true) {
-              const update_collection_api_res = await clientAPI(
-                "post",
-                "/updateCollection",
-                {
-                  collection_address: collection_address,
-                }
-              );
-              console.log(
-                "update_collection_api_res",
-                update_collection_api_res
-              );
+              await clientAPI("post", "/updateCollection", {
+                collection_address: collection_address,
+              });
             }
+
+            // const statusText = Object.keys(status.toHuman())[0];
+            // toast.success(
+            //   `Update Collection Attributes ${
+            //     statusText === "0" ? "started" : statusText.toLowerCase()
+            //   }.`
+            // );
           }
         }
       )
       .then((unsub) => (unsubscribe = unsub))
-      .catch((e) => console.log("e", e));
+      .catch((e) => {
+        dispatch({
+          type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+        });
+        const mess = `Tnx is ${e.message}`;
+        console.log("e.message", e.message);
+        toast.error(mess);
+      });
+
   return unsubscribe;
 }
 

@@ -10,11 +10,14 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AddNewNFTForm from "../Form/AddNewNFT";
+import { onCloseButtonModal } from "@utils";
+import { AccountActionTypes } from "@store/types/account.types";
 
 const AddNewNFTModal = ({ forceUpdate, collectionOwner }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const dispatch = useDispatch();
 
   const { addNftTnxStatus } = useSelector(
     (state) => state.account.accountLoaders
@@ -31,6 +34,7 @@ const AddNewNFTModal = ({ forceUpdate, collectionOwner }) => {
       </Button>
 
       <Modal
+        closeOnOverlayClick={false}
         scrollBehavior="inside"
         isCentered
         isOpen={isOpen}
@@ -56,6 +60,13 @@ const AddNewNFTModal = ({ forceUpdate, collectionOwner }) => {
             right="-8"
             borderWidth={2}
             borderRadius="0"
+            onClick={() =>
+              onCloseButtonModal({
+                status: addNftTnxStatus?.status,
+                dispatch,
+                type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+              })
+            }
           />
           <ModalHeader>
             <Heading size="h4" my={2}>

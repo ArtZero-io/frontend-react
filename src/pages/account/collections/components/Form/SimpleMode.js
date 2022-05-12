@@ -18,7 +18,6 @@ import { clientAPI } from "@api/client";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import { AccountActionTypes } from "@store/types/account.types";
 import StatusButton from "@components/Button/StatusButton";
-// import BN from "bn.js";
 
 const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -42,7 +41,6 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
           currentAccount
         );
         setAddingFee(addingFeeData / 10 ** 12);
-
       }
     };
     fetchFee();
@@ -108,9 +106,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
         if (dataList?.length) {
           setAvatarIPFSUrl(dataList[0].avatarImage);
           setHeaderIPFSUrl(dataList[0].headerImage);
-          // Todos Update headerSquareImage later
-          // setHeaderSquareIPFSUrl(dataList[0].headerSquareImage);
-          setHeaderSquareIPFSUrl(dataList[0].headerImage);
+          setHeaderSquareIPFSUrl(dataList[0].headerSquareImage);
           setIsSetRoyal(dataList[0].isCollectRoyalFee);
           setInitialValues(newInitialValues);
         } else {

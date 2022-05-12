@@ -1,14 +1,12 @@
-/* eslint-disable no-unused-vars */
-import { Button, HStack, Stack, Spacer, Flex, Text } from "@chakra-ui/react";
+import { HStack, Stack, Spacer, Flex, Text } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
-// import BN from "bn.js";
 
 import { useSubstrateState } from "@utils/substrate";
-import { delay, isValidAddressPolkadotAddress } from "@utils";
+import { isValidAddressPolkadotAddress } from "@utils";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 
 import ImageUpload from "@components/ImageUpload/Collection";
@@ -114,9 +112,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
         if (dataList) {
           setAvatarIPFSUrl(avatarImage);
           setHeaderIPFSUrl(headerImage);
-          // Todos Update headerSquareImage later
-          // setHeaderSquareIPFSUrl(headerSquareImage);
-          setHeaderSquareIPFSUrl(headerImage);
+          setHeaderSquareIPFSUrl(headerSquareImage);
           setIsSetRoyal(collectRoyalFee);
           setInitialValues(newInitialValues);
         } else {

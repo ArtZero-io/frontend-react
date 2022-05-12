@@ -239,6 +239,12 @@ export const getPublicCurrentAccount = () => {
 };
 
 export function handleContractCallAnimation(status, dispatchError, dispatch) {
+  if (dispatchError) {
+    return dispatch({
+      type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+    });
+  }
+
   if (!dispatchError && status) {
     const statusToHuman = Object.entries(status.toHuman());
 
@@ -294,10 +300,10 @@ export function handleContractCallAddNftAnimation(
     }
   }
 }
-export function onCloseButtonModal({ tnxStatus, dispatch, type }) {
+export function onCloseButtonModal({ status, dispatch, type }) {
   const endTimeStamp = Date.now();
 
-  tnxStatus === "Finalized" &&
+  status === "Finalized" &&
     dispatch({
       type: type,
       payload: {
