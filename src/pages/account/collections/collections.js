@@ -81,7 +81,7 @@ function MyCollectionsPage() {
           }
           return setCollections(listCollection);
         }
-
+        setOwner(options.owner);
         setCollections([]);
       } catch (error) {
         console.log(error);
@@ -90,10 +90,9 @@ function MyCollectionsPage() {
       }
     };
 
-    console.log("fetchCollectionsOwned");
-
-    (!collections || owner !== currentAccount?.address) &&
+    if (!collections || owner !== currentAccount?.address) {
       fetchCollectionsOwned();
+    }
   }, [
     currentPage,
     collections,
@@ -130,6 +129,7 @@ function MyCollectionsPage() {
           dispatch({
             type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
           });
+          console.log("setCollections...");
           setCollections(null);
           setLoading(false);
         });
@@ -165,17 +165,15 @@ function MyCollectionsPage() {
         ) : (
           <>
             <AnimatePresence>
-              {collections?.length && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <Text textAlign="left" color="brand.grayLight">
-                    There are {collections?.length || 0} collections
-                  </Text>
-                </motion.div>
-              )}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <Text textAlign="left" color="brand.grayLight">
+                  There are {collections?.length || 0} collections
+                </Text>
+              </motion.div>
             </AnimatePresence>
             {collections?.length ? (
               <>
