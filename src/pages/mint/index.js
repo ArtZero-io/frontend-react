@@ -14,7 +14,6 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import Layout from "@components/Layout/Layout";
-import Loader from "@components/Loader/CommonLoader";
 
 import MintHeader from "./components/Header";
 import NFTMintTab from "./components/Tab/NFTMint";
@@ -26,6 +25,7 @@ import { AccountActionTypes } from "@store/types/account.types";
 import { useSubstrateState } from "@utils/substrate";
 import artzero_nft from "@utils/blockchain/artzero-nft";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
+import AnimationLoader from "@components/Loader/AnimationLoader";
 
 const MintPage = () => {
   const { currentAccount, keyringState } = useSubstrateState();
@@ -97,7 +97,6 @@ const MintPage = () => {
             ".json",
           {}
         );
-        console.log(tokenUri + dataList[i].tokenID + ".json", metadata);
 
         var obj = {
           is_for_sale: dataList[i].is_for_sale,
@@ -143,19 +142,21 @@ const MintPage = () => {
             ))} */}
           </TabList>
           {keyringState === "READY" ? (
-            <TabPanels h="full" minH="xs">
-              {loading ? (
-                <Loader />
-              ) : (
-                <TabPanel
-                  pt={4}
-                  px={{ base: 2, "2xl": 24 }}
-                  bg="#171717"
-                  h="full"
-                >
+            <TabPanels h="full" minH="xs" bg="#171717">
+              <TabPanel
+                pt={4}
+                px={{ base: 2, "2xl": 24 }}
+                bg="#171717"
+                h="full"
+              >
+                {loading ? (
+                  <Center h="full">
+                    <AnimationLoader />
+                  </Center>
+                ) : (
                   <NFTMintTab myAZNFTs={myAZNFTs} />
-                </TabPanel>
-              )}
+                )}
+              </TabPanel>
 
               {/* {tabData.map((tab, index) => (
               <TabPanel px={12} py={8} key={index}>
@@ -164,8 +165,13 @@ const MintPage = () => {
             ))} */}
             </TabPanels>
           ) : (
-            <TabPanels h="full" minH="xs" id="abc" bg="#171717">
-              <TabPanel id="abc1" pt={4} px={{ base: 2, "2xl": 24 }} h="full">
+            <TabPanels h="full" minH="xs" bg="#171717">
+              <TabPanel
+                pt={4}
+                px={{ base: 2, "2xl": 24 }}
+                h="full"
+                bg="#171717"
+              >
                 <Center h="full">
                   <Heading size="h6" my={10}>
                     Please connect wallet to view your ArtZero NFTs.

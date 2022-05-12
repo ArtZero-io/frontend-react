@@ -51,32 +51,34 @@ function MintHeader() {
     },
     [currentAccount]
   );
-  const onGetWhiteList = async (e) => {
-    let whitelist = await artzero_nft_calls.getWhitelist(
-      currentAccount,
-      currentAccount?.address
-    );
-    if (whitelist) setWhitelist(whitelist);
-    else setWhitelist(null);
-  };
-  const onGetBalance = async (e) => {
-    let res = await artzero_nft_calls.balanceOf(
-      currentAccount,
-      currentAccount?.address
-    );
-    if (res) setBalance(res);
-    else setBalance(0);
-  };
+
   useEffect(() => {
+    const onGetWhiteList = async (e) => {
+      let whitelist = await artzero_nft_calls.getWhitelist(
+        currentAccount,
+        currentAccount?.address
+      );
+      console.log("whitelist", whitelist);
+      if (whitelist) setWhitelist(whitelist);
+      else setWhitelist(null);
+    };
+    const onGetBalance = async (e) => {
+      let res = await artzero_nft_calls.balanceOf(
+        currentAccount,
+        currentAccount?.address
+      );
+      if (res) setBalance(res);
+      else setBalance(0);
+    };
+    const onGetMintMode = async (e) => {
+      let mintMode = await artzero_nft_calls.getMintMode(currentAccount);
+      if (mintMode) setMintMode(Number(mintMode));
+      else setMintMode(-1);
+    };
     onGetBalance();
     onGetWhiteList();
-  }, [currentAccount]);
-
-  const onGetMintMode = async (e) => {
-    let mintMode = await artzero_nft_calls.getMintMode(currentAccount);
-    if (mintMode) setMintMode(mintMode);
-    else setMintMode(-1);
-  };
+    onGetMintMode();
+  }, [currentAccount, currentAccount?.address]);
 
   const onGetFee1 = async (e) => {
     let res = await artzero_nft_calls.getFee1(currentAccount);
@@ -142,7 +144,6 @@ function MintHeader() {
   };
 
   const onRefresh = useCallback(async () => {
-    await onGetMintMode();
     await onGetFee1();
     await onGetFee2();
     await onGetAmount1();
@@ -281,7 +282,7 @@ function MintHeader() {
             <Flex direction="column" justifyContent="space-between" h="full">
               <Box>
                 <Heading size="h6">Public Minting</Heading>
-                {Number(Number(mintMode)) <= 0 ? (
+                {Number(mintMode) <= 0 ? (
                   <Flex alignItems="center">
                     <Text>Status:</Text>
                     <Tag variant="inActive">
@@ -298,7 +299,7 @@ function MintHeader() {
                     </Tag>
                   </Flex>
                 )}
-                {Number(Number(mintMode)) === 1 ? (
+                {Number(mintMode) === 1 ? (
                   <>
                     <Text alignItems="center" mt={3}>
                       Minting fee: <span style={{ color: "#fff" }}>{fee1}</span>{" "}
@@ -311,7 +312,7 @@ function MintHeader() {
                   </>
                 ) : null}
 
-                {Number(Number(mintMode)) === 2 ? (
+                {Number(mintMode) === 2 ? (
                   <>
                     <Text alignItems="center" mt={3}>
                       Minting fee: <span style={{ color: "#fff" }}>{fee2}</span>{" "}

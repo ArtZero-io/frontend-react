@@ -1,4 +1,4 @@
-import { Box, Grid, Text } from "@chakra-ui/react";
+import { Box, Grid, Heading } from "@chakra-ui/react";
 import React, { Fragment } from "react";
 import MyNFTCard from "../../../account/components/Card/MyNFT";
 
@@ -10,11 +10,8 @@ function NFTMintTab({ myAZNFTs }) {
       px={{ base: "6", "2xl": "8" }}
       py={{ base: "8", "2xl": "4" }}
     >
-      {/* <Button variant="solid" onClick={() => get_my_AZ_NFTs()}>
-        Refresh
-      </Button> */}
       {myAZNFTs?.length === 0 ? (
-        <Text>No NFT found!</Text>
+        <Heading size='h6'>No NFT found!</Heading>
       ) : (
         <Grid
           templateColumns="repeat(auto-fill, minmax(min(100%, 224px), 1fr))"

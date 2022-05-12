@@ -20,7 +20,7 @@ import { setCollectionContract } from "@utils/blockchain/collection-manager-call
 import { setMarketplaceContract } from "@utils/blockchain/marketplace_contract_calls";
 import { setProfileContract } from "@utils/blockchain/profile_calls";
 import { setStakingContract } from "@utils/blockchain/staking_calls";
-import { Fragment, useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 export default function App() {
   const { apiState, apiError } = useSubstrateState();
@@ -72,42 +72,48 @@ const Main = () => {
   const { api, apiState } = useSubstrateState();
   const { artzeroNft, collection, marketplace, profile, staking } =
     contractData;
-  
-    useEffect(() => {
+  const [loadContractDone, setLoadContractDone] = useState(false);
+
+  useEffect(() => {
     const initContract = async () => {
       try {
         if (apiState === "READY") {
-          setAZNFTContract(api, artzeroNft);
-          setCollectionContract(api, collection);
-          setMarketplaceContract(api, marketplace);
-          setProfileContract(api, profile);
-          setStakingContract(api, staking);
+          await setCollectionContract(api, collection);
+          await setMarketplaceContract(api, marketplace);
+          await setProfileContract(api, profile);
+          await setStakingContract(api, staking);
+          await setAZNFTContract(api, artzeroNft);
+          setLoadContractDone(true);
         }
       } catch (e) {
         return console.log("err iniContract", e);
       }
     };
-
     initContract();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, apiState]);
+    console.log("initContract()...");
+  }, [api, apiState, artzeroNft, collection, marketplace, profile, staking]);
 
   return (
-    <Fragment>
-      <Toaster
-        position="bottom-left"
-        reverseOrder={true}
-        toastOptions={{
-          style: {
-            marginRight: "2rem",
-            borderRadius: 0,
-            padding: "16px",
-            color: "#000",
-            background: "#7AE7FF",
-          },
-        }}
-      />
-      <Router />
-    </Fragment>
+    <>
+      {loadContractDone && (
+        <Fragment>
+          <Toaster
+            position="bottom-left"
+            reverseOrder={true}
+            toastOptions={{
+              style: {
+                marginRight: "2rem",
+                borderRadius: 0,
+                padding: "16px",
+                color: "#000",
+                background: "#7AE7FF",
+              },
+            }}
+          />
+          {console.log("apiState", apiState)}
+          <Router />
+        </Fragment>
+      )}
+    </>
   );
 };
