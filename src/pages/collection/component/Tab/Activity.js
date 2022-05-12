@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { useSubstrateState } from "@utils/substrate";
-import DataTable from "../../../../components/Table/Table";
+import DataTable from "@components/Table/Table";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 
 function NFTTabActivity({ nftContractAddress, tokenID }) {
   const [bidders, setBidders] = useState([]);
   const { currentAccount } = useSubstrateState();
-  const headers = ["Address", "Time", "Price", "Action"];
   const [saleInfo, setSaleInfo] = useState({});
   const dispatch = useDispatch();
   // const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+
+  const headers = ["Address", "Time", "Price", "Action"];
 
   const acceptBid = async (bidId) => {
     if (currentAccount.address === saleInfo.nftOwner) {
@@ -36,15 +37,16 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
       );
 
       setSaleInfo(sale_info);
+      if (sale_info) {
+        const listBidder = await marketplace_contract_calls.getAllBids(
+          currentAccount,
+          nftContractAddress,
+          sale_info?.nftOwner,
+          { u64: tokenID }
+        );
 
-      const listBidder = await marketplace_contract_calls.getAllBids(
-        currentAccount,
-        nftContractAddress,
-        sale_info?.nftOwner,
-        { u64: tokenID }
-      );
-
-      setBidders(listBidder);
+        setBidders(listBidder);
+      }
     };
 
     fetchBidder();
