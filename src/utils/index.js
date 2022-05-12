@@ -266,6 +266,12 @@ export function handleContractCallAddNftAnimation(
   dispatchError,
   dispatch
 ) {
+  if (dispatchError) {
+    return dispatch({
+      type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+    });
+  }
+
   if (!dispatchError && status) {
     const statusToHuman = Object.entries(status.toHuman());
 
@@ -287,4 +293,16 @@ export function handleContractCallAddNftAnimation(
       });
     }
   }
+}
+export function onCloseButtonModal({ tnxStatus, dispatch, type }) {
+  const endTimeStamp = Date.now();
+
+  tnxStatus === "Finalized" &&
+    dispatch({
+      type: type,
+      payload: {
+        status: "End",
+        endTimeStamp,
+      },
+    });
 }

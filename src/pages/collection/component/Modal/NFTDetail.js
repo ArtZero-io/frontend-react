@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Modal,
   ModalCloseButton,
@@ -6,12 +5,24 @@ import {
   ModalOverlay,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import NFTTabCollectible from "../Tab/Collectible";
 import NFTTabActivity from "../Tab/Activity";
+import { useDispatch, useSelector } from "react-redux";
+import { onCloseButtonModal } from "@utils";
+import { AccountActionTypes } from "@store/types/account.types";
 
 function NFTDetailModal({ isOpen, onClose, ...rest }) {
+  const { addNftTnxStatus } = useSelector(
+    (state) => state.account.accountLoaders
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    addNftTnxStatus?.status === "End" && onClose();
+  }, [onClose, addNftTnxStatus?.status]);
+
   const tabHeight = useBreakpointValue({ base: `2.5rem`, "2xl": `4.5rem` });
 
   const tabData = [
@@ -28,6 +39,7 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
 
   return (
     <Modal
+      closeOnOverlayClick={false}
       isCentered
       onClose={onClose}
       isOpen={isOpen}
@@ -55,6 +67,12 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
           right="-8"
           borderWidth={2}
           borderRadius="0"
+          onClick={() =>
+            onCloseButtonModal({addNftTnxStatus,
+              dispatch,
+              type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+            })
+          }
         />
 
         <Tabs isLazy align="left">
