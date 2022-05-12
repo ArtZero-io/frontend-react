@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Table,
   TableContainer,
@@ -14,12 +13,10 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { convertStringToPrice, convertStringToDateTime } from "@utils";
-import { useSubstrateState } from "@utils/substrate";
-import { useDispatch, useSelector } from "react-redux";
+import { AnimatePresence, motion } from "framer-motion";
+import { useSelector } from "react-redux";
 
-function DataTable({ tableHeaders, tableData, onClickHandler, saleInfo, isOwner }) {
-  const { api, currentAccount } = useSubstrateState();
-  const dispatch = useDispatch();
+function DataTable({ tableHeaders, tableData, onClickHandler, isOwner }) {
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
 
   return (
@@ -41,73 +38,86 @@ function DataTable({ tableHeaders, tableData, onClickHandler, saleInfo, isOwner 
         },
       }}
     >
-      <Table variant="striped" size="md" colorScheme="blackAlpha">
-        <Thead>
-          <Tr>
-            {tableHeaders?.map((item) => (
-              <Th
-                textAlign="center"
-                key={item}
-                fontFamily="Evogria"
-                fontSize="sm"
-                fontWeight="normal"
-                py={{ base: "1rem", "2xl": "1.75rem" }}
-                display={item === 'Action' && !isOwner && 'none'}
-              >
-                {item}
-              </Th>
-            ))}
-          </Tr>
-        </Thead>
-
-        <Tbody>
-          {tableData?.map((item, idx) => (
-            <>
-              <Tr key={idx} color="#fff">
-                <Td
-                  color="#7ae7ff"
-                  py={{ base: "1rem", "2xl": "1.75rem" }}
-                  textAlign="center"
-                >
-                  {item.bidder}
-                </Td>
-
-                <Td py={{ base: "1rem", "2xl": "1.75rem" }} textAlign="center">
-                  {convertStringToDateTime(item.bidDate)}
-                </Td>
-
-                <Td py={{ base: "1rem", "2xl": "1.75rem" }} isNumeric>
-                  <Tag pr={0} bg="transparent">
-                    <TagLabel bg="transparent">
-                      {convertStringToPrice(item.bidValue)}
-                    </TagLabel>
-                    <TagRightIcon as={AzeroIcon} />
-                  </Tag>
-                </Td>
-                {console.log(saleInfo)}
-                {isOwner ? (
-                  <Td
-                    py={{ base: "1rem", "2xl": "1.75rem" }}
-                    textAlign="center"
-                  >
-                    <Button
-                      spinnerPlacement="start"
-                      isLoading={tnxStatus}
-                      loadingText={`${tnxStatus?.status}`}
-                      size="sm"
-                      onClick={() => onClickHandler(idx)}
+      <AnimatePresence>
+        {tableData.length ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <Table variant="striped" size="md" colorScheme="blackAlpha">
+              <Thead>
+                <Tr>
+                  {tableHeaders?.map((item) => (
+                    <Th
+                      textAlign="center"
+                      key={item}
+                      fontFamily="Evogria"
+                      fontSize="sm"
+                      fontWeight="normal"
+                      py={{ base: "1rem", "2xl": "1.75rem" }}
+                      display={item === "Action" && !isOwner && "none"}
+                      // display={"none"}
                     >
-                      Accept Bid
-                    </Button>
-                  </Td>
-                ) : (
-                  ""
-                )}
-              </Tr>
-            </>
-          ))}
-        </Tbody>
-      </Table>
+                      {item}
+                    </Th>
+                  ))}
+                </Tr>
+              </Thead>
+
+              <Tbody>
+                {tableData?.map((item, idx) => (
+                  <>
+                    <Tr key={idx} color="#fff">
+                      <Td
+                        color="#7ae7ff"
+                        py={{ base: "1rem", "2xl": "1.75rem" }}
+                        textAlign="center"
+                      >
+                        {item.bidder}
+                      </Td>
+
+                      <Td
+                        py={{ base: "1rem", "2xl": "1.75rem" }}
+                        textAlign="center"
+                      >
+                        {convertStringToDateTime(item.bidDate)}
+                      </Td>
+
+                      <Td py={{ base: "1rem", "2xl": "1.75rem" }} isNumeric>
+                        <Tag pr={0} bg="transparent">
+                          <TagLabel bg="transparent">
+                            {convertStringToPrice(item.bidValue)}
+                          </TagLabel>
+                          <TagRightIcon as={AzeroIcon} />
+                        </Tag>
+                      </Td>
+                      {isOwner ? (
+                        <Td
+                          py={{ base: "1rem", "2xl": "1.75rem" }}
+                          textAlign="center"
+                        >
+                          <Button
+                            spinnerPlacement="start"
+                            isLoading={tnxStatus}
+                            loadingText={`${tnxStatus?.status}`}
+                            size="sm"
+                            onClick={() => onClickHandler(idx)}
+                          >
+                            Accept Bid
+                          </Button>
+                        </Td>
+                      ) : (
+                        ""
+                      )}
+                    </Tr>
+                  </>
+                ))}
+              </Tbody>
+            </Table>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </TableContainer>
   );
 }

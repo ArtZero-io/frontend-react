@@ -252,9 +252,8 @@ const NFTTabCollectible = ({
               exit={{ opacity: 0 }}
             >
               <Text color="#fff" pb={2}>
-                {console.log("is_for_sale", is_for_sale)}
                 Owned by{" "}
-                <Link color="#7AE7FF">
+                <Link color="#7AE7FF" minW="5.5rem">
                   {is_for_sale
                     ? truncateStr(saleInfo?.nftOwner, 6)
                     : truncateStr(owner, 6)}
@@ -263,12 +262,14 @@ const NFTTabCollectible = ({
             </motion.div>
           </AnimatePresence>
         </Box>
-
-        {!saleInfo?.nftOwner ? (
-          <Flex minH="4.75rem" my='auto' alignItems={'center'}>
+        {/* is_for_sale true  no sale*/}
+        {/* is_for_sale true  no sale*/}
+        {!is_for_sale && currentAccount.address !== owner && (
+          <Flex h="4.75rem" alignItems={"center"}>
             <Heading size="h6">Not for sale</Heading>
           </Flex>
-        ) : (
+        )}
+        {is_for_sale && currentAccount.address !== saleInfo?.nftOwner && (
           <Stack direction={{ base: "column", xl: "row" }} w="full" py={2}>
             {currentAccount?.address !== saleInfo?.nftOwner && is_for_sale && (
               <>
@@ -396,6 +397,7 @@ const NFTTabCollectible = ({
             )}
           </Stack>
         )}
+
         {attrsList?.length === 0 ? (
           <>
             <Text my="3" display={{ base: "none", xl: "block" }}>
