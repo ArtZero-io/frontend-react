@@ -13,6 +13,7 @@ import {
 
 import AzeroIcon from "@theme/assets/icon/Azero.png";
 import SocialCard from "@components/Card/Social";
+import BN from "bn.js";
 
 import { IPFS_BASE_URL } from "@constants/index";
 import { shortenNumber } from "@utils";

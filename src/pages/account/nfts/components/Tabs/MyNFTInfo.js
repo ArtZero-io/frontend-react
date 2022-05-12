@@ -31,6 +31,7 @@ import { createLevelAttribute } from "@utils";
 import { useDispatch, useSelector } from "react-redux";
 import CommonLoader from "../../../../../components/Loader/CommonLoader";
 import { getCachedImage } from "@utils";
+import BN from "bn.js";
 
 function MyNFTTabInfo({
   avatar,

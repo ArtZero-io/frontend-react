@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
+import BN from "bn.js";
 
 import { useSubstrateState } from "@utils/substrate";
 import { delay, isValidAddressPolkadotAddress } from "@utils";
