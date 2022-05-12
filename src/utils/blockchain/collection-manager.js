@@ -2,7 +2,7 @@ const collection_manager = {
   CONTRACT_ADDRESS: "5DBVykh9N7rx7pz8KFUt2ZpKffkLEZBYmYef3DDDFpBfr6zr",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x0cda978fd4d6198979cb7a324326d0538fb76dcac646f7e2d00884a342e00696",
+      "hash": "0x39efc7a508a2dd26cb647163103a6f610ea154541bc52bb9fcbd305851ee9816",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -807,21 +807,6 @@ const collection_manager = {
             "selector": "0x4fa43c8c"
           },
           {
-            "args": [],
-            "docs": [],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 25
-            },
-            "selector": "0x5e228753"
-          },
-          {
             "args": [
               {
                 "label": "new_owner",
@@ -846,6 +831,21 @@ const collection_manager = {
               "type": 25
             },
             "selector": "0x11f43efd"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 25
+            },
+            "selector": "0x5e228753"
           },
           {
             "args": [
@@ -882,34 +882,6 @@ const collection_manager = {
                 "type": {
                   "displayName": [
                     "crossartzerocollection_external",
-                    "GetContractTypeInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              "Get NFT Contract Type 1 or 2 for PSP34"
-            ],
-            "label": "CrossArtZeroCollection::get_contract_type",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "GetContractTypeOutput"
-              ],
-              "type": 2
-            },
-            "selector": "0x81fa82e9"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
                     "GetRoyalFeeInput1"
                   ],
                   "type": 0
@@ -930,6 +902,34 @@ const collection_manager = {
               "type": 10
             },
             "selector": "0xfa0f936e"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "GetContractTypeInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              "Get NFT Contract Type 1 or 2 for PSP34"
+            ],
+            "label": "CrossArtZeroCollection::get_contract_type",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "GetContractTypeOutput"
+              ],
+              "type": 2
+            },
+            "selector": "0x81fa82e9"
           },
           {
             "args": [
