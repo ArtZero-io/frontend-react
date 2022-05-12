@@ -2,7 +2,7 @@ const marketplace = {
   CONTRACT_ADDRESS: "5FvNuCS1sTfnNgtk544B8SnohTVjpMKLny19D1XJ5DkwBWZM",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x1109e5e128a139b1be44e1b47e0406643a3daac03d16097be81d649d9434d99f",
+      "hash": "0x3fdd4ef5b0a49c8dc52076d3fdb917a828e081ac4a43dff630268ae2ec47bdec",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -1068,32 +1068,6 @@ const marketplace = {
             "selector": "0x8bb87aca"
           },
           {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 34
-            },
-            "selector": "0x11f43efd"
-          },
-          {
             "args": [],
             "docs": [],
             "label": "Ownable::owner",
@@ -1122,6 +1096,32 @@ const marketplace = {
               "type": 34
             },
             "selector": "0x5e228753"
+          },
+          {
+            "args": [
+              {
+                "label": "new_owner",
+                "type": {
+                  "displayName": [
+                    "ownable_external",
+                    "TransferOwnershipInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "TransferOwnershipOutput"
+              ],
+              "type": 34
+            },
+            "selector": "0x11f43efd"
           }
         ]
       },
