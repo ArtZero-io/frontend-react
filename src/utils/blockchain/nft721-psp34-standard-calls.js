@@ -278,6 +278,7 @@ async function allowance(
     token_id
   );
   if (result.isOk) {
+    console.log('output.toHuman()', output.toHuman())
     return output.toHuman();
   }
   return null;
@@ -293,7 +294,8 @@ async function approve(
   if (!contract || !caller_account) {
     return null;
   }
-  let res = false;
+  let unsubscribe;
+
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
@@ -304,36 +306,48 @@ async function approve(
     operator_address,
     token_id,
     is_approve
-  ).signAndSend(
-    address,
-    { signer: injector.signer },
-    ({ status, dispatchError }) => {
-      if (dispatchError) {
-        if (dispatchError.isModule) {
-          toast.error(`There is some error with your request`);
-        } else {
-          console.log("dispatchError ", dispatchError.toString());
+  )
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      ({ status, dispatchError }) => {
+        if (dispatchError) {
+          dispatch({
+            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+          });
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError ", dispatchError.toString());
+          }
+        }
+
+        if (status) {
+          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
+
+          // const statusText = Object.keys(status.toHuman())[0];
+          // if (status.isFinalized) {
+          //   toast.success(
+          //     `Approve ${
+          //       statusText === "0" ? "started" : statusText.toLowerCase()
+          //     }.`
+          //   );
+          // }
         }
       }
-
-      if (status) {
-        // handleContractCall(status, dispatchError, dispatch, contract);
-
-        const statusText = Object.keys(status.toHuman())[0];
-        if (status.isFinalized) {
-          console.log(status.toHuman());
-          console.log(status);
-          toast.success(
-            `Approve ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-          res = true;
-        }
-      }
-    }
-  );
-  return res;
+    )
+    .then((unsub) => {
+      unsubscribe = unsub;
+    })
+    .catch((e) => {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+      const mess = `Tnx is ${e.message}`;
+      console.log("e.message", e.message);
+      toast.error(mess);
+    });
+  return unsubscribe;
 }
 
 const nft721_psp34_standard_calls = {

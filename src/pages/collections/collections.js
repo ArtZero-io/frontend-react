@@ -50,7 +50,7 @@ const CollectionsPage = () => {
       try {
         const totalCollections = await clientAPI("get", "/getCollectionCount");
         setTotalCollectionsCount(totalCollections);
-
+        console.log('totalCollections', totalCollections)
         if (selectedItem === 0) {
           const collectionsList = await clientAPI(
             "post",
@@ -58,6 +58,8 @@ const CollectionsPage = () => {
             options
           );
           setCollections(collectionsList);
+          console.log('collectionsList.length', collectionsList.length)
+          console.log('collectionsList', collectionsList)
         }
 
         if (selectedItem === 1) {
@@ -68,6 +70,8 @@ const CollectionsPage = () => {
           );
 
           setCollections(totalCollectionsFilterByVolume);
+          console.log('totalCollectionsFilterByVolume.length', totalCollectionsFilterByVolume.length)
+          console.log('totalCollectionsFilterByVolume', totalCollectionsFilterByVolume)
         }
       } catch (error) {
         console.log(error);

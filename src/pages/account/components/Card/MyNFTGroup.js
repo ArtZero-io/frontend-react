@@ -114,15 +114,13 @@ function MyNFTGroupCard({
 
   return (
     <Box my={10}>
-      <React.Suspense fallback={<Text>Loading Component...</Text>}>
-        <ResponsivelySizedModal
-          contractType={contractType}
-          {...selectedNFT}
-          isOpen={isOpen}
-          onClose={onClose}
-          hasTabs={true}
-        />
-      </React.Suspense>
+      <ResponsivelySizedModal
+        contractType={contractType}
+        {...selectedNFT}
+        isOpen={isOpen}
+        onClose={onClose}
+        hasTabs={true}
+      />
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0 }}

@@ -12,7 +12,11 @@ import {
 } from "@chakra-ui/react";
 import MyNFTTabInfo from "@pages/account/nfts/components/Tabs/MyNFTInfo";
 import MyNFTTabOffers from "@pages/account/nfts/components/Tabs/MyNFTOffers";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
+import { onCloseButtonModal } from "@utils";
+import { AccountActionTypes } from "@store/types/account.types";
 export default function ResponsivelySizedModal({
   onClose,
   isOpen,
@@ -35,9 +39,27 @@ export default function ResponsivelySizedModal({
       content: <MyNFTTabOffers {...rest} />,
     },
   ];
-  console.log("tabData", tabData);
+
+  // eslint-disable-next-line no-unused-vars
+  const dispatch = useDispatch();
+
+  const { addNftTnxStatus } = useSelector(
+    (state) => state.account.accountLoaders
+  );
+
+  useEffect(() => {
+    addNftTnxStatus?.status === "End" && onClose();
+  }, [onClose, addNftTnxStatus?.status]);
+
   return (
-    <Modal isCentered onClose={onClose} isOpen={isOpen} size={"7xl"}>
+    <Modal
+      closeOnOverlayClick={false}
+      scrollBehavior="inside"
+      isCentered
+      onClose={onClose}
+      isOpen={isOpen}
+      size={"7xl"}
+    >
       <ModalOverlay
         bg="blackAlpha.300"
         backdropFilter="blur(10px) hue-rotate(90deg)"
@@ -59,6 +81,13 @@ export default function ResponsivelySizedModal({
           right="-8"
           borderWidth={2}
           borderRadius="0"
+          onClick={() =>
+            onCloseButtonModal({
+              status: addNftTnxStatus?.status,
+              dispatch,
+              type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+            })
+          }
         />
 
         <Tabs isLazy align="left" h="full">

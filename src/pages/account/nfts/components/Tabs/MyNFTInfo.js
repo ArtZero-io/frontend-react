@@ -29,9 +29,10 @@ import { IPFS_BASE_URL } from "@constants/index";
 import marketplace_contract from "@utils/blockchain/marketplace";
 import { createLevelAttribute } from "@utils";
 import { useDispatch, useSelector } from "react-redux";
-import CommonLoader from "../../../../../components/Loader/CommonLoader";
+// import CommonLoader from "../../../../../components/Loader/CommonLoader";
 import { getCachedImage } from "@utils";
-// import BN from "bn.js";
+import StatusPushForSaleButton from "@components/Button/StatusPushForSaleButton";
+import { AccountActionTypes } from "@store/types/account.types";
 
 function MyNFTTabInfo({
   avatar,
@@ -50,9 +51,13 @@ function MyNFTTabInfo({
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
     useState(false);
+
+  const [stepNo, setStepNo] = useState(0);
   const dispatch = useDispatch();
-  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const { addNftTnxStatus } = useSelector((s) => s.account.accountLoaders);
   console.log(attrsList);
+  const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
+
   useEffect(() => {
     const checkAllowMarketplaceContract = async () => {
       if (Number(contractType) === 2) {
@@ -87,8 +92,8 @@ function MyNFTTabInfo({
     dispatch,
   ]);
 
-  const listToken = async () => {
-    // if (Number(contractType) === 2) {
+  const approveToken = async () => {
+    console.log("approveToken..");
     if (owner === currentAccount?.address) {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
@@ -97,6 +102,22 @@ function MyNFTTabInfo({
       );
 
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+
+      dispatch({
+        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+        payload: {
+          status: "Start",
+        },
+      });
+
+      await nft721_psp34_standard_calls.approve(
+        currentAccount,
+        marketplace.CONTRACT_ADDRESS,
+        { u64: tokenID },
+        true,
+        dispatch
+      );
+
       const isAllowance = await nft721_psp34_standard_calls.allowance(
         currentAccount,
         currentAccount?.address,
@@ -104,17 +125,56 @@ function MyNFTTabInfo({
         { u64: tokenID },
         dispatch
       );
-      if (!isAllowance) {
-        toast("Approve...");
-        await nft721_psp34_standard_calls.approve(
-          currentAccount,
-          marketplace.CONTRACT_ADDRESS,
-          { u64: tokenID },
-          true,
-          dispatch
-        );
+
+      if (isAllowance) {
+        setIsAllowanceMarketplaceContract(true);
+
+        setStepNo(0);
+
+        dispatch({
+          type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+        });
       }
-      toast("Listing ...");
+    }
+  };
+
+  
+  const listToken = async () => {
+    if (owner === currentAccount?.address) {
+      const nft721_psp34_standard_contract = new ContractPromise(
+        api,
+        nft721_psp34_standard.CONTRACT_ABI,
+        nftContractAddress
+      );
+
+      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+
+      // const isAllowance = await nft721_psp34_standard_calls.allowance(
+      //   currentAccount,
+      //   currentAccount?.address,
+      //   marketplace_contract.CONTRACT_ADDRESS,
+      //   { u64: tokenID },
+      //   dispatch
+      // );
+      // console.log("isAllowance", isAllowance);
+      // if (!isAllowance) {
+      //   toast("Approve...");
+      //   await nft721_psp34_standard_calls.approve(
+      //     currentAccount,
+      //     marketplace.CONTRACT_ADDRESS,
+      //     { u64: tokenID },
+      //     true,
+      //     dispatch
+      //   );
+      // }
+      // toast("Listing ...");
+      dispatch({
+        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+        payload: {
+          status: "Start",
+        },
+      });
+
       await marketplace_contract_calls.list(
         currentAccount,
         nftContractAddress,
@@ -123,9 +183,11 @@ function MyNFTTabInfo({
         dispatch
       );
     } else {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
       toast.error(`This token is not yours!`);
     }
-    // }
   };
 
   const unlistToken = async () => {
@@ -137,19 +199,6 @@ function MyNFTTabInfo({
     );
   };
 
-  // const approveMarketplaceContract = async () => {
-  //   if (owner === currentAccount?.address) {
-  // const is_approve =
-
-  //     if (is_approve) {
-  //       setIsAllowanceMarketplaceContract(true);
-  //     }
-  //   } else {
-  //     toast.error(`This token is not yours!`);
-  //   }
-  // };
-
-  const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
   return (
     <Flex h="full">
       <Box minW={{ base: "20rem", "2xl": "30rem" }} bg="#372648">
@@ -200,242 +249,255 @@ function MyNFTTabInfo({
             {description}
           </Heading>
         </Box>
+        {attrsList?.length === 0 ? (
+          <Text my="3" display={{ base: "none", xl: "block" }}>
+            This NFT have no props/ levels.
+          </Text>
+        ) : (
+          <>
+            <Grid
+              boxShadow="lg"
+              mb={2}
+              minH="10rem"
+              w="full"
+              templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
+              gap={{ base: "0.5rem", "2xl": "1.25rem" }}
+              pr={"0.25rem"}
+              overflowY="auto"
+              sx={{
+                "&::-webkit-scrollbar": {
+                  width: "0.3rem",
+                  borderRadius: "1px",
+                  backgroundColor: `#7ae7ff`,
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: `#7ae7ff`,
+                },
+              }}
+            >
+              {attrsList?.length
+                ? attrsList
+                    .filter(
+                      (i) => !JSON.stringify(Object.values(i)).includes("|")
+                    )
+                    .map((item, idx) => {
+                      return (
+                        <Fragment key={idx}>
+                          <GridItem w="100%" h="100%">
+                            <Box
+                              w="full"
+                              textAlign="left"
+                              alignItems="end"
+                              bg="brand.semiBlack"
+                              px={{ base: "0.5rem", "2xl": "1rem" }}
+                              py={3}
+                            >
+                              <Flex w="full">
+                                <Box color="brand.grayLight" w="full">
+                                  <Text>{Object.keys(item)[0]}</Text>
+                                  <Heading
+                                    textAlign="right"
+                                    size="h6"
+                                    mt={1}
+                                    // minH='2.5rem'
+                                    isTruncated
+                                    maxW={"10rem"}
+                                    fontSize={{
+                                      base: "0.875rem",
+                                      "2xl": "1rem",
+                                    }}
+                                  ></Heading>
+                                </Box>
+                                <Spacer />
+                              </Flex>
+                              <Flex w="full" color="#7AE7FF">
+                                <Spacer />
+                                <Text fontStyle="italic">
+                                  {Object.values(item)[0]}
+                                </Text>
+                              </Flex>
+                            </Box>
+                          </GridItem>
+                        </Fragment>
+                      );
+                    })
+                : ""}
 
-        <Grid
-          boxShadow="lg"
-          mb={2}
-          minH="10rem"
-          w="full"
-          templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
-          gap={{ base: "0.5rem", "2xl": "1.25rem" }}
-          pr={"0.25rem"}
-          overflowY="auto"
-          sx={{
-            "&::-webkit-scrollbar": {
-              width: "0.3rem",
-              borderRadius: "1px",
-              backgroundColor: `#7ae7ff`,
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: `#7ae7ff`,
-            },
-          }}
-        >
-          {attrsList?.length
-            ? attrsList
-                .filter((i) => !JSON.stringify(Object.values(i)).includes("|"))
-                .map((item, idx) => {
-                  return (
-                    <Fragment key={idx}>
-                      <GridItem w="100%" h="100%">
-                        <Box
-                          w="full"
-                          textAlign="left"
-                          alignItems="end"
-                          bg="brand.semiBlack"
-                          px={{ base: "0.5rem", "2xl": "1rem" }}
-                          py={3}
-                        >
-                          <Flex w="full">
-                            <Box color="brand.grayLight" w="full">
-                              <Text>{Object.keys(item)[0]}</Text>
+              {attrsList?.length
+                ? attrsList
+                    .filter((i) =>
+                      JSON.stringify(Object.values(i)).includes("|")
+                    )
+                    .map((item, idx) => {
+                      return (
+                        <React.Fragment key={idx}>
+                          <Box
+                            w="full"
+                            textAlign="left"
+                            alignItems="end"
+                            bg="brand.semiBlack"
+                            px={{ base: "0.5rem", "2xl": "1rem" }}
+                            py={2}
+                            // my={2}
+                            minW="30%"
+                            maxH={"4.625rem"}
+                          >
+                            <Flex w="full" my={2}>
                               <Heading
-                                textAlign="right"
                                 size="h6"
                                 mt={1}
-                                // minH='2.5rem'
-                                isTruncated
-                                maxW={"10rem"}
-                                fontSize={{ base: "0.875rem", "2xl": "1rem" }}
-                              ></Heading>
-                            </Box>
-                            <Spacer />
-                          </Flex>
-                          <Flex w="full" color="#7AE7FF">
-                            <Spacer />
-                            <Text fontStyle="italic">
-                              {Object.values(item)[0]}
-                            </Text>
-                          </Flex>
-                        </Box>
-                      </GridItem>
-                    </Fragment>
-                  );
-                })
-            : ""}
+                                color="#fff"
+                                fontSize={{ base: "1rem", "2xl": "1.125rem" }}
+                              >
+                                {Object.keys(item)[0]}
+                              </Heading>
 
-          {attrsList?.length
-            ? attrsList
-                .filter((i) => JSON.stringify(Object.values(i)).includes("|"))
-                .map((item, idx) => {
-                  return (
-                    <React.Fragment key={idx}>
-                      <Box
-                        w="full"
-                        textAlign="left"
-                        alignItems="end"
-                        bg="brand.semiBlack"
-                        px={{ base: "0.5rem", "2xl": "1rem" }}
+                              <Spacer />
+                              <Text color="#fff">
+                                {
+                                  createLevelAttribute(Object.values(item)[0])
+                                    .level
+                                }{" "}
+                                of{" "}
+                                {
+                                  createLevelAttribute(Object.values(item)[0])
+                                    .levelMax
+                                }
+                              </Text>
+                            </Flex>
 
-                        py={2}
-                        // my={2}
-                        minW="30%"
-                        maxH={"4.625rem"}
-                      >
-                        <Flex w="full" my={2}>
-                          <Heading
-                            size="h6"
-                            mt={1}
-                            color="#fff"
-                            fontSize={{ base: "1rem", "2xl": "1.125rem" }}
-                          >
-                            {Object.keys(item)[0]}
-                          </Heading>
+                            <Progress
+                              colorScheme="telegram"
+                              size="sm"
+                              value={Number(
+                                (createLevelAttribute(Object.values(item)[0])
+                                  .level *
+                                  100) /
+                                  createLevelAttribute(Object.values(item)[0])
+                                    .levelMax
+                              )}
+                              height="6px"
+                            />
+                          </Box>
+                        </React.Fragment>
+                      );
+                    })
+                : null}
+            </Grid>
+          </>
+        )}
 
-                          <Spacer />
-                          <Text color="#fff">
-                            {createLevelAttribute(Object.values(item)[0]).level}{" "}
-                            of{" "}
-                            {
-                              createLevelAttribute(Object.values(item)[0])
-                                .levelMax
-                            }
-                          </Text>
-                        </Flex>
-
-                        <Progress
-                          colorScheme="telegram"
-                          size="sm"
-                          value={Number(
-                            (createLevelAttribute(Object.values(item)[0])
-                              .level *
-                              100) /
-                              createLevelAttribute(Object.values(item)[0])
-                                .levelMax
-                          )}
-                          height="6px"
-                        />
-                      </Box>
-                    </React.Fragment>
-                  );
-                })
-            : null}
-        </Grid>
-
-        {tnxStatus ? (
+        {/* {addNftTnxStatus ? (
           <CommonLoader
-            addText={`${tnxStatus?.status}`}
+            addText={`${addNftTnxStatus?.status}`}
             size="md"
             maxH={"4.125rem"}
           />
         ) : (
-          <>
-            {/* {!is_for_sale && !isAllowanceMarketplaceContract ? (
-              <Flex w="full" py={2} alignItems="center" justifyContent="start">
-                <Spacer />
-                <Text>
-                  (You need to approve permission for marketplace contract)
-                </Text>
-                <Button
-                  ml={2}
-                  variant="solid"
-                  onClick={approveMarketplaceContract}
-                >
-                  Approve
-                </Button>
-              </Flex>
-            ) : (
-              ""
-            )} */}
-
-            {!is_for_sale && (
-              <Flex
+        )} */}
+        <>
+          {!is_for_sale && (
+            <Flex
+              w="full"
+              py={2}
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Spacer />
+              <InputGroup
+                maxW={32}
+                mr={2}
+                px={0}
                 w="full"
-                py={2}
-                alignItems="center"
-                justifyContent="space-between"
+                bg="brand.semiBlack"
+                h={14}
+                py={0}
+                color="#fff "
+                borderRadius="0"
               >
-                <Spacer />
-                <InputGroup
-                  maxW={32}
-                  mr={2}
-                  px={0}
-                  w="full"
-                  bg="brand.semiBlack"
+                <Input
+                  value={askPrice}
+                  onChange={({ target }) => setAskPrice(target.value)}
+                  m={0}
                   h={14}
-                  py={0}
-                  color="#fff "
-                  borderRadius="0"
-                >
-                  <Input
-                    value={askPrice}
-                    onChange={({ target }) => setAskPrice(target.value)}
-                    m={0}
-                    h={14}
-                    pl={5}
-                    bg="black"
-                    variant="unstyled"
-                    placeholder="10"
-                    _placeholder={{
-                      color: "#888",
-                      fontSize: "lg",
-                    }}
-                  />
-                  <InputRightElement bg="transparent" h={14} w={16}>
-                    <AzeroIcon />
-                  </InputRightElement>
-                </InputGroup>
-                <Button ml={2} variant="solid" onClick={listToken}>
+                  pl={5}
+                  bg="black"
+                  variant="unstyled"
+                  placeholder="10"
+                  _placeholder={{
+                    color: "#888",
+                    fontSize: "lg",
+                  }}
+                />
+                <InputRightElement bg="transparent" h={14} w={16}>
+                  <AzeroIcon />
+                </InputRightElement>
+              </InputGroup>
+              {/* <Button ml={2} variant="solid" onClick={listToken}>
                   Push for sale
-                </Button>
-              </Flex>
-            )}
+                </Button> */}
+              {console.log("addNftTnxStatus?.status", addNftTnxStatus?.status)}
+              {console.log("addNftTnxStatus", addNftTnxStatus)}
+              <StatusPushForSaleButton
+                mx="auto"
+                isAllowanceMpContract={isAllowanceMarketplaceContract}
+                // isDo={idSelected === idx}
+                type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                text="push for sale"
+                isLoading={addNftTnxStatus}
+                loadingText={`${addNftTnxStatus?.status}`}
+                stepNo={stepNo}
+                setStepNo={setStepNo}
+                approveToken={approveToken}
+                listToken={listToken}
+              />
+            </Flex>
+          )}
 
-            {owner === marketplace.CONTRACT_ADDRESS && is_for_sale && (
-              <Flex w="full" py={2} alignItems="center" justifyContent="start">
-                <Spacer />
-                <Flex
-                  alignItems="center"
-                  justifyContent="start"
-                  fontSize="lg"
-                  mr={3}
-                >
-                  <Text color="brand.grayLight">For Sale At</Text>
+          {owner === marketplace.CONTRACT_ADDRESS && is_for_sale && (
+            <Flex w="full" py={2} alignItems="center" justifyContent="start">
+              <Spacer />
+              <Flex
+                alignItems="center"
+                justifyContent="start"
+                fontSize="lg"
+                mr={3}
+              >
+                <Text color="brand.grayLight">For Sale At</Text>
 
-                  <Text color="#fff" mx={2}>
+                <Text color="#fff" mx={2}>
                   {price / 10 ** 12}
-                  </Text>
-                  <AzeroIcon />
-                </Flex>
-                <Button ml={2} variant="solid" onClick={unlistToken}>
-                  remove from sale
-                </Button>
+                </Text>
+                <AzeroIcon />
               </Flex>
-            )}
+              <Button ml={2} variant="solid" onClick={unlistToken}>
+                remove from sale
+              </Button>
+            </Flex>
+          )}
 
-            {isAllowanceMarketplaceContract && isOffered?.status && (
-              <Flex w="full" py={2} alignItems="center" justifyContent="start">
-                <Spacer />
-                <Flex
-                  alignItems="center"
-                  justifyContent="start"
-                  fontSize="lg"
-                  mr={3}
-                >
-                  <Text color="brand.grayLight">My Offer</Text>
+          {isAllowanceMarketplaceContract && isOffered?.status && (
+            <Flex w="full" py={2} alignItems="center" justifyContent="start">
+              <Spacer />
+              <Flex
+                alignItems="center"
+                justifyContent="start"
+                fontSize="lg"
+                mr={3}
+              >
+                <Text color="brand.grayLight">My Offer</Text>
 
-                  <Text color="#fff" mx={2}>
-                    22.22
-                  </Text>
-                  <AzeroIcon />
-                </Flex>
-                <Button ml={2} variant="solid">
-                  Cancel Offer
-                </Button>
+                <Text color="#fff" mx={2}>
+                  22.22
+                </Text>
+                <AzeroIcon />
               </Flex>
-            )}
-          </>
-        )}
+              <Button ml={2} variant="solid">
+                Cancel Offer
+              </Button>
+            </Flex>
+          )}
+        </>
       </Flex>
     </Flex>
   );

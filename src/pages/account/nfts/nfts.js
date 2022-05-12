@@ -15,10 +15,9 @@ import { useSubstrateState } from "@utils/substrate";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import { clientAPI } from "@api/client";
 import { useDispatch, useSelector } from "react-redux";
-import CommonLoader from "@components/Loader/CommonLoader";
 import { delay } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
-import toast from "react-hot-toast";
+import AnimationLoader from "@components/Loader/AnimationLoader";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
@@ -27,10 +26,11 @@ const MyNFTsPage = () => {
   const [myCollections, setMyCollections] = useState(null);
 
   const [filterSelected, setFilterSelected] = useState(0);
-  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
-  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const { addNftTnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const [loading, setLoading] = useState(null);
+  const [loadingTime, setLoadingTime] = useState(null);
 
   function onClickHandler(v) {
     if (filterSelected !== v) {
@@ -151,30 +151,59 @@ const MyNFTsPage = () => {
   }, [currentAccount?.address, filterSelected, myCollections, owner]);
 
   useEffect(() => {
-    const forceUpdateAfterMint = async () => {
-      if (tnxStatus?.status === "Finalized") {
-        dispatch({
-          type: AccountActionTypes.SET_TNX_STATUS,
-          payload: null,
-        });
+    const forceUpdateAfterPushForSale = async () => {
+      if (addNftTnxStatus?.status !== "End") {
+        return;
+      }
+
+      const { status, timeStamp, endTimeStamp } = addNftTnxStatus;
+
+      if (status && timeStamp && endTimeStamp) {
+        const diffTime = 9000 - Number(endTimeStamp - timeStamp);
+        const delayTime = diffTime >= 0 ? diffTime : 500;
 
         setLoading(true);
-        toast.promise(
-          delay(9000).then(() => {
-            setMyCollections(null);
-            setLoading(false);
-          }),
-          {
-            loading: "Loading new data...",
-            success: `Done!`,
-            error: "Could not load data.",
-          }
-        );
+
+        setLoadingTime(delayTime / 1000);
+
+        await delay(delayTime).then(() => {
+          dispatch({
+            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+          });
+          setMyCollections(null);
+          setLoading(false);
+        });
       }
     };
 
-    forceUpdateAfterMint();
-  }, [tnxStatus, dispatch]);
+    forceUpdateAfterPushForSale();
+  }, [addNftTnxStatus, addNftTnxStatus?.status, dispatch, loadingTime]);
+
+  // useEffect(() => {
+  //   const forceUpdateAfterMint = async () => {
+  //     if (tnxStatus?.status === "Finalized") {
+  //       dispatch({
+  //         type: AccountActionTypes.SET_TNX_STATUS,
+  //         payload: null,
+  //       });
+
+  //       setLoading(true);
+  //       toast.promise(
+  //         delay(9000).then(() => {
+  //           setMyCollections(null);
+  //           setLoading(false);
+  //         }),
+  //         {
+  //           loading: "Loading new data...",
+  //           success: `Done!`,
+  //           error: "Could not load data.",
+  //         }
+  //       );
+  //     }
+  //   };
+
+  //   forceUpdateAfterMint();
+  // }, [tnxStatus, dispatch]);
 
   return (
     <Box as="section" maxW="container.3xl" minH="60rem">
@@ -229,13 +258,7 @@ const MyNFTsPage = () => {
           />
         </Flex>
 
-        {loading && (
-          <CommonLoader
-            addText={`Please wait a moment...`}
-            size="md"
-            maxH={"4.125rem"}
-          />
-        )}
+        {loading && <AnimationLoader loadingTime={loadingTime} />}
 
         <>
           {(!myCollections || myCollections?.length === 0) && (

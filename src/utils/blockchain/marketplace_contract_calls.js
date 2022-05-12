@@ -391,6 +391,9 @@ async function list(
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
         if (dispatchError) {
+          dispatch({
+            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+          });
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
           } else {
@@ -399,28 +402,33 @@ async function list(
         }
 
         if (status) {
-          handleContractCall(status, dispatchError, dispatch, contract);
+          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
 
-          const statusText = Object.keys(status.toHuman())[0];
+          // const statusText = Object.keys(status.toHuman())[0];
+          // toast.success(
+          //   `List NFT ${
+          //     statusText === "0" ? "started" : statusText.toLowerCase()
+          //   }.`
+          // );
           if (status.isFinalized === true) {
             // toast.success(`Okay`);
-            console.log("token_id", token_id);
-            const update_nft_api_res = await clientAPI("post", "/updateNFT", {
+            await clientAPI("post", "/updateNFT", {
               collection_address: nft_contract_address,
               token_id: token_id.u64,
             });
-            console.log("update_nft_api_res", update_nft_api_res);
           }
-          toast.success(
-            `List NFT ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
         }
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((e) => {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+      const mess = `Tnx is ${e.message}`;
+      console.log("e.message", e.message);
+      toast.error(mess);
+    });
   return unsubscribe;
 }
 async function unlist(
