@@ -160,18 +160,17 @@ async function mintWithAttributes(
               return toast.error("dispatchError", dispatchError.toString());
             }
           }
-          console.log("mintWithAttributes output:", output);
+
           if (status) {
             handleContractCallAddNftAnimation(status, dispatchError, dispatch);
 
             if (status.isFinalized === true) {
               const token_id = await getTotalSupply(address);
-              console.log("token_id", token_id);
-              const update_nft_api_res = await clientAPI("post", "/updateNFT", {
+
+              await clientAPI("post", "/updateNFT", {
                 collection_address: nft_address,
                 token_id: token_id,
               });
-              console.log("update_nft_api_res", update_nft_api_res);
             }
           }
         }
@@ -180,24 +179,12 @@ async function mintWithAttributes(
         unsubscribe = unsub;
       })
       .catch((e) => {
-        if (e === "Error: Cancelled") {
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-          });
-          console.log(
-            "You cancelled this transaction. Please add new collection again!"
-          );
-          return toast.error(
-            "You cancelled this transaction. Please add new collection again!"
-          );
-        } else {
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-          });
-
-          console.log("Has something wrong in this transaction!");
-          return toast.error("Has something wrong in this transaction!");
-        }
+        dispatch({
+          type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+        });
+        const mess = `Tnx is ${e.message}`;
+        console.log("e.message", e.message);
+        toast.error(mess);
       });
   }
 

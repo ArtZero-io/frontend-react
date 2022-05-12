@@ -78,21 +78,12 @@ async function addNewCollection(caller_account, data, dispatch) {
       unsubscribe = unsub;
     })
     .catch((e) => {
-      if (e === "Error: Cancelled") {
-        dispatch({
-          type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-        });
-
-        toast.error(
-          "You cancelled this transaction. Please add new collection again!"
-        );
-      } else {
-        dispatch({
-          type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-        });
-
-        toast.error("Has something wrong in this transaction!");
-      }
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+      });
+      const mess = `Tnx is ${e.message}`;
+      console.log("e.message", e.message);
+      toast.error(mess);
     });
   return unsubscribe;
 }
@@ -146,21 +137,12 @@ async function autoNewCollection(caller_account, data, dispatch) {
       unsubscribe = unsub;
     })
     .catch((e) => {
-      if (e === "Error: Cancelled") {
-        dispatch({
-          type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-        });
-
-        toast.error(
-          "You cancelled this transaction. Please add new collection again!"
-        );
-      } else {
-        dispatch({
-          type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-        });
-
-        toast.error("Has something wrong in this transaction!");
-      }
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+      });
+      const mess = `Tnx is ${e.message}`;
+      console.log("e.message", e.message);
+      toast.error(mess);
     });
   return unsubscribe;
 }
