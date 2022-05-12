@@ -24,6 +24,7 @@ const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 export const CollectionCard = ({
   headerImage,
+  squareImage,
   avatarImage,
   name,
   description,
@@ -88,7 +89,7 @@ export const CollectionCard = ({
             w="full"
             h={"16.25rem"}
             objectFit="cover"
-            src={getCollectionImage(headerImage, 500)}
+            src={getCollectionImage(squareImage, 500)}
             fallback={<Skeleton w="full" h="full" maxH={"16.25rem"} />}
           />
         </Box>
