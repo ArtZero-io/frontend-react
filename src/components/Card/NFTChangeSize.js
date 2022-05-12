@@ -97,17 +97,26 @@ export default function NFTChangeSizeCard({
 
               <Flex w="full">
                 <Spacer />
-                <Flex align='center' textAlign="right" color="brand.grayLight" mt="5">
-                  <Text mr="1">Highest Offer</Text>
-                  {highest_bid  ? (
+                <Flex
+                  align="center"
+                  textAlign="right"
+                  color="brand.grayLight"
+                  mt="5"
+                >
+                  {/* <Text mr="1">Highest Offer</Text> */}
+                  {highest_bid ? (
                     <Tag h={10} bg="transparent">
                       <TagLabel bg="transparent">
-                        {highest_bid  / 10 ** 12}
+                        Highest Offer {highest_bid / 10 ** 12}
                       </TagLabel>
                       <TagRightIcon as={AzeroIcon} />
                     </Tag>
                   ) : (
-                    <>No offer yet</>
+                    <>
+                      <Tag h={10} bg="transparent">
+                        <TagLabel bg="transparent" color='brand.grayLight'>No offer yet </TagLabel>
+                      </Tag>
+                    </>
                   )}
                 </Flex>
               </Flex>
