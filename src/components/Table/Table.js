@@ -10,6 +10,7 @@ import {
   TagLabel,
   TagRightIcon,
   Button,
+  Text,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { convertStringToPrice, convertStringToDateTime } from "@utils";
@@ -39,7 +40,7 @@ function DataTable({ tableHeaders, tableData, onClickHandler, isOwner }) {
       }}
     >
       <AnimatePresence>
-        {tableData.length ? (
+        {tableData?.length ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -116,7 +117,7 @@ function DataTable({ tableHeaders, tableData, onClickHandler, isOwner }) {
               </Tbody>
             </Table>
           </motion.div>
-        ) : null}
+        ) : <Text textAlign='center' py='2rem'>There is no bid yet.</Text>}
       </AnimatePresence>
     </TableContainer>
   );
