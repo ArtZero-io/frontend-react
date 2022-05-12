@@ -150,6 +150,7 @@ const NFTTabCollectible = ({
     await marketplace_contract_calls.removeBid(
       currentAccount,
       nftContractAddress,
+      saleInfo.nftOwner,
       { u64: tokenID },
       dispatch
     );
@@ -181,6 +182,7 @@ const NFTTabCollectible = ({
       await marketplace_contract_calls.bid(
         currentAccount,
         nftContractAddress,
+        saleInfo.nftOwner,
         { u64: tokenID },
         bidPrice,
         dispatch

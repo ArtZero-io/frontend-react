@@ -13,12 +13,13 @@ function MyNFTTabOffers({ nftContractAddress, tokenID }) {
   const [saleInfo, setSaleInfo] = useState({});
   const dispatch = useDispatch();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
-  
+
   const acceptBid = async (bidId) => {
     if (currentAccount.address == saleInfo.nftOwner) {
       await marketplace_contract_calls.acceptBid(
         currentAccount,
         nftContractAddress,
+        saleInfo.nftOwner,
         { u64: tokenID },
         bidId,
         dispatch
@@ -26,7 +27,7 @@ function MyNFTTabOffers({ nftContractAddress, tokenID }) {
     } else {
       toast.error(`You not owner of token`);
     }
-    
+
   };
 
   useEffect(() => {
