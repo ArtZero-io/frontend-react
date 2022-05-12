@@ -237,7 +237,7 @@ function CollectionHeader({
                         fontSize={{ base: "4xl", "2xl": "6xl" }}
                         lineHeight="none"
                       >
-                        {floorPrice / 10 ** 12 || 0}
+                        {(new BN (floorPrice)).div(new BN(10 ** 6)).toNumber() / (10**6) || 0}
                       </Text>
                       <Avatar
                         src={AzeroIcon}

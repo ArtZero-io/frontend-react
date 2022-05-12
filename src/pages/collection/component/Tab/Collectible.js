@@ -306,7 +306,7 @@ const NFTTabCollectible = ({
                         <Text>Current price</Text>
                         <Tag h={4} pr={0} bg="transparent">
                           <TagLabel bg="transparent">
-                            {price / 10 ** 12}
+                            {(new BN (price)).div(new BN(10 ** 6)).toNumber() / (10**6)}
                           </TagLabel>
                           <TagRightIcon as={AzeroIcon} />
                         </Tag>

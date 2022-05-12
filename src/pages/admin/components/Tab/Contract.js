@@ -59,7 +59,7 @@ function ContractTab() {
       artzero_nft.CONTRACT_ADDRESS
     );
     setAzNFTContractBalance(
-      new BN(balance.free, 10, "le").toNumber() / 10 ** 12
+      new BN(balance.free, 10, "le").div(new BN(10**6)).toNumber() / 10 ** 6
     );
   };
   const getAllWhiteList = async (e) => {

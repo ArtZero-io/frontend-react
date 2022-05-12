@@ -402,7 +402,7 @@ function MyNFTTabInfo({
                   <Text color="brand.grayLight">For Sale At</Text>
 
                   <Text color="#fff" mx={2}>
-                    {price / 10 ** 12}
+                    {(new BN(price)).div(new BN(10**6)).toNumber() / 10 ** 6}
                   </Text>
                   <AzeroIcon />
                 </Flex>
