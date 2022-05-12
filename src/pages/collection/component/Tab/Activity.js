@@ -19,6 +19,7 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
       await marketplace_contract_calls.acceptBid(
         currentAccount,
         nftContractAddress,
+        saleInfo.nftOwner,
         { u64: tokenID },
         bidId,
         dispatch

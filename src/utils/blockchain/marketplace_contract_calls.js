@@ -372,7 +372,7 @@ async function list(
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  const sale_price = new BN(price * 10 ** 12).toString();
+  const sale_price = new BN(price).mul(new BN(10 ** 12)).toString();
   console.log(sale_price);
 
   contract.tx
@@ -481,6 +481,7 @@ async function unlist(
 async function bid(
   caller_account,
   nft_contract_address,
+  seller,
   token_id,
   bid_amount,
   dispatch
@@ -522,7 +523,7 @@ async function bid(
           const statusText = Object.keys(status.toHuman())[0];
           const update_bid_api_res = await clientAPI("post", "/updateBids", {
             collection_address: nft_contract_address,
-            seller: address,
+            seller: seller,
             token_id: token_id.u64,
           });
           console.log("update_bid_api_res", update_bid_api_res);
@@ -542,6 +543,7 @@ async function bid(
 async function removeBid(
   caller_account,
   nft_contract_address,
+  seller,
   token_id,
   dispatch
 ) {
@@ -579,7 +581,7 @@ async function removeBid(
 
           const update_bid_api_res = await clientAPI("post", "/updateBids", {
             collection_address: nft_contract_address,
-            seller: address,
+            seller: seller,
             token_id: token_id.u64,
           });
           console.log("update_bid_api_res", update_bid_api_res);
@@ -658,6 +660,7 @@ async function buy(
 async function acceptBid(
   caller_account,
   nft_contract_address,
+  seller,
   token_id,
   bidIndex,
   dispatch
@@ -707,7 +710,7 @@ async function acceptBid(
             });
             await clientAPI("post", "/updateBids", {
               collection_address: nft_contract_address,
-              seller: address,
+              seller: seller,
               token_id: token_id.u64,
             });
             await clientAPI("post", "/updateCollection", {

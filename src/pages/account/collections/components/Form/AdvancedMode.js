@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { Formik, Form } from "formik";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
+import BN from "bn.js";
 
 import { useSubstrateState } from "@utils/substrate";
 import { delay, isValidAddressPolkadotAddress } from "@utils";
@@ -43,7 +44,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           currentAccount
         );
 
-        setAddingFee(addingFeeData / 10 ** 12);
+        setAddingFee((new BN(addingFeeData)).div(new BN(10**6)).toNumber() / 10 ** 6);
       }
     };
     fetchFee();

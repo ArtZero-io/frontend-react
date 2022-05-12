@@ -150,6 +150,7 @@ const NFTTabCollectible = ({
     await marketplace_contract_calls.removeBid(
       currentAccount,
       nftContractAddress,
+      saleInfo.nftOwner,
       { u64: tokenID },
       dispatch
     );
@@ -181,6 +182,7 @@ const NFTTabCollectible = ({
       await marketplace_contract_calls.bid(
         currentAccount,
         nftContractAddress,
+        saleInfo.nftOwner,
         { u64: tokenID },
         bidPrice,
         dispatch
@@ -305,7 +307,7 @@ const NFTTabCollectible = ({
                         <Text>Current price</Text>
                         <Tag h={4} pr={0} bg="transparent">
                           <TagLabel bg="transparent">
-                            {price / 10 ** 12}
+                            {(new BN (price)).div(new BN(10 ** 6)).toNumber() / (10**6)}
                           </TagLabel>
                           <TagRightIcon as={AzeroIcon} />
                         </Tag>
