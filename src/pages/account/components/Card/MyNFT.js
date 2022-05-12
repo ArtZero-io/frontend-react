@@ -208,7 +208,7 @@ function MyNFTCard({
                 </Text>
                 <Tag>
                   <TagLabel>
-                    {new BN(price).div(new BN(10 ** 6)).toNumber() / 10 ** 6}
+                    {price / 10**12}
                   </TagLabel>
                   <TagRightIcon as={AzeroIcon} />
                 </Tag>
@@ -222,10 +222,7 @@ function MyNFTCard({
                   <Tag>
                     <TagLabel>
                       {isBid?.status &&
-                        new BN(isBid?.bidPrice)
-                          .div(new BN(10 ** 6))
-                          .toNumber() /
-                          10 ** 6}
+                        isBid?.bidPrice / 10 ** 12}
                     </TagLabel>
                     <TagRightIcon as={AzeroIcon} />
                   </Tag>
