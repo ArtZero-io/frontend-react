@@ -71,7 +71,7 @@ function CollectionPage() {
       console.log("fetchCollectionDetail start", Date.now());
 
       const NFTListOptions = {
-        limit: 12,
+        limit: 200,
         offset: 0,
         sort: -1,
         collection_address,
@@ -221,6 +221,7 @@ function CollectionPage() {
               }
               console.log("collectionDetail contractType 1 Done ", Date.now());
             }
+            //console.log('collectionDetail',collectionDetail);
             setFormattedCollection(collectionDetail);
           }
         }
