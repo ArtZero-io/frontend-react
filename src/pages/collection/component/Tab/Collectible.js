@@ -132,8 +132,8 @@ const NFTTabCollectible = ({
       return;
     }
 
-    if (balance.free.gte(new BN(price))) {
-      //console.log('buy',tokenID,price);
+    if (balance.free.gte(new BN(price/10**6).mul(new BN(10**6))) ) {
+      console.log('buy',tokenID,price);
       await marketplace_contract_calls.buy(
         currentAccount,
         nftContractAddress,
@@ -175,7 +175,7 @@ const NFTTabCollectible = ({
     }
 
     if (balance.free.gte(new BN(bidPrice).mul(new BN(10 ** 12)))) {
-      if (new BN(bidPrice).mul(new BN(10 ** 12)).gte(new BN(price))) {
+      if (new BN(bidPrice).mul(new BN(10 ** 12)).gte(new BN(price/(10**6)).mul(new BN(10**6)))) {
         toast.error(`Bid Amount must less than Selling Price`);
         return;
       }
@@ -307,7 +307,7 @@ const NFTTabCollectible = ({
                         <Text>Current price</Text>
                         <Tag h={4} pr={0} bg="transparent">
                           <TagLabel bg="transparent">
-                            {(new BN (price)).div(new BN(10 ** 6)).toNumber() / (10**6)}
+                          {price/10**12}
                           </TagLabel>
                           <TagRightIcon as={AzeroIcon} />
                         </Tag>

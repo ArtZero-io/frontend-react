@@ -619,10 +619,10 @@ async function buy(
   const address = caller_account?.address;
   const gasLimit = -1;
 
-  // const azero_value = (new BN(price, 10, "le")).toString();
+  const azero_value = (new BN(price / 10**6).mul(new BN(10**6))).toString();
   const injector = await web3FromSource(caller_account?.meta?.source);
   contract.tx
-    .buy({ gasLimit, value: price }, nft_contract_address, token_id)
+    .buy({ gasLimit, value: azero_value }, nft_contract_address, token_id)
     .signAndSend(
       address,
       { signer: injector.signer },
