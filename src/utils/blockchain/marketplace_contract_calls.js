@@ -372,8 +372,8 @@ async function list(
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  const sale_price = new BN(price).mul(new BN(10 ** 12)).toString();
-  console.log(sale_price);
+  const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  //console.log(sale_price);
 
   contract.tx
     .list(
