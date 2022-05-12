@@ -2,7 +2,7 @@ const staking = {
   CONTRACT_ADDRESS: "5GSYdKjgnWeDm72XanDSaBrTKGMMxZY7qQa182wYSJ7Jebw8",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x79c396ab862d794d2a3339ca6c94bb5386a815436e5c7170d7fe8e5c4f92c58d",
+      "hash": "0xcc0521537ab4e7fdf885772fbfd5096147b526b99edb92fe24dc7c05af71a150",
       "language": "ink! 3.0.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -481,32 +481,6 @@ const staking = {
             "selector": "0xd34ab274"
           },
           {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 21
-            },
-            "selector": "0x11f43efd"
-          },
-          {
             "args": [],
             "docs": [],
             "label": "Ownable::renounce_ownership",
@@ -539,30 +513,28 @@ const staking = {
           {
             "args": [
               {
-                "label": "account",
+                "label": "new_owner",
                 "type": {
                   "displayName": [
-                    "crossartzerostaking_external",
-                    "GetTotalStakedByAccountInput1"
+                    "ownable_external",
+                    "TransferOwnershipInput1"
                   ],
                   "type": 0
                 }
               }
             ],
-            "docs": [
-              "Get User NFT staked in the contract"
-            ],
-            "label": "CrossArtZeroStaking::get_total_staked_by_account",
-            "mutates": false,
+            "docs": [],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
-                "crossartzerostaking_external",
-                "GetTotalStakedByAccountOutput"
+                "ownable_external",
+                "TransferOwnershipOutput"
               ],
-              "type": 7
+              "type": 21
             },
-            "selector": "0x487f1cac"
+            "selector": "0x11f43efd"
           },
           {
             "args": [
@@ -591,6 +563,34 @@ const staking = {
               "type": 7
             },
             "selector": "0x3d9ff06d"
+          },
+          {
+            "args": [
+              {
+                "label": "account",
+                "type": {
+                  "displayName": [
+                    "crossartzerostaking_external",
+                    "GetTotalStakedByAccountInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              "Get User NFT staked in the contract"
+            ],
+            "label": "CrossArtZeroStaking::get_total_staked_by_account",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerostaking_external",
+                "GetTotalStakedByAccountOutput"
+              ],
+              "type": 7
+            },
+            "selector": "0x487f1cac"
           }
         ]
       },
