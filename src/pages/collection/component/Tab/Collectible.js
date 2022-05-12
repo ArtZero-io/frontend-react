@@ -36,6 +36,8 @@ import process from "process";
 import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { getPublicCurrentAccount } from "@utils";
+import StatusBuyButton from "../../../../components/Button/StatusBuyButton";
+import { AccountActionTypes } from "@store/types/account.types";
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
@@ -58,9 +60,9 @@ const NFTTabCollectible = ({
   const [saleInfo, setSaleInfo] = useState(null);
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
   const publicCurrentAccount = getPublicCurrentAccount();
-
+  const [action, setAction] = useState("");
   const dispatch = useDispatch();
-  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const { addNftTnxStatus } = useSelector((s) => s.account.accountLoaders);
 
   useEffect(() => {
     const doLoad = async () => {
@@ -134,6 +136,13 @@ const NFTTabCollectible = ({
 
     if (balance.free.gte(new BN(price))) {
       //console.log('buy',tokenID,price);
+      setAction("buy");
+      dispatch({
+        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+        payload: {
+          status: "Start",
+        },
+      });
       await marketplace_contract_calls.buy(
         currentAccount,
         nftContractAddress,
@@ -142,6 +151,10 @@ const NFTTabCollectible = ({
         dispatch
       );
     } else {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+      setAction('')
       toast.error(`Not Enough Balance!`);
     }
   };
@@ -265,15 +278,27 @@ const NFTTabCollectible = ({
           </AnimatePresence>
         </Box>
         {/* is_for_sale true  no sale*/}
-        {/* is_for_sale true  no sale*/}
         {!is_for_sale && currentAccount.address !== owner && (
           <Flex h="4.75rem" alignItems={"center"}>
             <Heading size="h6">Not for sale</Heading>
           </Flex>
         )}
-        {is_for_sale && currentAccount.address !== saleInfo?.nftOwner && (
-          <Stack direction={{ base: "column", xl: "row" }} w="full" py={2}>
-            {currentAccount?.address !== saleInfo?.nftOwner && is_for_sale && (
+
+        <Stack
+          h={
+            saleInfo &&
+            is_for_sale &&
+            currentAccount?.address !== saleInfo?.nftOwner
+              ? "5.5rem"
+              : "0"
+          }
+          direction={{ base: "column", xl: "row" }}
+          w="full"
+          py={2}
+        >
+          {saleInfo &&
+            is_for_sale &&
+            currentAccount?.address !== saleInfo?.nftOwner && (
               <>
                 <Flex
                   w="full"
@@ -284,7 +309,15 @@ const NFTTabCollectible = ({
                   borderWidth={2}
                   minH="4.75rem"
                 >
-                  <Button
+                  <StatusBuyButton
+                    isDo={action === "buy"}
+                    type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                    text="buy"
+                    isLoading={addNftTnxStatus}
+                    loadingText={`${addNftTnxStatus?.status}`}
+                    onClick={buyToken}
+                  />
+                  {/* <Button
                     spinnerPlacement="start"
                     isLoading={tnxStatus}
                     loadingText={`${tnxStatus?.status}`}
@@ -294,7 +327,7 @@ const NFTTabCollectible = ({
                     onClick={buyToken}
                   >
                     Buy now
-                  </Button>
+                  </Button> */}
 
                   <Spacer />
 
@@ -307,7 +340,8 @@ const NFTTabCollectible = ({
                         <Text>Current price</Text>
                         <Tag h={4} pr={0} bg="transparent">
                           <TagLabel bg="transparent">
-                            {(new BN (price)).div(new BN(10 ** 6)).toNumber() / (10**6)}
+                            {new BN(price).div(new BN(10 ** 6)).toNumber() /
+                              10 ** 6}
                           </TagLabel>
                           <TagRightIcon as={AzeroIcon} />
                         </Tag>
@@ -330,8 +364,8 @@ const NFTTabCollectible = ({
                       <>
                         <Button
                           spinnerPlacement="start"
-                          isLoading={tnxStatus}
-                          loadingText={`${tnxStatus?.status}`}
+                          // isLoading={tnxStatus}
+                          // loadingText={`${tnxStatus?.status}`}
                           h={10}
                           maxW={"7rem"}
                           variant="solid"
@@ -373,8 +407,8 @@ const NFTTabCollectible = ({
                       <>
                         <Button
                           spinnerPlacement="start"
-                          isLoading={tnxStatus}
-                          loadingText={`${tnxStatus?.status}`}
+                          // isLoading={tnxStatus}
+                          // loadingText={`${tnxStatus?.status}`}
                           h={10}
                           maxW={"7rem"}
                           variant="solid"
@@ -397,8 +431,7 @@ const NFTTabCollectible = ({
                 )}
               </>
             )}
-          </Stack>
-        )}
+        </Stack>
 
         {attrsList?.length === 0 ? (
           <>

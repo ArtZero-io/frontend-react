@@ -1,11 +1,14 @@
 import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
-import { isValidAddressPolkadotAddress } from "@utils";
+import {
+  isValidAddressPolkadotAddress,
+  handleContractCall,
+  handleContractCallAddNftAnimation,
+} from "@utils";
 import { TypeRegistry, U32 } from "@polkadot/types";
 import { ContractPromise } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
-import { handleContractCall } from "..";
 
 let contract;
 
@@ -635,7 +638,7 @@ async function buy(
           }
         }
         if (status) {
-          handleContractCall(status, dispatchError, dispatch, contract);
+          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
 
           await clientAPI("post", "/updateNFT", {
             collection_address: nft_contract_address,

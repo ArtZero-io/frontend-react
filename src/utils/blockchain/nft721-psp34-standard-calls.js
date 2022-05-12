@@ -121,7 +121,6 @@ async function mintWithAttributes(
   }
   let unsubscribe;
 
-  console.log("mintWithAttributes attributes", attributes);
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
@@ -137,9 +136,6 @@ async function mintWithAttributes(
       attribute_value.push(attribute.value);
     }
   }
-
-  console.log("attribute_label", attribute_label);
-  console.log("attribute_value", attribute_value);
 
   if (attribute_label.length === attribute_value.length) {
     contract.tx
