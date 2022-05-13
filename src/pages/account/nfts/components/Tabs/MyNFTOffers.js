@@ -5,6 +5,7 @@ import { useSubstrateState } from "@utils/substrate";
 import DataTable from "@components/Table/Table";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { AccountActionTypes } from "@store/types/account.types";
 
 function MyNFTTabOffers({ nftContractAddress, tokenID }) {
   const [bidders, setBidders] = useState([]);
@@ -13,9 +14,19 @@ function MyNFTTabOffers({ nftContractAddress, tokenID }) {
   const [saleInfo, setSaleInfo] = useState({});
   const dispatch = useDispatch();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const [idSelected, setIdSelected] = useState(null);
 
   const acceptBid = async (bidId) => {
-    if (currentAccount.address == saleInfo.nftOwner) {
+    if (currentAccount.address === saleInfo.nftOwner) {
+      setIdSelected(bidId);
+
+      dispatch({
+        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+        payload: {
+          status: "Start",
+        },
+      });
+
       await marketplace_contract_calls.acceptBid(
         currentAccount,
         nftContractAddress,
@@ -25,9 +36,12 @@ function MyNFTTabOffers({ nftContractAddress, tokenID }) {
         dispatch
       );
     } else {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+      setIdSelected(null);
       toast.error(`You not owner of token`);
     }
-
   };
 
   useEffect(() => {
@@ -40,14 +54,16 @@ function MyNFTTabOffers({ nftContractAddress, tokenID }) {
 
       setSaleInfo(sale_info);
 
-      const listBidder = await marketplace_contract_calls.getAllBids(
-        currentAccount,
-        nftContractAddress,
-        sale_info?.nftOwner,
-        { u64: tokenID }
-      );
+      if (sale_info) {
+        const listBidder = await marketplace_contract_calls.getAllBids(
+          currentAccount,
+          nftContractAddress,
+          sale_info?.nftOwner,
+          { u64: tokenID }
+        );
 
-      setBidders(listBidder);
+        setBidders(listBidder);
+      }
     };
 
     fetchBidder();
@@ -55,10 +71,12 @@ function MyNFTTabOffers({ nftContractAddress, tokenID }) {
 
   return (
     <DataTable
+      idSelected={idSelected}
       tableHeaders={headers}
       tableData={bidders}
       saleInfo={saleInfo}
       onClickHandler={acceptBid}
+      isOwner={currentAccount?.address === saleInfo?.nftOwner}
     />
   );
 }
