@@ -278,7 +278,6 @@ async function allowance(
     token_id
   );
   if (result.isOk) {
-    console.log('output.toHuman()', output.toHuman())
     return output.toHuman();
   }
   return null;
@@ -326,13 +325,17 @@ async function approve(
           handleContractCallAddNftAnimation(status, dispatchError, dispatch);
 
           // const statusText = Object.keys(status.toHuman())[0];
-          // if (status.isFinalized) {
-          //   toast.success(
-          //     `Approve ${
-          //       statusText === "0" ? "started" : statusText.toLowerCase()
-          //     }.`
-          //   );
-          // }
+          if (status.isFinalized) {
+            dispatch({
+              type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+            });
+
+            //   toast.success(
+            //     `Approve ${
+            //       statusText === "0" ? "started" : statusText.toLowerCase()
+            //     }.`
+            //   );
+          }
         }
       }
     )

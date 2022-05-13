@@ -1,6 +1,8 @@
-import { Button } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import React, { Fragment } from "react";
 import { useDispatch } from "react-redux";
+import { AccountActionTypes } from "@store/types/account.types";
+import toast from "react-hot-toast";
 
 function StatusPushForSaleButton({
   isAllowanceMpContract,
@@ -8,11 +10,8 @@ function StatusPushForSaleButton({
   loadingText,
   text,
   type,
-  onClick,
-  isDo,
   stepNo,
   setStepNo,
-  step1Function,
   listToken,
   approveToken,
 }) {
@@ -36,50 +35,54 @@ function StatusPushForSaleButton({
   // inBlock INBLOCK
   // finalized FINALIZED
 
-  console.log("stepNo", stepNo);
-  console.log("isAllowanceMpContract", isAllowanceMpContract);
   if (!isAllowanceMpContract) {
     switch (stepNo) {
       case 0:
         return (
-          <Button
-            display={stepNo === 0 ? "flex" : "none"}
-            variant="solid"
-            onClick={() =>
-              !isAllowanceMpContract ? setStepNo(1) : setStepNo(2)
-            }
-            h={10}
-            maxW={"7rem"}
-            isDisabled={loadingText === "Start"}
-          >
-            Push for sale
-          </Button>
+          <>
+            <Button
+              display={stepNo === 0 ? "flex" : "none"}
+              variant="solid"
+              onClick={() => {
+                setStepNo(1);
+                toast.error("You need to approve before list on market");
+              }}
+              isDisabled={loadingText === "Start"}
+              minW="10rem"
+            >
+              Push for sale
+            </Button>
+          </>
         );
       case 1:
         return (
           <Fragment>
-            <Button
-              display={!isLoading ? "block" : "none"}
-              variant="solid"
-              onClick={() => {
-                console.log("step 1func...");
-                approveToken();
-              }}
-              h={10}
-              maxW={"7rem"}
-            >
-              Approve it
-            </Button>
+            <Box>
+              <Button
+                minW="10rem"
+                display={!isLoading ? "block" : "none"}
+                variant="solid"
+                onClick={() => {
+                  console.log("step 1func...");
+                  approveToken();
+                }}
+              >
+                Approve it
+              </Button>
+            </Box>
             <Button
               display={isLoading ? "flex" : "none"}
               isDisabled={loadingText !== "Finalized"}
               onClick={() => {
                 console.log("step 1func...");
                 setStepNo(0);
+
+                dispatch({
+                  type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+                });
               }}
               variant="outline"
-              h={10}
-              maxW={"7rem"}
+              minW="10rem"
               fontSize="md"
             >
               {loadingText === "Start"
@@ -102,7 +105,7 @@ function StatusPushForSaleButton({
 
   if (isAllowanceMpContract) {
     switch (stepNo) {
-      case 0:
+      case 1:
         return (
           <Fragment>
             <Button
@@ -111,8 +114,7 @@ function StatusPushForSaleButton({
               onClick={() => {
                 listToken();
               }}
-              h={10}
-              maxW={"7rem"}
+              minW="10rem"
             >
               Push for sale
             </Button>
@@ -120,9 +122,8 @@ function StatusPushForSaleButton({
               display={isLoading ? "flex" : "none"}
               variant="outline"
               onClick={() => onCloseHandler()}
-              h={10}
-              maxW={"7rem"}
-              isDisabled={loadingText === "Start"}
+              isDisabled={loadingText !== "Finalized"}
+              minW="10rem"
             >
               {loadingText === "Start"
                 ? "Please sign"
@@ -142,47 +143,7 @@ function StatusPushForSaleButton({
     }
   }
 
-  return (
-    text === "push for sale" &&
-    !isAllowanceMpContract && (
-      <>
-        {}
-        <>
-          <Button
-            hidden
-            display={isDo && isLoading ? "none" : "flex"}
-            variant="solid"
-            onClick={onClick}
-            h={10}
-            maxW={"7rem"}
-            isDisabled={loadingText === "Start"}
-          >
-            {isLoading ? "Approve it" : text}
-          </Button>
-          <Button
-            hidden
-            display={isDo && isLoading ? "flex" : "none"}
-            isDisabled={loadingText !== "Finalized"}
-            onClick={onCloseHandler}
-            variant="outline"
-            h={10}
-            maxW={"7rem"}
-            fontSize="md"
-          >
-            {loadingText === "Start"
-              ? "Please Sign"
-              : loadingText === "Ready"
-              ? "Ready"
-              : loadingText === "InBlock"
-              ? "In block"
-              : loadingText === "Finalized"
-              ? `All Done !`
-              : ""}
-          </Button>
-        </>
-      </>
-    )
-  );
+  return <></>;
 }
 
 export default StatusPushForSaleButton;

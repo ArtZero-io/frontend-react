@@ -92,6 +92,25 @@ function MyNFTTabInfo({
     dispatch,
   ]);
 
+  useEffect(() => {
+    const checkAllowance = async () => {
+      const isAllowance = await nft721_psp34_standard_calls.allowance(
+        currentAccount,
+        currentAccount?.address,
+        marketplace_contract.CONTRACT_ADDRESS,
+        { u64: tokenID },
+        dispatch
+      );
+
+      if (isAllowance) {
+        setIsAllowanceMarketplaceContract(true);
+        setStepNo(1);
+      }
+    };
+
+    checkAllowance();
+  }, [addNftTnxStatus?.status, currentAccount, dispatch, tokenID]);
+
   const approveToken = async () => {
     console.log("approveToken..");
     if (owner === currentAccount?.address) {
@@ -128,17 +147,10 @@ function MyNFTTabInfo({
 
       if (isAllowance) {
         setIsAllowanceMarketplaceContract(true);
-
-        setStepNo(0);
-
-        dispatch({
-          type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-        });
       }
     }
   };
 
-  
   const listToken = async () => {
     if (owner === currentAccount?.address) {
       const nft721_psp34_standard_contract = new ContractPromise(
@@ -186,6 +198,7 @@ function MyNFTTabInfo({
       dispatch({
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
       });
+
       toast.error(`This token is not yours!`);
     }
   };
@@ -387,71 +400,59 @@ function MyNFTTabInfo({
           </>
         )}
 
-        {/* {addNftTnxStatus ? (
-          <CommonLoader
-            addText={`${addNftTnxStatus?.status}`}
-            size="md"
-            maxH={"4.125rem"}
-          />
-        ) : (
-        )} */}
         <>
           {!is_for_sale && (
-            <Flex
-              w="full"
-              py={2}
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Spacer />
-              <InputGroup
-                maxW={32}
-                mr={2}
-                px={0}
+            <Fragment>
+              <Flex
                 w="full"
-                bg="brand.semiBlack"
-                h={14}
-                py={0}
-                color="#fff "
-                borderRadius="0"
+                py={2}
+                alignItems="center"
+                justifyContent="space-between"
               >
-                <Input
-                  value={askPrice}
-                  onChange={({ target }) => setAskPrice(target.value)}
-                  m={0}
+                <Spacer />
+                <InputGroup
+                  maxW={32}
+                  mr={2}
+                  px={0}
+                  w="full"
+                  bg="brand.semiBlack"
                   h={14}
-                  pl={5}
-                  bg="black"
-                  variant="unstyled"
-                  placeholder="10"
-                  _placeholder={{
-                    color: "#888",
-                    fontSize: "lg",
-                  }}
+                  py={0}
+                  color="#fff "
+                  borderRadius="0"
+                >
+                  <Input
+                    value={askPrice}
+                    onChange={({ target }) => setAskPrice(target.value)}
+                    m={0}
+                    h={14}
+                    pl={5}
+                    bg="black"
+                    variant="unstyled"
+                    placeholder="10"
+                    _placeholder={{
+                      color: "#888",
+                      fontSize: "lg",
+                    }}
+                  />
+                  <InputRightElement bg="transparent" h={14} w={16}>
+                    <AzeroIcon />
+                  </InputRightElement>
+                </InputGroup>
+
+                <StatusPushForSaleButton
+                  isAllowanceMpContract={isAllowanceMarketplaceContract}
+                  type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                  text="push for sale"
+                  isLoading={addNftTnxStatus}
+                  loadingText={`${addNftTnxStatus?.status}`}
+                  stepNo={stepNo}
+                  setStepNo={setStepNo}
+                  approveToken={approveToken}
+                  listToken={listToken}
                 />
-                <InputRightElement bg="transparent" h={14} w={16}>
-                  <AzeroIcon />
-                </InputRightElement>
-              </InputGroup>
-              {/* <Button ml={2} variant="solid" onClick={listToken}>
-                  Push for sale
-                </Button> */}
-              {console.log("addNftTnxStatus?.status", addNftTnxStatus?.status)}
-              {console.log("addNftTnxStatus", addNftTnxStatus)}
-              <StatusPushForSaleButton
-                mx="auto"
-                isAllowanceMpContract={isAllowanceMarketplaceContract}
-                // isDo={idSelected === idx}
-                type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
-                text="push for sale"
-                isLoading={addNftTnxStatus}
-                loadingText={`${addNftTnxStatus?.status}`}
-                stepNo={stepNo}
-                setStepNo={setStepNo}
-                approveToken={approveToken}
-                listToken={listToken}
-              />
-            </Flex>
+              </Flex>
+            </Fragment>
           )}
 
           {owner === marketplace.CONTRACT_ADDRESS && is_for_sale && (

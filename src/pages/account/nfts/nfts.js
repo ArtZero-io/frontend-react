@@ -258,28 +258,30 @@ const MyNFTsPage = () => {
           />
         </Flex>
 
-        {loading && <AnimationLoader loadingTime={loadingTime} />}
+        {loading ? (
+          <AnimationLoader loadingTime={loadingTime} />
+        ) : (
+          <>
+            {(!myCollections || myCollections?.length === 0) && (
+              <HStack
+                py={10}
+                align="start"
+                ml={3}
+                justifyContent="center"
+                w={"full"}
+              >
+                <Text textAlign="center" color="brand.grayLight" size="2xs">
+                  No NFT found.
+                </Text>
+              </HStack>
+            )}
 
-        <>
-          {(!myCollections || myCollections?.length === 0) && (
-            <HStack
-              py={10}
-              align="start"
-              ml={3}
-              justifyContent="center"
-              w={"full"}
-            >
-              <Text textAlign="center" color="brand.grayLight" size="2xs">
-                No NFT found.
-              </Text>
-            </HStack>
-          )}
-
-          {myCollections &&
-            myCollections?.map((item, idx) => {
-              return <MyNFTGroupCard {...item} key={idx} />;
-            })}
-        </>
+            {myCollections &&
+              myCollections?.map((item, idx) => {
+                return <MyNFTGroupCard {...item} key={idx} />;
+              })}
+          </>
+        )}
       </Box>
     </Box>
   );
