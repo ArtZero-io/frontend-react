@@ -51,7 +51,7 @@ function CollectionAdmin() {
       collection_manager.CONTRACT_ADDRESS
     );
     setCollectionContractBalance(
-      new BN(balance.free, 10, "le").div(new BN(10**6)).toNumber() / 10 ** 6
+      new BN(balance.free, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6
     );
   };
   const onGetCollectionContractOwner = async (e) => {
@@ -76,21 +76,34 @@ function CollectionAdmin() {
       limit: collection_count,
       offset: 0,
       sort: -1,
-      isActive:true
+      isActive: true,
+      ignoreNoNFT: true,
     };
 
-    let collections_actives = await clientAPI("post", "/getCollections", options_active);
+    let collections_actives = await clientAPI(
+      "post",
+      "/getCollections",
+      options_active
+    );
+    // console.log('collections_actives',collections_actives);
 
     const options_inactive = {
       limit: collection_count,
       offset: 0,
       sort: -1,
-      isActive:false
+      isActive: false,
+      ignoreNoNFT: true,
     };
 
-    const collections_inactives = await clientAPI("post", "/getCollections", options_inactive);
-
-    setCollections(collections_actives.concat(collections_inactives));
+    const collections_inactives = await clientAPI(
+      "post",
+      "/getCollections",
+      options_inactive
+    );
+    // console.log('collections_inactives',collections_inactives);
+    let collections = collections_actives.concat(collections_inactives);
+    // console.log('collections',collections);
+    setCollections(collections);
   };
   const onSetStatusCollection = async (collection_contract, isActive) => {
     if (collectionContractAdmin !== activeAddress) {
@@ -163,6 +176,7 @@ function CollectionAdmin() {
         <TableContainer
           maxW="6xl-mid"
           // maxH={{ base: "20rem", "2xl": "30rem" }}
+
           fontSize="lg"
           h="full"
           overflow="auto"
