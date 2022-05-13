@@ -278,7 +278,13 @@ const MyNFTsPage = () => {
 
             {myCollections &&
               myCollections?.map((item, idx) => {
-                return <MyNFTGroupCard {...item} key={idx} />;
+                return (
+                  <MyNFTGroupCard
+                    {...item}
+                    key={idx}
+                    filterSelected={filterSelected}
+                  />
+                );
               })}
           </>
         )}

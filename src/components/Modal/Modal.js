@@ -22,25 +22,30 @@ export default function ResponsivelySizedModal({
   isOpen,
   hasTabs,
   children,
+  filterSelected,
   ...rest
 }) {
+  console.log("filterSelected", filterSelected);
+
   const tabHeight = useBreakpointValue({
     base: `2.5rem`,
     xl: `3.5rem`,
     "2xl": `4.5rem`,
   });
+
   const tabData = [
     {
       label: "NFT info",
       content: <MyNFTTabInfo {...rest} />,
+      isDisabled: false,
     },
     {
       label: "Offers",
       content: <MyNFTTabOffers {...rest} />,
+      isDisabled: filterSelected === 0 ? true : false,
     },
   ];
 
-  // eslint-disable-next-line no-unused-vars
   const dispatch = useDispatch();
 
   const { addNftTnxStatus } = useSelector(
@@ -94,12 +99,14 @@ export default function ResponsivelySizedModal({
           <TabList bg="#171717">
             {tabData.map((tab, index) => (
               <Tab
+                isDisabled={tab.isDisabled}
                 ml={12}
                 key={index}
                 fontSize="md"
                 fontFamily="Evogria Italic"
                 minH={tabHeight}
               >
+                {console.log("tab.isDisabled", tab.isDisabled)}
                 {tab.label}
               </Tab>
             ))}

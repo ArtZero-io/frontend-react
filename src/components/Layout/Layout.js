@@ -7,9 +7,15 @@ import process from "process";
 import { Footer } from "../Footer/Footer";
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
+const linerGradient =
+  "linear-gradient(180deg, #000000 2%, #00000000 6%)"
+
 const Layout = ({ backdrop, children, variant = null }) => {
   const getCollectionImage = (imageHash, size) => {
     const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
+
+    console.log("callbackUrl", callbackUrl);
+    console.log("imageHash", imageHash);
 
     return (
       baseURL +
@@ -33,11 +39,7 @@ const Layout = ({ backdrop, children, variant = null }) => {
       bgPosition="top"
       bgRepeat="no-repeat"
       bgSize="cover"
-      bg={
-        variant === "collection-detail"
-          ? "linear-gradient(180deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 16.2%)"
-          : " "
-      }
+      // bg={variant === "collection-detail" ? linerGradient : " "}
     >
       {variant === "collection-detail" && (
         <Flex
