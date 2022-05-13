@@ -12,7 +12,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-
+import { shortenNumber } from "@utils";
 import ActiveIcon from "@theme/assets/icon/Active.js";
 import InActiveIcon from "@theme/assets/icon/InActive.js";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -143,7 +143,7 @@ export const CollectionCard = ({
                 <AzeroIcon fill={isActive ? "#7AE7FF" : "#888"} />
               </TagLeftIcon>
               <TagLabel color={isActive ? "#fff" : "#888"}>
-                Volume {volume || 0}
+                Volume {shortenNumber(volume) || 0}
               </TagLabel>
             </Tag>
 
