@@ -14,6 +14,9 @@ import {
   Progress,
   Skeleton,
   useBreakpointValue,
+  Tag,
+  TagLabel,
+  TagRightIcon,
 } from "@chakra-ui/react";
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -26,12 +29,13 @@ import { ContractPromise } from "@polkadot/api-contract";
 import marketplace from "@utils/blockchain/marketplace";
 import { IPFS_BASE_URL } from "@constants/index";
 import marketplace_contract from "@utils/blockchain/marketplace";
-import { createLevelAttribute } from "@utils";
 import { useDispatch, useSelector } from "react-redux";
 
 import { getCachedImage } from "@utils";
 import StatusPushForSaleButton from "@components/Button/StatusPushForSaleButton";
 import { AccountActionTypes } from "@store/types/account.types";
+import { convertStringToPrice, createLevelAttribute } from "@utils";
+import StatusBuyButton from "@components/Button/StatusBuyButton";
 
 function MyNFTTabInfo({
   avatar,
@@ -40,12 +44,14 @@ function MyNFTTabInfo({
   attrsList,
   is_for_sale,
   price,
-  isOffered,
+  filterSelected,
   tokenID,
   owner,
   nftContractAddress,
   contractType,
 }) {
+  console.log("filterSelected ", filterSelected);
+  console.log("owner", owner);
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
@@ -54,8 +60,53 @@ function MyNFTTabInfo({
   const [stepNo, setStepNo] = useState(0);
   const dispatch = useDispatch();
   const { addNftTnxStatus } = useSelector((s) => s.account.accountLoaders);
-  console.log(attrsList);
+
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
+
+  const [action, setAction] = useState("");
+  const [saleInfo, setSaleInfo] = useState(null);
+  const [isBided, setIsBided] = useState(false);
+  const [bidPrice, setBidPrice] = useState(0);
+
+  
+
+
+  useEffect(() => {
+    const doLoad = async () => {
+      // remove publicCurrentAccount due to private route
+      const sale_info = await marketplace_contract_calls.getNftSaleInfo(
+        currentAccount,
+        nftContractAddress,
+        { u64: tokenID }
+      );
+
+      setSaleInfo(sale_info);
+
+      if (sale_info) {
+        const listBidder = await marketplace_contract_calls.getAllBids(
+          currentAccount,
+          nftContractAddress,
+          sale_info?.nftOwner,
+          { u64: tokenID }
+        );
+
+        if (listBidder) {
+          for (const item of listBidder) {
+            if (item.bidder === currentAccount?.address) {
+              setIsBided(true);
+              setBidPrice(convertStringToPrice(item.bidValue));
+            }
+          }
+        } else {
+          console.log(
+            "Detail NFTTabCollectible doLoad. => listBidder is: ",
+            listBidder
+          );
+        }
+      }
+    };
+    !saleInfo && doLoad();
+  }, [currentAccount, nftContractAddress, saleInfo, tokenID]);
 
   useEffect(() => {
     const checkAllowMarketplaceContract = async () => {
@@ -222,6 +273,35 @@ function MyNFTTabInfo({
       });
 
       toast.error(`Error `, error);
+    }
+  };
+
+  const removeBid = async () => {
+    try {
+      setAction("remove bid");
+
+      dispatch({
+        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+        payload: {
+          status: "Start",
+        },
+      });
+
+      await marketplace_contract_calls.removeBid(
+        currentAccount,
+        nftContractAddress,
+        saleInfo.nftOwner,
+        { u64: tokenID },
+        dispatch
+      );
+      // setIsBided(false);
+      // setBidPrice(0);
+    } catch (error) {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+      setAction("");
+      toast.error(error);
     }
   };
 
@@ -468,53 +548,57 @@ function MyNFTTabInfo({
             </Fragment>
           )}
 
-          {owner === marketplace.CONTRACT_ADDRESS && is_for_sale && (
-            <Flex w="full" py={2} alignItems="center" justifyContent="start">
-              <Spacer />
-              <Flex
-                alignItems="center"
-                justifyContent="start"
-                fontSize="lg"
-                mr={3}
-              >
-                <Text color="brand.grayLight">For Sale At</Text>
+          {filterSelected !== 2 &&
+            owner === marketplace.CONTRACT_ADDRESS &&
+            is_for_sale && (
+              <Flex w="full" py={2} alignItems="center" justifyContent="start">
+                <Spacer />
+                <Flex
+                  alignItems="center"
+                  justifyContent="start"
+                  fontSize="lg"
+                  mr={3}
+                >
+                  <Text color="brand.grayLight">For Sale At</Text>
 
-                <Text color="#fff" mx={2}>
-                  {price / 10 ** 12}
-                </Text>
-                <AzeroIcon />
+                  <Text color="#fff" mx={2}>
+                    {price / 10 ** 12}
+                  </Text>
+                  <AzeroIcon />
+                </Flex>
+                <StatusPushForSaleButton
+                  type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                  text="remove from sale"
+                  isLoading={addNftTnxStatus}
+                  loadingText={`${addNftTnxStatus?.status}`}
+                  unlistToken={unlistToken}
+                />
               </Flex>
-              <StatusPushForSaleButton
-                type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
-                text="remove from sale"
-                isLoading={addNftTnxStatus}
-                loadingText={`${addNftTnxStatus?.status}`}
-                unlistToken={unlistToken}
-              />
-            </Flex>
+            )}
+
+          {isBided && (
+            <>
+              <Flex w="full" py={2} alignItems="center" justifyContent="start">
+                <StatusBuyButton
+                  isDo={action === "remove bid"}
+                  type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                  text="remove bid"
+                  isLoading={addNftTnxStatus}
+                  loadingText={`${addNftTnxStatus?.status}`}
+                  onClick={removeBid}
+                />
+                <Flex textAlign="right" color="brand.grayLight">
+                  <Text mx={2} my="auto">
+                    Your offer
+                  </Text>
+                  <Tag h={4} px={1}>
+                    <TagLabel bg="transparent">{bidPrice}</TagLabel>
+                    <TagRightIcon as={AzeroIcon} />
+                  </Tag>
+                </Flex>
+              </Flex>
+            </>
           )}
-
-          {/* {isAllowanceMarketplaceContract && isOffered?.status && (
-            <Flex w="full" py={2} alignItems="center" justifyContent="start">
-              <Spacer />
-              <Flex
-                alignItems="center"
-                justifyContent="start"
-                fontSize="lg"
-                mr={3}
-              >
-                <Text color="brand.grayLight">My Offer</Text>
-
-                <Text color="#fff" mx={2}>
-                  22.22
-                </Text>
-                <AzeroIcon />
-              </Flex>
-              <Button ml={2} variant="solid">
-                Cancel Offer
-              </Button>
-            </Flex>
-          )} */}
         </>
       </Flex>
     </Flex>

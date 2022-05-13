@@ -230,7 +230,7 @@ function MyNFTCard({
                 ) : null}
               </VStack>
 
-              <Flex w="full">
+              {!isBid && <Flex w="full">
                 <Spacer />
                 <Flex
                   align="center"
@@ -241,15 +241,18 @@ function MyNFTCard({
                   <Text mr="1">
                     {highest_bid ? "Highest Offer" : "No offer"}
                   </Text>
-                  {highest_bid && <Tag h={10} bg="transparent">
-                    <TagLabel bg="transparent">
-                      {highest_bid / 10 ** 12}
-                    </TagLabel>
-                    <TagRightIcon as={AzeroIcon} />
-                  </Tag>}
-                  
+                  {highest_bid ? (
+                    <Tag h={10} bg="transparent">
+                      <TagLabel bg="transparent">
+                        {highest_bid / 10 ** 12}
+                      </TagLabel>
+                      <TagRightIcon as={AzeroIcon} />
+                    </Tag>
+                  ) : (
+                    ""
+                  )}
                 </Flex>
-              </Flex>
+              </Flex>}
             </Flex>
           )}
         </Box>

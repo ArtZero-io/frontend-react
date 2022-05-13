@@ -162,7 +162,7 @@ function CollectionAdmin() {
         </Stack>
         <TableContainer
           maxW="6xl-mid"
-          maxH={{ base: "20rem", "2xl": "30rem" }}
+          // maxH={{ base: "20rem", "2xl": "30rem" }}
           fontSize="lg"
           h="full"
           overflow="auto"

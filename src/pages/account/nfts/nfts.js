@@ -121,7 +121,7 @@ const MyNFTsPage = () => {
         };
 
         let dataList = await clientAPI("post", "/getNFTByID", options);
-        const data = dataList?.map((item) => {
+        let data = dataList?.map((item) => {
           return {
             ...item,
             stakeStatus: 0,
@@ -131,6 +131,9 @@ const MyNFTsPage = () => {
             },
           };
         });
+
+        // filter nft have is_for_sale is false
+        data = data.filter((item) => item.is_for_sale === true);
 
         collection[0].listNFT = data;
 

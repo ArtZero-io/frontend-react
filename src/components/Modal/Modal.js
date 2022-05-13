@@ -22,7 +22,7 @@ export default function ResponsivelySizedModal({
   isOpen,
   hasTabs,
   children,
-  filterSelected,
+  filterSelected = 1,
   ...rest
 }) {
   console.log("filterSelected", filterSelected);
@@ -36,13 +36,13 @@ export default function ResponsivelySizedModal({
   const tabData = [
     {
       label: "NFT info",
-      content: <MyNFTTabInfo {...rest} />,
+      content: <MyNFTTabInfo filterSelected={filterSelected} {...rest} />,
       isDisabled: false,
     },
     {
       label: "Offers",
       content: <MyNFTTabOffers {...rest} />,
-      isDisabled: filterSelected === 0 ? true : false,
+      isDisabled: filterSelected === 0 || filterSelected === 2 ? true : false,
     },
   ];
 
