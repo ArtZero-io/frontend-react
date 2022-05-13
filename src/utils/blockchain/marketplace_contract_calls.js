@@ -72,9 +72,9 @@ async function getVolumeByCollection(caller_account, nft_contract_address) {
     nft_contract_address
   );
   if (result.isOk) {
-    if (output)
-      return new BN(output, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6;
-    else return 0;
+    /* eslint-disable no-useless-escape */
+    const a = output.toHuman().replace(/\,/g, "");
+    return a/10**12;
   }
   return 0;
 }
@@ -93,7 +93,9 @@ async function getTotalVolume(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+    /* eslint-disable no-useless-escape */
+    const a = output.toHuman().replace(/\,/g, "");
+    return a/10**12;
   }
   return null;
 }
@@ -300,7 +302,9 @@ async function getCurrentProfit(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+    /* eslint-disable no-useless-escape */
+    const a = output.toHuman().replace(/\,/g, "");
+    return a/10**12;
   }
   return null;
 }
@@ -319,7 +323,9 @@ async function getTotalProfit(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+    /* eslint-disable no-useless-escape */
+    const a = output.toHuman().replace(/\,/g, "");
+    return a/10**12;
   }
   return null;
 }

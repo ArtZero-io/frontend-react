@@ -174,7 +174,9 @@ async function getFee1(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+    /* eslint-disable no-useless-escape */
+    const a = output.toHuman().replace(/\,/g, "");
+    return a/10**12;
   }
   return null;
 }
@@ -193,7 +195,9 @@ async function getFee2(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+    /* eslint-disable no-useless-escape */
+    const a = output.toHuman().replace(/\,/g, "");
+    return a/10**12;
   }
   return null;
 }
