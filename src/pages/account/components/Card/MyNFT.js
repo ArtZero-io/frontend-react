@@ -37,6 +37,7 @@ function MyNFTCard({
   nftName,
   stakeStatus, //0 not show, 1 not staked, 2 staked , 3 pending unstake
   isBid,
+  highest_bid,
 }) {
   const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
@@ -45,6 +46,7 @@ function MyNFTCard({
   const [isUnstakeTime, setIsUnstakeTime] = useState(false);
   const [nftImage, setNftImage] = useState(null);
   const [limitUnstakeTime, setLimitUnstakeTime] = useState(0);
+
   const getRequestTime = async () => {
     let time = await staking_calls.getRequestUnstakeTime(
       currentAccount,
@@ -183,6 +185,7 @@ function MyNFTCard({
               </Text>
             ) : null}
           </Flex>
+
           {!is_for_sale && stakeStatus !== 0 ? (
             <Flex align="center" justify="start" w="full">
               <Button
@@ -204,16 +207,15 @@ function MyNFTCard({
             <Flex align="center" justify="start" w="full">
               <VStack align="start">
                 <Text ml={1} color="brand.grayLight">
-                  {is_for_sale && "For sale at"}
+                  {is_for_sale && "Sale at"}
                 </Text>
                 <Tag>
-                  <TagLabel>
-                    {price / 10**12}
-                  </TagLabel>
+                  <TagLabel>{price / 10 ** 12}</TagLabel>
                   <TagRightIcon as={AzeroIcon} />
                 </Tag>
               </VStack>
               <Spacer />
+
               <VStack align="start">
                 <Text ml={1} color="brand.grayLight">
                   {isBid?.status && "My Offer"}
@@ -221,13 +223,33 @@ function MyNFTCard({
                 {isBid?.status ? (
                   <Tag>
                     <TagLabel>
-                      {isBid?.status &&
-                        isBid?.bidPrice / 10 ** 12}
+                      {isBid?.status && isBid?.bidPrice / 10 ** 12}
                     </TagLabel>
                     <TagRightIcon as={AzeroIcon} />
                   </Tag>
                 ) : null}
               </VStack>
+
+              <Flex w="full">
+                <Spacer />
+                <Flex
+                  align="center"
+                  textAlign="right"
+                  color="brand.grayLight"
+                  direction="column"
+                >
+                  <Text mr="1">
+                    {highest_bid ? "Highest Offer" : "No offer"}
+                  </Text>
+                  {highest_bid && <Tag h={10} bg="transparent">
+                    <TagLabel bg="transparent">
+                      {highest_bid / 10 ** 12}
+                    </TagLabel>
+                    <TagRightIcon as={AzeroIcon} />
+                  </Tag>}
+                  
+                </Flex>
+              </Flex>
             </Flex>
           )}
         </Box>

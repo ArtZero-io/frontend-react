@@ -110,7 +110,7 @@ export default function NFTChangeSizeCard({
                         Highest Offer {highest_bid / 10 ** 12}
                       </TagLabel>
                       <TagRightIcon as={AzeroIcon} />
-                    </Tag>
+                    </Tag> 
                   ) : (
                     <>
                       <Tag h={10} bg="transparent">
