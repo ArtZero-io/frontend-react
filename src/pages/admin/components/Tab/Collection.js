@@ -76,21 +76,26 @@ function CollectionAdmin() {
       limit: collection_count,
       offset: 0,
       sort: -1,
-      isActive:true
+      isActive:true,
+      ignoreNoNFT: true
     };
 
     let collections_actives = await clientAPI("post", "/getCollections", options_active);
+    // console.log('collections_actives',collections_actives);
 
     const options_inactive = {
       limit: collection_count,
       offset: 0,
       sort: -1,
-      isActive:false
+      isActive:false,
+      ignoreNoNFT: true
     };
 
     const collections_inactives = await clientAPI("post", "/getCollections", options_inactive);
-
-    setCollections(collections_actives.concat(collections_inactives));
+    // console.log('collections_inactives',collections_inactives);
+    let collections = collections_actives.concat(collections_inactives);
+    // console.log('collections',collections);
+    setCollections(collections);
   };
   const onSetStatusCollection = async (collection_contract, isActive) => {
     if (collectionContractAdmin !== activeAddress) {
@@ -162,7 +167,7 @@ function CollectionAdmin() {
         </Stack>
         <TableContainer
           maxW="6xl-mid"
-          maxH={{ base: "20rem", "2xl": "30rem" }}
+
           fontSize="lg"
           h="full"
           overflow="auto"
