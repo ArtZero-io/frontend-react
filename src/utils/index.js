@@ -1,7 +1,7 @@
 import { decodeAddress, encodeAddress } from "@polkadot/keyring";
 import { hexToU8a, isHex } from "@polkadot/util";
 import { AccountActionTypes } from "../store/types/account.types";
-import BN from "bn.js";
+// import BN from "bn.js";
 import Keyring from "@polkadot/keyring";
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
@@ -51,8 +51,8 @@ export function convertStringToPrice(stringPrice) {
   try {
     /* eslint-disable no-useless-escape */
     const a = stringPrice.replace(/\,/g, "");
-    let price = new BN(a, 10).div(new BN(10 ** 6)).toNumber();
-    return price / 10 ** 6;
+    // let price = new BN(a, 10).div(new BN(10 ** 6)).toNumber();
+    return a / 10 ** 12;
   } catch (error) {
     console.log(error);
     return 0;
