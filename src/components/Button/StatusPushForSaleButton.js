@@ -14,6 +14,7 @@ function StatusPushForSaleButton({
   setStepNo,
   listToken,
   approveToken,
+  unlistToken,
 }) {
   const dispatch = useDispatch();
 
@@ -35,7 +36,7 @@ function StatusPushForSaleButton({
   // inBlock INBLOCK
   // finalized FINALIZED
 
-  if (!isAllowanceMpContract) {
+  if (text === "push for sale" && !isAllowanceMpContract) {
     switch (stepNo) {
       case 0:
         return (
@@ -45,7 +46,7 @@ function StatusPushForSaleButton({
               variant="solid"
               onClick={() => {
                 setStepNo(1);
-                toast.error("You need to approve before list on market");
+                toast.success("You will need to approve before list on market");
               }}
               isDisabled={loadingText === "Start"}
               minW="10rem"
@@ -103,7 +104,7 @@ function StatusPushForSaleButton({
     }
   }
 
-  if (isAllowanceMpContract) {
+  if (text === "push for sale" && isAllowanceMpContract) {
     switch (stepNo) {
       case 1:
         return (
@@ -143,7 +144,38 @@ function StatusPushForSaleButton({
     }
   }
 
-  return <></>;
+  return (<>
+    {text === "remove from sale" && <>
+      <Button
+        display={isLoading ? "none" : "flex"}
+        variant="solid"
+        onClick={unlistToken}
+        minW="10rem"
+        isDisabled={loadingText === "Start"}
+      >
+        {text === "remove from sale" ? "Remove from sale" : "Submit"}
+      </Button>
+      <Button
+        display={isLoading ? "flex" : "none"}
+        isDisabled={loadingText !== "Finalized"}
+        onClick={onCloseHandler}
+        variant="outline"
+        minW="10rem"
+        fontSize="md"
+      >
+        {loadingText === "Start"
+          ? "Please Sign"
+          : loadingText === "Ready"
+          ? "Ready"
+          : loadingText === "InBlock"
+          ? "In block"
+          : loadingText === "Finalized"
+          ? `All Done !`
+          : ""}
+      </Button>
+    </>}
+  </>
+  );
 }
 
 export default StatusPushForSaleButton;

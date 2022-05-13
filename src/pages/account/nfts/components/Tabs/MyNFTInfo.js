@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import {
   Box,
-  Button,
   Flex,
   Grid,
   GridItem,
@@ -29,7 +28,7 @@ import { IPFS_BASE_URL } from "@constants/index";
 import marketplace_contract from "@utils/blockchain/marketplace";
 import { createLevelAttribute } from "@utils";
 import { useDispatch, useSelector } from "react-redux";
-// import CommonLoader from "../../../../../components/Loader/CommonLoader";
+
 import { getCachedImage } from "@utils";
 import StatusPushForSaleButton from "@components/Button/StatusPushForSaleButton";
 import { AccountActionTypes } from "@store/types/account.types";
@@ -112,7 +111,6 @@ function MyNFTTabInfo({
   }, [addNftTnxStatus?.status, currentAccount, dispatch, tokenID]);
 
   const approveToken = async () => {
-    console.log("approveToken..");
     if (owner === currentAccount?.address) {
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
@@ -204,12 +202,27 @@ function MyNFTTabInfo({
   };
 
   const unlistToken = async () => {
-    await marketplace_contract_calls.unlist(
-      currentAccount,
-      nftContractAddress,
-      { u64: tokenID },
-      dispatch
-    );
+    try {
+      dispatch({
+        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+        payload: {
+          status: "Start",
+        },
+      });
+
+      await marketplace_contract_calls.unlist(
+        currentAccount,
+        nftContractAddress,
+        { u64: tokenID },
+        dispatch
+      );
+    } catch (error) {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+
+      toast.error(`Error `, error);
+    }
   };
 
   return (
@@ -325,7 +338,7 @@ function MyNFTTabInfo({
                               </Flex>
                               <Flex w="full" color="#7AE7FF">
                                 <Spacer />
-                                <Text fontStyle="italic">
+                                <Text fontStyle="italic" isTruncated>
                                   {Object.values(item)[0]}
                                 </Text>
                               </Flex>
@@ -471,13 +484,17 @@ function MyNFTTabInfo({
                 </Text>
                 <AzeroIcon />
               </Flex>
-              <Button ml={2} variant="solid" onClick={unlistToken}>
-                remove from sale
-              </Button>
+              <StatusPushForSaleButton
+                type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                text="remove from sale"
+                isLoading={addNftTnxStatus}
+                loadingText={`${addNftTnxStatus?.status}`}
+                unlistToken={unlistToken}
+              />
             </Flex>
           )}
 
-          {isAllowanceMarketplaceContract && isOffered?.status && (
+          {/* {isAllowanceMarketplaceContract && isOffered?.status && (
             <Flex w="full" py={2} alignItems="center" justifyContent="start">
               <Spacer />
               <Flex
@@ -497,7 +514,7 @@ function MyNFTTabInfo({
                 Cancel Offer
               </Button>
             </Flex>
-          )}
+          )} */}
         </>
       </Flex>
     </Flex>
