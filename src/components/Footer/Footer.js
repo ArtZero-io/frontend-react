@@ -69,7 +69,7 @@ export const Footer = () => (
               Discover, collect and trade NFTs on artzero
             </Heading>
             <Text pt={{ base: 3, xl: "auto" }}>
-              &copy; Copyright {new Date().getFullYear()} artZero. All Rights
+              &copy; Copyright {new Date().getFullYear()} ArtZero. All Rights
               Reserved
             </Text>
           </VStack>
