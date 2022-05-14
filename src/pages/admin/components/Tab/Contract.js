@@ -40,7 +40,7 @@ function ContractTab() {
   const [azNFTContractBalance, setAzNFTContractBalance] = useState(0);
 
   const onRefreshAZNFT = async () => {
-    console.log("onRefreshAZNFT", currentAccount);
+
     await getAZNFTContractBalance();
 
     await onGetOwner();

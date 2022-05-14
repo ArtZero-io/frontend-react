@@ -47,7 +47,7 @@ const CollectionItems = ({
   //  0 Low first, 1 High first, 2 Newest
 
   const getUnListedNFT = () => {
-    console.log("CollectionItems getUnListedNFT filter start", Date.now());
+
     if (!NFTListFormatted) return [];
 
     let result = NFTListFormatted;

@@ -139,8 +139,8 @@ const AddNewNFTForm = ({ collectionOwner }) => {
               nft721_psp34_standard_calls.setContract(
                 nft721_psp34_standard_contract
               );
-              console.log("attributes before mintWithAttributes", attributes);
 
+              
               dispatch({
                 type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
                 payload: {
@@ -158,7 +158,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
               dispatch({
                 type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
               });
-              console.log("You aren't the owner of this collection!");
+
               return toast.error("You aren't the owner of this collection!");
             }
           }

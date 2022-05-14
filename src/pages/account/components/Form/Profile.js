@@ -60,7 +60,7 @@ const ProfileForm = ({ profile }) => {
           const a = objArr.map((item) => item[0]);
           const v = objArr.map((item) => item[1]);
 
-          console.log(" a, v", a, v);
+          // console.log(" a, v", a, v);
 
           if (!a.length || !v.length) return toast.error("Please check again.");
           

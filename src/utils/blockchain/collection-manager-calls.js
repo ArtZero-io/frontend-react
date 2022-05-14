@@ -17,7 +17,7 @@ export const setCollectionContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
-  console.log("contract setCollectionContract", contract);
+  // console.log("contract setCollectionContract", contract);
 };
 
 //SETTERS
@@ -78,7 +78,7 @@ async function addNewCollection(caller_account, data, dispatch) {
         type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
       });
       const mess = `Tnx is ${e.message}`;
-      console.log("e.message", e.message);
+
       toast.error(mess);
     });
   return unsubscribe;
@@ -134,7 +134,7 @@ async function autoNewCollection(caller_account, data, dispatch) {
         type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
       });
       const mess = `Tnx is ${e.message}`;
-      console.log("e.message", e.message);
+
       toast.error(mess);
     });
   return unsubscribe;
@@ -526,7 +526,7 @@ async function setMultipleAttributes(
           type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
         });
         const mess = `Tnx is ${e.message}`;
-        console.log("e.message", e.message);
+
         toast.error(mess);
       });
 

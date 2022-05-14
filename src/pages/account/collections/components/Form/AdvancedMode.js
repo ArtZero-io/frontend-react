@@ -53,8 +53,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
       if (maxRoyalFeeRate === 0) {
         const maxRoyalFeeRateData =
           await collection_manager_calls.getMaxRoyalFeeRate(currentAccount);
-        console.log("maxRoyalFeeRateData:", maxRoyalFeeRateData);
-        setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
+
+          setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
       }
     };
     fetchFee();
@@ -220,7 +220,6 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     dispatch
                   );
                 } else {
-                  console.log("nftContractAddress", data.nftContractAddress);
                   await collection_manager_calls.setMultipleAttributes(
                     currentAccount,
                     data.nftContractAddress,

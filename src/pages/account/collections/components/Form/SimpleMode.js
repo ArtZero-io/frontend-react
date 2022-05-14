@@ -51,8 +51,8 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
       if (maxRoyalFeeRate === 0) {
         const maxRoyalFeeRateData =
           await collection_manager_calls.getMaxRoyalFeeRate(currentAccount);
-        console.log("maxRoyalFeeRateData:", maxRoyalFeeRateData);
-        setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
+
+          setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
       }
     };
     fetchFee();
@@ -62,7 +62,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
     const { data: balance } = await api.query.system.account(
       currentAccount?.address
     );
-    console.log("balance.free", balance.free);
+
     if (balance.free.toNumber() > addingFee) {
       return true;
     } else {
@@ -238,7 +238,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     dispatch
                   );
                 } else {
-                  console.log("nftContractAddress", nftContractAddress);
+
                   await collection_manager_calls.setMultipleAttributes(
                     currentAccount,
                     nftContractAddress,

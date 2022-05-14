@@ -18,7 +18,7 @@ export const setMarketplaceContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
-  console.log("contract setMarketplaceContract", contract);
+  // console.log("contract setMarketplaceContract", contract);
 };
 
 //GETS
@@ -108,7 +108,7 @@ async function getNftSaleInfo(caller_account, nft_contract_address, token_id) {
   ) {
     !contract && console.log("invalid inputs > contract", contract);
     !caller_account &&
-      console.log("invalid inputs > caller_account ", caller_account);
+
     !isValidAddressPolkadotAddress(nft_contract_address) &&
       console.log(
         "invalid inputs > nft_contract_address",
@@ -180,14 +180,14 @@ async function getAllBids(
   ) {
     !contract && console.log("invalid inputs > contract", contract);
     !caller_account &&
-      console.log("invalid inputs > caller_account ", caller_account);
+      // console.log("invalid inputs > caller_account ", caller_account);
     !isValidAddressPolkadotAddress(nft_contract_address) &&
       console.log(
         "invalid inputs > nft_contract_address",
         nft_contract_address
       );
-    !isValidAddressPolkadotAddress(seller) &&
-      console.log("invalid inputs > seller", seller);
+    // !isValidAddressPolkadotAddress(seller) &&
+      // console.log("invalid inputs > seller", seller);
     return null;
   }
 
@@ -431,7 +431,7 @@ async function list(
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
       });
       const mess = `Tnx is ${e.message}`;
-      console.log("e.message", e.message);
+      // console.log("e.message", e.message);
       toast.error(mess);
     });
   return unsubscribe;
@@ -499,7 +499,7 @@ async function unlist(
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
       });
       const mess = `Tnx is ${e.message}`;
-      console.log("e.message", e.message);
+      // console.log("e.message", e.message);
       toast.error(mess);
     });
 
@@ -570,7 +570,7 @@ async function bid(
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
       });
       const mess = `Tnx is ${e.message}`;
-      console.log("e.message", e.message);
+      // console.log("e.message", e.message);
       toast.error(mess);
     });
   return unsubscribe;
@@ -636,7 +636,7 @@ async function removeBid(
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
       });
       const mess = `Tnx is ${e.message}`;
-      console.log("e.message", e.message);
+      // console.log("e.message", e.message);
       toast.error(mess);
     });
 
@@ -705,7 +705,7 @@ async function buy(
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
       });
       const mess = `Tnx is ${e.message}`;
-      console.log("e.message", e.message);
+      // console.log("e.message", e.message);
       toast.error(mess);
     });
   return unsubscribe;
@@ -784,7 +784,7 @@ async function acceptBid(
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
       });
       const mess = `Tnx is ${e.message}`;
-      console.log("e.message", e.message);
+      // console.log("e.message", e.message);
       toast.error(mess);
     });
 

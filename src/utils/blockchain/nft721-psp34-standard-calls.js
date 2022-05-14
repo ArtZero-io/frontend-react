@@ -10,11 +10,11 @@ let contract;
 
 export const setContract = (c) => {
   contract = c;
-  console.log("contract setPsp34Contract", contract);
+  // console.log("contract setPsp34Contract", contract);
 };
 
 async function getTotalSupply(caller_account) {
-  console.log("getTotalSupply before check", !caller_account);
+  // console.log("getTotalSupply before check", !caller_account);
   if (!contract || !caller_account) {
     return null;
   }
@@ -153,10 +153,10 @@ async function mintWithAttributes(
               type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
             });
             if (dispatchError.isModule) {
-              console.log("dispatchError.isModule", dispatchError.isModule);
+              // console.log("dispatchError.isModule", dispatchError.isModule);
               return toast.error(`There is some error with your request`);
             } else {
-              console.log("dispatchError", dispatchError.toString());
+              // console.log("dispatchError", dispatchError.toString());
               return toast.error("dispatchError", dispatchError.toString());
             }
           }
@@ -183,7 +183,7 @@ async function mintWithAttributes(
           type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
         });
         const mess = `Tnx is ${e.message}`;
-        console.log("e.message", e.message);
+
         toast.error(mess);
       });
   }
@@ -347,7 +347,7 @@ async function approve(
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
       });
       const mess = `Tnx is ${e.message}`;
-      console.log("e.message", e.message);
+      // console.log("e.message", e.message);
       toast.error(mess);
     });
   return unsubscribe;

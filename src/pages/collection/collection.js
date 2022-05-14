@@ -68,8 +68,8 @@ function CollectionPage() {
 
   useEffect(() => {
     const fetchCollectionDetail = async () => {
-      console.log("fetchCollectionDetail start", Date.now());
 
+      
       const NFTListOptions = {
         limit: 200,
         offset: 0,
@@ -123,8 +123,6 @@ function CollectionPage() {
         );
 
         if (Number(collectionDetail.contractType) === 2) {
-          console.log("fetchCollectionDetail start contractType 2", Date.now());
-          console.log("1 NFTList", NFTList);
           return Promise.all(
             NFTList.map((item) => {
               const itemData = createObjAttrsNFT(
@@ -135,11 +133,8 @@ function CollectionPage() {
               return { ...item, ...itemData };
             })
           ).then((NFTListFormatted) => {
-            console.log("2 NFTList", NFTList);
-
             collectionDetail.NFTListFormatted = NFTListFormatted;
-            console.log("collectionDetail contractType 2 Done ", Date.now());
-            console.log("collectionDetail - formatted", collectionDetail);
+
             setFormattedCollection(collectionDetail);
           });
         }
@@ -152,8 +147,6 @@ function CollectionPage() {
           Number(collectionDetail.contractType) === 1 &&
           !collectionDetail.showOnChainMetadata
         ) {
-          console.log("fetchCollectionDetail start contractType 1", Date.now());
-
           const nft_contract = new ContractPromise(
             api,
             nft721_psp34_standard.CONTRACT_ABI,
@@ -219,16 +212,15 @@ function CollectionPage() {
 
                 collectionDetail.NFTListFormatted = NFTListFormattedAdv;
               }
-              console.log("collectionDetail contractType 1 Done ", Date.now());
             }
-            //console.log('collectionDetail',collectionDetail);
+
             setFormattedCollection(collectionDetail);
           }
         }
-        console.log("fetchCollectionDetail end", Date.now());
-      } catch (error) {
-        console.log("fetchCollectionDetail error", error);
 
+      } catch (error) {
+
+        
         toast.error("There was an error while fetching the collections.");
       }
     };

@@ -64,17 +64,17 @@ function MyNFTCard({
     setLimitUnstakeTime(limitUnstakeTimeTmp);
   };
   // const requestUpdateNFT = async () => {
-  //   console.log("MyNFTCard request updateNFT", nftContractAddress, tokenID);
+
   //   const res = await clientAPI("post", "/updateNFT", {
   //     collection_address: nftContractAddress,
   //     token_id: tokenID,
   //   });
-  //   console.log("MyNFTCard requestUpdateNFT res", res);
+
   // }
 
   useInterval(() => {
     if (unstakeRequestTime) {
-      console.log("unstakeRequestTime", unstakeRequestTime);
+
       let now = new Date().getTime() / 1000;
       let valid_time = unstakeRequestTime / 1000 + limitUnstakeTime * 60;
       if (valid_time - now > 0)

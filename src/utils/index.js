@@ -72,9 +72,7 @@ export function isValidAddressPolkadotAddress(address) {
 
     return true;
   } catch (error) {
-    console.log(error);
-    console.log("address", address);
-
+    // console.log(error);
     return false;
   }
 }
@@ -182,7 +180,6 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
           value: truncateStr(statusToHuman[0][1], 6),
         },
       });
-      console.log("handleContractCall statusToHuman", statusToHuman[0]);
     }
   }
 }
@@ -207,8 +204,8 @@ export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
     // console.log("createObjAttrsNFT formatList", result.formatList);
     return result;
   }
-  console.log("createObjAttrsNFT attrsArr", attrsArr);
-  console.log("createObjAttrsNFT attrsValArr", attrsValArr);
+  // console.log("createObjAttrsNFT attrsArr", attrsArr);
+  // console.log("createObjAttrsNFT attrsValArr", attrsValArr);
   return console.log("Can not create attributes Object");
 };
 

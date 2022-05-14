@@ -71,11 +71,12 @@ const ImageUploadCollection = ({
           uploadPromise().then((created) => {
             setImageIPFSUrl(created?.path);
             setImgURL(created?.path);
+            // eslint-disable-next-line no-unused-vars
             const update_nft_api_res = clientAPI("post", "/cacheImage", {
               input: created?.path,
               is1920: isBanner
             });
-            console.log("update_nft_api_res", update_nft_api_res);
+            // console.log("update_nft_api_res", update_nft_api_res);
           }),
           {
             loading: "Uploading...",

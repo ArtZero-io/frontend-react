@@ -64,7 +64,6 @@ function StatusPushForSaleButton({
                 display={!isLoading ? "block" : "none"}
                 variant="solid"
                 onClick={() => {
-                  console.log("step 1func...");
                   approveToken();
                 }}
               >
@@ -75,7 +74,6 @@ function StatusPushForSaleButton({
               display={isLoading ? "flex" : "none"}
               isDisabled={loadingText !== "Finalized"}
               onClick={() => {
-                console.log("step 1func...");
                 setStepNo(0);
 
                 dispatch({
@@ -144,37 +142,40 @@ function StatusPushForSaleButton({
     }
   }
 
-  return (<>
-    {text === "remove from sale" && <>
-      <Button
-        display={isLoading ? "none" : "flex"}
-        variant="solid"
-        onClick={unlistToken}
-        minW="10rem"
-        isDisabled={loadingText === "Start"}
-      >
-        {text === "remove from sale" ? "Remove from sale" : "Submit"}
-      </Button>
-      <Button
-        display={isLoading ? "flex" : "none"}
-        isDisabled={loadingText !== "Finalized"}
-        onClick={onCloseHandler}
-        variant="outline"
-        minW="10rem"
-        fontSize="md"
-      >
-        {loadingText === "Start"
-          ? "Please Sign"
-          : loadingText === "Ready"
-          ? "Ready"
-          : loadingText === "InBlock"
-          ? "In block"
-          : loadingText === "Finalized"
-          ? `All Done !`
-          : ""}
-      </Button>
-    </>}
-  </>
+  return (
+    <>
+      {text === "remove from sale" && (
+        <>
+          <Button
+            display={isLoading ? "none" : "flex"}
+            variant="solid"
+            onClick={unlistToken}
+            minW="10rem"
+            isDisabled={loadingText === "Start"}
+          >
+            {text === "remove from sale" ? "Remove from sale" : "Submit"}
+          </Button>
+          <Button
+            display={isLoading ? "flex" : "none"}
+            isDisabled={loadingText !== "Finalized"}
+            onClick={onCloseHandler}
+            variant="outline"
+            minW="10rem"
+            fontSize="md"
+          >
+            {loadingText === "Start"
+              ? "Please Sign"
+              : loadingText === "Ready"
+              ? "Ready"
+              : loadingText === "InBlock"
+              ? "In block"
+              : loadingText === "Finalized"
+              ? `All Done !`
+              : ""}
+          </Button>
+        </>
+      )}
+    </>
   );
 }
 

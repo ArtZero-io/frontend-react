@@ -13,7 +13,7 @@ export const setAZNFTContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
-  console.log("contract setAZNFTContract", contract);
+  // console.log("contract setAZNFTContract", contract);
 };
 
 /*

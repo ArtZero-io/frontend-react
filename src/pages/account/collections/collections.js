@@ -57,7 +57,7 @@ function MyCollectionsPage() {
           "/countCollectionsByOwner",
           { owner: currentAccount?.address }
         );
-        console.log("totalCollectionsCountData", totalCollectionsCountData);
+
         setTotalCollectionsCount(totalCollectionsCountData);
 
         const dataList = await clientAPI(
@@ -129,7 +129,7 @@ function MyCollectionsPage() {
           dispatch({
             type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
           });
-          console.log("setCollections...");
+
           setCollections(null);
           setLoading(false);
         });

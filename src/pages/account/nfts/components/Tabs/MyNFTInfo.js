@@ -50,8 +50,8 @@ function MyNFTTabInfo({
   nftContractAddress,
   contractType,
 }) {
-  console.log("filterSelected ", filterSelected);
-  console.log("owner", owner);
+
+
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =

@@ -58,7 +58,7 @@ function MintHeader() {
         currentAccount,
         currentAccount?.address
       );
-      console.log("whitelist", whitelist);
+
       if (whitelist) setWhitelist(whitelist);
       else setWhitelist(null);
     };

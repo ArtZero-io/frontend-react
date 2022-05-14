@@ -34,7 +34,7 @@ function ProfileHeader() {
   const [profile, setProfile] = useState(null);
 
   const forceUpdate = useCallback(() => {
-    console.log("setProfile(null");
+    // console.log("setProfile(null");
 
     setProfile(null);
   }, []);

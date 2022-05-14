@@ -156,7 +156,7 @@ const MyStakesPage = () => {
   };
 
   const getMyPendingUnstakeAZNFTs = async (total_pending) => {
-    console.log("getMyPendingUnstakeAZNFTs", total_pending);
+
     if (total_pending === 0) {
       my_pending_az_nfts = [];
       return;

@@ -66,7 +66,7 @@ const NFTTabCollectible = ({
 
   useEffect(() => {
     const doLoad = async () => {
-      console.log(" NFTTabCollectible doLoad");
+
       const sale_info = await marketplace_contract_calls.getNftSaleInfo(
         currentAccount || publicCurrentAccount,
         nftContractAddress,
@@ -82,7 +82,7 @@ const NFTTabCollectible = ({
           sale_info?.nftOwner,
           { u64: tokenID }
         );
-        console.log("listBidder", listBidder);
+
         if (listBidder) {
           for (const item of listBidder) {
             if (item.bidder === currentAccount?.address) {

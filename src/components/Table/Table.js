@@ -109,8 +109,6 @@ function DataTable({
                           py={{ base: "1rem", "2xl": "1.75rem" }}
                           textAlign="center"
                         >
-                          {/* {console.log("item", item)}
-                          {console.log("idx", idx)} */}
                           {/* <Button
                             spinnerPlacement="start"
                             // isLoading={tnxStatus}

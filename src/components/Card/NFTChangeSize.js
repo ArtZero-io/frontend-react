@@ -26,7 +26,7 @@ export default function NFTChangeSizeCard({
   bigCard,
   highest_bid,
 }) {
-  console.log(" highest_bid", highest_bid);
+
   const getNFTImage = (imageHash, size) => {
     const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
     return (

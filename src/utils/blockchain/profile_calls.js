@@ -16,7 +16,7 @@ export const setProfileContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
-  console.log("contract setProfileContract", contract);
+  // console.log("contract setProfileContract", contract);
 };
 
 // async function getWalletAddress() {

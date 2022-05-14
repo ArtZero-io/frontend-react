@@ -90,7 +90,7 @@ const Main = () => {
       }
     };
     initContract();
-    console.log("initContract()...");
+    // console.log("initContract()...");
   }, [api, apiState, artzeroNft, collection, marketplace, profile, staking]);
 
   return (
@@ -110,7 +110,7 @@ const Main = () => {
               },
             }}
           />
-          {console.log("apiState", apiState)}
+
           <Router />
         </Fragment>
       )}

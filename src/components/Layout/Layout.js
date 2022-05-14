@@ -13,9 +13,6 @@ const Layout = ({ backdrop, children, variant = null }) => {
   const getCollectionImage = (imageHash, size) => {
     const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
 
-    console.log("callbackUrl", callbackUrl);
-    console.log("imageHash", imageHash);
-
     return (
       baseURL +
       "/getImage?input=" +

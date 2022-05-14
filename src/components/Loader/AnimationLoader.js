@@ -22,8 +22,8 @@ const AnimationLoader = ({
 export default AnimationLoader;
 
 export const AzeroAnimation = ({ loadingTime = 7 }) => {
-  console.log("AzeroAnimation loadingTime", loadingTime);
 
+  
   const icon = {
     hidden: {
       opacity: 0,

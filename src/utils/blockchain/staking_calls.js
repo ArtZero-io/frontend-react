@@ -18,7 +18,7 @@ export const setStakingContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
-  console.log("contract setStakingContract", contract);
+  // console.log("contract setStakingContract", contract);
 };
 
 //GETTERS
