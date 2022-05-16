@@ -1,9 +1,16 @@
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import {
+  Flex,
+  Spacer,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import BN from "bn.js";
 
 import { clientAPI } from "@api/client";
 import Layout from "@components/Layout/Layout";
@@ -19,6 +26,10 @@ import { useSubstrateState } from "@utils/substrate";
 import { createObjAttrsNFT, delay, getPublicCurrentAccount } from "@utils";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+import { usePagination } from "@ajna/pagination";
+import PaginationMP from "@components/Pagination/Pagination";
+
+const NUMBER_PER_PAGE = 10;
 
 function CollectionPage() {
   const [formattedCollection, setFormattedCollection] = useState(null);
@@ -31,6 +42,24 @@ function CollectionPage() {
   );
   const [loading, setLoading] = useState(null);
   const [loadingTime, setLoadingTime] = useState(null);
+
+  const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
+
+  const {
+    pagesCount,
+    currentPage,
+    setCurrentPage,
+    isDisabled,
+    offset,
+    pageSize,
+  } = usePagination({
+    total: totalCollectionsCount,
+    initialState: {
+      pageSize: NUMBER_PER_PAGE,
+      isDisabled: false,
+      currentPage: 1,
+    },
+  });
 
   const forceUpdate = useCallback(() => {
     setFormattedCollection(null);
@@ -68,11 +97,10 @@ function CollectionPage() {
 
   useEffect(() => {
     const fetchCollectionDetail = async () => {
-
-      
+      setLoading(true);
       const NFTListOptions = {
-        limit: 200,
-        offset: 0,
+        limit: pageSize,
+        offset: offset,
         sort: -1,
         collection_address,
       };
@@ -92,11 +120,11 @@ function CollectionPage() {
 
         collectionDetail.floorPrice = floorPrice || 0;
 
+        setTotalCollectionsCount(collectionDetail.nft_count);
+
         const NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
 
         collectionDetail.floorPrice = floorPrice?.price || 0;
-
-        collectionDetail.nftTotalCount = NFTList?.length;
 
         //Get fake public CurrentAccount
         const publicCurrentAccount = currentAccount
@@ -116,14 +144,16 @@ function CollectionPage() {
             publicCurrentAccount,
             collection_address
           );
-        collectionDetail.volume = volumeData || 0;
-        // console.log(
-        //   "fetchCollectionDetail start check contractType 2",
-        //   Date.now()
-        // );
 
+        collectionDetail.volume = volumeData || 0;
+
+        if (collectionDetail?.nft_count === 0) {
+          return collectionDetail;
+        }
+
+        // Collections Type 2 - Simple Mode
         if (Number(collectionDetail.contractType) === 2) {
-          return Promise.all(
+          Promise.all(
             NFTList.map((item) => {
               const itemData = createObjAttrsNFT(
                 item.attributes,
@@ -136,13 +166,11 @@ function CollectionPage() {
             collectionDetail.NFTListFormatted = NFTListFormatted;
 
             setFormattedCollection(collectionDetail);
+            setLoading(false);
           });
         }
-        // console.log(
-        //   "fetchCollectionDetail start check contractType 1",
-        //   Date.now()
-        // );
 
+        // Collections Type 1 - Advanced Mode
         if (
           Number(collectionDetail.contractType) === 1 &&
           !collectionDetail.showOnChainMetadata
@@ -156,78 +184,37 @@ function CollectionPage() {
           const gasLimit = -1;
           const azero_value = 0;
 
-          const { result, output } = await nft_contract.query["getTokenCount"](
-            currentAccount?.address,
-            { value: azero_value, gasLimit }
-          );
+          const { result, output } = await nft_contract.query[
+            "psp34Traits::tokenUri"
+          ](currentAccount?.address, { value: azero_value, gasLimit }, 1);
 
-          if (result.isOk) {
-            const token_count = new BN(output, 10, "le").toNumber();
+          if (!result.isOk) {
+            toast.error("There is an error when loading token_uri!");
+            return;
+          }
 
-            collectionDetail.nftTotalCount = token_count;
+          const token_uri = output.toHuman()?.replace("1.json", "");
 
-            if (token_count) {
-              let NFTListFormattedAdv = [];
-              let token_uri = null;
-              const { result, output } = await nft_contract.query[
-                "psp34Traits::tokenUri"
-              ](currentAccount?.address, { value: azero_value, gasLimit }, 1);
-              if (result.isOk) {
-                token_uri = output.toHuman()?.replace("1.json", "");
-              }
+          Promise.all(
+            NFTList.map(async (item) => {
+              const res = await getMetaDataType1(item.tokenID, token_uri);
 
-              // for (let i = 1; i <= token_count; i++) {
-              for (let i = 1; i <= 15; i++) {
-                const metadata = await clientAPI(
-                  "get",
-                  "/getJSON?input=" + token_uri + i.toString() + ".json",
-                  {}
-                );
-                if (metadata) {
-                  let item = NFTList[i - 1];
-                  let attributes = [];
-                  let attributeValues = [];
-
-                  attributes.push("nftName");
-                  attributes.push("description");
-                  attributes.push("avatar");
-
-                  attributeValues.push(metadata.name);
-                  attributeValues.push(metadata.description);
-                  attributeValues.push(metadata.image);
-
-                  let length = metadata.attributes.length;
-
-                  for (var index = 0; index < length; index++) {
-                    attributes.push(metadata.attributes[index].trait_type);
-                    attributeValues.push(metadata.attributes[index].value);
-                  }
-
-                  const itemData = createObjAttrsNFT(
-                    attributes,
-                    attributeValues
-                  );
-
-                  NFTListFormattedAdv.push({ ...item, ...itemData });
-                }
-
-                collectionDetail.NFTListFormatted = NFTListFormattedAdv;
-              }
-            }
+              return { ...item, ...res };
+            })
+          ).then((result) => {
+            collectionDetail.NFTListFormatted = result;
 
             setFormattedCollection(collectionDetail);
-          }
+            setLoading(false);
+          });
         }
-
       } catch (error) {
-
-        
         toast.error("There was an error while fetching the collections.");
       }
     };
 
-    !formattedCollection && fetchCollectionDetail();
-  }, [api, collection_address, currentAccount, formattedCollection]);
+    fetchCollectionDetail();
+  }, [api, collection_address, currentAccount, offset, pageSize]);
 
   const tabData = [
     {
@@ -276,6 +263,20 @@ function CollectionPage() {
                   h="full"
                 >
                   {tab.content}
+                  <Flex
+                    w="full"
+                    py="1.5rem"
+                    alignItems={{ base: "start", xl: "end" }}
+                    direction={{ base: "column", xl: "row" }}
+                  >
+                    <PaginationMP
+                      pagesCount={pagesCount}
+                      isDisabled={isDisabled}
+                      currentPage={currentPage}
+                      setCurrentPage={setCurrentPage}
+                    />
+                    <Spacer my={{ base: "3", "2xl": "auto" }} />
+                  </Flex>
                 </TabPanel>
               ))}
             </TabPanels>
@@ -287,3 +288,24 @@ function CollectionPage() {
 }
 
 export default CollectionPage;
+
+const getMetaDataType1 = async (tokenID, token_uri) => {
+  const metadata = await clientAPI(
+    "get",
+    "/getJSON?input=" + token_uri + tokenID.toString() + ".json",
+    {}
+  );
+
+  if (metadata) {
+    const attrsList = metadata?.attributes?.map((item) => {
+      return { [item.trait_type]: item.value };
+    });
+
+    return {
+      ...metadata,
+      attrsList,
+      avatar: metadata.image,
+      nftName: metadata.name,
+    };
+  }
+};

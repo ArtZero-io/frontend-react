@@ -34,10 +34,9 @@ function CollectionHeader({
   discord,
   volume,
   floorPrice,
-  nftTotalCount,
   totalListed,
-  headerImage,
   loading,
+  nft_count,
 }) {
   const getCollectionImage = (imageHash, size) => {
     if (imageHash) {
@@ -146,7 +145,7 @@ function CollectionHeader({
             bg="black"
             minH={{ base: "5.75rem", "2xl": "7.75rem" }}
           >
-            {nftTotalCount ? (
+            {nft_count ? (
               <VStack textAlign="center" px={3}>
                 <AnimatePresence>
                   <motion.div
@@ -159,7 +158,7 @@ function CollectionHeader({
                       fontSize={{ base: "4xl", "2xl": "6xl" }}
                       lineHeight="none"
                     >
-                      {nftTotalCount || 0}
+                      {nft_count || 0}
                     </Text>
                     <Text>Items</Text>
                   </motion.div>
