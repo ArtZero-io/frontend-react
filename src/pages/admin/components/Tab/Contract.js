@@ -362,7 +362,6 @@ function ContractTab() {
               </HStack>
               <TableContainer
                 maxW="6xl-mid"
-                maxH={{ base: "20rem", "2xl": "30rem" }}
                 fontSize="lg"
                 h="full"
                 overflow="auto"
