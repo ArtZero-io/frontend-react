@@ -28,7 +28,7 @@ import { useLocation } from "react-router-dom";
 const links = [
   { label: "Home", href: ROUTES.HOME },
   { label: "Marketplace", href: ROUTES.MARKETPLACE },
-  { label: "TGE", href: ROUTES.MINTING_EVENT },
+  // { label: "TGE", href: ROUTES.MINTING_EVENT },
 ];
 
 const MobileNavContent = (props) => {

@@ -117,10 +117,10 @@ function CollectionPage() {
             collection_address
           );
         collectionDetail.volume = volumeData || 0;
-        console.log(
-          "fetchCollectionDetail start check contractType 2",
-          Date.now()
-        );
+        // console.log(
+        //   "fetchCollectionDetail start check contractType 2",
+        //   Date.now()
+        // );
 
         if (Number(collectionDetail.contractType) === 2) {
           return Promise.all(
@@ -138,10 +138,10 @@ function CollectionPage() {
             setFormattedCollection(collectionDetail);
           });
         }
-        console.log(
-          "fetchCollectionDetail start check contractType 1",
-          Date.now()
-        );
+        // console.log(
+        //   "fetchCollectionDetail start check contractType 1",
+        //   Date.now()
+        // );
 
         if (
           Number(collectionDetail.contractType) === 1 &&
@@ -176,7 +176,8 @@ function CollectionPage() {
                 token_uri = output.toHuman()?.replace("1.json", "");
               }
 
-              for (let i = 1; i <= token_count; i++) {
+              // for (let i = 1; i <= token_count; i++) {
+              for (let i = 1; i <= 15; i++) {
                 const metadata = await clientAPI(
                   "get",
                   "/getJSON?input=" + token_uri + i.toString() + ".json",

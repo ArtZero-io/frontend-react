@@ -25,8 +25,6 @@ export default function ResponsivelySizedModal({
   filterSelected = 1,
   ...rest
 }) {
-
-  
   const tabHeight = useBreakpointValue({
     base: `2.5rem`,
     xl: `3.5rem`,
@@ -106,7 +104,7 @@ export default function ResponsivelySizedModal({
                 fontFamily="Evogria Italic"
                 minH={tabHeight}
               >
-/                {tab.label}
+                {tab.label}
               </Tab>
             ))}
           </TabList>

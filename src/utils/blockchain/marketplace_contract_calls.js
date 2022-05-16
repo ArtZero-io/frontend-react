@@ -74,7 +74,7 @@ async function getVolumeByCollection(caller_account, nft_contract_address) {
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().replace(/\,/g, "");
-    return a/10**12;
+    return a / 10 ** 12;
   }
   return 0;
 }
@@ -95,7 +95,7 @@ async function getTotalVolume(caller_account) {
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().replace(/\,/g, "");
-    return a/10**12;
+    return a / 10 ** 12;
   }
   return null;
 }
@@ -108,8 +108,7 @@ async function getNftSaleInfo(caller_account, nft_contract_address, token_id) {
   ) {
     !contract && console.log("invalid inputs > contract", contract);
     !caller_account &&
-
-    !isValidAddressPolkadotAddress(nft_contract_address) &&
+      !isValidAddressPolkadotAddress(nft_contract_address) &&
       console.log(
         "invalid inputs > nft_contract_address",
         nft_contract_address
@@ -181,13 +180,13 @@ async function getAllBids(
     !contract && console.log("invalid inputs > contract", contract);
     !caller_account &&
       // console.log("invalid inputs > caller_account ", caller_account);
-    !isValidAddressPolkadotAddress(nft_contract_address) &&
+      !isValidAddressPolkadotAddress(nft_contract_address) &&
       console.log(
         "invalid inputs > nft_contract_address",
         nft_contract_address
       );
     // !isValidAddressPolkadotAddress(seller) &&
-      // console.log("invalid inputs > seller", seller);
+    // console.log("invalid inputs > seller", seller);
     return null;
   }
 
@@ -304,7 +303,7 @@ async function getCurrentProfit(caller_account) {
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().replace(/\,/g, "");
-    return a/10**12;
+    return a / 10 ** 12;
   }
   return null;
 }
@@ -325,7 +324,7 @@ async function getTotalProfit(caller_account) {
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().replace(/\,/g, "");
-    return a/10**12;
+    return a / 10 ** 12;
   }
   return null;
 }
@@ -499,7 +498,7 @@ async function unlist(
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
       });
       const mess = `Tnx is ${e.message}`;
-      // console.log("e.message", e.message);
+      console.log("unlist e.message", e.message);
       toast.error(mess);
     });
 

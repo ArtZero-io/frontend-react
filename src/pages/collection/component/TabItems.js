@@ -37,7 +37,7 @@ const CollectionItems = ({
   const [bigCard, setBigCard] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
 
-  const [isShowUnlisted, setIsShowUnlisted] = useState(3);
+  const [isShowUnlisted, setIsShowUnlisted] = useState(1);
 
   const options = [
     // "Price: Newest",
@@ -47,7 +47,6 @@ const CollectionItems = ({
   //  0 Low first, 1 High first, 2 Newest
 
   const getUnListedNFT = () => {
-
     if (!NFTListFormatted) return [];
 
     let result = NFTListFormatted;
@@ -66,6 +65,7 @@ const CollectionItems = ({
       return result;
     }
     if (isShowUnlisted % 3 === 1) {
+      console.log("result 3 === 1", result);
       result = result.filter((i) => i.is_for_sale === true);
     }
     if (isShowUnlisted % 3 === 2) {
@@ -176,7 +176,7 @@ const CollectionItems = ({
         w="full"
       >
         <AnimatePresence>
-          {unListNFT?.length && (
+          {unListNFT && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
