@@ -45,6 +45,7 @@ function CollectionPage() {
 
   const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
 
+  const [isShowUnlisted, setIsShowUnlisted] = useState(1);
   const {
     pagesCount,
     currentPage,
@@ -60,6 +61,15 @@ function CollectionPage() {
       currentPage: 1,
     },
   });
+
+  useEffect(() => {
+    if (currentPage > pagesCount) {
+      console.log("currentPage", currentPage);
+      console.log("pagesCount", pagesCount);
+      setCurrentPage(1);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pagesCount]);
 
   const forceUpdate = useCallback(() => {
     setFormattedCollection(null);
@@ -114,18 +124,6 @@ function CollectionPage() {
           }
         );
 
-        const [floorPrice] = await clientAPI("post", "/getFloorPrice", {
-          collection_address,
-        });
-
-        collectionDetail.floorPrice = floorPrice || 0;
-
-        setTotalCollectionsCount(collectionDetail.nft_count);
-
-        const NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
-
-        collectionDetail.floorPrice = floorPrice?.price || 0;
-
         //Get fake public CurrentAccount
         const publicCurrentAccount = currentAccount
           ? currentAccount
@@ -138,6 +136,39 @@ function CollectionPage() {
           );
 
         collectionDetail.totalListed = totalListedData || 0;
+
+        const [floorPrice] = await clientAPI("post", "/getFloorPrice", {
+          collection_address,
+        });
+
+        collectionDetail.floorPrice = floorPrice || 0;
+
+        let NFTList;
+
+        const collectionsCountTotal = collectionDetail?.nft_count;
+        const collectionsCountListed = collectionDetail?.totalListed;
+        const collectionsCountUnListed =
+          collectionsCountTotal - collectionsCountListed;
+
+        if (isShowUnlisted % 3 === 0) {
+          NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
+
+          setTotalCollectionsCount(collectionsCountTotal || 0);
+        }
+
+        if (isShowUnlisted % 3 === 1) {
+          NFTList = await clientAPI("post", "/getListedNFTs", NFTListOptions);
+
+          setTotalCollectionsCount(collectionsCountListed || 0);
+        }
+
+        if (isShowUnlisted % 3 === 2) {
+          NFTList = await clientAPI("post", "/getUnlistedNFTs", NFTListOptions);
+
+          setTotalCollectionsCount(collectionsCountUnListed || 0);
+        }
+
+        collectionDetail.floorPrice = floorPrice?.price || 0;
 
         const volumeData =
           await marketplace_contract_calls.getVolumeByCollection(
@@ -214,7 +245,14 @@ function CollectionPage() {
     };
 
     fetchCollectionDetail();
-  }, [api, collection_address, currentAccount, offset, pageSize]);
+  }, [
+    api,
+    collection_address,
+    currentAccount,
+    isShowUnlisted,
+    offset,
+    pageSize,
+  ]);
 
   const tabData = [
     {
@@ -225,6 +263,9 @@ function CollectionPage() {
           loadingTime={loadingTime}
           loading={loading}
           forceUpdate={forceUpdate}
+          isShowUnlisted={isShowUnlisted}
+          setIsShowUnlisted={setIsShowUnlisted}
+          totalCollectionsCount={totalCollectionsCount}
         />
       ),
     },

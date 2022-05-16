@@ -31,13 +31,16 @@ const CollectionItems = ({
   loading,
   forceUpdate,
   loadingTime,
+  setIsShowUnlisted,
+  isShowUnlisted,
+  totalCollectionsCount,
 }) => {
   const { currentAccount } = useSubstrateState();
 
   const [bigCard, setBigCard] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
 
-  const [isShowUnlisted, setIsShowUnlisted] = useState(1);
+  // const [isShowUnlisted, setIsShowUnlisted] = useState(1);
 
   const options = [
     // "Price: Newest",
@@ -46,6 +49,7 @@ const CollectionItems = ({
   ];
   //  0 Low first, 1 High first, 2 Newest
 
+  // TODOs: update after remove un/listed filter
   const getUnListedNFT = () => {
     if (!NFTListFormatted) return [];
 
@@ -61,16 +65,16 @@ const CollectionItems = ({
 
     // if (!isShowUnlisted) result = NFTListFormatted;
 
-    if (isShowUnlisted % 3 === 0) {
-      return result;
-    }
-    if (isShowUnlisted % 3 === 1) {
-      console.log("result 3 === 1", result);
-      result = result.filter((i) => i.is_for_sale === true);
-    }
-    if (isShowUnlisted % 3 === 2) {
-      result = result.filter((i) => i.is_for_sale === false);
-    }
+    // if (isShowUnlisted % 3 === 0) {
+    //   return result;
+    // }
+    // if (isShowUnlisted % 3 === 1) {
+    //   console.log("result 3 === 1", result);
+    //   result = result.filter((i) => i.is_for_sale === true);
+    // }
+    // if (isShowUnlisted % 3 === 2) {
+    //   result = result.filter((i) => i.is_for_sale === false);
+    // }
 
     return result;
   };
@@ -126,7 +130,7 @@ const CollectionItems = ({
         <Spacer />
         <Flex justifyContent="space-between" align="center" pr="2">
           <Text px={2} display={{ base: "block", xl: "none" }}>
-            {unListNFT.length || 0} items{" "}
+            {totalCollectionsCount || 0} items{" "}
             {isShowUnlisted % 3 === 0
               ? "in total"
               : isShowUnlisted % 3 === 1
@@ -183,7 +187,7 @@ const CollectionItems = ({
               exit={{ opacity: 0 }}
             >
               <Text px={2} display={{ base: "none", xl: "block" }}>
-                {unListNFT?.length || 0} items{" "}
+                {totalCollectionsCount || 0} items{" "}
                 {isShowUnlisted % 3 === 0
                   ? "in total"
                   : isShowUnlisted % 3 === 1
