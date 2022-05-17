@@ -18,7 +18,12 @@ import React, { useEffect, useState } from "react";
 import { clientAPI } from "@api/client";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { IPFS_BASE_URL } from "@constants/index";
-import { getCachedImage, secondsToTime, delay } from "@utils";
+import {
+  getCachedImage,
+  getCachedImageShort,
+  secondsToTime,
+  delay,
+} from "@utils";
 import staking_calls from "@utils/blockchain/staking_calls";
 import staking from "@utils/blockchain/staking";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
@@ -74,7 +79,6 @@ function MyNFTCard({
 
   useInterval(() => {
     if (unstakeRequestTime) {
-
       let now = new Date().getTime() / 1000;
       let valid_time = unstakeRequestTime / 1000 + limitUnstakeTime * 60;
       if (valid_time - now > 0)
@@ -87,15 +91,15 @@ function MyNFTCard({
   }, 1000);
 
   useEffect(() => {
-    setNftImage(
-      avatar
-        ? getCachedImage(
-            avatar,
-            500,
-            IPFS_BASE_URL + "/" + avatar.replace("ipfs://", "")
-          )
-        : ""
-    );
+    // setNftImage(
+    //   avatar
+    //     ? getCachedImage(
+    //         avatar,
+    //         500,
+    //         IPFS_BASE_URL + "/" + avatar.replace("ipfs://", "")
+    //       )
+    //     : ""
+    // );
     if (stakeStatus === 3) getRequestTime();
     //console.log(listNFT,'showOnChainMetadata',showOnChainMetadata);
     // requestUpdateNFT();
@@ -167,7 +171,7 @@ function MyNFTCard({
             w="full"
             h="full"
             objectFit="cover"
-            src={nftImage}
+            src={getCachedImageShort(avatar, 500)}
             fallback={<Skeleton w="13.75rem" h="13.75rem" />}
           />
         </Square>
@@ -230,29 +234,31 @@ function MyNFTCard({
                 ) : null}
               </VStack>
 
-              {!isBid && <Flex w="full">
-                <Spacer />
-                <Flex
-                  align="center"
-                  textAlign="right"
-                  color="brand.grayLight"
-                  direction="column"
-                >
-                  <Text mr="1">
-                    {highest_bid ? "Highest Offer" : "No offer"}
-                  </Text>
-                  {highest_bid ? (
-                    <Tag h={10} bg="transparent">
-                      <TagLabel bg="transparent">
-                        {highest_bid / 10 ** 12}
-                      </TagLabel>
-                      <TagRightIcon as={AzeroIcon} />
-                    </Tag>
-                  ) : (
-                    ""
-                  )}
+              {!isBid && (
+                <Flex w="full">
+                  <Spacer />
+                  <Flex
+                    align="center"
+                    textAlign="right"
+                    color="brand.grayLight"
+                    direction="column"
+                  >
+                    <Text mr="1">
+                      {highest_bid ? "Highest Offer" : "No offer"}
+                    </Text>
+                    {highest_bid ? (
+                      <Tag h={10} bg="transparent">
+                        <TagLabel bg="transparent">
+                          {highest_bid / 10 ** 12}
+                        </TagLabel>
+                        <TagRightIcon as={AzeroIcon} />
+                      </Tag>
+                    ) : (
+                      ""
+                    )}
+                  </Flex>
                 </Flex>
-              </Flex>}
+              )}
             </Flex>
           )}
         </Box>

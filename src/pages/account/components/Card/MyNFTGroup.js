@@ -13,11 +13,15 @@ import MyNFTCard from "./MyNFT";
 import { IPFS_BASE_URL } from "@constants/index";
 import { createObjAttrsNFT } from "@utils/index";
 import ResponsivelySizedModal from "@components/Modal/Modal";
-import { getCachedImage } from "@utils";
+import { getCachedImage, getCachedImageShort } from "@utils";
 import { clientAPI } from "@api/client";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "@utils/substrate";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import { ContractPromise } from "@polkadot/api-contract";
+import toast from "react-hot-toast";
+import { useHistory } from "react-router-dom";
 
 function MyNFTGroupCard({
   name,
@@ -27,14 +31,15 @@ function MyNFTGroupCard({
   showOnChainMetadata,
   showMyListing,
   filterSelected,
+  nftContractAddress,
 }) {
-  const { currentAccount } = useSubstrateState();
+  const { currentAccount, api } = useSubstrateState();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedNFT, setSelectedNFT] = useState(null);
 
   const [listNFTFormatted, setListNFTFormatted] = useState(null);
-
+  const history = useHistory();
   function onClickHandler(item) {
     setSelectedNFT(item);
     item?.stakeStatus === 0 && onOpen();
@@ -57,62 +62,42 @@ function MyNFTGroupCard({
       } else {
         //Off-chain Data
 
-        let tokenUri = await artzero_nft_calls.tokenUri(
-          currentAccount?.address,
-          1
+        const nft_contract = new ContractPromise(
+          api,
+          nft721_psp34_standard.CONTRACT_ABI,
+          nftContractAddress
         );
-        tokenUri = tokenUri?.replace("1.json", "");
 
-        let data = [];
-        let listNFT_length = listNFT.length;
-        for (var j = 0; j < listNFT_length; j++) {
-          let item = listNFT[j];
-          //get the off-chain metadata
-          const metadata = await clientAPI(
-            "get",
-            "/getJSON?input=" + tokenUri + item.tokenID?.toString() + ".json",
-            {}
-          );
-          //console.log(tokenUri + item.tokenID + ".json",metadata);
-          let attributes = [];
-          let attributeValues = [];
-          attributes.push("nftName");
-          attributes.push("description");
-          attributes.push("avatar");
+        const gasLimit = -1;
+        const azero_value = 0;
 
-          attributeValues.push(metadata.name);
-          attributeValues.push(metadata.description);
-          attributeValues.push(metadata.image);
+        const { result, output } = await nft_contract.query[
+          "psp34Traits::tokenUri"
+        ](currentAccount?.address, { value: azero_value, gasLimit }, 1);
 
-          let length = metadata.attributes.length;
-          for (var i = 0; i < length; i++) {
-            attributes.push(metadata.attributes[i].trait_type);
-            attributeValues.push(metadata.attributes[i].value);
-          }
-          const itemData = createObjAttrsNFT(attributes, attributeValues);
-
-          data.push({ ...item, ...itemData });
+        if (!result.isOk) {
+          toast.error("There is an error when loading token_uri!");
+          return;
         }
-        // console.log(data);
-        setListNFTFormatted(data);
-      }
 
-      // if (showMyListing === 1){
-      //   console.log('showMyListing only')
-      //   let mylistNFT = listNFT.filter(
-      //
-      //     (nft) => nft.is_for_sale
-      //
-      //   );
-      //   setListNFTFormatted(mylistNFT);
-      //}
+        const tokenUri = output.toHuman()?.replace("1.json", "");
+
+        Promise.all(
+          listNFT.map(async (item) => {
+            const res = await getMetaDataType1(item.tokenID, tokenUri);
+
+            return { ...item, ...res };
+          })
+        ).then((result) => {
+          setListNFTFormatted(result);
+        });
+      }
     };
 
     getAttributesData();
 
     //console.log(listNFT,'showOnChainMetadata',showOnChainMetadata);
-  }, [currentAccount, listNFT, showOnChainMetadata]);
-
+  }, [api, currentAccount, listNFT, nftContractAddress, showOnChainMetadata]);
   return (
     <Box my={10}>
       <ResponsivelySizedModal
@@ -133,18 +118,19 @@ function MyNFTGroupCard({
             <Avatar
               size={"lg"}
               border="2px solid white"
-              src={
-                avatarImage
-                  ? getCachedImage(
-                      avatarImage,
-                      100,
-                      IPFS_BASE_URL + "/" + avatarImage.replace("ipfs://", "")
-                    )
-                  : ""
-              }
+              src={getCachedImageShort(avatarImage, 100)}
             />
             <VStack align="start" ml={3} justifyContent="center">
-              <Heading size="h6">{name}</Heading>
+              <Heading
+                size="h6"
+                cursor="pointer"
+                _hover={{ color: "#7ae7ff" }}
+                onClick={() =>
+                  history.push(`/collection/${nftContractAddress}`)
+                }
+              >
+                {name}
+              </Heading>
               <Text textAlign="left" color="brand.grayLight" size="2xs">
                 {listNFTFormatted?.length} items
               </Text>
@@ -171,28 +157,6 @@ function MyNFTGroupCard({
             listNFTFormatted={listNFTFormatted}
             onClickHandler={onClickHandler}
           />
-
-          {/* <Grid
-            borderBottomWidth={1}
-            templateColumns="repeat(auto-fill, minmax(min(100%, 224px), 1fr))"
-            gap={6}
-            py={10}
-            px={1}
-          >
-            {listNFTFormatted?.map((item, idx) => (
-              <React.Fragment key={idx}>
-                <GridItem
-                  shadow="lg"
-                  w="full"
-                  h="full"
-                  cursor="pointer"
-                  onClick={() => onClickHandler(item)}
-                >
-                  <MyNFTCard {...item} />
-                </GridItem>
-              </React.Fragment>
-            ))}
-          </Grid> */}
         </Box>
       )}
     </Box>
@@ -310,3 +274,26 @@ function GridItemA({
     </motion.div>
   );
 }
+
+const getMetaDataType1 = async (tokenID, token_uri) => {
+  const metadata = await clientAPI(
+    "get",
+    "/getJSON?input=" + token_uri + tokenID.toString() + ".json",
+    {}
+  );
+
+  if (metadata) {
+    const attrsList = metadata?.attributes?.map((item) => {
+      return { [item.trait_type]: item.value };
+    });
+
+    console.log("metadata.image", metadata.image);
+
+    return {
+      ...metadata,
+      attrsList,
+      avatar: metadata.image,
+      nftName: metadata.name,
+    };
+  }
+};

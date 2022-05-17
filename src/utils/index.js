@@ -3,7 +3,7 @@ import { hexToU8a, isHex } from "@polkadot/util";
 import { AccountActionTypes } from "../store/types/account.types";
 // import BN from "bn.js";
 import Keyring from "@polkadot/keyring";
-
+import { IPFS_BASE_URL } from "@constants/index";
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 export function getCachedImage(imageHash, size, url) {
@@ -11,6 +11,12 @@ export function getCachedImage(imageHash, size, url) {
   return (
     baseURL + "/getImage?input=" + imageHash + "&size=" + size + "&url=" + url
   );
+}
+
+export function getCachedImageShort(imageHash, size = 100) {
+  const fallbackURL = `${IPFS_BASE_URL}/${imageHash.replace("ipfs://", "")}`;
+
+  return `${baseURL}/getImage?input=${imageHash}&size=${size}&url=${fallbackURL}`;
 }
 
 export function shortenNumber(number) {
