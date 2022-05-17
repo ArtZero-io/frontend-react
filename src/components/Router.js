@@ -16,7 +16,7 @@ import MyStakesPage from "@pages/account/stakes";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import AccountLayout from "./Layout/AccountLayout";
 import AdminLayout from "./Layout/AdminLayout";
-import NotFound from "./NotFound/NotFound";
+// import NotFound from "./NotFound/NotFound";
 // import MintLayout from "./Layout/MintLayout";
 
 const Router = () => {
@@ -26,7 +26,7 @@ const Router = () => {
         path="/account"
         render={() => (
           <AccountLayout>
-            <Switch>
+
               <Route exact path={ROUTES.ACCOUNT} component={GeneralPage} />
 
               <Route
@@ -44,7 +44,7 @@ const Router = () => {
                 path={ROUTES.ACCOUNT_MY_STAKES}
                 component={MyStakesPage}
               />
-            </Switch>
+
           </AccountLayout>
         )}
       />
@@ -53,9 +53,9 @@ const Router = () => {
         path="/admin"
         render={() => (
           <AdminLayout>
-            <Switch>
+
               <Route exact path={ROUTES.ACCOUNT_ADMIN} component={AdminPage} />
-            </Switch>
+
           </AdminLayout>
         )}
       />
@@ -74,9 +74,7 @@ const Router = () => {
       <Route exact path={ROUTES.DETAIL_COLLECTION} component={CollectionPage} />
       <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
       <Route exact path={ROUTES.HOME} component={HomePage} />
-      <Route path="*">
-        <NotFound />
-      </Route>
+
     </Switch>
   );
 };
