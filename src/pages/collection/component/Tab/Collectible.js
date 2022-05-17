@@ -66,7 +66,6 @@ const NFTTabCollectible = ({
 
   useEffect(() => {
     const doLoad = async () => {
-
       const sale_info = await marketplace_contract_calls.getNftSaleInfo(
         currentAccount || publicCurrentAccount,
         nftContractAddress,
@@ -546,6 +545,7 @@ const NFTTabCollectible = ({
                             <Flex w="full" color="#7AE7FF">
                               <Spacer />
                               <Text
+                                pr={1}
                                 fontStyle="italic"
                                 fontSize={{ base: "0.875rem", "2xl": "1rem" }}
                               >

@@ -64,11 +64,9 @@ function CollectionPage() {
 
   useEffect(() => {
     if (currentPage > pagesCount) {
-      console.log("currentPage", currentPage);
-      console.log("pagesCount", pagesCount);
       setCurrentPage(1);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagesCount]);
 
   const forceUpdate = useCallback(() => {
