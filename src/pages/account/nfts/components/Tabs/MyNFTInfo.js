@@ -418,7 +418,7 @@ function MyNFTTabInfo({
                               </Flex>
                               <Flex w="full" color="#7AE7FF">
                                 <Spacer />
-                                <Text fontStyle="italic" isTruncated>
+                                <Text fontStyle="italic" isTruncated pr={1}>
                                   {Object.values(item)[0]}
                                 </Text>
                               </Flex>

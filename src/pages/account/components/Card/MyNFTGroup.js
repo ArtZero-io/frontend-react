@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Avatar,
   Box,
@@ -10,12 +9,10 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import MyNFTCard from "./MyNFT";
-import { IPFS_BASE_URL } from "@constants/index";
 import { createObjAttrsNFT } from "@utils/index";
 import ResponsivelySizedModal from "@components/Modal/Modal";
-import { getCachedImage, getCachedImageShort } from "@utils";
+import { getCachedImageShort } from "@utils";
 import { clientAPI } from "@api/client";
-import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "@utils/substrate";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
