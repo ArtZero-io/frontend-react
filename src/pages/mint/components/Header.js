@@ -28,6 +28,8 @@ import InActiveIcon from "@theme/assets/icon/InActive.js";
 import BN from "bn.js";
 import toast from "react-hot-toast";
 
+const MAX_MINT_COUNT = 200;
+
 function MintHeader() {
   const dispatch = useDispatch();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
@@ -267,7 +269,7 @@ function MintHeader() {
                   </NumberInput>
 
                   <Button
-                    isDisabled={!whitelist}
+                    isDisabled={!whitelist || totalMinted >= MAX_MINT_COUNT}
                     variant="outline"
                     onClick={() => onWhiteListMint()}
                   >
@@ -327,7 +329,9 @@ function MintHeader() {
               </Box>
 
               <Button
-                isDisabled={Number(mintMode) <= 0}
+                isDisabled={
+                  Number(mintMode) <= 0 || totalMinted >= MAX_MINT_COUNT
+                }
                 spinnerPlacement="start"
                 isLoading={tnxStatus}
                 loadingText={`${tnxStatus?.status}`}
