@@ -139,7 +139,7 @@ function CollectionPage() {
           collection_address,
         });
 
-        collectionDetail.floorPrice = floorPrice || 0;
+        collectionDetail.floorPrice = floorPrice?.price || 0;
 
         let NFTList;
 
@@ -166,8 +166,6 @@ function CollectionPage() {
           setTotalCollectionsCount(collectionsCountUnListed || 0);
         }
 
-        collectionDetail.floorPrice = floorPrice?.price || 0;
-
         const volumeData =
           await marketplace_contract_calls.getVolumeByCollection(
             publicCurrentAccount,
@@ -177,10 +175,12 @@ function CollectionPage() {
         collectionDetail.volume = volumeData || 0;
 
         if (collectionDetail?.nft_count === 0) {
-          return collectionDetail;
+          setLoading(false);
+          return setFormattedCollection(collectionDetail);
         }
 
         // Collections Type 2 - Simple Mode
+
         if (Number(collectionDetail.contractType) === 2) {
           Promise.all(
             NFTList.map((item) => {
