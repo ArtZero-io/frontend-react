@@ -9,8 +9,9 @@ import {
   ModalOverlay,
   useDisclosure,
   IconButton,
+  Tooltip,
 } from "@chakra-ui/react";
-import { EditIcon } from "@chakra-ui/icons";
+import { EditIcon, QuestionIcon } from "@chakra-ui/icons";
 
 import SimpleModeForm from "../Form/SimpleMode";
 import { useDispatch, useSelector } from "react-redux";
@@ -113,8 +114,14 @@ function SimpleModeModal({
             }}
           />
           <ModalHeader>
-            <Heading size="h4" my={2}>
-              {mode === "add" ? "Simple Mode" : "Edit Collection"}
+            <Heading size="h4" m={2}>
+              {mode === "add" ? "Simple Mode" : "Edit Collection"}{" "}
+              <Tooltip
+                label="Simple Mode is designed for non-tech people. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
+                fontSize="md"
+              >
+                <QuestionIcon fontSize="md" />
+              </Tooltip>
             </Heading>
           </ModalHeader>
 

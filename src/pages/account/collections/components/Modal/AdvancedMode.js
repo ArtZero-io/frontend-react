@@ -1,4 +1,4 @@
-import { EditIcon } from "@chakra-ui/icons";
+import { EditIcon, QuestionIcon } from "@chakra-ui/icons";
 import {
   Button,
   Heading,
@@ -9,6 +9,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
@@ -102,8 +103,14 @@ function AdvancedModeModal({
             }}
           />
           <ModalHeader>
-            <Heading size="h4" my={2}>
-              {mode === "add" ? "Advanced Mode" : "Edit Collection"}
+            <Heading size="h4" m={2}>
+              {mode === "add" ? "Advanced Mode" : "Edit Collection"}{" "}
+              <Tooltip
+                label="Advanced mode is designed for those who wants to use customized NFT smart contract for example dedicated 5k or 10k collections with whitelisted options."
+                fontSize="md"
+              >
+                <QuestionIcon fontSize="md" />
+              </Tooltip>
             </Heading>
           </ModalHeader>
           <ModalBody
