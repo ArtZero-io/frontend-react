@@ -18,9 +18,9 @@ import { HiCloudUpload } from "react-icons/hi";
 import ActiveIcon from "@theme/assets/icon/Active.js";
 import { IPFS_CLIENT_URL } from "@constants/index";
 import { Buffer } from "buffer";
-import { IPFS_BASE_URL } from "@constants/index";
 import IdenticonAvatar from "@components/IdenticonAvatar/IdenticonAvatar/";
 import { clientAPI } from "@api/client";
+import { getCachedImageShort } from "@utils";
 
 const client = create(IPFS_CLIENT_URL);
 
@@ -101,7 +101,7 @@ export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
             boxSize="22.5rem"
             alt=""
             objectFit="cover"
-            src={`${IPFS_BASE_URL}/${profile?.avatar}`}
+            src={getCachedImageShort(profile?.avatar, 500)}
           />
         )}
         {!imagePreviewUrl && !profile?.avatar && <IdenticonAvatar size={360} />}

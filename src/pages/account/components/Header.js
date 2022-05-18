@@ -19,9 +19,8 @@ import { useDispatch } from "react-redux";
 
 import { getProfile } from "@actions/account";
 import IdenticonAvatar from "@components/IdenticonAvatar/IdenticonAvatar";
-import { IPFS_BASE_URL } from "@constants/index";
 import { useSubstrateState } from "@utils/substrate";
-
+import { getCachedImageShort } from "@utils";
 import ProfileModal from "./Modal/Profile";
 import toast from "react-hot-toast";
 
@@ -72,7 +71,6 @@ function ProfileHeader() {
         onClose={onClose}
         forceUpdate={forceUpdate}
       />
-
       <VStack>
         <Center
           rounded="full"
@@ -89,7 +87,7 @@ function ProfileHeader() {
               h="full"
               rounded="full"
               objectFit="cover"
-              src={`${IPFS_BASE_URL}/${profile?.avatar}`}
+              src={getCachedImageShort(profile?.avatar, 500)}
               fallback={<Skeleton w={32} h={32} rounded="full" />}
             />
           )}
