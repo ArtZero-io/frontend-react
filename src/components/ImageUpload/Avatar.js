@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { create } from "ipfs-http-client";
 import {
@@ -23,16 +23,32 @@ import { clientAPI } from "@api/client";
 import { getCachedImageShort } from "@utils";
 
 const client = create(IPFS_CLIENT_URL);
-
+const supportedFormat = ["image/png", "image/jpg", "image/jpeg"];
 export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
   const [imgURL, setImgURL] = useState(null);
 
   const [newAvatarData, setNewAvatarData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+  const ref = useRef();
 
   const retrieveNewAvatar = (e) => {
-    setImgURL(null);
+    if (e && !supportedFormat.includes(e.target.files[0].type)) {
+      toast.error(
+        `Please use .png .jpeg .jpeg format, the ${
+          e.target?.files[0] && e.target.files[0].type.split("/")[1]
+        } format is not supported.`
+      );
+
+      ref.current.value = null;
+      setNewAvatarData(null);
+      setImagePreviewUrl("");
+      return;
+    }
+
     const data = e.target.files[0];
+
+    setImgURL(null);
+
     const reader = new window.FileReader();
     reader.readAsArrayBuffer(data);
 
@@ -111,11 +127,12 @@ export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
         <VStack>
           <label htmlFor="inputTag" style={{ cursor: "pointer" }}>
             <input
+              ref={ref}
               style={{ display: "none" }}
               id="inputTag"
               onChange={retrieveNewAvatar}
               type="file"
-              accept="image/png, image/jpg, image/gif, image/jpeg"
+              accept="image/png, image/jpg, image/jpeg"
             />
             <Button as={Text} fontFamily="Evogria" variant="outline">
               {!imagePreviewUrl ? "Select Image" : "Pick another"}

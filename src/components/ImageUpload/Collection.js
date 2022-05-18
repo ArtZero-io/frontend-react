@@ -8,8 +8,8 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import React, { useState, useRef } from "react";
 
-import { useState } from "react";
 import { HiCloudUpload } from "react-icons/hi";
 
 import { create } from "ipfs-http-client";
@@ -20,6 +20,7 @@ import { clientAPI } from "@api/client";
 import { IPFS_BASE_URL } from "@constants/index";
 
 const client = create(IPFS_CLIENT_URL);
+const supportedFormat = ["image/png", "image/jpg", "image/jpeg"];
 
 const ImageUploadCollection = ({
   id,
@@ -34,8 +35,22 @@ const ImageUploadCollection = ({
 
   const [newAvatarData, setNewAvatarData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+  const ref = useRef();
 
   const retrieveNewAvatar = (e) => {
+    if (e && !supportedFormat.includes(e.target.files[0].type)) {
+      toast.error(
+        `Please use .png .jpeg .jpeg format, the ${
+          e.target?.files[0] && e.target.files[0].type.split("/")[1]
+        } format is not supported.`
+      );
+
+      ref.current.value = null;
+      setNewAvatarData(null);
+      setImagePreviewUrl("");
+      return;
+    }
+
     setImgURL(null);
 
     const data = e.target.files[0];
@@ -74,7 +89,7 @@ const ImageUploadCollection = ({
             // eslint-disable-next-line no-unused-vars
             const update_nft_api_res = clientAPI("post", "/cacheImage", {
               input: created?.path,
-              is1920: isBanner
+              is1920: isBanner,
             });
             // console.log("update_nft_api_res", update_nft_api_res);
           }),
@@ -114,11 +129,12 @@ const ImageUploadCollection = ({
                 No file chosen
               </Text>
               <input
+                ref={ref}
                 style={{ display: "none" }}
                 id={`${id}InputTag`}
                 onChange={retrieveNewAvatar}
                 type="file"
-                accept="image/png, image/jpg, image/gif, image/jpeg, image/webp"
+                accept="image/png, image/jpg, image/jpeg"
               />
             </Flex>
           </label>
