@@ -122,7 +122,7 @@ const MintPage = () => {
   return (
     <Layout>
       <Box as="section" maxW="container.3xl" position="relative">
-        <MintHeader setMyAZNFTs={setMyAZNFTs} />
+        <MintHeader setMyAZNFTs={setMyAZNFTs} loading={loading} />
 
         <Tabs isLazy align="center">
           <TabList bg="#000" borderBottomColor="#000">

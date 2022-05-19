@@ -30,7 +30,7 @@ import toast from "react-hot-toast";
 
 const MAX_MINT_COUNT = 200;
 
-function MintHeader() {
+function MintHeader({ loading }) {
   const dispatch = useDispatch();
   const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
   const { api, currentAccount } = useSubstrateState();
@@ -69,18 +69,22 @@ function MintHeader() {
         currentAccount,
         currentAccount?.address
       );
-      if (res) setBalance(res);
-      else setBalance(0);
+      if (res) {
+        setBalance(res);
+      } else {
+        setBalance(0);
+      }
     };
     const onGetMintMode = async (e) => {
       let mintMode = await artzero_nft_calls.getMintMode(currentAccount);
       if (mintMode) setMintMode(Number(mintMode));
       else setMintMode(-1);
     };
+
     onGetBalance();
     onGetWhiteList();
     onGetMintMode();
-  }, [currentAccount, currentAccount?.address]);
+  }, [currentAccount, currentAccount?.address, loading]);
 
   const onGetFee1 = async (e) => {
     let res = await artzero_nft_calls.getFee1(currentAccount);
