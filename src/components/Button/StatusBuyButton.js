@@ -9,6 +9,7 @@ function StatusBuyButton({
   type,
   onClick,
   isDo,
+  shouldDisabled,
 }) {
   const dispatch = useDispatch();
 
@@ -39,7 +40,7 @@ function StatusBuyButton({
           onClick={onClick}
           h={10}
           maxW={"7rem"}
-          isDisabled={loadingText === "Start"}
+          isDisabled={loadingText === "Start" || shouldDisabled}
         >
           {text === "buy"
             ? "Buy now"
@@ -53,7 +54,7 @@ function StatusBuyButton({
         </Button>
         <Button
           display={isDo && isLoading ? "flex" : "none"}
-          isDisabled={loadingText !== "Finalized"}
+          isDisabled={loadingText !== "Finalized" || shouldDisabled}
           onClick={onCloseHandler}
           variant="outline"
           h={10}

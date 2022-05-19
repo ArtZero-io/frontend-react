@@ -33,11 +33,13 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
     {
       label: "Collectible",
       content: <NFTTabCollectible {...rest} />,
+      isDisabled: false,
     },
     {
       // Before is label: "Activity",
       label: "Offers",
       content: <NFTTabActivity {...rest} />,
+      isDisabled: addNftTnxStatus?.status ? true : false,
     },
   ];
 
@@ -84,6 +86,7 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
           <TabList bg="#171717">
             {tabData.map((tab, index) => (
               <Tab
+                isDisabled={tab.isDisabled}
                 key={index}
                 ml={12}
                 fontSize="md"

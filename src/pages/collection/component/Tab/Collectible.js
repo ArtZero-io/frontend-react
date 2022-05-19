@@ -145,6 +145,7 @@ const NFTTabCollectible = ({
       await marketplace_contract_calls.buy(
         currentAccount,
         nftContractAddress,
+        saleInfo.nftOwner,
         { u64: tokenID },
         price,
         dispatch
@@ -343,6 +344,8 @@ const NFTTabCollectible = ({
                   minH="4.75rem"
                 >
                   <StatusBuyButton
+                    shouldDisabled={action && action !== "buy"}
+                    isDisabled={true}
                     isDo={action === "buy"}
                     type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
                     text="buy"
@@ -395,6 +398,7 @@ const NFTTabCollectible = ({
                     {!isBided && (
                       <>
                         <StatusBuyButton
+                          shouldDisabled={action && action !== "offer"}
                           isDo={action === "offer"}
                           type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
                           text="offer"
@@ -446,6 +450,7 @@ const NFTTabCollectible = ({
                     {isBided && (
                       <>
                         <StatusBuyButton
+                          shouldDisabled={action && action !== "remove bid"}
                           isDo={action === "remove bid"}
                           type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
                           text="remove bid"

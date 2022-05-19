@@ -31,19 +31,6 @@ export default function ResponsivelySizedModal({
     "2xl": `4.5rem`,
   });
 
-  const tabData = [
-    {
-      label: "NFT info",
-      content: <MyNFTTabInfo filterSelected={filterSelected} {...rest} />,
-      isDisabled: false,
-    },
-    {
-      label: "Offers",
-      content: <MyNFTTabOffers {...rest} />,
-      isDisabled: filterSelected === 0 || filterSelected === 2 ? true : false,
-    },
-  ];
-
   const dispatch = useDispatch();
 
   const { addNftTnxStatus } = useSelector(
@@ -53,6 +40,22 @@ export default function ResponsivelySizedModal({
   useEffect(() => {
     addNftTnxStatus?.status === "End" && onClose();
   }, [onClose, addNftTnxStatus?.status]);
+
+  const tabData = [
+    {
+      label: "NFT info",
+      content: <MyNFTTabInfo filterSelected={filterSelected} {...rest} />,
+      isDisabled: false,
+    },
+    {
+      label: "Offers",
+      content: <MyNFTTabOffers {...rest} />,
+      isDisabled:
+        filterSelected === 0 || filterSelected === 2 || addNftTnxStatus?.status
+          ? true
+          : false,
+    },
+  ];
 
   return (
     <Modal
