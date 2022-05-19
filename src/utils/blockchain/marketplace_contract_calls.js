@@ -10,6 +10,8 @@ import { ContractPromise } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
 import { AccountActionTypes } from "@store/types/account.types";
 
+import { APICall } from "../../api/client";
+
 let contract;
 
 export const setMarketplaceContract = (api, data) => {
@@ -438,6 +440,7 @@ async function list(
 async function unlist(
   caller_account,
   nft_contract_address,
+  seller,
   token_id,
   dispatch
 ) {
@@ -482,6 +485,16 @@ async function unlist(
               token_id: token_id.u64,
             });
           }
+
+          await APICall.askBeUpdateBidsData({
+            collection_address: nft_contract_address,
+            seller: seller,
+            token_id: token_id.u64,
+          });
+
+          await APICall.askBeUpdateCollectionData({
+            collection_address: nft_contract_address,
+          });
 
           // const statusText = Object.keys(status.toHuman())[0];
           // toast.success(
@@ -645,6 +658,7 @@ async function removeBid(
 async function buy(
   caller_account,
   nft_contract_address,
+  seller,
   token_id,
   price,
   dispatch
@@ -677,7 +691,7 @@ async function buy(
             console.log("dispatchError ", dispatchError.toString());
           }
         }
-        if (status) {
+        if (status?.isFinalized) {
           handleContractCallAddNftAnimation(status, dispatchError, dispatch);
 
           await clientAPI("post", "/updateNFT", {
@@ -689,6 +703,11 @@ async function buy(
             collection_address: nft_contract_address,
           });
 
+          await clientAPI("post", "/updateBids", {
+            collection_address: nft_contract_address,
+            seller: seller,
+            token_id: token_id.u64,
+          });
           // const statusText = Object.keys(status.toHuman())[0];
           // toast.success(
           //   `Buy NFT ${

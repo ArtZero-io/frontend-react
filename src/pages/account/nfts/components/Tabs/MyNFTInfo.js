@@ -50,8 +50,6 @@ function MyNFTTabInfo({
   nftContractAddress,
   contractType,
 }) {
-
-
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
@@ -67,9 +65,6 @@ function MyNFTTabInfo({
   const [saleInfo, setSaleInfo] = useState(null);
   const [isBided, setIsBided] = useState(false);
   const [bidPrice, setBidPrice] = useState(0);
-
-  
-
 
   useEffect(() => {
     const doLoad = async () => {
@@ -264,6 +259,7 @@ function MyNFTTabInfo({
       await marketplace_contract_calls.unlist(
         currentAccount,
         nftContractAddress,
+        currentAccount.address,
         { u64: tokenID },
         dispatch
       );
