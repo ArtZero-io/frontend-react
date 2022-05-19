@@ -18,12 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { onCloseButtonModal } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
 
-function AdvancedModeModal({
-  mode = "add",
-  id,
-  nftContractAddress,
-  onCloseParent,
-}) {
+function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const { addCollectionTnxStatus } = useSelector(
@@ -99,7 +94,6 @@ function AdvancedModeModal({
                 dispatch,
                 type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
               });
-              onCloseParent();
             }}
           />
           <ModalHeader>

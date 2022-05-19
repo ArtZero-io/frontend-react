@@ -18,12 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { onCloseButtonModal } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
 
-function SimpleModeModal({
-  mode = "add",
-  id,
-  nftContractAddress,
-  onCloseParent,
-}) {
+function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
   const {
     isOpen: isOpenSimpleMode,
     onOpen: onOpenSimpleMode,
@@ -110,7 +105,6 @@ function SimpleModeModal({
                 dispatch,
                 type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
               });
-              onCloseParent();
             }}
           />
           <ModalHeader>

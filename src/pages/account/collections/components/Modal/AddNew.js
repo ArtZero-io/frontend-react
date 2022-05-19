@@ -94,9 +94,9 @@ function AddNewCollection({ mode, id }) {
 
           <ModalBody>
             <Flex>
-              <SimpleMode onCloseParent={onCloseAddNew} mode={mode} id={id} />
+              <SimpleMode mode={mode} id={id} />
               <Spacer />
-              <AdvancedMode onCloseParent={onCloseAddNew} mode={mode} id={id} />
+              <AdvancedMode mode={mode} id={id} />
             </Flex>
           </ModalBody>
         </ModalContent>
