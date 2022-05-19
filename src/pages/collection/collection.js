@@ -7,7 +7,7 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -28,6 +28,7 @@ import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { usePagination } from "@ajna/pagination";
 import PaginationMP from "@components/Pagination/Pagination";
+import { APICall } from "../../api/client";
 
 const NUMBER_PER_PAGE = 10;
 
@@ -69,10 +70,10 @@ function CollectionPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagesCount]);
 
-  const forceUpdate = useCallback(() => {
+  const forceUpdate = () => {
     setFormattedCollection(null);
     setLoading(false);
-  }, []);
+  };
 
   useEffect(() => {
     const forceUpdateAfterCreateNFT = async () => {
@@ -95,6 +96,7 @@ function CollectionPage() {
             type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
           });
           setFormattedCollection(null);
+          setLoadingTime(null);
           setLoading(false);
         });
       }
@@ -114,13 +116,9 @@ function CollectionPage() {
       };
 
       try {
-        const [collectionDetail] = await clientAPI(
-          "post",
-          "/getCollectionByAddress",
-          {
-            collection_address,
-          }
-        );
+        const [collectionDetail] = await APICall.getCollectionByAddress({
+          collection_address,
+        });
 
         //Get fake public CurrentAccount
         const publicCurrentAccount = currentAccount
@@ -238,11 +236,12 @@ function CollectionPage() {
           });
         }
       } catch (error) {
+        console.log("error", error);
         toast.error("There was an error while fetching the collections.");
       }
     };
 
-    fetchCollectionDetail();
+    !loadingTime && fetchCollectionDetail();
   }, [
     api,
     collection_address,
@@ -250,6 +249,7 @@ function CollectionPage() {
     isShowUnlisted,
     offset,
     pageSize,
+    loadingTime,
   ]);
 
   const tabData = [

@@ -237,7 +237,7 @@ function CollectionHeader({
                         fontSize={{ base: "4xl", "2xl": "6xl" }}
                         lineHeight="none"
                       >
-                        {floorPrice / 10 ** 12 || 0}
+                        {shortenNumber(floorPrice / 10 ** 12) || 0}
                       </Text>
                       <Avatar
                         src={AzeroIcon}
@@ -367,4 +367,4 @@ function CollectionHeader({
   );
 }
 
-export default React.memo(CollectionHeader);
+export default CollectionHeader;
