@@ -49,7 +49,6 @@ async function mint(caller_account) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError, output }) => {
-        console.log(output);
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);

@@ -511,7 +511,7 @@ async function unlist(
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
       });
       const mess = `Tnx is ${e.message}`;
-      console.log("unlist e.message", e.message);
+      // console.log("unlist e.message", e.message);
       toast.error(mess);
     });
 

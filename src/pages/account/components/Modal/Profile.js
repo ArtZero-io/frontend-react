@@ -22,7 +22,6 @@ export default function ProfileModal({
   useEffect(() => {
     function onCloseHandler() {
       if (tnxStatus?.status === "Finalized") {
-        console.log('Date.now()', Date.now())
         dispatch({
           type: AccountActionTypes.SET_TNX_STATUS,
           payload: null,

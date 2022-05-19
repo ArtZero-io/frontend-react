@@ -284,8 +284,6 @@ const getMetaDataType1 = async (tokenID, token_uri) => {
       return { [item.trait_type]: item.value };
     });
 
-    console.log("metadata.image", metadata.image);
-
     return {
       ...metadata,
       attrsList,

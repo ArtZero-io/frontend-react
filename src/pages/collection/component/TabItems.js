@@ -63,18 +63,7 @@ const CollectionItems = ({
       result = result.sort((a, b) => b.price - a.price);
     }
 
-    // if (!isShowUnlisted) result = NFTListFormatted;
-
-    // if (isShowUnlisted % 3 === 0) {
-    //   return result;
-    // }
-    // if (isShowUnlisted % 3 === 1) {
-    //   console.log("result 3 === 1", result);
-    //   result = result.filter((i) => i.is_for_sale === true);
-    // }
-    // if (isShowUnlisted % 3 === 2) {
-    //   result = result.filter((i) => i.is_for_sale === false);
-    // }
+    
 
     return result;
   };

@@ -176,7 +176,7 @@ async function getFee1(caller_account) {
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().replace(/\,/g, "");
-    return a/10**12;
+    return a / 10 ** 12;
   }
   return null;
 }
@@ -197,7 +197,7 @@ async function getFee2(caller_account) {
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().replace(/\,/g, "");
-    return a/10**12;
+    return a / 10 ** 12;
   }
   return null;
 }
@@ -260,7 +260,6 @@ async function whitelistMint(caller_account, mint_amount, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -303,7 +302,6 @@ async function paidMint(caller_account, fee, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-
         if (dispatchError) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
@@ -523,8 +521,6 @@ async function approve(caller_account, operator_address, token_id, is_approve) {
       if (status) {
         const statusText = Object.keys(status.toHuman())[0];
         if (status.isFinalized) {
-          console.log(status.toHuman());
-          console.log(status);
           toast.success(
             `Approve ${
               statusText === "0" ? "started" : statusText.toLowerCase()

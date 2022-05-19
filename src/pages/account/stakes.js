@@ -117,7 +117,7 @@ const MyStakesPage = () => {
       "/getNFTsByOwnerAndCollection",
       options
     );
-    console.log(dataList);
+
     if (dataList) {
       const data = dataList?.map((item) => {
         return { ...item, stakeStatus: 1 };
@@ -126,7 +126,7 @@ const MyStakesPage = () => {
       if (az_collection?.length) {
         az_collection[0].listNFT = my_az_nfts;
       }
-      console.log('az_collection', az_collection)
+
       setCurrentTabList(az_collection);
     }
   };
@@ -156,7 +156,6 @@ const MyStakesPage = () => {
   };
 
   const getMyPendingUnstakeAZNFTs = async (total_pending) => {
-
     if (total_pending === 0) {
       my_pending_az_nfts = [];
       return;
@@ -193,13 +192,12 @@ const MyStakesPage = () => {
 
   const onClickHandler = async (e) => {
     const id = e.target.getAttribute("id").toString();
-if(az_collection.length){
-
-  if (id === "staked") az_collection[0].listNFT = my_staked_az_nfts;
-  else if (id === "notStaked") az_collection[0].listNFT = my_az_nfts;
-  else if (id === "pending") az_collection[0].listNFT = my_pending_az_nfts;
-  // console.log(az_collection);
-}
+    if (az_collection.length) {
+      if (id === "staked") az_collection[0].listNFT = my_staked_az_nfts;
+      else if (id === "notStaked") az_collection[0].listNFT = my_az_nfts;
+      else if (id === "pending") az_collection[0].listNFT = my_pending_az_nfts;
+      // console.log(az_collection);
+    }
     setCurrentTabList(az_collection);
     setCurrentTab(id);
   };
@@ -292,16 +290,12 @@ if(az_collection.length){
           </Flex>
         </HStack>
 
-        {/* {loading ? (
-          <Loader my={'14rem'} />
-        ) : (
-          currentTabList?.map((item) => <MyNFTGroupCard {...item} />)
-          )} */}
-          {console.log('currentTabList', currentTabList)}
         {currentTabList?.listNFT?.length === 0 ? (
           <Text>No NFTs found</Text>
         ) : (
-          currentTabList?.map((item, idx) => <MyNFTGroupCard {...item} key={idx}/>)
+          currentTabList?.map((item, idx) => (
+            <MyNFTGroupCard {...item} key={idx} />
+          ))
         )}
       </Box>
     </Box>

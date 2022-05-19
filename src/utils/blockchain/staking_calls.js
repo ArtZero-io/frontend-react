@@ -149,7 +149,7 @@ async function getRequestUnstakeTime(caller_account, account, token_id) {
     address,
     token_id
   );
-  console.log(output);
+
   if (result.isOk) {
     return output.toHuman();
   }
@@ -172,7 +172,7 @@ async function getLimitUnstakeTime(caller_account) {
     address,
     { value: azero_value, gasLimit }
   );
-  console.log(output);
+
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
