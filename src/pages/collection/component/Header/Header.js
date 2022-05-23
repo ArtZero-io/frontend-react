@@ -15,13 +15,13 @@ import AzeroIcon from "@theme/assets/icon/Azero.png";
 import SocialCard from "@components/Card/Social";
 // import BN from "bn.js";
 
-import { IPFS_BASE_URL } from "@constants/index";
+// import { IPFS_BASE_URL } from "@constants/index";
 import { shortenNumber } from "@utils";
-import process from "process";
+// import process from "process";
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
-const baseURL = process.env.REACT_APP_API_BASE_URL;
-
+import { getCachedImageShort } from "@utils/index";
+// const baseURL = process.env.REACT_APP_API_BASE_URL;
 const overlay =
   "linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)";
 
@@ -38,29 +38,30 @@ function CollectionHeader({
   loading,
   nft_count,
 }) {
-  const getCollectionImage = (imageHash, size) => {
-    if (imageHash) {
-      const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
-      return (
-        baseURL +
-        "/getImage?input=" +
-        imageHash +
-        "&size=" +
-        size +
-        "&url=" +
-        callbackUrl
-      );
-    } else {
-      return "";
-    }
-  };
+  // const getCollectionImage = (imageHash, size) => {
+  //   if (imageHash) {
+  //     const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
+  //     return (
+  //       baseURL +
+  //       "/getImage?input=" +
+  //       imageHash +
+  //       "&size=" +
+  //       size +
+  //       "&url=" +
+  //       callbackUrl
+  //     );
+  //   } else {
+  //     return "";
+  //   }
+  // };
   return (
     <Box
       maxH={"34rem"}
       minH={{ base: "22rem", "2xl": "34rem" }}
       as="section"
       position="relative"
-      maxW="container.3xl"
+      // maxW="container.3xl"
+      w="full"
       bg={overlay}
     >
       <Box
@@ -86,7 +87,7 @@ function CollectionHeader({
               h="full"
               rounded="full"
               objectFit="cover"
-              src={getCollectionImage(avatarImage, 500)}
+              src={avatarImage && getCachedImageShort(avatarImage, 500)}
               fallback={
                 <Skeleton w={"7.5rem"} h={"7.5rem"} borderRadius="full" />
               }

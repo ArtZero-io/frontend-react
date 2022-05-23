@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -15,22 +14,14 @@ import {
   Square,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { clientAPI } from "@api/client";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { IPFS_BASE_URL } from "@constants/index";
-import {
-  getCachedImage,
-  getCachedImageShort,
-  secondsToTime,
-  delay,
-} from "@utils";
+import { getCachedImageShort, secondsToTime, delay } from "@utils";
 import staking_calls from "@utils/blockchain/staking_calls";
 import staking from "@utils/blockchain/staking";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import BN from "bn.js";
 import useInterval from "use-interval";
 
 function MyNFTCard({
@@ -49,7 +40,7 @@ function MyNFTCard({
   const [unstakeRequestTime, setUnstakeRequestTime] = useState(0);
   const [countdownTime, setCountdownTime] = useState(0);
   const [isUnstakeTime, setIsUnstakeTime] = useState(false);
-  const [nftImage, setNftImage] = useState(null);
+  // const [nftImage, setNftImage] = useState(null);
   const [limitUnstakeTime, setLimitUnstakeTime] = useState(0);
 
   const getRequestTime = async () => {
@@ -91,18 +82,7 @@ function MyNFTCard({
   }, 1000);
 
   useEffect(() => {
-    // setNftImage(
-    //   avatar
-    //     ? getCachedImage(
-    //         avatar,
-    //         500,
-    //         IPFS_BASE_URL + "/" + avatar.replace("ipfs://", "")
-    //       )
-    //     : ""
-    // );
     if (stakeStatus === 3) getRequestTime();
-    //console.log(listNFT,'showOnChainMetadata',showOnChainMetadata);
-    // requestUpdateNFT();
   }, [stakeStatus]);
 
   async function stakeAction(stakeStatus) {

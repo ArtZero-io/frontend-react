@@ -26,25 +26,19 @@ const Router = () => {
         path="/account"
         render={() => (
           <AccountLayout>
+            <Route exact path={ROUTES.ACCOUNT} component={GeneralPage} />
 
-              <Route exact path={ROUTES.ACCOUNT} component={GeneralPage} />
-
-              <Route
-                exact
-                path={ROUTES.ACCOUNT_MY_COLLECTIONS}
-                component={MyCollectionsPage}
-              />
-              <Route
-                exact
-                path={ROUTES.ACCOUNT_MY_NFTS}
-                component={MyNFTsPage}
-              />
-              <Route
-                exact
-                path={ROUTES.ACCOUNT_MY_STAKES}
-                component={MyStakesPage}
-              />
-
+            <Route
+              exact
+              path={ROUTES.ACCOUNT_MY_COLLECTIONS}
+              component={MyCollectionsPage}
+            />
+            <Route exact path={ROUTES.ACCOUNT_MY_NFTS} component={MyNFTsPage} />
+            <Route
+              exact
+              path={ROUTES.ACCOUNT_MY_STAKES}
+              component={MyStakesPage}
+            />
           </AccountLayout>
         )}
       />
@@ -53,9 +47,7 @@ const Router = () => {
         path="/admin"
         render={() => (
           <AdminLayout>
-
-              <Route exact path={ROUTES.ACCOUNT_ADMIN} component={AdminPage} />
-
+            <Route exact path={ROUTES.ACCOUNT_ADMIN} component={AdminPage} />
           </AdminLayout>
         )}
       />
@@ -74,7 +66,6 @@ const Router = () => {
       <Route exact path={ROUTES.DETAIL_COLLECTION} component={CollectionPage} />
       <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
       <Route exact path={ROUTES.HOME} component={HomePage} />
-
     </Switch>
   );
 };

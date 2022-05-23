@@ -63,8 +63,6 @@ const CollectionItems = ({
       result = result.sort((a, b) => b.price - a.price);
     }
 
-    
-
     return result;
   };
 

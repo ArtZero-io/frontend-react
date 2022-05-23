@@ -128,7 +128,12 @@ const CollectionsPage = () => {
         </Center>
       ) : (
         <>
-          <Box as="section" maxW="container.3xl" position="relative">
+          <Box
+            as="section"
+            // maxW="container.3xl"
+            w="full"
+            position="relative"
+          >
             <Box
               mx="auto"
               maxW={{ base: "auto", "2xl": "7xl" }}
@@ -143,7 +148,11 @@ const CollectionsPage = () => {
             </Box>
           </Box>
 
-          <Box as="section" maxW="container.3xl">
+          <Box
+            as="section"
+            // maxW="container.3xl"
+            w="full"
+          >
             <Box
               mx="auto"
               maxW={{ base: "auto", "2xl": "7xl" }}
@@ -165,11 +174,17 @@ const CollectionsPage = () => {
             </Box>
           </Box>
 
-          <Box as="section" maxW="container.3xl">
+          <Box
+            as="section"
+            // maxW="container.3xl"
+            w="full"
+          >
             <Box
               mx="auto"
-              maxW={{ base: "auto", "2xl": "7xl" }}
-              px={{ base: "8", "2xl": "4" }}
+              // maxW={{ base: "auto", "2xl": "7xl" }}
+              maxW="1240px"
+              // px={{ base: "8", "2xl": "4" }}
+              px="0"
               py={{ base: "12", "2xl": "20" }}
             >
               <Heading size="h2" my="5rem" textAlign="center">
@@ -198,7 +213,6 @@ const CollectionsPage = () => {
 
                   {collections?.length ? (
                     <GridA
-                      bg="yellow"
                       collections={collections}
                       variant="marketplace-collection"
                     />

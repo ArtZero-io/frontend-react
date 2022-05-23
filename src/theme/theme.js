@@ -38,7 +38,7 @@ const theme = extendTheme({
         margin: 0,
         padding: 0,
         backgroundColor: "#000",
-        color: "#888",
+        color: "#fff",
         fontWeight: "normal",
         fontSize: "16px",
         // "-msOverflowStyle": "none",

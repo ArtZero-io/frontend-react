@@ -18,12 +18,22 @@ import PolkadotjsLogo from "@utils/wallets/PolkadotjsLogo.svg";
 import TalismanLogo from "@utils/wallets/TalismanLogo.svg";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { loadAccounts } from "@utils/substrate/SubstrateContext";
+import { motion } from "framer-motion";
 
 function WalletNotConnected(props) {
   const { dispatch, state } = useSubstrate();
   const [, setSelectedExtensionLocal] = useLocalStorage("selectedExtension");
 
   const { keyring } = state;
+  const buttonVariants = {
+    initial: {
+      scale: 1,
+    },
+
+    hover: {
+      scale: 0.95,
+    },
+  };
 
   SUPPORTED_WALLET_LIST.map(
     (item) =>
@@ -47,11 +57,33 @@ function WalletNotConnected(props) {
         bg="transparent"
         height="100%"
         mx="auto"
-        w={["12rem", "26rem", "28rem"]}
+        // w={["12rem", "26rem", "28rem"]}
       >
         <Flex align="center" justify="end" height="100%">
-          <Menu autoSelect={false} placement="bottom-end">
-            <MenuButton
+          <Menu autoSelect={false} placement="bottom-end" offset={[0, 18]}>
+            <motion.div
+              initial="initial"
+              whileHover="hover"
+              variants={buttonVariants}
+              transition={{
+                // ease: [0.34, 1.56, 0.64, 1],
+                curve: [0.17, 0.67, 0.83, 0.67],
+              }}
+            >
+              <MenuButton
+                as={Button}
+                h="50px"
+                px="8"
+                fontSize="15px"
+                lineHeight="shorter"
+                minW="10rem"
+                bg="brand.blue"
+                color="blackAlpha.900"
+              >
+                connect wallet
+              </MenuButton>
+            </motion.div>
+            {/* <MenuButton
               as={Button}
               height="14"
               px="8"
@@ -60,8 +92,8 @@ function WalletNotConnected(props) {
               bg="brand.blue"
               color="blackAlpha.900"
             >
-              Connect Wallet
-            </MenuButton>
+              connect wallet
+            </MenuButton> */}
             <MenuList
               bg={"brand.grayDark"}
               borderRadius="0"
@@ -90,12 +122,16 @@ function WalletNotConnected(props) {
                             <Image src={PolkadotjsLogo} alt={extensionName} />
                           )}
                         </Box>
-                        <Text size="sm" ml="3" mr="2">
+                        <Text fontSize="15px" pl="16px" mr="2">
                           {title}
                         </Text>
 
                         {!installed && (
-                          <Link href={installUrl} isexternal="true">
+                          <Link
+                            href={installUrl}
+                            isexternal="true"
+                            fontSize="15px"
+                          >
                             Install <ExternalLinkIcon mx="1px" />
                           </Link>
                         )}

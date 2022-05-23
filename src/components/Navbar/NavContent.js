@@ -8,8 +8,9 @@ import {
   MenuItem,
   MenuList,
   useDisclosure,
-  Heading,
   Button,
+  Text,
+  Flex,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { HiOutlineMenu, HiX } from "react-icons/hi";
@@ -28,7 +29,7 @@ import { useLocation } from "react-router-dom";
 const links = [
   { label: "Home", href: ROUTES.HOME },
   { label: "Marketplace", href: ROUTES.MARKETPLACE },
-  // { label: "TGE", href: ROUTES.MINTING_EVENT },
+  { label: "TGE", href: ROUTES.MINTING_EVENT },
 ];
 
 const MobileNavContent = (props) => {
@@ -73,27 +74,32 @@ const DesktopNavContent = (props) => {
   const { currentAccount } = useSubstrateState();
 
   return (
-    <HStack
-      spacing="8"
-      align="stretch"
-      {...props}
-      overflowX="hidden"
-      alignItems="center"
-      pl={1}
-    >
-      {links.map((link, index) => (
-        <NavLink.Desktop key={index} label={link.label} to={link.href} />
-      ))}
+    <Flex w="full">
+      <HStack
+        spacing="55px"
+        align="stretch"
+        overflowX="hidden"
+        alignItems="center"
+        justifyContent="center"
+        pl={1}
+        w="full"
+        {...props}
+      >
+        {links.map((link, index) => (
+          <NavLink.Desktop key={index} label={link.label} to={link.href} />
+        ))}
 
-      {/* {currentAccount && currentAccount?.address && (
-        <NavLink.Desktop label="Admin" to={ROUTES.ACCOUNT_ADMIN} />
-      )} */}
+        {currentAccount && currentAccount?.address && (
+          <NavLink.Desktop label="Admin" to={ROUTES.ACCOUNT_ADMIN} />
+        )}
 
-      {<NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />}
+        {<NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />}
 
-      {currentAccount && currentAccount?.address && <MyAccountDropdown />}
+        {currentAccount?.address && <MyAccountDropdown />}
+      </HStack>
+
       <WalletSelector />
-    </HStack>
+    </Flex>
   );
 };
 
@@ -101,12 +107,14 @@ export const NavContent = {
   Mobile: MobileNavContent,
   Desktop: DesktopNavContent,
 };
+
 const myAccountList = [
   { label: "General", href: ROUTES.ACCOUNT },
   { label: "My Collections", href: ROUTES.ACCOUNT_MY_COLLECTIONS },
   { label: "My NFTs", href: ROUTES.ACCOUNT_MY_NFTS },
   { label: "My Stakes", href: ROUTES.ACCOUNT_MY_STAKES },
 ];
+
 const MyAccountDropdown = () => {
   const history = useHistory();
   const location = useLocation();
@@ -116,31 +124,49 @@ const MyAccountDropdown = () => {
   }, [location.pathname]);
   return (
     <Box>
-      <Menu autoSelect={false} placement="bottom" offset={[-32, 12]}>
+      <Menu
+        autoSelect={false}
+        placement="bottom"
+        offset={[-32, 12]}
+        borderBottom="0"
+        // borderColor={path.includes("/account/") ? "brand.blue" : "transparent"}
+      >
         <MenuButton
+          // bg="yellow"
+          h="41px"
           _hover={{
             borderColor: "brand.blue",
             color: "brand.blue",
           }}
+          _focus={{
+            bg: "black",
+          }}
           ring={0}
           textAlign="left"
           borderBottom="2px"
-          borderColor="transparent"
+          // borderColor="yellow"
           transition="all 0.2s"
           as={Button}
           p={0}
-          h={7}
+          // h={7}
           bg="transparent"
+          borderColor={
+            path.includes("/account/") ? "brand.blue" : "transparent"
+          }
+          py="10px"
+          display="flex"
+          justifyContent="center"
         >
-          <Heading
-            size="sm"
+          <Text
+            // borderBottom="2px"
             m={0}
+            fontSize="15px"
+            lineHeight="shorter"
             fontFamily="Evogria, sans-serif"
-            fontWeight="medium"
-            color={path.includes("/account/") ? "brand.blue" : "#ccc"}
+            color={path.includes("/account/") ? "brand.blue" : "#fff"}
           >
             My Account
-          </Heading>
+          </Text>
         </MenuButton>
         <MenuList
           minW={8}

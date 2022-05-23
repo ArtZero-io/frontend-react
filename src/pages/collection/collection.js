@@ -289,7 +289,9 @@ function CollectionPage() {
           <Tabs isLazy align="center">
             <TabList bg="#000" borderBottomColor="#000">
               {tabData.map((tab, index) => (
-                <Tab key={index}>{tab.label}</Tab>
+                <Tab key={index} fontStyle="italic">
+                  {tab.label}
+                </Tab>
               ))}
             </TabList>
 
