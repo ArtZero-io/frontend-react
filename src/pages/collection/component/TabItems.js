@@ -13,11 +13,11 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { RiLayoutGridLine } from "react-icons/ri";
 import { BsGrid3X3 } from "react-icons/bs";
+import { MdRefresh } from "react-icons/md";
 
 import AddNewNFTModal from "./Modal/AddNewNFT";
 
 import Dropdown from "@components/Dropdown/Dropdown";
-import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import NFTDetailModal from "./Modal/NFTDetail";
@@ -72,19 +72,20 @@ const CollectionItems = ({
     <Box w="full" textAlign="left" minH={"54rem"}>
       <Stack direction={{ base: "column", xl: "row" }} w="full">
         <IconButton
-          display={{ base: "none", xl: "block" }}
+          display={{ base: "none", xl: "flex" }}
           aria-label="refresh"
-          icon={<RefreshIcon fontSize="1.5rem" />}
+          icon={<MdRefresh fontSize="1.5rem" />}
           size="icon"
           variant="iconSolid"
           mx={1.5}
+          _hover={{ color: "black", bg: "#7ae7ff" }}
           onClick={() => forceUpdate()}
         />
         <Flex justifyContent="space-between">
           <IconButton
-            display={{ base: "block", xl: "none" }}
+            display={{ base: "flex", xl: "none" }}
             aria-label="refresh"
-            icon={<RefreshIcon fontSize="1.5rem" />}
+            icon={<MdRefresh fontSize="1.5rem" />}
             size="icon"
             variant="iconSolid"
             mx={1.5}
@@ -162,7 +163,9 @@ const CollectionItems = ({
 
       <Flex
         align="center"
-        py={{ base: 2, xl: "1.25rem", "2xl": 4 }}
+        // py={{ base: 2, xl: "1.25rem", "2xl": 4 }}
+        pt="64px"
+        pb="16px"
         minH={{ base: 14, "2xl": 24 }}
         w="full"
       >
@@ -173,7 +176,7 @@ const CollectionItems = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <Text px={2} display={{ base: "none", xl: "block" }}>
+              <Text px={2} display={{ base: "none", xl: "block" }} color="#888">
                 {totalCollectionsCount || 0} items{" "}
                 {isShowUnlisted % 3 === 0
                   ? "in total"
@@ -242,8 +245,8 @@ function GridNftA({ listNFTFormatted, bigCard }) {
           style={{
             display: "grid",
             gridGap: "1.875rem",
-            // gridAutoRows: "20.625rem",
-            gridAutoFlow: "dense",
+            // gridAutoRows: "20.625rem", 
+            gridAutoFlow: "dense", 
             gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${
               bigCard ? "25rem" : "20rem"
             }), 1fr))`,

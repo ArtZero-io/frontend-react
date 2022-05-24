@@ -19,8 +19,7 @@ const HomeLayout = ({ children }) => {
       <Flex
         id="image-wrapper"
         position="absolute"
-        insetX="0"
-        bottom="0"
+        inset="0"
         w="full"
         // h={"90vh"}
         h="4133px"
@@ -35,6 +34,7 @@ const HomeLayout = ({ children }) => {
             w="full"
             h="full"
             objectPosition="center"
+            objectFit="cover"
             position="absolute"
           />
         </Box>

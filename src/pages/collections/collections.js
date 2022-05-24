@@ -128,7 +128,9 @@ const CollectionsPage = () => {
         </Center>
       ) : (
         <>
+          {/* TEMP ONLY */}
           <Box
+            hidden
             as="section"
             // maxW="container.3xl"
             w="full"
@@ -155,8 +157,10 @@ const CollectionsPage = () => {
           >
             <Box
               mx="auto"
-              maxW={{ base: "auto", "2xl": "7xl" }}
-              px={{ base: "8", "2xl": "4" }}
+              maxW="1240px"
+              // maxW={{ base: "auto", "2xl": "7xl" }}
+              // px={{ base: "8", "2xl": "4" }}
+              px="0"
               pt={{ base: "12", "2xl": "20" }}
             >
               <Heading size="h2" my="5rem" textAlign="center">
@@ -165,7 +169,6 @@ const CollectionsPage = () => {
               <>
                 {featuredCollections?.length ? (
                   <GridA
-                    bg="yellow"
                     collections={featuredCollections}
                     variant="marketplace-collection"
                   />
@@ -185,7 +188,9 @@ const CollectionsPage = () => {
               maxW="1240px"
               // px={{ base: "8", "2xl": "4" }}
               px="0"
-              py={{ base: "12", "2xl": "20" }}
+              pt="80px"
+              pb="100px"
+              // py={{ base: "12", "2xl": "20" }}
             >
               <Heading size="h2" my="5rem" textAlign="center">
                 All collections
@@ -194,8 +199,9 @@ const CollectionsPage = () => {
                 <>
                   <Flex
                     w="full"
-                    alignItems={{ base: "start", xl: "end" }}
-                    direction={{ base: "column", xl: "row" }}
+                    pb="16px"
+                    alignItems={{ base: "start", md: "end" }}
+                    direction={{ base: "column", md: "row" }}
                   >
                     <PaginationMP
                       pagesCount={pagesCount}
@@ -218,7 +224,7 @@ const CollectionsPage = () => {
                     />
                   ) : null}
 
-                  <Flex w="full" alignItems="end">
+                  <Flex w="full" alignItems="end" pt="20px">
                     <PaginationMP
                       isDisabled={isDisabled}
                       currentPage={currentPage}

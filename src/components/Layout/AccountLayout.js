@@ -47,6 +47,7 @@ const AccountLayout = ({ children }) => {
           onChange={handleTabsChange}
           align="center"
           isLazy
+          colorScheme="brand.blue"
         >
           <TabList>
             {tabData.map((tab) => (
@@ -55,9 +56,10 @@ const AccountLayout = ({ children }) => {
                 fontFamily="Evogria Italic, san serif"
                 color="#fff"
                 fontSize="lg"
-                pb={5}
-                px={1}
                 mx={4}
+                fontStyle="italic"
+                px="0.5px"
+                py="20px"
               >
                 {tab.label}
               </Tab>

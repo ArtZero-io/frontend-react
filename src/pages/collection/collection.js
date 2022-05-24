@@ -286,16 +286,22 @@ function CollectionPage() {
         <>
           <CollectionHeader {...formattedCollection} loading={loading} />
 
-          <Tabs isLazy align="center">
+          <Tabs isLazy align="center" colorScheme="brand.blue">
             <TabList bg="#000" borderBottomColor="#000">
               {tabData.map((tab, index) => (
-                <Tab key={index} fontStyle="italic">
+                <Tab
+                  key={index}
+                  fontStyle="italic"
+                  px="0.5px"
+                  pb="20px"
+                  fontSize="lg"
+                >
                   {tab.label}
                 </Tab>
               ))}
             </TabList>
 
-            <TabPanels h="full" minH="xs" bg="#171717">
+            <TabPanels h="full" minH="md" bg="#171717">
               {tabData.map((tab, index) => (
                 <TabPanel
                   pt={4}
@@ -304,6 +310,7 @@ function CollectionPage() {
                   h="full"
                 >
                   {tab.content}
+
                   <Flex
                     w="full"
                     py="1.5rem"

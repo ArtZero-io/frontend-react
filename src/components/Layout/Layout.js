@@ -20,7 +20,6 @@ const Layout = ({ backdrop, children, variant = null }) => {
       bgPosition="top"
       bgRepeat="no-repeat"
       bgSize="cover"
-      border="2px dotted yellow"
       bg={variant === "collection-detail" ? linerGradient : " "}
     >
       {variant === "collection-detail" && (
@@ -29,9 +28,10 @@ const Layout = ({ backdrop, children, variant = null }) => {
           position="absolute"
           insetX="0"
           w="full"
-          h={{ base: "full", xl: "auto" }}
-          maxH={"41rem"}
-          minH={{ base: "29rem", "2xl": "41rem" }}
+          h={{ base: "full", xl: "760px" }}
+          // maxH={"41rem"}
+          // h='776px'
+          // minH={{ base: "29rem", "2xl": "41rem" }}
           overflow="hidden"
           align="center"
           zIndex="hide"

@@ -38,9 +38,9 @@ const PaginationMP = ({
     <Stack
       maxW="25rem"
       textAlign="left"
-      align={{ base: "start", "xl": "space-between" }}
+      align={{ base: "start", xl: "space-between" }}
     >
-      <Text color="brand.grayLight" ml="1">
+      <Text color="brand.grayLight" ml="1" mb="19px">
         Page {currentPage} of {pagesCount}
       </Text>
       <Pagination
@@ -56,7 +56,7 @@ const PaginationMP = ({
           w="full"
         >
           <IconButton
-            color="#888"
+            color="#fff"
             mr={2}
             size="icon"
             icon={<ArrowLeftIcon />}
@@ -66,7 +66,7 @@ const PaginationMP = ({
             disabled={currentPage === 1}
             _disabled={{
               bg: "#222",
-              color: "#333",
+              color: "#555",
               cursor: "not-allowed",
               _hover: {
                 bg: "#7ae7ff",
@@ -75,9 +75,9 @@ const PaginationMP = ({
           />
 
           <PaginationPrevious
+            className="previous-btn"
             p={0}
             mr={2}
-            color="#888"
             bg="#222"
             _hover={{
               bg: "brand.blue",
@@ -85,20 +85,22 @@ const PaginationMP = ({
           >
             <Square size="3.125rem">
               <ChevronLeftIcon
-                _hover={{
-                  color: "black",
+                sx={{
+                  ".previous-btn:hover &": {
+                    color: "black",
+                  },
                 }}
-                width="1.5rem"
-                height="1.5rem"
-                color="#888"
+                width="24px"
+                height="24px"
+                color="#fff"
               />
             </Square>
           </PaginationPrevious>
 
           <PaginationNext
+            className="next-btn"
             p={0}
             mr={2}
-            color="#888"
             bg="#222"
             _hover={{
               bg: "brand.blue",
@@ -107,18 +109,20 @@ const PaginationMP = ({
           >
             <Square size="3.125rem">
               <ChevronRightIcon
-                _hover={{
-                  color: "black",
+                sx={{
+                  ".next-btn:hover &": {
+                    color: "black",
+                  },
                 }}
-                width="1.5rem"
-                height="1.5rem"
-                color="#888"
+                width="24px"
+                height="24px"
+                color="#fff"
               />
             </Square>
           </PaginationNext>
 
           <IconButton
-            color="#888"
+            color="#fff"
             mr={2}
             size="icon"
             icon={<ArrowRightIcon />}
@@ -128,7 +132,7 @@ const PaginationMP = ({
             disabled={currentPage >= pagesCount}
             _disabled={{
               bg: "#222",
-              color: "#333",
+              color: "#555",
               cursor: "not-allowed",
               _hover: {
                 bg: "#7ae7ff",
@@ -136,9 +140,11 @@ const PaginationMP = ({
             }}
           />
           <Input
+            fontSize="lg"
+            pl="17px"
             placeholder="Go to page"
             onKeyPress={onEnterHandler}
-            display={{ base: "none", "xl": "block" }}
+            display={{ base: "none", md: "block" }}
           />
         </PaginationContainer>
       </Pagination>

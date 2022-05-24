@@ -8,14 +8,14 @@ import {
   Tag,
   TagLabel,
   TagRightIcon,
-  Text,
   VStack,
   Square,
+  useDimensions,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { IPFS_BASE_URL } from "@constants/index";
-import process from "process";
-const baseURL = process.env.REACT_APP_API_BASE_URL;
+import { getCachedImageShort } from "@utils/index";
+import PixelCard from "@components/Card/PixelCard";
+import { useRef } from "react";
 
 export default function NFTChangeSizeCard({
   bidPrice,
@@ -26,27 +26,19 @@ export default function NFTChangeSizeCard({
   bigCard,
   highest_bid,
 }) {
-
-  const getNFTImage = (imageHash, size) => {
-    const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
-    return (
-      baseURL +
-      "/getImage?input=" +
-      imageHash +
-      "&size=" +
-      size +
-      "&url=" +
-      callbackUrl
-    );
-  };
+  const elementRef = useRef();
+  const dimensions = useDimensions(elementRef, true);
 
   return (
     <Box
+      pos="relative"
+      ref={elementRef}
       h="full"
       borderColor="transparent"
       borderWidth={"2px"}
       _hover={{ borderColor: "brand.blue" }}
     >
+      <PixelCard dimensions={dimensions} />
       <Flex
         direction="column"
         align="center"
@@ -65,7 +57,7 @@ export default function NFTChangeSizeCard({
             bg="#372648"
             alt={nftName}
             objectFit="cover"
-            src={getNFTImage(avatar, 500)}
+            src={avatar && getCachedImageShort(avatar, 500)}
             h="full"
             w="full"
             fallback={
@@ -82,9 +74,11 @@ export default function NFTChangeSizeCard({
           justifyContent="space-between"
           alignItems="start"
           flexGrow="1"
-          minH="8.125rem"
+          minH={is_for_sale ? "8.125rem" : ""}
         >
-          <Heading size="h6">{nftName}</Heading>
+          <Heading size="h6" textTransform="lowercase">
+            {nftName}
+          </Heading>
 
           {is_for_sale ? (
             <Flex w="full">
@@ -110,11 +104,13 @@ export default function NFTChangeSizeCard({
                         Highest Offer {highest_bid / 10 ** 12}
                       </TagLabel>
                       <TagRightIcon as={AzeroIcon} />
-                    </Tag> 
+                    </Tag>
                   ) : (
                     <>
                       <Tag h={10} bg="transparent">
-                        <TagLabel bg="transparent" color='brand.grayLight'>No offer yet </TagLabel>
+                        <TagLabel bg="transparent" color="brand.grayLight">
+                          No offer yet{" "}
+                        </TagLabel>
                       </Tag>
                     </>
                   )}
@@ -122,9 +118,12 @@ export default function NFTChangeSizeCard({
               </Flex>
             </Flex>
           ) : (
-            <Text textAlign="center" fontSize="lg">
-              Not for sale
-            </Text>
+            // <Text textAlign="center" fontSize="lg">
+            //   Not for sale
+            // </Text>
+            <Tag h={10}>
+              <TagLabel>Not for sale</TagLabel>
+            </Tag>
           )}
         </VStack>
       </Flex>

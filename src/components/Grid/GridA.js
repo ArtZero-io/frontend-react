@@ -7,7 +7,7 @@ import SimpleModeModal from "../../pages/account/collections/components/Modal/Si
 import { CollectionCard } from "../Card/Collection";
 import * as ROUTES from "@constants/routes";
 import { useDimensions } from "@chakra-ui/react";
-import PixelCard from "@components/Card/PixelCard";
+// import PixelCard from "@components/Card/PixelCard";
 
 export default function GridA({ collections, variant = "my-collection" }) {
   const originOffset = useRef({ top: 0, left: 0 });
@@ -49,7 +49,7 @@ export default function GridA({ collections, variant = "my-collection" }) {
         justifyItems: "center",
       }}
     >
-      <PixelCard dimensions={dimensions} />
+      {/* <PixelCard dimensions={dimensions} /> */}
 
       {collections?.map((c, i) => (
         <GridItemA

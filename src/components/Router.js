@@ -3,7 +3,7 @@ import * as ROUTES from "@constants/routes";
 
 import HomePage from "@pages/home";
 import MintPage from "@pages/mint";
-import AdminPage from "@pages/admin";
+// import AdminPage from "@pages/admin";
 
 import CollectionsPage from "@pages/collections/collections";
 import CollectionPage from "@pages/collection/collection";
@@ -47,7 +47,7 @@ const Router = () => {
         path="/admin"
         render={() => (
           <AdminLayout>
-            <Route exact path={ROUTES.ACCOUNT_ADMIN} component={AdminPage} />
+            <Route exact path={ROUTES.ACCOUNT_ADMIN} />
           </AdminLayout>
         )}
       />

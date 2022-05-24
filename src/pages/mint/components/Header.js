@@ -173,7 +173,9 @@ function MintHeader({ loading }) {
       >
         <VStack textAlign="center" justifyContent="space-between">
           <Center w="full" pos="relative">
-            <Heading size="h2">Token Generation Event</Heading>
+            <Heading size="h2" textTransform="lowercase">
+              Token Generation Event
+            </Heading>
           </Center>
 
           <Text fontSize="lg" maxW="6xl-mid" color="#fff" mt={5}>
@@ -192,7 +194,9 @@ function MintHeader({ loading }) {
           <Box fontSize="lg" bg="brand.grayDark" padding={7} minH="xs">
             <Flex direction="column" justifyContent="space-between" h="full">
               <Box h="full">
-                <Heading size="h6">Your Account:</Heading>
+                <Heading textTransform="lowercase" size="h6">
+                  Your Account:
+                </Heading>
                 <Text mt={3}>
                   Your address:{" "}
                   <span style={{ color: "#7ae7ff" }}>
@@ -205,7 +209,9 @@ function MintHeader({ loading }) {
                 </Text>
               </Box>
               <Box>
-                <Heading size="h6">ArtZero's NFT information:</Heading>
+                <Heading textTransform="lowercase" size="h6">
+                  ArtZero's NFT information:
+                </Heading>
                 <Text mt={3}>
                   Total Supply: <span style={{ color: "#fff" }}>200</span>
                 </Text>
@@ -221,13 +227,13 @@ function MintHeader({ loading }) {
             <Flex direction="column" justifyContent="space-between" h="full">
               <Box>
                 {!whitelist && (
-                  <Heading size="h6">
+                  <Heading size="h6" textTransform="lowercase">
                     You are not in the whitelist for minting ArtZero NFTs
                   </Heading>
                 )}
                 {whitelist && (
                   <>
-                    <Heading size="h6">
+                    <Heading size="h6" textTransform="lowercase">
                       You are in the whitelist for minting ArtZero NFTs
                     </Heading>
                     <Text mt={3}>
@@ -287,7 +293,9 @@ function MintHeader({ loading }) {
           <Box fontSize="lg" bg="brand.grayDark" padding={7} minH="xs">
             <Flex direction="column" justifyContent="space-between" h="full">
               <Box>
-                <Heading size="h6">Public Minting</Heading>
+                <Heading textTransform="lowercase" size="h6">
+                  Public Minting
+                </Heading>
                 {Number(mintMode) <= 0 ? (
                   <Flex alignItems="center">
                     <Text>Status:</Text>

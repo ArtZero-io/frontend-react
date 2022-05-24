@@ -17,10 +17,7 @@ import ActiveIcon from "@theme/assets/icon/Active.js";
 import InActiveIcon from "@theme/assets/icon/InActive.js";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
-import { IPFS_BASE_URL } from "@constants/index";
-import process from "process";
-
-const baseURL = process.env.REACT_APP_API_BASE_URL;
+import { getCachedImageShort } from "@utils/index";
 
 export const CollectionCard = ({
   headerImage,
@@ -32,19 +29,6 @@ export const CollectionCard = ({
   isActive,
   variant,
 }) => {
-  const getCollectionImage = (imageHash, size) => {
-    const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
-    return (
-      baseURL +
-      "/getImage?input=" +
-      imageHash +
-      "&size=" +
-      size +
-      "&url=" +
-      callbackUrl
-    );
-  };
-
   return (
     <Box
       className="my-collection-card"
@@ -71,7 +55,27 @@ export const CollectionCard = ({
           width="full"
           h={"16.25rem"}
           sx={{
+            ".my-collection-card &": {
+              _after: {
+                content: '""',
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "full",
+                height: "6rem",
+                backgroundImage:
+                  "linear-gradient(180deg, rgba(0, 0, 0, 0) 25.77%, #000000 100%);",
+              },
+            },
             ".my-collection-card:hover &": {
+              _after: {
+                content: '""',
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "0",
+                height: "0",
+              },
               _before: {
                 content: '""',
                 position: "absolute",
@@ -80,7 +84,7 @@ export const CollectionCard = ({
                 width: "full",
                 height: "6rem",
                 backgroundImage:
-                  "linear-gradient(180deg, #7ae7ff00 25%, #7AE7FF 100%)",
+                  "linear-gradient(180deg, rgba(122, 231, 255, 0) 25.77%, #7AE7FF 100%);",
               },
             },
           }}
@@ -90,7 +94,7 @@ export const CollectionCard = ({
             w="full"
             h={"16.25rem"}
             objectFit="cover"
-            src={getCollectionImage(squareImage, 500)}
+            src={getCachedImageShort(squareImage, 500)}
             fallback={<Skeleton w="full" h="full" maxH={"16.25rem"} />}
           />
         </Box>
@@ -110,7 +114,7 @@ export const CollectionCard = ({
             h="full"
             rounded="full"
             objectFit="cover"
-            src={getCollectionImage(avatarImage, 100)}
+            src={getCachedImageShort(avatarImage, 100)}
             fallback={<Skeleton w={16} h={16} rounded="full" />}
           />
         </Center>

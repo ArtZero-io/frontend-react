@@ -124,22 +124,11 @@ const MintPage = () => {
       <Box as="section" maxW="container.3xl" position="relative">
         <MintHeader setMyAZNFTs={setMyAZNFTs} loading={loading} />
 
-        <Tabs isLazy align="center">
+        <Tabs isLazy align="center" colorScheme="brand.blue">
           <TabList bg="#000" borderBottomColor="#000">
-            <Tab>My Artzero Nfts</Tab>
-            {/* {tabData.map((tab) => (
-              <Tab
-                key={tab.label}
-                fontFamily="Evogria Italic, san serif"
-                color="#fff"
-                pb={5}
-                px={1}
-                mx={4}
-                fontSize="lg"
-              >
-                {tab.label}
-              </Tab>
-            ))} */}
+            <Tab px="0.5px" pb="20px" fontSize="lg" fontStyle="italic">
+              my artzero nfts
+            </Tab>
           </TabList>
           {keyringState === "READY" ? (
             <TabPanels h="full" minH="xs" bg="#171717">
