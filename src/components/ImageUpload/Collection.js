@@ -17,7 +17,7 @@ import { Buffer } from "buffer";
 import { IPFS_CLIENT_URL } from "@constants/index";
 import toast from "react-hot-toast";
 import { clientAPI } from "@api/client";
-import { IPFS_BASE_URL } from "@constants/index";
+import { getCachedImageShort } from "@utils/index";
 
 const client = create(IPFS_CLIENT_URL);
 const supportedFormat = ["image/png", "image/jpg", "image/jpeg"];
@@ -145,7 +145,8 @@ const ImageUploadCollection = ({
             minH={16}
             minW={16}
             ml={2}
-            src={`${IPFS_BASE_URL}/${imageIPFSUrl}`}
+            // src={`${IPFS_BASE_URL}/${imageIPFSUrl}`}
+            src={getCachedImageShort(imageIPFSUrl, 100)}
           />
         )}
 
