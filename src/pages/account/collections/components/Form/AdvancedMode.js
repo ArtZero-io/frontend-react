@@ -54,7 +54,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
         const maxRoyalFeeRateData =
           await collection_manager_calls.getMaxRoyalFeeRate(currentAccount);
 
-          setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
+        setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
       }
     };
     fetchFee();
@@ -80,6 +80,10 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
       collectionDescription: "",
       collectRoyalFee: "",
       royalFee: 5,
+      website: "",
+      twitter: "",
+      discord: "",
+      agreeTosCheckbox: false,
     };
 
     const fetchCollectionsByID = async () => {
@@ -96,7 +100,10 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           royalFee,
           avatarImage,
           headerImage,
-          headerSquareImage,
+          squareImage,
+          website,
+          twitter,
+          discord,
         } = dataList;
 
         newInitialValues = {
@@ -107,12 +114,15 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           collectRoyalFee,
           royalFee: royalFee / 100,
           agreeTosCheckbox: false,
+          website,
+          twitter,
+          discord,
         };
 
         if (dataList) {
           setAvatarIPFSUrl(avatarImage);
           setHeaderIPFSUrl(headerImage);
-          setHeaderSquareIPFSUrl(headerSquareImage);
+          setHeaderSquareIPFSUrl(squareImage);
           setIsSetRoyal(collectRoyalFee);
           setInitialValues(newInitialValues);
         } else {
@@ -152,6 +162,18 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 .max(150, "Must be less than 150 characters")
                 .required("Required"),
               collectRoyalFee: Yup.boolean(),
+              website: Yup.string()
+                .url("This must be a valid URL")
+                .min(3, "Must be longer than 3 characters")
+                .max(50, "Must be less than 50 characters"),
+              twitter: Yup.string()
+                .url("This must be a valid URL")
+                .min(3, "Must be longer than 3 characters")
+                .max(50, "Must be less than 50 characters"),
+              discord: Yup.string()
+                .url("This must be a valid URL")
+                .min(3, "Must be longer than 3 characters")
+                .max(50, "Must be less than 50 characters"),
 
               agreeTosCheckbox: Yup.boolean().when("isEditMode", {
                 is: false,
@@ -189,6 +211,9 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     "avatar_image",
                     "header_image",
                     "header_square_image",
+                    "website",
+                    "twitter",
+                    "discord",
                   ],
 
                   attributeVals: [
@@ -197,6 +222,9 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     values.avatarIPFSUrl,
                     values.headerIPFSUrl,
                     values.headerSquareIPFSUrl,
+                    values.website,
+                    values.twitter,
+                    values.discord,
                   ],
 
                   collectionAllowRoyalFee: values.collectRoyalFee,
@@ -214,6 +242,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 });
 
                 if (mode === "add") {
+                  console.log('mode === "add" data', data)
                   await collection_manager_calls.addNewCollection(
                     currentAccount,
                     data,
@@ -246,6 +275,27 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     name="collectionName"
                     type="collectionName"
                     placeholder="Collection Name"
+                  />
+                </HStack>
+
+                <HStack>
+                  <AdvancedModeInput
+                    label="Website URL"
+                    name="website"
+                    type="text"
+                    placeholder={"Website URL"}
+                  />
+                  <AdvancedModeInput
+                    label="Twitter URL"
+                    name="twitter"
+                    type="text"
+                    placeholder={"Twitter URL"}
+                  />
+                  <AdvancedModeInput
+                    label="Discord URL"
+                    name="discord"
+                    type="text"
+                    placeholder={"Discord URL"}
                   />
                 </HStack>
 
@@ -285,6 +335,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       limitedSize={{ width: "1920", height: "600" }}
                     />
                   </Stack>
+                  
                   <Stack
                     direction="column"
                     alignItems="start"
