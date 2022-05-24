@@ -1,9 +1,9 @@
 const marketplace = {
-  CONTRACT_ADDRESS: "5FvNuCS1sTfnNgtk544B8SnohTVjpMKLny19D1XJ5DkwBWZM",
+  CONTRACT_ADDRESS: "5CrqvMFA9kv5cwB3F12qjxiAg1DTig8zKCuUee7FrwnD9CRQ",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x3fdd4ef5b0a49c8dc52076d3fdb917a828e081ac4a43dff630268ae2ec47bdec",
-      "language": "ink! 3.0.0",
+      "hash": "0x645cf713d92936f51026b54e2e0df46007e26602a0e7b6f5064dd964d106eb17",
+      "language": "ink! 3.0.1",
       "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
@@ -96,6 +96,17 @@ const marketplace = {
                     "Id"
                   ],
                   "type": 7
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "price",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 10
                 }
               }
             ],
@@ -306,9 +317,184 @@ const marketplace = {
             ],
             "docs": [],
             "label": "BidWinEvent"
+          },
+          {
+            "args": [
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "bidder",
+                "type": {
+                  "displayName": [
+                    "Option"
+                  ],
+                  "type": 17
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "seller",
+                "type": {
+                  "displayName": [
+                    "Option"
+                  ],
+                  "type": 17
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "Option"
+                  ],
+                  "type": 17
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "Id"
+                  ],
+                  "type": 7
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "price",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 10
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "bid_value",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 10
+                }
+              }
+            ],
+            "docs": [],
+            "label": "BidEvent"
+          },
+          {
+            "args": [
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "bidder",
+                "type": {
+                  "displayName": [
+                    "Option"
+                  ],
+                  "type": 17
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "seller",
+                "type": {
+                  "displayName": [
+                    "Option"
+                  ],
+                  "type": 17
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "Option"
+                  ],
+                  "type": 17
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "Id"
+                  ],
+                  "type": 7
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "bid_value",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 10
+                }
+              }
+            ],
+            "docs": [],
+            "label": "RemoveBidEvent"
           }
         ],
         "messages": [
+          {
+            "args": [
+              {
+                "label": "collection_contract_address",
+                "type": {
+                  "displayName": [
+                    "AccountId"
+                  ],
+                  "type": 0
+                }
+              },
+              {
+                "label": "staking_contract_address",
+                "type": {
+                  "displayName": [
+                    "AccountId"
+                  ],
+                  "type": 0
+                }
+              },
+              {
+                "label": "platform_fee",
+                "type": {
+                  "displayName": [
+                    "u32"
+                  ],
+                  "type": 4
+                }
+              }
+            ],
+            "docs": [],
+            "label": "initialize",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 29
+            },
+            "selector": "0xf2f6dba3"
+          },
           {
             "args": [
               {
@@ -349,7 +535,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 29
+              "type": 31
             },
             "selector": "0x832a283f"
           },
@@ -384,7 +570,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 29
+              "type": 31
             },
             "selector": "0x5aeeb315"
           },
@@ -419,7 +605,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 29
+              "type": 31
             },
             "selector": "0x15d62801"
           },
@@ -454,7 +640,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 29
+              "type": 31
             },
             "selector": "0x668d28a7"
           },
@@ -489,7 +675,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 29
+              "type": 31
             },
             "selector": "0x412b6e0f"
           },
@@ -533,7 +719,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 29
+              "type": 31
             },
             "selector": "0x1856538b"
           },
@@ -559,7 +745,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 29
+              "type": 31
             },
             "selector": "0xe84bde5a"
           },
@@ -585,7 +771,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 29
+              "type": 31
             },
             "selector": "0xcf051612"
           },
@@ -620,7 +806,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 29
+              "type": 31
             },
             "selector": "0x693e798c"
           },
@@ -664,7 +850,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 29
+              "type": 31
             },
             "selector": "0xd34ab274"
           },
@@ -699,7 +885,7 @@ const marketplace = {
               "displayName": [
                 "Option"
               ],
-              "type": 32
+              "type": 34
             },
             "selector": "0xfd066a27"
           },
@@ -896,7 +1082,7 @@ const marketplace = {
               "displayName": [
                 "Option"
               ],
-              "type": 33
+              "type": 35
             },
             "selector": "0xb36025ae"
           },
@@ -1028,7 +1214,7 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 29
+              "type": 31
             },
             "selector": "0x07fdb555"
           },
@@ -1063,9 +1249,35 @@ const marketplace = {
               "displayName": [
                 "Result"
               ],
-              "type": 29
+              "type": 31
             },
             "selector": "0x8bb87aca"
+          },
+          {
+            "args": [
+              {
+                "label": "new_owner",
+                "type": {
+                  "displayName": [
+                    "ownable_external",
+                    "TransferOwnershipInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "TransferOwnershipOutput"
+              ],
+              "type": 29
+            },
+            "selector": "0x11f43efd"
           },
           {
             "args": [],
@@ -1093,35 +1305,9 @@ const marketplace = {
                 "ownable_external",
                 "RenounceOwnershipOutput"
               ],
-              "type": 34
+              "type": 29
             },
             "selector": "0x5e228753"
-          },
-          {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 34
-            },
-            "selector": "0x11f43efd"
           }
         ]
       },
@@ -1974,9 +2160,77 @@ const marketplace = {
               "variant": {
                 "variants": [
                   {
+                    "index": 0,
+                    "name": "CallerIsNotOwner"
+                  },
+                  {
+                    "index": 1,
+                    "name": "NewOwnerIsZero"
+                  }
+                ]
+              }
+            },
+            "path": [
+              "contracts",
+              "traits",
+              "errors",
+              "ownable",
+              "OwnableError"
+            ]
+          }
+        },
+        {
+          "id": 31,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
                     "fields": [
                       {
-                        "type": 31,
+                        "type": 3
+                      }
+                    ],
+                    "index": 0,
+                    "name": "Ok"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 32
+                      }
+                    ],
+                    "index": 1,
+                    "name": "Err"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "T",
+                "type": 3
+              },
+              {
+                "name": "E",
+                "type": 32
+              }
+            ],
+            "path": [
+              "Result"
+            ]
+          }
+        },
+        {
+          "id": 32,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "fields": [
+                      {
+                        "type": 33,
                         "typeName": "String"
                       }
                     ],
@@ -2022,7 +2276,7 @@ const marketplace = {
           }
         },
         {
-          "id": 31,
+          "id": 33,
           "type": {
             "def": {
               "primitive": "str"
@@ -2030,7 +2284,7 @@ const marketplace = {
           }
         },
         {
-          "id": 32,
+          "id": 34,
           "type": {
             "def": {
               "variant": {
@@ -2063,7 +2317,7 @@ const marketplace = {
           }
         },
         {
-          "id": 33,
+          "id": 35,
           "type": {
             "def": {
               "variant": {
@@ -2092,74 +2346,6 @@ const marketplace = {
             ],
             "path": [
               "Option"
-            ]
-          }
-        },
-        {
-          "id": 34,
-          "type": {
-            "def": {
-              "variant": {
-                "variants": [
-                  {
-                    "fields": [
-                      {
-                        "type": 3
-                      }
-                    ],
-                    "index": 0,
-                    "name": "Ok"
-                  },
-                  {
-                    "fields": [
-                      {
-                        "type": 35
-                      }
-                    ],
-                    "index": 1,
-                    "name": "Err"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "T",
-                "type": 3
-              },
-              {
-                "name": "E",
-                "type": 35
-              }
-            ],
-            "path": [
-              "Result"
-            ]
-          }
-        },
-        {
-          "id": 35,
-          "type": {
-            "def": {
-              "variant": {
-                "variants": [
-                  {
-                    "index": 0,
-                    "name": "CallerIsNotOwner"
-                  },
-                  {
-                    "index": 1,
-                    "name": "NewOwnerIsZero"
-                  }
-                ]
-              }
-            },
-            "path": [
-              "contracts",
-              "traits",
-              "errors",
-              "ownable",
-              "OwnableError"
             ]
           }
         }

@@ -1,9 +1,9 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5DBVykh9N7rx7pz8KFUt2ZpKffkLEZBYmYef3DDDFpBfr6zr",
+  CONTRACT_ADDRESS: "5CMHHuvnZ8E8xWD4Rzhkgo2YyeQmpg5mTLH1CysKu2VV15CC",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x39efc7a508a2dd26cb647163103a6f610ea154541bc52bb9fcbd305851ee9816",
-      "language": "ink! 3.0.0",
+      "hash": "0x7dbf303c242fda65602dcc6a16deec6c1bc56d20b1296d5e7a2ed504a5b64b52",
+      "language": "ink! 3.0.1",
       "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
@@ -44,6 +44,33 @@ const collection_manager = {
                   ],
                   "type": 4
                 }
+              },
+              {
+                "label": "simple_mode_adding_fee",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 6
+                }
+              },
+              {
+                "label": "advance_mode_adding_fee",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 6
+                }
+              },
+              {
+                "label": "max_royal_fee_rate",
+                "type": {
+                  "displayName": [
+                    "u32"
+                  ],
+                  "type": 10
+                }
               }
             ],
             "docs": [],
@@ -53,8 +80,130 @@ const collection_manager = {
           }
         ],
         "docs": [],
-        "events": [],
+        "events": [
+          {
+            "args": [
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "collection_owner",
+                "type": {
+                  "displayName": [
+                    "Option"
+                  ],
+                  "type": 26
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "Option"
+                  ],
+                  "type": 26
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "contract_type",
+                "type": {
+                  "displayName": [
+                    "u8"
+                  ],
+                  "type": 2
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "is_active",
+                "type": {
+                  "displayName": [
+                    "bool"
+                  ],
+                  "type": 9
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "show_on_chain_metadata",
+                "type": {
+                  "displayName": [
+                    "bool"
+                  ],
+                  "type": 9
+                }
+              }
+            ],
+            "docs": [],
+            "label": "AddNewCollectionEvent"
+          }
+        ],
         "messages": [
+          {
+            "args": [
+              {
+                "label": "admin_address",
+                "type": {
+                  "displayName": [
+                    "AccountId"
+                  ],
+                  "type": 0
+                }
+              },
+              {
+                "label": "standard_nft_hash",
+                "type": {
+                  "displayName": [
+                    "Hash"
+                  ],
+                  "type": 4
+                }
+              },
+              {
+                "label": "simple_mode_adding_fee",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 6
+                }
+              },
+              {
+                "label": "advance_mode_adding_fee",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 6
+                }
+              },
+              {
+                "label": "max_royal_fee_rate",
+                "type": {
+                  "displayName": [
+                    "u32"
+                  ],
+                  "type": 10
+                }
+              }
+            ],
+            "docs": [],
+            "label": "initialize",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 18
+            },
+            "selector": "0xf2f6dba3"
+          },
           {
             "args": [
               {
@@ -63,7 +212,7 @@ const collection_manager = {
                   "displayName": [
                     "String"
                   ],
-                  "type": 18
+                  "type": 20
                 }
               },
               {
@@ -72,7 +221,7 @@ const collection_manager = {
                   "displayName": [
                     "String"
                   ],
-                  "type": 18
+                  "type": 20
                 }
               },
               {
@@ -90,7 +239,7 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 19
+                  "type": 21
                 }
               },
               {
@@ -99,7 +248,7 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 19
+                  "type": 21
                 }
               },
               {
@@ -131,7 +280,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 20
+              "type": 22
             },
             "selector": "0x05c561cd"
           },
@@ -161,7 +310,7 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 19
+                  "type": 21
                 }
               },
               {
@@ -170,7 +319,7 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 19
+                  "type": 21
                 }
               },
               {
@@ -202,7 +351,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 20
+              "type": 22
             },
             "selector": "0x36193f5f"
           },
@@ -237,7 +386,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 20
+              "type": 22
             },
             "selector": "0x5c7d9082"
           },
@@ -272,7 +421,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 20
+              "type": 22
             },
             "selector": "0x6500109f"
           },
@@ -293,7 +442,7 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 19
+                  "type": 21
                 }
               },
               {
@@ -302,7 +451,7 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 19
+                  "type": 21
                 }
               }
             ],
@@ -316,7 +465,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 20
+              "type": 22
             },
             "selector": "0x8119d25e"
           },
@@ -337,7 +486,7 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 19
+                  "type": 21
                 }
               }
             ],
@@ -349,7 +498,7 @@ const collection_manager = {
               "displayName": [
                 "Vec"
               ],
-              "type": 19
+              "type": 21
             },
             "selector": "0x8d76b3fe"
           },
@@ -384,7 +533,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 20
+              "type": 22
             },
             "selector": "0xeb59ea76"
           },
@@ -419,7 +568,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 20
+              "type": 22
             },
             "selector": "0x96c46720"
           },
@@ -454,7 +603,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 20
+              "type": 22
             },
             "selector": "0x482ff6b1"
           },
@@ -489,7 +638,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 20
+              "type": 22
             },
             "selector": "0x0fb1f1cf"
           },
@@ -525,14 +674,14 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 20
+              "type": 22
             },
             "selector": "0x33ad2887"
           },
           {
             "args": [
               {
-                "label": "new_fee",
+                "label": "simple_mode_adding_fee",
                 "type": {
                   "displayName": [
                     "Balance"
@@ -542,18 +691,44 @@ const collection_manager = {
               }
             ],
             "docs": [
-              " Update Adding Collection Fee - only Owner"
+              " Update Simple Mode Adding Collection Fee - only Owner"
             ],
-            "label": "update_adding_fee",
+            "label": "update_simple_mode_adding_fee",
             "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
                 "Result"
               ],
-              "type": 20
+              "type": 22
             },
-            "selector": "0x5655700b"
+            "selector": "0xb3bb96b4"
+          },
+          {
+            "args": [
+              {
+                "label": "advance_mode_adding_fee",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 6
+                }
+              }
+            ],
+            "docs": [
+              " Update Advance Mode Adding Collection Fee - only Owner"
+            ],
+            "label": "update_advance_mode_adding_fee",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 22
+            },
+            "selector": "0x4b11f798"
           },
           {
             "args": [
@@ -577,7 +752,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 20
+              "type": 22
             },
             "selector": "0xa4dfde0d"
           },
@@ -603,7 +778,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 20
+              "type": 22
             },
             "selector": "0xb470cada"
           },
@@ -629,7 +804,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 20
+              "type": 22
             },
             "selector": "0x07fdb555"
           },
@@ -655,7 +830,7 @@ const collection_manager = {
               "displayName": [
                 "Option"
               ],
-              "type": 22
+              "type": 24
             },
             "selector": "0x786d1a79"
           },
@@ -681,7 +856,7 @@ const collection_manager = {
               "displayName": [
                 "Option"
               ],
-              "type": 23
+              "type": 25
             },
             "selector": "0x83091e54"
           },
@@ -707,7 +882,7 @@ const collection_manager = {
               "displayName": [
                 "Option"
               ],
-              "type": 24
+              "type": 26
             },
             "selector": "0x672b1346"
           },
@@ -746,9 +921,9 @@ const collection_manager = {
           {
             "args": [],
             "docs": [
-              "Get Adding Fee"
+              "Get Simple Mode Adding Fee"
             ],
-            "label": "get_adding_fee",
+            "label": "get_simple_mode_adding_fee",
             "mutates": false,
             "payable": false,
             "returnType": {
@@ -757,7 +932,23 @@ const collection_manager = {
               ],
               "type": 6
             },
-            "selector": "0x546e4dbf"
+            "selector": "0x97db002d"
+          },
+          {
+            "args": [],
+            "docs": [
+              "Get Advance Mode Adding Fee"
+            ],
+            "label": "get_advance_mode_adding_fee",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 6
+            },
+            "selector": "0xa333e69e"
           },
           {
             "args": [],
@@ -792,21 +983,6 @@ const collection_manager = {
             "selector": "0x389a10e6"
           },
           {
-            "args": [],
-            "docs": [],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
             "args": [
               {
                 "label": "new_owner",
@@ -828,9 +1004,24 @@ const collection_manager = {
                 "ownable_external",
                 "TransferOwnershipOutput"
               ],
-              "type": 25
+              "type": 18
             },
             "selector": "0x11f43efd"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [],
@@ -843,7 +1034,7 @@ const collection_manager = {
                 "ownable_external",
                 "RenounceOwnershipOutput"
               ],
-              "type": 25
+              "type": 18
             },
             "selector": "0x5e228753"
           },
@@ -854,26 +1045,26 @@ const collection_manager = {
                 "type": {
                   "displayName": [
                     "crossartzerocollection_external",
-                    "GetCollectionOwnerInput1"
+                    "IsActiveInput1"
                   ],
                   "type": 0
                 }
               }
             ],
             "docs": [
-              " Get Collection Owner by Collection Address (NFT address)"
+              "Check if the Collection is active not"
             ],
-            "label": "CrossArtZeroCollection::get_collection_owner",
+            "label": "CrossArtZeroCollection::is_active",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "crossartzerocollection_external",
-                "GetCollectionOwnerOutput"
+                "IsActiveOutput"
               ],
-              "type": 24
+              "type": 9
             },
-            "selector": "0xb1f1e401"
+            "selector": "0x74687faf"
           },
           {
             "args": [
@@ -910,6 +1101,34 @@ const collection_manager = {
                 "type": {
                   "displayName": [
                     "crossartzerocollection_external",
+                    "GetCollectionOwnerInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Get Collection Owner by Collection Address (NFT address)"
+            ],
+            "label": "CrossArtZeroCollection::get_collection_owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "GetCollectionOwnerOutput"
+              ],
+              "type": 26
+            },
+            "selector": "0xb1f1e401"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
                     "GetContractTypeInput1"
                   ],
                   "type": 0
@@ -930,34 +1149,6 @@ const collection_manager = {
               "type": 2
             },
             "selector": "0x81fa82e9"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
-                    "IsActiveInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              "Check if the Collection is active not"
-            ],
-            "label": "CrossArtZeroCollection::is_active",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "IsActiveOutput"
-              ],
-              "type": 9
-            },
-            "selector": "0x74687faf"
           }
         ]
       },
@@ -1042,12 +1233,21 @@ const collection_manager = {
                   "ty": 6
                 }
               },
-              "name": "adding_fee"
+              "name": "simple_mode_adding_fee"
             },
             {
               "layout": {
                 "cell": {
                   "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 6
+                }
+              },
+              "name": "advance_mode_adding_fee"
+            },
+            {
+              "layout": {
+                "cell": {
+                  "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
                   "ty": 7
                 }
               },
@@ -1056,7 +1256,7 @@ const collection_manager = {
             {
               "layout": {
                 "cell": {
-                  "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
+                  "key": "0x0600000000000000000000000000000000000000000000000000000000000000",
                   "ty": 12
                 }
               },
@@ -1065,7 +1265,7 @@ const collection_manager = {
             {
               "layout": {
                 "cell": {
-                  "key": "0x0600000000000000000000000000000000000000000000000000000000000000",
+                  "key": "0x0700000000000000000000000000000000000000000000000000000000000000",
                   "ty": 13
                 }
               },
@@ -1074,7 +1274,7 @@ const collection_manager = {
             {
               "layout": {
                 "cell": {
-                  "key": "0x0700000000000000000000000000000000000000000000000000000000000000",
+                  "key": "0x0800000000000000000000000000000000000000000000000000000000000000",
                   "ty": 10
                 }
               },
@@ -1083,7 +1283,7 @@ const collection_manager = {
             {
               "layout": {
                 "cell": {
-                  "key": "0x0800000000000000000000000000000000000000000000000000000000000000",
+                  "key": "0x0900000000000000000000000000000000000000000000000000000000000000",
                   "ty": 5
                 }
               },
@@ -1092,7 +1292,7 @@ const collection_manager = {
             {
               "layout": {
                 "cell": {
-                  "key": "0x0900000000000000000000000000000000000000000000000000000000000000",
+                  "key": "0x0a00000000000000000000000000000000000000000000000000000000000000",
                   "ty": 15
                 }
               },
@@ -1434,22 +1634,90 @@ const collection_manager = {
           "id": 18,
           "type": {
             "def": {
-              "primitive": "str"
-            }
+              "variant": {
+                "variants": [
+                  {
+                    "fields": [
+                      {
+                        "type": 3
+                      }
+                    ],
+                    "index": 0,
+                    "name": "Ok"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 19
+                      }
+                    ],
+                    "index": 1,
+                    "name": "Err"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "T",
+                "type": 3
+              },
+              {
+                "name": "E",
+                "type": 19
+              }
+            ],
+            "path": [
+              "Result"
+            ]
           }
         },
         {
           "id": 19,
           "type": {
             "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "index": 0,
+                    "name": "CallerIsNotOwner"
+                  },
+                  {
+                    "index": 1,
+                    "name": "NewOwnerIsZero"
+                  }
+                ]
+              }
+            },
+            "path": [
+              "contracts",
+              "traits",
+              "errors",
+              "ownable",
+              "OwnableError"
+            ]
+          }
+        },
+        {
+          "id": 20,
+          "type": {
+            "def": {
+              "primitive": "str"
+            }
+          }
+        },
+        {
+          "id": 21,
+          "type": {
+            "def": {
               "sequence": {
-                "type": 18
+                "type": 20
               }
             }
           }
         },
         {
-          "id": 20,
+          "id": 22,
           "type": {
             "def": {
               "variant": {
@@ -1466,7 +1734,7 @@ const collection_manager = {
                   {
                     "fields": [
                       {
-                        "type": 21
+                        "type": 23
                       }
                     ],
                     "index": 1,
@@ -1482,7 +1750,7 @@ const collection_manager = {
               },
               {
                 "name": "E",
-                "type": 21
+                "type": 23
               }
             ],
             "path": [
@@ -1491,7 +1759,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 21,
+          "id": 23,
           "type": {
             "def": {
               "variant": {
@@ -1499,7 +1767,7 @@ const collection_manager = {
                   {
                     "fields": [
                       {
-                        "type": 18,
+                        "type": 20,
                         "typeName": "String"
                       }
                     ],
@@ -1553,7 +1821,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 22,
+          "id": 24,
           "type": {
             "def": {
               "variant": {
@@ -1586,7 +1854,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 23,
+          "id": 25,
           "type": {
             "def": {
               "variant": {
@@ -1619,7 +1887,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 24,
+          "id": 26,
           "type": {
             "def": {
               "variant": {
@@ -1648,74 +1916,6 @@ const collection_manager = {
             ],
             "path": [
               "Option"
-            ]
-          }
-        },
-        {
-          "id": 25,
-          "type": {
-            "def": {
-              "variant": {
-                "variants": [
-                  {
-                    "fields": [
-                      {
-                        "type": 3
-                      }
-                    ],
-                    "index": 0,
-                    "name": "Ok"
-                  },
-                  {
-                    "fields": [
-                      {
-                        "type": 26
-                      }
-                    ],
-                    "index": 1,
-                    "name": "Err"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "T",
-                "type": 3
-              },
-              {
-                "name": "E",
-                "type": 26
-              }
-            ],
-            "path": [
-              "Result"
-            ]
-          }
-        },
-        {
-          "id": 26,
-          "type": {
-            "def": {
-              "variant": {
-                "variants": [
-                  {
-                    "index": 0,
-                    "name": "CallerIsNotOwner"
-                  },
-                  {
-                    "index": 1,
-                    "name": "NewOwnerIsZero"
-                  }
-                ]
-              }
-            },
-            "path": [
-              "contracts",
-              "traits",
-              "errors",
-              "ownable",
-              "OwnableError"
             ]
           }
         }
