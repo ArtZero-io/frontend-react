@@ -79,116 +79,123 @@ function HomePage() {
   return (
     <HomeLayout>
       <Box as="section" maxW="container.2xl" p={0} position="relative">
-        <Box w="full" position="relative">
-          <AnimatePresence>
-            {/* UFO 1 */}
-            <motion.div
-              style={{
-                position: "absolute",
-                id: "image-ufo-1",
-                top: "5px",
-                right: "175px",
-                width: "490px",
-                height: "445px",
-              }}
-              animate={{
-                x: [0, 0, 0, -900, -400, 0, 0, 0],
-                y: [0, 10, 0, 30, 380, 0, 10, 0],
-                rotate: [0, -30, -30, -10, -5, -20, -30, 0],
-              }}
-              transition={{
-                duration: 15,
-                // curve: [1, -0.14, 0.15, 1.4],
-                // cubic-bezier(1,-0.14,.15,1.4)
-                // ease: [1, -0.14, 0.15, 1.4],
-                curve: [0.42, 0, 0.58, 1],
-                repeat: Infinity,
-              }}
-            >
-              <Image
-                filter="drop-shadow(15px -10px 25px #7AE7FF70)"
-                src={UFO1}
-                alt="UFO1"
-                w="full"
-                h="full"
-                objectPosition="center"
-              />
-            </motion.div>
-          </AnimatePresence>
-
-          {/* UFO 2 */}
-          <AnimatePresence>
-            <motion.div
-              style={{
-                position: "absolute",
-                id: "image-ufo-2",
-                top: "355px",
-                left: "250px",
-                width: "215px",
-                height: "144px",
-              }}
-              animate={{
-                y: [0, 5, 0],
-                rotate: 3,
-              }}
-              transition={{
-                duration: 1.5,
-                curve: [0.42, 0, 0.58, 1],
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
-            >
-              <Image
-                filter="drop-shadow(1px 3px 7px #7AE7FF70)"
-                src={UFO2}
-                alt="UFO2"
-                w="full"
-                h="full"
-                objectPosition="center"
-              />
-            </motion.div>
-          </AnimatePresence>
-
-          {/* UFO 3 */}
-          <AnimatePresence>
-            <motion.div
-              style={{
-                position: "absolute",
-                id: "image-ufo-3",
-                top: "630px",
-                right: "440px",
-                width: "115px",
-                height: "45px",
-              }}
-              animate={{
-                y: [0, 3, 0],
-                rotate: 10,
-              }}
-              transition={{
-                duration: 3,
-                curve: [0.42, 0, 0.58, 1],
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
-            >
-              <Image
-                filter="drop-shadow(1px 3px 7px #7AE7FF70)"
-                src={UFO3}
-                alt="UFO3"
-                w="full"
-                h="full"
-                objectPosition="center"
-              />
-            </motion.div>
-          </AnimatePresence>
-
+        <Box w="full">
           <Box
+            position="relative"
             mx="auto"
             maxW={{ base: "6xl", "2xl": "7xl" }}
             pt="220px"
             pb="180px"
+            h="732px"
             // py={{ base: "20", "2xl": "56" }}
           >
+            <AnimatePresence>
+              {/* UFO 1 */}
+              <motion.div
+                style={{
+                  position: "absolute",
+                  id: "image-ufo-1",
+                  // top: "5px",
+                  // right: "175px",
+                  top: "0px",
+                  right: "-140px",
+                  width: "490px",
+                  height: "445px",
+                }}
+                animate={{
+                  x: [0, 0, -980, -220, 0, 0],
+                  y: [0, 10, 30, 380, 10, 0],
+                  rotate: [0, -30, -30, 0, -30, 0],
+                  scale: [1, 1, 0.6, 0.3, 1, 1],
+
+                  // rotate: [0, -30, -30, -10, -5, -20, -30, 0],
+                }}
+                transition={{
+                  duration: 15,
+                  // curve: [1, -0.14, 0.15, 1.4],
+                  // cubic-bezier(1,-0.14,.15,1.4)
+                  // ease: [1, -0.14, 0.15, 1.4],
+                  curve: [0.42, 0, 0.58, 1],
+                  repeat: Infinity,
+                }}
+              >
+                <Image
+                  filter="drop-shadow(15px -10px 25px #7AE7FF70)"
+                  src={UFO1}
+                  alt="UFO1"
+                  w="full"
+                  h="full"
+                  objectPosition="center"
+                />
+              </motion.div>
+            </AnimatePresence>
+
+            {/* UFO 2 */}
+            <AnimatePresence>
+              <motion.div
+                style={{
+                  position: "absolute",
+                  id: "image-ufo-2",
+                  top: "350px",
+                  left: "-65px",
+                  width: "215px",
+                  height: "144px",
+                }}
+                animate={{
+                  y: [0, 5, 0],
+                  rotate: 3,
+                }}
+                transition={{
+                  duration: 1.5,
+                  curve: [0.42, 0, 0.58, 1],
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                }}
+              >
+                <Image
+                  filter="drop-shadow(1px 3px 7px #7AE7FF70)"
+                  src={UFO2}
+                  alt="UFO2"
+                  w="full"
+                  h="full"
+                  objectPosition="center"
+                />
+              </motion.div>
+            </AnimatePresence>
+
+            {/* UFO 3 */}
+            <AnimatePresence>
+              <motion.div
+                style={{
+                  position: "absolute",
+                  id: "image-ufo-3",
+                  top: "625px",
+                  right: "115px",
+                  width: "115px",
+                  height: "45px",
+                }}
+                animate={{
+                  y: [0, 3, 0],
+                  rotate: 10,
+                }}
+                transition={{
+                  duration: 3,
+                  curve: [0.42, 0, 0.58, 1],
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                }}
+              >
+                <Image
+                  filter="drop-shadow(1px 3px 7px #7AE7FF70)"
+                  src={UFO3}
+                  alt="UFO3"
+                  w="full"
+                  h="full"
+                  objectPosition="center"
+                />
+              </motion.div>
+            </AnimatePresence>
+
             <Center
               w="full"
               textAlign="center"
