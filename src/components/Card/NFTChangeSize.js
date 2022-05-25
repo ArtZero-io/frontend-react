@@ -45,6 +45,7 @@ export default function NFTChangeSizeCard({
         bg="brand.grayDark"
         h="full"
         w="full"
+        shadow="lg"
       >
         <Square>
           <Image

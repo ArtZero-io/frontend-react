@@ -23,6 +23,7 @@ import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import useInterval from "use-interval";
+import { motion } from "framer-motion";
 
 function MyNFTCard({
   nftContractAddress,
@@ -128,14 +129,23 @@ function MyNFTCard({
   }
 
   return (
-    <Box
-      h="full"
-      w="full"
-      mx="auto"
-      maxW="14rem"
-      borderColor="transparent"
-      borderWidth={"2px"}
-      _hover={{ borderColor: "brand.blue" }}
+    // h="full"
+    // w="full"
+    // mx="auto"
+    <motion.div
+      className="my-collection-card"
+      whileHover={{
+        borderColor: "#7ae7ff",
+      }}
+      style={{
+        borderWidth: "2px",
+        borderColor: "#7ae7ff00",
+        maxWidth: "14rem",
+
+        transitionDuration: "0.15s",
+        transitionProperty: "all",
+        transitionTimingFunction: "cubic-bezier(.17,.67,.83,.67)",
+      }}
     >
       <Flex
         direction="column"
@@ -243,7 +253,7 @@ function MyNFTCard({
           )}
         </Box>
       </Flex>
-    </Box>
+    </motion.div>
   );
 }
 export default MyNFTCard;

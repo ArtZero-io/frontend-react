@@ -16,6 +16,7 @@ import { shortenNumber } from "@utils";
 import ActiveIcon from "@theme/assets/icon/Active.js";
 import InActiveIcon from "@theme/assets/icon/InActive.js";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
+import { motion } from "framer-motion";
 
 import { getCachedImageShort } from "@utils/index";
 
@@ -30,17 +31,20 @@ export const CollectionCard = ({
   variant,
 }) => {
   return (
-    <Box
+    // h="full"
+    <motion.div
       className="my-collection-card"
-      h="full"
-      // w="full"
-      // maxW="24.5625rem"
-      mx="auto"
-      w="full"
-      // w={{ base: "20rem", xl: "24.5625rem" }}
-      borderColor="transparent"
-      borderWidth={"2px"}
-      _hover={{ borderColor: "brand.blue" }}
+      whileHover={{
+        borderColor: "#7ae7ff",
+      }}
+      style={{
+        borderWidth: "2px",
+        borderColor: "#7ae7ff00",
+
+        transitionDuration: "0.15s",
+        transitionProperty: "all",
+        transitionTimingFunction: "cubic-bezier(.17,.67,.83,.67)",
+      }}
     >
       <Flex
         direction="column"
@@ -54,6 +58,11 @@ export const CollectionCard = ({
           pos="relative"
           width="full"
           h={"16.25rem"}
+          style={{
+            transitionDuration: "0.15s",
+            transitionProperty: "all",
+            transitionTimingFunction: "cubic-bezier(.17,.67,.83,.67)",
+          }}
           sx={{
             ".my-collection-card &": {
               _after: {
@@ -173,6 +182,6 @@ export const CollectionCard = ({
           </Flex>
         </VStack>
       </Flex>
-    </Box>
+    </motion.div>
   );
 };
