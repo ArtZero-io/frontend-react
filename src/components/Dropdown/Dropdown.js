@@ -19,26 +19,33 @@ function Dropdown({ options, selectedItem, setSelectedItem }) {
           _active={{ bg: "brand.grayDark" }}
           fontFamily="Oswald"
           ring={0}
-          minW="10rems"
+          minW="195px"
+          w="full"
           textAlign="left"
           px={4}
           variant="outline"
           as={Button}
-          rightIcon={<ChevronDownIcon />}
+          rightIcon={<ChevronDownIcon fontSize="2xl" />}
           bg="brand.grayDark"
           borderColor="transparent"
+          textTransform="capitalize"
+          color="#fff"
+          fontSize="lg"
         >
           {options[selectedItem]}
         </MenuButton>
-        <MenuList minW="10rem" bg="brand.grayDark" borderRadius="0">
+        <MenuList minW="195px" w="full" bg="brand.grayDark" borderRadius="0">
           {options?.map((_, idx) => {
             return (
               <MenuItem
+                color="#fff"
+                fontSize="lg"
+                textTransform="capitalize"
                 _hover={{ bg: "brand.grayLight", color: "white" }}
                 fontFamily="Oswald"
                 onClick={() => onClickHandler(idx)}
                 key={idx}
-                isDisabled={idx === selectedItem ? true : false}
+                display={idx === selectedItem ? "none" : ""}
               >
                 {options[idx]}
               </MenuItem>

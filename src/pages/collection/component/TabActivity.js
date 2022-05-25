@@ -16,34 +16,6 @@ function TabActivity() {
     <>
       <DataTable />
     </>
-    // <Box as="section" maxW="container.3xl" position="relative">
-    //   <TableContainer>
-    //     <Table>
-    //       <Thead>
-    //         <Tr>
-    //           <Th>NFT</Th>
-    //           <Th>Type</Th>
-    //           <Th isNumeric>Price</Th>
-    //           <Th>From</Th>
-    //           <Th>To</Th>
-    //           <Th>Time</Th>
-    //         </Tr>
-    //       </Thead>
-    //       <Tbody>
-    //         {[...Array(15)].map((i) => (
-    //           <Tr key={i}>
-    //             <Td>Degen Ape #171923</Td>
-    //             <Td>Sale</Td>
-    //             <Td isNumeric>25.41</Td>
-    //             <Td>FjSn...WXGd</Td>
-    //             <Td>FjSn...WXGd</Td>
-    //             <Td>2 hours ago</Td>
-    //           </Tr>
-    //         ))}
-    //       </Tbody>
-    //     </Table>
-    //   </TableContainer>
-    // </Box>
   );
 }
 

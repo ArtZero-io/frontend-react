@@ -11,7 +11,9 @@ function NFTMintTab({ myAZNFTs }) {
       py={{ base: "8", "2xl": "4" }}
     >
       {myAZNFTs?.length === 0 ? (
-        <Heading size='h6'>No NFT found!</Heading>
+        <Heading size="h6" textTransform="lowercase">
+          No NFT found!
+        </Heading>
       ) : (
         <Grid
           templateColumns="repeat(auto-fill, minmax(min(100%, 224px), 1fr))"

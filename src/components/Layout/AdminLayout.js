@@ -23,17 +23,18 @@ const AdminLayout = () => {
       <Box as="section" maxW="container.3xl" position="relative">
         <AdminHeader />
 
-        <Tabs isLazy align="center">
+        <Tabs isLazy align="center" colorScheme="brand.blue">
           <TabList>
             {tabData.map((tab) => (
               <Tab
                 key={tab.label}
                 fontFamily="Evogria Italic, san serif"
                 color="#fff"
-                pb={5}
-                px={1}
                 mx={4}
                 fontSize="lg"
+                fontStyle="italic"
+                px="0.5px"
+                py="20px"
               >
                 {tab.label}
               </Tab>

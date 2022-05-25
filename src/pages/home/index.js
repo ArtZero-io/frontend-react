@@ -1,7 +1,6 @@
 import {
   Center,
   Heading,
-  Flex,
   Text,
   Box,
   Link,
@@ -22,9 +21,11 @@ import FrameHomepageSmall from "@theme/assets/icon/FrameHomepageSmall.svg";
 import SocialCard from "../../components/Card/Social";
 import toast from "react-hot-toast";
 import { BeatLoader } from "react-spinners";
-import HomePageBg1 from "@theme/assets/bg-homepage-1.png";
-import HomePageBg2 from "@theme/assets/bg-homepage-2.png";
-import HomePageBg3 from "@theme/assets/bg-homepage-3.png";
+
+import UFO1 from "@theme/assets/ufo-1.png";
+import UFO2 from "@theme/assets/ufo-2.png";
+import UFO3 from "@theme/assets/ufo-3.png";
+import { AnimatePresence, motion } from "framer-motion";
 
 function HomePage() {
   const [emailSubscribed, setEmailSubscribed] = useState("");
@@ -74,48 +75,174 @@ function HomePage() {
     };
     submitPOST();
   };
+
   return (
     <HomeLayout>
-      <Box as="section" maxW="container.2xl" p={0}>
+      <Box as="section" maxW="container.2xl" p={0} position="relative">
         <Box w="full">
           <Box
+            position="relative"
             mx="auto"
             maxW={{ base: "6xl", "2xl": "7xl" }}
-            py={{ base: "20", "2xl": "56" }}
+            pt="220px"
+            pb="180px"
+            h="732px"
+            // py={{ base: "20", "2xl": "56" }}
           >
-            <Center w="full" textAlign="center" mb="2rem" px={4}>
-              <Heading
-                size="h1"
-                fontSize={{ base: "48px", xl: "80px", "2xl": "100px" }}
-                lineHeight={{ base: "60px", xl: "100px", "2xl": "120px" }}
+            <AnimatePresence>
+              {/* UFO 1 */}
+              <motion.div
+                style={{
+                  position: "absolute",
+                  id: "image-ufo-1",
+                  // top: "5px",
+                  // right: "175px",
+                  top: "0px",
+                  right: "-140px",
+                  width: "490px",
+                  height: "445px",
+                }}
+                animate={{
+                  x: [0, 0, -980, -220, 0, 0],
+                  y: [0, 10, 30, 380, 10, 0],
+                  rotate: [0, -30, -30, 0, -30, 0],
+                  scale: [1, 1, 0.6, 0.3, 1, 1],
+
+                  // rotate: [0, -30, -30, -10, -5, -20, -30, 0],
+                }}
+                transition={{
+                  duration: 15,
+                  // curve: [1, -0.14, 0.15, 1.4],
+                  // cubic-bezier(1,-0.14,.15,1.4)
+                  // ease: [1, -0.14, 0.15, 1.4],
+                  curve: [0.42, 0, 0.58, 1],
+                  repeat: Infinity,
+                }}
               >
-                Artzero <br />
-                Smartnet Demo
+                <Image
+                  filter="drop-shadow(15px -10px 25px #7AE7FF70)"
+                  src={UFO1}
+                  alt="UFO1"
+                  w="full"
+                  h="full"
+                  objectPosition="center"
+                />
+              </motion.div>
+            </AnimatePresence>
+
+            {/* UFO 2 */}
+            <AnimatePresence>
+              <motion.div
+                style={{
+                  position: "absolute",
+                  id: "image-ufo-2",
+                  top: "350px",
+                  left: "-65px",
+                  width: "215px",
+                  height: "144px",
+                }}
+                animate={{
+                  y: [0, 5, 0],
+                  rotate: 3,
+                }}
+                transition={{
+                  duration: 1.5,
+                  curve: [0.42, 0, 0.58, 1],
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                }}
+              >
+                <Image
+                  filter="drop-shadow(1px 3px 7px #7AE7FF70)"
+                  src={UFO2}
+                  alt="UFO2"
+                  w="full"
+                  h="full"
+                  objectPosition="center"
+                />
+              </motion.div>
+            </AnimatePresence>
+
+            {/* UFO 3 */}
+            <AnimatePresence>
+              <motion.div
+                style={{
+                  position: "absolute",
+                  id: "image-ufo-3",
+                  top: "625px",
+                  right: "115px",
+                  width: "115px",
+                  height: "45px",
+                }}
+                animate={{
+                  y: [0, 3, 0],
+                  rotate: 10,
+                }}
+                transition={{
+                  duration: 3,
+                  curve: [0.42, 0, 0.58, 1],
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                }}
+              >
+                <Image
+                  filter="drop-shadow(1px 3px 7px #7AE7FF70)"
+                  src={UFO3}
+                  alt="UFO3"
+                  w="full"
+                  h="full"
+                  objectPosition="center"
+                />
+              </motion.div>
+            </AnimatePresence>
+
+            <Center
+              w="full"
+              textAlign="center"
+              mb="2rem"
+              px={4}
+              data-aos="fade-up"
+              data-aos-delay="300"
+              data-aos-duration="1000"
+            >
+              <Heading
+                // size="h1"
+                // fontSize={{ base: "48px", xl: "80px", "2xl": "100px" }}
+                // lineHeight={{ base: "60px", xl: "100px", "2xl": "120px" }}
+                color="#fff"
+                fontSize="100px"
+                lineHeight="120px"
+              >
+                <Text as="span" zIndex="0" pos="relative">
+                  artzero <br />
+                </Text>
+                <Text as="span">smartnet demo</Text>
               </Heading>
             </Center>
 
-            <Center w="full" textAlign="center" px={4}>
+            <Center
+              w="full"
+              textAlign="center"
+              px={4}
+              data-aos="fade-up"
+              data-aos-delay="600"
+              data-aos-duration="1000"
+            >
               <Text
                 fontFamily="Evogria"
-                fontSize="18px"
-                size="h6"
-                maxW="md"
+                maxW="434px"
                 color="#fff"
+                fontSize="18px"
                 lineHeight="30px"
               >
-                Welcome to ArtZero - The first NFT Marketplace on Aleph Zero
-                Network!
+                welcome to artzero - the first nft marketplace on aleph zero
+                network!
               </Text>
             </Center>
           </Box>
         </Box>
 
-        <Box
-          w="full"
-          bgImage={HomePageBg1}
-          bgPosition="50% 100%"
-          bgRepeat="no-repeat"
-        >
+        <Box pos="relative" w="full">
           <Box
             mx="auto"
             fontFamily="Evogria"
@@ -125,20 +252,36 @@ function HomePage() {
             py={{ base: "20", "2xl": "12" }}
             mb={30}
           >
-            <Center w="full" textAlign="center" mb="2rem">
+            <Center
+              w="full"
+              textAlign="center"
+              mb="2rem"
+              data-aos="fade-up"
+              data-aos-delay="100"
+              data-aos-duration="1000"
+            >
               <Heading size="h2">how to start?</Heading>
             </Center>
 
-            <Center w="full" textAlign="center" mb="2rem" px={4}>
+            <Center
+              w="610px"
+              mx="auto"
+              textAlign="center"
+              mb="2rem"
+              px={4}
+              data-aos="fade-up"
+              data-aos-delay="300"
+              data-aos-duration="1000"
+            >
               <Text size="h6" maxW="2xl" lineHeight="30px">
-                This version works with{" "}
+                this version works with{" "}
                 <Link
                   color="#7ae7ff"
                   textDecoration="underline"
                   href="https://subwallet.app/"
                   target="_blank"
                 >
-                  SubWallet
+                  subwallet
                 </Link>
                 ,{" "}
                 <Link
@@ -147,7 +290,7 @@ function HomePage() {
                   href="https://polkadot.js.org/extension/"
                   target="_blank"
                 >
-                  Polkadot JS
+                  polkadot js
                 </Link>{" "}
                 and{" "}
                 <Link
@@ -156,17 +299,27 @@ function HomePage() {
                   href="https://chrome.google.com/webstore/detail/talisman-wallet/fijngjgcjhjmmpcmkeiomlglpeiijkld"
                   target="_blank"
                 >
-                  Talisman
+                  talisman
                 </Link>
-                . Please make sure you installed at least one of these wallets
-                and created an account.
+                .<br />
+                please make sure you installed at least one of these wallets and
+                created an account.
               </Text>
             </Center>
 
-            <Center w="full" textAlign="center" mb="4rem" px={4}>
-              <Text size="h6" maxW="2xl" lineHeight="30px">
-                You will need some Smartnet AZero (SZERO) to start. Get free
-                SZERO from{" "}
+            <Center
+              w="600px"
+              mx="auto"
+              textAlign="center"
+              mb="100px"
+              px={4}
+              data-aos="fade-up"
+              data-aos-delay="600"
+              data-aos-duration="1000"
+            >
+              <Text size="h6" lineHeight="30px">
+                you will need some smartnet azero (szero) to start. <br />
+                get free szero from{" "}
                 <Link
                   color="#7ae7ff"
                   textDecoration="underline"
@@ -178,6 +331,9 @@ function HomePage() {
             </Center>
 
             <AspectRatio
+              data-aos="fade-up"
+              data-aos-delay="900"
+              data-aos-duration="1000"
               px={4}
               mx="auto"
               w="full"
@@ -195,38 +351,29 @@ function HomePage() {
         </Box>
 
         <Box pos="relative" w="full">
-          <Flex
-            id="image-wrapper"
-            position="absolute"
-            insetX="0"
-            bottom="0"
-            w="full"
-            h={"90vh"}
-            overflow="hidden"
-            align="center"
-            zIndex="-1"
-          >
-            <Box position="relative" w="full" h="full">
-              <Image
-                src={HomePageBg2}
-                alt="bg-HomePageBg2"
-                w="full"
-                h="full"
-                objectPosition="center"
-                position="absolute"
-              />
-            </Box>
-          </Flex>
           <Box
             mx="auto"
+            pt="50px"
             maxW={{ base: "6xl", "2xl": "7xl" }}
-            py={{ base: "20", "2xl": "24" }}
+            // py={{ base: "20", "2xl": "24" }}
           >
-            <Center w="full" textAlign="center" mb="3rem" px={4}>
-              <Heading size="h2">Available features</Heading>
+            <Center
+              w="full"
+              textAlign="center"
+              mb="3rem"
+              px={4}
+              data-aos="fade-up"
+              data-aos-delay="300"
+              data-aos-duration="1000"
+            >
+              <Heading size="h2">available features</Heading>
             </Center>
 
             <Box
+              color="#ABABAB"
+              data-aos="fade-up"
+              data-aos-delay="600"
+              data-aos-duration="1000"
               maxW="container.md"
               mx="auto"
               mb={36}
@@ -240,50 +387,36 @@ function HomePage() {
               bgRepeat="no-repeat"
             >
               <List spacing={6}>
-                <ListItem>
-                  <ListIcon as={BulletPointIcon} />
-                  Support ERC721 (PSP34) Standard NFT
-                </ListItem>
-                <ListItem>
-                  <ListIcon as={BulletPointIcon} />
-                  Support Polkadot JS, SubWallet and Talisman Wallet
-                </ListItem>
-                <ListItem>
-                  <ListIcon as={BulletPointIcon} />
-                  On-chain Profile
-                </ListItem>
-                <ListItem>
-                  <ListIcon as={BulletPointIcon} />
-                  Explore NFT Collections
-                </ListItem>
-                <ListItem>
-                  <ListIcon as={BulletPointIcon} />
-                  Create Collections in Simple mode and Advanced mode
-                </ListItem>
-                <ListItem>
-                  <ListIcon as={BulletPointIcon} />
-                  Create NFT
-                </ListItem>
-                <ListItem>
-                  <ListIcon as={BulletPointIcon} />
-                  List, unlist, buy, bid NFTs
-                </ListItem>
-                <ListItem>
-                  <ListIcon as={BulletPointIcon} />
-                  Mint ArtZero NFTs on Smartnet (only 200 available)
-                </ListItem>
-                <ListItem>
-                  <ListIcon as={BulletPointIcon} />
-                  Stake ArtZero NFTs for trade discount and profit share
-                </ListItem>
+                {availableFeaturesText.map((item, idx) => (
+                  <ListItem
+                    key={idx}
+                    _hover={{ pl: "10px", color: "#fff" }}
+                    transition="all 0.33s"
+                  >
+                    <ListIcon as={BulletPointIcon} />
+                    {item}
+                  </ListItem>
+                ))}
               </List>
             </Box>
 
-            <Center w="full" textAlign="center" mb="3rem" px={4}>
-              <Heading size="h2">Up-coming Features</Heading>
+            <Center
+              w="full"
+              textAlign="center"
+              mb="3rem"
+              px={4}
+              data-aos="fade-up"
+              data-aos-delay="300"
+              data-aos-duration="1000"
+            >
+              <Heading size="h2">up-coming features</Heading>
             </Center>
 
             <Box
+              color="#ABABAB"
+              data-aos="fade-up"
+              data-aos-delay="600"
+              data-aos-duration="1000"
               maxW="container.md"
               mx="auto"
               w="full"
@@ -296,22 +429,16 @@ function HomePage() {
               bgRepeat="no-repeat"
             >
               <List spacing={6}>
-                <ListItem>
-                  <ListIcon as={BulletPointIcon} />
-                  Support ERC1155 (PSP1155) Standard
-                </ListItem>
-                <ListItem>
-                  <ListIcon as={BulletPointIcon} />
-                  More documentation and tutorials
-                </ListItem>
-                <ListItem>
-                  <ListIcon as={BulletPointIcon} />
-                  Search for NFTs and Collections
-                </ListItem>
-                <ListItem>
-                  <ListIcon as={BulletPointIcon} />
-                  Launch Pad for NFT projects
-                </ListItem>
+                {upComingFeaturesText.map((item, idx) => (
+                  <ListItem
+                    key={idx}
+                    _hover={{ pl: "10px", color: "#fff" }}
+                    transition="all 0.33s"
+                  >
+                    <ListIcon as={BulletPointIcon} />
+                    {item}
+                  </ListItem>
+                ))}
               </List>
             </Box>
           </Box>
@@ -319,7 +446,7 @@ function HomePage() {
 
         <Box
           w="full"
-          bgImage={HomePageBg3}
+          // bgImage={HomePageBg3}
           bgPosition="center"
           bgRepeat="no-repeat"
           bgSize="cover"
@@ -327,26 +454,44 @@ function HomePage() {
           <Box
             mx="auto"
             px={4}
+            pt="325px"
             maxW={{ base: "6xl", "2xl": "7xl" }}
-            py={{ base: "20", "2xl": "24" }}
+            // py={{ base: "20", "2xl": "24" }}
             fontFamily="Evogria"
             fontSize="18px"
           >
-            <Center w="full" textAlign="center" mb="2rem">
-              <Heading size="h2">Subscribe to us</Heading>
+            <Center
+              w="full"
+              textAlign="center"
+              mb="18px"
+              data-aos="fade-up"
+              data-aos-delay="300"
+              data-aos-duration="1000"
+            >
+              <Heading size="h2">subscribe to us</Heading>
             </Center>
-            <Center w="full" textAlign="center" mb="3rem">
+            <Center
+              w="full"
+              textAlign="center"
+              mb="100px"
+              data-aos="fade-up"
+              data-aos-delay="300"
+              data-aos-duration="1000"
+            >
               <Text color="#fff" size="h6">
-                Let’s make a great impact together
+                let’s make a great impact together
               </Text>
             </Center>
             <InputGroup
+              data-aos="fade-up"
+              data-aos-delay="300"
+              data-aos-duration="1000"
               mb={12}
               mx="auto"
-              maxW="container.sm"
+              maxW="572px"
               w="full"
               bg="white"
-              h={14}
+              h="60px"
               py={1}
               color="blackAlpha.900"
               borderRadius="0"
@@ -358,26 +503,6 @@ function HomePage() {
                 bg="brand.blue"
                 h="full"
                 w={"10rem"}
-                _before={{
-                  content: '""',
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  borderRight: "14px solid #7ae7ff",
-                  borderBottom: "10px solid white",
-                  width: 0,
-                  bg: "yellow",
-                }}
-                _after={{
-                  content: '""',
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  borderLeft: "14px solid #7ae7ff",
-                  borderTop: "10px solid #ffffff00",
-                  bg: "transparent",
-                  width: 0,
-                }}
               >
                 SUBSCRIBE
               </InputRightElement>
@@ -394,17 +519,32 @@ function HomePage() {
                 pl={5}
                 placeholder="Enter your email"
                 _placeholder={{
-                  color: "blackAlpha.300",
+                  color: "#ababab",
                   fontSize: "lg",
                 }}
               />
             </InputGroup>
-            <Center w="full" textAlign="center" mb="3rem">
+            <Center
+              w="full"
+              textAlign="center"
+              my="60px"
+              data-aos="fade-up"
+              data-aos-delay="300"
+              data-aos-duration="1000"
+            >
               <SocialCard profile={profile} />
             </Center>
-            <Center w="full" textAlign="center" mb="3rem">
-              <Text fontSize="sm">
-                © Copyright 2022 artZero. All Rights Reserved
+            <Center
+              w="full"
+              textAlign="center"
+              pb="70px"
+              data-aos="fade-down"
+              data-aos-delay="100"
+              data-aos-duration="1000"
+              data-aos-anchor-placement="center-bottom"
+            >
+              <Text fontSize="sm" color="#ababab">
+                © copyright 2022 artzero. all rights reserved
               </Text>
             </Center>
           </Box>
@@ -415,3 +555,22 @@ function HomePage() {
 }
 
 export default HomePage;
+
+const availableFeaturesText = [
+  "support erc721 (psp34) standard nft",
+  "support polkadot js, subWallet and talisman wallet",
+  "on-chain profile",
+  "explore nft collections",
+  "create collections in simple mode and advanced mode",
+  "create nft",
+  "list, unlist, buy, bid nfts",
+  "mint artzero nfts on smartnet (only 200 available)",
+  "stake artzero nfts for trade discount and profit share",
+];
+
+const upComingFeaturesText = [
+  "support erc1155 (psp1155) standard",
+  "more documentation and tutorials",
+  "search for nfts and collections",
+  "launch pad for nft projects",
+];

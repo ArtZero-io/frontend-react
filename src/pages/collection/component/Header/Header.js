@@ -2,6 +2,7 @@ import {
   Avatar,
   Box,
   Center,
+  Divider,
   Flex,
   Heading,
   HStack,
@@ -13,14 +14,10 @@ import {
 
 import AzeroIcon from "@theme/assets/icon/Azero.png";
 import SocialCard from "@components/Card/Social";
-// import BN from "bn.js";
 
-import { IPFS_BASE_URL } from "@constants/index";
 import { shortenNumber } from "@utils";
-import process from "process";
-import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
-const baseURL = process.env.REACT_APP_API_BASE_URL;
+import { getCachedImageShort } from "@utils/index";
 
 const overlay =
   "linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)";
@@ -35,32 +32,16 @@ function CollectionHeader({
   volume,
   floorPrice,
   totalListed,
-  loading,
   nft_count,
 }) {
-  const getCollectionImage = (imageHash, size) => {
-    if (imageHash) {
-      const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
-      return (
-        baseURL +
-        "/getImage?input=" +
-        imageHash +
-        "&size=" +
-        size +
-        "&url=" +
-        callbackUrl
-      );
-    } else {
-      return "";
-    }
-  };
   return (
     <Box
       maxH={"34rem"}
       minH={{ base: "22rem", "2xl": "34rem" }}
       as="section"
       position="relative"
-      maxW="container.3xl"
+      // maxW="container.3xl"
+      w="full"
       bg={overlay}
     >
       <Box
@@ -86,7 +67,7 @@ function CollectionHeader({
               h="full"
               rounded="full"
               objectFit="cover"
-              src={getCollectionImage(avatarImage, 500)}
+              src={avatarImage && getCachedImageShort(avatarImage, 500)}
               fallback={
                 <Skeleton w={"7.5rem"} h={"7.5rem"} borderRadius="full" />
               }
@@ -120,7 +101,8 @@ function CollectionHeader({
                       {name}
                     </Heading>
                     <Text
-                      maxW="md"
+                      w="full"
+                      maxW="576px"
                       color="#fff"
                       fontSize={"lg"}
                       minH={{ base: "1rem", "2xl": "3.375rem" }}
@@ -135,15 +117,18 @@ function CollectionHeader({
 
           <HStack
             color="brand.blue"
-            // minW="container.md"
-            minW={{ base: "auto", xl: "auto", "2xl": "container.md" }}
+            maxW="680px"
+            // w="full"
+            maxH="110px"
+            h="full"
+            // minW={{ base: "auto", xl: "auto", "2xl": "container.md" }}
             borderWidth={2}
             borderColor="brand.blue"
             px={{ base: 1, xl: 12, "2xl": 16 }}
             py={{ base: "0.5rem", "2xl": "1.125rem" }}
             justifyContent="space-between"
             bg="black"
-            minH={{ base: "5.75rem", "2xl": "7.75rem" }}
+            // minH={{ base: "5.75rem", "2xl": "7.75rem" }}
           >
             {nft_count ? (
               <VStack textAlign="center" px={3}>
@@ -155,7 +140,7 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "4xl", "2xl": "6xl" }}
+                      fontSize={{ base: "4xl", "2xl": "5xl" }}
                       lineHeight="none"
                     >
                       {nft_count || 0}
@@ -174,7 +159,7 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "4xl", "2xl": "6xl" }}
+                      fontSize={{ base: "4xl", "2xl": "5xl" }}
                       lineHeight="none"
                     >
                       0
@@ -184,6 +169,9 @@ function CollectionHeader({
                 </AnimatePresence>
               </VStack>
             )}
+
+            <Divider transform="rotate(90deg)" width="50px" bg="#232323" />
+
             {totalListed ? (
               <VStack textAlign="center" px={3}>
                 <AnimatePresence>
@@ -194,7 +182,7 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "4xl", "2xl": "6xl" }}
+                      fontSize={{ base: "4xl", "2xl": "5xl" }}
                       lineHeight="none"
                     >
                       {totalListed || 0}
@@ -213,7 +201,7 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "4xl", "2xl": "6xl" }}
+                      fontSize={{ base: "4xl", "2xl": "5xl" }}
                       lineHeight="none"
                     >
                       0
@@ -223,6 +211,9 @@ function CollectionHeader({
                 </AnimatePresence>
               </VStack>
             )}
+
+            <Divider transform="rotate(90deg)" width="50px" bg="#232323" />
+
             {floorPrice ? (
               <VStack textAlign="center" px={3}>
                 <AnimatePresence>
@@ -234,15 +225,15 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "4xl", "2xl": "6xl" }}
+                        fontSize={{ base: "4xl", "2xl": "5xl" }}
                         lineHeight="none"
                       >
                         {shortenNumber(floorPrice / 10 ** 12) || 0}
                       </Text>
                       <Avatar
                         src={AzeroIcon}
-                        h={7}
-                        w={7}
+                        h="19px"
+                        w="19px"
                         ml={3}
                         name="AzeroLogo"
                         bg="transparent"
@@ -263,15 +254,15 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "4xl", "2xl": "6xl" }}
+                        fontSize={{ base: "4xl", "2xl": "5xl" }}
                         lineHeight="none"
                       >
                         0
                       </Text>
                       <Avatar
                         src={AzeroIcon}
-                        h={7}
-                        w={7}
+                        h="19px"
+                        w="19px"
                         ml={3}
                         name="AzeroLogo"
                         bg="transparent"
@@ -282,6 +273,8 @@ function CollectionHeader({
                 </AnimatePresence>
               </VStack>
             )}
+
+            <Divider transform="rotate(90deg)" width="50px" bg="#232323" />
 
             {volume ? (
               <VStack textAlign="center" px={3}>
@@ -294,15 +287,15 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "4xl", "2xl": "6xl" }}
+                        fontSize={{ base: "4xl", "2xl": "5xl" }}
                         lineHeight="none"
                       >
                         {shortenNumber(volume) || 0}
                       </Text>
                       <Avatar
                         src={AzeroIcon}
-                        h={7}
-                        w={7}
+                        h="19px"
+                        w="19px"
                         ml={3}
                         name="AzeroLogo"
                         bg="transparent"
@@ -328,7 +321,7 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "4xl", "2xl": "6xl" }}
+                        fontSize={{ base: "4xl", "2xl": "5xl" }}
                         lineHeight="none"
                       >
                         0
@@ -361,7 +354,8 @@ function CollectionHeader({
         profile={[{ website }, { twitter }, { discord }]}
         pos={{ base: "", xl: "absolute" }}
         right={"6.3125rem"}
-        bottom={{ base: "1.375rem", "2xl": "2.375rem" }}
+        // bottom={{ base: "1.375rem", "2xl": "2.375rem" }}
+        bottom="0"
       />
     </Box>
   );

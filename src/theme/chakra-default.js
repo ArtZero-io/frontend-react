@@ -73,7 +73,7 @@ export default {
     widest: "0.1em",
   },
   breakpoints: {
-    sm: "30em", //480px
+    sm: "30em", // 480px
     md: "48em", // 768px
     lg: "62em", // 992px
     xl: "80em", // 1280
@@ -101,12 +101,12 @@ export default {
       10: "2.5rem",
       12: "3rem",
       14: "3.5rem",
-      16: "4rem", 
+      16: "4rem",
       20: "5rem",
-      24: "6rem", 
-      28: "7rem", 
-      32: "8rem",   
-      36: "9rem", 
+      24: "6rem",
+      28: "7rem",
+      32: "8rem",
+      36: "9rem",
       40: "10rem",
       44: "11rem",
       48: "12rem",
@@ -163,10 +163,10 @@ export default {
   },
 
   // z-index values#
-  zIndices : {
+  zIndices: {
     zIndices: {
       hide: -1,
-      auto: 'auto',
+      auto: "auto",
       base: 0,
       docked: 10,
       dropdown: 1000,
@@ -178,5 +178,6 @@ export default {
       skipLink: 1600,
       toast: 1700,
       tooltip: 1800,
-    },}
+    },
+  },
 };

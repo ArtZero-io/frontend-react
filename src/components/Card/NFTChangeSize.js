@@ -1,5 +1,4 @@
 import {
-  Box,
   Flex,
   Heading,
   Image,
@@ -8,126 +7,109 @@ import {
   Tag,
   TagLabel,
   TagRightIcon,
-  Text,
   VStack,
   Square,
+  Text,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { IPFS_BASE_URL } from "@constants/index";
-import process from "process";
-const baseURL = process.env.REACT_APP_API_BASE_URL;
+import { getCachedImageShort } from "@utils/index";
+import { motion } from "framer-motion";
 
 export default function NFTChangeSizeCard({
-  bidPrice,
   is_for_sale,
   price,
   avatar,
   nftName,
-  bigCard,
   highest_bid,
+  width,
 }) {
-
-  const getNFTImage = (imageHash, size) => {
-    const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
-    return (
-      baseURL +
-      "/getImage?input=" +
-      imageHash +
-      "&size=" +
-      size +
-      "&url=" +
-      callbackUrl
-    );
-  };
-
   return (
-    <Box
-      h="full"
-      borderColor="transparent"
-      borderWidth={"2px"}
-      _hover={{ borderColor: "brand.blue" }}
+    <motion.div
+      whileHover={{
+        borderColor: "#7ae7ff",
+      }}
+      style={{
+        width,
+        borderWidth: "2px",
+        borderColor: "#7ae7ff00",
+
+        transitionDuration: "0.15s",
+        transitionProperty: "all",
+        transitionTimingFunction: "cubic-bezier(.17,.67,.83,.67)",
+      }}
     >
       <Flex
         direction="column"
         align="center"
-        textAlign="center"
+        textAlign="left"
         bg="brand.grayDark"
-        minH="25rem"
+        h="full"
+        w="full"
+        shadow="lg"
       >
-        <Square
-          w={bigCard ? "405.5px" : "317.6px"}
-          h={bigCard ? "25rem" : "20rem"}
-          bg="#372648"
-        >
+        <Square>
           <Image
-            borderWidth={"2px"}
-            borderColor="transparent"
-            bg="#372648"
             alt={nftName}
             objectFit="cover"
-            src={getNFTImage(avatar, 500)}
+            objectPosition="center"
+            src={avatar && getCachedImageShort(avatar, 500)}
             h="full"
             w="full"
-            fallback={
-              <Skeleton
-                w={bigCard ? "405.5px" : "317.6px"}
-                h={bigCard ? "25rem" : "20rem"}
-              />
-            }
+            minH={width}
+            fallback={<Skeleton h="full" w="full" />}
           />
         </Square>
         <VStack
           p={4}
           w="full"
+          h="full"
           justifyContent="space-between"
           alignItems="start"
-          flexGrow="1"
-          minH="8.125rem"
+          flex="1"
+          // minH={is_for_sale ? "8.125rem" : ""}
         >
-          <Heading size="h6">{nftName}</Heading>
+          <Heading size="h6" textTransform="lowercase">
+            {nftName}
+          </Heading>
 
           {is_for_sale ? (
-            <Flex w="full">
-              <Tag h={10}>
-                <TagLabel>{price / 10 ** 12}</TagLabel>
-                <TagRightIcon as={AzeroIcon} />
-              </Tag>
-
-              <Spacer />
-
+            <>
               <Flex w="full">
+                <Tag h={10}>
+                  <TagLabel>{price / 10 ** 12}</TagLabel>
+                  <TagRightIcon as={AzeroIcon} />
+                </Tag>
+
                 <Spacer />
-                <Flex
-                  align="center"
-                  textAlign="right"
-                  color="brand.grayLight"
-                  mt="5"
-                >
-                  {/* <Text mr="1">Highest Offer</Text> */}
-                  {highest_bid ? (
-                    <Tag h={10} bg="transparent">
-                      <TagLabel bg="transparent">
-                        Highest Offer {highest_bid / 10 ** 12}
-                      </TagLabel>
-                      <TagRightIcon as={AzeroIcon} />
-                    </Tag> 
-                  ) : (
-                    <>
-                      <Tag h={10} bg="transparent">
-                        <TagLabel bg="transparent" color='brand.grayLight'>No offer yet </TagLabel>
-                      </Tag>
-                    </>
-                  )}
-                </Flex>
               </Flex>
-            </Flex>
+              <Flex
+                w="full"
+                align="center"
+                textAlign="right"
+                color="brand.grayLight"
+                m="0"
+                py="0"
+              >
+                <Spacer />
+                {highest_bid ? (
+                  <>
+                    <Text bg="transparent" color="#fff">
+                      Highest Offer {highest_bid / 10 ** 12}
+                    </Text>
+                    <TagRightIcon as={AzeroIcon} />
+                  </>
+                ) : (
+                  <Text bg="transparent">No offer yet</Text>
+                )}
+              </Flex>
+            </>
           ) : (
-            <Text textAlign="center" fontSize="lg">
-              Not for sale
-            </Text>
+            <Tag h={10}>
+              <TagLabel>Not for sale</TagLabel>
+            </Tag>
           )}
         </VStack>
       </Flex>
-    </Box>
+    </motion.div>
   );
 }

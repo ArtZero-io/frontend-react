@@ -1,10 +1,9 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { useSubstrateState } from "@utils/substrate";
 import DataTable from "@components/Table/Table";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
 
 function MyNFTTabOffers({ nftContractAddress, tokenID }) {
@@ -13,7 +12,6 @@ function MyNFTTabOffers({ nftContractAddress, tokenID }) {
   const headers = ["Address", "Time", "Price", "Action"];
   const [saleInfo, setSaleInfo] = useState({});
   const dispatch = useDispatch();
-  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
   const [idSelected, setIdSelected] = useState(null);
 
   const acceptBid = async (bidId) => {

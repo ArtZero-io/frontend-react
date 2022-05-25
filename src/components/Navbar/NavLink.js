@@ -1,53 +1,63 @@
 import { Link } from "@chakra-ui/react";
-import * as React from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 const DesktopNavLink = ({ label, to, isExternal, ...props }) => {
-  const location = useLocation();
-  const [path, setPath] = useState(location.pathname);
+  const { pathname } = useLocation();
+  const [path, setPath] = useState(pathname);
+
   useEffect(() => {
-    setPath(location.pathname);
-  }, [location.pathname]);
+    setPath(pathname);
+  }, [pathname]);
+
   return (
     <>
       {isExternal && (
         <Link
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           isExternal
-          size="sm"
+          py="10px"
+          fontSize="15px"
+          lineHeight="shorter"
           fontFamily="Evogria, sans-serif"
           href={to}
-          fontWeight="medium"
           display="flex"
           alignItems="center"
           justifyContent="center"
           borderBottom="2px"
-          borderColor="transparent"
+          borderColor={path === to ? "brand.blue" : "transparent"}
+          // borderColor="transparent"
           transition="all 0.2s"
           textTransform="uppercase"
-          shadow="0px 4px 4px rgba(0, 0, 0, 0.75"
           _hover={{
             borderColor: "currentcolor",
             color: "brand.blue",
           }}
-          color={path === to ? "brand.blue" : "#ccc"}
+          color={path === to ? "brand.blue" : "#fff"}
         >
           {label}
         </Link>
       )}
       {!isExternal && (
         <Link
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           as={ReactRouterLink}
+          py="10px"
           to={to}
-          size="sm"
+          fontSize="15px"
+          lineHeight="shorter"
           fontFamily="Evogria, sans-serif"
-          fontWeight="medium"
           display="flex"
           alignItems="center"
           justifyContent="center"
           borderBottom="2px"
-          borderColor="transparent"
+          // borderColor="transparent"
+          borderColor={path === to ? "brand.blue" : "transparent"}
           transition="all 0.2s"
           textTransform="uppercase"
           shadow="0px 4px 4px rgba(0, 0, 0, 0.75"
@@ -55,7 +65,7 @@ const DesktopNavLink = ({ label, to, isExternal, ...props }) => {
             borderColor: "currentcolor",
             color: "brand.blue",
           }}
-          color={path === to ? "brand.blue" : "#ccc"}
+          color={path === to ? "brand.blue" : "#fff"}
         >
           {label}
         </Link>
@@ -72,22 +82,21 @@ const MobileNavLink = ({ label = "", to = "", isExternal, ...props }) => {
   return (
     <>
       {isExternal && (
-        <Link               bg="brand.grayDark"
-
+        <Link
+          bg="brand.grayDark"
           py="2rem"
           href={to}
           isExternal
-          size="sm"
+          fontSize="15px"
           fontFamily="Evogria, sans-serif"
-          fontWeight="medium"
           display="flex"
           alignItems="center"
           justifyContent="center"
           borderBottom="0"
-          borderColor="transparent"
+          // borderColor="transparent"
+          borderColor={path === to ? "brand.blue" : "transparent"}
           transition="all 0.2s"
           textTransform="uppercase"
-          shadow="0px 4px 4px rgba(0, 0, 0, 0.75"
           _hover={{
             borderColor: "currentcolor",
             color: "brand.blue",
@@ -98,8 +107,8 @@ const MobileNavLink = ({ label = "", to = "", isExternal, ...props }) => {
         </Link>
       )}
       {!isExternal && (
-        <Link               bg="brand.grayDark"
-
+        <Link
+          bg="brand.grayDark"
           py="2rem"
           as={ReactRouterLink}
           to={to}

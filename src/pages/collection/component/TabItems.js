@@ -7,22 +7,24 @@ import {
   IconButton,
   useDisclosure,
   Stack,
+  useDimensions,
+  // Input,
 } from "@chakra-ui/react";
 
 import React, { useEffect, useRef, useState } from "react";
 
 import { RiLayoutGridLine } from "react-icons/ri";
 import { BsGrid3X3 } from "react-icons/bs";
+import { MdRefresh } from "react-icons/md";
 
 import AddNewNFTModal from "./Modal/AddNewNFT";
 
 import Dropdown from "@components/Dropdown/Dropdown";
-import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import NFTDetailModal from "./Modal/NFTDetail";
-import NFTChangeSizeCard from "@components/Card/NFTChangeSize";
 import AnimationLoader from "@components/Loader/AnimationLoader";
+import NFTChangeSizeCard from "@components/Card/NFTChangeSize";
 
 const CollectionItems = ({
   NFTListFormatted,
@@ -34,13 +36,12 @@ const CollectionItems = ({
   setIsShowUnlisted,
   isShowUnlisted,
   totalCollectionsCount,
+  offset,
 }) => {
   const { currentAccount } = useSubstrateState();
 
-  const [bigCard, setBigCard] = useState(false);
+  const [bigCard, setBigCard] = useState(true);
   const [selectedItem, setSelectedItem] = useState(0);
-
-  // const [isShowUnlisted, setIsShowUnlisted] = useState(1);
 
   const options = [
     // "Price: Newest",
@@ -50,6 +51,7 @@ const CollectionItems = ({
   //  0 Low first, 1 High first, 2 Newest
 
   // TODOs: update after remove un/listed filter
+
   const getUnListedNFT = () => {
     if (!NFTListFormatted) return [];
 
@@ -63,161 +65,208 @@ const CollectionItems = ({
       result = result.sort((a, b) => b.price - a.price);
     }
 
-    
-
     return result;
   };
 
   const unListNFT = getUnListedNFT();
 
+  const elementRef = useRef();
+  const dimensions = useDimensions(elementRef, true);
+
+  const nftCardWidth = bigCard ? 300 : 240;
+  const nftCardHeight = bigCard ? 450 : 395;
+
+  const gridWidth = dimensions?.borderBox?.width;
+  const gridCol = Math.floor(gridWidth / nftCardWidth);
+
+  const gap = 30;
+
+  const realNftCardWidth =
+    (gridWidth - gridCol * nftCardWidth - gap * (gridCol - 1)) / gridCol +
+    nftCardWidth;
+  const realGridHeight =
+    Math.ceil(unListNFT?.length / gridCol) * (nftCardHeight + gap);
+
   return (
-    <Box w="full" textAlign="left" minH={"54rem"}>
-      <Stack direction={{ base: "column", xl: "row" }} w="full">
-        <IconButton
-          display={{ base: "none", xl: "block" }}
-          aria-label="refresh"
-          icon={<RefreshIcon fontSize="1.5rem" />}
-          size="icon"
-          variant="iconSolid"
-          mx={1.5}
-          onClick={() => forceUpdate()}
-        />
-        <Flex justifyContent="space-between">
+    <>
+      <Box w="full" mx="auto" px="0" textAlign="left">
+        <Stack direction={{ base: "column", xl: "row" }} w="full">
           <IconButton
-            display={{ base: "block", xl: "none" }}
+            display={{ base: "none", xl: "flex" }}
             aria-label="refresh"
-            icon={<RefreshIcon fontSize="1.5rem" />}
+            icon={<MdRefresh fontSize="1.5rem" />}
             size="icon"
             variant="iconSolid"
             mx={1.5}
+            _hover={{ color: "black", bg: "#7ae7ff" }}
             onClick={() => forceUpdate()}
           />
+          <Flex justifyContent="space-between">
+            <IconButton
+              display={{ base: "flex", xl: "none" }}
+              aria-label="refresh"
+              icon={<MdRefresh fontSize="1.5rem" />}
+              size="icon"
+              variant="iconSolid"
+              mx={1.5}
+              onClick={() => forceUpdate()}
+            />
 
-          <Button
-            mx={1.5}
-            variant="outline"
-            minW={"11rem"}
-            onClick={() =>
-              setIsShowUnlisted((isShowUnlisted) => isShowUnlisted + 1)
-            }
-          >
-            {isShowUnlisted % 3 === 0
-              ? "Show all"
-              : isShowUnlisted % 3 === 1
-              ? "Show listed"
-              : isShowUnlisted % 3 === 2
-              ? "Show unlisted"
-              : ""}
-          </Button>
-        </Flex>
-        {/* 
-        <Input
-          ml={1.5}
-          mr={3}
-          placeholder="Search items, collections, and accounts"
-        /> */}
-        <Spacer />
-        <Flex justifyContent="space-between" align="center" pr="2">
-          <Text px={2} display={{ base: "block", xl: "none" }}>
-            {totalCollectionsCount || 0} items{" "}
-            {isShowUnlisted % 3 === 0
-              ? "in total"
-              : isShowUnlisted % 3 === 1
-              ? "listed"
-              : isShowUnlisted % 3 === 2
-              ? "unlisted"
-              : ""}
-          </Text>
-          <Dropdown
-            mx={1.5}
-            options={options}
-            selectedItem={selectedItem}
-            setSelectedItem={setSelectedItem}
-          />
-        </Flex>
-
-        <IconButton
-          display={{ base: "none", xl: "flex" }}
-          bg={bigCard ? "#7ae7ff" : "#222"}
-          color={bigCard ? "#000" : "#fff"}
-          aria-label="big-card"
-          icon={<RiLayoutGridLine fontSize="1.5rem" />}
-          size="icon"
-          variant="iconSolid"
-          mr={1.5}
-          ml={3}
-          onClick={() => setBigCard(true)}
-        />
-
-        <IconButton
-          display={{ base: "none", xl: "flex" }}
-          bg={!bigCard ? "#7ae7ff" : "#222"}
-          color={!bigCard ? "#000" : "#fff"}
-          aria-label="small-card"
-          icon={<BsGrid3X3 fontSize="1.5rem" />}
-          size="icon"
-          variant="iconSolid"
-          mx={1.5}
-          onClick={() => setBigCard(false)}
-        />
-      </Stack>
-
-      <Flex
-        align="center"
-        py={{ base: 2, xl: "1.25rem", "2xl": 4 }}
-        minH={{ base: 14, "2xl": 24 }}
-        w="full"
-      >
-        <AnimatePresence>
-          {unListNFT && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+            <Button
+              mx={1.5}
+              variant="outline"
+              minW={"11rem"}
+              onClick={() =>
+                setIsShowUnlisted((isShowUnlisted) => isShowUnlisted + 1)
+              }
             >
-              <Text px={2} display={{ base: "none", xl: "block" }}>
-                {totalCollectionsCount || 0} items{" "}
-                {isShowUnlisted % 3 === 0
-                  ? "in total"
-                  : isShowUnlisted % 3 === 1
-                  ? "listed"
-                  : isShowUnlisted % 3 === 2
-                  ? "unlisted"
-                  : ""}
-              </Text>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              {isShowUnlisted % 3 === 0
+                ? "Show all"
+                : isShowUnlisted % 3 === 1
+                ? "Show listed"
+                : isShowUnlisted % 3 === 2
+                ? "Show unlisted"
+                : ""}
+            </Button>
+          </Flex>
+          {/* 
+          <Input
+            ml={1.5}
+            mr={3}
+            placeholder="Search items, collections, and accounts"
+          /> 
+          */}
+          <Spacer />
 
-        <Spacer />
+          <Flex justifyContent="space-between" align="center" pr="2">
+            <Text px={2} display={{ base: "block", xl: "none" }}>
+              {totalCollectionsCount || 0} items{" "}
+              {isShowUnlisted % 3 === 0
+                ? "in total"
+                : isShowUnlisted % 3 === 1
+                ? "listed"
+                : isShowUnlisted % 3 === 2
+                ? "unlisted"
+                : ""}
+            </Text>
 
-        {currentAccount?.address === collectionOwner && contractType === 2 ? (
-          <AddNewNFTModal collectionOwner={collectionOwner} />
-        ) : null}
-      </Flex>
+            <Dropdown
+              mx={1.5}
+              options={options}
+              selectedItem={selectedItem}
+              setSelectedItem={setSelectedItem}
+            />
+          </Flex>
 
-      {loading ? (
-        <AnimationLoader loadingTime={loadingTime} />
-      ) : (
-        <GridNftA bigCard={bigCard} listNFTFormatted={unListNFT} />
-      )}
-    </Box>
+          <IconButton
+            ml={3}
+            mr={1.5}
+            size="icon"
+            variant="iconSolid"
+            aria-label="big-card"
+            bg={bigCard ? "#7ae7ff" : "#222"}
+            color={bigCard ? "#000" : "#fff"}
+            display={{ base: "none", xl: "flex" }}
+            icon={<RiLayoutGridLine fontSize="1.5rem" />}
+            onClick={() => setBigCard(true)}
+          />
+
+          <IconButton
+            mx={1.5}
+            size="icon"
+            variant="iconSolid"
+            aria-label="small-card"
+            bg={!bigCard ? "#7ae7ff" : "#222"}
+            color={!bigCard ? "#000" : "#fff"}
+            display={{ base: "none", xl: "flex" }}
+            icon={<BsGrid3X3 fontSize="1.5rem" />}
+            onClick={() => setBigCard(false)}
+          />
+        </Stack>
+
+        <Flex
+          align="center"
+          // py={{ base: 2, xl: "1.25rem", "2xl": 4 }}
+          pt="64px"
+          pb="16px"
+          minH={{ base: 14, "2xl": 24 }}
+          w="full"
+        >
+          <AnimatePresence>
+            {unListNFT && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <Text
+                  px={2}
+                  display={{ base: "none", xl: "block" }}
+                  color="#888"
+                >
+                  {totalCollectionsCount || 0} items{" "}
+                  {isShowUnlisted % 3 === 0
+                    ? "in total"
+                    : isShowUnlisted % 3 === 1
+                    ? "listed"
+                    : isShowUnlisted % 3 === 2
+                    ? "unlisted"
+                    : ""}
+                </Text>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <Spacer />
+
+          {currentAccount?.address === collectionOwner && contractType === 2 ? (
+            <AddNewNFTModal collectionOwner={collectionOwner} />
+          ) : null}
+        </Flex>
+      </Box>
+
+      <Box
+        w="100%"
+        mx="auto"
+        px="0"
+        textAlign="left"
+        h={realGridHeight || 600}
+        ref={elementRef}
+        pos="relative"
+      >
+        {loading ? (
+          <AnimationLoader loadingTime={loadingTime} />
+        ) : (
+          <GridNftA
+            gap={gap}
+            gridCol={gridCol}
+            bigCard={bigCard}
+            listNFTFormatted={unListNFT}
+            realNftCardWidth={realNftCardWidth}
+            realGridCardHeight={nftCardHeight}
+          />
+        )}
+      </Box>
+    </>
   );
 };
 
 export default CollectionItems;
 
-function GridNftA({ listNFTFormatted, bigCard }) {
+function GridNftA({
+  listNFTFormatted,
+  bigCard,
+  realNftCardWidth,
+  realGridCardHeight,
+  gridCol,
+  gap,
+}) {
   const originOffset = useRef({ top: 0, left: 0 });
   const controls = useAnimation();
+
   const delayPerPixel = 0.0004;
 
-  useEffect(() => {
-    controls.start("visible");
-  }, [listNFTFormatted, controls]);
-
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const [selectedNft, setSelectedNft] = useState(null);
 
   function handleOnClick(item) {
@@ -225,14 +274,12 @@ function GridNftA({ listNFTFormatted, bigCard }) {
     onOpen();
   }
 
+  useEffect(() => {
+    controls.start("visible");
+  }, [listNFTFormatted, controls]);
+
   return (
     <>
-      {/* <ResponsivelySizedModal
-        // {...selectedNft}
-        isOpen={isOpen}
-        onClose={onClose}
-        hasTabs={true}
-      /> */}
       <NFTDetailModal {...selectedNft} isOpen={isOpen} onClose={onClose} />
 
       <AnimatePresence>
@@ -242,27 +289,28 @@ function GridNftA({ listNFTFormatted, bigCard }) {
           variants={{}}
           id="grid-item-div"
           style={{
-            display: "grid",
-            gridGap: "1.875rem",
-            // gridAutoRows: "20.625rem",
-            gridAutoFlow: "dense",
-            gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${
-              bigCard ? "25rem" : "20rem"
-            }), 1fr))`,
-            borderBottom: "0.125rem",
-            justifyItems: "center",
+            height: "100%",
           }}
         >
           {listNFTFormatted?.map((c, i) => (
             <GridItemA
-              key={i}
               i={i}
-              delayPerPixel={delayPerPixel}
-              originOffset={originOffset}
+              key={i}
               id="grid-item-a"
+              gap={gap}
+              gridCol={gridCol}
+              originOffset={originOffset}
+              delayPerPixel={delayPerPixel}
               onClick={() => handleOnClick(c)}
+              realNftCardWidth={realNftCardWidth}
+              realGridCardHeight={realGridCardHeight}
             >
-              <NFTChangeSizeCard {...c} bigCard={bigCard} />
+              <NFTChangeSizeCard
+                {...c}
+                bigCard={bigCard}
+                width={realNftCardWidth}
+                height={realGridCardHeight}
+              />
             </GridItemA>
           ))}
         </motion.div>
@@ -272,22 +320,29 @@ function GridNftA({ listNFTFormatted, bigCard }) {
 }
 
 function GridItemA({
-  delayPerPixel,
   i,
+  gap,
+  gridCol,
+  delayPerPixel,
   originIndex,
   originOffset,
   children,
   onClick,
   tokenID,
+  realNftCardWidth,
+  realGridCardHeight,
 }) {
   const delayRef = useRef(0);
   const offset = useRef({ top: 0, left: 0 });
   const ref = useRef();
 
+  const left = (i % gridCol) * (realNftCardWidth + gap);
+  const top = Math.floor(i / gridCol) * (realGridCardHeight + gap);
+
   const itemVariants = {
     hidden: {
       opacity: 0,
-      scale: 0.5,
+      scale: 0.8,
     },
     visible: (delayRef) => ({
       opacity: 1,
@@ -321,13 +376,18 @@ function GridItemA({
     <AnimatePresence>
       {!tokenID && (
         <motion.div
-          exit={{ opacity: 0, scale: 0 }}
           ref={ref}
-          variants={itemVariants}
           custom={delayRef}
+          variants={itemVariants}
+          exit={{ opacity: 0, scale: 0 }}
           style={{
-            position: "relative",
+            top,
+            left,
             cursor: "pointer",
+            position: "absolute",
+            transitionDuration: "0.45s",
+            transitionProperty: "top bottom right left",
+            transitionTimingFunction: "cubic-bezier(.17,.67,.83,.67)",
           }}
           onClick={() => onClick()}
         >

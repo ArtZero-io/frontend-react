@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Table,
   TableContainer,
@@ -10,7 +9,6 @@ import {
   Tag,
   TagLabel,
   TagRightIcon,
-  Button,
   Text,
   Flex,
 } from "@chakra-ui/react";

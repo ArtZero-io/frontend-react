@@ -24,8 +24,9 @@ import {
 import { useDispatch } from "react-redux";
 import { AccountActionTypes } from "../../store/types/account.types";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
+import { truncateStr } from "@utils/index";
 
-function WalletSelector(props) {
+function WalletSelector() {
   const dispatch = useDispatch();
   const [, setActiveAddressLocal] = useLocalStorage("activeAddress");
   const { setCurrentAccount, state } = useSubstrate();
@@ -72,8 +73,9 @@ function WalletSelector(props) {
     window.localStorage.clear();
     window.location.assign("/");
   }
+
   return (
-    <Box display={props.display} color="brand.blue" height="100%" mx="auto" minW={64}>
+    <>
       <Flex
         align="center"
         justify="space-between"
@@ -87,73 +89,93 @@ function WalletSelector(props) {
             _active={{ bg: "black", borderBottom: 0 }}
             bg="black"
             borderRadius="0"
-            borderWidth={2}
-            borderColor="brand.blue"
-            fontFamily="Oswald"
+            border="2px #7ae7ff solid"
+            fontFamily="Oswald, sans-serif"
             color="brand.blue"
             ring={0}
-            minW={64}
-            maxW={64}
-            mx="2"
-            px="3"
-            h="12"
+            // minW={64}
+            // maxW={64}
+            mx="10px"
+            p="0"
+            pl="15px"
+            w="250px"
+            h="50px"
             as={Button}
-            rightIcon={<ChevronDownIcon fontSize="2xl" />}
+            rightIcon={<ChevronDownIcon fontSize="3xl" w="30px" m="0" />}
             fontSize="lg"
+            textTransform="capitalize"
+            lineHeight="38px"
           >
-            <Flex>
-              <Text maxWidth={20} isTruncated>
-                {currentAccount?.meta?.name}{" "}
-              </Text>{" "}
-              - {currentAccount?.address.slice(0, 6)} ...{" "}
-              {currentAccount?.address.slice(-6)}
+            <Flex justifyContent="start" w="full">
+              <Text w="78px" isTruncated mr="2px" textAlign="left">
+                {currentAccount?.meta?.name}
+              </Text>
+              <Text> - {truncateStr(currentAccount?.address, 6)}</Text>
             </Flex>
           </MenuButton>
           <MenuList
-            minW={64}
-            maxW={64}
+            // minW={64}
+            // maxW={64}
+            w="250px"
             borderRadius="0"
-            borderWidth={2}
+            borderWidth="2px"
             borderColor="brand.blue"
             bg="black"
             borderTop="0"
-            px={2}
+            px="15px"
+            py="0"
           >
             {keyringOptions.map(({ address, name }) => (
               <MenuItem
-                _hover={{ bg: "brand.grayLight", color: "white" }}
-                fontFamily="Oswald"
-                onClick={() => selectAccountHandler(address)}
                 key={address}
-                px="1"
-                isDisabled={currentAccount?.address === address ? true : false}
+                fontFamily="Oswald"
+                textTransform="capitalize"
+                onClick={() => selectAccountHandler(address)}
+                display={currentAccount?.address === address ? "none" : ""}
+                p="0"
+                lineHeight="38px"
               >
-                <Flex fontSize="lg">
-                  <Text maxWidth={20} isTruncated>
+                <Flex
+                  _hover={{ color: "#fff" }}
+                  w="full"
+                  fontSize="lg"
+                  justifyContent="start"
+                  color="#888"
+                  lineHeight="38px"
+                >
+                  <Text w="78px" isTruncated mr="2px" textAlign="left">
                     {name}
-                  </Text>{" "}
-                  - {address.slice(0, 6)} ... {address.slice(-6)}
+                  </Text>
+                  <Text> - {truncateStr(address, 6)}</Text>
+                  {/* {address.slice(0, 6)} ... {address.slice(-6)} */}
+                  {/* <Box w="24px"></Box> */}
                 </Flex>
               </MenuItem>
             ))}
             <Spacer />
             <MenuItem
-              _hover={{ bg: "brand.grayLight", color: "brand.blue" }}
+              _hover={{ color: "brand.blue" }}
               color="white"
               textDecoration="underline"
               fontFamily="Oswald"
               onClick={() => logoutHandler()}
               fontSize="lg"
-              px="1"
+              p="0"
+              textTransform="capitalize"
+              lineHeight="26.68px"
+              my="18px"
+              bg="black"
             >
-              Disconnect wallet.
+              Disconnect Wallet
             </MenuItem>
           </MenuList>
         </Menu>
+
         <Spacer />
+
         <WalletMenu address={currentAccount?.address} />
       </Flex>
-    </Box>
+    </>
   );
 }
 
@@ -172,6 +194,6 @@ export default function AccountSelector(props) {
   return keyring?.getPairs && api?.query ? (
     <WalletSelector {...props} />
   ) : (
-    <WalletNotConnected  {...props}/>
+    <WalletNotConnected {...props} />
   );
 }

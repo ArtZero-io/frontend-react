@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -15,23 +14,16 @@ import {
   Square,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { clientAPI } from "@api/client";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { IPFS_BASE_URL } from "@constants/index";
-import {
-  getCachedImage,
-  getCachedImageShort,
-  secondsToTime,
-  delay,
-} from "@utils";
+import { getCachedImageShort, secondsToTime, delay } from "@utils";
 import staking_calls from "@utils/blockchain/staking_calls";
 import staking from "@utils/blockchain/staking";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import BN from "bn.js";
 import useInterval from "use-interval";
+import { motion } from "framer-motion";
 
 function MyNFTCard({
   nftContractAddress,
@@ -49,7 +41,7 @@ function MyNFTCard({
   const [unstakeRequestTime, setUnstakeRequestTime] = useState(0);
   const [countdownTime, setCountdownTime] = useState(0);
   const [isUnstakeTime, setIsUnstakeTime] = useState(false);
-  const [nftImage, setNftImage] = useState(null);
+  // const [nftImage, setNftImage] = useState(null);
   const [limitUnstakeTime, setLimitUnstakeTime] = useState(0);
 
   const getRequestTime = async () => {
@@ -91,18 +83,7 @@ function MyNFTCard({
   }, 1000);
 
   useEffect(() => {
-    // setNftImage(
-    //   avatar
-    //     ? getCachedImage(
-    //         avatar,
-    //         500,
-    //         IPFS_BASE_URL + "/" + avatar.replace("ipfs://", "")
-    //       )
-    //     : ""
-    // );
     if (stakeStatus === 3) getRequestTime();
-    //console.log(listNFT,'showOnChainMetadata',showOnChainMetadata);
-    // requestUpdateNFT();
   }, [stakeStatus]);
 
   async function stakeAction(stakeStatus) {
@@ -148,14 +129,23 @@ function MyNFTCard({
   }
 
   return (
-    <Box
-      h="full"
-      w="full"
-      mx="auto"
-      maxW="14rem"
-      borderColor="transparent"
-      borderWidth={"2px"}
-      _hover={{ borderColor: "brand.blue" }}
+    // h="full"
+    // w="full"
+    // mx="auto"
+    <motion.div
+      className="my-collection-card"
+      whileHover={{
+        borderColor: "#7ae7ff",
+      }}
+      style={{
+        borderWidth: "2px",
+        borderColor: "#7ae7ff00",
+        maxWidth: "14rem",
+
+        transitionDuration: "0.15s",
+        transitionProperty: "all",
+        transitionTimingFunction: "cubic-bezier(.17,.67,.83,.67)",
+      }}
     >
       <Flex
         direction="column"
@@ -263,7 +253,7 @@ function MyNFTCard({
           )}
         </Box>
       </Flex>
-    </Box>
+    </motion.div>
   );
 }
 export default MyNFTCard;

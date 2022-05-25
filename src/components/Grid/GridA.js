@@ -6,11 +6,26 @@ import AdvancedModeModal from "../../pages/account/collections/components/Modal/
 import SimpleModeModal from "../../pages/account/collections/components/Modal/SimpleMode";
 import { CollectionCard } from "../Card/Collection";
 import * as ROUTES from "@constants/routes";
+import { useDimensions } from "@chakra-ui/react";
+// import PixelCard from "@components/Card/PixelCard";
 
 export default function GridA({ collections, variant = "my-collection" }) {
   const originOffset = useRef({ top: 0, left: 0 });
   const controls = useAnimation();
   const delayPerPixel = 0.0008;
+
+  const elementRef = useRef();
+  const dimensions = useDimensions(elementRef, true);
+
+  const nftCardColumn =
+    dimensions?.borderBox?.width >= 984
+      ? 3
+      : dimensions?.borderBox?.width >= 728
+      ? 2
+      : 1;
+
+  const nftCardWidth =
+    (dimensions?.borderBox?.width - (nftCardColumn - 1) * 30) / nftCardColumn;
 
   useEffect(() => {
     controls.start("visible");
@@ -18,20 +33,24 @@ export default function GridA({ collections, variant = "my-collection" }) {
 
   return (
     <motion.div
+      ref={elementRef}
       initial="hidden"
       animate={controls}
       variants={{}}
       id="grid-item-div"
       style={{
+        position: "relative",
         margin: "2.5rem auto",
         display: "grid",
-        gridGap: "1rem",
-        gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, 24.5625rem), 1fr))`,
+        gridGap: "30px",
+        gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${nftCardWidth}px), 1fr))`,
         gridAutoRows: "31.25rem",
         gridAutoFlow: "dense",
         justifyItems: "center",
       }}
     >
+      {/* <PixelCard dimensions={dimensions} /> */}
+
       {collections?.map((c, i) => (
         <GridItemA
           key={i}
@@ -41,11 +60,11 @@ export default function GridA({ collections, variant = "my-collection" }) {
           id="grid-item-a"
         >
           {variant === "my-collection" && Number(c.contractType) === 2 && (
-            <SimpleModeModal mode="edit" id={c.index} pos={"absolute"} {...c}/>
+            <SimpleModeModal mode="edit" id={c.index} pos={"absolute"} {...c} />
           )}
 
           {variant === "my-collection" && Number(c.contractType) === 1 && (
-            <AdvancedModeModal mode="edit" id={c.index} {...c}/>
+            <AdvancedModeModal mode="edit" id={c.index} {...c} />
           )}
           <Link
             as={ReactRouterLink}
@@ -103,7 +122,11 @@ function GridItemA({ delayPerPixel, i, originIndex, originOffset, children }) {
       ref={ref}
       variants={itemVariants}
       custom={delayRef}
-      style={{ position: "relative", maxWidth: "24.5625rem" }}
+      style={{
+        position: "relative",
+        width: "100%",
+        // maxWidth: "24.5625rem"
+      }}
     >
       {children}
     </motion.div>

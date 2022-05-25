@@ -82,7 +82,7 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
           }
         />
 
-        <Tabs isLazy align="left">
+        <Tabs isLazy align="left" colorScheme="brand.blue">
           <TabList bg="#171717">
             {tabData.map((tab, index) => (
               <Tab
@@ -92,6 +92,9 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
                 fontSize="md"
                 fontFamily="Evogria Italic"
                 minH={tabHeight}
+                fontStyle="italic"
+                px="0.5px"
+                py="20px"
               >
                 {tab.label}
               </Tab>

@@ -96,7 +96,7 @@ export default function ResponsivelySizedModal({
           }
         />
 
-        <Tabs isLazy align="left" h="full">
+        <Tabs isLazy align="left" h="full" colorScheme="brand.blue">
           <TabList bg="#171717">
             {tabData.map((tab, index) => (
               <Tab
@@ -106,6 +106,9 @@ export default function ResponsivelySizedModal({
                 fontSize="md"
                 fontFamily="Evogria Italic"
                 minH={tabHeight}
+                fontStyle="italic"
+                px="0.5px"
+                py="20px"
               >
                 {tab.label}
               </Tab>
