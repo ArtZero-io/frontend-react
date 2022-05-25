@@ -28,10 +28,10 @@ const Layout = ({ backdrop, children, variant = null }) => {
           position="absolute"
           insetX="0"
           w="full"
-          h={{ base: "full", xl: "760px" }}
+          // h={{ base: "full", xl: "760px" }}
           // maxH={"41rem"}
-          // h='776px'
           // minH={{ base: "29rem", "2xl": "41rem" }}
+          h='776px'
           overflow="hidden"
           align="center"
           zIndex="hide"
@@ -43,7 +43,8 @@ const Layout = ({ backdrop, children, variant = null }) => {
               w="full"
               h="full"
               objectFit="cover"
-              fallback={<Skeleton w="full" h="full" maxH={"16.25rem"} />}
+              objectPosition="center"
+              fallback={<Skeleton w="full" h="full" maxH={"760px"} />}
             />
           </Box>
         </Flex>

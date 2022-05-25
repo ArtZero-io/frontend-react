@@ -33,7 +33,7 @@ const HomeLayout = ({ children }) => {
             alt="bg-HomePageBgFull"
             w="full"
             h="full"
-            objectPosition="center"
+            objectPosition="top"
             objectFit="cover"
             position="absolute"
           />

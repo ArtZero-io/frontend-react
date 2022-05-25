@@ -33,7 +33,6 @@ import { APICall } from "../../api/client";
 const NUMBER_PER_PAGE = 10;
 
 function CollectionPage() {
-  const [formattedCollection, setFormattedCollection] = useState(null);
   const { collection_address } = useParams();
   const { currentAccount, api } = useSubstrateState();
 
@@ -41,11 +40,11 @@ function CollectionPage() {
   const { addNftTnxStatus } = useSelector(
     (state) => state.account.accountLoaders
   );
+
+  const [formattedCollection, setFormattedCollection] = useState(null);
   const [loading, setLoading] = useState(null);
   const [loadingTime, setLoadingTime] = useState(null);
-
   const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
-
   const [isShowUnlisted, setIsShowUnlisted] = useState(1);
   const {
     pagesCount,
@@ -73,9 +72,11 @@ function CollectionPage() {
   const forceUpdate = () => {
     setFormattedCollection(null);
     setLoading(false);
+    setLoadingTime(0);
   };
 
   useEffect(() => {
+    // eslint-disable-next-line no-unused-vars
     const forceUpdateAfterCreateNFT = async () => {
       if (addNftTnxStatus?.status !== "End") {
         return;
@@ -174,6 +175,7 @@ function CollectionPage() {
 
         if (collectionDetail?.nft_count === 0) {
           setLoading(false);
+          setLoadingTime(null);
           return setFormattedCollection(collectionDetail);
         }
 
@@ -194,6 +196,7 @@ function CollectionPage() {
 
             setFormattedCollection(collectionDetail);
             setLoading(false);
+            setLoadingTime(null);
           });
         }
 
@@ -233,6 +236,7 @@ function CollectionPage() {
 
             setFormattedCollection(collectionDetail);
             setLoading(false);
+            setLoadingTime(null);
           });
         }
       } catch (error) {
@@ -258,6 +262,7 @@ function CollectionPage() {
       content: (
         <TabCollectionItems
           {...formattedCollection}
+          offset={offset}
           loadingTime={loadingTime}
           loading={loading}
           forceUpdate={forceUpdate}
@@ -284,7 +289,7 @@ function CollectionPage() {
     >
       {
         <>
-          <CollectionHeader {...formattedCollection} loading={loading} />
+          <CollectionHeader {...formattedCollection} />
 
           <Tabs isLazy align="center" colorScheme="brand.blue">
             <TabList bg="#000" borderBottomColor="#000">
@@ -305,9 +310,9 @@ function CollectionPage() {
               {tabData.map((tab, index) => (
                 <TabPanel
                   pt={4}
-                  px={{ base: 2, "2xl": 24 }}
+                  px={{ base: 2, xl: "100px" }}
+                  // px="100px"
                   key={index}
-                  h="full"
                 >
                   {tab.content}
 

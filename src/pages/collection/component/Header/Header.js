@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Avatar,
   Box,
@@ -8,24 +7,18 @@ import {
   Heading,
   HStack,
   Image,
-  MenuDivider,
   Skeleton,
-  StackDivider,
   Text,
   VStack,
 } from "@chakra-ui/react";
 
 import AzeroIcon from "@theme/assets/icon/Azero.png";
 import SocialCard from "@components/Card/Social";
-// import BN from "bn.js";
 
-// import { IPFS_BASE_URL } from "@constants/index";
 import { shortenNumber } from "@utils";
-// import process from "process";
-import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { getCachedImageShort } from "@utils/index";
-// const baseURL = process.env.REACT_APP_API_BASE_URL;
+
 const overlay =
   "linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)";
 
@@ -39,25 +32,8 @@ function CollectionHeader({
   volume,
   floorPrice,
   totalListed,
-  loading,
   nft_count,
 }) {
-  // const getCollectionImage = (imageHash, size) => {
-  //   if (imageHash) {
-  //     const callbackUrl = `${IPFS_BASE_URL}/${imageHash}`;
-  //     return (
-  //       baseURL +
-  //       "/getImage?input=" +
-  //       imageHash +
-  //       "&size=" +
-  //       size +
-  //       "&url=" +
-  //       callbackUrl
-  //     );
-  //   } else {
-  //     return "";
-  //   }
-  // };
   return (
     <Box
       maxH={"34rem"}

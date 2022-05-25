@@ -184,9 +184,7 @@ const CollectionsPage = () => {
           >
             <Box
               mx="auto"
-              // maxW={{ base: "auto", "2xl": "7xl" }}
               maxW="1240px"
-              // px={{ base: "8", "2xl": "4" }}
               px="0"
               pt="80px"
               pb="100px"
