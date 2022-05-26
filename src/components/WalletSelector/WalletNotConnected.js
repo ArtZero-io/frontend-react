@@ -31,7 +31,7 @@ function WalletNotConnected(props) {
     },
 
     hover: {
-      scale: 0.95,
+      scale: 0.99,
     },
   };
 
@@ -83,17 +83,7 @@ function WalletNotConnected(props) {
                 connect wallet
               </MenuButton>
             </motion.div>
-            {/* <MenuButton
-              as={Button}
-              height="14"
-              px="8"
-              size="md"
-              minW="10rem"
-              bg="brand.blue"
-              color="blackAlpha.900"
-            >
-              connect wallet
-            </MenuButton> */}
+
             <MenuList
               bg={"brand.grayDark"}
               borderRadius="0"
@@ -103,41 +93,51 @@ function WalletNotConnected(props) {
             >
               {SUPPORTED_WALLET_LIST.map(
                 ({ extensionName, title, installUrl, installed }) => (
-                  <MenuItem
+                  <Flex
+                    minW="36"
+                    alignItems="center"
                     _hover={{ bg: "blackAlpha.900" }}
-                    key={extensionName}
-                    isDisabled={!installed}
-                    onClick={() => handleConnect(extensionName)}
                   >
-                    <Box minW="36">
-                      <Flex justifyContent="start" align="center">
-                        <Box boxSize="26px">
-                          {extensionName === "subwallet-js" && (
-                            <Image src={SubwalletLogo} alt={extensionName} />
-                          )}
-                          {extensionName === "talisman" && (
-                            <Image src={TalismanLogo} alt={extensionName} />
-                          )}
-                          {extensionName === "polkadot-js" && (
-                            <Image src={PolkadotjsLogo} alt={extensionName} />
-                          )}
-                        </Box>
-                        <Text fontSize="15px" pl="16px" mr="2">
-                          {title}
-                        </Text>
-
-                        {!installed && (
-                          <Link
-                            href={installUrl}
-                            isexternal="true"
-                            fontSize="15px"
-                          >
-                            Install <ExternalLinkIcon mx="1px" />
-                          </Link>
-                        )}
-                      </Flex>
-                    </Box>
-                  </MenuItem>
+                    <MenuItem
+                      w="170px"
+                      key={extensionName}
+                      isDisabled={!installed}
+                      onClick={() => handleConnect(extensionName)}
+                      _hover={{ bg: "blackAlpha.900" }}
+                    >
+                      <Box>
+                        <Flex justifyContent="start" align="center">
+                          <Box boxSize="26px">
+                            {extensionName === "subwallet-js" && (
+                              <Image src={SubwalletLogo} alt={extensionName} />
+                            )}
+                            {extensionName === "talisman" && (
+                              <Image src={TalismanLogo} alt={extensionName} />
+                            )}
+                            {extensionName === "polkadot-js" && (
+                              <Image src={PolkadotjsLogo} alt={extensionName} />
+                            )}
+                          </Box>
+                          <Text fontSize="15px" pl="16px" mr="2">
+                            {title}
+                          </Text>
+                        </Flex>
+                      </Box>
+                    </MenuItem>
+                    {!installed && (
+                      <Link
+                        href={installUrl}
+                        isexternal="true"
+                        fontSize="14px"
+                        color="#fff"
+                        pr="2px"
+                        fontFamily="Evogria, sans-serif"
+                        _hover={{ bg: "blackAlpha.900", color: "#7ae7ff" }}
+                      >
+                        Install <ExternalLinkIcon mx="1px" />
+                      </Link>
+                    )}
+                  </Flex>
                 )
               )}
             </MenuList>

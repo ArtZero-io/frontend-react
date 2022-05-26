@@ -9,7 +9,6 @@ import {
   MenuList,
   useDisclosure,
   Button,
-  Text,
   Flex,
 } from "@chakra-ui/react";
 import * as React from "react";
@@ -127,7 +126,7 @@ const MyAccountDropdown = () => {
       <Menu
         autoSelect={false}
         placement="bottom"
-        offset={[-32, 12]}
+        offset={[-82, 12]}
         borderBottom="0"
         // borderColor={path.includes("/account/") ? "brand.blue" : "transparent"}
       >
@@ -156,25 +155,17 @@ const MyAccountDropdown = () => {
           py="10px"
           display="flex"
           justifyContent="center"
+          color={path.includes("/account/") ? "brand.blue" : "#fff"}
         >
-          <Text
-            // borderBottom="2px"
-            m={0}
-            fontSize="15px"
-            lineHeight="shorter"
-            fontFamily="Evogria, sans-serif"
-            color={path.includes("/account/") ? "brand.blue" : "#fff"}
-          >
-            My Account
-          </Text>
+          My Account
         </MenuButton>
         <MenuList
-          minW={8}
+          minW="250px"
           bg="brand.grayDark"
           borderWidth={2}
           borderColor="brand.blue"
           borderRadius="0"
-          px={2}
+          p="15px"
         >
           {myAccountList.map((item, idx) => (
             <MenuItem
@@ -184,6 +175,9 @@ const MyAccountDropdown = () => {
               onClick={() => history.push(item.href)}
               key={idx}
               to="#"
+              fontSize="15px"
+              py="12px"
+              px="15px"
             >
               {item.label}
             </MenuItem>

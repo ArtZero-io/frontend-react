@@ -154,7 +154,7 @@ function WalletSelector() {
             ))}
             <Spacer />
             <MenuItem
-              _hover={{ color: "brand.blue" }}
+              _hover={{ color: "brand.blue", bg: "black" }}
               color="white"
               textDecoration="underline"
               fontFamily="Oswald"
@@ -163,10 +163,11 @@ function WalletSelector() {
               p="0"
               textTransform="capitalize"
               lineHeight="26.68px"
-              my="18px"
               bg="black"
             >
-              Disconnect Wallet
+              <Text as="span" my="18px">
+                Disconnect Wallet
+              </Text>
             </MenuItem>
           </MenuList>
         </Menu>
