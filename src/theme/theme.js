@@ -50,6 +50,11 @@ const theme = extendTheme({
       "#root": {
         height: "100%",
       },
+      "#tsparticles .tsparticles-canvas": {
+        height: "100%",
+        width: "100%",
+        // minHeight: "4133px",
+      },
       h1: { textTransform: "uppercase" },
       h2: { textTransform: "uppercase" },
       h3: { textTransform: "uppercase" },

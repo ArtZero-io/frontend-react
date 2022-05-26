@@ -381,8 +381,8 @@ function GridItemA({
           variants={itemVariants}
           exit={{ opacity: 0, scale: 0 }}
           style={{
-            top,
-            left,
+            top: top || 0,
+            left: left || 0,
             cursor: "pointer",
             position: "absolute",
             transitionDuration: "0.45s",

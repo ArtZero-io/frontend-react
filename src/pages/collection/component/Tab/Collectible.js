@@ -259,7 +259,7 @@ const NFTTabCollectible = ({
           boxShadow="lg"
           alt="nft-img"
           objectFit="cover"
-          src={getNFTImage(avatar, 500)}
+          src={avatar && getNFTImage(avatar, 500)}
           fallback={<Skeleton minW={{ base: "20rem", "2xl": "30rem" }} />}
         />
       </Square>
