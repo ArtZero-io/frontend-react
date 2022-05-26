@@ -70,7 +70,6 @@ function CollectionPage() {
   }, [pagesCount]);
 
   const forceUpdate = () => {
-    setFormattedCollection(null);
     setLoading(false);
     setLoadingTime(0);
   };

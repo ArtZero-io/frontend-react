@@ -18,6 +18,7 @@ import SocialCard from "@components/Card/Social";
 import { shortenNumber } from "@utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { getCachedImageShort } from "@utils/index";
+import { memo } from "react";
 
 const overlay =
   "linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)";
@@ -328,8 +329,8 @@ function CollectionHeader({
                       </Text>
                       <Avatar
                         src={AzeroIcon}
-                        h={"1.75rem"}
-                        w={"1.75rem"}
+                        h={"19px"}
+                        w={"19px"}
                         ml={3}
                         name="AzeroLogo"
                         bg="transparent"
@@ -361,4 +362,4 @@ function CollectionHeader({
   );
 }
 
-export default CollectionHeader;
+export default memo(CollectionHeader);
