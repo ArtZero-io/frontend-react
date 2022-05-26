@@ -139,7 +139,7 @@ const MyAccountDropdown = () => {
             color: "brand.blue",
           }}
           _focus={{
-            bg: "black",
+            bg: "transparent",
           }}
           ring={0}
           textAlign="left"

@@ -213,10 +213,17 @@ function HomePage() {
                 fontSize="100px"
                 lineHeight="120px"
               >
-                <Text as="span" zIndex="0" pos="relative">
+                <Text
+                  textTransform="uppercase"
+                  as="span"
+                  zIndex="0"
+                  pos="relative"
+                >
                   artzero <br />
                 </Text>
-                <Text as="span">smartnet demo</Text>
+                <Text textTransform="uppercase" as="span">
+                  smartnet demo
+                </Text>
               </Heading>
             </Center>
 
@@ -273,7 +280,12 @@ function HomePage() {
               data-aos-delay="300"
               data-aos-duration="1000"
             >
-              <Text size="h6" maxW="2xl" lineHeight="30px">
+              <Text
+                textTransform="uppercase"
+                size="h6"
+                maxW="2xl"
+                lineHeight="30px"
+              >
                 this version works with{" "}
                 <Link
                   color="#7ae7ff"
@@ -317,7 +329,7 @@ function HomePage() {
               data-aos-delay="600"
               data-aos-duration="1000"
             >
-              <Text size="h6" lineHeight="30px">
+              <Text textTransform="uppercase" size="h6" lineHeight="30px">
                 you will need some smartnet azero (szero) to start. <br />
                 get free szero from{" "}
                 <Link
@@ -478,7 +490,7 @@ function HomePage() {
               data-aos-delay="300"
               data-aos-duration="1000"
             >
-              <Text color="#fff" size="h6">
+              <Text textTransform="uppercase" color="#fff" size="h6">
                 let’s make a great impact together
               </Text>
             </Center>
@@ -543,7 +555,7 @@ function HomePage() {
               data-aos-duration="1000"
               data-aos-anchor-placement="center-bottom"
             >
-              <Text fontSize="sm" color="#ababab">
+              <Text textTransform="uppercase" fontSize="sm" color="#ababab">
                 © copyright 2022 artzero. all rights reserved
               </Text>
             </Center>

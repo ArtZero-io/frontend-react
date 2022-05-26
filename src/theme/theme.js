@@ -50,6 +50,13 @@ const theme = extendTheme({
       "#root": {
         height: "100%",
       },
+      h1: { textTransform: "uppercase" },
+      h2: { textTransform: "uppercase" },
+      h3: { textTransform: "uppercase" },
+      h4: { textTransform: "uppercase" },
+      h5: { textTransform: "uppercase" },
+      h6: { textTransform: "uppercase" },
+      a: { textTransform: "uppercase" },
       button: {
         fontFamily: `Evogria, sans-serif`,
         fontStyle: "normal",

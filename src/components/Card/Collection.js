@@ -140,6 +140,8 @@ export const CollectionCard = ({
           </Box>
 
           <Text
+            textTransform="none"
+            textAlign="justify"
             noOfLines={[1, 3]}
             maxW={{ base: "unset", md: "20rem" }}
             minH={"4.5rem"}
@@ -156,7 +158,10 @@ export const CollectionCard = ({
               <TagLeftIcon>
                 <AzeroIcon fill={isActive ? "#7AE7FF" : "#888"} />
               </TagLeftIcon>
-              <TagLabel color={isActive ? "#fff" : "#888"}>
+              <TagLabel
+                color={isActive ? "#fff" : "#888"}
+                textTransform="capitalize"
+              >
                 Volume {shortenNumber(volume) || 0}
               </TagLabel>
             </Tag>
@@ -168,13 +173,13 @@ export const CollectionCard = ({
                 {isActive && (
                   <Tag variant="active">
                     <TagLeftIcon as={ActiveIcon} />
-                    <TagLabel>Active</TagLabel>
+                    <TagLabel textTransform="capitalize">Active</TagLabel>
                   </Tag>
                 )}
                 {!isActive && (
                   <Tag variant="inActive">
                     <TagLeftIcon as={InActiveIcon} />
-                    <TagLabel>Inactive</TagLabel>
+                    <TagLabel textTransform="capitalize">Inactive</TagLabel>
                   </Tag>
                 )}
               </>

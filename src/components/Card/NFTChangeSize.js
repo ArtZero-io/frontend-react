@@ -29,7 +29,7 @@ export default function NFTChangeSizeCard({
         borderColor: "#7ae7ff",
       }}
       style={{
-        width,
+        width: width || 0,
         borderWidth: "2px",
         borderColor: "#7ae7ff00",
 

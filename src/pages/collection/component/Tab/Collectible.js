@@ -312,7 +312,7 @@ const NFTTabCollectible = ({
           </AnimatePresence>
         </Box>
         {/* is_for_sale true  no sale*/}
-        {!is_for_sale && currentAccount.address !== owner && (
+        {!is_for_sale && currentAccount?.address !== owner && (
           <Flex h="4.75rem" alignItems={"center"}>
             <Heading size="h6">Not for sale</Heading>
           </Flex>
