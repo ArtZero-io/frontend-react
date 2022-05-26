@@ -37,7 +37,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
   useEffect(() => {
     const fetchFee = async () => {
       if (addingFee === 0) {
-        const addingFeeData = await collection_manager_calls.getAddingFee(
+        const addingFeeData = await collection_manager_calls.getSimpleModeAddingFee(
           currentAccount
         );
         setAddingFee(addingFeeData / 10 ** 12);

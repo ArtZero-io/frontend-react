@@ -38,7 +38,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
   useEffect(() => {
     const fetchFee = async () => {
       if (addingFee === 0) {
-        const addingFeeData = await collection_manager_calls.getAddingFee(
+        const addingFeeData = await collection_manager_calls.getAdvanceModeAddingFee(
           currentAccount
         );
 
@@ -335,7 +335,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       limitedSize={{ width: "1920", height: "600" }}
                     />
                   </Stack>
-                  
+
                   <Stack
                     direction="column"
                     alignItems="start"

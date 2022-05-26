@@ -160,7 +160,7 @@ async function getMintMode(caller_account) {
   return null;
 }
 
-async function getFee1(caller_account) {
+async function getMintingFee(caller_account) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -169,7 +169,7 @@ async function getFee1(caller_account) {
   const azero_value = 0;
   //console.log(contract);
 
-  const { result, output } = await contract.query.getFee1(address, {
+  const { result, output } = await contract.query.getMintingFee(address, {
     value: azero_value,
     gasLimit,
   });
@@ -181,7 +181,7 @@ async function getFee1(caller_account) {
   return null;
 }
 
-async function getFee2(caller_account) {
+async function getPublicSaleAmount(caller_account) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -190,28 +190,7 @@ async function getFee2(caller_account) {
   const azero_value = 0;
   //console.log(contract);
 
-  const { result, output } = await contract.query.getFee2(address, {
-    value: azero_value,
-    gasLimit,
-  });
-  if (result.isOk) {
-    /* eslint-disable no-useless-escape */
-    const a = output.toHuman().replace(/\,/g, "");
-    return a / 10 ** 12;
-  }
-  return null;
-}
-
-async function getAmount1(caller_account) {
-  if (!contract || !caller_account) {
-    return null;
-  }
-  const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  //console.log(contract);
-
-  const { result, output } = await contract.query.getAmount1(address, {
+  const { result, output } = await contract.query.getPublicSaleAmount(address, {
     value: azero_value,
     gasLimit,
   });
@@ -541,9 +520,8 @@ const contract_calls = {
   getWhitelistCount,
   getWhitelist,
   getMintMode,
-  getFee1,
-  getFee2,
-  getAmount1,
+  getMintingFee,
+  getPublicSaleAmount,
   tokenUri,
   whitelistMint,
   paidMint,

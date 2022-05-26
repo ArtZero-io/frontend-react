@@ -39,7 +39,6 @@ function MintHeader({ loading }) {
   const [whitelist, setWhitelist] = useState(null);
   const [mintMode, setMintMode] = useState(-1);
   const [fee1, setFee1] = useState(-1);
-  const [fee2, setFee2] = useState(-1);
   const [amount1, setAmount1] = useState(-1);
   const [totalMinted, setTotalMinted] = useState(0);
   const [whitelistAmount, setWhitelistAmount] = useState(1);
@@ -86,20 +85,14 @@ function MintHeader({ loading }) {
     onGetMintMode();
   }, [currentAccount, currentAccount?.address, loading]);
 
-  const onGetFee1 = async (e) => {
-    let res = await artzero_nft_calls.getFee1(currentAccount);
+  const ongetMintingFee = async (e) => {
+    let res = await artzero_nft_calls.getMintingFee(currentAccount);
     if (res) setFee1(res);
     else setFee1(-1);
   };
 
-  const onGetFee2 = async (e) => {
-    let res = await artzero_nft_calls.getFee2(currentAccount);
-    if (res) setFee2(res);
-    else setFee2(-1);
-  };
-
-  const onGetAmount1 = async (e) => {
-    let res = await artzero_nft_calls.getAmount1(currentAccount);
+  const onGetPublicSaleAmount = async (e) => {
+    let res = await artzero_nft_calls.getPublicSaleAmount(currentAccount);
     if (res) setAmount1(res);
     else setAmount1(-1);
   };
@@ -137,12 +130,6 @@ function MintHeader({ loading }) {
         return;
       }
       await artzero_nft_calls.paidMint(currentAccount, fee1, dispatch);
-    } else if (Number(mintMode) === 2) {
-      if (balance < fee2 + 0.01) {
-        toast.error("Not enough balance to mint");
-        return;
-      }
-      await artzero_nft_calls.paidMint(currentAccount, fee2, dispatch);
     }
 
     await delay(10000);
@@ -150,9 +137,8 @@ function MintHeader({ loading }) {
   };
 
   const onRefresh = useCallback(async () => {
-    await onGetFee1();
-    await onGetFee2();
-    await onGetAmount1();
+    await ongetMintingFee();
+    await onGetPublicSaleAmount();
     await onGetTotalMinted();
   }, []);
 
@@ -329,12 +315,7 @@ function MintHeader({ loading }) {
                 {Number(mintMode) === 2 ? (
                   <>
                     <Text alignItems="center" mt={3}>
-                      Minting fee: <span style={{ color: "#fff" }}>{fee2}</span>{" "}
-                      <AzeroIcon mb={1.5} />
-                    </Text>
-                    <Text mt={3}>
-                      Max Mint:{" "}
-                      <span style={{ color: "#fff" }}>{amount1} NFTs</span>
+                      Only Whitelist Mint Allowed
                     </Text>
                   </>
                 ) : null}
@@ -342,7 +323,7 @@ function MintHeader({ loading }) {
 
               <Button
                 isDisabled={
-                  Number(mintMode) <= 0 || totalMinted >= MAX_MINT_COUNT
+                  Number(mintMode) == 2 || Number(mintMode) <= 0 || totalMinted >= MAX_MINT_COUNT
                 }
                 spinnerPlacement="start"
                 isLoading={tnxStatus}

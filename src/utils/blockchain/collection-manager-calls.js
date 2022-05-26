@@ -29,7 +29,7 @@ async function addNewCollection(caller_account, data, dispatch) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
-  const azero_value = await getAddingFee(caller_account);
+  const azero_value = await getAdvanceModeAddingFee(caller_account);
   contract.tx
     .addNewCollection(
       { gasLimit, value: azero_value },
@@ -89,7 +89,7 @@ async function autoNewCollection(caller_account, data, dispatch) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
-  const azero_value = await getAddingFee(caller_account);
+  const azero_value = await getSimpleModeAddingFee(caller_account);
   contract.tx
     .autoNewCollection(
       { gasLimit, value: azero_value },
@@ -382,10 +382,21 @@ async function getCollectionByAddress(caller_account, collection_address) {
   return null;
 }
 
-async function getAddingFee(caller_account) {
+async function getSimpleModeAddingFee(caller_account) {
   const gasLimit = -1;
   const address = caller_account?.address;
-  const { result, output } = await contract.query.getAddingFee(address, {
+  const { result, output } = await contract.query.getSimpleModeAddingFee(address, {
+    gasLimit,
+  });
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+async function getAdvanceModeAddingFee(caller_account) {
+  const gasLimit = -1;
+  const address = caller_account?.address;
+  const { result, output } = await contract.query.getAdvanceModeAddingFee(address, {
     gasLimit,
   });
   if (result.isOk) {
@@ -534,7 +545,8 @@ async function setMultipleAttributes(
 }
 
 const collection_manager_calls = {
-  getAddingFee,
+  getAdvanceModeAddingFee,
+  getSimpleModeAddingFee,
   addNewCollection,
   autoNewCollection,
   getCollectionCount,
