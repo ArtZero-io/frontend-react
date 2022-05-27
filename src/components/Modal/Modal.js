@@ -60,6 +60,7 @@ export default function ResponsivelySizedModal({
   return (
     <Modal
       closeOnOverlayClick={false}
+      closeOnEsc={false}
       scrollBehavior="inside"
       isCentered
       onClose={onClose}

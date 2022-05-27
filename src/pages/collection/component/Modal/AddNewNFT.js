@@ -35,6 +35,7 @@ const AddNewNFTModal = ({ forceUpdate, collectionOwner }) => {
 
       <Modal
         closeOnOverlayClick={false}
+        closeOnEsc={false}
         scrollBehavior="inside"
         isCentered
         isOpen={isOpen}

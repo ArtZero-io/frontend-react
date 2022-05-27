@@ -76,6 +76,7 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
       <Modal
         scrollBehavior={"inside"}
         closeOnOverlayClick={false}
+        closeOnEsc={false}
         isCentered
         isOpen={isOpenSimpleMode}
         onClose={onCloseSimpleMode}

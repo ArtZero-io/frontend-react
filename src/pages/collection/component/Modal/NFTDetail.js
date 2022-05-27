@@ -45,7 +45,8 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
 
   return (
     <Modal
-      closeOnOverlayClick={false}
+      closeOnOverlayClick={false} 
+      closeOnEsc={false}
       isCentered
       onClose={onClose}
       isOpen={isOpen}

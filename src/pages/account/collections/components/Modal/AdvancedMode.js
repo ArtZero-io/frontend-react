@@ -65,6 +65,7 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
       <Modal
         scrollBehavior={"inside"}
         closeOnOverlayClick={false}
+        closeOnEsc={false}
         isCentered
         isOpen={isOpen}
         onClose={onClose}
