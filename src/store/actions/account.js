@@ -10,15 +10,15 @@ export function getProfile(currentAccount) {
     });
 
     try {
-      const res = await profile_calls.getProfileOnChain(currentAccount);
+      const res = await profile_calls.getProfileOnChain({
+        callerAccount: currentAccount,
+      });
 
-      
       dispatch({
         type: AccountActionTypes.GET_PROFILE,
       });
 
       return res;
-      
     } catch (error) {
       dispatch({
         type: AccountActionTypes.ACCOUNT_ERROR,
@@ -58,7 +58,8 @@ export function setMultipleAttributes(currentAccount, attributes, values) {
     });
 
     try {
-      await profile_calls.setMultipleAttributesProfileOnChain(currentAccount,
+      await profile_calls.setMultipleAttributesProfileOnChain(
+        currentAccount,
         attributes,
         values,
         dispatch

@@ -7,7 +7,7 @@ import { truncateStr } from "..";
 // let account;
 let contract;
 const value = 0;
-  const gasLimit = -1;
+const gasLimit = -1;
 // export const setAccount = (newAccount) => (account = newAccount);
 
 export const setProfileContract = (api, data) => {
@@ -30,17 +30,15 @@ export const setProfileContract = (api, data) => {
 //   }
 // }
 
-export async function getProfileOnChain(currentAccount) {
-  const address = currentAccount?.address;
-  
+export async function getProfileOnChain({ callerAccount, accountAddress }) {
+  const address = callerAccount?.address;
 
   let profileInfo;
-  
 
   const { result, output } = await contract.query.getAttributes(
     address,
     { value, gasLimit },
-    address,
+    accountAddress || address,
     [
       "username",
       "avatar",
@@ -51,10 +49,8 @@ export async function getProfileOnChain(currentAccount) {
       "telegram",
     ]
   );
- 
 
   if (result.isOk) {
-
     profileInfo = {
       status: "OK",
       data: {
@@ -70,7 +66,7 @@ export async function getProfileOnChain(currentAccount) {
   } else {
     profileInfo = {
       status: "ERROR",
-      message:  'Error when fetch profile info.',
+      message: "Error when fetch profile info.",
     };
   }
 

@@ -14,9 +14,9 @@ import {
   Progress,
   Skeleton,
   useBreakpointValue,
-  Tag,
   TagLabel,
   TagRightIcon,
+  Link,
 } from "@chakra-ui/react";
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -27,15 +27,17 @@ import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard
 import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
 import marketplace from "@utils/blockchain/marketplace";
-import { IPFS_BASE_URL } from "@constants/index";
 import marketplace_contract from "@utils/blockchain/marketplace";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getCachedImage } from "@utils";
 import StatusPushForSaleButton from "@components/Button/StatusPushForSaleButton";
 import { AccountActionTypes } from "@store/types/account.types";
 import { convertStringToPrice, createLevelAttribute } from "@utils";
 import StatusBuyButton from "@components/Button/StatusBuyButton";
+import { getCachedImageShort, truncateStr } from "@utils";
+import { Link as ReactRouterLink } from "react-router-dom";
+import profile_calls from "@utils/blockchain/profile_calls";
+import { motion, AnimatePresence } from "framer-motion";
 
 function MyNFTTabInfo({
   avatar,
@@ -65,6 +67,7 @@ function MyNFTTabInfo({
   const [saleInfo, setSaleInfo] = useState(null);
   const [isBided, setIsBided] = useState(false);
   const [bidPrice, setBidPrice] = useState(0);
+  const [ownerName, setOwnerName] = useState("");
 
   useEffect(() => {
     const doLoad = async () => {
@@ -93,10 +96,10 @@ function MyNFTTabInfo({
             }
           }
         } else {
-          console.log(
-            "Detail NFTTabCollectible doLoad. => listBidder is: ",
-            listBidder
-          );
+          // console.log(
+          //   "Detail NFTTabCollectible doLoad. => listBidder is: ",
+          //   listBidder
+          // );
         }
       }
     };
@@ -301,6 +304,22 @@ function MyNFTTabInfo({
     }
   };
 
+  useEffect(() => {
+    const ownerName = async () => {
+      const accountAddress = is_for_sale ? saleInfo?.nftOwner : owner;
+
+      const {
+        data: { username },
+      } = await profile_calls.getProfileOnChain({
+        callerAccount: currentAccount,
+        accountAddress,
+      });
+
+      return setOwnerName(username || truncateStr(accountAddress, 6));
+    };
+
+    ownerName();
+  }, [currentAccount, is_for_sale, owner, saleInfo?.nftOwner]);
   return (
     <Flex h="full">
       <Box minW={{ base: "20rem", "2xl": "30rem" }} bg="#372648">
@@ -310,15 +329,7 @@ function MyNFTTabInfo({
           boxShadow="lg"
           alt="nft-img"
           objectFit="cover"
-          src={
-            avatar
-              ? getCachedImage(
-                  avatar,
-                  500,
-                  IPFS_BASE_URL + "/" + avatar.replace("ipfs://", "")
-                )
-              : ""
-          }
+          src={avatar && getCachedImageShort(avatar, 500)}
           fallback={<Skeleton minW={{ base: "20rem", "2xl": "30rem" }} />}
         />
       </Box>
@@ -350,7 +361,32 @@ function MyNFTTabInfo({
           >
             {description}
           </Heading>
+
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ paddingBottom: "30px" }}
+            >
+              <Skeleton as="span" isLoaded={ownerName} minW="150px">
+                <Text color="#fff" maxW="max-content">
+                  Owned by{" "}
+                  <Link
+                    as={ReactRouterLink}
+                    // to="/user/xxx"
+                    to="#"
+                    color="#7AE7FF"
+                    textTransform="capitalize"
+                  >
+                    {ownerName}
+                  </Link>
+                </Text>
+              </Skeleton>
+            </motion.div>
+          </AnimatePresence>
         </Box>
+
         {attrsList?.length === 0 ? (
           <Text my="3" display={{ base: "none", xl: "block" }}>
             This NFT have no props/ levels.
@@ -584,13 +620,13 @@ function MyNFTTabInfo({
                   onClick={removeBid}
                 />
                 <Flex textAlign="right" color="brand.grayLight">
-                  <Text mx={2} my="auto">
-                    Your offer
+                  <Text ml={4} mr={1} my="auto">
+                    Your current offer is
                   </Text>
-                  <Tag h={4} px={1}>
+                  <Flex color="#fff" h="full" alignItems="center" px={1}>
                     <TagLabel bg="transparent">{bidPrice}</TagLabel>
                     <TagRightIcon as={AzeroIcon} />
-                  </Tag>
+                  </Flex>
                 </Flex>
               </Flex>
             </>
