@@ -1,9 +1,9 @@
 const nft721_psp34_standard = {
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x6c2893f30d1de95cb0efcfbd421ff3979aaa28327cf72555175ba6ef73c4338d",
+      "hash": "0xea53d30c2ef092cdc724be4e9eb26c14f4d1e9f87fb08bb9af9379df2315742f",
       "language": "ink! 3.0.1",
-      "compiler": "rustc 1.61.0-nightly"
+      "compiler": "rustc 1.63.0-nightly"
     },
     "contract": {
       "name": "psp34_nft",
@@ -55,39 +55,6 @@ const nft721_psp34_standard = {
         "events": [],
         "messages": [
           {
-            "args": [
-              {
-                "label": "name",
-                "type": {
-                  "displayName": [
-                    "String"
-                  ],
-                  "type": 25
-                }
-              },
-              {
-                "label": "symbol",
-                "type": {
-                  "displayName": [
-                    "String"
-                  ],
-                  "type": 25
-                }
-              }
-            ],
-            "docs": [],
-            "label": "initialize",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "Result"
-              ],
-              "type": 26
-            },
-            "selector": "0xf2f6dba3"
-          },
-          {
             "args": [],
             "docs": [
               "Only Owner can mint new token"
@@ -99,7 +66,7 @@ const nft721_psp34_standard = {
               "displayName": [
                 "Result"
               ],
-              "type": 28
+              "type": 26
             },
             "selector": "0xcfdd9aa2"
           },
@@ -111,7 +78,7 @@ const nft721_psp34_standard = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 30
+                  "type": 28
                 }
               },
               {
@@ -120,7 +87,7 @@ const nft721_psp34_standard = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 30
+                  "type": 28
                 }
               }
             ],
@@ -134,7 +101,7 @@ const nft721_psp34_standard = {
               "displayName": [
                 "Result"
               ],
-              "type": 28
+              "type": 26
             },
             "selector": "0xf90b8f61"
           },
@@ -176,7 +143,7 @@ const nft721_psp34_standard = {
               "displayName": [
                 "Result"
               ],
-              "type": 28
+              "type": 26
             },
             "selector": "0xbbaa6540"
           },
@@ -202,7 +169,7 @@ const nft721_psp34_standard = {
               "displayName": [
                 "bool"
               ],
-              "type": 31
+              "type": 29
             },
             "selector": "0x1d244111"
           },
@@ -221,32 +188,6 @@ const nft721_psp34_standard = {
               "type": 5
             },
             "selector": "0x012797cc"
-          },
-          {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 8
-                }
-              }
-            ],
-            "docs": [],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 26
-            },
-            "selector": "0x11f43efd"
           },
           {
             "args": [],
@@ -274,24 +215,194 @@ const nft721_psp34_standard = {
                 "ownable_external",
                 "RenounceOwnershipOutput"
               ],
-              "type": 26
+              "type": 30
             },
             "selector": "0x5e228753"
           },
           {
+            "args": [
+              {
+                "label": "new_owner",
+                "type": {
+                  "displayName": [
+                    "ownable_external",
+                    "TransferOwnershipInput1"
+                  ],
+                  "type": 8
+                }
+              }
+            ],
+            "docs": [],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "TransferOwnershipOutput"
+              ],
+              "type": 30
+            },
+            "selector": "0x11f43efd"
+          },
+          {
             "args": [],
             "docs": [],
-            "label": "PSP34::total_supply",
+            "label": "PSP34::collection_id",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34_external",
-                "TotalSupplyOutput"
+                "CollectionIdOutput"
               ],
-              "type": 6
+              "type": 1
             },
-            "selector": "0x628413fe"
+            "selector": "0xffa27a5f"
+          },
+          {
+            "args": [
+              {
+                "label": "owner",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "BalanceOfInput1"
+                  ],
+                  "type": 8
+                }
+              }
+            ],
+            "docs": [],
+            "label": "PSP34::balance_of",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "BalanceOfOutput"
+              ],
+              "type": 4
+            },
+            "selector": "0xcde7e55f"
+          },
+          {
+            "args": [
+              {
+                "label": "owner",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput1"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "operator",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput2"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput3"
+                  ],
+                  "type": 14
+                }
+              }
+            ],
+            "docs": [],
+            "label": "PSP34::allowance",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "AllowanceOutput"
+              ],
+              "type": 29
+            },
+            "selector": "0x4790f55a"
+          },
+          {
+            "args": [
+              {
+                "label": "operator",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput1"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput2"
+                  ],
+                  "type": 14
+                }
+              },
+              {
+                "label": "approved",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput3"
+                  ],
+                  "type": 29
+                }
+              }
+            ],
+            "docs": [],
+            "label": "PSP34::approve",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "ApproveOutput"
+              ],
+              "type": 32
+            },
+            "selector": "0x1932a8b0"
+          },
+          {
+            "args": [
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "OwnerOfInput1"
+                  ],
+                  "type": 1
+                }
+              }
+            ],
+            "docs": [],
+            "label": "PSP34::owner_of",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "OwnerOfOutput"
+              ],
+              "type": 21
+            },
+            "selector": "0x1168624d"
           },
           {
             "args": [
@@ -342,161 +453,17 @@ const nft721_psp34_standard = {
           {
             "args": [],
             "docs": [],
-            "label": "PSP34::collection_id",
+            "label": "PSP34::total_supply",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34_external",
-                "CollectionIdOutput"
+                "TotalSupplyOutput"
               ],
-              "type": 1
+              "type": 6
             },
-            "selector": "0xffa27a5f"
-          },
-          {
-            "args": [
-              {
-                "label": "owner",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "BalanceOfInput1"
-                  ],
-                  "type": 8
-                }
-              }
-            ],
-            "docs": [],
-            "label": "PSP34::balance_of",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "BalanceOfOutput"
-              ],
-              "type": 4
-            },
-            "selector": "0xcde7e55f"
-          },
-          {
-            "args": [
-              {
-                "label": "operator",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput1"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput2"
-                  ],
-                  "type": 14
-                }
-              },
-              {
-                "label": "approved",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput3"
-                  ],
-                  "type": 31
-                }
-              }
-            ],
-            "docs": [],
-            "label": "PSP34::approve",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "ApproveOutput"
-              ],
-              "type": 32
-            },
-            "selector": "0x1932a8b0"
-          },
-          {
-            "args": [
-              {
-                "label": "owner",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput1"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "operator",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput2"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput3"
-                  ],
-                  "type": 14
-                }
-              }
-            ],
-            "docs": [],
-            "label": "PSP34::allowance",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "AllowanceOutput"
-              ],
-              "type": 31
-            },
-            "selector": "0x4790f55a"
-          },
-          {
-            "args": [
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "OwnerOfInput1"
-                  ],
-                  "type": 1
-                }
-              }
-            ],
-            "docs": [],
-            "label": "PSP34::owner_of",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "OwnerOfOutput"
-              ],
-              "type": 21
-            },
-            "selector": "0x1168624d"
+            "selector": "0x628413fe"
           },
           {
             "args": [
@@ -573,32 +540,6 @@ const nft721_psp34_standard = {
           {
             "args": [
               {
-                "label": "index",
-                "type": {
-                  "displayName": [
-                    "psp34enumerable_external",
-                    "TokenByIndexInput1"
-                  ],
-                  "type": 6
-                }
-              }
-            ],
-            "docs": [],
-            "label": "PSP34Enumerable::token_by_index",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34enumerable_external",
-                "TokenByIndexOutput"
-              ],
-              "type": 35
-            },
-            "selector": "0xcd0340d0"
-          },
-          {
-            "args": [
-              {
                 "label": "owner",
                 "type": {
                   "displayName": [
@@ -635,6 +576,32 @@ const nft721_psp34_standard = {
           {
             "args": [
               {
+                "label": "index",
+                "type": {
+                  "displayName": [
+                    "psp34enumerable_external",
+                    "TokenByIndexInput1"
+                  ],
+                  "type": 6
+                }
+              }
+            ],
+            "docs": [],
+            "label": "PSP34Enumerable::token_by_index",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34enumerable_external",
+                "TokenByIndexOutput"
+              ],
+              "type": 35
+            },
+            "selector": "0xcd0340d0"
+          },
+          {
+            "args": [
+              {
                 "label": "uri",
                 "type": {
                   "displayName": [
@@ -656,9 +623,57 @@ const nft721_psp34_standard = {
                 "psp34traits_external",
                 "SetBaseUriOutput"
               ],
-              "type": 28
+              "type": 26
             },
             "selector": "0x4de6850b"
+          },
+          {
+            "args": [
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "SetMultipleAttributesInput1"
+                  ],
+                  "type": 1
+                }
+              },
+              {
+                "label": "attributes",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "SetMultipleAttributesInput2"
+                  ],
+                  "type": 28
+                }
+              },
+              {
+                "label": "values",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "SetMultipleAttributesInput3"
+                  ],
+                  "type": 28
+                }
+              }
+            ],
+            "docs": [
+              "Only Owner can set multiple attributes to a token"
+            ],
+            "label": "Psp34Traits::set_multiple_attributes",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "SetMultipleAttributesOutput"
+              ],
+              "type": 26
+            },
+            "selector": "0x5bf8416b"
           },
           {
             "args": [],
@@ -740,54 +755,6 @@ const nft721_psp34_standard = {
                 "type": {
                   "displayName": [
                     "psp34traits_external",
-                    "SetMultipleAttributesInput1"
-                  ],
-                  "type": 1
-                }
-              },
-              {
-                "label": "attributes",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "SetMultipleAttributesInput2"
-                  ],
-                  "type": 30
-                }
-              },
-              {
-                "label": "values",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "SetMultipleAttributesInput3"
-                  ],
-                  "type": 30
-                }
-              }
-            ],
-            "docs": [
-              "Only Owner can set multiple attributes to a token"
-            ],
-            "label": "Psp34Traits::set_multiple_attributes",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "SetMultipleAttributesOutput"
-              ],
-              "type": 28
-            },
-            "selector": "0x5bf8416b"
-          },
-          {
-            "args": [
-              {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
                     "GetAttributesInput1"
                   ],
                   "type": 1
@@ -800,7 +767,7 @@ const nft721_psp34_standard = {
                     "psp34traits_external",
                     "GetAttributesInput2"
                   ],
-                  "type": 30
+                  "type": 28
                 }
               }
             ],
@@ -815,7 +782,7 @@ const nft721_psp34_standard = {
                 "psp34traits_external",
                 "GetAttributesOutput"
               ],
-              "type": 30
+              "type": 28
             },
             "selector": "0x18209102"
           }
@@ -1704,74 +1671,6 @@ const nft721_psp34_standard = {
               "variant": {
                 "variants": [
                   {
-                    "index": 0,
-                    "name": "CallerIsNotOwner"
-                  },
-                  {
-                    "index": 1,
-                    "name": "NewOwnerIsZero"
-                  }
-                ]
-              }
-            },
-            "path": [
-              "contracts",
-              "traits",
-              "errors",
-              "ownable",
-              "OwnableError"
-            ]
-          }
-        },
-        {
-          "id": 28,
-          "type": {
-            "def": {
-              "variant": {
-                "variants": [
-                  {
-                    "fields": [
-                      {
-                        "type": 15
-                      }
-                    ],
-                    "index": 0,
-                    "name": "Ok"
-                  },
-                  {
-                    "fields": [
-                      {
-                        "type": 29
-                      }
-                    ],
-                    "index": 1,
-                    "name": "Err"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "T",
-                "type": 15
-              },
-              {
-                "name": "E",
-                "type": 29
-              }
-            ],
-            "path": [
-              "Result"
-            ]
-          }
-        },
-        {
-          "id": 29,
-          "type": {
-            "def": {
-              "variant": {
-                "variants": [
-                  {
                     "fields": [
                       {
                         "type": 25,
@@ -1796,7 +1695,7 @@ const nft721_psp34_standard = {
           }
         },
         {
-          "id": 30,
+          "id": 28,
           "type": {
             "def": {
               "sequence": {
@@ -1806,11 +1705,79 @@ const nft721_psp34_standard = {
           }
         },
         {
-          "id": 31,
+          "id": 29,
           "type": {
             "def": {
               "primitive": "bool"
             }
+          }
+        },
+        {
+          "id": 30,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "fields": [
+                      {
+                        "type": 15
+                      }
+                    ],
+                    "index": 0,
+                    "name": "Ok"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 31
+                      }
+                    ],
+                    "index": 1,
+                    "name": "Err"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "T",
+                "type": 15
+              },
+              {
+                "name": "E",
+                "type": 31
+              }
+            ],
+            "path": [
+              "Result"
+            ]
+          }
+        },
+        {
+          "id": 31,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "index": 0,
+                    "name": "CallerIsNotOwner"
+                  },
+                  {
+                    "index": 1,
+                    "name": "NewOwnerIsZero"
+                  }
+                ]
+              }
+            },
+            "path": [
+              "contracts",
+              "traits",
+              "errors",
+              "ownable",
+              "OwnableError"
+            ]
           }
         },
         {

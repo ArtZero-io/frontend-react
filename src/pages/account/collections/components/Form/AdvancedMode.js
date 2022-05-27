@@ -41,7 +41,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
         const addingFeeData = await collection_manager_calls.getAdvanceModeAddingFee(
           currentAccount
         );
-
+          console.log(addingFeeData);
         setAddingFee(addingFeeData / 10 ** 12);
       }
     };

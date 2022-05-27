@@ -399,6 +399,7 @@ async function getAdvanceModeAddingFee(caller_account) {
   const { result, output } = await contract.query.getAdvanceModeAddingFee(address, {
     gasLimit,
   });
+  console.log(new BN(output, 10, "le").toNumber());
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }

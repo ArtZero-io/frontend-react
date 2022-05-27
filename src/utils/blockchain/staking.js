@@ -1,10 +1,10 @@
 const staking = {
-  CONTRACT_ADDRESS: "5F1hBwmNq7vDBB2m59NP5c8aJ8w13BLfH43zQcFPRA6rX4pT",
+  CONTRACT_ADDRESS: "5EKHkM2nQrUbPYxks72VmPpvnCXUKRGUSTYNVeKJRGzHHhmG",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x694dbe83c28b54b23f54f0f87bd5d9762424251b6762c8f4faba589f728b661c",
+      "hash": "0x41a93b2599f091b66f17bab72f1da72120b1ba3a73ad6c4a616a7c8833bc6b4c",
       "language": "ink! 3.0.1",
-      "compiler": "rustc 1.61.0-nightly"
+      "compiler": "rustc 1.63.0-nightly"
     },
     "contract": {
       "name": "artzero_staking_nft",
@@ -570,6 +570,21 @@ const staking = {
             "selector": "0xd34ab274"
           },
           {
+            "args": [],
+            "docs": [],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
+          },
+          {
             "args": [
               {
                 "label": "new_owner",
@@ -594,21 +609,6 @@ const staking = {
               "type": 12
             },
             "selector": "0x11f43efd"
-          },
-          {
-            "args": [],
-            "docs": [],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
           },
           {
             "args": [],

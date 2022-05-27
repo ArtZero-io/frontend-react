@@ -1,10 +1,10 @@
 const profile = {
-  CONTRACT_ADDRESS: "5DFfBv4ZpopTeTvDuRpuvVovzZ29AktieT5Am2njrkZmC3oH",
+  CONTRACT_ADDRESS: "5DTvc2BVGfhdbVd7GTXaf333MktSfZRKtG8K1pEJAy89Gac5",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x86216f61e5ef658d9992ad0aa65b0ee14f9a346199247e11a1f337f1a1cf21fb",
+      "hash": "0xf7ab807519dad2e03cdcf4aad2cefb4afebcd256d4ab9f94612a406d9ba19aec",
       "language": "ink! 3.0.1",
-      "compiler": "rustc 1.61.0-nightly"
+      "compiler": "rustc 1.63.0-nightly"
     },
     "contract": {
       "name": "artzero_profile_manager",
@@ -121,21 +121,6 @@ const profile = {
             "selector": "0x4fa43c8c"
           },
           {
-            "args": [],
-            "docs": [],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 12
-            },
-            "selector": "0x5e228753"
-          },
-          {
             "args": [
               {
                 "label": "new_owner",
@@ -160,6 +145,21 @@ const profile = {
               "type": 12
             },
             "selector": "0x11f43efd"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 12
+            },
+            "selector": "0x5e228753"
           }
         ]
       },

@@ -1,10 +1,10 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5CMHHuvnZ8E8xWD4Rzhkgo2YyeQmpg5mTLH1CysKu2VV15CC",
+  CONTRACT_ADDRESS: "5GSjM1uNmUB4BfVGqPFyS2kMo4xxxZ8E24F7kRb2roA28HZ6",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x7dbf303c242fda65602dcc6a16deec6c1bc56d20b1296d5e7a2ed504a5b64b52",
+      "hash": "0x021a5806a9ff85badc6ac441043f289e9ebfbef123ea5f4c9658408c5b665be1",
       "language": "ink! 3.0.1",
-      "compiler": "rustc 1.61.0-nightly"
+      "compiler": "rustc 1.63.0-nightly"
     },
     "contract": {
       "name": "artzero_collection_manager",
@@ -707,6 +707,32 @@ const collection_manager = {
           {
             "args": [
               {
+                "label": "standard_nft_hash",
+                "type": {
+                  "displayName": [
+                    "Hash"
+                  ],
+                  "type": 4
+                }
+              }
+            ],
+            "docs": [
+              " Update Standard NFT Hash - only Owner"
+            ],
+            "label": "update_standard_nft_hash",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 22
+            },
+            "selector": "0xad51a976"
+          },
+          {
+            "args": [
+              {
                 "label": "advance_mode_adding_fee",
                 "type": {
                   "displayName": [
@@ -983,6 +1009,21 @@ const collection_manager = {
             "selector": "0x389a10e6"
           },
           {
+            "args": [],
+            "docs": [],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
+          },
+          {
             "args": [
               {
                 "label": "new_owner",
@@ -1011,21 +1052,6 @@ const collection_manager = {
           {
             "args": [],
             "docs": [],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [],
-            "docs": [],
             "label": "Ownable::renounce_ownership",
             "mutates": true,
             "payable": false,
@@ -1037,6 +1063,34 @@ const collection_manager = {
               "type": 18
             },
             "selector": "0x5e228753"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "GetCollectionOwnerInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Get Collection Owner by Collection Address (NFT address)"
+            ],
+            "label": "CrossArtZeroCollection::get_collection_owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "GetCollectionOwnerOutput"
+              ],
+              "type": 26
+            },
+            "selector": "0xb1f1e401"
           },
           {
             "args": [
@@ -1093,34 +1147,6 @@ const collection_manager = {
               "type": 10
             },
             "selector": "0xfa0f936e"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
-                    "GetCollectionOwnerInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Get Collection Owner by Collection Address (NFT address)"
-            ],
-            "label": "CrossArtZeroCollection::get_collection_owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "GetCollectionOwnerOutput"
-              ],
-              "type": 26
-            },
-            "selector": "0xb1f1e401"
           },
           {
             "args": [
