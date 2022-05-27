@@ -103,23 +103,29 @@ function HomePage() {
                   height: "445px",
                 }}
                 animate={{
-                  x: [0, 0, -980, -220, 0, 0],
-                  y: [0, 10, 30, 380, 10, 0],
-                  rotate: [0, -30, -30, 0, -30, 0],
-                  scale: [1, 1, 0.6, 0.3, 1, 1],
-
-                  // rotate: [0, -30, -30, -10, -5, -20, -30, 0],
+                  // flying
+                  // x: [0, 0, -980, -220, 0, 0],
+                  // y: [0, 10, 30, 380, 10, 0],
+                  // rotate: [0, -30, -30, 0, -30, 0],
+                  // scale: [1, 1, 0.6, 0.3, 1, 1],
+                  y: [0, 6, 0, 4],
+                  rotate: 3,
                 }}
                 transition={{
-                  duration: 15,
+                  duration: 1.5,
+                  // duration: 15,
                   // curve: [1, -0.14, 0.15, 1.4],
                   // cubic-bezier(1,-0.14,.15,1.4)
                   // ease: [1, -0.14, 0.15, 1.4],
                   curve: [0.42, 0, 0.58, 1],
                   repeat: Infinity,
+                  repeatType: "reverse",
                 }}
               >
                 <Image
+                  data-aos="fade-left"
+                  data-aos-delay="600"
+                  data-aos-duration="1000"
                   filter="drop-shadow(15px -10px 25px #7AE7FF70)"
                   src={UFO1}
                   alt="UFO1"
@@ -153,6 +159,9 @@ function HomePage() {
                 }}
               >
                 <Image
+                  data-aos="fade-right"
+                  data-aos-delay="600"
+                  data-aos-duration="2000"
                   filter="drop-shadow(1px 3px 7px #7AE7FF70)"
                   src={UFO2}
                   alt="UFO2"
@@ -186,6 +195,9 @@ function HomePage() {
                 }}
               >
                 <Image
+                  data-aos="fade-left"
+                  data-aos-delay="600"
+                  data-aos-duration="3000"
                   filter="drop-shadow(1px 3px 7px #7AE7FF70)"
                   src={UFO3}
                   alt="UFO3"

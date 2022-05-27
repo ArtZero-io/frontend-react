@@ -116,6 +116,7 @@ export const CollectionCard = ({
           p="-px"
           border="2px solid white"
           filter="drop-shadow(0px 4px 4px #ffffff25)"
+          bg="#333"
         >
           <Image
             alt={`avatar-img-${name}`}

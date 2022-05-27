@@ -95,7 +95,7 @@ function CollectionPage() {
           dispatch({
             type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
           });
-          setFormattedCollection(null);
+          // setFormattedCollection(null);
           setLoadingTime(null);
           setLoading(false);
         });
@@ -277,9 +277,9 @@ function CollectionPage() {
     // },
   ];
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  // useEffect(() => {
+  //   window.scrollTo(0, window?.scrollY);
+  // }, []);
 
   return (
     <Layout

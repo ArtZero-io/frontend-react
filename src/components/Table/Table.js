@@ -9,8 +9,8 @@ import {
   Tag,
   TagLabel,
   TagRightIcon,
-  Text,
   Flex,
+  Skeleton,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { convertStringToPrice, convertStringToDateTime } from "@utils";
@@ -49,99 +49,91 @@ function DataTable({
       }}
     >
       <AnimatePresence>
-        {tableData?.length ? (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <Table variant="striped" size="md" colorScheme="blackAlpha">
-              <Thead>
-                <Tr>
-                  {tableHeaders?.map((item) => (
-                    <Th
-                      textAlign="center"
-                      key={item}
-                      fontFamily="Evogria"
-                      fontSize="sm"
-                      fontWeight="normal"
-                      py={{ base: "1rem", "2xl": "1.75rem" }}
-                      display={item === "Action" && !isOwner && "none"}
-                      // display={"none"}
-                    >
-                      {item}
-                    </Th>
-                  ))}
-                </Tr>
-              </Thead>
-
-              <Tbody>
-                {tableData?.map((item, idx) => (
-                  <>
-                    <Tr key={idx} color="#fff">
-                      <Td
-                        color="#7ae7ff"
-                        py={{ base: "1rem", "2xl": "1.75rem" }}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          {tableData?.length ? (
+            <Skeleton minH="200px" isLoaded={tableData}>
+              <Table variant="striped" size="md" colorScheme="blackAlpha">
+                <Thead>
+                  <Tr>
+                    {tableHeaders?.map((item) => (
+                      <Th
                         textAlign="center"
-                      >
-                        {truncateStr(item.bidder, 6)}
-                      </Td>
-
-                      <Td
+                        key={item}
+                        fontFamily="Evogria"
+                        fontSize="sm"
+                        fontWeight="normal"
                         py={{ base: "1rem", "2xl": "1.75rem" }}
-                        textAlign="center"
+                        display={item === "Action" && !isOwner && "none"}
+                        // display={"none"}
                       >
-                        {convertStringToDateTime(item.bidDate)}
-                      </Td>
+                        {item}
+                      </Th>
+                    ))}
+                  </Tr>
+                </Thead>
 
-                      <Td py={{ base: "1rem", "2xl": "1.75rem" }} isNumeric>
-                        <Tag pr={0} bg="transparent">
-                          <TagLabel bg="transparent">
-                            {convertStringToPrice(item.bidValue)}
-                          </TagLabel>
-                          <TagRightIcon as={AzeroIcon} />
-                        </Tag>
-                      </Td>
-                      {isOwner ? (
+                <Tbody>
+                  {tableData?.map((item, idx) => (
+                    <>
+                      <Tr key={idx} color="#fff">
+                        <Td
+                          color="#7ae7ff"
+                          py={{ base: "1rem", "2xl": "1.75rem" }}
+                          textAlign="center"
+                        >
+                          {truncateStr(item.bidder, 6)}
+                        </Td>
+
                         <Td
                           py={{ base: "1rem", "2xl": "1.75rem" }}
                           textAlign="center"
                         >
-                          {/* <Button
-                            spinnerPlacement="start"
-                            // isLoading={tnxStatus}
-                            // loadingText={`${tnxStatus?.status}`}
-                            size="sm"
-                            onClick={() => onClickHandler(idx)}
-                          >
-                            Accept Bid
-                          </Button> */}
-                          <Flex justifyContent="center" w="full">
-                            <StatusBuyButton
-                              mx="auto"
-                              isDo={idSelected === idx}
-                              type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
-                              text="accept bid"
-                              isLoading={addNftTnxStatus}
-                              loadingText={`${addNftTnxStatus?.status}`}
-                              onClick={() => onClickHandler(idx)}
-                            />
-                          </Flex>
+                          {convertStringToDateTime(item.bidDate)}
                         </Td>
-                      ) : (
-                        ""
-                      )}
-                    </Tr>
-                  </>
-                ))}
-              </Tbody>
-            </Table>
-          </motion.div>
-        ) : (
-          <Text textAlign="center" py="2rem">
-            There is no bid yet.
-          </Text>
-        )}
+
+                        <Td py={{ base: "1rem", "2xl": "1.75rem" }} isNumeric>
+                          <Tag pr={0} bg="transparent">
+                            <TagLabel bg="transparent">
+                              {convertStringToPrice(item.bidValue)}
+                            </TagLabel>
+                            <TagRightIcon as={AzeroIcon} />
+                          </Tag>
+                        </Td>
+                        {isOwner ? (
+                          <Td
+                            py={{ base: "1rem", "2xl": "1.75rem" }}
+                            textAlign="center"
+                          >
+                            <Flex justifyContent="center" w="full">
+                              <StatusBuyButton
+                                isDisabled={
+                                  addNftTnxStatus?.status && idSelected !== idx
+                                }
+                                mx="auto"
+                                isDo={idSelected === idx}
+                                type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                                text="accept bid"
+                                isLoading={addNftTnxStatus}
+                                loadingText={`${addNftTnxStatus?.status}`}
+                                onClick={() => onClickHandler(idx)}
+                              />
+                            </Flex>
+                          </Td>
+                        ) : (
+                          ""
+                        )}
+                      </Tr>
+                    </>
+                  ))}
+                </Tbody>
+              </Table>
+            </Skeleton>
+          ) : null}
+        </motion.div>
       </AnimatePresence>
     </TableContainer>
   );

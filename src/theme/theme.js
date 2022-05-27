@@ -32,6 +32,7 @@ const theme = extendTheme({
       },
       html: {
         minHeight: "100vh",
+        scrollBehavior: "smooth",
       },
       body: {
         height: "100%",

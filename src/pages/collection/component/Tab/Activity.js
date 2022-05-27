@@ -5,9 +5,10 @@ import DataTable from "@components/Table/Table";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
+import { Text } from "@chakra-ui/react";
 
 function NFTTabActivity({ nftContractAddress, tokenID }) {
-  const [bidders, setBidders] = useState([]);
+  const [bidders, setBidders] = useState(null);
   const { currentAccount } = useSubstrateState();
   const [saleInfo, setSaleInfo] = useState({});
   const dispatch = useDispatch();
@@ -59,7 +60,7 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
           { u64: tokenID }
         );
 
-        setBidders(listBidder);
+        listBidder ? setBidders(listBidder) : setBidders([]);
       }
     };
 
@@ -67,14 +68,22 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
   }, [currentAccount, nftContractAddress, tokenID]);
 
   return (
-    <DataTable
-      idSelected={idSelected}
-      tableHeaders={headers}
-      tableData={bidders}
-      saleInfo={saleInfo}
-      onClickHandler={acceptBid}
-      isOwner={currentAccount?.address === saleInfo?.nftOwner}
-    />
+    <>
+      {bidders?.length === 0 ? (
+        <Text textAlign="center" py="2rem">
+          There is no bid yet.
+        </Text>
+      ) : (
+        <DataTable
+          idSelected={idSelected}
+          tableHeaders={headers}
+          tableData={bidders}
+          saleInfo={saleInfo}
+          onClickHandler={acceptBid}
+          isOwner={currentAccount?.address === saleInfo?.nftOwner}
+        />
+      )}
+    </>
   );
 }
 

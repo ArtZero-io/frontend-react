@@ -22,7 +22,7 @@ const HomeLayout = ({ children }) => {
         inset="0"
         w="full"
         // h={"90vh"}
-        h="4133px"
+        h="4144px"
         overflow="hidden"
         align="center"
       >

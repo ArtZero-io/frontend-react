@@ -61,6 +61,7 @@ function CollectionHeader({
             border="4px solid"
             borderColor="whiteAlpha.900"
             filter="drop-shadow(0px 4px 4px #00320025)"
+            bg="#333"
           >
             <Image
               alt={name}
