@@ -12,11 +12,14 @@ import {
   InputRightElement,
   Input,
   Image,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import HomeLayout from "@components/Layout/HomeLayout";
 import BulletPointIcon from "@theme/assets/icon/BulletPoint.js";
 import FrameHomepage from "@theme/assets/icon/FrameHomepage.svg";
+import FrameHomepageMobile from "@theme/assets/icon/FrameHomepageMobile.svg";
+import FrameHomepageSmallMobile from "@theme/assets/icon/FrameHomepageSmallMobile.svg";
 import FrameHomepageSmall from "@theme/assets/icon/FrameHomepageSmall.svg";
 import SocialCard from "../../components/Card/Social";
 import toast from "react-hot-toast";
@@ -75,48 +78,123 @@ function HomePage() {
     };
     submitPOST();
   };
+  console.log("first");
+  const ufoStyleOne = useBreakpointValue({
+    base: {
+      position: "absolute",
+      top: "-180px",
+      right: "-240px",
+    },
+    xl: {
+      position: "absolute",
+      top: "0px",
+      right: "-140px",
+      width: "490px",
+      height: "445px",
+    },
+  });
+  const ufoAnimationOne = useBreakpointValue({
+    base: {
+      scale: [0.38, 0.38, 0.38, 0.38],
+      y: [0, 2, 0, 4],
+      rotate: -3,
+    },
+    xl: {
+      scale: [1, 1, 1, 1],
+      y: [0, 2, 0, 4],
+      rotate: -3,
+    },
+  });
 
+  const ufoStyleTwo = useBreakpointValue({
+    base: {
+      position: "absolute",
+      top: "260px",
+      left: "-55px",
+    },
+    xl: {
+      position: "absolute",
+      top: "350px",
+      left: "-65px",
+      width: "215px",
+      height: "144px",
+      transform: "scale(1)",
+    },
+  });
+  const ufoAnimationTwo = useBreakpointValue({
+    base: {
+      y: [0, 5, 0],
+      rotate: 3,
+      scale: [0.4, 0.4, 0.4],
+    },
+    xl: {
+      y: [0, 5, 0],
+      rotate: 3,
+      scale: [1, 1, 1],
+    },
+  });
+  const ufoStyleThree = useBreakpointValue({
+    base: {
+      display: "none",
+    },
+    xl: {
+      position: "absolute",
+      id: "image-ufo-3",
+      top: "625px",
+      right: "115px",
+      width: "115px",
+      height: "45px",
+    },
+  });
+
+  const placeholderStyleB = useBreakpointValue({
+    base: {
+      color: "#ababab",
+      fontSize: "13px",
+    },
+    xl: {
+      color: "#ababab",
+      fontSize: "16px",
+    },
+  });
   return (
     <HomeLayout>
       <Box as="section" maxW="container.2xl" p={0} position="relative">
         <Box w="full">
           <Box
             position="relative"
+            overflow={["hidden", "visible", "visible"]}
             mx="auto"
             maxW={{ base: "6xl", "2xl": "7xl" }}
-            pt="220px"
-            pb="180px"
-            h="732px"
-            // py={{ base: "20", "2xl": "56" }}
+            pt={["80px", "220px", "220px"]}
+            pb={["170px", "180px", "180px"]}
+            h={["395px", "732px", "732px"]}
           >
             <AnimatePresence>
               {/* UFO 1 */}
               <motion.div
-                style={{
-                  position: "absolute",
-                  id: "image-ufo-1",
-                  // top: "5px",
-                  // right: "175px",
-                  top: "0px",
-                  right: "-140px",
-                  width: "490px",
-                  height: "445px",
-                }}
-                animate={{
+                id="image-ufo-1"
+                style={ufoStyleOne}
+                animate={
+                  ufoAnimationOne
+                  // {
                   // flying
                   // x: [0, 0, -980, -220, 0, 0],
                   // y: [0, 10, 30, 380, 10, 0],
                   // rotate: [0, -30, -30, 0, -30, 0],
                   // scale: [1, 1, 0.6, 0.3, 1, 1],
-                  y: [0, 6, 0, 4],
-                  rotate: 3,
-                }}
+                  //   scale: [0.38, 0.38, 0.38, 0.38],
+                  //   y: [0, 2, 0, 4],
+                  //   rotate: -3,
+                  // }
+                }
                 transition={{
-                  duration: 1.5,
+                  duration: 2,
                   // duration: 15,
                   // curve: [1, -0.14, 0.15, 1.4],
                   // cubic-bezier(1,-0.14,.15,1.4)
                   // ease: [1, -0.14, 0.15, 1.4],
+
                   curve: [0.42, 0, 0.58, 1],
                   repeat: Infinity,
                   repeatType: "reverse",
@@ -124,9 +202,8 @@ function HomePage() {
               >
                 <Image
                   data-aos="fade-left"
-                  data-aos-delay="600"
+                  data-aos-delay="300"
                   data-aos-duration="1000"
-                  filter="drop-shadow(15px -10px 25px #7AE7FF70)"
                   src={UFO1}
                   alt="UFO1"
                   w="full"
@@ -139,18 +216,9 @@ function HomePage() {
             {/* UFO 2 */}
             <AnimatePresence>
               <motion.div
-                style={{
-                  position: "absolute",
-                  id: "image-ufo-2",
-                  top: "350px",
-                  left: "-65px",
-                  width: "215px",
-                  height: "144px",
-                }}
-                animate={{
-                  y: [0, 5, 0],
-                  rotate: 3,
-                }}
+                id="image-ufo-2"
+                style={ufoStyleTwo}
+                animate={ufoAnimationTwo}
                 transition={{
                   duration: 1.5,
                   curve: [0.42, 0, 0.58, 1],
@@ -160,9 +228,8 @@ function HomePage() {
               >
                 <Image
                   data-aos="fade-right"
-                  data-aos-delay="600"
+                  data-aos-delay="300"
                   data-aos-duration="2000"
-                  filter="drop-shadow(1px 3px 7px #7AE7FF70)"
                   src={UFO2}
                   alt="UFO2"
                   w="full"
@@ -175,14 +242,7 @@ function HomePage() {
             {/* UFO 3 */}
             <AnimatePresence>
               <motion.div
-                style={{
-                  position: "absolute",
-                  id: "image-ufo-3",
-                  top: "625px",
-                  right: "115px",
-                  width: "115px",
-                  height: "45px",
-                }}
+                style={ufoStyleThree}
                 animate={{
                   y: [0, 3, 0],
                   rotate: 10,
@@ -196,9 +256,8 @@ function HomePage() {
               >
                 <Image
                   data-aos="fade-left"
-                  data-aos-delay="600"
+                  data-aos-delay="300"
                   data-aos-duration="3000"
-                  filter="drop-shadow(1px 3px 7px #7AE7FF70)"
                   src={UFO3}
                   alt="UFO3"
                   w="full"
@@ -211,19 +270,16 @@ function HomePage() {
             <Center
               w="full"
               textAlign="center"
-              mb="2rem"
+              mb={["10px", "2rem"]}
               px={4}
               data-aos="fade-up"
               data-aos-delay="300"
               data-aos-duration="1000"
             >
               <Heading
-                // size="h1"
-                // fontSize={{ base: "48px", xl: "80px", "2xl": "100px" }}
-                // lineHeight={{ base: "60px", xl: "100px", "2xl": "120px" }}
                 color="#fff"
-                fontSize="100px"
-                lineHeight="120px"
+                fontSize={["40px", null, "100px"]}
+                lineHeight={["48px", null, "120px"]}
               >
                 <Text
                   textTransform="uppercase"
@@ -244,15 +300,15 @@ function HomePage() {
               textAlign="center"
               px={4}
               data-aos="fade-up"
-              data-aos-delay="600"
+              data-aos-delay="300"
               data-aos-duration="1000"
             >
               <Text
                 fontFamily="Evogria"
-                maxW="434px"
+                maxW={["316px", null, "434px"]}
                 color="#fff"
-                fontSize="18px"
-                lineHeight="30px"
+                fontSize={["13px", null, "18px"]}
+                lineHeight={["21px", null, "30px"]}
               >
                 welcome to artzero - the first nft marketplace on aleph zero
                 network!
@@ -268,25 +324,25 @@ function HomePage() {
             fontSize="18px"
             color="#fff"
             maxW={{ base: "6xl", "2xl": "7xl" }}
-            py={{ base: "20", "2xl": "12" }}
+            py={{ base: "50px", "2xl": "12" }}
             mb={30}
           >
             <Center
               w="full"
               textAlign="center"
-              mb="2rem"
+              mb={["20px", "2rem"]}
               data-aos="fade-up"
-              data-aos-delay="100"
+              data-aos-delay="300"
               data-aos-duration="1000"
             >
-              <Heading size="h2">how to start?</Heading>
+              <Heading fontSize={["32px", null, "36px"]}>how to start?</Heading>
             </Center>
 
             <Center
-              w="610px"
+              w={["328px", "610px", "610px"]}
               mx="auto"
               textAlign="center"
-              mb="2rem"
+              mb={["20px", "2rem"]}
               px={4}
               data-aos="fade-up"
               data-aos-delay="300"
@@ -295,8 +351,9 @@ function HomePage() {
               <Text
                 textTransform="uppercase"
                 size="h6"
-                maxW="2xl"
-                lineHeight="30px"
+                w={["328px", "610px", "610px"]}
+                fontSize={["13px", null, "18px"]}
+                lineHeight={["21px", null, "30px"]}
               >
                 this version works with{" "}
                 <Link
@@ -325,25 +382,28 @@ function HomePage() {
                 >
                   talisman
                 </Link>
-                .<br />
-                please make sure you installed at least one of these wallets and
-                created an account.
+                .please make sure you installed at least one of these wallets
+                and created an account.
               </Text>
             </Center>
 
             <Center
-              w="600px"
+              w={["328px", "610px", "610px"]}
               mx="auto"
               textAlign="center"
-              mb="100px"
+              mb={["60px", "100px"]}
               px={4}
               data-aos="fade-up"
-              data-aos-delay="600"
+              data-aos-delay="300"
               data-aos-duration="1000"
             >
-              <Text textTransform="uppercase" size="h6" lineHeight="30px">
-                you will need some smartnet azero (szero) to start. <br />
-                get free szero from{" "}
+              <Text
+                textTransform="uppercase"
+                fontSize={["13px", null, "18px"]}
+                lineHeight={["21px", null, "30px"]}
+              >
+                you will need some smartnet azero (szero) to start. get free
+                szero from{" "}
                 <Link
                   color="#7ae7ff"
                   textDecoration="underline"
@@ -356,11 +416,11 @@ function HomePage() {
 
             <AspectRatio
               data-aos="fade-up"
-              data-aos-delay="900"
+              data-aos-delay="300"
               data-aos-duration="1000"
               px={4}
               mx="auto"
-              w="full"
+              w={["300px", "full", "full"]}
               maxW="77rem"
               ratio={16 / 9}
               justifyContent="center"
@@ -377,84 +437,101 @@ function HomePage() {
         <Box pos="relative" w="full">
           <Box
             mx="auto"
-            pt="50px"
+            pt={["0px", "50px", "50px"]}
             maxW={{ base: "6xl", "2xl": "7xl" }}
-            // py={{ base: "20", "2xl": "24" }}
           >
             <Center
-              w="full"
+              w={["155px", "full", "full"]}
               textAlign="center"
-              mb="3rem"
+              mb={["0px", "3rem", "3rem"]}
+              mx="auto"
               px={4}
               data-aos="fade-up"
               data-aos-delay="300"
               data-aos-duration="1000"
             >
-              <Heading size="h2">available features</Heading>
+              <Heading fontSize={["32px", null, "36px"]}>
+                available features
+              </Heading>
             </Center>
 
             <Box
               color="#ABABAB"
               data-aos="fade-up"
-              data-aos-delay="600"
+              data-aos-delay="300"
               data-aos-duration="1000"
               maxW="container.md"
               mx="auto"
-              mb={36}
+              mb={["74px", "144px", "144px"]}
               w="full"
-              p={{ base: 6, xl: 14 }}
+              p={{ base: 12, xl: 14 }}
               fontFamily="Evogria"
-              fontSize="18px"
+              fontSize={["13px", null, "18px"]}
+              lineHeight={["21px", null, "30px"]}
               textAlign="left"
-              bgImage={{ base: "", xl: FrameHomepage }}
+              bgImage={{ base: FrameHomepageMobile, xl: FrameHomepage }}
               bgPosition="center"
               bgRepeat="no-repeat"
             >
-              <List spacing={6}>
+              <List spacing={[2.5, 6, 6]}>
                 {availableFeaturesText.map((item, idx) => (
                   <ListItem
+                    display="flex"
+                    alignItems="center"
                     key={idx}
                     _hover={{ pl: "10px", color: "#fff" }}
                     transition="all 0.33s"
                   >
                     <ListIcon as={BulletPointIcon} />
-                    {item}
+                    <Text as="span">{item}</Text>
                   </ListItem>
                 ))}
               </List>
             </Box>
 
             <Center
-              w="full"
+              w={["full", "full", "full"]}
               textAlign="center"
-              mb="3rem"
+              mb={["0px", "3rem", "3rem"]}
+              mx="auto"
               px={4}
               data-aos="fade-up"
               data-aos-delay="300"
               data-aos-duration="1000"
             >
-              <Heading size="h2">up-coming features</Heading>
+              <Heading
+                w={["80%", "full", "full"]}
+                fontSize={["32px", null, "36px"]}
+              >
+                up-coming features
+              </Heading>
             </Center>
 
             <Box
               color="#ABABAB"
               data-aos="fade-up"
-              data-aos-delay="600"
+              data-aos-delay="300"
               data-aos-duration="1000"
               maxW="container.md"
               mx="auto"
               w="full"
-              p={{ base: 6, xl: 14 }}
+              p={{ base: 12, xl: 14 }}
               fontFamily="Evogria"
-              fontSize="18px"
+              fontSize={["13px", null, "18px"]}
+              lineHeight={["21px", null, "30px"]}
               textAlign="left"
-              bgImage={{ base: "", xl: FrameHomepageSmall }}
+              bgImage={{
+                base: FrameHomepageSmallMobile,
+                xl: FrameHomepageSmall,
+              }}
               bgPosition="center"
               bgRepeat="no-repeat"
             >
-              <List spacing={6}>
+              <List spacing={[2.5, 6, 6]}>
                 {upComingFeaturesText.map((item, idx) => (
                   <ListItem
+                    display="flex"
+                    alignItems="center"
                     key={idx}
                     _hover={{ pl: "10px", color: "#fff" }}
                     transition="all 0.33s"
@@ -478,31 +555,37 @@ function HomePage() {
           <Box
             mx="auto"
             px={4}
-            pt="325px"
+            pt={["155px", "250px", "250px"]}
             maxW={{ base: "6xl", "2xl": "7xl" }}
-            // py={{ base: "20", "2xl": "24" }}
             fontFamily="Evogria"
             fontSize="18px"
           >
             <Center
               w="full"
               textAlign="center"
-              mb="18px"
+              mb={["10px", "18px", "18px"]}
               data-aos="fade-up"
               data-aos-delay="300"
               data-aos-duration="1000"
             >
-              <Heading size="h2">subscribe to us</Heading>
+              <Heading fontSize={["32px", null, "36px"]}>
+                subscribe to us
+              </Heading>
             </Center>
             <Center
               w="full"
               textAlign="center"
-              mb="100px"
+              mb={["45px", "100px", "100px"]}
               data-aos="fade-up"
               data-aos-delay="300"
               data-aos-duration="1000"
             >
-              <Text textTransform="uppercase" color="#fff" size="h6">
+              <Text
+                textTransform="uppercase"
+                color="#fff"
+                fontSize={["13px", null, "18px"]}
+                lineHeight={["21px", null, "30px"]}
+              >
                 let’s make a great impact together
               </Text>
             </Center>
@@ -510,12 +593,12 @@ function HomePage() {
               data-aos="fade-up"
               data-aos-delay="300"
               data-aos-duration="1000"
-              mb={12}
+              mb={("36px", "48px")}
               mx="auto"
-              maxW="572px"
+              maxW={["327px", "572px", "572px"]}
               w="full"
               bg="white"
-              h="60px"
+              h={["48px", "60px", "60px"]}
               py={1}
               color="blackAlpha.900"
               borderRadius="0"
@@ -526,7 +609,8 @@ function HomePage() {
                 cursor="pointer"
                 bg="brand.blue"
                 h="full"
-                w={"10rem"}
+                fontSize={["15px", "18px", "18px"]}
+                w={["110px", "10rem", "10rem"]}
               >
                 SUBSCRIBE
               </InputRightElement>
@@ -542,16 +626,14 @@ function HomePage() {
                 my={1}
                 pl={5}
                 placeholder="Enter your email"
-                _placeholder={{
-                  color: "#ababab",
-                  fontSize: "lg",
-                }}
+                _placeholder={placeholderStyleB}
               />
             </InputGroup>
             <Center
               w="full"
               textAlign="center"
-              my="60px"
+              mt={["32px", "60px", "60px"]}
+              mb={["12px", "60px", "60px"]}
               data-aos="fade-up"
               data-aos-delay="300"
               data-aos-duration="1000"
@@ -561,13 +643,18 @@ function HomePage() {
             <Center
               w="full"
               textAlign="center"
-              pb="70px"
+              mb={["30px", "70px", "70px"]}
               data-aos="fade-down"
-              data-aos-delay="100"
+              data-aos-delay="300"
               data-aos-duration="1000"
               data-aos-anchor-placement="center-bottom"
             >
-              <Text textTransform="uppercase" fontSize="sm" color="#ababab">
+              <Text
+                textTransform="uppercase"
+                fontSize={["13px", "sm", "sm"]}
+                color="#ababab"
+                width={["175px", "full", "full"]}
+              >
                 © copyright 2022 artzero. all rights reserved
               </Text>
             </Center>

@@ -1,6 +1,7 @@
 import { Box, Container, Fade, Flex, Image } from "@chakra-ui/react";
 import Navbar from "../Navbar/Nav";
 import HomePageBgFull from "@theme/assets/bg-homepage-full.png";
+import HomePageBgFullMobile from "@theme/assets/bg-homepage-full-mobile.png";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 
@@ -21,14 +22,25 @@ const HomeLayout = ({ children }) => {
         position="absolute"
         inset="0"
         w="full"
-        // h={"90vh"}
-        h="4144px"
+        // h={"full"}
+        h={["2420px", "4090px", "4023px"]}
         overflow="hidden"
         align="center"
       >
         <Box position="relative" w="full" h="full">
           <Image
+            display={{ base: "none", xl: "block" }}
             src={HomePageBgFull}
+            alt="bg-HomePageBgFull"
+            w="full"
+            h="full"
+            objectPosition="top"
+            objectFit="cover"
+            position="absolute"
+          />
+          <Image
+            display={{ base: "block", xl: "none" }}
+            src={HomePageBgFullMobile}
             alt="bg-HomePageBgFull"
             w="full"
             h="full"

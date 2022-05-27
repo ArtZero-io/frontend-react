@@ -19,7 +19,7 @@ const DesktopNavLink = ({ label, to, isExternal, ...props }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           isExternal
-          py="10px"
+          py="6px"
           fontSize="15px"
           lineHeight="shorter"
           fontFamily="Evogria, sans-serif"
@@ -83,41 +83,44 @@ const MobileNavLink = ({ label = "", to = "", isExternal, ...props }) => {
     <>
       {isExternal && (
         <Link
-          bg="brand.grayDark"
-          py="2rem"
+          bg="black"
+          py="5px"
+          px="23px"
           href={to}
           isExternal
-          fontSize="15px"
+          fontSize="32px"
           fontFamily="Evogria, sans-serif"
           display="flex"
           alignItems="center"
-          justifyContent="center"
+          justifyContent="start"
           borderBottom="0"
           // borderColor="transparent"
           borderColor={path === to ? "brand.blue" : "transparent"}
           transition="all 0.2s"
           textTransform="uppercase"
+          textAlign="left"
           _hover={{
             borderColor: "currentcolor",
             color: "brand.blue",
           }}
-          color={path === to ? "brand.blue" : "#ccc"}
+          color={path === to ? "brand.blue" : "#fff"}
         >
           {label}
         </Link>
       )}
       {!isExternal && (
         <Link
-          bg="brand.grayDark"
-          py="2rem"
+          bg="black"
+          py="5px"
+          px="23px"
           as={ReactRouterLink}
           to={to}
-          size="sm"
+          fontSize="32px"
           fontFamily="Evogria, sans-serif"
           fontWeight="medium"
           display="flex"
           alignItems="center"
-          justifyContent="center"
+          justifyContent="start"
           borderBottom="0"
           borderColor="transparent"
           transition="all 0.2s"
@@ -127,7 +130,7 @@ const MobileNavLink = ({ label = "", to = "", isExternal, ...props }) => {
             borderColor: "currentcolor",
             color: "brand.blue",
           }}
-          color={path === to ? "brand.blue" : "#ccc"}
+          color={path === to ? "brand.blue" : "#fff"}
         >
           {label}
         </Link>

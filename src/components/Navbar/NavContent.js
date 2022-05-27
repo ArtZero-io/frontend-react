@@ -10,6 +10,7 @@ import {
   useDisclosure,
   Button,
   Flex,
+  Text,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { HiOutlineMenu, HiX } from "react-icons/hi";
@@ -24,7 +25,8 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-
+import { ArtZeroLogo } from "@theme/assets/logo/ArtZeroLogo";
+import SocialCard from "../Card/Social";
 const links = [
   { label: "Home", href: ROUTES.HOME },
   { label: "Marketplace", href: ROUTES.MARKETPLACE },
@@ -33,39 +35,118 @@ const links = [
 
 const MobileNavContent = (props) => {
   const { isOpen, onToggle } = useDisclosure();
+  isOpen
+    ? (document.body.style.position = "fixed")
+    : (document.body.style.position = "static");
+
   return (
-    <Box {...props}>
+    <Flex w="full" {...props}>
       <Center
+        position="absolute"
+        top="13px"
+        left="0"
         as="button"
-        p="2"
         mx="2"
-        fontSize="3xl"
-        color="brand.blue"
+        fontSize="2xl"
+        color="white"
         onClick={onToggle}
       >
         {isOpen ? <HiX /> : <HiOutlineMenu />}
       </Center>
+      <Flex w="full" ml="106px">
+        <ArtZeroLogo
+          zIndex="99"
+          alt="ArtZeroLogo"
+          height="20px"
+          width="138px"
+          display={{ base: "flex", md: "none" }}
+        />
+      </Flex>
       <NavList
+        bg="black"
         pos="absolute"
         zIndex={"99"}
-        insetX="0"
-        top="76px"
-        left="0px"
+        inset="0"
+        top="-17px"
+        left="-10px"
         animate={isOpen ? "enter" : "exit"}
-        h="full"
-        w="full"
+        h="calc(100vh)"
+        w="100vw"
       >
-        <Stack h="full" w="full" spacing="0">
+        <Center
+          position="absolute"
+          top="30px"
+          left="12px"
+          as="button"
+          mx="2"
+          fontSize="2xl"
+          color="white"
+          onClick={onToggle}
+          zIndex={"90"}
+        >
+          {isOpen ? <HiX /> : <HiOutlineMenu />}
+        </Center>
+        <Flex w="full" marginTop="32px" justifyContent="center" bg="black">
+          <ArtZeroLogo
+            zIndex="99"
+            alt="ArtZeroLogo"
+            height="20px"
+            width="138px"
+            display={{ base: "flex", md: "none" }}
+          />
+        </Flex>
+
+        <Stack
+          h="full"
+          w="full"
+          spacing="0"
+          pt="40px"
+          justify="start"
+          position="relative"
+        >
           {links.map((link, index) => (
-            <NavListItem key={index} bg="brand.semiBlack">
+            <NavListItem key={index}>
               <NavLink.Mobile label={link.label} to={link.href} />
             </NavListItem>
           ))}
           {<NavLink.Mobile label="Docs" to={ROUTES.DOCS} isExternal={true} />}
           {/* {currentAccount && currentAccount?.address && <MyAccountDropdown />} */}
+
+          <Flex
+            w="full"
+            justifyContent="center"
+            direction="column"
+            pos="absolute"
+            bottom="100px"
+            display={{ base: "flex", md: "none" }}
+          >
+            <Center
+              w="full"
+              textAlign="center"
+              // mt={["32px", "60px", "60px"]}
+              // mb={["12px", "60px", "60px"]}
+            >
+              <SocialCard profile={profile} />
+            </Center>
+            <Center
+              w="full"
+              textAlign="center"
+              // mb={["30px", "70px", "70px"]}
+            >
+              <Text
+                textTransform="uppercase"
+                fontSize={["13px", "sm", "sm"]}
+                color="#ababab"
+                width={["175px", "full", "full"]}
+              >
+                © copyright 2022 artzero <br />
+                all rights reserved
+              </Text>
+            </Center>
+          </Flex>
         </Stack>
       </NavList>
-    </Box>
+    </Flex>
   );
 };
 
@@ -73,6 +154,7 @@ const DesktopNavContent = (props) => {
   const { currentAccount } = useSubstrateState();
 
   return (
+    // <Flex w={[0, "full", "full"]}>
     <Flex w="full">
       <HStack
         spacing="55px"
@@ -97,7 +179,7 @@ const DesktopNavContent = (props) => {
         {currentAccount?.address && <MyAccountDropdown />}
       </HStack>
 
-      <WalletSelector />
+      <WalletSelector display={{ base: "none", md: "flex" }} />
     </Flex>
   );
 };
@@ -131,7 +213,6 @@ const MyAccountDropdown = () => {
         // borderColor={path.includes("/account/") ? "brand.blue" : "transparent"}
       >
         <MenuButton
-          // bg="yellow"
           h="41px"
           _hover={{
             borderColor: "brand.blue",
@@ -143,11 +224,9 @@ const MyAccountDropdown = () => {
           ring={0}
           textAlign="left"
           borderBottom="2px"
-          // borderColor="yellow"
           transition="all 0.2s"
           as={Button}
           p={0}
-          // h={7}
           bg="transparent"
           borderColor={
             path.includes("/account/") ? "brand.blue" : "transparent"
@@ -187,3 +266,10 @@ const MyAccountDropdown = () => {
     </Box>
   );
 };
+const profile = [
+  { discord: "https://discord.gg/wzkZ2JTvN4" },
+  { twitter: "https://twitter.com/ArtZero_io" },
+  { medium: "https://medium.com/@artzero_io" },
+  { telegram: "https://t.me/artzero_io" },
+  { mail: "mailto:admin@artzero.io" },
+];
