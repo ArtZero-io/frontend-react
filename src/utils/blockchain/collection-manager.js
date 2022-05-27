@@ -1,10 +1,10 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5GSjM1uNmUB4BfVGqPFyS2kMo4xxxZ8E24F7kRb2roA28HZ6",
+  CONTRACT_ADDRESS: "5EAn7gxPHKGtXbnJd5vQ57nxX79BZ7pAyhYJyyFV4DCTB6eR",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x021a5806a9ff85badc6ac441043f289e9ebfbef123ea5f4c9658408c5b665be1",
+      "hash": "0x5132859286371ffd9a07c9b27be8601303eb3adf69cce2d2b7f2cef694124c97",
       "language": "ink! 3.0.1",
-      "compiler": "rustc 1.63.0-nightly"
+      "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
       "name": "artzero_collection_manager",
@@ -887,6 +887,22 @@ const collection_manager = {
             "selector": "0x83091e54"
           },
           {
+            "args": [],
+            "docs": [
+              " Get Standard Nft Hash"
+            ],
+            "label": "get_standard_nft_hash",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Hash"
+              ],
+              "type": 4
+            },
+            "selector": "0xbeb47f47"
+          },
+          {
             "args": [
               {
                 "label": "id",
@@ -1011,6 +1027,21 @@ const collection_manager = {
           {
             "args": [],
             "docs": [],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 18
+            },
+            "selector": "0x5e228753"
+          },
+          {
+            "args": [],
+            "docs": [],
             "label": "Ownable::owner",
             "mutates": false,
             "payable": false,
@@ -1050,19 +1081,32 @@ const collection_manager = {
             "selector": "0x11f43efd"
           },
           {
-            "args": [],
-            "docs": [],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "GetContractTypeInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              "Get NFT Contract Type 1 or 2 for PSP34"
+            ],
+            "label": "CrossArtZeroCollection::get_contract_type",
+            "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
+                "crossartzerocollection_external",
+                "GetContractTypeOutput"
               ],
-              "type": 18
+              "type": 2
             },
-            "selector": "0x5e228753"
+            "selector": "0x81fa82e9"
           },
           {
             "args": [
@@ -1147,34 +1191,6 @@ const collection_manager = {
               "type": 10
             },
             "selector": "0xfa0f936e"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
-                    "GetContractTypeInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              "Get NFT Contract Type 1 or 2 for PSP34"
-            ],
-            "label": "CrossArtZeroCollection::get_contract_type",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "GetContractTypeOutput"
-              ],
-              "type": 2
-            },
-            "selector": "0x81fa82e9"
           }
         ]
       },
