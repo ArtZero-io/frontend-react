@@ -67,6 +67,14 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
     fetchBidder();
   }, [currentAccount, nftContractAddress, tokenID]);
 
+  if (!currentAccount) {
+    return (
+      <Text textAlign="center" py="2rem">
+        Please connect wallet first!{" "}
+      </Text>
+    );
+  }
+
   return (
     <>
       {bidders?.length === 0 ? (

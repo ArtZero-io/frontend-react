@@ -68,14 +68,6 @@ const CollectionsPage = () => {
           );
 
           setCollections(totalCollectionsFilterByVolume);
-          console.log(
-            "totalCollectionsFilterByVolume.length",
-            totalCollectionsFilterByVolume.length
-          );
-          console.log(
-            "totalCollectionsFilterByVolume",
-            totalCollectionsFilterByVolume
-          );
         }
       } catch (error) {
         console.log(error);

@@ -111,6 +111,9 @@ const NFTTabCollectible = ({
   ]);
 
   const buyToken = async () => {
+    if (!currentAccount) {
+      return toast.error("Please connect wallet first!");
+    }
     const { data: balance } = await api.query.system.account(
       currentAccount?.address
     );
@@ -177,6 +180,10 @@ const NFTTabCollectible = ({
   };
 
   const placeOffer = async () => {
+    if (!currentAccount) {
+      return toast.error("Please connect wallet first!");
+    }
+
     const { data: balance } = await api.query.system.account(
       currentAccount?.address
     );
@@ -252,6 +259,11 @@ const NFTTabCollectible = ({
     saleInfo?.nftOwner,
   ]);
 
+  // eslint-disable-next-line no-unused-vars
+  const heightB = useBreakpointValue({
+    base: "108px",
+    "2xl": "136px",
+  });
   return (
     <Flex
       h="full"
@@ -334,8 +346,7 @@ const NFTTabCollectible = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           style={{
-            height: "80px",
-            margin: "30px auto",
+            height: heightB,
             width: "100%",
             display: "flex",
             alignItems: "center",
@@ -343,7 +354,9 @@ const NFTTabCollectible = ({
         >
           {/* is_for_sale true  no sale*/}
           {!is_for_sale && currentAccount?.address !== owner && (
-            <Heading size="h6">Not for sale</Heading>
+            <Flex alignItems="center" h="80px">
+              <Heading size="h6">Not for sale</Heading>
+            </Flex>
           )}
           <Stack
             display={
@@ -353,11 +366,12 @@ const NFTTabCollectible = ({
                 ? "flex"
                 : "none"
             }
-            h="95px"
             direction={{ base: "column", xl: "row" }}
             w="full"
+            h="92px"
+            my={{ base: "8px", "2xl": "22px" }}
             py={2}
-            pr="28px"
+            pr={{ base: "0", "2xl": "28px" }}
           >
             {is_for_sale &&
               saleInfo &&
@@ -428,7 +442,7 @@ const NFTTabCollectible = ({
 
                           <Spacer />
                           <InputGroup
-                            w={24}
+                            w={"88px"}
                             bg="black"
                             h={10}
                             py={1}
