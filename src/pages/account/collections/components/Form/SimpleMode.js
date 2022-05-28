@@ -37,9 +37,8 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
   useEffect(() => {
     const fetchFee = async () => {
       if (addingFee === 0) {
-        const addingFeeData = await collection_manager_calls.getSimpleModeAddingFee(
-          currentAccount
-        );
+        const addingFeeData =
+          await collection_manager_calls.getSimpleModeAddingFee(currentAccount);
         setAddingFee(addingFeeData / 10 ** 12);
       }
     };
@@ -52,7 +51,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
         const maxRoyalFeeRateData =
           await collection_manager_calls.getMaxRoyalFeeRate(currentAccount);
 
-          setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
+        setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
       }
     };
     fetchFee();
@@ -106,7 +105,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
         if (dataList?.length) {
           setAvatarIPFSUrl(dataList[0].avatarImage);
           setHeaderIPFSUrl(dataList[0].headerImage);
-          setHeaderSquareIPFSUrl(dataList[0].headerSquareImage);
+          setHeaderSquareIPFSUrl(dataList[0].squareImage);
           setIsSetRoyal(dataList[0].isCollectRoyalFee);
           setInitialValues(newInitialValues);
         } else {
@@ -238,7 +237,6 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     dispatch
                   );
                 } else {
-
                   await collection_manager_calls.setMultipleAttributes(
                     currentAccount,
                     nftContractAddress,
