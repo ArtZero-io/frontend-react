@@ -54,8 +54,8 @@ function CollectionHeader({
         <VStack>
           <Center
             rounded="full"
-            w="7.5rem"
-            h="7.5rem"
+            w={["80px", "120px", "120px"]}
+            h={["80px", "120px", "120px"]}
             mt={-8}
             p="-px"
             border="4px solid"
@@ -71,7 +71,11 @@ function CollectionHeader({
               objectFit="cover"
               src={avatarImage && getCachedImageShort(avatarImage, 500)}
               fallback={
-                <Skeleton w={"7.5rem"} h={"7.5rem"} borderRadius="full" />
+                <Skeleton
+                  w={["80px", "120px", "120px"]}
+                  h={["80px", "120px", "120px"]}
+                  borderRadius="full"
+                />
               }
             />
           </Center>
@@ -95,7 +99,8 @@ function CollectionHeader({
                   >
                     <Heading
                       color="#fff"
-                      fontSize={{ base: "2rem", "2xl": "3rem" }}
+                      fontSize={["32px", "48px", "48px"]}
+                      lineHeight={["38px", "60px", "60px"]}
                       minH={{ base: "2.5rem", "2xl": "3.75rem" }}
                       // size="h2"
                       // minH="3.75rem"
@@ -106,7 +111,7 @@ function CollectionHeader({
                       w="full"
                       maxW="576px"
                       color="#fff"
-                      fontSize={"lg"}
+                      fontSize={["15px", "18px", "18px"]}
                       minH={{ base: "1rem", "2xl": "3.375rem" }}
                     >
                       {description}
@@ -119,20 +124,16 @@ function CollectionHeader({
 
           <HStack
             flexWrap={["wrap", "noWrap", "noWrap"]}
-            // flexWrap="wrap"
             color="brand.blue"
             maxW="680px"
-            // w="full"
-            maxH={["410px", "110px", "110px"]}
-            h={["190px", "full", "full"]}
-            // minW={{ base: "auto", xl: "auto", "2xl": "container.md" }}
+            maxH={["150px", "110px", "110px"]}
+            h={["full", "full", "full"]}
             borderWidth={2}
             borderColor="brand.blue"
             px={{ base: 1, xl: 12, "2xl": 16 }}
             py={{ base: "0.5rem", "2xl": "1.125rem" }}
             justifyContent="space-between"
             bg="black"
-            // minH={{ base: "5.75rem", "2xl": "7.75rem" }}
           >
             {nft_count ? (
               <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
@@ -144,12 +145,12 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "4xl", "2xl": "5xl" }}
+                      fontSize={{ base: "32px", "2xl": "48px" }}
                       lineHeight="none"
                     >
                       {nft_count || 0}
                     </Text>
-                    <Text>Items</Text>
+                    <Text fontSize={["13px", "16px", "16px"]}>Items</Text>
                   </motion.div>
                 </AnimatePresence>
               </VStack>
@@ -163,12 +164,12 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "4xl", "2xl": "5xl" }}
+                      fontSize={{ base: "32px", "2xl": "48px" }}
                       lineHeight="none"
                     >
                       0
                     </Text>
-                    <Text>Items</Text>
+                    <Text fontSize={["13px", "16px", "16px"]}>Items</Text>
                   </motion.div>
                 </AnimatePresence>
               </VStack>
@@ -191,12 +192,12 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "4xl", "2xl": "5xl" }}
+                      fontSize={{ base: "32px", "2xl": "48px" }}
                       lineHeight="none"
                     >
                       {totalListed || 0}
                     </Text>
-                    <Text>Listed</Text>{" "}
+                    <Text fontSize={["13px", "16px", "16px"]}>Listed</Text>
                   </motion.div>
                 </AnimatePresence>
               </VStack>
@@ -210,12 +211,12 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "4xl", "2xl": "5xl" }}
+                      fontSize={{ base: "32px", "2xl": "48px" }}
                       lineHeight="none"
                     >
                       0
                     </Text>
-                    <Text>Listed</Text>{" "}
+                    <Text fontSize={["13px", "16px", "16px"]}>Listed</Text>
                   </motion.div>
                 </AnimatePresence>
               </VStack>
@@ -239,7 +240,7 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "4xl", "2xl": "5xl" }}
+                        fontSize={{ base: "32px", "2xl": "48px" }}
                         lineHeight="none"
                       >
                         {shortenNumber(floorPrice / 10 ** 12) || 0}
@@ -253,7 +254,7 @@ function CollectionHeader({
                         bg="transparent"
                       />
                     </Flex>
-                    <Text>Floor price</Text>{" "}
+                    <Text fontSize={["13px", "16px", "16px"]}>Floor price</Text>
                   </motion.div>
                 </AnimatePresence>
               </VStack>
@@ -268,7 +269,7 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "4xl", "2xl": "5xl" }}
+                        fontSize={{ base: "32px", "2xl": "48px" }}
                         lineHeight="none"
                       >
                         0
@@ -282,7 +283,7 @@ function CollectionHeader({
                         bg="transparent"
                       />
                     </Flex>
-                    <Text>Floor price</Text>{" "}
+                    <Text fontSize={["13px", "16px", "16px"]}>Floor price</Text>
                   </motion.div>
                 </AnimatePresence>
               </VStack>
@@ -306,7 +307,7 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "4xl", "2xl": "5xl" }}
+                        fontSize={{ base: "32px", "2xl": "48px" }}
                         lineHeight="none"
                       >
                         {shortenNumber(volume) || 0}
@@ -320,7 +321,7 @@ function CollectionHeader({
                         bg="transparent"
                       />
                     </Flex>
-                    <Text as="span" mt={0}>
+                    <Text as="span" mt={0} fontSize={["13px", "16px", "16px"]}>
                       Vol traded
                       {/* <Text display={{ base: "none", xl: "inline" }}>
                         traded
@@ -340,7 +341,7 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "4xl", "2xl": "5xl" }}
+                        fontSize={{ base: "32px", "2xl": "48px" }}
                         lineHeight="none"
                       >
                         0
@@ -354,7 +355,7 @@ function CollectionHeader({
                         bg="transparent"
                       />
                     </Flex>
-                    <Text as="span" mt={0}>
+                    <Text as="span" mt={0} fontSize={["13px", "16px", "16px"]}>
                       Vol traded
                       {/* <Text display={{ base: "none", xl: "inline" }}>
                         Volume{" "}

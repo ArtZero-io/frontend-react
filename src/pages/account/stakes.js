@@ -283,7 +283,7 @@ const MyStakesPage = () => {
           </Flex>
           <Flex alignItems="start">
             <Text ml={1} color="brand.grayLight"></Text>
-            Discount Rate:
+            Trade Fee:
             <Text color="#fff" ml={2}>
               {generalStats.my_discount_rate}%
             </Text>

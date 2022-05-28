@@ -262,7 +262,10 @@ const NFTTabCollectible = ({
   // eslint-disable-next-line no-unused-vars
   const heightB = useBreakpointValue({
     base: "108px",
-    "2xl": "136px",
+    "2xl":
+      saleInfo && is_for_sale && currentAccount?.address !== saleInfo?.nftOwner
+        ? "136px"
+        : "45px",
   });
   return (
     <Flex
@@ -572,6 +575,7 @@ const NFTTabCollectible = ({
                             <Flex w="full" color="#7AE7FF">
                               <Spacer />
                               <Text
+                                isTruncated
                                 pr={1}
                                 fontStyle="italic"
                                 fontSize={{ base: "0.875rem", "2xl": "1rem" }}
