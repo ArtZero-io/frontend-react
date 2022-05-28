@@ -118,11 +118,13 @@ function CollectionHeader({
           </HStack>
 
           <HStack
+            flexWrap={["wrap", "noWrap", "noWrap"]}
+            // flexWrap="wrap"
             color="brand.blue"
             maxW="680px"
             // w="full"
-            maxH="110px"
-            h="full"
+            maxH={["410px", "110px", "110px"]}
+            h={["190px", "full", "full"]}
             // minW={{ base: "auto", xl: "auto", "2xl": "container.md" }}
             borderWidth={2}
             borderColor="brand.blue"
@@ -133,7 +135,7 @@ function CollectionHeader({
             // minH={{ base: "5.75rem", "2xl": "7.75rem" }}
           >
             {nft_count ? (
-              <VStack textAlign="center" px={3}>
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -152,7 +154,7 @@ function CollectionHeader({
                 </AnimatePresence>
               </VStack>
             ) : (
-              <VStack textAlign="center" px={3}>
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -172,10 +174,15 @@ function CollectionHeader({
               </VStack>
             )}
 
-            <Divider transform="rotate(90deg)" width="50px" bg="#232323" />
+            <Divider
+              transform="rotate(90deg)"
+              width="300px"
+              bg="#232323"
+              display={{ base: "none", xl: "inline" }}
+            />
 
             {totalListed ? (
-              <VStack textAlign="center" px={3}>
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -194,7 +201,7 @@ function CollectionHeader({
                 </AnimatePresence>
               </VStack>
             ) : (
-              <VStack textAlign="center" px={3}>
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -214,10 +221,15 @@ function CollectionHeader({
               </VStack>
             )}
 
-            <Divider transform="rotate(90deg)" width="50px" bg="#232323" />
+            <Divider
+              transform="rotate(90deg)"
+              width="300px"
+              bg="#232323"
+              display={{ base: "none", xl: "inline" }}
+            />
 
             {floorPrice ? (
-              <VStack textAlign="center" px={3}>
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -246,7 +258,7 @@ function CollectionHeader({
                 </AnimatePresence>
               </VStack>
             ) : (
-              <VStack textAlign="center" px={3}>
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -276,10 +288,15 @@ function CollectionHeader({
               </VStack>
             )}
 
-            <Divider transform="rotate(90deg)" width="50px" bg="#232323" />
+            <Divider
+              transform="rotate(90deg)"
+              width="300px"
+              bg="#232323"
+              display={{ base: "none", xl: "inline" }}
+            />
 
             {volume ? (
-              <VStack textAlign="center" px={3}>
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -304,16 +321,16 @@ function CollectionHeader({
                       />
                     </Flex>
                     <Text as="span" mt={0}>
-                      Volume{" "}
-                      <Text display={{ base: "none", xl: "inline" }}>
+                      Vol traded
+                      {/* <Text display={{ base: "none", xl: "inline" }}>
                         traded
-                      </Text>
+                      </Text> */}
                     </Text>{" "}
                   </motion.div>
                 </AnimatePresence>
               </VStack>
             ) : (
-              <VStack textAlign="center" px={3}>
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
                 <AnimatePresence>
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -338,10 +355,10 @@ function CollectionHeader({
                       />
                     </Flex>
                     <Text as="span" mt={0}>
-                      Volume{" "}
-                      <Text display={{ base: "none", xl: "inline" }}>
-                        traded
-                      </Text>
+                      Vol traded
+                      {/* <Text display={{ base: "none", xl: "inline" }}>
+                        Volume{" "}
+                      </Text> */}
                     </Text>
                   </motion.div>
                 </AnimatePresence>

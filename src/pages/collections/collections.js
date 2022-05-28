@@ -150,9 +150,7 @@ const CollectionsPage = () => {
             <Box
               mx="auto"
               maxW="1240px"
-              // maxW={{ base: "auto", "2xl": "7xl" }}
-              // px={{ base: "8", "2xl": "4" }}
-              px="0"
+              px={{ base: "22px", "2xl": "0" }}
               pt={{ base: "12", "2xl": "20" }}
             >
               <Heading size="h2" my="5rem" textAlign="center">
@@ -177,7 +175,7 @@ const CollectionsPage = () => {
             <Box
               mx="auto"
               maxW="1240px"
-              px="0"
+              px={{ base: "22px", "2xl": "0" }}
               pt="80px"
               pb="100px"
               // py={{ base: "12", "2xl": "20" }}

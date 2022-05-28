@@ -68,7 +68,10 @@ export default function NFTChangeSizeCard({
           flex="1"
           // minH={is_for_sale ? "8.125rem" : ""}
         >
-          <Heading size="h6" textTransform="lowercase">
+          <Heading
+            fontSize={["13px", "16px", "16px"]}
+            textTransform="uppercase"
+          >
             {nftName}
           </Heading>
 

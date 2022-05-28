@@ -24,7 +24,7 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
   }, [onClose, addNftTnxStatus?.status]);
 
   const tabHeight = useBreakpointValue({
-    base: `2.5rem`,
+    base: `1rem`,
     xl: `3.5rem`,
     "2xl": `4.5rem`,
   });
@@ -45,12 +45,13 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
 
   return (
     <Modal
-      closeOnOverlayClick={false} 
+      closeOnOverlayClick={false}
       closeOnEsc={false}
-      isCentered
+      isCentered={false}
       onClose={onClose}
       isOpen={isOpen}
       size={{ base: "sm", xl: "7xl" }}
+      scrollBehavior="inside"
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -62,13 +63,12 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
         bg="brand.grayDark"
         borderRadius="0"
         p={0}
-        h="full"
-        w="full"
+        h={["580px", "full", "full"]}
+        w={["300px", "full", "full"]}
         maxH={{ base: "auto", xl: "28rem", "2xl": "40rem" }}
         maxW={{ base: "58rem", "2xl": "78rem" }}
       >
         <ModalCloseButton
-          // display={{ base: "none", xl: "block" }}
           position="absolute"
           top="-8"
           right="-8"
@@ -90,12 +90,13 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
                 isDisabled={tab.isDisabled}
                 key={index}
                 ml={12}
-                fontSize="md"
+                fontSize={["13px", null, "18px"]}
+                lineHeight={["21px", null, "30px"]}
                 fontFamily="Evogria Italic"
                 minH={tabHeight}
                 fontStyle="italic"
                 px="0.5px"
-                py="20px"
+                py={["10px", "20px", "20px"]}
               >
                 {tab.label}
               </Tab>

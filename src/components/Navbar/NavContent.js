@@ -67,10 +67,10 @@ const MobileNavContent = (props) => {
         pos="absolute"
         zIndex={"99"}
         inset="0"
-        top="-17px"
+        top="-15px"
         left="-10px"
         animate={isOpen ? "enter" : "exit"}
-        h="calc(100vh)"
+        h="100vh"
         w="100vw"
       >
         <Center

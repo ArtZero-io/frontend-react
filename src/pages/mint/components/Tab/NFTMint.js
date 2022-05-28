@@ -11,7 +11,7 @@ function NFTMintTab({ myAZNFTs }) {
       py={{ base: "8", "2xl": "4" }}
     >
       {myAZNFTs?.length === 0 ? (
-        <Heading size="h6" textTransform="lowercase">
+        <Heading size="h6" textTransform="uppercase">
           No NFT found!
         </Heading>
       ) : (

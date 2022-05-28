@@ -8,6 +8,7 @@ import {
   useDisclosure,
   Stack,
   useDimensions,
+  useBreakpointValue,
   // Input,
 } from "@chakra-ui/react";
 
@@ -72,14 +73,17 @@ const CollectionItems = ({
 
   const elementRef = useRef();
   const dimensions = useDimensions(elementRef, true);
+  
+  const nftCardWidthB = useBreakpointValue({ base: 150, xl: 300 });
 
-  const nftCardWidth = bigCard ? 300 : 240;
+  const nftCardWidth = bigCard ? nftCardWidthB : 240;
   const nftCardHeight = bigCard ? 450 : 395;
 
   const gridWidth = dimensions?.borderBox?.width;
   const gridCol = Math.floor(gridWidth / nftCardWidth);
-
-  const gap = 30;
+  
+  const gapB = useBreakpointValue({ base: 15, xl: 30 });
+  const gap = gapB;
 
   const realNftCardWidth =
     (gridWidth - gridCol * nftCardWidth - gap * (gridCol - 1)) / gridCol +

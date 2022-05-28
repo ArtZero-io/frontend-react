@@ -159,7 +159,7 @@ function MintHeader({ loading }) {
       >
         <VStack textAlign="center" justifyContent="space-between">
           <Center w="full" pos="relative">
-            <Heading size="h2" textTransform="lowercase">
+            <Heading size="h2" textTransform="uppercase">
               Token Generation Event
             </Heading>
           </Center>
@@ -180,7 +180,7 @@ function MintHeader({ loading }) {
           <Box fontSize="lg" bg="brand.grayDark" padding={7} minH="xs">
             <Flex direction="column" justifyContent="space-between" h="full">
               <Box h="full">
-                <Heading textTransform="lowercase" size="h6">
+                <Heading textTransform="uppercase" size="h6">
                   Your Account:
                 </Heading>
                 <Text mt={3}>
@@ -195,7 +195,7 @@ function MintHeader({ loading }) {
                 </Text>
               </Box>
               <Box>
-                <Heading textTransform="lowercase" size="h6">
+                <Heading textTransform="uppercase" size="h6">
                   ArtZero's NFT information:
                 </Heading>
                 <Text mt={3}>
@@ -213,13 +213,13 @@ function MintHeader({ loading }) {
             <Flex direction="column" justifyContent="space-between" h="full">
               <Box>
                 {!whitelist && (
-                  <Heading size="h6" textTransform="lowercase">
+                  <Heading size="h6" textTransform="uppercase">
                     You are not in the whitelist for minting ArtZero NFTs
                   </Heading>
                 )}
                 {whitelist && (
                   <>
-                    <Heading size="h6" textTransform="lowercase">
+                    <Heading size="h6" textTransform="uppercase">
                       You are in the whitelist for minting ArtZero NFTs
                     </Heading>
                     <Text mt={3}>
@@ -279,7 +279,7 @@ function MintHeader({ loading }) {
           <Box fontSize="lg" bg="brand.grayDark" padding={7} minH="xs">
             <Flex direction="column" justifyContent="space-between" h="full">
               <Box>
-                <Heading textTransform="lowercase" size="h6">
+                <Heading textTransform="uppercase" size="h6">
                   Public Minting
                 </Heading>
                 {Number(mintMode) <= 0 ? (

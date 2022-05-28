@@ -272,8 +272,8 @@ const NFTTabCollectible = ({
       alignItems="center"
     >
       <Square
-        w={{ base: "20rem", "2xl": "30rem" }}
-        h={{ base: "20rem", "2xl": "30rem" }}
+        w={{ base: "250px", xl: "20rem", "2xl": "30rem" }}
+        h={{ base: "250px", xl: "20rem", "2xl": "30rem" }}
         bg="#372648"
       >
         <Image
@@ -283,7 +283,9 @@ const NFTTabCollectible = ({
           alt="nft-img"
           objectFit="cover"
           src={avatar && getCachedImageShort(avatar, 500)}
-          fallback={<Skeleton minW={{ base: "20rem", "2xl": "30rem" }} />}
+          fallback={
+            <Skeleton minW={{ base: "250px", xl: "20rem", "2xl": "30rem" }} />
+          }
         />
       </Square>
 
@@ -382,10 +384,10 @@ const NFTTabCollectible = ({
                     w="full"
                     alignItems="center"
                     borderColor="#343333"
-                    px={4}
+                    px={["8px", "16px"]}
                     py={1}
                     borderWidth={2}
-                    minH="4.75rem"
+                    minH={["4.15rem", "4.75rem", "4.75rem"]}
                   >
                     <StatusBuyButton
                       shouldDisabled={action && action !== "buy"}
@@ -423,10 +425,10 @@ const NFTTabCollectible = ({
                       w="full"
                       alignItems="center"
                       borderColor="#333"
-                      px={4}
+                      px={["8px", "16px"]}
                       py={1}
                       borderWidth={2}
-                      minH="4.75rem"
+                      minH={["4.15rem", "4.75rem", "4.75rem"]}
                     >
                       {!isBided && (
                         <>

@@ -22,7 +22,7 @@ export const Footer = () => {
           md: "full",
         }}
         mx="auto"
-        px={{ base: "3", "2xl": "24" }}
+        px={{ base: "22px", "2xl": "24" }}
       >
         <Flex
           borderTopWidth="2px"
@@ -38,7 +38,7 @@ export const Footer = () => {
             lg: "center",
           }}
           py={{
-            base: "12",
+            base: "30px",
             md: "2.875rem",
           }}
           justify="space-between"
@@ -64,17 +64,26 @@ export const Footer = () => {
             align="center"
           >
             <Box h="1.75rem" minW="12.0625rem">
-              <ArtZeroLogo alt="AzeroLogo" />
+              <ArtZeroLogo alt="AzeroLogo" height="20px" />
             </Box>
-            <Box pt={5} display={{ base: "block", xl: "none" }}>
-              <SocialCard profile={profile} mt={3} />
+            <Box display={{ base: "block", xl: "none" }}>
+              <SocialCard profile={profile} />
             </Box>
 
             <VStack w="full">
-              <Heading size="h6" color="brand.blue" mt="2">
+              <Heading
+                fontSize={["13px", null, "18px"]}
+                lineHeight={["21px", null, "30px"]}
+                color="brand.blue"
+                mt="2"
+              >
                 discover, collect and trade nfts on artzero
               </Heading>
-              <Text pt={{ base: 3, xl: "auto" }} color="#888" fontSize="16px">
+              <Text
+                pt={{ base: 3, xl: "auto" }}
+                color="#888"
+                fontSize={["13px", "16px", "16px"]}
+              >
                 &copy; Copyright {new Date().getFullYear()} ArtZero. All Rights
                 Reserved
               </Text>

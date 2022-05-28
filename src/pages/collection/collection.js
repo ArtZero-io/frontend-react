@@ -309,7 +309,7 @@ function CollectionPage() {
               {tabData.map((tab, index) => (
                 <TabPanel
                   // pt={4}
-                  px={{ base: "10px", "2xl": "100px" }}
+                  px={{ base: "12px", "2xl": "100px" }}
                   pt="40px"
                   key={index}
                 >
