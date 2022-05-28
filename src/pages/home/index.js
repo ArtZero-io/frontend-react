@@ -78,7 +78,7 @@ function HomePage() {
     };
     submitPOST();
   };
-  console.log("first");
+
   const ufoStyleOne = useBreakpointValue({
     base: {
       position: "absolute",

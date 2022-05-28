@@ -28,7 +28,14 @@ const PrivateRoute = ({ ...rest }) => {
             margin={3}
             speedMultiplier={1.5}
           />
-          <Heading size="h6" my={14}>
+          <Heading
+            size="h6"
+            my={14}
+            mx="auto"
+            maxW="250px"
+            minH="100px"
+            textAlign="center"
+          >
             Re - connecting to network . . .
           </Heading>
         </ModalContent>

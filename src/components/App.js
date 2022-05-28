@@ -33,7 +33,7 @@ export default function App() {
           loadingErrorMess={` ${apiError.target.url} failed.`}
         />
       ) : apiState !== "READY" ? (
-        <InitModal apiState={apiState} loadingErrorMess={`to network ...`} />
+        <InitModal apiState={apiState} loadingErrorMess={`to network...`} />
       ) : (
         <Main />
       )}
@@ -60,7 +60,14 @@ const InitModal = ({ apiState, loadingErrorMess }) => {
           margin={3}
           speedMultiplier={1.8}
         />
-        <Heading size="h6" my={14}>
+        <Heading
+          size="h6"
+          my={14}
+          mx="auto"
+          maxW="250px"
+          minH="100px"
+          textAlign="center"
+        >
           Connecting {loadingErrorMess}
         </Heading>
       </ModalContent>

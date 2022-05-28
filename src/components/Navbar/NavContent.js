@@ -117,7 +117,7 @@ const MobileNavContent = (props) => {
             justifyContent="center"
             direction="column"
             pos="absolute"
-            bottom="100px"
+            bottom="150px"
             display={{ base: "flex", md: "none" }}
           >
             <Center

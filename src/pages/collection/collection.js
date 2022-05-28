@@ -308,9 +308,9 @@ function CollectionPage() {
             <TabPanels h="full" minH="md" bg="#171717">
               {tabData.map((tab, index) => (
                 <TabPanel
-                  pt={4}
+                  // pt={4}
                   px={{ base: "10px", "2xl": "100px" }}
-                  // px="100px"
+                  pt="40px"
                   key={index}
                 >
                   {tab.content}
