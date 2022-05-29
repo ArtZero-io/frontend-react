@@ -1,6 +1,6 @@
 import { HStack, Stack, Spacer, Flex, Text } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Formik, Form } from "formik";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
@@ -35,13 +35,23 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
     (s) => s.account.accountLoaders
   );
 
+  const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
+  const currentHeaderIPFSUrl = useRef(headerIPFSUrl);
+  const currentHeaderSquareIPFSUrl = useRef(headerSquareIPFSUrl);
+
+  const noImagesChange =
+    currentAvatarIPFSUrl.current === avatarIPFSUrl &&
+    currentHeaderIPFSUrl.current === headerIPFSUrl &&
+    currentHeaderSquareIPFSUrl.current === headerSquareIPFSUrl;
+
   useEffect(() => {
     const fetchFee = async () => {
       if (addingFee === 0) {
-        const addingFeeData = await collection_manager_calls.getAdvanceModeAddingFee(
-          currentAccount
-        );
-          console.log(addingFeeData);
+        const addingFeeData =
+          await collection_manager_calls.getAdvanceModeAddingFee(
+            currentAccount
+          );
+
         setAddingFee(addingFeeData / 10 ** 12);
       }
     };
@@ -64,7 +74,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
     const { data: balance } = await api.query.system.account(
       currentAccount?.address
     );
-    console.log(balance.free);
+
     if (balance.free.toNumber() > addingFee) {
       return true;
     } else {
@@ -125,6 +135,10 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           setHeaderSquareIPFSUrl(squareImage);
           setIsSetRoyal(collectRoyalFee);
           setInitialValues(newInitialValues);
+
+          currentAvatarIPFSUrl.current = avatarImage;
+          currentHeaderIPFSUrl.current = headerImage;
+          currentHeaderSquareIPFSUrl.current = squareImage;
         } else {
           setInitialValues(null);
         }
@@ -242,7 +256,6 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 });
 
                 if (mode === "add") {
-                  console.log('mode === "add" data', data)
                   await collection_manager_calls.addNewCollection(
                     currentAccount,
                     data,
@@ -406,7 +419,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 <StatusButton
                   type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
                   text="collection"
-                  disabled={!(dirty && isValid)}
+                  disabled={!(dirty && isValid) && noImagesChange}
                   isLoading={addCollectionTnxStatus}
                   loadingText={`${addCollectionTnxStatus?.status}`}
                   mode={mode}

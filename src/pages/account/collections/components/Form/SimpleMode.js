@@ -1,6 +1,6 @@
 import { Box, Flex, HStack, Spacer, Stack, Text } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Formik, Form } from "formik";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
@@ -33,6 +33,15 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
   const { addCollectionTnxStatus } = useSelector(
     (s) => s.account.accountLoaders
   );
+
+  const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
+  const currentHeaderIPFSUrl = useRef(headerIPFSUrl);
+  const currentHeaderSquareIPFSUrl = useRef(headerSquareIPFSUrl);
+
+  const noImagesChange =
+    currentAvatarIPFSUrl.current === avatarIPFSUrl &&
+    currentHeaderIPFSUrl.current === headerIPFSUrl &&
+    currentHeaderSquareIPFSUrl.current === headerSquareIPFSUrl;
 
   useEffect(() => {
     const fetchFee = async () => {
@@ -108,6 +117,10 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
           setHeaderSquareIPFSUrl(dataList[0].squareImage);
           setIsSetRoyal(dataList[0].isCollectRoyalFee);
           setInitialValues(newInitialValues);
+
+          currentAvatarIPFSUrl.current = dataList[0].avatarImage;
+          currentHeaderIPFSUrl.current = dataList[0].headerImage;
+          currentHeaderSquareIPFSUrl.current = dataList[0].squareImage;
         } else {
           setInitialValues(null);
         }
@@ -400,7 +413,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                 <StatusButton
                   type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
                   text="collection"
-                  disabled={!(dirty && isValid)}
+                  disabled={!(dirty && isValid) && noImagesChange}
                   isLoading={addCollectionTnxStatus}
                   loadingText={`${addCollectionTnxStatus?.status}`}
                   mode={mode}
