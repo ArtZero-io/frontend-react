@@ -1,6 +1,7 @@
 import { Box, Container, Fade, Flex, Image, Skeleton } from "@chakra-ui/react";
 import Navbar from "../Navbar/Nav";
 import bgHeroFull from "@theme/assets/bg-hero-full.png";
+import React, { useCallback } from "react";
 
 import { Footer } from "../Footer/Footer";
 import { getCachedImageShort } from "@utils/index";
@@ -10,14 +11,13 @@ import { loadFull } from "tsparticles";
 const linerGradient = "linear-gradient(180deg, #000000 1.5rem, #00000000 8rem)";
 
 const Layout = ({ backdrop, children, variant = null }) => {
-  const particlesInit = async (main) => {
+  const particlesInit = useCallback(async (main) => {
     await loadFull(main);
-  };
+  }, []);
 
   return (
     <Container
-      id="layout-container 123123"
-      // maxW="container.3xl"
+      id="layout-container"
       minW="full"
       minH="100vh"
       px="0"
@@ -25,8 +25,9 @@ const Layout = ({ backdrop, children, variant = null }) => {
       bgImage={variant === "marketplace" && bgHeroFull}
       bgPosition="top"
       bgRepeat="no-repeat"
+      // bgSize={{ base: "contain", "2xl": "cover" }}
       bgSize="cover"
-      bg={variant === "collection-detail" ? linerGradient : " "}
+      bg={variant === "collection-detail" ? linerGradient : ""}
     >
       {variant === "marketplace" && (
         <Particles

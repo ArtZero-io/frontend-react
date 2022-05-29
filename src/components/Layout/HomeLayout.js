@@ -4,11 +4,12 @@ import HomePageBgFull from "@theme/assets/bg-homepage-full.png";
 import HomePageBgFullMobile from "@theme/assets/bg-homepage-full-mobile.png";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
+import React, { useCallback } from "react";
 
 const HomeLayout = ({ children }) => {
-  const particlesInit = async (main) => {
+  const particlesInit = useCallback(async (main) => {
     await loadFull(main);
-  };
+  }, []);
 
   return (
     <Container
@@ -36,7 +37,7 @@ const HomeLayout = ({ children }) => {
             h="full"
             objectPosition="top"
             objectFit="cover"
-            position="absolute"
+            // position="absolute"
           />
           <Image
             display={{ base: "block", xl: "none" }}

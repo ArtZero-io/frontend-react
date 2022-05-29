@@ -323,7 +323,7 @@ function MintHeader({ loading }) {
 
               <Button
                 isDisabled={
-                  Number(mintMode) == 2 || Number(mintMode) <= 0 || totalMinted >= MAX_MINT_COUNT
+                  Number(mintMode) === 2 || Number(mintMode) <= 0 || totalMinted >= MAX_MINT_COUNT
                 }
                 spinnerPlacement="start"
                 isLoading={tnxStatus}

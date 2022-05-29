@@ -393,7 +393,7 @@ const NFTTabCollectible = ({
                     minH={["4.15rem", "4.75rem", "4.75rem"]}
                   >
                     <StatusBuyButton
-                      shouldDisabled={action && action !== "buy"}
+                      shouldDisabled={addNftTnxStatus?.status && action && action !== "buy"}
                       isDisabled={true}
                       isDo={action === "buy"}
                       type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
@@ -436,7 +436,7 @@ const NFTTabCollectible = ({
                       {!isBided && (
                         <>
                           <StatusBuyButton
-                            shouldDisabled={action && action !== "offer"}
+                            shouldDisabled={addNftTnxStatus?.status && action && action !== "offer"}
                             isDo={action === "offer"}
                             type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
                             text="offer"
@@ -478,7 +478,7 @@ const NFTTabCollectible = ({
                       {isBided && (
                         <>
                           <StatusBuyButton
-                            shouldDisabled={action && action !== "remove bid"}
+                            shouldDisabled={addNftTnxStatus?.status && action && action !== "remove bid"}
                             isDo={action === "remove bid"}
                             type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
                             text="remove bid"

@@ -47,7 +47,7 @@ export default function NFTChangeSizeCard({
         w="full"
         shadow="lg"
       >
-        <Square>
+        <Square h={width} w={width} borderWidth='2px' borderColor='#ffffff00'>
           <Image
             alt={nftName}
             objectFit="cover"
