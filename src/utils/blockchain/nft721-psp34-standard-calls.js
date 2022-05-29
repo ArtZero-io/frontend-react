@@ -325,9 +325,9 @@ async function approve(
 
           // const statusText = Object.keys(status.toHuman())[0];
           if (status.isFinalized) {
-            dispatch({
-              type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-            });
+            // dispatch({
+            //   type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+            // });
 
             //   toast.success(
             //     `Approve ${
