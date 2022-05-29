@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Box, Button } from "@chakra-ui/react";
 import React, { Fragment } from "react";
 import { useDispatch } from "react-redux";
@@ -36,114 +37,146 @@ function StatusPushForSaleButton({
   // inBlock INBLOCK
   // finalized FINALIZED
 
-  if (text === "push for sale" && !isAllowanceMpContract) {
-    switch (stepNo) {
-      case 0:
-        return (
-          <>
-            <Button
-              display={stepNo === 0 ? "flex" : "none"}
-              variant="solid"
-              onClick={() => {
-                setStepNo(1);
-                toast.success("You will need to approve before list on market");
-              }}
-              isDisabled={loadingText === "Start"}
-              minW="10rem"
-            >
-              Push for sale
-            </Button>
-          </>
-        );
-      case 1:
-        return (
-          <Fragment>
-            <Box>
-              <Button
-                minW="10rem"
-                display={!isLoading ? "block" : "none"}
-                variant="solid"
-                onClick={() => {
-                  approveToken();
-                }}
-              >
-                Approve it
-              </Button>
-            </Box>
-            <Button
-              display={isLoading ? "flex" : "none"}
-              isDisabled={loadingText !== "Finalized"}
-              onClick={() => {
-                setStepNo(0);
+  // if (text === "push for sale" && !isAllowanceMpContract) {
+  //   switch (stepNo) {
+  //     case 0:
+  //       return (
+  //         <>
+  //           <Button
+  //             display={stepNo === 0 ? "flex" : "none"}
+  //             variant="solid"
+  //             onClick={() => {
+  //               setStepNo(1);
+  //               toast.success("You will need to approve before list on market");
+  //             }}
+  //             isDisabled={loadingText === "Start"}
+  //             minW="10rem"
+  //           >
+  //             Push for sale
+  //           </Button>
+  //         </>
+  //       );
+  //     case 1:
+  //       return (
+  //         <Fragment>
+  //           <Box>
+  //             <Button
+  //               minW="10rem"
+  //               display={!isLoading ? "block" : "none"}
+  //               variant="solid"
+  //               onClick={() => {
+  //                 approveToken();
+  //               }}
+  //             >
+  //               Approve it
+  //             </Button>
+  //           </Box>
+  //           <Button
+  //             display={isLoading ? "flex" : "none"}
+  //             isDisabled={loadingText !== "Finalized"}
+  //             onClick={() => {
+  //               setStepNo(0);
 
-                dispatch({
-                  type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-                });
-              }}
-              variant="outline"
-              minW="10rem"
-              fontSize="md"
-            >
-              {loadingText === "Start"
-                ? "Please sign"
-                : loadingText === "Ready"
-                ? "Ready"
-                : loadingText === "InBlock"
-                ? "In block"
-                : loadingText === "Finalized"
-                ? `All Done !`
-                : ""}
-            </Button>
-          </Fragment>
-        );
+  //               dispatch({
+  //                 type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+  //               });
+  //             }}
+  //             variant="outline"
+  //             minW="10rem"
+  //             fontSize="md"
+  //           >
+  //             {loadingText === "Start"
+  //               ? "Please sign"
+  //               : loadingText === "Ready"
+  //               ? "Ready"
+  //               : loadingText === "InBlock"
+  //               ? "In block"
+  //               : loadingText === "Finalized"
+  //               ? `All Done !`
+  //               : ""}
+  //           </Button>
+  //         </Fragment>
+  //       );
 
-      default:
-        break;
-    }
-  }
+  //     default:
+  //       break;
+  //   }
+  // }
 
-  if (text === "push for sale" && isAllowanceMpContract) {
-    switch (stepNo) {
-      case 1:
-        return (
-          <Fragment>
-            <Button
-              display={!isLoading ? "block" : "none"}
-              variant="solid"
-              onClick={() => {
-                listToken();
-              }}
-              minW="10rem"
-            >
-              Push for sale
-            </Button>
-            <Button
-              display={isLoading ? "flex" : "none"}
-              variant="outline"
-              onClick={() => onCloseHandler()}
-              isDisabled={loadingText !== "Finalized"}
-              minW="10rem"
-            >
-              {loadingText === "Start"
-                ? "Please sign"
-                : loadingText === "Ready"
-                ? "Ready"
-                : loadingText === "InBlock"
-                ? "In block"
-                : loadingText === "Finalized"
-                ? `All Done !`
-                : ""}
-            </Button>
-          </Fragment>
-        );
+  // if (text === "push for sale" && isAllowanceMpContract) {
+  //   switch (stepNo) {
+  //     case 1:
+  //       return (
+  //         <Fragment>
+  //           <Button
+  //             display={!isLoading ? "block" : "none"}
+  //             variant="solid"
+  //             onClick={() => {
+  //               listToken();
+  //             }}
+  //             minW="10rem"
+  //           >
+  //             Push for sale
+  //           </Button>
+  //           <Button
+  //             display={isLoading ? "flex" : "none"}
+  //             variant="outline"
+  //             onClick={() => onCloseHandler()}
+  //             isDisabled={loadingText !== "Finalized"}
+  //             minW="10rem"
+  //           >
+  //             {loadingText === "Start"
+  //               ? "Please sign"
+  //               : loadingText === "Ready"
+  //               ? "Ready"
+  //               : loadingText === "InBlock"
+  //               ? "In block"
+  //               : loadingText === "Finalized"
+  //               ? `All Done !`
+  //               : ""}
+  //           </Button>
+  //         </Fragment>
+  //       );
 
-      default:
-        break;
-    }
-  }
+  //     default:
+  //       break;
+  //   }
+  // }
 
   return (
     <>
+      {text === "push for sale" && (
+        <Fragment>
+          <Button
+            display={!isLoading ? "block" : "none"}
+            variant="solid"
+            onClick={() => {
+              listToken();
+            }}
+            minW="10rem"
+          >
+            Push for sale
+          </Button>
+          <Button
+            display={isLoading ? "flex" : "none"}
+            variant="outline"
+            onClick={() => onCloseHandler()}
+            isDisabled={loadingText !== "Finalized"}
+            minW="10rem"
+          >
+            {loadingText === "Start"
+              ? "Please sign"
+              : loadingText === "Ready"
+              ? "Ready"
+              : loadingText === "InBlock"
+              ? "In block"
+              : loadingText === "Finalized"
+              ? `All Done !`
+              : ""}
+          </Button>
+        </Fragment>
+      )}
+
       {text === "remove from sale" && (
         <>
           <Button

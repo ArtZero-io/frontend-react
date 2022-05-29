@@ -321,7 +321,7 @@ async function approve(
         }
 
         if (status) {
-          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
+          // handleContractCallAddNftAnimation(status, dispatchError, dispatch);
 
           // const statusText = Object.keys(status.toHuman())[0];
           if (status.isFinalized) {
@@ -348,6 +348,7 @@ async function approve(
       const mess = `Tnx is ${e.message}`;
       // console.log("e.message", e.message);
       toast.error(mess);
+      return;
     });
   return unsubscribe;
 }

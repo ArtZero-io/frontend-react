@@ -200,6 +200,13 @@ function MyNFTTabInfo({
 
   const listToken = async () => {
     if (owner === currentAccount?.address) {
+      dispatch({
+        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+        payload: {
+          status: "Start",
+        },
+      });
+
       const nft721_psp34_standard_contract = new ContractPromise(
         api,
         nft721_psp34_standard.CONTRACT_ABI,
@@ -208,39 +215,48 @@ function MyNFTTabInfo({
 
       nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
 
-      // const isAllowance = await nft721_psp34_standard_calls.allowance(
-      //   currentAccount,
-      //   currentAccount?.address,
-      //   marketplace_contract.CONTRACT_ADDRESS,
-      //   { u64: tokenID },
-      //   dispatch
-      // );
-      // console.log("isAllowance", isAllowance);
-      // if (!isAllowance) {
-      //   toast("Approve...");
-      //   await nft721_psp34_standard_calls.approve(
-      //     currentAccount,
-      //     marketplace.CONTRACT_ADDRESS,
-      //     { u64: tokenID },
-      //     true,
-      //     dispatch
-      //   );
-      // }
-      // toast("Listing ...");
-      dispatch({
-        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-        payload: {
-          status: "Start",
-        },
-      });
-
-      await marketplace_contract_calls.list(
+      const isAllowance = await nft721_psp34_standard_calls.allowance(
         currentAccount,
-        nftContractAddress,
+        currentAccount?.address,
+        marketplace_contract.CONTRACT_ADDRESS,
         { u64: tokenID },
-        askPrice,
         dispatch
       );
+      console.log("isAllowance", isAllowance);
+      let res;
+      if (!isAllowance) {
+        toast.success("Step 1: Approving NFT transfer...");
+
+        res = await nft721_psp34_standard_calls.approve(
+          currentAccount,
+          marketplace.CONTRACT_ADDRESS,
+          { u64: tokenID },
+          true,
+          dispatch
+        );
+        console.log("res", res);
+      }
+      if (res || isAllowance) {
+        toast.success(
+          res
+            ? "Step 2: Listing on marketplace..."
+            : "Listing on marketplace..."
+        );
+        await marketplace_contract_calls.list(
+          currentAccount,
+          nftContractAddress,
+          { u64: tokenID },
+          askPrice,
+          dispatch
+        );
+      }
+
+      // dispatch({
+      //   type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+      //   payload: {
+      //     status: "Start",
+      //   },
+      // });
     } else {
       dispatch({
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
