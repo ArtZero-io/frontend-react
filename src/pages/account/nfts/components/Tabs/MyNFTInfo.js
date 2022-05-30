@@ -222,7 +222,7 @@ function MyNFTTabInfo({
         { u64: tokenID },
         dispatch
       );
-      console.log("isAllowance", isAllowance);
+
       let res;
       if (!isAllowance) {
         toast.success("Step 1: Approving NFT transfer...");
@@ -234,7 +234,6 @@ function MyNFTTabInfo({
           true,
           dispatch
         );
-        console.log("res", res);
       }
       if (res || isAllowance) {
         toast.success(

@@ -1,9 +1,12 @@
 import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
-import { isValidAddressPolkadotAddress } from "@utils";
+import {
+  isValidAddressPolkadotAddress,
+  handleContractCallAddNftAnimation,
+} from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
-import { handleContractCall } from "@utils";
+import { AccountActionTypes } from "@store/types/account.types";
 
 let contract;
 
@@ -245,6 +248,9 @@ async function whitelistMint(caller_account, mint_amount, dispatch) {
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
         if (dispatchError) {
+          dispatch({
+            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+          });
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
           } else {
@@ -253,19 +259,26 @@ async function whitelistMint(caller_account, mint_amount, dispatch) {
         }
 
         if (status) {
-          handleContractCall(status, dispatchError, dispatch, contract);
+          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
 
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Whitelist minting ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
+          // const statusText = Object.keys(status.toHuman())[0];
+          // toast.success(
+          //   `Whitelist minting ${
+          //     statusText === "0" ? "started" : statusText.toLowerCase()
+          //   }.`
+          // );
         }
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((e) => {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+      const mess = `Tnx is ${e.message}`;
+      // console.log("e.message", e.message);
+      toast.error(mess);
+    });
   return unsubscribe;
 }
 
@@ -295,19 +308,26 @@ async function paidMint(caller_account, fee, dispatch) {
         }
 
         if (status) {
-          handleContractCall(status, dispatchError, dispatch, contract);
+          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
 
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Public Minting ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
+          // const statusText = Object.keys(status.toHuman())[0];
+          // toast.success(
+          //   `Public Minting ${
+          //     statusText === "0" ? "started" : statusText.toLowerCase()
+          //   }.`
+          // );
         }
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((e) => {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+      const mess = `Tnx is ${e.message}`;
+      // console.log("e.message", e.message);
+      toast.error(mess);
+    });
   return unsubscribe;
 }
 

@@ -4,7 +4,6 @@ import {
   Heading,
   Text,
   VStack,
-  Button,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
@@ -16,24 +15,26 @@ import {
   TagLeftIcon,
   TagLabel,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useSubstrateState } from "@utils/substrate";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
-import { delay, truncateStr } from "@utils";
+import { truncateStr } from "@utils";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import ActiveIcon from "@theme/assets/icon/Active.js";
 import InActiveIcon from "@theme/assets/icon/InActive.js";
 import BN from "bn.js";
 import toast from "react-hot-toast";
+import StatusBuyButton from "@components/Button/StatusBuyButton";
+import { AccountActionTypes } from "@store/types/account.types";
 
 const MAX_MINT_COUNT = 200;
 
 function MintHeader({ loading }) {
   const dispatch = useDispatch();
-  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
   const { api, currentAccount } = useSubstrateState();
+  const { addNftTnxStatus } = useSelector((s) => s.account.accountLoaders);
 
   const [balance, setBalance] = useState(0);
   const [whitelist, setWhitelist] = useState(null);
@@ -42,6 +43,8 @@ function MintHeader({ loading }) {
   const [amount1, setAmount1] = useState(-1);
   const [totalMinted, setTotalMinted] = useState(0);
   const [whitelistAmount, setWhitelistAmount] = useState(1);
+
+  const [action, setAction] = useState("");
 
   const onGetTotalMinted = useCallback(
     async (e) => {
@@ -60,14 +63,22 @@ function MintHeader({ loading }) {
         currentAccount?.address
       );
 
-      if (whitelist) setWhitelist(whitelist);
-      else setWhitelist(null);
+      if (whitelist) {
+        setWhitelist((prev) => {
+          return { ...prev, ...whitelist };
+        });
+      } else {
+        setWhitelist((prev) => {
+          return null;
+        });
+      }
     };
     const onGetBalance = async (e) => {
       let res = await artzero_nft_calls.balanceOf(
         currentAccount,
         currentAccount?.address
       );
+
       if (res) {
         setBalance(res);
       } else {
@@ -76,6 +87,7 @@ function MintHeader({ loading }) {
     };
     const onGetMintMode = async (e) => {
       let mintMode = await artzero_nft_calls.getMintMode(currentAccount);
+
       if (mintMode) setMintMode(Number(mintMode));
       else setMintMode(-1);
     };
@@ -85,36 +97,64 @@ function MintHeader({ loading }) {
     onGetMintMode();
   }, [currentAccount, currentAccount?.address, loading]);
 
-  const ongetMintingFee = async (e) => {
+  const onGetMintingFee = async (e) => {
     let res = await artzero_nft_calls.getMintingFee(currentAccount);
-    if (res) setFee1(res);
-    else setFee1(-1);
+    if (res) {
+      setFee1(res);
+    } else {
+      setFee1(-1);
+    }
   };
 
   const onGetPublicSaleAmount = async (e) => {
     let res = await artzero_nft_calls.getPublicSaleAmount(currentAccount);
-    if (res) setAmount1(res);
-    else setAmount1(-1);
+    if (res) {
+      setAmount1(res);
+    } else {
+      setAmount1(-1);
+    }
   };
 
   const onWhiteListMint = async () => {
+    setAction("");
+
     const { data: balance } = await api.query.system.account(
       currentAccount?.address
     );
-    console.log(balance);
+
     const freeBalance =
       new BN(balance.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+
     if (freeBalance < 0.01) {
       toast.error("Your balance is low.");
       return;
     }
-    await artzero_nft_calls.whitelistMint(
-      currentAccount,
-      whitelistAmount,
-      dispatch
-    );
-    await delay(10000);
-    await onRefresh();
+
+    try {
+      setAction("whitelist");
+
+      dispatch({
+        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+        payload: {
+          status: "Start",
+        },
+      });
+
+      await artzero_nft_calls.whitelistMint(
+        currentAccount,
+        whitelistAmount,
+        dispatch
+      );
+
+      // await delay(10000);
+      // await onRefresh();
+    } catch (error) {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+      });
+      setAction("");
+      toast.error(error);
+    }
   };
 
   const onPaidMint = async () => {
@@ -124,31 +164,49 @@ function MintHeader({ loading }) {
 
     const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
 
-    if (Number(mintMode) === 1) {
-      if (balance < fee1 + 0.01) {
-        toast.error("Not enough balance to mint");
-        return;
-      }
-      await artzero_nft_calls.paidMint(currentAccount, fee1, dispatch);
+    if (balance < fee1 + 0.01) {
+      toast.error("Not enough balance to mint");
+      return;
     }
 
-    await delay(10000);
-    await onRefresh();
+    if (Number(mintMode) === 1) {
+      try {
+        setAction("public");
+
+        dispatch({
+          type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+          payload: {
+            status: "Start",
+          },
+        });
+
+        await artzero_nft_calls.paidMint(currentAccount, fee1, dispatch);
+      } catch (error) {
+        dispatch({
+          type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+        });
+        setAction("");
+        toast.error(error);
+      }
+    }
+
+    // await delay(10000);
+    // await onRefresh();
   };
 
   const onRefresh = useCallback(async () => {
-    await ongetMintingFee();
+    await onGetMintingFee();
     await onGetPublicSaleAmount();
     await onGetTotalMinted();
-  }, []);
+  }, [onGetMintingFee, onGetPublicSaleAmount, onGetTotalMinted]);
 
   const fetchMintData = useCallback(async () => {
     await onRefresh();
-  }, []);
+  }, [onRefresh]);
 
   useEffect(() => {
     fetchMintData();
-  }, [currentAccount]);
+  }, [currentAccount, fetchMintData, loading]);
 
   return (
     <>
@@ -171,6 +229,7 @@ function MintHeader({ loading }) {
         </VStack>
 
         <Grid
+          color="#888"
           templateColumns="repeat(auto-fill, minmax(min(100%, 24rem), 1fr))"
           gap={6}
           maxW="6xl-mid"
@@ -186,7 +245,7 @@ function MintHeader({ loading }) {
                 <Text mt={3}>
                   Your address:{" "}
                   <span style={{ color: "#7ae7ff" }}>
-                    {truncateStr(currentAccount?.address, 9) || "n/a"}
+                    {truncateStr(currentAccount?.address, 6) || "n/a"}
                   </span>
                 </Text>
                 <Text mt={3}>
@@ -264,13 +323,33 @@ function MintHeader({ loading }) {
                     </NumberInputStepper>
                   </NumberInput>
 
-                  <Button
+                  <StatusBuyButton
+                    shouldDisabled={
+                      !whitelist ||
+                      totalMinted >= MAX_MINT_COUNT ||
+                      (addNftTnxStatus?.status &&
+                        !(!action || action === "whitelist"))
+                    }
+                    // shouldDisabled={action && action !== "whitelist"}
+                    // isDisabled={!whitelist || totalMinted >= MAX_MINT_COUNT}
+                    isDo={action === "whitelist"}
+                    type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                    text="whitelist"
+                    isLoading={addNftTnxStatus}
+                    loadingText={`${addNftTnxStatus?.status}`}
+                    onClick={onWhiteListMint}
+                    variant="outline"
+                    maxW="full"
+                    minW="225px"
+                    height="50px"
+                  />
+                  {/* <Button
                     isDisabled={!whitelist || totalMinted >= MAX_MINT_COUNT}
                     variant="outline"
                     onClick={() => onWhiteListMint()}
                   >
                     WhiteList Mint (FREE)
-                  </Button>
+                  </Button> */}
                 </Flex>
               </Box>
             </Flex>
@@ -321,9 +400,35 @@ function MintHeader({ loading }) {
                 ) : null}
               </Box>
 
-              <Button
+              <StatusBuyButton
+                shouldDisabled={
+                  Number(mintMode) === 2 ||
+                  Number(mintMode) <= 0 ||
+                  totalMinted >= MAX_MINT_COUNT ||
+                  (addNftTnxStatus?.status && !(!action || action === "public"))
+                }
+                // shouldDisabled={action && action !== "public"}
+                // isDisabled={
+                //   Number(mintMode) === 2 ||
+                //   Number(mintMode) <= 0 ||
+                //   totalMinted >= MAX_MINT_COUNT
+                // }
+                isDo={action === "public"}
+                type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                text="public"
+                isLoading={addNftTnxStatus}
+                loadingText={`${addNftTnxStatus?.status}`}
+                onClick={onPaidMint}
+                variant="solid"
+                maxW="full"
+                height="50px"
+              />
+              {/* <Button
                 isDisabled={
                   Number(mintMode) === 2 || Number(mintMode) <= 0 || totalMinted >= MAX_MINT_COUNT
+                  Number(mintMode) === 2 ||
+                  Number(mintMode) <= 0 ||
+                  totalMinted >= MAX_MINT_COUNT
                 }
                 spinnerPlacement="start"
                 isLoading={tnxStatus}
@@ -332,7 +437,7 @@ function MintHeader({ loading }) {
                 onClick={() => onPaidMint()}
               >
                 Mint Now
-              </Button>
+              </Button> */}
             </Flex>
           </Box>
         </Grid>
@@ -341,4 +446,4 @@ function MintHeader({ loading }) {
   );
 }
 
-export default MintHeader;
+export default memo(MintHeader);

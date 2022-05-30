@@ -91,10 +91,10 @@ const NFTTabCollectible = ({
             }
           }
         } else {
-          console.log(
-            "Detail NFTTabCollectible doLoad. => listBidder is: ",
-            listBidder
-          );
+          // console.log(
+          //   "Detail NFTTabCollectible doLoad. => listBidder is: ",
+          //   listBidder
+          // );
         }
       }
 

@@ -11,7 +11,6 @@ import {
 
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 
 import Layout from "@components/Layout/Layout";
 
@@ -30,41 +29,75 @@ import AnimationLoader from "@components/Loader/AnimationLoader";
 const MintPage = () => {
   const { currentAccount, keyringState } = useSubstrateState();
   const [myAZNFTs, setMyAZNFTs] = useState(null);
-  const [owner, setOwner] = useState(null);
+  const [, setOwner] = useState(null);
   const [loading, setLoading] = useState(null);
+  const [loadingTime, setLoadingTime] = useState(null);
 
   const dispatch = useDispatch();
 
-  const { tnxStatus } = useSelector((state) => state.account.accountLoaders);
+  const { addNftTnxStatus } = useSelector(
+    (state) => state.account.accountLoaders
+  );
+
+  // useEffect(() => {
+  //   const forceUpdateAfterMint = async () => {
+  //     if (tnxStatus?.status === "Finalized") {
+  //       dispatch({
+  //         type: AccountActionTypes.SET_TNX_STATUS,
+  //         payload: null,
+  //       });
+
+  //       setLoading(true);
+  //       toast.promise(
+  //         delay(10000).then(() => {
+  //           setMyAZNFTs(null);
+  //           setLoading(false);
+  //         }),
+  //         {
+  //           loading: "Loading new data...",
+  //           success: `Done!`,
+  //           error: "Could not load data.",
+  //         }
+  //       );
+  //     }
+  //   };
+
+  //   forceUpdateAfterMint();
+  // }, [tnxStatus, dispatch]);
 
   useEffect(() => {
     const forceUpdateAfterMint = async () => {
-      if (tnxStatus?.status === "Finalized") {
-        dispatch({
-          type: AccountActionTypes.SET_TNX_STATUS,
-          payload: null,
-        });
+      if (addNftTnxStatus?.status !== "End") {
+        return;
+      }
+
+      const { status, timeStamp, endTimeStamp } = addNftTnxStatus;
+
+      if (status && timeStamp && endTimeStamp) {
+        const diffTime = 9000 - Number(endTimeStamp - timeStamp);
+        const delayTime = diffTime >= 0 ? diffTime : 500;
 
         setLoading(true);
-        toast.promise(
-          delay(10000).then(() => {
-            setMyAZNFTs(null);
-            setLoading(false);
-          }),
-          {
-            loading: "Loading new data...",
-            success: `Done!`,
-            error: "Could not load data.",
-          }
-        );
+
+        setLoadingTime(delayTime / 1000);
+
+        await delay(delayTime).then(() => {
+          dispatch({
+            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+          });
+          setLoadingTime(null);
+          setLoading(false);
+        });
       }
     };
 
     forceUpdateAfterMint();
-  }, [tnxStatus, dispatch]);
+  }, [addNftTnxStatus, addNftTnxStatus?.status, dispatch, loadingTime]);
 
   useEffect(() => {
     const fetchMyAZNFTs = async () => {
+      setLoading(true);
+
       let tokenUri = await artzero_nft_calls.tokenUri(
         currentAccount?.address,
         1
@@ -108,21 +141,22 @@ const MintPage = () => {
         };
         myNFTs.push(obj);
       }
-      setMyAZNFTs(myNFTs);
-      setOwner(currentAccount?.address);
 
-      console.log(myNFTs);
+      setLoading(false);
+      setLoadingTime(null);
+      setOwner(currentAccount?.address);
+      return setMyAZNFTs(myNFTs);
     };
 
-    (myAZNFTs === null || owner !== currentAccount?.address) &&
-      currentAccount?.address &&
-      fetchMyAZNFTs();
-  }, [currentAccount, myAZNFTs, owner]);
+    // (myAZNFTs === null || owner !== currentAccount?.address) &&
+    //   currentAccount?.address &&
+    !loadingTime && fetchMyAZNFTs();
+  }, [currentAccount?.address, loadingTime]);
 
   return (
     <Layout>
       <Box as="section" maxW="container.3xl" position="relative">
-        <MintHeader setMyAZNFTs={setMyAZNFTs} loading={loading} />
+        <MintHeader loading={loading} />
 
         <Tabs isLazy align="center" colorScheme="brand.blue">
           <TabList bg="#000" borderBottomColor="#000">

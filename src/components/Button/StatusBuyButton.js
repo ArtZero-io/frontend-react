@@ -10,6 +10,10 @@ function StatusBuyButton({
   onClick,
   isDo,
   shouldDisabled,
+  minW = "",
+  maxW = "7rem",
+  variant = "solid",
+  height = 10,
 }) {
   const dispatch = useDispatch();
 
@@ -36,10 +40,11 @@ function StatusBuyButton({
       <>
         <Button
           display={isDo && isLoading ? "none" : "flex"}
-          variant="solid"
+          variant={variant}
           onClick={onClick}
-          h={10}
-          maxW={"7rem"}
+          h={height}
+          maxW={maxW}
+          w={minW}
           isDisabled={loadingText === "Start" || shouldDisabled}
         >
           {text === "buy"
@@ -50,16 +55,22 @@ function StatusBuyButton({
             ? "Remove bid"
             : text === "accept bid"
             ? "Accept bid"
+            : text === "whitelist"
+            ? "Whitelist mint (free)"
+            : text === "public"
+            ? "Mint now"
             : "Submit"}
         </Button>
+
         <Button
           display={isDo && isLoading ? "flex" : "none"}
           isDisabled={loadingText !== "Finalized" || shouldDisabled}
           onClick={onCloseHandler}
           variant="outline"
-          h={10}
-          maxW={"7rem"}
+          h={height}
+          maxW={maxW}
           fontSize="md"
+          width={minW}
         >
           {loadingText === "Start"
             ? "Please Sign"
@@ -68,6 +79,8 @@ function StatusBuyButton({
             : loadingText === "InBlock"
             ? "In block"
             : loadingText === "Finalized"
+            ? `All Done !`
+            : loadingText === "End"
             ? `All Done !`
             : ""}
         </Button>

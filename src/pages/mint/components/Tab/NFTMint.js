@@ -33,4 +33,4 @@ function NFTMintTab({ myAZNFTs }) {
   );
 }
 
-export default NFTMintTab;
+export default React.memo(NFTMintTab);
