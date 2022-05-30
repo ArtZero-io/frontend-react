@@ -39,6 +39,26 @@ async function owner(caller_account) {
   return null;
 }
 
+async function getAdminAddress(caller_account) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
+
+  const { result, output } = await contract.query.getAdminAddress(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
+
 async function totalSupply(caller_account) {
   if (!contract || !caller_account) {
     return null;
@@ -159,6 +179,7 @@ async function getMintMode(caller_account) {
     value: azero_value,
     gasLimit,
   });
+  console.log(result, output )
   if (result.isOk) {
     return output.toHuman();
   }
@@ -356,6 +377,53 @@ async function addWhitelist(caller_account, account, amount) {
   return unsubscribe;
 }
 
+async function initialize(caller_account, admin_address, name, symbol, total_supply, minting_fee, public_sale_amount) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  if (!isValidAddressPolkadotAddress(admin_address)) {
+    toast.error(`invalid inputs`);
+    return;
+  }
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+
+  contract.tx
+    .initialize({ gasLimit, value: azero_value },
+      admin_address, name, symbol, total_supply, minting_fee, public_sale_amount
+    )
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError", dispatchError.toString());
+          }
+        }
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+          toast.success(
+            `Initialize ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
+  return unsubscribe;
+}
+
 async function updateWhitelistAmount(caller_account, account, amount) {
   if (!contract || !caller_account) {
     return null;
@@ -519,6 +587,7 @@ async function approve(caller_account, operator_address, token_id, is_approve) {
 }
 
 const contract_calls = {
+  getAdminAddress,
   allowance,
   approve,
   getWhitelistAccount,
@@ -536,6 +605,7 @@ const contract_calls = {
   addWhitelist,
   updateWhitelistAmount,
   withdrawFee,
+  initialize
   // isLoaded,
 };
 

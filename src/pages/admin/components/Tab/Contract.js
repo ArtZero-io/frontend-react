@@ -32,6 +32,8 @@ function ContractTab() {
   const { activeAddress } = useSelector((s) => s.account);
 
   const [art0_NFT_owner, setArt0NFTOwner] = useState("");
+  const [azAdmin, setAZAdmin] = useState("");
+  const [mintMode,setMintMode] = useState(0);
   const [whitelistAmount, setWhitelistAmount] = useState(1);
   const [whitelistAddress, setWhitelistAddress] = useState("");
   const [whitelistCount, setWhitelistCount] = useState(0);
@@ -42,8 +44,11 @@ function ContractTab() {
   const onRefreshAZNFT = async () => {
 
     await getAZNFTContractBalance();
-
     await onGetOwner();
+
+    await onGetMintMode();
+
+    await onGetAdmin();
 
     await onGetWhitelistCount();
     await delay(1000);
@@ -91,6 +96,28 @@ function ContractTab() {
     if (res) setArt0NFTOwner(res);
     else setArt0NFTOwner("");
   };
+  const onGetAdmin = async (e) => {
+    let res = await artzero_nft_calls.getAdminAddress(currentAccount);
+
+    if (res) setAZAdmin(res);
+    else setAZAdmin("");
+  };
+  const onGetMintMode = async (e) => {
+    let res = await artzero_nft_calls.getMintMode(currentAccount);
+
+    if (res) setMintMode(res);
+    else setMintMode(0);
+  };
+  // const onInitialize = async() =>{
+  //   if (art0_NFT_owner !== activeAddress) {
+  //     toast.error(`You are not owner of this contract`);
+  //     return;
+  //   }
+  //   await artzero_nft_calls.initialize(
+  //     currentAccount,
+  //     activeAddress, 'AZ NFT', 'AZNFT', 10000, 100 * (10 ** 12), 5000
+  //   );
+  // }
   const onAddWhitelist = async () => {
     if (art0_NFT_owner !== activeAddress) {
       toast.error(`You are not owner of this contract`);
@@ -164,10 +191,28 @@ function ContractTab() {
 
                 <Flex alignItems="start" pr={20}>
                   <Text ml={1} color="brand.grayLight">
+                    Admin Address:{" "}
+                  </Text>
+                  <Text color="#7ae7ff" ml={2}>
+                    {truncateStr(azAdmin, 9)}
+                  </Text>
+                </Flex>
+
+                <Flex alignItems="start" pr={20}>
+                  <Text ml={1} color="brand.grayLight">
                     Contract Balance:{" "}
                   </Text>
                   <Text color="#fff" ml={2}>
                     {azNFTContractBalance} SZERO
+                  </Text>
+                </Flex>
+
+                <Flex alignItems="start" pr={20}>
+                  <Text ml={1} color="brand.grayLight">
+                    Mint Mode:{" "}
+                  </Text>
+                  <Text color="#fff" ml={2}>
+                    {mintMode}
                   </Text>
                 </Flex>
               </Stack>
@@ -195,6 +240,14 @@ function ContractTab() {
                     h="full"
                   >
                     <Box h="full">
+                      {/*<Button
+                        mt={7}
+                        variant="solid"
+                        w="full"
+                        onClick={() => onInitialize()}
+                      >
+                        Initialize
+                      </Button>*/}
                       <Heading size="h4">Owner Withdraw AZERO</Heading>
                       <Box mt={7}>
                         <Text color={!whitelist ? "F888" : "#fff"} py={2}>
