@@ -160,6 +160,9 @@ function AddLevelsModal({ name, isOpen, onClose }) {
                   </Button>
                 </Flex>
                 <Button
+                  disabled={
+                    !(arrayHelpers?.form?.dirty && arrayHelpers?.form?.isValid)
+                  }
                   mb={6}
                   w="full"
                   variant="solid"
