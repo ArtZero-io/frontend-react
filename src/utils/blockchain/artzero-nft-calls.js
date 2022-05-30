@@ -129,15 +129,20 @@ async function getWhitelist(caller_account, account) {
   const gasLimit = -1;
   const azero_value = 0;
   //console.log(contract);
-
-  const { result, output } = await contract.query.getWhitelist(
-    address,
-    { value: azero_value, gasLimit },
-    account
-  );
-  if (result.isOk) {
-    return output.toHuman();
+  try{
+    const { result, output } = await contract.query.getWhitelist(
+      address,
+      { value: azero_value, gasLimit },
+      account
+    );
+    if (result.isOk) {
+      return output.toHuman();
+    }
   }
+  catch(e){
+    return null;
+  }
+
   return null;
 }
 
