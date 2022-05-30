@@ -74,7 +74,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
             })
           )
             .min(0)
-            .max(6),
+            .max(10),
           levels: Yup.array(
             Yup.object().shape({
               name: Yup.string()
@@ -89,7 +89,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
             })
           )
             .min(0)
-            .max(6),
+            .max(10),
         })}
         onSubmit={async (values, { setSubmitting }) => {
           !avatarIPFSUrl && toast.error("Upload images first");
@@ -140,7 +140,6 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                 nft721_psp34_standard_contract
               );
 
-              
               dispatch({
                 type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
                 payload: {
