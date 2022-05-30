@@ -24,6 +24,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import useInterval from "use-interval";
 import { motion } from "framer-motion";
+import { shortenNumber } from "@utils";
 
 function MyNFTCard({
   nftContractAddress,
@@ -204,7 +205,7 @@ function MyNFTCard({
                   {is_for_sale && "Sale at"}
                 </Text>
                 <Tag>
-                  <TagLabel>{price / 10 ** 12}</TagLabel>
+                  <TagLabel>{shortenNumber(price / 10 ** 12)}</TagLabel>
                   <TagRightIcon as={AzeroIcon} />
                 </Tag>
               </VStack>

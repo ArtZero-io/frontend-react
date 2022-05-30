@@ -79,15 +79,15 @@ function GeneralPage() {
         Promise.all([nftListPromise, totalStakedPromise]).then(
           ([nftList, totalStaked]) => {
             const nftForSale = nftList.reduce(function (a, b) {
-              return (a.is_for_sale & 1) + (b.is_for_sale & 1);
+              return a + (b.is_for_sale | 0);
             }, 0);
-
             let info = [{ address: currentAccount?.address }];
 
             info = [
               ...info,
               { name: "NFTs for sale", value: nftForSale },
-              { name: "Owned NFTs", value: nftList.length },
+              { name: "Staked NFTs", value: totalStaked },
+              { name: "Total Owned NFTs", value: nftList.length + totalStaked },
             ];
 
             setDashboardInfo(info);

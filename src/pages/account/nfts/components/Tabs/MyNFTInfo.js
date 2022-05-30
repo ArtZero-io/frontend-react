@@ -38,6 +38,7 @@ import { getCachedImageShort, truncateStr } from "@utils";
 import { Link as ReactRouterLink } from "react-router-dom";
 import profile_calls from "@utils/blockchain/profile_calls";
 import { motion, AnimatePresence } from "framer-motion";
+import { shortenNumber } from "@utils";
 
 function MyNFTTabInfo({
   avatar,
@@ -609,7 +610,7 @@ function MyNFTTabInfo({
                   <Text color="brand.grayLight">For Sale At</Text>
 
                   <Text color="#fff" mx={2}>
-                    {price / 10 ** 12}
+                    {shortenNumber(price / 10 ** 12)}
                   </Text>
                   <AzeroIcon />
                 </Flex>
