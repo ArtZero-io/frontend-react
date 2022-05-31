@@ -59,10 +59,10 @@ function DataTable({
               <Table variant="striped" size="md" colorScheme="blackAlpha">
                 <Thead>
                   <Tr>
-                    {tableHeaders?.map((item) => (
+                    {tableHeaders?.map((item, idx) => (
                       <Th
                         textAlign="center"
-                        key={item}
+                        key={idx}
                         fontFamily="Evogria"
                         fontSize="sm"
                         fontWeight="normal"

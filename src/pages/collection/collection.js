@@ -7,7 +7,7 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -29,6 +29,8 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 import { usePagination } from "@ajna/pagination";
 import PaginationMP from "@components/Pagination/Pagination";
 import { APICall } from "../../api/client";
+import TabActivity from "./component/TabActivity";
+import useInterval from "../../hooks/useInterval";
 
 const NUMBER_PER_PAGE = 10;
 
@@ -46,6 +48,9 @@ function CollectionPage() {
   const [loadingTime, setLoadingTime] = useState(null);
   const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
   const [isShowUnlisted, setIsShowUnlisted] = useState(1);
+  const [tokenUriType1, setTokenUriType1] = useState("");
+  const [latestBlockNumber, setLatestBlockNumber] = useState(null);
+
   const {
     pagesCount,
     currentPage,
@@ -75,7 +80,6 @@ function CollectionPage() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line no-unused-vars
     const forceUpdateAfterCreateNFT = async () => {
       if (addNftTnxStatus?.status !== "End") {
         return;
@@ -224,6 +228,8 @@ function CollectionPage() {
 
           const token_uri = output.toHuman()?.replace("1.json", "");
 
+          setTokenUriType1(token_uri);
+
           Promise.all(
             NFTList.map(async (item) => {
               const res = await getMetaDataType1(item.tokenID, token_uri);
@@ -271,15 +277,66 @@ function CollectionPage() {
         />
       ),
     },
-    // {
-    //   label: "Activity",
-    //   content: <TabActivity />,
-    // },
+    {
+      label: "Activity",
+      content: (
+        <TabActivity
+          tokenUriType1={tokenUriType1}
+          latestBlockNumber={latestBlockNumber}
+        />
+      ),
+    },
   ];
 
   // useEffect(() => {
   //   window.scrollTo(0, window?.scrollY);
   // }, []);
+
+  const fetchPlatformEvents = useCallback(async () => {
+    try {
+      const getPurchaseEvents = await APICall.getPurchaseEvents();
+      const getBidWinEvents = await APICall.getBidWinEvents();
+      const getUnlistEvents = await APICall.getUnlistEvents();
+      const getNewListEvents = await APICall.getNewListEvents();
+
+      let result;
+
+      await Promise.all([
+        getPurchaseEvents,
+        getBidWinEvents,
+        getUnlistEvents,
+        getNewListEvents,
+      ]).then(async (res) => {
+        result = res
+          .reduce((a, b) => [...a, ...b])
+          .sort((a, b) => b.blockNumber - a.blockNumber);
+      });
+
+      const latestBlockNumber = result?.length && result[0].blockNumber;
+
+      return { events: result, latestBlockNumber };
+    } catch (error) {
+      console.log("error", error);
+
+      return error;
+    }
+  }, []);
+
+  const initEvents = async () => {
+    const payload = await fetchPlatformEvents();
+
+    dispatch({
+      type: AccountActionTypes.SET_EVENTS,
+      payload,
+    });
+
+    const latestBlockNum =
+      payload?.events?.length && payload?.events[0].blockNumber;
+
+    setLatestBlockNumber(latestBlockNum);
+  };
+
+  useInterval(() => initEvents(), 10000);
 
   return (
     <Layout
@@ -299,6 +356,7 @@ function CollectionPage() {
                   px="0.5px"
                   pb="20px"
                   fontSize="lg"
+                  mx="25px"
                 >
                   {tab.label}
                 </Tab>
@@ -308,7 +366,6 @@ function CollectionPage() {
             <TabPanels h="full" minH="md" bg="#171717">
               {tabData.map((tab, index) => (
                 <TabPanel
-                  // pt={4}
                   px={{ base: "12px", "2xl": "100px" }}
                   pt="40px"
                   key={index}
@@ -316,6 +373,7 @@ function CollectionPage() {
                   {tab.content}
 
                   <Flex
+                    display={tab.label === "Activity" ? "none" : "flex"}
                     w="full"
                     py="1.5rem"
                     alignItems={{ base: "start", xl: "end" }}

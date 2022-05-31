@@ -12,4 +12,7 @@ export const AccountActionTypes = {
   // NFT
   SET_ADD_NFT_TNX_STATUS: "SET_ADD_NFT_TNX_STATUS",
   CLEAR_ADD_NFT_TNX_STATUS: "CLEAR_ADD_NFT_TNX_STATUS",
+  // Move to new set for TNX
+  //EVENTS
+  SET_EVENTS: "SET_EVENTS",
 };

@@ -94,4 +94,67 @@ export const APICall = {
       collection_address,
     });
   },
+  getNFTByID: async ({ collection_address, token_id }) => {
+    return await client("POST", "/getNFTByID", {
+      collection_address,
+      token_id,
+    });
+  },
+
+  // Event API Calls
+  getPurchaseEvents: async () => {
+    let result = await client("POST", "/getPurchaseEvents", {
+      limit: 10,
+      offset: 0,
+      sort: -1,
+    });
+
+    result = result.map((item) => {
+      return { ...item, type: "PURCHASE" };
+    });
+
+    return result;
+  },
+
+  getBidWinEvents: async () => {
+    let result = await client("POST", "/getBidWinEvents", {
+      limit: 10,
+      offset: 0,
+      sort: -1,
+    });
+
+    result = result.map((item) => {
+      return { ...item, type: "BID ACCEPTED" };
+    });
+
+    return result;
+  },
+
+  getUnlistEvents: async () => {
+    let result = await client("POST", "/getUnlistEvents", {
+      limit: 10,
+      offset: 0,
+      sort: -1,
+    });
+
+    result = result.map((item) => {
+      return { ...item, type: "UNLIST" };
+    });
+
+    return result;
+  },
+
+  getNewListEvents: async () => {
+    let result = await client("POST", "/getNewListEvents", {
+      limit: 10,
+      offset: 0,
+      sort: -1,
+    });
+
+    result = result.map((item) => {
+      return { ...item, type: "LIST" };
+    });
+
+    return result;
+  },
 };

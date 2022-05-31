@@ -10,6 +10,7 @@ const activeAddressLocal = JSON.parse(
 );
 
 const initialState = {
+  platformEvents: null,
   activeAddress: activeAddressLocal || null,
   accountLoaders: {
     getProfile: false,
@@ -25,6 +26,11 @@ const accountReducer = (state = initialState, action) => {
   // console.log("action.type", action.type);
   // console.log("action.payload", action.payload);
   switch (action.type) {
+    case AccountActionTypes.SET_EVENTS:
+      return {
+        ...state,
+        platformEvents: action.payload,
+      };
     case AccountActionTypes.GET_PROFILE:
       return {
         ...state,
