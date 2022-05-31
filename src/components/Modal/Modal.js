@@ -79,8 +79,8 @@ export default function ResponsivelySizedModal({
         p={0}
         h="full"
         w="full"
-        maxH={{ base: "28rem", "2xl": "40rem" }}
-        maxW={{ base: "58rem", "2xl": "78rem" }}
+        maxH={{ base: "28rem", xl: "30rem", "2xl": "40rem" }}
+        maxW={{ base: "58rem", xl: "60rem","2xl": "78rem" }}
       >
         <ModalCloseButton
           position="absolute"

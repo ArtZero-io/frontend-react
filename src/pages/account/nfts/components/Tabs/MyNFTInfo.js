@@ -338,7 +338,7 @@ function MyNFTTabInfo({
   }, [currentAccount, is_for_sale, owner, saleInfo?.nftOwner]);
   return (
     <Flex h="full">
-      <Box minW={{ base: "20rem", "2xl": "30rem" }} bg="#372648">
+      <Box minW={{ base: "360px", "2xl": "30rem" }} bg="#372648">
         <Image
           w="full"
           h="full"
@@ -346,7 +346,7 @@ function MyNFTTabInfo({
           alt="nft-img"
           objectFit="cover"
           src={avatar && getCachedImageShort(avatar, 500)}
-          fallback={<Skeleton minW={{ base: "20rem", "2xl": "30rem" }} />}
+          fallback={<Skeleton minW={{ base: "360px", "2xl": "30rem" }} />}
         />
       </Box>
 

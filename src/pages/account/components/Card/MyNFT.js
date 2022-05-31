@@ -168,7 +168,7 @@ function MyNFTCard({
         </Square>
 
         <Box w="full" p={3}>
-          <Heading mb={3} size="h6" textAlign="left">
+          <Heading mb={3} fontSize={["15px", "16px", "17px"]} textAlign="left">
             {nftName}
           </Heading>
           <Flex align="center" justify="start" w="full" mb={3}>

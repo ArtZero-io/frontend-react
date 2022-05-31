@@ -94,13 +94,13 @@ function WalletNotConnected(props) {
               {SUPPORTED_WALLET_LIST.map(
                 ({ extensionName, title, installUrl, installed }) => (
                   <Flex
+                    key={extensionName}
                     minW="36"
                     alignItems="center"
                     _hover={{ bg: "blackAlpha.900" }}
                   >
                     <MenuItem
                       w="170px"
-                      key={extensionName}
                       isDisabled={!installed}
                       onClick={() => handleConnect(extensionName)}
                       _hover={{ bg: "blackAlpha.900" }}
