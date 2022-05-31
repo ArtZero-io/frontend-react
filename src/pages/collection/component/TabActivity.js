@@ -2,15 +2,15 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import EventTable from "@components/Table/EventTable";
 import { useSelector } from "react-redux";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
+
 import { getPublicCurrentAccount, truncateStr } from "@utils";
 import profile_calls from "@utils/blockchain/profile_calls";
 import { APICall, clientAPI } from "../../../api/client";
+import AnimationLoader from "@components/Loader/AnimationLoader";
 
 function TabActivity({ tokenUriType1, latestBlockNumber }) {
   const { platformEvents } = useSelector((s) => s.account);
 
-  const { collection_address } = useParams();
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(null);
   // eslint-disable-next-line no-unused-vars
@@ -35,71 +35,68 @@ function TabActivity({ tokenUriType1, latestBlockNumber }) {
     setLoading(true);
 
     const collectionEventsFull = async () => {
-      const collectionEvents = platformEvents?.events?.filter(
-        (i) => i.nftContractAddress === collection_address
-      );
-
       try {
-        await Promise.all(
-          collectionEvents?.map(async (event) => {
-            const buyerName = await getUsername({
-              accountAddress: event.buyer,
-            });
-
-            const sellerName = await getUsername({
-              accountAddress: event.seller,
-            });
-
-            const traderName = await getUsername({
-              accountAddress: event.trader,
-            });
-
-            const [{ name, contractType }] =
-              await APICall.getCollectionByAddress({
-                collection_address: event.nftContractAddress,
+        platformEvents?.events &&
+          (await Promise.all(
+            platformEvents?.events?.map(async (event) => {
+              const buyerName = await getUsername({
+                accountAddress: event.buyer,
               });
 
-            event = {
-              ...event,
-              buyerName,
-              sellerName,
-              traderName,
-              collectionName: name,
-            };
-
-            if (contractType === 2) {
-              const [{ attributesValue }] = await APICall.getNFTByID({
-                collection_address: event.nftContractAddress,
-                token_id: event.tokenID,
+              const sellerName = await getUsername({
+                accountAddress: event.seller,
               });
+
+              const traderName = await getUsername({
+                accountAddress: event.trader,
+              });
+
+              const [{ name, contractType }] =
+                await APICall.getCollectionByAddress({
+                  collection_address: event.nftContractAddress,
+                });
 
               event = {
                 ...event,
-                nftName: attributesValue[0],
-                avatar: attributesValue[2],
+                buyerName,
+                sellerName,
+                traderName,
+                collectionName: name,
               };
-            }
 
-            if (contractType === 1) {
-              const { name, avatar } = await getMetaDataType1(
-                event.tokenID,
-                tokenUriType1
-              );
+              if (contractType === 2) {
+                const [{ attributesValue }] = await APICall.getNFTByID({
+                  collection_address: event.nftContractAddress,
+                  token_id: event.tokenID,
+                });
 
-              event = {
-                ...event,
-                nftName: name,
-                avatar,
-              };
-            }
+                event = {
+                  ...event,
+                  nftName: attributesValue[0],
+                  avatar: attributesValue[2],
+                };
+              }
 
-            return event;
-          })
-        ).then((arr) => {
-          setLoading(false);
+              if (contractType === 1) {
+                const { name, avatar } = await getMetaDataType1(
+                  event.tokenID,
+                  tokenUriType1
+                );
 
-          setCollectionEventsFull(arr);
-        });
+                event = {
+                  ...event,
+                  nftName: name,
+                  avatar,
+                };
+              }
+
+              return event;
+            })
+          ).then((arr) => {
+            setLoading(false);
+
+            setCollectionEventsFull(arr);
+          }));
       } catch (error) {
         console.log("error", error);
       }
@@ -178,14 +175,17 @@ function TabActivity({ tokenUriType1, latestBlockNumber }) {
             </Tab>
           ))}
         </TabList>
-
-        <TabPanels h="full" minH="md" bg="#171717">
-          {tabData.map((tab, index) => (
-            <TabPanel p="0px" key={index}>
-              {tab.content}
-            </TabPanel>
-          ))}
-        </TabPanels>
+        {!platformEvents?.events ? (
+          <AnimationLoader loadingTime={5} />
+        ) : (
+          <TabPanels h="full" minH="md" bg="#171717">
+            {tabData.map((tab, index) => (
+              <TabPanel p="0px" key={index}>
+                {tab.content}
+              </TabPanel>
+            ))}
+          </TabPanels>
+        )}
       </Tabs>
     </>
   );

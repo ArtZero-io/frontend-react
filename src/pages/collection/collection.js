@@ -294,10 +294,11 @@ function CollectionPage() {
 
   const fetchPlatformEvents = useCallback(async () => {
     try {
-      const getPurchaseEvents = await APICall.getPurchaseEvents();
-      const getBidWinEvents = await APICall.getBidWinEvents();
-      const getUnlistEvents = await APICall.getUnlistEvents();
-      const getNewListEvents = await APICall.getNewListEvents();
+      
+      const getPurchaseEvents = await APICall.getPurchaseEvents({collection_address});
+      const getBidWinEvents = await APICall.getBidWinEvents({collection_address});
+      const getUnlistEvents = await APICall.getUnlistEvents({collection_address});
+      const getNewListEvents = await APICall.getNewListEvents({collection_address});
 
       let result;
 

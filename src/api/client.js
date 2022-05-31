@@ -102,11 +102,12 @@ export const APICall = {
   },
 
   // Event API Calls
-  getPurchaseEvents: async () => {
+  getPurchaseEvents: async ({ collection_address }) => {
     let result = await client("POST", "/getPurchaseEvents", {
       limit: 10,
       offset: 0,
       sort: -1,
+      collection_address,
     });
 
     result = result.map((item) => {
@@ -116,11 +117,12 @@ export const APICall = {
     return result;
   },
 
-  getBidWinEvents: async () => {
+  getBidWinEvents: async ({ collection_address }) => {
     let result = await client("POST", "/getBidWinEvents", {
       limit: 10,
       offset: 0,
       sort: -1,
+      collection_address,
     });
 
     result = result.map((item) => {
@@ -130,11 +132,12 @@ export const APICall = {
     return result;
   },
 
-  getUnlistEvents: async () => {
+  getUnlistEvents: async ({ collection_address }) => {
     let result = await client("POST", "/getUnlistEvents", {
       limit: 10,
       offset: 0,
       sort: -1,
+      collection_address,
     });
 
     result = result.map((item) => {
@@ -144,11 +147,12 @@ export const APICall = {
     return result;
   },
 
-  getNewListEvents: async () => {
+  getNewListEvents: async ({ collection_address }) => {
     let result = await client("POST", "/getNewListEvents", {
       limit: 10,
       offset: 0,
       sort: -1,
+      collection_address,
     });
 
     result = result.map((item) => {

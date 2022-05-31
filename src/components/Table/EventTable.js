@@ -20,7 +20,6 @@ import { getCachedImageShort } from "../../utils";
 import { memo } from "react";
 
 function EventTable({ tableHeaders, tableData }) {
-  console.log(" tableData", tableData);
   return (
     <>
       {tableData?.length === 0 ? (
