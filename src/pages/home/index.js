@@ -13,6 +13,7 @@ import {
   Input,
   Image,
   useBreakpointValue,
+  Button,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import HomeLayout from "@components/Layout/HomeLayout";
@@ -29,8 +30,10 @@ import UFO1 from "@theme/assets/ufo-1.png";
 import UFO2 from "@theme/assets/ufo-2.png";
 import UFO3 from "@theme/assets/ufo-3.png";
 import { AnimatePresence, motion } from "framer-motion";
+import { useHistory } from "react-router-dom";
 
 function HomePage() {
+  const history = useHistory();
   const [emailSubscribed, setEmailSubscribed] = useState("");
 
   const profile = [
@@ -85,7 +88,21 @@ function HomePage() {
       top: "-180px",
       right: "-240px",
     },
+    md: {
+      position: "absolute",
+      top: "0px",
+      right: "-140px",
+      width: "490px",
+      height: "445px",
+    },
     xl: {
+      position: "absolute",
+      top: "0px",
+      right: "-40px",
+      width: "490px",
+      height: "445px",
+    },
+    "2xl": {
       position: "absolute",
       top: "0px",
       right: "-140px",
@@ -163,7 +180,7 @@ function HomePage() {
         <Box w="full">
           <Box
             position="relative"
-            overflow={["hidden", "visible", "visible"]}
+            overflow={{ base: "hidden", lg: "hidden", xl: "visible" }}
             mx="auto"
             maxW={{ base: "6xl", "2xl": "7xl" }}
             pt={["80px", "220px", "220px"]}
@@ -421,7 +438,7 @@ function HomePage() {
               px={4}
               mx="auto"
               w={["300px", "full", "full"]}
-              maxW="77rem"
+              maxW={{ md: "40rem", lg: "57rem", xl: "77rem" }}
               ratio={16 / 9}
               justifyContent="center"
             >
@@ -432,6 +449,40 @@ function HomePage() {
               />
             </AspectRatio>
           </Box>
+          <motion.div
+            initial="initial"
+            whileHover="hover"
+            variants={{
+              initial: {
+                scale: 1,
+              },
+
+              hover: {
+                scale: 0.99,
+              },
+            }}
+            transition={{
+              curve: [0.17, 0.67, 0.83, 0.67],
+            }}
+          >
+            <Button
+              data-aos="fade-up"
+              data-aos-delay="300"
+              data-aos-duration="1000"
+              display={["block", "none", "none"]}
+              mx="auto"
+              mb="45px"
+              cursor="pointer"
+              bg="brand.blue"
+              h="50px"
+              fontSize={["15px", "18px", "18px"]}
+              w="210px"
+              _hover={{ scale: 0.99 }}
+              onClick={() => history.push("/marketplace")}
+            >
+              Go To Marketplace
+            </Button>
+          </motion.div>
         </Box>
 
         <Box pos="relative" w="full">
@@ -469,7 +520,7 @@ function HomePage() {
               fontSize={["13px", null, "18px"]}
               lineHeight={["21px", null, "30px"]}
               textAlign="left"
-              bgImage={{ base: FrameHomepageMobile, xl: FrameHomepage }}
+              bgImage={{ base: FrameHomepageMobile, md: FrameHomepage }}
               bgPosition="center"
               bgRepeat="no-repeat"
             >
@@ -522,7 +573,7 @@ function HomePage() {
               textAlign="left"
               bgImage={{
                 base: FrameHomepageSmallMobile,
-                xl: FrameHomepageSmall,
+                md: FrameHomepageSmall,
               }}
               bgPosition="center"
               bgRepeat="no-repeat"

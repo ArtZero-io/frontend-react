@@ -24,7 +24,7 @@ const HomeLayout = ({ children }) => {
         inset="0"
         w="full"
         // h={"full"}
-        h={["2420px", "4090px", "4023px"]}
+        h={["2470px", "4090px", "4023px"]}
         overflow="hidden"
         align="center"
       >
