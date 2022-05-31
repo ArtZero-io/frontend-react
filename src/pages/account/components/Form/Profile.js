@@ -39,16 +39,16 @@ const ProfileForm = ({ profile }) => {
             .max(150, "Must be less than 150 characters"),
           twitter: Yup.string()
             .url("This must be a valid URL")
-            .max(30, "Must be 30 characters or less"),
+            .max(50, "Must be 50 characters or less"),
           facebook: Yup.string()
             .url("This must be a valid URL")
-            .max(30, "Must be 30 characters or less"),
+            .max(50, "Must be 50 characters or less"),
           telegram: Yup.string()
             .url("This must be a valid URL")
-            .max(30, "Must be 30 characters or less"),
+            .max(50, "Must be 50 characters or less"),
           instagram: Yup.string()
             .url("This must be a valid URL")
-            .max(30, "Must be 30 characters or less"),
+            .max(50, "Must be 50 characters or less"),
         })}
         onSubmit={async (values, { setSubmitting }) => {
           avatarIPFSUrl && (values.avatar = avatarIPFSUrl);
@@ -63,7 +63,7 @@ const ProfileForm = ({ profile }) => {
           // console.log(" a, v", a, v);
 
           if (!a.length || !v.length) return toast.error("Please check again.");
-          
+
           dispatch(setMultipleAttributes(currentAccount, a, v));
         }}
       >
