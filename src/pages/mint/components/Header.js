@@ -325,6 +325,7 @@ function MintHeader({ loading }) {
 
                   <StatusBuyButton
                     shouldDisabled={
+                      whitelist?.claimedAmount >= whitelist?.whitelistAmount ||
                       !whitelist ||
                       totalMinted >= MAX_MINT_COUNT ||
                       (addNftTnxStatus?.status &&
