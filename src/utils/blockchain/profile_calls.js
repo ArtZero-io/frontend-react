@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
 import { web3FromSource } from "../wallets/extension-dapp";
 import { AccountActionTypes } from "@store/types/account.types";
-import { truncateStr } from "..";
+import { handleContractCallAnimation } from "..";
 
 // let account;
 let contract;
@@ -18,17 +18,6 @@ export const setProfileContract = (api, data) => {
   );
   // console.log("contract setProfileContract", contract);
 };
-
-// async function getWalletAddress() {
-//   const address = account?.address;
-
-//   if (address) {
-//     return address;
-//   } else {
-//     console.log(`Unable to get wallet address.`);
-//     return "";
-//   }
-// }
 
 export async function getProfileOnChain({ callerAccount, accountAddress }) {
   const address = callerAccount?.address;
@@ -162,22 +151,24 @@ export async function setMultipleAttributesProfileOnChain(
           }
 
           if (status) {
-            const statusToHuman = Object.entries(status.toHuman());
+            handleContractCallAnimation(status, dispatchError, dispatch);
 
-            if (Object.keys(status.toHuman())[0] === "0") {
-              dispatch({
-                type: AccountActionTypes.SET_TNX_STATUS,
-                payload: { status: "Ready" },
-              });
-            } else {
-              dispatch({
-                type: AccountActionTypes.SET_TNX_STATUS,
-                payload: {
-                  status: statusToHuman[0][0],
-                  value: truncateStr(statusToHuman[0][1], 6),
-                },
-              });
-            }
+            // const statusToHuman = Object.entries(status.toHuman());
+
+            // if (Object.keys(status.toHuman())[0] === "0") {
+            //   dispatch({
+            //     type: AccountActionTypes.SET_TNX_STATUS,
+            //     payload: { status: "Ready" },
+            //   });
+            // } else {
+            //   dispatch({
+            //     type: AccountActionTypes.SET_TNX_STATUS,
+            //     payload: {
+            //       status: statusToHuman[0][0],
+            //       value: truncateStr(statusToHuman[0][1], 6),
+            //     },
+            //   });
+            // }
 
             // const statusText = Object.keys(status.toHuman())[0];
             // toast.success(
@@ -191,8 +182,14 @@ export async function setMultipleAttributesProfileOnChain(
       .then((unsub) => {
         return (unsubscribe = unsub);
       })
-      .catch((e) => console.log("e", e));
+      .catch((e) => {
+        dispatch({
+          type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+        });
+        const mess = `Tnx is ${e.message}`;
 
+        toast.error(mess);
+      });
   return unsubscribe;
 }
 

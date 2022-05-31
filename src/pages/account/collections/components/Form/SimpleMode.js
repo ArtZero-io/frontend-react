@@ -418,19 +418,6 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                   loadingText={`${addCollectionTnxStatus?.status}`}
                   mode={mode}
                 />
-                {/* <Button
-                  disabled={!(dirty && isValid)}
-                  variant="solid"
-                  spinnerPlacement="start"
-                  isLoading={tnxStatus}
-                  loadingText={`${tnxStatus?.status}`}
-                  w="full"
-                  type="submit"
-                  mt={6}
-                  mb={{ xl: "16px", "2xl": "32px" }}
-                >
-                  {mode === "add" ? "Add new collection" : "Submit change"}
-                </Button> */}
               </Form>
             )}
           </Formik>

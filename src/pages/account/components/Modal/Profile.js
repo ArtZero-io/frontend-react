@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
 import ProfileForm from "../Form/Profile";
 import { delay } from "@utils";
+import { onCloseButtonModal } from "@utils";
 
 export default function ProfileModal({
   profile,
@@ -17,28 +18,40 @@ export default function ProfileModal({
   forceUpdate,
 }) {
   const dispatch = useDispatch();
-  const { tnxStatus } = useSelector((state) => state.account.accountLoaders);
+  const { addCollectionTnxStatus } = useSelector(
+    (state) => state.account.accountLoaders
+  );
 
   useEffect(() => {
     function onCloseHandler() {
-      if (tnxStatus?.status === "Finalized") {
-        dispatch({
-          type: AccountActionTypes.SET_TNX_STATUS,
-          payload: null,
-        });
+      if (addCollectionTnxStatus?.status === "End") {
+        // dispatch({
+        //   type: AccountActionTypes.SET_TNX_STATUS,
+        //   payload: null,
+        // });
 
-        delay(3000).then(() => {
+        delay(300).then(() => {
           forceUpdate();
           onClose();
+          dispatch({
+            type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+          });
         });
       }
     }
 
     onCloseHandler();
-  }, [tnxStatus, dispatch, forceUpdate, onClose]);
+  }, [addCollectionTnxStatus, dispatch, forceUpdate, onClose]);
 
   return (
-    <Modal onClose={onClose} isCentered isOpen={isOpen} size={"6xl"}>
+    <Modal
+      closeOnOverlayClick={false}
+      closeOnEsc={false}
+      onClose={onClose}
+      isCentered
+      isOpen={isOpen}
+      size={"6xl"}
+    >
       <ModalOverlay
         bg="blackAlpha.300"
         backdropFilter="blur(10px) hue-rotate(90deg)"
@@ -58,6 +71,13 @@ export default function ProfileModal({
           right="-8"
           borderWidth={2}
           borderRadius="0"
+          onClick={() => {
+            onCloseButtonModal({
+              status: addCollectionTnxStatus?.status,
+              dispatch,
+              type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
+            });
+          }}
         />
         <ProfileForm profile={profile} />
       </ModalContent>

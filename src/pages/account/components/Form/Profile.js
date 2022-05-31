@@ -1,8 +1,8 @@
 import * as Yup from "yup";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Formik, Form } from "formik";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Flex, VStack } from "@chakra-ui/react";
+import { Flex, VStack } from "@chakra-ui/react";
 
 import { setMultipleAttributes } from "@actions/account";
 
@@ -11,13 +11,21 @@ import ImageUpload from "@components/ImageUpload/Avatar";
 import SimpleModeTextarea from "@components/TextArea/TextArea";
 import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
+import { AccountActionTypes } from "@store/types/account.types";
+import StatusButton from "@components/Button/StatusButton";
 
 const ProfileForm = ({ profile }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState(null);
   const { currentAccount } = useSubstrateState();
 
   const dispatch = useDispatch();
-  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const { addCollectionTnxStatus } = useSelector(
+    (s) => s.account.accountLoaders
+  );
+
+  const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
+
+  const noImagesChange = currentAvatarIPFSUrl.current === avatarIPFSUrl;
 
   return (
     <>
@@ -63,85 +71,99 @@ const ProfileForm = ({ profile }) => {
           // console.log(" a, v", a, v);
 
           if (!a.length || !v.length) return toast.error("Please check again.");
-
+          dispatch({
+            type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
+            payload: {
+              status: "Start",
+            },
+          });
           dispatch(setMultipleAttributes(currentAccount, a, v));
         }}
       >
-        <Form>
-          <Flex w="full" justify="space-between">
-            <VStack minW={96} px={3}>
-              <ImageUpload
-                setImageIPFSUrl={setAvatarIPFSUrl}
-                profile={profile}
-              />
-            </VStack>
+        {({ values, dirty, isValid }) => (
+          <Form>
+            <Flex w="full" justify="space-between">
+              <VStack minW={96} px={3}>
+                <ImageUpload
+                  setImageIPFSUrl={setAvatarIPFSUrl}
+                  profile={profile}
+                />
+              </VStack>
 
-            <VStack flexGrow="1" ml={3}>
-              <Flex w="full" justify="space-between">
-                <SimpleModeInput
-                  width={"xs"}
-                  label="User Name"
-                  name="username"
-                  type="text"
-                  placeholder={profile?.username || "User Name"}
+              <VStack flexGrow="1" ml={3}>
+                <Flex w="full" justify="space-between">
+                  <SimpleModeInput
+                    width={"xs"}
+                    label="User Name"
+                    name="username"
+                    type="text"
+                    placeholder={profile?.username || "User Name"}
+                  />
+                  <SimpleModeTextarea
+                    width={"xs"}
+                    label="Bio"
+                    name="bio"
+                    type="text"
+                    rows={2}
+                    placeholder={profile?.bio || "Bio"}
+                  />
+                </Flex>
+                <Flex w="full" justify="space-between">
+                  <SimpleModeInput
+                    width={"xs"}
+                    label="Twitter URL"
+                    name="twitter"
+                    type="text"
+                    placeholder={profile?.twitter || "Twitter URL"}
+                  />
+                  <SimpleModeInput
+                    width={"xs"}
+                    label="Facebook URL"
+                    name="facebook"
+                    type="text"
+                    placeholder={profile?.facebook || "Facebook URL"}
+                  />
+                </Flex>
+                <Flex w="full" justify="space-between">
+                  <SimpleModeInput
+                    width={"xs"}
+                    label="Telegram URL"
+                    name="telegram"
+                    type="text"
+                    placeholder={profile?.telegram || "Telegram URL"}
+                  />
+                  <SimpleModeInput
+                    width={"xs"}
+                    label="Instagram URL"
+                    name="instagram"
+                    type="text"
+                    placeholder={profile?.instagram || "Instagram URL"}
+                  />
+                </Flex>
+                <StatusButton
+                  type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
+                  text="profile"
+                  disabled={!(dirty && isValid) && noImagesChange}
+                  isLoading={addCollectionTnxStatus}
+                  loadingText={`${addCollectionTnxStatus?.status}`}
                 />
-                <SimpleModeTextarea
-                  width={"xs"}
-                  label="Bio"
-                  name="bio"
-                  type="text"
-                  rows={2}
-                  placeholder={profile?.bio || "Bio"}
-                />
-              </Flex>
-              <Flex w="full" justify="space-between">
-                <SimpleModeInput
-                  width={"xs"}
-                  label="Twitter URL"
-                  name="twitter"
-                  type="text"
-                  placeholder={profile?.twitter || "Twitter URL"}
-                />
-                <SimpleModeInput
-                  width={"xs"}
-                  label="Facebook URL"
-                  name="facebook"
-                  type="text"
-                  placeholder={profile?.facebook || "Facebook URL"}
-                />
-              </Flex>
-              <Flex w="full" justify="space-between">
-                <SimpleModeInput
-                  width={"xs"}
-                  label="Telegram URL"
-                  name="telegram"
-                  type="text"
-                  placeholder={profile?.telegram || "Telegram URL"}
-                />
-                <SimpleModeInput
-                  width={"xs"}
-                  label="Instagram URL"
-                  name="instagram"
-                  type="text"
-                  placeholder={profile?.instagram || "Instagram URL"}
-                />
-              </Flex>
-              <Button
-                spinnerPlacement="start"
-                isLoading={tnxStatus}
-                loadingText={`${tnxStatus?.status}`}
-                // spinner={<BeatLoader size={8} />}
-                variant="solid"
-                w="full"
-                type="submit"
-                mt={8}
-                mb={{ xl: "16px", "2xl": "32px" }}
-              >
-                Save profile
-              </Button>
-            </VStack>
-          </Flex>
-        </Form>
+                {/* <Button
+                  spinnerPlacement="start"
+                  isLoading={tnxStatus}
+                  loadingText={`${tnxStatus?.status}`}
+                  // spinner={<BeatLoader size={8} />}
+                  variant="solid"
+                  w="full"
+                  type="submit"
+                  mt={8}
+                  mb={{ xl: "16px", "2xl": "32px" }}
+                >
+                  Save profile
+                </Button> */}
+              </VStack>
+            </Flex>
+          </Form>
+        )}
       </Formik>
     </>
   );
