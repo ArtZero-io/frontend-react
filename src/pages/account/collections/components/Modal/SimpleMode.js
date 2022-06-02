@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Button,
   Heading,
@@ -11,12 +12,13 @@ import {
   IconButton,
   Tooltip,
 } from "@chakra-ui/react";
-import { EditIcon, QuestionIcon } from "@chakra-ui/icons";
+import { QuestionIcon } from "@chakra-ui/icons";
 
 import SimpleModeForm from "../Form/SimpleMode";
 import { useDispatch, useSelector } from "react-redux";
 import { onCloseButtonModal } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
+import EditIcon from "@theme/assets/icon/Edit.js";
 
 function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
   const {
@@ -44,34 +46,36 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
         </Button>
       )}
       {mode === "edit" && (
-        <IconButton
-          zIndex={"1"}
-          pos="absolute"
-          top="2rem"
-          right="1.5rem"
-          aria-label="edit"
-          icon={
-            <EditIcon
-              color="#7ae7ff"
-              fontSize="1.5rem"
-              _hover={{
-                bg: "#171717",
-              }}
-              p={1}
-            />
-          }
-          size="icon"
-          borderWidth={0}
-          variant="iconOutline"
-          onClick={() => onOpenSimpleMode()}
-          h={0}
-          _hover={{
-            h: 0,
-          }}
-          _focus={{
-            h: 0,
-          }}
-        />
+        <>
+          <IconButton
+            zIndex={"1"}
+            pos="absolute"
+            top="2px"
+            right="2px"
+            h="40px"
+            minW="40px"
+            aria-label="edit"
+            icon={
+              <EditIcon
+                id="abc1"
+                color="currentColor"
+                width="17px"
+                height="17px"
+                p="0"
+              />
+            }
+            size="icon"
+            borderWidth={0}
+            variant="iconSolid"
+            _hover={{
+              color: "#000",
+              bg: "#7ae7ff",
+            }}
+            bg="black"
+            color="#7ae7ff"
+            onClick={() => onOpenSimpleMode()}
+          />
+        </>
       )}
       <Modal
         scrollBehavior={"inside"}

@@ -24,7 +24,6 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import useInterval from "use-interval";
 import { motion } from "framer-motion";
-import { shortenNumber } from "@utils";
 
 function MyNFTCard({
   nftContractAddress,
@@ -199,58 +198,63 @@ function MyNFTCard({
           ) : null}
 
           {(is_for_sale || isBid) && (
-            <Flex align="center" justify="start" w="full">
-              <VStack align="start">
-                <Text ml={1} color="brand.grayLight">
-                  {is_for_sale && "Sale at"}
-                </Text>
-                <Tag>
-                  <TagLabel>{shortenNumber(price / 10 ** 12)}</TagLabel>
-                  <TagRightIcon as={AzeroIcon} />
-                </Tag>
-              </VStack>
-              <Spacer />
-
-              <VStack align="start">
-                <Text ml={1} color="brand.grayLight">
-                  {isBid?.status && "My Offer"}
-                </Text>
-                {isBid?.status ? (
+            <>
+              <Flex align="center" justify="start" w="full">
+                <VStack align="start">
+                  <Text ml={1} color="brand.grayLight">
+                    {is_for_sale && "For Sale At"}
+                  </Text>
                   <Tag>
-                    <TagLabel>
-                      {isBid?.status && isBid?.bidPrice / 10 ** 12}
-                    </TagLabel>
+                    <TagLabel>{price / 10 ** 12}</TagLabel>
                     <TagRightIcon as={AzeroIcon} />
                   </Tag>
-                ) : null}
-              </VStack>
+                </VStack>
+                <Spacer />
+              </Flex>
+              <Flex>
+                <Spacer />
 
-              {!isBid && (
-                <Flex w="full">
-                  <Spacer />
-                  <Flex
-                    align="center"
-                    textAlign="right"
-                    color="brand.grayLight"
-                    direction="column"
-                  >
-                    <Text mr="1">
-                      {highest_bid ? "Highest Offer" : "No offer"}
-                    </Text>
-                    {highest_bid ? (
-                      <Tag h={10} bg="transparent">
-                        <TagLabel bg="transparent">
-                          {highest_bid / 10 ** 12}
-                        </TagLabel>
-                        <TagRightIcon as={AzeroIcon} />
-                      </Tag>
-                    ) : (
-                      ""
-                    )}
+                <VStack align="start">
+                  <Text color="brand.grayLight" textAlign="center" w="full">
+                    {isBid?.status && "My Offer"}
+                  </Text>
+                  {isBid?.status ? (
+                    <Tag minH={"20px"} bg="transparent">
+                      <TagLabel bg="transparent">
+                        {isBid?.status && isBid?.bidPrice / 10 ** 12}
+                      </TagLabel>
+                      <TagRightIcon as={AzeroIcon} />
+                    </Tag>
+                  ) : null}
+                </VStack>
+
+                {!isBid && (
+                  <Flex w="full" mt="4px">
+                    <Spacer />
+                    <Flex
+                      align="center"
+                      textAlign="right"
+                      color="brand.grayLight"
+                      direction="column"
+                    >
+                      <Text textAlign="center" w="full">
+                        {highest_bid ? "Highest Offer" : "No offer"}
+                      </Text>
+                      {highest_bid ? (
+                        <Tag h={"20px"} bg="transparent">
+                          <TagLabel bg="transparent">
+                            {highest_bid / 10 ** 12}
+                          </TagLabel>
+                          <TagRightIcon as={AzeroIcon} />
+                        </Tag>
+                      ) : (
+                        ""
+                      )}
+                    </Flex>
                   </Flex>
-                </Flex>
-              )}
-            </Flex>
+                )}
+              </Flex>
+            </>
           )}
         </Box>
       </Flex>

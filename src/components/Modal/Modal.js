@@ -51,9 +51,7 @@ export default function ResponsivelySizedModal({
       label: "Offers",
       content: <MyNFTTabOffers {...rest} />,
       isDisabled:
-        filterSelected === 0 || filterSelected === 2 || addNftTnxStatus?.status
-          ? true
-          : false,
+        filterSelected === 0 || addNftTnxStatus?.status ? true : false,
     },
   ];
 
@@ -80,7 +78,7 @@ export default function ResponsivelySizedModal({
         h="full"
         w="full"
         maxH={{ base: "28rem", xl: "30rem", "2xl": "40rem" }}
-        maxW={{ base: "58rem", xl: "60rem","2xl": "78rem" }}
+        maxW={{ base: "58rem", xl: "60rem", "2xl": "78rem" }}
       >
         <ModalCloseButton
           position="absolute"

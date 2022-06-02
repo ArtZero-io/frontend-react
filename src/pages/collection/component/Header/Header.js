@@ -236,6 +236,7 @@ function CollectionHeader({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
+                    style={{ minWidth: "65px" }}
                   >
                     <Flex alignItems="center" justifyContent="center">
                       <Text
@@ -265,6 +266,7 @@ function CollectionHeader({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
+                    style={{ minWidth: "65px" }}
                   >
                     <Flex alignItems="center" justifyContent="center">
                       <Text
@@ -303,6 +305,7 @@ function CollectionHeader({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
+                    style={{ minWidth: "65px" }}
                   >
                     <Flex alignItems="center" justifyContent="center">
                       <Text
@@ -337,6 +340,7 @@ function CollectionHeader({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
+                    style={{ minWidth: "65px" }}
                   >
                     <Flex alignItems="center" justifyContent="center">
                       <Text

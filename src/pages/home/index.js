@@ -219,8 +219,8 @@ function HomePage() {
               >
                 <Image
                   data-aos="fade-left"
-                  data-aos-delay="300"
-                  data-aos-duration="1000"
+                  data-aos-delay="100"
+                  data-aos-duration="500"
                   src={UFO1}
                   alt="UFO1"
                   w="full"
@@ -245,7 +245,7 @@ function HomePage() {
               >
                 <Image
                   data-aos="fade-right"
-                  data-aos-delay="300"
+                  data-aos-delay="100"
                   data-aos-duration="2000"
                   src={UFO2}
                   alt="UFO2"
@@ -273,7 +273,7 @@ function HomePage() {
               >
                 <Image
                   data-aos="fade-left"
-                  data-aos-delay="300"
+                  data-aos-delay="100"
                   data-aos-duration="3000"
                   src={UFO3}
                   alt="UFO3"
@@ -290,8 +290,8 @@ function HomePage() {
               mb={["10px", "2rem"]}
               px={4}
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
             >
               <Heading
                 color="#fff"
@@ -317,8 +317,8 @@ function HomePage() {
               textAlign="center"
               px={4}
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
             >
               <Text
                 fontFamily="Evogria"
@@ -349,8 +349,8 @@ function HomePage() {
               textAlign="center"
               mb={["20px", "2rem"]}
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
             >
               <Heading fontSize={["32px", null, "36px"]}>how to start?</Heading>
             </Center>
@@ -362,8 +362,8 @@ function HomePage() {
               mb={["20px", "2rem"]}
               px={4}
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
             >
               <Text
                 textTransform="uppercase"
@@ -411,8 +411,8 @@ function HomePage() {
               mb={["60px", "100px"]}
               px={4}
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
             >
               <Text
                 textTransform="uppercase"
@@ -433,8 +433,8 @@ function HomePage() {
 
             <AspectRatio
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
               px={4}
               mx="auto"
               w={["300px", "full", "full"]}
@@ -467,8 +467,8 @@ function HomePage() {
           >
             <Button
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
               display={["block", "none", "none"]}
               mx="auto"
               mb="45px"
@@ -498,8 +498,8 @@ function HomePage() {
               mx="auto"
               px={4}
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
             >
               <Heading fontSize={["32px", null, "36px"]}>
                 available features
@@ -509,8 +509,8 @@ function HomePage() {
             <Box
               color="#ABABAB"
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
               maxW="container.md"
               mx="auto"
               mb={["74px", "144px", "144px"]}
@@ -547,8 +547,8 @@ function HomePage() {
               mx="auto"
               px={4}
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
             >
               <Heading
                 w={["80%", "full", "full"]}
@@ -561,8 +561,8 @@ function HomePage() {
             <Box
               color="#ABABAB"
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
               maxW="container.md"
               mx="auto"
               w="full"
@@ -586,6 +586,7 @@ function HomePage() {
                     key={idx}
                     _hover={{ pl: "10px", color: "#fff" }}
                     transition="all 0.33s"
+                    textTransform="uppercase"
                   >
                     <ListIcon as={BulletPointIcon} />
                     {item}
@@ -616,8 +617,8 @@ function HomePage() {
               textAlign="center"
               mb={["10px", "18px", "18px"]}
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
             >
               <Heading fontSize={["32px", null, "36px"]}>
                 subscribe to us
@@ -628,8 +629,8 @@ function HomePage() {
               textAlign="center"
               mb={["45px", "100px", "100px"]}
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
             >
               <Text
                 textTransform="uppercase"
@@ -642,8 +643,8 @@ function HomePage() {
             </Center>
             <InputGroup
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
               mb={("36px", "48px")}
               mx="auto"
               maxW={["327px", "572px", "572px"]}
@@ -686,8 +687,8 @@ function HomePage() {
               mt={["32px", "60px", "60px"]}
               mb={["12px", "60px", "60px"]}
               data-aos="fade-up"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
             >
               <SocialCard profile={profile} />
             </Center>
@@ -696,8 +697,8 @@ function HomePage() {
               textAlign="center"
               mb={["30px", "70px", "70px"]}
               data-aos="fade-down"
-              data-aos-delay="300"
-              data-aos-duration="1000"
+              data-aos-delay="100"
+              data-aos-duration="500"
               data-aos-anchor-placement="center-bottom"
             >
               <Text
@@ -735,4 +736,5 @@ const upComingFeaturesText = [
   "more documentation and tutorials",
   "search for nfts and collections",
   "launch pad for nft projects",
+  "mobile support: nova and subwallet",
 ];
