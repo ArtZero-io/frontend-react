@@ -63,30 +63,96 @@ const AddNewNFTForm = ({ collectionOwner }) => {
             .min(3, "Must be longer than 3 characters")
             .max(150, "Must be 150 characters or less")
             .required("Required"),
-          properties: Yup.array(
-            Yup.object().shape({
-              type: Yup.string()
-                .min(3, "Must be longer than 3 characters")
-                .max(30, "Must be less than 30 characters"),
-              name: Yup.string()
-                .min(3, "Must be longer than 3 characters")
-                .max(30, "Must be less than 30 characters"),
-            })
-          )
+          properties: Yup.array()
+            .of(
+              Yup.object().shape(
+                {
+                  type: Yup.string().when("name", {
+                    is: (val) => val,
+                    then: Yup.string()
+                      .test(
+                        "Test Prop",
+                        "Duplicated Props Type!",
+                        (value, schema) => {
+                          const propsArr = schema?.from[1].value?.properties;
+
+                          const keyPropsArr = propsArr.map((p) =>
+                            p.type?.trim()
+                          );
+
+                          const [isDup] = keyPropsArr.filter(
+                            (v, i) => i !== keyPropsArr.indexOf(v)
+                          );
+
+                          return !(isDup && isDup.trim() === value.trim());
+                        }
+                      )
+                      .required("Must have type value.")
+                      .min(3, "Must be longer than 3 characters")
+                      .max(30, "Must be less than 30 characters"),
+                    otherwise: Yup.string().notRequired(),
+                  }),
+                  name: Yup.string().when("type", {
+                    is: (val) => val,
+                    then: Yup.string()
+                      .required("Must have name value.")
+                      .min(3, "Must be longer than 3 characters")
+                      .max(30, "Must be less than 30 characters"),
+                    otherwise: Yup.string().notRequired(),
+                  }),
+                },
+                [["type", "name"]]
+              )
+            )
             .min(0)
             .max(10),
           levels: Yup.array(
-            Yup.object().shape({
-              name: Yup.string()
-                .min(3, "Must be longer than 3 characters")
-                .max(30, "Must be less than 30 characters"),
-              level: Yup.number()
-                .min(1, "Must be bigger than 0")
-                .max(Yup.ref("level"), "Must smaller than max"),
-              levelMax: Yup.number()
-                .min(Yup.ref("level"), "Must greater than level")
-                .max(10, "Must be smaller than 10"),
-            })
+            Yup.object().shape(
+              {
+                name: Yup.string().when("level", {
+                  is: (val) => val,
+                  then: Yup.string()
+                    .test(
+                      "Test Level",
+                      "Duplicated Levels Name!",
+                      (value, schema) => {
+                        const levelsArr = schema?.from[1].value?.levels;
+
+                        const keyLevelsArr = levelsArr.map((p) =>
+                          p.name?.trim()
+                        );
+
+                        const [isDup] = keyLevelsArr.filter(
+                          (v, i) => i !== keyLevelsArr.indexOf(v)
+                        );
+
+                        return !(isDup && isDup.trim() === value.trim());
+                      }
+                    )
+                    .required("Must have level name.")
+                    .min(3, "Must be longer than 3 characters")
+                    .max(30, "Must be less than 30 characters"),
+                  otherwise: Yup.string().notRequired(),
+                }),
+                level: Yup.number().when("levelMax", {
+                  is: (val) => val,
+                  then: Yup.number()
+                    .required("Must have min value.")
+                    .min(1, "Must be bigger than 0")
+                    .max(Yup.ref("levelMax"), "Must smaller than max"),
+                  otherwise: Yup.number().notRequired(),
+                }),
+                levelMax: Yup.number().when("name", {
+                  is: (val) => val,
+                  then: Yup.number()
+                    .required("Must have max value.")
+                    .min(Yup.ref("level"), "Must greater than level")
+                    .max(10, "Must be smaller than 10"),
+                  otherwise: Yup.number().notRequired(),
+                }),
+              },
+              [["name", "level", "levelMax"]]
+            )
           )
             .min(0)
             .max(10),
@@ -232,6 +298,7 @@ const AddNewNFTForm = ({ collectionOwner }) => {
                                 <Box color="brand.grayLight" w="full">
                                   <Text>{item.type}</Text>
                                   <Heading
+                                    pr={"2.5px"}
                                     size="h6"
                                     mt={1}
                                     noOfLines={[1, 2]}
