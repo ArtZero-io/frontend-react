@@ -102,6 +102,7 @@ function CollectionPage() {
           // setFormattedCollection(null);
           setLoadingTime(null);
           setLoading(false);
+          setIsShowUnlisted(2);
         });
       }
     };
@@ -294,11 +295,18 @@ function CollectionPage() {
 
   const fetchPlatformEvents = useCallback(async () => {
     try {
-      
-      const getPurchaseEvents = await APICall.getPurchaseEvents({collection_address});
-      const getBidWinEvents = await APICall.getBidWinEvents({collection_address});
-      const getUnlistEvents = await APICall.getUnlistEvents({collection_address});
-      const getNewListEvents = await APICall.getNewListEvents({collection_address});
+      const getPurchaseEvents = await APICall.getPurchaseEvents({
+        collection_address,
+      });
+      const getBidWinEvents = await APICall.getBidWinEvents({
+        collection_address,
+      });
+      const getUnlistEvents = await APICall.getUnlistEvents({
+        collection_address,
+      });
+      const getNewListEvents = await APICall.getNewListEvents({
+        collection_address,
+      });
 
       let result;
 

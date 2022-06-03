@@ -61,7 +61,6 @@ async function getAdminAddress(caller_account) {
   return null;
 }
 
-
 async function totalSupply(caller_account) {
   if (!contract || !caller_account) {
     return null;
@@ -152,7 +151,7 @@ async function getWhitelist(caller_account, account) {
   const gasLimit = -1;
   const azero_value = 0;
   //console.log(contract);
-  try{
+  try {
     const { result, output } = await contract.query.getWhitelist(
       address,
       { value: azero_value, gasLimit },
@@ -161,8 +160,7 @@ async function getWhitelist(caller_account, account) {
     if (result.isOk) {
       return output.toHuman();
     }
-  }
-  catch(e){
+  } catch (e) {
     return null;
   }
 
@@ -182,7 +180,7 @@ async function getMintMode(caller_account) {
     value: azero_value,
     gasLimit,
   });
-  console.log(result, output )
+
   if (result.isOk) {
     return output.toHuman();
   }
@@ -223,6 +221,27 @@ async function getPublicSaleAmount(caller_account) {
     value: azero_value,
     gasLimit,
   });
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+async function getPublicSaleMintedAmount(caller_account) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
+
+  const { result, output } = await contract.query.getPublicSaleMintedCount(
+    address,
+    {
+      value: azero_value,
+      gasLimit,
+    }
+  );
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
@@ -397,7 +416,15 @@ async function addWhitelist(caller_account, account, amount) {
   return unsubscribe;
 }
 
-async function initialize(caller_account, admin_address, name, symbol, total_supply, minting_fee, public_sale_amount) {
+async function initialize(
+  caller_account,
+  admin_address,
+  name,
+  symbol,
+  total_supply,
+  minting_fee,
+  public_sale_amount
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -414,8 +441,14 @@ async function initialize(caller_account, admin_address, name, symbol, total_sup
   const injector = await web3FromSource(caller_account?.meta?.source);
 
   contract.tx
-    .initialize({ gasLimit, value: azero_value },
-      admin_address, name, symbol, total_supply, minting_fee, public_sale_amount
+    .initialize(
+      { gasLimit, value: azero_value },
+      admin_address,
+      name,
+      symbol,
+      total_supply,
+      minting_fee,
+      public_sale_amount
     )
     .signAndSend(
       address,
@@ -616,6 +649,7 @@ const contract_calls = {
   getMintMode,
   getMintingFee,
   getPublicSaleAmount,
+  getPublicSaleMintedAmount,
   tokenUri,
   whitelistMint,
   paidMint,
@@ -625,7 +659,7 @@ const contract_calls = {
   addWhitelist,
   updateWhitelistAmount,
   withdrawFee,
-  initialize
+  initialize,
   // isLoaded,
 };
 

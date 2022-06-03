@@ -41,6 +41,7 @@ function MintHeader({ loading }) {
   const [mintMode, setMintMode] = useState(-1);
   const [fee1, setFee1] = useState(-1);
   const [amount1, setAmount1] = useState(-1);
+  const [publicSaleMintedCount, setPublicSaleMintedCount] = useState(0);
   const [totalMinted, setTotalMinted] = useState(0);
   const [whitelistAmount, setWhitelistAmount] = useState(1);
 
@@ -108,12 +109,28 @@ function MintHeader({ loading }) {
 
   const onGetPublicSaleAmount = async (e) => {
     let res = await artzero_nft_calls.getPublicSaleAmount(currentAccount);
+
     if (res) {
       setAmount1(res);
     } else {
       setAmount1(-1);
     }
   };
+
+  const onGetPublicSaleMintedCount = useCallback(
+    async (e) => {
+      let res = await artzero_nft_calls.getPublicSaleMintedAmount(
+        currentAccount
+      );
+
+      if (res) {
+        setPublicSaleMintedCount(res);
+      } else {
+        setPublicSaleMintedCount(null);
+      }
+    },
+    [currentAccount]
+  );
 
   const onWhiteListMint = async () => {
     setAction("");
@@ -146,7 +163,6 @@ function MintHeader({ loading }) {
         dispatch
       );
 
-      // await delay(10000);
       // await onRefresh();
     } catch (error) {
       dispatch({
@@ -197,8 +213,14 @@ function MintHeader({ loading }) {
   const onRefresh = useCallback(async () => {
     await onGetMintingFee();
     await onGetPublicSaleAmount();
+    onGetPublicSaleMintedCount();
     await onGetTotalMinted();
-  }, [onGetMintingFee, onGetPublicSaleAmount, onGetTotalMinted]);
+  }, [
+    onGetMintingFee,
+    onGetPublicSaleAmount,
+    onGetPublicSaleMintedCount,
+    onGetTotalMinted,
+  ]);
 
   const fetchMintData = useCallback(async () => {
     await onRefresh();
@@ -386,8 +408,10 @@ function MintHeader({ loading }) {
                       <AzeroIcon mb={1.5} />
                     </Text>
                     <Text mt={3}>
-                      Max Mint:{" "}
-                      <span style={{ color: "#fff" }}>{amount1} NFTs</span>
+                      Minted / Max Mint:{" "}
+                      <span style={{ color: "#fff" }}>
+                        {publicSaleMintedCount} / {amount1} NFTs
+                      </span>
                     </Text>
                   </>
                 ) : null}
@@ -406,6 +430,7 @@ function MintHeader({ loading }) {
                   Number(mintMode) === 2 ||
                   Number(mintMode) <= 0 ||
                   totalMinted >= MAX_MINT_COUNT ||
+                  publicSaleMintedCount >= amount1 ||
                   (addNftTnxStatus?.status && !(!action || action === "public"))
                 }
                 // shouldDisabled={action && action !== "public"}

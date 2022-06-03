@@ -36,6 +36,7 @@ function DataTable({
       fontSize="lg"
       h="full"
       overflow="auto"
+      overflowY="scroll"
       sx={{
         "&::-webkit-scrollbar": {
           width: "0.3rem",
@@ -61,6 +62,10 @@ function DataTable({
                   <Tr>
                     {tableHeaders?.map((item, idx) => (
                       <Th
+                        position="sticky"
+                        top={0}
+                        zIndex={1}
+                        bg="#222"
                         textAlign="center"
                         key={idx}
                         fontFamily="Evogria"
