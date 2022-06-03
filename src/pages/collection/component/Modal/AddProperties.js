@@ -19,6 +19,8 @@ import AddPropertiesInput from "@components/Input/Input";
 function AddPropertiesModal({ name, isOpen, onClose }) {
   const [{ value }] = useField(name);
 
+  const hasEmptyProp = value.some((p) => p.type?.trim() === "");
+
   return (
     <Modal
       onClose={onClose}
@@ -111,6 +113,7 @@ function AddPropertiesModal({ name, isOpen, onClose }) {
                     variant="outline"
                     type="button"
                     isDisabled={
+                      hasEmptyProp ||
                       !arrayHelpers?.form?.dirty ||
                       arrayHelpers.form?.errors?.properties
                     }
@@ -120,7 +123,9 @@ function AddPropertiesModal({ name, isOpen, onClose }) {
                   </Button>
                 </Flex>
                 <Button
-                  disabled={!(arrayHelpers?.form?.dirty && arrayHelpers?.form?.isValid)}
+                  disabled={
+                    !(arrayHelpers?.form?.dirty && arrayHelpers?.form?.isValid)
+                  }
                   mb={6}
                   w="full"
                   variant="solid"

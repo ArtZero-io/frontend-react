@@ -19,6 +19,8 @@ import AddLevelsInput from "@components/Input/Input";
 function AddLevelsModal({ name, isOpen, onClose }) {
   const [{ value }] = useField(name);
 
+  const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
+
   return (
     <Modal
       onClose={onClose}
@@ -72,7 +74,6 @@ function AddLevelsModal({ name, isOpen, onClose }) {
               Level Max
             </Text>
           </Box>
-          {/* <Box w={12} /> */}
         </Flex>
 
         <FieldArray
@@ -149,6 +150,7 @@ function AddLevelsModal({ name, isOpen, onClose }) {
                     variant="outline"
                     type="button"
                     isDisabled={
+                      hasEmptyLevel ||
                       !arrayHelpers?.form?.dirty ||
                       arrayHelpers.form?.errors?.levels
                     }
