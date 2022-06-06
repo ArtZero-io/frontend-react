@@ -65,6 +65,15 @@ const reducer = (state, action) => {
       return { ...state, supportedExtensions: action.payload };
     case "SET_CURRENT_EXTENSION":
       return { ...state, currentExtension: action.payload };
+    case "LOG_OUT":
+      return {
+        ...state,
+        keyring: null,
+        currentAccount: null,
+        keyringState: null,
+        apiState: null,
+        apiStateState: null,
+      };
     default:
       throw new Error(`Unknown type: ${action.type}`);
   }
@@ -154,7 +163,13 @@ export const loadAccounts = async (state, dispatch, wallet) => {
         systemChainType.isLocal ||
         isTestChain(systemChain);
 
-      Keyring.loadAll({ isDevelopment }, allAccounts);
+      try {
+        Keyring.loadAll({ isDevelopment }, allAccounts);
+      } catch (error) {
+        allAccounts.forEach(({ address, meta }) => {
+          Keyring.saveAddress(address, meta);
+        });
+      }
 
       dispatch({ type: "SET_KEYRING", payload: Keyring });
     } catch (e) {
@@ -197,9 +212,22 @@ const SubstrateContextProvider = (props) => {
     // blockchainModule.setAccount(acct);
     window.localStorage.setItem("currentAccount", JSON.stringify(acct));
   }
+  async function doLogOut() {
+    const accArr = Keyring.getAccounts();
+
+    await Promise.all(
+      accArr.map((item) => Keyring.forgetAccount(item.address))
+    ).then((result) => {
+      dispatch({ type: "LOG_OUT" });
+
+      window.localStorage.setItem("currentAccount", JSON.stringify(""));
+    });
+  }
 
   return (
-    <SubstrateContext.Provider value={{ state, setCurrentAccount, dispatch }}>
+    <SubstrateContext.Provider
+      value={{ state, setCurrentAccount, doLogOut, dispatch }}
+    >
       {props.children}
     </SubstrateContext.Provider>
   );

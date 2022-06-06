@@ -25,11 +25,15 @@ import { useDispatch } from "react-redux";
 import { AccountActionTypes } from "../../store/types/account.types";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { truncateStr } from "@utils/index";
+import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 function WalletSelector() {
+  const { path } = useLocation();
   const dispatch = useDispatch();
+  const history = useHistory();
   const [, setActiveAddressLocal] = useLocalStorage("activeAddress");
-  const { setCurrentAccount, state } = useSubstrate();
+  const { setCurrentAccount, doLogOut, state } = useSubstrate();
   const { keyring, currentAccount } = state;
 
   const keyringOptions = keyring.getPairs().map((account) => ({
@@ -70,8 +74,13 @@ function WalletSelector() {
   }
 
   function logoutHandler() {
+    dispatch({ type: "SET_CURRENT_ACCOUNT", payload: null });
+
+    doLogOut();
+
     window.localStorage.clear();
-    window.location.assign("/");
+
+    history.push(path);
   }
 
   return (
@@ -147,8 +156,6 @@ function WalletSelector() {
                     {name}
                   </Text>
                   <Text> - {truncateStr(address, 6)}</Text>
-                  {/* {address.slice(0, 6)} ... {address.slice(-6)} */}
-                  {/* <Box w="24px"></Box> */}
                 </Flex>
               </MenuItem>
             ))}
