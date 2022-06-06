@@ -19,9 +19,10 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
 
 import { getCachedImageShort } from "@utils/index";
+import { useEffect, useRef } from "react";
+import { delay } from "@utils";
 
 export const CollectionCard = ({
-  headerImage,
   squareImage,
   avatarImage,
   name,
@@ -29,10 +30,27 @@ export const CollectionCard = ({
   volume,
   isActive,
   variant,
+  nftContractAddress,
+  scrollToCollectionAddress,
 }) => {
+  const restorationRef = useRef();
+
+  useEffect(() => {
+    const doScroll = async () => {
+      await delay(1000).then(() => {
+        restorationRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      });
+    };
+
+    nftContractAddress === scrollToCollectionAddress && doScroll();
+  }, [nftContractAddress, scrollToCollectionAddress]);
+
   return (
-    // h="full"
     <motion.div
+      ref={restorationRef}
       className="my-collection-card"
       whileHover={{
         borderColor: "#7ae7ff",
@@ -142,7 +160,7 @@ export const CollectionCard = ({
 
           <Text
             textTransform="none"
-            textAlign="justify"
+            textAlign="center"
             noOfLines={[1, 3]}
             maxW={{ base: "unset", md: "20rem" }}
             minH={"4.5rem"}

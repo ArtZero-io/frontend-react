@@ -1,21 +1,24 @@
 import { Link } from "@chakra-ui/react";
 import { motion, useAnimation } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import AdvancedModeModal from "../../pages/account/collections/components/Modal/AdvancedMode";
 import SimpleModeModal from "../../pages/account/collections/components/Modal/SimpleMode";
 import { CollectionCard } from "../Card/Collection";
 import * as ROUTES from "@constants/routes";
 import { useDimensions } from "@chakra-ui/react";
-// import PixelCard from "@components/Card/PixelCard";
 
-export default function GridA({ collections, variant = "my-collection" }) {
+function GridA({
+  collections,
+  scrollToCollectionAddress,
+  variant = "my-collection",
+}) {
   const originOffset = useRef({ top: 0, left: 0 });
   const controls = useAnimation();
-  const delayPerPixel = 0.0008;
+  const delayPerPixel = 0.0004;
 
   const elementRef = useRef();
-  const dimensions = useDimensions(elementRef, true);
+  const dimensions = useDimensions(elementRef);
 
   const nftCardColumn =
     dimensions?.borderBox?.width >= 984
@@ -49,8 +52,6 @@ export default function GridA({ collections, variant = "my-collection" }) {
         justifyItems: "center",
       }}
     >
-      {/* <PixelCard dimensions={dimensions} /> */}
-
       {collections?.map((c, i) => (
         <GridItemA
           key={i}
@@ -70,14 +71,25 @@ export default function GridA({ collections, variant = "my-collection" }) {
             as={ReactRouterLink}
             to={`${ROUTES.DETAIL_COLLECTION_BASE}/${c?.nftContractAddress}`}
             style={{ textDecoration: "none" }}
+            onClick={() =>
+              sessionStorage.setItem(
+                "scroll-position-collection-nft-contract-address",
+                c.nftContractAddress
+              )
+            }
           >
-            <CollectionCard {...c} variant={variant} />
+            <CollectionCard
+              {...c}
+              variant={variant}
+              scrollToCollectionAddress={scrollToCollectionAddress}
+            />
           </Link>
         </GridItemA>
       ))}
     </motion.div>
   );
 }
+export default memo(GridA);
 
 function GridItemA({ delayPerPixel, i, originIndex, originOffset, children }) {
   const delayRef = useRef(0);

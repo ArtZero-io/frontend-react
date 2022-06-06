@@ -73,7 +73,7 @@ function CollectionHeader({
               fallback={
                 <Skeleton
                   w={["80px", "120px", "120px"]}
-                  h={["80px", "120px", "120px"]}
+                  h={["72px", "112px", "112px"]}
                   borderRadius="full"
                 />
               }

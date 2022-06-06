@@ -1,6 +1,6 @@
 import { Box, Center, Flex, Heading, Spacer } from "@chakra-ui/react";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { usePagination } from "@ajna/pagination";
 import toast from "react-hot-toast";
 
@@ -12,12 +12,15 @@ import PaginationMP from "@components/Pagination/Pagination";
 import { NUMBER_PER_PAGE } from "@constants/index";
 import { clientAPI } from "@api/client";
 import GridA from "../../components/Grid/GridA";
+import { useHistory } from "react-router-dom";
 
 const CollectionsPage = () => {
   const [collections, setCollections] = useState([]);
   const [featuredCollections, setFeaturedCollections] = useState([]);
   const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
   const [selectedItem, setSelectedItem] = useState(0);
+
+  const history = useHistory();
 
   const options = ["All collections", "Trending"];
   // 0 All, 1 Vol
@@ -107,6 +110,22 @@ const CollectionsPage = () => {
     fetchFeaturedCollections();
     fetchCollections();
   }, [offset, pageSize, selectedItem]);
+
+  const scrollToCollectionAddress = useMemo(() => {
+    if (history.action !== "POP") {
+      return;
+    }
+
+    const persistedId = sessionStorage.getItem(
+      "scroll-position-collection-nft-contract-address"
+    );
+
+    sessionStorage.removeItem(
+      "scroll-position-collection-nft-contract-address"
+    );
+
+    return persistedId ? persistedId : null;
+  }, [history.action]);
 
   return (
     <Layout variant="marketplace">
@@ -209,6 +228,7 @@ const CollectionsPage = () => {
                     <GridA
                       collections={collections}
                       variant="marketplace-collection"
+                      scrollToCollectionAddress={scrollToCollectionAddress}
                     />
                   ) : null}
 
