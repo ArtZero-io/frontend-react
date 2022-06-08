@@ -42,6 +42,7 @@
     "axios": "^0.26.1",
     "big-integer": "^1.6.51",
     "buffer": "^6.0.3",
+    "downshift": "^6.1.7",
     "formik": "^2.2.9",
     "formik-chakra-ui": "^1.6.0",
     "framer-motion": "^6",

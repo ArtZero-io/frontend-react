@@ -161,4 +161,20 @@ export const APICall = {
 
     return result;
   },
+
+  getSearchResult: async ({
+    keywords,
+    limit = 10,
+    ignoreNoNFT = true,
+    isActive = true,
+  }) => {
+    let result = await client("POST", "/searchCollections", {
+      keywords,
+      limit,
+      ignoreNoNFT,
+      isActive,
+    });
+
+    return result;
+  },
 };

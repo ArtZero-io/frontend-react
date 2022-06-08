@@ -27,6 +27,8 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { ArtZeroLogo } from "@theme/assets/logo/ArtZeroLogo";
 import SocialCard from "../Card/Social";
+import SearchBox from "../SearchBox/SearchBox";
+
 const links = [
   { label: "Home", href: ROUTES.HOME },
   { label: "Marketplace", href: ROUTES.MARKETPLACE },
@@ -156,6 +158,7 @@ const DesktopNavContent = (props) => {
   return (
     // <Flex w={[0, "full", "full"]}>
     <Flex w="full">
+      <SearchBox maxW="100px" />
       <HStack
         spacing="55px"
         align="stretch"
@@ -178,7 +181,6 @@ const DesktopNavContent = (props) => {
 
         {currentAccount?.address && <MyAccountDropdown />}
       </HStack>
-
       <WalletSelector display={{ base: "none", md: "flex" }} />
     </Flex>
   );
@@ -266,6 +268,7 @@ const MyAccountDropdown = () => {
     </Box>
   );
 };
+
 const profile = [
   { discord: "https://discord.gg/wzkZ2JTvN4" },
   { twitter: "https://twitter.com/ArtZero_io" },
@@ -273,3 +276,47 @@ const profile = [
   { telegram: "https://t.me/artzero_io" },
   { mail: "mailto:admin@artzero.io" },
 ];
+
+// const SearchBar = () => {
+//   return (
+//     <>
+//       <InputGroup
+//         maxW="400px"
+//         minW={{ base: "auto", xl: "100px", "2xl": "400px" }}
+//         bg="transparent"
+//         h={14}
+//         py={1}
+//         mx={{ base: "auto", xl: "20px", "2xl": "60px" }}
+//         color="brand.darkGray"
+//         borderWidth="0"
+//         borderRadius="0"
+//         borderColor="#ffffff25"
+//         borderBottomWidth="2px"
+//       >
+//         <InputRightElement
+//           transform="translateX(22px)"
+//           bg="transparent"
+//           h="full"
+//           w={16}
+//           cursor="pointer"
+//         >
+//           <FiSearch size="22px" p="0" />
+//         </InputRightElement>{" "}
+//         <Input
+//           hidden
+//           variant="unstyled"
+//           my={1}
+//           pl={0}
+//           color="#fff"
+//           fontSize="lg"
+//           bg="transparent"
+//           placeholder="Search items, collections, and accounts"
+//           _placeholder={{
+//             color: "brand.darkGray",
+//             fontSize: "lg",
+//           }}
+//         />
+//       </InputGroup>
+//     </>
+//   );
+// };

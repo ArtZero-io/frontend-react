@@ -264,7 +264,7 @@ function CollectionPage() {
 
   const tabData = [
     {
-      label: "Collection Items",
+      label: "Items",
       content: (
         <TabCollectionItems
           {...formattedCollection}

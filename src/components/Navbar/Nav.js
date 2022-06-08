@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from "react";
 import { Box, Flex, Link, VisuallyHidden } from "@chakra-ui/react";
 import { NavContent } from "./NavContent";
@@ -7,7 +6,6 @@ import { Link as ReactRouterLink } from "react-router-dom";
 
 function Nav({ variant = null }) {
   return (
-    // <Box minHeight={{ base: "5rem", xl: 28 }}>
     <Box
       as="header"
       height={["80px", "90px", "90px"]}
