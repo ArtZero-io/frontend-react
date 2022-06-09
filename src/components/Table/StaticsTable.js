@@ -11,13 +11,85 @@ import {
   Image,
   Square,
   Heading,
+  Flex,
+  Text,
+  Box,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { AnimatePresence, motion } from "framer-motion";
-import { truncateStr, shortenNumber, getCachedImageShort } from "@utils";
+
 import { memo } from "react";
 
-function EventTable({ tableHeaders, tableData }) {
+function StaticsTable({ tableHeaders, tableData }) {
+  const formatDataCell = (itemObj, itemIndex, headerValue) => {
+    switch (headerValue) {
+      case "index":
+        return Number(itemIndex + 1);
+      case "totalStakers":
+        return <>{itemObj[headerValue]} Stakers</>;
+      case "marketCap":
+        return (
+          <>
+            {itemObj[headerValue]} <TagRightIcon as={AzeroIcon} />
+          </>
+        );
+
+      case "floorPrice":
+        return (
+          <>
+            {itemObj[headerValue]} <TagRightIcon as={AzeroIcon} />
+          </>
+        );
+
+      case "totalAmount":
+        return (
+          <>
+            {itemObj[headerValue]} <TagRightIcon as={AzeroIcon} />
+          </>
+        );
+      case "collectionName":
+        return (
+          <Flex alignItems="center">
+            <Square size="50px" mr="20px">
+              <Image width="full" height="full" src={itemObj.avatarImage} />
+            </Square>
+
+            <Flex direction="column" alignItems="flex-start">
+              <Heading fontSize="16px">{itemObj[headerValue]}</Heading>
+              <Text color="#7ae7ff" fontSize="16px" mt="4px">
+                {itemObj["totalSupply"]}
+              </Text>
+            </Flex>
+          </Flex>
+        );
+      case "vol7Day":
+        return (
+          <>
+            <Box>
+              {itemObj[headerValue]["amount"]} <TagRightIcon as={AzeroIcon} />
+            </Box>
+            <Box mt="6px" color="#34B979" fontSize="16px">
+              +{itemObj[headerValue]["percent"]}%
+            </Box>
+          </>
+        );
+      case "averagePrice24h":
+        return (
+          <>
+            <Box>
+              {itemObj[headerValue]["amount"]} <TagRightIcon as={AzeroIcon} />
+            </Box>
+            <Box mt="6px" color="#34B979" fontSize="16px">
+              {itemObj[headerValue]["percent"]} %
+            </Box>
+          </>
+        );
+
+      default:
+        return <>{itemObj[headerValue]}</>;
+    }
+  };
+
   return (
     <>
       {tableData?.length === 0 ? (
@@ -27,22 +99,10 @@ function EventTable({ tableHeaders, tableData }) {
       ) : (
         <TableContainer
           minH="500px"
-          maxH={{ base: "20rem", "2xl": "30rem" }}
+          // maxH={{ base: "20rem", "2xl": "30rem" }}
           fontSize="lg"
           h="full"
           overflow="auto"
-          overflowY="scroll"
-          sx={{
-            "&::-webkit-scrollbar": {
-              width: "0.3rem",
-              height: "0.3rem",
-              borderRadius: "1px",
-              backgroundColor: `#7ae7ff`,
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: `#7ae7ff`,
-            },
-          }}
         >
           <AnimatePresence>
             <motion.div
@@ -77,42 +137,15 @@ function EventTable({ tableHeaders, tableData }) {
                     </Thead>
 
                     <Tbody>
-                      {tableData?.map((item, idx) => (
-                        <Tr key={idx} color="#fff">
+                      {tableData?.map((item, index) => (
+                        <Tr key={index} color="#fff">
                           {Object.keys(tableHeaders)?.map((i, idx) => (
                             <Td
                               key={idx}
                               py={{ base: "1rem", "2xl": "1.75rem" }}
                               textAlign="center"
-                              color="#7ae7ff"
                             >
-                              {i === "nftContractAddress" ||
-                              i === "seller" ||
-                              i === "trader" ||
-                              i === "buyer" ? (
-                                truncateStr(item[i])
-                              ) : i === "price" ||
-                                i === "platformFee" ||
-                                i === "royalFee" ? (
-                                <>
-                                  {shortenNumber(item[i])}
-                                  <TagRightIcon as={AzeroIcon} />
-                                </>
-                              ) : i === "avatar" ? (
-                                <>
-                                  <Square size="64px" mx="auto">
-                                    <Image
-                                      width="full"
-                                      height="full"
-                                      src={
-                                        item[i] && getCachedImageShort(item[i])
-                                      }
-                                    />
-                                  </Square>
-                                </>
-                              ) : (
-                                item[i]
-                              )}
+                              {formatDataCell(item, index, i)}
                             </Td>
                           ))}
                         </Tr>
@@ -129,4 +162,4 @@ function EventTable({ tableHeaders, tableData }) {
   );
 }
 
-export default memo(EventTable);
+export default memo(StaticsTable);
