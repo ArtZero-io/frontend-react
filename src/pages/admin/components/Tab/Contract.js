@@ -154,9 +154,9 @@ function ContractTab() {
       return;
     }
     //check whitelistAddress
-    await artzero_nft_calls.onWithdraw(currentAccount, withdrawAmount);
+    await artzero_nft_calls.withdrawFee(currentAccount, withdrawAmount);
     await delay(5000);
-    await onRefreshAZNFT();
+    await getAZNFTContractBalance();
   };
 
   return (
@@ -258,8 +258,6 @@ function ContractTab() {
                           <NumberInput
                             bg="black"
                             defaultValue={1}
-                            min={1}
-                            max={5}
                             onChange={(valueString) =>
                               setWithdrawAmount(valueString)
                             }

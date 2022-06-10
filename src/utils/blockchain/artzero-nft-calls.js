@@ -539,7 +539,7 @@ async function withdrawFee(caller_account, amount) {
   const injector = await web3FromSource(caller_account?.meta?.source);
 
   contract.tx
-    .withdrawFee({ gasLimit, value: azero_value }, amount)
+    .withdrawFee({ gasLimit, value: azero_value }, parseFloat(amount) * 10**12)
     .signAndSend(
       address,
       { signer: injector.signer },
