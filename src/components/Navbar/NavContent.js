@@ -33,7 +33,7 @@ const links = [
   { label: "Home", href: ROUTES.HOME },
   { label: "Marketplace", href: ROUTES.MARKETPLACE },
   { label: "TGE", href: ROUTES.MINTING_EVENT },
-  { label: "Statics", href: ROUTES.STATICS },
+  { label: "Stats", href: ROUTES.STATS },
 ];
 
 const MobileNavContent = (props) => {

@@ -2,11 +2,11 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import React from "react";
 
 import Layout from "@components/Layout/Layout";
-import StaticsHeader from "./component/Header/StaticsHeader";
+import StatsHeader from "./component/Header/StatsHeader";
 import TopCollectionsTab from "./Tab/TopCollectionsTab";
 import PayoutHistoryTab from "./Tab/PayoutHistoryTab";
 
-function StaticsPage() {
+function StatsPage() {
   const tabData = [
     {
       label: "top nft collections",
@@ -26,7 +26,7 @@ function StaticsPage() {
     <Layout>
       {
         <>
-          <StaticsHeader />
+          <StatsHeader />
 
           <Tabs isLazy align="center" colorScheme="brand.blue">
             <TabList bg="#000" borderBottomColor="#000">
@@ -62,4 +62,4 @@ function StaticsPage() {
   );
 }
 
-export default StaticsPage;
+export default StatsPage;

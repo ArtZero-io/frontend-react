@@ -20,7 +20,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { memo } from "react";
 
-function StaticsTable({ tableHeaders, tableData }) {
+function StatsTable({ tableHeaders, tableData }) {
   const formatDataCell = (itemObj, itemIndex, headerValue) => {
     switch (headerValue) {
       case "index":
@@ -162,4 +162,4 @@ function StaticsTable({ tableHeaders, tableData }) {
   );
 }
 
-export default memo(StaticsTable);
+export default memo(StatsTable);

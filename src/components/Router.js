@@ -13,7 +13,7 @@ import MyCollectionsPage from "@pages/account/collections/collections";
 import GeneralPage from "@pages/account/general";
 import MyNFTsPage from "@pages/account/nfts/nfts";
 import MyStakesPage from "@pages/account/stakes";
-import StaticsPage from "@pages/statics";
+import StatsPage from "@pages/stats";
 
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import AccountLayout from "./Layout/AccountLayout";
@@ -67,7 +67,7 @@ const Router = () => {
       <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />
       <Route exact path={ROUTES.DETAIL_COLLECTION} component={CollectionPage} />
       <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
-      <Route exact path={ROUTES.STATICS} component={StaticsPage} />
+      <Route exact path={ROUTES.STATS} component={StatsPage} />
       <Route exact path={ROUTES.LAUNCHPAD_BASE} component={LaunchpadPage} />
       <Route exact path={ROUTES.HOME} component={HomePage} />
     </Switch>

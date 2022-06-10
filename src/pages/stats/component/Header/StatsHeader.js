@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
-function StaticsHeader({
+function StatsHeader({
   avatarImage,
   name,
   description,
@@ -35,9 +35,9 @@ function StaticsHeader({
         pt={{ base: "12", "2xl": "110px" }}
         pb={{ base: "4", "2xl": "110px" }}
       >
-        <Box w="full" maxW="410px" mx="auto" textAlign="center" mb="44px">
+        <Box w="full" maxW="500px" mx="auto" textAlign="center" mb="44px">
           <Heading size="h2" mb="10px">
-            Platform Statics
+            Platform Statistics
           </Heading>
           <Text maxW="360px" fontSize="lg" mx="auto">
             The Degenerate Ape Academy is an NFT brand housed on the blockchain.{" "}
@@ -95,7 +95,7 @@ function StaticsHeader({
   );
 }
 
-export default StaticsHeader;
+export default StatsHeader;
 
 const dashboardInfo = [
   { title: "Reward share from Validator", value: "2222", unit: "azero" },

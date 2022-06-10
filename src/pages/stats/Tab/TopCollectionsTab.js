@@ -6,7 +6,7 @@ import { APICall, clientAPI } from "@api/client";
 import { Heading, IconButton, Spacer, Stack, Text } from "@chakra-ui/react";
 import { FaDollarSign } from "react-icons/fa";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import StaticsTable from "@components/Table/StaticsTable";
+import StatsTable from "@components/Table/StatsTable";
 
 function TopCollectionsTab({ tokenUriType1 }) {
   // eslint-disable-next-line no-unused-vars
@@ -185,7 +185,7 @@ function TopCollectionsTab({ tokenUriType1 }) {
         />
       </Stack>
 
-      <StaticsTable
+      <StatsTable
         tableHeaders={headers}
         tableData={collectionEventsFull
           ?.filter((i) => i.type === "PURCHASE")

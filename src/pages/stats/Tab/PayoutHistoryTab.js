@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Heading, Stack } from "@chakra-ui/react";
-import StaticsTable from "@components/Table/StaticsTable";
+import StatsTable from "@components/Table/StatsTable";
 
 function PayoutHistoryTab() {
   // eslint-disable-next-line no-unused-vars
@@ -22,7 +22,7 @@ function PayoutHistoryTab() {
         </Heading>
       </Stack>
 
-      <StaticsTable tableHeaders={headers} tableData={payoutList} />
+      <StatsTable tableHeaders={headers} tableData={payoutList} />
     </>
   );
 }
