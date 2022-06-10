@@ -1,5 +1,6 @@
 export const HOME = "/";
 export const HELP = "/help";
+export const STATICS = "/statics";
 
 // MY ACCOUNT
 export const ACCOUNT = "/account/general";
