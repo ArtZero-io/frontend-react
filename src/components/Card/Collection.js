@@ -32,6 +32,7 @@ export const CollectionCard = ({
   variant,
   nftContractAddress,
   scrollToCollectionAddress,
+  royalFee,
 }) => {
   const restorationRef = useRef();
 
@@ -188,7 +189,15 @@ export const CollectionCard = ({
             {variant === "my-collection" && (
               <>
                 <Spacer />
-
+                <Box
+                  textTransform="capitalize"
+                  px="3px"
+                  borderWidth="1px"
+                  borderColor="#7ae7ff"
+                  fontSize="12px"
+                >
+                  {royalFee / 100}% Loyal fee
+                </Box>
                 {isActive && (
                   <Tag variant="active">
                     <TagLeftIcon as={ActiveIcon} />

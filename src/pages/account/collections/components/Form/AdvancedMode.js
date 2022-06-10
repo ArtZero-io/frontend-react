@@ -1,4 +1,4 @@
-import { HStack, Stack, Spacer, Flex, Text } from "@chakra-ui/react";
+import { HStack, Stack, Spacer, Flex, Text, Box } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect, useRef } from "react";
 import { Formik, Form } from "formik";
@@ -363,6 +363,17 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       title="Collection Square Header"
                       limitedSize={{ width: "500", height: "500" }}
                     />
+
+                    <Box my="30px" py="30px">
+                      <Box
+                        textTransform="capitalize"
+                        px="3px"
+                        borderWidth="1px"
+                        borderColor="#7ae7ff"
+                      >
+                        {initialValues.royalFee}% Loyal fee
+                      </Box>
+                    </Box>
                   </Stack>
                 </Stack>
 

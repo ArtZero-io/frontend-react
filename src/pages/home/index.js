@@ -578,7 +578,7 @@ function HomePage() {
               bgPosition="center"
               bgRepeat="no-repeat"
             >
-              <List spacing={[2.5, 6, 6]}>
+              <List spacing={[2, 5, 5]}>
                 {upComingFeaturesText.map((item, idx) => (
                   <ListItem
                     display="flex"
@@ -736,5 +736,5 @@ const upComingFeaturesText = [
   "more documentation and tutorials",
   "search for nfts and collections",
   "launch pad for nft projects",
-  "mobile support: nova and subwallet",
+  "mobile support: subwallet and nova",
 ];

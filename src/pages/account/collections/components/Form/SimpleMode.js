@@ -362,6 +362,16 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                       title="Collection Square Header"
                       limitedSize={{ width: "500", height: "500" }}
                     />
+                    <Box my="30px" py="30px">
+                      <Box
+                        textTransform="capitalize"
+                        px="3px"
+                        borderWidth="1px"
+                        borderColor="#7ae7ff"
+                      >
+                        {initialValues.royalFee / 100}% Loyal fee
+                      </Box>
+                    </Box>
                   </Stack>
                 </Stack>
 
