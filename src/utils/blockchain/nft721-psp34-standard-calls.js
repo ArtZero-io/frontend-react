@@ -19,17 +19,38 @@ async function getTotalSupply(caller_account) {
     return null;
   }
 
+  const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
   //console.log(collection_manager_contract);
 
   const { result, output } = await contract.query["psp34::totalSupply"](
-    caller_account,
+    address,
     { value: azero_value, gasLimit }
   );
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
+  return null;
+}
+
+async function tokenUri(caller_account,token_id) {
+  // console.log("getTotalSupply before check", !caller_account);
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const { result, output } = await contract.query[
+    "psp34Traits::tokenUri"
+  ](address, { value: azero_value, gasLimit }, token_id);
+  if (result.isOk) {
+    return output.toHuman();
+  }
+
   return null;
 }
 
@@ -354,6 +375,7 @@ async function approve(
 }
 
 const nft721_psp34_standard_calls = {
+  tokenUri,
   mint,
   mintWithAttributes,
   getTotalSupply,

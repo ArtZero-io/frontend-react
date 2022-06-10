@@ -5,7 +5,7 @@ import Layout from "@components/Layout/Layout";
 import AdminHeader from "@pages/admin/components/Header";
 import ContractTab from "@pages/admin/components/Tab/Contract";
 import CollectionTab from "@pages/admin/components/Tab/Collection";
-
+import CheckCollection from "@pages/admin/components/Tab/CheckCollection";
 const AdminLayout = () => {
   const tabData = [
     {
@@ -15,6 +15,10 @@ const AdminLayout = () => {
     {
       label: "Collection Management",
       content: <CollectionTab />,
+    },
+    {
+      label: "Check Advanced Mode Collection",
+      content: <CheckCollection />,
     },
   ];
 
