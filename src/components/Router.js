@@ -6,6 +6,7 @@ import MintPage from "@pages/mint";
 // import AdminPage from "@pages/admin";
 
 import CollectionsPage from "@pages/collections/collections";
+import { LaunchpadPage } from "@pages/launchpad";
 import CollectionPage from "@pages/collection/collection";
 
 import MyCollectionsPage from "@pages/account/collections/collections";
@@ -67,6 +68,7 @@ const Router = () => {
       <Route exact path={ROUTES.DETAIL_COLLECTION} component={CollectionPage} />
       <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
       <Route exact path={ROUTES.STATICS} component={StaticsPage} />
+      <Route exact path={ROUTES.LAUNCHPAD_BASE} component={LaunchpadPage} />
       <Route exact path={ROUTES.HOME} component={HomePage} />
     </Switch>
   );

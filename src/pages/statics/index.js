@@ -2,7 +2,7 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import React from "react";
 
 import Layout from "@components/Layout/Layout";
-import CollectionHeader from "./component/Header/Header";
+import StaticsHeader from "./component/Header/StaticsHeader";
 import TopCollectionsTab from "./Tab/TopCollectionsTab";
 import PayoutHistoryTab from "./Tab/PayoutHistoryTab";
 
@@ -26,7 +26,7 @@ function StaticsPage() {
     <Layout>
       {
         <>
-          <CollectionHeader />
+          <StaticsHeader />
 
           <Tabs isLazy align="center" colorScheme="brand.blue">
             <TabList bg="#000" borderBottomColor="#000">
