@@ -9,6 +9,8 @@ import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 
 const linerGradient = "linear-gradient(180deg, #000000 1.5rem, #00000000 8rem)";
+const linerGradientLaunchpad =
+  "linear-gradient(180deg, #000000 20px, #000000 30px, rgba(0, 0, 0, 0) 320px)";
 
 const Layout = ({ backdrop, children, variant = null }) => {
   const particlesInit = useCallback(async (main) => {
@@ -25,9 +27,14 @@ const Layout = ({ backdrop, children, variant = null }) => {
       bgImage={variant === "marketplace" && bgHeroFull}
       bgPosition="top"
       bgRepeat="no-repeat"
-      // bgSize={{ base: "contain", "2xl": "cover" }}
       bgSize="cover"
-      bg={variant === "collection-detail" ? linerGradient : ""}
+      bg={
+        variant === "collection-detail"
+          ? linerGradient
+          : variant === "launchpad-detail"
+          ? linerGradientLaunchpad
+          : ""
+      }
     >
       {variant === "marketplace" && (
         <Particles
@@ -37,15 +44,13 @@ const Layout = ({ backdrop, children, variant = null }) => {
           options={options1}
         />
       )}
+
       {variant === "collection-detail" && (
         <Flex
           id="image-wrapper"
           position="absolute"
           insetX="0"
           w="full"
-          // h={{ base: "full", xl: "760px" }}
-          // maxH={"41rem"}
-          // minH={{ base: "29rem", "2xl": "41rem" }}
           h="776px"
           overflow="hidden"
           align="center"
@@ -64,10 +69,49 @@ const Layout = ({ backdrop, children, variant = null }) => {
           </Box>
         </Flex>
       )}
+
+      {variant === "launchpad-detail" && (
+        <Flex
+          id="image-wrapper"
+          position="absolute"
+          insetX="0"
+          w="full"
+          h="500px"
+          overflow="hidden"
+          align="center"
+          zIndex="hide"
+          _after={{
+            content: '""',
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "full",
+            height: "12rem",
+            backgroundImage:
+              "linear-gradient(0deg, #000000 3.25%, #000000 18.26%, rgba(0, 0, 0, 0) 100%);)",
+          }}
+        >
+          <Box position="relative" w="full" h="full" overflow="hidden">
+            <Image
+              // src={backdrop && getCachedImageShort(backdrop, 1920)}
+              src="https://api.artzero.io/getImage?input=QmVdtkRoaXiBsj3vo79nq36P7EVoBdxaZf8VGhHLfpxuEG&size=1920&url=https://ipfs.infura.io/ipfs/QmVdtkRoaXiBsj3vo79nq36P7EVoBdxaZf8VGhHLfpxuEG"
+              alt="bg-heroFull"
+              w="full"
+              h="full"
+              objectFit="cover"
+              objectPosition="center"
+              fallback={<Skeleton w="full" h="full" maxH={"760px"} />}
+            />
+          </Box>
+        </Flex>
+      )}
+
       <Navbar variant={variant} />
+
       <Fade in="true" delay={0.25} style={{ minHeight: "calc(100vh - 7rem)" }}>
         {children}
       </Fade>
+
       <Footer />
     </Container>
   );

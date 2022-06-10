@@ -149,7 +149,11 @@ export const Card = ({ variant, collection_address = "abc" }) => {
           bg="black"
           variant="outline"
           w="full"
-          onClick={() => history.push("/")}
+          onClick={() =>
+            history.push(
+              "/launchpad/5FoLoL5mYXpBwxJUMDo3tcwh5VTrzaz3LvbA4B7LiivjXV7C"
+            )
+          }
         >
           view project
         </Button>

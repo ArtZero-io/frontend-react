@@ -18,6 +18,7 @@ import StatsPage from "@pages/stats";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import AccountLayout from "./Layout/AccountLayout";
 import AdminLayout from "./Layout/AdminLayout";
+import LaunchpadDetailPage from "../pages/launchpad/detail";
 // import NotFound from "./NotFound/NotFound";
 // import MintLayout from "./Layout/MintLayout";
 
@@ -53,21 +54,16 @@ const Router = () => {
           </AdminLayout>
         )}
       />
-      {/* <PrivateRoute
-        path="/mint"
-        render={() => (
-          <MintLayout>
-            <Switch>
-              <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />
-            </Switch>
-          </MintLayout>
-        )}
-      /> */}
 
       <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />
       <Route exact path={ROUTES.DETAIL_COLLECTION} component={CollectionPage} />
       <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
       <Route exact path={ROUTES.STATS} component={StatsPage} />
+      <Route
+        exact
+        path={ROUTES.LAUNCHPAD_DETAIL}
+        component={LaunchpadDetailPage}
+      />
       <Route exact path={ROUTES.LAUNCHPAD_BASE} component={LaunchpadPage} />
       <Route exact path={ROUTES.HOME} component={HomePage} />
     </Switch>
