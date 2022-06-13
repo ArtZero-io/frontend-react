@@ -19,6 +19,7 @@ import TalismanLogo from "@utils/wallets/TalismanLogo.svg";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { loadAccounts } from "@utils/substrate/SubstrateContext";
 import { motion } from "framer-motion";
+import { browserName } from "react-device-detect";
 
 function WalletNotConnected(props) {
   const { dispatch, state } = useSubstrate();
@@ -91,55 +92,62 @@ function WalletNotConnected(props) {
               borderColor="brand.blue"
               p={3}
             >
-              {SUPPORTED_WALLET_LIST.map(
-                ({ extensionName, title, installUrl, installed }) => (
-                  <Flex
-                    key={extensionName}
-                    minW="36"
-                    alignItems="center"
+              {SUPPORTED_WALLET_LIST.map((wallet) => (
+                <Flex
+                  key={wallet.extensionName}
+                  minW="36"
+                  alignItems="center"
+                  _hover={{ bg: "blackAlpha.900" }}
+                >
+                  <MenuItem
+                    w="170px"
+                    isDisabled={!wallet.installed}
+                    onClick={() => handleConnect(wallet.extensionName)}
                     _hover={{ bg: "blackAlpha.900" }}
                   >
-                    <MenuItem
-                      w="170px"
-                      isDisabled={!installed}
-                      onClick={() => handleConnect(extensionName)}
-                      _hover={{ bg: "blackAlpha.900" }}
+                    <Box>
+                      <Flex justifyContent="start" align="center">
+                        <Box boxSize="26px">
+                          {wallet.extensionName === "subwallet-js" && (
+                            <Image
+                              src={SubwalletLogo}
+                              alt={wallet.extensionName}
+                            />
+                          )}
+                          {wallet.extensionName === "talisman" && (
+                            <Image
+                              src={TalismanLogo}
+                              alt={wallet.extensionName}
+                            />
+                          )}
+                          {wallet.extensionName === "polkadot-js" && (
+                            <Image
+                              src={PolkadotjsLogo}
+                              alt={wallet.extensionName}
+                            />
+                          )}
+                        </Box>
+                        <Text fontSize="15px" pl="16px" mr="2">
+                          {wallet.title}
+                        </Text>
+                      </Flex>
+                    </Box>
+                  </MenuItem>
+                  {!wallet.installed && (
+                    <Link
+                      href={wallet[`installUrl${browserName}`]}
+                      isexternal="true"
+                      fontSize="14px"
+                      color="#fff"
+                      pr="2px"
+                      fontFamily="Evogria, sans-serif"
+                      _hover={{ bg: "blackAlpha.900", color: "#7ae7ff" }}
                     >
-                      <Box>
-                        <Flex justifyContent="start" align="center">
-                          <Box boxSize="26px">
-                            {extensionName === "subwallet-js" && (
-                              <Image src={SubwalletLogo} alt={extensionName} />
-                            )}
-                            {extensionName === "talisman" && (
-                              <Image src={TalismanLogo} alt={extensionName} />
-                            )}
-                            {extensionName === "polkadot-js" && (
-                              <Image src={PolkadotjsLogo} alt={extensionName} />
-                            )}
-                          </Box>
-                          <Text fontSize="15px" pl="16px" mr="2">
-                            {title}
-                          </Text>
-                        </Flex>
-                      </Box>
-                    </MenuItem>
-                    {!installed && (
-                      <Link
-                        href={installUrl}
-                        isexternal="true"
-                        fontSize="14px"
-                        color="#fff"
-                        pr="2px"
-                        fontFamily="Evogria, sans-serif"
-                        _hover={{ bg: "blackAlpha.900", color: "#7ae7ff" }}
-                      >
-                        Install <ExternalLinkIcon mx="1px" />
-                      </Link>
-                    )}
-                  </Flex>
-                )
-              )}
+                      Install <ExternalLinkIcon mx="1px" />
+                    </Link>
+                  )}
+                </Flex>
+              ))}
             </MenuList>
           </Menu>
         </Flex>
