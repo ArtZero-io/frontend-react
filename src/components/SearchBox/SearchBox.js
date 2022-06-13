@@ -8,6 +8,7 @@ import {
   InputGroup,
   InputRightElement,
   Image,
+  Text,
 } from "@chakra-ui/react";
 import { FiSearch } from "react-icons/fi";
 import { APICall } from "../../api/client";
@@ -84,11 +85,11 @@ export default function SearchBox() {
   return (
     <InputGroup
       w={{ base: "auto", "2xl": "full" }}
-      minW={{ base: "100px", xl: "250px" }}
-      maxW="400px"
+      minW={{ base: "100px", xl: "200px", "2xl": "250px" }}
+      maxW={{ base: "100px", xl: "200px", "2xl": "400px" }}
       h={"50px"}
       py={1}
-      mx={{ base: "20px", xl: "20px", "2xl": "60px" }}
+      mx={{ base: "10px", xl: "10px", "2xl": "60px" }}
       color="brand.darkGray"
       borderWidth="0"
       borderRadius="0"
@@ -114,7 +115,7 @@ export default function SearchBox() {
           <Flex direction="row" alignItems="baseline">
             <ComboboxInput
               {...getInputProps()}
-              placeholder="Search collections..."
+              placeholder="Search collections ..."
               flex="0 0 auto"
               width="full"
             />
@@ -133,7 +134,6 @@ export default function SearchBox() {
                   alignItems="center"
                   mb={"12px"}
                   onClick={() => {
-                    console.log("onClickasdasdasdasd");
                     history.push(`/collection/${item.nftContractAddress}`);
                   }}
                 >
@@ -149,7 +149,12 @@ export default function SearchBox() {
                     itemIndex={index}
                     highlightedIndex={highlightedIndex}
                   >
-                    {item.name}
+                    <Text
+                      maxW={{ base: "100px", xl: "110px", "2xl": "300px" }}
+                      isTruncated
+                    >
+                      {item.name}
+                    </Text>
                   </ComboboxItem>
                 </Flex>
               ))}

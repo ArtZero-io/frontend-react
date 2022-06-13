@@ -33,7 +33,7 @@ const links = [
   { label: "Home", href: ROUTES.HOME },
   { label: "Marketplace", href: ROUTES.MARKETPLACE },
   { label: "TGE", href: ROUTES.MINTING_EVENT },
-  { label: "Stats", href: ROUTES.STATS },
+  // { label: "Stats", href: ROUTES.STATS },
 ];
 
 const MobileNavContent = (props) => {
@@ -159,9 +159,10 @@ const DesktopNavContent = (props) => {
   return (
     // <Flex w={[0, "full", "full"]}>
     <Flex w="full">
-      <SearchBox maxW="100px" />
+      <SearchBox />
+
       <HStack
-        spacing="55px"
+        spacing={{ xl: "35px", "2xl": "55px" }}
         align="stretch"
         overflowX="hidden"
         alignItems="center"

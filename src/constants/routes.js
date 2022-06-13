@@ -20,7 +20,7 @@ export const LAUNCHPAD_DETAIL = "/launchpad/:collection_address";
 export const MINTING_EVENT = "/mint";
 
 export const MARKETPLACE = "/marketplace";
-export const DOCS = "https://admin-128.gitbook.io/artzero_io/";
+export const DOCS = "https://docs.artzero.io";
 
 //EXTERNAL LINKS
 export const LANDING_PAGE = "http://artzero.io";
