@@ -19,6 +19,8 @@ import {
   Square,
   Input,
   Stack,
+  HStack,
+  Circle,
 } from "@chakra-ui/react";
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -38,19 +40,22 @@ import { AccountActionTypes } from "@store/types/account.types";
 
 import profile_calls from "@utils/blockchain/profile_calls";
 import { Link as ReactRouterLink } from "react-router-dom";
+import AddNewNFTModal from "../Modal/AddNewNFT";
+import { ImLock, ImUnlocked } from "react-icons/im";
 
-const NFTTabCollectible = ({
-  nftContractAddress,
-  description,
-  nftName,
-  owner,
-  is_for_sale,
-  avatar,
-  tokenID,
-  price,
-  attrsList,
-  highest_bid,
-}) => {
+const NFTTabCollectible = (props) => {
+  const {
+    nftContractAddress,
+    description,
+    nftName,
+    owner,
+    is_for_sale,
+    avatar,
+    tokenID,
+    price,
+    attrsList,
+    is_locked,
+  } = props;
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
   const publicCurrentAccount = getPublicCurrentAccount();
@@ -310,6 +315,31 @@ const NFTTabCollectible = ({
             >
               {nftName}
             </Heading>
+            <Spacer />
+
+            <HStack
+              pos="absolute"
+              top={{
+                base: `18px`,
+                xl: `18px`,
+              }}
+              right={{
+                base: `72px`,
+                xl: `72px`,
+              }}
+            >
+              {!is_locked && (
+                <Circle size="32px" bg="#171717" color="white">
+                  <TagRightIcon ml="6px" as={ImUnlocked} size="22px"  />
+                </Circle>
+              )}
+              {is_locked && (
+                <Circle size="32px" bg="#171717" color="white">
+                  <TagRightIcon ml="6px" as={ImLock} size="22px" />
+                </Circle>
+              )}
+            </HStack>
+            <AddNewNFTModal mode="edit" {...props} />
           </Flex>
 
           <Heading

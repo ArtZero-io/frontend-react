@@ -1,6 +1,7 @@
 import {
   Button,
   Heading,
+  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -14,8 +15,9 @@ import { useDispatch, useSelector } from "react-redux";
 import AddNewNFTForm from "../Form/AddNewNFT";
 import { onCloseButtonModal } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
+import { EditIcon } from "@chakra-ui/icons";
 
-const AddNewNFTModal = ({ forceUpdate, collectionOwner }) => {
+const AddNewNFTModal = ({ mode = "add", ...rest }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
 
@@ -29,10 +31,49 @@ const AddNewNFTModal = ({ forceUpdate, collectionOwner }) => {
 
   return (
     <>
-      <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-        Add new NFT
-      </Button>
-
+      {mode === "add" && (
+        <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
+          Add new NFT
+        </Button>
+      )}
+      {mode === "edit" && (
+        <>
+          <IconButton
+            pos="absolute"
+            top={{
+              base: `1rem`,
+              xl: `1rem`,
+            }}
+            right={{
+              base: `1rem`,
+              xl: `1rem`,
+            }}
+            w={["20px", "20px", "40px"]}
+            h={["20px", "20px", "40px"]}
+            aria-label="edit"
+            icon={
+              <EditIcon
+                id="abc1"
+                color="currentColor"
+                width="17px"
+                height="17px"
+                p="0"
+              />
+            }
+            size="icon"
+            borderWidth="0px"
+            variant="iconSolid"
+            _hover={{
+              color: "#000",
+              bg: "#7ae7ff",
+              borderWidth: "2px",
+            }}
+            bg="transparent"
+            color="#7ae7ff"
+            onClick={() => onOpen()}
+          />
+        </>
+      )}
       <Modal
         closeOnOverlayClick={false}
         closeOnEsc={false}
@@ -89,7 +130,7 @@ const AddNewNFTModal = ({ forceUpdate, collectionOwner }) => {
               },
             }}
           >
-            <AddNewNFTForm collectionOwner={collectionOwner} />
+            <AddNewNFTForm mode={mode} {...rest} />
           </ModalBody>
         </ModalContent>
       </Modal>

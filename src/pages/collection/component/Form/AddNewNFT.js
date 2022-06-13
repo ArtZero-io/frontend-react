@@ -14,7 +14,7 @@ import {
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { Formik, Form } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -33,10 +33,12 @@ import AddPropertiesModal from "../Modal/AddProperties";
 
 import { AccountActionTypes } from "@store/types/account.types";
 import StatusButton from "@components/Button/StatusButton";
+import { createLevelAttribute } from "@utils";
 
-const AddNewNFTForm = ({ collectionOwner }) => {
+const AddNewNFTForm = ({ mode = "add", collectionOwner, ...rest }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const { currentAccount, api } = useSubstrateState();
+  const [initialValues, setInitialValues] = useState(undefined);
 
   const { collection_address } = useParams();
 
@@ -45,351 +47,401 @@ const AddNewNFTForm = ({ collectionOwner }) => {
 
   const [modifierToEdit, setModifierToEdit] = useState(-1);
 
+  const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
+
+  const noImagesChange =
+    avatarIPFSUrl && currentAvatarIPFSUrl.current === avatarIPFSUrl;
+
+  useEffect(() => {
+    let newInitialValues = {
+      NFTName: "",
+      description: "",
+      properties: [{ type: "", name: "" }],
+      levels: [{ name: "", level: "", levelMax: "" }],
+    };
+
+    if (mode === "edit") {
+      newInitialValues.NFTName = rest.nftName;
+      newInitialValues.description = rest.description;
+
+      newInitialValues.properties = rest.attrsList
+        .filter((item) => !JSON.stringify(Object.values(item)).includes("|"))
+        .map((item) => {
+          return { type: Object.keys(item)[0], name: Object.values(item)[0] };
+        });
+
+      newInitialValues.levels = rest?.attrsList
+        ?.filter((item) => JSON.stringify(Object.values(item)).includes("|"))
+        .map((item) => {
+          const result = createLevelAttribute(Object.values(item)[0]);
+
+          result.name = Object.keys(item)[0];
+
+          return result;
+        });
+      setAvatarIPFSUrl(rest.avatar);
+      currentAvatarIPFSUrl.current = rest.avatar;
+      setInitialValues(newInitialValues);
+    } else {
+      setInitialValues(newInitialValues);
+    }
+  }, [mode, rest.attrsList, rest.avatar, rest.description, rest.nftName]);
+
   return (
     <div>
-      <Formik
-        initialValues={{
-          NFTName: "",
-          description: "",
-          properties: [{ type: "", name: "" }],
-          levels: [{ name: "", level: "", levelMax: "" }],
-        }}
-        validationSchema={Yup.object({
-          NFTName: Yup.string()
-            .min(3, "Must be longer than 3 characters")
-            .max(30, "Must be less than 30 characters")
-            .required("Required"),
-          description: Yup.string()
-            .min(3, "Must be longer than 3 characters")
-            .max(150, "Must be 150 characters or less")
-            .required("Required"),
-          properties: Yup.array()
-            .of(
+      {initialValues && (
+        <Formik
+          initialValues={initialValues}
+          validationSchema={Yup.object({
+            NFTName: Yup.string()
+              .min(3, "Must be longer than 3 characters")
+              .max(30, "Must be less than 30 characters")
+              .required("Required"),
+            description: Yup.string()
+              .min(3, "Must be longer than 3 characters")
+              .max(150, "Must be 150 characters or less")
+              .required("Required"),
+            properties: Yup.array()
+              .of(
+                Yup.object().shape(
+                  {
+                    type: Yup.string().when("name", {
+                      is: (val) => val,
+                      then: Yup.string()
+                        .test(
+                          "Test Prop",
+                          "Duplicated Props Type!",
+                          (value, schema) => {
+                            const propsArr = schema?.from[1].value?.properties;
+
+                            const keyPropsArr = propsArr.map((p) =>
+                              p.type?.trim()
+                            );
+
+                            const [isDup] = keyPropsArr.filter(
+                              (v, i) => i !== keyPropsArr.indexOf(v)
+                            );
+
+                            return !(isDup && isDup.trim() === value.trim());
+                          }
+                        )
+                        .required("Must have type value.")
+                        .min(3, "Must be longer than 3 characters")
+                        .max(30, "Must be less than 30 characters"),
+                      otherwise: Yup.string().notRequired(),
+                    }),
+                    name: Yup.string().when("type", {
+                      is: (val) => val,
+                      then: Yup.string()
+                        .required("Must have name value.")
+                        .min(3, "Must be longer than 3 characters")
+                        .max(30, "Must be less than 30 characters"),
+                      otherwise: Yup.string().notRequired(),
+                    }),
+                  },
+                  [["type", "name"]]
+                )
+              )
+              .min(0)
+              .max(10),
+            levels: Yup.array(
               Yup.object().shape(
                 {
-                  type: Yup.string().when("name", {
+                  name: Yup.string().when("level", {
                     is: (val) => val,
                     then: Yup.string()
                       .test(
-                        "Test Prop",
-                        "Duplicated Props Type!",
+                        "Test Level",
+                        "Duplicated Levels Name!",
                         (value, schema) => {
-                          const propsArr = schema?.from[1].value?.properties;
+                          const levelsArr = schema?.from[1].value?.levels;
 
-                          const keyPropsArr = propsArr.map((p) =>
-                            p.type?.trim()
+                          const keyLevelsArr = levelsArr.map((p) =>
+                            p.name?.trim()
                           );
 
-                          const [isDup] = keyPropsArr.filter(
-                            (v, i) => i !== keyPropsArr.indexOf(v)
+                          const [isDup] = keyLevelsArr.filter(
+                            (v, i) => i !== keyLevelsArr.indexOf(v)
                           );
 
                           return !(isDup && isDup.trim() === value.trim());
                         }
                       )
-                      .required("Must have type value.")
+                      .required("Must have level name.")
                       .min(3, "Must be longer than 3 characters")
                       .max(30, "Must be less than 30 characters"),
                     otherwise: Yup.string().notRequired(),
                   }),
-                  name: Yup.string().when("type", {
+                  level: Yup.number().when("levelMax", {
                     is: (val) => val,
-                    then: Yup.string()
-                      .required("Must have name value.")
-                      .min(3, "Must be longer than 3 characters")
-                      .max(30, "Must be less than 30 characters"),
-                    otherwise: Yup.string().notRequired(),
+                    then: Yup.number()
+                      .required("Must have min value.")
+                      .min(1, "Must be bigger than 0")
+                      .max(Yup.ref("levelMax"), "Must smaller than max"),
+                    otherwise: Yup.number().notRequired(),
+                  }),
+                  levelMax: Yup.number().when("name", {
+                    is: (val) => val,
+                    then: Yup.number()
+                      .required("Must have max value.")
+                      .min(Yup.ref("level"), "Must greater than level")
+                      .max(10, "Must be smaller than 10"),
+                    otherwise: Yup.number().notRequired(),
                   }),
                 },
-                [["type", "name"]]
+                [["name", "level", "levelMax"]]
               )
             )
-            .min(0)
-            .max(10),
-          levels: Yup.array(
-            Yup.object().shape(
-              {
-                name: Yup.string().when("level", {
-                  is: (val) => val,
-                  then: Yup.string()
-                    .test(
-                      "Test Level",
-                      "Duplicated Levels Name!",
-                      (value, schema) => {
-                        const levelsArr = schema?.from[1].value?.levels;
+              .min(0)
+              .max(10),
+          })}
+          onSubmit={async (values, { setSubmitting }) => {
+            !avatarIPFSUrl && toast.error("Upload images first");
 
-                        const keyLevelsArr = levelsArr.map((p) =>
-                          p.name?.trim()
-                        );
+            if (avatarIPFSUrl) {
+              values.avatarIPFSUrl = avatarIPFSUrl;
 
-                        const [isDup] = keyLevelsArr.filter(
-                          (v, i) => i !== keyLevelsArr.indexOf(v)
-                        );
+              if (collectionOwner === currentAccount?.address) {
+                let attributes = [
+                  {
+                    name: "nft_name",
+                    value: values.NFTName,
+                  },
+                  {
+                    name: "description",
+                    value: values.description,
+                  },
+                  {
+                    name: "avatar",
+                    value: values.avatarIPFSUrl,
+                  },
+                ];
 
-                        return !(isDup && isDup.trim() === value.trim());
-                      }
-                    )
-                    .required("Must have level name.")
-                    .min(3, "Must be longer than 3 characters")
-                    .max(30, "Must be less than 30 characters"),
-                  otherwise: Yup.string().notRequired(),
-                }),
-                level: Yup.number().when("levelMax", {
-                  is: (val) => val,
-                  then: Yup.number()
-                    .required("Must have min value.")
-                    .min(1, "Must be bigger than 0")
-                    .max(Yup.ref("levelMax"), "Must smaller than max"),
-                  otherwise: Yup.number().notRequired(),
-                }),
-                levelMax: Yup.number().when("name", {
-                  is: (val) => val,
-                  then: Yup.number()
-                    .required("Must have max value.")
-                    .min(Yup.ref("level"), "Must greater than level")
-                    .max(10, "Must be smaller than 10"),
-                  otherwise: Yup.number().notRequired(),
-                }),
-              },
-              [["name", "level", "levelMax"]]
-            )
-          )
-            .min(0)
-            .max(10),
-        })}
-        onSubmit={async (values, { setSubmitting }) => {
-          !avatarIPFSUrl && toast.error("Upload images first");
-
-          if (avatarIPFSUrl) {
-            values.avatarIPFSUrl = avatarIPFSUrl;
-
-            if (collectionOwner === currentAccount?.address) {
-              let attributes = [
-                {
-                  name: "nft_name",
-                  value: values.NFTName,
-                },
-                {
-                  name: "description",
-                  value: values.description,
-                },
-                {
-                  name: "avatar",
-                  value: values.avatarIPFSUrl,
-                },
-              ];
-
-              if (values?.properties[0]?.name) {
-                for (const property of values.properties) {
-                  attributes.push({
-                    name: property.type,
-                    value: property.name,
-                  });
+                if (values?.properties[0]?.name) {
+                  for (const property of values.properties) {
+                    attributes.push({
+                      name: property.type,
+                      value: property.name,
+                    });
+                  }
                 }
-              }
 
-              if (values?.levels[0]?.name) {
-                for (const level of values.levels) {
-                  attributes.push({
-                    name: level.name,
-                    value: level.level + "|" + level.levelMax,
-                  });
+                if (values?.levels[0]?.name) {
+                  for (const level of values.levels) {
+                    attributes.push({
+                      name: level.name,
+                      value: level.level + "|" + level.levelMax,
+                    });
+                  }
                 }
+
+                const nft721_psp34_standard_contract = new ContractPromise(
+                  api,
+                  nft721_psp34_standard.CONTRACT_ABI,
+                  collection_address
+                );
+                nft721_psp34_standard_calls.setContract(
+                  nft721_psp34_standard_contract
+                );
+
+                dispatch({
+                  type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+                  payload: {
+                    status: "Start",
+                  },
+                });
+
+                if (mode === "add") {
+                  await nft721_psp34_standard_calls.mintWithAttributes(
+                    currentAccount,
+                    collection_address,
+                    attributes,
+                    dispatch
+                  );
+                } else {
+                  alert("edit NFT");
+                  // Todos: update NFT func
+                  // await collection_manager_calls.setMultipleAttributes(
+                  //   currentAccount,
+                  //   nftContractAddress,
+                  //   data.attributes,
+                  //   data.attributeVals,
+                  //   dispatch
+                  // );
+                }
+              } else {
+                dispatch({
+                  type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+                });
+
+                return toast.error("You aren't the owner of this collection!");
               }
-
-              const nft721_psp34_standard_contract = new ContractPromise(
-                api,
-                nft721_psp34_standard.CONTRACT_ABI,
-                collection_address
-              );
-              nft721_psp34_standard_calls.setContract(
-                nft721_psp34_standard_contract
-              );
-
-              dispatch({
-                type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-                payload: {
-                  status: "Start",
-                },
-              });
-
-              await nft721_psp34_standard_calls.mintWithAttributes(
-                currentAccount,
-                collection_address,
-                attributes,
-                dispatch
-              );
-            } else {
-              dispatch({
-                type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-              });
-
-              return toast.error("You aren't the owner of this collection!");
             }
-          }
-        }}
-      >
-        {({ values, dirty, isValid }) => (
-          <div>
-            <Form>
-              <HStack>
-                <AddNewNFTInput
-                  mode="add"
-                  label="NFT Name"
-                  name="NFTName"
-                  type="NFTName"
-                  placeholder="NFT Name"
+          }}
+        >
+          {({ values, dirty, isValid }) => (
+            <div>
+              <Form>
+                <HStack>
+                  <AddNewNFTInput
+                    mode="add"
+                    label="NFT Name"
+                    name="NFTName"
+                    type="NFTName"
+                    placeholder="NFT Name"
+                  />
+                </HStack>
+                <AddNewNFTTextArea
+                  label="Description"
+                  name="description"
+                  type="text"
+                  placeholder="Description"
                 />
-              </HStack>
+                <AddNewNFTImageUpload
+                  mode={mode}
+                  imageIPFSUrl={avatarIPFSUrl}
+                  setImageIPFSUrl={setAvatarIPFSUrl}
+                  title="NFT Image"
+                  limitedSize={{ width: "1000", height: "1000" }}
+                  isBanner={false}
+                />
+                {/* Add Props  */}
+                <Box py={6} borderBottomWidth={1}>
+                  <Flex w="full" pb={3}>
+                    <VStack alignItems="start">
+                      <Heading size="h5">properties</Heading>
+                      <Text fontSize={"lg"}>
+                        {/* Textural trails that show up as restangles */}
+                      </Text>
+                    </VStack>
+                    <Spacer />
+                    <Button
+                      variant="outline"
+                      color="brand.blue"
+                      onClick={() => setModifierToEdit("properties")}
+                    >
+                      Add properties
+                    </Button>
+                  </Flex>
 
-              <AddNewNFTTextArea
-                label="Description"
-                name="description"
-                type="text"
-                placeholder="Description"
-              />
+                  {values?.properties[0]?.type ? (
+                    <Grid
+                      w="full"
+                      templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
+                      gap={6}
+                      overflowY="auto"
+                    >
+                      {values?.properties.map((item, idx) => {
+                        return (
+                          <React.Fragment key={idx}>
+                            <GridItem w="100%" h="100%">
+                              <Box
+                                w="full"
+                                textAlign="left"
+                                alignItems="end"
+                                bg="brand.semiBlack"
+                                px={4}
+                                py={3}
+                              >
+                                <Flex w="full">
+                                  <Box color="brand.grayLight" w="full">
+                                    <Text>{item.type}</Text>
+                                    <Heading
+                                      pr={"2.5px"}
+                                      size="h6"
+                                      mt={1}
+                                      noOfLines={[1, 2]}
+                                      textAlign="right"
+                                    >
+                                      {item.name}
+                                    </Heading>
+                                  </Box>
+                                  <Spacer />
+                                </Flex>
+                              </Box>
+                            </GridItem>
+                          </React.Fragment>
+                        );
+                      })}
+                    </Grid>
+                  ) : null}
 
-              <AddNewNFTImageUpload
-                setImageIPFSUrl={setAvatarIPFSUrl}
-                title="NFT Image"
-                limitedSize={{ width: "1000", height: "1000" }}
-                isBanner={false}
-              />
+                  <AddPropertiesModal
+                    name="properties"
+                    onClose={() => setModifierToEdit(null)}
+                    isOpen={modifierToEdit === "properties"}
+                  />
+                </Box>
+                {/* End Add Props  */}
+                <Box py={6} borderBottomWidth={1}>
+                  <Flex w="full" pb={3}>
+                    <VStack alignItems="start">
+                      <Heading size="h5">Levels</Heading>
+                      <Text fontSize={"lg"}>
+                        {/* Textural trails that show up as restangles */}
+                      </Text>
+                    </VStack>
+                    <Spacer />
+                    <Button
+                      variant="outline"
+                      color="brand.blue"
+                      onClick={() => setModifierToEdit("levels")}
+                    >
+                      Add levels
+                    </Button>
+                  </Flex>
 
-              {/* Add Props  */}
-              <Box py={6} borderBottomWidth={1}>
-                <Flex w="full" pb={3}>
-                  <VStack alignItems="start">
-                    <Heading size="h5">properties</Heading>
-                    <Text fontSize={"lg"}>
-                      {/* Textural trails that show up as restangles */}
-                    </Text>
-                  </VStack>
-                  <Spacer />
-                  <Button
-                    variant="outline"
-                    color="brand.blue"
-                    onClick={() => setModifierToEdit("properties")}
-                  >
-                    Add properties
-                  </Button>
-                </Flex>
-
-                {values.properties[0].type ? (
-                  <Grid
-                    w="full"
-                    templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
-                    gap={6}
-                    overflowY="auto"
-                  >
-                    {values?.properties.map((item, idx) => {
-                      return (
-                        <React.Fragment key={idx}>
-                          <GridItem w="100%" h="100%">
+                  {values?.levels[0]?.name
+                    ? values?.levels?.map((item, idx) => {
+                        return (
+                          <React.Fragment key={idx}>
                             <Box
                               w="full"
                               textAlign="left"
                               alignItems="end"
                               bg="brand.semiBlack"
-                              px={4}
-                              py={3}
+                              p={5}
+                              mb={3}
                             >
-                              <Flex w="full">
-                                <Box color="brand.grayLight" w="full">
-                                  <Text>{item.type}</Text>
-                                  <Heading
-                                    pr={"2.5px"}
-                                    size="h6"
-                                    mt={1}
-                                    noOfLines={[1, 2]}
-                                    textAlign="right"
-                                  >
-                                    {item.name}
-                                  </Heading>
-                                </Box>
+                              <Flex w="full" mb={3}>
+                                <Heading size="h6" mt={1} color="#fff">
+                                  {item.name}
+                                </Heading>
                                 <Spacer />
+                                <Text color="#fff">
+                                  {item.level} of {item.levelMax}
+                                </Text>
                               </Flex>
+                              <Progress
+                                colorScheme="telegram"
+                                size="sm"
+                                value={Number(
+                                  (item.level * 100) / item.levelMax
+                                )}
+                                height="6px"
+                              />
                             </Box>
-                          </GridItem>
-                        </React.Fragment>
-                      );
-                    })}
-                  </Grid>
-                ) : null}
+                          </React.Fragment>
+                        );
+                      })
+                    : null}
 
-                <AddPropertiesModal
-                  name="properties"
-                  onClose={() => setModifierToEdit(null)}
-                  isOpen={modifierToEdit === "properties"}
+                  <AddLevelsModal
+                    name="levels"
+                    onClose={() => setModifierToEdit(null)}
+                    isOpen={modifierToEdit === "levels"}
+                  />
+                </Box>
+
+                <StatusButton
+                  mode={mode}
+                  text="NFT"
+                  type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                  disabled={!(dirty && isValid) && noImagesChange}
+                  isLoading={addNftTnxStatus}
+                  loadingText={`${addNftTnxStatus?.status}`}
                 />
-              </Box>
-              {/* End Add Props  */}
-
-              <Box py={6} borderBottomWidth={1}>
-                <Flex w="full" pb={3}>
-                  <VStack alignItems="start">
-                    <Heading size="h5">Levels</Heading>
-                    <Text fontSize={"lg"}>
-                      {/* Textural trails that show up as restangles */}
-                    </Text>
-                  </VStack>
-                  <Spacer />
-                  <Button
-                    variant="outline"
-                    color="brand.blue"
-                    onClick={() => setModifierToEdit("levels")}
-                  >
-                    Add levels
-                  </Button>
-                </Flex>
-
-                {values.levels[0].name
-                  ? values?.levels.map((item, idx) => {
-                      return (
-                        <React.Fragment key={idx}>
-                          <Box
-                            w="full"
-                            textAlign="left"
-                            alignItems="end"
-                            bg="brand.semiBlack"
-                            p={5}
-                            mb={3}
-                          >
-                            <Flex w="full" mb={3}>
-                              <Heading size="h6" mt={1} color="#fff">
-                                {item.name}
-                              </Heading>
-                              <Spacer />
-                              <Text color="#fff">
-                                {item.level} of {item.levelMax}
-                              </Text>
-                            </Flex>
-                            <Progress
-                              colorScheme="telegram"
-                              size="sm"
-                              value={Number((item.level * 100) / item.levelMax)}
-                              height="6px"
-                            />
-                          </Box>
-                        </React.Fragment>
-                      );
-                    })
-                  : null}
-
-                <AddLevelsModal
-                  name="levels"
-                  onClose={() => setModifierToEdit(null)}
-                  isOpen={modifierToEdit === "levels"}
-                />
-              </Box>
-              <StatusButton
-                text="NFT"
-                type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
-                disabled={!(dirty && isValid)}
-                isLoading={addNftTnxStatus}
-                loadingText={`${addNftTnxStatus?.status}`}
-              />
-              {/* <Button
+                {/* <Button
                 spinnerPlacement="start"
                 isLoading={tnxStatus}
                 loadingText={`${tnxStatus?.status}`}
@@ -401,10 +453,11 @@ const AddNewNFTForm = ({ collectionOwner }) => {
               >
                 Add new NFT
               </Button> */}
-            </Form>
-          </div>
-        )}
-      </Formik>
+              </Form>
+            </div>
+          )}
+        </Formik>
+      )}
     </div>
   );
 };

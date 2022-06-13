@@ -73,7 +73,7 @@ const CollectionItems = ({
 
   const elementRef = useRef();
   const dimensions = useDimensions(elementRef, true);
-  
+
   const nftCardWidthB = useBreakpointValue({ base: 150, xl: 300 });
 
   const nftCardWidth = bigCard ? nftCardWidthB : 240;
@@ -81,7 +81,6 @@ const CollectionItems = ({
 
   const gridWidth = dimensions?.borderBox?.width;
   const gridCol = Math.floor(gridWidth / nftCardWidth);
-  
   const gapB = useBreakpointValue({ base: 15, xl: 30 });
   const gap = gapB;
 
@@ -224,7 +223,7 @@ const CollectionItems = ({
           <Spacer />
 
           {currentAccount?.address === collectionOwner && contractType === 2 ? (
-            <AddNewNFTModal collectionOwner={collectionOwner} />
+            <AddNewNFTModal collectionOwner={collectionOwner} mode="add" />
           ) : null}
         </Flex>
       </Box>
@@ -248,6 +247,7 @@ const CollectionItems = ({
             listNFTFormatted={unListNFT}
             realNftCardWidth={realNftCardWidth}
             realGridCardHeight={nftCardHeight}
+            collectionOwner={collectionOwner}
           />
         )}
       </Box>
@@ -264,6 +264,7 @@ function GridNftA({
   realGridCardHeight,
   gridCol,
   gap,
+  collectionOwner,
 }) {
   const originOffset = useRef({ top: 0, left: 0 });
   const controls = useAnimation();
@@ -284,7 +285,12 @@ function GridNftA({
 
   return (
     <>
-      <NFTDetailModal {...selectedNft} isOpen={isOpen} onClose={onClose} />
+      <NFTDetailModal
+        {...selectedNft}
+        isOpen={isOpen}
+        onClose={onClose}
+        collectionOwner={collectionOwner}
+      />
 
       <AnimatePresence>
         <motion.div
