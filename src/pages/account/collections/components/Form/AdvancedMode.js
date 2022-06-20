@@ -278,12 +278,14 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               <Form>
                 <HStack>
                   <AdvancedModeInput
+                    isRequired={true}
                     label="NFT Contract Address"
                     name="nftContractAddress"
                     type="text"
                     placeholder="NFT Contract Address"
                   />
                   <AdvancedModeInput
+                    isRequired={true}
                     label="Collection Name"
                     name="collectionName"
                     type="collectionName"
@@ -313,6 +315,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 </HStack>
 
                 <AdvancedModeTextArea
+                  isRequired={true}
                   label="Collection Description"
                   name="collectionDescription"
                   type="text"

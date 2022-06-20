@@ -268,12 +268,14 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                   {mode === "add" && (
                     <>
                       <SimpleModeInput
+                        isRequired={true}
                         label="NFT Name"
                         name="nftName"
                         type="text"
                         placeholder="NFT Name"
                       />
                       <SimpleModeInput
+                        isRequired={true}
                         label="NFT Symbol"
                         name="nftSymbol"
                         type="text"
@@ -282,6 +284,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     </>
                   )}
                   <SimpleModeInput
+                    isRequired={true}
                     label="Collection Name"
                     name="collectionName"
                     type="text"
@@ -311,6 +314,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                 </HStack>
 
                 <SimpleModeTextArea
+                  isRequired={true}
                   label="Collection Description"
                   name="collectionDescription"
                   type="text"

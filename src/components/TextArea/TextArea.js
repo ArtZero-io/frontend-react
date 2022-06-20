@@ -3,10 +3,17 @@ import React from "react";
 import { useField, Field } from "formik";
 import { FormControl, FormLabel, Textarea, Text } from "@chakra-ui/react";
 
-export default function SimpleModeTextarea({ label, height, width, ...props }) {
+export default function SimpleModeTextarea({
+  label,
+  height,
+  width,
+  isRequired = false,
+  ...props
+}) {
   const [field, meta] = useField(props);
   return (
     <FormControl
+      isRequired={isRequired}
       fontSize="lg"
       h={height || 28}
       color="#fff"

@@ -24,6 +24,7 @@ const supportedFormat = ["image/png", "image/jpg", "image/jpeg"];
 
 const ImageUploadCollection = ({
   id,
+  isRequired = false,
   mode,
   isBanner,
   imageIPFSUrl,

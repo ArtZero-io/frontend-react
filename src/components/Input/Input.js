@@ -2,10 +2,17 @@ import React from "react";
 import { useField, Field } from "formik";
 import { FormControl, FormLabel, Input, Text } from "@chakra-ui/react";
 
-export default function SimpleModeInput({ label, height, width, ...props }) {
+export default function SimpleModeInput({
+  label,
+  height,
+  width,
+  isRequired = false,
+  ...props
+}) {
   const [field, meta] = useField(props);
   return (
     <FormControl
+      isRequired={isRequired}
       mx={1}
       fontSize="lg"
       color="#fff"
@@ -18,6 +25,7 @@ export default function SimpleModeInput({ label, height, width, ...props }) {
         </FormLabel>
       )}
       <Field
+        required
         ml={0}
         pl={2}
         as={Input}
