@@ -16,7 +16,7 @@ import { FieldArray, useField } from "formik";
 import toast from "react-hot-toast";
 import AddLevelsInput from "@components/Input/Input";
 
-function AddLevelsModal({ name, isOpen, onClose }) {
+function AddLevelsModal({ name, isOpen, onClose, mode }) {
   const [{ value }] = useField(name);
 
   const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
@@ -44,7 +44,7 @@ function AddLevelsModal({ name, isOpen, onClose }) {
       >
         <ModalHeader>
           <Heading size="h4" my={2}>
-            Add levels
+            {mode === "add" ? "Add levels" : "Edit levels    "}
           </Heading>
           <Text fontSize={"sm"}>
             {/* Textural trails that show up as restangles */}
@@ -85,6 +85,7 @@ function AddLevelsModal({ name, isOpen, onClose }) {
                   <div key={index}>
                     <Flex alignItems="start" mb={4}>
                       <AddLevelsInput
+                        isRequired={true}
                         flexGrow={10}
                         mx={5}
                         width="full"
@@ -95,6 +96,7 @@ function AddLevelsModal({ name, isOpen, onClose }) {
                         placeholder="Your level here"
                       />
                       <AddLevelsInput
+                        isRequired={true}
                         textAlign="center"
                         flexGrow={0}
                         mx={5}
@@ -111,6 +113,7 @@ function AddLevelsModal({ name, isOpen, onClose }) {
                         </Text>
                       </Flex>
                       <AddLevelsInput
+                        isRequired={true}
                         textAlign="center"
                         flexGrow={1}
                         mx={5}
@@ -146,13 +149,18 @@ function AddLevelsModal({ name, isOpen, onClose }) {
                   </div>
                 ))}
                 <Flex pb={6}>
+                  {/* TODO:
+                  Temp add mode === "add" for edit mode
+                  consider to make a separate form for edit NFT
+                   */}
                   <Button
                     variant="outline"
                     type="button"
                     isDisabled={
-                      hasEmptyLevel ||
-                      !arrayHelpers?.form?.dirty ||
-                      arrayHelpers.form?.errors?.levels
+                      mode === "add" &&
+                      (hasEmptyLevel ||
+                        !arrayHelpers?.form?.dirty ||
+                        arrayHelpers.form?.errors?.levels)
                     }
                     onClick={() =>
                       arrayHelpers.push({ name: "", level: "", levelMax: "" })

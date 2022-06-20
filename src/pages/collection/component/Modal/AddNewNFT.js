@@ -112,7 +112,7 @@ const AddNewNFTModal = ({ mode = "add", ...rest }) => {
           />
           <ModalHeader>
             <Heading size="h4" my={2}>
-              Add new NFT
+              {mode === "add" ? "Add new NFT" : "Edit NFT"}
             </Heading>
           </ModalHeader>
 

@@ -57,7 +57,7 @@ const client = async (method, url, options = {}) => {
   const { status, ret, message } = data;
 
   if (status === "OK") {
-    return ret;
+    return ret || "OK";
   }
 
   if (status === "FAILED") {

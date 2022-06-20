@@ -16,7 +16,7 @@ import { FieldArray, useField } from "formik";
 import toast from "react-hot-toast";
 import AddPropertiesInput from "@components/Input/Input";
 
-function AddPropertiesModal({ name, isOpen, onClose }) {
+function AddPropertiesModal({ name, isOpen, onClose, mode }) {
   const [{ value }] = useField(name);
 
   const hasEmptyProp = value.some((p) => p.type?.trim() === "");
@@ -44,7 +44,7 @@ function AddPropertiesModal({ name, isOpen, onClose }) {
       >
         <ModalHeader>
           <Heading size="h4" my={2}>
-            Add properties
+            {mode === "add" ? "Add properties" : "Edit properties"}
           </Heading>
           <Text fontSize={"sm"}>
             {/* Textural trails that show up as restangles */}
@@ -109,13 +109,18 @@ function AddPropertiesModal({ name, isOpen, onClose }) {
                   </div>
                 ))}
                 <Flex pb={6}>
+                  {/* TODO:
+                  Temp add mode === "add" for edit mode
+                  consider to make a separate form for edit NFT
+                   */}
                   <Button
                     variant="outline"
                     type="button"
                     isDisabled={
-                      hasEmptyProp ||
-                      !arrayHelpers?.form?.dirty ||
-                      arrayHelpers.form?.errors?.properties
+                      mode === "add" &&
+                      (hasEmptyProp ||
+                        !arrayHelpers?.form?.dirty ||
+                        arrayHelpers.form?.errors?.properties)
                     }
                     onClick={() => arrayHelpers.push({ type: "", name: "" })}
                   >

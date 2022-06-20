@@ -35,7 +35,7 @@ import { AccountActionTypes } from "@store/types/account.types";
 import StatusButton from "@components/Button/StatusButton";
 import { createLevelAttribute } from "@utils";
 
-const AddNewNFTForm = ({ mode = "add", collectionOwner, ...rest }) => {
+const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const { currentAccount, api } = useSubstrateState();
   const [initialValues, setInitialValues] = useState(undefined);
@@ -259,15 +259,13 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, ...rest }) => {
                     dispatch
                   );
                 } else {
-                  alert("edit NFT");
-                  // Todos: update NFT func
-                  // await collection_manager_calls.setMultipleAttributes(
-                  //   currentAccount,
-                  //   nftContractAddress,
-                  //   data.attributes,
-                  //   data.attributeVals,
-                  //   dispatch
-                  // );
+                  await nft721_psp34_standard_calls.setMultipleAttributesNFT(
+                    currentAccount,
+                    collection_address,
+                    tokenID,
+                    attributes,
+                    dispatch
+                  );
                 }
               } else {
                 dispatch({
@@ -284,6 +282,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, ...rest }) => {
               <Form>
                 <HStack>
                   <AddNewNFTInput
+                    isRequired={true}
                     mode="add"
                     label="NFT Name"
                     name="NFTName"
@@ -292,6 +291,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, ...rest }) => {
                   />
                 </HStack>
                 <AddNewNFTTextArea
+                  isRequired={true}
                   label="Description"
                   name="description"
                   type="text"
@@ -367,6 +367,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, ...rest }) => {
                   ) : null}
 
                   <AddPropertiesModal
+                    mode={mode}
                     name="properties"
                     onClose={() => setModifierToEdit(null)}
                     isOpen={modifierToEdit === "properties"}
@@ -427,16 +428,16 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, ...rest }) => {
                     : null}
 
                   <AddLevelsModal
+                    mode={mode}
                     name="levels"
                     onClose={() => setModifierToEdit(null)}
                     isOpen={modifierToEdit === "levels"}
                   />
                 </Box>
-
                 <StatusButton
-                  mode={mode}
                   text="NFT"
                   type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                  // disabled={!(dirty && isValid)}
                   disabled={!(dirty && isValid) && noImagesChange}
                   isLoading={addNftTnxStatus}
                   loadingText={`${addNftTnxStatus?.status}`}

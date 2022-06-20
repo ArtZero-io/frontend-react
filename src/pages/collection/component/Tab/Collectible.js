@@ -330,7 +330,7 @@ const NFTTabCollectible = (props) => {
             >
               {!is_locked && (
                 <Circle size="32px" bg="#171717" color="white">
-                  <TagRightIcon ml="6px" as={ImUnlocked} size="22px"  />
+                  <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
                 </Circle>
               )}
               {is_locked && (
@@ -339,7 +339,9 @@ const NFTTabCollectible = (props) => {
                 </Circle>
               )}
             </HStack>
-            <AddNewNFTModal mode="edit" {...props} />
+            {owner === currentAccount.address && (
+              <AddNewNFTModal mode="edit" {...props} />
+            )}
           </Flex>
 
           <Heading

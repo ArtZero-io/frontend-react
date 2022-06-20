@@ -1,10 +1,15 @@
+/* eslint-disable no-unused-vars */
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import BN from "bn.js";
 import { TypeRegistry, U64 } from "@polkadot/types";
 import { clientAPI } from "@api/client";
-import { handleContractCallAddNftAnimation } from "@utils";
+import {
+  handleContractCallAddNftAnimation,
+  // handleContractCallAnimation,
+} from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
+import { APICall } from "../../api/client";
 
 let contract;
 
@@ -34,7 +39,7 @@ async function getTotalSupply(caller_account) {
   return null;
 }
 
-async function tokenUri(caller_account,token_id) {
+async function tokenUri(caller_account, token_id) {
   // console.log("getTotalSupply before check", !caller_account);
   if (!contract || !caller_account) {
     return null;
@@ -44,9 +49,11 @@ async function tokenUri(caller_account,token_id) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query[
-    "psp34Traits::tokenUri"
-  ](address, { value: azero_value, gasLimit }, token_id);
+  const { result, output } = await contract.query["psp34Traits::tokenUri"](
+    address,
+    { value: azero_value, gasLimit },
+    token_id
+  );
   if (result.isOk) {
     return output.toHuman();
   }
@@ -287,9 +294,7 @@ async function allowance(
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  // const tokenId = await contract.api.createType("ContractsPsp34Id", {
-  //   U64: new U64(new TypeRegistry(), token_id),
-  // });
+
   const { result, output } = await contract.query["psp34::allowance"](
     address,
     { value: azero_value, gasLimit },
@@ -349,7 +354,6 @@ async function approve(
             // dispatch({
             //   type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
             // });
-
             //   toast.success(
             //     `Approve ${
             //       statusText === "0" ? "started" : statusText.toLowerCase()
@@ -374,6 +378,75 @@ async function approve(
   return unsubscribe;
 }
 
+async function setMultipleAttributesNFT(
+  account,
+  collection_address,
+  tokenID,
+  attributes,
+  dispatch
+) {
+  let attribute_label = [];
+  let attribute_value = [];
+
+  for (const attribute of attributes) {
+    if (attribute_label.includes(attribute.name.trim()) === false) {
+      attribute_label.push(attribute.name.trim());
+      attribute_value.push(attribute.value);
+    }
+  }
+  let unsubscribe;
+
+  const address = account?.address;
+  const gasLimit = -1;
+  const value = 0;
+
+  const injector = await web3FromSource(account?.meta?.source);
+
+  await contract.tx["psp34Traits::setMultipleAttributes"](
+    { value, gasLimit },
+    { u64: tokenID },
+    attribute_label,
+    attribute_value
+  )
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError ", dispatchError.toString());
+          }
+        }
+
+        if (status) {
+          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
+
+          if (status.isFinalized === true) {
+            const response = await APICall.askBeUpdateNftData({
+              collection_address,
+              token_id: tokenID,
+            });
+
+            if (response !== "OK") return toast.error(response);
+          }
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+      });
+      const mess = `Tnx is ${e.message}`;
+
+      toast.error(mess);
+    });
+
+  return unsubscribe;
+}
+
 const nft721_psp34_standard_calls = {
   tokenUri,
   mint,
@@ -387,6 +460,7 @@ const nft721_psp34_standard_calls = {
   getOwnerAddressByTokenId,
   approve,
   allowance,
+  setMultipleAttributesNFT,
 };
 
 export default nft721_psp34_standard_calls;
