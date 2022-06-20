@@ -63,7 +63,7 @@ export default function SearchBox() {
     isOpen,
     getMenuProps,
     getInputProps,
-    getComboboxProps,
+    // getComboboxProps,
     highlightedIndex,
     getItemProps,
     inputValue,
@@ -107,7 +107,7 @@ export default function SearchBox() {
       </InputRightElement>
       <Flex direction="column" align="center" w="full">
         <Flex
-          {...getComboboxProps()}
+          // {...getComboboxProps()}
           direction="column"
           flex="1 1 auto"
           w="full"
