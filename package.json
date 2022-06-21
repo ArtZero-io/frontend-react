@@ -39,6 +39,7 @@
     "@polkadot/util-crypto": "^9.0.1",
     "@polkadot/x-bigint": "^9.1.1",
     "@yarnpkg/plugin-interactive-tools": "^3.1.2",
+    "aos": "^3.0.0-beta.6",
     "axios": "^0.26.1",
     "big-integer": "^1.6.51",
     "buffer": "^6.0.3",

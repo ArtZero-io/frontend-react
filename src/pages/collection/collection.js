@@ -408,7 +408,7 @@ function CollectionPage() {
 
 export default CollectionPage;
 
-const getMetaDataType1 = async (tokenID, token_uri) => {
+export const getMetaDataType1 = async (tokenID, token_uri) => {
   const metadata = await clientAPI(
     "get",
     "/getJSON?input=" + token_uri + tokenID.toString() + ".json",

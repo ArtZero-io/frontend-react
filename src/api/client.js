@@ -68,6 +68,7 @@ const client = async (method, url, options = {}) => {
 };
 
 export const APICall = {
+  // Ask BE Update API Calls
   askBeUpdateBidsData: async ({ collection_address, seller, token_id }) => {
     return await client("POST", "/updateBids", {
       collection_address,
@@ -86,18 +87,6 @@ export const APICall = {
   askBeUpdateCollectionData: async ({ collection_address }) => {
     return await client("POST", "/updateCollection", {
       collection_address,
-    });
-  },
-
-  getCollectionByAddress: async ({ collection_address }) => {
-    return await client("POST", "/getCollectionByAddress", {
-      collection_address,
-    });
-  },
-  getNFTByID: async ({ collection_address, token_id }) => {
-    return await client("POST", "/getNFTByID", {
-      collection_address,
-      token_id,
     });
   },
 
@@ -160,6 +149,44 @@ export const APICall = {
     });
 
     return result;
+  },
+
+  // Collection API Calls
+  getCollectionByAddress: async ({ collection_address }) => {
+    return await client("POST", "/getCollectionByAddress", {
+      collection_address,
+    });
+  },
+
+  getCollectionsByOwner: async ({
+    owner,
+    limit = 1000,
+    offset = 0,
+    sort = -1,
+  }) => {
+    console.log("getCollectionsByOwner..... start");
+
+    const ret = await client("POST", "/getCollectionsByOwner", {
+      owner,
+      limit,
+      offset,
+      sort,
+    });
+
+    console.log("ret", ret);
+  },
+
+  getNFTsByOwner: async ({ owner }) => {
+    return await client("POST", "/getNFTsByOwner", {
+      owner,
+    });
+  },
+
+  getNFTByID: async ({ collection_address, token_id }) => {
+    return await client("POST", "/getNFTByID", {
+      collection_address,
+      token_id,
+    });
   },
 
   getSearchResult: async ({
