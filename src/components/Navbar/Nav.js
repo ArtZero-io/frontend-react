@@ -4,7 +4,7 @@ import { NavContent } from "./NavContent";
 import { ArtZeroLogo } from "@theme/assets/logo/ArtZeroLogo";
 import { Link as ReactRouterLink } from "react-router-dom";
 
-function Nav({ variant = null }) {
+function Nav() {
   return (
     <Box
       as="header"
@@ -31,7 +31,6 @@ function Nav({ variant = null }) {
               alt="ArtZeroLogo"
             />
           </Link>
-
           <NavContent.Mobile display={{ base: "flex", md: "none" }} />
           <NavContent.Desktop
             w={[0, "full", "full"]}

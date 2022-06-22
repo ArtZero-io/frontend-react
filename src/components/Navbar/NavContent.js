@@ -27,7 +27,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { ArtZeroLogo } from "@theme/assets/logo/ArtZeroLogo";
 import SocialCard from "../Card/Social";
-import SearchBox from "../SearchBox/SearchBox";
+import SearchDrawer from "../SearchBox/SearchDrawer";
 
 const links = [
   { label: "Home", href: ROUTES.HOME },
@@ -123,19 +123,11 @@ const MobileNavContent = (props) => {
             bottom="150px"
             display={{ base: "flex", md: "none" }}
           >
-            <Center
-              w="full"
-              textAlign="center"
-              // mt={["32px", "60px", "60px"]}
-              // mb={["12px", "60px", "60px"]}
-            >
+            <Center w="full" textAlign="center">
               <SocialCard profile={profile} />
             </Center>
-            <Center
-              w="full"
-              textAlign="center"
-              // mb={["30px", "70px", "70px"]}
-            >
+
+            <Center w="full" textAlign="center">
               <Text
                 textTransform="uppercase"
                 fontSize={["13px", "sm", "sm"]}
@@ -157,32 +149,29 @@ const DesktopNavContent = (props) => {
   const { currentAccount } = useSubstrateState();
 
   return (
-    // <Flex w={[0, "full", "full"]}>
     <Flex w="full">
-      <SearchBox />
-
       <HStack
         spacing={{ xl: "35px", "2xl": "55px" }}
         align="stretch"
         overflowX="hidden"
         alignItems="center"
-        justifyContent="center"
-        pl={1}
+        justifyContent="flex-start"
+        pl={"50px"}
         w="full"
         {...props}
       >
         {links.map((link, index) => (
           <NavLink.Desktop key={index} label={link.label} to={link.href} />
         ))}
-
         {/* {currentAccount && currentAccount?.address && (
           <NavLink.Desktop label="Admin" to={ROUTES.ACCOUNT_ADMIN} />
         )} */}
-
         {<NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />}
-
         {currentAccount?.address && <MyAccountDropdown />}
       </HStack>
+
+      <SearchDrawer display={{ base: "none", md: "flex" }} />
+
       <WalletSelector display={{ base: "none", md: "flex" }} />
     </Flex>
   );
@@ -278,47 +267,3 @@ const profile = [
   { telegram: "https://t.me/artzero_io" },
   { mail: "mailto:admin@artzero.io" },
 ];
-
-// const SearchBar = () => {
-//   return (
-//     <>
-//       <InputGroup
-//         maxW="400px"
-//         minW={{ base: "auto", xl: "100px", "2xl": "400px" }}
-//         bg="transparent"
-//         h={14}
-//         py={1}
-//         mx={{ base: "auto", xl: "20px", "2xl": "60px" }}
-//         color="brand.darkGray"
-//         borderWidth="0"
-//         borderRadius="0"
-//         borderColor="#ffffff25"
-//         borderBottomWidth="2px"
-//       >
-//         <InputRightElement
-//           transform="translateX(22px)"
-//           bg="transparent"
-//           h="full"
-//           w={16}
-//           cursor="pointer"
-//         >
-//           <FiSearch size="22px" p="0" />
-//         </InputRightElement>{" "}
-//         <Input
-//           hidden
-//           variant="unstyled"
-//           my={1}
-//           pl={0}
-//           color="#fff"
-//           fontSize="lg"
-//           bg="transparent"
-//           placeholder="Search items, collections, and accounts"
-//           _placeholder={{
-//             color: "brand.darkGray",
-//             fontSize: "lg",
-//           }}
-//         />
-//       </InputGroup>
-//     </>
-//   );
-// };
