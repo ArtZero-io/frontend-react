@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import {
   Box,
@@ -16,213 +15,102 @@ import artzero_nft from "@utils/blockchain/artzero-nft";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import staking_calls from "@utils/blockchain/staking_calls";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import BN from "bn.js";
 import { clientAPI } from "@api/client";
 import MyNFTGroupCard from "../account/components/Card/MyNFTGroup";
 
-import { useSelector } from "react-redux";
-import { delay } from "../../utils";
-import { formatNumber } from "@polkadot/util";
+// import { useSelector } from "react-redux";
 import { APICall } from "../../api/client";
 import { getMetaDataType1 } from "../collection/collection";
-import { ContractPromise } from "@polkadot/api-contract";
-
-let az_collection = [];
-let my_az_nfts = [];
-let my_staked_az_nfts = [];
-let my_pending_az_nfts = [];
+import AnimationLoader from "@components/Loader/AnimationLoader";
+import { motion } from "framer-motion";
 
 const MyStakesPage = () => {
-  const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
-
+  // const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
   const { currentAccount, api } = useSubstrateState();
-  const [generalStats, setGeneralStats] = useState({
-    my_total_az_nfts: 0,
-    my_total_staked_az_nfts: 0,
-    my_total_unstaked_az_nfts: 0,
-    my_total_pending_az_nfts: 0,
-    my_discount_rate: 0,
-  });
-  const [currentTab, setCurrentTab] = useState("notStaked");
-  const [, setLoading] = useState(true);
-  const [currentTabList, setCurrentTabList] = useState([]);
 
-  const getGeneralStats = async () => {
-    setLoading(true);
-    let my_total_staked_az_nfts = await staking_calls.getTotalStakedByAccount(
-      currentAccount,
-      currentAccount.address
-    );
+  const [loading, setLoading] = useState(false);
+  const [statsInfo, setStatsInfo] = useState({});
+  const [activeTab, setActiveTab] = useState(tabList.NOT_STAKED);
+  const [PMPCollectionDetail, setPMPCollectionDetail] = useState(null);
 
-    const myStakedCount = await fetchMyPMPStakedCount(
-      currentAccount,
-      currentAccount.address
-    );
-    console.log("myStakedCount", myStakedCount);
-
-    let my_total_pending_az_nfts =
-      await staking_calls.getTotalPendingUnstakedByAccount(
-        currentAccount,
-        currentAccount.address
-      );
-
-    let my_total_unstaked_az_nfts = await artzero_nft_calls.balanceOf(
-      currentAccount,
-      currentAccount?.address
-    );
-    let my_total_az_nfts =
-      my_total_staked_az_nfts +
-      my_total_pending_az_nfts +
-      my_total_unstaked_az_nfts;
-
-    let stakingDiscountCriteria =
-      await marketplace_contract_calls.getStakingDiscountCriteria(
-        currentAccount
-      );
-
-    let stakingDiscountRate =
-      await marketplace_contract_calls.getStakingDiscountRate(currentAccount);
-
-    let my_discount_rate =
-      (await marketplace_contract_calls.getPlatformFee(currentAccount)) / 100;
-
-    let length = stakingDiscountRate.length;
-
-    for (var index = 0; index < length; index++) {
-      if (
-        my_total_staked_az_nfts >=
-        new BN(stakingDiscountCriteria[index]).toNumber()
-      ) {
-        my_discount_rate =
-          (my_discount_rate *
-            (10000 - new BN(stakingDiscountRate[index]).toNumber())) /
-          10000;
-        break;
-      }
-    }
-    let obj = {
-      my_total_az_nfts,
-      my_total_staked_az_nfts,
-      my_total_unstaked_az_nfts,
-      my_total_pending_az_nfts,
-      my_discount_rate,
-    };
-    setGeneralStats(obj);
-    await delay(3000);
-    await getAZCollection();
-    await getMyAZNFTs();
-    await getMyStakedAZNFTs(my_total_staked_az_nfts);
-    await getMyPendingUnstakeAZNFTs(my_total_pending_az_nfts);
-    setLoading(false);
-  };
-
-  const getMyAZNFTs = async () => {
-    const options = {
-      collection_address: artzero_nft.CONTRACT_ADDRESS,
-      owner: currentAccount.address,
-      limit: 10000,
-      offset: 0,
-      sort: -1,
-    };
-
-    const dataList = await clientAPI(
-      "post",
-      "/getNFTsByOwnerAndCollection",
-      options
-    );
-    console.log("dataList", dataList);
-    if (dataList) {
-      const data = dataList?.map((item) => {
-        return { ...item, stakeStatus: 1 };
-      });
-      my_az_nfts = data;
-      if (az_collection?.length) {
-        az_collection[0].listNFT = my_az_nfts;
-      }
-      console.log("qwe 1az_collection", az_collection);
-      setCurrentTabList(az_collection);
-    }
-  };
-
-  const getMyStakedAZNFTs = async (total_staked) => {
-    if (total_staked === 0) {
-      my_staked_az_nfts = [];
-      return;
-    }
-
-    let tokens = [];
-    for (var i = 1; i <= total_staked; i++) {
-      const options = {
-        collection_address: artzero_nft.CONTRACT_ADDRESS,
-        token_id: await staking_calls.getStakedId(
-          currentAccount,
-          currentAccount.address,
-          i
-        ),
-      };
-
-      const token_info = await clientAPI("post", "/getNFTByID", options);
-      token_info[0].stakeStatus = 2;
-      tokens.push(token_info[0]);
-    }
-
-    my_staked_az_nfts = tokens;
-    console.log("qwe 2my_staked_az_nfts", my_staked_az_nfts);
-  };
-
-  const getMyPendingUnstakeAZNFTs = async (total_pending) => {
-    if (total_pending === 0) {
-      my_pending_az_nfts = [];
-      return;
-    }
-
-    let tokens = [];
-    for (var i = 1; i <= total_pending; i++) {
-      const options = {
-        collection_address: artzero_nft.CONTRACT_ADDRESS,
-        token_id: await staking_calls.getPendingUnstakedId(
-          currentAccount,
-          currentAccount.address,
-          i
-        ),
-      };
-
-      const token_info = await clientAPI("post", "/getNFTByID", options);
-      token_info[0].stakeStatus = 3;
-      tokens.push(token_info[0]);
-    }
-    my_pending_az_nfts = tokens;
-    console.log("qwe 3my_pending_az_nfts", my_pending_az_nfts);
-  };
-
-  const getAZCollection = async () => {
-    //Get all Not Staked AZ NFTs
-    az_collection = await clientAPI("post", "/getCollectionByAddress", {
-      collection_address: artzero_nft.CONTRACT_ADDRESS,
-    });
-    console.log("qwe 4az_collection", az_collection);
-  };
-  // const xxx = getMyUnstakePMP({ owner, collection_address });
-
-  // console.log("xxx", xxx);
   useEffect(() => {
-    getGeneralStats();
-  }, [currentAccount.address, tnxStatus]);
+    const prepareStatsInfo = async () => {
+      const stakedCount = await fetchMyPMPStakedCount(currentAccount);
 
-  const onClickHandler = async (e) => {
-    const id = e.target.getAttribute("id").toString();
-    if (az_collection.length) {
-      if (id === "staked") az_collection[0].listNFT = my_staked_az_nfts;
-      else if (id === "notStaked") az_collection[0].listNFT = my_az_nfts;
-      else if (id === "pending") az_collection[0].listNFT = my_pending_az_nfts;
-      // console.log(az_collection);
-    }
-    setCurrentTabList(az_collection);
-    setCurrentTab(id);
-  };
+      const pendingCount = await fetchMyPMPPendingCount(currentAccount);
+
+      const unstakedCount = await fetchMyPMPUnstakedCount(currentAccount);
+
+      const totalCount = stakedCount + pendingCount + unstakedCount;
+
+      const myTradingFee = await fetchMyTradingFee(stakedCount, currentAccount);
+
+      const stats = {
+        totalCount,
+        unstakedCount,
+        pendingCount,
+        stakedCount,
+        myTradingFee,
+      };
+
+      setStatsInfo(stats);
+    };
+
+    prepareStatsInfo();
+  }, [api, currentAccount]);
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchCollectionDetail = async () => {
+      const PMPCollectionDetail = await getPMPCollectionDetail();
+
+      PMPCollectionDetail.listNFT = [];
+
+      if (activeTab === tabList.NOT_STAKED) {
+        const myUnstakePMP = await getMyUnstakePMP({
+          owner: currentAccount.address,
+          collection_address: artzero_nft.CONTRACT_ADDRESS,
+        });
+        PMPCollectionDetail.listNFT = myUnstakePMP;
+      }
+
+      if (activeTab === tabList.PENDING_UNSTAKE) {
+        const myPendingPMP = await getMyPendingPMP({
+          api,
+          pendingCount: statsInfo.pendingCount,
+          currentAccount,
+        });
+
+        PMPCollectionDetail.listNFT = myPendingPMP;
+      }
+
+      if (activeTab === tabList.STAKED) {
+        const myStakedPMP = await getMyStakedPMP({
+          api,
+          stakedCount: statsInfo.stakedCount,
+          currentAccount,
+        });
+
+        console.log("myStakedPMP", myStakedPMP);
+        PMPCollectionDetail.listNFT = myStakedPMP;
+      }
+
+      setPMPCollectionDetail(PMPCollectionDetail);
+
+      setLoading(false);
+    };
+
+    fetchCollectionDetail();
+  }, [
+    activeTab,
+    api,
+    currentAccount,
+    statsInfo.pendingCount,
+    statsInfo.stakedCount,
+  ]);
 
   return (
     <Box as="section" maxW="container.3xl">
@@ -235,33 +123,19 @@ const MyStakesPage = () => {
         <Flex w="full" alignItems="start" pb={12}>
           <Heading size="h2">My Stakes</Heading>
           <Spacer />
-          <Button
-            isActive={"notStaked" === currentTab}
-            id="notStaked"
-            variant="outline"
-            mx={1}
-            onClick={(e) => onClickHandler(e)}
-          >
-            Not Staked
-          </Button>
-          <Button
-            isActive={"pending" === currentTab}
-            id="pending"
-            variant="outline"
-            mx={1}
-            onClick={(e) => onClickHandler(e)}
-          >
-            Pending Unstake
-          </Button>
-          <Button
-            isActive={"staked" === currentTab}
-            id="staked"
-            variant="outline"
-            mx={1}
-            onClick={(e) => onClickHandler(e)}
-          >
-            Staked
-          </Button>
+
+          {Object.keys(tabList).map((item) => (
+            <Button
+              key={item}
+              isActive={item === activeTab}
+              id={item}
+              variant="outline"
+              mx={1}
+              onClick={() => setActiveTab(item)}
+            >
+              {item.replace("_", " ")}
+            </Button>
+          ))}
 
           <IconButton
             mx={1}
@@ -272,52 +146,54 @@ const MyStakesPage = () => {
           />
         </Flex>
 
-        <HStack pb={5} borderBottomWidth={1}>
-          <Text color="#fff">ArtZero NFT Stats:</Text>
-          <br />
-          <Flex alignItems="start" pr={20}>
-            <Text ml={1} color="brand.grayLight"></Text>
-            Total:
-            <Text color="#fff" ml={2}>
-              {generalStats.my_total_az_nfts}
-            </Text>
-          </Flex>
-          <Flex alignItems="start" pr={20}>
-            <Text ml={1} color="brand.grayLight"></Text>
-            Total Staked:
-            <Text color="#fff" ml={2}>
-              {generalStats.my_total_staked_az_nfts}
-            </Text>
-          </Flex>
-          <Flex alignItems="start" pr={20}>
-            <Text ml={1} color="brand.grayLight"></Text>
-            Total Pending Unstaked:
-            <Text color="#fff" ml={2}>
-              {generalStats.my_total_pending_az_nfts}
-            </Text>
-          </Flex>
-          <Flex alignItems="start" pr={20}>
-            <Text ml={1} color="brand.grayLight"></Text>
-            Total Not Staked:
-            <Text color="#fff" ml={2}>
-              {generalStats.my_total_unstaked_az_nfts}
-            </Text>
-          </Flex>
-          <Flex alignItems="start">
-            <Text ml={1} color="brand.grayLight"></Text>
-            Trade Fee:
-            <Text color="#fff" ml={2}>
-              {generalStats.my_discount_rate}%
-            </Text>
-          </Flex>
-        </HStack>
+        <Text textAlign="left" color="#fff">
+          Praying Mantis Predators NFT Stats:
+        </Text>
 
-        {currentTabList?.listNFT?.length === 0 ? (
-          <Text>No NFTs found</Text>
+        <HStack py={5} borderBottomWidth={1}>
+          {Object.keys(statsInfo).map((item) => (
+            <Flex alignItems="start" pr={"5rem"}>
+              <Text color="brand.grayLight">
+                {item === "totalCount"
+                  ? "Total"
+                  : item === "unstakedCount"
+                  ? "Total Not Staked"
+                  : item === "pendingCount"
+                  ? "Total Pending Unstake"
+                  : item === "stakedCount"
+                  ? "Total Staked"
+                  : item === "myTradingFee"
+                  ? "Trading Fee"
+                  : null}
+                :
+              </Text>
+              <Text ml={1}>{statsInfo[item]}</Text>
+              <Text ml={1}>
+                {item === "myTradingFee"
+                  ? "%"
+                  : statsInfo[item] > 1
+                  ? "items"
+                  : "item"}
+              </Text>
+            </Flex>
+          ))}
+        </HStack>
+        <AnimationLoader />
+
+        {loading ? (
+          <AnimationLoader loadingTime={1} />
+        ) : PMPCollectionDetail?.listNFT?.length === 0 ? (
+          <Heading py="3rem" size="h6">
+            No NFTs found
+          </Heading>
         ) : (
-          currentTabList?.map((item, idx) => (
-            <MyNFTGroupCard {...item} key={idx} />
-          ))
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {<MyNFTGroupCard {...PMPCollectionDetail} />}
+          </motion.div>
         )}
       </Box>
     </Box>
@@ -341,26 +217,31 @@ export const createNumberBN = (num, pow = 1) => {
     : new BN(numPF, 10).pow(new BN(powPF));
 };
 
-export const fetchMyPMPStakedCount = async (currentAccount, address) => {
-  return await staking_calls.getTotalStakedByAccount(currentAccount, address);
-};
-
-export const fetchMyPMPPendingCount = async (currentAccount, address) => {
-  return await staking_calls.getTotalPendingUnstakedByAccount(
+export const fetchMyPMPStakedCount = async (currentAccount) => {
+  return await staking_calls.getTotalStakedByAccount(
     currentAccount,
-    address
+    currentAccount.address
   );
 };
 
-export const fetchMyPMPUnstakedCount = async (currentAccount, address) => {
-  return await artzero_nft_calls.balanceOf(currentAccount, address);
+export const fetchMyPMPPendingCount = async (currentAccount) => {
+  return await staking_calls.getTotalPendingUnstakedByAccount(
+    currentAccount,
+    currentAccount.address
+  );
+};
+
+export const fetchMyPMPUnstakedCount = async (currentAccount) => {
+  return await artzero_nft_calls.balanceOf(
+    currentAccount,
+    currentAccount.address
+  );
 };
 
 export const fetchPlatformStakingDiscountStep = async (currentAccount) => {
   const response = await marketplace_contract_calls.getStakingDiscountCriteria(
     currentAccount
   );
-
   return Array.from(response);
 };
 
@@ -384,13 +265,12 @@ export const fetchPlatformTradingFee = async (currentAccount) => {
   return response / 100;
 };
 
-export const fetchMyTradingFee = async (
-  PMPStaked,
-  stepArr,
-  rateArr,
-  platformTradingFee
-) => {
+export const fetchMyTradingFee = async (PMPStaked, currentAccount) => {
   let ret;
+
+  const stepArr = await fetchPlatformStakingDiscountStep(currentAccount);
+  const rateArr = await fetchPlatformStakingDiscountRate(currentAccount);
+  const platformTradingFee = await fetchPlatformTradingFee(currentAccount);
 
   for (var i = 0; i < stepArr.length; i++) {
     if (PMPStaked >= stepArr[i]) {
@@ -398,7 +278,7 @@ export const fetchMyTradingFee = async (
       break;
     }
   }
-  return ret.toFixed(2);
+  return ret && ret.toFixed(2);
 };
 
 export const getMyUnstakePMP = async ({ owner, collection_address }) => {
@@ -415,7 +295,6 @@ export const getMyUnstakePMP = async ({ owner, collection_address }) => {
     return { ...item, stakeStatus: 1 };
   });
 
-  console.log("ret", ret);
   return ret;
 };
 
@@ -435,25 +314,10 @@ export const getMyPendingPMP = async ({
     currentAccount,
   });
 
-  console.log("token_uri", token_uri);
-  const getTokenIdOfPendingPMP = async ({ currentAccount, index }) => {
-    return await staking_calls.getPendingUnstakedId(
-      currentAccount,
-      currentAccount.address,
-      index + 1
-    );
-  };
-
-  Promise.all(
+  ret = await Promise.all(
     [...Array(pendingCount)].map(async (_, index) => {
-      const id = await getTokenIdOfPendingPMP({ currentAccount, index });
-      console.log("id", id);
-      return id;
-    })
-  ).then((arr) => {
-    console.log("arr", arr);
-    ret = arr.map(async (token_id) => {
-      console.log("token_id", token_id);
+      const token_id = await getTokenIdOfPendingPMP({ currentAccount, index });
+
       const [token_info] = await APICall.getNFTByID({
         collection_address: PMPContractAddress,
         token_id,
@@ -461,13 +325,10 @@ export const getMyPendingPMP = async ({
 
       const tokenMeta = await getMetaDataType1(token_id, token_uri);
 
-      const xxx = { ...token_info, ...tokenMeta, stakeStatus: 3 };
-      console.log("xxxxxx", xxx);
-      return token_info;
-    });
-  });
-  // my_pending_az_nfts = tokens;
-  console.log("qwe 3ret", ret);
+      return { ...token_info, ...tokenMeta, stakeStatus: 3 };
+    })
+  );
+
   return ret;
 };
 
@@ -478,69 +339,63 @@ export const getMyStakedPMP = async ({ api, stakedCount, currentAccount }) => {
 
   const PMPContractAddress = artzero_nft.CONTRACT_ADDRESS;
   const token_uri = await getTokenURI({
-    api,
-    nftContractAddress: PMPContractAddress,
     currentAccount,
   });
 
-  console.log("token_uri", token_uri);
-  const getTokenIdOfPendingPMP = async ({ currentAccount, index }) => {
-    return await staking_calls.getStakedId(
-      currentAccount,
-      currentAccount.address,
-      index + 1
-    );
-  };
-
-  Promise.all(
+  ret = await Promise.all(
     [...Array(stakedCount)].map(async (_, index) => {
-      const id = await getTokenIdOfPendingPMP({ currentAccount, index });
-      console.log("id", id);
-      return id;
-    })
-  ).then((arr) => {
-    console.log("arr", arr);
-    ret = arr.map(async (token_id) => {
-      console.log("token_id", token_id);
+      const token_id = await getTokenIdOfStakedPMP({ currentAccount, index });
+      console.log("ccc token_id", token_id);
+
       const [token_info] = await APICall.getNFTByID({
         collection_address: PMPContractAddress,
         token_id,
       });
-
       const tokenMeta = await getMetaDataType1(token_id, token_uri);
-
-      const xxx = { ...token_info, ...tokenMeta, stakeStatus: 3 };
-      console.log("xxxxxx", xxx);
-      return token_info;
-    });
-  });
-  // my_pending_az_nfts = tokens;
-  console.log("qwe 3ret", ret);
+      console.log("ccctoken_info", token_info);
+      console.log("ccctokenMeta", tokenMeta);
+      return { ...token_info, ...tokenMeta, stakeStatus: 2 };
+    })
+  );
   return ret;
 };
 
-export const getTokenURI = async ({
-  api,
-  nftContractAddress,
-  currentAccount,
-}) => {
-  const nft_contract = new ContractPromise(
-    api,
-    nft721_psp34_standard.CONTRACT_ABI,
-    nftContractAddress
-  );
-
-  const gasLimit = -1;
-  const azero_value = 0;
-
-  const { result, output } = await nft_contract.query["psp34Traits::tokenUri"](
+export const getTokenURI = async ({ currentAccount }) => {
+  const tokenUriFull = await artzero_nft_calls.query(
     currentAccount?.address,
-    { value: azero_value, gasLimit },
     1
   );
 
-  console.log("output", output);
-  const token_uri = output.toHuman()?.replace("1.json", "");
-  console.log("token_uri", token_uri);
-  return token_uri;
+  console.log("tokenUriFull", tokenUriFull);
+  return tokenUriFull.toHuman()?.replace("1.json", "");
+};
+
+export const getTokenIdOfPendingPMP = async ({ currentAccount, index }) => {
+  return await staking_calls.getPendingUnstakedId(
+    currentAccount,
+    currentAccount.address,
+    index + 1
+  );
+};
+
+export const getTokenIdOfStakedPMP = async ({ currentAccount, index }) => {
+  return await staking_calls.getStakedId(
+    currentAccount,
+    currentAccount.address,
+    index + 1
+  );
+};
+
+export const getPMPCollectionDetail = async () => {
+  const [ret] = await APICall.getCollectionByAddress({
+    collection_address: artzero_nft.CONTRACT_ADDRESS,
+  });
+
+  return ret;
+};
+
+export const tabList = {
+  NOT_STAKED: "NOT_STAKED",
+  PENDING_UNSTAKE: "PENDING_UNSTAKE",
+  STAKED: "STAKED",
 };

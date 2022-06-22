@@ -22,8 +22,6 @@ const AnimationLoader = ({
 export default AnimationLoader;
 
 export const AzeroAnimation = ({ loadingTime = 7 }) => {
-
-  
   const icon = {
     hidden: {
       opacity: 0,
@@ -68,8 +66,8 @@ export const AzeroAnimation = ({ loadingTime = 7 }) => {
           initial="hidden"
           animate="visible"
           transition={{
-            default: { duration: (loadingTime || 7) - 5, ease: "easeInOut" },
-            fill: { duration: loadingTime || 7, ease: [1, 0, 0.8, 1] },
+            default: { duration: loadingTime - 5, ease: "easeInOut" },
+            fill: { duration: loadingTime, ease: [1, 0, 0.8, 1] },
           }}
         />
       </motion.svg>
