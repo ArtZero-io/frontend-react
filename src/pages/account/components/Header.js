@@ -33,7 +33,6 @@ function ProfileHeader() {
   const [profile, setProfile] = useState(null);
 
   const forceUpdate = useCallback(() => {
-
     setProfile(null);
   }, []);
 
@@ -87,7 +86,7 @@ function ProfileHeader() {
               rounded="full"
               objectFit="cover"
               src={getCachedImageShort(profile?.avatar, 500)}
-              fallback={<Skeleton w={32} h={32} rounded="full" />}
+              fallback={<Skeleton w={32} h="118px" rounded="full" />}
             />
           )}
           {!profile?.avatar && <IdenticonAvatar size={120} />}
