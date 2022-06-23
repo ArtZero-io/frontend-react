@@ -367,16 +367,19 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       limitedSize={{ width: "500", height: "500" }}
                     />
 
-                    <Box my="30px" py="30px">
-                      <Box
-                        textTransform="capitalize"
-                        px="3px"
-                        borderWidth="1px"
-                        borderColor="#7ae7ff"
-                      >
-                        {initialValues.royalFee}% Loyal fee
+                    {(mode === "edit") &
+                    (
+                      <Box my="30px" py="30px">
+                        <Box
+                          textTransform="capitalize"
+                          px="3px"
+                          borderWidth="1px"
+                          borderColor="#7ae7ff"
+                        >
+                          {initialValues.royalFee}% Royalty
+                        </Box>
                       </Box>
-                    </Box>
+                    )}
                   </Stack>
                 </Stack>
 

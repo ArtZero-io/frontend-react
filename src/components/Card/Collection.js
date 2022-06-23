@@ -128,14 +128,16 @@ export const CollectionCard = ({
         </Box>
 
         <Center
+          zIndex="base"
+          pos="relative"
           rounded="full"
           w={16}
           h={16}
           mt={-8}
           p="-px"
           border="2px solid white"
-          filter="drop-shadow(0px 4px 4px #ffffff25)"
-          bg="#333"
+          bg="#d8d8d8"
+          boxShadow="0px 30px 20px rgba(0, 0, 0, 0.25)"
         >
           <Image
             alt={`avatar-img-${name}`}
@@ -165,6 +167,7 @@ export const CollectionCard = ({
             noOfLines={[1, 3]}
             maxW={{ base: "unset", md: "20rem" }}
             minH={"4.5rem"}
+            color="#888"
           >
             {description}
           </Text>
@@ -175,14 +178,19 @@ export const CollectionCard = ({
             justify="center"
           >
             <Tag>
-              <TagLeftIcon>
+              <TagLeftIcon w="18px" h="18px">
                 <AzeroIcon fill={isActive ? "#7AE7FF" : "#888"} />
               </TagLeftIcon>
               <TagLabel
                 color={isActive ? "#fff" : "#888"}
                 textTransform="capitalize"
               >
-                Volume {shortenNumber(volume) || 0}
+                <Text as="span" fontWeight="400">
+                  Volume
+                </Text>{" "}
+                <Text as="span" fontWeight="600">
+                  {shortenNumber(volume) || 0}
+                </Text>
               </TagLabel>
             </Tag>
 
