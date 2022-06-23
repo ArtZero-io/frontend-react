@@ -1,14 +1,14 @@
 const profile = {
-  CONTRACT_ADDRESS: "5G8DSQGDJ7F3xvuyWXNnKeivzPotcuHLfmjHqgs87YYUQ8mR",
+  CONTRACT_ADDRESS: "5CTLLyrpNLCWZzFCKUv7aa17ov3KdZFD6R8omiKSQQahW61F",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x186ab51e67547103130f5cdfd7b9f2fc05ccb846c3dca8e9981ef4c325425c59",
-      "language": "ink! 3.0.1",
-      "compiler": "rustc 1.61.0-nightly"
+      "hash": "0x7141bc896ce6898a956e0f1dd9ca1498f03d94b478f3dd207df263d41e08e805",
+      "language": "ink! 3.2.0",
+      "compiler": "rustc 1.63.0-nightly"
     },
     "contract": {
       "name": "artzero_profile_manager",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "authors": [
         "ArtZero <admin@artzero.io>"
       ]
@@ -107,22 +107,19 @@ const profile = {
           },
           {
             "args": [],
-            "docs": [],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [],
-            "docs": [],
+            "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
             "label": "Ownable::renounce_ownership",
             "mutates": true,
             "payable": false,
@@ -134,6 +131,23 @@ const profile = {
               "type": 12
             },
             "selector": "0x5e228753"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [
@@ -148,7 +162,18 @@ const profile = {
                 }
               }
             ],
-            "docs": [],
+            "docs": [
+              " Transfers ownership of the contract to a `new_owner`.",
+              " Can only be called by the current owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner.",
+              "",
+              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
+            ],
             "label": "Ownable::transfer_ownership",
             "mutates": true,
             "payable": false,
@@ -173,7 +198,7 @@ const profile = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x8cd6e4a382bfd8c05974e694dac962833b58a5d56cc64ad5d8451dcbda63b387",
+                          "key": "0x238cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
                           "ty": 0
                         }
                       },
@@ -182,14 +207,14 @@ const profile = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0x8dd6e4a382bfd8c05974e694dac962833b58a5d56cc64ad5d8451dcbda63b387",
+                          "dispatchKey": "0x248cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0x8ed6e4a382bfd8c05974e694dac962833b58a5d56cc64ad5d8451dcbda63b387",
+                                      "key": "0x258cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
                                       "ty": 3
                                     }
                                   },
@@ -488,7 +513,7 @@ const profile = {
               }
             },
             "path": [
-              "contracts",
+              "openbrush_contracts",
               "traits",
               "errors",
               "ownable",

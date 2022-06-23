@@ -1,14 +1,14 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5EAn7gxPHKGtXbnJd5vQ57nxX79BZ7pAyhYJyyFV4DCTB6eR",
+  CONTRACT_ADDRESS: "5G4Yfmsrtjh3AqZzEBLTgdBuJ5Mj7JgzNC3XQiCoDzSdeZeh",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x5132859286371ffd9a07c9b27be8601303eb3adf69cce2d2b7f2cef694124c97",
-      "language": "ink! 3.0.1",
-      "compiler": "rustc 1.61.0-nightly"
+      "hash": "0x88715994a79fe3dd4f01ddb61e541d3828ab896dabdc0862772e8905534c62e6",
+      "language": "ink! 3.2.0",
+      "compiler": "rustc 1.63.0-nightly"
     },
     "contract": {
       "name": "artzero_collection_manager",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "authors": [
         "ArtZero <admin@artzero.io>"
       ]
@@ -1026,7 +1026,19 @@ const collection_manager = {
           },
           {
             "args": [],
-            "docs": [],
+            "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
             "label": "Ownable::renounce_ownership",
             "mutates": true,
             "payable": false,
@@ -1038,21 +1050,6 @@ const collection_manager = {
               "type": 18
             },
             "selector": "0x5e228753"
-          },
-          {
-            "args": [],
-            "docs": [],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
           },
           {
             "args": [
@@ -1067,7 +1064,18 @@ const collection_manager = {
                 }
               }
             ],
-            "docs": [],
+            "docs": [
+              " Transfers ownership of the contract to a `new_owner`.",
+              " Can only be called by the current owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner.",
+              "",
+              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
+            ],
             "label": "Ownable::transfer_ownership",
             "mutates": true,
             "payable": false,
@@ -1079,6 +1087,23 @@ const collection_manager = {
               "type": 18
             },
             "selector": "0x11f43efd"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [
@@ -1107,6 +1132,34 @@ const collection_manager = {
               "type": 2
             },
             "selector": "0x81fa82e9"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "GetRoyalFeeInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              "Get royal fee of the Collection"
+            ],
+            "label": "CrossArtZeroCollection::get_royal_fee",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "GetRoyalFeeOutput"
+              ],
+              "type": 10
+            },
+            "selector": "0xfa0f936e"
           },
           {
             "args": [
@@ -1163,34 +1216,6 @@ const collection_manager = {
               "type": 9
             },
             "selector": "0x74687faf"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
-                    "GetRoyalFeeInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              "Get royal fee of the Collection"
-            ],
-            "label": "CrossArtZeroCollection::get_royal_fee",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "GetRoyalFeeOutput"
-              ],
-              "type": 10
-            },
-            "selector": "0xfa0f936e"
           }
         ]
       },
@@ -1204,7 +1229,7 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x8cd6e4a382bfd8c05974e694dac962833b58a5d56cc64ad5d8451dcbda63b387",
+                          "key": "0x238cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
                           "ty": 0
                         }
                       },
@@ -1213,14 +1238,14 @@ const collection_manager = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0x8dd6e4a382bfd8c05974e694dac962833b58a5d56cc64ad5d8451dcbda63b387",
+                          "dispatchKey": "0x248cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0x8ed6e4a382bfd8c05974e694dac962833b58a5d56cc64ad5d8451dcbda63b387",
+                                      "key": "0x258cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
                                       "ty": 3
                                     }
                                   },
@@ -1732,7 +1757,7 @@ const collection_manager = {
               }
             },
             "path": [
-              "contracts",
+              "openbrush_contracts",
               "traits",
               "errors",
               "ownable",

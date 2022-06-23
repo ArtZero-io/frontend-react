@@ -1,14 +1,14 @@
 const marketplace = {
-  CONTRACT_ADDRESS: "5FCoBKQb1fYVRLa1kQ9JXYiVnUH1CyUBNcgoXQqHQRZYXvaU",
+  CONTRACT_ADDRESS: "5GPqMBWQwCkRKKq7KwF7qauzrr7fB2hhbE1VhYUH8r4uqST8",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x739a1212bc1b2607b20f8c890cb2dc6624225039f646e5973aae56dc2e4fefb4",
-      "language": "ink! 3.0.1",
-      "compiler": "rustc 1.61.0-nightly"
+      "hash": "0xd27125a4cedcdb951192f561d48583d9e6d67697d6a6214e35cd6a27a2d8cacf",
+      "language": "ink! 3.2.0",
+      "compiler": "rustc 1.63.0-nightly"
     },
     "contract": {
       "name": "artzero_marketplace_psp34",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "authors": [
         "ArtZero <admin@artzero.io>"
       ]
@@ -752,6 +752,32 @@ const marketplace = {
           {
             "args": [
               {
+                "label": "platform_fee",
+                "type": {
+                  "displayName": [
+                    "u32"
+                  ],
+                  "type": 4
+                }
+              }
+            ],
+            "docs": [
+              " Set Platform fee - only owner"
+            ],
+            "label": "set_platform_fee",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 31
+            },
+            "selector": "0x2c5b83f1"
+          },
+          {
+            "args": [
+              {
                 "label": "staking_contract_address",
                 "type": {
                   "displayName": [
@@ -1254,8 +1280,47 @@ const marketplace = {
             "selector": "0x8bb87aca"
           },
           {
+            "args": [
+              {
+                "label": "new_owner",
+                "type": {
+                  "displayName": [
+                    "ownable_external",
+                    "TransferOwnershipInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Transfers ownership of the contract to a `new_owner`.",
+              " Can only be called by the current owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner.",
+              "",
+              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
+            ],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "TransferOwnershipOutput"
+              ],
+              "type": 29
+            },
+            "selector": "0x11f43efd"
+          },
+          {
             "args": [],
-            "docs": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
             "label": "Ownable::owner",
             "mutates": false,
             "payable": false,
@@ -1270,7 +1335,19 @@ const marketplace = {
           },
           {
             "args": [],
-            "docs": [],
+            "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
             "label": "Ownable::renounce_ownership",
             "mutates": true,
             "payable": false,
@@ -1282,32 +1359,6 @@ const marketplace = {
               "type": 29
             },
             "selector": "0x5e228753"
-          },
-          {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 29
-            },
-            "selector": "0x11f43efd"
           }
         ]
       },
@@ -1321,7 +1372,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x8cd6e4a382bfd8c05974e694dac962833b58a5d56cc64ad5d8451dcbda63b387",
+                          "key": "0x238cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
                           "ty": 0
                         }
                       },
@@ -1330,14 +1381,14 @@ const marketplace = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0x8dd6e4a382bfd8c05974e694dac962833b58a5d56cc64ad5d8451dcbda63b387",
+                          "dispatchKey": "0x248cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0x8ed6e4a382bfd8c05974e694dac962833b58a5d56cc64ad5d8451dcbda63b387",
+                                      "key": "0x258cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
                                       "ty": 3
                                     }
                                   },
@@ -1683,7 +1734,7 @@ const marketplace = {
               }
             },
             "path": [
-              "contracts",
+              "openbrush_contracts",
               "traits",
               "psp34",
               "psp34",
@@ -2171,7 +2222,7 @@ const marketplace = {
               }
             },
             "path": [
-              "contracts",
+              "openbrush_contracts",
               "traits",
               "errors",
               "ownable",
