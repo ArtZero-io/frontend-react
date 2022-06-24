@@ -204,7 +204,7 @@ export const CollectionCard = ({
                   borderColor="#7ae7ff"
                   fontSize="12px"
                 >
-                  {royalFee / 100}% Loyal fee
+                  {royalFee / 100}% Royalty
                 </Box>
                 {isActive && (
                   <Tag variant="active">
