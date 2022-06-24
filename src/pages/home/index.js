@@ -4,7 +4,7 @@ import {
   Text,
   Box,
   Link,
-  AspectRatio,
+  // AspectRatio,
   List,
   ListIcon,
   ListItem,
@@ -307,7 +307,7 @@ function HomePage() {
                   artzero <br />
                 </Text>
                 <Text textTransform="uppercase" as="span">
-                  smartnet demo
+                  testnet demo
                 </Text>
               </Heading>
             </Center>
@@ -399,7 +399,7 @@ function HomePage() {
                 >
                   talisman
                 </Link>
-                .please make sure you installed at least one of these wallets
+                . please make sure you installed at least one of these wallets
                 and created an account.
               </Text>
             </Center>
@@ -419,19 +419,19 @@ function HomePage() {
                 fontSize={["13px", null, "18px"]}
                 lineHeight={["21px", null, "30px"]}
               >
-                you will need some smartnet azero (szero) to start. get free
-                szero from{" "}
+                you will need some testnet azero (tzero) to start. get free
+                tzero from{" "}
                 <Link
                   color="#7ae7ff"
                   textDecoration="underline"
-                  href="https://faucet-smartnet.test.azero.dev"
+                  href="https://faucet.test.azero.dev"
                 >
-                  https://faucet-smartnet.test.azero.dev
+                  https://faucet.test.azero.dev
                 </Link>
               </Text>
             </Center>
 
-            <AspectRatio
+            {/* <AspectRatio
               data-aos="fade-up"
               data-aos-delay="100"
               data-aos-duration="500"
@@ -447,7 +447,7 @@ function HomePage() {
                 src="https://www.youtube.com/embed/V-7hWodoLl0"
                 allowFullScreen
               />
-            </AspectRatio>
+            </AspectRatio> */}
           </Box>
           <motion.div
             initial="initial"
@@ -480,7 +480,7 @@ function HomePage() {
               _hover={{ scale: 0.99 }}
               onClick={() => history.push("/marketplace")}
             >
-              Go To Marketplace
+              go to marketplace
             </Button>
           </motion.div>
         </Box>
@@ -530,6 +530,7 @@ function HomePage() {
                     display="flex"
                     alignItems="center"
                     key={idx}
+                    cursor="default"
                     _hover={{ pl: "10px", color: "#fff" }}
                     transition="all 0.33s"
                   >
@@ -584,6 +585,7 @@ function HomePage() {
                     display="flex"
                     alignItems="center"
                     key={idx}
+                    cursor="default"
                     _hover={{ pl: "10px", color: "#fff" }}
                     transition="all 0.33s"
                     textTransform="uppercase"
@@ -695,7 +697,7 @@ function HomePage() {
             <Center
               w="full"
               textAlign="center"
-              mb={["30px", "70px", "70px"]}
+              // mb={["30px", "70px", "70px"]}
               data-aos="fade-down"
               data-aos-delay="100"
               data-aos-duration="500"
@@ -727,7 +729,7 @@ const availableFeaturesText = [
   "create collections in simple mode and advanced mode",
   "create nft",
   "list, unlist, buy, bid nfts",
-  "mint artzero nfts on smartnet (only 200 available)",
+  "mint artzero nfts on testnet (only 200 available)",
   "stake artzero nfts for trade discount and profit share",
 ];
 
@@ -736,5 +738,5 @@ const upComingFeaturesText = [
   "more documentation and tutorials",
   "search for nfts and collections",
   "launch pad for nft projects",
-  "mobile support: subwallet and nova",
+  "mobile support: subwallet and nova wallet",
 ];
