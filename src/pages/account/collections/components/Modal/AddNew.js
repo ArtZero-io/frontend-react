@@ -19,8 +19,9 @@ import AddCollectionIcon from "@theme/assets/icon/AddCollection";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { EditIcon } from "@chakra-ui/icons";
+import { formMode } from "@constants";
 
-function AddNewCollection({ mode, id }) {
+function AddNewCollection({ mode = formMode.ADD, id }) {
   const {
     isOpen: isOpenAddNew,
     onOpen: onOpenAddNew,
@@ -37,7 +38,7 @@ function AddNewCollection({ mode, id }) {
 
   return (
     <>
-      {mode === "add" && (
+      {mode === formMode.ADD && (
         <Button
           variant="outline"
           color="brand.blue"
@@ -46,7 +47,7 @@ function AddNewCollection({ mode, id }) {
           Add Collection
         </Button>
       )}
-      {mode === "edit" && (
+      {mode === formMode.EDIT && (
         <IconButton
           pos="absolute"
           top="1.5rem"
@@ -88,7 +89,7 @@ function AddNewCollection({ mode, id }) {
           <ModalHeader textAlign="center">
             <AddCollectionIcon />
             <Heading size="h4" my={3}>
-              {mode === "add" ? "Add collection" : "Edit collection"}
+              {mode === formMode.ADD ? "Add collection" : "Edit collection"}
             </Heading>
           </ModalHeader>
 

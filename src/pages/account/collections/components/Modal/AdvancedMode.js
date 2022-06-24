@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { onCloseButtonModal } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
 import EditIcon from "@theme/assets/icon/Edit.js";
+import { formMode } from "@constants";
 
 function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -27,12 +28,12 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
   );
   return (
     <>
-      {mode === "add" && (
+      {mode === formMode.ADD && (
         <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
           Advanced Mode
         </Button>
       )}
-      {mode === "edit" && (
+      {mode === formMode.EDIT && (
         <>
           <IconButton
             zIndex={"1"}
@@ -102,7 +103,7 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
           />
           <ModalHeader>
             <Heading size="h4" m={2}>
-              {mode === "add" ? "Advanced Mode" : "Edit Collection"}{" "}
+              {mode === formMode.ADD ? "Advanced Mode" : "Edit Collection"}{" "}
               <Tooltip
                 label="Advanced mode is designed for those who wants to use customized NFT smart contract for example dedicated 5k or 10k collections with whitelisted options."
                 fontSize="md"

@@ -1,6 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import React from "react";
 import { useDispatch } from "react-redux";
+import { formMode } from "@constants";
 
 function StatusButton({ isLoading, loadingText, mode, disabled, text, type }) {
   const dispatch = useDispatch();
@@ -38,7 +39,7 @@ function StatusButton({ isLoading, loadingText, mode, disabled, text, type }) {
         mb={{ xl: "16px", "2xl": "32px" }}
       >
         {text && "Submit"}{" "}
-        {mode && (mode === "add" ? "Add new collection" : "change")}
+        {mode && (mode === formMode.ADD ? "Add new collection" : "change")}
       </Button>
 
       <Button

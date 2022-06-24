@@ -18,6 +18,7 @@ import { IPFS_CLIENT_URL } from "@constants/index";
 import toast from "react-hot-toast";
 import { clientAPI } from "@api/client";
 import { getCachedImageShort } from "@utils/index";
+import { formMode } from "@constants";
 
 const client = create(IPFS_CLIENT_URL);
 const supportedFormat = ["image/png", "image/jpg", "image/jpeg"];
@@ -141,7 +142,7 @@ const ImageUploadCollection = ({
           </label>
         </HStack>
 
-        {mode === "edit" && !imagePreviewUrl && (
+        {mode === formMode.EDIT && !imagePreviewUrl && (
           <Avatar
             minH={16}
             minW={16}

@@ -34,6 +34,7 @@ import AddPropertiesModal from "../Modal/AddProperties";
 import { AccountActionTypes } from "@store/types/account.types";
 import StatusButton from "@components/Button/StatusButton";
 import { createLevelAttribute } from "@utils";
+import { formMode } from "@constants";
 
 const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -60,7 +61,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
       levels: [{ name: "", level: "", levelMax: "" }],
     };
 
-    if (mode === "edit") {
+    if (mode === formMode.EDIT) {
       newInitialValues.NFTName = rest.nftName;
       newInitialValues.description = rest.description;
 

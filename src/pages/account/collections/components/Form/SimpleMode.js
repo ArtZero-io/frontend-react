@@ -18,8 +18,9 @@ import { clientAPI } from "@api/client";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import { AccountActionTypes } from "@store/types/account.types";
 import StatusButton from "@components/Button/StatusButton";
+import { formMode } from "@constants";
 
-const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
+const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
   const [headerSquareIPFSUrl, setHeaderSquareIPFSUrl] = useState("");
@@ -105,7 +106,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
           collectionName: dataList[0].name,
           collectionDescription: dataList[0].description,
           collectRoyalFee: dataList[0].isCollectRoyalFee,
-          royalFee: dataList[0].royalFee,
+          royalFee: dataList[0].royalFee / 100,
           website: dataList[0].website,
           twitter: dataList[0].twitter,
           discord: dataList[0].discord,
@@ -131,7 +132,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
       }
     };
 
-    mode === "edit"
+    mode === formMode.EDIT
       ? fetchCollectionsByID()
       : setInitialValues(newInitialValues);
   }, [id, mode]);
@@ -230,8 +231,8 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                     values.discord,
                   ],
 
-                  collectionAllowRoyalFee: values.collectionRoyalFee,
-                  collectionRoyalFeeData: values.collectionRoyalFee
+                  collectionAllowRoyalFee: values.collectRoyalFee,
+                  collectionRoyalFeeData: values.collectRoyalFee
                     ? Math.round(values.royalFee * 100)
                     : 0,
                 };
@@ -243,13 +244,15 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                   },
                 });
 
-                if (mode === "add") {
+                if (mode === formMode.ADD) {
                   await collection_manager_calls.autoNewCollection(
                     currentAccount,
                     data,
                     dispatch
                   );
-                } else {
+                }
+
+                if (mode === formMode.EDIT) {
                   await collection_manager_calls.setMultipleAttributes(
                     currentAccount,
                     nftContractAddress,
@@ -259,13 +262,12 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                   );
                 }
               }
-              // }
             }}
           >
             {({ values, dirty, isValid }) => (
               <Form>
                 <HStack>
-                  {mode === "add" && (
+                  {mode === formMode.ADD && (
                     <>
                       <SimpleModeInput
                         isRequired={true}
@@ -367,8 +369,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                       limitedSize={{ width: "500", height: "500" }}
                     />
 
-                    {(mode === "edit") &
-                    (
+                    {mode === formMode.EDIT && (
                       <Box my="30px" py="30px">
                         <Box
                           textTransform="capitalize"
@@ -383,7 +384,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                   </Stack>
                 </Stack>
 
-                {mode === "add" && (
+                {mode === formMode.ADD && (
                   <Flex alignItems="center" minH={20} mt={5}>
                     <Box w="12rem">
                       <SimpleModeSwitch

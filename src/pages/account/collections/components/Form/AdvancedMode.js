@@ -19,6 +19,7 @@ import { clientAPI } from "@api/client";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import { AccountActionTypes } from "@store/types/account.types";
 import StatusButton from "@components/Button/StatusButton";
+import { formMode } from "@constants";
 
 const AdvancedModeForm = ({ mode = "add", id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -149,7 +150,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
       }
     };
 
-    mode === "edit"
+    mode === formMode.EDIT
       ? fetchCollectionsByID()
       : setInitialValues(newInitialValues);
   }, [id, mode]);
@@ -367,8 +368,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       limitedSize={{ width: "500", height: "500" }}
                     />
 
-                    {(mode === "edit") &
-                    (
+                    {mode === formMode.EDIT && (
                       <Box my="30px" py="30px">
                         <Box
                           textTransform="capitalize"
@@ -383,7 +383,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   </Stack>
                 </Stack>
 
-                {mode === "add" && (
+                {mode === formMode.ADD && (
                   <Flex alignItems="center" minH={20} mt={5}>
                     <Stack
                       direction={{ base: "column", "2xl": "row" }}
@@ -441,19 +441,6 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   loadingText={`${addCollectionTnxStatus?.status}`}
                   mode={mode}
                 />
-                {/* <Button
-                  disabled={!(dirty && isValid)}
-                  spinnerPlacement="start"
-                  isLoading={tnxStatus}
-                  loadingText={`${tnxStatus?.status}`}
-                  variant="solid"
-                  w="full"
-                  type="submit"
-                  mt={8}
-                  mb={{ xl: "16px", "2xl": "32px" }}
-                >
-                  {mode === "add" ? "Add new collection" : "Submit change"}
-                </Button> */}
               </Form>
             )}
           </Formik>

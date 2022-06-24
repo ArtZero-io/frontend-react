@@ -19,8 +19,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { onCloseButtonModal } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
 import EditIcon from "@theme/assets/icon/Edit.js";
+import { formMode } from "@constants";
 
-function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
+function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
   const {
     isOpen: isOpenSimpleMode,
     onOpen: onOpenSimpleMode,
@@ -34,7 +35,7 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
 
   return (
     <>
-      {mode === "add" && (
+      {mode === formMode.ADD && (
         <Button
           variant="outline"
           color="brand.blue"
@@ -45,7 +46,7 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
           Simple Mode
         </Button>
       )}
-      {mode === "edit" && (
+      {mode === formMode.EDIT && (
         <>
           <IconButton
             zIndex={"1"}
@@ -114,7 +115,7 @@ function SimpleModeModal({ mode = "add", id, nftContractAddress }) {
           />
           <ModalHeader>
             <Heading size="h4" m={2}>
-              {mode === "add" ? "Simple Mode" : "Edit Collection"}{" "}
+              {mode === formMode.ADD ? "Simple Mode" : "Edit Collection"}{" "}
               <Tooltip
                 label="Simple Mode is designed for non-tech people. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
                 fontSize="md"
