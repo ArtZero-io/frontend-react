@@ -23,6 +23,7 @@ import { useSubstrateState } from "@utils/substrate";
 import { getCachedImageShort } from "@utils";
 import ProfileModal from "./Modal/Profile";
 import toast from "react-hot-toast";
+// import { truncateStr } from "@utils";
 
 function ProfileHeader() {
   const dispatch = useDispatch();
@@ -95,26 +96,29 @@ function ProfileHeader() {
         <HStack w="full" justifyContent="space-around" py={4}>
           <VStack textAlign="center" justifyContent="space-between">
             <Center w="full" pos="relative">
-              <Heading size="h2">{profile?.username || "Unknown"}</Heading>
+              <Heading size="h2">
+                {profile?.username || "Unknown"}
+                {/* {profile?.username || truncateStr(currentAccount.address)} */}
+              </Heading>
+              <IconButton
+                pos="relative"
+                bottom={"-8px"}
+                right={"-8px"}
+                aria-label="edit"
+                icon={<EditIcon />}
+                size="icon"
+                borderWidth={0}
+                variant="iconOutline"
+                onClick={() => onOpen()}
+                h={0}
+                _hover={{
+                  h: 0,
+                }}
+                _focus={{
+                  h: 0,
+                }}
+              />
             </Center>
-            <IconButton
-              pos="relative"
-              bottom={7}
-              right={-60}
-              aria-label="edit"
-              icon={<EditIcon />}
-              size="icon"
-              borderWidth={0}
-              variant="iconOutline"
-              onClick={() => onOpen()}
-              h={0}
-              _hover={{
-                h: 0,
-              }}
-              _focus={{
-                h: 0,
-              }}
-            />
 
             <Text fontSize="lg" maxW="md">
               {profile?.bio || "Something about yourself ..."}
