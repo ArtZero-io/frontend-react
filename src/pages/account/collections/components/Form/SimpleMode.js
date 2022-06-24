@@ -147,7 +147,7 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
 
               collectionName: Yup.string()
                 .min(3, "Must be longer than 3 characters")
-                .max(50, "Must be less than 50 characters")
+                .max(30, "Must be less than 30 characters")
                 .required("Required"),
               collectionDescription: Yup.string()
                 .min(3, "Must be longer than 3 characters")
@@ -160,11 +160,11 @@ const SimpleModeForm = ({ mode = "add", id, nftContractAddress }) => {
                 .max(50, "Must be less than 50 characters"),
               twitter: Yup.string()
                 .url("This must be a valid URL")
-                .min(3, "Must be longer than 3 characters")
+                .matches(/\btwitter.com\b/, "Not a Twitter URL")
                 .max(50, "Must be less than 50 characters"),
               discord: Yup.string()
                 .url("This must be a valid URL")
-                .min(3, "Must be longer than 3 characters")
+                .matches(/\bdiscord.gg\b/, "Not a Discord URL")
                 .max(50, "Must be less than 50 characters"),
 
               nftName: Yup.string().when("isEditMode", {

@@ -47,15 +47,19 @@ const ProfileForm = ({ profile }) => {
             .max(150, "Must be less than 150 characters"),
           twitter: Yup.string()
             .url("This must be a valid URL")
+            .matches(/\btwitter.com\b/, "Not a Twitter URL")
             .max(50, "Must be 50 characters or less"),
           facebook: Yup.string()
             .url("This must be a valid URL")
+            .matches(/\bfacebook.com\b/, "Not a Facebook URL")
             .max(50, "Must be 50 characters or less"),
           telegram: Yup.string()
             .url("This must be a valid URL")
+            .matches(/\btelegram.org\b/, "Not a Telegram URL")
             .max(50, "Must be 50 characters or less"),
           instagram: Yup.string()
             .url("This must be a valid URL")
+            .matches(/\binstagram.com\b/, "Not an Instagram URL")
             .max(50, "Must be 50 characters or less"),
         })}
         onSubmit={async (values, { setSubmitting }) => {
@@ -87,7 +91,9 @@ const ProfileForm = ({ profile }) => {
                 <ImageUpload
                   setImageIPFSUrl={setAvatarIPFSUrl}
                   profile={profile}
+                  limitedSize={{ width: "500", height: "500" }}
                 />
+                asd
               </VStack>
 
               <VStack flexGrow="1" ml={3}>
