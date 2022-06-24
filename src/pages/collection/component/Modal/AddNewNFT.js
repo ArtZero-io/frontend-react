@@ -16,6 +16,7 @@ import AddNewNFTForm from "../Form/AddNewNFT";
 import { onCloseButtonModal } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
 import { EditIcon } from "@chakra-ui/icons";
+import { formMode } from "@constants";
 
 const AddNewNFTModal = ({ mode = "add", ...rest }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,12 +32,12 @@ const AddNewNFTModal = ({ mode = "add", ...rest }) => {
 
   return (
     <>
-      {mode === "add" && (
+      {mode === formMode.ADD && (
         <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
           Add new NFT
         </Button>
       )}
-      {mode === "edit" && (
+      {mode === formMode.EDIT && (
         <>
           <IconButton
             pos="absolute"
@@ -112,7 +113,7 @@ const AddNewNFTModal = ({ mode = "add", ...rest }) => {
           />
           <ModalHeader>
             <Heading size="h4" my={2}>
-              {mode === "add" ? "Add new NFT" : "Edit NFT"}
+              {mode === formMode.ADD ? "Add new NFT" : "Edit NFT"}
             </Heading>
           </ModalHeader>
 

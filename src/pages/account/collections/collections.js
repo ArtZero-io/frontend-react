@@ -19,6 +19,7 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 
 import GridA from "@components/Grid/GridA";
 import { AnimatePresence, motion } from "framer-motion";
+import { formMode } from "@constants";
 
 function MyCollectionsPage() {
   const [collections, setCollections] = useState(null);
@@ -157,7 +158,7 @@ function MyCollectionsPage() {
 
           <Spacer />
 
-          <AddNewCollectionModal mode="add" />
+          <AddNewCollectionModal mode={formMode.ADD} />
         </Flex>
 
         {loading ? (
