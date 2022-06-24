@@ -31,10 +31,11 @@ const MyStakesPage = () => {
   // const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
   const { currentAccount, api } = useSubstrateState();
 
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [statsInfo, setStatsInfo] = useState({});
   const [activeTab, setActiveTab] = useState(tabList.NOT_STAKED);
   const [PMPCollectionDetail, setPMPCollectionDetail] = useState(null);
+  const [platformTradingFee, setPlatformTradingFee] = useState(0);
 
   useEffect(() => {
     const prepareStatsInfo = async () => {
@@ -47,6 +48,9 @@ const MyStakesPage = () => {
       const totalCount = stakedCount + pendingCount + unstakedCount;
 
       const myTradingFee = await fetchMyTradingFee(stakedCount, currentAccount);
+
+      const fee = await fetchPlatformTradingFee(currentAccount);
+      setPlatformTradingFee(fee);
 
       const stats = {
         totalCount,
@@ -63,7 +67,7 @@ const MyStakesPage = () => {
   }, [api, currentAccount]);
 
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
     const fetchCollectionDetail = async () => {
       const PMPCollectionDetail = await getPMPCollectionDetail();
 
@@ -100,17 +104,11 @@ const MyStakesPage = () => {
 
       setPMPCollectionDetail(PMPCollectionDetail);
 
-      setLoading(false);
+      // setLoading(false);
     };
 
     fetchCollectionDetail();
-  }, [
-    activeTab,
-    api,
-    currentAccount,
-    statsInfo.pendingCount,
-    statsInfo.stakedCount,
-  ]);
+  }, [currentAccount, activeTab]);
 
   return (
     <Box as="section" maxW="container.3xl">
@@ -167,21 +165,20 @@ const MyStakesPage = () => {
                   : null}
                 :
               </Text>
-              <Text ml={1}>{statsInfo[item]}</Text>
+
               <Text ml={1}>
                 {item === "myTradingFee"
-                  ? "%"
+                  ? `${statsInfo[item] || platformTradingFee} %`
                   : statsInfo[item] > 1
-                  ? "items"
-                  : "item"}
+                  ? `${statsInfo[item]} items`
+                  : `${statsInfo[item]} item`}
               </Text>
             </Flex>
           ))}
         </HStack>
 
-        {loading ? (
-          <AnimationLoader />
-        ) : PMPCollectionDetail?.listNFT?.length === 0 ? (
+        {loading ? <AnimationLoader /> : null}
+        {PMPCollectionDetail?.listNFT?.length === 0 ? (
           <Heading py="3rem" size="h6">
             No NFTs found
           </Heading>
