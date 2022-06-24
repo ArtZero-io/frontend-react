@@ -148,32 +148,38 @@ const MyStakesPage = () => {
           Praying Mantis Predators NFT Stats:
         </Text>
 
-        <HStack py={5} borderBottomWidth={1}>
+        <HStack py={5} borderBottomWidth={1} h="75px">
           {Object.keys(statsInfo).map((item) => (
-            <Flex alignItems="start" pr={"5rem"}>
-              <Text color="brand.grayLight">
-                {item === "totalCount"
-                  ? "Total"
-                  : item === "unstakedCount"
-                  ? "Total Not Staked"
-                  : item === "pendingCount"
-                  ? "Total Pending Unstake"
-                  : item === "stakedCount"
-                  ? "Total Staked"
-                  : item === "myTradingFee"
-                  ? "Trading Fee"
-                  : null}
-                :
-              </Text>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <Flex alignItems="start" pr={"5rem"}>
+                <Text color="brand.grayLight">
+                  {item === "totalCount"
+                    ? "Total"
+                    : item === "unstakedCount"
+                    ? "Total Not Staked"
+                    : item === "pendingCount"
+                    ? "Total Pending Unstake"
+                    : item === "stakedCount"
+                    ? "Total Staked"
+                    : item === "myTradingFee"
+                    ? "Trading Fee"
+                    : null}
+                  :
+                </Text>
 
-              <Text ml={1}>
-                {item === "myTradingFee"
-                  ? `${statsInfo[item] || platformTradingFee} %`
-                  : statsInfo[item] > 1
-                  ? `${statsInfo[item]} items`
-                  : `${statsInfo[item]} item`}
-              </Text>
-            </Flex>
+                <Text ml={1}>
+                  {item === "myTradingFee"
+                    ? `${statsInfo[item] || platformTradingFee} %`
+                    : statsInfo[item] > 1
+                    ? `${statsInfo[item]} items`
+                    : `${statsInfo[item]} item`}
+                </Text>
+              </Flex>
+            </motion.div>
           ))}
         </HStack>
 
@@ -357,13 +363,12 @@ export const getMyStakedPMP = async ({ api, stakedCount, currentAccount }) => {
 };
 
 export const getTokenURI = async ({ currentAccount }) => {
-  const tokenUriFull = await artzero_nft_calls.query(
+  const tokenUriFull = await artzero_nft_calls.tokenUri(
     currentAccount?.address,
     1
   );
 
-  console.log("tokenUriFull", tokenUriFull);
-  return tokenUriFull.toHuman()?.replace("1.json", "");
+  return tokenUriFull.replace("1.json", "");
 };
 
 export const getTokenIdOfPendingPMP = async ({ currentAccount, index }) => {
