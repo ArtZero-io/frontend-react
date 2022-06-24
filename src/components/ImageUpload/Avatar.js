@@ -24,7 +24,12 @@ import { getCachedImageShort } from "@utils";
 
 const client = create(IPFS_CLIENT_URL);
 const supportedFormat = ["image/png", "image/jpg", "image/jpeg"];
-export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
+
+export default function ImageUploadAvatar({
+  setImageIPFSUrl,
+  profile,
+  limitedSize = { width: "500", height: "500" },
+}) {
   const [imgURL, setImgURL] = useState(null);
 
   const [newAvatarData, setNewAvatarData] = useState(null);
@@ -159,6 +164,9 @@ export default function ImageUploadAvatar({ setImageIPFSUrl, profile }) {
           )}
         </HStack>
       </Center>
+      <Text ml={2} fontSize="14px" color="brand.grayLight">
+        Recommended file size is {limitedSize.width}x{limitedSize.height} px
+      </Text>
     </VStack>
   );
 }
