@@ -178,10 +178,9 @@ const MyStakesPage = () => {
             </Flex>
           ))}
         </HStack>
-        <AnimationLoader />
 
         {loading ? (
-          <AnimationLoader loadingTime={1} />
+          <AnimationLoader />
         ) : PMPCollectionDetail?.listNFT?.length === 0 ? (
           <Heading py="3rem" size="h6">
             No NFTs found

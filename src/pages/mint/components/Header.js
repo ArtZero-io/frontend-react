@@ -122,11 +122,10 @@ function MintHeader({ loading }) {
       let res = await artzero_nft_calls.getPublicSaleMintedAmount(
         currentAccount
       );
-
       if (res) {
         setPublicSaleMintedCount(res);
       } else {
-        setPublicSaleMintedCount(null);
+        setPublicSaleMintedCount(0);
       }
     },
     [currentAccount]
