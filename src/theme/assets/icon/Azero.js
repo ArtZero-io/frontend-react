@@ -1,8 +1,13 @@
 import { Icon } from "@chakra-ui/react";
 
-export default function AzeroIcon({ fill = "#7AE7FF", ...rest }) {
+export default function AzeroIcon({
+  fill = "#7AE7FF",
+  w = "18px",
+  h = "18px",
+  ...rest
+}) {
   return (
-    <Icon width="19" height="18" viewBox="0 0 19 18" {...rest}>
+    <Icon width={w} height={h} viewBox="0 0 18 18" {...rest}>
       <path
         fillRule="evenodd"
         clipRule="evenodd"
