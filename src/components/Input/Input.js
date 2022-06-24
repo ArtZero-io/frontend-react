@@ -25,7 +25,6 @@ export default function SimpleModeInput({
         </FormLabel>
       )}
       <Field
-        required
         ml={0}
         pl={2}
         as={Input}
@@ -35,7 +34,7 @@ export default function SimpleModeInput({
         {...props}
       />
       {meta.touched && meta.error ? (
-        <Text textAlign="left" color="red" ml={1} fontSize="sm">
+        <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
           {meta.error}
         </Text>
       ) : null}

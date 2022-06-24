@@ -23,7 +23,7 @@ export default function AddLevelsInput({ label, height, form, ...props }) {
       )}
       <Field ml={0} pl={1} as={NumberInput} bg="black" {...field} {...props} />
       {meta.touched && meta.error ? (
-        <Text textAlign="left" color="red" ml={1} fontSize="sm">
+        <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
           {meta.error}
         </Text>
       ) : null}

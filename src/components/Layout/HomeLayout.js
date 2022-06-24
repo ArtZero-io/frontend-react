@@ -13,10 +13,12 @@ const HomeLayout = ({ children }) => {
 
   return (
     <Container
+      h="full"
       id="layout-container"
       minW="full"
       px={{ sm: "0" }}
       position="relative"
+      pb="70px"
     >
       <Flex
         id="image-wrapper"
@@ -24,7 +26,7 @@ const HomeLayout = ({ children }) => {
         inset="0"
         w="full"
         // h={"full"}
-        h={["2470px", "4090px", "4023px"]}
+        // h={["2470px", "4090px", "4023px"]}
         overflow="hidden"
         align="center"
       >
