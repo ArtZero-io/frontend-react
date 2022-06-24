@@ -42,6 +42,8 @@ const MobileNavContent = (props) => {
     ? (document.body.style.position = "fixed")
     : (document.body.style.position = "static");
 
+  const { currentAccount } = useSubstrateState();
+
   return (
     <Flex w="full" {...props}>
       <Center
@@ -107,14 +109,15 @@ const MobileNavContent = (props) => {
           justify="start"
           position="relative"
         >
+          <WalletSelector display={{ base: "flex", md: "none" }} />
+
           {links.map((link, index) => (
             <NavListItem key={index}>
               <NavLink.Mobile label={link.label} to={link.href} />
             </NavListItem>
           ))}
           {<NavLink.Mobile label="Docs" to={ROUTES.DOCS} isExternal={true} />}
-          {/* {currentAccount && currentAccount?.address && <MyAccountDropdown />} */}
-
+          {currentAccount && currentAccount?.address && <MyAccountDropdown />}
           <Flex
             w="full"
             justifyContent="center"
@@ -129,13 +132,11 @@ const MobileNavContent = (props) => {
 
             <Center w="full" textAlign="center">
               <Text
-                textTransform="uppercase"
                 fontSize={["13px", "sm", "sm"]}
                 color="#ababab"
-                width={["175px", "full", "full"]}
+                width={["260px", "full", "full"]}
               >
-                © copyright 2022 artzero <br />
-                all rights reserved
+                © Copyright 2022 ArtZero. All Rights Reserved
               </Text>
             </Center>
           </Flex>
@@ -172,7 +173,7 @@ const DesktopNavContent = (props) => {
 
       <SearchDrawer display={{ base: "none", md: "flex" }} />
 
-      <WalletSelector display={{ base: "none", md: "flex" }} />
+      <WalletSelector display={{ base: "none", lg: "flex" }} />
     </Flex>
   );
 };
@@ -197,7 +198,7 @@ const MyAccountDropdown = () => {
     setPath(location.pathname);
   }, [location.pathname]);
   return (
-    <Box>
+    <Box p={{ base: "20px", lg: "0" }}>
       <Menu
         autoSelect={false}
         placement="bottom"
@@ -206,6 +207,7 @@ const MyAccountDropdown = () => {
         // borderColor={path.includes("/account/") ? "brand.blue" : "transparent"}
       >
         <MenuButton
+          fontSize={{ base: "32px", lg: "15px" }}
           h="41px"
           _hover={{
             borderColor: "brand.blue",
@@ -221,12 +223,12 @@ const MyAccountDropdown = () => {
           as={Button}
           p={0}
           bg="transparent"
-          borderColor={
-            path.includes("/account/") ? "brand.blue" : "transparent"
-          }
           py="10px"
           display="flex"
           justifyContent="center"
+          borderColor={
+            path.includes("/account/") ? "brand.blue" : "transparent"
+          }
           color={path.includes("/account/") ? "brand.blue" : "#fff"}
         >
           My Account
@@ -238,6 +240,7 @@ const MyAccountDropdown = () => {
           borderColor="brand.blue"
           borderRadius="0"
           p="15px"
+          // ml={{ base: "20px", lg: "auto" }}
         >
           {myAccountList.map((item, idx) => (
             <MenuItem
@@ -247,7 +250,8 @@ const MyAccountDropdown = () => {
               onClick={() => history.push(item.href)}
               key={idx}
               to="#"
-              fontSize="15px"
+              // fontSize="15px"
+              fontSize={{ base: "32px", lg: "15px" }}
               py="12px"
               px="15px"
             >

@@ -15,11 +15,8 @@ import {
   MenuItem,
   Button,
   Flex,
-  Box,
   Spacer,
   Text,
-  Alert,
-  AlertIcon,
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { AccountActionTypes } from "../../store/types/account.types";
@@ -28,7 +25,7 @@ import { truncateStr } from "@utils/index";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
-function WalletSelector() {
+function WalletSelector({ display }) {
   const { path } = useLocation();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -86,10 +83,13 @@ function WalletSelector() {
   return (
     <>
       <Flex
+        display={display}
         align="center"
         justify="space-between"
-        height="100%"
-        mx="2"
+        height="full"
+        maxH="55px"
+        px={{ base: "10px", md: "auto" }}
+        mb={{ base: "20px", md: "auto" }}
         flexDirection={{ md: "colum" }}
       >
         <Menu autoSelect={false} placement="bottom-end" offset={[-0.5, -1]}>
@@ -102,12 +102,11 @@ function WalletSelector() {
             fontFamily="Oswald, sans-serif"
             color="brand.blue"
             ring={0}
-            // minW={64}
-            // maxW={64}
-            mx="10px"
+            // mx={{ base: "15px", md: "10px" }}
+            mx={"10px"}
             p="0"
             pl="15px"
-            w="250px"
+            w="226px"
             h="50px"
             as={Button}
             rightIcon={<ChevronDownIcon fontSize="3xl" w="30px" m="0" />}
@@ -116,16 +115,14 @@ function WalletSelector() {
             lineHeight="38px"
           >
             <Flex justifyContent="start" w="full">
-              <Text w="78px" isTruncated mr="2px" textAlign="left">
+              <Text w="54px" isTruncated mr="2px" textAlign="left">
                 {currentAccount?.meta?.name}
               </Text>
               <Text> - {truncateStr(currentAccount?.address, 6)}</Text>
             </Flex>
           </MenuButton>
           <MenuList
-            // minW={64}
-            // maxW={64}
-            w="250px"
+            w="226px"
             borderRadius="0"
             borderWidth="2px"
             borderColor="brand.blue"
@@ -133,6 +130,7 @@ function WalletSelector() {
             borderTop="0"
             px="15px"
             py="0"
+            // ml={{ base: "5px", lg: "auto" }}
           >
             {keyringOptions.map(({ address, name }) => (
               <MenuItem
@@ -152,14 +150,14 @@ function WalletSelector() {
                   color="#888"
                   lineHeight="38px"
                 >
-                  <Text w="78px" isTruncated mr="2px" textAlign="left">
+                  <Text w="54px" isTruncated mr="2px" textAlign="left">
                     {name}
                   </Text>
                   <Text> - {truncateStr(address, 6)}</Text>
                 </Flex>
               </MenuItem>
             ))}
-            <Spacer />
+            <Spacer display={{ base: "none", md: "flex" }} />
             <MenuItem
               _hover={{ color: "brand.blue", bg: "black" }}
               color="white"
@@ -188,16 +186,7 @@ function WalletSelector() {
 }
 
 export default function AccountSelector(props) {
-  const { keyring, api, walletPendingApprove } = useSubstrateState();
-  if (walletPendingApprove)
-    return (
-      <Box pr="2">
-        <Alert status="warning" maxW="10rem" py="1">
-          <AlertIcon />
-          <Text fontSize="sm">Please approve on you wallet.</Text>
-        </Alert>
-      </Box>
-    );
+  const { keyring, api } = useSubstrateState();
 
   return keyring?.getPairs && api?.query ? (
     <WalletSelector {...props} />
