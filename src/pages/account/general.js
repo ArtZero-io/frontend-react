@@ -298,9 +298,9 @@ function GeneralPage() {
           >
             <Flex w="full">
               <Box fontFamily="Evogria Italic" fontSize="3xl-mid" color="#FFF">
-                <span>Stake your </span>
+                <span>stake your </span>
                 <span style={{ color: "#7AE7FF" }}>
-                  Praying Mantis Predators
+                  praying mantis predators
                 </span>
                 <div />
                 <span>to reduce your </span>
@@ -311,11 +311,7 @@ function GeneralPage() {
               <Spacer />
               <Box variant="outline" h={32} w={32}>
                 <Tag variant="outline" h={6} w={32} mt={3}>
-                  {
-                    <TagLabel>
-                      Trade Fees: {tradeFee && `${tradeFee}%`}
-                    </TagLabel>
-                  }
+                  {<TagLabel>Trade Fee: {tradeFee && `${tradeFee}%`}</TagLabel>}
                 </Tag>
               </Box>
             </Flex>
@@ -331,11 +327,15 @@ function GeneralPage() {
             <Flex w="full">
               <Text mt={0} mb={1} fontSize="lg" color="#fff">
                 Your Estimated Earning:{" "}
-                <span style={{ color: "#7AE7FF" }}>
-                  {parseFloat(estimatedEarning).toFixed(3) || 0} AZERO{" "}
-                </span>
+                <Text as="span" color="#7AE7FF" mr="30px">
+                  {parseFloat(estimatedEarning).toFixed(3) || 0}{" "}
+                  <AzeroIcon mb="2px" w="16px" h="16px" />
+                </Text>
                 &nbsp;&nbsp;&nbsp;Next Payout:{" "}
-                <span style={{ color: "#7AE7FF" }}>July 01, 2022</span>
+                <Text as="span" color="#7AE7FF">
+                  {" "}
+                  Aug 01, 2022
+                </Text>
               </Text>
             </Flex>
 

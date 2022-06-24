@@ -146,7 +146,7 @@ function CollectionAdmin() {
               Collection Contract Balance:
             </Text>
             <Text color="#fff" ml={2}>
-              {collectionContractBalance} SZERO
+              {collectionContractBalance} ZERO
             </Text>
           </Flex>
         </Stack>

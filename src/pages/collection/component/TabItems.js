@@ -131,6 +131,18 @@ const CollectionItems = ({
                 ? "Show unlisted"
                 : ""}
             </Button>
+            {Object.keys(tabList).map((item) => (
+              <Button
+                key={item}
+                // isActive={item === activeTab}
+                id={item}
+                variant="outline"
+                mx={1}
+                // onClick={() => setActiveTab(item)}
+              >
+                {item.replace("_", " ")}
+              </Button>
+            ))}
           </Flex>
           {/* 
           <Input
@@ -407,3 +419,9 @@ function GridItemA({
     </AnimatePresence>
   );
 }
+
+export const tabList = {
+  SHOW_ALL: "SHOW_ALL",
+  SHOW_LISTED: "SHOW_LISTED",
+  SHOW_UNLISTED: "SHOW_UNLISTED",
+};

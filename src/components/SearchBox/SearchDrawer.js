@@ -32,8 +32,11 @@ const SearchDrawer = () => {
 
   const getSearchResult = async (keywords) => {
     try {
-      const response = await APICall.getSearchResult({ keywords });
-      console.log("response", response);
+      let response = await APICall.getSearchResult({ keywords });
+
+      if (response.length > 0) {
+        response = response.filter((item) => item.nft_count > 0);
+      }
       setResultList(response);
     } catch (error) {
       console.log(error);
@@ -41,6 +44,7 @@ const SearchDrawer = () => {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceGetSearchResult = useCallback(
     debounce((k) => getSearchResult(k), 1500),
     []

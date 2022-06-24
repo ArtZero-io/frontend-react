@@ -203,7 +203,7 @@ function ContractTab() {
                     Contract Balance:{" "}
                   </Text>
                   <Text color="#fff" ml={2}>
-                    {azNFTContractBalance} SZERO
+                    {azNFTContractBalance} ZERO
                   </Text>
                 </Flex>
 
