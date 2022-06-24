@@ -284,7 +284,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 <HStack>
                   <AddNewNFTInput
                     isRequired={true}
-                    mode="add"
+                    mode={formMode.ADD}
                     label="NFT Name"
                     name="NFTName"
                     type="NFTName"

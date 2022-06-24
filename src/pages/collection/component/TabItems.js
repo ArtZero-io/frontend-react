@@ -26,6 +26,7 @@ import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import NFTDetailModal from "./Modal/NFTDetail";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import NFTChangeSizeCard from "@components/Card/NFTChangeSize";
+import { formMode } from "@constants";
 
 const CollectionItems = ({
   NFTListFormatted,
@@ -38,6 +39,8 @@ const CollectionItems = ({
   isShowUnlisted,
   totalCollectionsCount,
   offset,
+  activeTab,
+  setActiveTab,
 }) => {
   const { currentAccount } = useSubstrateState();
 
@@ -115,7 +118,7 @@ const CollectionItems = ({
               onClick={() => forceUpdate()}
             />
 
-            <Button
+            {/* <Button
               mx={1.5}
               variant="outline"
               minW={"11rem"}
@@ -130,15 +133,16 @@ const CollectionItems = ({
                 : isShowUnlisted % 3 === 2
                 ? "Show unlisted"
                 : ""}
-            </Button>
+            </Button> */}
             {Object.keys(tabList).map((item) => (
               <Button
                 key={item}
-                // isActive={item === activeTab}
+                _active={{ bg: "#7ae7ff", color: "#000" }}
+                isActive={item === activeTab}
                 id={item}
                 variant="outline"
                 mx={1}
-                // onClick={() => setActiveTab(item)}
+                onClick={() => setActiveTab(item)}
               >
                 {item.replace("_", " ")}
               </Button>
@@ -156,11 +160,11 @@ const CollectionItems = ({
           <Flex justifyContent="space-between" align="center" pr="2">
             <Text px={2} display={{ base: "block", xl: "none" }}>
               {totalCollectionsCount || 0} items{" "}
-              {isShowUnlisted % 3 === 0
+              {activeTab === tabList.ALL
                 ? "in total"
-                : isShowUnlisted % 3 === 1
+                : activeTab === tabList.LISTED
                 ? "listed"
-                : isShowUnlisted % 3 === 2
+                : activeTab === tabList.UNLISTED
                 ? "unlisted"
                 : ""}
             </Text>
@@ -220,11 +224,11 @@ const CollectionItems = ({
                   color="#888"
                 >
                   {totalCollectionsCount || 0} items{" "}
-                  {isShowUnlisted % 3 === 0
+                  {activeTab === tabList.ALL
                     ? "in total"
-                    : isShowUnlisted % 3 === 1
+                    : activeTab === tabList.LISTED
                     ? "listed"
-                    : isShowUnlisted % 3 === 2
+                    : activeTab === tabList.UNLISTED
                     ? "unlisted"
                     : ""}
                 </Text>
@@ -235,7 +239,10 @@ const CollectionItems = ({
           <Spacer />
 
           {currentAccount?.address === collectionOwner && contractType === 2 ? (
-            <AddNewNFTModal collectionOwner={collectionOwner} mode="add" />
+            <AddNewNFTModal
+              collectionOwner={collectionOwner}
+              mode={formMode.ADD}
+            />
           ) : null}
         </Flex>
       </Box>
@@ -419,9 +426,8 @@ function GridItemA({
     </AnimatePresence>
   );
 }
-
 export const tabList = {
-  SHOW_ALL: "SHOW_ALL",
-  SHOW_LISTED: "SHOW_LISTED",
-  SHOW_UNLISTED: "SHOW_UNLISTED",
+  ALL: "ALL",
+  LISTED: "LISTED",
+  UNLISTED: "UNLISTED",
 };

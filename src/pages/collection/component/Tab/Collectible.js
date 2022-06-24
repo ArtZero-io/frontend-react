@@ -42,6 +42,7 @@ import profile_calls from "@utils/blockchain/profile_calls";
 import { Link as ReactRouterLink } from "react-router-dom";
 import AddNewNFTModal from "../Modal/AddNewNFT";
 import { ImLock, ImUnlocked } from "react-icons/im";
+import { formMode } from "@constants";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -340,7 +341,7 @@ const NFTTabCollectible = (props) => {
               )}
             </HStack>
             {owner === currentAccount.address && (
-              <AddNewNFTModal mode="edit" {...props} />
+              <AddNewNFTModal mode={formMode.EDIT} {...props} />
             )}
           </Flex>
 

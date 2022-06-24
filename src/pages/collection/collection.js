@@ -50,6 +50,7 @@ function CollectionPage() {
   const [isShowUnlisted, setIsShowUnlisted] = useState(1);
   const [tokenUriType1, setTokenUriType1] = useState("");
   const [latestBlockNumber, setLatestBlockNumber] = useState(null);
+  const [activeTab, setActiveTab] = useState(tabList.LISTED);
 
   const {
     pagesCount,
@@ -151,19 +152,19 @@ function CollectionPage() {
         const collectionsCountUnListed =
           collectionsCountTotal - collectionsCountListed;
 
-        if (isShowUnlisted % 3 === 0) {
+        if (activeTab === tabList.ALL) {
           NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
 
           setTotalCollectionsCount(collectionsCountTotal || 0);
         }
 
-        if (isShowUnlisted % 3 === 1) {
+        if (activeTab === tabList.LISTED) {
           NFTList = await clientAPI("post", "/getListedNFTs", NFTListOptions);
 
           setTotalCollectionsCount(collectionsCountListed || 0);
         }
 
-        if (isShowUnlisted % 3 === 2) {
+        if (activeTab === tabList.UNLISTED) {
           NFTList = await clientAPI("post", "/getUnlistedNFTs", NFTListOptions);
 
           setTotalCollectionsCount(collectionsCountUnListed || 0);
@@ -260,6 +261,7 @@ function CollectionPage() {
     offset,
     pageSize,
     loadingTime,
+    activeTab,
   ]);
 
   const tabData = [
@@ -275,6 +277,8 @@ function CollectionPage() {
           isShowUnlisted={isShowUnlisted}
           setIsShowUnlisted={setIsShowUnlisted}
           totalCollectionsCount={totalCollectionsCount}
+          setActiveTab={setActiveTab}
+          activeTab={activeTab}
         />
       ),
     },
@@ -427,4 +431,10 @@ export const getMetaDataType1 = async (tokenID, token_uri) => {
       nftName: metadata.name,
     };
   }
+};
+
+export const tabList = {
+  ALL: "ALL",
+  LISTED: "LISTED",
+  UNLISTED: "UNLISTED",
 };
