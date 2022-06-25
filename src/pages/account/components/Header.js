@@ -23,7 +23,7 @@ import { useSubstrateState } from "@utils/substrate";
 import { getCachedImageShort } from "@utils";
 import ProfileModal from "./Modal/Profile";
 import toast from "react-hot-toast";
-// import { truncateStr } from "@utils";
+import { truncateStr } from "@utils";
 
 function ProfileHeader() {
   const dispatch = useDispatch();
@@ -40,8 +40,11 @@ function ProfileHeader() {
   useEffect(() => {
     const fetchProfile = async () => {
       const res = await dispatch(getProfile(currentAccount));
-
       if (res.status === "OK") {
+        if (!res.data.username) {
+          res.data.username = truncateStr(currentAccount?.address);
+        }
+
         setProfile((prev) => {
           return {
             ...res.data,
@@ -97,8 +100,8 @@ function ProfileHeader() {
           <VStack textAlign="center" justifyContent="space-between">
             <Center w="full" pos="relative">
               <Heading size="h2">
-                {profile?.username || "Unknown"}
-                {/* {profile?.username || truncateStr(currentAccount.address)} */}
+                {/* {profile?.username || "Unknown"} */}
+                {profile?.username || truncateStr(currentAccount.address)}
               </Heading>
               <IconButton
                 pos="relative"
@@ -149,7 +152,7 @@ function ProfileHeader() {
               </Link>
               <Link
                 isexternal="true"
-                href={`${profile?.telegram}` || `https://t.me/artzero_io`}
+                href={`${profile?.telegram}` || `https://telegram.org`}
               >
                 <IconButton
                   aria-label="telegram"
