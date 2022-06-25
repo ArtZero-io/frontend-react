@@ -563,6 +563,7 @@ function MyNFTTabInfo({
                   borderRadius="0"
                 >
                   <Input
+                    isDisabled={addNftTnxStatus?.status}
                     value={askPrice}
                     onChange={({ target }) => setAskPrice(target.value)}
                     m={0}

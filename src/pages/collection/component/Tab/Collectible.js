@@ -494,6 +494,7 @@ const NFTTabCollectible = (props) => {
                             borderRadius="0"
                           >
                             <Input
+                              isDisabled={addNftTnxStatus?.status}
                               bg="black"
                               color="white"
                               variant="unstyled"

@@ -43,7 +43,9 @@ const ProfileForm = ({ profile }) => {
         validationSchema={Yup.object({
           username: Yup.string()
             .min(3, "Must be longer than 3 characters")
-            .max(30, "Must be less than 30 characters"),
+            .max(30, "Must be less than 30 characters")
+            .required("Required"),
+
           bio: Yup.string()
             .min(3, "Must be longer than 3 characters")
             .max(150, "Must be less than 150 characters"),
