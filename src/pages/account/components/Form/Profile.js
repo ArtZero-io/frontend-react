@@ -13,6 +13,8 @@ import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
 import { AccountActionTypes } from "@store/types/account.types";
 import StatusButton from "@components/Button/StatusButton";
+// eslint-disable-next-line no-unused-vars
+import { truncateStr } from "@utils";
 
 const ProfileForm = ({ profile }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState(null);
@@ -31,12 +33,12 @@ const ProfileForm = ({ profile }) => {
     <>
       <Formik
         initialValues={{
-          username: "",
-          bio: "",
-          twitter: "",
-          facebook: "",
-          telegram: "",
-          instagram: "",
+          username: profile?.username,
+          bio: profile?.bio,
+          twitter: profile?.twitter,
+          facebook: profile?.facebook,
+          telegram: profile?.telegram,
+          instagram: profile?.instagram,
         }}
         validationSchema={Yup.object({
           username: Yup.string()
@@ -103,7 +105,7 @@ const ProfileForm = ({ profile }) => {
                     label="User Name"
                     name="username"
                     type="text"
-                    placeholder={profile?.username || "User Name"}
+                    placeholder="User Name"
                   />
                   <SimpleModeTextarea
                     width={"xs"}
@@ -111,7 +113,7 @@ const ProfileForm = ({ profile }) => {
                     name="bio"
                     type="text"
                     rows={2}
-                    placeholder={profile?.bio || "Bio"}
+                    placeholder="Bio"
                   />
                 </Flex>
                 <Flex w="full" justify="space-between">
@@ -120,14 +122,14 @@ const ProfileForm = ({ profile }) => {
                     label="Twitter URL"
                     name="twitter"
                     type="text"
-                    placeholder={profile?.twitter || "Twitter URL"}
+                    placeholder="Twitter URL"
                   />
                   <SimpleModeInput
                     width={"xs"}
                     label="Facebook URL"
                     name="facebook"
                     type="text"
-                    placeholder={profile?.facebook || "Facebook URL"}
+                    placeholder="Facebook URL"
                   />
                 </Flex>
                 <Flex w="full" justify="space-between">
@@ -136,14 +138,14 @@ const ProfileForm = ({ profile }) => {
                     label="Telegram URL"
                     name="telegram"
                     type="text"
-                    placeholder={profile?.telegram || "Telegram URL"}
+                    placeholder="Telegram URL"
                   />
                   <SimpleModeInput
                     width={"xs"}
                     label="Instagram URL"
                     name="instagram"
                     type="text"
-                    placeholder={profile?.instagram || "Instagram URL"}
+                    placeholder="Instagram URL"
                   />
                 </Flex>
                 <StatusButton
