@@ -45,6 +45,7 @@ import { ImLock, ImUnlocked } from "react-icons/im";
 import { formMode } from "@constants";
 
 const NFTTabCollectible = (props) => {
+
   const {
     nftContractAddress,
     description,
@@ -56,7 +57,9 @@ const NFTTabCollectible = (props) => {
     price,
     attrsList,
     is_locked,
+    showOnChainMetadata,
   } = props;
+
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
   const publicCurrentAccount = getPublicCurrentAccount();
@@ -340,7 +343,8 @@ const NFTTabCollectible = (props) => {
                 </Circle>
               )}
             </HStack>
-            {owner === currentAccount.address && (
+            {console.log('showOnChainMetadata', showOnChainMetadata, nftName)}
+            {showOnChainMetadata && owner === currentAccount.address && (
               <AddNewNFTModal mode={formMode.EDIT} {...props} />
             )}
           </Flex>

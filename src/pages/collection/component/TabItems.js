@@ -41,6 +41,7 @@ const CollectionItems = ({
   offset,
   activeTab,
   setActiveTab,
+  showOnChainMetadata,
 }) => {
   const { currentAccount } = useSubstrateState();
 
@@ -267,6 +268,7 @@ const CollectionItems = ({
             realNftCardWidth={realNftCardWidth}
             realGridCardHeight={nftCardHeight}
             collectionOwner={collectionOwner}
+            showOnChainMetadata={showOnChainMetadata}
           />
         )}
       </Box>
@@ -284,6 +286,7 @@ function GridNftA({
   gridCol,
   gap,
   collectionOwner,
+  showOnChainMetadata,
 }) {
   const originOffset = useRef({ top: 0, left: 0 });
   const controls = useAnimation();
@@ -309,6 +312,7 @@ function GridNftA({
         isOpen={isOpen}
         onClose={onClose}
         collectionOwner={collectionOwner}
+        showOnChainMetadata={showOnChainMetadata}
       />
 
       <AnimatePresence>
