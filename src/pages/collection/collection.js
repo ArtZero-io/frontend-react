@@ -47,7 +47,6 @@ function CollectionPage() {
   const [loading, setLoading] = useState(null);
   const [loadingTime, setLoadingTime] = useState(null);
   const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
-  const [isShowUnlisted, setIsShowUnlisted] = useState(1);
   const [tokenUriType1, setTokenUriType1] = useState("");
   const [latestBlockNumber, setLatestBlockNumber] = useState(null);
   const [activeTab, setActiveTab] = useState(tabList.LISTED);
@@ -103,7 +102,7 @@ function CollectionPage() {
           // setFormattedCollection(null);
           setLoadingTime(null);
           setLoading(false);
-          setIsShowUnlisted(2);
+          setActiveTab(tabList.UNLISTED);
         });
       }
     };
@@ -257,7 +256,6 @@ function CollectionPage() {
     api,
     collection_address,
     currentAccount,
-    isShowUnlisted,
     offset,
     pageSize,
     loadingTime,
@@ -274,8 +272,6 @@ function CollectionPage() {
           loadingTime={loadingTime}
           loading={loading}
           forceUpdate={forceUpdate}
-          isShowUnlisted={isShowUnlisted}
-          setIsShowUnlisted={setIsShowUnlisted}
           totalCollectionsCount={totalCollectionsCount}
           setActiveTab={setActiveTab}
           activeTab={activeTab}
