@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -14,81 +13,9 @@ import {
   ModalHeader,
   ModalBody,
 } from "@chakra-ui/react";
+import { Fragment } from "react";
 
-import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import { useSubstrateState } from "@utils/substrate";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
-import toast from "react-hot-toast";
-import { ContractPromise } from "@polkadot/api-contract";
-import marketplace from "@utils/blockchain/marketplace";
-
-const FeeInfoModal = ({
-  nft_detail,
-  collection_detail,
-  nft_contract_address,
-  isSale = false,
-}) => {
-  const { api, currentAccount } = useSubstrateState();
-  // eslint-disable-next-line no-unused-vars
-  const [sale_price, setSalePrice] = useState(0);
-
-  // eslint-disable-next-line no-unused-vars
-  const listToken = async () => {
-    console.log(nft_contract_address);
-    console.log(sale_price);
-    console.log(nft_detail.id);
-    console.log(collection_detail);
-    if (Number(collection_detail.contractType) === 2) {
-      const nft721_psp34_standard_contract = new ContractPromise(
-        api,
-        nft721_psp34_standard.CONTRACT_ABI,
-        collection_detail.nftContractAddress
-      );
-      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-      const ownerAddress =
-        await nft721_psp34_standard_calls.getOwnerAddressByTokenId(
-          currentAccount,
-          nft_detail.id
-        );
-      console.log(ownerAddress);
-
-      if (ownerAddress === currentAccount?.address) {
-        const is_allownce = await nft721_psp34_standard_calls.allowance(
-          currentAccount,
-          currentAccount?.address,
-          marketplace.CONTRACT_ADDRESS,
-          nft_detail.id
-        );
-
-        if (is_allownce) {
-          await marketplace_contract_calls.list(
-            currentAccount,
-            nft_contract_address,
-            nft_detail.id,
-            sale_price
-          );
-        } else {
-          const is_approve = await nft721_psp34_standard_calls.approve(
-            currentAccount,
-            marketplace.CONTRACT_ADDRESS,
-            nft_detail.id,
-            true
-          );
-          if (is_approve) {
-            await marketplace_contract_calls.list(
-              currentAccount,
-              nft_contract_address,
-              nft_detail.id,
-              sale_price
-            );
-          }
-        }
-      } else {
-        toast.error(`This token is not yours!`);
-      }
-    }
-  };
+const FeeInfoModal = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   return (
@@ -144,7 +71,7 @@ const FeeInfoModal = ({
                     Stakers
                   </Heading>
                   {feeChart.map((item, idx) => (
-                    <React.Fragment key={idx}>
+                    <Fragment key={idx}>
                       <Flex align="center" justify="center" borderWidth={1}>
                         <Box
                           minH={{ base: "4.5rem", "2xl": "5rem" }}
@@ -155,7 +82,7 @@ const FeeInfoModal = ({
                           </Heading>
                         </Box>
                       </Flex>
-                    </React.Fragment>
+                    </Fragment>
                   ))}
                 </Flex>
               </Box>
@@ -170,7 +97,7 @@ const FeeInfoModal = ({
                     Trade discount
                   </Heading>
                   {feeChart.map((item, idx) => (
-                    <React.Fragment key={idx}>
+                    <Fragment key={idx}>
                       <Flex borderWidth={1} w="full" pl={10}>
                         <Box minH={{ base: "4.5rem", "2xl": "5rem" }} mr={3}>
                           <Text
@@ -193,7 +120,7 @@ const FeeInfoModal = ({
                           <Heading size="h6">Trade Fee</Heading>
                         </Flex>
                       </Flex>
-                    </React.Fragment>
+                    </Fragment>
                   ))}
                 </Flex>
               </Box>

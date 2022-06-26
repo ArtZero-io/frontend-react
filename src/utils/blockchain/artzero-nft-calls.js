@@ -7,6 +7,7 @@ import {
 } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
 import { AccountActionTypes } from "@store/types/account.types";
+import { clearTxStatus } from "../../store/actions/txStatus";
 
 let contract;
 
@@ -539,7 +540,10 @@ async function withdrawFee(caller_account, amount) {
   const injector = await web3FromSource(caller_account?.meta?.source);
 
   contract.tx
-    .withdrawFee({ gasLimit, value: azero_value }, parseFloat(amount) * 10**12)
+    .withdrawFee(
+      { gasLimit, value: azero_value },
+      parseFloat(amount) * 10 ** 12
+    )
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -596,11 +600,17 @@ async function allowance(
   return null;
 }
 
-async function approve(caller_account, operator_address, token_id, is_approve) {
+async function approve(
+  caller_account,
+  operator_address,
+  token_id,
+  is_approve,
+  dispatch
+) {
   if (!contract || !caller_account) {
     return null;
   }
-  let res = false;
+  let unsubscribe;
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
@@ -611,32 +621,42 @@ async function approve(caller_account, operator_address, token_id, is_approve) {
     operator_address,
     token_id,
     is_approve
-  ).signAndSend(
-    address,
-    { signer: injector.signer },
-    ({ status, dispatchError }) => {
-      if (dispatchError) {
-        if (dispatchError.isModule) {
-          toast.error(`There is some error with your request`);
-        } else {
-          console.log("dispatchError ", dispatchError.toString());
+  )
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      ({ dispatchError, status }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError ", dispatchError.toString());
+          }
         }
-      }
 
-      if (status) {
-        const statusText = Object.keys(status.toHuman())[0];
-        if (status.isFinalized) {
-          toast.success(
-            `Approve ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-          res = true;
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+          if (status.isFinalized) {
+            toast.success(
+              `Approve ${
+                statusText === "0" ? "started" : statusText.toLowerCase()
+              }.`
+            );
+          }
         }
       }
-    }
-  );
-  return res;
+    )
+    .then((unsub) => {
+      unsubscribe = unsub;
+    })
+    .catch((e) => {
+      dispatch(clearTxStatus());
+      const mess = `Tnx is ${e.message}`;
+      // console.log("e.message", e.message);
+      toast.error(mess);
+      return;
+    });
+  return unsubscribe;
 }
 
 const contract_calls = {

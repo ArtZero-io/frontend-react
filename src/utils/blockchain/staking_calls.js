@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { ContractPromise } from "@polkadot/api-contract";
 import toast from "react-hot-toast";
 import BN from "bn.js";
@@ -9,6 +10,10 @@ import {
 } from "@utils";
 import artzero_nft from "@utils/blockchain/artzero-nft";
 import { clientAPI } from "@api/client";
+import {
+  txErrorHandler,
+  txResponseErrorHandler,
+} from "../../store/actions/txStatus";
 
 let contract;
 
@@ -157,10 +162,7 @@ async function getRequestUnstakeTime(caller_account, account, token_id) {
 }
 
 async function getLimitUnstakeTime(caller_account) {
-  if (
-    !contract ||
-    !caller_account
-  ) {
+  if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
   }
@@ -168,10 +170,10 @@ async function getLimitUnstakeTime(caller_account) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getLimitUnstakeTime(
-    address,
-    { value: azero_value, gasLimit }
-  );
+  const { result, output } = await contract.query.getLimitUnstakeTime(address, {
+    value: azero_value,
+    gasLimit,
+  });
 
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
@@ -180,7 +182,7 @@ async function getLimitUnstakeTime(caller_account) {
 }
 
 //SETTERS
-async function stake(caller_account, token_ids, dispatch) {
+async function stake(caller_account, token_ids, dispatch, txType, api) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -198,39 +200,32 @@ async function stake(caller_account, token_ids, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+        });
 
-        if (status) {
-          handleContractCall(status, dispatchError, dispatch, contract);
-
+        if (status.isFinalized === true) {
           for (var i = 0; i < token_ids.length; i++) {
+            console.log("updateNFT token_ids", token_ids);
             await clientAPI("post", "/updateNFT", {
               collection_address: artzero_nft.CONTRACT_ADDRESS,
               token_id: token_ids[i],
             });
-            await delay(300);
+            // await delay(300);
           }
-
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Stake Artzero NFTs ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
         }
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
-async function unstake(caller_account, token_ids, dispatch) {
+async function unstake(caller_account, token_ids, dispatch, txType, api) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -248,38 +243,43 @@ async function unstake(caller_account, token_ids, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+        });
 
-        if (status) {
-          handleContractCall(status, dispatchError, dispatch, contract);
-
+        if (status.isFinalized === true) {
           for (var i = 0; i < token_ids.length; i++) {
             await clientAPI("post", "/updateNFT", {
               collection_address: artzero_nft.CONTRACT_ADDRESS,
               token_id: token_ids[i],
             });
-            await delay(300);
+            // await delay(300);
           }
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Unstake Artzero NFTs ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
+          // const statusText = Object.keys(status.toHuman())[0];
+          // toast.success(
+          //   `Unstake Artzero NFTs ${
+          //     statusText === "0" ? "started" : statusText.toLowerCase()
+          //   }.`
+          // );
         }
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
-async function requestUnstake(caller_account, token_ids, dispatch) {
+async function requestUnstake(
+  caller_account,
+  token_ids,
+  dispatch,
+  txType,
+  api
+) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -297,38 +297,45 @@ async function requestUnstake(caller_account, token_ids, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+        });
 
         if (status) {
-          handleContractCall(status, dispatchError, dispatch, contract);
+          // handleContractCall(status, dispatchError, dispatch, contract);
 
           for (var i = 0; i < token_ids.length; i++) {
             await clientAPI("post", "/updateNFT", {
               collection_address: artzero_nft.CONTRACT_ADDRESS,
               token_id: token_ids[i],
             });
-            await delay(300);
+            // await delay(300);
           }
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Request Unstake Artzero NFTs ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
+          // const statusText = Object.keys(status.toHuman())[0];
+          // toast.success(
+          //   `Request Unstake Artzero NFTs ${
+          //     statusText === "0" ? "started" : statusText.toLowerCase()
+          //   }.`
+          // );
         }
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
-async function cancelRequestUnstake(caller_account, token_ids, dispatch) {
+async function cancelRequestUnstake(
+  caller_account,
+  token_ids,
+  dispatch,
+  txType,
+  api
+) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -346,35 +353,35 @@ async function cancelRequestUnstake(caller_account, token_ids, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          handleContractCall(status, dispatchError, dispatch, contract);
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+        });
+        if (status.isFinalized === true) {
+          // handleContractCall(status, dispatchError, dispatch, contract);
 
           for (var i = 0; i < token_ids.length; i++) {
             await clientAPI("post", "/updateNFT", {
               collection_address: artzero_nft.CONTRACT_ADDRESS,
               token_id: token_ids[i],
             });
-            await delay(300);
+            // await delay(300);
           }
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Cancel Request Unstake Artzero NFTs ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
+          // const statusText = Object.keys(status.toHuman())[0];
+          // toast.success(
+          //   `Cancel Request Unstake Artzero NFTs ${
+          //     statusText === "0" ? "started" : statusText.toLowerCase()
+          //   }.`
+          // );
         }
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
@@ -390,7 +397,7 @@ const staking_calls = {
   unstake,
   setStakingContract,
   getTotalPendingUnstakedByAccount,
-  getLimitUnstakeTime
+  getLimitUnstakeTime,
 };
 
 export default staking_calls;

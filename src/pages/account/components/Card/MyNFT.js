@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -21,9 +22,17 @@ import staking from "@utils/blockchain/staking";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useInterval from "use-interval";
 import { motion } from "framer-motion";
+import { setTxStatus } from "@store/actions/txStatus";
+import {
+  START,
+  STAKE,
+  REQUEST_UNSTAKE,
+  CANCEL_REQUEST_UNSTAKE,
+  UNSTAKE,
+} from "@constants";
 
 function MyNFTCard({
   nftContractAddress,
@@ -37,12 +46,13 @@ function MyNFTCard({
   highest_bid,
 }) {
   const dispatch = useDispatch();
-  const { currentAccount } = useSubstrateState();
+  const { currentAccount, api } = useSubstrateState();
   const [unstakeRequestTime, setUnstakeRequestTime] = useState(0);
   const [countdownTime, setCountdownTime] = useState(0);
   const [isUnstakeTime, setIsUnstakeTime] = useState(false);
-  // const [nftImage, setNftImage] = useState(null);
   const [limitUnstakeTime, setLimitUnstakeTime] = useState(0);
+
+  const txStatus = useSelector((state) => state.txStatus);
 
   const getRequestTime = async () => {
     let time = await staking_calls.getRequestUnstakeTime(
@@ -50,7 +60,6 @@ function MyNFTCard({
       currentAccount.address,
       tokenID
     );
-    console.log(time);
     /* eslint-disable no-useless-escape */
     const unstakeRequestTimeTmp = time.replace(/\,/g, "");
     setUnstakeRequestTime(unstakeRequestTimeTmp);
@@ -60,14 +69,6 @@ function MyNFTCard({
     );
     setLimitUnstakeTime(limitUnstakeTimeTmp);
   };
-  // const requestUpdateNFT = async () => {
-
-  //   const res = await clientAPI("post", "/updateNFT", {
-  //     collection_address: nftContractAddress,
-  //     token_id: tokenID,
-  //   });
-
-  // }
 
   useInterval(() => {
     if (unstakeRequestTime) {
@@ -88,6 +89,8 @@ function MyNFTCard({
 
   async function stakeAction(stakeStatus) {
     if (stakeStatus === 1) {
+      dispatch(setTxStatus({ txType: STAKE, txStatus: START }));
+
       let allowance = await artzero_nft_calls.allowance(
         currentAccount,
         currentAccount.address,
@@ -95,43 +98,76 @@ function MyNFTCard({
         { u64: tokenID }
       );
 
+      let res;
+
       if (!allowance) {
-        toast("Approve NFT...");
-        await artzero_nft_calls.approve(
+        toast.success("Step 1: Approving NFT for staking...");
+
+        res = await artzero_nft_calls.approve(
           currentAccount,
           staking.CONTRACT_ADDRESS,
           { u64: tokenID },
-          true
+          true,
+          dispatch
         );
-        await delay(3000);
       }
+      if (res || allowance) {
+        //Token is unstaked, Stake Now
+        toast.success(res ? "Step 2: Staking..." : "Staking...");
 
-      //Token is unstaked, Stake Now
-      toast("Staking NFT...");
-      await staking_calls.stake(currentAccount, [tokenID], dispatch);
-    } else if (stakeStatus === 2) {
+        await staking_calls.stake(
+          currentAccount,
+          [tokenID],
+          dispatch,
+          STAKE,
+          api
+        );
+        return;
+      }
+    }
+
+    if (stakeStatus === 2) {
+      dispatch(setTxStatus({ txType: REQUEST_UNSTAKE, txStatus: START }));
       //Token is staked, Request Unstake Now
-      toast("Request Unstaking NFT...");
-      await staking_calls.requestUnstake(currentAccount, [tokenID], dispatch);
+      toast.success("Request Unstaking NFT...");
+
+      await staking_calls.requestUnstake(
+        currentAccount,
+        [tokenID],
+        dispatch,
+        REQUEST_UNSTAKE,
+        api
+      );
     } else if (stakeStatus === 3) {
       if (isUnstakeTime) {
-        toast("Unstaking NFT...");
-        await staking_calls.unstake(currentAccount, [tokenID], dispatch);
+        dispatch(setTxStatus({ txType: UNSTAKE, txStatus: START }));
+
+        toast.success("Unstaking NFT...");
+        await staking_calls.unstake(
+          currentAccount,
+          [tokenID],
+          dispatch,
+          UNSTAKE,
+          api
+        );
       } else {
+        dispatch(
+          setTxStatus({ txType: CANCEL_REQUEST_UNSTAKE, txStatus: START })
+        );
+
         toast("Cancel Unstaking Request...");
         await staking_calls.cancelRequestUnstake(
           currentAccount,
           [tokenID],
-          dispatch
+          dispatch,
+          CANCEL_REQUEST_UNSTAKE,
+          api
         );
       }
     }
   }
 
   return (
-    // h="full"
-    // w="full"
-    // mx="auto"
     <motion.div
       className="my-collection-card"
       whileHover={{
@@ -183,6 +219,18 @@ function MyNFTCard({
           {!is_for_sale && stakeStatus !== 0 ? (
             <Flex align="center" justify="start" w="full">
               <Button
+                isLoading={
+                  txStatus?.stakeStatus ||
+                  txStatus?.unstakeStatus ||
+                  txStatus?.cancelRequestUnstakeStatus ||
+                  txStatus?.requestUnstakeStatus
+                }
+                loadingText={
+                  txStatus?.stakeStatus ||
+                  txStatus?.unstakeStatus ||
+                  txStatus?.cancelRequestUnstakeStatus ||
+                  txStatus?.requestUnstakeStatus
+                }
                 variant="outline"
                 onClick={() => stakeAction(stakeStatus)}
               >

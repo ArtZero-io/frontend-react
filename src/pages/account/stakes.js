@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Flex,
@@ -21,94 +21,123 @@ import BN from "bn.js";
 import { clientAPI } from "@api/client";
 import MyNFTGroupCard from "../account/components/Card/MyNFTGroup";
 
-// import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { APICall } from "../../api/client";
 import { getMetaDataType1 } from "../collection/collection";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { motion } from "framer-motion";
+import { FINALIZED } from "@constants";
+import { clearTxStatus } from "../../store/actions/txStatus";
 
 const MyStakesPage = () => {
-  // const { tnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const txStatus = useSelector((state) => state.txStatus);
+  const dispatch = useDispatch();
+
   const { currentAccount, api } = useSubstrateState();
 
-  const [loading] = useState(false);
-  const [statsInfo, setStatsInfo] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [statsInfo, setStatsInfo] = useState(null);
   const [activeTab, setActiveTab] = useState(tabList.NOT_STAKED);
   const [PMPCollectionDetail, setPMPCollectionDetail] = useState(null);
   const [platformTradingFee, setPlatformTradingFee] = useState(0);
+  const prepareStatsInfo = async () => {
+    const stakedCount = await fetchMyPMPStakedCount(currentAccount);
 
-  useEffect(() => {
-    const prepareStatsInfo = async () => {
-      const stakedCount = await fetchMyPMPStakedCount(currentAccount);
+    const pendingCount = await fetchMyPMPPendingCount(currentAccount);
 
-      const pendingCount = await fetchMyPMPPendingCount(currentAccount);
+    const unstakedCount = await fetchMyPMPUnstakedCount(currentAccount);
 
-      const unstakedCount = await fetchMyPMPUnstakedCount(currentAccount);
+    const totalCount = stakedCount + pendingCount + unstakedCount;
 
-      const totalCount = stakedCount + pendingCount + unstakedCount;
+    const myTradingFee = await fetchMyTradingFee(stakedCount, currentAccount);
 
-      const myTradingFee = await fetchMyTradingFee(stakedCount, currentAccount);
+    const fee = await fetchPlatformTradingFee(currentAccount);
+    setPlatformTradingFee(fee);
 
-      const fee = await fetchPlatformTradingFee(currentAccount);
-      setPlatformTradingFee(fee);
-
-      const stats = {
-        totalCount,
-        unstakedCount,
-        pendingCount,
-        stakedCount,
-        myTradingFee,
-      };
-
-      setStatsInfo(stats);
+    const stats = {
+      totalCount,
+      unstakedCount,
+      pendingCount,
+      stakedCount,
+      myTradingFee,
     };
 
-    prepareStatsInfo();
-  }, [api, currentAccount]);
+    setStatsInfo(stats);
+  };
+  useEffect(() => {
+    !statsInfo && prepareStatsInfo();
+  }, [statsInfo, api, currentAccount]);
+
+  const fetchCollectionDetail = useMemo(
+    () => async () => {
+      setLoading(true);
+      try {
+        const PMPCollectionDetail = await getPMPCollectionDetail();
+
+        PMPCollectionDetail.listNFT = [];
+
+        if (activeTab === tabList.NOT_STAKED) {
+          const myUnstakePMP = await getMyUnstakePMP({
+            owner: currentAccount.address,
+            collection_address: artzero_nft.CONTRACT_ADDRESS,
+          });
+          PMPCollectionDetail.listNFT = myUnstakePMP;
+        }
+
+        if (activeTab === tabList.PENDING_UNSTAKE) {
+          const myPendingPMP = await getMyPendingPMP({
+            api,
+            pendingCount: statsInfo?.pendingCount,
+            currentAccount,
+          });
+
+          PMPCollectionDetail.listNFT = myPendingPMP;
+        }
+
+        if (activeTab === tabList.STAKED) {
+          const myStakedPMP = await getMyStakedPMP({
+            api,
+            stakedCount: statsInfo?.stakedCount,
+            currentAccount,
+          });
+
+          PMPCollectionDetail.listNFT = myStakedPMP;
+        }
+
+        setPMPCollectionDetail(PMPCollectionDetail);
+
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
+    },
+    [activeTab, currentAccount]
+  );
 
   useEffect(() => {
-    // setLoading(true);
-    const fetchCollectionDetail = async () => {
-      const PMPCollectionDetail = await getPMPCollectionDetail();
-
-      PMPCollectionDetail.listNFT = [];
-
-      if (activeTab === tabList.NOT_STAKED) {
-        const myUnstakePMP = await getMyUnstakePMP({
-          owner: currentAccount.address,
-          collection_address: artzero_nft.CONTRACT_ADDRESS,
-        });
-        PMPCollectionDetail.listNFT = myUnstakePMP;
-      }
-
-      if (activeTab === tabList.PENDING_UNSTAKE) {
-        const myPendingPMP = await getMyPendingPMP({
-          api,
-          pendingCount: statsInfo.pendingCount,
-          currentAccount,
-        });
-
-        PMPCollectionDetail.listNFT = myPendingPMP;
-      }
-
-      if (activeTab === tabList.STAKED) {
-        const myStakedPMP = await getMyStakedPMP({
-          api,
-          stakedCount: statsInfo.stakedCount,
-          currentAccount,
-        });
-
-        console.log("myStakedPMP", myStakedPMP);
-        PMPCollectionDetail.listNFT = myStakedPMP;
-      }
-
-      setPMPCollectionDetail(PMPCollectionDetail);
-
-      // setLoading(false);
-    };
-
     fetchCollectionDetail();
   }, [currentAccount, activeTab]);
+
+  useEffect(() => {
+    const forceUpdateAfterCreateNFT = async () => {
+      if (
+        txStatus?.stakeStatus === FINALIZED ||
+        txStatus?.unstakeStatus === FINALIZED ||
+        txStatus?.cancelRequestUnstakeStatus === FINALIZED ||
+        txStatus?.requestUnstakeStatus === FINALIZED
+      ) {
+        dispatch(clearTxStatus());
+        refresh();
+      }
+    };
+
+    forceUpdateAfterCreateNFT();
+  }, [dispatch, txStatus]);
+
+  const refresh = () => {
+    fetchCollectionDetail();
+    prepareStatsInfo();
+  };
 
   return (
     <Box as="section" maxW="container.3xl">
@@ -136,6 +165,7 @@ const MyStakesPage = () => {
           ))}
 
           <IconButton
+            onClick={() => refresh()}
             mx={1}
             aria-label="refresh"
             icon={<RefreshIcon />}
@@ -149,42 +179,45 @@ const MyStakesPage = () => {
         </Text>
 
         <HStack py={5} borderBottomWidth={1} h="75px">
-          {Object.keys(statsInfo).map((item) => (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <Flex alignItems="start" pr={"5rem"}>
-                <Text color="brand.grayLight">
-                  {item === "totalCount"
-                    ? "Total"
-                    : item === "unstakedCount"
-                    ? "Total Not Staked"
-                    : item === "pendingCount"
-                    ? "Total Pending Unstake"
-                    : item === "stakedCount"
-                    ? "Total Staked"
-                    : item === "myTradingFee"
-                    ? "Trading Fee"
-                    : null}
-                  :
-                </Text>
+          {statsInfo &&
+            Object.keys(statsInfo).map((item) => (
+              <motion.div
+                key={item}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <Flex alignItems="start" pr={"5rem"}>
+                  <Text color="brand.grayLight">
+                    {item === "totalCount"
+                      ? "Total"
+                      : item === "unstakedCount"
+                      ? "Total Not Staked"
+                      : item === "pendingCount"
+                      ? "Total Pending Unstake"
+                      : item === "stakedCount"
+                      ? "Total Staked"
+                      : item === "myTradingFee"
+                      ? "Trading Fee"
+                      : null}
+                    :
+                  </Text>
 
-                <Text ml={1}>
-                  {item === "myTradingFee"
-                    ? `${statsInfo[item] || platformTradingFee} %`
-                    : statsInfo[item] > 1
-                    ? `${statsInfo[item]} items`
-                    : `${statsInfo[item]} item`}
-                </Text>
-              </Flex>
-            </motion.div>
-          ))}
+                  <Text ml={1}>
+                    {item === "myTradingFee"
+                      ? `${statsInfo[item] || platformTradingFee} %`
+                      : statsInfo[item] > 1
+                      ? `${statsInfo[item]} items`
+                      : `${statsInfo[item]} item`}
+                  </Text>
+                </Flex>
+              </motion.div>
+            ))}
         </HStack>
 
-        {loading ? <AnimationLoader /> : null}
-        {PMPCollectionDetail?.listNFT?.length === 0 ? (
+        {loading ? (
+          <AnimationLoader />
+        ) : PMPCollectionDetail?.listNFT?.length === 0 ? (
           <Heading py="3rem" size="h6">
             No NFTs found
           </Heading>
@@ -334,7 +367,7 @@ export const getMyPendingPMP = async ({
   return ret;
 };
 
-export const getMyStakedPMP = async ({ api, stakedCount, currentAccount }) => {
+export const getMyStakedPMP = async ({ stakedCount, currentAccount }) => {
   let ret = [];
 
   if (stakedCount === 0) return ret;
@@ -347,15 +380,12 @@ export const getMyStakedPMP = async ({ api, stakedCount, currentAccount }) => {
   ret = await Promise.all(
     [...Array(stakedCount)].map(async (_, index) => {
       const token_id = await getTokenIdOfStakedPMP({ currentAccount, index });
-      console.log("ccc token_id", token_id);
 
       const [token_info] = await APICall.getNFTByID({
         collection_address: PMPContractAddress,
         token_id,
       });
       const tokenMeta = await getMetaDataType1(token_id, token_uri);
-      console.log("ccctoken_info", token_info);
-      console.log("ccctokenMeta", tokenMeta);
       return { ...token_info, ...tokenMeta, stakeStatus: 2 };
     })
   );
