@@ -59,35 +59,37 @@ function MyNFTGroupCard({
       } else {
         //Off-chain Data
 
-        const nft_contract = new ContractPromise(
-          api,
-          nft721_psp34_standard.CONTRACT_ABI,
-          nftContractAddress
-        );
+        if (nftContractAddress) {
+          const nft_contract = new ContractPromise(
+            api,
+            nft721_psp34_standard.CONTRACT_ABI,
+            nftContractAddress
+          );
 
-        const gasLimit = -1;
-        const azero_value = 0;
+          const gasLimit = -1;
+          const azero_value = 0;
 
-        const { result, output } = await nft_contract.query[
-          "psp34Traits::tokenUri"
-        ](currentAccount?.address, { value: azero_value, gasLimit }, 1);
+          const { result, output } = await nft_contract.query[
+            "psp34Traits::tokenUri"
+          ](currentAccount?.address, { value: azero_value, gasLimit }, 1);
 
-        if (!result.isOk) {
-          toast.error("There is an error when loading token_uri!");
-          return;
+          if (!result.isOk) {
+            toast.error("There is an error when loading token_uri!");
+            return;
+          }
+
+          const tokenUri = output.toHuman()?.replace("1.json", "");
+
+          Promise.all(
+            listNFT.map(async (item) => {
+              const res = await getMetaDataType1(item.tokenID, tokenUri);
+
+              return { ...item, ...res };
+            })
+          ).then((result) => {
+            setListNFTFormatted(result);
+          });
         }
-
-        const tokenUri = output.toHuman()?.replace("1.json", "");
-
-        Promise.all(
-          listNFT.map(async (item) => {
-            const res = await getMetaDataType1(item.tokenID, tokenUri);
-
-            return { ...item, ...res };
-          })
-        ).then((result) => {
-          setListNFTFormatted(result);
-        });
       }
     };
 
