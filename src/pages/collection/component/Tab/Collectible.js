@@ -343,7 +343,7 @@ const NFTTabCollectible = (props) => {
                 </Circle>
               )}
             </HStack>
-            {console.log('showOnChainMetadata', showOnChainMetadata, nftName)}
+
             {showOnChainMetadata && owner === currentAccount.address && (
               <AddNewNFTModal mode={formMode.EDIT} {...props} />
             )}

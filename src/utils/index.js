@@ -183,7 +183,7 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
         type: AccountActionTypes.SET_TNX_STATUS,
         payload: {
           status: statusToHuman[0][0],
-          value: truncateStr(statusToHuman[0][1], 6),
+          // value: truncateStr(statusToHuman[0][1], 6),
         },
       });
     }
@@ -263,7 +263,7 @@ export function handleContractCallAnimation(status, dispatchError, dispatch) {
         type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
         payload: {
           status: statusToHuman[0][0],
-          value: truncateStr(statusToHuman[0][1], 6),
+          // value: truncateStr(statusToHuman[0][1], 6),
           timeStamp: finalizedTimeStamp,
         },
       });
@@ -296,7 +296,7 @@ export function handleContractCallAddNftAnimation(
         type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
         payload: {
           status: statusToHuman[0][0],
-          value: truncateStr(statusToHuman[0][1], 6),
+          // value: truncateStr(statusToHuman[0][1], 6),
           timeStamp: finalizedTimeStamp,
         },
       });

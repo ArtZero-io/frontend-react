@@ -256,7 +256,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   },
                 });
 
-                if (mode === "add") {
+                if (mode === formMode.ADD) {
                   await collection_manager_calls.addNewCollection(
                     currentAccount,
                     data,

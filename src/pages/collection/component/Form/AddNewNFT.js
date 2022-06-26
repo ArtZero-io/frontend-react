@@ -252,7 +252,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   },
                 });
 
-                if (mode === "add") {
+                if (mode === formMode.ADD) {
                   await nft721_psp34_standard_calls.mintWithAttributes(
                     currentAccount,
                     collection_address,
