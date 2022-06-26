@@ -2,6 +2,18 @@ export const formMode = {
   ADD: "ADD",
   EDIT: "EDIT",
 };
+// finalized inBlock broadcast ready
+export const START = "Start";
+export const READY = "Ready";
+export const BROADCAST = "Broadcast";
+export const IN_BLOCK = "InBlock";
+export const FINALIZED = "Finalized";
+
+// MY STAKING ACTIONS
+export const STAKE = "stake";
+export const REQUEST_UNSTAKE = "requestUnstake";
+export const CANCEL_REQUEST_UNSTAKE = "cancelRequestUnstake";
+export const UNSTAKE = "unstake";
 
 export const NUMBER_PER_PAGE = 6;
 
