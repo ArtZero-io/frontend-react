@@ -9,9 +9,10 @@ import {
   PopoverHeader,
   PopoverBody,
   useDisclosure,
-  IconButton,
   Button,
   PopoverFooter,
+  Tooltip,
+  TagRightIcon,
 } from "@chakra-ui/react";
 
 import { useSubstrateState } from "@utils/substrate";
@@ -53,7 +54,7 @@ function LockNFTModal({ owner, nftContractAddress, tokenID, txType = "lock" }) {
       const injector = await web3FromSource(currentAccount?.meta?.source);
 
       await contract.tx
-        .lock({ value: azero_value, gasLimit }, tokenID)
+        .lock({ value: azero_value, gasLimit }, { u64: tokenID })
         .signAndSend(
           currentAccount?.address,
           { signer: injector.signer },
@@ -86,14 +87,30 @@ function LockNFTModal({ owner, nftContractAddress, tokenID, txType = "lock" }) {
   return (
     <>
       <Popover
+        top="52px"
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
-        placement="right"
+        placement="bottom"
         closeOnBlur={false}
       >
-        <PopoverTrigger>
-          <IconButton size="sm" icon={<ImUnlocked />} />
+        <PopoverTrigger mt="52px">
+          <Tooltip
+            top="52px"
+            hasArrow
+            label="Unlocked on-chain metadata"
+            bg="gray.300"
+          >
+            <span>
+              <TagRightIcon
+                cursor="pointer"
+                ml="6px"
+                as={ImUnlocked}
+                onClick={onOpen}
+                size="22px"
+              />
+            </span>
+          </Tooltip>
         </PopoverTrigger>
         <PopoverContent>
           <PopoverArrow />

@@ -23,10 +23,11 @@ export default function ResponsivelySizedModal({
   hasTabs,
   children,
   filterSelected = 1,
+  showOnChainMetadata,
   ...rest
 }) {
   const tabHeight = useBreakpointValue({
-    base: `2.5rem`,
+    base: `1rem`,
     xl: `3.5rem`,
     "2xl": `4.5rem`,
   });
@@ -44,7 +45,13 @@ export default function ResponsivelySizedModal({
   const tabData = [
     {
       label: "NFT info",
-      content: <MyNFTTabInfo filterSelected={filterSelected} {...rest} />,
+      content: (
+        <MyNFTTabInfo
+          showOnChainMetadata={showOnChainMetadata}
+          filterSelected={filterSelected}
+          {...rest}
+        />
+      ),
       isDisabled: false,
     },
     {
@@ -102,12 +109,13 @@ export default function ResponsivelySizedModal({
                 isDisabled={tab.isDisabled}
                 ml={12}
                 key={index}
-                fontSize="md"
+                fontSize={["13px", null, "18px"]}
+                lineHeight={["21px", null, "30px"]}
                 fontFamily="Evogria Italic"
                 minH={tabHeight}
                 fontStyle="italic"
                 px="0.5px"
-                py="20px"
+                py={["10px", "20px", "20px"]}
               >
                 {tab.label}
               </Tab>
@@ -116,7 +124,12 @@ export default function ResponsivelySizedModal({
 
           <TabPanels style={{ height: `calc(100% - ${tabHeight})` }}>
             {tabData.map((tab, index) => (
-              <TabPanel px={{ base: 6, "2xl": 12 }} py={8} h="full" key={index}>
+              <TabPanel
+                px={{ base: 6, "2xl": 12 }}
+                py={{ base: 4, "2xl": 8 }}
+                h="full"
+                key={index}
+              >
                 {tab.content}
               </TabPanel>
             ))}

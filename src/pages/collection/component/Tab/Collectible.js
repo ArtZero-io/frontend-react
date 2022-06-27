@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -20,7 +21,7 @@ import {
   Input,
   Stack,
   HStack,
-  Circle,
+  Tooltip,
 } from "@chakra-ui/react";
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -324,29 +325,59 @@ const NFTTabCollectible = (props) => {
             <HStack
               pos="absolute"
               top={{
-                base: `18px`,
-                xl: `18px`,
+                base: `20px`,
+                xl: `20px`,
               }}
               right={{
-                base: `72px`,
-                xl: `72px`,
+                base: `20px`,
+                xl: `20px`,
               }}
             >
-              {!is_locked && owner !== currentAccount.address && (
-                <Circle size="32px" bg="#171717" color="white">
-                  <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
-                </Circle>
+              {!is_locked &&
+                showOnChainMetadata &&
+                owner !== currentAccount?.address && (
+                  <Tooltip
+                    hasArrow
+                    label="Unlocked on-chain metadata"
+                    bg="gray.300"
+                    color="black"
+                  >
+                    <span>
+                      <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
+                    </span>
+                  </Tooltip>
+                )}
+
+              {!is_locked && !showOnChainMetadata && (
+                <Tooltip
+                  hasArrow
+                  label="Off-chain metadata"
+                  bg="gray.300"
+                  color="black"
+                >
+                  <span>
+                    <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
+                  </span>
+                </Tooltip>
               )}
-              {is_locked && (
-                <Circle size="32px" bg="#171717" color="white">
-                  <TagRightIcon ml="6px" as={ImLock} size="22px" />
-                </Circle>
+
+              {is_locked && showOnChainMetadata && (
+                <Tooltip
+                  hasArrow
+                  label="Locked on-chain metadata"
+                  bg="gray.300"
+                  color="black"
+                >
+                  <span>
+                    <TagRightIcon ml="6px" as={ImLock} size="22px" />
+                  </span>
+                </Tooltip>
               )}
-              {!is_locked && owner === currentAccount.address && (
+
+              {!is_locked && owner === currentAccount?.address && (
                 <LockNFTModal {...props} />
               )}
             </HStack>
-
             {!is_locked &&
               showOnChainMetadata &&
               owner === currentAccount.address && (
