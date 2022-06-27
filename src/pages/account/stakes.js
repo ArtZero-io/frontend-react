@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -41,83 +41,74 @@ const MyStakesPage = () => {
   const [activeTab, setActiveTab] = useState(tabList.NOT_STAKED);
   const [PMPCollectionDetail, setPMPCollectionDetail] = useState(null);
   const [platformTradingFee, setPlatformTradingFee] = useState(0);
-  const prepareStatsInfo = async () => {
-    const stakedCount = await fetchMyPMPStakedCount(currentAccount);
 
-    const pendingCount = await fetchMyPMPPendingCount(currentAccount);
+  const fetchCollectionDetail = useCallback(async () => {
+    setLoading(true);
+    try {
+      const stakedCount = await fetchMyPMPStakedCount(currentAccount);
 
-    const unstakedCount = await fetchMyPMPUnstakedCount(currentAccount);
+      const pendingCount = await fetchMyPMPPendingCount(currentAccount);
 
-    const totalCount = stakedCount + pendingCount + unstakedCount;
+      const unstakedCount = await fetchMyPMPUnstakedCount(currentAccount);
 
-    const myTradingFee = await fetchMyTradingFee(stakedCount, currentAccount);
+      const totalCount = stakedCount + pendingCount + unstakedCount;
 
-    const fee = await fetchPlatformTradingFee(currentAccount);
-    setPlatformTradingFee(fee);
+      const myTradingFee = await fetchMyTradingFee(stakedCount, currentAccount);
 
-    const stats = {
-      totalCount,
-      unstakedCount,
-      pendingCount,
-      stakedCount,
-      myTradingFee,
-    };
+      const fee = await fetchPlatformTradingFee(currentAccount);
+      setPlatformTradingFee(fee);
 
-    setStatsInfo(stats);
-  };
-  useEffect(() => {
-    !statsInfo && prepareStatsInfo();
-  }, [statsInfo, api, currentAccount]);
+      const stats = {
+        totalCount,
+        unstakedCount,
+        pendingCount,
+        stakedCount,
+        myTradingFee,
+      };
+      setStatsInfo(stats);
 
-  const fetchCollectionDetail = useMemo(
-    () => async () => {
-      setLoading(true);
-      try {
-        const PMPCollectionDetail = await getPMPCollectionDetail();
+      const PMPCollectionDetail = await getPMPCollectionDetail();
 
-        PMPCollectionDetail.listNFT = [];
+      PMPCollectionDetail.listNFT = [];
 
-        if (activeTab === tabList.NOT_STAKED) {
-          const myUnstakePMP = await getMyUnstakePMP({
-            owner: currentAccount.address,
-            collection_address: artzero_nft.CONTRACT_ADDRESS,
-          });
-          PMPCollectionDetail.listNFT = myUnstakePMP;
-        }
-
-        if (activeTab === tabList.PENDING_UNSTAKE) {
-          const myPendingPMP = await getMyPendingPMP({
-            api,
-            pendingCount: statsInfo?.pendingCount,
-            currentAccount,
-          });
-
-          PMPCollectionDetail.listNFT = myPendingPMP;
-        }
-
-        if (activeTab === tabList.STAKED) {
-          const myStakedPMP = await getMyStakedPMP({
-            api,
-            stakedCount: statsInfo?.stakedCount,
-            currentAccount,
-          });
-
-          PMPCollectionDetail.listNFT = myStakedPMP;
-        }
-
-        setPMPCollectionDetail(PMPCollectionDetail);
-
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
+      if (activeTab === tabList.NOT_STAKED) {
+        const myUnstakePMP = await getMyUnstakePMP({
+          owner: currentAccount.address,
+          collection_address: artzero_nft.CONTRACT_ADDRESS,
+        });
+        PMPCollectionDetail.listNFT = myUnstakePMP;
       }
-    },
-    [activeTab, currentAccount]
-  );
+
+      if (activeTab === tabList.PENDING_UNSTAKE) {
+        const myPendingPMP = await getMyPendingPMP({
+          api,
+          pendingCount: pendingCount,
+          currentAccount,
+        });
+
+        PMPCollectionDetail.listNFT = myPendingPMP;
+      }
+
+      if (activeTab === tabList.STAKED) {
+        const myStakedPMP = await getMyStakedPMP({
+          api,
+          stakedCount: stakedCount,
+          currentAccount,
+        });
+
+        PMPCollectionDetail.listNFT = myStakedPMP;
+      }
+
+      setPMPCollectionDetail(PMPCollectionDetail);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  }, [activeTab, currentAccount]);
 
   useEffect(() => {
     fetchCollectionDetail();
-  }, [currentAccount, activeTab]);
+  }, [activeTab, currentAccount]);
 
   useEffect(() => {
     const forceUpdate = async () => {
@@ -127,7 +118,7 @@ const MyStakesPage = () => {
         txStatus?.cancelRequestUnstakeStatus === FINALIZED ||
         txStatus?.requestUnstakeStatus === FINALIZED
       ) {
-        await delay(1000).then(() => {
+        await delay(100).then(() => {
           dispatch(clearTxStatus());
           refresh();
         });
@@ -135,11 +126,11 @@ const MyStakesPage = () => {
     };
 
     forceUpdate();
-  }, [dispatch, txStatus]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [dispatch, txStatus]);
 
   const refresh = () => {
     fetchCollectionDetail();
-    prepareStatsInfo();
   };
 
   return (
