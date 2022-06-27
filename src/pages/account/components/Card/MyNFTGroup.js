@@ -43,6 +43,8 @@ function MyNFTGroupCard({
   }
 
   useEffect(() => {
+    let isSubscribed = true;
+
     const getAttributesData = async () => {
       if (showOnChainMetadata) {
         //On-Chain Data
@@ -87,13 +89,14 @@ function MyNFTGroupCard({
               return { ...item, ...res };
             })
           ).then((result) => {
-            setListNFTFormatted(result);
+            isSubscribed && setListNFTFormatted(result);
           });
         }
       }
     };
 
     getAttributesData();
+    return () => (isSubscribed = false);
 
     //console.log(listNFT,'showOnChainMetadata',showOnChainMetadata);
   }, [api, currentAccount, listNFT, nftContractAddress, showOnChainMetadata]);
