@@ -17,6 +17,8 @@ import {
   TagLabel,
   TagRightIcon,
   Link,
+  Tooltip,
+  HStack,
 } from "@chakra-ui/react";
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -39,20 +41,27 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import profile_calls from "@utils/blockchain/profile_calls";
 import { motion, AnimatePresence } from "framer-motion";
 import { shortenNumber } from "@utils";
+import { formMode } from "@constants";
+import { ImLock, ImUnlocked } from "react-icons/im";
+import LockNFTModal from "../../../../../components/Modal/LockNFTModal";
+import AddNewNFTModal from "../../../../collection/component/Modal/AddNewNFT";
 
-function MyNFTTabInfo({
-  avatar,
-  nftName,
-  description,
-  attrsList,
-  is_for_sale,
-  price,
-  filterSelected,
-  tokenID,
-  owner,
-  nftContractAddress,
-  contractType,
-}) {
+function MyNFTTabInfo(props) {
+  const {
+    avatar,
+    nftName,
+    description,
+    attrsList,
+    is_for_sale,
+    price,
+    filterSelected,
+    tokenID,
+    owner,
+    nftContractAddress,
+    contractType,
+    is_locked,
+    showOnChainMetadata,
+  } = props;
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
@@ -160,44 +169,44 @@ function MyNFTTabInfo({
     checkAllowance();
   }, [addNftTnxStatus?.status, currentAccount, dispatch, tokenID]);
 
-  const approveToken = async () => {
-    if (owner === currentAccount?.address) {
-      const nft721_psp34_standard_contract = new ContractPromise(
-        api,
-        nft721_psp34_standard.CONTRACT_ABI,
-        nftContractAddress
-      );
+  // const approveToken = async () => {
+  //   if (owner === currentAccount?.address) {
+  //     const nft721_psp34_standard_contract = new ContractPromise(
+  //       api,
+  //       nft721_psp34_standard.CONTRACT_ABI,
+  //       nftContractAddress
+  //     );
 
-      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+  //     nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
 
-      dispatch({
-        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-        payload: {
-          status: "Start",
-        },
-      });
+  //     dispatch({
+  //       type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+  //       payload: {
+  //         status: "Start",
+  //       },
+  //     });
 
-      await nft721_psp34_standard_calls.approve(
-        currentAccount,
-        marketplace.CONTRACT_ADDRESS,
-        { u64: tokenID },
-        true,
-        dispatch
-      );
+  //     await nft721_psp34_standard_calls.approve(
+  //       currentAccount,
+  //       marketplace.CONTRACT_ADDRESS,
+  //       { u64: tokenID },
+  //       true,
+  //       dispatch
+  //     );
 
-      const isAllowance = await nft721_psp34_standard_calls.allowance(
-        currentAccount,
-        currentAccount?.address,
-        marketplace_contract.CONTRACT_ADDRESS,
-        { u64: tokenID },
-        dispatch
-      );
+  //     const isAllowance = await nft721_psp34_standard_calls.allowance(
+  //       currentAccount,
+  //       currentAccount?.address,
+  //       marketplace_contract.CONTRACT_ADDRESS,
+  //       { u64: tokenID },
+  //       dispatch
+  //     );
 
-      if (isAllowance) {
-        setIsAllowanceMarketplaceContract(true);
-      }
-    }
-  };
+  //     if (isAllowance) {
+  //       setIsAllowanceMarketplaceContract(true);
+  //     }
+  //   }
+  // };
 
   const listToken = async () => {
     if (owner === currentAccount?.address) {
@@ -336,6 +345,7 @@ function MyNFTTabInfo({
 
     ownerName();
   }, [currentAccount, is_for_sale, owner, saleInfo?.nftOwner]);
+
   return (
     <Flex h="full">
       <Box minW={{ base: "360px", "2xl": "30rem" }} bg="#372648">
@@ -366,7 +376,70 @@ function MyNFTTabInfo({
             >
               {nftName}
             </Heading>
+
             <Spacer />
+
+            <HStack
+              pos="absolute"
+              top={{
+                base: `20px`,
+                xl: `20px`,
+              }}
+              right={{
+                base: `20px`,
+                xl: `20px`,
+              }}
+            >
+              {!is_locked &&
+                showOnChainMetadata &&
+                owner !== currentAccount?.address && (
+                  <Tooltip
+                    hasArrow
+                    label="Unlocked on-chain metadata"
+                    bg="gray.300"
+                    color="black"
+                  >
+                    <span>
+                      <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
+                    </span>
+                  </Tooltip>
+                )}
+
+              {!is_locked && !showOnChainMetadata && (
+                <Tooltip
+                  hasArrow
+                  label="Off-chain metadata"
+                  bg="gray.300"
+                  color="black"
+                >
+                  <span>
+                    <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
+                  </span>
+                </Tooltip>
+              )}
+
+              {is_locked && showOnChainMetadata && (
+                <Tooltip
+                  hasArrow
+                  label="Locked on-chain metadata"
+                  bg="gray.300"
+                  color="black"
+                >
+                  <span>
+                    <TagRightIcon ml="6px" as={ImLock} size="22px" />
+                  </span>
+                </Tooltip>
+              )}
+
+              {!is_locked && owner === currentAccount?.address && (
+                <LockNFTModal {...props} />
+              )}
+            </HStack>
+            {!is_locked &&
+              showOnChainMetadata &&
+              owner === currentAccount.address && (
+                <AddNewNFTModal mode={formMode.EDIT} {...props} />
+              )}
           </Flex>
           <Heading
             size="h6"
@@ -590,7 +663,7 @@ function MyNFTTabInfo({
                   loadingText={`${addNftTnxStatus?.status}`}
                   stepNo={stepNo}
                   setStepNo={setStepNo}
-                  approveToken={approveToken}
+                  // approveToken={approveToken}
                   listToken={listToken}
                 />
               </Flex>

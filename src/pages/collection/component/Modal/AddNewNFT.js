@@ -42,12 +42,12 @@ const AddNewNFTModal = ({ mode = "add", ...rest }) => {
           <IconButton
             pos="absolute"
             top={{
-              base: `1rem`,
-              xl: `1rem`,
+              base: `10px`,
+              xl: `10px`,
             }}
             right={{
-              base: `1rem`,
-              xl: `1rem`,
+              base: `60px`,
+              xl: `60px`,
             }}
             w={["20px", "20px", "40px"]}
             h={["20px", "20px", "40px"]}

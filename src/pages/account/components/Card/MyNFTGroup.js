@@ -109,6 +109,7 @@ function MyNFTGroupCard({
         onClose={onClose}
         hasTabs={true}
         filterSelected={filterSelected}
+        showOnChainMetadata={showOnChainMetadata}
       />
       <AnimatePresence>
         <motion.div

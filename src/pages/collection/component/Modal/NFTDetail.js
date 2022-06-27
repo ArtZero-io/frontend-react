@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { onCloseButtonModal } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
 
-function NFTDetailModal({ isOpen, onClose, showOnChainMetadata, ...rest }) {
+function NFTDetailModal({ isOpen, onClose, ...rest }) {
   const { addNftTnxStatus } = useSelector(
     (state) => state.account.accountLoaders
   );
@@ -32,12 +32,7 @@ function NFTDetailModal({ isOpen, onClose, showOnChainMetadata, ...rest }) {
   const tabData = [
     {
       label: "Collectible",
-      content: (
-        <NFTTabCollectible
-          showOnChainMetadata={showOnChainMetadata}
-          {...rest}
-        />
-      ),
+      content: <NFTTabCollectible {...rest} />,
       isDisabled: false,
     },
     {

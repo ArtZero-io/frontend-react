@@ -127,7 +127,7 @@ const MyStakesPage = () => {
 
     forceUpdate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, txStatus]);
+   }, [dispatch, txStatus]);
 
   const refresh = () => {
     fetchCollectionDetail();
