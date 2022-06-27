@@ -120,9 +120,8 @@ function LockNFTModal({ owner, nftContractAddress, tokenID, txType = "lock" }) {
           </PopoverHeader>
 
           <PopoverBody>
-            Once locked, your content CAN NOT be edited or removed as it is
-            permanently stored in decentralized file storage, which will be
-            accessible for other clients to view and use.
+            Once locked, the on-chain metadata for this NFT will be locked
+            permanently. No one will be able to unlock or edit the metadata.
           </PopoverBody>
           <PopoverFooter textAlign="center">
             <Text>Are you sure you want to lock?</Text>

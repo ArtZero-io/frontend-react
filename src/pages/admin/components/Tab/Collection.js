@@ -306,8 +306,9 @@ function CollectionAdmin() {
                         </Button>
                       ) : (
                         <Button
+                          variant="outline"
                           size="sm"
-                          color="black"
+                          color="#7ae7ff"
                           onClick={() =>
                             onSetStatusCollection(
                               collection.nftContractAddress,

@@ -54,11 +54,11 @@ function WalletNotConnected(props) {
     <>
       <Box
         display={props.display}
-        // size="sm"
         bg="transparent"
-        height="100%"
+        height="full"
         mx="auto"
-        // w={["12rem", "26rem", "28rem"]}
+        maxH="55px"
+        mb={{ base: "20px", md: "auto" }}
       >
         <Flex align="center" justify="end" height="100%">
           <Menu autoSelect={false} placement="bottom-end" offset={[0, 18]}>
