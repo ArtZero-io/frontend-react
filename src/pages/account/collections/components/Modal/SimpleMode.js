@@ -36,15 +36,20 @@ function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
   return (
     <>
       {mode === formMode.ADD && (
-        <Button
-          variant="outline"
-          color="brand.blue"
-          onClick={() => {
-            onOpenSimpleMode();
-          }}
+        <Tooltip
+          hasArrow
+          label="Simple Mode is designed for non-tech people. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
         >
-          Simple Mode
-        </Button>
+          <Button
+            variant="outline"
+            color="brand.blue"
+            onClick={() => {
+              onOpenSimpleMode();
+            }}
+          >
+            Simple Mode
+          </Button>
+        </Tooltip>
       )}
       {mode === formMode.EDIT && (
         <>

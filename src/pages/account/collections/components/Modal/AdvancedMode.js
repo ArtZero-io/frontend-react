@@ -29,9 +29,14 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
   return (
     <>
       {mode === formMode.ADD && (
-        <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-          Advanced Mode
-        </Button>
+        <Tooltip
+          hasArrow
+          label="Advanced mode is designed for those who wants to use customized NFT smart contract for example dedicated 5k or 10k collections with whitelisted options."
+        >
+          <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
+            Advanced Mode
+          </Button>
+        </Tooltip>
       )}
       {mode === formMode.EDIT && (
         <>
