@@ -43,9 +43,9 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import AddNewNFTModal from "../Modal/AddNewNFT";
 import { ImLock, ImUnlocked } from "react-icons/im";
 import { formMode } from "@constants";
+import LockNFTModal from "../../../../components/Modal/LockNFTModal";
 
 const NFTTabCollectible = (props) => {
-
   const {
     nftContractAddress,
     description,
@@ -332,7 +332,7 @@ const NFTTabCollectible = (props) => {
                 xl: `72px`,
               }}
             >
-              {!is_locked && (
+              {!is_locked && owner !== currentAccount.address && (
                 <Circle size="32px" bg="#171717" color="white">
                   <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
                 </Circle>
@@ -342,11 +342,16 @@ const NFTTabCollectible = (props) => {
                   <TagRightIcon ml="6px" as={ImLock} size="22px" />
                 </Circle>
               )}
+              {!is_locked && owner === currentAccount.address && (
+                <LockNFTModal {...props} />
+              )}
             </HStack>
 
-            {showOnChainMetadata && owner === currentAccount.address && (
-              <AddNewNFTModal mode={formMode.EDIT} {...props} />
-            )}
+            {!is_locked &&
+              showOnChainMetadata &&
+              owner === currentAccount.address && (
+                <AddNewNFTModal mode={formMode.EDIT} {...props} />
+              )}
           </Flex>
 
           <Heading

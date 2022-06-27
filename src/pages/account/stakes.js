@@ -28,6 +28,7 @@ import AnimationLoader from "@components/Loader/AnimationLoader";
 import { motion } from "framer-motion";
 import { FINALIZED } from "@constants";
 import { clearTxStatus } from "../../store/actions/txStatus";
+import { delay } from "@utils";
 
 const MyStakesPage = () => {
   const txStatus = useSelector((state) => state.txStatus);
@@ -119,19 +120,21 @@ const MyStakesPage = () => {
   }, [currentAccount, activeTab]);
 
   useEffect(() => {
-    const forceUpdateAfterCreateNFT = async () => {
+    const forceUpdate = async () => {
       if (
         txStatus?.stakeStatus === FINALIZED ||
         txStatus?.unstakeStatus === FINALIZED ||
         txStatus?.cancelRequestUnstakeStatus === FINALIZED ||
         txStatus?.requestUnstakeStatus === FINALIZED
       ) {
-        dispatch(clearTxStatus());
-        refresh();
+        await delay(1000).then(() => {
+          dispatch(clearTxStatus());
+          refresh();
+        });
       }
     };
 
-    forceUpdateAfterCreateNFT();
+    forceUpdate();
   }, [dispatch, txStatus]);
 
   const refresh = () => {
