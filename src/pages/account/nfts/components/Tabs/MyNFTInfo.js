@@ -17,7 +17,8 @@ import {
   TagLabel,
   TagRightIcon,
   Link,
-  Circle,
+  Tooltip,
+  HStack,
 } from "@chakra-ui/react";
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -40,9 +41,10 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import profile_calls from "@utils/blockchain/profile_calls";
 import { motion, AnimatePresence } from "framer-motion";
 import { shortenNumber } from "@utils";
-// import { formMode } from "@constants";
-// import AddNewNFTModal from "../../../../collection/component/Modal/AddNewNFT";
+import { formMode } from "@constants";
 import { ImLock, ImUnlocked } from "react-icons/im";
+import LockNFTModal from "../../../../../components/Modal/LockNFTModal";
+import AddNewNFTModal from "../../../../collection/component/Modal/AddNewNFT";
 
 function MyNFTTabInfo(props) {
   const {
@@ -58,8 +60,7 @@ function MyNFTTabInfo(props) {
     nftContractAddress,
     contractType,
     is_locked,
-
-    // showOnChainMetadata,
+    showOnChainMetadata,
   } = props;
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
@@ -344,6 +345,7 @@ function MyNFTTabInfo(props) {
 
     ownerName();
   }, [currentAccount, is_for_sale, owner, saleInfo?.nftOwner]);
+
   return (
     <Flex h="full">
       <Box minW={{ base: "360px", "2xl": "30rem" }} bg="#372648">
@@ -374,20 +376,70 @@ function MyNFTTabInfo(props) {
             >
               {nftName}
             </Heading>
+
             <Spacer />
-            {!is_locked && (
-              <Circle size="32px" bg="#171717" color="white">
-                <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
-              </Circle>
-            )}
-            {is_locked && (
-              <Circle size="32px" bg="#171717" color="white">
-                <TagRightIcon ml="6px" as={ImLock} size="22px" />
-              </Circle>
-            )}
-            {/* {showOnChainMetadata && owner === currentAccount.address && (
-              <AddNewNFTModal mode={formMode.EDIT} {...props} />
-            )} */}
+
+            <HStack
+              pos="absolute"
+              top={{
+                base: `20px`,
+                xl: `20px`,
+              }}
+              right={{
+                base: `20px`,
+                xl: `20px`,
+              }}
+            >
+              {!is_locked &&
+                showOnChainMetadata &&
+                owner !== currentAccount?.address && (
+                  <Tooltip
+                    hasArrow
+                    label="Unlocked on-chain metadata"
+                    bg="gray.300"
+                    color="black"
+                  >
+                    <span>
+                      <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
+                    </span>
+                  </Tooltip>
+                )}
+
+              {!is_locked && !showOnChainMetadata && (
+                <Tooltip
+                  hasArrow
+                  label="Off-chain metadata"
+                  bg="gray.300"
+                  color="black"
+                >
+                  <span>
+                    <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
+                  </span>
+                </Tooltip>
+              )}
+
+              {is_locked && showOnChainMetadata && (
+                <Tooltip
+                  hasArrow
+                  label="Locked on-chain metadata"
+                  bg="gray.300"
+                  color="black"
+                >
+                  <span>
+                    <TagRightIcon ml="6px" as={ImLock} size="22px" />
+                  </span>
+                </Tooltip>
+              )}
+
+              {!is_locked && owner === currentAccount?.address && (
+                <LockNFTModal {...props} />
+              )}
+            </HStack>
+            {!is_locked &&
+              showOnChainMetadata &&
+              owner === currentAccount.address && (
+                <AddNewNFTModal mode={formMode.EDIT} {...props} />
+              )}
           </Flex>
           <Heading
             size="h6"
