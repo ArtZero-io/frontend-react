@@ -53,7 +53,7 @@ function AddNewCollection({ mode = formMode.ADD, id }) {
           top="1.5rem"
           right="1rem"
           aria-label="edit"
-          icon={<EditIcon color="#7ae7ff" fontSize="1.5rem" />}
+          icon={<EditIcon color="#7ae7ff" fontSize="24px" />}
           size="icon"
           borderWidth={0}
           variant="iconOutline"

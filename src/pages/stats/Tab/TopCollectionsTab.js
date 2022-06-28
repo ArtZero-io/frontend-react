@@ -156,7 +156,7 @@ function TopCollectionsTab({ tokenUriType1 }) {
           icon={
             <AzeroIcon
               fill={!useAzeroUnit ? "#888" : "#000"}
-              fontSize="1.5rem"
+              fontSize="24px"
             />
           }
           onClick={() => setUseAzeroUnit(true)}

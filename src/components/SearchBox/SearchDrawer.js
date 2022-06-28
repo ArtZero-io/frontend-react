@@ -21,6 +21,7 @@ import { APICall } from "@api/client";
 import debounce from "lodash.debounce";
 import { useHistory } from "react-router-dom";
 import { getCachedImageShort } from "@utils/index";
+import { motion } from "framer-motion";
 
 const SearchDrawer = () => {
   const history = useHistory();
@@ -87,7 +88,14 @@ const SearchDrawer = () => {
         <DrawerContent>
           <DrawerCloseButton color="#fff" />
 
-          <DrawerBody bg="#222">
+          <DrawerBody
+            bg="#222"
+            overflowY="hidden"
+            style={{
+              maxHeight: (resultList?.length || 0) * 42 + 188,
+              transition: "max-height 0.5s cubic-bezier(0.19, 1, 0.22, 1) 0.1s",
+            }}
+          >
             <Stack
               spacing="2px"
               maxW="700px"
@@ -124,39 +132,53 @@ const SearchDrawer = () => {
               </InputGroup>
 
               {resultList?.length === 0 ? (
-                <Text color="#888" textAlign="center">
-                  No result.
-                </Text>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <Text color="#888" textAlign="center">
+                    No result.
+                  </Text>
+                </motion.div>
               ) : (
                 resultList?.map((item) => (
-                  <Box>
-                    <Flex
-                      cursor="pointer"
-                      key={item._id}
-                      alignItems="center"
-                      mb={"12px"}
-                      onClick={() => {
-                        onClose();
-                        history.push(`/collection/${item.nftContractAddress}`);
-                      }}
-                    >
-                      <Image
-                        w="28px"
-                        h="28px"
-                        mr="10px"
-                        src={getCachedImageShort(item.squareImage, 100)}
-                      />
-                      <Text
-                        color="#888"
-                        _hover={{
-                          color: "#fff",
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Box>
+                      <Flex
+                        cursor="pointer"
+                        key={item._id}
+                        alignItems="center"
+                        mb={"12px"}
+                        onClick={() => {
+                          onClose();
+                          history.push(
+                            `/collection/${item.nftContractAddress}`
+                          );
                         }}
-                        isTruncated
                       >
-                        {item.name}
-                      </Text>
-                    </Flex>
-                  </Box>
+                        <Image
+                          w="28px"
+                          h="28px"
+                          mr="10px"
+                          src={getCachedImageShort(item.squareImage, 100)}
+                        />
+                        <Text
+                          color="#888"
+                          _hover={{
+                            color: "#fff",
+                          }}
+                          isTruncated
+                        >
+                          {item.name}
+                        </Text>
+                      </Flex>
+                    </Box>
+                  </motion.div>
                 ))
               )}
             </Stack>

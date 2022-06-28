@@ -101,7 +101,7 @@ const CollectionItems = ({
           <IconButton
             display={{ base: "none", xl: "flex" }}
             aria-label="refresh"
-            icon={<MdRefresh fontSize="1.5rem" />}
+            icon={<MdRefresh fontSize="24px" />}
             size="icon"
             variant="iconSolid"
             mx={1.5}
@@ -112,7 +112,7 @@ const CollectionItems = ({
             <IconButton
               display={{ base: "flex", xl: "none" }}
               aria-label="refresh"
-              icon={<MdRefresh fontSize="1.5rem" />}
+              icon={<MdRefresh fontSize="24px" />}
               size="icon"
               variant="iconSolid"
               mx={1.5}
@@ -187,7 +187,7 @@ const CollectionItems = ({
             bg={bigCard ? "#7ae7ff" : "#222"}
             color={bigCard ? "#000" : "#fff"}
             display={{ base: "none", xl: "flex" }}
-            icon={<RiLayoutGridLine fontSize="1.5rem" />}
+            icon={<RiLayoutGridLine fontSize="24px" />}
             onClick={() => setBigCard(true)}
           />
 
@@ -199,7 +199,7 @@ const CollectionItems = ({
             bg={!bigCard ? "#7ae7ff" : "#222"}
             color={!bigCard ? "#000" : "#fff"}
             display={{ base: "none", xl: "flex" }}
-            icon={<BsGrid3X3 fontSize="1.5rem" />}
+            icon={<BsGrid3X3 fontSize="24px" />}
             onClick={() => setBigCard(false)}
           />
         </Stack>
