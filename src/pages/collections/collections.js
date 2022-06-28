@@ -42,6 +42,7 @@ const CollectionsPage = () => {
   });
 
   useEffect(() => {
+    let isSubscribed = true;
     const fetchCollections = async () => {
       const options = {
         limit: pageSize,
@@ -96,7 +97,7 @@ const CollectionsPage = () => {
             return collectionByAddress;
           })
         ).then((resultsArr) => {
-          return setFeaturedCollections(resultsArr);
+          isSubscribed && setFeaturedCollections(resultsArr);
         });
       } catch (error) {
         console.log(error);
@@ -109,6 +110,7 @@ const CollectionsPage = () => {
 
     fetchFeaturedCollections();
     fetchCollections();
+    return () => (isSubscribed = false);
   }, [offset, pageSize, selectedItem]);
 
   const scrollToCollectionAddress = useMemo(() => {
