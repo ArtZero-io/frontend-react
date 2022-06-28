@@ -134,7 +134,7 @@ function ProfileHeader() {
               >
                 <IconButton
                   aria-label="instagram"
-                  icon={<FaInstagram size="1.5rem" />}
+                  icon={<FaInstagram size="24px" />}
                   size="icon"
                   variant="iconOutline"
                 />
@@ -145,7 +145,7 @@ function ProfileHeader() {
               >
                 <IconButton
                   aria-label="twitter"
-                  icon={<FaTwitter size="1.5rem" />}
+                  icon={<FaTwitter size="24px" />}
                   size="icon"
                   variant="iconOutline"
                 />
@@ -156,7 +156,7 @@ function ProfileHeader() {
               >
                 <IconButton
                   aria-label="telegram"
-                  icon={<FaTelegram size="1.5rem" />}
+                  icon={<FaTelegram size="24px" />}
                   size="icon"
                   variant="iconOutline"
                 />
@@ -167,7 +167,7 @@ function ProfileHeader() {
               >
                 <IconButton
                   aria-label="facebook"
-                  icon={<FaFacebook size="1.5rem" />}
+                  icon={<FaFacebook size="24px" />}
                   size="icon"
                   variant="iconOutline"
                 />

@@ -550,7 +550,7 @@ const NFTTabCollectible = (props) => {
                               }}
                               value={bidPrice}
                             />
-                            <AzeroIcon size="1.5rem" m={2} />
+                            <AzeroIcon size="24px" m={2} />
                           </InputGroup>
                         </>
                       )}

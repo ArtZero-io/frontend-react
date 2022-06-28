@@ -31,8 +31,6 @@ import {
 import { clientAPI } from "@api/client";
 
 function LockNFTModal({ owner, nftContractAddress, tokenID, txType = "lock" }) {
-  console.log(owner, nftContractAddress, tokenID);
-
   const { api, currentAccount } = useSubstrateState();
   const dispatch = useDispatch();
   const { onOpen, onClose, isOpen } = useDisclosure();

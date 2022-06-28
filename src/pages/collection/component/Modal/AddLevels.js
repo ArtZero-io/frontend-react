@@ -140,7 +140,7 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
                       /> */}
                       <IconButton
                         aria-label="Delete"
-                        icon={<DeleteIcon fontSize="1.5rem" />}
+                        icon={<DeleteIcon fontSize="24px" />}
                         size="icon"
                         variant="iconOutline"
                         isDisabled={index === 0 && value.length === 1}
