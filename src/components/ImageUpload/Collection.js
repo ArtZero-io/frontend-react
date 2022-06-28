@@ -25,7 +25,7 @@ const supportedFormat = ["image/png", "image/jpg", "image/jpeg"];
 
 const ImageUploadCollection = ({
   id,
-  isRequired = false,
+  isDisabled = false,
   mode,
   isBanner,
   imageIPFSUrl,
@@ -119,6 +119,7 @@ const ImageUploadCollection = ({
           <label htmlFor={`${id}InputTag`} style={{ cursor: "pointer" }}>
             <Flex alignItems="center">
               <Button
+                isDisabled={isDisabled}
                 as={Text}
                 variant="outline"
                 color="brand.blue"
@@ -131,6 +132,7 @@ const ImageUploadCollection = ({
                 No file chosen
               </Text>
               <input
+                disabled={isDisabled}
                 ref={ref}
                 style={{ display: "none" }}
                 id={`${id}InputTag`}
@@ -147,7 +149,6 @@ const ImageUploadCollection = ({
             minH={16}
             minW={16}
             ml={2}
-            // src={`${IPFS_BASE_URL}/${imageIPFSUrl}`}
             src={getCachedImageShort(imageIPFSUrl, 100)}
           />
         )}

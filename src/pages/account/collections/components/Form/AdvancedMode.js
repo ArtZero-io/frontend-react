@@ -187,7 +187,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 .max(50, "Must be less than 50 characters"),
               discord: Yup.string()
                 .url("This must be a valid URL")
-                .matches(/\bdiscord.gg\b/, "Not a Discord URL")
+                .matches(/\bdiscord.\b/, "Not a Discord URL")
                 .max(50, "Must be less than 50 characters"),
 
               agreeTosCheckbox: Yup.boolean().when("isEditMode", {
@@ -279,6 +279,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               <Form>
                 <HStack>
                   <AdvancedModeInput
+                    isDisabled={addCollectionTnxStatus}
                     isRequired={true}
                     label="NFT Contract Address"
                     name="nftContractAddress"
@@ -286,6 +287,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     placeholder="NFT Contract Address"
                   />
                   <AdvancedModeInput
+                    isDisabled={addCollectionTnxStatus}
                     isRequired={true}
                     label="Collection Name"
                     name="collectionName"
@@ -296,18 +298,21 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
 
                 <HStack>
                   <AdvancedModeInput
+                    isDisabled={addCollectionTnxStatus}
                     label="Website URL"
                     name="website"
                     type="text"
                     placeholder={"Website URL"}
                   />
                   <AdvancedModeInput
+                    isDisabled={addCollectionTnxStatus}
                     label="Twitter URL"
                     name="twitter"
                     type="text"
                     placeholder={"Twitter URL"}
                   />
                   <AdvancedModeInput
+                    isDisabled={addCollectionTnxStatus}
                     label="Discord URL"
                     name="discord"
                     type="text"
@@ -316,6 +321,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 </HStack>
 
                 <AdvancedModeTextArea
+                  isDisabled={addCollectionTnxStatus}
                   isRequired={true}
                   label="Collection Description"
                   name="collectionDescription"
@@ -334,6 +340,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     justifyContent="end"
                   >
                     <ImageUpload
+                      isDisabled={addCollectionTnxStatus}
                       mode={mode}
                       isBanner={false}
                       id="collection-avatar"
@@ -343,6 +350,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       limitedSize={{ width: "100", height: "100" }}
                     />
                     <ImageUpload
+                      isDisabled={addCollectionTnxStatus}
                       mode={mode}
                       isBanner={true}
                       id="collection-header"
@@ -359,6 +367,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     justifyContent="end"
                   >
                     <ImageUpload
+                      isDisabled={addCollectionTnxStatus}
                       mode={mode}
                       isBanner={true}
                       id="collection-header-square"

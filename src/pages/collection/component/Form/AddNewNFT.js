@@ -299,6 +299,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
               <Form>
                 <HStack>
                   <AddNewNFTInput
+                    isDisabled={addNftTnxStatus}
                     isRequired={true}
                     mode={formMode.ADD}
                     label="NFT Name"
@@ -308,6 +309,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   />
                 </HStack>
                 <AddNewNFTTextArea
+                  isDisabled={addNftTnxStatus}
                   isRequired={true}
                   label="Description"
                   name="description"
@@ -315,6 +317,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   placeholder="Description"
                 />
                 <AddNewNFTImageUpload
+                  isDisabled={addNftTnxStatus}
                   mode={mode}
                   imageIPFSUrl={avatarIPFSUrl}
                   setImageIPFSUrl={setAvatarIPFSUrl}
@@ -333,6 +336,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     </VStack>
                     <Spacer />
                     <Button
+                      isDisabled={addNftTnxStatus}
                       variant="outline"
                       color="brand.blue"
                       onClick={() => setModifierToEdit("properties")}
@@ -401,6 +405,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     </VStack>
                     <Spacer />
                     <Button
+                      isDisabled={addNftTnxStatus}
                       variant="outline"
                       color="brand.blue"
                       onClick={() => setModifierToEdit("levels")}

@@ -286,6 +286,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                     </>
                   )}
                   <SimpleModeInput
+                    isDisabled={addCollectionTnxStatus}
                     isRequired={true}
                     label="Collection Name"
                     name="collectionName"
@@ -296,18 +297,21 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
 
                 <HStack>
                   <SimpleModeInput
+                    isDisabled={addCollectionTnxStatus}
                     label="Website URL"
                     name="website"
                     type="text"
                     placeholder={"Website URL"}
                   />
                   <SimpleModeInput
+                    isDisabled={addCollectionTnxStatus}
                     label="Twitter URL"
                     name="twitter"
                     type="text"
                     placeholder={"Twitter URL"}
                   />
                   <SimpleModeInput
+                    isDisabled={addCollectionTnxStatus}
                     label="Discord URL"
                     name="discord"
                     type="text"
@@ -316,6 +320,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 </HStack>
 
                 <SimpleModeTextArea
+                  isDisabled={addCollectionTnxStatus}
                   isRequired={true}
                   label="Collection Description"
                   name="collectionDescription"
@@ -334,6 +339,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                     justifyContent="end"
                   >
                     <CollectionImageUpload
+                      isDisabled={addCollectionTnxStatus}
                       id="avatar"
                       mode={mode}
                       isBanner={false}
@@ -344,6 +350,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                     />
 
                     <CollectionImageUpload
+                      isDisabled={addCollectionTnxStatus}
                       id="header"
                       mode={mode}
                       isBanner={true}
@@ -360,6 +367,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                     justifyContent="end"
                   >
                     <CollectionImageUpload
+                      isDisabled={addCollectionTnxStatus}
                       id="header_square"
                       mode={mode}
                       isBanner={false}
