@@ -30,7 +30,13 @@ import {
 } from "@store/actions/txStatus";
 import { clientAPI } from "@api/client";
 
-function LockNFTModal({ owner, nftContractAddress, tokenID, txType = "lock" }) {
+function LockNFTModal({
+  owner,
+  nftContractAddress,
+  tokenID,
+  txType = "lock",
+  isDisabled = "false",
+}) {
   const { api, currentAccount } = useSubstrateState();
   const dispatch = useDispatch();
   const { onOpen, onClose, isOpen } = useDisclosure();
@@ -104,7 +110,7 @@ function LockNFTModal({ owner, nftContractAddress, tokenID, txType = "lock" }) {
                 cursor="pointer"
                 ml="6px"
                 as={ImUnlocked}
-                onClick={onOpen}
+                onClick={!isDisabled && onOpen}
                 size="22px"
               />
             </span>

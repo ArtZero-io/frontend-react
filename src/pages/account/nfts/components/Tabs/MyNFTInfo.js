@@ -432,13 +432,17 @@ function MyNFTTabInfo(props) {
               )}
 
               {!is_locked && owner === currentAccount?.address && (
-                <LockNFTModal {...props} />
+                <LockNFTModal {...props} isDisabled={addNftTnxStatus} />
               )}
             </HStack>
             {!is_locked &&
               showOnChainMetadata &&
               owner === currentAccount.address && (
-                <AddNewNFTModal mode={formMode.EDIT} {...props} />
+                <AddNewNFTModal
+                  mode={formMode.EDIT}
+                  {...props}
+                  isDisabled={addNftTnxStatus}
+                />
               )}
           </Flex>
           <Heading

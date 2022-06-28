@@ -18,7 +18,7 @@ import { AccountActionTypes } from "@store/types/account.types";
 import { EditIcon } from "@chakra-ui/icons";
 import { formMode } from "@constants";
 
-const AddNewNFTModal = ({ mode = "add", ...rest }) => {
+const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
 
@@ -40,6 +40,7 @@ const AddNewNFTModal = ({ mode = "add", ...rest }) => {
       {mode === formMode.EDIT && (
         <>
           <IconButton
+            isDisabled={isDisabled}
             pos="absolute"
             top={{
               base: `10px`,
@@ -54,6 +55,7 @@ const AddNewNFTModal = ({ mode = "add", ...rest }) => {
             aria-label="edit"
             icon={
               <EditIcon
+                isDisabled={isDisabled}
                 id="abc1"
                 color="currentColor"
                 width="17px"
@@ -68,6 +70,9 @@ const AddNewNFTModal = ({ mode = "add", ...rest }) => {
               color: "#000",
               bg: "#7ae7ff",
               borderWidth: "2px",
+            }}
+            _disabled={{
+              bg: "transparent",
             }}
             bg="transparent"
             color="#7ae7ff"
