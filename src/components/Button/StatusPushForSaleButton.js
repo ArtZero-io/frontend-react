@@ -6,16 +6,14 @@ import { AccountActionTypes } from "@store/types/account.types";
 import toast from "react-hot-toast";
 
 function StatusPushForSaleButton({
-  isAllowanceMpContract,
   isLoading,
   loadingText,
   text,
   type,
-  stepNo,
-  setStepNo,
+
   listToken,
-  approveToken,
   unlistToken,
+  isDisabled,
 }) {
   const dispatch = useDispatch();
 
@@ -31,123 +29,12 @@ function StatusPushForSaleButton({
     });
   };
 
-  //isLoading
-  // is "START" => Pls sign tnx
-  // is "READY" => Ready to go
-  // inBlock INBLOCK
-  // finalized FINALIZED
-
-  // if (text === "push for sale" && !isAllowanceMpContract) {
-  //   switch (stepNo) {
-  //     case 0:
-  //       return (
-  //         <>
-  //           <Button
-  //             display={stepNo === 0 ? "flex" : "none"}
-  //             variant="solid"
-  //             onClick={() => {
-  //               setStepNo(1);
-  //               toast.success("You will need to approve before list on market");
-  //             }}
-  //             isDisabled={loadingText === "Start"}
-  //             minW="10rem"
-  //           >
-  //             Push for sale
-  //           </Button>
-  //         </>
-  //       );
-  //     case 1:
-  //       return (
-  //         <Fragment>
-  //           <Box>
-  //             <Button
-  //               minW="10rem"
-  //               display={!isLoading ? "block" : "none"}
-  //               variant="solid"
-  //               onClick={() => {
-  //                 approveToken();
-  //               }}
-  //             >
-  //               Approve it
-  //             </Button>
-  //           </Box>
-  //           <Button
-  //             display={isLoading ? "flex" : "none"}
-  //             isDisabled={loadingText !== "Finalized"}
-  //             onClick={() => {
-  //               setStepNo(0);
-
-  //               dispatch({
-  //                 type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-  //               });
-  //             }}
-  //             variant="outline"
-  //             minW="10rem"
-  //             fontSize="md"
-  //           >
-  //             {loadingText === "Start"
-  //               ? "Please sign"
-  //               : loadingText === "Ready"
-  //               ? "Ready"
-  //               : loadingText === "InBlock"
-  //               ? "In block"
-  //               : loadingText === "Finalized"
-  //               ? `All Done !`
-  //               : ""}
-  //           </Button>
-  //         </Fragment>
-  //       );
-
-  //     default:
-  //       break;
-  //   }
-  // }
-
-  // if (text === "push for sale" && isAllowanceMpContract) {
-  //   switch (stepNo) {
-  //     case 1:
-  //       return (
-  //         <Fragment>
-  //           <Button
-  //             display={!isLoading ? "block" : "none"}
-  //             variant="solid"
-  //             onClick={() => {
-  //               listToken();
-  //             }}
-  //             minW="10rem"
-  //           >
-  //             Push for sale
-  //           </Button>
-  //           <Button
-  //             display={isLoading ? "flex" : "none"}
-  //             variant="outline"
-  //             onClick={() => onCloseHandler()}
-  //             isDisabled={loadingText !== "Finalized"}
-  //             minW="10rem"
-  //           >
-  //             {loadingText === "Start"
-  //               ? "Please sign"
-  //               : loadingText === "Ready"
-  //               ? "Ready"
-  //               : loadingText === "InBlock"
-  //               ? "In block"
-  //               : loadingText === "Finalized"
-  //               ? `All Done !`
-  //               : ""}
-  //           </Button>
-  //         </Fragment>
-  //       );
-
-  //     default:
-  //       break;
-  //   }
-  // }
-
   return (
     <>
       {text === "push for sale" && (
         <Fragment>
           <Button
+            isDisabled={isDisabled}
             display={!isLoading ? "block" : "none"}
             variant="solid"
             onClick={() => {

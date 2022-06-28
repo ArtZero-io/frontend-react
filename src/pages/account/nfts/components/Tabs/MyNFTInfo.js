@@ -70,6 +70,7 @@ function MyNFTTabInfo(props) {
   const [stepNo, setStepNo] = useState(0);
   const dispatch = useDispatch();
   const { addNftTnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const txStatus = useSelector((state) => state.txStatus);
 
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
 
@@ -169,44 +170,7 @@ function MyNFTTabInfo(props) {
     checkAllowance();
   }, [addNftTnxStatus?.status, currentAccount, dispatch, tokenID]);
 
-  // const approveToken = async () => {
-  //   if (owner === currentAccount?.address) {
-  //     const nft721_psp34_standard_contract = new ContractPromise(
-  //       api,
-  //       nft721_psp34_standard.CONTRACT_ABI,
-  //       nftContractAddress
-  //     );
-
-  //     nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-
-  //     dispatch({
-  //       type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-  //       payload: {
-  //         status: "Start",
-  //       },
-  //     });
-
-  //     await nft721_psp34_standard_calls.approve(
-  //       currentAccount,
-  //       marketplace.CONTRACT_ADDRESS,
-  //       { u64: tokenID },
-  //       true,
-  //       dispatch
-  //     );
-
-  //     const isAllowance = await nft721_psp34_standard_calls.allowance(
-  //       currentAccount,
-  //       currentAccount?.address,
-  //       marketplace_contract.CONTRACT_ADDRESS,
-  //       { u64: tokenID },
-  //       dispatch
-  //     );
-
-  //     if (isAllowance) {
-  //       setIsAllowanceMarketplaceContract(true);
-  //     }
-  //   }
-  // };
+   
 
   const listToken = async () => {
     if (owner === currentAccount?.address) {
@@ -441,7 +405,8 @@ function MyNFTTabInfo(props) {
                 <AddNewNFTModal
                   mode={formMode.EDIT}
                   {...props}
-                  isDisabled={addNftTnxStatus}
+                  collectionOwner={owner}
+                  isDisabled={addNftTnxStatus || txStatus?.lockStatus}
                 />
               )}
           </Flex>
@@ -640,7 +605,7 @@ function MyNFTTabInfo(props) {
                   borderRadius="0"
                 >
                   <Input
-                    isDisabled={addNftTnxStatus?.status}
+                    isDisabled={addNftTnxStatus?.status || txStatus?.lockStatus}
                     value={askPrice}
                     onChange={({ target }) => setAskPrice(target.value)}
                     m={0}
@@ -669,6 +634,7 @@ function MyNFTTabInfo(props) {
                   setStepNo={setStepNo}
                   // approveToken={approveToken}
                   listToken={listToken}
+                  isDisabled={txStatus?.lockStatus || addNftTnxStatus}
                 />
               </Flex>
             </Fragment>

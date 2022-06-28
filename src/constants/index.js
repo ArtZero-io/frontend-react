@@ -14,6 +14,7 @@ export const STAKE = "stake";
 export const REQUEST_UNSTAKE = "requestUnstake";
 export const CANCEL_REQUEST_UNSTAKE = "cancelRequestUnstake";
 export const UNSTAKE = "unstake";
+export const LOCK = "lock";
 
 export const NUMBER_PER_PAGE = 6;
 

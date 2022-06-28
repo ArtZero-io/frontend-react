@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Text,
   Popover,
@@ -18,7 +17,7 @@ import {
 import { useSubstrateState } from "@utils/substrate";
 
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { ImUnlocked } from "react-icons/im";
 import { ContractPromise } from "@polkadot/api-contract";
@@ -29,7 +28,8 @@ import {
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import { clientAPI } from "@api/client";
-
+import { setTxStatus } from "@store/actions/txStatus";
+import { START, LOCK } from "@constants";
 function LockNFTModal({
   owner,
   nftContractAddress,
@@ -40,12 +40,15 @@ function LockNFTModal({
   const { api, currentAccount } = useSubstrateState();
   const dispatch = useDispatch();
   const { onOpen, onClose, isOpen } = useDisclosure();
+  const txStatus = useSelector((state) => state.txStatus);
 
   const lockNFTsHandler = async () => {
     if (owner !== currentAccount?.address) {
       return toast.error("You are not the owner of this NFT");
     }
     if (nftContractAddress) {
+      dispatch(setTxStatus({ txType: LOCK, txStatus: START }));
+
       const contract = new ContractPromise(
         api,
         nft721_psp34_standard.CONTRACT_ABI,
@@ -63,7 +66,6 @@ function LockNFTModal({
           currentAccount?.address,
           { signer: injector.signer },
           async ({ status, dispatchError }) => {
-            console.log("status", status);
             txResponseErrorHandler({
               status,
               dispatchError,
@@ -88,6 +90,21 @@ function LockNFTModal({
     }
   };
 
+  // useEffect(() => {
+  //   const forceUpdate = async () => {
+  //     if (txStatus?.lockStatus === FINALIZED) {
+  //       await delay(100).then(() => {
+  //         dispatch(clearTxStatus());
+
+  //         onClose();
+  //       });
+  //     }
+  //   };
+
+  //   forceUpdate();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [dispatch, txStatus]);
+
   return (
     <>
       <Popover
@@ -110,7 +127,7 @@ function LockNFTModal({
                 cursor="pointer"
                 ml="6px"
                 as={ImUnlocked}
-                onClick={!isDisabled && onOpen}
+                onClick={!isDisabled ? onOpen : () => {}}
                 size="22px"
               />
             </span>
@@ -132,7 +149,12 @@ function LockNFTModal({
             <Button variant="solid" onClick={onClose}>
               Cancel
             </Button>
-            <Button variant="outline" onClick={lockNFTsHandler}>
+            <Button
+              isLoading={txStatus?.lockStatus}
+              loadingText={txStatus?.lockStatus}
+              variant="outline"
+              onClick={lockNFTsHandler}
+            >
               Lock
             </Button>
           </PopoverFooter>

@@ -54,14 +54,7 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
             h={["20px", "20px", "40px"]}
             aria-label="edit"
             icon={
-              <EditIcon
-                isDisabled={isDisabled}
-                id="abc1"
-                color="currentColor"
-                width="17px"
-                height="17px"
-                p="0"
-              />
+              <EditIcon color="currentColor" width="17px" height="17px" p="0" />
             }
             size="icon"
             borderWidth="0px"

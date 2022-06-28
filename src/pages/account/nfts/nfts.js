@@ -18,6 +18,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { delay } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
 import AnimationLoader from "@components/Loader/AnimationLoader";
+import { FINALIZED } from "@constants";
+import { clearTxStatus } from "../../../store/actions/txStatus";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
@@ -29,6 +31,8 @@ const MyNFTsPage = () => {
 
   const dispatch = useDispatch();
   const { addNftTnxStatus } = useSelector((s) => s.account.accountLoaders);
+  const txStatus = useSelector((state) => state.txStatus);
+
   const [loading, setLoading] = useState(null);
   const [loadingTime, setLoadingTime] = useState(null);
 
@@ -155,7 +159,10 @@ const MyNFTsPage = () => {
 
   useEffect(() => {
     const forceUpdateAfterPushForSale = async () => {
-      if (addNftTnxStatus?.status !== "End") {
+      if (
+        addNftTnxStatus?.status !== "End" ||
+        txStatus.lockStatus !== FINALIZED
+      ) {
         return;
       }
 
@@ -173,14 +180,22 @@ const MyNFTsPage = () => {
           dispatch({
             type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
           });
+          dispatch(clearTxStatus());
           setMyCollections(null);
+
           setLoading(false);
         });
       }
     };
 
     forceUpdateAfterPushForSale();
-  }, [addNftTnxStatus, addNftTnxStatus?.status, dispatch, loadingTime]);
+  }, [
+    addNftTnxStatus,
+    addNftTnxStatus?.status,
+    dispatch,
+    loadingTime,
+    txStatus.lockStatus,
+  ]);
 
   // useEffect(() => {
   //   const forceUpdateAfterMint = async () => {
