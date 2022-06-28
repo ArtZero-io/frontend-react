@@ -260,6 +260,22 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     dispatch
                   );
                 } else {
+                  // add deleted properties
+                  const oldAttrsKeysList = rest.attrsList.map(
+                    (item) => Object.keys(item)[0]
+                  );
+
+                  const newAttrsKeysList = attributes.map((item) => item.name);
+
+                  for (let oldAttr of oldAttrsKeysList) {
+                    if (newAttrsKeysList.indexOf(oldAttr) === -1) {
+                      attributes.push({
+                        name: oldAttr,
+                        value: "",
+                      });
+                    }
+                  }
+
                   await nft721_psp34_standard_calls.setMultipleAttributesNFT(
                     currentAccount,
                     collection_address,

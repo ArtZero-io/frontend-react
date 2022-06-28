@@ -437,7 +437,7 @@ async function setMultipleAttributesNFT(
     .then((unsub) => (unsubscribe = unsub))
     .catch((e) => {
       dispatch({
-        type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
       });
       const mess = `Tnx is ${e.message}`;
 
