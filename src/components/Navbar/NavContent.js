@@ -56,9 +56,9 @@ const MobileNavContent = (props) => {
         color="white"
         onClick={onToggle}
       >
-        {isOpen ? <HiX /> : <HiOutlineMenu />}
+        {isOpen ? <HiX size="20px" /> : <HiOutlineMenu size="20px" />}
       </Center>
-      <Flex w="full" ml="106px">
+      <Flex w="full" ml="109px">
         <ArtZeroLogo
           zIndex="99"
           alt="ArtZeroLogo"
@@ -67,6 +67,19 @@ const MobileNavContent = (props) => {
           display={{ base: "flex", md: "none" }}
         />
       </Flex>
+
+      <SearchDrawer
+        position="absolute"
+        top="0px"
+        right="-10px"
+        as="button"
+        mx="2"
+        fontSize="2xl"
+        color="white"
+        onClick={onToggle}
+        display={{ base: "flex", md: "none" }}
+      />
+
       <NavList
         bg="black"
         pos="absolute"
@@ -80,8 +93,8 @@ const MobileNavContent = (props) => {
       >
         <Center
           position="absolute"
-          top="30px"
-          left="12px"
+          top="28px"
+          left="10px"
           as="button"
           mx="2"
           fontSize="2xl"
@@ -89,9 +102,9 @@ const MobileNavContent = (props) => {
           onClick={onToggle}
           zIndex={"90"}
         >
-          {isOpen ? <HiX /> : <HiOutlineMenu />}
+          {isOpen ? <HiX size="20px" /> : <HiOutlineMenu size="20px" />}
         </Center>
-        <Flex w="full" marginTop="32px" justifyContent="center" bg="black">
+        <Flex w="full" marginTop="30px" justifyContent="center" bg="black">
           <ArtZeroLogo
             zIndex="99"
             alt="ArtZeroLogo"
@@ -100,7 +113,6 @@ const MobileNavContent = (props) => {
             display={{ base: "flex", md: "none" }}
           />
         </Flex>
-
         <Stack
           h="full"
           w="full"
@@ -116,8 +128,11 @@ const MobileNavContent = (props) => {
               <NavLink.Mobile label={link.label} to={link.href} />
             </NavListItem>
           ))}
+
           {<NavLink.Mobile label="Docs" to={ROUTES.DOCS} isExternal={true} />}
-          {currentAccount && currentAccount?.address && <MyAccountDropdown />}
+
+          {currentAccount?.address && <MyAccountDropdown />}
+
           <Flex
             w="full"
             justifyContent="center"
