@@ -39,7 +39,7 @@ const AccountLayout = ({ children }) => {
 
   return (
     <Layout>
-      <Box as="section" maxW="container.3xl" position="relative" bg="#000">
+      <Box as="section" position="relative" bg="#000" mx="auto">
         <ProfileHeader />
 
         <Tabs
@@ -66,11 +66,10 @@ const AccountLayout = ({ children }) => {
             ))}
           </TabList>
           <TabPanels
-            className="TabPanels"
-            bg="#171717"
-            // bg="blue"
             p={0}
-            minH="calc(100vh - 49px)"
+            bg="#171717"
+            className="TabPanels"
+            minH="calc(100vh - 480px)"
           >
             {children}
           </TabPanels>
