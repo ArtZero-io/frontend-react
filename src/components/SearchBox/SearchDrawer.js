@@ -47,7 +47,7 @@ const SearchDrawer = ({ display = true, ...rest }) => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceGetSearchResult = useCallback(
-    debounce((k) => getSearchResult(k), 1500),
+    debounce((k) => getSearchResult(k), 1000),
     []
   );
 
@@ -62,7 +62,7 @@ const SearchDrawer = ({ display = true, ...rest }) => {
     <>
       <Button
         {...rest}
-        px="0px"
+        px={["0px", "30px", "30px"]}
         display={display}
         mr={0}
         color="#fff"
