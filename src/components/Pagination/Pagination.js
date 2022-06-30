@@ -22,6 +22,7 @@ const PaginationMP = ({
 }) => {
   const handlePageChange = (nextPage) => {
     setCurrentPage(nextPage);
+    sessionStorage.setItem("scroll-position-current-page", nextPage);
   };
 
   const onEnterHandler = (e) => {

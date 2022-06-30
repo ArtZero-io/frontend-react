@@ -126,8 +126,16 @@ const CollectionsPage = () => {
       "scroll-position-collection-nft-contract-address"
     );
 
+    const prevCurrentPage = sessionStorage.getItem(
+      "scroll-position-current-page"
+    );
+    
+    if (prevCurrentPage) {
+      setCurrentPage(prevCurrentPage);
+      sessionStorage.removeItem("scroll-position-current-page");
+    }
     return persistedId ? persistedId : null;
-  }, [history.action]);
+  }, [history.action, setCurrentPage]);
 
   return (
     <Layout variant="marketplace">
