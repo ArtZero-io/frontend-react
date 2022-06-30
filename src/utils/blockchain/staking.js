@@ -1,8 +1,8 @@
 const staking = {
-  CONTRACT_ADDRESS: "5HNAdMFqvvvc76x7hR8W6e4spAjbZECwT4mNQwtJUJBYQdpk",
+  CONTRACT_ADDRESS: "5G8EFZR3Prv63cao4hGx8zVCmMAvHU4rHcWkqCgqWxBXTz8n",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x271ee1d724dfd772895772ff57685db64e74250ea86036e50797c5d75d0e2b2b",
+      "hash": "0x7dfbd006b02b4c08106d7a4d8a814794ff0b46b4d284d0863292ca513121a846",
       "language": "ink! 3.2.0",
       "compiler": "rustc 1.63.0-nightly"
     },

@@ -1,8 +1,8 @@
 const marketplace = {
-  CONTRACT_ADDRESS: "5GPqMBWQwCkRKKq7KwF7qauzrr7fB2hhbE1VhYUH8r4uqST8",
+  CONTRACT_ADDRESS: "5HKXsapeuLDo3sW5qaGTcQwjcsJy9hNGskfRaxEv3C9fzpUP",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xd27125a4cedcdb951192f561d48583d9e6d67697d6a6214e35cd6a27a2d8cacf",
+      "hash": "0xfb91ce3d946405b9203f23bd867da097a6911e5b924d4025abe61d9ea92c8d56",
       "language": "ink! 3.2.0",
       "compiler": "rustc 1.63.0-nightly"
     },

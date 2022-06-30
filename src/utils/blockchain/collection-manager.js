@@ -1,8 +1,8 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5G4Yfmsrtjh3AqZzEBLTgdBuJ5Mj7JgzNC3XQiCoDzSdeZeh",
+  CONTRACT_ADDRESS: "5CY2xoR8QwrwpphqioYLfL6A5jHn9meKQibWQBYtfNA4KZak",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x88715994a79fe3dd4f01ddb61e541d3828ab896dabdc0862772e8905534c62e6",
+      "hash": "0x1d903ac69e3e097056f6480ead141ad8fb9de7f564e933dc078a25b89d103d8e",
       "language": "ink! 3.2.0",
       "compiler": "rustc 1.63.0-nightly"
     },

@@ -1,8 +1,8 @@
 const artzero_nft = {
-  CONTRACT_ADDRESS: "5EiDzMtbuH96ym8HWRxhBQPG7CyhVaUrQjfzk5vuWs5zbCbR",
+  CONTRACT_ADDRESS: "5HCQaquu3ZCDNgGCSrVgu1UgfqCDJ1Z8tFAi1cDK3JV8cd7G",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xa5b43011e540569dd4a01f861fd1d9056466e7e8dd3b951702b2ef132e8ac78f",
+      "hash": "0xe1c413ad59256a7fcdd3fc0350b19ff6a6169215798fde1dfec4196a76fcadf4",
       "language": "ink! 3.2.0",
       "compiler": "rustc 1.63.0-nightly"
     },

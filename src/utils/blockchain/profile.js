@@ -1,8 +1,8 @@
 const profile = {
-  CONTRACT_ADDRESS: "5CTLLyrpNLCWZzFCKUv7aa17ov3KdZFD6R8omiKSQQahW61F",
+  CONTRACT_ADDRESS: "5ELq3WCQvLyQ6LqZASQXH6vo1rtELtC2dYjF6pPziGSFAURT",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x7141bc896ce6898a956e0f1dd9ca1498f03d94b478f3dd207df263d41e08e805",
+      "hash": "0xe7de4bf40c73a3a68c24d605ac62db1270f0af1cb37699d9c9f62053f92cb665",
       "language": "ink! 3.2.0",
       "compiler": "rustc 1.63.0-nightly"
     },
