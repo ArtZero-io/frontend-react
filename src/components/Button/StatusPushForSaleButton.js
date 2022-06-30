@@ -1,16 +1,12 @@
-/* eslint-disable no-unused-vars */
-import { Box, Button } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import React, { Fragment } from "react";
 import { useDispatch } from "react-redux";
-import { AccountActionTypes } from "@store/types/account.types";
-import toast from "react-hot-toast";
 
 function StatusPushForSaleButton({
   isLoading,
   loadingText,
   text,
   type,
-
   listToken,
   unlistToken,
   isDisabled,

@@ -39,32 +39,6 @@ const MintPage = () => {
     (state) => state.account.accountLoaders
   );
 
-  // useEffect(() => {
-  //   const forceUpdateAfterMint = async () => {
-  //     if (tnxStatus?.status === "Finalized") {
-  //       dispatch({
-  //         type: AccountActionTypes.SET_TNX_STATUS,
-  //         payload: null,
-  //       });
-
-  //       setLoading(true);
-  //       toast.promise(
-  //         delay(10000).then(() => {
-  //           setMyAZNFTs(null);
-  //           setLoading(false);
-  //         }),
-  //         {
-  //           loading: "Loading new data...",
-  //           success: `Done!`,
-  //           error: "Could not load data.",
-  //         }
-  //       );
-  //     }
-  //   };
-
-  //   forceUpdateAfterMint();
-  // }, [tnxStatus, dispatch]);
-
   useEffect(() => {
     const forceUpdateAfterMint = async () => {
       if (addNftTnxStatus?.status !== "End") {
@@ -148,14 +122,18 @@ const MintPage = () => {
       return setMyAZNFTs(myNFTs);
     };
 
-    // (myAZNFTs === null || owner !== currentAccount?.address) &&
-    //   currentAccount?.address &&
     !loadingTime && fetchMyAZNFTs();
   }, [currentAccount?.address, loadingTime]);
 
   return (
     <Layout>
-      <Box as="section" maxW="container.3xl" position="relative">
+      <Box
+        as="section"
+        h="full"
+        // maxW="container.3xl"
+        position="relative"
+        mx="auto"
+      >
         <MintHeader loading={loading} />
 
         <Tabs isLazy align="center" colorScheme="brand.blue">
@@ -171,6 +149,7 @@ const MintPage = () => {
                 px={{ base: 2, "2xl": 24 }}
                 bg="#171717"
                 h="full"
+                minH="600px"
               >
                 {loading ? (
                   <Center h="full">
@@ -180,12 +159,6 @@ const MintPage = () => {
                   <NFTMintTab myAZNFTs={myAZNFTs} />
                 )}
               </TabPanel>
-
-              {/* {tabData.map((tab, index) => (
-              <TabPanel px={12} py={8} key={index}>
-                {tab.content}
-              </TabPanel>
-            ))} */}
             </TabPanels>
           ) : (
             <TabPanels h="full" minH="xs" bg="#171717">
@@ -209,14 +182,3 @@ const MintPage = () => {
   );
 };
 export default MintPage;
-
-// const tabData = [
-//   {
-//     label: "My Artzero Nfts",
-//     content: <NFTMintTab myAZNFTs={myAZNFTs} />,
-//   },
-//   {
-//     label: "Minting history",
-//     content: <MintHistoryTab />,
-//   },
-// ];

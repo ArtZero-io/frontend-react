@@ -23,7 +23,7 @@ import { useHistory } from "react-router-dom";
 import { getCachedImageShort } from "@utils/index";
 import { motion } from "framer-motion";
 
-const SearchDrawer = () => {
+const SearchDrawer = ({ display = true, ...rest }) => {
   const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const firstField = React.useRef();
@@ -47,7 +47,7 @@ const SearchDrawer = () => {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceGetSearchResult = useCallback(
-    debounce((k) => getSearchResult(k), 1500),
+    debounce((k) => getSearchResult(k), 1000),
     []
   );
 
@@ -61,13 +61,16 @@ const SearchDrawer = () => {
   return (
     <>
       <Button
-        leftIcon={<FiSearch size="22px" p="0" />}
-        onClick={onOpen}
-        variant={{ base: "unstyled", xl: "outline" }}
-        fontSize="15px"
-        color="#fff"
-        borderWidth="0"
+        {...rest}
+        px={["0px", "30px", "30px"]}
+        display={display}
         mr={0}
+        color="#fff"
+        fontSize="15px"
+        borderWidth="0"
+        onClick={onOpen}
+        leftIcon={<FiSearch size="22px" p="0" />}
+        variant={{ base: "unstyled", xl: "outline" }}
         _hover={{ borderWidth: "0", color: "#7ae7ff" }}
         _focus={{ borderWidth: "0", color: "#7ae7ff", bg: "transparent" }}
         _active={{ borderWidth: "0", color: "#7ae7ff", bg: "transparent" }}

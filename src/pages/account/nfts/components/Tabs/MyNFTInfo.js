@@ -170,8 +170,6 @@ function MyNFTTabInfo(props) {
     checkAllowance();
   }, [addNftTnxStatus?.status, currentAccount, dispatch, tokenID]);
 
-   
-
   const listToken = async () => {
     if (owner === currentAccount?.address) {
       dispatch({
