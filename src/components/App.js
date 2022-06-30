@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import "@fontsource/oswald";
 import theme from "@theme/theme";
+import toast from "react-hot-toast";
 
 import Router from "@components/Router";
 import { useSubstrateState } from "@utils/substrate";
@@ -20,7 +21,8 @@ import { setCollectionContract } from "@utils/blockchain/collection-manager-call
 import { setMarketplaceContract } from "@utils/blockchain/marketplace_contract_calls";
 import { setProfileContract } from "@utils/blockchain/profile_calls";
 import { setStakingContract } from "@utils/blockchain/staking_calls";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function App() {
   const { apiState, apiError } = useSubstrateState();
@@ -100,6 +102,56 @@ const Main = () => {
     // console.log("initContract()...");
   }, [api, apiState, artzeroNft, collection, marketplace, profile, staking]);
 
+  const { addNftTnxStatus, tnxStatus, addCollectionTnxStatus } = useSelector(
+    (state) => state.account.accountLoaders
+  );
+  const txStatus = useSelector((state) => state.txStatus);
+
+  let id = useRef(null);
+
+  useEffect(() => {
+    const hasPendingTx =
+      addNftTnxStatus?.status === "Start" ||
+      addCollectionTnxStatus?.status === "Start" ||
+      tnxStatus?.status === "Start" ||
+      txStatus?.stakeStatus === "Start" ||
+      txStatus?.requestUnstakeStatus === "Start" ||
+      txStatus?.cancelRequestUnstakeStatus === "Start" ||
+      txStatus?.unstakeStatus === "Start" ||
+      txStatus?.lockStatus === "Start";
+
+    console.log("txStatus?.stakeStatus", txStatus?.stakeStatus);
+    const message = (
+      <span>
+        You have a transaction that needs to be signed.
+        <br />
+        Please <b>Sign</b> or <b>Cancel</b> it in the pop-up window.
+      </span>
+    );
+
+    if (!id.current && hasPendingTx) {
+      const toastId = toast(message, {
+        duration: Infinity,
+        icon: "⏳",
+      });
+
+      id.current = toastId;
+    } else {
+      addNftTnxStatus?.status !== "Start" && toast.dismiss(id.current);
+
+      id.current = null;
+    }
+  }, [
+    addCollectionTnxStatus?.status,
+    addNftTnxStatus,
+    tnxStatus?.status,
+    txStatus?.cancelRequestUnstakeStatus,
+    txStatus?.lockStatus,
+    txStatus?.requestUnstakeStatus,
+    txStatus?.stakeStatus,
+    txStatus?.unstakeStatus,
+  ]);
+
   return (
     <>
       {loadContractDone && (
@@ -109,7 +161,6 @@ const Main = () => {
             reverseOrder={true}
             toastOptions={{
               style: {
-                marginRight: "2rem",
                 borderRadius: 0,
                 padding: "16px",
                 color: "#000",
