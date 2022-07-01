@@ -36,6 +36,7 @@ function LockNFTModal({
   tokenID,
   txType = "lock",
   isDisabled = "false",
+  showOnChainMetadata,
 }) {
   const { api, currentAccount } = useSubstrateState();
   const dispatch = useDispatch();
@@ -115,24 +116,26 @@ function LockNFTModal({
         placement="bottom"
         closeOnBlur={false}
       >
-        <PopoverTrigger mt="52px">
-          <Tooltip
-            top="52px"
-            hasArrow
-            label="Unlocked on-chain metadata"
-            bg="gray.300"
-          >
-            <span>
-              <TagRightIcon
-                cursor="pointer"
-                ml="6px"
-                as={ImUnlocked}
-                onClick={!isDisabled ? onOpen : () => {}}
-                size="22px"
-              />
-            </span>
-          </Tooltip>
-        </PopoverTrigger>
+        {showOnChainMetadata && (
+          <PopoverTrigger mt="52px">
+            <Tooltip
+              top="52px"
+              hasArrow
+              label="Unlocked on-chain metadata"
+              bg="gray.300"
+            >
+              <span>
+                <TagRightIcon
+                  cursor="pointer"
+                  ml="6px"
+                  as={ImUnlocked}
+                  onClick={!isDisabled ? onOpen : () => {}}
+                  size="22px"
+                />
+              </span>
+            </Tooltip>
+          </PopoverTrigger>
+        )}
         <PopoverContent>
           <PopoverArrow />
           <PopoverCloseButton />
