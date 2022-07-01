@@ -21,7 +21,7 @@ export const setCollectionContract = (api, data) => {
 };
 
 //SETTERS
-async function addNewCollection(caller_account, data, dispatch) {
+async function addNewCollection(caller_account, data, dispatch, api) {
   if (!isValidAddressPolkadotAddress(data?.nftContractAddress)) {
     return null;
   }
@@ -51,8 +51,15 @@ async function addNewCollection(caller_account, data, dispatch) {
         }
 
         if (dispatchError) {
+          dispatch({
+            type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+          });
+
           if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
+            // toast.error(`There is some error with your request`);
+            const decoded = api.registry.findMetaError(dispatchError.asModule);
+
+            return toast.error(`Error: ${decoded?.docs.join(" ")}`);
           } else {
             console.log("dispatchError ", dispatchError.toString());
           }
@@ -84,12 +91,18 @@ async function addNewCollection(caller_account, data, dispatch) {
   return unsubscribe;
 }
 
-async function autoNewCollection(caller_account, data, dispatch) {
+async function autoNewCollection(caller_account, data, dispatch, api) {
   let unsubscribe;
   const address = caller_account?.address;
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
   const azero_value = await getSimpleModeAddingFee(caller_account);
+
+  // caller_account, data, dispatch.AccountActionTypes
+  console.log("caller_account", caller_account);
+  console.log("data", data);
+  console.log("azero_value", azero_value);
+
   contract.tx
     .autoNewCollection(
       { gasLimit, value: azero_value },
@@ -106,8 +119,16 @@ async function autoNewCollection(caller_account, data, dispatch) {
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
         if (dispatchError) {
+          dispatch({
+            type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+          });
           if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
+            const decoded = api.registry.findMetaError(dispatchError.asModule);
+
+            return toast.error(`Error: ${decoded?.docs.join(" ")}`);
+
+            // toast.error(`There is some error with your request`);
+            // console.log("dispatchError.isModule", dispatchError);
           } else {
             toast.error("dispatchError ", dispatchError.toString());
             console.log("dispatchError ", dispatchError.toString());
@@ -385,9 +406,12 @@ async function getCollectionByAddress(caller_account, collection_address) {
 async function getSimpleModeAddingFee(caller_account) {
   const gasLimit = -1;
   const address = caller_account?.address;
-  const { result, output } = await contract.query.getSimpleModeAddingFee(address, {
-    gasLimit,
-  });
+  const { result, output } = await contract.query.getSimpleModeAddingFee(
+    address,
+    {
+      gasLimit,
+    }
+  );
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
@@ -396,9 +420,12 @@ async function getSimpleModeAddingFee(caller_account) {
 async function getAdvanceModeAddingFee(caller_account) {
   const gasLimit = -1;
   const address = caller_account?.address;
-  const { result, output } = await contract.query.getAdvanceModeAddingFee(address, {
-    gasLimit,
-  });
+  const { result, output } = await contract.query.getAdvanceModeAddingFee(
+    address,
+    {
+      gasLimit,
+    }
+  );
 
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
