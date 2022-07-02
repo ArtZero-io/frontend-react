@@ -147,41 +147,52 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               isEditMode: Yup.boolean(),
 
               collectionName: Yup.string()
+                .trim()
                 .min(3, "Must be longer than 3 characters")
                 .max(30, "Must be less than 30 characters")
                 .required("Required"),
               collectionDescription: Yup.string()
+                .trim()
                 .min(3, "Must be longer than 3 characters")
                 .max(150, "Must be less than 150 characters")
                 .required("Required"),
               collectRoyalFee: Yup.boolean(),
               website: Yup.string()
-                .url("This must be a valid URL")
-                .min(3, "Must be longer than 3 characters")
+                .trim()
+                .url("URL must start with http:// or https://")
                 .max(50, "Must be less than 50 characters"),
               twitter: Yup.string()
-                .url("This must be a valid URL")
-                .matches(/\btwitter.com\b/, "Not a Twitter URL")
+                .trim()
+                .url("URL must start with http:// or https://")
+                .matches(/\btwitter.com\b/, "URL must be twitter.com")
                 .max(50, "Must be less than 50 characters"),
               discord: Yup.string()
-                .url("This must be a valid URL")
-                .matches(/\bdiscord.gg\b/, "Not a Discord URL")
+                .trim()
+                .url("URL must start with http:// or https://")
+                .matches(
+                  /\bdiscord.(com|gg)\b/,
+                  "URL must be discord.com or discord.gg"
+                )
                 .max(50, "Must be less than 50 characters"),
 
-              nftName: Yup.string().when("isEditMode", {
-                is: false,
-                then: Yup.string()
-                  .min(3, "Must be longer than 3 characters")
-                  .max(25, "Must be less than 25 characters")
-                  .required("Required"),
-              }),
-              nftSymbol: Yup.string().when("isEditMode", {
-                is: false,
-                then: Yup.string()
-                  .min(3, "Must be longer than 3 characters")
-                  .max(8, "Must be less than 8 characters")
-                  .required("Required"),
-              }),
+              nftName: Yup.string()
+                .trim()
+                .when("isEditMode", {
+                  is: false,
+                  then: Yup.string()
+                    .min(3, "Must be longer than 3 characters")
+                    .max(25, "Must be less than 25 characters")
+                    .required("Required"),
+                }),
+              nftSymbol: Yup.string()
+                .trim()
+                .when("isEditMode", {
+                  is: false,
+                  then: Yup.string()
+                    .min(3, "Must be longer than 3 characters")
+                    .max(8, "Must be less than 8 characters")
+                    .required("Required"),
+                }),
               agreeTosCheckbox: Yup.boolean().when("isEditMode", {
                 is: false,
                 then: Yup.boolean()
@@ -248,7 +259,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   await collection_manager_calls.autoNewCollection(
                     currentAccount,
                     data,
-                    dispatch
+                    dispatch,
+                    api
                   );
                 }
 
@@ -258,7 +270,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                     nftContractAddress,
                     data.attributes,
                     data.attributeVals,
-                    dispatch
+                    dispatch,
+                    api
                   );
                 }
               }
@@ -270,6 +283,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   {mode === formMode.ADD && (
                     <>
                       <SimpleModeInput
+                        isDisabled={addCollectionTnxStatus}
                         isRequired={true}
                         label="NFT Name"
                         name="nftName"
@@ -277,6 +291,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                         placeholder="NFT Name"
                       />
                       <SimpleModeInput
+                        isDisabled={addCollectionTnxStatus}
                         isRequired={true}
                         label="NFT Symbol"
                         name="nftSymbol"
@@ -331,9 +346,10 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 <Stack
                   direction="row"
                   alignItems="start"
-                  justifyContent="space-around"
+                  justifyContent="space-between"
                 >
                   <Stack
+                    w="50%"
                     direction="column"
                     alignItems="start"
                     justifyContent="end"
@@ -362,6 +378,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   </Stack>
 
                   <Stack
+                    w="50%"
                     direction="column"
                     alignItems="start"
                     justifyContent="end"
@@ -396,6 +413,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   <Flex alignItems="center" minH={20} mt={5}>
                     <Box w="12rem">
                       <SimpleModeSwitch
+                        isDisabled={addCollectionTnxStatus}
                         onChange={() => {
                           values.collectRoyalFee = !values.collectRoyalFee;
                           setIsSetRoyal(!isSetRoyal);
@@ -405,7 +423,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                       />
                     </Box>
                     <AddCollectionNumberInput
-                      isDisabled={!isSetRoyal}
+                      isDisabled={!isSetRoyal || addCollectionTnxStatus}
                       isDisplay={isSetRoyal}
                       maxRoyalFeeRate={maxRoyalFeeRate}
                       label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
@@ -430,6 +448,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                       </Text>
 
                       <CommonCheckbox
+                        isDisabled={addCollectionTnxStatus}
                         name="agreeTosCheckbox"
                         content="I agree to ArtZero's Terms of Service"
                       />

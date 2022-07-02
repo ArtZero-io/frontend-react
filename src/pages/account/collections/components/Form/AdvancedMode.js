@@ -165,29 +165,37 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               isEditMode: Yup.boolean(),
 
               nftContractAddress: Yup.string()
+                .trim()
                 .min(3, "Must be longer than 3 characters")
                 .max(48, "Must be less than 48 characters")
                 .required("Required"),
               collectionName: Yup.string()
+                .trim()
                 .min(3, "Must be longer than 3 characters")
                 .max(30, "Must be less than 30 characters")
                 .required("Required"),
               collectionDescription: Yup.string()
+                .trim()
                 .min(3, "Must be longer than 3 characters")
                 .max(150, "Must be less than 150 characters")
                 .required("Required"),
               collectRoyalFee: Yup.boolean(),
               website: Yup.string()
-                .url("This must be a valid URL")
-                .min(3, "Must be longer than 3 characters")
+                .trim()
+                .url("URL must start with http:// or https://")
                 .max(50, "Must be less than 50 characters"),
               twitter: Yup.string()
-                .url("This must be a valid URL")
-                .matches(/\btwitter.com\b/, "Not a Twitter URL")
+                .trim()
+                .url("URL must start with http:// or https://")
+                .matches(/\btwitter.com\b/, "URL must be twitter.com")
                 .max(50, "Must be less than 50 characters"),
               discord: Yup.string()
-                .url("This must be a valid URL")
-                .matches(/\bdiscord.\b/, "Not a Discord URL")
+                .trim()
+                .url("URL must start with http:// or https://")
+                .matches(
+                  /\bdiscord.(com|gg)\b/,
+                  "URL must be discord.com or discord.gg"
+                )
                 .max(50, "Must be less than 50 characters"),
 
               agreeTosCheckbox: Yup.boolean().when("isEditMode", {
@@ -260,7 +268,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   await collection_manager_calls.addNewCollection(
                     currentAccount,
                     data,
-                    dispatch
+                    dispatch,
+                    api
                   );
                 } else {
                   await collection_manager_calls.setMultipleAttributes(
@@ -268,7 +277,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     data.nftContractAddress,
                     data.attributes,
                     data.attributeVals,
-                    dispatch
+                    dispatch,
+                    api
                   );
                 }
               }
@@ -332,9 +342,10 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 <Stack
                   direction="row"
                   alignItems="start"
-                  justifyContent="space-around"
+                  justifyContent="space-between"
                 >
                   <Stack
+                    w="50%"
                     direction="column"
                     alignItems="start"
                     justifyContent="end"
@@ -362,6 +373,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   </Stack>
 
                   <Stack
+                    w="50%"
                     direction="column"
                     alignItems="start"
                     justifyContent="end"
@@ -401,6 +413,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       minW={52}
                     >
                       <AdvancedModeSwitch
+                        isDisabled={addCollectionTnxStatus}
                         onChange={() => {
                           values.collectRoyalFee = !values.collectRoyalFee;
                           setIsSetRoyal(!isSetRoyal);
@@ -410,7 +423,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       />
                     </Stack>
                     <AddCollectionNumberInput
-                      isDisabled={!isSetRoyal}
+                      isDisabled={!isSetRoyal || addCollectionTnxStatus}
                       isDisplay={isSetRoyal}
                       maxRoyalFeeRate={maxRoyalFeeRate}
                       label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
@@ -435,6 +448,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       </Text>
 
                       <CommonCheckbox
+                        isDisabled={addCollectionTnxStatus}
                         name="agreeTosCheckbox"
                         content="I agree to ArtZero's Terms of Service"
                       />
