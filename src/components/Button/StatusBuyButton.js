@@ -29,12 +29,6 @@ function StatusBuyButton({
     });
   };
 
-  //isLoading
-  // is "START" => Pls sign tnx
-  // is "READY" => Ready to go
-  // inBlock INBLOCK
-  // finalized FINALIZED
-
   return (
     <>
       <>
@@ -76,6 +70,8 @@ function StatusBuyButton({
             ? "Please Sign"
             : loadingText === "Ready"
             ? "Ready"
+            : loadingText === "Broadcast"
+            ? "Broadcast"
             : loadingText === "InBlock"
             ? "In block"
             : loadingText === "Finalized"

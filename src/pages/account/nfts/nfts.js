@@ -160,31 +160,33 @@ const MyNFTsPage = () => {
   useEffect(() => {
     const forceUpdateAfterPushForSale = async () => {
       if (
-        addNftTnxStatus?.status !== "End" ||
-        txStatus.lockStatus !== FINALIZED
+        addNftTnxStatus?.status === "End" ||
+        txStatus?.lockStatus === FINALIZED
       ) {
-        return;
-      }
+        if (
+          addNftTnxStatus?.status &&
+          addNftTnxStatus?.timeStamp &&
+          addNftTnxStatus?.endTimeStamp
+        ) {
+          const diffTime =
+            9000 -
+            Number(addNftTnxStatus?.endTimeStamp - addNftTnxStatus?.timeStamp);
+          const delayTime = diffTime >= 0 ? diffTime : 500;
 
-      const { status, timeStamp, endTimeStamp } = addNftTnxStatus;
+          setLoading(true);
 
-      if (status && timeStamp && endTimeStamp) {
-        const diffTime = 9000 - Number(endTimeStamp - timeStamp);
-        const delayTime = diffTime >= 0 ? diffTime : 500;
+          setLoadingTime(delayTime / 1000);
 
-        setLoading(true);
+          await delay(delayTime).then(() => {
+            dispatch({
+              type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+            });
+            dispatch(clearTxStatus());
+            setMyCollections(null);
 
-        setLoadingTime(delayTime / 1000);
-
-        await delay(delayTime).then(() => {
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+            setLoading(false);
           });
-          dispatch(clearTxStatus());
-          setMyCollections(null);
-
-          setLoading(false);
-        });
+        }
       }
     };
 
@@ -197,31 +199,22 @@ const MyNFTsPage = () => {
     txStatus.lockStatus,
   ]);
 
-  // useEffect(() => {
-  //   const forceUpdateAfterMint = async () => {
-  //     if (tnxStatus?.status === "Finalized") {
-  //       dispatch({
-  //         type: AccountActionTypes.SET_TNX_STATUS,
-  //         payload: null,
-  //       });
+  useEffect(() => {
+    const forceUpdateAfterLockNFT = async () => {
+      if (txStatus?.lockStatus === FINALIZED) {
+        setLoading(true);
 
-  //       setLoading(true);
-  //       toast.promise(
-  //         delay(9000).then(() => {
-  //           setMyCollections(null);
-  //           setLoading(false);
-  //         }),
-  //         {
-  //           loading: "Loading new data...",
-  //           success: `Done!`,
-  //           error: "Could not load data.",
-  //         }
-  //       );
-  //     }
-  //   };
+        await delay(8000).then(() => {
+          dispatch(clearTxStatus());
+          setMyCollections(null);
 
-  //   forceUpdateAfterMint();
-  // }, [tnxStatus, dispatch]);
+          setLoading(false);
+        });
+      }
+    };
+
+    forceUpdateAfterLockNFT();
+  }, [addNftTnxStatus, dispatch, txStatus?.lockStatus]);
 
   return (
     <Box as="section" maxW="container.3xl" minH="60rem">

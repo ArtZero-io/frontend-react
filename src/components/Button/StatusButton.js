@@ -18,12 +18,6 @@ function StatusButton({ isLoading, loadingText, mode, disabled, text, type }) {
     });
   };
 
-  //isLoading
-  // is "START" => Pls sign tnx
-  // is "READY" => Ready to go
-  // inBlock INBLOCK
-  // finalized FINALIZED
-
   return (
     <>
       <Button
@@ -55,6 +49,8 @@ function StatusButton({ isLoading, loadingText, mode, disabled, text, type }) {
           ? "Please sign Tnx in your wallet"
           : loadingText === "Ready"
           ? "Your Tnx is ready"
+          : loadingText === "Broadcast"
+          ? "Your Tnx is Broadcast"
           : loadingText === "InBlock"
           ? "Your Tnx is inblock"
           : loadingText === "Finalized"

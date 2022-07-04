@@ -8,6 +8,7 @@ export const READY = "Ready";
 export const BROADCAST = "Broadcast";
 export const IN_BLOCK = "InBlock";
 export const FINALIZED = "Finalized";
+export const END = "End";
 
 // MY STAKING ACTIONS
 export const STAKE = "stake";
