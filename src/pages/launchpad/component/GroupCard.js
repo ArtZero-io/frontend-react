@@ -10,24 +10,18 @@ import {
   ModalOverlay,
   Spacer,
   useDisclosure,
-  Box,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper
+  Box
 } from "@chakra-ui/react";
-import ImageUpload from "@components/ImageUpload/Collection";
 import { useEffect, useState } from "react";
 import React from "react";
 import { Card } from "./Card";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
-import { Formik, Form } from "formik";
+// import { Formik, Form } from "formik";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
 import { useSubstrateState } from "@utils/substrate";
-import SimpleModeTextArea from "@components/TextArea/TextArea";
+import { convertDateToTimeStamp } from "@utils";
 
 export const GroupCard = ({ variant = "live" }) => {
   const [projectName, setProjectName] = useState("");
@@ -52,6 +46,45 @@ export const GroupCard = ({ variant = "live" }) => {
     addCollectionTnxStatus?.status === "End" && onCloseAddNewProject();
   }, [onCloseAddNewProject, addCollectionTnxStatus?.status]);
   
+  const submitForm = async () => {
+    
+      if (!avatarIPFSUrl) {
+        return toast.error("Upload avatar");
+      }
+      const data = {
+        "name": projectName,
+        "description": projectDescription,
+        "total_supply": totalSupply,
+        "roadmaps": roadmaps,
+        "team_members": teamMembers,
+        "start_time": convertDateToTimeStamp(startTime),
+        "end_time": convertDateToTimeStamp(endTime),
+        "attributes": [
+          "avatar"
+        ],
+        "attribute_vals": [
+          avatarIPFSUrl
+        ]
+      };
+      console.log(data);
+      dispatch({
+        type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
+        payload: {
+          status: "Start"
+        },
+      });
+    
+      await launchpad_contract_calls.addNewProject(
+        currentAccount,
+        data,
+        dispatch
+      );
+       
+      
+      // }
+    }
+  
+
   return (
     <>
       <Box
@@ -132,110 +165,54 @@ export const GroupCard = ({ variant = "live" }) => {
 
           <ModalBody>
             <Flex>
-            <Formik
-              onSubmit={async (values, { setSubmitting }) => {
-                if (!avatarIPFSUrl) {
-                  return toast.error("Upload avatar");
-                }
-                const data = {
-                  "name": projectName,
-                  "description": projectDescription,
-                  "total_supply": totalSupply,
-                  "roadmaps": roadmaps,
-                  "team_members": teamMembers,
-                  "startTime": startTime,
-                  "endTime": endTime,
-                  "attributes": [
-                    "avatarIPFSUrl"
-                  ],
-                  "attribute_vals": [
-                    avatarIPFSUrl
-                  ]
-                };
-
-                dispatch({
-                  type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-                  payload: {
-                    status: "Start"
-                  },
-                });
-              
-                await launchpad_contract_calls.addNewProject(
-                  currentAccount,
-                  data,
-                  dispatch
-                );
-                 
-                
-                // }
-              }}
-            >
-              {({ values, dirty, isValid }) => (
-                <Form>
+                <form>
                   <label>
                   Project Name
-                  <input type="text" value={projectName} onChange={(val) => setProjectName(val)} />
+                  <input type="text" value={projectName} onChange={(val) => setProjectName(val.target.value)} />
                   </label>
-                  <SimpleModeTextArea
-                    isDisabled={addCollectionTnxStatus}
-                    isRequired={true}
-                    label="Project Description"
-                    name="projectDescription"
-                    type="text"
-                    placeholder="Project Description"
-                  />
+                  <br/>
                   <label>
                     Project description
-                    <textarea value={projectDescription} onChange={(val) => setProjectDescription(val)} />
+                    <textarea value={projectDescription} onChange={(val) => setProjectDescription(val.target.value)} />
                   </label>
-                  <ImageUpload
-                      isDisabled={addCollectionTnxStatus}
-                      id="project-avatar"
-                      imageIPFSUrl={avatarIPFSUrl}
-                      setImageIPFSUrl={setAvatarIPFSUrl}
-                      title="Project Avatar Image"
-                      limitedSize={{ width: "100", height: "100" }}
-                    />
-                    <NumberInput
-                      isDisabled={addCollectionTnxStatus}
-                      id="project-total-supply"
-                      min={1}
-                      precision={2}
-                      step={0.5}
-                      bg="black"
-                      onChange={(val) => setTotalSupply(val)}
-                    >
-                      <NumberInputField borderRadius="0" h={12} />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
+                  <br/>
+                  <label>
+                    Project Avatar
+                  <input type="text" value={avatarIPFSUrl} onChange={(val) => setAvatarIPFSUrl(val.target.value)} />
+                  </label>
+                  <br/>
+                  <label>
+                    Total Supply
+                  <input type="" value={totalSupply} onChange={(val) => setTotalSupply(val.target.value)} />
+                  </label>
+                  <br/>
                     <label>
                     Road maps
-                  <input type="text" value={roadmaps} onChange={(val) => setRoadMaps(val)} />
+                  <input type="text" value={roadmaps} onChange={(val) => setRoadMaps(val.target.value)} />
                   </label>
                   <label>
                   Team Members
-                  <input type="text" value={teamMembers} onChange={(val) => setTeamMembers(val)} />
+                  <input type="text" value={teamMembers} onChange={(val) => setTeamMembers(val.target.value)} />
                   </label>
+                  <br/>
                   <label> Start time
-                    <input type="date"  onChange={(val) => setStartTime(val)}/>
+                    <input type="date"  onChange={(val) => setStartTime(val.target.value)}/>
                     </label>
+                    <br/>
                     <label> End time
-                    <input type="date"  onChange={(val) => setEndTime(val)}/>
+                    <input type="date"  onChange={(val) => setEndTime(val.target.value)}/>
                     </label>
-                    <Button
+                    <br/>
+                    <div
                         w="full"
                         type="submit"
                         mt={6}
                         mb={{ xl: "16px", "2xl": "32px" }}
+                        onClick={submitForm}
                       >
                         Add new Project
-                      </Button>
-                </Form>
-              )}
-            </Formik>
+                      </div>
+                </form>
             </Flex>
           </ModalBody>
         </ModalContent>

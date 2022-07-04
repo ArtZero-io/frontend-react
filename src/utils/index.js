@@ -53,6 +53,11 @@ export function isValidImage(imageUrl) {
   }
 }
 
+export function convertDateToTimeStamp(dateStr) {
+  const date = new Date(dateStr);
+  return date.getTime();
+}
+
 export function convertStringToPrice(stringPrice) {
   try {
     /* eslint-disable no-useless-escape */

@@ -108,30 +108,32 @@ async function addNewProject(
   data,
   dispatch
 ) {
-
+  console.log(data);
   let unsubscribe;
   const address = caller_account?.address;
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
   contract.tx
-    .addNewCollection(
+    .addNewProject(
       { gasLimit, value: value },
       address,
-      data?.nftContractAddress,
+      data.name,
+      data.description,
+      data.total_supply,
+      data.roadmaps,
+      data.team_members,
+      data.start_time,
+      data.end_time,
       data.attributes,
-      data.attributeVals,
-      data.collectionAllowRoyalFee,
-      data.collectionRoyalFeeData
+      data.attribute_vals
     )
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
         if (status.isFinalized === true) {
-          await clientAPI("post", "/updateCollection", {
-            collection_address: data.nftContractAddress,
-          });
+          toast.success(`Success`);
         }
 
         if (dispatchError) {
