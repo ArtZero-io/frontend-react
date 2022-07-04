@@ -18,6 +18,7 @@ import { truncateStr } from "@utils";
 
 const ProfileForm = ({ profile }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState(null);
+  const [isUploadAvatarIPFSUrl, setIsUploadAvatarIPFSUrl] = useState(false);
   const { currentAccount } = useSubstrateState();
 
   const dispatch = useDispatch();
@@ -42,31 +43,41 @@ const ProfileForm = ({ profile }) => {
         }}
         validationSchema={Yup.object({
           username: Yup.string()
+            .trim()
             .min(3, "Must be longer than 3 characters")
             .max(30, "Must be less than 30 characters")
             .required("Required"),
 
           bio: Yup.string()
+            .trim()
             .min(3, "Must be longer than 3 characters")
             .max(150, "Must be less than 150 characters"),
           twitter: Yup.string()
-            .url("This must be a valid URL")
-            .matches(/\btwitter.com\b/, "Not a Twitter URL")
+            .trim()
+            .url("URL must start with http:// or https://")
+            .matches(/\btwitter.com\b/, "URL must be twitter.com")
             .max(50, "Must be 50 characters or less"),
           facebook: Yup.string()
-            .url("This must be a valid URL")
-            .matches(/\bfacebook.com\b/, "Not a Facebook URL")
+            .trim()
+            .url("URL must start with http:// or https://")
+            .matches(/\bfacebook.com\b/, "URL must be facebook.com")
             .max(50, "Must be 50 characters or less"),
           telegram: Yup.string()
-            .url("This must be a valid URL")
-            .matches(/\btelegram.org\b/, "Not a Telegram URL")
+            .trim()
+            .url("URL must start with http:// or https://")
+            .matches(/\btelegram.org\b/, "URL must be telegram.com")
             .max(50, "Must be 50 characters or less"),
           instagram: Yup.string()
-            .url("This must be a valid URL")
-            .matches(/\binstagram.com\b/, "Not an Instagram URL")
+            .trim()
+            .url("URL must start with http:// or https://")
+            .matches(/\binstagram.com\b/, "URL must be instagram.com")
             .max(50, "Must be 50 characters or less"),
         })}
         onSubmit={async (values, { setSubmitting }) => {
+          if (!isUploadAvatarIPFSUrl) {
+            return toast.error("Please upload new avatar.");
+          }
+
           avatarIPFSUrl && (values.avatar = avatarIPFSUrl);
 
           const objArr = Object.entries(values).filter(([, value]) => {
@@ -79,6 +90,7 @@ const ProfileForm = ({ profile }) => {
           // console.log(" a, v", a, v);
 
           if (!a.length || !v.length) return toast.error("Please check again.");
+
           dispatch({
             type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
             payload: {
@@ -93,6 +105,8 @@ const ProfileForm = ({ profile }) => {
             <Flex w="full" justify="space-between">
               <VStack minW={96} px={3}>
                 <ImageUpload
+                  setIsUploadAvatarIPFSUrl={setIsUploadAvatarIPFSUrl}
+                  isDisabled={addCollectionTnxStatus}
                   setImageIPFSUrl={setAvatarIPFSUrl}
                   profile={profile}
                   limitedSize={{ width: "500", height: "500" }}
@@ -103,6 +117,7 @@ const ProfileForm = ({ profile }) => {
               <VStack flexGrow="1" ml={3}>
                 <Flex w="full" justify="space-between">
                   <SimpleModeInput
+                    isDisabled={addCollectionTnxStatus}
                     width={"xs"}
                     label="User Name"
                     name="username"
@@ -110,6 +125,7 @@ const ProfileForm = ({ profile }) => {
                     placeholder="User Name"
                   />
                   <SimpleModeTextarea
+                    isDisabled={addCollectionTnxStatus}
                     width={"xs"}
                     label="Bio"
                     name="bio"
@@ -120,6 +136,7 @@ const ProfileForm = ({ profile }) => {
                 </Flex>
                 <Flex w="full" justify="space-between">
                   <SimpleModeInput
+                    isDisabled={addCollectionTnxStatus}
                     width={"xs"}
                     label="Twitter URL"
                     name="twitter"
@@ -127,6 +144,7 @@ const ProfileForm = ({ profile }) => {
                     placeholder="Twitter URL"
                   />
                   <SimpleModeInput
+                    isDisabled={addCollectionTnxStatus}
                     width={"xs"}
                     label="Facebook URL"
                     name="facebook"
@@ -136,6 +154,7 @@ const ProfileForm = ({ profile }) => {
                 </Flex>
                 <Flex w="full" justify="space-between">
                   <SimpleModeInput
+                    isDisabled={addCollectionTnxStatus}
                     width={"xs"}
                     label="Telegram URL"
                     name="telegram"
@@ -143,6 +162,7 @@ const ProfileForm = ({ profile }) => {
                     placeholder="Telegram URL"
                   />
                   <SimpleModeInput
+                    isDisabled={addCollectionTnxStatus}
                     width={"xs"}
                     label="Instagram URL"
                     name="instagram"
@@ -157,19 +177,6 @@ const ProfileForm = ({ profile }) => {
                   isLoading={addCollectionTnxStatus}
                   loadingText={`${addCollectionTnxStatus?.status}`}
                 />
-                {/* <Button
-                  spinnerPlacement="start"
-                  isLoading={tnxStatus}
-                  loadingText={`${tnxStatus?.status}`}
-                  // spinner={<BeatLoader size={8} />}
-                  variant="solid"
-                  w="full"
-                  type="submit"
-                  mt={8}
-                  mb={{ xl: "16px", "2xl": "32px" }}
-                >
-                  Save profile
-                </Button> */}
               </VStack>
             </Flex>
           </Form>
