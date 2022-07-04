@@ -130,7 +130,7 @@ export default function ResponsivelySizedModal({
             {tabData.map((tab, index) => (
               <TabPanel
                 px={{ base: 6, "2xl": 12 }}
-                py={{ base: 4, "2xl": 8 }}
+                py={{ base: "22px", "2xl": "44px" }}
                 h="full"
                 key={index}
               >

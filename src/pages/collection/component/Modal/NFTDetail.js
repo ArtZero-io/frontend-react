@@ -14,20 +14,21 @@ import { onCloseButtonModal } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
 
 function NFTDetailModal({ isOpen, onClose, ...rest }) {
-  const { addNftTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
-  );
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    addNftTnxStatus?.status === "End" && onClose();
-  }, [onClose, addNftTnxStatus?.status]);
-
   const tabHeight = useBreakpointValue({
     base: `1rem`,
     xl: `3.5rem`,
     "2xl": `4.5rem`,
   });
+
+  const dispatch = useDispatch();
+
+  const { addNftTnxStatus } = useSelector(
+    (state) => state.account.accountLoaders
+  );
+
+  useEffect(() => {
+    addNftTnxStatus?.status === "End" && onClose();
+  }, [onClose, addNftTnxStatus?.status]);
 
   const tabData = [
     {
@@ -47,11 +48,11 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
     <Modal
       closeOnOverlayClick={false}
       closeOnEsc={false}
-      isCentered={false}
+      scrollBehavior="inside"
+      isCentered
       onClose={onClose}
       isOpen={isOpen}
-      size={{ base: "sm", xl: "7xl" }}
-      scrollBehavior="inside"
+      size={"7xl"}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -63,10 +64,10 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
         bg="brand.grayDark"
         borderRadius="0"
         p={0}
-        h={["580px", "full", "full"]}
-        w={["300px", "full", "full"]}
-        maxH={{ base: "auto", xl: "28rem", "2xl": "40rem" }}
-        maxW={{ base: "58rem", "2xl": "78rem" }}
+        h="full"
+        w="full"
+        maxH={{ base: "28rem", xl: "30rem", "2xl": "40rem" }}
+        maxW={{ base: "58rem", xl: "60rem", "2xl": "78rem" }}
       >
         <ModalCloseButton
           position="absolute"
@@ -88,8 +89,8 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
             {tabData.map((tab, index) => (
               <Tab
                 isDisabled={tab.isDisabled}
-                key={index}
                 ml={12}
+                key={index}
                 fontSize={["13px", null, "18px"]}
                 lineHeight={["21px", null, "30px"]}
                 fontFamily="Evogria Italic"
@@ -106,10 +107,10 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
           <TabPanels style={{ height: `calc(100% - ${tabHeight})` }}>
             {tabData.map((tab, index) => (
               <TabPanel
-                px={{ base: 6, "2xl": 12 }}
-                py={{ base: 4, "2xl": 8 }}
-                key={index}
-                h="full"
+              px={{ base: 6, "2xl": 12 }}
+              py={{ base: "22px", "2xl": "44px" }}
+              h="full"
+              key={index}
               >
                 {tab.content}
               </TabPanel>
