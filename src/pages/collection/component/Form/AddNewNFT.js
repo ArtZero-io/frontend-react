@@ -239,7 +239,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 const nft721_psp34_standard_contract = new ContractPromise(
                   api,
                   nft721_psp34_standard.CONTRACT_ABI,
-                  collection_address
+                  collection_address || rest.nftContractAddress
                 );
                 nft721_psp34_standard_calls.setContract(
                   nft721_psp34_standard_contract
@@ -276,9 +276,10 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     }
                   }
 
+                  // rest.nftContractAddress due to Edit mode on My NFT has no params
                   await nft721_psp34_standard_calls.setMultipleAttributesNFT(
                     currentAccount,
-                    collection_address,
+                    collection_address || rest.nftContractAddress,
                     tokenID,
                     attributes,
                     dispatch
