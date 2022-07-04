@@ -40,13 +40,29 @@ const ImageUploadCollection = ({
   const ref = useRef();
 
   const retrieveNewAvatar = (e) => {
-    if (e && !supportedFormat.includes(e.target.files[0].type)) {
+    let data;
+    if (e) data = e.target.files[0];
+
+    if (!supportedFormat.includes(data?.type)) {
+      console.log("includes Date.now()", Date.now());
+
       toast.error(
         `Please use .png .jpeg .jpeg format, the ${
           e.target?.files[0] && e.target.files[0].type.split("/")[1]
         } format is not supported.`
       );
+      ref.current.value = null;
+      setNewAvatarData(null);
+      setImagePreviewUrl("");
+      return;
+    }
 
+    if (data?.size >= 5242880) {
+      toast.error(
+        `Maximum size support is 5MB, your image size is ${(
+          data?.size / 1000000
+        ).toFixed(2)}MB.`
+      );
       ref.current.value = null;
       setNewAvatarData(null);
       setImagePreviewUrl("");
@@ -55,8 +71,8 @@ const ImageUploadCollection = ({
 
     setImgURL(null);
 
-    const data = e.target.files[0];
     const reader = new window.FileReader();
+
     reader.readAsArrayBuffer(data);
 
     reader.onloadend = () => {
@@ -70,9 +86,12 @@ const ImageUploadCollection = ({
 
       setImagePreviewUrl(src);
     }
+    console.log("End retrieveNewAvatar Date.now()", Date.now());
   };
 
   const onUploadHandler = async (e) => {
+    console.log("onUploadHandler Date.now()", Date.now());
+
     try {
       if (newAvatarData) {
         const uploadPromise = () =>
@@ -93,11 +112,11 @@ const ImageUploadCollection = ({
               input: created?.path,
               is1920: isBanner,
             });
-            // console.log("update_nft_api_res", update_nft_api_res);
+            console.log("update_nft_api_res", update_nft_api_res);
           }),
           {
             loading: "Uploading...",
-            success: () => `Upload successful.`,
+            success: "Upload successful!",
             error: "Could not upload your image!!!.",
           }
         );

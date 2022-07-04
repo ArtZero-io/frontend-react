@@ -37,24 +37,39 @@ export default function ImageUploadAvatar({
   const ref = useRef();
 
   const retrieveNewAvatar = (e) => {
-    if (e && !supportedFormat.includes(e.target.files[0].type)) {
+    let data;
+    if (e) data = e.target.files[0];
+
+    if (!supportedFormat.includes(data?.type)) {
+      console.log("includes Date.now()", Date.now());
+
       toast.error(
         `Please use .png .jpeg .jpeg format, the ${
           e.target?.files[0] && e.target.files[0].type.split("/")[1]
         } format is not supported.`
       );
-
       ref.current.value = null;
       setNewAvatarData(null);
       setImagePreviewUrl("");
       return;
     }
 
-    const data = e.target.files[0];
+    if (data?.size >= 5242880) {
+      toast.error(
+        `Maximum size support is 5MB, your image size is ${(
+          data?.size / 1000000
+        ).toFixed(2)}MB.`
+      );
+      ref.current.value = null;
+      setNewAvatarData(null);
+      setImagePreviewUrl("");
+      return;
+    }
 
     setImgURL(null);
 
     const reader = new window.FileReader();
+
     reader.readAsArrayBuffer(data);
 
     reader.onloadend = () => {
