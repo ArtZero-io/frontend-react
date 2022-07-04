@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
 import { create } from "ipfs-http-client";
 import {
@@ -27,13 +27,16 @@ const supportedFormat = ["image/png", "image/jpg", "image/jpeg"];
 
 export default function ImageUploadAvatar({
   setImageIPFSUrl,
+  isDisabled = false,
   profile,
   limitedSize = { width: "500", height: "500" },
+  setIsUploadAvatarIPFSUrl,
 }) {
   const [imgURL, setImgURL] = useState(null);
 
   const [newAvatarData, setNewAvatarData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+
   const ref = useRef();
 
   const retrieveNewAvatar = (e) => {
@@ -108,7 +111,7 @@ export default function ImageUploadAvatar({
           }),
           {
             loading: "Uploading...",
-            success: () => `Upload Avatar successful.!`,
+            success: `Upload Avatar successful!`,
             error: "Could not upload Avatar.",
           }
         );
@@ -118,6 +121,14 @@ export default function ImageUploadAvatar({
       toast.error(error.message);
     }
   };
+
+  useEffect(() => {
+    if (imgURL && imagePreviewUrl) {
+      setIsUploadAvatarIPFSUrl(true);
+    } else {
+      setIsUploadAvatarIPFSUrl(false);
+    }
+  }, [imagePreviewUrl, imgURL, setIsUploadAvatarIPFSUrl]);
 
   return (
     <VStack h="full" justifyContent="flex-start" alignItems="start">
@@ -147,6 +158,7 @@ export default function ImageUploadAvatar({
         <VStack>
           <label htmlFor="inputTag" style={{ cursor: "pointer" }}>
             <input
+              disabled={isDisabled}
               ref={ref}
               style={{ display: "none" }}
               id="inputTag"
@@ -154,7 +166,12 @@ export default function ImageUploadAvatar({
               type="file"
               accept="image/png, image/jpg, image/jpeg"
             />
-            <Button as={Text} fontFamily="Evogria" variant="outline">
+            <Button
+              isDisabled={isDisabled}
+              as={Text}
+              fontFamily="Evogria"
+              variant="outline"
+            >
               {!imagePreviewUrl ? "Select Image" : "Pick another"}
             </Button>
           </label>
