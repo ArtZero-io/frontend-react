@@ -103,10 +103,20 @@ async function setMultipleAttributes(
   return unsubscribe;
 }
 
+async function addNewProject(
+  currentAccount,
+  data,
+  dispatch
+) {
+  console.log(currentAccount);
+  console.log(data);
+}
+
 const launchpad_contract_calls = {
   setLaunchPadContract,
   getAttributes,
-  setMultipleAttributes
+  setMultipleAttributes,
+  addNewProject
 };
 
 export default launchpad_contract_calls;

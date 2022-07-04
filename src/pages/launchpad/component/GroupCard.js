@@ -10,7 +10,12 @@ import {
   ModalOverlay,
   Spacer,
   useDisclosure,
-  Box
+  Box,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
 } from "@chakra-ui/react";
 import ImageUpload from "@components/ImageUpload/Collection";
 import AdvancedModeInput from "@components/Input/Input";
@@ -25,9 +30,13 @@ import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
 import { useSubstrateState } from "@utils/substrate";
+import SimpleModeTextArea from "@components/TextArea/TextArea";
 
 export const GroupCard = ({ variant = "live" }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
+  const [totalSupply, setTotalSupply] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
   const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
   const {
@@ -142,13 +151,25 @@ export const GroupCard = ({ variant = "live" }) => {
                   toast.error(`The NFT contract address must be an address!`);
                 } else {
                   const data = {
-
+                    "name": values.name,
+                    "description": values.description,
+                    "total_supply": totalSupply,
+                    "roadmaps": values.roadmaps,
+                    "team_members": values.teamMemeber,
+                    "startTime": startTime,
+                    "endTime": endTime,
+                    "attributes": [
+                      "avatarIPFSUrl"
+                    ],
+                    "attribute_vals": [
+                      values.avatarIPFSUrl
+                    ]
                   };
 
                   dispatch({
                     type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
                     payload: {
-                      status: "Start",
+                      status: "Start"
                     },
                   });
 
@@ -171,6 +192,14 @@ export const GroupCard = ({ variant = "live" }) => {
                     type="projectName"
                     placeholder="Project Name"
                   />
+                  <SimpleModeTextArea
+                    isDisabled={addCollectionTnxStatus}
+                    isRequired={true}
+                    label="Project Description"
+                    name="projectDescription"
+                    type="text"
+                    placeholder="Project Description"
+                  />
                   <ImageUpload
                       isDisabled={addCollectionTnxStatus}
                       id="project-avatar"
@@ -179,6 +208,45 @@ export const GroupCard = ({ variant = "live" }) => {
                       title="Project Avatar Image"
                       limitedSize={{ width: "100", height: "100" }}
                     />
+                    <NumberInput
+                      isDisabled={addCollectionTnxStatus}
+                      id="project-total-supply"
+                      min={1}
+                      precision={2}
+                      step={0.5}
+                      bg="black"
+                      onChange={(val) => setTotalSupply(val)}
+                    >
+                      <NumberInputField borderRadius="0" h={12} />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                    <AdvancedModeInput
+                      isRequired={true}
+                      label="Road Map"
+                      name="roadMap"
+                      type="roadMap"
+                      placeholder="Road Map"
+                    />
+                    <AdvancedModeInput
+                      isRequired={true}
+                      label="Team Member"
+                      name="teamMemeber"
+                      type="teamMemeber"
+                      placeholder="Team Member"
+                    />
+                    <input type="date"  onChange={(val) => setStartTime(val)}/>
+                    <input type="date"  onChange={(val) => setEndTime(val)}/>
+                    <Button
+                        w="full"
+                        type="submit"
+                        mt={6}
+                        mb={{ xl: "16px", "2xl": "32px" }}
+                      >
+                        Add new Project
+                      </Button>
                 </Form>
               )}
             </Formik>
