@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import {
-  handleContractCallAnimation,
+  handleContractCallAnimation
 } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
@@ -104,12 +104,57 @@ async function setMultipleAttributes(
 }
 
 async function addNewProject(
-  currentAccount,
+  caller_account,
   data,
   dispatch
 ) {
-  console.log(currentAccount);
-  console.log(data);
+
+  let unsubscribe;
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+  const value = 0;
+  contract.tx
+    .addNewCollection(
+      { gasLimit, value: value },
+      address,
+      data?.nftContractAddress,
+      data.attributes,
+      data.attributeVals,
+      data.collectionAllowRoyalFee,
+      data.collectionRoyalFeeData
+    )
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (status.isFinalized === true) {
+          await clientAPI("post", "/updateCollection", {
+            collection_address: data.nftContractAddress,
+          });
+        }
+
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError ", dispatchError.toString());
+          }
+        }
+      }
+    )
+    .then((unsub) => {
+      unsubscribe = unsub;
+    })
+    .catch((e) => {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+      });
+      const mess = `Tnx is ${e.message}`;
+
+      toast.error(mess);
+    });
+  return unsubscribe;
 }
 
 const launchpad_contract_calls = {

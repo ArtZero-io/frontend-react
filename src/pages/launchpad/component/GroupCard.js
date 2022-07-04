@@ -15,26 +15,27 @@ import {
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
-  NumberInputStepper,
+  NumberInputStepper
 } from "@chakra-ui/react";
 import ImageUpload from "@components/ImageUpload/Collection";
-import AdvancedModeInput from "@components/Input/Input";
 import { useEffect, useState } from "react";
 import React from "react";
 import { Card } from "./Card";
-import { isValidAddressPolkadotAddress } from "@utils";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 import { Formik, Form } from "formik";
 import toast from "react-hot-toast";
-import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
 import { useSubstrateState } from "@utils/substrate";
 import SimpleModeTextArea from "@components/TextArea/TextArea";
 
 export const GroupCard = ({ variant = "live" }) => {
+  const [projectName, setProjectName] = useState("");
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
-  const [totalSupply, setTotalSupply] = useState("");
+  const [totalSupply, setTotalSupply] = useState(0);
+  const [projectDescription, setProjectDescription] = useState("");
+  const [roadmaps, setRoadMaps] = useState("");
+  const [teamMembers, setTeamMembers] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const dispatch = useDispatch();
@@ -132,66 +133,49 @@ export const GroupCard = ({ variant = "live" }) => {
           <ModalBody>
             <Flex>
             <Formik
-              validationSchema={Yup.object().shape({
-                projectName: Yup.string()
-                .min(3, "Must be longer than 3 characters")
-                .max(30, "Must be less than 30 characters")
-                .required("Required"),
-              })}
               onSubmit={async (values, { setSubmitting }) => {
                 if (!avatarIPFSUrl) {
                   return toast.error("Upload avatar");
                 }
+                const data = {
+                  "name": projectName,
+                  "description": projectDescription,
+                  "total_supply": totalSupply,
+                  "roadmaps": roadmaps,
+                  "team_members": teamMembers,
+                  "startTime": startTime,
+                  "endTime": endTime,
+                  "attributes": [
+                    "avatarIPFSUrl"
+                  ],
+                  "attribute_vals": [
+                    avatarIPFSUrl
+                  ]
+                };
 
-                // if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
-                values.avatarIPFSUrl = avatarIPFSUrl;
-
-
-                if (!isValidAddressPolkadotAddress(values.nftContractAddress)) {
-                  toast.error(`The NFT contract address must be an address!`);
-                } else {
-                  const data = {
-                    "name": values.name,
-                    "description": values.description,
-                    "total_supply": totalSupply,
-                    "roadmaps": values.roadmaps,
-                    "team_members": values.teamMemeber,
-                    "startTime": startTime,
-                    "endTime": endTime,
-                    "attributes": [
-                      "avatarIPFSUrl"
-                    ],
-                    "attribute_vals": [
-                      values.avatarIPFSUrl
-                    ]
-                  };
-
-                  dispatch({
-                    type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-                    payload: {
-                      status: "Start"
-                    },
-                  });
-
-                  await launchpad_contract_calls.addNewProject(
-                    currentAccount,
-                    data,
-                    dispatch
-                  );
+                dispatch({
+                  type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
+                  payload: {
+                    status: "Start"
+                  },
+                });
+              
+                await launchpad_contract_calls.addNewProject(
+                  currentAccount,
+                  data,
+                  dispatch
+                );
                  
-                }
+                
                 // }
               }}
             >
               {({ values, dirty, isValid }) => (
                 <Form>
-                  <AdvancedModeInput
-                    isRequired={true}
-                    label="Project Name"
-                    name="projectName"
-                    type="projectName"
-                    placeholder="Project Name"
-                  />
+                  <label>
+                  Project Name
+                  <input type="text" value={projectName} onChange={(val) => setProjectName(val)} />
+                  </label>
                   <SimpleModeTextArea
                     isDisabled={addCollectionTnxStatus}
                     isRequired={true}
@@ -200,6 +184,10 @@ export const GroupCard = ({ variant = "live" }) => {
                     type="text"
                     placeholder="Project Description"
                   />
+                  <label>
+                    Project description
+                    <textarea value={projectDescription} onChange={(val) => setProjectDescription(val)} />
+                  </label>
                   <ImageUpload
                       isDisabled={addCollectionTnxStatus}
                       id="project-avatar"
@@ -223,22 +211,20 @@ export const GroupCard = ({ variant = "live" }) => {
                         <NumberDecrementStepper />
                       </NumberInputStepper>
                     </NumberInput>
-                    <AdvancedModeInput
-                      isRequired={true}
-                      label="Road Map"
-                      name="roadMap"
-                      type="roadMap"
-                      placeholder="Road Map"
-                    />
-                    <AdvancedModeInput
-                      isRequired={true}
-                      label="Team Member"
-                      name="teamMemeber"
-                      type="teamMemeber"
-                      placeholder="Team Member"
-                    />
+                    <label>
+                    Road maps
+                  <input type="text" value={roadmaps} onChange={(val) => setRoadMaps(val)} />
+                  </label>
+                  <label>
+                  Team Members
+                  <input type="text" value={teamMembers} onChange={(val) => setTeamMembers(val)} />
+                  </label>
+                  <label> Start time
                     <input type="date"  onChange={(val) => setStartTime(val)}/>
+                    </label>
+                    <label> End time
                     <input type="date"  onChange={(val) => setEndTime(val)}/>
+                    </label>
                     <Button
                         w="full"
                         type="submit"
