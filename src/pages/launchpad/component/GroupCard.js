@@ -23,7 +23,7 @@ import { AccountActionTypes } from "@store/types/account.types";
 import { useSubstrateState } from "@utils/substrate";
 import { convertDateToTimeStamp } from "@utils";
 
-export const GroupCard = ({ variant = "live" }) => {
+export const GroupCard = ({ variant, projects }) => {
   const [projectName, setProjectName] = useState("");
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [totalSupply, setTotalSupply] = useState(0);
@@ -34,9 +34,6 @@ export const GroupCard = ({ variant = "live" }) => {
   const [endTime, setEndTime] = useState("");
   const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
-  const [liveProjects, setLiveProjects] = useState([]);
-  const [endProjects, setEndProjects] = useState([]);
-  const [isLoadedProject, setIsLoadedProject] = useState(false);
   const {
     isOpen: isOpenAddNew,
     onOpen: onOpenAddProject,
@@ -48,10 +45,7 @@ export const GroupCard = ({ variant = "live" }) => {
 
   useEffect(async () => {
     addCollectionTnxStatus?.status === "End" && onCloseAddNewProject();
-    if (!isLoadedProject) {
-      
-    }
-  }, [isLoadedProject, onCloseAddNewProject, addCollectionTnxStatus?.status]);
+  }, [onCloseAddNewProject, addCollectionTnxStatus?.status]);
   
   const submitForm = async () => {
     
@@ -86,8 +80,6 @@ export const GroupCard = ({ variant = "live" }) => {
         data,
         dispatch
       );
-       
-      
       // }
     }
   
@@ -125,12 +117,9 @@ export const GroupCard = ({ variant = "live" }) => {
               variant="solid" 
               onClick={() => onOpenAddProject()}>Add project</Button>}
         </Flex>
-
+      
         <Flex justifyContent="space-between">
-          <Card variant={variant} />
-          <Card variant={variant} />
-          <Card variant={variant} />
-          <Card variant={variant} />
+          {(projects && projects.length) ? projects.map((item) => <Card variant={variant} project={item}/>) : ""}
         </Flex>
 
         <Flex

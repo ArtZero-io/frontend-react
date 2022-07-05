@@ -14,7 +14,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useHistory } from "react-router-dom";
 
-export const Card = ({ variant, collection_address = "abc" }) => {
+export const Card = ({ variant, project, collection_address = "abc" }) => {
   const history = useHistory();
 
   return (
@@ -123,7 +123,7 @@ export const Card = ({ variant, collection_address = "abc" }) => {
           fontSize={["15px", "16px", "17px"]}
           textAlign="center"
         >
-          Millionaire Mafia Club{" "}
+          {project.name}{" "}
         </Heading>
 
         {variant === "upcoming" && (
