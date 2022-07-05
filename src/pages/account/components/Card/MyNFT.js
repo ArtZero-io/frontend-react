@@ -218,7 +218,7 @@ function MyNFTCard({
           </Flex>
 
           {!is_for_sale && stakeStatus !== 0 ? (
-            <Flex align="center" justify="center" w="full">
+            <Flex align="center" justify="start" w="full">
               <Button
                 isLoading={
                   txStatus?.stakeStatus ||
