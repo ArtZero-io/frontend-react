@@ -118,7 +118,7 @@ const MyStakesPage = () => {
         txStatus?.cancelRequestUnstakeStatus === FINALIZED ||
         txStatus?.requestUnstakeStatus === FINALIZED
       ) {
-        await delay(100).then(() => {
+        await delay(6000).then(() => {
           dispatch(clearTxStatus());
           refresh();
         });
