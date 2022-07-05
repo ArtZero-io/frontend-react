@@ -1,7 +1,9 @@
 import toast from "react-hot-toast";
+import BN from "bn.js";
 import { web3FromSource } from "../wallets/extension-dapp";
 import {
-  handleContractCallAnimation
+  handleContractCallAnimation,
+  isValidAddressPolkadotAddress
 } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
@@ -103,6 +105,65 @@ async function setMultipleAttributes(
   return unsubscribe;
 }
 
+async function getProjectCount(caller_account) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
+
+  const { result, output } = await contract.query.getProjectCount(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+
+async function getProjectById(caller_account, project_id) {
+  const gasLimit = -1;
+  const azero_value = 0;
+  const address = caller_account?.address;
+
+  const { result, output } = await contract.query.getProjectById(
+    address,
+    { value: azero_value, gasLimit },
+    project_id
+  );
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
+async function getProjectByNftAddress(caller_account, nft_address) {
+  if (
+    !contract ||
+    !caller_account ||
+    !isValidAddressPolkadotAddress(nft_address)
+  ) {
+    return null;
+  }
+
+  const gasLimit = -1;
+  const azero_value = 0;
+  const address = caller_account?.address;
+
+  const { result, output } = await contract.query.getProjectByNftAddress(
+    address,
+    { value: azero_value, gasLimit },
+    nft_address
+  );
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
 async function addNewProject(
   caller_account,
   data,
@@ -163,7 +224,10 @@ const launchpad_contract_calls = {
   setLaunchPadContract,
   getAttributes,
   setMultipleAttributes,
-  addNewProject
+  addNewProject,
+  getProjectCount,
+  getProjectByNftAddress,
+  getProjectById
 };
 
 export default launchpad_contract_calls;

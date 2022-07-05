@@ -34,6 +34,9 @@ export const GroupCard = ({ variant = "live" }) => {
   const [endTime, setEndTime] = useState("");
   const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
+  const [liveProjects, setLiveProjects] = useState([]);
+  const [endProjects, setEndProjects] = useState([]);
+  const [isLoadedProject, setIsLoadedProject] = useState(false);
   const {
     isOpen: isOpenAddNew,
     onOpen: onOpenAddProject,
@@ -42,9 +45,13 @@ export const GroupCard = ({ variant = "live" }) => {
   const { addCollectionTnxStatus } = useSelector(
     (state) => state.account.accountLoaders
   );
-  useEffect(() => {
+
+  useEffect(async () => {
     addCollectionTnxStatus?.status === "End" && onCloseAddNewProject();
-  }, [onCloseAddNewProject, addCollectionTnxStatus?.status]);
+    if (!isLoadedProject) {
+      
+    }
+  }, [isLoadedProject, onCloseAddNewProject, addCollectionTnxStatus?.status]);
   
   const submitForm = async () => {
     
