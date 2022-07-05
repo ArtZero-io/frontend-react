@@ -13,6 +13,7 @@ import {
   VStack,
   Spacer,
   Square,
+  HStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -262,19 +263,19 @@ function MyNFTCard({
               <Flex>
                 <Spacer />
 
-                <VStack align="start">
+                <HStack align="center" justify="flex-end">
                   <Text color="brand.grayLight" textAlign="center" w="full">
-                    {isBid?.status && "My Offer"}
+                    {isBid?.status && "My offer"}
                   </Text>
                   {isBid?.status ? (
-                    <Tag minH={"20px"} bg="transparent">
+                    <HStack minH={"20px"} bg="transparent">
                       <TagLabel bg="transparent">
                         {isBid?.status && isBid?.bidPrice / 10 ** 12}
                       </TagLabel>
                       <TagRightIcon as={AzeroIcon} />
-                    </Tag>
+                    </HStack>
                   ) : null}
-                </VStack>
+                </HStack>
 
                 {!isBid && (
                   <Flex w="full" mt="4px">
@@ -283,21 +284,19 @@ function MyNFTCard({
                       align="center"
                       textAlign="right"
                       color="brand.grayLight"
-                      direction="column"
+                      // direction="column"
                     >
                       <Text textAlign="center" w="full">
-                        {highest_bid ? "Highest Offer" : "No offer"}
+                        {highest_bid ? "Best offer" : "No offer"}
                       </Text>
                       {highest_bid ? (
-                        <Tag h={"20px"} bg="transparent">
-                          <TagLabel bg="transparent">
+                        <HStack ml={"6px"} bg="transparent" id="abc">
+                          <Text color="#fff" bg="transparent">
                             {highest_bid / 10 ** 12}
-                          </TagLabel>
+                          </Text>
                           <TagRightIcon as={AzeroIcon} />
-                        </Tag>
-                      ) : (
-                        ""
-                      )}
+                        </HStack>
+                      ) : null}
                     </Flex>
                   </Flex>
                 )}
