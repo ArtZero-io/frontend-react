@@ -22,7 +22,7 @@ export default function CommonCheckbox({ label, content, ...props }) {
         </Flex>
         <Flex>
           {meta.touched && meta.error ? (
-            <Text textAlign="left" color="red" ml={0} fontSize="sm">
+            <Text textAlign="left" color="#ff8c8c" ml={0} fontSize="sm">
               {meta.error}
             </Text>
           ) : null}

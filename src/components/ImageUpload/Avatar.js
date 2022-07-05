@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
 import { create } from "ipfs-http-client";
 import {
@@ -27,34 +27,52 @@ const supportedFormat = ["image/png", "image/jpg", "image/jpeg"];
 
 export default function ImageUploadAvatar({
   setImageIPFSUrl,
+  isDisabled = false,
   profile,
   limitedSize = { width: "500", height: "500" },
+  setIsUploadAvatarIPFSUrl,
 }) {
   const [imgURL, setImgURL] = useState(null);
 
   const [newAvatarData, setNewAvatarData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+
   const ref = useRef();
 
   const retrieveNewAvatar = (e) => {
-    if (e && !supportedFormat.includes(e.target.files[0].type)) {
+    let data;
+    if (e) data = e.target.files[0];
+
+    if (!supportedFormat.includes(data?.type)) {
+      console.log("includes Date.now()", Date.now());
+
       toast.error(
         `Please use .png .jpeg .jpeg format, the ${
           e.target?.files[0] && e.target.files[0].type.split("/")[1]
         } format is not supported.`
       );
-
       ref.current.value = null;
       setNewAvatarData(null);
       setImagePreviewUrl("");
       return;
     }
 
-    const data = e.target.files[0];
+    if (data?.size >= 5242880) {
+      toast.error(
+        `Maximum size support is 5MB, your image size is ${(
+          data?.size / 1000000
+        ).toFixed(2)}MB.`
+      );
+      ref.current.value = null;
+      setNewAvatarData(null);
+      setImagePreviewUrl("");
+      return;
+    }
 
     setImgURL(null);
 
     const reader = new window.FileReader();
+
     reader.readAsArrayBuffer(data);
 
     reader.onloadend = () => {
@@ -93,7 +111,7 @@ export default function ImageUploadAvatar({
           }),
           {
             loading: "Uploading...",
-            success: () => `Upload Avatar successful.!`,
+            success: `Upload Avatar successful!`,
             error: "Could not upload Avatar.",
           }
         );
@@ -103,6 +121,14 @@ export default function ImageUploadAvatar({
       toast.error(error.message);
     }
   };
+
+  useEffect(() => {
+    if (imgURL && imagePreviewUrl) {
+      setIsUploadAvatarIPFSUrl(true);
+    } else {
+      setIsUploadAvatarIPFSUrl(false);
+    }
+  }, [imagePreviewUrl, imgURL, setIsUploadAvatarIPFSUrl]);
 
   return (
     <VStack h="full" justifyContent="flex-start" alignItems="start">
@@ -132,6 +158,7 @@ export default function ImageUploadAvatar({
         <VStack>
           <label htmlFor="inputTag" style={{ cursor: "pointer" }}>
             <input
+              disabled={isDisabled}
               ref={ref}
               style={{ display: "none" }}
               id="inputTag"
@@ -139,7 +166,12 @@ export default function ImageUploadAvatar({
               type="file"
               accept="image/png, image/jpg, image/jpeg"
             />
-            <Button as={Text} fontFamily="Evogria" variant="outline">
+            <Button
+              isDisabled={isDisabled}
+              as={Text}
+              fontFamily="Evogria"
+              variant="outline"
+            >
               {!imagePreviewUrl ? "Select Image" : "Pick another"}
             </Button>
           </label>

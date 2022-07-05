@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -13,15 +12,18 @@ import {
   Tag,
   TagLabel,
   TagRightIcon,
-  InputGroup,
+  // InputGroup,
   Progress,
   Skeleton,
   useBreakpointValue,
   Square,
-  Input,
+  // Input,
   Stack,
   HStack,
   Tooltip,
+  NumberInput,
+  InputRightElement,
+  NumberInputField,
 } from "@chakra-ui/react";
 
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -34,7 +36,7 @@ import toast from "react-hot-toast";
 import { truncateStr } from "@utils";
 import BN from "bn.js";
 import { useDispatch, useSelector } from "react-redux";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { getPublicCurrentAccount, getCachedImageShort } from "@utils";
 import StatusBuyButton from "@components/Button/StatusBuyButton";
 import { AccountActionTypes } from "@store/types/account.types";
@@ -68,7 +70,7 @@ const NFTTabCollectible = (props) => {
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
 
   const [doOffer, setDoOffer] = useState(false);
-  const [bidPrice, setBidPrice] = useState(0);
+  const [bidPrice, setBidPrice] = useState(1);
   const [, setIsLoaded] = useState(false);
   const [isBided, setIsBided] = useState(false);
   const [saleInfo, setSaleInfo] = useState(null);
@@ -269,50 +271,23 @@ const NFTTabCollectible = (props) => {
     saleInfo?.nftOwner,
   ]);
 
-  // eslint-disable-next-line no-unused-vars
-  const heightB = useBreakpointValue({
-    base: "108px",
-    "2xl":
-      saleInfo && is_for_sale && currentAccount?.address !== saleInfo?.nftOwner
-        ? "136px"
-        : "45px",
-  });
   return (
-    <Flex
-      h="full"
-      direction={{ base: "column", xl: "row" }}
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Square
-        w={{ base: "250px", xl: "20rem", "2xl": "30rem" }}
-        h={{ base: "250px", xl: "20rem", "2xl": "30rem" }}
-        bg="#372648"
-      >
-        <Image
-          w="full"
-          h="full"
-          boxShadow="lg"
-          alt="nft-img"
-          objectFit="cover"
-          src={avatar && getCachedImageShort(avatar, 500)}
-          fallback={
-            <Skeleton minW={{ base: "250px", xl: "20rem", "2xl": "30rem" }} />
-          }
-        />
-      </Square>
+    <>
+      <HStack spacing={{ base: "30px", "2xl": "40px" }} alignItems="stretch">
+        <Square size={{ base: "360px", "2xl": "480px" }}>
+          <Image
+            w="full"
+            h="full"
+            boxShadow="lg"
+            alt="nft-img"
+            objectFit="cover"
+            src={avatar && getCachedImageShort(avatar, 500)}
+            fallback={<Skeleton minW={{ base: "360px", "2xl": "480px" }} />}
+          />
+        </Square>
 
-      <Flex
-        h="full"
-        w="full"
-        ml={{ base: 0, xl: 8 }}
-        py={{ base: 2, xl: 0 }}
-        direction={"column"}
-        justifyContent="flex-start"
-        alignItems="flex-start"
-      >
-        <Box w="full">
-          <Flex>
+        <Stack alignItems="flex-start" w="full">
+          <HStack>
             <Heading
               color="#fff"
               size="h4"
@@ -320,6 +295,7 @@ const NFTTabCollectible = (props) => {
             >
               {nftName}
             </Heading>
+
             <Spacer />
 
             <HStack
@@ -378,366 +354,417 @@ const NFTTabCollectible = (props) => {
                 <LockNFTModal {...props} />
               )}
             </HStack>
+
             {!is_locked &&
               showOnChainMetadata &&
               owner === currentAccount.address && (
                 <AddNewNFTModal mode={formMode.EDIT} {...props} />
               )}
-          </Flex>
+          </HStack>
 
-          <Heading
-            size="h6"
-            py="15px"
-            fontSize={{ base: "0.8rem", "2xl": "1rem" }}
-            color="brand.grayLight"
-            lineHeight="1.35"
-          >
-            {description}
-          </Heading>
-
-          <AnimatePresence>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+          <Stack>
+            <Heading
+              isTruncated
+              maxW={{ base: "500px", "2xl": "610px" }}
+              size="h6"
+              pt={{ base: "6px", "2xl": "12px" }}
+              fontSize={{ base: "0.8rem", "2xl": "1rem" }}
+              color="brand.grayLight"
+              lineHeight="1.35"
             >
-              <Skeleton as="span" isLoaded={ownerName} minW="150px">
-                <Text color="#fff" maxW="max-content">
-                  Owned by{" "}
-                  <Link
-                    as={ReactRouterLink}
-                    // to="/user/xxx"
-                    to="#"
-                    color="#7AE7FF"
-                    textTransform="capitalize"
-                  >
-                    {ownerName}
-                  </Link>
-                </Text>
-              </Skeleton>
-            </motion.div>
-          </AnimatePresence>
-        </Box>
+              {description}
+            </Heading>
+          </Stack>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          style={{
-            height: heightB,
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          {/* is_for_sale true  no sale*/}
-          {!is_for_sale && currentAccount?.address !== owner && (
-            <Flex alignItems="center" h="80px">
-              <Heading size="h6">Not for sale</Heading>
-            </Flex>
-          )}
-          <Stack
-            display={
-              saleInfo &&
-              is_for_sale &&
-              currentAccount?.address !== saleInfo?.nftOwner
-                ? "flex"
-                : "none"
-            }
-            direction={{ base: "column", xl: "row" }}
-            w="full"
-            h="92px"
-            my={{ base: "8px", "2xl": "22px" }}
-            py={2}
-            pr={{ base: "0", "2xl": "28px" }}
-          >
-            {is_for_sale &&
-              saleInfo &&
-              currentAccount?.address !== saleInfo?.nftOwner && (
-                <>
-                  <Flex
-                    mr="22px"
-                    w="full"
-                    alignItems="center"
-                    borderColor="#343333"
-                    px={["8px", "16px"]}
-                    py={1}
-                    borderWidth={2}
-                    minH={["4.15rem", "4.75rem", "4.75rem"]}
-                  >
-                    <StatusBuyButton
-                      shouldDisabled={
-                        addNftTnxStatus?.status && action && action !== "buy"
-                      }
-                      isDisabled={true}
-                      isDo={action === "buy"}
-                      type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
-                      text="buy"
-                      isLoading={addNftTnxStatus}
-                      loadingText={`${addNftTnxStatus?.status}`}
-                      onClick={buyToken}
-                    />
+          <Stack>
+            <Skeleton as="span" isLoaded={ownerName} minW="150px">
+              <Text
+                color="#fff"
+                maxW="max-content"
+                pt={{ base: "6px", "2xl": "12px" }}
+                fontSize={{ base: "14px", "2xl": "16px" }}
+              >
+                Owned by{" "}
+                <Link
+                  as={ReactRouterLink}
+                  // to="/user/xxx"
+                  to="#"
+                  color="#7AE7FF"
+                  textTransform="capitalize"
+                >
+                  {ownerName}
+                </Link>
+              </Text>
+            </Skeleton>
+          </Stack>
 
-                    <Spacer />
-
-                    <Flex w="full">
-                      <Spacer />
-
-                      <Flex w="full">
-                        <Spacer />
-                        <Box h="52px" textAlign="right" color="brand.grayLight">
-                          <Text>Current price</Text>
-                          <Tag h={4} pr={0} bg="transparent">
-                            <TagLabel bg="transparent">
-                              {price / 10 ** 12}
-                            </TagLabel>
-                            <TagRightIcon as={AzeroIcon} />
-                          </Tag>
-                        </Box>
-                      </Flex>
-                    </Flex>
+          <Stack w="full">
+            <Stack w="full">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                {/* is_for_sale true  no sale*/}
+                {!is_for_sale && currentAccount?.address !== owner ? (
+                  <Flex alignItems="center" pt="8px">
+                    <Heading size="h6">Not for sale</Heading>
                   </Flex>
-                  {!doOffer && is_for_sale && (
-                    <Flex
-                      mr="30px"
-                      w="full"
-                      alignItems="center"
-                      borderColor="#333"
-                      px={["8px", "16px"]}
-                      py={1}
-                      borderWidth={2}
-                      minH={["4.15rem", "4.75rem", "4.75rem"]}
-                    >
-                      {!isBided && (
-                        <>
+                ) : null}
+
+                <Stack
+                  display={
+                    saleInfo &&
+                    is_for_sale &&
+                    currentAccount?.address !== saleInfo?.nftOwner
+                      ? "flex"
+                      : "none"
+                  }
+                  direction={{ base: "column", xl: "row" }}
+                  w="full"
+                  h="92px"
+                  py={2}
+                  my={{ base: "8px", xl: "2px", "2xl": "22px" }}
+                  pr={{ base: "0", "2xl": "28px" }}
+                >
+                  {is_for_sale &&
+                    saleInfo &&
+                    currentAccount?.address !== saleInfo?.nftOwner && (
+                      <>
+                        <Flex
+                          mr="22px"
+                          w="full"
+                          alignItems="center"
+                          borderColor="#343333"
+                          px={["8px", "16px"]}
+                          borderWidth={2}
+                          minH={["4.15rem", "4.75rem", "4.75rem"]}
+                        >
                           <StatusBuyButton
                             shouldDisabled={
                               addNftTnxStatus?.status &&
                               action &&
-                              action !== "offer"
+                              action !== "buy"
                             }
-                            isDo={action === "offer"}
+                            isDisabled={true}
+                            isDo={action === "buy"}
                             type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
-                            text="offer"
+                            text="buy"
                             isLoading={addNftTnxStatus}
                             loadingText={`${addNftTnxStatus?.status}`}
-                            onClick={placeOffer}
+                            onClick={buyToken}
                           />
 
                           <Spacer />
-                          <InputGroup
-                            w={"88px"}
-                            bg="black"
-                            h={10}
+
+                          <Flex w="full">
+                            <Spacer />
+
+                            <Flex w="full">
+                              <Spacer />
+                              <Box
+                                h="52px"
+                                textAlign="right"
+                                color="brand.grayLight"
+                              >
+                                <Text>Current price</Text>
+                                <Tag h={4} pr={0} bg="transparent">
+                                  <TagLabel bg="transparent">
+                                    {price / 10 ** 12}
+                                  </TagLabel>
+                                  <TagRightIcon as={AzeroIcon} />
+                                </Tag>
+                              </Box>
+                            </Flex>
+                          </Flex>
+                        </Flex>
+                        {!doOffer && is_for_sale && (
+                          <Flex
+                            mr="30px"
+                            w="full"
+                            alignItems="center"
+                            borderColor="#333"
+                            px={["8px", "16px"]}
                             py={1}
-                            color="black"
-                            borderRadius="0"
+                            id="ac"
+                            borderWidth={2}
+                            minH={["4.15rem", "4.75rem", "4.75rem"]}
                           >
-                            <Input
-                              isDisabled={addNftTnxStatus?.status}
-                              bg="black"
-                              color="white"
-                              variant="unstyled"
-                              my={1}
-                              pl={3}
-                              placeholder="0"
-                              _placeholder={{
-                                color: "brand.grayDark",
-                                fontSize: "lg",
-                              }}
-                              onChange={({ target }) => {
-                                setBidPrice(target.value);
-                              }}
-                              value={bidPrice}
-                            />
-                            <AzeroIcon size="24px" m={2} />
-                          </InputGroup>
-                        </>
-                      )}
+                            {!isBided && (
+                              <>
+                                <StatusBuyButton
+                                  shouldDisabled={
+                                    addNftTnxStatus?.status &&
+                                    action &&
+                                    action !== "offer"
+                                  }
+                                  isDo={action === "offer"}
+                                  type={
+                                    AccountActionTypes.SET_ADD_NFT_TNX_STATUS
+                                  }
+                                  text="offer"
+                                  isLoading={addNftTnxStatus}
+                                  loadingText={`${addNftTnxStatus?.status}`}
+                                  onClick={placeOffer}
+                                />
 
-                      {isBided && (
-                        <>
-                          <StatusBuyButton
-                            shouldDisabled={
-                              addNftTnxStatus?.status &&
-                              action &&
-                              action !== "remove bid"
-                            }
-                            isDo={action === "remove bid"}
-                            type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
-                            text="remove bid"
-                            isLoading={addNftTnxStatus}
-                            loadingText={`${addNftTnxStatus?.status}`}
-                            onClick={removeBid}
-                          />
+                                <Spacer />
+                                <NumberInput
+                                  maxW={32}
+                                  isDisabled={addNftTnxStatus?.status}
+                                  bg="black"
+                                  defaultValue={15}
+                                  min={1}
+                                  precision={0}
+                                  onChange={(v) => setBidPrice(parseInt(v))}
+                                  value={bidPrice}
+                                  ml={3}
+                                  h="50px"
+                                >
+                                  <NumberInputField
+                                    h="50px"
+                                    borderRadius={0}
+                                    borderWidth={0}
+                                    color="#fff"
+                                  />
+                                  <InputRightElement
+                                    bg="transparent"
+                                    h={"50px"}
+                                    w={8}
+                                  >
+                                    <AzeroIcon />
+                                  </InputRightElement>
+                                </NumberInput>
+                              </>
+                            )}
 
-                          <Spacer />
-                          <Box
-                            h="52px"
-                            textAlign="right"
-                            color="brand.grayLight"
-                          >
-                            <Text>Your offer</Text>
-                            <Tag h={4} pr={0} bg="transparent">
-                              <TagLabel bg="transparent">{bidPrice}</TagLabel>
-                              <TagRightIcon as={AzeroIcon} />
-                            </Tag>
-                          </Box>
-                        </>
-                      )}
-                    </Flex>
-                  )}
+                            {isBided && (
+                              <>
+                                <StatusBuyButton
+                                  shouldDisabled={
+                                    addNftTnxStatus?.status &&
+                                    action &&
+                                    action !== "remove bid"
+                                  }
+                                  isDo={action === "remove bid"}
+                                  type={
+                                    AccountActionTypes.SET_ADD_NFT_TNX_STATUS
+                                  }
+                                  text="remove bid"
+                                  isLoading={addNftTnxStatus}
+                                  loadingText={`${addNftTnxStatus?.status}`}
+                                  onClick={removeBid}
+                                />
+
+                                <Spacer />
+                                <Box
+                                  h="52px"
+                                  textAlign="right"
+                                  color="brand.grayLight"
+                                >
+                                  <Text>Your offer</Text>
+                                  <Tag h={4} pr={0} bg="transparent">
+                                    <TagLabel bg="transparent">
+                                      {bidPrice}
+                                    </TagLabel>
+                                    <TagRightIcon as={AzeroIcon} />
+                                  </Tag>
+                                </Box>
+                              </>
+                            )}
+                          </Flex>
+                        )}
+                      </>
+                    )}
+                </Stack>
+              </motion.div>
+            </Stack>
+
+            <Stack w="full" flexGrow="1">
+              {attrsList?.length === 0 ? (
+                <Stack>
+                  <Text
+                    mt={{ base: "6px", "2xl": "12px" }}
+                    display={{ base: "none", xl: "block" }}
+                    fontSize={{ base: "14px", "2xl": "16px" }}
+                  >
+                    This NFT have no props/ levels.
+                  </Text>
+                </Stack>
+              ) : (
+                <>
+                  <Grid
+                    maxH={{
+                      base:
+                        owner === currentAccount?.address ||
+                        saleInfo?.nftOwner === currentAccount?.address
+                          ? "255px"
+                          : is_for_sale && saleInfo
+                          ? "160px"
+                          : "225px",
+
+                      "2xl":
+                        owner === currentAccount?.address ||
+                        currentAccount?.address === saleInfo?.nftOwner
+                          ? "335px"
+                          : is_for_sale && saleInfo
+                          ? "200px"
+                          : "305px",
+                    }}
+                    id="grid-attrs"
+                    boxShadow="lg"
+                    w="full"
+                    templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
+                    gap={{ base: "0.5rem", xl: "1rem", "2xl": "1.25rem" }}
+                    pr="22px"
+                    overflowY="auto"
+                    sx={{
+                      "&::-webkit-scrollbar": {
+                        width: "4px",
+                        height: "15px",
+                        borderRadius: "1px",
+                        backgroundColor: `#7ae7ff`,
+                      },
+                      "&::-webkit-scrollbar-thumb": {
+                        backgroundColor: `#7ae7ff`,
+                      },
+                    }}
+                  >
+                    {attrsList?.length
+                      ? attrsList
+                          .filter(
+                            (i) =>
+                              !JSON.stringify(Object.values(i)).includes("|")
+                          )
+                          .map((item, idx) => {
+                            return (
+                              <GridItem w="100%" h="100%" key={idx}>
+                                <Box
+                                  w="full"
+                                  textAlign="left"
+                                  alignItems="end"
+                                  bg="brand.semiBlack"
+                                  px={{ base: "0.5rem", "2xl": "1rem" }}
+                                  py={3}
+                                >
+                                  <Flex w="full">
+                                    <Box color="brand.grayLight" w="full">
+                                      <Text>{Object.keys(item)[0]}</Text>
+                                      <Heading
+                                        textAlign="right"
+                                        size="h6"
+                                        mt={1}
+                                        // minH="2.5rem"
+                                        isTruncated
+                                        maxW={"10rem"}
+                                        fontSize={{
+                                          base: "0.875rem",
+                                          "2xl": "1rem",
+                                        }}
+                                      ></Heading>
+                                    </Box>
+                                    <Spacer />
+                                  </Flex>
+                                  <Flex w="full" color="#7AE7FF">
+                                    <Spacer />
+                                    <Text
+                                      isTruncated
+                                      pr={1}
+                                      fontStyle="italic"
+                                      fontSize={{
+                                        base: "0.875rem",
+                                        "2xl": "1rem",
+                                      }}
+                                    >
+                                      {Object.values(item)[0]}
+                                    </Text>
+                                  </Flex>
+                                </Box>{" "}
+                              </GridItem>
+                            );
+                          })
+                      : ""}
+
+                    {attrsList?.length
+                      ? attrsList
+                          .filter((i) =>
+                            JSON.stringify(Object.values(i)).includes("|")
+                          )
+                          .map((item, idx) => {
+                            return (
+                              <React.Fragment key={idx}>
+                                <Box
+                                  w="full"
+                                  textAlign="left"
+                                  alignItems="end"
+                                  bg="brand.semiBlack"
+                                  px={{ base: "0.5rem", "2xl": "1rem" }}
+                                  py={2}
+                                  // my={2}
+                                  minW="30%"
+                                  maxH={"4.625rem"}
+                                >
+                                  <Flex w="full" my={2}>
+                                    <Heading
+                                      size="h6"
+                                      mt={1}
+                                      color="#fff"
+                                      fontSize={{
+                                        base: "1rem",
+                                        "2xl": "1.125rem",
+                                      }}
+                                    >
+                                      {Object.keys(item)[0]}
+                                    </Heading>
+
+                                    <Spacer />
+                                    <Text color="#fff">
+                                      {
+                                        createLevelAttribute(
+                                          Object.values(item)[0]
+                                        ).level
+                                      }{" "}
+                                      of{" "}
+                                      {
+                                        createLevelAttribute(
+                                          Object.values(item)[0]
+                                        ).levelMax
+                                      }
+                                    </Text>
+                                  </Flex>
+
+                                  <Progress
+                                    colorScheme="telegram"
+                                    size="sm"
+                                    value={Number(
+                                      (createLevelAttribute(
+                                        Object.values(item)[0]
+                                      ).level *
+                                        100) /
+                                        createLevelAttribute(
+                                          Object.values(item)[0]
+                                        ).levelMax
+                                    )}
+                                    height="6px"
+                                  />
+                                </Box>
+                              </React.Fragment>
+                            );
+                          })
+                      : null}
+                  </Grid>
                 </>
               )}
-          </Stack>{" "}
-        </motion.div>
-
-        {attrsList?.length === 0 ? (
-          <>
-            <Text my="3" display={{ base: "none", xl: "block" }}>
-              This NFT have no props/ levels.
-            </Text>
-          </>
-        ) : (
-          <>
-            <Grid
-              display={{ base: "none", xl: "grid" }}
-              boxShadow="lg"
-              maxH={{ base: "8rem", "2xl": "14rem" }}
-              w="full"
-              h="full"
-              templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
-              gap={{ base: "0.5rem", "2xl": "30px" }}
-              pr={"22px"}
-              overflowY="auto"
-              sx={{
-                "&::-webkit-scrollbar": {
-                  width: "4px",
-                  height: "15px",
-                  borderRadius: "1px",
-                  backgroundColor: `#7ae7ff`,
-                },
-                "&::-webkit-scrollbar-thumb": {
-                  backgroundColor: `#7ae7ff`,
-                },
-              }}
-            >
-              {attrsList?.length
-                ? attrsList
-                    .filter(
-                      (i) => !JSON.stringify(Object.values(i)).includes("|")
-                    )
-                    .map((item, idx) => {
-                      return (
-                        <GridItem w="100%" h="100%" key={idx}>
-                          <Box
-                            w="full"
-                            textAlign="left"
-                            alignItems="end"
-                            bg="brand.semiBlack"
-                            px={{ base: "0.5rem", "2xl": "1rem" }}
-                            py={3}
-                          >
-                            <Flex w="full">
-                              <Box color="brand.grayLight" w="full">
-                                <Text>{Object.keys(item)[0]}</Text>
-                                <Heading
-                                  textAlign="right"
-                                  size="h6"
-                                  mt={1}
-                                  // minH="2.5rem"
-                                  isTruncated
-                                  maxW={"10rem"}
-                                  fontSize={{
-                                    base: "0.875rem",
-                                    "2xl": "1rem",
-                                  }}
-                                ></Heading>
-                              </Box>
-                              <Spacer />
-                            </Flex>
-                            <Flex w="full" color="#7AE7FF">
-                              <Spacer />
-                              <Text
-                                isTruncated
-                                pr={1}
-                                fontStyle="italic"
-                                fontSize={{ base: "0.875rem", "2xl": "1rem" }}
-                              >
-                                {Object.values(item)[0]}
-                              </Text>
-                            </Flex>
-                          </Box>{" "}
-                        </GridItem>
-                      );
-                    })
-                : ""}
-
-              {attrsList?.length
-                ? attrsList
-                    .filter((i) =>
-                      JSON.stringify(Object.values(i)).includes("|")
-                    )
-                    .map((item, idx) => {
-                      return (
-                        <React.Fragment key={idx}>
-                          <Box
-                            w="full"
-                            textAlign="left"
-                            alignItems="end"
-                            bg="brand.semiBlack"
-                            px={{ base: "0.5rem", "2xl": "1rem" }}
-                            py={2}
-                            // my={2}
-                            minW="30%"
-                            maxH={"4.625rem"}
-                          >
-                            <Flex w="full" my={2}>
-                              <Heading
-                                size="h6"
-                                mt={1}
-                                color="#fff"
-                                fontSize={{ base: "1rem", "2xl": "1.125rem" }}
-                              >
-                                {Object.keys(item)[0]}
-                              </Heading>
-
-                              <Spacer />
-                              <Text color="#fff">
-                                {
-                                  createLevelAttribute(Object.values(item)[0])
-                                    .level
-                                }{" "}
-                                of{" "}
-                                {
-                                  createLevelAttribute(Object.values(item)[0])
-                                    .levelMax
-                                }
-                              </Text>
-                            </Flex>
-
-                            <Progress
-                              colorScheme="telegram"
-                              size="sm"
-                              value={Number(
-                                (createLevelAttribute(Object.values(item)[0])
-                                  .level *
-                                  100) /
-                                  createLevelAttribute(Object.values(item)[0])
-                                    .levelMax
-                              )}
-                              height="6px"
-                            />
-                          </Box>
-                        </React.Fragment>
-                      );
-                    })
-                : null}
-            </Grid>
-          </>
-        )}
-      </Flex>
-    </Flex>
+            </Stack>
+          </Stack>
+        </Stack>
+      </HStack>
+    </>
   );
 };
 
