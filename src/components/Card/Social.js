@@ -36,8 +36,23 @@ function SocialCard({ profile, pos, right, top, bottom, justifyContent }) {
       {profile?.map((i, idx) => {
         return (
           <Fragment key={idx}>
-            <Link isexternal="true" href={`${Object.values(i)[0]}`}>
+            {Object.values(i)[0] ? (
+              <Link isExternal href={`${Object.values(i)[0] || null}`}>
+                <IconButton
+                  aria-label={Object.keys(i)[0]}
+                  icon={iconList[Object.keys(i)[0]]}
+                  size="icon"
+                  variant="iconOutline"
+                  _hover={{
+                    bg: "#7ae7ff",
+                    color: "black",
+                    borderWidth: "0",
+                  }}
+                />
+              </Link>
+            ) : (
               <IconButton
+                isDisabled
                 aria-label={Object.keys(i)[0]}
                 icon={iconList[Object.keys(i)[0]]}
                 size="icon"
@@ -48,7 +63,7 @@ function SocialCard({ profile, pos, right, top, bottom, justifyContent }) {
                   borderWidth: "0",
                 }}
               />
-            </Link>
+            )}
           </Fragment>
         );
       })}
