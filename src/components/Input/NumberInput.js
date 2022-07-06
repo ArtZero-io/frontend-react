@@ -15,36 +15,42 @@ export default function AddCollectionNumberInput({
   label,
   name,
   isDisabled,
-  isDisplay,
+  isDisplay = true,
   inputWidth,
-  maxRoyalFeeRate,
+  max,
+  hasStepper = true,
+  precision = 2,
+  step=0.5
+,
   ...props
 }) {
   return (
     <Box style={{ display: isDisplay ? "block" : "none" }}>
-      <Field name="royalFee">
+      <Field name={name}>
         {({ field, form }) => (
           <FormControl id={name}>
-            <FormLabel ml={1} htmlFor="royalFee">
+            <FormLabel ml={1} htmlFor={name}>
               {label}
             </FormLabel>
             <NumberInput
-              w={inputWidth}
-              isDisabled={isDisabled}
-              id={name}
-              min={0}
-              max={maxRoyalFeeRate}
-              precision={2}
-              step={0.5}
-              bg="black"
               {...field}
+              min={0}
+              id={name}
+              bg="black"
+              step={step}
+              w={inputWidth}
+              max={max}
+              precision={precision}
+              isDisabled={isDisabled}
               onChange={(val) => form.setFieldValue(field.name, val)}
             >
               <NumberInputField borderRadius="0" h={12} />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
+              {hasStepper && (
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              )}
             </NumberInput>
           </FormControl>
         )}

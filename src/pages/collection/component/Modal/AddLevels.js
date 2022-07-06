@@ -125,19 +125,7 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
                         type="number"
                         placeholder="5"
                       />
-                      {/* //TODO Replace by Number Input later */}
-                      {/* <AddCollectionNumberInput
-                        name={`levels.${index}.levelMax`}
-                        type="number"
-                        placeholder="Max level here"
-                      /> */}
-                      {/* <LevelsNumberInput
-                        mx={5}
-                        height={16}
-                        autoComplete="off"
-                        name={`levels.${index}.levelMax`}
-                        placeholder="Max level here"
-                      /> */}
+
                       <IconButton
                         aria-label="Delete"
                         icon={<DeleteIcon fontSize="24px" />}

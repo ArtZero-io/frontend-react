@@ -13,7 +13,7 @@ import SimpleModeSwitch from "@components/Switch/Switch";
 import { useSubstrateState } from "@utils/substrate";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 
-import AddCollectionNumberInput from "../NumberInput";
+import AddCollectionNumberInput from "@components/Input/NumberInput";
 import { clientAPI } from "@api/client";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import { AccountActionTypes } from "@store/types/account.types";
@@ -425,7 +425,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                     <AddCollectionNumberInput
                       isDisabled={!isSetRoyal || addCollectionTnxStatus}
                       isDisplay={isSetRoyal}
-                      maxRoyalFeeRate={maxRoyalFeeRate}
+                      max={maxRoyalFeeRate}
                       label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
                       name="royalFee"
                       type="number"

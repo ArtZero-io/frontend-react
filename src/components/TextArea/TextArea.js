@@ -5,8 +5,8 @@ import { FormControl, FormLabel, Textarea, Text } from "@chakra-ui/react";
 
 export default function SimpleModeTextarea({
   label,
-  height,
-  width,
+  height = "112px",
+  width = "full",
   isRequired = false,
   ...props
 }) {
@@ -15,9 +15,9 @@ export default function SimpleModeTextarea({
     <FormControl
       isRequired={isRequired}
       fontSize="lg"
-      h={height || 28}
+      h={height}
       color="#fff"
-      w={width || "full"}
+      w={width}
     >
       <FormLabel fontSize="lg" ml={1} htmlFor={props.id || props.name}>
         {label}
