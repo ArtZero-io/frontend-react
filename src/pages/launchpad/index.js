@@ -1,15 +1,13 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 import Layout from "@components/Layout/Layout";
 import { GroupCard } from "./component/GroupCard";
-import { useEffect } from "react";
 import React, { useEffect, useState } from "react";
-import Layout from "@components/Layout/Layout";
-import { GroupCard } from "./component/GroupCard";
 import { useSubstrateState } from "@utils/substrate";
 import { timestampWithoutCommas } from "@utils";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 
 export const LaunchpadPage = () => {
+  // eslint-disable-next-line no-unused-vars
   const { currentAccount } = useSubstrateState();
 
   const [liveProjects, setLiveProjects] = useState([]);
@@ -85,7 +83,7 @@ export const LaunchpadPage = () => {
   );
 };
 
-export const getLaunchpadProjects = () => {
+export const getLaunchpadProjects = async ({ currentAccount }) => {
   // call the smart contract to get the list of all projects
   // return the list of projects with status is live, upcoming or ended
   const projectCount = await launchpad_contract_calls.getProjectCount(
@@ -110,12 +108,12 @@ export const getLaunchpadProjects = () => {
     if (
       timestampWithoutCommas(project.startTime) < currentTime &&
       currentTime < timestampWithoutCommas(project.endTime) &&
-      project.projectType == 2
+      project.projectType === 2
     ) {
       liveProjectsArr.push(project);
     } else if (
       currentTime < timestampWithoutCommas(project.startTime) &&
-      project.projectType == 2
+      project.projectType === 2
     ) {
       upcomingProjectsArr.push(project);
     } else {
