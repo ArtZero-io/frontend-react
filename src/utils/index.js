@@ -53,6 +53,10 @@ export function isValidImage(imageUrl) {
   }
 }
 
+export function timestampWithoutCommas(input) {
+  return input.replace(/,/g, '');
+}
+
 export function convertDateToTimeStamp(dateStr) {
   const date = new Date(dateStr);
   return date.getTime();

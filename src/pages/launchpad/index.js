@@ -1,10 +1,17 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
 import Layout from "@components/Layout/Layout";
 import { GroupCard } from "./component/GroupCard";
 import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import Layout from "@components/Layout/Layout";
+import { GroupCard } from "./component/GroupCard";
+import { useSubstrateState } from "@utils/substrate";
+import { timestampWithoutCommas } from "@utils";
+import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 
 export const LaunchpadPage = () => {
+  const { currentAccount } = useSubstrateState();
+
   const [liveProjects, setLiveProjects] = useState([]);
   const [upcomingProjects, setUpcomingProjects] = useState([]);
   const [endedProjects, setEndedProjects] = useState([]);
@@ -23,6 +30,35 @@ export const LaunchpadPage = () => {
 
     fetchData();
   }, []);
+  // const [isLoadedProject, setIsLoadedProject] = useState(false);
+
+  // useEffect(async () => {
+  //   if (!isLoadedProject) {
+  //     const projectCount = await launchpad_contract_calls.getProjectCount(currentAccount);
+  //     console.log(projectCount);
+  //     let liveProjectsArr = [];
+  //     let upcomingProjectsArr = [];
+  //     let endedProjectsArr = [];
+  //     for (let i = 1; i <= projectCount; i++) {
+  //       const nftAddress = await launchpad_contract_calls.getProjectById(currentAccount, i);
+  //       console.log(nftAddress);
+  //       const project = await launchpad_contract_calls.getProjectByNftAddress(currentAccount, nftAddress);
+  //       console.log(project);
+  //       const currentTime = Date.now();
+  //       if (timestampWithoutCommas(project.startTime) < currentTime && currentTime < timestampWithoutCommas(project.endTime) && project.projectType == 2) {
+  //         liveProjectsArr.push(project);
+  //       } else if (currentTime < timestampWithoutCommas(project.startTime) && project.projectType == 2) {
+  //         upcomingProjectsArr.push(project);
+  //       } else {
+  //         endedProjectsArr.push(project);
+  //       }
+  //     }
+  //     setLiveProjects(liveProjectsArr);
+  //     setUpcomingProjects(upcomingProjectsArr);
+  //     setEndedProjects(endedProjectsArr);
+  //     setIsLoadedProject(true);
+  //   }
+  // }, [isLoadedProject]);
 
   return (
     <Layout>
@@ -31,21 +67,61 @@ export const LaunchpadPage = () => {
           launchpad
         </Heading>
         <Text maxW="360px" fontSize="lg" mx="auto">
-          Dolore sint in sit enim proident ullamco quis eu veniam. Dolore sintin proident ullamco quis.
+          Dolore sint in sit enim proident ullamco quis eu veniam. Dolore sintin
+          proident ullamco quis.
         </Text>
       </Box>
 
       <GroupCard variant="live" projectsList={liveProjects} />
 
       <GroupCard variant="upcoming" projectsList={upcomingProjects} />
-      
+
       <GroupCard variant="ended" projectsList={endedProjects} />
+
+      {/* <GroupCard projects={liveProjects} variant="live" />
+      <GroupCard projects={upcomingProjects} variant="upcoming" />
+      <GroupCard projects={endedProjects} variant="ended" /> */}
     </Layout>
   );
 };
 
 export const getLaunchpadProjects = () => {
   // call the smart contract to get the list of all projects
+  // return the list of projects with status is live, upcoming or ended
+  const projectCount = await launchpad_contract_calls.getProjectCount(
+    currentAccount
+  );
+  console.log(projectCount);
+  let liveProjectsArr = [];
+  let upcomingProjectsArr = [];
+  let endedProjectsArr = [];
+  for (let i = 1; i <= projectCount; i++) {
+    const nftAddress = await launchpad_contract_calls.getProjectById(
+      currentAccount,
+      i
+    );
+    console.log(nftAddress);
+    const project = await launchpad_contract_calls.getProjectByNftAddress(
+      currentAccount,
+      nftAddress
+    );
+    console.log(project);
+    const currentTime = Date.now();
+    if (
+      timestampWithoutCommas(project.startTime) < currentTime &&
+      currentTime < timestampWithoutCommas(project.endTime) &&
+      project.projectType == 2
+    ) {
+      liveProjectsArr.push(project);
+    } else if (
+      currentTime < timestampWithoutCommas(project.startTime) &&
+      project.projectType == 2
+    ) {
+      upcomingProjectsArr.push(project);
+    } else {
+      endedProjectsArr.push(project);
+    }
+  }
 
   return projectsList;
 };

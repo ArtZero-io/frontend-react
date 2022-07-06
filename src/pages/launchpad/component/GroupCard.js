@@ -36,9 +36,6 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
   const [endTime, setEndTime] = useState("");
   const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
-  const [liveProjects, setLiveProjects] = useState([]);
-  const [endProjects, setEndProjects] = useState([]);
-  const [isLoadedProject, setIsLoadedProject] = useState(false);
   const {
     isOpen: isOpenAddNew,
     onOpen: onOpenAddProject,
@@ -121,9 +118,8 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
         </Flex>
 
         <Flex justifyContent="space-between">
-          {projectsList.map((p) => (
-            <Card key={p.name} project={p} />
-          ))}
+          {projectsList.length &&
+            projectsList.map((p) => <Card key={p.name} project={p} />)}
         </Flex>
 
         <Flex

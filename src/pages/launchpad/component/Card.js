@@ -18,7 +18,7 @@ import { getCachedImageShort, secondsToTime } from "@utils/index";
 import * as ROUTES from "@constants/routes";
 import useInterval from "use-interval";
 
-export const Card = ({ project }) => {
+export const Card = ({ variant, project, collection_address = "abc" }) => {
   const history = useHistory();
   const [countdown, setCountdown] = useState(null);
 
