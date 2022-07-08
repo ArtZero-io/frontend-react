@@ -45,7 +45,10 @@ const MyStakesPage = () => {
   const fetchCollectionDetail = useCallback(async () => {
     setLoading(true);
     try {
-      const stakedCount = await fetchMyPMPStakedCount(currentAccount);
+      const stakedCount = await fetchMyPMPStakedCount(
+        currentAccount,
+        staking_calls
+      );
 
       const pendingCount = await fetchMyPMPPendingCount(currentAccount);
 
@@ -53,7 +56,11 @@ const MyStakesPage = () => {
 
       const totalCount = stakedCount + pendingCount + unstakedCount;
 
-      const myTradingFee = await fetchMyTradingFee(stakedCount, currentAccount);
+      const myTradingFee = await fetchMyTradingFee(
+        stakedCount,
+        currentAccount,
+        marketplace_contract_calls
+      );
 
       const fee = await fetchPlatformTradingFee(currentAccount);
       setPlatformTradingFee(fee);
@@ -127,7 +134,7 @@ const MyStakesPage = () => {
 
     forceUpdate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [dispatch, txStatus]);
+  }, [dispatch, txStatus]);
 
   const refresh = () => {
     fetchCollectionDetail();
@@ -246,7 +253,7 @@ export const createNumberBN = (num, pow = 1) => {
     : new BN(numPF, 10).pow(new BN(powPF));
 };
 
-export const fetchMyPMPStakedCount = async (currentAccount) => {
+export const fetchMyPMPStakedCount = async (currentAccount, staking_calls) => {
   return await staking_calls.getTotalStakedByAccount(
     currentAccount,
     currentAccount.address
@@ -267,14 +274,20 @@ export const fetchMyPMPUnstakedCount = async (currentAccount) => {
   );
 };
 
-export const fetchPlatformStakingDiscountStep = async (currentAccount) => {
+export const fetchPlatformStakingDiscountStep = async (
+  currentAccount,
+  marketplace_contract_calls
+) => {
   const response = await marketplace_contract_calls.getStakingDiscountCriteria(
     currentAccount
   );
   return Array.from(response);
 };
 
-export const fetchPlatformStakingDiscountRate = async (currentAccount) => {
+export const fetchPlatformStakingDiscountRate = async (
+  currentAccount,
+  marketplace_contract_calls
+) => {
   const response = await marketplace_contract_calls.getStakingDiscountRate(
     currentAccount
   );
@@ -286,7 +299,10 @@ export const fetchPlatformStakingDiscountRate = async (currentAccount) => {
   return ret;
 };
 
-export const fetchPlatformTradingFee = async (currentAccount) => {
+export const fetchPlatformTradingFee = async (
+  currentAccount,
+  marketplace_contract_calls
+) => {
   const response = await marketplace_contract_calls.getPlatformFee(
     currentAccount
   );
@@ -294,12 +310,27 @@ export const fetchPlatformTradingFee = async (currentAccount) => {
   return response / 100;
 };
 
-export const fetchMyTradingFee = async (PMPStaked, currentAccount) => {
+export const fetchMyTradingFee = async (
+  PMPStaked,
+  currentAccount,
+  marketplace_contract_calls
+) => {
   let ret;
 
-  const stepArr = await fetchPlatformStakingDiscountStep(currentAccount);
-  const rateArr = await fetchPlatformStakingDiscountRate(currentAccount);
-  const platformTradingFee = await fetchPlatformTradingFee(currentAccount);
+  const stepArr = await fetchPlatformStakingDiscountStep(
+    currentAccount,
+    marketplace_contract_calls
+  );
+  const rateArr = await fetchPlatformStakingDiscountRate(
+    currentAccount,
+    marketplace_contract_calls
+  );
+  const platformTradingFee = await fetchPlatformTradingFee(
+    currentAccount,
+    marketplace_contract_calls
+  );
+
+  ret = platformTradingFee;
 
   for (var i = 0; i < stepArr.length; i++) {
     if (PMPStaked >= stepArr[i]) {
@@ -307,6 +338,7 @@ export const fetchMyTradingFee = async (PMPStaked, currentAccount) => {
       break;
     }
   }
+
   return ret && ret.toFixed(2);
 };
 
