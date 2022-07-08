@@ -26,18 +26,24 @@ function EventTable({ tableHeaders, tableData }) {
       ) : (
         <TableContainer
           fontSize="lg"
-          w="1100px"
+          w={{ base: "1100px", "2xl": "1560px" }}
           h={{ base: "390px", "2xl": "480px" }}
           overflowY="scroll"
           sx={{
             "&::-webkit-scrollbar": {
-              width: "0.3rem",
-              height: "0.3rem",
-              borderRadius: "1px",
-              backgroundColor: `#7ae7ff`,
+              width: "4px",
+              height: "4px",
+              borderRadius: "0px",
+              backgroundColor: `transparent`,
             },
             "&::-webkit-scrollbar-thumb": {
               backgroundColor: `#7ae7ff`,
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: `#7ae7ff`,
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: `transparent`,
             },
           }}
         >
