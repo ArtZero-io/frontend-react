@@ -51,9 +51,15 @@ const MyStakesPage = () => {
         staking_calls
       );
 
-      const pendingCount = await fetchMyPMPPendingCount(currentAccount);
+      const pendingCount = await fetchMyPMPPendingCount(
+        currentAccount,
+        staking_calls
+      );
 
-      const unstakedCount = await fetchMyPMPUnstakedCount(currentAccount);
+      const unstakedCount = await fetchMyPMPUnstakedCount(
+        currentAccount,
+        artzero_nft_calls
+      );
 
       const totalCount = stakedCount + pendingCount + unstakedCount;
 
@@ -62,8 +68,10 @@ const MyStakesPage = () => {
         currentAccount,
         marketplace_contract_calls
       );
-
-      const fee = await fetchPlatformTradingFee(currentAccount);
+      const fee = await fetchPlatformTradingFee(
+        currentAccount,
+        marketplace_contract_calls
+      );
       setPlatformTradingFee(fee);
 
       const stats = {
@@ -276,14 +284,17 @@ export const fetchMyPMPStakedCount = async (currentAccount, staking_calls) => {
   );
 };
 
-export const fetchMyPMPPendingCount = async (currentAccount) => {
+export const fetchMyPMPPendingCount = async (currentAccount, staking_calls) => {
   return await staking_calls.getTotalPendingUnstakedByAccount(
     currentAccount,
     currentAccount.address
   );
 };
 
-export const fetchMyPMPUnstakedCount = async (currentAccount) => {
+export const fetchMyPMPUnstakedCount = async (
+  currentAccount,
+  artzero_nft_calls
+) => {
   return await artzero_nft_calls.balanceOf(
     currentAccount,
     currentAccount.address
