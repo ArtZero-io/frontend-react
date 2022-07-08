@@ -178,7 +178,7 @@ function TabActivity({ tokenUriType1, latestBlockNumber }) {
         {!platformEvents?.events ? (
           <AnimationLoader loadingTime={5} />
         ) : (
-          <TabPanels h="full" minH="md" bg="#171717">
+          <TabPanels h="full" minH="md">
             {tabData.map((tab, index) => (
               <TabPanel p="0px" key={index}>
                 {tab.content}
