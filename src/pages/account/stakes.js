@@ -8,6 +8,7 @@ import {
   Text,
   HStack,
   Button,
+  Stack,
 } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
 
@@ -126,6 +127,12 @@ const MyStakesPage = () => {
         txStatus?.requestUnstakeStatus === FINALIZED
       ) {
         await delay(6000).then(() => {
+          txStatus?.stakeStatus && setActiveTab(tabList.STAKED);
+          txStatus?.cancelRequestUnstakeStatus && setActiveTab(tabList.STAKED);
+          txStatus?.requestUnstakeStatus &&
+            setActiveTab(tabList.PENDING_UNSTAKE);
+          txStatus?.unstakeStatus && setActiveTab(tabList.NOT_STAKED);
+
           dispatch(clearTxStatus());
           refresh();
         });
@@ -215,22 +222,31 @@ const MyStakesPage = () => {
               </motion.div>
             ))}
         </HStack>
-
-        {loading ? (
-          <AnimationLoader />
-        ) : PMPCollectionDetail?.listNFT?.length === 0 ? (
-          <Heading py="3rem" size="h6">
-            No NFTs found
-          </Heading>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            {<MyNFTGroupCard {...PMPCollectionDetail} />}
-          </motion.div>
-        )}
+        <Stack minHeight="504px" h="full">
+          {loading ? (
+            <Stack h="574px">
+              <AnimationLoader />
+            </Stack>
+          ) : PMPCollectionDetail?.listNFT?.length === 0 ? (
+            <Heading py="3rem" size="h6">
+              No NFTs found
+            </Heading>
+          ) : (
+            <motion.div
+              style={{ minHeight: "574px" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              {
+                <MyNFTGroupCard
+                  {...PMPCollectionDetail}
+                  hasBottomBorder={false}
+                />
+              }
+            </motion.div>
+          )}
+        </Stack>
       </Box>
     </Box>
   );

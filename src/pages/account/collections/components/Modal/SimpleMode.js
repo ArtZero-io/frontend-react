@@ -135,12 +135,19 @@ function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
             overflowY="auto"
             sx={{
               "&::-webkit-scrollbar": {
-                width: "0.3rem",
-                borderRadius: "1px",
-                backgroundColor: `#7ae7ff`,
+                width: "4px",
+                height: "4px",
+                borderRadius: "0px",
+                backgroundColor: `transparent`,
               },
               "&::-webkit-scrollbar-thumb": {
                 backgroundColor: `#7ae7ff`,
+              },
+              "&::-webkit-scrollbar-thumb:hover": {
+                backgroundColor: `#7ae7ff`,
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: `transparent`,
               },
             }}
           >

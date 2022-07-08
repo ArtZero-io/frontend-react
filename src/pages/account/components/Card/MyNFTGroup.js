@@ -28,6 +28,7 @@ function MyNFTGroupCard({
   showOnChainMetadata,
   filterSelected,
   nftContractAddress,
+  hasBottomBorder = false,
   ...rest
 }) {
   const { currentAccount, api } = useSubstrateState();
@@ -149,14 +150,14 @@ function MyNFTGroupCard({
           align="start"
           ml={3}
           justifyContent="center"
-          borderBottomWidth={1}
+          borderBottomWidth={hasBottomBorder ? "1px" : "0px"}
         >
           <Text textAlign="center" color="brand.grayLight" size="2xs">
             No NFT found
           </Text>
         </VStack>
       ) : (
-        <Box borderBottomWidth={1}>
+        <Box borderBottomWidth={hasBottomBorder ? "1px" : "0px"}>
           <GridNftA
             listNFTFormatted={listNFTFormatted}
             onClickHandler={onClickHandler}
@@ -196,7 +197,7 @@ function GridNftA({
         // gridAutoRows: "20.625rem",
         gridAutoFlow: "dense",
         gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, 224px), 1fr))`,
-        borderBottom: "0.125rem",
+        // borderBottom: "0.125rem",
         justifyItems: "center",
       }}
     >

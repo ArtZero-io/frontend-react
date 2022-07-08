@@ -339,25 +339,30 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 export default AddNewProjectForm;
 
 export const fetchUserBalance = async ({ currentAccount, api }) => {
-  const {
-    data: { free: balance },
-  } = await api.query.system.account(currentAccount?.address);
+  if (currentAccount) {
+    const {
+      data: { free: balance },
+    } = await api.query.system.account(currentAccount?.address);
 
-  const [chainDecimals] = await api.registry.chainDecimals;
+    const [chainDecimals] = await api.registry.chainDecimals;
 
-  // return balance with 4 digits after decimal
-  const formattedStrBal = formatBalance(
-    balance,
-    { withSi: false, forceUnit: "-" },
-    chainDecimals
-  );
+    // return balance with 4 digits after decimal
+    const formattedStrBal = formatBalance(
+      balance,
+      { withSi: false, forceUnit: "-" },
+      chainDecimals
+    );
 
-  const formattedNumBal = formattedStrBal.replaceAll(",", "") * 1;
+    const formattedNumBal = formattedStrBal.replaceAll(",", "") * 1;
 
-  return { balance: formattedNumBal };
+    return { balance: formattedNumBal };
+  }
 };
 
-export const fetchInitialValuesProject = async ({ mode, collection_address }) => {
+export const fetchInitialValuesProject = async ({
+  mode,
+  collection_address,
+}) => {
   let initialValues = {
     isEditMode: false,
     nftName: "",

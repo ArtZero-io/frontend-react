@@ -33,7 +33,7 @@ function ContractTab() {
 
   const [art0_NFT_owner, setArt0NFTOwner] = useState("");
   const [azAdmin, setAZAdmin] = useState("");
-  const [mintMode,setMintMode] = useState(0);
+  const [mintMode, setMintMode] = useState(0);
   const [whitelistAmount, setWhitelistAmount] = useState(1);
   const [whitelistAddress, setWhitelistAddress] = useState("");
   const [whitelistCount, setWhitelistCount] = useState(0);
@@ -42,7 +42,6 @@ function ContractTab() {
   const [azNFTContractBalance, setAzNFTContractBalance] = useState(0);
 
   const onRefreshAZNFT = async () => {
-
     await getAZNFTContractBalance();
     await onGetOwner();
 
@@ -64,7 +63,7 @@ function ContractTab() {
       artzero_nft.CONTRACT_ADDRESS
     );
     setAzNFTContractBalance(
-      new BN(balance.free, 10, "le").div(new BN(10**6)).toNumber() / 10 ** 6
+      new BN(balance.free, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6
     );
   };
   const getAllWhiteList = async (e) => {
@@ -418,13 +417,19 @@ function ContractTab() {
                 overflow="auto"
                 sx={{
                   "&::-webkit-scrollbar": {
-                    width: "0.3rem",
-                    height: "0.3rem",
-                    borderRadius: "1px",
-                    backgroundColor: `#7ae7ff`,
+                    width: "4px",
+                    height: "4px",
+                    borderRadius: "0px",
+                    backgroundColor: `transparent`,
                   },
                   "&::-webkit-scrollbar-thumb": {
                     backgroundColor: `#7ae7ff`,
+                  },
+                  "&::-webkit-scrollbar-thumb:hover": {
+                    backgroundColor: `#7ae7ff`,
+                  },
+                  "&::-webkit-scrollbar-track": {
+                    backgroundColor: `transparent`,
                   },
                 }}
               >

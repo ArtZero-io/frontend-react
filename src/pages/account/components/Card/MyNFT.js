@@ -90,7 +90,7 @@ function MyNFTCard({
 
   async function stakeAction(stakeStatus) {
     if (stakeStatus === 1) {
-      dispatch(setTxStatus({ txType: STAKE, txStatus: START }));
+      dispatch(setTxStatus({ txType: STAKE, txStatus: START, tokenID }));
 
       let allowance = await artzero_nft_calls.allowance(
         currentAccount,
@@ -128,7 +128,9 @@ function MyNFTCard({
     }
 
     if (stakeStatus === 2) {
-      dispatch(setTxStatus({ txType: REQUEST_UNSTAKE, txStatus: START }));
+      dispatch(
+        setTxStatus({ txType: REQUEST_UNSTAKE, txStatus: START, tokenID })
+      );
       //Token is staked, Request Unstake Now
       toast.success("Request Unstaking NFT...");
 
@@ -141,7 +143,7 @@ function MyNFTCard({
       );
     } else if (stakeStatus === 3) {
       if (isUnstakeTime) {
-        dispatch(setTxStatus({ txType: UNSTAKE, txStatus: START }));
+        dispatch(setTxStatus({ txType: UNSTAKE, txStatus: START, tokenID }));
 
         toast.success("Unstaking NFT...");
         await staking_calls.unstake(
@@ -153,7 +155,11 @@ function MyNFTCard({
         );
       } else {
         dispatch(
-          setTxStatus({ txType: CANCEL_REQUEST_UNSTAKE, txStatus: START })
+          setTxStatus({
+            txType: CANCEL_REQUEST_UNSTAKE,
+            txStatus: START,
+            tokenID,
+          })
         );
 
         toast("Cancel Unstaking Request...");
@@ -220,13 +226,8 @@ function MyNFTCard({
           {!is_for_sale && stakeStatus !== 0 ? (
             <Flex align="center" justify="start" w="full">
               <Button
-                isLoading={
-                  txStatus?.stakeStatus ||
-                  txStatus?.unstakeStatus ||
-                  txStatus?.cancelRequestUnstakeStatus ||
-                  txStatus?.requestUnstakeStatus
-                }
-                loadingText={
+                isLoading={txStatus?.tokenID === tokenID}
+                isDisabled={
                   txStatus?.stakeStatus ||
                   txStatus?.unstakeStatus ||
                   txStatus?.cancelRequestUnstakeStatus ||
