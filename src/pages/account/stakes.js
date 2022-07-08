@@ -375,6 +375,9 @@ export const getMyUnstakePMP = async ({ owner, collection_address }) => {
   const dataList = await clientAPI("post", "/getNFTsByOwnerAndCollection", {
     collection_address,
     owner,
+    limit: 10000,
+    offset: 0,
+    sort: -1,
   });
 
   if (dataList.length === 0) return ret;
