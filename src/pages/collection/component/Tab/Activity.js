@@ -60,6 +60,14 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
           { u64: tokenID }
         );
 
+        //sort highest price first
+        listBidder.sort((a, b) => {
+          return (
+            b.bidValue.replaceAll(",", "") * 1 -
+            a.bidValue.replaceAll(",", "") * 1
+          );
+        });
+
         listBidder ? setBidders(listBidder) : setBidders([]);
       }
     };
