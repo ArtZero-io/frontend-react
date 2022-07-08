@@ -1,7 +1,3 @@
-import React, { useState } from "react";
-
-import Layout from "@components/Layout/Layout";
-import LaunchpadDetailHeader from "../component/Header";
 import {
   Box,
   Button,
@@ -19,11 +15,19 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
+import React, { useState } from "react";
+
+import Layout from "@components/Layout/Layout";
+import LaunchpadDetailHeader from "../component/Header";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { TeamCard } from "../component/TeamCard";
+import { useParams } from "react-router-dom";
 
 function LaunchpadDetailPage() {
   const [formattedCollection] = useState(null);
+  const { collection_address } = useParams();
+
+  console.log("collection_address", collection_address);
 
   return (
     <Layout

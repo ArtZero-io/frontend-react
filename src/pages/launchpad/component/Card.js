@@ -4,33 +4,66 @@ import {
   Circle,
   Flex,
   Heading,
+  HStack,
   Image,
   Progress,
   Skeleton,
   Square,
   Text,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useHistory } from "react-router-dom";
+import { getCachedImageShort, secondsToTime } from "@utils/index";
+import * as ROUTES from "@constants/routes";
+import useInterval from "use-interval";
 
-export const Card = ({ variant, collection_address = "abc" }) => {
+export const Card = ({ variant, project, collection_address = "abc" }) => {
   const history = useHistory();
+  const [countdown, setCountdown] = useState(null);
+
+  const {
+    status,
+    avatarImage,
+    progressPercent,
+    name,
+    nftContractAddress,
+    // countdownTime, fake below
+  } = project;
+
+  useInterval(() => {
+    if (status !== "upcoming") {
+      return;
+    }
+
+    let now = new Date().getTime() / 1000;
+    //fake countdown time
+    const timeLeft = 16529721963 + progressPercent - now;
+
+    if (timeLeft <= 0) {
+      setCountdown({ h: 0, m: 0, s: 0 });
+      return;
+    }
+
+    const timeLeftString = secondsToTime(timeLeft);
+
+    timeLeftString && setCountdown(timeLeftString);
+  }, 1000);
 
   return (
     <Flex
-      direction="column"
-      align="center"
-      textAlign="center"
-      bg="brand.grayDark"
-      shadow="lg"
       h="full"
       w="full"
+      shadow="lg"
       maxW="288px"
       minH="450px"
+      align="center"
+      direction="column"
+      textAlign="center"
+      bg="brand.grayDark"
       position="relative"
     >
-      {variant === "live" && (
+      {status === "live" && (
         <Flex
           alignItems="start"
           justifyContent="flex-start"
@@ -74,7 +107,8 @@ export const Card = ({ variant, collection_address = "abc" }) => {
           <Text mt="2px">Live</Text>
         </Flex>
       )}
-      {variant === "upcoming" && (
+
+      {status === "upcoming" && (
         <Flex
           alignItems="center"
           justifyContent="center"
@@ -88,7 +122,8 @@ export const Card = ({ variant, collection_address = "abc" }) => {
           <Text mx="10px">Upcoming</Text>
         </Flex>
       )}
-      {variant === "ended" && (
+
+      {status === "ended" && (
         <Flex
           alignItems="center"
           justifyContent="center"
@@ -109,39 +144,44 @@ export const Card = ({ variant, collection_address = "abc" }) => {
           w="full"
           h="full"
           objectFit="cover"
-          src="https://api.artzero.io/getImage?input=ipfs://QmdFprEsYt3yDkPrgqCqzZBdGD3ScVUUU9gwPnXRZD6KpN/49.png&size=500&url=https://ipfs.infura.io/ipfs/QmdFprEsYt3yDkPrgqCqzZBdGD3ScVUUU9gwPnXRZD6KpN/49.png"
+          src={getCachedImageShort(avatarImage, 500)}
           fallback={<Skeleton w="288px" h="288px" />}
         />
       </Square>
+
       <Box w="full" px="16px" py="20px">
-        {variant === "live" && (
-          <Progress w="258px" h="8px" value={80} mb="12px" />
+        {status === "live" && (
+          <Progress w="258px" h="8px" value={progressPercent / 100} mb="12px" />
         )}
+
         <Heading
-          mt={variant === "live" ? "20px" : 0}
+          mt={status === "live" ? "20px" : 0}
           mb="14px"
           fontSize={["15px", "16px", "17px"]}
           textAlign="center"
         >
-          Millionaire Mafia Club{" "}
+          {name}
         </Heading>
 
-        {variant === "upcoming" && (
-          <Flex
+        {status === "upcoming" && (
+          <HStack
             alignItems="center"
-            justifyContent="space-between"
+            justifyContent="center"
             minH="30px"
             w="full"
             my="15px"
           >
-            <Text mx="10px">01 day</Text>
+            <Text mx="10px">
+              {Math.ceil(countdown?.h / 24)} day
+              {Math.ceil(countdown?.h / 24) > 1 ? "s" : ""}
+            </Text>
             <Text>:</Text>
-            <Text mx="10px">23 hrs</Text>
+            <Text mx="10px">{countdown?.h % 24} hrs</Text>
             <Text>:</Text>
-            <Text mx="10px">23 min</Text>
+            <Text mx="10px">{countdown?.m} min</Text>
             <Text>:</Text>
-            <Text mx="10px">23 sec</Text>
-          </Flex>
+            <Text mx="10px">{countdown?.s} s</Text>
+          </HStack>
         )}
 
         <Button
@@ -150,16 +190,23 @@ export const Card = ({ variant, collection_address = "abc" }) => {
           variant="outline"
           w="full"
           onClick={() =>
-            history.push(
-              "/launchpad/5FoLoL5mYXpBwxJUMDo3tcwh5VTrzaz3LvbA4B7LiivjXV7C"
-            )
+            history.push(`${ROUTES.LAUNCHPAD_BASE}/${nftContractAddress}`)
           }
         >
           view project
         </Button>
-        {variant === "ended" && (
-          <Button mt="10px" variant="outline" w="full">
-            secondary market{" "}
+        {status === "ended" && (
+          <Button
+            mt="10px"
+            variant="outline"
+            w="full"
+            onClick={() =>
+              history.push(
+                `${ROUTES.DETAIL_COLLECTION_BASE}/${nftContractAddress}`
+              )
+            }
+          >
+            secondary market
           </Button>
         )}
       </Box>
