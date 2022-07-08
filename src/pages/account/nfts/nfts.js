@@ -294,6 +294,7 @@ const MyNFTsPage = () => {
                     {...item}
                     key={idx}
                     filterSelected={filterSelected}
+                    hasBottomBorder={true}
                   />
                 );
               })}
