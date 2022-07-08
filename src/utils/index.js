@@ -53,6 +53,15 @@ export function isValidImage(imageUrl) {
   }
 }
 
+export function timestampWithoutCommas(input) {
+  return input.replace(/,/g, "");
+}
+
+export function convertDateToTimeStamp(dateStr) {
+  const date = new Date(dateStr);
+  return date.getTime();
+}
+
 export function convertStringToPrice(stringPrice) {
   try {
     /* eslint-disable no-useless-escape */
@@ -283,6 +292,7 @@ export function handleContractCallAddNftAnimation(
 
   if (!dispatchError && status) {
     const statusToHuman = Object.entries(status.toHuman());
+    const url = `https://test.azero.dev/#/explorer/query/`;
 
     if (Object.keys(status.toHuman())[0] === "0") {
       dispatch({
@@ -291,6 +301,11 @@ export function handleContractCallAddNftAnimation(
       });
     } else {
       const finalizedTimeStamp = Date.now();
+      // https://test.azero.dev/#/explorer/query/0x82d154d0ecb07080e42d50ba916060baacf0925553db3e48e643eb3575c68238
+
+      if (statusToHuman[0][0] === "Finalized") {
+        console.log("Tx finalized at ", `${url}${statusToHuman[0][1]}`);
+      }
 
       dispatch({
         type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,

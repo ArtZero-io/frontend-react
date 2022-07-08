@@ -1,8 +1,24 @@
-import { Box, Button, Flex, Heading, Spacer } from "@chakra-ui/react";
+/* eslint-disable no-unused-vars */
+import {
+  Button,
+  Flex,
+  Heading,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Spacer,
+  useDisclosure,
+  Box,
+  HStack,
+} from "@chakra-ui/react";
+import { useState } from "react";
 import React from "react";
 import { Card } from "./Card";
 
-export const GroupCard = ({ variant = "live" }) => {
+export const GroupCard = ({ variant = "live", projectsList }) => {
   return (
     <>
       <Box
@@ -35,22 +51,27 @@ export const GroupCard = ({ variant = "live" }) => {
         </Flex>
 
         <Flex justifyContent="space-between">
-          <Card variant={variant} />
-          <Card variant={variant} />
-          <Card variant={variant} />
-          <Card variant={variant} />
+          {projectsList.length ? (
+            projectsList.map((p) => <Card key={p.name} project={p} />)
+          ) : (
+            <HStack justify="center" w="full">
+              <Heading size="h6">No project found.</Heading>
+            </HStack>
+          )}
         </Flex>
 
-        <Flex
-          direction={{ base: "column", xl: "row" }}
-          w="full"
-          alignItems="center"
-          justifyContent="center"
-          mx="auto"
-          mt="60px"
-        >
-          <Button variant="outline">show more</Button>
-        </Flex>
+        {projectsList.length ? (
+          <Flex
+            w="full"
+            mx="auto"
+            mt="60px"
+            alignItems="center"
+            justifyContent="center"
+            direction={{ base: "column", xl: "row" }}
+          >
+            <Button variant="outline">show more</Button>
+          </Flex>
+        ) : null}
       </Box>
     </>
   );

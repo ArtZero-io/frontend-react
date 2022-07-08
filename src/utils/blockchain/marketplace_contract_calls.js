@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
@@ -11,6 +12,8 @@ import { clientAPI } from "@api/client";
 import { AccountActionTypes } from "@store/types/account.types";
 
 import { APICall } from "../../api/client";
+// import { createNumberBN } from "../../pages/account/stakes";
+import { BigInt } from "@polkadot/x-bigint";
 
 let contract;
 
@@ -381,9 +384,14 @@ async function list(
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
+  // console.log("1p1rice", price);
+  // console.log("2Number.MAX_SAFE_INTEGER", Number.MAX_SAFE_INTEGER / 10 ** 6);
+  // console.log("3Number.MAX_SAFE_INTEGER", Number.MAX_SAFE_INTEGER);
+  // const sale_price = BigInt(price * 10 ** 12).toString();
 
   const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
-  //console.log(sale_price);
+  
+  console.log("4sale_price", sale_price);
 
   contract.tx
     .list(
@@ -418,6 +426,7 @@ async function list(
           }
 
           // const statusText = Object.keys(status.toHuman())[0];
+          // console.log('first', first)
           // toast.success(
           //   `List NFT ${
           //     statusText === "0" ? "started" : statusText.toLowerCase()

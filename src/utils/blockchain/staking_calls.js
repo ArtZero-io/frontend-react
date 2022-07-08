@@ -206,6 +206,7 @@ async function stake(caller_account, token_ids, dispatch, txType, api) {
           dispatch,
           txType,
           api,
+          caller_account,
         });
 
         if (status.isFinalized === true) {

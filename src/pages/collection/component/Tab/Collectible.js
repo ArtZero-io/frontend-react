@@ -518,10 +518,10 @@ const NFTTabCollectible = (props) => {
                                   maxW={32}
                                   isDisabled={addNftTnxStatus?.status}
                                   bg="black"
-                                  defaultValue={15}
+                                  max={900000000}
                                   min={1}
-                                  precision={0}
-                                  onChange={(v) => setBidPrice(parseInt(v))}
+                                  precision={6}
+                                  onChange={(v) => setBidPrice(v)}
                                   value={bidPrice}
                                   ml={3}
                                   h="50px"
