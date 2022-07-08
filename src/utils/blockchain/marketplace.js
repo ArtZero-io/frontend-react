@@ -1,10 +1,10 @@
 const marketplace = {
-  CONTRACT_ADDRESS: "5EYAyonn6JNuychz3wZVL9to6UUeGf77K2EacQVqCQVxLLHZ",
+  CONTRACT_ADDRESS: "5H4tBoDMBt8wsYapK2danWtnGvjKEf9DMT7GJJAhB2ksXY8h",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xfb91ce3d946405b9203f23bd867da097a6911e5b924d4025abe61d9ea92c8d56",
-      "language": "ink! 3.2.0",
-      "compiler": "rustc 1.63.0-nightly"
+      "hash": "0x816f3609c3ef966578a99ae963f9bdbbd8d57cc3369a6736560036ee3842393d",
+      "language": "ink! 3.3.0",
+      "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
       "name": "artzero_marketplace_psp34",
@@ -1280,6 +1280,23 @@ const marketplace = {
             "selector": "0x8bb87aca"
           },
           {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
+          },
+          {
             "args": [
               {
                 "label": "new_owner",
@@ -1315,23 +1332,6 @@ const marketplace = {
               "type": 29
             },
             "selector": "0x11f43efd"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
           },
           {
             "args": [],
@@ -1411,156 +1411,191 @@ const marketplace = {
             },
             {
               "layout": {
-                "cell": {
-                  "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 0
-                }
-              },
-              "name": "collection_contract_address"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 0
-                }
-              },
-              "name": "staking_contract_address"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 4
-                }
-              },
-              "name": "platform_fee"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 5
-                }
-              },
-              "name": "market_list"
-            },
-            {
-              "layout": {
                 "struct": {
                   "fields": [
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
-                          "ty": 15
+                          "key": "0x1d42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "ty": 0
                         }
                       },
-                      "name": "id_to_index"
+                      "name": "collection_contract_address"
                     },
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
-                          "ty": 18
+                          "key": "0x1e42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "ty": 0
                         }
                       },
-                      "name": "index_to_id"
+                      "name": "staking_contract_address"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x1f42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "ty": 4
+                        }
+                      },
+                      "name": "platform_fee"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x2042c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "ty": 5
+                        }
+                      },
+                      "name": "market_list"
+                    },
+                    {
+                      "layout": {
+                        "struct": {
+                          "fields": [
+                            {
+                              "layout": {
+                                "cell": {
+                                  "key": "0x2142c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                                  "ty": 15
+                                }
+                              },
+                              "name": "id_to_index"
+                            },
+                            {
+                              "layout": {
+                                "cell": {
+                                  "key": "0x2242c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                                  "ty": 18
+                                }
+                              },
+                              "name": "index_to_id"
+                            }
+                          ]
+                        }
+                      },
+                      "name": "sale_tokens_ids"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x2342c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "ty": 20
+                        }
+                      },
+                      "name": "sale_tokens_ids_last_index"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x2442c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "ty": 22
+                        }
+                      },
+                      "name": "bidders"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x2542c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "ty": 26
+                        }
+                      },
+                      "name": "listed_token_number_by_collection_address"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x2642c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "ty": 10
+                        }
+                      },
+                      "name": "total_volume"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x2742c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "ty": 27
+                        }
+                      },
+                      "name": "volume_by_collection"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x2842c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "ty": 27
+                        }
+                      },
+                      "name": "volume_by_user"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x2942c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "ty": 10
+                        }
+                      },
+                      "name": "total_profit"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x2a42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "ty": 10
+                        }
+                      },
+                      "name": "current_profit"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x2b42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "ty": 11
+                        }
+                      },
+                      "name": "staking_discount_criteria"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x2c42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "ty": 28
+                        }
+                      },
+                      "name": "staking_discount_rate"
+                    },
+                    {
+                      "layout": {
+                        "enum": {
+                          "dispatchKey": "0x2d42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "variants": {
+                            "0": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x2e42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                                      "ty": 3
+                                    }
+                                  },
+                                  "name": null
+                                }
+                              ]
+                            },
+                            "1": {
+                              "fields": []
+                            }
+                          }
+                        }
+                      },
+                      "name": "_reserved"
                     }
                   ]
                 }
               },
-              "name": "sale_tokens_ids"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0600000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 20
-                }
-              },
-              "name": "sale_tokens_ids_last_index"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0700000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 22
-                }
-              },
-              "name": "bidders"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0800000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 26
-                }
-              },
-              "name": "listed_token_number_by_collection_address"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0900000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 10
-                }
-              },
-              "name": "total_volume"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0a00000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 27
-                }
-              },
-              "name": "volume_by_collection"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0b00000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 27
-                }
-              },
-              "name": "volume_by_user"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0c00000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 10
-                }
-              },
-              "name": "total_profit"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0d00000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 10
-                }
-              },
-              "name": "current_profit"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0e00000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 11
-                }
-              },
-              "name": "staking_discount_criteria"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0f00000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 28
-                }
-              },
-              "name": "staking_discount_rate"
+              "name": "manager"
             }
           ]
         }
@@ -1736,8 +1771,7 @@ const marketplace = {
             "path": [
               "openbrush_contracts",
               "traits",
-              "psp34",
-              "psp34",
+              "types",
               "Id"
             ]
           }
