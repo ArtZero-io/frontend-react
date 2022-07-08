@@ -217,7 +217,7 @@ const MyNFTsPage = () => {
   }, [addNftTnxStatus, dispatch, txStatus?.lockStatus]);
 
   return (
-    <Box as="section" maxW="container.3xl" minH="60rem">
+    <Box as="section" maxW="container.3xl">
       <Box
         mx="auto"
         maxW={{ base: "6xl", "2xl": "7xl" }}

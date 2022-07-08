@@ -384,14 +384,8 @@ async function list(
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
-  // console.log("1p1rice", price);
-  // console.log("2Number.MAX_SAFE_INTEGER", Number.MAX_SAFE_INTEGER / 10 ** 6);
-  // console.log("3Number.MAX_SAFE_INTEGER", Number.MAX_SAFE_INTEGER);
-  // const sale_price = BigInt(price * 10 ** 12).toString();
 
   const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
-  
-  console.log("4sale_price", sale_price);
 
   contract.tx
     .list(

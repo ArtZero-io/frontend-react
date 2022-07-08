@@ -12,12 +12,10 @@ import {
   Tag,
   TagLabel,
   TagRightIcon,
-  // InputGroup,
   Progress,
   Skeleton,
   useBreakpointValue,
   Square,
-  // Input,
   Stack,
   HStack,
   Tooltip,
@@ -76,6 +74,8 @@ const NFTTabCollectible = (props) => {
   const [saleInfo, setSaleInfo] = useState(null);
   const [action, setAction] = useState("");
   const [ownerName, setOwnerName] = useState("");
+
+  const [isOfferBtnFocus, setIsOfferBtnFocus] = useState(false);
 
   useEffect(() => {
     const doLoad = async () => {
@@ -473,9 +473,18 @@ const NFTTabCollectible = (props) => {
                                 color="brand.grayLight"
                               >
                                 <Text>Current price</Text>
-                                <Tag h={4} pr={0} bg="transparent">
+                                <Tag h={4} pr={0} bg="transparent" maxW="95px">
                                   <TagLabel bg="transparent">
-                                    {price / 10 ** 12}
+                                    <Tooltip
+                                      bg="#171717"
+                                      color="#fff"
+                                      border="1px solid #7ae7ff"
+                                      borderRadius="0"
+                                      label={(price / 10 ** 12).toFixed(6)}
+                                      aria-label="A tooltip"
+                                    >
+                                      {(price / 10 ** 12).toFixed(6)}
+                                    </Tooltip>
                                   </TagLabel>
                                   <TagRightIcon as={AzeroIcon} />
                                 </Tag>
@@ -498,6 +507,7 @@ const NFTTabCollectible = (props) => {
                             {!isBided && (
                               <>
                                 <StatusBuyButton
+                                  isOfferBtnFocus={isOfferBtnFocus}
                                   shouldDisabled={
                                     addNftTnxStatus?.status &&
                                     action &&
@@ -513,18 +523,20 @@ const NFTTabCollectible = (props) => {
                                   onClick={placeOffer}
                                 />
 
-                                <Spacer />
                                 <NumberInput
-                                  maxW={32}
+                                  // maxW={"128px"}
+                                  minW={"85px"}
                                   isDisabled={addNftTnxStatus?.status}
                                   bg="black"
-                                  max={900000000}
+                                  max={999000000}
                                   min={1}
                                   precision={6}
                                   onChange={(v) => setBidPrice(v)}
                                   value={bidPrice}
                                   ml={3}
                                   h="50px"
+                                  onFocus={() => setIsOfferBtnFocus(true)}
+                                  onBlur={() => setIsOfferBtnFocus(false)}
                                 >
                                   <NumberInputField
                                     h="50px"

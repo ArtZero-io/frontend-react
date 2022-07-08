@@ -623,7 +623,7 @@ function MyNFTTabInfo(props) {
                   // maxW={32}
                   isDisabled={addNftTnxStatus?.status || txStatus?.lockStatus}
                   bg="black"
-                  max={900000000}
+                  max={999000000}
                   min={1}
                   precision={6}
                   onChange={(v) => setAskPrice(v)}
@@ -641,36 +641,7 @@ function MyNFTTabInfo(props) {
                     <AzeroIcon />
                   </InputRightElement>
                 </NumberInput>
-                {/* <InputGroup
-                  maxW={32}
-                  mr={2}
-                  px={0}
-                  w="full"
-                  bg="brand.semiBlack"
-                  h={"52px"}
-                  py={0}
-                  color="#fff "
-                  borderRadius="0"
-                >
-                  <Input
-                    isDisabled={addNftTnxStatus?.status || txStatus?.lockStatus}
-                    value={askPrice}
-                    onChange={({ target }) => setAskPrice(target.value)}
-                    m={0}
-                    h={"52px"}
-                    pl={5}
-                    bg="black"
-                    variant="unstyled"
-                    placeholder="10"
-                    _placeholder={{
-                      color: "#888",
-                      fontSize: "lg",
-                    }}
-                  />
-                  <InputRightElement bg="transparent" h={"52px"} w={16}>
-                    <AzeroIcon />
-                  </InputRightElement>
-                </InputGroup> */}
+
                 <StatusPushForSaleButton
                   isAllowanceMpContract={isAllowanceMarketplaceContract}
                   type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
@@ -679,7 +650,6 @@ function MyNFTTabInfo(props) {
                   loadingText={`${addNftTnxStatus?.status}`}
                   stepNo={stepNo}
                   setStepNo={setStepNo}
-                  // approveToken={approveToken}
                   listToken={listToken}
                   isDisabled={txStatus?.lockStatus || addNftTnxStatus}
                 />
@@ -705,7 +675,7 @@ function MyNFTTabInfo(props) {
                     <Text color="brand.grayLight">For Sale At</Text>
 
                     <Text color="#fff" mx={2}>
-                      {price / 10 ** 12}
+                      {(price / 10 ** 12).toFixed(6)}
                     </Text>
                     <AzeroIcon />
                   </Flex>
