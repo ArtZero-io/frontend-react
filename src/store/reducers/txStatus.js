@@ -6,6 +6,7 @@ const txStatusReducer = (state = {}, { type, payload }) => {
       return {
         ...state,
         [`${payload.txType}Status`]: payload.txStatus,
+        tokenID: state?.tokenID || payload?.tokenID,
       };
 
     case CLEAR_STATUS:

@@ -3,13 +3,14 @@ import { SET_STATUS, CLEAR_STATUS } from "../types/txStatus";
 import { READY } from "@constants";
 import { fetchUserBalance } from "../../pages/launchpad/component/Form/AddNewProject";
 
-export const setTxStatus = ({ txType, txStatus }) => {
+export const setTxStatus = ({ txType, txStatus, tokenID }) => {
   return (dispatch) => {
     dispatch({
       type: SET_STATUS,
       payload: {
         txType,
         txStatus,
+        tokenID,
       },
     });
   };
