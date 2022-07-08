@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-import React, { Fragment, useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -8,52 +6,53 @@ import {
   Heading,
   Spacer,
   Text,
-  // Input,
   Image,
-  // InputGroup,
-  InputRightElement,
-  Progress,
-  Skeleton,
-  useBreakpointValue,
-  TagLabel,
-  TagRightIcon,
   Link,
   Tooltip,
   HStack,
   Square,
-  // VStack,
   Stack,
-  // Center,
+  Progress,
+  Skeleton,
+  TagLabel,
+  TagRightIcon,
   NumberInput,
   NumberInputField,
+  InputRightElement,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import { useSubstrateState } from "@utils/substrate";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
-import toast from "react-hot-toast";
-import { ContractPromise } from "@polkadot/api-contract";
-import marketplace from "@utils/blockchain/marketplace";
-import marketplace_contract from "@utils/blockchain/marketplace";
-import { useDispatch, useSelector } from "react-redux";
-
-import StatusPushForSaleButton from "@components/Button/StatusPushForSaleButton";
-import { AccountActionTypes } from "@store/types/account.types";
-import { convertStringToPrice, createLevelAttribute } from "@utils";
-import StatusBuyButton from "@components/Button/StatusBuyButton";
-import { getCachedImageShort, truncateStr } from "@utils";
-import { Link as ReactRouterLink } from "react-router-dom";
-import profile_calls from "@utils/blockchain/profile_calls";
-// import { motion, AnimatePresence } from "framer-motion";
-// import { shortenNumber } from "@utils";
-import { formMode } from "@constants";
 import { ImLock, ImUnlocked } from "react-icons/im";
-import LockNFTModal from "../../../../../components/Modal/LockNFTModal";
-import AddNewNFTModal from "../../../../collection/component/Modal/AddNewNFT";
-import { BigInt } from "@polkadot/x-bigint";
-import { BN } from "@polkadot/util";
+
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Link as ReactRouterLink } from "react-router-dom";
+import React, { Fragment, useEffect, useState } from "react";
+
+import profile_calls from "@utils/blockchain/profile_calls";
+import staking_calls from "@utils/blockchain/staking_calls";
+import marketplace_contract from "@utils/blockchain/marketplace";
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
+
+import { useSubstrateState } from "@utils/substrate";
+import { ContractPromise } from "@polkadot/api-contract";
+import { getCachedImageShort, truncateStr } from "@utils";
+import { convertStringToPrice, createLevelAttribute } from "@utils";
+
+import { formMode } from "@constants";
+import { AccountActionTypes } from "@store/types/account.types";
+
+import LockNFTModal from "@components/Modal/LockNFTModal";
+import StatusBuyButton from "@components/Button/StatusBuyButton";
+import StatusPushForSaleButton from "@components/Button/StatusPushForSaleButton";
+
+import AddNewNFTModal from "@pages/collection/component/Modal/AddNewNFT";
+import {
+  fetchMyPMPStakedCount,
+  fetchMyTradingFee,
+} from "@pages/account/stakes";
 
 function MyNFTTabInfo(props) {
   const {
@@ -70,7 +69,9 @@ function MyNFTTabInfo(props) {
     contractType,
     is_locked,
     showOnChainMetadata,
+    royalFee,
   } = props;
+
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
@@ -88,6 +89,7 @@ function MyNFTTabInfo(props) {
   const [isBided, setIsBided] = useState(false);
   const [bidPrice, setBidPrice] = useState(0);
   const [ownerName, setOwnerName] = useState("");
+  const [myTradingFee, setMyTradingFee] = useState(null);
 
   useEffect(() => {
     const doLoad = async () => {
@@ -210,7 +212,7 @@ function MyNFTTabInfo(props) {
 
           res = await nft721_psp34_standard_calls.approve(
             currentAccount,
-            marketplace.CONTRACT_ADDRESS,
+            marketplace_contract.CONTRACT_ADDRESS,
             { u64: tokenID },
             true,
             dispatch
@@ -231,13 +233,6 @@ function MyNFTTabInfo(props) {
             dispatch
           );
         }
-
-        // dispatch({
-        //   type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-        //   payload: {
-        //     status: "Start",
-        //   },
-        // });
       } else {
         dispatch({
           type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
@@ -325,10 +320,28 @@ function MyNFTTabInfo(props) {
     ownerName();
   }, [currentAccount, is_for_sale, owner, saleInfo?.nftOwner]);
 
+  useEffect(() => {
+    const fetchTradeFee = async () => {
+      const stakedCount = await fetchMyPMPStakedCount(
+        currentAccount,
+        staking_calls
+      );
+
+      const myTradingFeeData = await fetchMyTradingFee(
+        stakedCount,
+        currentAccount,
+        marketplace_contract_calls
+      );
+
+      setMyTradingFee(myTradingFeeData);
+    };
+    fetchTradeFee();
+  }, [currentAccount]);
+
   return (
     <>
       <HStack spacing={{ base: "30px", "2xl": "40px" }} alignItems="stretch">
-        <Square size={{ base: "360px", "2xl": "480px" }}>
+        <Square size={{ base: "340px", "2xl": "460px" }}>
           <Image
             w="full"
             h="full"
@@ -663,7 +676,7 @@ function MyNFTTabInfo(props) {
             )}
 
             {filterSelected !== 2 &&
-              owner === marketplace.CONTRACT_ADDRESS &&
+              owner === marketplace_contract.CONTRACT_ADDRESS &&
               is_for_sale && (
                 <Flex
                   w="full"
@@ -726,6 +739,61 @@ function MyNFTTabInfo(props) {
           </Stack>
         </Stack>
       </HStack>
+      {filterSelected === 0 ? (
+        <HStack
+          justify="space-between"
+          color="brand.blue"
+          fontSize={{ base: "14px", "2xl": "15px" }}
+          w="full"
+          py={{ base: "10px", "2xl": "20px" }}
+        >
+          <Text>
+            Royal fee: {((askPrice * royalFee) / 10000).toFixed(6)}{" "}
+            <AzeroIcon w="12px" mb="2px" /> ({(royalFee / 100).toFixed(2)} %)
+          </Text>
+          <Text>
+            Trade fee: {((askPrice * myTradingFee) / 100).toFixed(6)}{" "}
+            <AzeroIcon w="12px" mb="2px" /> ({myTradingFee} %)
+          </Text>
+          <Text>
+            You will receive:{" "}
+            {(
+              askPrice -
+              (askPrice * myTradingFee) / 100 -
+              (askPrice * royalFee) / 10000
+            ).toFixed(6)}{" "}
+            <AzeroIcon w="12px" mb="2px" />
+          </Text>
+        </HStack>
+      ) : null}
+
+      {filterSelected === 1 ? (
+        <HStack
+          justify="space-between"
+          color="brand.blue"
+          fontSize={{ base: "14px", "2xl": "15px" }}
+          w="full"
+          py={{ base: "10px", "2xl": "20px" }}
+        >
+          <Text>
+            Royal fee: {(((price / 10 ** 12) * royalFee) / 10000).toFixed(6)}{" "}
+            <AzeroIcon w="12px" mb="2px" /> ({(royalFee / 100).toFixed(2)} %)
+          </Text>
+          <Text>
+            Trade fee: {(((price / 10 ** 12) * myTradingFee) / 100).toFixed(6)}{" "}
+            <AzeroIcon w="12px" mb="2px" /> ({myTradingFee} %)
+          </Text>
+          <Text>
+            You will receive:{" "}
+            {(
+              price / 10 ** 12 -
+              ((price / 10 ** 12) * myTradingFee) / 100 -
+              ((price / 10 ** 12) * royalFee) / 10000
+            ).toFixed(6)}{" "}
+            <AzeroIcon w="12px" mb="2px" />
+          </Text>
+        </HStack>
+      ) : null}
     </>
   );
 }

@@ -29,6 +29,7 @@ function MyNFTGroupCard({
   filterSelected,
   nftContractAddress,
   hasBottomBorder = false,
+  ...rest
 }) {
   const { currentAccount, api } = useSubstrateState();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -110,6 +111,7 @@ function MyNFTGroupCard({
         hasTabs={true}
         filterSelected={filterSelected}
         showOnChainMetadata={showOnChainMetadata}
+        {...rest}
       />
       <AnimatePresence>
         <motion.div
