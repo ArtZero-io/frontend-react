@@ -14,7 +14,7 @@ import AdvancedModeInput from "@components/Input/Input";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import AdvancedModeTextArea from "@components/TextArea/TextArea";
 
-import AddCollectionNumberInput from "../NumberInput";
+import AddCollectionNumberInput from "@components/Input/NumberInput";
 import { clientAPI } from "@api/client";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import { AccountActionTypes } from "@store/types/account.types";
@@ -425,7 +425,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     <AddCollectionNumberInput
                       isDisabled={!isSetRoyal || addCollectionTnxStatus}
                       isDisplay={isSetRoyal}
-                      maxRoyalFeeRate={maxRoyalFeeRate}
+                      max={maxRoyalFeeRate}
                       label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
                       name="royalFee"
                       type="number"

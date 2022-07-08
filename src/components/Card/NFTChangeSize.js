@@ -79,7 +79,7 @@ export default function NFTChangeSizeCard({
             <>
               <Flex w="full">
                 <Tag h={10}>
-                  <TagLabel>{price / 10 ** 12}</TagLabel>
+                  <TagLabel>{(price / 10 ** 12).toFixed(6)}</TagLabel>
                   <TagRightIcon as={AzeroIcon} />
                 </Tag>
 

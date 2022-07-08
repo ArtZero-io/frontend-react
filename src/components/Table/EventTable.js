@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { AnimatePresence, motion } from "framer-motion";
-import { truncateStr, shortenNumber, getCachedImageShort } from "@utils";
+import { truncateStr, getCachedImageShort } from "@utils";
 import { memo } from "react";
 
 function EventTable({ tableHeaders, tableData }) {
@@ -30,8 +30,7 @@ function EventTable({ tableHeaders, tableData }) {
           maxH={{ base: "20rem", "2xl": "30rem" }}
           fontSize="lg"
           h="full"
-          overflow="auto"
-          overflowY="scroll"
+          overflow="scroll"
           sx={{
             "&::-webkit-scrollbar": {
               width: "0.3rem",
@@ -81,6 +80,7 @@ function EventTable({ tableHeaders, tableData }) {
                         <Tr key={idx} color="#fff">
                           {Object.keys(tableHeaders)?.map((i, idx) => (
                             <Td
+                              isNumeric={i === "price" ? true : false}
                               key={idx}
                               py={{ base: "1rem", "2xl": "1.75rem" }}
                               textAlign="center"
@@ -95,7 +95,7 @@ function EventTable({ tableHeaders, tableData }) {
                                 i === "platformFee" ||
                                 i === "royalFee" ? (
                                 <>
-                                  {shortenNumber(item[i])}
+                                  {item[i].toFixed(6)}
                                   <TagRightIcon as={AzeroIcon} />
                                 </>
                               ) : i === "avatar" ? (

@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
 import { SET_STATUS, CLEAR_STATUS } from "../types/txStatus";
 import { READY } from "@constants";
+import { fetchUserBalance } from "../../pages/launchpad/component/Form/AddNewProject";
 
 export const setTxStatus = ({ txType, txStatus }) => {
   return (dispatch) => {
@@ -38,12 +39,13 @@ export const txErrorHandler = ({ error, dispatch }) => {
   toast.error(message);
 };
 
-export const txResponseErrorHandler = ({
+export const txResponseErrorHandler = async ({
   status,
   dispatchError,
+  dispatch,
   txType,
   api,
-  dispatch,
+  caller_account,
 }) => {
   if (dispatchError) {
     dispatch(clearTxStatus());
@@ -61,7 +63,14 @@ export const txResponseErrorHandler = ({
   if (!dispatchError && status) {
     const statusToHuman = Object.entries(status.toHuman());
 
+    const url = `https://test.azero.dev/#/explorer/query/`;
+
     if (Object.keys(status.toHuman())[0] === "0") {
+      let bal;
+      await fetchUserBalance({ currentAccount: caller_account, api }).then(
+        ({ balance }) => (bal = balance)
+      );
+      console.log("txType bal before: ", bal);
       dispatch(setTxStatus({ txType: txType, txStatus: READY }));
     } else {
       const finalizedTimeStamp = Date.now();
@@ -73,6 +82,14 @@ export const txResponseErrorHandler = ({
           timeStamp: finalizedTimeStamp,
         })
       );
+      if (statusToHuman[0][0] === "Finalized") {
+        let bal;
+        await fetchUserBalance({ currentAccount: caller_account, api }).then(
+          ({ balance }) => (bal = balance)
+        );
+        console.log("txType bal before: ", bal);
+        console.log("Tx finalized at ", `${url}${statusToHuman[0][1]}`);
+      }
     }
   }
 };

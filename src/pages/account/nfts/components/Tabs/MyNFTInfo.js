@@ -8,9 +8,9 @@ import {
   Heading,
   Spacer,
   Text,
-  Input,
+  // Input,
   Image,
-  InputGroup,
+  // InputGroup,
   InputRightElement,
   Progress,
   Skeleton,
@@ -21,9 +21,9 @@ import {
   Tooltip,
   HStack,
   Square,
-  VStack,
+  // VStack,
   Stack,
-  Center,
+  // Center,
   NumberInput,
   NumberInputField,
 } from "@chakra-ui/react";
@@ -46,12 +46,14 @@ import StatusBuyButton from "@components/Button/StatusBuyButton";
 import { getCachedImageShort, truncateStr } from "@utils";
 import { Link as ReactRouterLink } from "react-router-dom";
 import profile_calls from "@utils/blockchain/profile_calls";
-import { motion, AnimatePresence } from "framer-motion";
-import { shortenNumber } from "@utils";
+// import { motion, AnimatePresence } from "framer-motion";
+// import { shortenNumber } from "@utils";
 import { formMode } from "@constants";
 import { ImLock, ImUnlocked } from "react-icons/im";
 import LockNFTModal from "../../../../../components/Modal/LockNFTModal";
 import AddNewNFTModal from "../../../../collection/component/Modal/AddNewNFT";
+import { BigInt } from "@polkadot/x-bigint";
+import { BN } from "@polkadot/util";
 
 function MyNFTTabInfo(props) {
   const {
@@ -177,69 +179,78 @@ function MyNFTTabInfo(props) {
   // }, [addNftTnxStatus?.status, currentAccount, dispatch, tokenID]);
 
   const listToken = async () => {
-    if (owner === currentAccount?.address) {
-      dispatch({
-        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-        payload: {
-          status: "Start",
-        },
-      });
+    try {
+      if (owner === currentAccount?.address) {
+        dispatch({
+          type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+          payload: {
+            status: "Start",
+          },
+        });
 
-      const nft721_psp34_standard_contract = new ContractPromise(
-        api,
-        nft721_psp34_standard.CONTRACT_ABI,
-        nftContractAddress
-      );
+        const nft721_psp34_standard_contract = new ContractPromise(
+          api,
+          nft721_psp34_standard.CONTRACT_ABI,
+          nftContractAddress
+        );
 
-      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+        nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
 
-      const isAllowance = await nft721_psp34_standard_calls.allowance(
-        currentAccount,
-        currentAccount?.address,
-        marketplace_contract.CONTRACT_ADDRESS,
-        { u64: tokenID },
-        dispatch
-      );
-
-      let res;
-      if (!isAllowance) {
-        toast.success("Step 1: Approving NFT transfer...");
-
-        res = await nft721_psp34_standard_calls.approve(
+        const isAllowance = await nft721_psp34_standard_calls.allowance(
           currentAccount,
-          marketplace.CONTRACT_ADDRESS,
+          currentAccount?.address,
+          marketplace_contract.CONTRACT_ADDRESS,
           { u64: tokenID },
-          true,
           dispatch
         );
-      }
-      if (res || isAllowance) {
-        toast.success(
-          res
-            ? "Step 2: Listing on marketplace..."
-            : "Listing on marketplace..."
-        );
-        await marketplace_contract_calls.list(
-          currentAccount,
-          nftContractAddress,
-          { u64: tokenID },
-          askPrice,
-          dispatch
-        );
-      }
 
-      // dispatch({
-      //   type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-      //   payload: {
-      //     status: "Start",
-      //   },
-      // });
-    } else {
+        let res;
+        if (!isAllowance) {
+          toast.success("Step 1: Approving NFT transfer...");
+
+          res = await nft721_psp34_standard_calls.approve(
+            currentAccount,
+            marketplace.CONTRACT_ADDRESS,
+            { u64: tokenID },
+            true,
+            dispatch
+          );
+        }
+        if (res || isAllowance) {
+          toast.success(
+            res
+              ? "Step 2: Listing on marketplace..."
+              : "Listing on marketplace..."
+          );
+          console.log("xxx askPrice", askPrice);
+          await marketplace_contract_calls.list(
+            currentAccount,
+            nftContractAddress,
+            { u64: tokenID },
+            askPrice,
+            dispatch
+          );
+        }
+
+        // dispatch({
+        //   type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+        //   payload: {
+        //     status: "Start",
+        //   },
+        // });
+      } else {
+        dispatch({
+          type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+        });
+
+        toast.error(`This token is not yours!`);
+      }
+    } catch (error) {
       dispatch({
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
       });
-
-      toast.error(`This token is not yours!`);
+      console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -609,13 +620,13 @@ function MyNFTTabInfo(props) {
               >
                 <Spacer />
                 <NumberInput
-                  maxW={32}
+                  // maxW={32}
                   isDisabled={addNftTnxStatus?.status || txStatus?.lockStatus}
                   bg="black"
-                  defaultValue={15}
+                  max={999000000}
                   min={1}
-                  precision={0}
-                  onChange={(v) => setAskPrice(parseInt(v))}
+                  precision={6}
+                  onChange={(v) => setAskPrice(v)}
                   value={askPrice}
                   mr={3}
                   h="52px"
@@ -630,36 +641,7 @@ function MyNFTTabInfo(props) {
                     <AzeroIcon />
                   </InputRightElement>
                 </NumberInput>
-                {/* <InputGroup
-                  maxW={32}
-                  mr={2}
-                  px={0}
-                  w="full"
-                  bg="brand.semiBlack"
-                  h={"52px"}
-                  py={0}
-                  color="#fff "
-                  borderRadius="0"
-                >
-                  <Input
-                    isDisabled={addNftTnxStatus?.status || txStatus?.lockStatus}
-                    value={askPrice}
-                    onChange={({ target }) => setAskPrice(target.value)}
-                    m={0}
-                    h={"52px"}
-                    pl={5}
-                    bg="black"
-                    variant="unstyled"
-                    placeholder="10"
-                    _placeholder={{
-                      color: "#888",
-                      fontSize: "lg",
-                    }}
-                  />
-                  <InputRightElement bg="transparent" h={"52px"} w={16}>
-                    <AzeroIcon />
-                  </InputRightElement>
-                </InputGroup> */}
+
                 <StatusPushForSaleButton
                   isAllowanceMpContract={isAllowanceMarketplaceContract}
                   type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
@@ -668,7 +650,6 @@ function MyNFTTabInfo(props) {
                   loadingText={`${addNftTnxStatus?.status}`}
                   stepNo={stepNo}
                   setStepNo={setStepNo}
-                  // approveToken={approveToken}
                   listToken={listToken}
                   isDisabled={txStatus?.lockStatus || addNftTnxStatus}
                 />
@@ -694,7 +675,7 @@ function MyNFTTabInfo(props) {
                     <Text color="brand.grayLight">For Sale At</Text>
 
                     <Text color="#fff" mx={2}>
-                      {price / 10 ** 12}
+                      {(price / 10 ** 12).toFixed(6)}
                     </Text>
                     <AzeroIcon />
                   </Flex>

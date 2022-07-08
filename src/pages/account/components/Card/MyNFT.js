@@ -254,7 +254,7 @@ function MyNFTCard({
                     {is_for_sale && "For Sale At"}
                   </Text>
                   <Tag>
-                    <TagLabel>{price / 10 ** 12}</TagLabel>
+                    <TagLabel>{(price / 10 ** 12).toFixed(6)}</TagLabel>
                     <TagRightIcon as={AzeroIcon} />
                   </Tag>
                 </VStack>
