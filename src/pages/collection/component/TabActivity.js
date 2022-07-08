@@ -8,13 +8,18 @@ import profile_calls from "@utils/blockchain/profile_calls";
 import { APICall, clientAPI } from "../../../api/client";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 
-function TabActivity({ tokenUriType1, latestBlockNumber }) {
+function TabActivity({
+  tokenUriType1,
+  latestBlockNumber,
+  collectionOwner,
+  ...rest
+}) {
   const { platformEvents } = useSelector((s) => s.account);
 
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(null);
   // eslint-disable-next-line no-unused-vars
-  const [loadingTime, setLoadingTime] = useState(null);
+  const [collectionOwnerName, setCollectionOwnerName] = useState(null);
   const [collectionEventsFull, setCollectionEventsFull] = useState(null);
 
   const latestBlockNumberRef = useRef(latestBlockNumber);
@@ -105,11 +110,28 @@ function TabActivity({ tokenUriType1, latestBlockNumber }) {
     collectionEventsFull();
   }, [shouldUpdate]);
 
+  useEffect(() => {
+    const collectionOwnerName = async () => {
+      const name = await getUsername({
+        accountAddress: collectionOwner,
+      });
+
+      return name;
+    };
+
+    collectionOwnerName().then((name) => {
+      setCollectionOwnerName(name);
+    });
+  }, [collectionOwner, getUsername]);
+
   const tabData = [
     {
       label: "PURCHASE",
       content: (
         <EventTable
+          {...rest}
+          type="PURCHASE"
+          collectionOwnerName={collectionOwnerName}
           tableHeaders={headers.purchase}
           tableData={collectionEventsFull?.filter((i) => i.type === "PURCHASE")}
         />
@@ -119,6 +141,9 @@ function TabActivity({ tokenUriType1, latestBlockNumber }) {
       label: "LIST",
       content: (
         <EventTable
+          {...rest}
+          type="LIST"
+          collectionOwnerName={collectionOwnerName}
           tableHeaders={headers.list}
           tableData={collectionEventsFull?.filter((i) => i.type === "LIST")}
         />
@@ -128,6 +153,9 @@ function TabActivity({ tokenUriType1, latestBlockNumber }) {
       label: "UNLIST",
       content: (
         <EventTable
+          {...rest}
+          type="UNLIST"
+          collectionOwnerName={collectionOwnerName}
           tableHeaders={headers.unlist}
           tableData={collectionEventsFull?.filter((i) => i.type === "UNLIST")}
         />
@@ -137,6 +165,9 @@ function TabActivity({ tokenUriType1, latestBlockNumber }) {
       label: "BID ACCEPTED",
       content: (
         <EventTable
+          {...rest}
+          type="BID ACCEPT"
+          collectionOwnerName={collectionOwnerName}
           tableHeaders={headers.bidAccepted}
           tableData={collectionEventsFull?.filter(
             (i) => i.type === "BID ACCEPTED"
@@ -195,7 +226,7 @@ export default TabActivity;
 
 const headers = {
   purchase: {
-    collectionName: "Collection",
+    collectionName: "Collection Name",
     nftName: "NFT Name",
     avatar: "Image",
     type: "Type",
@@ -207,7 +238,7 @@ const headers = {
     blockNumber: "Block No#",
   },
   list: {
-    collectionName: "Collection",
+    collectionName: "Collection Name",
     nftName: "NFT Name",
     avatar: "Image",
     type: "Type",
@@ -216,7 +247,7 @@ const headers = {
     blockNumber: "Block No#",
   },
   unlist: {
-    collectionName: "Collection",
+    collectionName: "Collection Name",
     nftName: "NFT Name",
     avatar: "Image",
     type: "Type",
@@ -224,7 +255,7 @@ const headers = {
     blockNumber: "Block No#",
   },
   bidAccepted: {
-    collectionName: "Collection",
+    collectionName: "Collection Name",
     nftName: "NFT Name",
     avatar: "Image",
     type: "Type",
