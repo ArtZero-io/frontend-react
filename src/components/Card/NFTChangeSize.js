@@ -61,16 +61,17 @@ export default function NFTChangeSizeCard({
           />
         </Square>
         <VStack
-          p={4}
+          p={["10px", "12px", "12px"]}
           w="full"
           h="full"
           justifyContent="space-between"
           alignItems="start"
           flex="1"
+          isTruncated
           // minH={is_for_sale ? "8.125rem" : ""}
         >
           <Heading
-            fontSize={["13px", "16px", "16px"]}
+            fontSize={["12px", "16px", "16px"]}
             textTransform="uppercase"
           >
             {nftName}
@@ -80,10 +81,14 @@ export default function NFTChangeSizeCard({
             <>
               <Flex w="full">
                 <Tag h={10}>
-                  <TagLabel>
+                  <TagLabel fontSize={["14px", "16px", "16px"]}>
                     {formatNumDynamicDecimal(price / 10 ** 12)}
                   </TagLabel>
-                  <TagRightIcon as={AzeroIcon} />
+                  <TagRightIcon
+                    h={["12px", "16px", "16px"]}
+                    w={["12px", "16px", "16px"]}
+                    as={AzeroIcon}
+                  />
                 </Tag>
 
                 <Spacer />
@@ -99,20 +104,32 @@ export default function NFTChangeSizeCard({
                 <Spacer />
                 {highest_bid ? (
                   <>
-                    <Text bg="transparent" color="#fff">
+                    <Text
+                      fontSize={["14px", "16px", "16px"]}
+                      bg="transparent"
+                      color="#fff"
+                    >
                       Highest Offer{" "}
                       {formatNumDynamicDecimal(highest_bid / 10 ** 12)}
                     </Text>
-                    <TagRightIcon as={AzeroIcon} />
+                    <TagRightIcon
+                      h={["12px", "16px", "16px"]}
+                      w={["12px", "16px", "16px"]}
+                      as={AzeroIcon}
+                    />
                   </>
                 ) : (
-                  <Text bg="transparent">No offer yet</Text>
+                  <Text fontSize={["14px", "16px", "16px"]} bg="transparent">
+                    No offer yet
+                  </Text>
                 )}
               </Flex>
             </>
           ) : (
             <Tag h={10}>
-              <TagLabel>Not for sale</TagLabel>
+              <TagLabel fontSize={["14px", "16px", "16px"]}>
+                Not for sale
+              </TagLabel>
             </Tag>
           )}
         </VStack>

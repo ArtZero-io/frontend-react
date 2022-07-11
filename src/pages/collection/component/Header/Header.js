@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Avatar,
   Box,
@@ -37,25 +38,28 @@ function CollectionHeader({
 }) {
   return (
     <Box
-      maxH={"34rem"}
-      minH={{ base: "22rem", "2xl": "34rem" }}
+      maxH={{ sm: "753px", xl: "25rem", "2xl": "34rem" }}
+      minH={{ sm: "625px", xl: "22rem", "2xl": "34rem" }}
       as="section"
       position="relative"
       // maxW="container.3xl"
       w="full"
+      h="625px"
       bg={overlay}
+      // bg="yellow"
     >
       <Box
+        h="full"
         mx="auto"
-        px={{ base: "6", "2xl": "8" }}
-        pt={{ base: "12", "2xl": "3.75rem" }}
+        px={{ base: "48px", xl: "6", "2xl": "8" }}
+        pt={{ base: "56px", xl: "12", "2xl": "3.75rem" }}
         pb={{ base: "4", "2xl": "18" }}
       >
-        <VStack>
+        <VStack h="full">
           <Center
             rounded="full"
-            w={["80px", "120px", "120px"]}
-            h={["80px", "120px", "120px"]}
+            w={["68px", "120px", "120px"]}
+            h={["68px", "120px", "120px"]}
             mt={-8}
             p="-px"
             border="4px solid"
@@ -72,8 +76,8 @@ function CollectionHeader({
               src={avatarImage && getCachedImageShort(avatarImage, 500)}
               fallback={
                 <Skeleton
-                  w={["80px", "120px", "120px"]}
-                  h={["72px", "112px", "112px"]}
+                  w={["74px", "120px", "120px"]}
+                  h={["68px", "112px", "112px"]}
                   borderRadius="full"
                 />
               }
@@ -83,7 +87,8 @@ function CollectionHeader({
           <HStack
             w="full"
             justifyContent="space-around"
-            py={{ base: "0.5rem", "2xl": "2.25rem" }}
+            pt={{ base: "4px", xl: "0.5rem", "2xl": "2.25rem" }}
+            pb={{ base: "34px", xl: "0.5rem", "2xl": "2.25rem" }}
           >
             {
               <AnimatePresence>
@@ -100,7 +105,7 @@ function CollectionHeader({
                     <Heading
                       color="#fff"
                       fontSize={["32px", "48px", "48px"]}
-                      lineHeight={["38px", "60px", "60px"]}
+                      lineHeight={["46px", "60px", "60px"]}
                       minH={{ base: "2.5rem", "2xl": "3.75rem" }}
                       // size="h2"
                       // minH="3.75rem"
@@ -113,6 +118,7 @@ function CollectionHeader({
                       color="#fff"
                       fontSize={["15px", "18px", "18px"]}
                       minH={{ base: "1rem", "2xl": "3.375rem" }}
+                      lineHeight={{ base: "24px", xl: "28px" }}
                     >
                       {description}
                     </Text>
@@ -126,7 +132,7 @@ function CollectionHeader({
             flexWrap={["wrap", "noWrap", "noWrap"]}
             color="brand.blue"
             maxW="680px"
-            maxH={["150px", "110px", "110px"]}
+            maxH={["200px", "110px", "110px"]}
             h={["full", "full", "full"]}
             borderWidth={2}
             borderColor="brand.blue"
@@ -134,6 +140,7 @@ function CollectionHeader({
             py={{ base: "0.5rem", "2xl": "1.125rem" }}
             justifyContent="space-between"
             bg="black"
+            mb="60px"
           >
             {nft_count ? (
               <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
@@ -145,12 +152,12 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "32px", "2xl": "48px" }}
+                      fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
                       lineHeight="none"
                     >
                       {nft_count || 0}
                     </Text>
-                    <Text fontSize={["13px", "16px", "16px"]}>Items</Text>
+                    <Text fontSize={["14px", "16px", "16px"]}>Items</Text>
                   </motion.div>
                 </AnimatePresence>
               </VStack>
@@ -164,12 +171,12 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "32px", "2xl": "48px" }}
+                      fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
                       lineHeight="none"
                     >
                       0
                     </Text>
-                    <Text fontSize={["13px", "16px", "16px"]}>Items</Text>
+                    <Text fontSize={["14px", "16px", "16px"]}>Items</Text>
                   </motion.div>
                 </AnimatePresence>
               </VStack>
@@ -192,12 +199,12 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "32px", "2xl": "48px" }}
+                      fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
                       lineHeight="none"
                     >
                       {totalListed || 0}
                     </Text>
-                    <Text fontSize={["13px", "16px", "16px"]}>Listed</Text>
+                    <Text fontSize={["14px", "16px", "16px"]}>Listed</Text>
                   </motion.div>
                 </AnimatePresence>
               </VStack>
@@ -211,12 +218,12 @@ function CollectionHeader({
                   >
                     <Text
                       fontFamily="DS-Digital"
-                      fontSize={{ base: "32px", "2xl": "48px" }}
+                      fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
                       lineHeight="none"
                     >
                       0
                     </Text>
-                    <Text fontSize={["13px", "16px", "16px"]}>Listed</Text>
+                    <Text fontSize={["14px", "16px", "16px"]}>Listed</Text>
                   </motion.div>
                 </AnimatePresence>
               </VStack>
@@ -241,7 +248,7 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "32px", "2xl": "48px" }}
+                        fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
                         lineHeight="none"
                       >
                         {shortenNumber(floorPrice / 10 ** 12) || 0}
@@ -255,7 +262,7 @@ function CollectionHeader({
                         bg="transparent"
                       />
                     </Flex>
-                    <Text fontSize={["13px", "16px", "16px"]}>Floor price</Text>
+                    <Text fontSize={["14px", "16px", "16px"]}>Floor price</Text>
                   </motion.div>
                 </AnimatePresence>
               </VStack>
@@ -271,7 +278,7 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "32px", "2xl": "48px" }}
+                        fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
                         lineHeight="none"
                       >
                         0
@@ -285,7 +292,7 @@ function CollectionHeader({
                         bg="transparent"
                       />
                     </Flex>
-                    <Text fontSize={["13px", "16px", "16px"]}>Floor price</Text>
+                    <Text fontSize={["14px", "16px", "16px"]}>Floor price</Text>
                   </motion.div>
                 </AnimatePresence>
               </VStack>
@@ -310,7 +317,7 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "32px", "2xl": "48px" }}
+                        fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
                         lineHeight="none"
                       >
                         {shortenNumber(volume) || 0}
@@ -345,7 +352,7 @@ function CollectionHeader({
                     <Flex alignItems="center" justifyContent="center">
                       <Text
                         fontFamily="DS-Digital"
-                        fontSize={{ base: "32px", "2xl": "48px" }}
+                        fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
                         lineHeight="none"
                       >
                         0
@@ -370,17 +377,16 @@ function CollectionHeader({
               </VStack>
             )}
           </HStack>
+          <SocialCard
+            justifyContent="center"
+            profile={[{ website }, { twitter }, { discord }]}
+            pos={{ base: "", xl: "absolute" }}
+            right={"6.3125rem"}
+            // bottom={{ base: "1.375rem", "2xl": "2.375rem" }}
+            bottom="0"
+          />
         </VStack>
       </Box>
-
-      <SocialCard
-        justifyContent="center"
-        profile={[{ website }, { twitter }, { discord }]}
-        pos={{ base: "", xl: "absolute" }}
-        right={"6.3125rem"}
-        // bottom={{ base: "1.375rem", "2xl": "2.375rem" }}
-        bottom="0"
-      />
     </Box>
   );
 }

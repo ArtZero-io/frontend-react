@@ -364,8 +364,8 @@ function CollectionPage() {
                   key={index}
                   fontStyle="italic"
                   px="0.5px"
-                  pb="20px"
-                  fontSize="lg"
+                  pb={{ base: "12px", xl: "20px" }}
+                  fontSize={{ base: "16px", xl: "lg" }}
                   mx="25px"
                 >
                   {tab.label}
@@ -377,7 +377,7 @@ function CollectionPage() {
               {tabData.map((tab, index) => (
                 <TabPanel
                   px={{ base: "12px", "2xl": "100px" }}
-                  pt="40px"
+                  pt={{ base: "14px", "xl": "40px" }}
                   key={index}
                 >
                   {tab.content}

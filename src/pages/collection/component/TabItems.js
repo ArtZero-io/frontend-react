@@ -81,7 +81,12 @@ const CollectionItems = ({
   const nftCardWidthB = useBreakpointValue({ base: 150, xl: 300 });
 
   const nftCardWidth = bigCard ? nftCardWidthB : 240;
-  const nftCardHeight = bigCard ? 450 : 395;
+
+  const nftCardHeightR = bigCard ? 450 : 395;
+  const nftCardHeight = useBreakpointValue({
+    base: 280,
+    xl: nftCardHeightR,
+  });
 
   const gridWidth = dimensions?.borderBox?.width;
   const gridCol = Math.floor(gridWidth / nftCardWidth);
@@ -109,7 +114,7 @@ const CollectionItems = ({
             onClick={() => forceUpdate()}
           />
           <Flex justifyContent="space-between">
-            <IconButton
+            {/* <IconButton
               display={{ base: "flex", xl: "none" }}
               aria-label="refresh"
               icon={<MdRefresh fontSize="24px" />}
@@ -117,7 +122,7 @@ const CollectionItems = ({
               variant="iconSolid"
               mx={1.5}
               onClick={() => forceUpdate()}
-            />
+            /> */}
 
             {/* <Button
               mx={1.5}
@@ -159,8 +164,8 @@ const CollectionItems = ({
           <Spacer />
 
           <Flex justifyContent="space-between" align="center" pr="2">
-            <Text px={2} display={{ base: "block", xl: "none" }}>
-              {totalCollectionsCount || 0} items{" "}
+            {/* <Text color="#888" px={2} display={{ base: "block", xl: "none" }}>
+              {totalCollectionsCount || 0} asd items{" "}
               {activeTab === tabList.ALL
                 ? "in total"
                 : activeTab === tabList.LISTED
@@ -168,9 +173,18 @@ const CollectionItems = ({
                 : activeTab === tabList.UNLISTED
                 ? "unlisted"
                 : ""}
-            </Text>
-
+            </Text> */}
+            <IconButton
+              display={{ base: "flex", xl: "none" }}
+              aria-label="refresh"
+              icon={<MdRefresh fontSize="24px" />}
+              size="icon"
+              variant="iconSolid"
+              mx={1.5}
+              onClick={() => forceUpdate()}
+            />
             <Dropdown
+              // width="full"
               mx={1.5}
               options={options}
               selectedItem={selectedItem}
@@ -207,8 +221,8 @@ const CollectionItems = ({
         <Flex
           align="center"
           // py={{ base: 2, xl: "1.25rem", "2xl": 4 }}
-          pt="64px"
-          pb="16px"
+          pt={{ base: "10px", xl: "34px", "2xl": "34px" }}
+          pb={{ base: "10px", xl: "16px" }}
           minH={{ base: 14, "2xl": 24 }}
           w="full"
         >
@@ -221,7 +235,7 @@ const CollectionItems = ({
               >
                 <Text
                   px={2}
-                  display={{ base: "none", xl: "block" }}
+                  // display={{ base: "none", xl: "block" }}
                   color="#888"
                 >
                   {totalCollectionsCount || 0} items{" "}
