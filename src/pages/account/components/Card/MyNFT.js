@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -17,7 +16,11 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { getCachedImageShort, secondsToTime, delay } from "@utils";
+import {
+  getCachedImageShort,
+  secondsToTime,
+  formatNumDynamicDecimal,
+} from "@utils";
 import staking_calls from "@utils/blockchain/staking_calls";
 import staking from "@utils/blockchain/staking";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
@@ -255,7 +258,9 @@ function MyNFTCard({
                     {is_for_sale && "For Sale At"}
                   </Text>
                   <Tag>
-                    <TagLabel>{(price / 10 ** 12).toFixed(6)}</TagLabel>
+                    <TagLabel>
+                      {formatNumDynamicDecimal(price / 10 ** 12)}
+                    </TagLabel>
                     <TagRightIcon as={AzeroIcon} />
                   </Tag>
                 </VStack>
@@ -271,7 +276,7 @@ function MyNFTCard({
                   {isBid?.status ? (
                     <HStack minH={"20px"} bg="transparent">
                       <TagLabel bg="transparent">
-                        {isBid?.status && isBid?.bidPrice / 10 ** 12}
+                        {formatNumDynamicDecimal(isBid?.bidPrice / 10 ** 12)}
                       </TagLabel>
                       <TagRightIcon as={AzeroIcon} />
                     </HStack>
@@ -288,12 +293,12 @@ function MyNFTCard({
                       // direction="column"
                     >
                       <Text textAlign="center" w="full">
-                        {highest_bid ? "Best offer" : "No offer"}
+                        {highest_bid ? "  Best offer" : "No offer"}
                       </Text>
                       {highest_bid ? (
-                        <HStack ml={"6px"} bg="transparent" id="abc">
+                        <HStack ml={"6px"} bg="transparent" i>
                           <Text color="#fff" bg="transparent">
-                            {highest_bid / 10 ** 12}
+                            {formatNumDynamicDecimal(highest_bid / 10 ** 12)}
                           </Text>
                           <TagRightIcon as={AzeroIcon} />
                         </HStack>

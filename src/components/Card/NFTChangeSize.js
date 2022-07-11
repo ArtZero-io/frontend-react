@@ -14,6 +14,7 @@ import {
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { getCachedImageShort } from "@utils/index";
 import { motion } from "framer-motion";
+import { formatNumDynamicDecimal } from "@utils";
 
 export default function NFTChangeSizeCard({
   is_for_sale,
@@ -79,7 +80,9 @@ export default function NFTChangeSizeCard({
             <>
               <Flex w="full">
                 <Tag h={10}>
-                  <TagLabel>{(price / 10 ** 12).toFixed(6)}</TagLabel>
+                  <TagLabel>
+                    {formatNumDynamicDecimal(price / 10 ** 12)}
+                  </TagLabel>
                   <TagRightIcon as={AzeroIcon} />
                 </Tag>
 
@@ -97,7 +100,8 @@ export default function NFTChangeSizeCard({
                 {highest_bid ? (
                   <>
                     <Text bg="transparent" color="#fff">
-                      Highest Offer {highest_bid / 10 ** 12}
+                      Highest Offer{" "}
+                      {formatNumDynamicDecimal(highest_bid / 10 ** 12)}
                     </Text>
                     <TagRightIcon as={AzeroIcon} />
                   </>

@@ -1,50 +1,59 @@
-import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
   Grid,
   GridItem,
   Heading,
-  Spacer,
-  Text,
-  Link,
+  HStack,
   Image,
+  InputRightElement,
+  Link,
+  NumberInput,
+  NumberInputField,
+  Progress,
+  Skeleton,
+  Spacer,
+  Square,
+  Stack,
   Tag,
   TagLabel,
   TagRightIcon,
-  Progress,
-  Skeleton,
-  useBreakpointValue,
-  Square,
-  Stack,
-  HStack,
+  Text,
   Tooltip,
-  NumberInput,
-  InputRightElement,
-  NumberInputField,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { useSubstrateState } from "@utils/substrate";
-import { convertStringToPrice, createLevelAttribute } from "@utils";
+import { ImLock, ImUnlocked } from "react-icons/im";
 
-import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-
-import toast from "react-hot-toast";
-import { truncateStr } from "@utils";
-import BN from "bn.js";
+import { Link as ReactRouterLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+
+import BN from "bn.js";
+import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-import { getPublicCurrentAccount, getCachedImageShort } from "@utils";
-import StatusBuyButton from "@components/Button/StatusBuyButton";
-import { AccountActionTypes } from "@store/types/account.types";
+
+import {
+  truncateStr,
+  getCachedImageShort,
+  convertStringToPrice,
+  createLevelAttribute,
+  getPublicCurrentAccount,
+  formatNumDynamicDecimal,
+} from "@utils";
+
+import { useSubstrateState } from "@utils/substrate";
 
 import profile_calls from "@utils/blockchain/profile_calls";
-import { Link as ReactRouterLink } from "react-router-dom";
-import AddNewNFTModal from "../Modal/AddNewNFT";
-import { ImLock, ImUnlocked } from "react-icons/im";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+
 import { formMode } from "@constants";
-import LockNFTModal from "../../../../components/Modal/LockNFTModal";
+import { AccountActionTypes } from "@store/types/account.types";
+
+import LockNFTModal from "@components/Modal/LockNFTModal";
+import StatusBuyButton from "@components/Button/StatusBuyButton";
+
+import AddNewNFTModal from "../Modal/AddNewNFT";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -480,10 +489,14 @@ const NFTTabCollectible = (props) => {
                                       color="#fff"
                                       border="1px solid #7ae7ff"
                                       borderRadius="0"
-                                      label={(price / 10 ** 12).toFixed(6)}
+                                      label={formatNumDynamicDecimal(
+                                        price / 10 ** 12
+                                      )}
                                       aria-label="A tooltip"
                                     >
-                                      {(price / 10 ** 12).toFixed(6)}
+                                      {formatNumDynamicDecimal(
+                                        price / 10 ** 12
+                                      )}
                                     </Tooltip>
                                   </TagLabel>
                                   <TagRightIcon as={AzeroIcon} />
