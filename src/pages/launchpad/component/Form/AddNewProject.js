@@ -72,86 +72,44 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             initialValues={initialValues}
             validationSchema={Yup.object().shape({
               isEditMode: Yup.boolean(),
-
-              projectName: Yup.string()
-                .trim()
-                .min(3, "Must be longer than 3 characters")
-                .max(30, "Must be less than 30 characters")
-                .required("Required"),
-
-              projectDescription: Yup.string()
-                .trim()
-                .min(3, "Must be longer than 3 characters")
-                .max(150, "Must be less than 150 characters")
-                .required("Required"),
-              projectRoadmap: Yup.string()
-                .trim()
-                .min(3, "Must be longer than 3 characters")
-                .max(150, "Must be less than 150 characters")
-                .required("Required"),
-              projectTeamMembers: Yup.string()
-                .trim()
-                .min(3, "Must be longer than 3 characters")
-                .max(150, "Must be less than 150 characters")
-                .required("Required"),
-
-              nftName: Yup.string()
-                .trim()
-                .when("isEditMode", {
+                agreeTosCheckbox: Yup.boolean().when("isEditMode", {
                   is: false,
-                  then: Yup.string()
-                    .min(3, "Must be longer than 3 characters")
-                    .max(25, "Must be less than 25 characters")
-                    .required("Required"),
+                  then: Yup.boolean()
+                    .required("The terms and conditions must be accepted.")
+                    .oneOf([true], "The TOCs must be accepted."),
                 }),
-
-              nftSymbol: Yup.string()
-                .trim()
-                .when("isEditMode", {
-                  is: false,
-                  then: Yup.string()
-                    .min(3, "Must be longer than 3 characters")
-                    .max(8, "Must be less than 8 characters")
-                    .required("Required"),
-                }),
-
-              agreeTosCheckbox: Yup.boolean().when("isEditMode", {
-                is: false,
-                then: Yup.boolean()
-                  .required("The terms and conditions must be accepted.")
-                  .oneOf([true], "The TOCs must be accepted."),
-              }),
             })}
             onSubmit={async (values, { setSubmitting }) => {
-              if (!values.isEditMode && (!headerIPFSUrl || !avatarIPFSUrl)) {
-                return toast.error("Upload avatar or header please!");
-              }
+              console.log(values);
+              // if (!values.isEditMode && (!headerIPFSUrl || !avatarIPFSUrl)) {
+              //   return toast.error("Upload avatar or header please!");
+              // }
 
-              values.avatarIPFSUrl = avatarIPFSUrl;
-              values.headerIPFSUrl = headerIPFSUrl;
+              // values.avatarIPFSUrl = avatarIPFSUrl;
+              // values.headerIPFSUrl = headerIPFSUrl;
 
-              if (userBalance < 1) {
-                return toast.error(`Your balance too low!`);
-              }
+              // if (userBalance < 1) {
+              //   return toast.error(`Your balance too low!`);
+              // }
+              const data = {};
+              // const data = {
+              //   nftName: values.nftName,
+              //   nftSymbol: values.nftSymbol,
 
-              const data = {
-                nftName: values.nftName,
-                nftSymbol: values.nftSymbol,
+              //   attributes: [
+              //     "name",
+              //     "description",
+              //     "avatar_image",
+              //     "header_image",
+              //   ],
 
-                attributes: [
-                  "name",
-                  "description",
-                  "avatar_image",
-                  "header_image",
-                ],
-
-                attributeVals: [
-                  values.projectName.trim(),
-                  values.projectDescription.trim(),
-                  values.avatarIPFSUrl,
-                  values.headerIPFSUrl,
-                ],
-              };
+              //   attributeVals: [
+              //     values.projectName.trim(),
+              //     values.projectDescription.trim(),
+              //     values.avatarIPFSUrl,
+              //     values.headerIPFSUrl,
+              //   ],
+              // };
 
               dispatch({
                 type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
@@ -183,142 +141,40 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
           >
             {({ values, dirty, isValid }) => (
               <Form>
-                <HStack>
-                  {mode === formMode.ADD && (
-                    <>
-                      <Input
-                        type="text"
-                        name="nftName"
-                        label="NFT Name"
-                        isRequired={true}
-                        placeholder="NFT Name"
-                        isDisabled={addCollectionTnxStatus}
-                      />
-                      <Input
-                        type="text"
-                        name="nftSymbol"
-                        label="NFT Symbol"
-                        isRequired={true}
-                        placeholder="NFT Symbol"
-                        isDisabled={addCollectionTnxStatus}
-                      />
-                    </>
-                  )}
-
-                  <Input
-                    type="text"
-                    isRequired={true}
-                    name="projectName"
-                    label="Project name"
-                    placeholder="Project name"
-                    isDisabled={addCollectionTnxStatus}
-                  />
-                </HStack>
-
-                <TextArea
-                  height="140"
-                  type="text"
-                  isRequired={true}
-                  name="projectDescription"
-                  label="Project description"
-                  placeholder="Project description"
-                  isDisabled={addCollectionTnxStatus}
-                />
-                <TextArea
-                  height="140"
-                  type="text"
-                  isRequired={true}
-                  name="projectRoadmap"
-                  label="Project roadmap"
-                  placeholder="Project roadmap"
-                  isDisabled={addCollectionTnxStatus}
-                />
-
-                <TextArea
-                  height="140"
-                  type="text"
-                  isRequired={true}
-                  name="projectTeamMembers"
-                  label="Project team members"
-                  placeholder="Project team members"
-                  isDisabled={addCollectionTnxStatus}
-                />
-
-                <Stack
-                  direction="row"
-                  alignItems="start"
-                  justifyContent="space-between"
-                >
-                  <Stack
-                    w="50%"
-                    direction="column"
-                    alignItems="start"
-                    justifyContent="end"
-                  >
-                    <ImageUpload
-                      isDisabled={addCollectionTnxStatus}
-                      id="avatar"
-                      mode={mode}
-                      isBanner={false}
-                      imageIPFSUrl={avatarIPFSUrl}
-                      setImageIPFSUrl={setAvatarIPFSUrl}
-                      title="Project Avatar Image"
-                      limitedSize={{ width: "100", height: "100" }}
-                    />
-                  </Stack>
-
-                  <Stack
-                    w="50%"
-                    direction="column"
-                    alignItems="start"
-                    justifyContent="end"
-                  >
-                    <ImageUpload
-                      id="header"
-                      mode={mode}
-                      isBanner={true}
-                      title="Project Header Image"
-                      imageIPFSUrl={headerIPFSUrl}
-                      isDisabled={addCollectionTnxStatus}
-                      setImageIPFSUrl={setHeaderIPFSUrl}
-                      limitedSize={{ width: "1920", height: "600" }}
-                    />
-                  </Stack>
-                </Stack>
-
                 {mode === formMode.ADD && (
-                  <Flex alignItems="center" minH={20} mt={5}>
-                    <Flex
-                      direction="column"
-                      justifyContent="flex-start"
-                      alignItems="flex-start"
-                      textAlign="left"
-                    >
-                      <CommonCheckbox
-                        isDisabled={addCollectionTnxStatus}
-                        name="agreeTosCheckbox"
-                        content="I agree to ArtZero's Terms of Service"
-                      />
+                  <>
+                    <HStack align="center" justify="space-between">
+                    <NumberInput
+                      step={1}
+                      type="number"
+                      precision={0}
+                      name="totalSupply"
+                      hasStepper={false}
+                      placeholder="10000"
+                      inputWidth={"8rem"}
+                      label="Total Supply"
+                      maxRoyalFeeRate={10000}
+                      isDisabled={addCollectionTnxStatus}
+                    />
+                    <TimePicker />
+                  </HStack>
+                    <Flex alignItems="center" minH={20} mt={5}>
+                      
+                      <Flex
+                        direction="column"
+                        justifyContent="flex-start"
+                        alignItems="flex-start"
+                        textAlign="left"
+                      >
+                        <CommonCheckbox
+                          isDisabled={addCollectionTnxStatus}
+                          name="agreeTosCheckbox"
+                          content="I agree to ArtZero's Terms of Service"
+                        />
+                      </Flex>
                     </Flex>
-                  </Flex>
+                  </>
                 )}
-
-                <HStack align="center" justify="space-between">
-                  <NumberInput
-                    step={1}
-                    type="number"
-                    precision={0}
-                    name="totalSupply"
-                    hasStepper={false}
-                    placeholder="10000"
-                    inputWidth={"8rem"}
-                    label="Total Supply"
-                    maxRoyalFeeRate={10000}
-                    isDisabled={addCollectionTnxStatus}
-                  />
-                  <TimePicker />
-                </HStack>
-
                 <StatusButton
                   mode={mode}
                   text="project"
