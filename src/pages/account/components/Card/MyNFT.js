@@ -17,6 +17,7 @@ import {
 import React, { useEffect, useState } from "react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import {
+  delay,
   getCachedImageShort,
   secondsToTime,
   formatNumDynamicDecimal,
@@ -115,17 +116,21 @@ function MyNFTCard({
           dispatch
         );
       }
+
       if (res || allowance) {
         //Token is unstaked, Stake Now
         toast.success(res ? "Step 2: Staking..." : "Staking...");
 
-        await staking_calls.stake(
-          currentAccount,
-          [tokenID],
-          dispatch,
-          STAKE,
-          api
-        );
+        await delay(2000).then(async () => {
+          await staking_calls.stake(
+            currentAccount,
+            [tokenID],
+            dispatch,
+            STAKE,
+            api
+          );
+        });
+
         return;
       }
     }
