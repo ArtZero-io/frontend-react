@@ -84,7 +84,7 @@ const NFTTabCollectible = (props) => {
   const [action, setAction] = useState("");
   const [ownerName, setOwnerName] = useState("");
 
-  const [isOfferBtnFocus, setIsOfferBtnFocus] = useState(false);
+  // const [isOfferBtnFocus, setIsOfferBtnFocus] = useState(false);
 
   useEffect(() => {
     const doLoad = async () => {
@@ -520,7 +520,7 @@ const NFTTabCollectible = (props) => {
                             {!isBided && (
                               <>
                                 <StatusBuyButton
-                                  isOfferBtnFocus={isOfferBtnFocus}
+                                  // isOfferBtnFocus={isOfferBtnFocus}
                                   shouldDisabled={
                                     addNftTnxStatus?.status &&
                                     action &&
@@ -548,8 +548,8 @@ const NFTTabCollectible = (props) => {
                                   value={bidPrice}
                                   ml={3}
                                   h="50px"
-                                  onFocus={() => setIsOfferBtnFocus(true)}
-                                  onBlur={() => setIsOfferBtnFocus(false)}
+                                  // onFocus={() => setIsOfferBtnFocus(true)}
+                                  // onBlur={() => setIsOfferBtnFocus(false)}
                                 >
                                   <NumberInputField
                                     h="50px"
