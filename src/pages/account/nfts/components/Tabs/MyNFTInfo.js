@@ -39,7 +39,11 @@ import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard
 import { useSubstrateState } from "@utils/substrate";
 import { ContractPromise } from "@polkadot/api-contract";
 import { getCachedImageShort, truncateStr } from "@utils";
-import { convertStringToPrice, createLevelAttribute } from "@utils";
+import {
+  convertStringToPrice,
+  createLevelAttribute,
+  formatNumDynamicDecimal,
+} from "@utils";
 
 import { formMode } from "@constants";
 import { AccountActionTypes } from "@store/types/account.types";
@@ -694,7 +698,7 @@ function MyNFTTabInfo(props) {
                     <Text color="brand.grayLight">For Sale At</Text>
 
                     <Text color="#fff" mx={2}>
-                      {(price / 10 ** 12).toFixed(6)}
+                      {formatNumDynamicDecimal(price / 10 ** 12)}
                     </Text>
                     <AzeroIcon />
                   </Flex>
@@ -748,20 +752,21 @@ function MyNFTTabInfo(props) {
           py={{ base: "10px", "2xl": "20px" }}
         >
           <Text>
-            Royal fee: {((askPrice * royalFee) / 10000).toFixed(6)}{" "}
+            Royal fee: {formatNumDynamicDecimal((askPrice * royalFee) / 10000)}{" "}
             <AzeroIcon w="12px" mb="2px" /> ({(royalFee / 100).toFixed(2)} %)
           </Text>
           <Text>
-            Trade fee: {((askPrice * myTradingFee) / 100).toFixed(6)}{" "}
+            Trade fee:{" "}
+            {formatNumDynamicDecimal((askPrice * myTradingFee) / 100)}{" "}
             <AzeroIcon w="12px" mb="2px" /> ({myTradingFee} %)
           </Text>
           <Text>
             You will receive:{" "}
-            {(
+            {formatNumDynamicDecimal(
               askPrice -
-              (askPrice * myTradingFee) / 100 -
-              (askPrice * royalFee) / 10000
-            ).toFixed(6)}{" "}
+                (askPrice * myTradingFee) / 100 -
+                (askPrice * royalFee) / 10000
+            )}{" "}
             <AzeroIcon w="12px" mb="2px" />
           </Text>
         </HStack>
@@ -776,20 +781,20 @@ function MyNFTTabInfo(props) {
           py={{ base: "10px", "2xl": "20px" }}
         >
           <Text>
-            Royal fee: {(((price / 10 ** 12) * royalFee) / 10000).toFixed(6)}{" "}
+            Royal fee: {formatNumDynamicDecimal((price / 10 ** 16) * royalFee)}{" "}
             <AzeroIcon w="12px" mb="2px" /> ({(royalFee / 100).toFixed(2)} %)
           </Text>
           <Text>
-            Trade fee: {(((price / 10 ** 12) * myTradingFee) / 100).toFixed(6)}{" "}
+            Trade fee:{" "}
+            {formatNumDynamicDecimal((price / 10 ** 14) * myTradingFee)}{" "}
             <AzeroIcon w="12px" mb="2px" /> ({myTradingFee} %)
           </Text>
           <Text>
             You will receive:{" "}
-            {(
-              price / 10 ** 12 -
-              ((price / 10 ** 12) * myTradingFee) / 100 -
-              ((price / 10 ** 12) * royalFee) / 10000
-            ).toFixed(6)}{" "}
+            {formatNumDynamicDecimal(
+              price *
+                (1 / 10 ** 12 - myTradingFee / 10 ** 14 - royalFee / 10 ** 16)
+            )}{" "}
             <AzeroIcon w="12px" mb="2px" />
           </Text>
         </HStack>

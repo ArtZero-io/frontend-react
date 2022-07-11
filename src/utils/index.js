@@ -4,6 +4,7 @@ import { AccountActionTypes } from "../store/types/account.types";
 // import BN from "bn.js";
 import Keyring from "@polkadot/keyring";
 import { IPFS_BASE_URL } from "@constants/index";
+import numeral from "numeral";
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 export function getCachedImage(imageHash, size, url) {
@@ -330,3 +331,18 @@ export function onCloseButtonModal({ status, dispatch, type }) {
       },
     });
 }
+
+export const formatNumDynamicDecimal = (num = 0, dec = 6) => {
+  const number = parseInt(num * 10 ** dec) / 10 ** dec;
+  const numStr = number.toString();
+  const dotIdx = numStr.indexOf(".");
+
+  if (dotIdx === -1) {
+    return numeral(numStr).format("0,0");
+  }
+
+  const intPart = numeral(numStr.slice(0, dotIdx)).format("0,0");
+  const decPart = numStr.slice(dotIdx + 1, numStr.length);
+
+  return intPart + `${dotIdx === -1 ? "" : `.${decPart}`}`;
+};
