@@ -38,7 +38,7 @@ import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard
 
 import { useSubstrateState } from "@utils/substrate";
 import { ContractPromise } from "@polkadot/api-contract";
-import { getCachedImageShort, truncateStr } from "@utils";
+import { getCachedImageShort, truncateStr, delay } from "@utils";
 import {
   convertStringToPrice,
   createLevelAttribute,
@@ -228,14 +228,16 @@ function MyNFTTabInfo(props) {
               ? "Step 2: Listing on marketplace..."
               : "Listing on marketplace..."
           );
-          console.log("xxx askPrice", askPrice);
-          await marketplace_contract_calls.list(
-            currentAccount,
-            nftContractAddress,
-            { u64: tokenID },
-            askPrice,
-            dispatch
-          );
+
+          await delay(2000).then(async () => {
+            await marketplace_contract_calls.list(
+              currentAccount,
+              nftContractAddress,
+              { u64: tokenID },
+              askPrice,
+              dispatch
+            );
+          });
         }
       } else {
         dispatch({
@@ -486,7 +488,7 @@ function MyNFTTabInfo(props) {
             ) : (
               <>
                 <Grid
-                  maxH={{ base: "190px", "2xl": "265px" }}
+                  maxH={{ base: "170px", "2xl": "245px" }}
                   id="grid-attrs"
                   boxShadow="lg"
                   mb={2}

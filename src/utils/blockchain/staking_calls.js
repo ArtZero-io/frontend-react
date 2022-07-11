@@ -250,6 +250,7 @@ async function unstake(caller_account, token_ids, dispatch, txType, api) {
           dispatch,
           txType,
           api,
+          caller_account,
         });
 
         if (status.isFinalized === true) {
@@ -304,6 +305,7 @@ async function requestUnstake(
           dispatch,
           txType,
           api,
+          caller_account,
         });
 
         if (status) {
@@ -360,6 +362,7 @@ async function cancelRequestUnstake(
           dispatch,
           txType,
           api,
+          caller_account,
         });
         if (status.isFinalized === true) {
           // handleContractCall(status, dispatchError, dispatch, contract);

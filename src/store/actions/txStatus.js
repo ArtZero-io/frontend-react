@@ -67,11 +67,11 @@ export const txResponseErrorHandler = async ({
     const url = `https://test.azero.dev/#/explorer/query/`;
 
     if (Object.keys(status.toHuman())[0] === "0") {
-      let bal;
+
       await fetchUserBalance({ currentAccount: caller_account, api }).then(
-        ({ balance }) => (bal = balance)
+        ({ balance }) => console.log(txType, " bal ready: ", balance)
       );
-      console.log("txType bal before: ", bal);
+
       dispatch(setTxStatus({ txType: txType, txStatus: READY }));
     } else {
       const finalizedTimeStamp = Date.now();
@@ -84,11 +84,11 @@ export const txResponseErrorHandler = async ({
         })
       );
       if (statusToHuman[0][0] === "Finalized") {
-        let bal;
+
         await fetchUserBalance({ currentAccount: caller_account, api }).then(
-          ({ balance }) => (bal = balance)
+          ({ balance }) => console.log(txType, " bal final: ", balance)
         );
-        console.log("txType bal before: ", bal);
+        
         console.log("Tx finalized at ", `${url}${statusToHuman[0][1]}`);
       }
     }
