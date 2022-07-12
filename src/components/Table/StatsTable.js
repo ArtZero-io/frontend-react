@@ -16,72 +16,117 @@ import {
   Box,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { AnimatePresence, motion } from "framer-motion";
-
+import { motion } from "framer-motion";
+import { getCachedImageShort } from "@utils/index";
 import { memo } from "react";
+import { formatNumDynamicDecimal } from "@utils";
+import { useHistory } from "react-router-dom";
 
-function StatsTable({ tableHeaders, tableData }) {
-  const formatDataCell = (itemObj, itemIndex, headerValue) => {
+function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
+  const history = useHistory();
+
+  const formatDataCell = (itemObj, headerValue) => {
     switch (headerValue) {
-      case "index":
-        return Number(itemIndex + 1);
-      case "totalStakers":
-        return <>{itemObj[headerValue]} Stakers</>;
+      case "order":
+        return itemObj[headerValue];
+
       case "marketCap":
         return (
           <>
-            {itemObj[headerValue]} <TagRightIcon as={AzeroIcon} />
+            {useAzeroUnit ? (
+              <>
+                {formatNumDynamicDecimal(
+                  itemObj["nft_count"] * itemObj["floorPrice"]
+                )}
+                <TagRightIcon as={AzeroIcon} />
+              </>
+            ) : (
+              <>
+                ${" "}
+                {formatNumDynamicDecimal(
+                  azeroPrice * itemObj["nft_count"] * itemObj["floorPrice"],
+                  2
+                )}{" "}
+              </>
+            )}
           </>
         );
 
       case "floorPrice":
         return (
           <>
-            {itemObj[headerValue]} <TagRightIcon as={AzeroIcon} />
+            {useAzeroUnit ? (
+              <>
+                {formatNumDynamicDecimal(itemObj[headerValue])}
+                <TagRightIcon as={AzeroIcon} />
+              </>
+            ) : (
+              <>
+                ${" "}
+                {formatNumDynamicDecimal(azeroPrice * itemObj[headerValue], 2)}
+              </>
+            )}
           </>
         );
 
-      case "totalAmount":
-        return (
-          <>
-            {itemObj[headerValue]} <TagRightIcon as={AzeroIcon} />
-          </>
-        );
-      case "collectionName":
+      case "name":
         return (
           <Flex alignItems="center">
-            <Square size="50px" mr="20px">
-              <Image width="full" height="full" src={itemObj.avatarImage} />
+            <Square size="50px" mr="20px" shadow="lg">
+              <Image
+                width="full"
+                height="full"
+                src={getCachedImageShort(itemObj.avatarImage)}
+              />
             </Square>
 
             <Flex direction="column" alignItems="flex-start">
-              <Heading fontSize="16px">{itemObj[headerValue]}</Heading>
+              <Heading
+                fontSize="16px"
+                cursor="pointer"
+                _hover={{ color: "brand.blue" }}
+                onClick={() => {
+                  history.push(`/collection/${itemObj.nftContractAddress}`);
+                }}
+              >
+                {itemObj[headerValue]}
+              </Heading>
               <Text color="#7ae7ff" fontSize="16px" mt="4px">
-                {itemObj["totalSupply"]}
+                {itemObj["nft_count"]} NFTs
               </Text>
             </Flex>
           </Flex>
         );
-      case "vol7Day":
+
+      case "volume":
         return (
           <>
-            <Box>
-              {itemObj[headerValue]["amount"]} <TagRightIcon as={AzeroIcon} />
-            </Box>
-            <Box mt="6px" color="#34B979" fontSize="16px">
+            {useAzeroUnit ? (
+              <>
+                <Box>
+                  {formatNumDynamicDecimal(itemObj[headerValue])}{" "}
+                  <TagRightIcon as={AzeroIcon} />
+                </Box>
+
+                {/* <Box mt="6px" color="#34B979" fontSize="16px">
               +{itemObj[headerValue]["percent"]}%
-            </Box>
-          </>
-        );
-      case "averagePrice24h":
-        return (
-          <>
-            <Box>
-              {itemObj[headerValue]["amount"]} <TagRightIcon as={AzeroIcon} />
-            </Box>
-            <Box mt="6px" color="#34B979" fontSize="16px">
-              {itemObj[headerValue]["percent"]} %
-            </Box>
+            </Box> */}
+              </>
+            ) : (
+              <>
+                <Box>
+                  ${" "}
+                  {formatNumDynamicDecimal(
+                    azeroPrice * itemObj[headerValue],
+                    2
+                  )}
+                </Box>
+
+                {/* <Box mt="6px" color="#34B979" fontSize="16px">
+              +{itemObj[headerValue]["percent"]}%
+            </Box> */}
+              </>
+            )}
           </>
         );
 
@@ -98,64 +143,63 @@ function StatsTable({ tableHeaders, tableData }) {
         </Heading>
       ) : (
         <TableContainer
-          minH="500px"
-          // maxH={{ base: "20rem", "2xl": "30rem" }}
+          shadow="lg"
+          minH="600px"
           fontSize="lg"
           h="full"
           overflow="auto"
         >
-          <AnimatePresence>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              {tableData?.length ? (
-                <Skeleton minH="200px" h="full" isLoaded={tableData}>
-                  <Table variant="striped" size="md" colorScheme="blackAlpha">
-                    <Thead>
-                      <Tr>
-                        {Object.values(tableHeaders)?.map((item, idx) => (
-                          <Th
-                            position="sticky"
-                            top={0}
-                            zIndex={1}
-                            textAlign="center"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {tableData?.length ? (
+              <Skeleton minH="200px" h="full" isLoaded={tableData}>
+                <Table variant="striped" size="md" colorScheme="blackAlpha">
+                  <Thead>
+                    <Tr>
+                      {Object.values(tableHeaders)?.map((item, idx) => (
+                        <Th
+                          position="sticky"
+                          top={0}
+                          zIndex={1}
+                          textAlign="center"
+                          key={idx}
+                          fontFamily="Evogria"
+                          color="#888"
+                          bg="#171717"
+                          fontSize="15px"
+                          fontWeight="400"
+                          dropShadow="lg"
+                          py={{ base: "1rem", "2xl": "1.75rem" }}
+                        >
+                          {item}
+                        </Th>
+                      ))}
+                    </Tr>
+                  </Thead>
+
+                  <Tbody>
+                    {tableData?.map((item, index) => (
+                      <Tr key={index} color="#fff">
+                        {Object.keys(tableHeaders)?.map((i, idx) => (
+                          <Td
+                            isNumeric={i !== "order" ? true : false}
                             key={idx}
-                            fontFamily="Evogria"
-                            color="#888"
-                            bg="#171717"
-                            fontSize="15px"
-                            fontWeight="400"
-                            dropShadow="lg"
                             py={{ base: "1rem", "2xl": "1.75rem" }}
+                            textAlign="center"
                           >
-                            {item}
-                          </Th>
+                            {formatDataCell(item, i)}
+                          </Td>
                         ))}
                       </Tr>
-                    </Thead>
-
-                    <Tbody>
-                      {tableData?.map((item, index) => (
-                        <Tr key={index} color="#fff">
-                          {Object.keys(tableHeaders)?.map((i, idx) => (
-                            <Td
-                              key={idx}
-                              py={{ base: "1rem", "2xl": "1.75rem" }}
-                              textAlign="center"
-                            >
-                              {formatDataCell(item, index, i)}
-                            </Td>
-                          ))}
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                </Skeleton>
-              ) : null}
-            </motion.div>
-          </AnimatePresence>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Skeleton>
+            ) : null}
+          </motion.div>
         </TableContainer>
       )}
     </>

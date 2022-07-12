@@ -158,14 +158,28 @@ export const APICall = {
     });
   },
 
+  getCollectionByVolume: async ({
+    limit = 5,
+    offset = 0,
+    sort = -1,
+    isActive = true,
+  }) => {
+    const ret = await client("POST", "/getCollectionsByVolume", {
+      limit,
+      offset,
+      sort,
+      isActive,
+    });
+
+    return ret;
+  },
+
   getCollectionsByOwner: async ({
     owner,
     limit = 1000,
     offset = 0,
     sort = -1,
   }) => {
-    console.log("getCollectionsByOwner..... start");
-
     const ret = await client("POST", "/getCollectionsByOwner", {
       owner,
       limit,
@@ -173,9 +187,16 @@ export const APICall = {
       sort,
     });
 
-    console.log("ret", ret);
+    return ret;
   },
 
+  getCollectionFloorPrice: async ({ collection_address }) => {
+    return await client("POST", "/getFloorPrice", {
+      collection_address,
+    });
+  },
+
+  // NFT API Calls
   getNFTsByOwner: async ({ owner }) => {
     return await client("POST", "/getNFTsByOwner", {
       owner,
