@@ -4,10 +4,11 @@ import toast from "react-hot-toast";
 import { Formik, Form } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect, useRef } from "react";
-import { Flex, HStack, Spacer, Stack } from "@chakra-ui/react";
+import { Flex, HStack, Spacer, Stack, Text } from "@chakra-ui/react";
 
 import Input from "@components/Input/Input";
 import NumberInput from "@components/Input/NumberInput";
+import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker";
 
 import TextArea from "@components/TextArea/TextArea";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
@@ -16,7 +17,7 @@ import ImageUpload from "@components/ImageUpload/Collection";
 
 import { useSubstrateState } from "@utils/substrate";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-
+import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 import { formMode } from "@constants";
 import { APICall } from "@api/client";
 import { AccountActionTypes } from "@store/types/account.types";
@@ -28,7 +29,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
   const [initialValues, setInitialValues] = useState(null);
   const [userBalance, setUserBalance] = useState(null);
-
+  const [scheduleProject, setScheduleProject] = useState([new Date(), new Date()]);
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
   const { addCollectionTnxStatus } = useSelector(
@@ -81,35 +82,13 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             })}
             onSubmit={async (values, { setSubmitting }) => {
               console.log(values);
-              // if (!values.isEditMode && (!headerIPFSUrl || !avatarIPFSUrl)) {
-              //   return toast.error("Upload avatar or header please!");
-              // }
-
-              // values.avatarIPFSUrl = avatarIPFSUrl;
-              // values.headerIPFSUrl = headerIPFSUrl;
-
-              // if (userBalance < 1) {
-              //   return toast.error(`Your balance too low!`);
-              // }
-              const data = {};
-              // const data = {
-              //   nftName: values.nftName,
-              //   nftSymbol: values.nftSymbol,
-
-              //   attributes: [
-              //     "name",
-              //     "description",
-              //     "avatar_image",
-              //     "header_image",
-              //   ],
-
-              //   attributeVals: [
-              //     values.projectName.trim(),
-              //     values.projectDescription.trim(),
-              //     values.avatarIPFSUrl,
-              //     values.headerIPFSUrl,
-              //   ],
-              // };
+              
+              const data = {
+                total_supply: Number(values.totalSupply),
+                start_time: scheduleProject[0].getTime(),
+                end_time: scheduleProject[1].getTime(),
+                project_info: values.project_info
+              };
 
               dispatch({
                 type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
@@ -119,30 +98,37 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               });
 
               if (mode === formMode.ADD) {
-                await collection_manager_calls.autoNewCollection(
+                await launchpad_contract_calls.addNewProject(
                   currentAccount,
                   data,
-                  dispatch,
-                  api
+                  dispatch
                 );
               }
 
-              if (mode === formMode.EDIT) {
-                await collection_manager_calls.setMultipleAttributes(
-                  currentAccount,
-                  nftContractAddress,
-                  data.attributes,
-                  data.attributeVals,
-                  dispatch,
-                  api
-                );
-              }
+              // if (mode === formMode.EDIT) {
+              //   await collection_manager_calls.setMultipleAttributes(
+              //     currentAccount,
+              //     nftContractAddress,
+              //     data.attributes,
+              //     data.attributeVals,
+              //     dispatch,
+              //     api
+              //   );
+              // }
             }}
           >
             {({ values, dirty, isValid }) => (
               <Form>
                 {mode === formMode.ADD && (
                   <>
+                    <Input
+                        type="text"
+                        name="project_info"
+                        label="Project Information"
+                        isRequired={true}
+                        placeholder="Project Information"
+                        isDisabled={addCollectionTnxStatus}
+                      />
                     <HStack align="center" justify="space-between">
                     <NumberInput
                       step={1}
@@ -156,7 +142,10 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       maxRoyalFeeRate={10000}
                       isDisabled={addCollectionTnxStatus}
                     />
-                    <TimePicker />
+                    <Stack>
+                      <Text>Start time - End time</Text>
+                      <DateTimeRangePicker onChange={setScheduleProject} value={scheduleProject} locale="en-EN" />
+                    </Stack>
                   </HStack>
                     <Flex alignItems="center" minH={20} mt={5}>
                       
@@ -215,10 +204,7 @@ const fetchUserBalance = async ({ currentAccount, api }) => {
 const fetchInitialValuesProject = async ({ mode, collection_address }) => {
   let initialValues = {
     isEditMode: false,
-    nftName: "",
-    nftSymbol: "",
-    projectName: "",
-    projectDescription: "",
+    project_info: '',
     totalSupply: 0,
     agreeTosCheckbox: false,
   };

@@ -179,15 +179,10 @@ async function addNewProject(
     .addNewProject(
       { gasLimit, value: value },
       address,
-      data.name,
-      data.description,
       data.total_supply,
-      data.roadmaps,
-      data.team_members,
       data.start_time,
       data.end_time,
-      data.attributes,
-      data.attribute_vals
+      data.project_info
     )
     .signAndSend(
       address,
