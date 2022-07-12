@@ -23,13 +23,20 @@ import { APICall } from "@api/client";
 import { AccountActionTypes } from "@store/types/account.types";
 import { formatBalance } from "@polkadot/util";
 import { TimePicker } from "../../../../components/TimePicker/TimePicker";
+import JsonUpload from "../../../../components/JsonUpload/JsonUpload";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
+  const [jsonIPFSUrl, setJsonIPFSUrl] = useState("");
+
+  console.log("jsonIPFSUrl", jsonIPFSUrl);
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
   const [initialValues, setInitialValues] = useState(null);
   const [userBalance, setUserBalance] = useState(null);
-  const [scheduleProject, setScheduleProject] = useState([new Date(), new Date()]);
+  const [scheduleProject, setScheduleProject] = useState([
+    new Date(),
+    new Date(),
+  ]);
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
   const { addCollectionTnxStatus } = useSelector(
@@ -73,21 +80,21 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             initialValues={initialValues}
             validationSchema={Yup.object().shape({
               isEditMode: Yup.boolean(),
-                agreeTosCheckbox: Yup.boolean().when("isEditMode", {
-                  is: false,
-                  then: Yup.boolean()
-                    .required("The terms and conditions must be accepted.")
-                    .oneOf([true], "The TOCs must be accepted."),
-                }),
+              agreeTosCheckbox: Yup.boolean().when("isEditMode", {
+                is: false,
+                then: Yup.boolean()
+                  .required("The terms and conditions must be accepted.")
+                  .oneOf([true], "The TOCs must be accepted."),
+              }),
             })}
             onSubmit={async (values, { setSubmitting }) => {
               console.log(values);
-              
+
               const data = {
                 total_supply: Number(values.totalSupply),
                 start_time: scheduleProject[0].getTime(),
                 end_time: scheduleProject[1].getTime(),
-                project_info: values.project_info
+                project_info: values.project_info,
               };
 
               dispatch({
@@ -122,33 +129,40 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 {mode === formMode.ADD && (
                   <>
                     <Input
-                        type="text"
-                        name="project_info"
-                        label="Project Information"
-                        isRequired={true}
-                        placeholder="Project Information"
-                        isDisabled={addCollectionTnxStatus}
-                      />
-                    <HStack align="center" justify="space-between">
-                    <NumberInput
-                      step={1}
-                      type="number"
-                      precision={0}
-                      name="totalSupply"
-                      hasStepper={false}
-                      placeholder="10000"
-                      inputWidth={"8rem"}
-                      label="Total Supply"
-                      maxRoyalFeeRate={10000}
+                      type="text"
+                      name="project_info"
+                      label="Project Information"
+                      isRequired={true}
+                      placeholder="Project Information"
                       isDisabled={addCollectionTnxStatus}
                     />
-                    <Stack>
-                      <Text>Start time - End time</Text>
-                      <DateTimeRangePicker onChange={setScheduleProject} value={scheduleProject} locale="en-EN" />
-                    </Stack>
-                  </HStack>
+                    <HStack align="center" justify="space-between">
+                      <NumberInput
+                        step={1}
+                        type="number"
+                        precision={0}
+                        name="totalSupply"
+                        hasStepper={false}
+                        placeholder="10000"
+                        inputWidth={"8rem"}
+                        label="Total Supply"
+                        maxRoyalFeeRate={10000}
+                        isDisabled={addCollectionTnxStatus}
+                      />
+                      <Stack>
+                        <Text>Start time - End time</Text>
+                        <DateTimeRangePicker
+                          onChange={setScheduleProject}
+                          value={scheduleProject}
+                          locale="en-EN"
+                        />
+                      </Stack>
+                    </HStack>
+                    <JsonUpload
+                      jsonIPFSUrl={jsonIPFSUrl}
+                      setJsonIPFSUrl={setJsonIPFSUrl}
+                    />
                     <Flex alignItems="center" minH={20} mt={5}>
-                      
                       <Flex
                         direction="column"
                         justifyContent="flex-start"
@@ -204,7 +218,7 @@ const fetchUserBalance = async ({ currentAccount, api }) => {
 const fetchInitialValuesProject = async ({ mode, collection_address }) => {
   let initialValues = {
     isEditMode: false,
-    project_info: '',
+    project_info: "",
     totalSupply: 0,
     agreeTosCheckbox: false,
   };
