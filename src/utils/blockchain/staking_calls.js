@@ -180,6 +180,27 @@ async function getLimitUnstakeTime(caller_account) {
   }
   return null;
 }
+async function getTotalCountOfStakeholders(caller_account) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const { result, output } = await contract.query.getStakedAccountsLastIndex(
+    address,
+    {
+      value: azero_value,
+      gasLimit,
+    }
+  );
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
 
 //SETTERS
 async function stake(caller_account, token_ids, dispatch, txType, api) {
@@ -402,6 +423,7 @@ const staking_calls = {
   setStakingContract,
   getTotalPendingUnstakedByAccount,
   getLimitUnstakeTime,
+  getTotalCountOfStakeholders,
 };
 
 export default staking_calls;
