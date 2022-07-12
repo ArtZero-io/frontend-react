@@ -222,51 +222,82 @@ const MyNFTsPage = () => {
         mx="auto"
         maxW={{ base: "6xl", "2xl": "7xl" }}
         px={{ base: "6", "2xl": "8" }}
-        py={{ base: "12", "2xl": "20" }}
+        py={{ base: "4", xl: "12", "2xl": "20" }}
       >
-        <Flex w="full" alignItems="start" pb={12}>
-          <Heading size="h2">My NFTs</Heading>
+        <Flex
+          w="full"
+          alignItems="start"
+          justify="space-between"
+          pb={{ base: "12px", xl: "48px" }}
+          direction={{ base: "column", xl: "row" }}
+        >
+          <Heading minW="100px" fontSize={{ base: "26px", xl: "48px" }}>
+            My NFTs
+          </Heading>
 
           <Spacer />
-
-          <Button
-            isActive={filterSelected === 0}
-            variant="outline"
-            mx={1}
-            id="collected"
-            onClick={() => onClickHandler(0)}
+          <HStack
+            maxW={{ base: "320px", xl: "500px" }}
+            overflowX="scroll"
+            mt="20px"
+            pb="8px"
+            sx={{
+              "&::-webkit-scrollbar": {
+                width: "4px",
+                height: "4px",
+                borderRadius: "0px",
+                backgroundColor: `transparent`,
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: `#7ae7ff`,
+              },
+              "&::-webkit-scrollbar-thumb:hover": {
+                backgroundColor: `#7ae7ff`,
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: `transparent`,
+              },
+            }}
           >
-            Collected
-          </Button>
+            <Button
+              isActive={filterSelected === 0}
+              variant="outline"
+              mx={1}
+              id="collected"
+              onClick={() => onClickHandler(0)}
+            >
+              Collected
+            </Button>
 
-          <Button
-            isActive={filterSelected === 1}
-            variant="outline"
-            mx={1}
-            id="listed"
-            onClick={() => onClickHandler(1)}
-          >
-            My Listing
-          </Button>
+            <Button
+              isActive={filterSelected === 1}
+              variant="outline"
+              mx={1}
+              id="listed"
+              onClick={() => onClickHandler(1)}
+            >
+              My Listing
+            </Button>
 
-          <Button
-            isActive={filterSelected === 2}
-            variant="outline"
-            mx={1}
-            id="bid"
-            onClick={() => onClickHandler(2)}
-          >
-            My Bids
-          </Button>
+            <Button
+              isActive={filterSelected === 2}
+              variant="outline"
+              mx={1}
+              id="bid"
+              onClick={() => onClickHandler(2)}
+            >
+              My Bids
+            </Button>
 
-          <IconButton
-            mx={1}
-            aria-label="refresh"
-            icon={<RefreshIcon />}
-            size="icon"
-            variant="iconSolid"
-            onClick={() => setMyCollections(null)}
-          />
+            <IconButton
+              mx={1}
+              aria-label="refresh"
+              icon={<RefreshIcon />}
+              size="icon"
+              variant="iconSolid"
+              onClick={() => setMyCollections(null)}
+            />
+          </HStack>
         </Flex>
 
         {loading ? (

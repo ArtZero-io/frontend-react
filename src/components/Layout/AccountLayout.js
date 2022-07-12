@@ -55,7 +55,7 @@ const AccountLayout = ({ children }) => {
                 key={tab.label}
                 fontFamily="Evogria Italic, san serif"
                 color="#fff"
-                fontSize="lg"
+                fontSize={{ base: "16px", xl: "lg" }}
                 mx={4}
                 fontStyle="italic"
                 px="0.5px"

@@ -14,7 +14,7 @@ import {
   Tag,
   TagLeftIcon,
   TagLabel,
-  HStack,
+  Stack,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -279,14 +279,20 @@ function MintHeader({ loading }) {
           <Box fontSize="lg" bg="brand.grayDark" padding={7} minH="xs">
             <Flex direction="column" justifyContent="space-between" h="full">
               <Box h="full">
-                <Heading textTransform="uppercase" size="h6">
+                <Heading textTransform="uppercase" size="h6" lineHeight="22px">
                   Your{" "}
                   <Text as="span" color="#7ae7ff">
                     PRAYING MANTIS PREDATORS (PMP)
                   </Text>{" "}
                   NFT Balance
                 </Heading>
-                <HStack align="flex-end" justify="space-between">
+
+                <Stack
+                  align={{ base: "flex-start", xl: "flex-end" }}
+                  fontSize={{ base: "16px", xl: "18px" }}
+                  direction={{ base: "column", xl: "row" }}
+                  justify={{ base: "flex-start", xl: "space-between" }}
+                >
                   <Text mt={3}>
                     Your address:{" "}
                     <span style={{ color: "#7ae7ff" }}>
@@ -298,38 +304,49 @@ function MintHeader({ loading }) {
                     Total own:{" "}
                     <span style={{ color: "#fff" }}>{balance} NFTs</span>
                   </Text>
-                </HStack>
-                <HStack align="flex-end" justify="space-between">
+                </Stack>
+
+                <Stack
+                  fontSize={{ base: "16px", xl: "18px" }}
+                  direction={{ base: "column", xl: "row" }}
+                  align={{ base: "flex-start", xl: "flex-end" }}
+                  justify={{ base: "flex-start", xl: "space-between" }}
+                >
                   <Text mt={2}>
                     Staked/pending:{" "}
                     <span style={{ color: "#fff" }}>
                       {balanceStake + balancePending} NFTs
                     </span>
                   </Text>
-
                   <Text mt={2}>
                     Available:{" "}
                     <span style={{ color: "#fff" }}>
                       {balance - balanceStake - balancePending} NFTs
                     </span>
                   </Text>
-                </HStack>
+                </Stack>
               </Box>
               <Box>
-                <Heading textTransform="uppercase" size="h6">
-                
+                <Heading textTransform="uppercase" size="h6" lineHeight="22px">
                   <Text as="span" color="#7ae7ff">
                     PRAYING MANTIS PREDATORS (PMP)
                   </Text>{" "}
-                   NFT information:
+                  NFT information:
                 </Heading>
-                <Text mt={3}>
-                  Total Supply: <span style={{ color: "#fff" }}>200</span>
-                </Text>
-                <Text mt={3}>
-                  Total Minted:{" "}
-                  <span style={{ color: "#fff" }}>{totalMinted}</span>
-                </Text>
+
+                <Stack
+                  fontSize={{ base: "16px", xl: "18px" }}
+                  direction={{ base: "row", xl: "column" }}
+                  align={{ base: "flex-end", xl: "flex-start" }}
+                >
+                  <Text mt={3} mr="30px">
+                    Total Supply: <span style={{ color: "#fff" }}>200</span>
+                  </Text>
+                  <Text mt={3}>
+                    Total Minted:{" "}
+                    <span style={{ color: "#fff" }}>{totalMinted}</span>
+                  </Text>
+                </Stack>
               </Box>
             </Flex>
           </Box>
@@ -341,7 +358,10 @@ function MintHeader({ loading }) {
                   whitelist minting
                 </Heading>
                 {!whitelist ? (
-                  <Flex alignItems="center">
+                  <Flex
+                    alignItems="center"
+                    fontSize={{ base: "16px", xl: "18px" }}
+                  >
                     <Text>Status:</Text>
                     <Tag variant="inActive">
                       <TagLeftIcon as={InActiveIcon} />
@@ -349,7 +369,10 @@ function MintHeader({ loading }) {
                     </Tag>
                   </Flex>
                 ) : (
-                  <Flex alignItems="center">
+                  <Flex
+                    alignItems="center"
+                    fontSize={{ base: "16px", xl: "18px" }}
+                  >
                     <Text>Status:</Text>
                     <Tag variant="active">
                       <TagLeftIcon as={ActiveIcon} />
@@ -358,46 +381,42 @@ function MintHeader({ loading }) {
                   </Flex>
                 )}
                 {!whitelist && (
-                  <Heading py="30px" size="h6" textTransform="uppercase">
-                    Notice: You are not in the whitelist for minting ArtZero
-                    NFTs
+                  <Heading
+                    py="30px"
+                    size="h6"
+                    textTransform="uppercase"
+                    lineHeight="22px"
+                  >
+                    Notice: You are not in the whitelist for minting PRAYING
+                    MANTIS PREDATORS (PMP) NFTs
                   </Heading>
                 )}
                 {whitelist && (
                   <>
-                    <>
-                      <Text alignItems="center" mt={3}>
-                        Minting fee: <span style={{ color: "#fff" }}>0</span>{" "}
-                        <AzeroIcon mb={1.5} />
-                      </Text>
-                      <Text mt={3}>
-                        Minted / Max Mint:{" "}
-                        <span style={{ color: "#fff" }}>
-                          {whitelist?.claimedAmount} /{" "}
-                          {whitelist?.whitelistAmount} NFTs
-                        </span>
-                      </Text>
-                    </>
-                    {/* <Text size="h6" textTransform="uppercase">
-                      You are in the whitelist for minting ArtZero NFTs
+                    <Text
+                      alignItems="center"
+                      mt={3}
+                      fontSize={{ base: "16px", xl: "18px" }}
+                    >
+                      Minting fee: <span style={{ color: "#fff" }}>0</span>{" "}
+                      <AzeroIcon mb={1.5} />
                     </Text>
-                    <Text mt={3}>
-                      You can claim:{" "}
+                    <Text mt={3} fontSize={{ base: "16px", xl: "18px" }}>
+                      Minted / Max Mint:{" "}
                       <span style={{ color: "#fff" }}>
-                        {whitelist?.whitelistAmount} ArtZero NFTs
+                        {whitelist?.claimedAmount} /{" "}
+                        {whitelist?.whitelistAmount} NFTs
                       </span>
                     </Text>
-                    <Text mt={3}>
-                      You already claimed:{" "}
-                      <span style={{ color: "#fff" }}>
-                        {whitelist?.claimedAmount} ArtZero NFTs
-                      </span>
-                    </Text> */}
                   </>
                 )}
               </Box>
               <Box>
-                <Text color={!whitelist ? "F888" : "#fff"} py={2}>
+                <Text
+                  color={!whitelist ? "F888" : "#fff"}
+                  py={2}
+                  fontSize={{ base: "16px", xl: "18px" }}
+                >
                   Enter amount to mint
                 </Text>
                 <Flex justify="space-between">
@@ -431,8 +450,6 @@ function MintHeader({ loading }) {
                       (addNftTnxStatus?.status &&
                         !(!action || action === "whitelist"))
                     }
-                    // shouldDisabled={action && action !== "whitelist"}
-                    // isDisabled={!whitelist || totalMinted >= MAX_MINT_COUNT}
                     isDo={action === "whitelist"}
                     type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
                     text="whitelist"
@@ -441,16 +458,9 @@ function MintHeader({ loading }) {
                     onClick={onWhiteListMint}
                     variant="outline"
                     maxW="full"
-                    minW="225px"
+                    minW={{ base: "195px", xl: "225px" }}
                     height="50px"
                   />
-                  {/* <Button
-                    isDisabled={!whitelist || totalMinted >= MAX_MINT_COUNT}
-                    variant="outline"
-                    onClick={() => onWhiteListMint()}
-                  >
-                    WhiteList Mint (FREE)
-                  </Button> */}
                 </Flex>
               </Box>
             </Flex>
@@ -463,7 +473,10 @@ function MintHeader({ loading }) {
                   Public Minting
                 </Heading>
                 {Number(mintMode) <= 0 ? (
-                  <Flex alignItems="center">
+                  <Flex
+                    alignItems="center"
+                    fontSize={{ base: "16px", xl: "18px" }}
+                  >
                     <Text>Status:</Text>
                     <Tag variant="inActive">
                       <TagLeftIcon as={InActiveIcon} />
@@ -471,7 +484,10 @@ function MintHeader({ loading }) {
                     </Tag>
                   </Flex>
                 ) : (
-                  <Flex alignItems="center">
+                  <Flex
+                    alignItems="center"
+                    fontSize={{ base: "16px", xl: "18px" }}
+                  >
                     <Text>Status:</Text>
                     <Tag variant="active">
                       <TagLeftIcon as={ActiveIcon} />
@@ -481,11 +497,15 @@ function MintHeader({ loading }) {
                 )}
                 {Number(mintMode) === 1 ? (
                   <>
-                    <Text alignItems="center" mt={3}>
+                    <Text
+                      alignItems="center"
+                      mt={3}
+                      fontSize={{ base: "16px", xl: "18px" }}
+                    >
                       Minting fee: <span style={{ color: "#fff" }}>{fee1}</span>{" "}
                       <AzeroIcon mb={1.5} />
                     </Text>
-                    <Text mt={3}>
+                    <Text mt={3} fontSize={{ base: "16px", xl: "18px" }}>
                       Minted / Max Mint:{" "}
                       <span style={{ color: "#fff" }}>
                         {publicSaleMintedCount} / {amount1} NFTs
@@ -496,7 +516,11 @@ function MintHeader({ loading }) {
 
                 {Number(mintMode) === 2 ? (
                   <>
-                    <Text alignItems="center" mt={3}>
+                    <Text
+                      alignItems="center"
+                      mt={3}
+                      fontSize={{ base: "16px", xl: "18px" }}
+                    >
                       Only Whitelist Mint Allowed
                     </Text>
                   </>
@@ -511,12 +535,6 @@ function MintHeader({ loading }) {
                   publicSaleMintedCount >= amount1 ||
                   (addNftTnxStatus?.status && !(!action || action === "public"))
                 }
-                // shouldDisabled={action && action !== "public"}
-                // isDisabled={
-                //   Number(mintMode) === 2 ||
-                //   Number(mintMode) <= 0 ||
-                //   totalMinted >= MAX_MINT_COUNT
-                // }
                 isDo={action === "public"}
                 type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
                 text="public"
@@ -527,21 +545,6 @@ function MintHeader({ loading }) {
                 maxW="full"
                 height="50px"
               />
-              {/* <Button
-                isDisabled={
-                  Number(mintMode) === 2 || Number(mintMode) <= 0 || totalMinted >= MAX_MINT_COUNT
-                  Number(mintMode) === 2 ||
-                  Number(mintMode) <= 0 ||
-                  totalMinted >= MAX_MINT_COUNT
-                }
-                spinnerPlacement="start"
-                isLoading={tnxStatus}
-                loadingText={`${tnxStatus?.status}`}
-                variant="solid"
-                onClick={() => onPaidMint()}
-              >
-                Mint Now
-              </Button> */}
             </Flex>
           </Box>
         </Grid>

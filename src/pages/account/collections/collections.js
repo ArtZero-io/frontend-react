@@ -153,10 +153,15 @@ function MyCollectionsPage() {
         px={{ base: "8", "2xl": "4" }}
         py={{ base: "12", "2xl": "20" }}
       >
-        <Flex w="full" alignItems="start" pb={12}>
+        <Flex
+          direction={{ base: "column", xl: "row" }}
+          w="full"
+          alignItems="start"
+          pb={12}
+        >
           <Heading size="h2">My collections</Heading>
 
-          <Spacer />
+          <Spacer mt={{ base: "20px", xl: "0px" }} />
 
           <AddNewCollectionModal mode={formMode.ADD} />
         </Flex>
