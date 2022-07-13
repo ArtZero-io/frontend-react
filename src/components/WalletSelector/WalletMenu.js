@@ -21,12 +21,24 @@ function WalletMenu() {
         .account(activeAddress, (balance) => {
           let oneSZERO = new BN(10 ** 12);
           let balSZERO = new BN(balance.data.free, 10, "le");
-          if (balSZERO.gt(oneSZERO))
-            balSZERO = balSZERO.div(new BN(10 ** 12)).toNumber();
-          else balSZERO = balSZERO.toNumber() / 10 ** 12;
 
-          if (balSZERO >= 1) balSZERO = shortenNumber(balSZERO);
-          else balSZERO = parseFloat(balSZERO).toFixed(3);
+          console.log(
+            "bal mil-AZERO:",
+            balSZERO.toHuman().slice(0, -16) +
+              "." +
+              balSZERO.toHuman().slice(-15, -8)
+          );
+          if (balSZERO.gt(oneSZERO)) {
+            balSZERO = balSZERO.div(new BN(10 ** 12)).toNumber();
+          } else {
+            balSZERO = balSZERO.toNumber() / 10 ** 12;
+          }
+
+          if (balSZERO >= 1) {
+            balSZERO = shortenNumber(balSZERO);
+          } else {
+            balSZERO = parseFloat(balSZERO).toFixed(3);
+          }
           setAccountBalance(balSZERO);
         })
         .then((unsub) => (unsubscribe = unsub))

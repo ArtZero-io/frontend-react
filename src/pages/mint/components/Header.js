@@ -14,6 +14,7 @@ import {
   Tag,
   TagLeftIcon,
   TagLabel,
+  HStack,
 } from "@chakra-ui/react";
 import { useCallback, useEffect, useState, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +29,11 @@ import BN from "bn.js";
 import toast from "react-hot-toast";
 import StatusBuyButton from "@components/Button/StatusBuyButton";
 import { AccountActionTypes } from "@store/types/account.types";
+import staking_calls from "@utils/blockchain/staking_calls";
+import {
+  fetchMyPMPPendingCount,
+  fetchMyPMPStakedCount,
+} from "../../account/stakes";
 
 const MAX_MINT_COUNT = 200;
 
@@ -37,6 +43,8 @@ function MintHeader({ loading }) {
   const { addNftTnxStatus } = useSelector((s) => s.account.accountLoaders);
 
   const [balance, setBalance] = useState(0);
+  const [balanceStake, setBalanceStake] = useState(0);
+  const [balancePending, setBalancePending] = useState(0);
   const [whitelist, setWhitelist] = useState(null);
   const [mintMode, setMintMode] = useState(-1);
   const [fee1, setFee1] = useState(-1);
@@ -75,13 +83,24 @@ function MintHeader({ loading }) {
       }
     };
     const onGetBalance = async (e) => {
-      let res = await artzero_nft_calls.balanceOf(
+      let unstakedCount = await artzero_nft_calls.balanceOf(
         currentAccount,
         currentAccount?.address
       );
+      const stakedCount = await fetchMyPMPStakedCount(
+        currentAccount,
+        staking_calls
+      );
+      setBalanceStake(stakedCount);
+      const pendingCount = await fetchMyPMPPendingCount(
+        currentAccount,
+        staking_calls
+      );
+      setBalancePending(pendingCount);
+      const totalCount = stakedCount + pendingCount + unstakedCount;
 
-      if (res) {
-        setBalance(res);
+      if (totalCount) {
+        setBalance(totalCount);
       } else {
         setBalance(0);
       }
@@ -261,22 +280,48 @@ function MintHeader({ loading }) {
             <Flex direction="column" justifyContent="space-between" h="full">
               <Box h="full">
                 <Heading textTransform="uppercase" size="h6">
-                  Your Account:
+                  Your{" "}
+                  <Text as="span" color="#7ae7ff">
+                    PRAYING MANTIS PREDATORS (PMP)
+                  </Text>{" "}
+                  NFT Balance
                 </Heading>
-                <Text mt={3}>
-                  Your address:{" "}
-                  <span style={{ color: "#7ae7ff" }}>
-                    {truncateStr(currentAccount?.address, 6) || "n/a"}
-                  </span>
-                </Text>
-                <Text mt={3}>
-                  Your ArtZero's NFT Balance:{" "}
-                  <span style={{ color: "#fff" }}>{balance} NFTs</span>
-                </Text>
+                <HStack align="flex-end" justify="space-between">
+                  <Text mt={3}>
+                    Your address:{" "}
+                    <span style={{ color: "#7ae7ff" }}>
+                      {truncateStr(currentAccount?.address, 5) || "n/a"}
+                    </span>
+                  </Text>
+
+                  <Text mt={3}>
+                    Total own:{" "}
+                    <span style={{ color: "#fff" }}>{balance} NFTs</span>
+                  </Text>
+                </HStack>
+                <HStack align="flex-end" justify="space-between">
+                  <Text mt={2}>
+                    Staked/pending:{" "}
+                    <span style={{ color: "#fff" }}>
+                      {balanceStake + balancePending} NFTs
+                    </span>
+                  </Text>
+
+                  <Text mt={2}>
+                    Available:{" "}
+                    <span style={{ color: "#fff" }}>
+                      {balance - balanceStake - balancePending} NFTs
+                    </span>
+                  </Text>
+                </HStack>
               </Box>
               <Box>
                 <Heading textTransform="uppercase" size="h6">
-                  ArtZero's NFT information:
+                
+                  <Text as="span" color="#7ae7ff">
+                    PRAYING MANTIS PREDATORS (PMP)
+                  </Text>{" "}
+                   NFT information:
                 </Heading>
                 <Text mt={3}>
                   Total Supply: <span style={{ color: "#fff" }}>200</span>
@@ -292,16 +337,50 @@ function MintHeader({ loading }) {
           <Box fontSize="lg" bg="brand.grayDark" padding={7} minH="xs">
             <Flex direction="column" justifyContent="space-between" h="full">
               <Box>
+                <Heading textTransform="uppercase" size="h6">
+                  whitelist minting
+                </Heading>
+                {!whitelist ? (
+                  <Flex alignItems="center">
+                    <Text>Status:</Text>
+                    <Tag variant="inActive">
+                      <TagLeftIcon as={InActiveIcon} />
+                      <TagLabel>Disabled</TagLabel>
+                    </Tag>
+                  </Flex>
+                ) : (
+                  <Flex alignItems="center">
+                    <Text>Status:</Text>
+                    <Tag variant="active">
+                      <TagLeftIcon as={ActiveIcon} />
+                      <TagLabel>Enabled</TagLabel>
+                    </Tag>
+                  </Flex>
+                )}
                 {!whitelist && (
-                  <Heading size="h6" textTransform="uppercase">
-                    You are not in the whitelist for minting ArtZero NFTs
+                  <Heading py="30px" size="h6" textTransform="uppercase">
+                    Notice: You are not in the whitelist for minting ArtZero
+                    NFTs
                   </Heading>
                 )}
                 {whitelist && (
                   <>
-                    <Heading size="h6" textTransform="uppercase">
+                    <>
+                      <Text alignItems="center" mt={3}>
+                        Minting fee: <span style={{ color: "#fff" }}>0</span>{" "}
+                        <AzeroIcon mb={1.5} />
+                      </Text>
+                      <Text mt={3}>
+                        Minted / Max Mint:{" "}
+                        <span style={{ color: "#fff" }}>
+                          {whitelist?.claimedAmount} /{" "}
+                          {whitelist?.whitelistAmount} NFTs
+                        </span>
+                      </Text>
+                    </>
+                    {/* <Text size="h6" textTransform="uppercase">
                       You are in the whitelist for minting ArtZero NFTs
-                    </Heading>
+                    </Text>
                     <Text mt={3}>
                       You can claim:{" "}
                       <span style={{ color: "#fff" }}>
@@ -313,7 +392,7 @@ function MintHeader({ loading }) {
                       <span style={{ color: "#fff" }}>
                         {whitelist?.claimedAmount} ArtZero NFTs
                       </span>
-                    </Text>
+                    </Text> */}
                   </>
                 )}
               </Box>

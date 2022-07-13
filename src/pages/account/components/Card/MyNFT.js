@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -17,7 +16,12 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { getCachedImageShort, secondsToTime, delay } from "@utils";
+import {
+  delay,
+  getCachedImageShort,
+  secondsToTime,
+  formatNumDynamicDecimal,
+} from "@utils";
 import staking_calls from "@utils/blockchain/staking_calls";
 import staking from "@utils/blockchain/staking";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
@@ -90,7 +94,7 @@ function MyNFTCard({
 
   async function stakeAction(stakeStatus) {
     if (stakeStatus === 1) {
-      dispatch(setTxStatus({ txType: STAKE, txStatus: START }));
+      dispatch(setTxStatus({ txType: STAKE, txStatus: START, tokenID }));
 
       let allowance = await artzero_nft_calls.allowance(
         currentAccount,
@@ -112,23 +116,29 @@ function MyNFTCard({
           dispatch
         );
       }
+
       if (res || allowance) {
         //Token is unstaked, Stake Now
         toast.success(res ? "Step 2: Staking..." : "Staking...");
 
-        await staking_calls.stake(
-          currentAccount,
-          [tokenID],
-          dispatch,
-          STAKE,
-          api
-        );
+        await delay(2000).then(async () => {
+          await staking_calls.stake(
+            currentAccount,
+            [tokenID],
+            dispatch,
+            STAKE,
+            api
+          );
+        });
+
         return;
       }
     }
 
     if (stakeStatus === 2) {
-      dispatch(setTxStatus({ txType: REQUEST_UNSTAKE, txStatus: START }));
+      dispatch(
+        setTxStatus({ txType: REQUEST_UNSTAKE, txStatus: START, tokenID })
+      );
       //Token is staked, Request Unstake Now
       toast.success("Request Unstaking NFT...");
 
@@ -141,7 +151,7 @@ function MyNFTCard({
       );
     } else if (stakeStatus === 3) {
       if (isUnstakeTime) {
-        dispatch(setTxStatus({ txType: UNSTAKE, txStatus: START }));
+        dispatch(setTxStatus({ txType: UNSTAKE, txStatus: START, tokenID }));
 
         toast.success("Unstaking NFT...");
         await staking_calls.unstake(
@@ -153,7 +163,11 @@ function MyNFTCard({
         );
       } else {
         dispatch(
-          setTxStatus({ txType: CANCEL_REQUEST_UNSTAKE, txStatus: START })
+          setTxStatus({
+            txType: CANCEL_REQUEST_UNSTAKE,
+            txStatus: START,
+            tokenID,
+          })
         );
 
         toast("Cancel Unstaking Request...");
@@ -220,13 +234,8 @@ function MyNFTCard({
           {!is_for_sale && stakeStatus !== 0 ? (
             <Flex align="center" justify="start" w="full">
               <Button
-                isLoading={
-                  txStatus?.stakeStatus ||
-                  txStatus?.unstakeStatus ||
-                  txStatus?.cancelRequestUnstakeStatus ||
-                  txStatus?.requestUnstakeStatus
-                }
-                loadingText={
+                isLoading={txStatus?.tokenID === tokenID}
+                isDisabled={
                   txStatus?.stakeStatus ||
                   txStatus?.unstakeStatus ||
                   txStatus?.cancelRequestUnstakeStatus ||
@@ -254,7 +263,9 @@ function MyNFTCard({
                     {is_for_sale && "For Sale At"}
                   </Text>
                   <Tag>
-                    <TagLabel>{price / 10 ** 12}</TagLabel>
+                    <TagLabel>
+                      {formatNumDynamicDecimal(price / 10 ** 12)}
+                    </TagLabel>
                     <TagRightIcon as={AzeroIcon} />
                   </Tag>
                 </VStack>
@@ -270,7 +281,7 @@ function MyNFTCard({
                   {isBid?.status ? (
                     <HStack minH={"20px"} bg="transparent">
                       <TagLabel bg="transparent">
-                        {isBid?.status && isBid?.bidPrice / 10 ** 12}
+                        {formatNumDynamicDecimal(isBid?.bidPrice / 10 ** 12)}
                       </TagLabel>
                       <TagRightIcon as={AzeroIcon} />
                     </HStack>
@@ -287,12 +298,12 @@ function MyNFTCard({
                       // direction="column"
                     >
                       <Text textAlign="center" w="full">
-                        {highest_bid ? "Best offer" : "No offer"}
+                        {highest_bid ? "  Best offer" : "No offer"}
                       </Text>
                       {highest_bid ? (
-                        <HStack ml={"6px"} bg="transparent" id="abc">
+                        <HStack ml={"6px"} bg="transparent" i>
                           <Text color="#fff" bg="transparent">
-                            {highest_bid / 10 ** 12}
+                            {formatNumDynamicDecimal(highest_bid / 10 ** 12)}
                           </Text>
                           <TagRightIcon as={AzeroIcon} />
                         </HStack>

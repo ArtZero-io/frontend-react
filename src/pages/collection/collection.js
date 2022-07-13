@@ -282,6 +282,7 @@ function CollectionPage() {
       label: "Activity",
       content: (
         <TabActivity
+          {...formattedCollection}
           tokenUriType1={tokenUriType1}
           latestBlockNumber={latestBlockNumber}
         />

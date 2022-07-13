@@ -95,10 +95,12 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
           initialValues={initialValues}
           validationSchema={Yup.object({
             NFTName: Yup.string()
+              .trim()
               .min(3, "Must be longer than 3 characters")
               .max(30, "Must be less than 30 characters")
               .required("Required"),
             description: Yup.string()
+              .trim()
               .min(3, "Must be longer than 3 characters")
               .max(150, "Must be 150 characters or less")
               .required("Required"),
@@ -106,39 +108,44 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
               .of(
                 Yup.object().shape(
                   {
-                    type: Yup.string().when("name", {
-                      is: (val) => val,
-                      then: Yup.string()
-                        .test(
-                          "Test Prop",
-                          "Duplicated Props Type!",
-                          (value, schema) => {
-                            const propsArr = schema?.from[1].value?.properties;
+                    type: Yup.string()
+                      .trim()
+                      .when("name", {
+                        is: (val) => val,
+                        then: Yup.string()
+                          .test(
+                            "Test Prop",
+                            "Duplicated Props Type!",
+                            (value, schema) => {
+                              const propsArr =
+                                schema?.from[1].value?.properties;
 
-                            const keyPropsArr = propsArr.map((p) =>
-                              p.type?.trim()
-                            );
+                              const keyPropsArr = propsArr.map((p) =>
+                                p.type?.trim()
+                              );
 
-                            const [isDup] = keyPropsArr.filter(
-                              (v, i) => i !== keyPropsArr.indexOf(v)
-                            );
+                              const [isDup] = keyPropsArr.filter(
+                                (v, i) => i !== keyPropsArr.indexOf(v)
+                              );
 
-                            return !(isDup && isDup.trim() === value.trim());
-                          }
-                        )
-                        .required("Must have type value.")
-                        .min(3, "Must be longer than 3 characters")
-                        .max(30, "Must be less than 30 characters"),
-                      otherwise: Yup.string().notRequired(),
-                    }),
-                    name: Yup.string().when("type", {
-                      is: (val) => val,
-                      then: Yup.string()
-                        .required("Must have name value.")
-                        .min(3, "Must be longer than 3 characters")
-                        .max(30, "Must be less than 30 characters"),
-                      otherwise: Yup.string().notRequired(),
-                    }),
+                              return !(isDup && isDup.trim() === value.trim());
+                            }
+                          )
+                          .required("Must have type value.")
+                          .min(3, "Must be longer than 3 characters")
+                          .max(30, "Must be less than 30 characters"),
+                        otherwise: Yup.string().notRequired(),
+                      }),
+                    name: Yup.string()
+                      .trim()
+                      .when("type", {
+                        is: (val) => val,
+                        then: Yup.string()
+                          .required("Must have name value.")
+                          .min(3, "Must be longer than 3 characters")
+                          .max(30, "Must be less than 30 characters"),
+                        otherwise: Yup.string().notRequired(),
+                      }),
                   },
                   [["type", "name"]]
                 )
@@ -148,31 +155,33 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
             levels: Yup.array(
               Yup.object().shape(
                 {
-                  name: Yup.string().when("level", {
-                    is: (val) => val,
-                    then: Yup.string()
-                      .test(
-                        "Test Level",
-                        "Duplicated Levels Name!",
-                        (value, schema) => {
-                          const levelsArr = schema?.from[1].value?.levels;
+                  name: Yup.string()
+                    .trim()
+                    .when("level", {
+                      is: (val) => val,
+                      then: Yup.string()
+                        .test(
+                          "Test Level",
+                          "Duplicated Levels Name!",
+                          (value, schema) => {
+                            const levelsArr = schema?.from[1].value?.levels;
 
-                          const keyLevelsArr = levelsArr.map((p) =>
-                            p.name?.trim()
-                          );
+                            const keyLevelsArr = levelsArr.map((p) =>
+                              p.name?.trim()
+                            );
 
-                          const [isDup] = keyLevelsArr.filter(
-                            (v, i) => i !== keyLevelsArr.indexOf(v)
-                          );
+                            const [isDup] = keyLevelsArr.filter(
+                              (v, i) => i !== keyLevelsArr.indexOf(v)
+                            );
 
-                          return !(isDup && isDup.trim() === value.trim());
-                        }
-                      )
-                      .required("Must have level name.")
-                      .min(3, "Must be longer than 3 characters")
-                      .max(30, "Must be less than 30 characters"),
-                    otherwise: Yup.string().notRequired(),
-                  }),
+                            return !(isDup && isDup.trim() === value.trim());
+                          }
+                        )
+                        .required("Must have level name.")
+                        .min(3, "Must be longer than 3 characters")
+                        .max(30, "Must be less than 30 characters"),
+                      otherwise: Yup.string().notRequired(),
+                    }),
                   level: Yup.number().when("levelMax", {
                     is: (val) => val,
                     then: Yup.number()
@@ -353,38 +362,40 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                       gap={6}
                       overflowY="auto"
                     >
-                      {values?.properties.map((item, idx) => {
-                        return (
-                          <React.Fragment key={idx}>
-                            <GridItem w="100%" h="100%">
-                              <Box
-                                w="full"
-                                textAlign="left"
-                                alignItems="end"
-                                bg="brand.semiBlack"
-                                px={4}
-                                py={3}
-                              >
-                                <Flex w="full">
-                                  <Box color="brand.grayLight" w="full">
-                                    <Text>{item.type}</Text>
-                                    <Heading
-                                      pr={"2.5px"}
-                                      size="h6"
-                                      mt={1}
-                                      noOfLines={[1, 2]}
-                                      textAlign="right"
-                                    >
-                                      {item.name}
-                                    </Heading>
-                                  </Box>
-                                  <Spacer />
-                                </Flex>
-                              </Box>
-                            </GridItem>
-                          </React.Fragment>
-                        );
-                      })}
+                      {values?.properties
+                        .filter((i) => i.name.replaceAll(" ", "") !== "")
+                        .map((item, idx) => {
+                          return (
+                            <React.Fragment key={idx}>
+                              <GridItem w="100%" h="100%">
+                                <Box
+                                  w="full"
+                                  textAlign="left"
+                                  alignItems="end"
+                                  bg="brand.semiBlack"
+                                  px={4}
+                                  py={3}
+                                >
+                                  <Flex w="full">
+                                    <Box color="brand.grayLight" w="full">
+                                      <Text>{item.type}</Text>
+                                      <Heading
+                                        pr={"2.5px"}
+                                        size="h6"
+                                        mt={1}
+                                        noOfLines={[1, 2]}
+                                        textAlign="right"
+                                      >
+                                        {item.name}
+                                      </Heading>
+                                    </Box>
+                                    <Spacer />
+                                  </Flex>
+                                </Box>
+                              </GridItem>
+                            </React.Fragment>
+                          );
+                        })}
                     </Grid>
                   ) : null}
 
@@ -414,40 +425,47 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                       Add levels
                     </Button>
                   </Flex>
-
+                  {console.log(
+                    "key vay",
+                    values?.levels?.filter(
+                      (i) => i.name !== false && i.name !== " "
+                    )
+                  )}
                   {values?.levels[0]?.name
-                    ? values?.levels?.map((item, idx) => {
-                        return (
-                          <React.Fragment key={idx}>
-                            <Box
-                              w="full"
-                              textAlign="left"
-                              alignItems="end"
-                              bg="brand.semiBlack"
-                              p={5}
-                              mb={3}
-                            >
-                              <Flex w="full" mb={3}>
-                                <Heading size="h6" mt={1} color="#fff">
-                                  {item.name}
-                                </Heading>
-                                <Spacer />
-                                <Text color="#fff">
-                                  {item.level} of {item.levelMax}
-                                </Text>
-                              </Flex>
-                              <Progress
-                                colorScheme="telegram"
-                                size="sm"
-                                value={Number(
-                                  (item.level * 100) / item.levelMax
-                                )}
-                                height="6px"
-                              />
-                            </Box>
-                          </React.Fragment>
-                        );
-                      })
+                    ? values?.levels
+                        ?.filter((i) => i.name.replaceAll(" ", "") !== "")
+                        .map((item, idx) => {
+                          return (
+                            <React.Fragment key={idx}>
+                              <Box
+                                w="full"
+                                textAlign="left"
+                                alignItems="end"
+                                bg="brand.semiBlack"
+                                p={5}
+                                mb={3}
+                              >
+                                <Flex w="full" mb={3}>
+                                  <Heading size="h6" mt={1} color="#fff">
+                                    {item.name}
+                                  </Heading>
+                                  <Spacer />
+                                  <Text color="#fff">
+                                    {item.level} of {item.levelMax}
+                                  </Text>
+                                </Flex>
+                                <Progress
+                                  colorScheme="telegram"
+                                  size="sm"
+                                  value={Number(
+                                    (item.level * 100) / item.levelMax
+                                  )}
+                                  height="6px"
+                                />
+                              </Box>
+                            </React.Fragment>
+                          );
+                        })
                     : null}
 
                   <AddLevelsModal

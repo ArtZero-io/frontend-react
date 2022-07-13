@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-import React, { Fragment, useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -8,50 +6,57 @@ import {
   Heading,
   Spacer,
   Text,
-  Input,
   Image,
-  InputGroup,
-  InputRightElement,
-  Progress,
-  Skeleton,
-  useBreakpointValue,
-  TagLabel,
-  TagRightIcon,
   Link,
   Tooltip,
   HStack,
   Square,
-  VStack,
   Stack,
-  Center,
+  Progress,
+  Skeleton,
+  TagLabel,
+  TagRightIcon,
   NumberInput,
   NumberInputField,
+  InputRightElement,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import { useSubstrateState } from "@utils/substrate";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
-import toast from "react-hot-toast";
-import { ContractPromise } from "@polkadot/api-contract";
-import marketplace from "@utils/blockchain/marketplace";
-import marketplace_contract from "@utils/blockchain/marketplace";
-import { useDispatch, useSelector } from "react-redux";
-
-import StatusPushForSaleButton from "@components/Button/StatusPushForSaleButton";
-import { AccountActionTypes } from "@store/types/account.types";
-import { convertStringToPrice, createLevelAttribute } from "@utils";
-import StatusBuyButton from "@components/Button/StatusBuyButton";
-import { getCachedImageShort, truncateStr } from "@utils";
-import { Link as ReactRouterLink } from "react-router-dom";
-import profile_calls from "@utils/blockchain/profile_calls";
-import { motion, AnimatePresence } from "framer-motion";
-import { shortenNumber } from "@utils";
-import { formMode } from "@constants";
 import { ImLock, ImUnlocked } from "react-icons/im";
-import LockNFTModal from "../../../../../components/Modal/LockNFTModal";
-import AddNewNFTModal from "../../../../collection/component/Modal/AddNewNFT";
+
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { Link as ReactRouterLink } from "react-router-dom";
+import React, { Fragment, useEffect, useState } from "react";
+
+import profile_calls from "@utils/blockchain/profile_calls";
+import staking_calls from "@utils/blockchain/staking_calls";
+import marketplace_contract from "@utils/blockchain/marketplace";
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
+
+import { useSubstrateState } from "@utils/substrate";
+import { ContractPromise } from "@polkadot/api-contract";
+import { getCachedImageShort, truncateStr, delay } from "@utils";
+import {
+  convertStringToPrice,
+  createLevelAttribute,
+  formatNumDynamicDecimal,
+} from "@utils";
+
+import { formMode } from "@constants";
+import { AccountActionTypes } from "@store/types/account.types";
+
+import LockNFTModal from "@components/Modal/LockNFTModal";
+import StatusBuyButton from "@components/Button/StatusBuyButton";
+import StatusPushForSaleButton from "@components/Button/StatusPushForSaleButton";
+
+import AddNewNFTModal from "@pages/collection/component/Modal/AddNewNFT";
+import {
+  fetchMyPMPStakedCount,
+  fetchMyTradingFee,
+} from "@pages/account/stakes";
 
 function MyNFTTabInfo(props) {
   const {
@@ -68,7 +73,9 @@ function MyNFTTabInfo(props) {
     contractType,
     is_locked,
     showOnChainMetadata,
+    royalFee,
   } = props;
+
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
@@ -86,6 +93,7 @@ function MyNFTTabInfo(props) {
   const [isBided, setIsBided] = useState(false);
   const [bidPrice, setBidPrice] = useState(0);
   const [ownerName, setOwnerName] = useState("");
+  const [myTradingFee, setMyTradingFee] = useState(null);
 
   useEffect(() => {
     const doLoad = async () => {
@@ -177,69 +185,73 @@ function MyNFTTabInfo(props) {
   // }, [addNftTnxStatus?.status, currentAccount, dispatch, tokenID]);
 
   const listToken = async () => {
-    if (owner === currentAccount?.address) {
-      dispatch({
-        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-        payload: {
-          status: "Start",
-        },
-      });
+    try {
+      if (owner === currentAccount?.address) {
+        dispatch({
+          type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+          payload: {
+            status: "Start",
+          },
+        });
 
-      const nft721_psp34_standard_contract = new ContractPromise(
-        api,
-        nft721_psp34_standard.CONTRACT_ABI,
-        nftContractAddress
-      );
+        const nft721_psp34_standard_contract = new ContractPromise(
+          api,
+          nft721_psp34_standard.CONTRACT_ABI,
+          nftContractAddress
+        );
 
-      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+        nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
 
-      const isAllowance = await nft721_psp34_standard_calls.allowance(
-        currentAccount,
-        currentAccount?.address,
-        marketplace_contract.CONTRACT_ADDRESS,
-        { u64: tokenID },
-        dispatch
-      );
-
-      let res;
-      if (!isAllowance) {
-        toast.success("Step 1: Approving NFT transfer...");
-
-        res = await nft721_psp34_standard_calls.approve(
+        const isAllowance = await nft721_psp34_standard_calls.allowance(
           currentAccount,
-          marketplace.CONTRACT_ADDRESS,
+          currentAccount?.address,
+          marketplace_contract.CONTRACT_ADDRESS,
           { u64: tokenID },
-          true,
           dispatch
         );
-      }
-      if (res || isAllowance) {
-        toast.success(
-          res
-            ? "Step 2: Listing on marketplace..."
-            : "Listing on marketplace..."
-        );
-        await marketplace_contract_calls.list(
-          currentAccount,
-          nftContractAddress,
-          { u64: tokenID },
-          askPrice,
-          dispatch
-        );
-      }
 
-      // dispatch({
-      //   type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-      //   payload: {
-      //     status: "Start",
-      //   },
-      // });
-    } else {
+        let res;
+        if (!isAllowance) {
+          toast.success("Step 1: Approving NFT transfer...");
+
+          res = await nft721_psp34_standard_calls.approve(
+            currentAccount,
+            marketplace_contract.CONTRACT_ADDRESS,
+            { u64: tokenID },
+            true,
+            dispatch
+          );
+        }
+        if (res || isAllowance) {
+          toast.success(
+            res
+              ? "Step 2: Listing on marketplace..."
+              : "Listing on marketplace..."
+          );
+
+          await delay(2000).then(async () => {
+            await marketplace_contract_calls.list(
+              currentAccount,
+              nftContractAddress,
+              { u64: tokenID },
+              askPrice,
+              dispatch
+            );
+          });
+        }
+      } else {
+        dispatch({
+          type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+        });
+
+        toast.error(`This token is not yours!`);
+      }
+    } catch (error) {
       dispatch({
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
       });
-
-      toast.error(`This token is not yours!`);
+      console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -314,10 +326,28 @@ function MyNFTTabInfo(props) {
     ownerName();
   }, [currentAccount, is_for_sale, owner, saleInfo?.nftOwner]);
 
+  useEffect(() => {
+    const fetchTradeFee = async () => {
+      const stakedCount = await fetchMyPMPStakedCount(
+        currentAccount,
+        staking_calls
+      );
+
+      const myTradingFeeData = await fetchMyTradingFee(
+        stakedCount,
+        currentAccount,
+        marketplace_contract_calls
+      );
+
+      setMyTradingFee(myTradingFeeData);
+    };
+    fetchTradeFee();
+  }, [currentAccount]);
+
   return (
     <>
       <HStack spacing={{ base: "30px", "2xl": "40px" }} alignItems="stretch">
-        <Square size={{ base: "360px", "2xl": "480px" }}>
+        <Square size={{ base: "340px", "2xl": "460px" }}>
           <Image
             w="full"
             h="full"
@@ -458,7 +488,7 @@ function MyNFTTabInfo(props) {
             ) : (
               <>
                 <Grid
-                  maxH={{ base: "190px", "2xl": "265px" }}
+                  maxH={{ base: "170px", "2xl": "245px" }}
                   id="grid-attrs"
                   boxShadow="lg"
                   mb={2}
@@ -470,12 +500,18 @@ function MyNFTTabInfo(props) {
                   sx={{
                     "&::-webkit-scrollbar": {
                       width: "4px",
-                      height: "15px",
-                      borderRadius: "1px",
-                      backgroundColor: `#7ae7ff`,
+                      height: "4px",
+                      borderRadius: "0px",
+                      backgroundColor: `transparent`,
                     },
                     "&::-webkit-scrollbar-thumb": {
                       backgroundColor: `#7ae7ff`,
+                    },
+                    "&::-webkit-scrollbar-thumb:hover": {
+                      backgroundColor: `#7ae7ff`,
+                    },
+                    "&::-webkit-scrollbar-track": {
+                      backgroundColor: `transparent`,
                     },
                   }}
                 >
@@ -609,13 +645,13 @@ function MyNFTTabInfo(props) {
               >
                 <Spacer />
                 <NumberInput
-                  maxW={32}
+                  // maxW={32}
                   isDisabled={addNftTnxStatus?.status || txStatus?.lockStatus}
                   bg="black"
-                  defaultValue={15}
+                  max={999000000}
                   min={1}
-                  precision={0}
-                  onChange={(v) => setAskPrice(parseInt(v))}
+                  precision={6}
+                  onChange={(v) => setAskPrice(v)}
                   value={askPrice}
                   mr={3}
                   h="52px"
@@ -630,36 +666,7 @@ function MyNFTTabInfo(props) {
                     <AzeroIcon />
                   </InputRightElement>
                 </NumberInput>
-                {/* <InputGroup
-                  maxW={32}
-                  mr={2}
-                  px={0}
-                  w="full"
-                  bg="brand.semiBlack"
-                  h={"52px"}
-                  py={0}
-                  color="#fff "
-                  borderRadius="0"
-                >
-                  <Input
-                    isDisabled={addNftTnxStatus?.status || txStatus?.lockStatus}
-                    value={askPrice}
-                    onChange={({ target }) => setAskPrice(target.value)}
-                    m={0}
-                    h={"52px"}
-                    pl={5}
-                    bg="black"
-                    variant="unstyled"
-                    placeholder="10"
-                    _placeholder={{
-                      color: "#888",
-                      fontSize: "lg",
-                    }}
-                  />
-                  <InputRightElement bg="transparent" h={"52px"} w={16}>
-                    <AzeroIcon />
-                  </InputRightElement>
-                </InputGroup> */}
+
                 <StatusPushForSaleButton
                   isAllowanceMpContract={isAllowanceMarketplaceContract}
                   type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
@@ -668,7 +675,6 @@ function MyNFTTabInfo(props) {
                   loadingText={`${addNftTnxStatus?.status}`}
                   stepNo={stepNo}
                   setStepNo={setStepNo}
-                  // approveToken={approveToken}
                   listToken={listToken}
                   isDisabled={txStatus?.lockStatus || addNftTnxStatus}
                 />
@@ -676,7 +682,7 @@ function MyNFTTabInfo(props) {
             )}
 
             {filterSelected !== 2 &&
-              owner === marketplace.CONTRACT_ADDRESS &&
+              owner === marketplace_contract.CONTRACT_ADDRESS &&
               is_for_sale && (
                 <Flex
                   w="full"
@@ -694,7 +700,7 @@ function MyNFTTabInfo(props) {
                     <Text color="brand.grayLight">For Sale At</Text>
 
                     <Text color="#fff" mx={2}>
-                      {price / 10 ** 12}
+                      {formatNumDynamicDecimal(price / 10 ** 12)}
                     </Text>
                     <AzeroIcon />
                   </Flex>
@@ -739,6 +745,62 @@ function MyNFTTabInfo(props) {
           </Stack>
         </Stack>
       </HStack>
+      {filterSelected === 0 ? (
+        <HStack
+          justify="space-between"
+          color="brand.blue"
+          fontSize={{ base: "14px", "2xl": "15px" }}
+          w="full"
+          py={{ base: "10px", "2xl": "20px" }}
+        >
+          <Text>
+            Royal fee: {formatNumDynamicDecimal((askPrice * royalFee) / 10000)}{" "}
+            <AzeroIcon w="12px" mb="2px" /> ({(royalFee / 100).toFixed(2)} %)
+          </Text>
+          <Text>
+            Trade fee:{" "}
+            {formatNumDynamicDecimal((askPrice * myTradingFee) / 100)}{" "}
+            <AzeroIcon w="12px" mb="2px" /> ({myTradingFee} %)
+          </Text>
+          <Text>
+            You will receive:{" "}
+            {formatNumDynamicDecimal(
+              askPrice -
+                (askPrice * myTradingFee) / 100 -
+                (askPrice * royalFee) / 10000
+            )}{" "}
+            <AzeroIcon w="12px" mb="2px" />
+          </Text>
+        </HStack>
+      ) : null}
+
+      {filterSelected === 1 ? (
+        <HStack
+          justify="space-between"
+          color="brand.blue"
+          fontSize={{ base: "14px", "2xl": "15px" }}
+          w="full"
+          py={{ base: "10px", "2xl": "20px" }}
+        >
+          <Text>
+            Royal fee: {formatNumDynamicDecimal((price / 10 ** 16) * royalFee)}{" "}
+            <AzeroIcon w="12px" mb="2px" /> ({(royalFee / 100).toFixed(2)} %)
+          </Text>
+          <Text>
+            Trade fee:{" "}
+            {formatNumDynamicDecimal((price / 10 ** 14) * myTradingFee)}{" "}
+            <AzeroIcon w="12px" mb="2px" /> ({myTradingFee} %)
+          </Text>
+          <Text>
+            You will receive:{" "}
+            {formatNumDynamicDecimal(
+              price *
+                (1 / 10 ** 12 - myTradingFee / 10 ** 14 - royalFee / 10 ** 16)
+            )}{" "}
+            <AzeroIcon w="12px" mb="2px" />
+          </Text>
+        </HStack>
+      ) : null}
     </>
   );
 }

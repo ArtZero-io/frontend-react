@@ -1,10 +1,10 @@
 const profile = {
-  CONTRACT_ADDRESS: "5GSfASGWNhqA8VYhHsvVumkqebK2CN8s5gNkR1nfevSFEtkn",
+  CONTRACT_ADDRESS: "5EQt8Bv7u7MDQ5dJX8cocFsEdC76vRKQyacDqXE8G2TRxSjA",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xe7de4bf40c73a3a68c24d605ac62db1270f0af1cb37699d9c9f62053f92cb665",
-      "language": "ink! 3.2.0",
-      "compiler": "rustc 1.63.0-nightly"
+      "hash": "0xc2b0257c8470112abcdafc29e5fa9dafaff4281e5df9667692b1dcd4710418ad",
+      "language": "ink! 3.3.0",
+      "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
       "name": "artzero_profile_manager",
@@ -106,6 +106,43 @@ const profile = {
             "selector": "0x8d76b3fe"
           },
           {
+            "args": [
+              {
+                "label": "new_owner",
+                "type": {
+                  "displayName": [
+                    "ownable_external",
+                    "TransferOwnershipInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Transfers ownership of the contract to a `new_owner`.",
+              " Can only be called by the current owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner.",
+              "",
+              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
+            ],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "TransferOwnershipOutput"
+              ],
+              "type": 12
+            },
+            "selector": "0x11f43efd"
+          },
+          {
             "args": [],
             "docs": [
               " Leaves the contract without owner. It will not be possible to call",
@@ -148,43 +185,6 @@ const profile = {
               "type": 0
             },
             "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Transfers ownership of the contract to a `new_owner`.",
-              " Can only be called by the current owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner.",
-              "",
-              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
-            ],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 12
-            },
-            "selector": "0x11f43efd"
           }
         ]
       },
@@ -237,12 +237,21 @@ const profile = {
             },
             {
               "layout": {
-                "cell": {
-                  "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 4
+                "struct": {
+                  "fields": [
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xd6f6a66103e52d940145ccd243a105f3980c9a81611e500edaca89c0d6edaa71",
+                          "ty": 4
+                        }
+                      },
+                      "name": "attributes"
+                    }
+                  ]
                 }
               },
-              "name": "attributes"
+              "name": "manager"
             }
           ]
         }

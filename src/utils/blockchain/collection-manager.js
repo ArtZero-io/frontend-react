@@ -1,10 +1,10 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5FC33tCVpcgxNrvVdRA5TdhYWMWr1ysW6GRRMawJJGwJxb6M",
+  CONTRACT_ADDRESS: "5Eeo1AUXZTi3Mgm9kQEhj5c6nVdwGua4Zs2ZRnfByCBQQKtr",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x1d903ac69e3e097056f6480ead141ad8fb9de7f564e933dc078a25b89d103d8e",
-      "language": "ink! 3.2.0",
-      "compiler": "rustc 1.63.0-nightly"
+      "hash": "0xe3cb2f7718ef52cc9c9c8a0f36c1c59cd072448f857cafa607133e72c7da432b",
+      "language": "ink! 3.3.0",
+      "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
       "name": "artzero_collection_manager",
@@ -664,8 +664,7 @@ const collection_manager = {
               }
             ],
             "docs": [
-              " Update Active Status - only Admin can change",
-              " When its active, collection will be shown on the UI and will be tradable"
+              " Update Active Status When its active, collection will be shown on the UI and will be tradable - only Admin can change"
             ],
             "label": "update_is_active",
             "mutates": true,
@@ -1025,33 +1024,6 @@ const collection_manager = {
             "selector": "0x389a10e6"
           },
           {
-            "args": [],
-            "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 18
-            },
-            "selector": "0x5e228753"
-          },
-          {
             "args": [
               {
                 "label": "new_owner",
@@ -1106,32 +1078,31 @@ const collection_manager = {
             "selector": "0x4fa43c8c"
           },
           {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
-                    "GetContractTypeInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
+            "args": [],
             "docs": [
-              "Get NFT Contract Type 1 or 2 for PSP34"
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
             ],
-            "label": "CrossArtZeroCollection::get_contract_type",
-            "mutates": false,
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
-                "crossartzerocollection_external",
-                "GetContractTypeOutput"
+                "ownable_external",
+                "RenounceOwnershipOutput"
               ],
-              "type": 2
+              "type": 18
             },
-            "selector": "0x81fa82e9"
+            "selector": "0x5e228753"
           },
           {
             "args": [
@@ -1168,34 +1139,6 @@ const collection_manager = {
                 "type": {
                   "displayName": [
                     "crossartzerocollection_external",
-                    "GetCollectionOwnerInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Get Collection Owner by Collection Address (NFT address)"
-            ],
-            "label": "CrossArtZeroCollection::get_collection_owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "GetCollectionOwnerOutput"
-              ],
-              "type": 26
-            },
-            "selector": "0xb1f1e401"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
                     "IsActiveInput1"
                   ],
                   "type": 0
@@ -1216,6 +1159,62 @@ const collection_manager = {
               "type": 9
             },
             "selector": "0x74687faf"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "GetContractTypeInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              "Get NFT Contract Type 1 or 2 for PSP34"
+            ],
+            "label": "CrossArtZeroCollection::get_contract_type",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "GetContractTypeOutput"
+              ],
+              "type": 2
+            },
+            "selector": "0x81fa82e9"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "GetCollectionOwnerInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Get Collection Owner by Collection Address (NFT address)"
+            ],
+            "label": "CrossArtZeroCollection::get_collection_owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "GetCollectionOwnerOutput"
+              ],
+              "type": 26
+            },
+            "selector": "0xb1f1e401"
           }
         ]
       },
@@ -1268,102 +1267,137 @@ const collection_manager = {
             },
             {
               "layout": {
-                "cell": {
-                  "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 4
+                "struct": {
+                  "fields": [
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xe4f43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "ty": 4
+                        }
+                      },
+                      "name": "standard_nft_hash"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xe5f43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "ty": 0
+                        }
+                      },
+                      "name": "admin_address"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xe6f43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "ty": 5
+                        }
+                      },
+                      "name": "collection_count"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xe7f43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "ty": 6
+                        }
+                      },
+                      "name": "simple_mode_adding_fee"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xe8f43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "ty": 6
+                        }
+                      },
+                      "name": "advance_mode_adding_fee"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xe9f43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "ty": 7
+                        }
+                      },
+                      "name": "collections"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xeaf43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "ty": 12
+                        }
+                      },
+                      "name": "collections_by_id"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xebf43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "ty": 13
+                        }
+                      },
+                      "name": "collections_by_owner"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xecf43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "ty": 10
+                        }
+                      },
+                      "name": "max_royal_fee_rate"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xedf43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "ty": 5
+                        }
+                      },
+                      "name": "active_collection_count"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xeef43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "ty": 15
+                        }
+                      },
+                      "name": "attributes"
+                    },
+                    {
+                      "layout": {
+                        "enum": {
+                          "dispatchKey": "0xeff43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "variants": {
+                            "0": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0xf0f43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                                      "ty": 3
+                                    }
+                                  },
+                                  "name": null
+                                }
+                              ]
+                            },
+                            "1": {
+                              "fields": []
+                            }
+                          }
+                        }
+                      },
+                      "name": "_reserved"
+                    }
+                  ]
                 }
               },
-              "name": "standard_nft_hash"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 0
-                }
-              },
-              "name": "admin_address"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 5
-                }
-              },
-              "name": "collection_count"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 6
-                }
-              },
-              "name": "simple_mode_adding_fee"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 6
-                }
-              },
-              "name": "advance_mode_adding_fee"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 7
-                }
-              },
-              "name": "collections"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0600000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 12
-                }
-              },
-              "name": "collections_by_id"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0700000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 13
-                }
-              },
-              "name": "collections_by_owner"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0800000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 10
-                }
-              },
-              "name": "max_royal_fee_rate"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0900000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 5
-                }
-              },
-              "name": "active_collection_count"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0a00000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 15
-                }
-              },
-              "name": "attributes"
+              "name": "manager"
             }
           ]
         }

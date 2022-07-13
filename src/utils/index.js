@@ -4,6 +4,7 @@ import { AccountActionTypes } from "../store/types/account.types";
 // import BN from "bn.js";
 import Keyring from "@polkadot/keyring";
 import { IPFS_BASE_URL } from "@constants/index";
+import numeral from "numeral";
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 export function getCachedImage(imageHash, size, url) {
@@ -54,7 +55,7 @@ export function isValidImage(imageUrl) {
 }
 
 export function timestampWithoutCommas(input) {
-  return input.replace(/,/g, '');
+  return input.replace(/,/g, "");
 }
 
 export function convertDateToTimeStamp(dateStr) {
@@ -292,6 +293,7 @@ export function handleContractCallAddNftAnimation(
 
   if (!dispatchError && status) {
     const statusToHuman = Object.entries(status.toHuman());
+    const url = `https://test.azero.dev/#/explorer/query/`;
 
     if (Object.keys(status.toHuman())[0] === "0") {
       dispatch({
@@ -300,6 +302,11 @@ export function handleContractCallAddNftAnimation(
       });
     } else {
       const finalizedTimeStamp = Date.now();
+      // https://test.azero.dev/#/explorer/query/0x82d154d0ecb07080e42d50ba916060baacf0925553db3e48e643eb3575c68238
+
+      if (statusToHuman[0][0] === "Finalized") {
+        console.log("Tx finalized at ", `${url}${statusToHuman[0][1]}`);
+      }
 
       dispatch({
         type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
@@ -324,3 +331,18 @@ export function onCloseButtonModal({ status, dispatch, type }) {
       },
     });
 }
+
+export const formatNumDynamicDecimal = (num = 0, dec = 6) => {
+  const number = parseInt(num * 10 ** dec) / 10 ** dec;
+  const numStr = number.toString();
+  const dotIdx = numStr.indexOf(".");
+
+  if (dotIdx === -1) {
+    return numeral(numStr).format("0,0");
+  }
+
+  const intPart = numeral(numStr.slice(0, dotIdx)).format("0,0");
+  const decPart = numStr.slice(dotIdx + 1, numStr.length);
+
+  return intPart + `${dotIdx === -1 ? "" : `.${decPart}`}`;
+};

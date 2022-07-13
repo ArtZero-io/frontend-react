@@ -12,6 +12,7 @@ import {
   Spacer,
   useDisclosure,
   Box,
+  HStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import React from "react";
@@ -84,6 +85,7 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
     // }
   };
 
+  // export const GroupCard = ({ variant = "live", projectsList }) => {
   return (
     <>
       <Box
@@ -118,20 +120,27 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
         </Flex>
 
         <Flex justifyContent="space-between">
-          {projectsList.length &&
-            projectsList.map((p) => <Card key={p.name} project={p} />)}
+          {projectsList.length ? (
+            projectsList.map((p) => <Card key={p.name} project={p} />)
+          ) : (
+            <HStack justify="center" w="full">
+              <Heading size="h6">No project found.</Heading>
+            </HStack>
+          )}
         </Flex>
 
-        <Flex
-          w="full"
-          mx="auto"
-          mt="60px"
-          alignItems="center"
-          justifyContent="center"
-          direction={{ base: "column", xl: "row" }}
-        >
-          <Button variant="outline">show more</Button>
-        </Flex>
+        {projectsList.length ? (
+          <Flex
+            w="full"
+            mx="auto"
+            mt="60px"
+            alignItems="center"
+            justifyContent="center"
+            direction={{ base: "column", xl: "row" }}
+          >
+            <Button variant="outline">show more</Button>
+          </Flex>
+        ) : null}
       </Box>
 
       <Modal
@@ -169,12 +178,19 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
           <ModalBody
             sx={{
               "&::-webkit-scrollbar": {
-                width: "0.3rem",
-                borderRadius: "1px",
-                backgroundColor: `#7ae7ff`,
+                width: "4px",
+                height: "4px",
+                borderRadius: "0px",
+                backgroundColor: `transparent`,
               },
               "&::-webkit-scrollbar-thumb": {
                 backgroundColor: `#7ae7ff`,
+              },
+              "&::-webkit-scrollbar-thumb:hover": {
+                backgroundColor: `#7ae7ff`,
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: `transparent`,
               },
             }}
           >

@@ -8,6 +8,7 @@ import {
   Text,
   HStack,
   Button,
+  Stack,
 } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
 
@@ -45,17 +46,32 @@ const MyStakesPage = () => {
   const fetchCollectionDetail = useCallback(async () => {
     setLoading(true);
     try {
-      const stakedCount = await fetchMyPMPStakedCount(currentAccount);
+      const stakedCount = await fetchMyPMPStakedCount(
+        currentAccount,
+        staking_calls
+      );
 
-      const pendingCount = await fetchMyPMPPendingCount(currentAccount);
+      const pendingCount = await fetchMyPMPPendingCount(
+        currentAccount,
+        staking_calls
+      );
 
-      const unstakedCount = await fetchMyPMPUnstakedCount(currentAccount);
+      const unstakedCount = await fetchMyPMPUnstakedCount(
+        currentAccount,
+        artzero_nft_calls
+      );
 
       const totalCount = stakedCount + pendingCount + unstakedCount;
 
-      const myTradingFee = await fetchMyTradingFee(stakedCount, currentAccount);
-
-      const fee = await fetchPlatformTradingFee(currentAccount);
+      const myTradingFee = await fetchMyTradingFee(
+        stakedCount,
+        currentAccount,
+        marketplace_contract_calls
+      );
+      const fee = await fetchPlatformTradingFee(
+        currentAccount,
+        marketplace_contract_calls
+      );
       setPlatformTradingFee(fee);
 
       const stats = {
@@ -119,6 +135,12 @@ const MyStakesPage = () => {
         txStatus?.requestUnstakeStatus === FINALIZED
       ) {
         await delay(6000).then(() => {
+          txStatus?.stakeStatus && setActiveTab(tabList.STAKED);
+          txStatus?.cancelRequestUnstakeStatus && setActiveTab(tabList.STAKED);
+          txStatus?.requestUnstakeStatus &&
+            setActiveTab(tabList.PENDING_UNSTAKE);
+          txStatus?.unstakeStatus && setActiveTab(tabList.NOT_STAKED);
+
           dispatch(clearTxStatus());
           refresh();
         });
@@ -127,7 +149,7 @@ const MyStakesPage = () => {
 
     forceUpdate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [dispatch, txStatus]);
+  }, [dispatch, txStatus]);
 
   const refresh = () => {
     fetchCollectionDetail();
@@ -208,22 +230,31 @@ const MyStakesPage = () => {
               </motion.div>
             ))}
         </HStack>
-
-        {loading ? (
-          <AnimationLoader />
-        ) : PMPCollectionDetail?.listNFT?.length === 0 ? (
-          <Heading py="3rem" size="h6">
-            No NFTs found
-          </Heading>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            {<MyNFTGroupCard {...PMPCollectionDetail} />}
-          </motion.div>
-        )}
+        <Stack minHeight="504px" h="full">
+          {loading ? (
+            <Stack h="574px">
+              <AnimationLoader />
+            </Stack>
+          ) : PMPCollectionDetail?.listNFT?.length === 0 ? (
+            <Heading py="3rem" size="h6">
+              No NFTs found
+            </Heading>
+          ) : (
+            <motion.div
+              style={{ minHeight: "574px" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              {
+                <MyNFTGroupCard
+                  {...PMPCollectionDetail}
+                  hasBottomBorder={false}
+                />
+              }
+            </motion.div>
+          )}
+        </Stack>
       </Box>
     </Box>
   );
@@ -246,35 +277,44 @@ export const createNumberBN = (num, pow = 1) => {
     : new BN(numPF, 10).pow(new BN(powPF));
 };
 
-export const fetchMyPMPStakedCount = async (currentAccount) => {
+export const fetchMyPMPStakedCount = async (currentAccount, staking_calls) => {
   return await staking_calls.getTotalStakedByAccount(
     currentAccount,
     currentAccount.address
   );
 };
 
-export const fetchMyPMPPendingCount = async (currentAccount) => {
+export const fetchMyPMPPendingCount = async (currentAccount, staking_calls) => {
   return await staking_calls.getTotalPendingUnstakedByAccount(
     currentAccount,
     currentAccount.address
   );
 };
 
-export const fetchMyPMPUnstakedCount = async (currentAccount) => {
+export const fetchMyPMPUnstakedCount = async (
+  currentAccount,
+  artzero_nft_calls
+) => {
   return await artzero_nft_calls.balanceOf(
     currentAccount,
     currentAccount.address
   );
 };
 
-export const fetchPlatformStakingDiscountStep = async (currentAccount) => {
+export const fetchPlatformStakingDiscountStep = async (
+  currentAccount,
+  marketplace_contract_calls
+) => {
   const response = await marketplace_contract_calls.getStakingDiscountCriteria(
     currentAccount
   );
   return Array.from(response);
 };
 
-export const fetchPlatformStakingDiscountRate = async (currentAccount) => {
+export const fetchPlatformStakingDiscountRate = async (
+  currentAccount,
+  marketplace_contract_calls
+) => {
   const response = await marketplace_contract_calls.getStakingDiscountRate(
     currentAccount
   );
@@ -286,7 +326,10 @@ export const fetchPlatformStakingDiscountRate = async (currentAccount) => {
   return ret;
 };
 
-export const fetchPlatformTradingFee = async (currentAccount) => {
+export const fetchPlatformTradingFee = async (
+  currentAccount,
+  marketplace_contract_calls
+) => {
   const response = await marketplace_contract_calls.getPlatformFee(
     currentAccount
   );
@@ -294,12 +337,27 @@ export const fetchPlatformTradingFee = async (currentAccount) => {
   return response / 100;
 };
 
-export const fetchMyTradingFee = async (PMPStaked, currentAccount) => {
+export const fetchMyTradingFee = async (
+  PMPStaked,
+  currentAccount,
+  marketplace_contract_calls
+) => {
   let ret;
 
-  const stepArr = await fetchPlatformStakingDiscountStep(currentAccount);
-  const rateArr = await fetchPlatformStakingDiscountRate(currentAccount);
-  const platformTradingFee = await fetchPlatformTradingFee(currentAccount);
+  const stepArr = await fetchPlatformStakingDiscountStep(
+    currentAccount,
+    marketplace_contract_calls
+  );
+  const rateArr = await fetchPlatformStakingDiscountRate(
+    currentAccount,
+    marketplace_contract_calls
+  );
+  const platformTradingFee = await fetchPlatformTradingFee(
+    currentAccount,
+    marketplace_contract_calls
+  );
+
+  ret = platformTradingFee;
 
   for (var i = 0; i < stepArr.length; i++) {
     if (PMPStaked >= stepArr[i]) {
@@ -307,6 +365,7 @@ export const fetchMyTradingFee = async (PMPStaked, currentAccount) => {
       break;
     }
   }
+
   return ret && ret.toFixed(2);
 };
 
@@ -316,6 +375,9 @@ export const getMyUnstakePMP = async ({ owner, collection_address }) => {
   const dataList = await clientAPI("post", "/getNFTsByOwnerAndCollection", {
     collection_address,
     owner,
+    limit: 10000,
+    offset: 0,
+    sort: -1,
   });
 
   if (dataList.length === 0) return ret;

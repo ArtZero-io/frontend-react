@@ -1,27 +1,24 @@
-/* eslint-disable no-unused-vars */
-import * as Yup from "yup";
-import toast from "react-hot-toast";
-import { Formik, Form } from "formik";
-import { useDispatch, useSelector } from "react-redux";
-import React, { useState, useEffect, useRef } from "react";
-import { Flex, HStack, Spacer, Stack, Text } from "@chakra-ui/react";
-import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker";
+import { APICall } from "@api/client";
+import { Flex, HStack, Stack, Text } from "@chakra-ui/react";
+import StatusButton from "@components/Button/StatusButton";
+import CommonCheckbox from "@components/Checkbox/Checkbox";
+import ImageUpload from "@components/ImageUpload/Collection";
 import Input from "@components/Input/Input";
 import NumberInput from "@components/Input/NumberInput";
-import { create } from "ipfs-http-client";
 import TextArea from "@components/TextArea/TextArea";
-import CommonCheckbox from "@components/Checkbox/Checkbox";
-import StatusButton from "@components/Button/StatusButton";
-import ImageUpload from "@components/ImageUpload/Collection";
-import { IPFS_CLIENT_URL } from "@constants/index";
-import { useSubstrateState } from "@utils/substrate";
-import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 import { formMode } from "@constants";
-import { APICall } from "@api/client";
-import { AccountActionTypes } from "@store/types/account.types";
+import { IPFS_CLIENT_URL } from "@constants/index";
 import { formatBalance } from "@polkadot/util";
-import { TimePicker } from "../../../../components/TimePicker/TimePicker";
-import { clientAPI } from "@api/client";
+import { AccountActionTypes } from "@store/types/account.types";
+import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
+import { useSubstrateState } from "@utils/substrate";
+import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker";
+import { Form, Formik } from "formik";
+import { create } from "ipfs-http-client";
+import React, { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import * as Yup from "yup";
 const client = create(IPFS_CLIENT_URL);
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
@@ -29,7 +26,10 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
   const [initialValues, setInitialValues] = useState(null);
   const [userBalance, setUserBalance] = useState(null);
-  const [scheduleProject, setScheduleProject] = useState([new Date(), new Date()]);
+  const [scheduleProject, setScheduleProject] = useState([
+    new Date(),
+    new Date(),
+  ]);
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
   const { addCollectionTnxStatus } = useSelector(
@@ -141,10 +141,12 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 header: values.headerIPFSUrl,
                 avatar: values.avatarIPFSUrl,
                 team_members: values.projectTeamMembers,
-                roadmaps: values.projectRoadmap
-              }
+                roadmaps: values.projectRoadmap,
+              };
               console.log(project_info);
-              const project_info_ipfs = await client.add(JSON.stringify(project_info));
+              const project_info_ipfs = await client.add(
+                JSON.stringify(project_info)
+              );
               console.log(project_info_ipfs.path);
               const data = {
                 total_supply: Number(values.totalSupply),
@@ -152,7 +154,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 end_time: scheduleProject[1].getTime(),
                 project_info: project_info_ipfs.path,
               };
-              console.log('data', data);
+              console.log("data", data);
               dispatch({
                 type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
                 payload: {
@@ -345,25 +347,31 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
 export default AddNewProjectForm;
 
-const fetchUserBalance = async ({ currentAccount, api }) => {
-  const {
-    data: { free: balance },
-  } = await api.query.system.account(currentAccount?.address);
+export const fetchUserBalance = async ({ currentAccount, api }) => {
+  if (currentAccount) {
+    const {
+      data: { free: balance },
+    } = await api.query.system.account(currentAccount?.address);
 
-  const [chainDecimals] = await api.registry.chainDecimals;
+    const [chainDecimals] = await api.registry.chainDecimals;
 
-  const formattedStrBal = formatBalance(
-    balance,
-    { withSi: false, forceUnit: "-" },
-    chainDecimals
-  );
+    // return balance with 4 digits after decimal
+    const formattedStrBal = formatBalance(
+      balance,
+      { withSi: false, forceUnit: "-" },
+      chainDecimals
+    );
 
-  const formattedNumBal = formattedStrBal.replace(",", "") * 1;
+    const formattedNumBal = formattedStrBal.replaceAll(",", "") * 1;
 
-  return { balance: formattedNumBal };
+    return { balance: formattedNumBal };
+  }
 };
 
-const fetchInitialValuesProject = async ({ mode, collection_address }) => {
+export const fetchInitialValuesProject = async ({
+  mode,
+  collection_address,
+}) => {
   let initialValues = {
     isEditMode: false,
     nftName: "",

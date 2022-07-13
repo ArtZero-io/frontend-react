@@ -7,17 +7,16 @@ import {
   Thead,
   Tr,
   TagRightIcon,
-  Skeleton,
   Image,
   Square,
   Heading,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { AnimatePresence, motion } from "framer-motion";
-import { truncateStr, shortenNumber, getCachedImageShort } from "@utils";
+import { motion } from "framer-motion";
+import { getCachedImageShort } from "@utils";
 import { memo } from "react";
 
-function EventTable({ tableHeaders, tableData }) {
+function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
   return (
     <>
       {tableData?.length === 0 ? (
@@ -26,103 +25,152 @@ function EventTable({ tableHeaders, tableData }) {
         </Heading>
       ) : (
         <TableContainer
-          minH="500px"
-          maxH={{ base: "20rem", "2xl": "30rem" }}
           fontSize="lg"
-          h="full"
-          overflow="auto"
+          w={{ base: "1100px", "2xl": "1560px" }}
+          h={{ base: "390px", "2xl": "480px" }}
           overflowY="scroll"
           sx={{
             "&::-webkit-scrollbar": {
-              width: "0.3rem",
-              height: "0.3rem",
-              borderRadius: "1px",
-              backgroundColor: `#7ae7ff`,
+              width: "4px",
+              height: "4px",
+              borderRadius: "0px",
+              backgroundColor: `transparent`,
             },
             "&::-webkit-scrollbar-thumb": {
               backgroundColor: `#7ae7ff`,
             },
+            "&::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: `#7ae7ff`,
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: `transparent`,
+            },
           }}
         >
-          <AnimatePresence>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              {tableData?.length ? (
-                <Skeleton minH="200px" h="full" isLoaded={tableData}>
-                  <Table variant="striped" size="md" colorScheme="blackAlpha">
-                    <Thead>
-                      <Tr>
-                        {Object.values(tableHeaders)?.map((item, idx) => (
-                          <Th
-                            position="sticky"
-                            top={0}
-                            zIndex={1}
-                            textAlign="center"
-                            key={idx}
-                            fontFamily="Evogria"
-                            color="#888"
-                            bg="#171717"
-                            fontSize="15px"
-                            fontWeight="400"
-                            dropShadow="lg"
-                            py={{ base: "1rem", "2xl": "1.75rem" }}
-                          >
-                            {item}
-                          </Th>
-                        ))}
-                      </Tr>
-                    </Thead>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {tableData?.length ? (
+              <Table variant="striped" colorScheme="blackAlpha">
+                <Thead>
+                  <Tr>
+                    <Th
+                      hidden={type === "UNLIST" || type === "LIST"}
+                      position="sticky"
+                      top={0}
+                      zIndex={1}
+                      textAlign="center"
+                      fontFamily="Evogria"
+                      color="#888"
+                      bg="#171717"
+                      fontSize="15px"
+                      fontWeight="400"
+                      dropShadow="lg"
+                      py={{ base: "1rem", "2xl": "1.75rem" }}
+                    >
+                      collection creator
+                    </Th>
+                    {Object.values(tableHeaders)?.map((item, idx) => (
+                      <Th
+                        position="sticky"
+                        top={0}
+                        zIndex={1}
+                        textAlign="center"
+                        key={idx}
+                        fontFamily="Evogria"
+                        color="#888"
+                        bg="#171717"
+                        fontSize="15px"
+                        fontWeight="400"
+                        dropShadow="lg"
+                        py={{ base: "1rem", "2xl": "1.75rem" }}
+                      >
+                        {item}
+                      </Th>
+                    ))}
+                    <Th
+                      position="sticky"
+                      top={0}
+                      zIndex={1}
+                      textAlign="center"
+                      fontFamily="Evogria"
+                      color="#888"
+                      bg="#171717"
+                      fontSize="15px"
+                      fontWeight="400"
+                      dropShadow="lg"
+                      py={{ base: "1rem", "2xl": "1.75rem" }}
+                    >
+                      Time
+                    </Th>
+                  </Tr>
+                </Thead>
 
-                    <Tbody>
-                      {tableData?.map((item, idx) => (
-                        <Tr key={idx} color="#fff">
-                          {Object.keys(tableHeaders)?.map((i, idx) => (
-                            <Td
-                              key={idx}
-                              py={{ base: "1rem", "2xl": "1.75rem" }}
-                              textAlign="center"
-                              color="#7ae7ff"
-                            >
-                              {i === "nftContractAddress" ||
-                              i === "seller" ||
-                              i === "trader" ||
-                              i === "buyer" ? (
-                                truncateStr(item[i])
-                              ) : i === "price" ||
-                                i === "platformFee" ||
-                                i === "royalFee" ? (
-                                <>
-                                  {shortenNumber(item[i])}
-                                  <TagRightIcon as={AzeroIcon} />
-                                </>
-                              ) : i === "avatar" ? (
-                                <>
-                                  <Square size="64px" mx="auto">
-                                    <Image
-                                      width="full"
-                                      height="full"
-                                      src={
-                                        item[i] && getCachedImageShort(item[i])
-                                      }
-                                    />
-                                  </Square>
-                                </>
-                              ) : (
-                                item[i]
-                              )}
-                            </Td>
-                          ))}
-                        </Tr>
+                <Tbody>
+                  {tableData?.map((item, idx) => (
+                    <Tr key={idx} color="#fff">
+                      <Td
+                        hidden={type === "UNLIST" || type === "LIST"}
+                        py={{ base: "1rem", "2xl": "1.75rem" }}
+                        textAlign="center"
+                        color="#fff"
+                      >
+                        {collectionOwnerName}
+                      </Td>
+                      {Object.keys(tableHeaders)?.map((i, idx) => (
+                        <Td
+                          isNumeric={i === "price" ? true : false}
+                          key={idx}
+                          py={{ base: "1rem", "2xl": "1.75rem" }}
+                          textAlign="center"
+                          // color="#fff"
+                          color={
+                            i === "nftContractAddress" ||
+                            i === "seller" ||
+                            i === "trader" ||
+                            i === "buyer"
+                              ? "#7ae7ff"
+                              : "#fff"
+                          }
+                        >
+                          {i === "price" ||
+                          i === "platformFee" ||
+                          i === "royalFee" ? (
+                            <>
+                              {item[i].toFixed(6)}
+                              <TagRightIcon as={AzeroIcon} w="16px" />
+                            </>
+                          ) : i === "avatar" ? (
+                            <>
+                              <Square size="64px" mx="auto">
+                                <Image
+                                  width="full"
+                                  height="full"
+                                  src={item[i] && getCachedImageShort(item[i])}
+                                />
+                              </Square>
+                            </>
+                          ) : (
+                            item[i]
+                          )}
+                        </Td>
                       ))}
-                    </Tbody>
-                  </Table>
-                </Skeleton>
-              ) : null}
-            </motion.div>
-          </AnimatePresence>
+                      <Td
+                        key={idx}
+                        py={{ base: "1rem", "2xl": "1.75rem" }}
+                        textAlign="center"
+                        color="#fff"
+                      >
+                        {new Date(1657304023551).toLocaleString("en-US")}
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            ) : null}
+          </motion.div>
         </TableContainer>
       )}
     </>

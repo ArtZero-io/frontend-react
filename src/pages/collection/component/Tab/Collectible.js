@@ -1,52 +1,59 @@
-import React, { useState, useEffect } from "react";
 import {
   Box,
   Flex,
   Grid,
   GridItem,
   Heading,
-  Spacer,
-  Text,
-  Link,
+  HStack,
   Image,
+  InputRightElement,
+  Link,
+  NumberInput,
+  NumberInputField,
+  Progress,
+  Skeleton,
+  Spacer,
+  Square,
+  Stack,
   Tag,
   TagLabel,
   TagRightIcon,
-  // InputGroup,
-  Progress,
-  Skeleton,
-  useBreakpointValue,
-  Square,
-  // Input,
-  Stack,
-  HStack,
+  Text,
   Tooltip,
-  NumberInput,
-  InputRightElement,
-  NumberInputField,
+  useBreakpointValue,
 } from "@chakra-ui/react";
-
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { useSubstrateState } from "@utils/substrate";
-import { convertStringToPrice, createLevelAttribute } from "@utils";
+import { ImLock, ImUnlocked } from "react-icons/im";
 
-import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-
-import toast from "react-hot-toast";
-import { truncateStr } from "@utils";
-import BN from "bn.js";
+import { Link as ReactRouterLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+
+import BN from "bn.js";
+import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-import { getPublicCurrentAccount, getCachedImageShort } from "@utils";
-import StatusBuyButton from "@components/Button/StatusBuyButton";
-import { AccountActionTypes } from "@store/types/account.types";
+
+import {
+  truncateStr,
+  getCachedImageShort,
+  convertStringToPrice,
+  createLevelAttribute,
+  getPublicCurrentAccount,
+  formatNumDynamicDecimal,
+} from "@utils";
+
+import { useSubstrateState } from "@utils/substrate";
 
 import profile_calls from "@utils/blockchain/profile_calls";
-import { Link as ReactRouterLink } from "react-router-dom";
-import AddNewNFTModal from "../Modal/AddNewNFT";
-import { ImLock, ImUnlocked } from "react-icons/im";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+
 import { formMode } from "@constants";
-import LockNFTModal from "../../../../components/Modal/LockNFTModal";
+import { AccountActionTypes } from "@store/types/account.types";
+
+import LockNFTModal from "@components/Modal/LockNFTModal";
+import StatusBuyButton from "@components/Button/StatusBuyButton";
+
+import AddNewNFTModal from "../Modal/AddNewNFT";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -76,6 +83,8 @@ const NFTTabCollectible = (props) => {
   const [saleInfo, setSaleInfo] = useState(null);
   const [action, setAction] = useState("");
   const [ownerName, setOwnerName] = useState("");
+
+  // const [isOfferBtnFocus, setIsOfferBtnFocus] = useState(false);
 
   useEffect(() => {
     const doLoad = async () => {
@@ -473,9 +482,22 @@ const NFTTabCollectible = (props) => {
                                 color="brand.grayLight"
                               >
                                 <Text>Current price</Text>
-                                <Tag h={4} pr={0} bg="transparent">
+                                <Tag h={4} pr={0} bg="transparent" maxW="95px">
                                   <TagLabel bg="transparent">
-                                    {price / 10 ** 12}
+                                    <Tooltip
+                                      bg="#171717"
+                                      color="#fff"
+                                      border="1px solid #7ae7ff"
+                                      borderRadius="0"
+                                      label={formatNumDynamicDecimal(
+                                        price / 10 ** 12
+                                      )}
+                                      aria-label="A tooltip"
+                                    >
+                                      {formatNumDynamicDecimal(
+                                        price / 10 ** 12
+                                      )}
+                                    </Tooltip>
                                   </TagLabel>
                                   <TagRightIcon as={AzeroIcon} />
                                 </Tag>
@@ -498,6 +520,7 @@ const NFTTabCollectible = (props) => {
                             {!isBided && (
                               <>
                                 <StatusBuyButton
+                                  // isOfferBtnFocus={isOfferBtnFocus}
                                   shouldDisabled={
                                     addNftTnxStatus?.status &&
                                     action &&
@@ -513,18 +536,20 @@ const NFTTabCollectible = (props) => {
                                   onClick={placeOffer}
                                 />
 
-                                <Spacer />
                                 <NumberInput
-                                  maxW={32}
+                                  // maxW={"128px"}
+                                  minW={"85px"}
                                   isDisabled={addNftTnxStatus?.status}
                                   bg="black"
-                                  defaultValue={15}
+                                  max={999000000}
                                   min={1}
-                                  precision={0}
-                                  onChange={(v) => setBidPrice(parseInt(v))}
+                                  precision={6}
+                                  onChange={(v) => setBidPrice(v)}
                                   value={bidPrice}
                                   ml={3}
                                   h="50px"
+                                  // onFocus={() => setIsOfferBtnFocus(true)}
+                                  // onBlur={() => setIsOfferBtnFocus(false)}
                                 >
                                   <NumberInputField
                                     h="50px"
@@ -626,12 +651,18 @@ const NFTTabCollectible = (props) => {
                     sx={{
                       "&::-webkit-scrollbar": {
                         width: "4px",
-                        height: "15px",
-                        borderRadius: "1px",
-                        backgroundColor: `#7ae7ff`,
+                        height: "4px",
+                        borderRadius: "0px",
+                        backgroundColor: `transparent`,
                       },
                       "&::-webkit-scrollbar-thumb": {
                         backgroundColor: `#7ae7ff`,
+                      },
+                      "&::-webkit-scrollbar-thumb:hover": {
+                        backgroundColor: `#7ae7ff`,
+                      },
+                      "&::-webkit-scrollbar-track": {
+                        backgroundColor: `transparent`,
                       },
                     }}
                   >
