@@ -20,8 +20,8 @@ export default function AddCollectionNumberInput({
   max,
   hasStepper = true,
   precision = 2,
-  step=0.5
-,
+  step = 0.5,
+  height = "48px",
   ...props
 }) {
   return (
@@ -44,7 +44,7 @@ export default function AddCollectionNumberInput({
               isDisabled={isDisabled}
               onChange={(val) => form.setFieldValue(field.name, val)}
             >
-              <NumberInputField borderRadius="0" h={12} />
+              <NumberInputField borderRadius="0" h={height} />
               {hasStepper && (
                 <NumberInputStepper>
                   <NumberIncrementStepper />

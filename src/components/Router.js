@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Switch, Route } from "react-router-dom";
 import * as ROUTES from "@constants/routes";
 
@@ -19,6 +20,7 @@ import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import AccountLayout from "./Layout/AccountLayout";
 import AdminLayout from "./Layout/AdminLayout";
 import LaunchpadDetailPage from "../pages/launchpad/detail";
+import AddProject from "../pages/launchpad/add-project";
 // import NotFound from "./NotFound/NotFound";
 // import MintLayout from "./Layout/MintLayout";
 
@@ -59,6 +61,7 @@ const Router = () => {
       <Route exact path={ROUTES.DETAIL_COLLECTION} component={CollectionPage} />
       <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
       <Route exact path={ROUTES.STATS} component={StatsPage} />
+      <Route exact path={ROUTES.LAUNCHPAD_ADD_PROJECT} component={AddProject} />
       <Route
         exact
         path={ROUTES.LAUNCHPAD_DETAIL}

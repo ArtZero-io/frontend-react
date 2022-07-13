@@ -14,6 +14,7 @@ export const ACCOUNT_ADMIN = "/admin";
 export const DETAIL_COLLECTION = "/collection/:collection_address";
 export const DETAIL_COLLECTION_BASE = "/collection";
 export const LAUNCHPAD_BASE = "/launchpad";
+export const LAUNCHPAD_ADD_PROJECT = "/launchpad/add";
 export const LAUNCHPAD_DETAIL = "/launchpad/:collection_address";
 
 // MINTING EVENT

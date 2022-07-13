@@ -1,5 +1,5 @@
 import { APICall } from "@api/client";
-import { Flex, HStack, Stack, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import StatusButton from "@components/Button/StatusButton";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import ImageUpload from "@components/ImageUpload/Collection";
@@ -20,6 +20,23 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 const client = create(IPFS_CLIENT_URL);
+
+// 1. Project info tab
+// project name
+// Start time - End time
+// project desc
+// project roadmap dang add more
+// project team member dang add more
+// Project Header Image
+
+// 2. NFT info tab
+// Name
+// Symbol
+// Total Supply
+
+// 3. Phase Info
+// có 3 item default (OG, Whitelist Mint, Public Mint) dạng add more
+// phase item gồm {code, name, start time, end time}
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -185,9 +202,112 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
           >
             {({ values, dirty, isValid }) => (
               <Form>
-                <HStack>
+                <Stack direction={{ base: "column", xl: "row" }}>
+                  <Heading size="h4">1. Project info tab</Heading>
+
+                  <Stack
+                    direction={{ base: "column", xl: "row" }}
+                    align="flex-end"
+                  >
+                    <Input
+                      type="text"
+                      isRequired={true}
+                      name="projectName"
+                      label="Project name"
+                      placeholder="Project name"
+                      isDisabled={addCollectionTnxStatus}
+                    />
+                    <Stack w={{ base: "315px", xl: "775px" }} pb="30px">
+                      <Text fontSize="lg" ml={1} mb="10px">
+                        Start time - End time
+                      </Text>
+                      <DateTimeRangePicker
+                        onChange={setScheduleProject}
+                        value={scheduleProject}
+                        locale="en-EN"
+                      />
+                    </Stack>
+                  </Stack>
+
+                  <Stack>
+                    <TextArea
+                      height="140"
+                      type="text"
+                      isRequired={true}
+                      name="projectDescription"
+                      label="Project description"
+                      placeholder="Project description"
+                      isDisabled={addCollectionTnxStatus}
+                    />
+                    <Heading size="h6">
+                      + project roadmap dang add more:
+                      <br />
+                    </Heading>
+                    <Text size="h6">
+                      <br />
+                      Milestone
+                      <br /> - List content
+                      <br /> - List content
+                      <br /> - List content
+                    </Text>
+                    <Heading size="h6">
+                      + project team member dang add more
+                    </Heading>
+                    <Text size="h6">
+                      <br />- name - title - image upload?
+                      <br />- name - title - image upload?
+                      <br />- name - title - image upload?
+                    </Text>
+                  </Stack>
+
+                  <Stack
+                    py="20px"
+                    direction={{ base: "column", xl: "row" }}
+                    alignItems="start"
+                    justifyContent="space-between"
+                  >
+                    <Stack
+                      w="50%"
+                      direction="column"
+                      alignItems="start"
+                      justifyContent="end"
+                    >
+                      <ImageUpload
+                        isDisabled={addCollectionTnxStatus}
+                        id="avatar"
+                        mode={mode}
+                        isBanner={false}
+                        imageIPFSUrl={avatarIPFSUrl}
+                        setImageIPFSUrl={setAvatarIPFSUrl}
+                        title="Project Avatar Image"
+                        limitedSize={{ width: "100", height: "100" }}
+                      />
+                    </Stack>
+
+                    <Stack
+                      w="50%"
+                      direction="column"
+                      alignItems="start"
+                      justifyContent="end"
+                    >
+                      <ImageUpload
+                        id="header"
+                        mode={mode}
+                        isBanner={true}
+                        title="Project Header Image"
+                        imageIPFSUrl={headerIPFSUrl}
+                        isDisabled={addCollectionTnxStatus}
+                        setImageIPFSUrl={setHeaderIPFSUrl}
+                        limitedSize={{ width: "1920", height: "600" }}
+                      />
+                    </Stack>
+                  </Stack>
+                </Stack>
+
+                <Stack>
+                  <Heading size="h4"> 2. NFT info tab</Heading>
                   {mode === formMode.ADD && (
-                    <>
+                    <Stack direction={{ base: "column", xl: "row" }}>
                       <Input
                         type="text"
                         name="nftName"
@@ -204,88 +324,48 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         placeholder="NFT Symbol"
                         isDisabled={addCollectionTnxStatus}
                       />
-                    </>
+                      <Box pb="24px">
+                        <NumberInput
+                          height="52px"
+                          step={1}
+                          type="number"
+                          precision={0}
+                          name="totalSupply"
+                          hasStepper={false}
+                          placeholder="10000"
+                          inputWidth={"8rem"}
+                          label="Total Supply"
+                          maxRoyalFeeRate={10000}
+                          isDisabled={addCollectionTnxStatus}
+                        />
+                      </Box>
+                    </Stack>
                   )}
+                </Stack>
 
-                  <Input
-                    type="text"
-                    isRequired={true}
-                    name="projectName"
-                    label="Project name"
-                    placeholder="Project name"
-                    isDisabled={addCollectionTnxStatus}
-                  />
-                </HStack>
-
-                <TextArea
-                  height="140"
-                  type="text"
-                  isRequired={true}
-                  name="projectDescription"
-                  label="Project description"
-                  placeholder="Project description"
-                  isDisabled={addCollectionTnxStatus}
-                />
-                <TextArea
-                  height="140"
-                  type="text"
-                  isRequired={true}
-                  name="projectRoadmap"
-                  label="Project roadmap"
-                  placeholder="Project roadmap"
-                  isDisabled={addCollectionTnxStatus}
-                />
-
-                <TextArea
-                  height="140"
-                  type="text"
-                  isRequired={true}
-                  name="projectTeamMembers"
-                  label="Project team members"
-                  placeholder="Project team members"
-                  isDisabled={addCollectionTnxStatus}
-                />
-
-                <Stack
-                  direction="row"
-                  alignItems="start"
-                  justifyContent="space-between"
-                >
-                  <Stack
-                    w="50%"
-                    direction="column"
-                    alignItems="start"
-                    justifyContent="end"
-                  >
-                    <ImageUpload
-                      isDisabled={addCollectionTnxStatus}
-                      id="avatar"
-                      mode={mode}
-                      isBanner={false}
-                      imageIPFSUrl={avatarIPFSUrl}
-                      setImageIPFSUrl={setAvatarIPFSUrl}
-                      title="Project Avatar Image"
-                      limitedSize={{ width: "100", height: "100" }}
-                    />
-                  </Stack>
-
-                  <Stack
-                    w="50%"
-                    direction="column"
-                    alignItems="start"
-                    justifyContent="end"
-                  >
-                    <ImageUpload
-                      id="header"
-                      mode={mode}
-                      isBanner={true}
-                      title="Project Header Image"
-                      imageIPFSUrl={headerIPFSUrl}
-                      isDisabled={addCollectionTnxStatus}
-                      setImageIPFSUrl={setHeaderIPFSUrl}
-                      limitedSize={{ width: "1920", height: "600" }}
-                    />
-                  </Stack>
+                <Stack>
+                  <Heading size="h4"> 3. Phase Info</Heading>
+                  <Text size="h6">+ OG1 - Start time - End time??</Text>
+                  <Text size="h6">+ OG2 - Start time - End time??</Text>
+                  <Text size="h6">+ OG3 - Start time - End time??</Text>
+                  <Text size="h6">
+                    + Whitelist Mint1 - Start time - End time??
+                  </Text>
+                  <Text size="h6">
+                    + Whitelist Mint2 - Start time - End time??
+                  </Text>
+                  <Text size="h6">
+                    + Whitelist Mint3 - Start time - End time??
+                  </Text>
+                  <Text size="h6">
+                    + Public Mint1 - Start time - End time??
+                  </Text>
+                  <Text size="h6">
+                    + Public Mint2 - Start time - End time??
+                  </Text>
+                  <Text size="h6">
+                    + Public Mint3 - Start time - End time??
+                  </Text>
                 </Stack>
 
                 {mode === formMode.ADD && (
@@ -304,29 +384,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     </Flex>
                   </Flex>
                 )}
-
-                <HStack align="center" justify="space-between">
-                  <NumberInput
-                    step={1}
-                    type="number"
-                    precision={0}
-                    name="totalSupply"
-                    hasStepper={false}
-                    placeholder="10000"
-                    inputWidth={"8rem"}
-                    label="Total Supply"
-                    maxRoyalFeeRate={10000}
-                    isDisabled={addCollectionTnxStatus}
-                  />
-                  <Stack>
-                    <Text>Start time - End time</Text>
-                    <DateTimeRangePicker
-                      onChange={setScheduleProject}
-                      value={scheduleProject}
-                      locale="en-EN"
-                    />
-                  </Stack>
-                </HStack>
 
                 <StatusButton
                   mode={mode}

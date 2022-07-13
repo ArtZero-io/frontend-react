@@ -25,6 +25,8 @@ import { AccountActionTypes } from "@store/types/account.types";
 import { useSubstrateState } from "@utils/substrate";
 import { convertDateToTimeStamp } from "@utils";
 import AddNewProject from "./Form/AddNewProject";
+import { useHistory } from "react-router-dom";
+import * as ROUTES from "@constants/routes";
 
 export const GroupCard = ({ variant = "live", projectsList }) => {
   const [projectName, setProjectName] = useState("");
@@ -36,6 +38,7 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const dispatch = useDispatch();
+  const history = useHistory();
   const { currentAccount } = useSubstrateState();
   const {
     isOpen: isOpenAddNew,
@@ -57,6 +60,7 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
     if (!avatarIPFSUrl) {
       return toast.error("Upload avatar");
     }
+
     const data = {
       name: projectName,
       description: projectDescription,
@@ -113,7 +117,10 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
           <Spacer />
 
           {variant === "live" && (
-            <Button variant="solid" onClick={() => onOpenAddProject()}>
+            <Button
+              variant="solid"
+              onClick={() => history.push(ROUTES.LAUNCHPAD_ADD_PROJECT)}
+            >
               add project
             </Button>
           )}
