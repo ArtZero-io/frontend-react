@@ -202,7 +202,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
           >
             {({ values, dirty, isValid }) => (
               <Form>
-                <Stack direction={{ base: "column", xl: "row" }}>
+                <Stack>
                   <Heading size="h4">1. Project info tab</Heading>
 
                   <Stack
