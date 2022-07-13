@@ -23,7 +23,7 @@ import { clientAPI } from "@api/client";
 import { getCachedImageShort } from "@utils";
 
 const client = create(IPFS_CLIENT_URL);
-const supportedFormat = ["image/png", "image/jpg", "image/jpeg"];
+const supportedFormat = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
 
 export default function ImageUploadAvatar({
   setImageIPFSUrl,
@@ -44,7 +44,7 @@ export default function ImageUploadAvatar({
       console.log("includes Date.now()", Date.now());
 
       toast.error(
-        `Please use .png .jpeg .jpeg format, the ${
+        `Please use .png .jpeg .jpeg, .gif format, the ${
           e.target?.files[0] && e.target.files[0].type.split("/")[1]
         } format is not supported.`
       );
@@ -152,7 +152,7 @@ export default function ImageUploadAvatar({
               id="inputTag"
               onChange={retrieveNewAvatar}
               type="file"
-              accept="image/png, image/jpg, image/jpeg"
+              accept="image/png, image/jpg, image/jpeg, image/gif"
             />
             <Button as={Text} fontFamily="Evogria" variant="outline">
               {!imagePreviewUrl ? "Select Image" : "Pick another"}
