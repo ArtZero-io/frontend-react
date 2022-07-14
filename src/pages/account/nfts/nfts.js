@@ -231,8 +231,8 @@ const MyNFTsPage = () => {
           pb={{ base: "12px", xl: "48px" }}
           direction={{ base: "column", xl: "row" }}
         >
-          <Heading minW="100px" fontSize={{ base: "26px", xl: "48px" }}>
-            My NFTs
+          <Heading fontSize={["3xl-mid", "5xl", "5xl"]} minW="100px">
+            MY NFTs
           </Heading>
 
           <Spacer />
@@ -260,30 +260,33 @@ const MyNFTsPage = () => {
             }}
           >
             <Button
-              isActive={filterSelected === 0}
-              variant="outline"
               mx={1}
               id="collected"
+              variant="outline"
+              isActive={filterSelected === 0}
+              px={["16px", "32px", "32px"]}
               onClick={() => onClickHandler(0)}
             >
               Collected
             </Button>
 
             <Button
-              isActive={filterSelected === 1}
-              variant="outline"
               mx={1}
               id="listed"
+              variant="outline"
+              isActive={filterSelected === 1}
+              px={["16px", "32px", "32px"]}
               onClick={() => onClickHandler(1)}
             >
               My Listing
             </Button>
 
             <Button
-              isActive={filterSelected === 2}
-              variant="outline"
               mx={1}
               id="bid"
+              variant="outline"
+              isActive={filterSelected === 2}
+              px={["16px", "32px", "32px"]}
               onClick={() => onClickHandler(2)}
             >
               My Bids

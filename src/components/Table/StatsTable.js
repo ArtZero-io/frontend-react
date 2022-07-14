@@ -144,7 +144,7 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
       ) : (
         <TableContainer
           shadow="lg"
-          minH="600px"
+          minH="500px"
           fontSize="lg"
           h="full"
           overflow="auto"

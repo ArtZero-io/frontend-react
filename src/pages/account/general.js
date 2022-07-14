@@ -151,7 +151,7 @@ function GeneralPage() {
         mx="auto"
         maxW={{ base: "6xl", "2xl": "7xl" }}
         px={{ base: "6", "2xl": "8" }}
-        py={{ base: "12", "2xl": "20" }}
+        py={["4", "12", "20"]}
       >
         <VStack as="section" w="full">
           <Box w="full" textAlign="left" mb={6}>
@@ -161,7 +161,9 @@ function GeneralPage() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                <Heading size="h2">DASHBOARD</Heading>
+                <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>
+                  DASHBOARD
+                </Heading>
 
                 <Flex alignItems="center">
                   <Button
@@ -177,7 +179,7 @@ function GeneralPage() {
                     <Text fontFamily="Oswald">
                       {isLargerThan480
                         ? currentAccount?.address
-                        : truncateStr(currentAccount?.address, 12)}
+                        : truncateStr(currentAccount?.address, 16)}
                     </Text>
                     <Input
                       display="none"
@@ -297,7 +299,7 @@ function GeneralPage() {
             <Image
               w="full"
               h="full"
-              src="https://bafybeia665snn5queuptbhbe5htc2sovn5gcrwwpwvcq4vb7dhmoui3dri.ipfs.infura-ipfs.io/"
+              src="https://api.artzero.io/getImage?input=QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH&size=500&url=https://ipfs.infura.io/ipfs/QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH"
             />
           </Square>
 
@@ -332,8 +334,12 @@ function GeneralPage() {
                 h={32}
                 w={28}
               >
-                <Tag variant="outline" h={6} w={32} mt={3}>
-                  {<TagLabel>Trade Fee: {tradeFee && `${tradeFee}%`}</TagLabel>}
+                <Tag variant="outline" h={6} w={"128px"} mt={3}>
+                  {
+                    <TagLabel fontSize="14px">
+                      Trade Fee: {tradeFee && `${tradeFee}%`}
+                    </TagLabel>
+                  }
                 </Tag>
               </Box>
             </Flex>
@@ -347,7 +353,7 @@ function GeneralPage() {
               >
                 Your Total Stake:{" "}
                 <span style={{ color: "#7AE7FF" }}>
-                  {totalStaked || 0} NFTs{" "}
+                  {totalStaked || 0} NFT{totalStaked > 1 ? "s" : ""}
                 </span>
               </Text>
             </Flex>
@@ -365,7 +371,11 @@ function GeneralPage() {
                 Your Estimated Earning:{" "}
                 <Text as="span" color="#7AE7FF" mr="30px">
                   {parseFloat(estimatedEarning).toFixed(3) || 0}{" "}
-                  <AzeroIcon mb="2px" w="16px" h="16px" />
+                  <AzeroIcon
+                    mb="2px"
+                    w={["14px", "16px", "16px"]}
+                    h={["14px", "16px", "16px"]}
+                  />
                 </Text>
               </Text>
               <Text fontSize={{ base: "16px", xl: "lg" }}>
@@ -384,14 +394,8 @@ function GeneralPage() {
               justify="flex-start"
               direction={{ base: "column", xl: "row" }}
             >
-              <Button
-                w={{ base: "full", xl: "auto" }}
-                variant="solid"
-                onClick={() => history.push(ROUTES.ACCOUNT_MY_STAKES)}
-              >
-                Stake now
-              </Button>
               <Box
+                pb="20px"
                 w={"full"}
                 variant="outline"
                 display={{ base: "flex", xl: "none" }}
@@ -409,6 +413,15 @@ function GeneralPage() {
                   </TagLabel>
                 </Tag>
               </Box>
+
+              <Button
+                w={{ base: "full", xl: "auto" }}
+                variant="solid"
+                onClick={() => history.push(ROUTES.ACCOUNT_MY_STAKES)}
+              >
+                Stake now
+              </Button>
+
               <FeeInfoModal />
             </Stack>
           </VStack>

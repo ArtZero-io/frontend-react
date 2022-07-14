@@ -72,7 +72,7 @@ const MobileNavContent = (props) => {
       <SearchDrawer
         position="absolute"
         top="0px"
-        right="-10px"
+        right="0px"
         as="button"
         mx="2"
         fontSize="2xl"
@@ -223,7 +223,7 @@ const MyAccountDropdown = () => {
         // borderColor={path.includes("/account/") ? "brand.blue" : "transparent"}
       >
         <MenuButton
-          fontSize={{ base: "32px", lg: "15px" }}
+          fontSize={{ base: "24px", xl: "32px", lg: "15px" }}
           h="41px"
           _hover={{
             borderColor: "brand.blue",
@@ -247,7 +247,7 @@ const MyAccountDropdown = () => {
           }
           color={path.includes("/account/") ? "brand.blue" : "#fff"}
         >
-          My Account
+          my account
         </MenuButton>
         <MenuList
           minW="250px"
@@ -267,7 +267,7 @@ const MyAccountDropdown = () => {
               key={idx}
               to="#"
               // fontSize="15px"
-              fontSize={{ base: "32px", lg: "15px" }}
+              fontSize={{ base: "24px", xl: "32px", lg: "15px" }}
               py="12px"
               px="15px"
             >

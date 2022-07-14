@@ -169,15 +169,15 @@ const MyStakesPage = () => {
           pb={{ base: "12px", xl: "48px" }}
           direction={{ base: "column", xl: "row" }}
         >
-          <Heading minW="100px" fontSize={{ base: "26px", xl: "48px" }}>
+          <Heading fontSize={["3xl-mid", "5xl", "5xl"]} minW="100px">
             My Stakes
           </Heading>
           <Spacer />
           <HStack
             maxW={{ base: "320px", xl: "600px" }}
-            overflowX="scroll"
             mt="20px"
             pb="8px"
+            overflowX="scroll"
             sx={{
               "&::-webkit-scrollbar": {
                 width: "4px",
@@ -198,11 +198,12 @@ const MyStakesPage = () => {
           >
             {Object.keys(tabList).map((item) => (
               <Button
+                mx={1}
                 key={item}
-                isActive={item === activeTab}
                 id={item}
                 variant="outline"
-                mx={1}
+                isActive={item === activeTab}
+                px={["16px", "32px", "32px"]}
                 onClick={() => setActiveTab(item)}
               >
                 {item.replace("_", " ")}

@@ -257,12 +257,20 @@ function MintHeader({ loading }) {
       >
         <VStack textAlign="center" justifyContent="space-between">
           <Center w="full" pos="relative">
-            <Heading size="h2" textTransform="uppercase">
-              Token Generation Event
+            <Heading
+              fontSize={["3xl-mid", "5xl", "5xl"]}
+              textTransform="uppercase"
+            >
+              token generation event
             </Heading>
           </Center>
 
-          <Text fontSize="lg" maxW="6xl-mid" color="#fff" mt={5}>
+          <Text
+            fontSize={["md", "lg", "lg"]}
+            maxW="6xl-mid"
+            color="#fff"
+            mt={5}
+          >
             In the TGE, whitelisted addresses can mint NFTs for free. If you are
             not in the whitelist, you still can purchase an NFT.
           </Text>

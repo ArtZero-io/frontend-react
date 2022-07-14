@@ -53,13 +53,12 @@ const AccountLayout = ({ children }) => {
             {tabData.map((tab) => (
               <Tab
                 key={tab.label}
-                fontFamily="Evogria Italic, san serif"
-                color="#fff"
-                fontSize={{ base: "16px", xl: "lg" }}
                 mx={4}
-                fontStyle="italic"
                 px="0.5px"
-                py="20px"
+                color="#fff"
+                py={["8px", "20px", "20px"]}
+                fontSize={["md", "lg", "lg"]}
+                fontFamily="Evogria Italic, san serif"
               >
                 {tab.label}
               </Tab>

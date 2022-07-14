@@ -42,11 +42,9 @@ function CollectionHeader({
       minH={{ sm: "625px", xl: "22rem", "2xl": "34rem" }}
       as="section"
       position="relative"
-      // maxW="container.3xl"
       w="full"
       h="625px"
       bg={overlay}
-      // bg="yellow"
     >
       <Box
         h="full"
@@ -129,14 +127,15 @@ function CollectionHeader({
           </HStack>
 
           <HStack
+            overflow="hidden"
             flexWrap={["wrap", "noWrap", "noWrap"]}
             color="brand.blue"
-            maxW="680px"
+            maxW={["280px", "680px", "680px"]}
             maxH={["200px", "110px", "110px"]}
             h={["full", "full", "full"]}
             borderWidth={2}
             borderColor="brand.blue"
-            px={{ base: 1, xl: 12, "2xl": 16 }}
+            px={{ base: "0px", xl: 12, "2xl": 16 }}
             py={{ base: "0.5rem", "2xl": "1.125rem" }}
             justifyContent="space-between"
             bg="black"
@@ -230,10 +229,23 @@ function CollectionHeader({
             )}
 
             <Divider
-              transform="rotate(90deg)"
               width="300px"
               bg="#232323"
+              transform="rotate(90deg)"
               display={{ base: "none", xl: "inline" }}
+            />
+
+            <Divider
+              width="300px"
+              bg="#232323"
+              transform="rotate(180deg) translateY(-10px) translateX(4px)"
+              display={{ base: "inline", md: "none" }}
+            />
+            <Divider
+              width="300px"
+              bg="#232323"
+              transform="rotate(90deg) translateY(5px)"
+              display={{ base: "inline", md: "none" }}
             />
 
             {floorPrice ? (

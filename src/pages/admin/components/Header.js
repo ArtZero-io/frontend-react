@@ -12,7 +12,9 @@ function AdminHeader() {
           <HStack w="full" justifyContent="space-around" py={4}>
             <VStack textAlign="center" justifyContent="space-between">
               <Center w="full" pos="relative">
-                <Heading size="h2">ArtZero Administration</Heading>
+                <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>
+                  ArtZero Administration
+                </Heading>
               </Center>
             </VStack>
           </HStack>

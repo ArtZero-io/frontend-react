@@ -76,11 +76,11 @@ function ProfileHeader() {
       <VStack>
         <Center
           rounded="full"
-          w={32}
-          h={32}
           p="-px"
           border="4px solid"
           borderColor="white"
+          w={["68px", "128px", "128px"]}
+          h={["68px", "128px", "128px"]}
         >
           {profile?.avatar && (
             <Image
@@ -90,7 +90,13 @@ function ProfileHeader() {
               rounded="full"
               objectFit="cover"
               src={getCachedImageShort(profile?.avatar, 500)}
-              fallback={<Skeleton w={32} h="118px" rounded="full" />}
+              fallback={
+                <Skeleton
+                  w={["74px", "120px", "120px"]}
+                  h={["60px", "118px", "118px"]}
+                  rounded="full"
+                />
+              }
             />
           )}
           {!profile?.avatar && <IdenticonAvatar size={120} />}
@@ -99,14 +105,13 @@ function ProfileHeader() {
         <HStack w="full" justifyContent="space-around" py={4}>
           <VStack textAlign="center" justifyContent="space-between">
             <Center w="full" pos="relative">
-              <Heading size="h2">
-                {/* {profile?.username || "Unknown"} */}
+              <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>
                 {profile?.username || truncateStr(currentAccount.address)}
               </Heading>
               <IconButton
                 pos="relative"
-                bottom={"-8px"}
-                right={"-8px"}
+                bottom={["-4px", "-8px", "-8px"]}
+                right={["6px", "-8px", "-8px"]}
                 aria-label="edit"
                 icon={<EditIcon />}
                 size="icon"
@@ -123,55 +128,83 @@ function ProfileHeader() {
               />
             </Center>
 
-            <Text fontSize="lg" maxW="md">
+            <Text fontSize={["md", "lg", "lg"]} maxW="md">
               {profile?.bio || "Something about yourself ..."}
             </Text>
 
             <HStack textAlign="center">
-              <Link
-                isexternal="true"
-                href={`${profile?.instagram}` || `https://instagram.com`}
-              >
+              {profile?.instagram ? (
+                <Link isexternal="true" href={`${profile?.instagram}`}>
+                  <IconButton
+                    aria-label="instagram"
+                    icon={<FaInstagram size="24px" />}
+                    size="icon"
+                    variant="iconOutline"
+                  />
+                </Link>
+              ) : (
                 <IconButton
+                  isDisabled
                   aria-label="instagram"
                   icon={<FaInstagram size="24px" />}
                   size="icon"
                   variant="iconOutline"
                 />
-              </Link>
-              <Link
-                isexternal="true"
-                href={`${profile?.twitter}` || `https://twitter.com`}
-              >
+              )}
+              {profile?.twitter ? (
+                <Link isexternal="true" href={`${profile?.twitter}`}>
+                  <IconButton
+                    aria-label="twitter"
+                    icon={<FaTwitter size="24px" />}
+                    size="icon"
+                    variant="iconOutline"
+                  />
+                </Link>
+              ) : (
                 <IconButton
+                  isDisabled
                   aria-label="twitter"
                   icon={<FaTwitter size="24px" />}
                   size="icon"
                   variant="iconOutline"
                 />
-              </Link>
-              <Link
-                isexternal="true"
-                href={`${profile?.telegram}` || `https://telegram.org`}
-              >
+              )}
+              {profile?.telegram ? (
+                <Link isexternal="true" href={`${profile?.telegram}`}>
+                  <IconButton
+                    aria-label="telegram"
+                    icon={<FaTelegram size="24px" />}
+                    size="icon"
+                    variant="iconOutline"
+                  />
+                </Link>
+              ) : (
                 <IconButton
+                  isDisabled
                   aria-label="telegram"
                   icon={<FaTelegram size="24px" />}
                   size="icon"
                   variant="iconOutline"
                 />
-              </Link>
-              <Link
-                isexternal="true"
-                href={`${profile?.facebook}` || `https://www.facebook.com`}
-              >
+              )}
+              {profile?.facebook ? (
+                <Link isexternal="true" href={`${profile?.facebook}`}>
+                  <IconButton
+                    aria-label="facebook"
+                    icon={<FaFacebook size="24px" />}
+                    size="icon"
+                    variant="iconOutline"
+                  />
+                </Link>
+              ) : (
                 <IconButton
+                  isDisabled
                   aria-label="facebook"
                   icon={<FaFacebook size="24px" />}
                   size="icon"
                   variant="iconOutline"
                 />
-              </Link>
+              )}
             </HStack>
           </VStack>
         </HStack>
