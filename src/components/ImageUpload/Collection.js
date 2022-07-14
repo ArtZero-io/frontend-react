@@ -30,8 +30,11 @@ const ImageUploadCollection = ({
   isBanner,
   imageIPFSUrl,
   setImageIPFSUrl,
-  title = "Upload Image",
-  limitedSize = { width: "430", height: "430" },
+  title,
+  //  title = "Upload Image",
+  limitedSize,
+  minH = "64px",
+  index,
 }) => {
   const [imgURL, setImgURL] = useState("");
 
@@ -105,7 +108,7 @@ const ImageUploadCollection = ({
 
         toast.promise(
           uploadPromise().then((created) => {
-            setImageIPFSUrl(created?.path);
+            setImageIPFSUrl(created?.path, index);
             setImgURL(created?.path);
             // eslint-disable-next-line no-unused-vars
             const update_nft_api_res = clientAPI("post", "/cacheImage", {
@@ -128,13 +131,20 @@ const ImageUploadCollection = ({
   };
 
   return (
-    <VStack minW={52} alignItems="start" pt={6} fontSize="lg">
-      <Text color="#fff" ml={0}>
-        {title}
-      </Text>
+    <VStack
+      minW={52}
+      alignItems="start"
+      //  pt={6}
+      fontSize="lg"
+    >
+      {title ? (
+        <Text color="#fff" ml={0}>
+          {title}
+        </Text>
+      ) : null}
 
       <Center w="full" justifyContent="center">
-        <HStack py="1" justifyContent="center" minH={16}>
+        <HStack py="1" justifyContent="center" minH={minH}>
           <label htmlFor={`${id}InputTag`} style={{ cursor: "pointer" }}>
             <Flex alignItems="center">
               <Button
@@ -165,7 +175,7 @@ const ImageUploadCollection = ({
 
         {mode === formMode.EDIT && !imagePreviewUrl && (
           <Avatar
-            minH={16}
+            minH={minH}
             minW={16}
             ml={2}
             src={getCachedImageShort(imageIPFSUrl, 100)}
@@ -174,7 +184,7 @@ const ImageUploadCollection = ({
 
         {imagePreviewUrl && (
           <HStack justifyContent="center" minH={16}>
-            <Avatar minH={16} minW={16} ml={2} src={imagePreviewUrl} />
+            <Avatar minH={minH} minW={minH} ml={2} src={imagePreviewUrl} />
 
             {imgURL ? (
               <Text minW={28} color="brand.blue">
@@ -186,16 +196,18 @@ const ImageUploadCollection = ({
                 leftIcon={<HiCloudUpload />}
                 onClick={onUploadHandler}
               >
-                Upload Image
+                Upload
               </Button>
             )}
           </HStack>
         )}
         <Spacer />
       </Center>
-      <Text ml={2} fontSize="14px" color="brand.grayLight">
-        Recommended file size is {limitedSize.width}x{limitedSize.height} px
-      </Text>
+      {limitedSize ? (
+        <Text ml={2} fontSize="14px" color="brand.grayLight">
+          Recommended file size is {limitedSize.width}x{limitedSize.height} px
+        </Text>
+      ) : null}
     </VStack>
   );
 };

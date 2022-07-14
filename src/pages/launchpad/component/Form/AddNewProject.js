@@ -19,6 +19,9 @@ import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
+import AddMember from "./AddMember";
+import AddPhase from "./AddPhase";
+import AddRoadmap from "./AddRoadmap";
 const client = create(IPFS_CLIENT_URL);
 
 // 1. Project info tab
@@ -102,16 +105,171 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 .min(3, "Must be longer than 3 characters")
                 .max(150, "Must be less than 150 characters")
                 .required("Required"),
-              projectRoadmap: Yup.string()
-                .trim()
-                .min(3, "Must be longer than 3 characters")
-                .max(150, "Must be less than 150 characters")
-                .required("Required"),
-              projectTeamMembers: Yup.string()
-                .trim()
-                .min(3, "Must be longer than 3 characters")
-                .max(150, "Must be less than 150 characters")
-                .required("Required"),
+              // projectRoadmap: Yup.string()
+              //   .trim()
+              //   .min(3, "Must be longer than 3 characters")
+              //   .max(150, "Must be less than 150 characters")
+              //   .required("Required"),
+              // projectTeamMembers: Yup.string()
+              //   .trim()
+              //   .min(3, "Must be longer than 3 characters")
+              //   .max(150, "Must be less than 150 characters")
+              //   .required("Required"),
+
+              roadmap: Yup.array()
+                .of(
+                  Yup.object().shape(
+                    {
+                      type: Yup.string()
+                        .trim()
+                        // .when("content", {
+                        //   is: (val) => val,
+                        //   then: Yup.string()
+                        //     .test(
+                        //       "Test Prop",
+                        //       "Duplicated Props Type!",
+                        //       (value, schema) => {
+                        //         const propsArr = schema?.from[1].value?.roadmap;
+
+                        //         const keyPropsArr = propsArr.map((p) =>
+                        //           p.type?.trim()
+                        //         );
+
+                        //         const [isDup] = keyPropsArr.filter(
+                        //           (v, i) => i !== keyPropsArr.indexOf(v)
+                        //         );
+
+                        //         return !(
+                        //           isDup && isDup.trim() === value.trim()
+                        //         );
+                        //       }
+                        //     )
+                        //     .required("Must have type value.")
+                        //     .min(3, "Must be longer than 3 characters")
+                        //     .max(30, "Must be less than 30 characters"),
+                        //   otherwise: Yup.string().notRequired(),
+                        // })
+                        ,
+                      content: Yup.string()
+                        .trim()
+                        .when("type", {
+                          is: (val) => val,
+                          then: Yup.string()
+                            .required("Must have name value.")
+                            .min(3, "Must be longer than 3 characters")
+                            .max(30, "Must be less than 30 characters"),
+                          otherwise: Yup.string().notRequired(),
+                        }),
+                    },
+                    [["type", "content"]]
+                  )
+                )
+                .min(0)
+                .max(10),
+              members: Yup.array(
+                Yup.object().shape(
+                  {
+                    name: Yup.string()
+                      .trim()
+                      .when("level", {
+                        is: (val) => val,
+                        then: Yup.string()
+                          .test(
+                            "Test Level",
+                            "Duplicated Levels Name!",
+                            (value, schema) => {
+                              const levelsArr = schema?.from[1].value?.levels;
+
+                              const keyLevelsArr = levelsArr.map((p) =>
+                                p.name?.trim()
+                              );
+
+                              const [isDup] = keyLevelsArr.filter(
+                                (v, i) => i !== keyLevelsArr.indexOf(v)
+                              );
+
+                              return !(isDup && isDup.trim() === value.trim());
+                            }
+                          )
+                          .required("Must have level name.")
+                          .min(3, "Must be longer than 3 characters")
+                          .max(30, "Must be less than 30 characters"),
+                        otherwise: Yup.string().notRequired(),
+                      }),
+                    level: Yup.number().when("levelMax", {
+                      is: (val) => val,
+                      then: Yup.number()
+                        .required("Must have min value.")
+                        .min(1, "Must be bigger than 0")
+                        .max(Yup.ref("levelMax"), "Must smaller than max"),
+                      otherwise: Yup.number().notRequired(),
+                    }),
+                    levelMax: Yup.number().when("name", {
+                      is: (val) => val,
+                      then: Yup.number()
+                        .required("Must have max value.")
+                        .min(Yup.ref("level"), "Must greater than level")
+                        .max(10, "Must be smaller than 10"),
+                      otherwise: Yup.number().notRequired(),
+                    }),
+                  },
+                  [["name", "level", "levelMax"]]
+                )
+              )
+                .min(0)
+                .max(10),
+              phases: Yup.array(
+                Yup.object().shape(
+                  {
+                    name: Yup.string()
+                      .trim()
+                      .when("level", {
+                        is: (val) => val,
+                        then: Yup.string()
+                          .test(
+                            "Test Level",
+                            "Duplicated Levels Name!",
+                            (value, schema) => {
+                              const levelsArr = schema?.from[1].value?.levels;
+
+                              const keyLevelsArr = levelsArr.map((p) =>
+                                p.name?.trim()
+                              );
+
+                              const [isDup] = keyLevelsArr.filter(
+                                (v, i) => i !== keyLevelsArr.indexOf(v)
+                              );
+
+                              return !(isDup && isDup.trim() === value.trim());
+                            }
+                          )
+                          .required("Must have level name.")
+                          .min(3, "Must be longer than 3 characters")
+                          .max(30, "Must be less than 30 characters"),
+                        otherwise: Yup.string().notRequired(),
+                      }),
+                    level: Yup.number().when("levelMax", {
+                      is: (val) => val,
+                      then: Yup.number()
+                        .required("Must have min value.")
+                        .min(1, "Must be bigger than 0")
+                        .max(Yup.ref("levelMax"), "Must smaller than max"),
+                      otherwise: Yup.number().notRequired(),
+                    }),
+                    levelMax: Yup.number().when("name", {
+                      is: (val) => val,
+                      then: Yup.number()
+                        .required("Must have max value.")
+                        .min(Yup.ref("level"), "Must greater than level")
+                        .max(10, "Must be smaller than 10"),
+                      otherwise: Yup.number().notRequired(),
+                    }),
+                  },
+                  [["name", "level", "levelMax"]]
+                )
+              )
+                .min(0)
+                .max(10),
 
               nftName: Yup.string()
                 .trim()
@@ -202,8 +360,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
           >
             {({ values, dirty, isValid }) => (
               <Form>
+                {console.log("values", values)}
                 <Stack>
-                  <Heading size="h4">1. Project info tab</Heading>
+                  <Heading size="h4">1. Project info</Heading>
 
                   <Stack
                     direction={{ base: "column", xl: "row" }}
@@ -239,25 +398,11 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       placeholder="Project description"
                       isDisabled={addCollectionTnxStatus}
                     />
-                    <Heading size="h6">
-                      + project roadmap dang add more:
-                      <br />
-                    </Heading>
-                    <Text size="h6">
-                      <br />
-                      Milestone
-                      <br /> - List content
-                      <br /> - List content
-                      <br /> - List content
-                    </Text>
-                    <Heading size="h6">
-                      + project team member dang add more
-                    </Heading>
-                    <Text size="h6">
-                      <br />- name - title - image upload?
-                      <br />- name - title - image upload?
-                      <br />- name - title - image upload?
-                    </Text>
+                    <Heading size="h6">project roadmap</Heading>
+                    <AddRoadmap name="roadmap" />
+
+                    <Heading size="h6">project team member</Heading>
+                    <AddMember name="members" />
                   </Stack>
 
                   <Stack
@@ -305,7 +450,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 </Stack>
 
                 <Stack>
-                  <Heading size="h4"> 2. NFT info tab</Heading>
+                  <Heading size="h4"> 2. NFT info</Heading>
                   {mode === formMode.ADD && (
                     <Stack direction={{ base: "column", xl: "row" }}>
                       <Input
@@ -345,27 +490,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                 <Stack>
                   <Heading size="h4"> 3. Phase Info</Heading>
-                  <Text size="h6">+ OG1 - Start time - End time??</Text>
-                  <Text size="h6">+ OG2 - Start time - End time??</Text>
-                  <Text size="h6">+ OG3 - Start time - End time??</Text>
-                  <Text size="h6">
-                    + Whitelist Mint1 - Start time - End time??
-                  </Text>
-                  <Text size="h6">
-                    + Whitelist Mint2 - Start time - End time??
-                  </Text>
-                  <Text size="h6">
-                    + Whitelist Mint3 - Start time - End time??
-                  </Text>
-                  <Text size="h6">
-                    + Public Mint1 - Start time - End time??
-                  </Text>
-                  <Text size="h6">
-                    + Public Mint2 - Start time - End time??
-                  </Text>
-                  <Text size="h6">
-                    + Public Mint3 - Start time - End time??
-                  </Text>
+                  <AddPhase name="phases" />
                 </Stack>
 
                 {mode === formMode.ADD && (
@@ -437,6 +562,13 @@ export const fetchInitialValuesProject = async ({
     projectDescription: "",
     totalSupply: 0,
     agreeTosCheckbox: false,
+    roadmap: [{ type: "2022 Q1", content: "Do something" }],
+    members: [{ name: "Mr. A", title: "Boss", avatar: "" }],
+    phases: [
+      { name: "OG mint 1", start: "", end: "" },
+      { name: "WhiteList mint 1", start: "", end: "" },
+      { name: "Public mint1", start: "", end: "" },
+    ],
   };
 
   if (mode === formMode.ADD) {
