@@ -209,12 +209,15 @@ const myAccountList = [
 const MyAccountDropdown = () => {
   const history = useHistory();
   const location = useLocation();
+
   const [path, setPath] = useState(location.pathname);
+
   useEffect(() => {
     setPath(location.pathname);
   }, [location.pathname]);
+
   return (
-    <Box p={{ base: "20px", lg: "0" }}>
+    <Box px={{ base: "23px", lg: "0" }} py={{ base: "0px", lg: "0" }}>
       <Menu
         autoSelect={false}
         placement="bottom"
@@ -223,7 +226,7 @@ const MyAccountDropdown = () => {
         // borderColor={path.includes("/account/") ? "brand.blue" : "transparent"}
       >
         <MenuButton
-          fontSize={{ base: "24px", xl: "32px", lg: "15px" }}
+          fontSize={{ base: "24px", xl: "15px" }}
           h="41px"
           _hover={{
             borderColor: "brand.blue",
@@ -266,8 +269,7 @@ const MyAccountDropdown = () => {
               onClick={() => history.push(item.href)}
               key={idx}
               to="#"
-              // fontSize="15px"
-              fontSize={{ base: "24px", xl: "32px", lg: "15px" }}
+              fontSize={{ base: "24px", xl: "15px" }}
               py="12px"
               px="15px"
             >

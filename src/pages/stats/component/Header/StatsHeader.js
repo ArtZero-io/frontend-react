@@ -35,11 +35,14 @@ function StatsHeader({ platformStatistics, isLoading }) {
             mx="auto"
             px="16px"
             w="full"
-            gap="30px"
+            gap={["15px", "30px", "30px"]}
             maxW="1200px"
             minH={"120px"}
             // maxW="960px"
-            templateColumns="repeat(auto-fill, minmax(min(100%, 250px), 1fr))"
+            templateColumns={{
+              base: "repeat(auto-fill, minmax(min(100%, 150px), 1fr))",
+              xl: "repeat(auto-fill, minmax(min(100%, 250px), 1fr))",
+            }}
           >
             {platformStatistics?.map((item, idx) => (
               <GridItem key={idx} w="full" h="full">
@@ -52,21 +55,27 @@ function StatsHeader({ platformStatistics, isLoading }) {
                   fontSize="lg"
                 >
                   <Flex w="full" mb="16px">
-                    <Text color="brand.grayLight">{item.title}</Text>
+                    <Text color="brand.grayLight" fontSize={["md", "lg", "lg"]}>
+                      {item.title}
+                    </Text>
                   </Flex>
 
                   <Flex h="full" w="full" textAlign="left" alignItems="end">
                     <Text
                       lineHeight="42px"
                       bg="transparent"
-                      fontSize="5xl"
+                      fontSize={["3xl-mid", "5xl", "5xl"]}
                       fontFamily="DS-Digital"
                     >
                       {formatNumDynamicDecimal(item.value)}
                     </Text>
 
                     {item.unit === "azero" ? (
-                      <TagRightIcon mb="8px" fontSize="23px" as={AzeroIcon} />
+                      <TagRightIcon
+                        mb={["12px", "8px", "8px"]}
+                        fontSize={["18px", "23px", "23px"]}
+                        as={AzeroIcon}
+                      />
                     ) : (
                       <>
                         <Spacer />

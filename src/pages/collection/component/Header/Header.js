@@ -234,11 +234,11 @@ function CollectionHeader({
               transform="rotate(90deg)"
               display={{ base: "none", xl: "inline" }}
             />
-
+            {/* // mobile + line */}
             <Divider
               width="300px"
               bg="#232323"
-              transform="rotate(180deg) translateY(-10px) translateX(4px)"
+              transform="rotate(180deg) translateY(-6px) translateX(4px)"
               display={{ base: "inline", md: "none" }}
             />
             <Divider
