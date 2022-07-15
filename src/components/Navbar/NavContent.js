@@ -223,7 +223,7 @@ const MyAccountDropdown = () => {
         // borderColor={path.includes("/account/") ? "brand.blue" : "transparent"}
       >
         <MenuButton
-          fontSize={{ base: "24px", xl: "32px", lg: "15px" }}
+          fontSize={{ base: "24px", xl: "15px" }}
           h="41px"
           _hover={{
             borderColor: "brand.blue",
