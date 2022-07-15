@@ -86,7 +86,7 @@ function StatsPage() {
           },
           {
             title: "Next Payout",
-            value: currentProfit.toFixed(2),
+            value: (currentProfit * 0.3).toFixed(2),
             unit: "azero",
           },
           {
