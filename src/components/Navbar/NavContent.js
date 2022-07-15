@@ -266,8 +266,7 @@ const MyAccountDropdown = () => {
               onClick={() => history.push(item.href)}
               key={idx}
               to="#"
-              // fontSize="15px"
-              fontSize={{ base: "24px", xl: "32px", lg: "15px" }}
+              fontSize={{ base: "24px", xl: "15px" }}
               py="12px"
               px="15px"
             >
