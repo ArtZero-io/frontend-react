@@ -183,13 +183,34 @@ function TabActivity({
         isLazy
         align="center"
         colorScheme="brand.blue"
-        orientation="vertical"
+        // orientation={["horizontal", "vertical", "vertical"]}
+        // orientation={{ base: "horizontal", xl: "vertical" }}
       >
         <TabList
           justifyContent="start"
           borderColor="#171717"
           pt="11px"
           pr="5px"
+          pb="8px"
+          overflowX="scroll"
+          maxW={{ base: "320px", xl: "600px" }}
+          sx={{
+            "&::-webkit-scrollbar": {
+              width: "4px",
+              height: "4px",
+              borderRadius: "0px",
+              backgroundColor: `transparent`,
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: `#7ae7ff`,
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: `#7ae7ff`,
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: `transparent`,
+            },
+          }}
         >
           {tabData.map((tab, index) => (
             <Tab
@@ -197,7 +218,7 @@ function TabActivity({
               fontSize="15px"
               minW="130px"
               alignItems="center"
-              justifyContent="start"
+              justifyContent="center"
               key={index}
               textAlign="left"
               py="15px"

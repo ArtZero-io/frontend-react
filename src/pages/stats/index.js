@@ -66,25 +66,25 @@ function StatsPage() {
       const ret = {
         platformStatistics: [
           {
-            title: "Current Reward Share (platform)",
+            title: "Next Payout",
             value: currentProfit,
             unit: "azero",
           },
+          // {
+          //   title: "Total Reward Share (platform)",
+          //   value: totalProfit,
+          //   unit: "azero",
+          // },
           {
-            title: "Total Reward Share (platform)",
-            value: totalProfit,
-            unit: "azero",
-          },
-          {
-            title: "Total NFT Staked (platform)",
+            title: "Total NFTs Staked",
             value: platformTotalStaked,
             unit: "NFTs",
           },
-          {
-            title: "Total Stakeholders",
-            value: platformTotalStakeholders,
-            unit: "users",
-          },
+          // {
+          //   title: "Total Stakeholders",
+          //   value: platformTotalStakeholders,
+          //   unit: "users",
+          // },
         ],
         topCollections: dataListWithFP,
       };
@@ -141,11 +141,11 @@ function StatsPage() {
           {tabData.map((tab, index) => (
             <Tab
               key={index}
-              fontStyle="italic"
-              px="0.5px"
-              pb="20px"
-              fontSize="lg"
               mx="25px"
+              px="0.5px"
+              py={["8px", "20px", "20px"]}
+              fontSize={["md", "lg", "lg"]}
+              fontFamily="Evogria Italic, san serif"
             >
               {tab.label}
             </Tab>
@@ -155,8 +155,9 @@ function StatsPage() {
         <TabPanels h="full" minH="md" bg="#171717">
           {tabData.map((tab, index) => (
             <TabPanel
-              pt="40px"
-              pb="50px"
+              // pt="40px"
+              // pb="50px"
+              p={0}
               key={index}
               px={{ base: "12px", "2xl": "100px" }}
             >

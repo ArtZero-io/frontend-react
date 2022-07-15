@@ -19,7 +19,7 @@ function GridA({
   const delayPerPixel = 0.0004;
 
   const elementRef = useRef();
-  const dimensions = useDimensions(elementRef);
+  const dimensions = useDimensions(elementRef, true);
 
   const nftCardColumn =
     dimensions?.borderBox?.width >= 984

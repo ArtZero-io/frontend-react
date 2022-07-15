@@ -21,18 +21,19 @@ function StatsHeader({ platformStatistics, isLoading }) {
         pb={{ base: "4", "2xl": "20px" }}
       >
         <Box w="full" maxW="500px" mx="auto" textAlign="center" mb="44px">
-          <Heading size="h2" mb="10px">
-            Platform Statistics
+          <Heading fontSize={["3xl-mid", "5xl", "5xl"]} mb="10px">
+            statistics
           </Heading>
-          <Text maxW="360px" fontSize="lg" mx="auto">
-            Quis amet eu labore non deserunt dolor incididunt pariatur consequat
-            ex consequat.
+          <Text maxW="320px" fontSize={["md", "lg", "lg"]} mx="auto">
+            Reward will be paid equally to all staked PMP NFTs on a random day
+            of the month without any prior notice
           </Text>
         </Box>
 
         <Skeleton isLoaded={!isLoading} maxW="1200px" mx="auto">
           <Grid
             mx="auto"
+            px="16px"
             w="full"
             gap="30px"
             maxW="1200px"

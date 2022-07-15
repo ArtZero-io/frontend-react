@@ -36,7 +36,7 @@ const AdminLayout = () => {
                 color="#fff"
                 mx={4}
                 fontSize="lg"
-                fontStyle="italic"
+                // fontStyle="italic"
                 px="0.5px"
                 py="20px"
               >

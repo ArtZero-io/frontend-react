@@ -7,9 +7,9 @@ const theme = extendTheme({
     body: `Oswald, sans-serif`,
   },
   fontSizes: {
-    "3xl-mid": "2rem",
-    "4xl-mid": "2.5rem",
-    "5xl-mid": "3.5rem",
+    "3xl-mid": "2rem", //32px
+    "4xl-mid": "2.5rem", //40px
+    "5xl-mid": "3.5rem", // 56px
   },
   colors: {
     brand: {

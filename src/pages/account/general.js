@@ -13,9 +13,10 @@ import {
   useClipboard,
   Square,
   Image,
-  HStack,
   Tag,
   TagLabel,
+  useMediaQuery,
+  Stack,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 
@@ -34,6 +35,7 @@ import staking_calls from "@utils/blockchain/staking_calls";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import BN from "bn.js";
 import { motion, AnimatePresence } from "framer-motion";
+import { truncateStr } from "@utils";
 
 function GeneralPage() {
   const history = useHistory();
@@ -141,13 +143,15 @@ function GeneralPage() {
     getTradeFee();
   }, [currentAccount]);
 
+  const [isLargerThan480] = useMediaQuery("(min-width: 480px)");
+
   return (
     <Box as="section" maxW="container.3xl">
       <Box
         mx="auto"
         maxW={{ base: "6xl", "2xl": "7xl" }}
         px={{ base: "6", "2xl": "8" }}
-        py={{ base: "12", "2xl": "20" }}
+        py={["4", "12", "20"]}
       >
         <VStack as="section" w="full">
           <Box w="full" textAlign="left" mb={6}>
@@ -157,7 +161,9 @@ function GeneralPage() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                <Heading size="h2">DASHBOARD</Heading>
+                <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>
+                  DASHBOARD
+                </Heading>
 
                 <Flex alignItems="center">
                   <Button
@@ -170,10 +176,14 @@ function GeneralPage() {
                     mr={3}
                     h={9}
                   >
-                    <Text fontFamily="Oswald">{currentAccount.address}</Text>
+                    <Text fontFamily="Oswald">
+                      {isLargerThan480
+                        ? currentAccount?.address
+                        : truncateStr(currentAccount?.address, 16)}
+                    </Text>
                     <Input
                       display="none"
-                      defaultValue={currentAccount.address}
+                      defaultValue={currentAccount?.address}
                       px={2}
                       h={8}
                       mx={0}
@@ -273,31 +283,40 @@ function GeneralPage() {
           </Grid>
         </VStack>
 
-        <HStack
+        <Stack
+          direction={{ base: "column", xl: "row" }}
           h="full"
           my={10}
-          p={{ base: "6", "2xl": "7" }}
+          p={{ base: "35px", "2xl": "7" }}
           maxW="container.xl"
           bg="black"
           pos="relative"
         >
-          <Square size={{ base: "18rem", "2xl": "20rem" }} bg="#222">
+          <Square
+            size={{ base: "16rem", xl: "18rem", "2xl": "20rem" }}
+            bg="#222"
+          >
             <Image
               w="full"
               h="full"
-              src="https://bafybeia665snn5queuptbhbe5htc2sovn5gcrwwpwvcq4vb7dhmoui3dri.ipfs.infura-ipfs.io/"
+              src="https://api.artzero.io/getImage?input=QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH&size=500&url=https://ipfs.infura.io/ipfs/QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH"
             />
           </Square>
 
           <VStack
             w="full"
-            h={72}
+            h={{ xl: "288px" }}
             pr={2}
-            pl={{ base: "4", "2xl": "10" }}
+            pl={{ base: "0", xl: "4", "2xl": "10" }}
             textAlign="left"
           >
             <Flex w="full">
-              <Box fontFamily="Evogria Italic" fontSize="3xl-mid" color="#FFF">
+              <Box
+                w="full"
+                fontFamily="Evogria Italic"
+                fontSize={{ base: "24px", xl: "3xl-mid" }}
+                color="#FFF"
+              >
                 <span>stake your </span>
                 <span style={{ color: "#7AE7FF" }}>
                   praying mantis predators
@@ -309,38 +328,94 @@ function GeneralPage() {
                 <span style={{ color: "#7AE7FF" }}>AZERO</span>
               </Box>
               <Spacer />
-              <Box variant="outline" h={32} w={32}>
-                <Tag variant="outline" h={6} w={32} mt={3}>
-                  {<TagLabel>Trade Fee: {tradeFee && `${tradeFee}%`}</TagLabel>}
+              <Box
+                display={{ base: "none", xl: "flex" }}
+                variant="outline"
+                h={32}
+                w={28}
+              >
+                <Tag variant="outline" h={6} w={"128px"} mt={3}>
+                  {
+                    <TagLabel fontSize="14px">
+                      Trade Fee: {tradeFee && `${tradeFee}%`}
+                    </TagLabel>
+                  }
                 </Tag>
               </Box>
             </Flex>
 
             <Flex w="full">
-              <Text mt={0} mb={1} fontSize="lg" color="#fff">
+              <Text
+                mt={0}
+                mb={1}
+                fontSize={{ base: "16px", xl: "lg" }}
+                color="#fff"
+              >
                 Your Total Stake:{" "}
                 <span style={{ color: "#7AE7FF" }}>
-                  {totalStaked || 0} NFTs{" "}
+                  {totalStaked || 0} NFT{totalStaked > 1 ? "s" : ""}
                 </span>
               </Text>
             </Flex>
-            <Flex w="full">
-              <Text mt={0} mb={1} fontSize="lg" color="#fff">
+            <Stack
+              direction={{ base: "column", xl: "row" }}
+              w="full"
+              align="flex-start"
+            >
+              <Text
+                mt={0}
+                mb={1}
+                fontSize={{ base: "16px", xl: "lg" }}
+                color="#fff"
+              >
                 Your Estimated Earning:{" "}
                 <Text as="span" color="#7AE7FF" mr="30px">
                   {parseFloat(estimatedEarning).toFixed(3) || 0}{" "}
-                  <AzeroIcon mb="2px" w="16px" h="16px" />
+                  <AzeroIcon
+                    mb="2px"
+                    w={["14px", "16px", "16px"]}
+                    h={["14px", "16px", "16px"]}
+                  />
                 </Text>
-                &nbsp;&nbsp;&nbsp;Next Payout:{" "}
-                <Text as="span" color="#7AE7FF">
-                  {" "}
+              </Text>
+              <Text fontSize={{ base: "16px", xl: "lg" }}>
+                Next Payout:{" "}
+                <Text as="span" color="#7AE7FF" mr="30px">
                   Aug 01, 2022
                 </Text>
               </Text>
-            </Flex>
+            </Stack>
 
-            <Flex w="full" alignItems="center">
+            <Stack
+              pt="20px"
+              // align="center"
+              w="full"
+              align="center"
+              justify="flex-start"
+              direction={{ base: "column", xl: "row" }}
+            >
+              <Box
+                pb="20px"
+                w={"full"}
+                variant="outline"
+                display={{ base: "flex", xl: "none" }}
+              >
+                <Tag
+                  h={6}
+                  // w={"full"}
+                  mt={3}
+                  mx="auto"
+                  textAlign="center"
+                  variant="outline"
+                >
+                  <TagLabel textAlign="center">
+                    Your Current Trade Fee: {tradeFee && `${tradeFee}%`}
+                  </TagLabel>
+                </Tag>
+              </Box>
+
               <Button
+                w={{ base: "full", xl: "auto" }}
                 variant="solid"
                 onClick={() => history.push(ROUTES.ACCOUNT_MY_STAKES)}
               >
@@ -348,9 +423,9 @@ function GeneralPage() {
               </Button>
 
               <FeeInfoModal />
-            </Flex>
+            </Stack>
           </VStack>
-        </HStack>
+        </Stack>
       </Box>
     </Box>
   );
