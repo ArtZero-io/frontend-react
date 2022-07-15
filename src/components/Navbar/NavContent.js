@@ -209,12 +209,15 @@ const myAccountList = [
 const MyAccountDropdown = () => {
   const history = useHistory();
   const location = useLocation();
+
   const [path, setPath] = useState(location.pathname);
+
   useEffect(() => {
     setPath(location.pathname);
   }, [location.pathname]);
+
   return (
-    <Box p={{ base: "20px", lg: "0" }}>
+    <Box px={{ base: "23px", lg: "0" }} py={{ base: "0px", lg: "0" }}>
       <Menu
         autoSelect={false}
         placement="bottom"

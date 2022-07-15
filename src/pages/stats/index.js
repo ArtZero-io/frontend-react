@@ -80,7 +80,7 @@ function StatsPage() {
           },
 
           {
-            title: "Total Marketplace Volume",
+            title: "Total Volume",
             value: totalVolume.toFixed(2),
             unit: "azero",
           },
