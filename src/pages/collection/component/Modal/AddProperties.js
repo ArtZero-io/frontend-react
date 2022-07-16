@@ -11,6 +11,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { FieldArray, useField } from "formik";
 import toast from "react-hot-toast";
@@ -22,12 +23,14 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
 
   const hasEmptyProp = value.some((p) => p.type?.trim() === "");
 
+  const modalSize = useBreakpointValue(["xs", "2xl", "2xl"]);
+
   return (
     <Modal
       onClose={onClose}
       isCentered
       isOpen={isOpen}
-      size={"2xl"}
+      size={modalSize}
       minH="40rem"
     >
       <ModalOverlay
@@ -37,14 +40,14 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
 
       <ModalContent
         position="relative"
-        px={6}
+        px={["4px", "24px", "24px"]}
         minH={{ xl: "md" }}
         borderRadius="0"
         textAlign="center"
         bg="brand.grayDark"
       >
         <ModalHeader>
-          <Heading size="h4" my={2}>
+          <Heading fontSize={["2xl", "3xl", "3xl"]} my={2}>
             {mode === formMode.ADD ? "Add properties" : "Edit properties"}
           </Heading>
           <Text fontSize={"sm"}>
@@ -53,20 +56,20 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
         </ModalHeader>
 
         <ModalCloseButton
-          position="absolute"
-          top="-8"
-          right="-8"
           borderWidth={2}
           borderRadius="0"
+          position="absolute"
+          top={["0", "-8", "-8"]}
+          right={["0", "-8", "-8"]}
         />
         <Flex>
           <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
-            <Text fontSize={"lg"} color="#fff">
+            <Text fontSize={["md", "lg", "lg"]} color="#fff">
               Type
             </Text>
           </Box>
           <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
-            <Text fontSize={"lg"} color="#fff">
+            <Text fontSize={["md", "lg", "lg"]} color="#fff">
               Name
             </Text>
           </Box>
@@ -116,8 +119,10 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
                   consider to make a separate form for edit NFT
                    */}
                   <Button
-                    variant="outline"
                     type="button"
+                    variant="outline"
+                    fontSize={["sm", "md", "md"]}
+                    px={["12px", "32px", "32px"]}
                     isDisabled={
                       mode === formMode.ADD &&
                       (hasEmptyProp ||

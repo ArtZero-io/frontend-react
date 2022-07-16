@@ -92,18 +92,18 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
         <ModalContent
           position="relative"
           bg="brand.grayDark"
-          px={6}
-          pb={8}
+          px={["4px", "24px", "24px"]}
+          pb={["4px", "32px", "32px"]}
           borderRadius="0"
           textAlign="center"
           minH={{ xl: "md" }}
         >
           <ModalCloseButton
-            position="absolute"
-            top="-8"
-            right="-8"
             borderWidth={2}
             borderRadius="0"
+            position="absolute"
+            top={["0", "-8", "-8"]}
+            right={["0", "-8", "-8"]}
             onClick={() =>
               onCloseButtonModal({
                 status: addNftTnxStatus?.status,
@@ -113,7 +113,7 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
             }
           />
           <ModalHeader>
-            <Heading size="h4" my={2}>
+            <Heading fontSize={["2xl", "3xl", "3xl"]} my={2}>
               {mode === formMode.ADD ? "Add new NFT" : "Edit NFT"}
             </Heading>
           </ModalHeader>
