@@ -339,13 +339,17 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 <Box py={6} borderBottomWidth={1}>
                   <Flex w="full" pb={3}>
                     <VStack alignItems="start">
-                      <Heading size="h5">properties</Heading>
+                      <Heading fontSize={["lg", "xl", "xl"]}>
+                        properties
+                      </Heading>
                       <Text fontSize={"lg"}>
                         {/* Textural trails that show up as restangles */}
                       </Text>
                     </VStack>
                     <Spacer />
                     <Button
+                      fontSize={["sm", "md", "md"]}
+                      px={["12px", "32px", "32px"]}
                       isDisabled={addNftTnxStatus}
                       variant="outline"
                       color="brand.blue"
@@ -410,13 +414,15 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 <Box py={6} borderBottomWidth={1}>
                   <Flex w="full" pb={3}>
                     <VStack alignItems="start">
-                      <Heading size="h5">Levels</Heading>
+                      <Heading fontSize={["lg", "xl", "xl"]}>Levels</Heading>
                       <Text fontSize={"lg"}>
                         {/* Textural trails that show up as restangles */}
                       </Text>
                     </VStack>
                     <Spacer />
                     <Button
+                      fontSize={["sm", "md", "md"]}
+                      px={["12px", "32px", "32px"]}
                       isDisabled={addNftTnxStatus}
                       variant="outline"
                       color="brand.blue"

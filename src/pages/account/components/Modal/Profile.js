@@ -66,11 +66,11 @@ export default function ProfileModal({
         minH={{ xl: "md" }}
       >
         <ModalCloseButton
-          position="absolute"
-          top="-8"
-          right="-8"
           borderWidth={2}
           borderRadius="0"
+          position="absolute"
+          top={["0", "-8", "-8"]}
+          right={["0", "-8", "-8"]}
           onClick={() => {
             onCloseButtonModal({
               status: addCollectionTnxStatus?.status,

@@ -44,11 +44,11 @@ const FeeInfoModal = () => {
           borderRadius="0"
         >
           <ModalCloseButton
-            position="absolute"
-            top="-8"
-            right="-8"
             borderWidth={2}
             borderRadius="0"
+            position="absolute"
+            top={["0", "-8", "-8"]}
+            right={["0", "-8", "-8"]}
           />
           <ModalHeader textAlign="center">
             <Heading fontSize={{ base: "24px", xl: "32px" }} my={3}>

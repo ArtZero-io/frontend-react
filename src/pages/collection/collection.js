@@ -264,7 +264,7 @@ function CollectionPage() {
 
   const tabData = [
     {
-      label: "Items",
+      label: "items",
       content: (
         <TabCollectionItems
           {...formattedCollection}
@@ -279,7 +279,7 @@ function CollectionPage() {
       ),
     },
     {
-      label: "Activity",
+      label: "activity",
       content: (
         <TabActivity
           {...formattedCollection}
@@ -362,11 +362,11 @@ function CollectionPage() {
               {tabData.map((tab, index) => (
                 <Tab
                   key={index}
-                  fontStyle="italic"
                   px="0.5px"
+                  mx="25px"
                   pb={{ base: "12px", xl: "20px" }}
                   fontSize={{ base: "16px", xl: "lg" }}
-                  mx="25px"
+                  fontFamily="Evogria Italic, san serif"
                 >
                   {tab.label}
                 </Tab>
@@ -377,7 +377,7 @@ function CollectionPage() {
               {tabData.map((tab, index) => (
                 <TabPanel
                   px={{ base: "12px", "2xl": "100px" }}
-                  pt={{ base: "14px", "xl": "40px" }}
+                  pt={{ base: "14px", xl: "40px" }}
                   key={index}
                 >
                   {tab.content}

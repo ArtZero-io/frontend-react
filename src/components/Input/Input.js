@@ -14,17 +14,24 @@ export default function SimpleModeInput({
     <FormControl
       isRequired={isRequired}
       mx={1}
-      fontSize="lg"
+      fontSize={["md", "lg", "lg"]}
       color="#fff"
       h={height || 28}
       w={width || "full"}
     >
       {label && (
-        <FormLabel fontSize="lg" ml={1} htmlFor={props.id || props.name}>
+        <FormLabel
+          fontSize={["md", "lg", "lg"]}
+          ml={1}
+          htmlFor={props.id || props.name}
+        >
           {label}
         </FormLabel>
       )}
       <Field
+        _placeholder={{
+          fontSize: "md",
+        }}
         ml={0}
         pl={2}
         as={Input}

@@ -105,11 +105,11 @@ function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
           textAlign="center"
         >
           <ModalCloseButton
-            position="absolute"
-            top="-8"
-            right="-8"
             borderWidth={2}
             borderRadius="0"
+            position="absolute"
+            top={["0", "-8", "-8"]}
+            right={["0", "-8", "-8"]}
             onClick={() => {
               onCloseButtonModal({
                 status: addCollectionTnxStatus?.status,
@@ -119,7 +119,7 @@ function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
             }}
           />
           <ModalHeader>
-            <Heading size="h4" m={2}>
+            <Heading fontSize={["2xl", "3xl", "3xl"]} m={2}>
               {mode === formMode.ADD ? "Simple Mode" : "Edit Collection"}{" "}
               <Tooltip
                 label="Simple Mode is designed for non-tech people. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."

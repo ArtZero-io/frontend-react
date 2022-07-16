@@ -14,16 +14,23 @@ export default function SimpleModeTextarea({
   return (
     <FormControl
       isRequired={isRequired}
-      fontSize="lg"
+      fontSize={["md", "lg", "lg"]}
       h={height}
       color="#fff"
       w={width}
     >
-      <FormLabel fontSize="lg" ml={1} htmlFor={props.id || props.name}>
+      <FormLabel
+        fontSize={["md", "lg", "lg"]}
+        ml={1}
+        htmlFor={props.id || props.name}
+      >
         {label}
       </FormLabel>
       <Field
-        fontSize="lg"
+        _placeholder={{
+          fontSize: "md",
+        }}
+        fontSize={["md", "lg", "lg"]}
         pl={2}
         borderRadius="0"
         as={Textarea}

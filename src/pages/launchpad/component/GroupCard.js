@@ -170,7 +170,7 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
             borderRadius="0"
           />
           <ModalHeader textAlign="center">
-            <Heading size="h4" m={2}>
+            <Heading fontSize={["2xl", "3xl", "3xl"]} m={2}>
               Add new project
             </Heading>
           </ModalHeader>

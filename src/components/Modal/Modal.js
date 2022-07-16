@@ -92,11 +92,11 @@ export default function ResponsivelySizedModal({
         maxW={{ base: "58rem", xl: "60rem", "2xl": "78rem" }}
       >
         <ModalCloseButton
-          position="absolute"
-          top="-8"
-          right="-8"
           borderWidth={2}
           borderRadius="0"
+          position="absolute"
+          top={["0", "-8", "-8"]}
+          right={["0", "-8", "-8"]}
           onClick={() =>
             onCloseButtonModal({
               status: addNftTnxStatus?.status,
@@ -117,7 +117,6 @@ export default function ResponsivelySizedModal({
                 lineHeight={["21px", null, "30px"]}
                 fontFamily="Evogria Italic"
                 minH={tabHeight}
-                fontStyle="italic"
                 px="0.5px"
                 py={["10px", "20px", "20px"]}
               >

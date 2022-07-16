@@ -247,7 +247,9 @@ function ContractTab() {
                       >
                         Initialize
                       </Button>*/}
-                      <Heading size="h4">Owner Withdraw AZERO</Heading>
+                      <Heading fontSize={["2xl", "3xl", "3xl"]}>
+                        Owner Withdraw AZERO
+                      </Heading>
                       <Box mt={7}>
                         <Text color={!whitelist ? "F888" : "#fff"} py={2}>
                           Owner Withdraw AZERO
@@ -307,7 +309,9 @@ function ContractTab() {
                     h="full"
                   >
                     <Box h="full">
-                      <Heading size="h4">Add Whitelist</Heading>
+                      <Heading fontSize={["2xl", "3xl", "3xl"]}>
+                        Add Whitelist
+                      </Heading>
 
                       <Box h="full">
                         {" "}

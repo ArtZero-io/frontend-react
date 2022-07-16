@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Flex,
@@ -282,8 +283,12 @@ const NFTTabCollectible = (props) => {
 
   return (
     <>
-      <HStack spacing={{ base: "30px", "2xl": "40px" }} alignItems="stretch">
-        <Square size={{ base: "360px", "2xl": "480px" }}>
+      <Stack
+        alignItems="stretch"
+        direction={{ base: "column", xl: "row" }}
+        spacing={["15px", "30px", "40px"]}
+      >
+        <Square size={{ base: "272px", xl: "360px", "2xl": "480px" }}>
           <Image
             w="full"
             h="full"
@@ -297,11 +302,7 @@ const NFTTabCollectible = (props) => {
 
         <Stack alignItems="flex-start" w="full">
           <HStack>
-            <Heading
-              color="#fff"
-              size="h4"
-              fontSize={{ base: "1rem", "2xl": "2rem" }}
-            >
+            <Heading color="#fff" fontSize={["xl", "3xl-mid", "3xl-mid"]}>
               {nftName}
             </Heading>
 
@@ -310,11 +311,11 @@ const NFTTabCollectible = (props) => {
             <HStack
               pos="absolute"
               top={{
-                base: `20px`,
+                base: `10px`,
                 xl: `20px`,
               }}
               right={{
-                base: `20px`,
+                base: `50px`,
                 xl: `20px`,
               }}
             >
@@ -374,10 +375,10 @@ const NFTTabCollectible = (props) => {
           <Stack>
             <Heading
               isTruncated
-              maxW={{ base: "500px", "2xl": "610px" }}
+              maxW={{ base: "260px", xl: "500px", "2xl": "610px" }}
               size="h6"
               pt={{ base: "6px", "2xl": "12px" }}
-              fontSize={{ base: "0.8rem", "2xl": "1rem" }}
+              fontSize={["xs", "md", "md"]}
               color="brand.grayLight"
               lineHeight="1.35"
             >
@@ -610,7 +611,7 @@ const NFTTabCollectible = (props) => {
               </motion.div>
             </Stack>
 
-            <Stack w="full" flexGrow="1">
+            <Stack display={["none", "flex", "flex"]} w="full" flexGrow="1">
               {attrsList?.length === 0 ? (
                 <Stack>
                   <Text
@@ -794,7 +795,7 @@ const NFTTabCollectible = (props) => {
             </Stack>
           </Stack>
         </Stack>
-      </HStack>
+      </Stack>
     </>
   );
 };

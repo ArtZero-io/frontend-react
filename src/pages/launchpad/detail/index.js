@@ -66,7 +66,7 @@ function LaunchpadDetailPage() {
         mb="30px"
       >
         <Flex w="full" mb="15px">
-          <Heading size="h4">Phases</Heading>
+          <Heading fontSize={["2xl", "3xl", "3xl"]}>Phases</Heading>
           <Spacer />
         </Flex>
         <Wrap flexWrap={true} w="full" mb="15px">
@@ -146,7 +146,7 @@ function LaunchpadDetailPage() {
         mb="30px"
       >
         <Flex w="full" mb="30px">
-          <Heading size="h4">Roadmap</Heading>
+          <Heading fontSize={["2xl", "3xl", "3xl"]}>roadmap</Heading>
           <Spacer />
         </Flex>
 
@@ -267,7 +267,7 @@ function LaunchpadDetailPage() {
         mb="30px"
       >
         <Flex w="full" mb="30px">
-          <Heading size="h4">Team</Heading>
+          <Heading fontSize={["2xl", "3xl", "3xl"]}>Team</Heading>
           <Spacer />
         </Flex>
         <Grid

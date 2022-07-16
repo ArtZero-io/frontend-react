@@ -80,15 +80,15 @@ function AddNewCollection({ mode = formMode.ADD, id }) {
           borderRadius="0"
         >
           <ModalCloseButton
-            position="absolute"
-            top="-8"
-            right="-8"
             borderWidth={2}
             borderRadius="0"
+            position="absolute"
+            top={["0", "-8", "-8"]}
+            right={["0", "-8", "-8"]}
           />
           <ModalHeader textAlign="center">
             <AddCollectionIcon />
-            <Heading size="h4" my={3}>
+            <Heading fontSize={["2xl", "3xl", "3xl"]} my={3}>
               {mode === formMode.ADD ? "Add collection" : "Edit collection"}
             </Heading>
           </ModalHeader>

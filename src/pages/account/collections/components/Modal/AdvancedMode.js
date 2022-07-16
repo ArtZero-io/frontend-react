@@ -93,11 +93,11 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
           textAlign="center"
         >
           <ModalCloseButton
-            position="absolute"
-            top="-8"
-            right="-8"
             borderWidth={2}
             borderRadius="0"
+            position="absolute"
+            top={["0", "-8", "-8"]}
+            right={["0", "-8", "-8"]}
             onClick={() => {
               onCloseButtonModal({
                 status: addCollectionTnxStatus?.status,
@@ -107,7 +107,7 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
             }}
           />
           <ModalHeader>
-            <Heading size="h4" m={2}>
+            <Heading fontSize={["2xl", "3xl", "3xl"]} m={2}>
               {mode === formMode.ADD ? "Advanced Mode" : "Edit Collection"}{" "}
               <Tooltip
                 label="Advanced mode is designed for those who wants to use customized NFT smart contract for example dedicated 5k or 10k collections with whitelisted options."

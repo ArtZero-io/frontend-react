@@ -128,7 +128,7 @@ const ImageUploadCollection = ({
   };
 
   return (
-    <VStack minW={52} alignItems="start" pt={6} fontSize="lg">
+    <VStack minW={52} alignItems="start" pt={6} fontSize={["md", "lg", "lg"]}>
       <Text color="#fff" ml={0}>
         {title}
       </Text>
@@ -143,9 +143,10 @@ const ImageUploadCollection = ({
                 variant="outline"
                 color="brand.blue"
                 fontFamily="Evogria"
-                fontSize="md"
+                fontSize={["sm", "md", "md"]}
+                px={["12px", "32px", "32px"]}
               >
-                {!imagePreviewUrl ? "Select Image" : "Pick another"}
+                {!imagePreviewUrl ? "select image" : "pick another"}
               </Button>
               <Text hidden minW={28} ml={4} color="brand.grayLight">
                 No file chosen
@@ -174,11 +175,16 @@ const ImageUploadCollection = ({
 
         {imagePreviewUrl && (
           <HStack justifyContent="center" minH={16}>
-            <Avatar minH={16} minW={16} ml={2} src={imagePreviewUrl} />
+            <Avatar
+              minH={["52px", "64px", "64px"]}
+              minW={["52px", "64px", "64px"]}
+              ml={2}
+              src={imagePreviewUrl}
+            />
 
             {imgURL ? (
-              <Text minW={28} color="brand.blue">
-                Ready for submit !
+              <Text minW={[4, 28, 28]} color="brand.blue">
+                Ready!
               </Text>
             ) : (
               <Button
@@ -186,14 +192,14 @@ const ImageUploadCollection = ({
                 leftIcon={<HiCloudUpload />}
                 onClick={onUploadHandler}
               >
-                Upload Image
+                upload
               </Button>
             )}
           </HStack>
         )}
         <Spacer />
       </Center>
-      <Text ml={2} fontSize="14px" color="brand.grayLight">
+      <Text ml={2} fontSize={["xs", "sm", "sm"]} color="brand.grayLight">
         Recommended file size is {limitedSize.width}x{limitedSize.height} px
       </Text>
     </VStack>
