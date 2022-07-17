@@ -305,7 +305,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
               values.avatarIPFSUrl = avatarIPFSUrl;
               values.headerIPFSUrl = headerIPFSUrl;
-
+              
               if (userBalance < 1) {
                 return toast.error(`Your balance too low!`);
               }
@@ -318,18 +318,28 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 team_members: values.projectTeamMembers,
                 roadmaps: values.projectRoadmap,
               };
-              console.log(project_info);
+
               const project_info_ipfs = await client.add(
                 JSON.stringify(project_info)
               );
-              console.log(project_info_ipfs.path);
+              let code_phases = [];
+              let start_time_phases = [];
+              let end_time_phases = [];
+              for (let phase of values.phases) {
+                code_phases.push(phase.name);
+                start_time_phases.push(phase.start);
+                end_time_phases.push(phase.end);
+              }
               const data = {
                 total_supply: Number(values.totalSupply),
                 start_time: scheduleProject[0].getTime(),
                 end_time: scheduleProject[1].getTime(),
                 project_info: project_info_ipfs.path,
+                code_phases: code_phases,
+                start_time_phases: start_time_phases,
+                end_time_phases: end_time_phases
               };
-              console.log("data", data);
+
               dispatch({
                 type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
                 payload: {
