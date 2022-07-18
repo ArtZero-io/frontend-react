@@ -425,12 +425,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                       Add levels
                     </Button>
                   </Flex>
-                  {console.log(
-                    "key vay",
-                    values?.levels?.filter(
-                      (i) => i.name !== false && i.name !== " "
-                    )
-                  )}
+
                   {values?.levels[0]?.name
                     ? values?.levels
                         ?.filter((i) => i.name.replaceAll(" ", "") !== "")
