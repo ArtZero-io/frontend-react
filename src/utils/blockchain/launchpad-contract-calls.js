@@ -200,13 +200,13 @@ async function addNewProject(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        console.log(dispatchError);
-        console.log(status);
+        
         if (status.isFinalized === true) {
           toast.success(`Success`);
         }
 
         if (dispatchError) {
+          console.log(dispatchError.toString());
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
           } else {

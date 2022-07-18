@@ -1,8 +1,8 @@
 const launchpad_manager = {
-    CONTRACT_ADDRESS: "5EzfTnonFcwqTgEhqDE7kTVZoCa44nC5J3ebNJwpGMgga2yU",
+    CONTRACT_ADDRESS: "5HBtJKSDNRGKstiZw44jRuah4a5cwpLT5yiys4JrKFGsMJbh",
     CONTRACT_ABI: {
       "source": {
-        "hash": "0x276570d3cc78eb74b56eda64d30ca710f3e280b75dcca2bb4828461fde537a35",
+        "hash": "0xa2bf8879b3e2dc511151a57451329bab2ee3626677d2bf4a7fbddd5f6657edbe",
         "language": "ink! 3.3.0",
         "compiler": "rustc 1.63.0-nightly"
       },
@@ -582,23 +582,6 @@ const launchpad_manager = {
             {
               "args": [],
               "docs": [
-                " Returns the address of the current owner."
-              ],
-              "label": "Ownable::owner",
-              "mutates": false,
-              "payable": false,
-              "returnType": {
-                "displayName": [
-                  "ownable_external",
-                  "OwnerOutput"
-                ],
-                "type": 0
-              },
-              "selector": "0x4fa43c8c"
-            },
-            {
-              "args": [],
-              "docs": [
                 " Leaves the contract without owner. It will not be possible to call",
                 " owner's functions anymore. Can only be called by the current owner.",
                 "",
@@ -659,6 +642,23 @@ const launchpad_manager = {
                 "type": 16
               },
               "selector": "0x11f43efd"
+            },
+            {
+              "args": [],
+              "docs": [
+                " Returns the address of the current owner."
+              ],
+              "label": "Ownable::owner",
+              "mutates": false,
+              "payable": false,
+              "returnType": {
+                "displayName": [
+                  "ownable_external",
+                  "OwnerOutput"
+                ],
+                "type": 0
+              },
+              "selector": "0x4fa43c8c"
             },
             {
               "args": [],
