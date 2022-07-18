@@ -169,12 +169,21 @@ async function addNewProject(
   data,
   dispatch
 ) {
-  console.log(data);
+  
   let unsubscribe;
   const address = caller_account?.address;
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
+
+  console.log('address', address);
+  console.log('total_supply', data.total_supply);
+  console.log('start_time', data.start_time);
+  console.log('end_time', data.end_time);
+  console.log('project_info', data.project_info);
+  console.log('data.code_phases', data.code_phases);
+  console.log('data.start_time_phases', data.start_time_phases);
+  console.log('data.codeend_time_phases_phases', data.end_time_phases);
   contract.tx
     .addNewProject(
       { gasLimit, value: value },
@@ -182,12 +191,17 @@ async function addNewProject(
       data.total_supply,
       data.start_time,
       data.end_time,
-      data.project_info
+      data.project_info,
+      data.code_phases,
+      data.start_time_phases,
+      data.end_time_phases
     )
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
+        console.log(dispatchError);
+        console.log(status);
         if (status.isFinalized === true) {
           toast.success(`Success`);
         }
@@ -215,6 +229,26 @@ async function addNewProject(
   return unsubscribe;
 }
 
+async function getProjectAddingFee(caller_account) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
+
+  const { result, output } = await contract.query.getProjectAddingFee(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return new BN(output, 10, "le");
+  }
+  return null;
+}
+
 const launchpad_contract_calls = {
   setLaunchPadContract,
   getAttributes,
@@ -222,7 +256,8 @@ const launchpad_contract_calls = {
   addNewProject,
   getProjectCount,
   getProjectByNftAddress,
-  getProjectById
+  getProjectById,
+  getProjectAddingFee
 };
 
 export default launchpad_contract_calls;

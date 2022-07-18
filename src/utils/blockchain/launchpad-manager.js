@@ -1,10 +1,10 @@
 const launchpad_manager = {
-    CONTRACT_ADDRESS: "5FkW4m8CdUap6NJtRRcDT5kcjvjQieDrigr3cY758fgyTCDR",
+    CONTRACT_ADDRESS: "5EzfTnonFcwqTgEhqDE7kTVZoCa44nC5J3ebNJwpGMgga2yU",
     CONTRACT_ABI: {
       "source": {
-        "hash": "0x83ead8c71f88989358b3f21afee9847fd64957e472ad2a9b0fd4d28078077099",
+        "hash": "0x276570d3cc78eb74b56eda64d30ca710f3e280b75dcca2bb4828461fde537a35",
         "language": "ink! 3.3.0",
-        "compiler": "rustc 1.61.0-nightly"
+        "compiler": "rustc 1.63.0-nightly"
       },
       "contract": {
         "name": "artzero_launchpad_psp34",
@@ -222,7 +222,7 @@ const launchpad_manager = {
               ],
               "label": "add_new_project",
               "mutates": true,
-              "payable": true,
+              "payable": false,
               "returnType": {
                 "displayName": [
                   "Result"
@@ -313,6 +313,32 @@ const launchpad_manager = {
             {
               "args": [
                 {
+                  "label": "project_adding_fee",
+                  "type": {
+                    "displayName": [
+                      "Balance"
+                    ],
+                    "type": 14
+                  }
+                }
+              ],
+              "docs": [
+                " update project adding fee - Only Admin"
+              ],
+              "label": "update_project_adding_fee",
+              "mutates": true,
+              "payable": false,
+              "returnType": {
+                "displayName": [
+                  "Result"
+                ],
+                "type": 21
+              },
+              "selector": "0x0c3b5043"
+            },
+            {
+              "args": [
+                {
                   "label": "project_mint_fee_rate",
                   "type": {
                     "displayName": [
@@ -396,6 +422,22 @@ const launchpad_manager = {
                 "type": 21
               },
               "selector": "0x88efeaf2"
+            },
+            {
+              "args": [],
+              "docs": [
+                " Get Project Adding Fee"
+              ],
+              "label": "get_project_adding_fee",
+              "mutates": false,
+              "payable": false,
+              "returnType": {
+                "displayName": [
+                  "Balance"
+                ],
+                "type": 14
+              },
+              "selector": "0x57fe17e8"
             },
             {
               "args": [],
@@ -555,6 +597,33 @@ const launchpad_manager = {
               "selector": "0x4fa43c8c"
             },
             {
+              "args": [],
+              "docs": [
+                " Leaves the contract without owner. It will not be possible to call",
+                " owner's functions anymore. Can only be called by the current owner.",
+                "",
+                " NOTE: Renouncing ownership will leave the contract without an owner,",
+                " thereby removing any functionality that is only available to the owner.",
+                "",
+                " On success a `OwnershipTransferred` event is emitted.",
+                "",
+                " # Errors",
+                "",
+                " Panics with `CallerIsNotOwner` error if caller is not owner"
+              ],
+              "label": "Ownable::renounce_ownership",
+              "mutates": true,
+              "payable": false,
+              "returnType": {
+                "displayName": [
+                  "ownable_external",
+                  "RenounceOwnershipOutput"
+                ],
+                "type": 16
+              },
+              "selector": "0x5e228753"
+            },
+            {
               "args": [
                 {
                   "label": "new_owner",
@@ -590,33 +659,6 @@ const launchpad_manager = {
                 "type": 16
               },
               "selector": "0x11f43efd"
-            },
-            {
-              "args": [],
-              "docs": [
-                " Leaves the contract without owner. It will not be possible to call",
-                " owner's functions anymore. Can only be called by the current owner.",
-                "",
-                " NOTE: Renouncing ownership will leave the contract without an owner,",
-                " thereby removing any functionality that is only available to the owner.",
-                "",
-                " On success a `OwnershipTransferred` event is emitted.",
-                "",
-                " # Errors",
-                "",
-                " Panics with `CallerIsNotOwner` error if caller is not owner"
-              ],
-              "label": "Ownable::renounce_ownership",
-              "mutates": true,
-              "payable": false,
-              "returnType": {
-                "displayName": [
-                  "ownable_external",
-                  "RenounceOwnershipOutput"
-                ],
-                "type": 16
-              },
-              "selector": "0x5e228753"
             },
             {
               "args": [],
