@@ -59,6 +59,7 @@ function MyNFTCard({
   const [countdownTime, setCountdownTime] = useState(0);
   const [isUnstakeTime, setIsUnstakeTime] = useState(false);
   const [limitUnstakeTime, setLimitUnstakeTime] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { location } = useHistory();
 
@@ -79,6 +80,7 @@ function MyNFTCard({
 
   useEffect(() => {
     const getRequestTime = async () => {
+      setIsLoading(true);
       let time = await staking_calls.getRequestUnstakeTime(
         currentAccount,
         currentAccount.address,
@@ -92,6 +94,21 @@ function MyNFTCard({
         currentAccount
       );
       setLimitUnstakeTime(limitUnstakeTimeTmp);
+
+
+      if (unstakeRequestTimeTmp) {
+        let now = new Date().getTime() / 1000;
+        let valid_time = unstakeRequestTimeTmp / 1000 + limitUnstakeTimeTmp * 60;
+        if (valid_time - now > 0)
+          setCountdownTime(secondsToTime(valid_time - now));
+        else {
+          setIsUnstakeTime(true);
+          setCountdownTime({ h: 0, m: 0, s: 0 });
+        }
+      }
+
+
+      setIsLoading(false);
     };
 
     if (stakeStatus === 3) getRequestTime();
@@ -194,7 +211,7 @@ function MyNFTCard({
           {!is_for_sale && stakeStatus !== 0 ? (
             <Flex align="center" justify="start" w="full">
               <Button
-                isLoading={txStatus?.tokenID?.includes(tokenID)}
+                isLoading={isLoading || txStatus?.tokenID?.includes(tokenID)}
                 isDisabled={
                   txStatus?.stakeStatus ||
                   txStatus?.unstakeStatus ||

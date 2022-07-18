@@ -246,15 +246,17 @@ function GridNftA({
           null
         );
 
-        toast.success("Step 1: Approving NFT for staking...");
+        if (!allowance) {
+          toast.success("Step 1: Approving NFT for staking...");
 
-        res = await artzero_nft_calls.approve(
-          currentAccount,
-          staking.CONTRACT_ADDRESS,
-          null,
-          true,
-          dispatch
-        );
+          res = await artzero_nft_calls.approve(
+            currentAccount,
+            staking.CONTRACT_ADDRESS,
+            null,
+            true,
+            dispatch
+          );
+        }
       }
 
       if (res || allowance) {
