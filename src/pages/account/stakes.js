@@ -120,10 +120,11 @@ const MyStakesPage = () => {
     } catch (error) {
       setLoading(false);
     }
-  }, [activeTab, currentAccount]);
+  }, [activeTab, api, currentAccount]);
 
   useEffect(() => {
     fetchCollectionDetail();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, currentAccount]);
 
   useEffect(() => {
@@ -134,7 +135,7 @@ const MyStakesPage = () => {
         txStatus?.cancelRequestUnstakeStatus === FINALIZED ||
         txStatus?.requestUnstakeStatus === FINALIZED
       ) {
-        await delay(6000).then(() => {
+        await delay(7000).then(() => {
           txStatus?.stakeStatus && setActiveTab(tabList.STAKED);
           txStatus?.cancelRequestUnstakeStatus && setActiveTab(tabList.STAKED);
           txStatus?.requestUnstakeStatus &&
