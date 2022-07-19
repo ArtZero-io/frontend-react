@@ -105,19 +105,27 @@ async function setMultipleAttributes(
   return unsubscribe;
 }
 
+async function getProjectInfoByHash(ipfsHash) {
+  const ipfsUrl = `https://ipfs.infura.io/ipfs/${ipfsHash}`;
+  const projecInfoRes = await clientAPI("get", ipfsUrl, {});
+  return projecInfoRes;
+}
+
 async function getProjectCount(caller_account) {
   if (!contract || !caller_account) {
     return null;
   }
+  console.log('xzczxc');
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
   //console.log(contract);
-
+ 
   const { result, output } = await contract.query.getProjectCount(address, {
     value: azero_value,
     gasLimit,
   });
+  console.log(output);
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
@@ -174,7 +182,7 @@ async function addNewProject(
   const address = caller_account?.address;
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
-  const value = 0;
+  const value = await getProjectAddingFee(caller_account);
 
   console.log('address', address);
   console.log('total_supply', data.total_supply);
@@ -257,7 +265,8 @@ const launchpad_contract_calls = {
   getProjectCount,
   getProjectByNftAddress,
   getProjectById,
-  getProjectAddingFee
+  getProjectAddingFee,
+  getProjectInfoByHash,
 };
 
 export default launchpad_contract_calls;

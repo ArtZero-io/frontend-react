@@ -14,9 +14,10 @@ import {
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useHistory } from "react-router-dom";
-import { getCachedImageShort, secondsToTime } from "@utils/index";
+import { secondsToTime } from "@utils/index";
 import * as ROUTES from "@constants/routes";
 import useInterval from "use-interval";
+import { IPFS_BASE_URL } from "@constants/index";
 
 export const Card = ({ variant, project, collection_address = "abc" }) => {
   const history = useHistory();
@@ -30,7 +31,7 @@ export const Card = ({ variant, project, collection_address = "abc" }) => {
     nftContractAddress,
     // countdownTime, fake below
   } = project;
-
+  console.log(project);
   useInterval(() => {
     if (status !== "upcoming") {
       return;
@@ -144,7 +145,7 @@ export const Card = ({ variant, project, collection_address = "abc" }) => {
           w="full"
           h="full"
           objectFit="cover"
-          src={getCachedImageShort(avatarImage, 500)}
+          src={`${IPFS_BASE_URL}/${avatarImage}`}
           fallback={<Skeleton w="288px" h="288px" />}
         />
       </Square>

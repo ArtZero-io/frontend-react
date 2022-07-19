@@ -1,10 +1,10 @@
 const launchpad_manager = {
-    CONTRACT_ADDRESS: "5HBtJKSDNRGKstiZw44jRuah4a5cwpLT5yiys4JrKFGsMJbh",
+    CONTRACT_ADDRESS: "5DuhrKkipquPvG6xAKZL2mBzHuhBRifges4zJqHoGYskK1ea",
     CONTRACT_ABI: {
       "source": {
-        "hash": "0xa2bf8879b3e2dc511151a57451329bab2ee3626677d2bf4a7fbddd5f6657edbe",
+        "hash": "0xcebd2587a7bd6b61cf80c00f186ea793d905e6076b8a60339f7aa60571572dbc",
         "language": "ink! 3.3.0",
-        "compiler": "rustc 1.63.0-nightly"
+        "compiler": "rustc 1.61.0-nightly"
       },
       "contract": {
         "name": "artzero_launchpad_psp34",
@@ -222,7 +222,7 @@ const launchpad_manager = {
               ],
               "label": "add_new_project",
               "mutates": true,
-              "payable": false,
+              "payable": true,
               "returnType": {
                 "displayName": [
                   "Result"
@@ -580,33 +580,6 @@ const launchpad_manager = {
               "selector": "0x908e3150"
             },
             {
-              "args": [],
-              "docs": [
-                " Leaves the contract without owner. It will not be possible to call",
-                " owner's functions anymore. Can only be called by the current owner.",
-                "",
-                " NOTE: Renouncing ownership will leave the contract without an owner,",
-                " thereby removing any functionality that is only available to the owner.",
-                "",
-                " On success a `OwnershipTransferred` event is emitted.",
-                "",
-                " # Errors",
-                "",
-                " Panics with `CallerIsNotOwner` error if caller is not owner"
-              ],
-              "label": "Ownable::renounce_ownership",
-              "mutates": true,
-              "payable": false,
-              "returnType": {
-                "displayName": [
-                  "ownable_external",
-                  "RenounceOwnershipOutput"
-                ],
-                "type": 16
-              },
-              "selector": "0x5e228753"
-            },
-            {
               "args": [
                 {
                   "label": "new_owner",
@@ -659,6 +632,33 @@ const launchpad_manager = {
                 "type": 0
               },
               "selector": "0x4fa43c8c"
+            },
+            {
+              "args": [],
+              "docs": [
+                " Leaves the contract without owner. It will not be possible to call",
+                " owner's functions anymore. Can only be called by the current owner.",
+                "",
+                " NOTE: Renouncing ownership will leave the contract without an owner,",
+                " thereby removing any functionality that is only available to the owner.",
+                "",
+                " On success a `OwnershipTransferred` event is emitted.",
+                "",
+                " # Errors",
+                "",
+                " Panics with `CallerIsNotOwner` error if caller is not owner"
+              ],
+              "label": "Ownable::renounce_ownership",
+              "mutates": true,
+              "payable": false,
+              "returnType": {
+                "displayName": [
+                  "ownable_external",
+                  "RenounceOwnershipOutput"
+                ],
+                "type": 16
+              },
+              "selector": "0x5e228753"
             },
             {
               "args": [],
