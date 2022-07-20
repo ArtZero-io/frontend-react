@@ -230,7 +230,7 @@ import {
                     fontWeight="normal"
                     py={7}
                   >
-                    Metadata
+                    Status
                   </Th>
                   <Th
                     fontFamily="Evogria"
