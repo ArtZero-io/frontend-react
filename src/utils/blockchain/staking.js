@@ -1,8 +1,8 @@
 const staking = {
-  CONTRACT_ADDRESS: "5HSQcwhqfJJdu1kmB6r1j7opjbLWgBRgnUNcmioWJbuRCtm1",
+  CONTRACT_ADDRESS: "5CbP7RFS6o3sqGwc3t3oPWGQdNsmZnoQGjS3VDMaDCNQG8to",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x16b689ac2666beecc84b2fd4a6b93d94fd3646e80ae9c416b02e1a231221eef8",
+      "hash": "0x97ad221e33ea783fa7e2c4f742a26a1a50fda7d481ec0fa7b7973b466289df44",
       "language": "ink! 3.3.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -174,6 +174,73 @@ const staking = {
             ],
             "docs": [],
             "label": "CancelRequestUnstakeEvent"
+          },
+          {
+            "args": [
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "staker",
+                "type": {
+                  "displayName": [
+                    "Option"
+                  ],
+                  "type": 11
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "reward_amount",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 15
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "staked_amount",
+                "type": {
+                  "displayName": [
+                    "u64"
+                  ],
+                  "type": 6
+                }
+              }
+            ],
+            "docs": [],
+            "label": "ClaimReward"
+          },
+          {
+            "args": [
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "reward_amount",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 15
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "total_staked_amount",
+                "type": {
+                  "displayName": [
+                    "u64"
+                  ],
+                  "type": 6
+                }
+              }
+            ],
+            "docs": [],
+            "label": "AddReward"
           }
         ],
         "messages": [
@@ -215,7 +282,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 15
+              "type": 17
             },
             "selector": "0xf2f6dba3"
           },
@@ -241,7 +308,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 19
             },
             "selector": "0x1bb3d394"
           },
@@ -267,7 +334,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 19
             },
             "selector": "0x675e7b6f"
           },
@@ -293,7 +360,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 19
             },
             "selector": "0xb470cada"
           },
@@ -319,9 +386,99 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 19
             },
             "selector": "0x04230988"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Add reward to reward_pool"
+            ],
+            "label": "add_reward",
+            "mutates": true,
+            "payable": true,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 19
+            },
+            "selector": "0x1b146ead"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Set Account so it can claim the reward. Must run by backend every month before add_reward"
+            ],
+            "label": "set_claimable",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 19
+            },
+            "selector": "0x81b402da"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Claim Reward"
+            ],
+            "label": "claim_reward",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 19
+            },
+            "selector": "0x9a8353a7"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "get_reward_pool",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 15
+            },
+            "selector": "0x443c6a4a"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "get_claimable_reward",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Balance"
+              ],
+              "type": 15
+            },
+            "selector": "0x411901a1"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "is_claimed",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "bool"
+              ],
+              "type": 4
+            },
+            "selector": "0xc58eed46"
           },
           {
             "args": [],
@@ -582,7 +739,7 @@ const staking = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 20
+                  "type": 22
                 }
               }
             ],
@@ -596,7 +753,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 19
             },
             "selector": "0x5adb38de"
           },
@@ -608,7 +765,7 @@ const staking = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 20
+                  "type": 22
                 }
               }
             ],
@@ -622,7 +779,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 19
             },
             "selector": "0xfd83c46b"
           },
@@ -634,7 +791,7 @@ const staking = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 20
+                  "type": 22
                 }
               }
             ],
@@ -648,7 +805,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 19
             },
             "selector": "0xc5bd017e"
           },
@@ -660,7 +817,7 @@ const staking = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 20
+                  "type": 22
                 }
               }
             ],
@@ -674,7 +831,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 19
             },
             "selector": "0x82364901"
           },
@@ -686,7 +843,7 @@ const staking = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 21
+                  "type": 15
                 }
               }
             ],
@@ -700,7 +857,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 19
             },
             "selector": "0x07fdb555"
           },
@@ -712,7 +869,7 @@ const staking = {
                   "displayName": [
                     "Id"
                   ],
-                  "type": 22
+                  "type": 23
                 }
               },
               {
@@ -735,46 +892,9 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 19
             },
             "selector": "0xd34ab274"
-          },
-          {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Transfers ownership of the contract to a `new_owner`.",
-              " Can only be called by the current owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner.",
-              "",
-              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
-            ],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 15
-            },
-            "selector": "0x11f43efd"
           },
           {
             "args": [],
@@ -816,9 +936,46 @@ const staking = {
                 "ownable_external",
                 "RenounceOwnershipOutput"
               ],
-              "type": 15
+              "type": 17
             },
             "selector": "0x5e228753"
+          },
+          {
+            "args": [
+              {
+                "label": "new_owner",
+                "type": {
+                  "displayName": [
+                    "ownable_external",
+                    "TransferOwnershipInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Transfers ownership of the contract to a `new_owner`.",
+              " Can only be called by the current owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner.",
+              "",
+              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
+            ],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "TransferOwnershipOutput"
+              ],
+              "type": 17
+            },
+            "selector": "0x11f43efd"
           },
           {
             "args": [
@@ -1093,15 +1250,42 @@ const staking = {
                     },
                     {
                       "layout": {
+                        "cell": {
+                          "key": "0x84a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                          "ty": 15
+                        }
+                      },
+                      "name": "reward_pool"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x85a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                          "ty": 15
+                        }
+                      },
+                      "name": "claimable_reward"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x86a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                          "ty": 16
+                        }
+                      },
+                      "name": "is_claimed"
+                    },
+                    {
+                      "layout": {
                         "enum": {
-                          "dispatchKey": "0x84a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                          "dispatchKey": "0x87a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0x85a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                                      "key": "0x88a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
                                       "ty": 3
                                     }
                                   },
@@ -1427,67 +1611,39 @@ const staking = {
           "id": 15,
           "type": {
             "def": {
-              "variant": {
-                "variants": [
-                  {
-                    "fields": [
-                      {
-                        "type": 3
-                      }
-                    ],
-                    "index": 0,
-                    "name": "Ok"
-                  },
-                  {
-                    "fields": [
-                      {
-                        "type": 16
-                      }
-                    ],
-                    "index": 1,
-                    "name": "Err"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "T",
-                "type": 3
-              },
-              {
-                "name": "E",
-                "type": 16
-              }
-            ],
-            "path": [
-              "Result"
-            ]
+              "primitive": "u128"
+            }
           }
         },
         {
           "id": 16,
           "type": {
             "def": {
-              "variant": {
-                "variants": [
+              "composite": {
+                "fields": [
                   {
-                    "index": 0,
-                    "name": "CallerIsNotOwner"
-                  },
-                  {
-                    "index": 1,
-                    "name": "NewOwnerIsZero"
+                    "name": "offset_key",
+                    "type": 7,
+                    "typeName": "Key"
                   }
                 ]
               }
             },
+            "params": [
+              {
+                "name": "K",
+                "type": 0
+              },
+              {
+                "name": "V",
+                "type": 4
+              }
+            ],
             "path": [
-              "openbrush_contracts",
-              "traits",
-              "errors",
-              "ownable",
-              "OwnableError"
+              "ink_storage",
+              "lazy",
+              "mapping",
+              "Mapping"
             ]
           }
         },
@@ -1540,9 +1696,77 @@ const staking = {
               "variant": {
                 "variants": [
                   {
+                    "index": 0,
+                    "name": "CallerIsNotOwner"
+                  },
+                  {
+                    "index": 1,
+                    "name": "NewOwnerIsZero"
+                  }
+                ]
+              }
+            },
+            "path": [
+              "openbrush_contracts",
+              "traits",
+              "errors",
+              "ownable",
+              "OwnableError"
+            ]
+          }
+        },
+        {
+          "id": 19,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
                     "fields": [
                       {
-                        "type": 19,
+                        "type": 3
+                      }
+                    ],
+                    "index": 0,
+                    "name": "Ok"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 20
+                      }
+                    ],
+                    "index": 1,
+                    "name": "Err"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "T",
+                "type": 3
+              },
+              {
+                "name": "E",
+                "type": 20
+              }
+            ],
+            "path": [
+              "Result"
+            ]
+          }
+        },
+        {
+          "id": 20,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "fields": [
+                      {
+                        "type": 21,
                         "typeName": "String"
                       }
                     ],
@@ -1580,7 +1804,7 @@ const staking = {
           }
         },
         {
-          "id": 19,
+          "id": 21,
           "type": {
             "def": {
               "primitive": "str"
@@ -1588,7 +1812,7 @@ const staking = {
           }
         },
         {
-          "id": 20,
+          "id": 22,
           "type": {
             "def": {
               "sequence": {
@@ -1598,15 +1822,7 @@ const staking = {
           }
         },
         {
-          "id": 21,
-          "type": {
-            "def": {
-              "primitive": "u128"
-            }
-          }
-        },
-        {
-          "id": 22,
+          "id": 23,
           "type": {
             "def": {
               "variant": {
@@ -1624,7 +1840,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 23,
+                        "type": 24,
                         "typeName": "u16"
                       }
                     ],
@@ -1634,7 +1850,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 24,
+                        "type": 25,
                         "typeName": "u32"
                       }
                     ],
@@ -1654,7 +1870,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 21,
+                        "type": 15,
                         "typeName": "u128"
                       }
                     ],
@@ -1664,7 +1880,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 25,
+                        "type": 26,
                         "typeName": "Vec<u8>"
                       }
                     ],
@@ -1683,7 +1899,7 @@ const staking = {
           }
         },
         {
-          "id": 23,
+          "id": 24,
           "type": {
             "def": {
               "primitive": "u16"
@@ -1691,7 +1907,7 @@ const staking = {
           }
         },
         {
-          "id": 24,
+          "id": 25,
           "type": {
             "def": {
               "primitive": "u32"
@@ -1699,7 +1915,7 @@ const staking = {
           }
         },
         {
-          "id": 25,
+          "id": 26,
           "type": {
             "def": {
               "sequence": {
