@@ -6,8 +6,6 @@ import {
   Grid,
   GridItem,
   Heading,
-  List,
-  ListItem,
   Progress,
   Spacer,
   Tag,
@@ -15,26 +13,70 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 import Layout from "@components/Layout/Layout";
 import LaunchpadDetailHeader from "../component/Header";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { TeamCard } from "../component/TeamCard";
 import { useParams } from "react-router-dom";
+import { useSubstrateState } from "@utils/substrate";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { ContractPromise } from "@polkadot/api-contract";
+import { IPFS_BASE_URL } from "@constants/index";
 
-function LaunchpadDetailPage() {
-  const [formattedCollection] = useState(null);
+const LaunchpadDetailPage = () => {
+  const [formattedCollection, setFormattedCollection] = useState({});
   const { collection_address } = useParams();
+  const { api, currentAccount } = useSubstrateState();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const project = await launchpad_contract_calls.getProjectByNftAddress(
+        currentAccount,
+        collection_address
+      );
+      if (project.isActive) {
+        const projectInfo = await launchpad_contract_calls.getProjectInfoByHash(project.projectInfo);
+        console.log('projectInfo', projectInfo);
+        const launchpad_psp34_nft_standard_contract = new ContractPromise(
+          api,
+          launchpad_psp34_nft_standard.CONTRACT_ABI,
+          collection_address
+        );
+
+        launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
+        console.log(launchpad_psp34_nft_standard_contract);
+        const totalSupply = await launchpad_psp34_nft_standard_calls.getTotalSupply(currentAccount);
+        console.log('totalSupply', totalSupply);
+        // const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
+        // for (let i = 1; i <= totalPhase; i++) {
+          
+        // }
+        const projectDetail = {
+          name: projectInfo.name,
+          description: projectInfo.description,
+          avatarImage: projectInfo.avatar,
+          headerImage: projectInfo.header,
+          totalSupply: totalSupply,
+          roadmaps: projectInfo.roadmaps,
+          team_members: projectInfo.team_members
+        };
+        setFormattedCollection(projectDetail);
+      }
+    };
+
+    fetchData();
+  }, []);
   console.log("collection_address", collection_address);
 
   return (
     <Layout
-      backdrop={formattedCollection?.headerImage}
+      backdrop={`${IPFS_BASE_URL}/${formattedCollection.headerImage}`}
       variant="launchpad-detail"
     >
-      <LaunchpadDetailHeader />
+      <LaunchpadDetailHeader project={formattedCollection}/>
 
       <Box
         w="full"
@@ -149,112 +191,27 @@ function LaunchpadDetailPage() {
           <Heading size="h4">Roadmap</Heading>
           <Spacer />
         </Flex>
+        {(formattedCollection.roadmaps && formattedCollection.roadmaps.length) ? formattedCollection.roadmaps.map((item, index) => (
+          <>
+            <Flex w="full" mb="20px">
+              <Heading size="h6">
+                Phase {++index}:{" "}
+                <Text as="span" color="#7ae7ff">
+                  {item.type}
+                </Text>
+              </Heading>
+              <Spacer />
+            </Flex>
 
-        <Flex w="full" mb="20px">
-          <Heading size="h6">
-            Phase 1:{" "}
-            <Text as="span" color="#7ae7ff">
-              Rise from the Ashes
-            </Text>
-          </Heading>
-          <Spacer />
-        </Flex>
+            <Box fontSize="lg" color="#888" px="20px" mb="30px">
+              <Text as="span" color="#7ae7ff">
+                {item.content}
+              </Text>
+            </Box>
 
-        <Box fontSize="lg" color="#888" px="20px" mb="30px">
-          <List styleType="disc">
-            <ListItem mr="30px" mb="10px">
-              Whitelist: 162
-            </ListItem>
-
-            <ListItem mr="30px" mb="10px">
-              Social Media Accounts
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Drawings of Tier 4 (Apartment) - Tier 3 (Duplex) - Tier 2 (Villa)
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              NFT Card Design
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Website & Ashes
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Render Photos of Tier 4 (Apartment)
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Animation Video of Tier 4 (Apartment)
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Preview Demo of Tier 4 (Apartment)
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Giveaways
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              First Demo Release Tier 4 (Apartment)
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Collab with Partnerships
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Granting Whitelist Roles
-            </ListItem>
-          </List>
-        </Box>
-
-        <Divider />
-
-        <Flex w="full" mb="20px" mt="30px">
-          <Heading size="h6">
-            Phase 2:{" "}
-            <Text as="span" color="#7ae7ff">
-              The shaping of the Ashes{" "}
-            </Text>
-          </Heading>
-          <Spacer />
-        </Flex>
-
-        <Box fontSize="lg" color="#888" px="20px">
-          <List styleType="disc">
-            <ListItem mr="30px" mb="10px">
-              Whitelist: 162
-            </ListItem>
-
-            <ListItem mr="30px" mb="10px">
-              Social Media Accounts
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Drawings of Tier 4 (Apartment) - Tier 3 (Duplex) - Tier 2 (Villa)
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              NFT Card Design
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Website & Ashes
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Render Photos of Tier 4 (Apartment)
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Animation Video of Tier 4 (Apartment)
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Preview Demo of Tier 4 (Apartment)
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Giveaways
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              First Demo Release Tier 4 (Apartment)
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Collab with Partnerships
-            </ListItem>
-            <ListItem mr="30px" mb="10px">
-              Granting Whitelist Roles
-            </ListItem>
-          </List>
-        </Box>
+            <Divider />
+          </>
+        )) : ''}
       </Box>
 
       <Box
@@ -274,24 +231,9 @@ function LaunchpadDetailPage() {
           templateColumns={`repeat(auto-fill, minmax(min(100%, 250px), 1fr))`}
           gap="30px"
         >
-          <GridItem>
-            <TeamCard />
-          </GridItem>
-          <GridItem>
-            <TeamCard />
-          </GridItem>
-          <GridItem>
-            <TeamCard />
-          </GridItem>
-          <GridItem>
-            <TeamCard />
-          </GridItem>
-          <GridItem>
-            <TeamCard />
-          </GridItem>
-          <GridItem>
-            <TeamCard />
-          </GridItem>
+          {(formattedCollection.team_members && formattedCollection.team_members.length) ? formattedCollection.team_members.map((item) => (<GridItem>
+            <TeamCard team_member={item}/>
+          </GridItem>)) : ''}
         </Grid>
       </Box>
     </Layout>

@@ -12,20 +12,10 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
-import SocialCard from "@components/Card/Social";
+// import SocialCard from "@components/Card/Social";
+import { IPFS_BASE_URL } from "@constants/index";
 
-function LaunchpadDetailHeader({
-  avatarImage,
-  name,
-  description,
-  website,
-  twitter,
-  discord,
-  volume,
-  floorPrice,
-  totalListed,
-  nft_count,
-}) {
+function LaunchpadDetailHeader({project}) {
   return (
     <Box as="section" position="relative" w="full" mt="320px">
       <Box mx="auto" w="full" maxW="870px">
@@ -47,7 +37,7 @@ function LaunchpadDetailHeader({
               rounded="full"
               objectFit="cover"
               // src={avatarImage && getCachedImageShort(avatarImage, 500)}
-              src="https://api.artzero.io/getImage?input=QmRA2n3WM5DUu98VE7kG3BzgkAffwEcEVWrVN7qrN8EgRZ&size=500&url=https://ipfs.infura.io/ipfs/QmRA2n3WM5DUu98VE7kG3BzgkAffwEcEVWrVN7qrN8EgRZ"
+              src={`${IPFS_BASE_URL}/${project.avatarImage}`}
               fallback={
                 <Skeleton
                   w={["80px", "120px", "120px"]}
@@ -76,7 +66,7 @@ function LaunchpadDetailHeader({
                   minH={{ base: "2.5rem", "2xl": "3.75rem" }}
                   py="30px"
                 >
-                  Solapoly Game{" "}
+                  {project.name}{" "}
                 </Heading>
                 <Flex
                   color="#888"
@@ -89,7 +79,7 @@ function LaunchpadDetailHeader({
                   <Text>
                     Supply:{" "}
                     <Text as="span" color="#fff">
-                      5,000
+                      {project.totalSupply}
                     </Text>
                   </Text>
                   <Text>
@@ -227,15 +217,7 @@ function LaunchpadDetailHeader({
             minH={{ base: "1rem", "2xl": "3.375rem" }}
             py="30px"
           >
-            <Text>
-              In Solana, PC/VR based realistic metaverse virtual world project
-              inspired by quotes, emotions and feelings from the ashes of
-              reality due to the confusion and destruction of life. A virtual
-              environment where people can spend time with each other even if
-              they are far from their friends. Virtual reality full of surprises
-              that can be accessed through virtual reality use, phone use,
-              Windows, mac.
-            </Text>
+            <Text>{project.description}</Text>
           </Flex>
         </VStack>
       </Box>
@@ -245,7 +227,7 @@ function LaunchpadDetailHeader({
         right={"100px"}
         top="30px"
       >
-        <SocialCard profile={[{ website }, { twitter }, { discord }]} />
+        {/* <SocialCard profile={[{ website }, { twitter }, { discord }]} /> */}
       </Box>
     </Box>
   );

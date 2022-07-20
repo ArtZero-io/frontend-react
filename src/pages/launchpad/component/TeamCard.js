@@ -8,8 +8,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
+import { IPFS_BASE_URL } from "@constants/index";
 
-export const TeamCard = () => {
+export const TeamCard = ({team_member}) => {
   return (
     <Flex
       direction="column"
@@ -28,7 +29,7 @@ export const TeamCard = () => {
           w="full"
           h="full"
           objectFit="cover"
-          src="https://api.artzero.io/getImage?input=ipfs://QmdFprEsYt3yDkPrgqCqzZBdGD3ScVUUU9gwPnXRZD6KpN/49.png&size=500&url=https://ipfs.infura.io/ipfs/QmdFprEsYt3yDkPrgqCqzZBdGD3ScVUUU9gwPnXRZD6KpN/49.png"
+          src={`${IPFS_BASE_URL}/${team_member.avatar}`}
           fallback={<Skeleton w="250px" h="250px" />}
         />
       </Square>
@@ -38,10 +39,10 @@ export const TeamCard = () => {
           textAlign="center"
           mb="5px"
         >
-          Berk Kadir Sert{" "}
+          {team_member.name}{" "}
         </Heading>
         <Text as="span" color="#888">
-          Ceo Founder / Interior Architecture{" "}
+          {team_member.title}{" "}
         </Text>
       </Box>
     </Flex>
