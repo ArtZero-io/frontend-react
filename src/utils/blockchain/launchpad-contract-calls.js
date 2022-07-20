@@ -111,6 +111,45 @@ async function getProjectInfoByHash(ipfsHash) {
   return projecInfoRes;
 }
 
+async function owner(caller_account) {
+  console.log('zxczxc');
+  if (!contract || !caller_account) {
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
+
+  const { result, output } = await contract.query["ownable::owner"](address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
+async function getAdminAddress(caller_account) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
+
+  const { result, output } = await contract.query.getAdminAddress(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
 async function getProjectCount(caller_account) {
   if (!contract || !caller_account) {
     return null;
@@ -257,6 +296,54 @@ async function getProjectAddingFee(caller_account) {
   return null;
 }
 
+async function updateIsActiveProject(caller_account, isActive, collection_address) {
+  if (
+    !contract ||
+    !caller_account ||
+    !isValidAddressPolkadotAddress(collection_address)
+  ) {
+    return null;
+  }
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+  console.log(collection_address, isActive);
+  contract.tx
+    .updateIsActiveProject(
+      { gasLimit, value: azero_value },
+      isActive,
+      collection_address
+    )
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError ", dispatchError.toString());
+          }
+        }
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+          toast.success(
+            `Update Collection Status ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
+  return unsubscribe;
+}
+
 const launchpad_contract_calls = {
   setLaunchPadContract,
   getAttributes,
@@ -267,6 +354,9 @@ const launchpad_contract_calls = {
   getProjectById,
   getProjectAddingFee,
   getProjectInfoByHash,
+  getAdminAddress,
+  owner,
+  updateIsActiveProject
 };
 
 export default launchpad_contract_calls;
