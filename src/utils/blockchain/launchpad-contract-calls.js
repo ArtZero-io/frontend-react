@@ -276,6 +276,59 @@ async function addNewProject(
   return unsubscribe;
 }
 
+async function editProject(
+  caller_account,
+  data,
+  dispatch
+) {
+  
+  let unsubscribe;
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+  const value = 0;
+
+  contract.tx
+    .editProject(
+      { gasLimit, value: value },
+      data.contract_address,
+      data.start_time,
+      data.end_time,
+      data.project_info
+    )
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        
+        if (status.isFinalized === true) {
+          toast.success(`Success`);
+        }
+
+        if (dispatchError) {
+          console.log(dispatchError.toString());
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError ", dispatchError.toString());
+          }
+        }
+      }
+    )
+    .then((unsub) => {
+      unsubscribe = unsub;
+    })
+    .catch((e) => {
+      dispatch({
+        type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+      });
+      const mess = `Tnx is ${e.message}`;
+
+      toast.error(mess);
+    });
+  return unsubscribe;
+}
+
 async function getProjectAddingFee(caller_account) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
@@ -356,7 +409,8 @@ const launchpad_contract_calls = {
   getProjectInfoByHash,
   getAdminAddress,
   owner,
-  updateIsActiveProject
+  updateIsActiveProject,
+  editProject
 };
 
 export default launchpad_contract_calls;
