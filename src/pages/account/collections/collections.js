@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Spacer, Text } from "@chakra-ui/react";
+import { Flex, Heading, Spacer, Text } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
 import { usePagination } from "@ajna/pagination";
@@ -18,8 +18,9 @@ import AnimationLoader from "@components/Loader/AnimationLoader";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
 import GridA from "@components/Grid/GridA";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { formMode } from "@constants";
+import CommonContainer from "../../../components/Container/CommonContainer";
 
 function MyCollectionsPage() {
   const [collections, setCollections] = useState(null);
@@ -146,60 +147,52 @@ function MyCollectionsPage() {
   ]);
 
   return (
-    <Box as="section" maxW="container.3xl">
-      <Box
-        mx="auto"
-        maxW={{ base: "auto", "2xl": "7xl" }}
-        px={{ base: "6", xl: "8", "2xl": "4" }}
-        py={["4", "12", "20"]}
+    <CommonContainer>
+      <Flex
+        direction={{ base: "column", xl: "row" }}
+        w="full"
+        alignItems="start"
+        pb={["20px", "20px", "48px"]}
       >
-        <Flex
-          direction={{ base: "column", xl: "row" }}
-          w="full"
-          alignItems="start"
-          pb={["20px", "20px", "48px"]}
-        >
-          <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>My collections</Heading>
+        <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>my collections</Heading>
 
-          <Spacer mt={{ base: "20px", xl: "0px" }} />
+        <Spacer mt={{ base: "20px", xl: "0px" }} />
 
-          <AddNewCollectionModal mode={formMode.ADD} />
-        </Flex>
+        <AddNewCollectionModal mode={formMode.ADD} />
+      </Flex>
 
-        {loading ? (
-          <AnimationLoader loadingTime={loadingTime} />
-        ) : (
-          <>
-            <AnimatePresence>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <Text textAlign="left" color="brand.grayLight">
-                  There are {collections?.length || 0} collections
-                </Text>
-              </motion.div>
-            </AnimatePresence>
-            {collections?.length ? (
-              <>
-                <GridA collections={collections} />
+      {loading ? (
+        <AnimationLoader loadingTime={loadingTime} />
+      ) : (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <Text textAlign="left" color="brand.grayLight">
+              There are {collections?.length || 0} collections
+            </Text>
+          </motion.div>
 
-                <Flex w="full">
-                  <PaginationMP
-                    isDisabled={isDisabled}
-                    currentPage={currentPage}
-                    pagesCount={pagesCount}
-                    setCurrentPage={setCurrentPage}
-                  />
-                  <Spacer />
-                </Flex>
-              </>
-            ) : null}
-          </>
-        )}
-      </Box>
-    </Box>
+          {collections?.length ? (
+            <>
+              <GridA collections={collections} />
+
+              <Flex w="full">
+                <PaginationMP
+                  isDisabled={isDisabled}
+                  currentPage={currentPage}
+                  pagesCount={pagesCount}
+                  setCurrentPage={setCurrentPage}
+                />
+                <Spacer />
+              </Flex>
+            </>
+          ) : null}
+        </>
+      )}
+    </CommonContainer>
   );
 }
 

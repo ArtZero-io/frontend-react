@@ -193,7 +193,7 @@ function TabActivity({
           pr="5px"
           pb="8px"
           overflowX="scroll"
-          maxW={{ base: "320px", xl: "600px" }}
+          // maxW={{ base: "320px", xl: "600px" }}
           sx={{
             "&::-webkit-scrollbar": {
               width: "4px",
@@ -214,14 +214,14 @@ function TabActivity({
         >
           {tabData.map((tab, index) => (
             <Tab
-              _selected={{ bg: "#7ae7ff", color: "#000" }}
-              fontSize="15px"
-              minW="130px"
+              minW="50px"
+              key={index}
               alignItems="center"
               justifyContent="center"
-              key={index}
-              textAlign="left"
-              py="15px"
+              py={{ base: "4px", xl: "12px" }}
+              fontSize={{ base: "md", xl: "lg" }}
+              fontFamily="Evogria Italic, san serif"
+              _selected={{ bg: "#7ae7ff", color: "#000" }}
             >
               {tab.label}
             </Tab>
@@ -247,65 +247,74 @@ export default TabActivity;
 
 const headers = {
   purchase: {
-    collectionName: "Collection Name",
-    nftName: "NFT Name",
-    avatar: "Image",
-    type: "Type",
-    price: "Price",
-    platformFee: "Platform Fee",
-    royalFee: "Royal Fee",
-    sellerName: "Seller",
-    buyerName: "Buyer",
-    blockNumber: "Block No#",
+    collectionName: "collection name",
+    nftName: "nft name",
+    avatar: "image",
+    type: "type",
+    price: "price",
+    platformFee: "platform Fee",
+    royalFee: "royal fee",
+    sellerName: "seller",
+    buyerName: "buyer",
+    blockNumber: "block no#",
   },
   list: {
-    collectionName: "Collection Name",
-    nftName: "NFT Name",
-    avatar: "Image",
-    type: "Type",
-    price: "Price",
-    traderName: "Trader",
-    blockNumber: "Block No#",
+    collectionName: "collection name",
+    nftName: "nft name",
+    avatar: "image",
+    type: "type",
+    price: "price",
+    traderName: "trader",
+    blockNumber: "block no#",
   },
   unlist: {
-    collectionName: "Collection Name",
-    nftName: "NFT Name",
-    avatar: "Image",
-    type: "Type",
-    traderName: "Trader",
-    blockNumber: "Block No#",
+    collectionName: "collection name",
+    nftName: "nft name",
+    avatar: "image",
+    type: "type",
+    traderName: "trader",
+    blockNumber: "block no#",
   },
   bidAccepted: {
-    collectionName: "Collection Name",
-    nftName: "NFT Name",
-    avatar: "Image",
-    type: "Type",
-    price: "Price",
-    platformFee: "Platform Fee",
-    royalFee: "Royal Fee",
-    sellerName: "Seller",
-    buyerName: "Buyer",
-    blockNumber: "Block No#",
+    collectionName: "collection name",
+    nftName: "nft name",
+    avatar: "image",
+    type: "type",
+    price: "price",
+    platformFee: "platform fee",
+    royalFee: "royal fee",
+    sellerName: "seller",
+    buyerName: "buyer",
+    blockNumber: "block no#",
   },
 };
 
 const getMetaDataType1 = async (tokenID, token_uri) => {
+  console.log(
+    "getJSON?input",
+    "/getJSON?input=" + token_uri + tokenID.toString() + ".json"
+  );
   const metadata = await clientAPI(
     "get",
     "/getJSON?input=" + token_uri + tokenID.toString() + ".json",
     {}
   );
 
+  console.log("metadata", metadata);
+
   if (metadata) {
     const attrsList = metadata?.attributes?.map((item) => {
       return { [item.trait_type]: item.value };
     });
 
-    return {
-      ...metadata,
+    const ret = {
+      // ...metadata,
       attrsList,
       avatar: metadata.image,
       nftName: metadata.name,
+      description: metadata.description,
     };
+    console.log("ret", ret);
+    return ret;
   }
 };

@@ -168,13 +168,17 @@ const DesktopNavContent = (props) => {
   return (
     <Flex w="full">
       <HStack
-        spacing={{ xl: "35px", "2xl": "55px" }}
+        w="full"
         align="stretch"
         overflowX="hidden"
         alignItems="center"
-        justifyContent="flex-start"
-        pl={"50px"}
-        w="full"
+        justifyContent={{
+          base: "flex-start",
+          md: "space-between",
+          xl: "flex-start",
+        }}
+        spacing={{ xl: "35px", "2xl": "55px" }}
+        pl={{ base: "8px", md: "32px", xl: "50px" }}
         {...props}
       >
         {links.map((link, index) => (
@@ -226,7 +230,7 @@ const MyAccountDropdown = () => {
         // borderColor={path.includes("/account/") ? "brand.blue" : "transparent"}
       >
         <MenuButton
-          fontSize={{ base: "24px", xl: "15px" }}
+          fontSize={{ base: "24px", md: "15px" }}
           h="41px"
           _hover={{
             borderColor: "brand.blue",
@@ -269,7 +273,7 @@ const MyAccountDropdown = () => {
               onClick={() => history.push(item.href)}
               key={idx}
               to="#"
-              fontSize={{ base: "24px", xl: "15px" }}
+              fontSize={{ base: "24px", md: "15px" }}
               py="12px"
               px="15px"
             >

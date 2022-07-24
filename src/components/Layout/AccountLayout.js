@@ -10,27 +10,31 @@ const AccountLayout = ({ children }) => {
   const history = useHistory();
   const { pathname } = useLocation();
 
-  const tabData = [
+  const tabsData = [
     {
       label: "General",
-      value: ROUTES.ACCOUNT,
+      isDisabled: false,
+      route: ROUTES.ACCOUNT,
     },
     {
       label: "My Collections",
-      value: ROUTES.ACCOUNT_MY_COLLECTIONS,
+      isDisabled: false,
+      route: ROUTES.ACCOUNT_MY_COLLECTIONS,
     },
     {
       label: "My NFTS",
-      value: ROUTES.ACCOUNT_MY_NFTS,
+      isDisabled: false,
+      route: ROUTES.ACCOUNT_MY_NFTS,
     },
     {
       label: "My Stakes",
-      value: ROUTES.ACCOUNT_MY_STAKES,
+      isDisabled: false,
+      route: ROUTES.ACCOUNT_MY_STAKES,
     },
   ];
 
   const handleTabsChange = (index) => {
-    history.push(tabData[index].value);
+    history.push(tabsData[index].route);
   };
 
   useEffect(() => {
@@ -43,14 +47,15 @@ const AccountLayout = ({ children }) => {
         <ProfileHeader />
 
         <Tabs
-          index={tabData.map((i) => i.value).indexOf(pathname)}
+          mx="auto"
+          index={tabsData.map((i) => i.route).indexOf(pathname)}
           onChange={handleTabsChange}
           align="center"
           isLazy
           colorScheme="brand.blue"
         >
           <TabList>
-            {tabData.map((tab) => (
+            {tabsData.map((tab) => (
               <Tab
                 key={tab.label}
                 mx={4}

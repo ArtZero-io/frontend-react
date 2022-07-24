@@ -10,6 +10,16 @@ import {
 } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
 import { APICall } from "../../api/client";
+import { ContractPromise } from "@polkadot/api-contract";
+
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import { createObjAttrsNFT } from "..";
+import {
+  setTxStatus,
+  txErrorHandler,
+  txResponseErrorHandler,
+} from "../../store/actions/txStatus";
+import { START } from "@constants";
 
 let contract;
 
@@ -17,7 +27,7 @@ export const setContract = (c) => {
   contract = c;
   // console.log("contract setPsp34Contract", contract);
 };
-
+console.log("xxxcontract", contract);
 async function getTotalSupply(caller_account) {
   // console.log("getTotalSupply before check", !caller_account);
   if (!contract || !caller_account) {
@@ -313,7 +323,9 @@ async function approve(
   operator_address,
   token_id,
   is_approve,
-  dispatch
+  dispatch,
+  txType,
+  api
 ) {
   if (!contract || !caller_account) {
     return null;
@@ -346,35 +358,41 @@ async function approve(
           }
         }
 
-        if (status) {
-          // handleContractCallAddNftAnimation(status, dispatchError, dispatch);
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
 
-          // const statusText = Object.keys(status.toHuman())[0];
-          if (status.isFinalized) {
-            // dispatch({
-            //   type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-            // });
-            //   toast.success(
-            //     `Approve ${
-            //       statusText === "0" ? "started" : statusText.toLowerCase()
-            //     }.`
-            //   );
-          }
+        // if (status) {
+        // handleContractCallAddNftAnimation(status, dispatchError, dispatch);
+
+        // const statusText = Object.keys(status.toHuman())[0];
+        if (status.isFinalized) {
+          dispatch(
+            setTxStatus({
+              type: txType,
+              step: START,
+            })
+          );
+          // dispatch({
+          //   type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+          // });
+          //   toast.success(
+          //     `Approve ${
+          //       statusText === "0" ? "started" : statusText.toLowerCase()
+          //     }.`
+          //   );
         }
+        // }
       }
     )
-    .then((unsub) => {
-      unsubscribe = unsub;
-    })
-    .catch((e) => {
-      dispatch({
-        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-      });
-      const mess = `Tnx is ${e.message}`;
-      // console.log("e.message", e.message);
-      toast.error(mess);
-      return;
-    });
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
@@ -446,6 +464,132 @@ async function setMultipleAttributesNFT(
 
   return unsubscribe;
 }
+
+// jjj
+
+const getTokenUriType1 = async function (
+  api,
+  currentAccount,
+  collectionAddress,
+  tokenID
+) {
+  const contract = new ContractPromise(
+    api,
+    nft721_psp34_standard.CONTRACT_ABI,
+    collectionAddress
+  );
+
+  const value = 0;
+  const gasLimit = -1;
+
+  const { result, output } = await contract.query["psp34Traits::tokenUri"](
+    currentAccount?.address,
+    { value, gasLimit },
+    tokenID
+  );
+
+  if (result.isOk) {
+    return output.toHuman();
+  }
+
+  return null;
+};
+
+const getBaseTokenUriType1 = async function (
+  api,
+  currentAccount,
+  collectionAddress
+) {
+  const contract = new ContractPromise(
+    api,
+    nft721_psp34_standard.CONTRACT_ABI,
+    collectionAddress
+  );
+
+  const value = 0;
+  const gasLimit = -1;
+
+  const { result, output } = await contract.query["psp34Traits::tokenUri"](
+    currentAccount?.address,
+    { value, gasLimit },
+    1
+  );
+
+  if (result.isOk) {
+    return output.toHuman()?.replace("1.json", "");
+  }
+
+  return null;
+};
+
+const getNftAttrsType1 = async function (
+  api,
+  currentAccount,
+  collectionAddress,
+  tokenID
+) {
+  const token_uri = await getTokenUriType1(
+    api,
+    currentAccount,
+    collectionAddress,
+    tokenID
+  );
+
+  const metadata = await clientAPI("get", "/getJSON?input=" + token_uri, {});
+
+  if (metadata) {
+    const attrsList = metadata?.attributes?.map((item) => {
+      return { [item.trait_type]: item.value };
+    });
+
+    const ret = {
+      attrsList,
+      nftName: metadata.name,
+      avatar: metadata.image,
+      description: metadata.description,
+    };
+
+    return ret;
+  }
+};
+
+export const getNFTDetails = async function (
+  api,
+  currentAccount,
+  collection_address,
+  token_id,
+  contractType
+) {
+  let [tokenDetails] = await APICall.getNFTByID({
+    collection_address,
+    token_id,
+  });
+
+  // Collections Type 2 - Simple Mode
+  if (contractType === 2) {
+    const data = createObjAttrsNFT(
+      tokenDetails.attributes,
+      tokenDetails.attributesValue
+    );
+
+    tokenDetails = { ...tokenDetails, ...data };
+  }
+
+  // Collections Type 1 - Adv Mode
+  if (contractType === 1) {
+    const data = await getNftAttrsType1(
+      api,
+      currentAccount,
+      collection_address,
+      token_id
+    );
+
+    tokenDetails = { ...tokenDetails, ...data };
+  }
+
+  console.log("tokenDetails", tokenDetails);
+  return tokenDetails;
+};
 
 const nft721_psp34_standard_calls = {
   tokenUri,

@@ -1,36 +1,28 @@
-import {
-  Flex,
-  Spacer,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-} from "@chakra-ui/react";
+import { Flex, Spacer } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
+import { usePagination } from "@ajna/pagination";
+import { useDispatch, useSelector } from "react-redux";
+import { ContractPromise } from "@polkadot/api-contract";
 
 import { clientAPI } from "@api/client";
 import Layout from "@components/Layout/Layout";
+import PaginationMP from "@components/Pagination/Pagination";
 
+import TabActivity from "./component/TabActivity";
 import TabCollectionItems from "./component/TabItems";
 import CollectionHeader from "./component/Header/Header";
 
-import { AccountActionTypes } from "@store/types/account.types";
-
-import { ContractPromise } from "@polkadot/api-contract";
-
+import { APICall } from "@api/client";
+import useInterval from "@hooks/useInterval";
 import { useSubstrateState } from "@utils/substrate";
+import { AccountActionTypes } from "@store/types/account.types";
 import { createObjAttrsNFT, delay, getPublicCurrentAccount } from "@utils";
+
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import { usePagination } from "@ajna/pagination";
-import PaginationMP from "@components/Pagination/Pagination";
-import { APICall } from "../../api/client";
-import TabActivity from "./component/TabActivity";
-import useInterval from "../../hooks/useInterval";
+import CommonTabs from "../../components/Tabs/CommonTabs";
 
 const NUMBER_PER_PAGE = 10;
 
@@ -43,13 +35,13 @@ function CollectionPage() {
     (state) => state.account.accountLoaders
   );
 
-  const [formattedCollection, setFormattedCollection] = useState(null);
   const [loading, setLoading] = useState(null);
   const [loadingTime, setLoadingTime] = useState(null);
-  const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
   const [tokenUriType1, setTokenUriType1] = useState("");
-  const [latestBlockNumber, setLatestBlockNumber] = useState(null);
   const [activeTab, setActiveTab] = useState(tabList.LISTED);
+  const [latestBlockNumber, setLatestBlockNumber] = useState(null);
+  const [formattedCollection, setFormattedCollection] = useState(null);
+  const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
 
   const {
     pagesCount,
@@ -61,9 +53,9 @@ function CollectionPage() {
   } = usePagination({
     total: totalCollectionsCount,
     initialState: {
-      pageSize: NUMBER_PER_PAGE,
-      isDisabled: false,
       currentPage: 1,
+      isDisabled: false,
+      pageSize: NUMBER_PER_PAGE,
     },
   });
 
@@ -125,6 +117,7 @@ function CollectionPage() {
           collection_address,
         });
 
+        console.log('collectionDetail', collectionDetail)
         //Get fake public CurrentAccount
         const publicCurrentAccount = currentAccount
           ? currentAccount
@@ -262,25 +255,27 @@ function CollectionPage() {
     activeTab,
   ]);
 
-  const tabData = [
+  const tabsData = [
     {
       label: "items",
-      content: (
+      isDisabled: false,
+      component: (
         <TabCollectionItems
           {...formattedCollection}
           offset={offset}
-          loadingTime={loadingTime}
           loading={loading}
-          forceUpdate={forceUpdate}
-          totalCollectionsCount={totalCollectionsCount}
-          setActiveTab={setActiveTab}
           activeTab={activeTab}
+          loadingTime={loadingTime}
+          forceUpdate={forceUpdate}
+          setActiveTab={setActiveTab}
+          totalCollectionsCount={totalCollectionsCount}
         />
       ),
     },
     {
       label: "activity",
-      content: (
+      isDisabled: false,
+      component: (
         <TabActivity
           {...formattedCollection}
           tokenUriType1={tokenUriType1}
@@ -348,6 +343,8 @@ function CollectionPage() {
 
   useInterval(() => initEvents(), 10000);
 
+  const [tabIndex, setTabIndex] = React.useState(0);
+
   return (
     <Layout
       backdrop={formattedCollection?.headerImage}
@@ -357,50 +354,29 @@ function CollectionPage() {
         <>
           <CollectionHeader {...formattedCollection} />
 
-          <Tabs isLazy align="center" colorScheme="brand.blue">
-            <TabList bg="#000" borderBottomColor="#000">
-              {tabData.map((tab, index) => (
-                <Tab
-                  key={index}
-                  px="0.5px"
-                  mx="25px"
-                  pb={{ base: "12px", xl: "20px" }}
-                  fontSize={{ base: "16px", xl: "lg" }}
-                  fontFamily="Evogria Italic, san serif"
-                >
-                  {tab.label}
-                </Tab>
-              ))}
-            </TabList>
+          <CommonTabs
+            tabsData={tabsData}
+            onChange={(idx) => setTabIndex(idx)}
+          />
 
-            <TabPanels h="full" minH="md" bg="#171717">
-              {tabData.map((tab, index) => (
-                <TabPanel
-                  px={{ base: "12px", "2xl": "100px" }}
-                  pt={{ base: "14px", xl: "40px" }}
-                  key={index}
-                >
-                  {tab.content}
-
-                  <Flex
-                    display={tab.label === "Activity" ? "none" : "flex"}
-                    w="full"
-                    py="1.5rem"
-                    alignItems={{ base: "start", xl: "end" }}
-                    direction={{ base: "column", xl: "row" }}
-                  >
-                    <PaginationMP
-                      pagesCount={pagesCount}
-                      isDisabled={isDisabled}
-                      currentPage={currentPage}
-                      setCurrentPage={setCurrentPage}
-                    />
-                    <Spacer my={{ base: "3", "2xl": "auto" }} />
-                  </Flex>
-                </TabPanel>
-              ))}
-            </TabPanels>
-          </Tabs>
+          <Flex
+            w="full"
+            bg="brand.semiBlack"
+            pt={{ base: "14px", xl: "40px" }}
+            pb={{ base: "50px", xl: "100px" }}
+            px={{ base: "12px", "2xl": "100px" }}
+            // alignItems={{ base: "start", xl: "end" }}
+            // direction={{ base: "column", xl: "row" }}
+            display={tabIndex === 1 ? "none" : "flex"}
+          >
+            <PaginationMP
+              pagesCount={pagesCount}
+              isDisabled={isDisabled}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+            />
+            <Spacer my={{ base: "3", "2xl": "auto" }} />
+          </Flex>
         </>
       }
     </Layout>

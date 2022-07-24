@@ -30,9 +30,9 @@ import useInterval from "use-interval";
 import { motion } from "framer-motion";
 import {
   STAKE,
+  UNSTAKE,
   REQUEST_UNSTAKE,
   CANCEL_REQUEST_UNSTAKE,
-  UNSTAKE,
 } from "@constants";
 import { useHistory } from "react-router-dom";
 
@@ -95,10 +95,10 @@ function MyNFTCard({
       );
       setLimitUnstakeTime(limitUnstakeTimeTmp);
 
-
       if (unstakeRequestTimeTmp) {
         let now = new Date().getTime() / 1000;
-        let valid_time = unstakeRequestTimeTmp / 1000 + limitUnstakeTimeTmp * 60;
+        let valid_time =
+          unstakeRequestTimeTmp / 1000 + limitUnstakeTimeTmp * 60;
         if (valid_time - now > 0)
           setCountdownTime(secondsToTime(valid_time - now));
         else {
@@ -106,7 +106,6 @@ function MyNFTCard({
           setCountdownTime({ h: 0, m: 0, s: 0 });
         }
       }
-
 
       setIsLoading(false);
     };
@@ -140,10 +139,13 @@ function MyNFTCard({
             "span.chakra-checkbox__control": {
               borderRadius: "0",
               borderWidth: "0.2px",
+              borderColor: "brand.blue",
+              backgroundColor: "brand.semiBlack",
+            },
+            "span.chakra-checkbox__control[data-checked] > div": {
+              color: "brand.blue",
             },
           }}
-          _hover={{ borderColor: "#171717", borderWidth: "0.2px" }}
-          _checked={{ borderColor: "#171717", borderWidth: "0.2px" }}
           size="lg"
           top="10px"
           right="10px"

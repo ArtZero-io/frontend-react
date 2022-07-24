@@ -3,12 +3,13 @@ import { motion } from "framer-motion";
 
 const AnimationLoader = ({
   loadingTime = 7,
-  addText = "Please wait a moment...",
+  addText = "wait a moment...",
   minH = "4rem",
   maxH = "6rem",
+  ...rest
 }) => {
   return (
-    <Center width="full" height="full" maxH={maxH} minH={minH}>
+    <Center width="full" height="full" maxH={maxH} minH={minH} {...rest}>
       <Stack direction="column" alignItems="center" spacing={2}>
         <AzeroAnimation loadingTime={loadingTime} />
         <Heading color="#7ae7ff" size="h6" px={5}>
@@ -22,6 +23,7 @@ const AnimationLoader = ({
 export default AnimationLoader;
 
 export const AzeroAnimation = ({ loadingTime = 7 }) => {
+
   const icon = {
     hidden: {
       opacity: 0,
@@ -66,7 +68,7 @@ export const AzeroAnimation = ({ loadingTime = 7 }) => {
           initial="hidden"
           animate="visible"
           transition={{
-            default: { duration: loadingTime - 5, ease: "easeInOut" },
+            default: { duration: loadingTime * 0.75, ease: "easeInOut" },
             fill: { duration: loadingTime, ease: [1, 0, 0.8, 1] },
           }}
         />

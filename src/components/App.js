@@ -1,5 +1,5 @@
 import { Toaster } from "react-hot-toast";
-import { GridLoader } from "react-spinners";
+import { PuffLoader } from "react-spinners";
 
 import {
   Modal,
@@ -57,18 +57,15 @@ const InitModal = ({ apiState, loadingErrorMess }) => {
         justifyContent="center"
         alignItems="center"
       >
-        <GridLoader
-          color="#7ae7ff"
-          size={15}
-          margin={3}
-          speedMultiplier={1.8}
-        />
+        <PuffLoader color="#7ae7ff" />
+
         <Heading
           size="h6"
-          my={14}
+          my="30px"
           mx="auto"
           maxW="250px"
           minH="100px"
+          color="#7ae7ff"
           textAlign="center"
         >
           Connecting {loadingErrorMess}
@@ -80,8 +77,14 @@ const InitModal = ({ apiState, loadingErrorMess }) => {
 
 const Main = () => {
   const { api, apiState } = useSubstrateState();
-  const { artzeroNft, collection, marketplace, profile, staking, launchpad_manager } =
-    contractData;
+  const {
+    artzeroNft,
+    collection,
+    marketplace,
+    profile,
+    staking,
+    launchpad_manager,
+  } = contractData;
   const [loadContractDone, setLoadContractDone] = useState(false);
 
   useEffect(() => {
@@ -94,7 +97,7 @@ const Main = () => {
           await setStakingContract(api, staking);
           await setAZNFTContract(api, artzeroNft);
           await setLaunchPadContract(api, launchpad_manager);
-          
+
           setLoadContractDone(true);
         }
       } catch (e) {
@@ -103,7 +106,16 @@ const Main = () => {
     };
     initContract();
     // console.log("initContract()...");
-  }, [api, apiState, artzeroNft, collection, marketplace, profile, staking, launchpad_manager]);
+  }, [
+    api,
+    apiState,
+    artzeroNft,
+    collection,
+    marketplace,
+    profile,
+    staking,
+    launchpad_manager,
+  ]);
 
   const { addNftTnxStatus, tnxStatus, addCollectionTnxStatus } = useSelector(
     (state) => state.account.accountLoaders
@@ -121,7 +133,8 @@ const Main = () => {
       txStatus?.requestUnstakeStatus === "Start" ||
       txStatus?.cancelRequestUnstakeStatus === "Start" ||
       txStatus?.unstakeStatus === "Start" ||
-      txStatus?.lockStatus === "Start";
+      txStatus?.lockStatus === "Start" ||
+      txStatus?.step === "Start";
 
     // console.log("txStatus?.stakeStatus", txStatus?.stakeStatus);
     const message = (
@@ -152,6 +165,7 @@ const Main = () => {
     txStatus?.lockStatus,
     txStatus?.requestUnstakeStatus,
     txStatus?.stakeStatus,
+    txStatus?.step,
     txStatus?.unstakeStatus,
   ]);
 

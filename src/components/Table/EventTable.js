@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
-import { getCachedImageShort } from "@utils";
+import { getCachedImageShort, formatNumDynamicDecimal } from "@utils";
 import { memo } from "react";
 
 function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
@@ -26,7 +26,8 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
       ) : (
         <TableContainer
           fontSize="lg"
-          w={{ base: "1100px", "2xl": "1560px" }}
+          w="full"
+          // w={{ base: "1100px", "2xl": "1560px" }}
           h={{ base: "390px", "2xl": "480px" }}
           overflowY="scroll"
           sx={{
@@ -90,7 +91,7 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
                         {item}
                       </Th>
                     ))}
-                    <Th
+                    {/* <Th
                       position="sticky"
                       top={0}
                       zIndex={1}
@@ -104,7 +105,7 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
                       py={{ base: "1rem", "2xl": "1.75rem" }}
                     >
                       Time
-                    </Th>
+                    </Th> */}
                   </Tr>
                 </Thead>
 
@@ -139,7 +140,7 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
                           i === "platformFee" ||
                           i === "royalFee" ? (
                             <>
-                              {item[i].toFixed(6)}
+                              {formatNumDynamicDecimal(item[i])}
                               <TagRightIcon as={AzeroIcon} w="16px" />
                             </>
                           ) : i === "avatar" ? (
@@ -157,14 +158,14 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
                           )}
                         </Td>
                       ))}
-                      <Td
+                      {/* <Td
                         key={idx}
                         py={{ base: "1rem", "2xl": "1.75rem" }}
                         textAlign="center"
                         color="#fff"
                       >
                         {new Date(1657304023551).toLocaleString("en-US")}
-                      </Td>
+                      </Td> */}
                     </Tr>
                   ))}
                 </Tbody>

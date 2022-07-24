@@ -1,17 +1,13 @@
 import toast from "react-hot-toast";
 import { SET_STATUS, CLEAR_STATUS } from "../types/txStatus";
-import { READY } from "@constants";
+import { READY, FINALIZED } from "@constants";
 import { fetchUserBalance } from "../../pages/launchpad/component/Form/AddNewProject";
 
-export const setTxStatus = ({ txType, txStatus, tokenID }) => {
+export const setTxStatus = (props) => {
   return (dispatch) => {
     dispatch({
       type: SET_STATUS,
-      payload: {
-        txType,
-        txStatus,
-        tokenID,
-      },
+      payload: { ...props },
     });
   };
 };
@@ -45,6 +41,7 @@ export const txResponseErrorHandler = async ({
   dispatchError,
   dispatch,
   txType,
+  type,
   api,
   caller_account,
 }) => {
@@ -65,30 +62,32 @@ export const txResponseErrorHandler = async ({
     const statusToHuman = Object.entries(status.toHuman());
 
     const url = `https://test.azero.dev/#/explorer/query/`;
-
+    console.log(
+      "Object.keys(status.toHuman(",
+      Object.keys(status.toHuman())[0]
+    );
     if (Object.keys(status.toHuman())[0] === "0") {
+      dispatch(setTxStatus({ txType, txStatus: READY, step: READY, type }));
 
       await fetchUserBalance({ currentAccount: caller_account, api }).then(
         ({ balance }) => console.log(txType, " bal ready: ", balance)
       );
-
-      dispatch(setTxStatus({ txType: txType, txStatus: READY }));
     } else {
-      const finalizedTimeStamp = Date.now();
-
       dispatch(
         setTxStatus({
+          type,
           txType: txType,
+          timeStamp: Date.now(),
+          step: statusToHuman[0][0],
           txStatus: statusToHuman[0][0],
-          timeStamp: finalizedTimeStamp,
         })
       );
-      if (statusToHuman[0][0] === "Finalized") {
 
+      if (statusToHuman[0][0] === FINALIZED) {
         await fetchUserBalance({ currentAccount: caller_account, api }).then(
           ({ balance }) => console.log(txType, " bal final: ", balance)
         );
-        
+
         console.log("Tx finalized at ", `${url}${statusToHuman[0][1]}`);
       }
     }

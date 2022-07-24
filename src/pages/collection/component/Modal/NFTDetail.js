@@ -72,7 +72,10 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
         maxW={{ base: "20rem", xl: "60rem", "2xl": "78rem" }}
       >
         <ModalCloseButton
-          borderWidth={2}
+          w="42px"
+          h="42px"
+          border="none"
+          // borderWidth={2}
           borderRadius="0"
           position="absolute"
           top={["0", "-8", "-8"]}

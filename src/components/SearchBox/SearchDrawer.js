@@ -62,7 +62,8 @@ const SearchDrawer = ({ display = true, ...rest }) => {
     <>
       <Button
         {...rest}
-        px={["0px", "30px", "30px"]}
+        // px={["0px", "30px", "30px"]}
+        px={{ base: "4px", xl: "30px" }}
         display={display}
         mr={0}
         color="#fff"
@@ -75,7 +76,7 @@ const SearchDrawer = ({ display = true, ...rest }) => {
         _focus={{ borderWidth: "0", color: "#7ae7ff", bg: "transparent" }}
         _active={{ borderWidth: "0", color: "#7ae7ff", bg: "transparent" }}
       >
-        <Text display={{ base: "none", md: "flex" }} as="span">
+        <Text display={{ base: "none", xl: "flex" }} as="span">
           Search
         </Text>
       </Button>

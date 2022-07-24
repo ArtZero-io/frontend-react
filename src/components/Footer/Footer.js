@@ -47,7 +47,7 @@ export const Footer = () => {
           <Stack
             direction={{
               base: "column",
-              md: "row",
+              xl: "row",
             }}
             spacing={{
               base: "4",

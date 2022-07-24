@@ -1,13 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  Box,
   Flex,
   Heading,
   Spacer,
   IconButton,
   Text,
   HStack,
-  Button,
   Stack,
 } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
@@ -30,6 +28,8 @@ import { motion } from "framer-motion";
 import { FINALIZED } from "@constants";
 import { clearTxStatus } from "../../store/actions/txStatus";
 import { delay } from "@utils";
+import CommonContainer from "../../components/Container/CommonContainer";
+import CommonButton from "../../components/Button/CommonButton";
 
 const MyStakesPage = () => {
   const txStatus = useSelector((state) => state.txStatus);
@@ -124,7 +124,7 @@ const MyStakesPage = () => {
 
   useEffect(() => {
     fetchCollectionDetail();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, currentAccount]);
 
   useEffect(() => {
@@ -157,143 +157,134 @@ const MyStakesPage = () => {
   };
 
   return (
-    <Box as="section" maxW="container.3xl">
-      <Box
-        mx="auto"
-        maxW={{ base: "6xl", "2xl": "7xl" }}
-        px={{ base: "6", "2xl": "8" }}
-        py={{ base: "4", xl: "12", "2xl": "20" }}
+    <CommonContainer>
+      <Flex
+        w="full"
+        alignItems="start"
+        pb={{ base: "12px", xl: "48px" }}
+        direction={{ base: "column", xl: "row" }}
       >
-        <Flex
-          w="full"
-          alignItems="start"
-          pb={{ base: "12px", xl: "48px" }}
-          direction={{ base: "column", xl: "row" }}
-        >
-          <Heading fontSize={["3xl-mid", "5xl", "5xl"]} minW="100px">
-            My Stakes
-          </Heading>
-          <Spacer />
-          <HStack
-            maxW={{ base: "320px", xl: "600px" }}
-            mt="20px"
-            pb="8px"
-            overflowX="scroll"
-            sx={{
-              "&::-webkit-scrollbar": {
-                width: "4px",
-                height: "4px",
-                borderRadius: "0px",
-                backgroundColor: `transparent`,
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-thumb:hover": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: `transparent`,
-              },
-            }}
-          >
-            {Object.keys(tabList).map((item) => (
-              <Button
-                mx={1}
-                key={item}
-                id={item}
-                variant="outline"
-                isActive={item === activeTab}
-                px={["16px", "32px", "32px"]}
-                onClick={() => setActiveTab(item)}
-              >
-                {item.replace("_", " ")}
-              </Button>
-            ))}
+        <Heading fontSize={["3xl-mid", "5xl", "5xl"]} minW="100px">
+          my stakes
+        </Heading>
 
-            <IconButton
-              onClick={() => refresh()}
-              mx={1}
-              aria-label="refresh"
-              icon={<RefreshIcon />}
-              size="icon"
-              variant="iconSolid"
+        <Spacer />
+
+        <HStack
+          pb="8px"
+          mt="20px"
+          overflowX="scroll"
+          maxW={{ base: "320px", md: "600px" }}
+          sx={{
+            "&::-webkit-scrollbar": {
+              width: "4px",
+              height: "4px",
+              borderRadius: "0px",
+              backgroundColor: `transparent`,
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: `#7ae7ff`,
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              backgroundColor: `#7ae7ff`,
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: `transparent`,
+            },
+          }}
+        >
+          {Object.keys(tabList).map((item) => (
+            <CommonButton
+              key={item}
+              variant="outline"
+              text={item.replace("_", " ")}
+              isActive={item === activeTab}
+              onClick={() => setActiveTab(item)}
             />
-          </HStack>
-        </Flex>
+          ))}
 
-        <Text textAlign="left" color="#fff">
-          Praying Mantis Predators NFT Stats:
-        </Text>
+          <IconButton
+            onClick={() => refresh()}
+            mx={1}
+            aria-label="refresh"
+            icon={<RefreshIcon />}
+            size="icon"
+            variant="iconSolid"
+          />
+        </HStack>
+      </Flex>
 
-        <Stack
-          py={5}
-          h={{ base: "195px", xl: "75px" }}
-          borderBottomWidth={1}
-          direction={{ base: "column", xl: "row" }}
-        >
-          {statsInfo &&
-            Object.keys(statsInfo).map((item) => (
-              <motion.div
-                key={item}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <Flex alignItems="start" pr={"5rem"}>
-                  <Text color="brand.grayLight">
-                    {item === "totalCount"
-                      ? "Total"
-                      : item === "unstakedCount"
-                      ? "Total Not Staked"
-                      : item === "pendingCount"
-                      ? "Total Pending Unstake"
-                      : item === "stakedCount"
-                      ? "Total Staked"
-                      : item === "myTradingFee"
-                      ? "Trading Fee"
-                      : null}
-                    :
-                  </Text>
+      <Text textAlign="left" color="#fff">
+        Praying Mantis Predators NFT Stats:
+      </Text>
 
-                  <Text ml={1}>
-                    {item === "myTradingFee"
-                      ? `${statsInfo[item] || platformTradingFee} %`
-                      : statsInfo[item] > 1
-                      ? `${statsInfo[item]} items`
-                      : `${statsInfo[item]} item`}
-                  </Text>
-                </Flex>
-              </motion.div>
-            ))}
-        </Stack>
-        <Stack minHeight="504px" h="full">
-          {loading ? (
-            <Stack h="574px">
-              <AnimationLoader />
-            </Stack>
-          ) : PMPCollectionDetail?.listNFT?.length === 0 ? (
-            <Heading py="3rem" size="h6">
-              No NFTs found
-            </Heading>
-          ) : (
+      <Stack
+        py={5}
+        h={{ base: "195px", xl: "75px" }}
+        borderBottomWidth={1}
+        direction={{ base: "column", lg: "row" }}
+      >
+        {statsInfo &&
+          Object.keys(statsInfo).map((item) => (
             <motion.div
-              style={{ minHeight: "574px" }}
+              key={item}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              {
-                <MyNFTGroupCard
-                  {...PMPCollectionDetail}
-                  hasBottomBorder={false}
-                />
-              }
+              <Flex alignItems="start" pr={"5rem"}>
+                <Text color="brand.grayLight">
+                  {item === "totalCount"
+                    ? "Total"
+                    : item === "unstakedCount"
+                    ? "Total Not Staked"
+                    : item === "pendingCount"
+                    ? "Total Pending Unstake"
+                    : item === "stakedCount"
+                    ? "Total Staked"
+                    : item === "myTradingFee"
+                    ? "Trading Fee"
+                    : null}
+                  :
+                </Text>
+
+                <Text ml={1}>
+                  {item === "myTradingFee"
+                    ? `${statsInfo[item] || platformTradingFee} %`
+                    : statsInfo[item] > 1
+                    ? `${statsInfo[item]} items`
+                    : `${statsInfo[item]} item`}
+                </Text>
+              </Flex>
             </motion.div>
-          )}
-        </Stack>
-      </Box>
-    </Box>
+          ))}
+      </Stack>
+      <Stack minHeight="504px" h="full">
+        {loading ? (
+          <Stack h="574px">
+            <AnimationLoader />
+          </Stack>
+        ) : PMPCollectionDetail?.listNFT?.length === 0 ? (
+          <Heading py="3rem" size="h6">
+            No NFTs found
+          </Heading>
+        ) : (
+          <motion.div
+            style={{ minHeight: "574px" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {
+              <MyNFTGroupCard
+                {...PMPCollectionDetail}
+                hasBottomBorder={false}
+              />
+            }
+          </motion.div>
+        )}
+      </Stack>
+    </CommonContainer>
   );
 };
 
