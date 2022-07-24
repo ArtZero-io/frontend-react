@@ -204,6 +204,7 @@ const myAccountList = [
   { label: "My Collections", href: ROUTES.ACCOUNT_MY_COLLECTIONS },
   { label: "My NFTs", href: ROUTES.ACCOUNT_MY_NFTS },
   { label: "My Stakes", href: ROUTES.ACCOUNT_MY_STAKES },
+  { label: "My Projects", href: ROUTES.ACCOUNT_MY_PROJECTS },
 ];
 
 const MyAccountDropdown = () => {

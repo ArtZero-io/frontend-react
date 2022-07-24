@@ -32,13 +32,14 @@ const LaunchpadDetailPage = () => {
   const { collection_address } = useParams();
   const { api, currentAccount } = useSubstrateState();
   const [phases, setPhases] = useState([]);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       const project = await launchpad_contract_calls.getProjectByNftAddress(
         currentAccount,
         collection_address
       );
+      
       if (project.isActive) {
         const projectInfo = await launchpad_contract_calls.getProjectInfoByHash(project.projectInfo);
         console.log('projectInfo', projectInfo);
@@ -52,12 +53,14 @@ const LaunchpadDetailPage = () => {
         console.log(launchpad_psp34_nft_standard_contract);
         const totalSupply = await launchpad_psp34_nft_standard_calls.getTotalSupply(currentAccount);
         console.log('totalSupply', totalSupply);
+        console.log('projectInfo', projectInfo);
         const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
         let phasesTmp = [];
         for (let i = 1; i <= totalPhase; i++) {
           const phaseSchedule = await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(currentAccount, i);
           const phaseCode = await launchpad_psp34_nft_standard_calls.getPhasesCodeById(currentAccount, i);
           const phaseInfo = {
+            id: i,
             code: phaseCode,
             startTime: timestampWithoutCommas(phaseSchedule.startTime),
             endTime: timestampWithoutCommas(phaseSchedule.endTime)

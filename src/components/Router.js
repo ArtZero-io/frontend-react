@@ -21,6 +21,8 @@ import AccountLayout from "./Layout/AccountLayout";
 import AdminLayout from "./Layout/AdminLayout";
 import LaunchpadDetailPage from "../pages/launchpad/detail";
 import AddProject from "../pages/launchpad/add-project";
+import MyProjectsPage from "@pages/account/projects";
+import MyWhiteListProjectPage from "@pages/account/projects/whitelist";
 // import NotFound from "./NotFound/NotFound";
 // import MintLayout from "./Layout/MintLayout";
 
@@ -43,6 +45,16 @@ const Router = () => {
               exact
               path={ROUTES.ACCOUNT_MY_STAKES}
               component={MyStakesPage}
+            />
+            <Route
+              exact
+              path={ROUTES.ACCOUNT_MY_PROJECTS}
+              component={MyProjectsPage}
+            />
+            <Route
+              exact
+              path={ROUTES.ACCOUNT_WHITELIST_PROJECTS}
+              component={MyWhiteListProjectPage}
             />
           </AccountLayout>
         )}

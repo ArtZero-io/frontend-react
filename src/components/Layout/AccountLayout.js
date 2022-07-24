@@ -27,6 +27,14 @@ const AccountLayout = ({ children }) => {
       label: "My Stakes",
       value: ROUTES.ACCOUNT_MY_STAKES,
     },
+    {
+      label: "My Projects",
+      value: ROUTES.ACCOUNT_MY_PROJECTS,
+    },
+    {
+      label: "Manager WhiteList of Projects",
+      value: ROUTES.ACCOUNT_WHITELIST_PROJECTS,
+    },
   ];
 
   const handleTabsChange = (index) => {
