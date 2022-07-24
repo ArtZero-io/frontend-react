@@ -69,6 +69,17 @@ function LaunchpadDetailHeader({project}) {
                   {project.name}{" "}
                 </Heading>
                 <Flex
+                  color="#fff"
+                  w="full"
+                  justifyContent="space-between"
+                  maxW="730px"
+                  fontSize={["15px", "18px", "18px"]}
+                  minH={{ base: "1rem", "2xl": "3.375rem" }}
+                  py="30px"
+                >
+                  <Text>{project.description}</Text>
+                </Flex>
+                <Flex
                   color="#888"
                   w="full"
                   justifyContent="space-between"
@@ -208,17 +219,7 @@ function LaunchpadDetailHeader({project}) {
               </>
             </VStack>
           </HStack>
-          <Flex
-            color="#fff"
-            w="full"
-            justifyContent="space-between"
-            maxW="730px"
-            fontSize={["15px", "18px", "18px"]}
-            minH={{ base: "1rem", "2xl": "3.375rem" }}
-            py="30px"
-          >
-            <Text>{project.description}</Text>
-          </Flex>
+          
         </VStack>
       </Box>
       <Box

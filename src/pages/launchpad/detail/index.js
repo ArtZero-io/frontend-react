@@ -25,11 +25,13 @@ import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
 import { IPFS_BASE_URL } from "@constants/index";
+import { timestampWithoutCommas } from "@utils";
 
 const LaunchpadDetailPage = () => {
   const [formattedCollection, setFormattedCollection] = useState({});
   const { collection_address } = useParams();
   const { api, currentAccount } = useSubstrateState();
+  const [phases, setPhases] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,10 +52,18 @@ const LaunchpadDetailPage = () => {
         console.log(launchpad_psp34_nft_standard_contract);
         const totalSupply = await launchpad_psp34_nft_standard_calls.getTotalSupply(currentAccount);
         console.log('totalSupply', totalSupply);
-        // const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
-        // for (let i = 1; i <= totalPhase; i++) {
-          
-        // }
+        const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
+        let phasesTmp = [];
+        for (let i = 1; i <= totalPhase; i++) {
+          const phaseSchedule = await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(currentAccount, i);
+          const phaseCode = await launchpad_psp34_nft_standard_calls.getPhasesCodeById(currentAccount, i);
+          const phaseInfo = {
+            code: phaseCode,
+            startTime: timestampWithoutCommas(phaseSchedule.startTime),
+            endTime: timestampWithoutCommas(phaseSchedule.endTime)
+          };
+          phasesTmp.push(phaseInfo);
+        }
         const projectDetail = {
           name: projectInfo.name,
           description: projectInfo.description,
@@ -63,7 +73,9 @@ const LaunchpadDetailPage = () => {
           roadmaps: projectInfo.roadmaps,
           team_members: projectInfo.team_members
         };
+        
         setFormattedCollection(projectDetail);
+        setPhases(phasesTmp);
       }
     };
 
@@ -93,9 +105,11 @@ const LaunchpadDetailPage = () => {
           <Text color="#888">98% (760/777)</Text>
         </Flex>
         <Progress value={98} mb="20px" h="8px" />
-        <Flex w="full" justifyContent="center">
+        {(!currentAccount) ? (<Flex w="full" justifyContent="center">
           <Button variant="outline">connect your wallet</Button>
-        </Flex>
+        </Flex>) : (<Flex w="full" justifyContent="center">
+          <Button variant="outline">mint</Button>
+        </Flex>)}
       </Box>
 
       <Box
@@ -111,73 +125,45 @@ const LaunchpadDetailPage = () => {
           <Heading size="h4">Phases</Heading>
           <Spacer />
         </Flex>
-        <Wrap flexWrap={true} w="full" mb="15px">
-          <WrapItem>
-            <Tag w="full">OG</Tag>
-          </WrapItem>
-          <Flex
-            color="#888"
-            w="full"
-            minW="500px"
-            alignContent="center"
-            fontSize={["15px", "18px", "18px"]}
-            minH={{ base: "1rem", "2xl": "3.375rem" }}
-          >
-            <Text mr="30px">
-              Whitelist:{" "}
-              <Text as="span" color="#fff">
-                162
-              </Text>
-            </Text>
-            <Text mr="30px">
-              Max:{" "}
-              <Text as="span" color="#fff">
-                3 Tokens
-              </Text>
-            </Text>
-            <Text>
-              Price:{" "}
-              <Text as="span" color="#fff">
-                1.20 <AzeroIcon mb="5px" />
-              </Text>
-            </Text>
-          </Flex>
-        </Wrap>
-        <Divider />
-        <Wrap flexWrap={true} w="full" mt="30px">
-          <WrapItem>
-            <Tag w="full">Whitelist</Tag>
-          </WrapItem>
-          <Flex
-            color="#888"
-            w="full"
-            minW="500px"
-            alignContent="center"
-            fontSize={["15px", "18px", "18px"]}
-            minH={{ base: "1rem", "2xl": "3.375rem" }}
-          >
-            <Text mr="30px">
-              Whitelist:{" "}
-              <Text as="span" color="#fff">
-                1162
-              </Text>
-            </Text>
-            <Text mr="30px">
-              Max:{" "}
-              <Text as="span" color="#fff">
-                2 Tokens
-              </Text>
-            </Text>
-            <Text>
-              Price:{" "}
-              <Text as="span" color="#fff">
-                1.50 <AzeroIcon mb="5px" />
-              </Text>
-            </Text>
-          </Flex>
-        </Wrap>
-      </Box>
-
+        
+        {(phases && phases.length) ? phases.map((item, index) => (
+          <>
+            <Wrap key={index} flexWrap={true} w="full" mb="15px">
+              <WrapItem>
+                <Tag w="full">{item.code}</Tag>
+              </WrapItem>
+              <Flex
+                color="#888"
+                w="full"
+                minW="500px"
+                alignContent="center"
+                fontSize={["15px", "18px", "18px"]}
+                minH={{ base: "1rem", "2xl": "3.375rem" }}
+              >
+                <Text mr="30px">
+                  Whitelist:{" "}
+                  <Text as="span" color="#fff">
+                    162
+                  </Text>
+                </Text>
+                <Text mr="30px">
+                  Max:{" "}
+                  <Text as="span" color="#fff">
+                    3 Tokens
+                  </Text>
+                </Text>
+                <Text>
+                  Price:{" "}
+                  <Text as="span" color="#fff">
+                    1.20 <AzeroIcon mb="5px" />
+                  </Text>
+                </Text>
+              </Flex>
+            </Wrap>
+            <Divider />
+          </>
+        )) : ''}
+       </Box>
       <Box
         w="full"
         maxW="870px"

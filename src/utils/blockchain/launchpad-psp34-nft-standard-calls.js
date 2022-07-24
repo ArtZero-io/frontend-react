@@ -34,6 +34,28 @@ async function getTotalSupply(caller_account) {
   return null;
 }
 
+async function getPhaseScheduleById(caller_account, phaseId) {
+  // console.log("getTotalSupply before check", !caller_account);
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(collection_manager_contract);
+
+  const { result, output } = await contract.query.getPhaseScheduleById(
+    address,
+    { value: azero_value, gasLimit },
+    phaseId
+  );
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
 async function getLastPhaseId(caller_account) {
   // console.log("getTotalSupply before check", !caller_account);
   if (!contract || !caller_account) {
@@ -55,10 +77,35 @@ async function getLastPhaseId(caller_account) {
   return null;
 }
 
+
+async function getPhasesCodeById(caller_account, phaseId) {
+  // console.log("getTotalSupply before check", !caller_account);
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(collection_manager_contract);
+
+  const { result, output } = await contract.query.getPhasesCodeById(
+    address,
+    { value: azero_value, gasLimit },
+    phaseId
+  );
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
 const launchpad_psp34_nft_standard_calls = {
   getTotalSupply,
   getLastPhaseId,
   setContract,
+  getPhaseScheduleById,
+  getPhasesCodeById
 };
 
 export default launchpad_psp34_nft_standard_calls;
