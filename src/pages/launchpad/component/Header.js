@@ -18,25 +18,17 @@ import { IPFS_BASE_URL } from "@constants/index";
 function LaunchpadDetailHeader({project}) {
   const [livePhase, setLivePhase] = useState({});
 
-  useEffect(() => {
-    const fetchData = async () => {
-      let phaseTmp = {};
-      console.log('LaunchpadDetailHeader::project', project);
-      console.log(project.phases && project.phases.length);
-      if (project.phases && project.phases.length) {
-        for (const phase of project.phases) {
-          console.log(phase);
-          if (phase.isLive == 1) {
-            phaseTmp = phase;
-          }
-        }
-      }
-      console.log(phaseTmp);
-      setLivePhase(phaseTmp);
-    };
+  const { phases } = project;
 
-    fetchData();
-  }, []);
+  useEffect(() => {
+    if (phases?.length > 0) {
+      const data = phases.find((p) => p.isLive === 1);
+      console.log("data", data);
+      setLivePhase(data);
+    }
+  }, [phases]);
+
+  console.log("livePhase", livePhase);
 
   return (
     <Box as="section" position="relative" w="full" mt="320px">
