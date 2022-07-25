@@ -1,6 +1,5 @@
 import {
   Button,
-  Flex,
   Heading,
   IconButton,
   Modal,
@@ -10,6 +9,8 @@ import {
   ModalHeader,
   ModalOverlay,
   Spacer,
+  Stack,
+  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import AdvancedMode from "./AdvancedMode";
@@ -36,6 +37,8 @@ function AddNewCollection({ mode = formMode.ADD, id }) {
     addCollectionTnxStatus?.status === "End" && onCloseAddNew();
   }, [onCloseAddNew, addCollectionTnxStatus?.status]);
 
+  const modalSize = useBreakpointValue({ base: "xs", md: "xl" });
+
   return (
     <>
       {mode === formMode.ADD && (
@@ -47,6 +50,7 @@ function AddNewCollection({ mode = formMode.ADD, id }) {
           Add Collection
         </Button>
       )}
+
       {mode === formMode.EDIT && (
         <IconButton
           pos="absolute"
@@ -67,17 +71,23 @@ function AddNewCollection({ mode = formMode.ADD, id }) {
           }}
         />
       )}
-      <Modal isCentered isOpen={isOpenAddNew} onClose={onCloseAddNew} size="xl">
+
+      <Modal
+        isCentered
+        size={modalSize}
+        isOpen={isOpenAddNew}
+        onClose={onCloseAddNew}
+      >
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
         />
         <ModalContent
+          borderRadius="0"
           position="relative"
           bg="brand.grayDark"
-          py={10}
-          px={20}
-          borderRadius="0"
+          px={["4px", "24px", "24px"]}
+          py={["4px", "32px", "32px"]}
         >
           <ModalCloseButton
             borderWidth={2}
@@ -87,18 +97,24 @@ function AddNewCollection({ mode = formMode.ADD, id }) {
             right={["0", "-8", "-8"]}
           />
           <ModalHeader textAlign="center">
-            <AddCollectionIcon />
-            <Heading fontSize={["2xl", "3xl", "3xl"]} my={3}>
-              {mode === formMode.ADD ? "Add collection" : "Edit collection"}
+            <AddCollectionIcon
+              width={["36px", "48px"]}
+              height={["36px", "48px"]}
+            />
+
+            <Heading fontSize={["xl", "3xl", "3xl"]} my={3}>
+              {mode === formMode.ADD ? "add collection" : "edit collection"}
             </Heading>
           </ModalHeader>
 
           <ModalBody>
-            <Flex>
+            <Stack w="75%" mx="auto" direction={{ base: "column", md: "row" }}>
               <SimpleMode mode={mode} id={id} />
+
               <Spacer />
+
               <AdvancedMode mode={mode} id={id} />
-            </Flex>
+            </Stack>
           </ModalBody>
         </ModalContent>
       </Modal>

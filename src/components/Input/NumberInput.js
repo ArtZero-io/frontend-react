@@ -12,16 +12,15 @@ import {
 import { Field } from "formik";
 
 export default function AddCollectionNumberInput({
+  max,
   label,
   name,
   isDisabled,
-  isDisplay = true,
   inputWidth,
-  max,
-  hasStepper = true,
+  step = 0.5,
   precision = 2,
-  step=0.5
-,
+  isDisplay = true,
+  hasStepper = true,
   ...props
 }) {
   return (
@@ -29,7 +28,7 @@ export default function AddCollectionNumberInput({
       <Field name={name}>
         {({ field, form }) => (
           <FormControl id={name}>
-            <FormLabel ml={1} htmlFor={name}>
+            <FormLabel ml={[0, 1]} htmlFor={name}>
               {label}
             </FormLabel>
             <NumberInput

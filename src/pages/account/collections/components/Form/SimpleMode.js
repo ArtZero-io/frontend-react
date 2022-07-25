@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Spacer, Stack, Text } from "@chakra-ui/react";
+import { Box, Flex, Spacer, Stack, Text } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect, useRef } from "react";
 import { Formik, Form } from "formik";
@@ -279,7 +279,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
           >
             {({ values, dirty, isValid }) => (
               <Form>
-                <HStack>
+                <Stack direction={{ base: "column", md: "row" }}>
                   {mode === formMode.ADD && (
                     <>
                       <SimpleModeInput
@@ -308,9 +308,9 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                     type="text"
                     placeholder="Collection Name"
                   />
-                </HStack>
+                </Stack>
 
-                <HStack>
+                <Stack direction={{ base: "column", md: "row" }}>
                   <SimpleModeInput
                     isDisabled={addCollectionTnxStatus}
                     label="Website URL"
@@ -332,7 +332,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                     type="text"
                     placeholder={"Discord URL"}
                   />
-                </HStack>
+                </Stack>
 
                 <SimpleModeTextArea
                   isDisabled={addCollectionTnxStatus}
@@ -344,9 +344,9 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 />
 
                 <Stack
-                  direction="row"
                   alignItems="start"
                   justifyContent="space-between"
+                  direction={{ base: "column", md: "row" }}
                 >
                   <Stack
                     w="50%"
@@ -410,7 +410,12 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 </Stack>
 
                 {mode === formMode.ADD && (
-                  <Flex alignItems="center" minH={20} mt={5}>
+                  <Stack
+                    mt={5}
+                    minH={20}
+                    direction={{ base: "column", md: "row" }}
+                    alignItems={{ base: "start", md: "center" }}
+                  >
                     <Box w="12rem">
                       <SimpleModeSwitch
                         isDisabled={addCollectionTnxStatus}
@@ -422,6 +427,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                         name="collectRoyalFee"
                       />
                     </Box>
+
                     <AddCollectionNumberInput
                       isDisabled={!isSetRoyal || addCollectionTnxStatus}
                       isDisplay={isSetRoyal}
@@ -441,7 +447,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                       alignItems="flex-start"
                       textAlign="left"
                     >
-                      <Text color="#fff">
+                      <Text color="#fff" fontSize={["md", "lg", "lg"]}>
                         Create new collection you will pay
                         <strong> {addingFee} $AZERO </strong> in fee to
                         ArtZero.io
@@ -453,7 +459,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                         content="I agree to ArtZero's Terms of Service"
                       />
                     </Flex>
-                  </Flex>
+                  </Stack>
                 )}
 
                 <StatusButton

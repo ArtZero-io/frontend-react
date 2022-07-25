@@ -10,6 +10,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Tooltip,
+  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import React from "react";
@@ -27,6 +28,8 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
   const { addCollectionTnxStatus } = useSelector(
     (s) => s.account.accountLoaders
   );
+  const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
+
   return (
     <>
       {mode === formMode.ADD && (
@@ -39,6 +42,7 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
           </Button>
         </Tooltip>
       )}
+
       {mode === formMode.EDIT && (
         <>
           <IconButton
@@ -73,13 +77,13 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
       )}
 
       <Modal
-        scrollBehavior={"inside"}
-        closeOnOverlayClick={false}
-        closeOnEsc={false}
         isCentered
         isOpen={isOpen}
+        size={modalSize}
         onClose={onClose}
-        size="4xl"
+        closeOnEsc={false}
+        scrollBehavior={"inside"}
+        closeOnOverlayClick={false}
       >
         <ModalOverlay
           bg="blackAlpha.300"
@@ -88,10 +92,10 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
         <ModalContent
           position="relative"
           bg="brand.grayDark"
-          px={6}
-          pb={8}
           borderRadius="0"
           textAlign="center"
+          px={["4px", "24px", "24px"]}
+          pb={["4px", "32px", "32px"]}
         >
           <ModalCloseButton
             borderWidth={2}
@@ -118,15 +122,12 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
               </Tooltip>
             </Heading>
           </ModalHeader>
-          <ModalBody
-            shadow="lg"
-            overflowY="auto"
-            sx={SCROLLBAR}
-          >
+
+          <ModalBody shadow="lg" overflowY="auto" sx={SCROLLBAR}>
             <AdvancedModeForm
-              onClose={onClose}
-              mode={mode}
               id={id}
+              mode={mode}
+              onClose={onClose}
               nftContractAddress={nftContractAddress}
             />
           </ModalBody>

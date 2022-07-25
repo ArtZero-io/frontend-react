@@ -41,6 +41,7 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
           Add new NFT
         </Button>
       )}
+
       {mode === formMode.EDIT && (
         <>
           <Tooltip
@@ -66,6 +67,7 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
           </Tooltip>
         </>
       )}
+
       <Modal
         isCentered
         isOpen={isOpen}

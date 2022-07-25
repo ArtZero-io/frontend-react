@@ -1,4 +1,4 @@
-import { HStack, Stack, Spacer, Flex, Text, Box } from "@chakra-ui/react";
+import { Stack, Spacer, Flex, Text, Box } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useState, useEffect, useRef } from "react";
 import { Formik, Form } from "formik";
@@ -287,7 +287,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           >
             {({ values, dirty, isValid }) => (
               <Form>
-                <HStack>
+                <Stack direction={{ base: "column", md: "row" }}>
                   <AdvancedModeInput
                     isDisabled={addCollectionTnxStatus}
                     isRequired={true}
@@ -304,9 +304,9 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     type="collectionName"
                     placeholder="Collection Name"
                   />
-                </HStack>
+                </Stack>
 
-                <HStack>
+                <Stack direction={{ base: "column", md: "row" }}>
                   <AdvancedModeInput
                     isDisabled={addCollectionTnxStatus}
                     label="Website URL"
@@ -328,7 +328,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     type="text"
                     placeholder={"Discord URL"}
                   />
-                </HStack>
+                </Stack>
 
                 <AdvancedModeTextArea
                   isDisabled={addCollectionTnxStatus}
@@ -340,9 +340,9 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 />
 
                 <Stack
-                  direction="row"
                   alignItems="start"
                   justifyContent="space-between"
+                  direction={{ base: "column", md: "row" }}
                 >
                   <Stack
                     w="50%"
@@ -405,13 +405,13 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 </Stack>
 
                 {mode === formMode.ADD && (
-                  <Flex alignItems="center" minH={20} mt={5}>
-                    <Stack
-                      direction={{ base: "column", "2xl": "row" }}
-                      alignItems="end"
-                      minH={20}
-                      minW={52}
-                    >
+                  <Stack
+                    mt={5}
+                    minH={20}
+                    direction={{ base: "column", md: "row" }}
+                    alignItems={{ base: "start", md: "center" }}
+                  >
+                    <Box w="12rem">
                       <AdvancedModeSwitch
                         isDisabled={addCollectionTnxStatus}
                         onChange={() => {
@@ -421,7 +421,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                         label="Collect Royal Fee"
                         name="collectRoyalFee"
                       />
-                    </Stack>
+                    </Box>
+
                     <AddCollectionNumberInput
                       isDisabled={!isSetRoyal || addCollectionTnxStatus}
                       isDisplay={isSetRoyal}
@@ -441,7 +442,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       alignItems="flex-start"
                       textAlign="left"
                     >
-                      <Text color="#fff">
+                      <Text color="#fff" fontSize={["md", "lg", "lg"]}>
                         Create new collection you will pay
                         <strong> {addingFee} $AZERO </strong> in fee to
                         ArtZero.io
@@ -453,7 +454,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                         content="I agree to ArtZero's Terms of Service"
                       />
                     </Flex>
-                  </Flex>
+                  </Stack>
                 )}
 
                 <StatusButton
