@@ -177,13 +177,17 @@ export const CollectionCard = ({
             alignItems="center"
             justify="center"
           >
-            <Tag>
-              <TagLeftIcon w="18px" h="18px">
+            <Tag mr="8px">
+              <TagLeftIcon
+                h={["12px", "16px", "16px"]}
+                w={["12px", "16px", "16px"]}
+              >
                 <AzeroIcon fill={isActive ? "#7AE7FF" : "#888"} />
               </TagLeftIcon>
               <TagLabel
                 color={isActive ? "#fff" : "#888"}
                 textTransform="capitalize"
+                fontSize={["14px", "16px"]}
               >
                 <Text as="span" fontWeight="400">
                   Volume
@@ -207,13 +211,13 @@ export const CollectionCard = ({
                   {royalFee / 100}% Royalty
                 </Box>
                 {isActive && (
-                  <Tag variant="active">
+                  <Tag variant="active" fontSize={["14px", "16px"]}>
                     <TagLeftIcon as={ActiveIcon} />
                     <TagLabel textTransform="capitalize">Active</TagLabel>
                   </Tag>
                 )}
                 {!isActive && (
-                  <Tag variant="inActive">
+                  <Tag variant="inActive" fontSize={["14px", "16px"]}>
                     <TagLeftIcon as={InActiveIcon} />
                     <TagLabel textTransform="capitalize">Inactive</TagLabel>
                   </Tag>
