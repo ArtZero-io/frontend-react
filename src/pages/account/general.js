@@ -288,15 +288,19 @@ function GeneralPage() {
       </VStack>
 
       <Stack
-        direction={{ base: "column", xl: "row" }}
         h="full"
         my={10}
-        p={{ base: "35px", "2xl": "7" }}
-        maxW="container.xl"
         bg="black"
         pos="relative"
+        maxW="container.xl"
+        p={{ base: "35px", "2xl": "7" }}
+        direction={{ base: "column", xl: "row" }}
       >
-        <Square size={{ base: "16rem", xl: "18rem", "2xl": "20rem" }} bg="#222">
+        <Square
+          mx="auto"
+          bg="#222"
+          size={{ base: "240px", xl: "18rem", "2xl": "20rem" }}
+        >
           <Image
             w="full"
             h="full"
@@ -305,11 +309,11 @@ function GeneralPage() {
         </Square>
 
         <VStack
-          w="full"
-          h={{ xl: "288px" }}
           pr={2}
-          pl={{ base: "0", xl: "40px" }}
+          w="full"
           textAlign="left"
+          h={{ xl: "288px" }}
+          pl={{ base: "0", xl: "40px" }}
         >
           <Flex w="full">
             <Box
@@ -328,10 +332,10 @@ function GeneralPage() {
             </Box>
             <Spacer />
             <Box
-              display={{ base: "none", xl: "flex" }}
-              variant="outline"
               h={32}
               w={28}
+              variant="outline"
+              display={{ base: "none", xl: "flex" }}
             >
               <Tag variant="outline" h={6} w={"128px"} mt={3}>
                 {
@@ -347,8 +351,8 @@ function GeneralPage() {
             <Text
               mt={0}
               mb={1}
-              fontSize={{ base: "16px", xl: "lg" }}
               color="#fff"
+              fontSize={{ base: "16px", xl: "lg" }}
             >
               Your Total Stake:{" "}
               <span style={{ color: "#7AE7FF" }}>
@@ -364,8 +368,8 @@ function GeneralPage() {
             <Text
               mt={0}
               mb={1}
-              fontSize={{ base: "16px", xl: "lg" }}
               color="#fff"
+              fontSize={{ base: "16px", xl: "lg" }}
             >
               Your Estimated Earning:{" "}
               <Text as="span" color="#7AE7FF" mr="30px">
@@ -386,8 +390,8 @@ function GeneralPage() {
           </Stack>
 
           <Stack
-            pt="20px"
             // align="center"
+            pt="20px"
             w="full"
             align="center"
             justify="flex-start"
@@ -418,7 +422,7 @@ function GeneralPage() {
               variant="solid"
               onClick={() => history.push(ROUTES.ACCOUNT_MY_STAKES)}
             >
-              Stake now
+              stake now
             </Button>
 
             <FeeInfoModal />

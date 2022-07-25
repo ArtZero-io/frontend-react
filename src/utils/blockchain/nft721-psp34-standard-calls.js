@@ -588,7 +588,6 @@ export const getNFTDetails = async function (
     tokenDetails = { ...tokenDetails, ...data };
   }
 
-  console.log("tokenDetails", tokenDetails);
   return tokenDetails;
 };
 
