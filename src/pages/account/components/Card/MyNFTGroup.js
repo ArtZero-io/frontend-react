@@ -6,6 +6,7 @@ import {
   Heading,
   Text,
   useDisclosure,
+  useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
 import React, { Fragment, useEffect, useRef, useState } from "react";
@@ -51,12 +52,19 @@ function MyNFTGroupCard({
   const [selectedNFT, setSelectedNFT] = useState(null);
 
   const [listNFTFormatted, setListNFTFormatted] = useState(null);
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   const history = useHistory();
 
   function onClickHandler(item) {
-    setSelectedNFT(item);
-    item?.stakeStatus === 0 && onOpen();
+    console.log("item", item);
+    if (isBigScreen) {
+      setSelectedNFT(item);
+      item?.stakeStatus === 0 && onOpen();
+    } else {
+      console.log("rest", rest);
+      history.push(`/nft/${item.nftContractAddress}/${item.tokenID}`);
+    }
   }
 
   useEffect(() => {

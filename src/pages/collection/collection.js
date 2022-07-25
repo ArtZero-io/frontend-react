@@ -289,7 +289,6 @@ function CollectionPage() {
   }, []);
 
   const fetchPlatformEvents = useCallback(async () => {
-    console.log("first fetchPlatformEvents ...............................");
     try {
       const getPurchaseEvents = await APICall.getPurchaseEvents({
         collection_address,

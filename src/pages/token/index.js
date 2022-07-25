@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
+  // BreadcrumbLink,
   Flex,
   Grid,
   GridItem,
@@ -26,12 +27,17 @@ import {
   InputRightElement,
   Tooltip,
   Icon,
+  Button,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { MdOutlineArrowBackIos } from "react-icons/md";
 
 import toast from "react-hot-toast";
-import { Link as ReactRouterLink, useParams } from "react-router-dom";
+import {
+  Link as ReactRouterLink,
+  useHistory,
+  useParams,
+} from "react-router-dom";
 
 import { APICall } from "@api/client";
 import * as ROUTES from "@constants/routes";
@@ -75,11 +81,14 @@ import { AiOutlineUnlock, AiOutlineLock } from "react-icons/ai";
 
 import LockNFTModalMobile from "../../components/Modal/LockNFTModalMobile";
 import { SCROLLBAR } from "../../constants";
+import { formMode } from "@constants";
+import AddNewNFTModal from "../../pages/collection/component/Modal/AddNewNFT";
 
 function TokenPage() {
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
   const { collection_address, token_id } = useParams();
+  const history = useHistory();
 
   const [token, setToken] = useState(null);
   const [bidPrice, setBidPrice] = useState(1);
@@ -288,6 +297,24 @@ function TokenPage() {
     }
   };
 
+  const handleAcceptBidAction = async (bidId) => {
+    try {
+      await acceptBid(
+        api,
+        currentAccount,
+        isOwner,
+        token?.nftContractAddress,
+        token?.tokenID,
+        bidId,
+        dispatch
+      );
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      dispatch(clearTxStatus());
+    }
+  };
+
   return (
     <NftLayout>
       <VStack minH="calc(100vh - 265px - 80px)" bg="brand.grayDark">
@@ -296,17 +323,16 @@ function TokenPage() {
         ) : (
           <VStack textAlign="left" w="full" p="15px">
             <Breadcrumb w="full">
-              <BreadcrumbItem>
-                <BreadcrumbLink
+              <BreadcrumbItem isCurrentPage>
+                <HStack
                   py="10px"
                   display="flex"
                   alignItems="center"
-                  as={ReactRouterLink}
-                  to={`${ROUTES.DETAIL_COLLECTION_BASE}/${collection?.nftContractAddress}`}
+                  onClick={() => history.goBack()}
                 >
                   <MdOutlineArrowBackIos />
                   <Heading size="h6" pl="8px">{`${collection?.name}`}</Heading>
-                </BreadcrumbLink>
+                </HStack>
               </BreadcrumbItem>
             </Breadcrumb>
 
@@ -324,9 +350,16 @@ function TokenPage() {
 
             <Stack w="full" py="15px">
               <HStack align="center" justify="space-between" px="5px">
-                <Heading fontSize="xl">{token?.nftName}</Heading>
+                <Heading fontSize="xl" pr="2px" isTruncated>
+                  {token?.nftName}
+                </Heading>
 
-                <Box minW="20px">
+                <HStack minW="66px" justify="end">
+                  {!token?.is_locked &&
+                    collection?.showOnChainMetadata &&
+                    isOwner && (
+                      <AddNewNFTModal mode={formMode.EDIT} {...token} />
+                    )}
                   {!token?.is_locked &&
                     collection?.showOnChainMetadata &&
                     !isOwner && (
@@ -390,7 +423,7 @@ function TokenPage() {
                           border: "2px solid #333333",
                         }}
                       >
-                        <TagRightIcon w="14px" h="14px" as={AiOutlineLock} />
+                        <Icon w="14px" h="14px" as={AiOutlineLock} />
                       </span>
                     </Tooltip>
                   )}
@@ -409,7 +442,7 @@ function TokenPage() {
                       />
                     </>
                   )}
-                </Box>
+                </HStack>
               </HStack>
 
               <Heading
@@ -426,11 +459,11 @@ function TokenPage() {
               <Text p="5px" fontSize="md">
                 Owned by{" "}
                 <Link
-                  as={ReactRouterLink}
                   // to="/user/xxx"
                   to="#"
                   color="brand.blue"
                   textTransform="none"
+                  as={ReactRouterLink}
                 >
                   {ownerName}
                 </Link>
@@ -605,7 +638,7 @@ function TokenPage() {
               ) : (
                 <Grid
                   pr="10px"
-                  h="255px"
+                  maxH="255px"
                   w="full"
                   gap="15px"
                   sx={SCROLLBAR}
@@ -745,7 +778,7 @@ function TokenPage() {
                   isOwner={isOwner}
                   tableData={bidsList}
                   tableHeaders={headers}
-                  // onClickHandler={acceptBid}
+                  onClickHandler={handleAcceptBidAction}
                   // saleInfo={saleInfo}
                 />
               )}
@@ -1026,6 +1059,47 @@ const unlistToken = async (
     { u64: tokenID },
     dispatch,
     UNLIST_TOKEN,
+    api
+  );
+};
+
+const acceptBid = async (
+  api,
+  currentAccount,
+  isOwner,
+  nftContractAddress,
+  tokenID,
+  bidId,
+  dispatch
+) => {
+  // check wallet connected
+  if (!currentAccount) {
+    toast.error("Please connect wallet first!");
+    return;
+  }
+
+  //check owner of the NFT
+  if (!isOwner) {
+    toast.error(`It's not your token!`);
+    return;
+  }
+
+  dispatch(
+    setTxStatus({
+      type: ACCEPT_BID,
+      step: START,
+      tokenIDArray: Array.of(bidId),
+      // array of bidId NOT TokenID
+    })
+  );
+  await marketplace_contract_calls.acceptBid(
+    currentAccount,
+    nftContractAddress,
+    currentAccount.address,
+    { u64: tokenID },
+    bidId,
+    dispatch,
+    ACCEPT_BID,
     api
   );
 };

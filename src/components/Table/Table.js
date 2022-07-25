@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Table,
   TableContainer,
@@ -20,6 +21,8 @@ import { truncateStr } from "@utils";
 import StatusBuyButton from "../Button/StatusBuyButton";
 import { AccountActionTypes } from "@store/types/account.types";
 import { SCROLLBAR } from "../../constants";
+import useTxStatus from "../../hooks/useTxStatus";
+import CommonButton from "../../components/Button/CommonButton";
 
 function CommonTable({
   tableHeaders,
@@ -30,6 +33,8 @@ function CommonTable({
   ...rest
 }) {
   const { addNftTnxStatus } = useSelector((s) => s.account.accountLoaders);
+
+  const { actionType, tokenIDArray } = useTxStatus();
 
   return (
     <TableContainer
@@ -65,7 +70,6 @@ function CommonTable({
                       fontFamily="Evogria"
                       py={{ base: "1rem", "2xl": "1.75rem" }}
                       display={item === "action" && !isOwner && "none"}
-                      // display={"none"}
                     >
                       {item}
                     </Th>
@@ -106,9 +110,12 @@ function CommonTable({
                           textAlign="center"
                         >
                           <Flex justifyContent="center" w="full">
-                            <StatusBuyButton
+                            <CommonButton
                               isDisabled={
-                                addNftTnxStatus?.status && idSelected !== idx
+                                (addNftTnxStatus?.status &&
+                                  idSelected !== idx) ||
+                                (actionType &&
+                                  !tokenIDArray.includes(item.bidId))
                               }
                               mx="auto"
                               isDo={idSelected === idx}

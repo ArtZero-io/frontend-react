@@ -753,7 +753,9 @@ async function acceptBid(
   seller,
   token_id,
   bidIndex,
-  dispatch
+  dispatch,
+  txType,
+  api
 ) {
   if (
     !contract ||
@@ -789,21 +791,32 @@ async function acceptBid(
           }
         }
 
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
+
         if (status) {
           handleContractCallAddNftAnimation(status, dispatchError, dispatch);
 
-          if (status.isFinalized === true) {
-            await clientAPI("post", "/updateNFT", {
+          if (status?.isFinalized) {
+            await APICall.askBeUpdateNftData({
               collection_address: nft_contract_address,
               token_id: token_id.u64,
             });
-            await clientAPI("post", "/updateBids", {
+
+            await APICall.askBeUpdateCollectionData({
+              collection_address: nft_contract_address,
+            });
+
+            await APICall.askBeUpdateBidsData({
               collection_address: nft_contract_address,
               seller: seller,
               token_id: token_id.u64,
-            });
-            await clientAPI("post", "/updateCollection", {
-              collection_address: nft_contract_address,
             });
           }
           // const statusText = Object.keys(status.toHuman())[0];
@@ -816,14 +829,7 @@ async function acceptBid(
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => {
-      dispatch({
-        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-      });
-      const mess = `Tnx is ${e.message}`;
-      // console.log("e.message", e.message);
-      toast.error(mess);
-    });
+    .catch((error) => txErrorHandler({ error, dispatch }));
 
   return unsubscribe;
 }
