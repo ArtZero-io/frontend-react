@@ -117,6 +117,7 @@ function CollectionHeader({
                       fontSize={["15px", "18px", "18px"]}
                       minH={{ base: "1rem", "2xl": "3.375rem" }}
                       lineHeight={{ base: "24px", xl: "28px" }}
+                      noOfLines={[3, 3]}
                     >
                       {description}
                     </Text>

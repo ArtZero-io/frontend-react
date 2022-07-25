@@ -50,7 +50,7 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
         nftContractAddress,
         { u64: tokenID }
       );
-
+      console.log("sale_info", sale_info);
       setSaleInfo(sale_info);
 
       if (sale_info) {
@@ -60,6 +60,7 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
           sale_info?.nftOwner,
           { u64: tokenID }
         );
+        console.log("listBidder", listBidder);
 
         //sort highest price first
         listBidder?.length &&

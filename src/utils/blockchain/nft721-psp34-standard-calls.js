@@ -27,7 +27,7 @@ export const setContract = (c) => {
   contract = c;
   // console.log("contract setPsp34Contract", contract);
 };
-
+console.log("xxxcontract", contract);
 async function getTotalSupply(caller_account) {
   // console.log("getTotalSupply before check", !caller_account);
   if (!contract || !caller_account) {

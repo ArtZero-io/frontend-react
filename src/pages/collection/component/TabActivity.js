@@ -275,11 +275,17 @@ const headers = {
 };
 
 const getMetaDataType1 = async (tokenID, token_uri) => {
+  console.log(
+    "getJSON?input",
+    "/getJSON?input=" + token_uri + tokenID.toString() + ".json"
+  );
   const metadata = await clientAPI(
     "get",
     "/getJSON?input=" + token_uri + tokenID.toString() + ".json",
     {}
   );
+
+  console.log("metadata", metadata);
 
   if (metadata) {
     const attrsList = metadata?.attributes?.map((item) => {
@@ -293,7 +299,6 @@ const getMetaDataType1 = async (tokenID, token_uri) => {
       nftName: metadata.name,
       description: metadata.description,
     };
-
     return ret;
   }
 };

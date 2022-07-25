@@ -29,9 +29,9 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
           w="full"
           fontSize="lg"
           // w={{ base: "1100px", "2xl": "1560px" }}
+          sx={SCROLLBAR}
           overflowY="scroll"
           h={{ base: "390px", "2xl": "480px" }}
-          sx={SCROLLBAR}
         >
           <motion.div
             initial={{ opacity: 0 }}

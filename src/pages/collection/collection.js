@@ -117,6 +117,7 @@ function CollectionPage() {
           collection_address,
         });
 
+        console.log('collectionDetail', collectionDetail)
         //Get fake public CurrentAccount
         const publicCurrentAccount = currentAccount
           ? currentAccount

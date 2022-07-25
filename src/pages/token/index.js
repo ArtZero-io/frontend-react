@@ -107,7 +107,6 @@ function TokenPage() {
         const [collectionDetails] = await APICall.getCollectionByAddress({
           collection_address,
         });
-
         const tokenDetails = await getNFTDetails(
           api,
           currentAccount || getPublicCurrentAccount(),
@@ -160,7 +159,6 @@ function TokenPage() {
             });
 
             const myBid = listBidder.filter((item) => item.isMyBid === true);
-
             if (myBid.length) {
               const bidValue =
                 (myBid[0].bidValue.replaceAll(",", "") * 1) / 10 ** 12;
@@ -610,11 +608,11 @@ function TokenPage() {
                   h="255px"
                   w="full"
                   gap="15px"
+                  sx={SCROLLBAR}
                   boxShadow="lg"
                   id="grid-attrs"
                   overflowY="auto"
                   templateColumns={`repeat(auto-fill, minmax(min(100%, 128px), 1fr))`}
-                  sx={SCROLLBAR}
                 >
                   {token?.attrsList
                     .filter(
@@ -778,7 +776,6 @@ const buyToken = async (
     toast.error("Please connect wallet first!");
     return;
   }
-
   //check owner of the NFT
   if (isOwner) {
     toast.error(`Can not buy your own NFT!`);
@@ -825,7 +822,6 @@ const placeBid = async (
     toast.error("Please connect wallet first!");
     return;
   }
-
   //check owner of the NFT
   if (isOwner) {
     toast.error(`Can not bid your own NFT!`);
