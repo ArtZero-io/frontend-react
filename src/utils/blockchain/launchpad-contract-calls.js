@@ -222,15 +222,6 @@ async function addNewProject(
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
   const value = await getProjectAddingFee(caller_account);
-
-  console.log('address', address);
-  console.log('total_supply', data.total_supply);
-  console.log('start_time', data.start_time);
-  console.log('end_time', data.end_time);
-  console.log('project_info', data.project_info);
-  console.log('data.code_phases', data.code_phases);
-  console.log('data.start_time_phases', data.start_time_phases);
-  console.log('data.codeend_time_phases_phases', data.end_time_phases);
   contract.tx
     .addNewProject(
       { gasLimit, value: value },
@@ -363,7 +354,6 @@ async function updateIsActiveProject(caller_account, isActive, collection_addres
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
-  console.log(collection_address, isActive);
   contract.tx
     .updateIsActiveProject(
       { gasLimit, value: azero_value },

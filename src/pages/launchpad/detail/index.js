@@ -56,6 +56,8 @@ const LaunchpadDetailPage = () => {
         console.log('projectInfo', projectInfo);
         const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
         let phasesTmp = [];
+        const currentPhaseId = await launchpad_psp34_nft_standard_calls.getCurrentPhase(currentAccount);
+        console.log('currentPhaseId', currentPhaseId);
         for (let i = 1; i <= totalPhase; i++) {
           const phaseSchedule = await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(currentAccount, i);
           const phaseCode = await launchpad_psp34_nft_standard_calls.getPhasesCodeById(currentAccount, i);
@@ -63,7 +65,8 @@ const LaunchpadDetailPage = () => {
             id: i,
             code: phaseCode,
             startTime: timestampWithoutCommas(phaseSchedule.startTime),
-            endTime: timestampWithoutCommas(phaseSchedule.endTime)
+            endTime: timestampWithoutCommas(phaseSchedule.endTime),
+            isLive: (i == currentPhaseId) ? 1 : 0
           };
           phasesTmp.push(phaseInfo);
         }
@@ -74,7 +77,8 @@ const LaunchpadDetailPage = () => {
           headerImage: projectInfo.header,
           totalSupply: totalSupply,
           roadmaps: projectInfo.roadmaps,
-          team_members: projectInfo.team_members
+          team_members: projectInfo.team_members,
+          phases: phasesTmp
         };
         
         setFormattedCollection(projectDetail);

@@ -12,14 +12,37 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
-// import SocialCard from "@components/Card/Social";
+import { useEffect, useState } from "react";
 import { IPFS_BASE_URL } from "@constants/index";
 
 function LaunchpadDetailHeader({project}) {
+  const [livePhase, setLivePhase] = useState({});
+
+  useEffect(async () => {
+    const fetchData = async () => {
+      let phaseTmp = {};
+      console.log('LaunchpadDetailHeader::project', project);
+      console.log(project.phases && project.phases.length);
+      if (project.phases && project.phases.length) {
+        for (const phase of project.phases) {
+          console.log(phase);
+          if (phase.isLive == 1) {
+            phaseTmp = phase;
+          }
+        }
+      }
+      console.log(phaseTmp);
+      setLivePhase(phaseTmp);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <Box as="section" position="relative" w="full" mt="320px">
       <Box mx="auto" w="full" maxW="870px">
         <VStack>
+          {console.log('LaunchpadDetailHeader::render', project)}
           <Center
             rounded="full"
             w={["80px", "120px", "120px"]}
@@ -93,18 +116,23 @@ function LaunchpadDetailHeader({project}) {
                       {project.totalSupply}
                     </Text>
                   </Text>
-                  <Text>
-                    Price:{" "}
-                    <Text as="span" color="#fff">
-                      1.20 <AzeroIcon mb="5px" />
-                    </Text>
-                  </Text>
-                  <Text>
-                    Mint Phase:{" "}
-                    <Text as="span" color="#fff">
-                      Public
-                    </Text>
-                  </Text>
+                  {(livePhase ? (
+                    <>
+                      <Text>
+                        Price:{" "}
+                        <Text as="span" color="#fff">
+                          1.20 <AzeroIcon mb="5px" />
+                        </Text>
+                      </Text>
+                      <Text>
+                        Mint Phase:{" "}
+                        <Text as="span" color="#fff">
+                        {livePhase.code}
+                        </Text>
+                      </Text>
+                    </>
+                  ) : '')}
+                  
                 </Flex>
               </VStack>
             </motion.div>

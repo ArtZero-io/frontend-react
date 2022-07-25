@@ -148,13 +148,53 @@ async function getPhasesCodeById(caller_account, phaseId) {
   return null;
 }
 
+async function getCurrentPhase(caller_account) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const { result, output } = await contract.query.getCurrentPhase(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
+async function getWhitelistByAccountId(caller_account, phaseCode) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const { result, output } = await contract.query.getCurrentPhase(address, {
+    value: azero_value,
+    gasLimit,
+  }, address, phaseCode);
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
 const launchpad_psp34_nft_standard_calls = {
   getTotalSupply,
   getLastPhaseId,
   setContract,
   getPhaseScheduleById,
   getPhasesCodeById,
-  addWhitelist
+  addWhitelist,
+  getCurrentPhase,
+  getWhitelistByAccountId
 };
 
 export default launchpad_psp34_nft_standard_calls;

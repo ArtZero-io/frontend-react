@@ -23,6 +23,7 @@ import * as Yup from "yup";
 import AddMember from "./AddMember";
 import AddPhase from "./AddPhase";
 import AddRoadmap from "./AddRoadmap";
+import ExtraInformationInput from "@components/Input/Input";
 const client = create(IPFS_CLIENT_URL);
 
 // 1. Project info tab
@@ -304,7 +305,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               // if (!values.isEditMode && (!headerIPFSUrl || !avatarIPFSUrl)) {
               //   return toast.error("Upload avatar or header please!");
               // }
-              console.log('zxczxc');
               values.avatarIPFSUrl = avatarIPFSUrl;
               values.headerIPFSUrl = headerIPFSUrl;
               
@@ -315,6 +315,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               const project_info = {
                 name: values.projectName.trim(),
                 description: values.projectDescription.trim(),
+                website: values.website.trim(),
+                twitter: values.twitter.trim(),
+                discord: values.discord.trim(),
                 nft_name: values.nftName.trim(),
                 nft_symbol: values.nftSymbol.trim(),
                 header: values.headerIPFSUrl,
@@ -401,7 +404,29 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       />
                     </Stack>
                   </Stack>
-
+                  <Stack>
+                    <ExtraInformationInput
+                      isDisabled={addCollectionTnxStatus}
+                      label="Website URL"
+                      name="website"
+                      type="text"
+                      placeholder={"Website URL"}
+                    />
+                    <ExtraInformationInput
+                      isDisabled={addCollectionTnxStatus}
+                      label="Twitter URL"
+                      name="twitter"
+                      type="text"
+                      placeholder={"Twitter URL"}
+                    />
+                    <ExtraInformationInput
+                      isDisabled={addCollectionTnxStatus}
+                      label="Discord URL"
+                      name="discord"
+                      type="text"
+                      placeholder={"Discord URL"}
+                    />
+                </Stack>
                   <Stack>
                     <TextArea
                       height="140"
