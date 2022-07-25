@@ -147,6 +147,7 @@ function GeneralPage() {
       setTradeFee(my_discount_rate);
     };
     getTradeFee();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAccount]);
 
   const [isLargerThan480] = useMediaQuery("(min-width: 480px)");

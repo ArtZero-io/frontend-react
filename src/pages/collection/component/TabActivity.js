@@ -84,14 +84,14 @@ function TabActivity({
               }
 
               if (contractType === 1) {
-                const { name, avatar } = await getMetaDataType1(
+                const { nftName, avatar } = await getMetaDataType1(
                   event.tokenID,
                   tokenUriType1
                 );
 
                 event = {
                   ...event,
-                  nftName: name,
+                  nftName,
                   avatar,
                 };
               }
@@ -109,6 +109,7 @@ function TabActivity({
     };
     latestBlockNumberRef.current = latestBlockNumber;
     collectionEventsFull();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldUpdate]);
 
   useEffect(() => {
@@ -275,17 +276,11 @@ const headers = {
 };
 
 const getMetaDataType1 = async (tokenID, token_uri) => {
-  console.log(
-    "getJSON?input",
-    "/getJSON?input=" + token_uri + tokenID.toString() + ".json"
-  );
   const metadata = await clientAPI(
     "get",
     "/getJSON?input=" + token_uri + tokenID.toString() + ".json",
     {}
   );
-
-  console.log("metadata", metadata);
 
   if (metadata) {
     const attrsList = metadata?.attributes?.map((item) => {
@@ -299,6 +294,7 @@ const getMetaDataType1 = async (tokenID, token_uri) => {
       nftName: metadata.name,
       description: metadata.description,
     };
+
     return ret;
   }
 };

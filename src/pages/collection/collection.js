@@ -117,7 +117,6 @@ function CollectionPage() {
           collection_address,
         });
 
-        console.log('collectionDetail', collectionDetail)
         //Get fake public CurrentAccount
         const publicCurrentAccount = currentAccount
           ? currentAccount
@@ -290,6 +289,7 @@ function CollectionPage() {
   }, []);
 
   const fetchPlatformEvents = useCallback(async () => {
+    console.log("first fetchPlatformEvents ...............................");
     try {
       const getPurchaseEvents = await APICall.getPurchaseEvents({
         collection_address,
@@ -325,7 +325,7 @@ function CollectionPage() {
 
       return error;
     }
-  }, []);
+  }, [collection_address]);
 
   const initEvents = async () => {
     const payload = await fetchPlatformEvents();

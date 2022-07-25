@@ -38,6 +38,7 @@ function CollectionAdmin() {
     await onGetCollectionCount();
     await delay(1000);
     await getAllCollections();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -96,13 +97,13 @@ function CollectionAdmin() {
       ignoreNoNFT: true,
     };
 
-    const collections_inactives = await clientAPI(
+    const collections_inactive = await clientAPI(
       "post",
       "/getCollections",
       options_inactive
     );
-    // console.log('collections_inactives',collections_inactives);
-    let collections = collections_actives.concat(collections_inactives);
+    // console.log('collections_inactive',collections_inactive);
+    let collections = collections_actives.concat(collections_inactive);
     // console.log('collections',collections);
     setCollections(collections);
   };

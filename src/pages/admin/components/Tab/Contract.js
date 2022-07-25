@@ -55,8 +55,13 @@ function ContractTab() {
     await getAllWhiteList();
   };
 
-  useEffect(async () => {
-    onRefreshAZNFT();
+  useEffect(() => {
+    const fetch = async () => {
+      await onRefreshAZNFT();
+    };
+
+    fetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAccount]);
 
   const getAZNFTContractBalance = async () => {
