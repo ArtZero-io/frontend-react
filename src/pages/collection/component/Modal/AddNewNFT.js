@@ -67,13 +67,13 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
         </>
       )}
       <Modal
-        closeOnOverlayClick={false}
-        closeOnEsc={false}
-        scrollBehavior="inside"
         isCentered
         isOpen={isOpen}
-        onClose={onClose}
         size={modalSize}
+        onClose={onClose}
+        closeOnEsc={false}
+        scrollBehavior="inside"
+        closeOnOverlayClick={false}
       >
         <ModalOverlay
           bg="blackAlpha.300"
@@ -108,11 +108,7 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
             </Heading>
           </ModalHeader>
 
-          <ModalBody
-            shadow="lg"
-            overflowY="auto"
-            sx={SCROLLBAR}
-          >
+          <ModalBody shadow="lg" overflowY="auto" sx={SCROLLBAR}>
             <AddNewNFTForm mode={mode} {...rest} />
           </ModalBody>
         </ModalContent>

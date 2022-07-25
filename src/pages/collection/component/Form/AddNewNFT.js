@@ -318,6 +318,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     placeholder="NFT Name"
                   />
                 </HStack>
+
                 <AddNewNFTTextArea
                   isDisabled={addNftTnxStatus}
                   isRequired={true}
@@ -326,6 +327,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   type="text"
                   placeholder="Description"
                 />
+
                 <AddNewNFTImageUpload
                   isDisabled={addNftTnxStatus}
                   mode={mode}
@@ -335,6 +337,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   limitedSize={{ width: "1000", height: "1000" }}
                   isBanner={false}
                 />
+
                 {/* Add Props  */}
                 <Box py={6} borderBottomWidth={1}>
                   <Flex w="full" pb={3}>
@@ -411,6 +414,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   />
                 </Box>
                 {/* End Add Props  */}
+
                 <Box py={6} borderBottomWidth={1}>
                   <Flex w="full" pb={3}>
                     <VStack alignItems="start">
@@ -476,6 +480,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     isOpen={modifierToEdit === "levels"}
                   />
                 </Box>
+
                 <StatusButton
                   text="NFT"
                   type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
@@ -484,18 +489,6 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   isLoading={addNftTnxStatus}
                   loadingText={`${addNftTnxStatus?.status}`}
                 />
-                {/* <Button
-                spinnerPlacement="start"
-                isLoading={tnxStatus}
-                loadingText={`${tnxStatus?.status}`}
-                variant="solid"
-                w="full"
-                type="submit"
-                mt={8}
-                mb={{ xl: "16px", "2xl": "32px" }}
-              >
-                Add new NFT
-              </Button> */}
               </Form>
             </div>
           )}

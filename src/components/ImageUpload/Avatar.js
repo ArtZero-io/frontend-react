@@ -135,23 +135,27 @@ export default function ImageUploadAvatar({
       <Box>
         {imagePreviewUrl && (
           <Image
+            alt="avatar"
             boxShadow="base"
-            boxSize="22.5rem"
-            alt=""
             objectFit="cover"
+            boxSize={["260px", "360px"]}
             src={imagePreviewUrl}
           />
         )}
+
         {!imagePreviewUrl && profile?.avatar && (
           <Image
+            alt="avatar"
             boxShadow="base"
-            boxSize="22.5rem"
-            alt=""
             objectFit="cover"
+            boxSize={["260px", "360px"]}
             src={getCachedImageShort(profile?.avatar, 500)}
           />
         )}
-        {!imagePreviewUrl && !profile?.avatar && <IdenticonAvatar size={360} />}
+
+        {!imagePreviewUrl && !profile?.avatar && (
+          <IdenticonAvatar size={["260px", "360px"]} />
+        )}
       </Box>
 
       <Center w="full" justifyContent="center">
@@ -167,12 +171,14 @@ export default function ImageUploadAvatar({
               accept="image/png, image/jpg, image/jpeg, image/gif"
             />
             <Button
-              isDisabled={isDisabled}
               as={Text}
+              isDisabled={isDisabled}
               fontFamily="Evogria"
               variant="outline"
+              fontSize={["sm", "md"]}
+              px={["16px", "32px"]}
             >
-              {!imagePreviewUrl ? "Select Image" : "Pick another"}
+              {!imagePreviewUrl ? "select image" : "pick another"}
             </Button>
           </label>
         </VStack>
@@ -182,16 +188,18 @@ export default function ImageUploadAvatar({
           {imgURL ? (
             <Tag variant="active">
               <TagLeftIcon as={ActiveIcon} />
-              <TagLabel>Ready for submit</TagLabel>
+              <TagLabel>Ready !</TagLabel>
             </Tag>
           ) : (
             <Button
               variant="solid"
+              fontSize={["sm", "md"]}
+              px={["16px", "32px"]}
               leftIcon={<HiCloudUpload />}
               onClick={onUploadHandler}
               isDisabled={!imagePreviewUrl}
             >
-              Upload Image
+              upload
             </Button>
           )}
         </HStack>

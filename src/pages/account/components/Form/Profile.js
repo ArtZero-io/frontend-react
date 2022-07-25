@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import { useRef, useState } from "react";
 import { Formik, Form } from "formik";
 import { useDispatch, useSelector } from "react-redux";
-import { Flex, VStack } from "@chakra-ui/react";
+import { VStack, Stack } from "@chakra-ui/react";
 
 import { setMultipleAttributes } from "@actions/account";
 
@@ -13,8 +13,6 @@ import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
 import { AccountActionTypes } from "@store/types/account.types";
 import StatusButton from "@components/Button/StatusButton";
-// eslint-disable-next-line no-unused-vars
-import { truncateStr } from "@utils";
 
 const ProfileForm = ({ profile }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState(null);
@@ -102,83 +100,107 @@ const ProfileForm = ({ profile }) => {
       >
         {({ values, dirty, isValid }) => (
           <Form>
-            <Flex w="full" justify="space-between">
-              <VStack minW={96} px={3}>
+            <Stack
+              w="full"
+              justify="space-between"
+              direction={["column", "row"]}
+            >
+              <VStack
+                // minW={96}
+                px={3}
+              >
                 <ImageUpload
-                  setIsUploadAvatarIPFSUrl={setIsUploadAvatarIPFSUrl}
-                  isDisabled={addCollectionTnxStatus}
-                  setImageIPFSUrl={setAvatarIPFSUrl}
                   profile={profile}
+                  setImageIPFSUrl={setAvatarIPFSUrl}
+                  isDisabled={addCollectionTnxStatus}
                   limitedSize={{ width: "500", height: "500" }}
+                  setIsUploadAvatarIPFSUrl={setIsUploadAvatarIPFSUrl}
                 />
-                asd
               </VStack>
 
               <VStack flexGrow="1" ml={3}>
-                <Flex w="full" justify="space-between">
+                <Stack
+                  w="full"
+                  align="center"
+                  justify="space-between"
+                  direction={["column", "row"]}
+                >
                   <SimpleModeInput
-                    isDisabled={addCollectionTnxStatus}
-                    width={"xs"}
-                    label="User Name"
-                    name="username"
                     type="text"
+                    name="username"
+                    label="User Name"
+                    width={["250px", "xs"]}
                     placeholder="User Name"
+                    isDisabled={addCollectionTnxStatus}
                   />
                   <SimpleModeTextarea
-                    isDisabled={addCollectionTnxStatus}
-                    width={"xs"}
-                    label="Bio"
-                    name="bio"
-                    type="text"
                     rows={2}
+                    name="bio"
+                    label="Bio"
+                    type="text"
                     placeholder="Bio"
-                  />
-                </Flex>
-                <Flex w="full" justify="space-between">
-                  <SimpleModeInput
+                    width={["250px", "xs"]}
                     isDisabled={addCollectionTnxStatus}
-                    width={"xs"}
-                    label="Twitter URL"
+                  />
+                </Stack>
+
+                <Stack
+                  w="full"
+                  alignItems="center"
+                  justify="space-between"
+                  direction={["column", "row"]}
+                >
+                  <SimpleModeInput
+                    type="text"
                     name="twitter"
-                    type="text"
+                    label="Twitter URL"
+                    width={["250px", "xs"]}
                     placeholder="Twitter URL"
+                    isDisabled={addCollectionTnxStatus}
                   />
                   <SimpleModeInput
-                    isDisabled={addCollectionTnxStatus}
-                    width={"xs"}
-                    label="Facebook URL"
+                    type="text"
                     name="facebook"
-                    type="text"
+                    label="Facebook URL"
+                    width={["250px", "xs"]}
                     placeholder="Facebook URL"
-                  />
-                </Flex>
-                <Flex w="full" justify="space-between">
-                  <SimpleModeInput
                     isDisabled={addCollectionTnxStatus}
-                    width={"xs"}
-                    label="Telegram URL"
+                  />
+                </Stack>
+
+                <Stack
+                  w="full"
+                  align="center"
+                  justify="space-between"
+                  direction={["column", "row"]}
+                >
+                  <SimpleModeInput
+                    type="text"
                     name="telegram"
-                    type="text"
+                    label="Telegram URL"
+                    width={["250px", "xs"]}
                     placeholder="Telegram URL"
+                    isDisabled={addCollectionTnxStatus}
                   />
                   <SimpleModeInput
-                    isDisabled={addCollectionTnxStatus}
-                    width={"xs"}
-                    label="Instagram URL"
-                    name="instagram"
                     type="text"
+                    name="instagram"
+                    label="Instagram URL"
+                    width={["250px", "xs"]}
                     placeholder="Instagram URL"
+                    isDisabled={addCollectionTnxStatus}
                   />
-                </Flex>
+                </Stack>
+
                 <StatusButton
-                  type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
                   text="profile"
-                  disabled={!(dirty && isValid) && noImagesChange}
+                  type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
                   isLoading={addCollectionTnxStatus}
+                  disabled={!(dirty && isValid) && noImagesChange}
                   loadingText={`${addCollectionTnxStatus?.status}`}
                 />
               </VStack>
-            </Flex>
+            </Stack>
           </Form>
         )}
       </Formik>
