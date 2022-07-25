@@ -168,13 +168,17 @@ const DesktopNavContent = (props) => {
   return (
     <Flex w="full">
       <HStack
-        spacing={{ xl: "35px", "2xl": "55px" }}
+        w="full"
         align="stretch"
         overflowX="hidden"
         alignItems="center"
-        justifyContent="flex-start"
-        pl={"50px"}
-        w="full"
+        justifyContent={{
+          base: "flex-start",
+          md: "space-between",
+          xl: "flex-start",
+        }}
+        spacing={{ xl: "35px", "2xl": "55px" }}
+        pl={{ base: "8px", md: "32px", xl: "50px" }}
         {...props}
       >
         {links.map((link, index) => (
@@ -200,10 +204,10 @@ export const NavContent = {
 };
 
 const myAccountList = [
-  { label: "General", href: ROUTES.ACCOUNT },
-  { label: "My Collections", href: ROUTES.ACCOUNT_MY_COLLECTIONS },
-  { label: "My NFTs", href: ROUTES.ACCOUNT_MY_NFTS },
-  { label: "My Stakes", href: ROUTES.ACCOUNT_MY_STAKES },
+  { label: "general", href: ROUTES.ACCOUNT },
+  { label: "my collections", href: ROUTES.ACCOUNT_MY_COLLECTIONS },
+  { label: "my NFTs", href: ROUTES.ACCOUNT_MY_NFTS },
+  { label: "my stakes", href: ROUTES.ACCOUNT_MY_STAKES },
 ];
 
 const MyAccountDropdown = () => {
@@ -226,8 +230,18 @@ const MyAccountDropdown = () => {
         // borderColor={path.includes("/account/") ? "brand.blue" : "transparent"}
       >
         <MenuButton
-          fontSize={{ base: "24px", xl: "15px" }}
+          p={0}
+          ring={0}
           h="41px"
+          py="10px"
+          as={Button}
+          display="flex"
+          bg="transparent"
+          textAlign="left"
+          borderBottom="2px"
+          transition="all 0.2s"
+          justifyContent="center"
+          fontSize={{ base: "24px", md: "15px" }}
           _hover={{
             borderColor: "brand.blue",
             color: "brand.blue",
@@ -235,16 +249,6 @@ const MyAccountDropdown = () => {
           _focus={{
             bg: "transparent",
           }}
-          ring={0}
-          textAlign="left"
-          borderBottom="2px"
-          transition="all 0.2s"
-          as={Button}
-          p={0}
-          bg="transparent"
-          py="10px"
-          display="flex"
-          justifyContent="center"
           borderColor={
             path.includes("/account/") ? "brand.blue" : "transparent"
           }
@@ -253,25 +257,25 @@ const MyAccountDropdown = () => {
           my account
         </MenuButton>
         <MenuList
-          minW="250px"
-          bg="brand.grayDark"
-          borderWidth={2}
-          borderColor="brand.blue"
-          borderRadius="0"
           p="15px"
+          minW="250px"
+          borderWidth={2}
+          borderRadius="0"
+          bg="brand.grayDark"
+          borderColor="brand.blue"
           // ml={{ base: "20px", lg: "auto" }}
         >
           {myAccountList.map((item, idx) => (
             <MenuItem
-              as={ReactRouterLink}
-              fontFamily="Evogria, sans-serif"
-              _hover={{ bg: "black" }}
-              onClick={() => history.push(item.href)}
-              key={idx}
               to="#"
-              fontSize={{ base: "24px", xl: "15px" }}
               py="12px"
               px="15px"
+              key={idx}
+              _hover={{ bg: "black" }}
+              as={ReactRouterLink}
+              fontFamily="Evogria, sans-serif"
+              onClick={() => history.push(item.href)}
+              fontSize={{ base: "24px", md: "15px" }}
             >
               {item.label}
             </MenuItem>

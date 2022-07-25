@@ -16,6 +16,7 @@ import { delay, truncateStr } from "@utils";
 import toast from "react-hot-toast";
 import BN from "bn.js";
 import { clientAPI } from "@api/client";
+import { SCROLLBAR } from "../../../../constants";
 
 let collection_count = 0;
 
@@ -174,29 +175,11 @@ function CollectionAdmin() {
           </Stack>
         </Stack>
         <TableContainer
-          maxW="6xl-mid"
-          // maxH={{ base: "20rem", "2xl": "30rem" }}
-
-          fontSize="lg"
           h="full"
+          maxW="6xl-mid"
+          fontSize="lg"
           overflow="auto"
-          sx={{
-            "&::-webkit-scrollbar": {
-              width: "4px",
-              height: "4px",
-              borderRadius: "0px",
-              backgroundColor: `transparent`,
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: `#7ae7ff`,
-            },
-            "&::-webkit-scrollbar-thumb:hover": {
-              backgroundColor: `#7ae7ff`,
-            },
-            "&::-webkit-scrollbar-track": {
-              backgroundColor: `transparent`,
-            },
-          }}
+          sx={SCROLLBAR}
         >
           <Table variant="striped" colorScheme="blackAlpha" overflow="auto">
             <Thead>

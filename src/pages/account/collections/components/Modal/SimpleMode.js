@@ -20,6 +20,7 @@ import { onCloseButtonModal } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
 import EditIcon from "@theme/assets/icon/Edit.js";
 import { formMode } from "@constants";
+import { SCROLLBAR } from "../../../../../constants";
 
 function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
   const {
@@ -133,23 +134,7 @@ function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
           <ModalBody
             shadow="lg"
             overflowY="auto"
-            sx={{
-              "&::-webkit-scrollbar": {
-                width: "4px",
-                height: "4px",
-                borderRadius: "0px",
-                backgroundColor: `transparent`,
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-thumb:hover": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: `transparent`,
-              },
-            }}
+            sx={SCROLLBAR}
           >
             <SimpleModeForm
               maxH="60rem"

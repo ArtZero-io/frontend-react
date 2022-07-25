@@ -55,6 +55,7 @@ import LockNFTModal from "@components/Modal/LockNFTModal";
 import StatusBuyButton from "@components/Button/StatusBuyButton";
 
 import AddNewNFTModal from "../Modal/AddNewNFT";
+import { SCROLLBAR } from "../../../../constants";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -649,23 +650,7 @@ const NFTTabCollectible = (props) => {
                     gap={{ base: "0.5rem", xl: "1rem", "2xl": "1.25rem" }}
                     pr="22px"
                     overflowY="auto"
-                    sx={{
-                      "&::-webkit-scrollbar": {
-                        width: "4px",
-                        height: "4px",
-                        borderRadius: "0px",
-                        backgroundColor: `transparent`,
-                      },
-                      "&::-webkit-scrollbar-thumb": {
-                        backgroundColor: `#7ae7ff`,
-                      },
-                      "&::-webkit-scrollbar-thumb:hover": {
-                        backgroundColor: `#7ae7ff`,
-                      },
-                      "&::-webkit-scrollbar-track": {
-                        backgroundColor: `transparent`,
-                      },
-                    }}
+                    sx={SCROLLBAR}
                   >
                     {attrsList?.length
                       ? attrsList

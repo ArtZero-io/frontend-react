@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { useSubstrateState } from "@utils/substrate";
-import DataTable from "@components/Table/Table";
+import CommonTable from "@components/Table/Table";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
@@ -68,7 +68,7 @@ function MyNFTTabOffers({ nftContractAddress, tokenID }) {
   }, [currentAccount, nftContractAddress, tokenID]);
 
   return (
-    <DataTable
+    <CommonTable
       idSelected={idSelected}
       tableHeaders={headers}
       tableData={bidders}

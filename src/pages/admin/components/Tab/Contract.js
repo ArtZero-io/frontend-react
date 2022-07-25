@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { delay, truncateStr } from "@utils";
 import toast from "react-hot-toast";
 import BN from "bn.js";
+import { SCROLLBAR } from "../../../../constants";
 
 let wl_count = 0;
 function ContractTab() {
@@ -415,27 +416,11 @@ function ContractTab() {
                 </Flex>
               </HStack>
               <TableContainer
+                h="full"
                 maxW="6xl-mid"
                 fontSize="lg"
-                h="full"
                 overflow="auto"
-                sx={{
-                  "&::-webkit-scrollbar": {
-                    width: "4px",
-                    height: "4px",
-                    borderRadius: "0px",
-                    backgroundColor: `transparent`,
-                  },
-                  "&::-webkit-scrollbar-thumb": {
-                    backgroundColor: `#7ae7ff`,
-                  },
-                  "&::-webkit-scrollbar-thumb:hover": {
-                    backgroundColor: `#7ae7ff`,
-                  },
-                  "&::-webkit-scrollbar-track": {
-                    backgroundColor: `transparent`,
-                  },
-                }}
+                sx={SCROLLBAR}
               >
                 <Table
                   variant="striped"

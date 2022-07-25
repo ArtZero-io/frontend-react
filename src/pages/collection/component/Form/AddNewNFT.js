@@ -66,7 +66,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
       newInitialValues.description = rest.description;
 
       newInitialValues.properties = rest.attrsList
-        .filter((item) => !JSON.stringify(Object.values(item)).includes("|"))
+        ?.filter((item) => !JSON.stringify(Object.values(item)).includes("|"))
         .map((item) => {
           return { type: Object.keys(item)[0], name: Object.values(item)[0] };
         });

@@ -72,7 +72,10 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
         maxW={{ base: "20rem", xl: "60rem", "2xl": "78rem" }}
       >
         <ModalCloseButton
-          borderWidth={2}
+          w="42px"
+          h="42px"
+          border="none"
+          // borderWidth={2}
           borderRadius="0"
           position="absolute"
           top={["0", "-8", "-8"]}
@@ -90,15 +93,15 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
           <TabList bg="#171717">
             {tabData.map((tab, index) => (
               <Tab
-                isDisabled={tab.isDisabled}
-                ml={[6, 12, 12]}
+                px="0.5px"
                 key={index}
+                ml={[6, 12, 12]}
+                minH={tabHeight}
+                isDisabled={tab.isDisabled}
+                fontFamily="Evogria Italic"
+                py={["10px", "20px", "20px"]}
                 fontSize={["13px", null, "18px"]}
                 lineHeight={["21px", null, "30px"]}
-                fontFamily="Evogria Italic"
-                minH={tabHeight}
-                px="0.5px"
-                py={["10px", "20px", "20px"]}
               >
                 {tab.label}
               </Tab>

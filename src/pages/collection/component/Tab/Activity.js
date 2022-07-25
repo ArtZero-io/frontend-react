@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { useSubstrateState } from "@utils/substrate";
-import DataTable from "@components/Table/Table";
+import CommonTable from "@components/Table/Table";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
@@ -52,6 +52,7 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
       );
 
       setSaleInfo(sale_info);
+
       if (sale_info) {
         const listBidder = await marketplace_contract_calls.getAllBids(
           currentAccount,
@@ -61,12 +62,13 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
         );
 
         //sort highest price first
-        listBidder.sort((a, b) => {
-          return (
-            b.bidValue.replaceAll(",", "") * 1 -
-            a.bidValue.replaceAll(",", "") * 1
-          );
-        });
+        listBidder?.length &&
+          listBidder.sort((a, b) => {
+            return (
+              b.bidValue.replaceAll(",", "") * 1 -
+              a.bidValue.replaceAll(",", "") * 1
+            );
+          });
 
         listBidder ? setBidders(listBidder) : setBidders([]);
       }
@@ -90,7 +92,7 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
           There is no bid yet.
         </Text>
       ) : (
-        <DataTable
+        <CommonTable
           idSelected={idSelected}
           tableHeaders={headers}
           tableData={bidders}

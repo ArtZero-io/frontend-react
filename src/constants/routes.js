@@ -16,6 +16,9 @@ export const DETAIL_COLLECTION_BASE = "/collection";
 export const LAUNCHPAD_BASE = "/launchpad";
 export const LAUNCHPAD_DETAIL = "/launchpad/:collection_address";
 
+// NFT TOKEN 
+export const NFT_DETAIL = "/nft/:collection_address/:token_id";
+
 // MINTING EVENT
 export const MINTING_EVENT = "/mint";
 

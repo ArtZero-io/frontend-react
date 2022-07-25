@@ -4,6 +4,7 @@ import * as React from "react";
 import { ArtZeroLogo } from "../../theme/assets/logo/ArtZeroLogo";
 import SocialCard from "@components/Card/Social";
 import { useLocation } from "react-router-dom";
+
 const profile = [
   { discord: "https://discord.gg/wzkZ2JTvN4" },
   { twitter: "https://twitter.com/ArtZero_io" },
@@ -11,6 +12,7 @@ const profile = [
   { telegram: "https://t.me/artzero_io" },
   { mail: "mailto:admin@artzero.io" },
 ];
+
 export const Footer = () => {
   const { pathname } = useLocation();
 
@@ -47,7 +49,7 @@ export const Footer = () => {
           <Stack
             direction={{
               base: "column",
-              md: "row",
+              xl: "row",
             }}
             spacing={{
               base: "4",

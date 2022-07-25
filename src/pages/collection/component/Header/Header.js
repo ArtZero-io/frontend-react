@@ -49,9 +49,9 @@ function CollectionHeader({
       <Box
         h="full"
         mx="auto"
-        px={{ base: "48px", xl: "6", "2xl": "8" }}
-        pt={{ base: "56px", xl: "12", "2xl": "3.75rem" }}
         pb={{ base: "4", "2xl": "18" }}
+        px={{ base: "32px", xl: "6", "2xl": "8" }}
+        pt={{ base: "56px", xl: "12", "2xl": "3.75rem" }}
       >
         <VStack h="full">
           <Center
@@ -75,7 +75,7 @@ function CollectionHeader({
               fallback={
                 <Skeleton
                   w={["74px", "120px", "120px"]}
-                  h={["68px", "112px", "112px"]}
+                  h={["60px", "112px", "112px"]}
                   borderRadius="full"
                 />
               }
@@ -102,11 +102,10 @@ function CollectionHeader({
                   >
                     <Heading
                       color="#fff"
+                      noOfLines={[2, 2]}
                       fontSize={["32px", "48px", "48px"]}
                       lineHeight={["46px", "60px", "60px"]}
                       minH={{ base: "2.5rem", "2xl": "3.75rem" }}
-                      // size="h2"
-                      // minH="3.75rem"
                     >
                       {name}
                     </Heading>
@@ -114,6 +113,7 @@ function CollectionHeader({
                       w="full"
                       maxW="576px"
                       color="#fff"
+                      noOfLines={[3, 3]}
                       fontSize={["15px", "18px", "18px"]}
                       minH={{ base: "1rem", "2xl": "3.375rem" }}
                       lineHeight={{ base: "24px", xl: "28px" }}
@@ -127,19 +127,19 @@ function CollectionHeader({
           </HStack>
 
           <HStack
-            overflow="hidden"
-            flexWrap={["wrap", "noWrap", "noWrap"]}
-            color="brand.blue"
-            maxW={["280px", "680px", "680px"]}
-            maxH={["200px", "110px", "110px"]}
-            h={["full", "full", "full"]}
-            borderWidth={2}
-            borderColor="brand.blue"
-            px={{ base: "0px", xl: 12, "2xl": 16 }}
-            py={{ base: "0.5rem", "2xl": "1.125rem" }}
-            justifyContent="space-between"
             bg="black"
             mb="60px"
+            borderWidth={2}
+            overflow="hidden"
+            color="brand.blue"
+            borderColor="brand.blue"
+            h={["full", "full", "full"]}
+            justifyContent="space-between"
+            maxW={["280px", "680px", "680px"]}
+            maxH={["200px", "110px", "110px"]}
+            flexWrap={["wrap", "noWrap", "noWrap"]}
+            px={{ base: "0px", xl: 12, "2xl": 16 }}
+            py={{ base: "0.5rem", "2xl": "1.125rem" }}
           >
             {nft_count ? (
               <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
@@ -234,19 +234,22 @@ function CollectionHeader({
               transform="rotate(90deg)"
               display={{ base: "none", xl: "inline" }}
             />
+
             {/* // mobile + line */}
             <Divider
-              width="300px"
               bg="#232323"
-              transform="rotate(180deg) translateY(-6px) translateX(4px)"
+              width="300px"
+              style={{ margin: 0 }}
               display={{ base: "inline", md: "none" }}
+              transform="rotate(180deg) translateY(-10px) translateX(0px)"
             />
             <Divider
-              width="300px"
               bg="#232323"
+              width="267px"
               transform="rotate(90deg) translateY(5px)"
               display={{ base: "inline", md: "none" }}
             />
+            {/* // End mobile + line */}
 
             {floorPrice ? (
               <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
@@ -389,6 +392,7 @@ function CollectionHeader({
               </VStack>
             )}
           </HStack>
+
           <SocialCard
             justifyContent="center"
             profile={[{ website }, { twitter }, { discord }]}

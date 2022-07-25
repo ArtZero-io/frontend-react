@@ -1,6 +1,7 @@
-import { Box } from "@chakra-ui/react";
 import React from "react";
-import DataTable from '@components/Table/Table'
+import { Box } from "@chakra-ui/react";
+import CommonTable from "@components/Table/Table";
+
 function HistoryTab() {
   return (
     <Box
@@ -8,7 +9,7 @@ function HistoryTab() {
       px={{ base: "6", "2xl": "8" }}
       py={{ base: "8", "2xl": "4" }}
     >
-      <DataTable/>
+      <CommonTable />
     </Box>
   );
 }

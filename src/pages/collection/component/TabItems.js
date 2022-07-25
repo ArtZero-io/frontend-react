@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   Text,
   Spacer,
@@ -9,7 +8,8 @@ import {
   Stack,
   useDimensions,
   useBreakpointValue,
-  // Input,
+  useMediaQuery,
+  HStack,
 } from "@chakra-ui/react";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -27,6 +27,9 @@ import NFTDetailModal from "./Modal/NFTDetail";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import NFTChangeSizeCard from "@components/Card/NFTChangeSize";
 import { formMode } from "@constants";
+import CommonButton from "../../../components/Button/CommonButton";
+import { useHistory } from "react-router-dom";
+import { SCROLLBAR } from "../../../constants";
 
 const CollectionItems = ({
   NFTListFormatted,
@@ -102,58 +105,35 @@ const CollectionItems = ({
   return (
     <>
       <Box w="full" mx="auto" px="0" textAlign="left">
-        <Stack direction={{ base: "column", xl: "row" }} w="full">
-          <IconButton
-            display={{ base: "none", xl: "flex" }}
-            aria-label="refresh"
-            icon={<MdRefresh fontSize="24px" />}
-            size="icon"
-            variant="iconSolid"
-            mx={1.5}
-            _hover={{ color: "black", bg: "#7ae7ff" }}
-            onClick={() => forceUpdate()}
-          />
-          <Flex justifyContent="space-between">
-            {/* <IconButton
-              display={{ base: "flex", xl: "none" }}
-              aria-label="refresh"
-              icon={<MdRefresh fontSize="24px" />}
+        <Stack direction={{ base: "column", md: "row" }} w="full">
+          <HStack
+            pb="8px"
+            sx={SCROLLBAR}
+            overflowX="scroll"
+            justifyContent="space-between"
+          >
+            <IconButton
+              mr={1.5}
               size="icon"
               variant="iconSolid"
-              mx={1.5}
+              aria-label="refresh"
               onClick={() => forceUpdate()}
-            /> */}
+              icon={<MdRefresh fontSize="24px" />}
+              _hover={{ color: "black", bg: "#7ae7ff" }}
+            />
+            <Spacer />
 
-            {/* <Button
-              mx={1.5}
-              variant="outline"
-              minW={"11rem"}
-              onClick={() =>
-                setIsShowUnlisted((isShowUnlisted) => isShowUnlisted + 1)
-              }
-            >
-              {isShowUnlisted % 3 === 0
-                ? "Show all"
-                : isShowUnlisted % 3 === 1
-                ? "Show listed"
-                : isShowUnlisted % 3 === 2
-                ? "Show unlisted"
-                : ""}
-            </Button> */}
             {Object.keys(tabList).map((item) => (
-              <Button
+              <CommonButton
                 key={item}
-                _active={{ bg: "#7ae7ff", color: "#000" }}
-                isActive={item === activeTab}
-                id={item}
+                text={item}
                 variant="outline"
-                mx={1}
+                isActive={item === activeTab}
                 onClick={() => setActiveTab(item)}
-              >
-                {item.replace("_", " ")}
-              </Button>
+                _active={{ bg: "brand.blue", color: "black" }}
+              />
             ))}
-          </Flex>
+          </HStack>
           {/* 
           <Input
             ml={1.5}
@@ -164,6 +144,30 @@ const CollectionItems = ({
           <Spacer />
 
           <Flex justifyContent="space-between" align="center" pr="2">
+            {unListNFT && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <Text
+                  px={2}
+                  display={{ base: "block", md: "none" }}
+                  color="#888"
+                >
+                  {totalCollectionsCount || 0} items{" "}
+                  {activeTab === tabList.ALL
+                    ? "in total"
+                    : activeTab === tabList.LISTED
+                    ? "listed"
+                    : activeTab === tabList.UNLISTED
+                    ? "unlisted"
+                    : ""}
+                </Text>
+              </motion.div>
+            )}
+
+            <Spacer />
             {/* <Text color="#888" px={2} display={{ base: "block", xl: "none" }}>
               {totalCollectionsCount || 0} asd items{" "}
               {activeTab === tabList.ALL
@@ -174,7 +178,7 @@ const CollectionItems = ({
                 ? "unlisted"
                 : ""}
             </Text> */}
-            <IconButton
+            {/* <IconButton
               display={{ base: "flex", xl: "none" }}
               aria-label="refresh"
               icon={<MdRefresh fontSize="24px" />}
@@ -182,7 +186,7 @@ const CollectionItems = ({
               variant="iconSolid"
               mx={1.5}
               onClick={() => forceUpdate()}
-            />
+            /> */}
             <Dropdown
               // width="full"
               mx={1.5}
@@ -226,30 +230,24 @@ const CollectionItems = ({
           minH={{ base: 14, "2xl": 24 }}
           w="full"
         >
-          <AnimatePresence>
-            {unListNFT && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <Text
-                  px={2}
-                  // display={{ base: "none", xl: "block" }}
-                  color="#888"
-                >
-                  {totalCollectionsCount || 0} items{" "}
-                  {activeTab === tabList.ALL
-                    ? "in total"
-                    : activeTab === tabList.LISTED
-                    ? "listed"
-                    : activeTab === tabList.UNLISTED
-                    ? "unlisted"
-                    : ""}
-                </Text>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {unListNFT && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <Text px={2} display={{ base: "none", md: "block" }} color="#888">
+                {totalCollectionsCount || 0} items{" "}
+                {activeTab === tabList.ALL
+                  ? "in total"
+                  : activeTab === tabList.LISTED
+                  ? "listed"
+                  : activeTab === tabList.UNLISTED
+                  ? "unlisted"
+                  : ""}
+              </Text>
+            </motion.div>
+          )}
 
           <Spacer />
 
@@ -304,15 +302,21 @@ function GridNftA({
 }) {
   const originOffset = useRef({ top: 0, left: 0 });
   const controls = useAnimation();
-
+  const history = useHistory();
   const delayPerPixel = 0.0004;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedNft, setSelectedNft] = useState(null);
 
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+
   function handleOnClick(item) {
-    setSelectedNft(item);
-    onOpen();
+    if (isBigScreen) {
+      setSelectedNft(item);
+      onOpen();
+    } else {
+      history.push(`/nft/${item.nftContractAddress}/${item.tokenID}`);
+    }
   }
 
   useEffect(() => {
@@ -321,47 +325,47 @@ function GridNftA({
 
   return (
     <>
-      <NFTDetailModal
-        {...selectedNft}
-        isOpen={isOpen}
-        onClose={onClose}
-        collectionOwner={collectionOwner}
-        showOnChainMetadata={showOnChainMetadata}
-      />
+      {isBigScreen && (
+        <NFTDetailModal
+          {...selectedNft}
+          isOpen={isOpen}
+          onClose={onClose}
+          collectionOwner={collectionOwner}
+          showOnChainMetadata={showOnChainMetadata}
+        />
+      )}
 
-      <AnimatePresence>
-        <motion.div
-          initial="hidden"
-          animate={controls}
-          variants={{}}
-          id="grid-item-div"
-          style={{
-            height: "100%",
-          }}
-        >
-          {listNFTFormatted?.map((c, i) => (
-            <GridItemA
-              i={i}
-              key={i}
-              id="grid-item-a"
-              gap={gap}
-              gridCol={gridCol}
-              originOffset={originOffset}
-              delayPerPixel={delayPerPixel}
-              onClick={() => handleOnClick(c)}
-              realNftCardWidth={realNftCardWidth}
-              realGridCardHeight={realGridCardHeight}
-            >
-              <NFTChangeSizeCard
-                {...c}
-                bigCard={bigCard}
-                width={realNftCardWidth}
-                height={realGridCardHeight}
-              />
-            </GridItemA>
-          ))}
-        </motion.div>
-      </AnimatePresence>
+      <motion.div
+        initial="hidden"
+        animate={controls}
+        variants={{}}
+        id="grid-item-div"
+        style={{
+          height: "100%",
+        }}
+      >
+        {listNFTFormatted?.map((c, i) => (
+          <GridItemA
+            i={i}
+            key={i}
+            id="grid-item-a"
+            gap={gap}
+            gridCol={gridCol}
+            originOffset={originOffset}
+            delayPerPixel={delayPerPixel}
+            onClick={() => handleOnClick(c)}
+            realNftCardWidth={realNftCardWidth}
+            realGridCardHeight={realGridCardHeight}
+          >
+            <NFTChangeSizeCard
+              {...c}
+              bigCard={bigCard}
+              width={realNftCardWidth}
+              height={realGridCardHeight}
+            />
+          </GridItemA>
+        ))}
+      </motion.div>
     </>
   );
 }

@@ -62,20 +62,20 @@ const SearchDrawer = ({ display = true, ...rest }) => {
     <>
       <Button
         {...rest}
-        px={["0px", "30px", "30px"]}
-        display={display}
         mr={0}
         color="#fff"
         fontSize="15px"
         borderWidth="0"
         onClick={onOpen}
+        display={display}
+        px={{ base: "4px", xl: "30px" }}
         leftIcon={<FiSearch size="22px" p="0" />}
         variant={{ base: "unstyled", xl: "outline" }}
         _hover={{ borderWidth: "0", color: "#7ae7ff" }}
         _focus={{ borderWidth: "0", color: "#7ae7ff", bg: "transparent" }}
         _active={{ borderWidth: "0", color: "#7ae7ff", bg: "transparent" }}
       >
-        <Text display={{ base: "none", md: "flex" }} as="span">
+        <Text display={{ base: "none", xl: "flex" }} as="span">
           Search
         </Text>
       </Button>

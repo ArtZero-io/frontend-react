@@ -25,6 +25,7 @@ import { AccountActionTypes } from "@store/types/account.types";
 import { useSubstrateState } from "@utils/substrate";
 import { convertDateToTimeStamp } from "@utils";
 import AddNewProject from "./Form/AddNewProject";
+import { SCROLLBAR } from "../../../constants";
 
 export const GroupCard = ({ variant = "live", projectsList }) => {
   const [projectName, setProjectName] = useState("");
@@ -46,17 +47,11 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
     (state) => state.account.accountLoaders
   );
 
-  // useEffect(async () => {
-  //   addCollectionTnxStatus?.status === "End" && onCloseAddNewProject();
-  //   if (!isLoadedProject) {
-
-  //   }
-  // }, [isLoadedProject, onCloseAddNewProject, addCollectionTnxStatus?.status]);
-
   const submitForm = async () => {
     if (!avatarIPFSUrl) {
       return toast.error("Upload avatar");
     }
+
     const data = {
       name: projectName,
       description: projectDescription,
@@ -68,7 +63,7 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
       attributes: ["avatar"],
       attribute_vals: [avatarIPFSUrl],
     };
-    console.log(data);
+
     dispatch({
       type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
       payload: {
@@ -175,25 +170,7 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
             </Heading>
           </ModalHeader>
 
-          <ModalBody
-            sx={{
-              "&::-webkit-scrollbar": {
-                width: "4px",
-                height: "4px",
-                borderRadius: "0px",
-                backgroundColor: `transparent`,
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-thumb:hover": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: `transparent`,
-              },
-            }}
-          >
+          <ModalBody sx={SCROLLBAR}>
             <AddNewProject />
 
             <Flex>

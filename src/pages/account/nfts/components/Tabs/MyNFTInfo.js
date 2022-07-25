@@ -57,6 +57,7 @@ import {
   fetchMyPMPStakedCount,
   fetchMyTradingFee,
 } from "@pages/account/stakes";
+import { SCROLLBAR } from "../../../../../constants";
 
 function MyNFTTabInfo(props) {
   const {
@@ -488,32 +489,16 @@ function MyNFTTabInfo(props) {
             ) : (
               <>
                 <Grid
-                  maxH={{ base: "170px", "2xl": "245px" }}
-                  id="grid-attrs"
-                  boxShadow="lg"
                   mb={2}
                   w="full"
-                  templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
-                  gap={{ base: "0.5rem", xl: "1rem", "2xl": "1.25rem" }}
                   pr={"22px"}
+                  id="grid-attrs"
+                  boxShadow="lg"
                   overflowY="auto"
-                  sx={{
-                    "&::-webkit-scrollbar": {
-                      width: "4px",
-                      height: "4px",
-                      borderRadius: "0px",
-                      backgroundColor: `transparent`,
-                    },
-                    "&::-webkit-scrollbar-thumb": {
-                      backgroundColor: `#7ae7ff`,
-                    },
-                    "&::-webkit-scrollbar-thumb:hover": {
-                      backgroundColor: `#7ae7ff`,
-                    },
-                    "&::-webkit-scrollbar-track": {
-                      backgroundColor: `transparent`,
-                    },
-                  }}
+                  maxH={{ base: "170px", "2xl": "245px" }}
+                  sx={SCROLLBAR}
+                  gap={{ base: "0.5rem", xl: "1rem", "2xl": "1.25rem" }}
+                  templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
                 >
                   {attrsList?.length
                     ? attrsList
