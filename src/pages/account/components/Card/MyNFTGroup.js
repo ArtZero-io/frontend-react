@@ -387,8 +387,8 @@ function GridNftA({
             txStatus?.requestUnstakeStatus
           }
           position="absolute"
-          top="0"
-          right="0"
+          top={["30px", "0"]}
+          right={["0", "0"]}
           size="sm"
           onClick={() =>
             handleStakeAction(

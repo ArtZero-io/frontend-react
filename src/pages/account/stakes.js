@@ -180,6 +180,7 @@ const MyStakesPage = () => {
         >
           {Object.keys(tabList).map((item) => (
             <CommonButton
+              minW="140"
               key={item}
               variant="outline"
               text={item.replace("_", " ")}
