@@ -19,6 +19,7 @@ import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import AccountLayout from "./Layout/AccountLayout";
 import AdminLayout from "./Layout/AdminLayout";
 import LaunchpadDetailPage from "../pages/launchpad/detail";
+import NftDetailPage from "../pages/token/";
 // import NotFound from "./NotFound/NotFound";
 // import MintLayout from "./Layout/MintLayout";
 
@@ -55,10 +56,11 @@ const Router = () => {
         )}
       />
 
-      <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />
-      <Route exact path={ROUTES.DETAIL_COLLECTION} component={CollectionPage} />
-      <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
       <Route exact path={ROUTES.STATS} component={StatsPage} />
+      <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />
+      <Route exact path={ROUTES.NFT_DETAIL} component={NftDetailPage} />
+      <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
+      <Route exact path={ROUTES.DETAIL_COLLECTION} component={CollectionPage} />
       <Route
         exact
         path={ROUTES.LAUNCHPAD_DETAIL}

@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
 import { web3FromSource } from "../wallets/extension-dapp";
 import { AccountActionTypes } from "@store/types/account.types";
-import { handleContractCallAnimation } from "..";
+import { getPublicCurrentAccount, handleContractCallAnimation, truncateStr } from "..";
 
 // let account;
 let contract;
@@ -201,3 +201,14 @@ const blockchainModule = {
 };
 
 export default blockchainModule;
+
+export const getUsernameOnchain = async ({ accountAddress }) => {
+  const {
+    data: { username },
+  } = await getProfileOnChain({
+    callerAccount: getPublicCurrentAccount(),
+    accountAddress,
+  });
+
+  return username || truncateStr(accountAddress);
+};

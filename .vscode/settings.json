@@ -15,5 +15,8 @@
     "unlist",
     "unstaked",
     "Unstaking"
-  ]
+  ],
+  "editor.fontFamily": "'Courier Prime', 'Haskplex Nerd' , Monaco, Consolas, 'Courier New', monospace",
+  "files.autoSave": "afterDelay",
+  "editor.fontSize": 14
 }
