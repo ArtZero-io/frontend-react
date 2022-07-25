@@ -18,7 +18,7 @@ import { IPFS_BASE_URL } from "@constants/index";
 function LaunchpadDetailHeader({project}) {
   const [livePhase, setLivePhase] = useState({});
 
-  useEffect(async () => {
+  useEffect(() => {
     const fetchData = async () => {
       let phaseTmp = {};
       console.log('LaunchpadDetailHeader::project', project);
