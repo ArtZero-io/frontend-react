@@ -56,6 +56,8 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 
+import staking_calls from "@utils/blockchain/staking_calls";
+
 import CommonTable from "@components/Table/Table";
 import NftLayout from "@components/Layout/NftLayout";
 import CommonButton from "@components/Button/CommonButton";
@@ -83,6 +85,10 @@ import LockNFTModalMobile from "../../components/Modal/LockNFTModalMobile";
 import { SCROLLBAR } from "../../constants";
 import { formMode } from "@constants";
 import AddNewNFTModal from "../../pages/collection/component/Modal/AddNewNFT";
+import {
+  fetchMyPMPStakedCount,
+  fetchMyTradingFee,
+} from "@pages/account/stakes";
 
 function TokenPage() {
   const dispatch = useDispatch();
@@ -96,6 +102,8 @@ function TokenPage() {
   const [bidsList, setBidsList] = useState(null);
   const [collection, setCollection] = useState(null);
   const [ownerName, setOwnerName] = useState(null);
+  const [myTradingFee, setMyTradingFee] = useState(null);
+  const [feeCalculated, setFeeCalculated] = useState(null);
 
   const [isOwner, setIsOwner] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -112,6 +120,19 @@ function TokenPage() {
     async function () {
       try {
         setLoading(true);
+
+        const stakedCount = await fetchMyPMPStakedCount(
+          currentAccount,
+          staking_calls
+        );
+
+        const myTradingFeeData = await fetchMyTradingFee(
+          stakedCount,
+          currentAccount,
+          marketplace_contract_calls
+        );
+
+        setMyTradingFee(myTradingFeeData);
 
         const [collectionDetails] = await APICall.getCollectionByAddress({
           collection_address,
@@ -315,6 +336,24 @@ function TokenPage() {
     }
   };
 
+  useEffect(() => {
+    let p = askPrice;
+
+    if (token?.is_for_sale) {
+      p = token?.price / 1000000000000;
+    }
+
+    const info = calculateFee(p, collection?.royalFee, myTradingFee);
+
+    setFeeCalculated(info);
+  }, [
+    askPrice,
+    collection?.royalFee,
+    myTradingFee,
+    token?.is_for_sale,
+    token?.price,
+  ]);
+
   return (
     <NftLayout>
       <VStack minH="calc(100vh - 80px)" bg="brand.grayDark">
@@ -502,59 +541,67 @@ function TokenPage() {
               {isOwner ? (
                 <Stack>
                   {token?.is_for_sale ? (
-                    <HStack>
-                      <CommonButton
-                        mx="0"
-                        {...rest}
-                        text="cancel sale"
-                        onClick={handleUnlistTokenAction}
-                        isDisabled={actionType && actionType !== UNLIST_TOKEN}
-                      />
-                      {/* <Spacer />
-                      <Box h="52px" textAlign="right" color="brand.grayLight">
-                        <Text>Your offer</Text>
-                        <Tag h={4} pr={0} bg="transparent">
-                          <TagLabel bg="transparent">{bidPrice}</TagLabel>
-                          <TagRightIcon as={AzeroIcon} />
-                        </Tag>
-                      </Box> */}
-                    </HStack>
-                  ) : (
-                    <HStack>
-                      <NumberInput
-                        minW={"85px"}
-                        isDisabled={actionType}
-                        bg="black"
-                        max={999000000}
-                        min={1}
-                        precision={6}
-                        onChange={(v) => setAskPrice(v)}
-                        value={askPrice}
-                        ml={3}
-                        h="50px"
-                      >
-                        <NumberInputField
-                          textAlign="end"
-                          h="52px"
-                          borderRadius={0}
-                          borderWidth={0}
-                          color="#fff"
+                    <Stack>
+                      <HStack>
+                        <CommonButton
+                          mx="0"
+                          {...rest}
+                          text="cancel sale"
+                          onClick={handleUnlistTokenAction}
+                          isDisabled={actionType && actionType !== UNLIST_TOKEN}
                         />
-                        <InputRightElement bg="transparent" h={"50px"} w={8}>
-                          <AzeroIcon />
-                        </InputRightElement>
-                      </NumberInput>
 
-                      <Spacer />
+                        {/* <Spacer />
+                      <Box h="52px" textAlign="right" color="brand.grayLight">
+                      <Text>Your offer</Text>
+                      <Tag h={4} pr={0} bg="transparent">
+                      <TagLabel bg="transparent">{bidPrice}</TagLabel>
+                      <TagRightIcon as={AzeroIcon} />
+                      </Tag>
+                    </Box> */}
+                      </HStack>
+                      <FeeCalculatedBar feeCalculated={feeCalculated} />
+                    </Stack>
+                  ) : (
+                    <Stack>
+                      <HStack>
+                        <NumberInput
+                          minW={"85px"}
+                          isDisabled={actionType}
+                          bg="black"
+                          max={999000000}
+                          min={1}
+                          precision={6}
+                          onChange={(v) => setAskPrice(v)}
+                          value={askPrice}
+                          ml={3}
+                          h="50px"
+                        >
+                          <NumberInputField
+                            textAlign="end"
+                            h="52px"
+                            borderRadius={0}
+                            borderWidth={0}
+                            color="#fff"
+                          />
+                          <InputRightElement bg="transparent" h={"50px"} w={8}>
+                            <AzeroIcon />
+                          </InputRightElement>
+                        </NumberInput>
 
-                      <CommonButton
-                        mx="0"
-                        {...rest}
-                        text="push for sale"
-                        onClick={handleListTokenAction}
-                        isDisabled={actionType && actionType !== LIST_TOKEN}
-                      />
-                    </HStack>
+                        <Spacer />
+
+                        <CommonButton
+                          mx="0"
+                          {...rest}
+                          text="push for sale"
+                          onClick={handleListTokenAction}
+                          isDisabled={actionType && actionType !== LIST_TOKEN}
+                        />
+                      </HStack>
+
+                      <FeeCalculatedBar feeCalculated={feeCalculated} />
+                    </Stack>
                   )}
                 </Stack>
               ) : null}
@@ -864,8 +911,6 @@ const placeBid = async (
   // check balance
   const { balance } = await fetchUserBalance({ currentAccount, api });
 
-  console.log("bidPrice", bidPrice);
-
   if (balance < bidPrice) {
     toast.error(`Not enough balance!`);
     return;
@@ -1101,5 +1146,72 @@ const acceptBid = async (
     dispatch,
     ACCEPT_BID,
     api
+  );
+};
+
+export const calculateFee = (askPrice, royalFee, myTradingFee) => {
+  // price 99000000000000 -> price of LISTED item MUST div 10*12
+
+  // askPrice 99.000000 ~ 99 Azero
+  // royalFee 450 ~ 4.5%
+  // myTradingFee 5.00 ~ 5%
+
+  const royalFeePercent = royalFee / 100;
+  const royalFeeAmount = (askPrice * royalFeePercent) / 100;
+
+  const tradeFeePercent = Number(myTradingFee);
+  const tradeFeeAmount = (askPrice * tradeFeePercent) / 100;
+
+  const userPortionPercent = 100 - royalFeePercent - tradeFeePercent;
+  const userPortionAmount = askPrice - royalFeeAmount - tradeFeeAmount;
+
+  const ret = {
+    royalFeePercent: royalFeePercent.toFixed(2),
+    royalFeeAmount: formatNumDynamicDecimal(royalFeeAmount),
+    tradeFeePercent: tradeFeePercent.toFixed(2),
+    tradeFeeAmount: formatNumDynamicDecimal(tradeFeeAmount),
+    userPortionPercent: userPortionPercent.toFixed(2),
+    userPortionAmount: formatNumDynamicDecimal(userPortionAmount),
+  };
+
+  return ret;
+};
+
+const FeeCalculatedBar = ({ feeCalculated }) => {
+  return (
+    <HStack
+      justify="space-between"
+      color="brand.blue"
+      fontSize={{ base: "14px", "2xl": "15px" }}
+      w="full"
+      py={{ base: "10px", "2xl": "20px" }}
+    >
+      <VStack alignItems="start">
+        <Text fontSize={{ base: "12px", "2xl": "15px" }}>
+          Royal fee:(
+          {feeCalculated.royalFeePercent} %)
+        </Text>
+        <Text>
+          {feeCalculated.royalFeeAmount} <AzeroIcon w="12px" mb="2px" />
+        </Text>
+      </VStack>
+      <VStack alignItems="start">
+        <Text fontSize={{ base: "12px", "2xl": "15px" }}>
+          Trade fee:({feeCalculated.tradeFeePercent} %)
+        </Text>
+        <Text>
+          {feeCalculated.tradeFeeAmount} <AzeroIcon w="12px" mb="2px" />{" "}
+        </Text>
+      </VStack>
+      <VStack alignItems="start">
+        <Text fontSize={{ base: "12px", "2xl": "15px" }}>
+          You will receive:
+        </Text>
+        <Text>
+          {" "}
+          {feeCalculated.userPortionAmount} <AzeroIcon w="12px" mb="2px" />
+        </Text>
+      </VStack>
+    </HStack>
   );
 };
