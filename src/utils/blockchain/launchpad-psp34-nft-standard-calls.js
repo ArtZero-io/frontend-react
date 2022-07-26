@@ -6,7 +6,7 @@ import { TypeRegistry, U64 } from "@polkadot/types";
 import { clientAPI } from "@api/client";
 import { AccountActionTypes } from "@store/types/account.types";
 import { APICall } from "../../api/client";
-import { isValidAddressPolkadotAddress } from "@utils";
+import { isValidAddressPolkadotAddress, convertStringToPrice } from "@utils";
 
 let contract;
 
@@ -186,7 +186,7 @@ async function getWhitelistByAccountId(caller_account, phaseCode) {
   return null;
 }
 
-async function whitelistMint(caller_account, phaseId, amount) {
+async function whitelistMint(caller_account, phaseId, amount, minting_fee) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -195,9 +195,10 @@ async function whitelistMint(caller_account, phaseId, amount) {
 
   const address = caller_account?.address;
   const gasLimit = -1;
-  const azero_value = 10;
+  console.log('whitelistMint::minting_fee', minting_fee);
+  const azero_value = new BN(minting_fee / 10 ** 6).mul(new BN(10 ** 6)).toString();
   const injector = await web3FromSource(caller_account?.meta?.source);
-
+  console.log('whitelistMint::azero_value', azero_value);
   contract.tx
     .whitelistMint({ gasLimit, value: azero_value }, phaseId, amount)
     .signAndSend(

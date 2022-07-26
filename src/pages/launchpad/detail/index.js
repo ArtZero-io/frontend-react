@@ -103,7 +103,9 @@ const LaunchpadDetailPage = () => {
   }, []);
 
   const onWhiteListMint = async () => {
-    await launchpad_psp34_nft_standard_calls.whitelistMint(currentAccount, currentPhaseId, 1);
+    console.log('LaunchpadDetailPage::currentWhitelist', currentWhitelist);
+    const mintingFee = currentWhitelist.mintingFee.replace(/,/g, "");
+    await launchpad_psp34_nft_standard_calls.whitelistMint(currentAccount, currentPhaseId, 1, mintingFee);
   }
 
   return (
@@ -131,9 +133,10 @@ const LaunchpadDetailPage = () => {
         
         {(!currentAccount) ? (<Flex w="full" justifyContent="center">
           <Button variant="outline">connect your wallet</Button>
-        </Flex>) : (<Flex w="full" justifyContent="center">
+        </Flex>) : ''}
+        {(currentAccount && currentWhitelist.whitelistAmount) ? (<Flex w="full" justifyContent="center">
           <Button onClick={() => onWhiteListMint()} variant="outline">mint</Button>
-        </Flex>)}
+        </Flex>) : ''}
       </Box>
 
       <Box

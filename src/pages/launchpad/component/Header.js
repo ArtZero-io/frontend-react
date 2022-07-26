@@ -253,9 +253,9 @@ function LaunchpadDetailHeader({project, currentWhitelist}) {
                     fontSize={{ base: "32px", "2xl": "48px" }}
                     lineHeight="none"
                   >
-                    {countDownTimer.minutes}{" "}
+                    {countDownTimer.seconds}{" "}
                   </Text>
-                  <Text fontSize={["13px", "16px", "16px"]}>seconds</Text>
+                  <Text fontSize={["13px", "16px", "16px"]}>Seconds</Text>
                 </motion.div>
               </>
             </VStack>
