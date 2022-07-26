@@ -17,24 +17,40 @@ import { IPFS_BASE_URL } from "@constants/index";
 
 function LaunchpadDetailHeader({project}) {
   const [livePhase, setLivePhase] = useState({});
-
   const { phases } = project;
+  const [countDownTimer, setCountDownTimer] = useState({});
 
   useEffect(() => {
     if (phases?.length > 0) {
       const data = phases.find((p) => p.isLive === 1);
       console.log("data", data);
       setLivePhase(data);
+      getCountDownTimer(data.endTime);
     }
-  }, [phases]);
+  }, [phases, useState]);
 
-  console.log("livePhase", livePhase);
+  const getCountDownTimer = (endTime) => {
+    console.log(endTime);
+
+    const total = endTime - Date.now();
+    console.log(total);
+    const seconds = Math.floor( (total/1000) % 60 );
+    const minutes = Math.floor( (total/1000/60) % 60 );
+    const hours = Math.floor( (total/(1000*60*60)) % 24 );
+    const days = Math.floor( total/(1000*60*60*24) );
+    setCountDownTimer({
+      days: days,
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds
+    });
+    console.log(days, hours, minutes, seconds);
+  }
 
   return (
     <Box as="section" position="relative" w="full" mt="320px">
       <Box mx="auto" w="full" maxW="870px">
         <VStack>
-          {console.log('LaunchpadDetailHeader::render', project)}
           <Center
             rounded="full"
             w={["80px", "120px", "120px"]}
@@ -156,7 +172,7 @@ function LaunchpadDetailHeader({project}) {
                     fontSize={{ base: "32px", "2xl": "48px" }}
                     lineHeight="none"
                   >
-                    02{" "}
+                    {countDownTimer.days}{" "}
                   </Text>
                   <Text fontSize={["13px", "16px", "16px"]}>Days</Text>
                 </motion.div>
@@ -182,7 +198,7 @@ function LaunchpadDetailHeader({project}) {
                     fontSize={{ base: "32px", "2xl": "48px" }}
                     lineHeight="none"
                   >
-                    04{" "}
+                    {countDownTimer.hours}{" "}
                   </Text>
                   <Text fontSize={["13px", "16px", "16px"]}>Hours</Text>
                 </motion.div>
@@ -207,7 +223,7 @@ function LaunchpadDetailHeader({project}) {
                     fontSize={{ base: "32px", "2xl": "48px" }}
                     lineHeight="none"
                   >
-                    02{" "}
+                    {countDownTimer.minutes}{" "}
                   </Text>
                   <Text fontSize={["13px", "16px", "16px"]}>Mins</Text>
                 </motion.div>
@@ -232,7 +248,7 @@ function LaunchpadDetailHeader({project}) {
                     fontSize={{ base: "32px", "2xl": "48px" }}
                     lineHeight="none"
                   >
-                    02{" "}
+                    {countDownTimer.minutes}{" "}
                   </Text>
                   <Text fontSize={["13px", "16px", "16px"]}>seconds</Text>
                 </motion.div>

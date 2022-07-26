@@ -32,13 +32,16 @@ const LaunchpadDetailPage = () => {
   const { collection_address } = useParams();
   const { api, currentAccount } = useSubstrateState();
   const [phases, setPhases] = useState([]);
-  
+  const [totalWhitelistAmount, setTotalWhitelistAmount] = useState(0);
+  const [totalClaimedAmount, setTotalClaimedAmount] = useState(0);
+  const [currentPhaseId, setCurrentPhaseId] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
       const project = await launchpad_contract_calls.getProjectByNftAddress(
         currentAccount,
         collection_address
       );
+      console.log('LaunchpadDetailPage::project', project)
       
       if (project.isActive) {
         const projectInfo = await launchpad_contract_calls.getProjectInfoByHash(project.projectInfo);
@@ -50,25 +53,28 @@ const LaunchpadDetailPage = () => {
         );
 
         launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
-        console.log(launchpad_psp34_nft_standard_contract);
         const totalSupply = await launchpad_psp34_nft_standard_calls.getTotalSupply(currentAccount);
-        console.log('totalSupply', totalSupply);
-        console.log('projectInfo', projectInfo);
         const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
         let phasesTmp = [];
-        const currentPhaseId = await launchpad_psp34_nft_standard_calls.getCurrentPhase(currentAccount);
-        console.log('currentPhaseId', currentPhaseId);
+        const currentPhaseIdTmp = await launchpad_psp34_nft_standard_calls.getCurrentPhase(currentAccount);
+        console.log('currentPhaseId', currentPhaseIdTmp);
         for (let i = 1; i <= totalPhase; i++) {
           const phaseSchedule = await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(currentAccount, i);
+          console.log('LaunchpadDetailPage::phaseSchedule', phaseSchedule);
           const phaseCode = await launchpad_psp34_nft_standard_calls.getPhasesCodeById(currentAccount, i);
           const phaseInfo = {
             id: i,
             code: phaseCode,
             startTime: timestampWithoutCommas(phaseSchedule.startTime),
             endTime: timestampWithoutCommas(phaseSchedule.endTime),
-            isLive: (i == currentPhaseId) ? 1 : 0
+            isLive: (i == currentPhaseIdTmp) ? 1 : 0
           };
           phasesTmp.push(phaseInfo);
+          if (i == currentPhaseIdTmp) {
+            setTotalWhitelistAmount(parseInt(phaseSchedule.whitelistAmount));
+            setTotalClaimedAmount(parseInt(phaseSchedule.claimedAmount));
+            setCurrentPhaseId(currentPhaseIdTmp);
+          }
         }
         const projectDetail = {
           name: projectInfo.name,
@@ -88,7 +94,10 @@ const LaunchpadDetailPage = () => {
 
     fetchData();
   }, []);
-  console.log("collection_address", collection_address);
+
+  const onWhiteListMint = async () => {
+    await launchpad_psp34_nft_standard_calls.whitelistMint(currentAccount, currentPhaseId, 1);
+  }
 
   return (
     <Layout
@@ -109,13 +118,14 @@ const LaunchpadDetailPage = () => {
         <Flex w="full" mb="15px">
           <Heading size="h6">Public Sale In Progress</Heading>
           <Spacer />
-          <Text color="#888">98% (760/777)</Text>
+          {(totalWhitelistAmount != 0) ? (<Text color="#888">{Math.round(totalClaimedAmount/totalWhitelistAmount)}% ({totalClaimedAmount}/{totalWhitelistAmount})</Text>) : (<Text color="#888">0% ({totalClaimedAmount}/{totalWhitelistAmount})</Text>)}
         </Flex>
-        <Progress value={98} mb="20px" h="8px" />
+        {(totalWhitelistAmount != 0) ? (<Progress value={Math.round(totalClaimedAmount/totalWhitelistAmount)} mb="20px" h="8px" />) : (<Progress value="0" mb="20px" h="8px" />)}
+        
         {(!currentAccount) ? (<Flex w="full" justifyContent="center">
           <Button variant="outline">connect your wallet</Button>
         </Flex>) : (<Flex w="full" justifyContent="center">
-          <Button variant="outline">mint</Button>
+          <Button onClick={() => onWhiteListMint()} variant="outline">mint</Button>
         </Flex>)}
       </Box>
 
