@@ -37,7 +37,6 @@ function RewardDistribution() {
   const [adminAddress,setAdminAddress] = useState("");
   const [stakersCount,setStakerCount] = useState(0);
   const [stakers,setStakers] = useState([]);
-  const [loading,setLoading] = useState(true);
 
   const onRefresh = async () => {
     let reward_pool = await staking_calls.getRewardPool(currentAccount);
@@ -45,21 +44,22 @@ function RewardDistribution() {
     let total_staked = await staking_calls.getTotalStaked(currentAccount);
     let is_locked = await staking_calls.getIsLocked(currentAccount);
     let admin_address = await staking_calls.getAdminAddress(currentAccount);
-    let staker_count = await staking_calls.getTotalCountOfStakeholders(currentAccount);
+
     // console.log(reward_pool,claimable_reward);
     setClaimableReward(claimable_reward);
     setRewardPool(reward_pool);
     setTotalStaked(total_staked);
     setIsLocked(is_locked);
     setAdminAddress(admin_address);
-    setStakerCount(staker_count);
+
   };
   const getStakers = async () => {
-    setLoading(true);
+    let staker_count = await staking_calls.getTotalCountOfStakeholders(currentAccount);
+    setStakerCount(staker_count);
     let stakers = [];
-    for (var i=0;i<stakersCount;i++){
+    for (var i=0;i<staker_count;i++){
       let staker = await staking_calls.getStakedAccountsAccountByIndex(currentAccount,i);
-      console.log(staker);
+
       let staker_info = {
         address:staker,
         amount:await staking_calls.getTotalStakedByAccount(currentAccount,staker),
@@ -68,7 +68,6 @@ function RewardDistribution() {
       stakers.push(staker_info);
     }
     setStakers(stakers);
-    setLoading(false);
   }
   const onAddReward = async () => {
     await staking_calls.addReward(currentAccount,addAmount);
@@ -341,7 +340,7 @@ function RewardDistribution() {
                     Total Stakers:
                   </Text>
                   <Text color="#fff" ml={2}>
-                    {stakersCount} {loading ? "LOADING FOR DATA ...." : ""}
+                    {stakersCount}
                   </Text>
                 </Flex>
               </HStack>
@@ -405,7 +404,7 @@ function RewardDistribution() {
                   <Tbody>
                     {stakers.length == 0 ? (
                       <Tr color="#fff">
-                        <Center py={7}>No Data.</Center>
+                        <Center py={7}>Loading Data...</Center>
                       </Tr>
                     ) : (
                       stakers.map((staker, index) => (

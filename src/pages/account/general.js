@@ -17,6 +17,10 @@ import {
   TagLabel,
   useMediaQuery,
   Stack,
+  TableContainer,
+  HStack,
+  Table,
+  Thead, Tr,Tbody,Th,Center, Td
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 
@@ -48,7 +52,9 @@ function GeneralPage() {
   const [tradeFee, setTradeFee] = useState(null);
   //const [platformTotalStaked,setPlatformTotalStaked] = useState(3);
   const [estimatedEarning, setEstimatedEarning] = useState(0);
+  const [rewardHistory,setRewardHistory] = useState([]);
   useEffect(() => {
+    getRewardHistory();
     const fetchAllNfts = async () => {
       const options = {
         owner: currentAccount?.address,
@@ -142,6 +148,17 @@ function GeneralPage() {
     };
     getTradeFee();
   }, [currentAccount]);
+  const getRewardHistory= async () => {
+    const rewards = await clientAPI(
+      "post",
+      "/getClaimRewardHistory",
+      {
+        staker_address:currentAccount.address
+      }
+    );
+    console.log(rewards);
+    setRewardHistory([]);
+  }
 
   const [isLargerThan480] = useMediaQuery("(min-width: 480px)");
 
@@ -423,9 +440,112 @@ function GeneralPage() {
               </Button>
 
               <FeeInfoModal />
+
             </Stack>
           </VStack>
         </Stack>
+        <Box maxW="6xl-mid" fontSize="lg">
+          <HStack pb={5} borderBottomWidth={1}>
+            <Flex alignItems="start" pr={20}>
+              <Text ml={1} color="brand.grayLight">
+                Recent Reward History
+              </Text>
+            </Flex>
+          </HStack>
+          <TableContainer
+            maxW="6xl-mid"
+            fontSize="lg"
+            h="full"
+            overflow="auto"
+            sx={{
+              "&::-webkit-scrollbar": {
+                width: "4px",
+                height: "4px",
+                borderRadius: "0px",
+                backgroundColor: `transparent`,
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: `#7ae7ff`,
+              },
+              "&::-webkit-scrollbar-thumb:hover": {
+                backgroundColor: `#7ae7ff`,
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: `transparent`,
+              },
+            }}
+          >
+            <Table
+              variant="striped"
+              colorScheme="blackAlpha"
+              overflow="auto"
+            >
+              <Thead>
+                <Tr>
+                  <Th
+                    fontFamily="Evogria"
+                    fontSize="sm"
+                    fontWeight="normal"
+                    py={7}
+                  >
+                    BlockNumber
+                  </Th>
+                  <Th
+                    fontFamily="Evogria"
+                    fontSize="sm"
+                    fontWeight="normal"
+                    py={7}
+                  >
+                    Staker
+                  </Th>
+                  <Th
+                    fontFamily="Evogria"
+                    fontSize="sm"
+                    fontWeight="normal"
+                    py={7}
+                    isNumeric
+                  >
+                    Staked Amount
+                  </Th>
+                  <Th
+                    fontFamily="Evogria"
+                    fontSize="sm"
+                    fontWeight="normal"
+                    py={7}
+                    isNumeric
+                  >
+                    Reward Amount
+                  </Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {rewardHistory.length == 0 ? (
+                  <Tr color="#fff">
+                    <Center py={7}>No Record found or Loading for data.</Center>
+                  </Tr>
+                ) : (
+                  rewardHistory.map((reward, index) => (
+                    <Tr key={index} color="#fff">
+                      <Td py={7}>{truncateStr(reward.address, 5)}</Td>
+                      <Td py={7} isNumeric>
+                        {reward.blockNumber}
+                      </Td>
+                      <Td py={7}>
+                        {reward.staker}
+                      </Td>
+                      <Td py={7} isNumeric>
+                        {reward.stakedAmount}
+                      </Td>
+                      <Td py={7} isNumeric>
+                        {reward.rewardAmount}
+                      </Td>
+                    </Tr>
+                  ))
+                )}
+              </Tbody>
+            </Table>
+          </TableContainer>
+        </Box>
       </Box>
     </Box>
   );
