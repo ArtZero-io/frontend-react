@@ -74,9 +74,9 @@ async function addWhitelist(caller_account, account, phaseId, amount, price) {
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
-
+  const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
   contract.tx
-    .addWhitelist({ gasLimit, value: azero_value }, account, phaseId, amount, price)
+    .addWhitelist({ gasLimit, value: azero_value }, account, phaseId, amount, minting_fee)
     .signAndSend(
       address,
       { signer: injector.signer },

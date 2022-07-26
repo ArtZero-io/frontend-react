@@ -17,6 +17,7 @@ import { IPFS_BASE_URL } from "@constants/index";
 import {
   convertStringToPrice
 } from "@utils";
+import useInterval from "use-interval";
 
 function LaunchpadDetailHeader({project, currentWhitelist}) {
   const [livePhase, setLivePhase] = useState({});
@@ -28,15 +29,11 @@ function LaunchpadDetailHeader({project, currentWhitelist}) {
       const data = phases.find((p) => p.isLive === 1);
       console.log("data", data);
       setLivePhase(data);
-      getCountDownTimer(data.endTime);
     }
   }, [phases, useState]);
 
-  const getCountDownTimer = (endTime) => {
-    console.log(endTime);
-
-    const total = endTime - Date.now();
-    console.log(total);
+  useInterval(() => {
+    const total = livePhase.endTime - Date.now();
     const seconds = Math.floor( (total/1000) % 60 );
     const minutes = Math.floor( (total/1000/60) % 60 );
     const hours = Math.floor( (total/(1000*60*60)) % 24 );
@@ -47,8 +44,7 @@ function LaunchpadDetailHeader({project, currentWhitelist}) {
       minutes: minutes,
       seconds: seconds
     });
-    console.log(days, hours, minutes, seconds);
-  }
+  }, 1000);
 
   return (
     <Box as="section" position="relative" w="full" mt="320px">

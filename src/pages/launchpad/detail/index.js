@@ -81,7 +81,6 @@ const LaunchpadDetailPage = () => {
             if (currentWhitelistTmp) {
               setCurrentWhitelist(currentWhitelistTmp);
             }
-            
           }
         }
         const projectDetail = {
