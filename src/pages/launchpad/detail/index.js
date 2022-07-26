@@ -62,6 +62,7 @@ const LaunchpadDetailPage = () => {
         for (let i = 1; i <= totalPhase; i++) {
           const phaseSchedule = await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(currentAccount, i);
           const phaseCode = await launchpad_psp34_nft_standard_calls.getPhasesCodeById(currentAccount, i);
+          
           const phaseInfo = {
             id: i,
             code: phaseCode,
@@ -72,7 +73,7 @@ const LaunchpadDetailPage = () => {
           phasesTmp.push(phaseInfo);
           
           if (i == currentPhaseIdTmp) {
-            console.log(phaseCode);
+            console.log('LaunchpadDetailPage::phaseSchedule', phaseSchedule);
             setTotalWhitelistAmount(parseInt(phaseSchedule.whitelistAmount));
             setTotalClaimedAmount(parseInt(phaseSchedule.claimedAmount));
             setCurrentPhaseId(currentPhaseIdTmp);
@@ -136,7 +137,7 @@ const LaunchpadDetailPage = () => {
         </Flex>) : ''}
         {(currentAccount && currentWhitelist.whitelistAmount) ? (<Flex w="full" justifyContent="center">
           <Button onClick={() => onWhiteListMint()} variant="outline">mint</Button>
-        </Flex>) : ''}
+        </Flex>) : 'No whitelist amount in current phase'}
       </Box>
 
       <Box
