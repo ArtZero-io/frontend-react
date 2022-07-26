@@ -14,35 +14,46 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { IPFS_BASE_URL } from "@constants/index";
+import {
+  convertStringToPrice
+} from "@utils";
 
-function LaunchpadDetailHeader({project}) {
+function LaunchpadDetailHeader({project, currentWhitelist}) {
   const [livePhase, setLivePhase] = useState({});
+  const { phases } = project;
+  const [countDownTimer, setCountDownTimer] = useState({});
 
   useEffect(() => {
-    const fetchData = async () => {
-      let phaseTmp = {};
-      console.log('LaunchpadDetailHeader::project', project);
-      console.log(project.phases && project.phases.length);
-      if (project.phases && project.phases.length) {
-        for (const phase of project.phases) {
-          console.log(phase);
-          if (phase.isLive == 1) {
-            phaseTmp = phase;
-          }
-        }
-      }
-      console.log(phaseTmp);
-      setLivePhase(phaseTmp);
-    };
+    if (phases?.length > 0) {
+      const data = phases.find((p) => p.isLive === 1);
+      console.log("data", data);
+      setLivePhase(data);
+      getCountDownTimer(data.endTime);
+    }
+  }, [phases, useState]);
 
-    fetchData();
-  }, []);
+  const getCountDownTimer = (endTime) => {
+    console.log(endTime);
+
+    const total = endTime - Date.now();
+    console.log(total);
+    const seconds = Math.floor( (total/1000) % 60 );
+    const minutes = Math.floor( (total/1000/60) % 60 );
+    const hours = Math.floor( (total/(1000*60*60)) % 24 );
+    const days = Math.floor( total/(1000*60*60*24) );
+    setCountDownTimer({
+      days: days,
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds
+    });
+    console.log(days, hours, minutes, seconds);
+  }
 
   return (
     <Box as="section" position="relative" w="full" mt="320px">
       <Box mx="auto" w="full" maxW="870px">
         <VStack>
-          {console.log('LaunchpadDetailHeader::render', project)}
           <Center
             rounded="full"
             w={["80px", "120px", "120px"]}
@@ -116,14 +127,20 @@ function LaunchpadDetailHeader({project}) {
                       {project.totalSupply}
                     </Text>
                   </Text>
+                  {
+                    (livePhase && currentWhitelist.mintingFee) ? (
+                      <>
+                        <Text>
+                          Price:{" "}
+                          <Text as="span" color="#fff">
+                            {convertStringToPrice(currentWhitelist.mintingFee)} <AzeroIcon mb="5px" />
+                          </Text>
+                        </Text>
+                      </>
+                    ) : ''
+                  }
                   {(livePhase ? (
                     <>
-                      <Text>
-                        Price:{" "}
-                        <Text as="span" color="#fff">
-                          1.20 <AzeroIcon mb="5px" />
-                        </Text>
-                      </Text>
                       <Text>
                         Mint Phase:{" "}
                         <Text as="span" color="#fff">
@@ -164,7 +181,7 @@ function LaunchpadDetailHeader({project}) {
                     fontSize={{ base: "32px", "2xl": "48px" }}
                     lineHeight="none"
                   >
-                    02{" "}
+                    {countDownTimer.days}{" "}
                   </Text>
                   <Text fontSize={["13px", "16px", "16px"]}>Days</Text>
                 </motion.div>
@@ -190,7 +207,7 @@ function LaunchpadDetailHeader({project}) {
                     fontSize={{ base: "32px", "2xl": "48px" }}
                     lineHeight="none"
                   >
-                    04{" "}
+                    {countDownTimer.hours}{" "}
                   </Text>
                   <Text fontSize={["13px", "16px", "16px"]}>Hours</Text>
                 </motion.div>
@@ -215,7 +232,7 @@ function LaunchpadDetailHeader({project}) {
                     fontSize={{ base: "32px", "2xl": "48px" }}
                     lineHeight="none"
                   >
-                    02{" "}
+                    {countDownTimer.minutes}{" "}
                   </Text>
                   <Text fontSize={["13px", "16px", "16px"]}>Mins</Text>
                 </motion.div>
@@ -240,7 +257,7 @@ function LaunchpadDetailHeader({project}) {
                     fontSize={{ base: "32px", "2xl": "48px" }}
                     lineHeight="none"
                   >
-                    02{" "}
+                    {countDownTimer.minutes}{" "}
                   </Text>
                   <Text fontSize={["13px", "16px", "16px"]}>seconds</Text>
                 </motion.div>

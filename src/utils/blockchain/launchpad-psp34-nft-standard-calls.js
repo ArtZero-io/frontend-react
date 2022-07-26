@@ -176,7 +176,7 @@ async function getWhitelistByAccountId(caller_account, phaseCode) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getCurrentPhase(address, {
+  const { result, output } = await contract.query.getWhitelistByAccountId(address, {
     value: azero_value,
     gasLimit,
   }, address, phaseCode);
@@ -184,6 +184,47 @@ async function getWhitelistByAccountId(caller_account, phaseCode) {
     return output.toHuman();
   }
   return null;
+}
+
+async function whitelistMint(caller_account, phaseId, amount) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 10;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+
+  contract.tx
+    .whitelistMint({ gasLimit, value: azero_value }, phaseId, amount)
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError", dispatchError.toString());
+          }
+        }
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+          toast.success(
+            `Add Whitelist ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
+  return unsubscribe;
 }
 
 const launchpad_psp34_nft_standard_calls = {
@@ -194,7 +235,8 @@ const launchpad_psp34_nft_standard_calls = {
   getPhasesCodeById,
   addWhitelist,
   getCurrentPhase,
-  getWhitelistByAccountId
+  getWhitelistByAccountId,
+  whitelistMint
 };
 
 export default launchpad_psp34_nft_standard_calls;

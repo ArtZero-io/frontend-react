@@ -604,9 +604,9 @@ export const fetchInitialValuesProject = async ({
     roadmap: [{ type: "2022 Q1", content: "Do something" }],
     members: [{ name: "Mr. A", title: "Boss", avatar: "" }],
     phases: [
-      { name: "OG mint 1", start: "", end: "" },
-      { name: "WhiteList mint 1", start: "", end: "" },
-      { name: "Public mint1", start: "", end: "" },
+      { name: "OG mint", start: "", end: "" },
+      { name: "WhiteList mint", start: "", end: "" },
+      { name: "Public mint", start: "", end: "" },
     ],
   };
 
