@@ -16,8 +16,9 @@ import {
   TagLeftIcon,
   TagLabel,
   Stack,
+  Skeleton,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useState, memo } from "react";
+import { useState, memo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useSubstrateState } from "@utils/substrate";
@@ -53,103 +54,9 @@ function MintHeader({ loading }) {
   const [publicSaleMintedCount, setPublicSaleMintedCount] = useState(0);
   const [totalMinted, setTotalMinted] = useState(0);
   const [whitelistAmount, setWhitelistAmount] = useState(1);
+  const [isLoadingMintData, setIsLoadingMintData] = useState(false);
 
   const [action, setAction] = useState("");
-
-  const onGetTotalMinted = useCallback(
-    async (e) => {
-      let res = await artzero_nft_calls.totalSupply(currentAccount);
-
-      if (res) setTotalMinted(res);
-      else setTotalMinted(0);
-    },
-    [currentAccount]
-  );
-
-  useEffect(() => {
-    const onGetWhiteList = async (e) => {
-      let whitelist = await artzero_nft_calls.getWhitelist(
-        currentAccount,
-        currentAccount?.address
-      );
-
-      if (whitelist) {
-        setWhitelist((prev) => {
-          return { ...prev, ...whitelist };
-        });
-      } else {
-        setWhitelist((prev) => {
-          return null;
-        });
-      }
-    };
-    const onGetBalance = async (e) => {
-      let unstakedCount = await artzero_nft_calls.balanceOf(
-        currentAccount,
-        currentAccount?.address
-      );
-      const stakedCount = await fetchMyPMPStakedCount(
-        currentAccount,
-        staking_calls
-      );
-      setBalanceStake(stakedCount);
-      const pendingCount = await fetchMyPMPPendingCount(
-        currentAccount,
-        staking_calls
-      );
-      setBalancePending(pendingCount);
-      const totalCount = stakedCount + pendingCount + unstakedCount;
-
-      if (totalCount) {
-        setBalance(totalCount);
-      } else {
-        setBalance(0);
-      }
-    };
-    const onGetMintMode = async (e) => {
-      let mintMode = await artzero_nft_calls.getMintMode(currentAccount);
-
-      if (mintMode) setMintMode(Number(mintMode));
-      else setMintMode(-1);
-    };
-
-    onGetBalance();
-    onGetWhiteList();
-    onGetMintMode();
-  }, [currentAccount, currentAccount?.address, loading]);
-
-  const onGetMintingFee = async (e) => {
-    let res = await artzero_nft_calls.getMintingFee(currentAccount);
-    if (res) {
-      setFee1(res);
-    } else {
-      setFee1(-1);
-    }
-  };
-
-  const onGetPublicSaleAmount = async (e) => {
-    let res = await artzero_nft_calls.getPublicSaleAmount(currentAccount);
-
-    if (res) {
-      setAmount1(res);
-    } else {
-      setAmount1(-1);
-    }
-  };
-
-  const onGetPublicSaleMintedCount = useCallback(
-    async (e) => {
-      let res = await artzero_nft_calls.getPublicSaleMintedAmount(
-        currentAccount
-      );
-      if (res) {
-        setPublicSaleMintedCount(res);
-      } else {
-        setPublicSaleMintedCount(0);
-      }
-    },
-    [currentAccount]
-  );
 
   const onWhiteListMint = async () => {
     setAction("");
@@ -181,8 +88,6 @@ function MintHeader({ loading }) {
         whitelistAmount,
         dispatch
       );
-
-      // await onRefresh();
     } catch (error) {
       dispatch({
         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
@@ -194,8 +99,6 @@ function MintHeader({ loading }) {
 
   const onPaidMint = async () => {
     const { data } = await api.query.system.account(currentAccount.address);
-
-    // const balance = new BN(data.free, 10, "le") / 10 ** 12;
 
     const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
 
@@ -224,30 +127,269 @@ function MintHeader({ loading }) {
         toast.error(error);
       }
     }
-
-    // await delay(10000);
-    // await onRefresh();
   };
 
-  const onRefresh = useCallback(async () => {
-    await onGetMintingFee();
-    await onGetPublicSaleAmount();
-    onGetPublicSaleMintedCount();
-    await onGetTotalMinted();
-  }, [
-    onGetMintingFee,
-    onGetPublicSaleAmount,
-    onGetPublicSaleMintedCount,
-    onGetTotalMinted,
-  ]);
-
-  const fetchMintData = useCallback(async () => {
-    await onRefresh();
-  }, [onRefresh]);
-
   useEffect(() => {
-    fetchMintData();
-  }, [currentAccount, fetchMintData, loading]);
+    const fetchData = async () => {
+      const getBalance = async () => {
+        let unstakedCount = await artzero_nft_calls.balanceOf(
+          currentAccount,
+          currentAccount?.address
+        );
+        const stakedCount = await fetchMyPMPStakedCount(
+          currentAccount,
+          staking_calls
+        );
+        setBalanceStake(stakedCount);
+        const pendingCount = await fetchMyPMPPendingCount(
+          currentAccount,
+          staking_calls
+        );
+        setBalancePending(pendingCount);
+        const totalCount = stakedCount + pendingCount + unstakedCount;
+
+        if (totalCount) {
+          setBalance(totalCount);
+        } else {
+          setBalance(0);
+        }
+      };
+
+      try {
+        setIsLoadingMintData(true);
+
+        const totalMintedData = await getTotalMinted(currentAccount);
+        setTotalMinted(totalMintedData);
+
+        const whitelistData = await getWhiteList(currentAccount);
+        console.log("whitelistData", whitelistData);
+
+        if (whitelistData) {
+          setWhitelist((prev) => {
+            return { ...prev, ...whitelistData };
+          });
+        } else {
+          setWhitelist(null);
+        }
+
+        await getBalance(currentAccount);
+
+        const mintModeData = await getMintMode(currentAccount);
+        setMintMode(mintModeData);
+
+        const mintingFeeData = await getMintingFee(currentAccount);
+        setFee1(mintingFeeData);
+
+        const amount1Data = await getPublicSaleAmount(currentAccount);
+
+        const publicSaleMintedCountData = await getPublicSaleMintedCount(
+          currentAccount
+        );
+
+        await Promise.all([amount1Data, publicSaleMintedCountData]).then(
+          ([amount1Data, publicSaleMintedCountData]) => {
+            setAmount1(amount1Data);
+            setPublicSaleMintedCount(publicSaleMintedCountData);
+          }
+        );
+
+        setIsLoadingMintData(false);
+      } catch (error) {
+        console.log(error);
+        setIsLoadingMintData(false);
+      }
+    };
+
+    fetchData();
+  }, [currentAccount]);
+
+  //==================OLD CODE START
+
+  // const onGetTotalMinted = useCallback(
+  //   async (e) => {
+  //     let res = await artzero_nft_calls.totalSupply(currentAccount);
+
+  //     if (res) setTotalMinted(res);
+  //     else setTotalMinted(0);
+  //   },
+  //   [currentAccount]
+  // );
+
+  // useEffect(() => {
+  //   const onGetWhiteList = async (e) => {
+  //     let whitelist = await artzero_nft_calls.getWhitelist(
+  //       currentAccount,
+  //       currentAccount?.address
+  //     );
+
+  //     if (whitelist) {
+  //       setWhitelist((prev) => {
+  //         return { ...prev, ...whitelist };
+  //       });
+  //     } else {
+  //       setWhitelist((prev) => {
+  //         return null;
+  //       });
+  //     }
+  //   };
+  //   const onGetBalance = async (e) => {
+  //     let unstakedCount = await artzero_nft_calls.balanceOf(
+  //       currentAccount,
+  //       currentAccount?.address
+  //     );
+  //     const stakedCount = await fetchMyPMPStakedCount(
+  //       currentAccount,
+  //       staking_calls
+  //     );
+  //     setBalanceStake(stakedCount);
+  //     const pendingCount = await fetchMyPMPPendingCount(
+  //       currentAccount,
+  //       staking_calls
+  //     );
+  //     setBalancePending(pendingCount);
+  //     const totalCount = stakedCount + pendingCount + unstakedCount;
+
+  //     if (totalCount) {
+  //       setBalance(totalCount);
+  //     } else {
+  //       setBalance(0);
+  //     }
+  //   };
+  //   const onGetMintMode = async (e) => {
+  //     let mintMode = await artzero_nft_calls.getMintMode(currentAccount);
+
+  //     if (mintMode) setMintMode(Number(mintMode));
+  //     else setMintMode(-1);
+  //   };
+
+  //   onGetBalance();
+  //   onGetWhiteList();
+  //   onGetMintMode();
+  // }, [currentAccount, currentAccount?.address, loading]);
+
+  // const onGetMintingFee = async (e) => {
+  //   let res = await artzero_nft_calls.getMintingFee(currentAccount);
+  //   if (res) {
+  //     setFee1(res);
+  //   } else {
+  //     setFee1(-1);
+  //   }
+  // };
+
+  // const onGetPublicSaleAmount = async (e) => {
+  //   let res = await artzero_nft_calls.getPublicSaleAmount(currentAccount);
+
+  //   if (res) {
+  //     setAmount1(res);
+  //   } else {
+  //     setAmount1(-1);
+  //   }
+  // };
+
+  // const onGetPublicSaleMintedCount = useCallback(
+  //   async (e) => {
+  //     let res = await artzero_nft_calls.getPublicSaleMintedAmount(
+  //       currentAccount
+  //     );
+  //     if (res) {
+  //       setPublicSaleMintedCount(res);
+  //     } else {
+  //       setPublicSaleMintedCount(0);
+  //     }
+  //   },
+  //   [currentAccount]
+  // );
+
+  // const onWhiteListMint = async () => {
+  //   setAction("");
+
+  //   const { data: balance } = await api.query.system.account(
+  //     currentAccount?.address
+  //   );
+
+  //   const freeBalance =
+  //     new BN(balance.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+
+  //   if (freeBalance < 0.01) {
+  //     toast.error("Your balance is low.");
+  //     return;
+  //   }
+
+  //   try {
+  //     setAction("whitelist");
+
+  //     dispatch({
+  //       type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+  //       payload: {
+  //         status: "Start",
+  //       },
+  //     });
+
+  //     await artzero_nft_calls.whitelistMint(
+  //       currentAccount,
+  //       whitelistAmount,
+  //       dispatch
+  //     );
+  //   } catch (error) {
+  //     dispatch({
+  //       type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+  //     });
+  //     setAction("");
+  //     toast.error(error);
+  //   }
+  // };
+
+  // const onPaidMint = async () => {
+  //   const { data } = await api.query.system.account(currentAccount.address);
+
+  //   const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+
+  //   if (balance < fee1 + 0.01) {
+  //     toast.error("Not enough balance to mint");
+  //     return;
+  //   }
+
+  //   if (Number(mintMode) === 1) {
+  //     try {
+  //       setAction("public");
+
+  //       dispatch({
+  //         type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
+  //         payload: {
+  //           status: "Start",
+  //         },
+  //       });
+
+  //       await artzero_nft_calls.paidMint(currentAccount, fee1, dispatch);
+  //     } catch (error) {
+  //       dispatch({
+  //         type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
+  //       });
+  //       setAction("");
+  //       toast.error(error);
+  //     }
+  //   }
+  // };
+
+  // const onRefresh = useCallback(async () => {
+  //   await onGetMintingFee();
+  //   await onGetPublicSaleAmount();
+  //   onGetPublicSaleMintedCount();
+  //   await onGetTotalMinted();
+  // }, [
+  //   onGetMintingFee,
+  //   onGetPublicSaleAmount,
+  //   onGetPublicSaleMintedCount,
+  //   onGetTotalMinted,
+  // ]);
+
+  // const fetchMintData = useCallback(async () => {
+  //   await onRefresh();
+  // }, [onRefresh]);
+
+  // useEffect(() => {
+  //   fetchMintData();
+  // }, [currentAccount, fetchMintData, loading]);
 
   return (
     <>
@@ -392,9 +534,10 @@ function MintHeader({ loading }) {
                 {!whitelist && (
                   <Heading
                     py="30px"
-                    size="h6"
-                    textTransform="uppercase"
+                    color="#fff"
                     lineHeight="22px"
+                    textTransform="uppercase"
+                    fontSize={{ base: "14px", xl: "15px" }}
                   >
                     Notice: You are not in the whitelist for minting PRAYING
                     MANTIS PREDATORS (PMP) NFTs
@@ -410,6 +553,7 @@ function MintHeader({ loading }) {
                       Minting fee: <span style={{ color: "#fff" }}>0</span>{" "}
                       <AzeroIcon mb={1.5} />
                     </Text>
+
                     <Text mt={3} fontSize={{ base: "16px", xl: "18px" }}>
                       Minted / Max Mint:{" "}
                       <span style={{ color: "#fff" }}>
@@ -462,7 +606,7 @@ function MintHeader({ loading }) {
                     isDo={action === "whitelist"}
                     type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
                     text="whitelist"
-                    isLoading={addNftTnxStatus}
+                    isLoading={addNftTnxStatus || isLoadingMintData}
                     loadingText={`${addNftTnxStatus?.status}`}
                     onClick={onWhiteListMint}
                     variant="outline"
@@ -511,14 +655,20 @@ function MintHeader({ loading }) {
                       mt={3}
                       fontSize={{ base: "16px", xl: "18px" }}
                     >
-                      Minting fee: <span style={{ color: "#fff" }}>{fee1}</span>{" "}
-                      <AzeroIcon mb={1.5} />
+                      Minting fee:{" "}
+                      <Skeleton as="span" isLoaded={!isLoadingMintData}>
+                        <span style={{ color: "#fff" }}>{fee1}</span>{" "}
+                        <AzeroIcon mb={1.5} />
+                      </Skeleton>
                     </Text>
+
                     <Text mt={3} fontSize={{ base: "16px", xl: "18px" }}>
                       Minted / Max Mint:{" "}
-                      <span style={{ color: "#fff" }}>
-                        {publicSaleMintedCount} / {amount1} NFTs
-                      </span>
+                      <Skeleton as="span" isLoaded={!isLoadingMintData}>
+                        <span style={{ color: "#fff" }}>
+                          {publicSaleMintedCount} / {amount1} NFTs
+                        </span>
+                      </Skeleton>
                     </Text>
                   </>
                 ) : null}
@@ -535,7 +685,7 @@ function MintHeader({ loading }) {
                   </>
                 ) : null}
               </Box>
-
+              {console.log("isLoadingMintData", isLoadingMintData)}
               <StatusBuyButton
                 shouldDisabled={
                   Number(mintMode) === 2 ||
@@ -547,7 +697,7 @@ function MintHeader({ loading }) {
                 isDo={action === "public"}
                 type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
                 text="public"
-                isLoading={addNftTnxStatus}
+                isLoading={addNftTnxStatus || isLoadingMintData}
                 loadingText={`${addNftTnxStatus?.status}`}
                 onClick={onPaidMint}
                 variant="solid"
@@ -563,3 +713,39 @@ function MintHeader({ loading }) {
 }
 
 export default memo(MintHeader);
+
+const getTotalMinted = async (currentAccount) => {
+  let res = await artzero_nft_calls.totalSupply(currentAccount);
+
+  return res || 0;
+};
+
+const getWhiteList = async (currentAccount) => {
+  let res = await artzero_nft_calls.getWhitelist(
+    currentAccount,
+    currentAccount?.address
+  );
+  console.log("getWhiteList res", res);
+  return res;
+};
+
+const getMintMode = async (currentAccount) => {
+  let res = await artzero_nft_calls.getMintMode(currentAccount);
+
+  return Number(res) || -1;
+};
+const getMintingFee = async (currentAccount) => {
+  let res = await artzero_nft_calls.getMintingFee(currentAccount);
+  return res || -1;
+};
+
+const getPublicSaleAmount = async (currentAccount) => {
+  let res = await artzero_nft_calls.getPublicSaleAmount(currentAccount);
+
+  return res || -1;
+};
+
+const getPublicSaleMintedCount = async (currentAccount) => {
+  let res = await artzero_nft_calls.getPublicSaleMintedAmount(currentAccount);
+  return res || -1;
+};
