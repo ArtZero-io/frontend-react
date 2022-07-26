@@ -6,6 +6,7 @@ import AdminHeader from "@pages/admin/components/Header";
 import ContractTab from "@pages/admin/components/Tab/Contract";
 import CollectionTab from "@pages/admin/components/Tab/Collection";
 import CheckCollection from "@pages/admin/components/Tab/CheckCollection";
+import RewardDistribution from "@pages/admin/components/Tab/RewardDistribution";
 const AdminLayout = () => {
   const tabData = [
     {
@@ -19,6 +20,10 @@ const AdminLayout = () => {
     {
       label: "Check Advanced Mode Collection",
       content: <CheckCollection />,
+    },
+    {
+      label: "Reward Distribution",
+      content: <RewardDistribution />,
     },
   ];
 
