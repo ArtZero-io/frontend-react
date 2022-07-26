@@ -176,7 +176,7 @@ async function getWhitelistByAccountId(caller_account, phaseCode) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getCurrentPhase(address, {
+  const { result, output } = await contract.query.getWhitelistByAccountId(address, {
     value: azero_value,
     gasLimit,
   }, address, phaseCode);

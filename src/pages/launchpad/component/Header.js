@@ -14,8 +14,11 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { IPFS_BASE_URL } from "@constants/index";
+import {
+  convertStringToPrice
+} from "@utils";
 
-function LaunchpadDetailHeader({project}) {
+function LaunchpadDetailHeader({project, currentWhitelist}) {
   const [livePhase, setLivePhase] = useState({});
   const { phases } = project;
   const [countDownTimer, setCountDownTimer] = useState({});
@@ -124,14 +127,20 @@ function LaunchpadDetailHeader({project}) {
                       {project.totalSupply}
                     </Text>
                   </Text>
+                  {
+                    (livePhase && currentWhitelist.mintingFee) ? (
+                      <>
+                        <Text>
+                          Price:{" "}
+                          <Text as="span" color="#fff">
+                            {convertStringToPrice(currentWhitelist.mintingFee)} <AzeroIcon mb="5px" />
+                          </Text>
+                        </Text>
+                      </>
+                    ) : ''
+                  }
                   {(livePhase ? (
                     <>
-                      <Text>
-                        Price:{" "}
-                        <Text as="span" color="#fff">
-                          1.20 <AzeroIcon mb="5px" />
-                        </Text>
-                      </Text>
                       <Text>
                         Mint Phase:{" "}
                         <Text as="span" color="#fff">

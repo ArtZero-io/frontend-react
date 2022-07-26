@@ -35,6 +35,8 @@ const LaunchpadDetailPage = () => {
   const [totalWhitelistAmount, setTotalWhitelistAmount] = useState(0);
   const [totalClaimedAmount, setTotalClaimedAmount] = useState(0);
   const [currentPhaseId, setCurrentPhaseId] = useState(0);
+  const [currentWhitelist, setCurrentWhitelist] = useState({});
+
   useEffect(() => {
     const fetchData = async () => {
       const project = await launchpad_contract_calls.getProjectByNftAddress(
@@ -57,10 +59,8 @@ const LaunchpadDetailPage = () => {
         const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
         let phasesTmp = [];
         const currentPhaseIdTmp = await launchpad_psp34_nft_standard_calls.getCurrentPhase(currentAccount);
-        console.log('currentPhaseId', currentPhaseIdTmp);
         for (let i = 1; i <= totalPhase; i++) {
           const phaseSchedule = await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(currentAccount, i);
-          console.log('LaunchpadDetailPage::phaseSchedule', phaseSchedule);
           const phaseCode = await launchpad_psp34_nft_standard_calls.getPhasesCodeById(currentAccount, i);
           const phaseInfo = {
             id: i,
@@ -70,10 +70,18 @@ const LaunchpadDetailPage = () => {
             isLive: (i == currentPhaseIdTmp) ? 1 : 0
           };
           phasesTmp.push(phaseInfo);
+          
           if (i == currentPhaseIdTmp) {
+            console.log(phaseCode);
             setTotalWhitelistAmount(parseInt(phaseSchedule.whitelistAmount));
             setTotalClaimedAmount(parseInt(phaseSchedule.claimedAmount));
             setCurrentPhaseId(currentPhaseIdTmp);
+            const currentWhitelistTmp = await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(currentAccount, phaseCode);
+            console.log('LaunchpadDetailPage::currentWhitelistTmp', currentWhitelistTmp);
+            if (currentWhitelistTmp) {
+              setCurrentWhitelist(currentWhitelistTmp);
+            }
+            
           }
         }
         const projectDetail = {
@@ -104,7 +112,7 @@ const LaunchpadDetailPage = () => {
       backdrop={`${IPFS_BASE_URL}/${formattedCollection.headerImage}`}
       variant="launchpad-detail"
     >
-      <LaunchpadDetailHeader project={formattedCollection}/>
+      <LaunchpadDetailHeader project={formattedCollection} currentWhitelist={currentWhitelist}/>
 
       <Box
         w="full"
