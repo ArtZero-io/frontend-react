@@ -162,7 +162,6 @@ function MintHeader({ loading }) {
         setTotalMinted(totalMintedData);
 
         const whitelistData = await getWhiteList(currentAccount);
-        console.log("whitelistData", whitelistData);
 
         if (whitelistData) {
           setWhitelist((prev) => {
@@ -725,7 +724,7 @@ const getWhiteList = async (currentAccount) => {
     currentAccount,
     currentAccount?.address
   );
-  console.log("getWhiteList res", res);
+
   return res;
 };
 

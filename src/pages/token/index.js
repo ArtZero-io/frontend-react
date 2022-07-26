@@ -317,7 +317,7 @@ function TokenPage() {
 
   return (
     <NftLayout>
-      <VStack minH="calc(100vh - 265px - 80px)" bg="brand.grayDark">
+      <VStack minH="calc(100vh - 80px)" bg="brand.grayDark">
         {loading || loadingForceUpdate ? (
           <ModalLoader loadingTime={loadingTime || 1} />
         ) : (
