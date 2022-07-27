@@ -380,18 +380,23 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   <Heading size="h4">1. Project info</Heading>
 
                   <Stack
-                    direction={{ base: "column", xl: "row" }}
-                    align="flex-end"
+                    direction={{ base: "column", md: "row" }}
+                    align="start"
                   >
-                    <Input
-                      type="text"
-                      isRequired={true}
-                      name="projectName"
-                      label="Project name"
-                      placeholder="Project name"
-                      isDisabled={addCollectionTnxStatus}
-                    />
-                    <Stack w={{ base: "315px", xl: "775px" }} pb="30px">
+                    <Stack w={{ base: "100%", md: "50%" }}>
+                      <Input
+                        type="text"
+                        isRequired={true}
+                        name="projectName"
+                        label="Project name"
+                        placeholder="Project name"
+                        isDisabled={addCollectionTnxStatus}
+                      />
+                    </Stack>
+                    <Stack
+                      // w={{ base: "315px", xl: "775px" }}
+                      pb="30px"
+                    >
                       <Text fontSize="lg" ml={1} mb="10px">
                         Start time - End time
                       </Text>
@@ -489,7 +494,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 <Stack>
                   <Heading size="h4"> 2. NFT info</Heading>
                   {mode === formMode.ADD && (
-                    <Stack direction={{ base: "column", xl: "row" }}>
+                    <Stack direction={{ base: "row", xl: "row" }}>
                       <Input
                         type="text"
                         name="nftName"

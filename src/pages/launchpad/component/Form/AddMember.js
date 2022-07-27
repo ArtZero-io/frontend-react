@@ -5,12 +5,14 @@ import {
   Button,
   Flex,
   Heading,
+  HStack,
   IconButton,
   Modal,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Stack,
   Text,
 } from "@chakra-ui/react";
 import { FieldArray, useField } from "formik";
@@ -65,62 +67,70 @@ function AddMember({ name, isOpen, onClose, mode }) {
             <div>
               {value?.map((members, index) => (
                 <div key={index}>
-                  <Flex alignItems="flex-start" mb={4}>
-                    <IconButton
-                      aria-label="Delete"
-                      icon={<DeleteIcon fontSize="24px" />}
-                      size="icon"
-                      variant="iconOutline"
-                      isDisabled={index === 0 && value.length === 1}
-                      onClick={() => arrayHelpers.remove(index)}
-                    />
-                    <Input
-                      isRequired={true}
-                      flexGrow={10}
-                      mx={5}
-                      width="15%"
-                      height={16}
-                      autoComplete="off"
-                      name={`members[${index}].name`}
-                      type="text"
-                      placeholder="Your name here"
-                    />
-                    <Input
-                      isRequired={true}
-                      textAlign="center"
-                      flexGrow={0}
-                      mx={5}
-                      height={16}
-                      width={"20%"}
-                      autoComplete="off"
-                      name={`members.${index}.title`}
-                      type="text"
-                      placeholder="Your title here"
-                    />
-                    <Input
-                      isRequired={true}
-                      textAlign="center"
-                      flexGrow={0}
-                      mx={5}
-                      height={16}
-                      width={"20%"}
-                      autoComplete="off"
-                      name={`members.${index}.socialLink`}
-                      type="text"
-                      placeholder="Your link here"
-                    />
+                  <Stack
+                    direction={{ base: "column", md: "row" }}
+                    alignItems="flex-start"
+                    mb={4}
+                  >
+                    <HStack w="full">
+                      <IconButton
+                        aria-label="Delete"
+                        icon={<DeleteIcon fontSize="24px" />}
+                        size="icon"
+                        variant="iconOutline"
+                        isDisabled={index === 0 && value.length === 1}
+                        onClick={() => arrayHelpers.remove(index)}
+                      />
+                      <Input
+                        isRequired={true}
+                        flexGrow={10}
+                        mx={5}
+                        width="45%"
+                        height={16}
+                        autoComplete="off"
+                        name={`members[${index}].name`}
+                        type="text"
+                        placeholder="Your name here"
+                      />
+                      <Input
+                        isRequired={true}
+                        textAlign="center"
+                        flexGrow={0}
+                        mx={5}
+                        height={16}
+                        width={"45%"}
+                        autoComplete="off"
+                        name={`members.${index}.title`}
+                        type="text"
+                        placeholder="Your title here"
+                      />
+                    </HStack>
+                    <HStack w="full" justifyContent="start" alignItems="center">
+                      <Input
+                        isRequired={true}
+                        textAlign="center"
+                        flexGrow={0}
+                        mx={5}
+                        height={16}
+                        width={"30%"}
+                        autoComplete="off"
+                        name={`members.${index}.socialLink`}
+                        type="text"
+                        placeholder="Your link here"
+                      />
 
-                    <ImageUpload
-                      minH="20px"
-                      // isDisabled={addCollectionTnxStatus}
-                      id={`memberAvatar${index}`}
-                      index={index}
-                      mode={mode}
-                      isBanner={false}
-                      imageIPFSUrl={avatarIPFSUrl}
-                      setImageIPFSUrl={handleAvatarUrl}
-                    />
-                  </Flex>
+                      <ImageUpload
+                        minH="20px"
+                        // isDisabled={addCollectionTnxStatus}
+                        id={`memberAvatar${index}`}
+                        index={index}
+                        mode={mode}
+                        isBanner={false}
+                        imageIPFSUrl={avatarIPFSUrl}
+                        setImageIPFSUrl={handleAvatarUrl}
+                      />
+                    </HStack>
+                  </Stack>
                 </div>
               ))}
               <Flex pb={6}>
