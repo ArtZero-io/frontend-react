@@ -14,11 +14,15 @@ import staking_calls from "@utils/blockchain/staking_calls";
 import useInterval from "use-interval";
 import { getPublicCurrentAccount } from "@utils";
 import { formatNumDynamicDecimal, shortenNumber } from "../../utils";
+import launchpad_manager from "@utils/blockchain/launchpad-manager";
+import collection_manager from "@utils/blockchain/collection-manager";
+import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
+
 const url =
   "https://api.coingecko.com/api/v3/simple/price?ids=aleph-zero&vs_currencies=usd";
 
 function StatsPage() {
-  const { currentAccount } = useSubstrateState();
+  const { currentAccount, api } = useSubstrateState();
 
   const [platformStatistics, setPlatformStatistics] = useState(null);
   const [topCollections, setTopCollections] = useState(null);
@@ -45,13 +49,29 @@ function StatsPage() {
         currentAccount || getPublicCurrentAccount()
       );
 
+      const launchpadBalance = await fetchUserBalance({
+        currentAccount,
+        api,
+        address: launchpad_manager?.CONTRACT_ADDRESS,
+      });
+      const collectionBalance = await fetchUserBalance({
+        currentAccount,
+        api,
+        address: collection_manager?.CONTRACT_ADDRESS,
+      });
+
+      console.log("profit before %---------------");
+      console.log("currentProfitMP", currentProfit);
+      console.log("collectionBal", collectionBalance?.balance);
+      console.log("launchpadBal", launchpadBalance?.balance);
+
       const totalVolume = await marketplace_contract_calls.getTotalVolume(
         currentAccount || getPublicCurrentAccount()
       );
 
-      const totalProfit = await marketplace_contract_calls.getTotalProfit(
-        currentAccount || getPublicCurrentAccount()
-      );
+      const totalProfit =
+        currentProfit + launchpadBalance?.balance + collectionBalance?.balance;
+      console.log("totalProfit", totalProfit);
 
       const dataList = await APICall.getCollectionByVolume({ limit: 5 });
 
@@ -86,7 +106,7 @@ function StatsPage() {
           },
           {
             title: "Next Payout",
-            value: (currentProfit * 0.3).toFixed(2),
+            value: (totalProfit * 0.3).toFixed(2),
             unit: "azero",
           },
           {
