@@ -349,7 +349,7 @@ function RewardDistribution() {
                             alignItems="center"
                           >
                             <Text color={"#fff"} py={2}>
-                             To do Step 3, admin need to run the script on the server to set all stakers claimable from FALSE to TRUE
+                             To do Step 3, admin need to run the script on the server to set all stakers is_claimed to FALSE
                             </Text>
                           </Flex>
                         </Box>
@@ -384,7 +384,7 @@ function RewardDistribution() {
                       <Heading size="h4">Add Rewards</Heading>
                       <Box mt={7}>
                         <Text color={"#fff"} py={2}>
-                          Only when staking is unlocked. Anyone can add.
+                          Only when staking is locked. Anyone can add.
                         </Text>
                         <Box>
                           <NumberInput
