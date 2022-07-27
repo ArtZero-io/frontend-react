@@ -17,6 +17,7 @@ import { FieldArray, useField } from "formik";
 import toast from "react-hot-toast";
 import Input from "@components/Input/Input";
 import { formMode } from "@constants";
+import CommonTextArea from "@components/TextArea/TextArea";
 
 function AddRoadmap({ name, isOpen, onClose, mode }) {
   const [{ value }] = useField(name);
@@ -47,31 +48,30 @@ function AddRoadmap({ name, isOpen, onClose, mode }) {
               {value?.map((roadmap, index) => (
                 <div key={index}>
                   <Flex alignItems="start" mb={4}>
-                    <Input
-                      width="20%"
-                      mx={5}
-                      height={16}
-                      autoComplete="off"
-                      name={`roadmap[${index}].type`}
-                      type="text"
-                      placeholder="Your type here"
-                    />
-                    <Input
-                      mx={5}
-                      height={16}
-                      autoComplete="off"
-                      name={`roadmap.${index}.content`}
-                      type="text"
-                      placeholder="Your content here"
-                    />
-
                     <IconButton
+                      mt="8px"
                       aria-label="Delete"
                       icon={<DeleteIcon fontSize="24px" />}
                       size="icon"
                       variant="iconOutline"
                       isDisabled={index === 0 && value.length === 1}
                       onClick={() => arrayHelpers.remove(index)}
+                    />
+                    <Input
+                      width="20%"
+                      mx={5}
+                      mt="8px"
+                      height={16}
+                      type="text"
+                      autoComplete="off"
+                      name={`roadmap[${index}].type`}
+                      placeholder="Your type here"
+                    />
+
+                    <CommonTextArea
+                      type="text"
+                      name={`roadmap.${index}.content`}
+                      placeholder="Your content here"
                     />
                   </Flex>
                 </div>

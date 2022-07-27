@@ -17,6 +17,11 @@ export const CANCEL_REQUEST_UNSTAKE = "cancelRequestUnstake";
 export const UNSTAKE = "unstake";
 export const LOCK = "lock";
 
+// PROJECT STATUS
+export const LIVE = "live";
+export const UPCOMING = "upcoming";
+export const ENDED = "ended";
+
 export const NUMBER_PER_PAGE = 6;
 
 export const IPFS_BASE_URL = "https://ipfs.infura.io/ipfs";

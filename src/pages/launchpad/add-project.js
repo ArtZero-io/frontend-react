@@ -24,9 +24,10 @@ const AddProject = () => {
         py="26px"
         mb="30px"
       >
-        <Heading size={"h5"} pb="30px" textAlign='center'>
+        <Heading size={"h5"} pb="30px" textAlign="center">
           Add new project
         </Heading>
+
         <AddNewProjectForm />
       </Stack>
     </Layout>

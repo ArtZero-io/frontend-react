@@ -93,8 +93,7 @@ const Layout = ({ backdrop, children, variant = null }) => {
         >
           <Box position="relative" w="full" h="full" overflow="hidden">
             <Image
-              // src={backdrop && getCachedImageShort(backdrop, 1920)}
-              src="https://api.artzero.io/getImage?input=QmVdtkRoaXiBsj3vo79nq36P7EVoBdxaZf8VGhHLfpxuEG&size=1920&url=https://ipfs.infura.io/ipfs/QmVdtkRoaXiBsj3vo79nq36P7EVoBdxaZf8VGhHLfpxuEG"
+              src={backdrop && getCachedImageShort(backdrop, 1920)}
               alt="bg-heroFull"
               w="full"
               h="full"

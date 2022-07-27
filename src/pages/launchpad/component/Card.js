@@ -17,7 +17,7 @@ import { useHistory } from "react-router-dom";
 import { secondsToTime } from "@utils/index";
 import * as ROUTES from "@constants/routes";
 import useInterval from "use-interval";
-import { IPFS_BASE_URL } from "@constants/index";
+import { getCachedImageShort } from "@utils/index";
 
 export const Card = ({ variant, project, collection_address }) => {
   const history = useHistory();
@@ -145,7 +145,7 @@ export const Card = ({ variant, project, collection_address }) => {
           w="full"
           h="full"
           objectFit="cover"
-          src={`${IPFS_BASE_URL}/${avatarImage}`}
+          src={getCachedImageShort(avatarImage, 500)}
           fallback={<Skeleton w="288px" h="288px" />}
         />
       </Square>

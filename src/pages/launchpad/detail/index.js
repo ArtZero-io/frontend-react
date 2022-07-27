@@ -21,7 +21,11 @@ import Layout from "@components/Layout/Layout";
 import LaunchpadDetailHeader from "../component/Header";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { TeamCard } from "../component/TeamCard";
-import { Link as ReactRouterLink, useParams } from "react-router-dom";
+import {
+  Link as ReactRouterLink,
+  useHistory,
+  useParams,
+} from "react-router-dom";
 import { useSubstrateState } from "@utils/substrate";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
@@ -40,6 +44,8 @@ const LaunchpadDetailPage = () => {
   const [totalClaimedAmount, setTotalClaimedAmount] = useState(0);
   const [currentPhaseId, setCurrentPhaseId] = useState(0);
   const [currentWhitelist, setCurrentWhitelist] = useState({});
+
+  const history = useHistory();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -145,15 +151,10 @@ const LaunchpadDetailPage = () => {
       mintingFee
     );
   };
-  console.log("formattedCollection", formattedCollection);
-  console.log(
-    "formattedCollection.headerImage",
-    formattedCollection.headerImage
-  );
+
   return (
     <Layout
-      // backdrop={`${IPFS_BASE_URL}/${formattedCollection.headerImage}`}
-      backdrop={getCachedImageShort(formattedCollection?.headerImage, 1920)}
+      backdrop={formattedCollection?.headerImage}
       variant="launchpad-detail"
     >
       <LaunchpadDetailHeader
@@ -172,6 +173,7 @@ const LaunchpadDetailPage = () => {
       >
         <Flex w="full" mb="15px">
           <Heading size="h6">Public Sale In Progress</Heading>
+
           <Spacer />
           {totalWhitelistAmount != 0 ? (
             <Text color="#888">
@@ -224,16 +226,18 @@ const LaunchpadDetailPage = () => {
         <Flex w="full" mb="15px">
           <Heading size="h4">Phases</Heading>
           <Spacer />
-          <Link
-            as={ReactRouterLink}
+
+          <Button
             variant="solid"
-            to={{
-              state: { formMode: "EDIT", collection_address },
-              pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
-            }}
+            onClick={() =>
+              history.push({
+                state: { formMode: "ADD" },
+                pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
+              })
+            }
           >
-            EDIT project
-          </Link>
+            edit project
+          </Button>
         </Flex>
 
         {phases && phases.length

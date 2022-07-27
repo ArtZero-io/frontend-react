@@ -24,7 +24,7 @@ import * as Yup from "yup";
 import AddMember from "./AddMember";
 import AddPhase from "./AddPhase";
 import AddRoadmap from "./AddRoadmap";
-import ExtraInformationInput from "@components/Input/Input";
+import CommonInput from "@components/Input/Input";
 import { timestampWithoutCommas } from "@utils";
 import { useLocation } from "react-router-dom";
 
@@ -71,12 +71,12 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
   const location = useLocation();
 
-  mode = location.state.formMode;
+  mode = location.state?.formMode;
 
   if (mode === "EDIT") {
-    nftContractAddress = location.state.collection_address;
+    nftContractAddress = location.state?.collection_address;
   }
-  
+
   useEffect(() => {
     const prepareData = async () => {
       const { error, initialValues, avatarIPFSUrl, headerIPFSUrl } =
@@ -402,22 +402,22 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       />
                     </Stack>
                   </Stack>
-                  <Stack>
-                    <ExtraInformationInput
+                  <Stack direction={["column", "row"]}>
+                    <CommonInput
                       isDisabled={addCollectionTnxStatus}
                       label="Website URL"
                       name="website"
                       type="text"
                       placeholder={"Website URL"}
                     />
-                    <ExtraInformationInput
+                    <CommonInput
                       isDisabled={addCollectionTnxStatus}
                       label="Twitter URL"
                       name="twitter"
                       type="text"
                       placeholder={"Twitter URL"}
                     />
-                    <ExtraInformationInput
+                    <CommonInput
                       isDisabled={addCollectionTnxStatus}
                       label="Discord URL"
                       name="discord"
@@ -538,6 +538,11 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       alignItems="flex-start"
                       textAlign="left"
                     >
+                      <Text color="#fff">
+                        Create new collection you will pay
+                        <strong> {"xxx"} $AZERO </strong> in fee to ArtZero.io
+                      </Text>
+
                       <CommonCheckbox
                         isDisabled={addCollectionTnxStatus}
                         name="agreeTosCheckbox"
@@ -601,7 +606,7 @@ export const fetchInitialValuesProject = async ({
     totalSupply: 0,
     agreeTosCheckbox: false,
     roadmap: [{ type: "2022 Q1", content: "Do something" }],
-    members: [{ name: "Mr. A", title: "Boss", avatar: "" }],
+    members: [{ name: "Mr. A", title: "Boss", avatar: "", socialLink: "" }],
     phases: [
       { name: "OG mint", start: "", end: "" },
       { name: "WhiteList mint", start: "", end: "" },

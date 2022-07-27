@@ -8,9 +8,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
-import { IPFS_BASE_URL } from "@constants/index";
+import { getCachedImageShort } from "@utils/index";
 
-export const TeamCard = ({team_member}) => {
+export const TeamCard = ({ team_member }) => {
   return (
     <Flex
       direction="column"
@@ -29,7 +29,7 @@ export const TeamCard = ({team_member}) => {
           w="full"
           h="full"
           objectFit="cover"
-          src={`${IPFS_BASE_URL}/${team_member.avatar}`}
+          src={getCachedImageShort(team_member?.avatar, 500)}
           fallback={<Skeleton w="250px" h="250px" />}
         />
       </Square>

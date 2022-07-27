@@ -25,7 +25,6 @@ import AnimationLoader from "@components/Loader/AnimationLoader";
 import * as ROUTES from "@constants/routes";
 
 export const GroupCard = ({ variant = "live", projectsList, loading }) => {
-  console.log('GroupCard variant', variant)
   // const [projectName, setProjectName] = useState("");
   // const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   // const [totalSupply, setTotalSupply] = useState(0);
@@ -86,7 +85,6 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
   //   // }
   // };
 
-  // export const GroupCard = ({ variant = "live", projectsList }) => {
   return (
     <>
       <Box
@@ -114,16 +112,17 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
           <Spacer />
 
           {variant === "live" && (
-            <Link
-              as={ReachLink}
+            <Button
               variant="solid"
-              to={{
-                state: { formMode: "ADD" },
-                pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
-              }}
+              onClick={() =>
+                history.push({
+                  state: { formMode: "ADD" },
+                  pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
+                })
+              }
             >
               add project
-            </Link>
+            </Button>
           )}
         </Flex>
 
@@ -137,7 +136,9 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
               justifyContent="start"
             >
               {projectsList.length ? (
-                projectsList.map((p) => <Card key={p.name} project={p} variant={variant}/>)
+                projectsList.map((p) => (
+                  <Card key={p.name} project={p} variant={variant} />
+                ))
               ) : (
                 <HStack justify="center" w="full">
                   <Heading size="h6">No project found.</Heading>

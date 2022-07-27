@@ -67,7 +67,6 @@ function LaunchpadDetailHeader({ project, currentWhitelist }) {
               rounded="full"
               objectFit="cover"
               src={getCachedImageShort(project?.avatarImage, 500)}
-              // src={`${IPFS_BASE_URL}/${project.avatarImage}`}
               fallback={
                 <Skeleton
                   w={["80px", "120px", "120px"]}

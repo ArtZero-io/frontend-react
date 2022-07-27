@@ -46,6 +46,11 @@ function AddMember({ name, isOpen, onClose, mode }) {
             Title
           </Text>
         </Box>
+        <Box mb={4} flexGrow={1} textAlign="left" pl={3} w={16}>
+          <Text fontSize={"lg"} color="#fff">
+            Social link
+          </Text>
+        </Box>
         <Box mb={4} flexGrow={2} textAlign="left" pl={3} minW={16} w={20}>
           <Text fontSize={"lg"} color="#fff">
             Avatar
@@ -92,6 +97,18 @@ function AddMember({ name, isOpen, onClose, mode }) {
                       type="text"
                       placeholder="Your title here"
                     />
+                    <Input
+                      isRequired={true}
+                      textAlign="center"
+                      flexGrow={0}
+                      mx={5}
+                      height={16}
+                      width={"20%"}
+                      autoComplete="off"
+                      name={`members.${index}.socialLink`}
+                      type="text"
+                      placeholder="Your link here"
+                    />
 
                     <ImageUpload
                       minH="20px"
@@ -117,7 +134,12 @@ function AddMember({ name, isOpen, onClose, mode }) {
                       arrayHelpers.form?.errors?.levels)
                   }
                   onClick={() => {
-                    arrayHelpers.push({ name: "", title: "", avatar: "" });
+                    arrayHelpers.push({
+                      name: "",
+                      title: "",
+                      avatar: "",
+                      socialLink: "",
+                    });
                   }}
                 >
                   Add more
