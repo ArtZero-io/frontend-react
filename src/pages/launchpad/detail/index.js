@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -28,6 +29,7 @@ import { ContractPromise } from "@polkadot/api-contract";
 import { IPFS_BASE_URL } from "@constants/index";
 import { timestampWithoutCommas } from "@utils";
 import * as ROUTES from "@constants/routes";
+import { getCachedImageShort } from "@utils/index";
 
 const LaunchpadDetailPage = () => {
   const [formattedCollection, setFormattedCollection] = useState({});
@@ -143,10 +145,15 @@ const LaunchpadDetailPage = () => {
       mintingFee
     );
   };
-
+  console.log("formattedCollection", formattedCollection);
+  console.log(
+    "formattedCollection.headerImage",
+    formattedCollection.headerImage
+  );
   return (
     <Layout
-      backdrop={`${IPFS_BASE_URL}/${formattedCollection.headerImage}`}
+      // backdrop={`${IPFS_BASE_URL}/${formattedCollection.headerImage}`}
+      backdrop={getCachedImageShort(formattedCollection?.headerImage, 1920)}
       variant="launchpad-detail"
     >
       <LaunchpadDetailHeader

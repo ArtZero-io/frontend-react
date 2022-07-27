@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Center,
@@ -14,12 +15,11 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { IPFS_BASE_URL } from "@constants/index";
-import {
-  convertStringToPrice
-} from "@utils";
+import { convertStringToPrice } from "@utils";
 import useInterval from "use-interval";
+import { getCachedImageShort } from "@utils/index";
 
-function LaunchpadDetailHeader({project, currentWhitelist}) {
+function LaunchpadDetailHeader({ project, currentWhitelist }) {
   const [livePhase, setLivePhase] = useState({});
   const { phases } = project;
   const [countDownTimer, setCountDownTimer] = useState({});
@@ -34,15 +34,15 @@ function LaunchpadDetailHeader({project, currentWhitelist}) {
 
   useInterval(() => {
     const total = livePhase.endTime - Date.now();
-    const seconds = Math.floor( (total/1000) % 60 );
-    const minutes = Math.floor( (total/1000/60) % 60 );
-    const hours = Math.floor( (total/(1000*60*60)) % 24 );
-    const days = Math.floor( total/(1000*60*60*24) );
+    const seconds = Math.floor((total / 1000) % 60);
+    const minutes = Math.floor((total / 1000 / 60) % 60);
+    const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+    const days = Math.floor(total / (1000 * 60 * 60 * 24));
     setCountDownTimer({
       days: days,
       hours: hours,
       minutes: minutes,
-      seconds: seconds
+      seconds: seconds,
     });
   }, 1000);
 
@@ -66,8 +66,8 @@ function LaunchpadDetailHeader({project, currentWhitelist}) {
               h="full"
               rounded="full"
               objectFit="cover"
-              // src={avatarImage && getCachedImageShort(avatarImage, 500)}
-              src={`${IPFS_BASE_URL}/${project.avatarImage}`}
+              src={getCachedImageShort(project?.avatarImage, 500)}
+              // src={`${IPFS_BASE_URL}/${project.avatarImage}`}
               fallback={
                 <Skeleton
                   w={["80px", "120px", "120px"]}
@@ -123,29 +123,31 @@ function LaunchpadDetailHeader({project, currentWhitelist}) {
                       {project.totalSupply}
                     </Text>
                   </Text>
-                  {
-                    (livePhase && currentWhitelist.mintingFee) ? (
-                      <>
-                        <Text>
-                          Price:{" "}
-                          <Text as="span" color="#fff">
-                            {convertStringToPrice(currentWhitelist.mintingFee)} <AzeroIcon mb="5px" />
-                          </Text>
+                  {livePhase && currentWhitelist.mintingFee ? (
+                    <>
+                      <Text>
+                        Price:{" "}
+                        <Text as="span" color="#fff">
+                          {convertStringToPrice(currentWhitelist.mintingFee)}{" "}
+                          <AzeroIcon mb="5px" />
                         </Text>
-                      </>
-                    ) : ''
-                  }
-                  {(livePhase ? (
+                      </Text>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  {livePhase ? (
                     <>
                       <Text>
                         Mint Phase:{" "}
                         <Text as="span" color="#fff">
-                        {livePhase.code}
+                          {livePhase.code}
                         </Text>
                       </Text>
                     </>
-                  ) : '')}
-                  
+                  ) : (
+                    ""
+                  )}
                 </Flex>
               </VStack>
             </motion.div>
@@ -260,7 +262,6 @@ function LaunchpadDetailHeader({project, currentWhitelist}) {
               </>
             </VStack>
           </HStack>
-          
         </VStack>
       </Box>
       <Box

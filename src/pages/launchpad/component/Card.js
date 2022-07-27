@@ -19,12 +19,12 @@ import * as ROUTES from "@constants/routes";
 import useInterval from "use-interval";
 import { IPFS_BASE_URL } from "@constants/index";
 
-export const Card = ({ variant, project, collection_address = "abc" }) => {
+export const Card = ({ variant, project, collection_address }) => {
   const history = useHistory();
   const [countdown, setCountdown] = useState(null);
 
   const {
-    status,
+    // status,
     avatarImage,
     progressPercent,
     name,
@@ -33,7 +33,7 @@ export const Card = ({ variant, project, collection_address = "abc" }) => {
   } = project;
   console.log(project);
   useInterval(() => {
-    if (status !== "upcoming") {
+    if (variant !== "upcoming") {
       return;
     }
 
@@ -64,7 +64,7 @@ export const Card = ({ variant, project, collection_address = "abc" }) => {
       bg="brand.grayDark"
       position="relative"
     >
-      {status === "live" && (
+      {variant === "live" && (
         <Flex
           alignItems="start"
           justifyContent="flex-start"
@@ -109,7 +109,7 @@ export const Card = ({ variant, project, collection_address = "abc" }) => {
         </Flex>
       )}
 
-      {status === "upcoming" && (
+      {variant === "upcoming" && (
         <Flex
           alignItems="center"
           justifyContent="center"
@@ -124,7 +124,7 @@ export const Card = ({ variant, project, collection_address = "abc" }) => {
         </Flex>
       )}
 
-      {status === "ended" && (
+      {variant === "ended" && (
         <Flex
           alignItems="center"
           justifyContent="center"
@@ -151,12 +151,12 @@ export const Card = ({ variant, project, collection_address = "abc" }) => {
       </Square>
 
       <Box w="full" px="16px" py="20px">
-        {status === "live" && (
+        {variant === "live" && (
           <Progress w="258px" h="8px" value={progressPercent / 100} mb="12px" />
         )}
 
         <Heading
-          mt={status === "live" ? "20px" : 0}
+          mt={variant === "live" ? "20px" : 0}
           mb="14px"
           fontSize={["15px", "16px", "17px"]}
           textAlign="center"
@@ -164,7 +164,7 @@ export const Card = ({ variant, project, collection_address = "abc" }) => {
           {name}
         </Heading>
 
-        {status === "upcoming" && (
+        {variant === "upcoming" && (
           <HStack
             alignItems="center"
             justifyContent="center"
@@ -196,7 +196,7 @@ export const Card = ({ variant, project, collection_address = "abc" }) => {
         >
           view project
         </Button>
-        {status === "ended" && (
+        {variant === "ended" && (
           <Button
             mt="10px"
             variant="outline"

@@ -25,6 +25,7 @@ import AnimationLoader from "@components/Loader/AnimationLoader";
 import * as ROUTES from "@constants/routes";
 
 export const GroupCard = ({ variant = "live", projectsList, loading }) => {
+  console.log('GroupCard variant', variant)
   // const [projectName, setProjectName] = useState("");
   // const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   // const [totalSupply, setTotalSupply] = useState(0);
@@ -136,7 +137,7 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
               justifyContent="start"
             >
               {projectsList.length ? (
-                projectsList.map((p) => <Card key={p.name} project={p} />)
+                projectsList.map((p) => <Card key={p.name} project={p} variant={variant}/>)
               ) : (
                 <HStack justify="center" w="full">
                   <Heading size="h6">No project found.</Heading>
@@ -144,16 +145,16 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
               )}
             </Stack>
             {projectsList.length ? (
-              <Flex
+              <Stack
                 w="full"
                 mx="auto"
-                mt="60px"
+                pt="60px"
                 alignItems="center"
                 justifyContent="center"
                 direction={{ base: "column", xl: "row" }}
               >
                 <Button variant="outline">show more</Button>
-              </Flex>
+              </Stack>
             ) : null}
           </Stack>
         )}
