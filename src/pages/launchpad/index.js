@@ -13,68 +13,85 @@ export const LaunchpadPage = () => {
   const [liveProjects, setLiveProjects] = useState([]);
   const [upcomingProjects, setUpcomingProjects] = useState([]);
   const [endedProjects, setEndedProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      const projectCount = await launchpad_contract_calls.getProjectCount(
-        currentAccount
-      );
-      let liveProjectsArr = [];
-      let upcomingProjectsArr = [];
-      let endedProjectsArr = [];
-      console.log('projectCount', projectCount);
-      for (let i = 1; i <= projectCount; i++) {
-        const nftAddress = await launchpad_contract_calls.getProjectById(
-          currentAccount,
-          i
+      try {
+        setLoading(true);
+        const projectCount = await launchpad_contract_calls.getProjectCount(
+          currentAccount
         );
-        console.log(nftAddress);
-        const project = await launchpad_contract_calls.getProjectByNftAddress(
-          currentAccount,
-          nftAddress
-        );
-        console.log(project);
-        if (!project.isActive) {continue;}
-        const projectInfo = await launchpad_contract_calls.getProjectInfoByHash(project.projectInfo);
-        console.log('projectInfo', projectInfo);
-        const currentTime = Date.now();
-        const projectTmp = {
-          index: i,
-          collectionOwner: project.projectOwner,
-          nftContractAddress: nftAddress,
-          name: projectInfo.name,
-          description: projectInfo.description,
-          avatarImage: projectInfo.avatar,
-          squareImage: projectInfo.avatar,
-          headerImage: projectInfo.header,
-        };
-        if (
-          timestampWithoutCommas(project.startTime) < currentTime &&
-          currentTime < timestampWithoutCommas(project.endTime) &&
-          project.projectType == 1
-        ) {
-          liveProjectsArr.push(projectTmp);
-        } else if (
-          currentTime < timestampWithoutCommas(project.startTime) &&
-          project.projectType == 1
-        ) {
-          upcomingProjectsArr.push(projectTmp);
-        } else {
-          endedProjectsArr.push(projectTmp);
-        }
-      }
-      
-      // const live = projects.filter((p) => p.status === "live");
-      // const upcoming = projects.filter((p) => p.status === "upcoming");
-      // const ended = projects.filter((p) => p.status === "ended");
+        let liveProjectsArr = [];
+        let upcomingProjectsArr = [];
+        let endedProjectsArr = [];
 
-      setLiveProjects(liveProjectsArr);
-      setUpcomingProjects(upcomingProjectsArr);
-      setEndedProjects(endedProjectsArr);
+        for (let i = 1; i <= projectCount; i++) {
+          const nftAddress = await launchpad_contract_calls.getProjectById(
+            currentAccount,
+            i
+          );
+
+          // console.log(nftAddress);
+          const project = await launchpad_contract_calls.getProjectByNftAddress(
+            currentAccount,
+            nftAddress
+          );
+
+          //  console.log(project);
+          if (!project.isActive) {
+            continue;
+          }
+          const projectInfo =
+            await launchpad_contract_calls.getProjectInfoByHash(
+              project.projectInfo
+            );
+
+          // console.log("xxx projectInfo", projectInfo);
+          const currentTime = Date.now();
+          const projectTmp = {
+            index: i,
+            collectionOwner: project.projectOwner,
+            nftContractAddress: nftAddress,
+            name: projectInfo.name,
+            description: projectInfo.description,
+            avatarImage: projectInfo.avatar,
+            squareImage: projectInfo.avatar,
+            headerImage: projectInfo.header,
+          };
+
+          if (
+            timestampWithoutCommas(project.startTime) < currentTime &&
+            currentTime < timestampWithoutCommas(project.endTime) &&
+            Number(project.projectType) === 1
+          ) {
+            liveProjectsArr.push(projectTmp);
+          } else if (
+            currentTime < timestampWithoutCommas(project.startTime) &&
+            Number(project.projectType)(project.projectType) === 1
+          ) {
+            upcomingProjectsArr.push(projectTmp);
+          } else {
+            endedProjectsArr.push(projectTmp);
+          }
+        }
+
+        // const live = projects.filter((p) => p.status === "live");
+        // const upcoming = projects.filter((p) => p.status === "upcoming");
+        // const ended = projects.filter((p) => p.status === "ended");
+
+        setLiveProjects(liveProjectsArr);
+        setUpcomingProjects(upcomingProjectsArr);
+        setEndedProjects(endedProjectsArr);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
     };
 
     fetchData();
-  }, []);
+  }, [currentAccount]);
 
   return (
     <Layout>
@@ -88,16 +105,22 @@ export const LaunchpadPage = () => {
         </Text>
       </Box>
 
-      <GroupCard variant="live" projectsList={liveProjects} />
+      <GroupCard variant="live" projectsList={liveProjects} loading={loading} />
 
-      <GroupCard variant="upcoming" projectsList={upcomingProjects} />
+      <GroupCard
+        variant="upcoming"
+        projectsList={upcomingProjects}
+        loading={loading}
+      />
 
-      <GroupCard variant="ended" projectsList={endedProjects} />
+      <GroupCard
+        variant="ended"
+        projectsList={endedProjects}
+        loading={loading}
+      />
     </Layout>
   );
 };
-
-
 
 // const projectsList = [
 //   {

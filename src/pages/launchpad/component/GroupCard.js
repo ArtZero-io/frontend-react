@@ -3,51 +3,47 @@ import {
   Button,
   Flex,
   Heading,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Spacer,
-  useDisclosure,
+  // useDisclosure,
   Box,
   HStack,
+  Stack,
+  Link,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import React from "react";
 import { Card } from "./Card";
-import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
-// import { Formik, Form } from "formik";
-import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { AccountActionTypes } from "@store/types/account.types";
-import { useSubstrateState } from "@utils/substrate";
-import { convertDateToTimeStamp } from "@utils";
-import AddNewProject from "./Form/AddNewProject";
-import { useHistory } from "react-router-dom";
+// import { useState } from "react";
+// import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
+// import toast from "react-hot-toast";
+// import { useDispatch, useSelector } from "react-redux";
+// import { AccountActionTypes } from "@store/types/account.types";
+// import { useSubstrateState } from "@utils/substrate";
+// import { convertDateToTimeStamp } from "@utils";
+import { Link as ReachLink, useHistory } from "react-router-dom";
+import AnimationLoader from "@components/Loader/AnimationLoader";
+
 import * as ROUTES from "@constants/routes";
 
-export const GroupCard = ({ variant = "live", projectsList }) => {
-  const [projectName, setProjectName] = useState("");
-  const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
-  const [totalSupply, setTotalSupply] = useState(0);
-  const [projectDescription, setProjectDescription] = useState("");
-  const [roadmap, setRoadmap] = useState("");
-  const [teamMembers, setTeamMembers] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const dispatch = useDispatch();
+export const GroupCard = ({ variant = "live", projectsList, loading }) => {
+  // const [projectName, setProjectName] = useState("");
+  // const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
+  // const [totalSupply, setTotalSupply] = useState(0);
+  // const [projectDescription, setProjectDescription] = useState("");
+  // const [roadmap, setRoadmap] = useState("");
+  // const [teamMembers, setTeamMembers] = useState("");
+  // const [startTime, setStartTime] = useState("");
+  // const [endTime, setEndTime] = useState("");
+  // const dispatch = useDispatch();
   const history = useHistory();
-  const { currentAccount } = useSubstrateState();
-  const {
-    isOpen: isOpenAddNew,
-    onOpen: onOpenAddProject,
-    onClose: onCloseAddNewProject,
-  } = useDisclosure();
-  const { addCollectionTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
-  );
+  // const { cu, {formMode:'ADD'}rrentAccount , {formMode:'ADD'}} = useSubstrateState();
+  // const {
+  //   isOpen: isOpenAddNew,
+  //   onOpen: onOpenAddProject,
+  //   onClose: onCloseAddNewProject,
+  // } = useDisclosure();
+  // const { addCollectionTnxStatus } = useSelector(
+  //   (state) => state.account.accountLoaders
+  // );
 
   // useEffect(async () => {
   //   addCollectionTnxStatus?.status === "End" && onCloseAddNewProject();
@@ -56,38 +52,38 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
   //   }
   // }, [isLoadedProject, onCloseAddNewProject, addCollectionTnxStatus?.status]);
 
-  const submitForm = async () => {
-    if (!avatarIPFSUrl) {
-      return toast.error("Upload avatar");
-    }
+  // const submitForm = async () => {
+  //   if (!avatarIPFSUrl) {
+  //     return toast.error("Upload avatar");
+  //   }
 
-    const data = {
-      name: projectName,
-      description: projectDescription,
-      total_supply: totalSupply,
-      roadmap: roadmap,
-      team_members: teamMembers,
-      start_time: convertDateToTimeStamp(startTime),
-      end_time: convertDateToTimeStamp(endTime),
-      attributes: ["avatar"],
-      attribute_vals: [avatarIPFSUrl],
-    };
-    console.log(data);
-    dispatch({
-      type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-      payload: {
-        status: "Start",
-      },
-    });
+  //   const data = {
+  //     name: projectName,
+  //     description: projectDescription,
+  //     total_supply: totalSupply,
+  //     roadmap: roadmap,
+  //     team_members: teamMembers,
+  //     start_time: convertDateToTimeStamp(startTime),
+  //     end_time: convertDateToTimeStamp(endTime),
+  //     attributes: ["avatar"],
+  //     attribute_vals: [avatarIPFSUrl],
+  //   };
+  //   console.log(data);
+  //   dispatch({
+  //     type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
+  //     payload: {
+  //       status: "Start",
+  //     },
+  //   });
 
-    await launchpad_contract_calls.addNewProject(
-      currentAccount,
-      data,
-      dispatch
-    );
+  //   await launchpad_contract_calls.addNewProject(
+  //     currentAccount,
+  //     data,
+  //     dispatch
+  //   );
 
-    // }
-  };
+  //   // }
+  // };
 
   // export const GroupCard = ({ variant = "live", projectsList }) => {
   return (
@@ -117,94 +113,51 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
           <Spacer />
 
           {variant === "live" && (
-            <Button
+            <Link
+              as={ReachLink}
               variant="solid"
-              onClick={() => history.push(ROUTES.LAUNCHPAD_ADD_PROJECT)}
+              to={{
+                state: { formMode: "ADD" },
+                pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
+              }}
             >
               add project
-            </Button>
+            </Link>
           )}
         </Flex>
 
-        <Flex justifyContent="space-between">
-          {projectsList.length ? (
-            projectsList.map((p) => <Card key={p.name} project={p} />)
-          ) : (
-            <HStack justify="center" w="full">
-              <Heading size="h6">No project found.</Heading>
-            </HStack>
-          )}
-        </Flex>
-
-        {projectsList.length ? (
-          <Flex
-            w="full"
-            mx="auto"
-            mt="60px"
-            alignItems="center"
-            justifyContent="center"
-            direction={{ base: "column", xl: "row" }}
-          >
-            <Button variant="outline">show more</Button>
-          </Flex>
-        ) : null}
+        {loading ? (
+          <AnimationLoader />
+        ) : (
+          <Stack>
+            <Stack
+              direction={["column", "row"]}
+              gap="15px"
+              justifyContent="start"
+            >
+              {projectsList.length ? (
+                projectsList.map((p) => <Card key={p.name} project={p} />)
+              ) : (
+                <HStack justify="center" w="full">
+                  <Heading size="h6">No project found.</Heading>
+                </HStack>
+              )}
+            </Stack>
+            {projectsList.length ? (
+              <Flex
+                w="full"
+                mx="auto"
+                mt="60px"
+                alignItems="center"
+                justifyContent="center"
+                direction={{ base: "column", xl: "row" }}
+              >
+                <Button variant="outline">show more</Button>
+              </Flex>
+            ) : null}
+          </Stack>
+        )}
       </Box>
-
-      <Modal
-        isCentered
-        isOpen={isOpenAddNew}
-        onClose={onCloseAddNewProject}
-        size="4xl"
-        scrollBehavior={"inside"}
-      >
-        <ModalOverlay
-          bg="blackAlpha.300"
-          backdropFilter="blur(10px) hue-rotate(90deg)"
-        />
-        <ModalContent
-          position="relative"
-          bg="brand.grayDark"
-          px={6}
-          pb={8}
-          borderRadius="0"
-          textAlign="center"
-        >
-          <ModalCloseButton
-            position="absolute"
-            top="-8"
-            right="-8"
-            borderWidth={2}
-            borderRadius="0"
-          />
-          <ModalHeader textAlign="center">
-            <Heading size="h4" m={2}>
-              Add new project
-            </Heading>
-          </ModalHeader>
-
-          <ModalBody
-            sx={{
-              "&::-webkit-scrollbar": {
-                width: "4px",
-                height: "4px",
-                borderRadius: "0px",
-                backgroundColor: `transparent`,
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-thumb:hover": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: `transparent`,
-              },
-            }}
-          >
-            <AddNewProject />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
     </>
   );
 };

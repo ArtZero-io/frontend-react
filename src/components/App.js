@@ -24,6 +24,7 @@ import { setStakingContract } from "@utils/blockchain/staking_calls";
 import { setLaunchPadContract } from "@utils/blockchain/launchpad-contract-calls";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import "./TimePicker/TimePicker.css";
 
 export default function App() {
   const { apiState, apiError } = useSubstrateState();
@@ -80,8 +81,14 @@ const InitModal = ({ apiState, loadingErrorMess }) => {
 
 const Main = () => {
   const { api, apiState } = useSubstrateState();
-  const { artzeroNft, collection, marketplace, profile, staking, launchpad_manager } =
-    contractData;
+  const {
+    artzeroNft,
+    collection,
+    marketplace,
+    profile,
+    staking,
+    launchpad_manager,
+  } = contractData;
   const [loadContractDone, setLoadContractDone] = useState(false);
 
   useEffect(() => {
@@ -94,7 +101,7 @@ const Main = () => {
           await setStakingContract(api, staking);
           await setAZNFTContract(api, artzeroNft);
           await setLaunchPadContract(api, launchpad_manager);
-          
+
           setLoadContractDone(true);
         }
       } catch (e) {
@@ -103,7 +110,16 @@ const Main = () => {
     };
     initContract();
     // console.log("initContract()...");
-  }, [api, apiState, artzeroNft, collection, marketplace, profile, staking, launchpad_manager]);
+  }, [
+    api,
+    apiState,
+    artzeroNft,
+    collection,
+    marketplace,
+    profile,
+    staking,
+    launchpad_manager,
+  ]);
 
   const { addNftTnxStatus, tnxStatus, addCollectionTnxStatus } = useSelector(
     (state) => state.account.accountLoaders

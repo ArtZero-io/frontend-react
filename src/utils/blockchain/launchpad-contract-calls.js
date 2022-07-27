@@ -3,11 +3,12 @@ import BN from "bn.js";
 import { web3FromSource } from "../wallets/extension-dapp";
 import {
   handleContractCallAnimation,
-  isValidAddressPolkadotAddress
+  isValidAddressPolkadotAddress,
 } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
 import { AccountActionTypes } from "@store/types/account.types";
+import { txResponseErrorHandler } from "../../store/actions/txStatus";
 
 let contract;
 
@@ -112,7 +113,7 @@ async function getProjectInfoByHash(ipfsHash) {
 }
 
 async function owner(caller_account) {
-  console.log('zxczxc');
+  console.log("zxczxc");
   if (!contract || !caller_account) {
     return null;
   }
@@ -154,12 +155,12 @@ async function getProjectCount(caller_account) {
   if (!contract || !caller_account) {
     return null;
   }
-  console.log('xzczxc');
+  console.log("xzczxc");
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
   //console.log(contract);
- 
+
   const { result, output } = await contract.query.getProjectCount(address, {
     value: azero_value,
     gasLimit,
@@ -211,17 +212,13 @@ async function getProjectByNftAddress(caller_account, nft_address) {
   return null;
 }
 
-async function addNewProject(
-  caller_account,
-  data,
-  dispatch
-) {
-  
+async function addNewProject(caller_account, data, dispatch, txType, api) {
   let unsubscribe;
   const address = caller_account?.address;
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
   const value = await getProjectAddingFee(caller_account);
+  console.log('addNewProject contract', contract)
   contract.tx
     .addNewProject(
       { gasLimit, value: value },
@@ -238,7 +235,14 @@ async function addNewProject(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
         if (status.isFinalized === true) {
           toast.success(`Success`);
         }
@@ -267,12 +271,7 @@ async function addNewProject(
   return unsubscribe;
 }
 
-async function editProject(
-  caller_account,
-  data,
-  dispatch
-) {
-  
+async function editProject(caller_account, data, dispatch) {
   let unsubscribe;
   const address = caller_account?.address;
   const gasLimit = -1;
@@ -291,7 +290,6 @@ async function editProject(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        
         if (status.isFinalized === true) {
           toast.success(`Success`);
         }
@@ -321,6 +319,7 @@ async function editProject(
 }
 
 async function getProjectAddingFee(caller_account) {
+
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -340,7 +339,11 @@ async function getProjectAddingFee(caller_account) {
   return null;
 }
 
-async function updateIsActiveProject(caller_account, isActive, collection_address) {
+async function updateIsActiveProject(
+  caller_account,
+  isActive,
+  collection_address
+) {
   if (
     !contract ||
     !caller_account ||
@@ -400,7 +403,7 @@ const launchpad_contract_calls = {
   getAdminAddress,
   owner,
   updateIsActiveProject,
-  editProject
+  editProject,
 };
 
 export default launchpad_contract_calls;

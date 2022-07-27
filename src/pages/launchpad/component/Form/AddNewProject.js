@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // eslint-disable-next-line no-unused-vars
 import { APICall } from "@api/client";
 import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
@@ -24,6 +25,9 @@ import AddMember from "./AddMember";
 import AddPhase from "./AddPhase";
 import AddRoadmap from "./AddRoadmap";
 import ExtraInformationInput from "@components/Input/Input";
+import { timestampWithoutCommas } from "@utils";
+import { useLocation } from "react-router-dom";
+
 const client = create(IPFS_CLIENT_URL);
 
 // 1. Project info tab
@@ -60,20 +64,30 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
   const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
   const currentHeaderIPFSUrl = useRef(headerIPFSUrl);
-// eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line no-unused-vars
   const noImagesChange =
     currentAvatarIPFSUrl.current === avatarIPFSUrl &&
     currentHeaderIPFSUrl.current === headerIPFSUrl;
 
+  const location = useLocation();
+
+  mode = location.state.formMode;
+
+  if (mode === "EDIT") {
+    nftContractAddress = location.state.collection_address;
+  }
+  
   useEffect(() => {
     const prepareData = async () => {
       const { error, initialValues, avatarIPFSUrl, headerIPFSUrl } =
         await fetchInitialValuesProject({
+          currentAccount,
           mode,
           collection_address: nftContractAddress,
         });
 
       if (!error) {
+        console.log("initialValues", initialValues);
         setInitialValues(initialValues);
         setAvatarIPFSUrl(avatarIPFSUrl);
         setHeaderIPFSUrl(headerIPFSUrl);
@@ -93,16 +107,13 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
         <>
           <Formik
             initialValues={initialValues}
-            validationSchema={Yup.object().shape(
-              {
+            validationSchema={Yup.object().shape({
               // isEditMode: Yup.boolean(),
-
               // projectName: Yup.string()
               //   .trim()
               //   .min(3, "Must be longer than 3 characters")
               //   .max(30, "Must be less than 30 characters")
               //   .required("Required"),
-
               // projectDescription: Yup.string()
               //   .trim()
               //   .min(3, "Must be longer than 3 characters")
@@ -118,7 +129,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               // //   .min(3, "Must be longer than 3 characters")
               // //   .max(150, "Must be less than 150 characters")
               // //   .required("Required"),
-
               // roadmap: Yup.array()
               //   .of(
               //     Yup.object().shape(
@@ -133,15 +143,12 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               //           //       "Duplicated Props Type!",
               //           //       (value, schema) => {
               //           //         const propsArr = schema?.from[1].value?.roadmap;
-
               //           //         const keyPropsArr = propsArr.map((p) =>
               //           //           p.type?.trim()
               //           //         );
-
               //           //         const [isDup] = keyPropsArr.filter(
               //           //           (v, i) => i !== keyPropsArr.indexOf(v)
               //           //         );
-
               //           //         return !(
               //           //           isDup && isDup.trim() === value.trim()
               //           //         );
@@ -182,15 +189,12 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               //               "Duplicated Levels Name!",
               //               (value, schema) => {
               //                 const levelsArr = schema?.from[1].value?.levels;
-
               //                 const keyLevelsArr = levelsArr.map((p) =>
               //                   p.name?.trim()
               //                 );
-
               //                 const [isDup] = keyLevelsArr.filter(
               //                   (v, i) => i !== keyLevelsArr.indexOf(v)
               //                 );
-
               //                 return !(isDup && isDup.trim() === value.trim());
               //               }
               //             )
@@ -234,15 +238,12 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               //               "Duplicated Levels Name!",
               //               (value, schema) => {
               //                 const levelsArr = schema?.from[1].value?.levels;
-
               //                 const keyLevelsArr = levelsArr.map((p) =>
               //                   p.name?.trim()
               //                 );
-
               //                 const [isDup] = keyLevelsArr.filter(
               //                   (v, i) => i !== keyLevelsArr.indexOf(v)
               //                 );
-
               //                 return !(isDup && isDup.trim() === value.trim());
               //               }
               //             )
@@ -273,7 +274,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               // )
               //   .min(0)
               //   .max(10),
-
               // nftName: Yup.string()
               //   .trim()
               //   .when("isEditMode", {
@@ -283,7 +283,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               //       .max(25, "Must be less than 25 characters")
               //       .required("Required"),
               //   }),
-
               // nftSymbol: Yup.string()
               //   .trim()
               //   .when("isEditMode", {
@@ -293,7 +292,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               //       .max(8, "Must be less than 8 characters")
               //       .required("Required"),
               //   }),
-
               // agreeTosCheckbox: Yup.boolean().when("isEditMode", {
               //   is: false,
               //   then: Yup.boolean()
@@ -307,7 +305,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               // }
               values.avatarIPFSUrl = avatarIPFSUrl;
               values.headerIPFSUrl = headerIPFSUrl;
-              
+
               if (userBalance < 1) {
                 return toast.error(`Your balance too low!`);
               }
@@ -344,7 +342,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 project_info: project_info_ipfs.path,
                 code_phases: code_phases,
                 start_time_phases: start_time_phases,
-                end_time_phases: end_time_phases
+                end_time_phases: end_time_phases,
               };
 
               dispatch({
@@ -426,7 +424,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       type="text"
                       placeholder={"Discord URL"}
                     />
-                </Stack>
+                  </Stack>
                   <Stack>
                     <TextArea
                       height="140"
@@ -590,6 +588,7 @@ export const fetchUserBalance = async ({ currentAccount, api }) => {
 };
 
 export const fetchInitialValuesProject = async ({
+  currentAccount,
   mode,
   collection_address,
 }) => {
@@ -610,30 +609,89 @@ export const fetchInitialValuesProject = async ({
     ],
   };
 
+  console.log("mode", mode);
+  // TEMP COMMENT
   if (mode === formMode.ADD) {
     return { initialValues };
   }
 
   try {
-    const dataList = await APICall.getCollectionByAddress({
-      collection_address,
-    });
+    // const dataList = await APICall.getCollectionByAddress({
+    //   collection_address,
+    // });
 
-    console.log("collection_address", collection_address);
-    console.log("dataList", dataList);
-    if (!dataList?.length) {
-      return { initialValues };
-    }
+    // console.log("collection_address", collection_address);
+    // console.log("dataList", dataList);
+    // if (!dataList?.length) {
+    //   return { initialValues };
+    // }
 
-    initialValues.projectName = dataList[0].name;
-    initialValues.projectDescription = dataList[0].description;
-    initialValues.nftName = dataList[0].nftName;
-    initialValues.nftSymbol = dataList[0].nftSymbol;
-    console.log("initialValues", initialValues);
+    // initialValues.projectName = dataList[0].name;
+    // initialValues.projectDescription = dataList[0].description;
+    // initialValues.nftName = dataList[0].nftName;
+    // initialValues.nftSymbol = dataList[0].nftSymbol;
+    // console.log("initialValues", initialValues);
+    // return {
+    //   initialValues,
+    //   avatarIPFSUrl: dataList[0].avatarImage,
+    //   headerIPFSUrl: dataList[0].headerImage,
+    // };
+
+    const project = await launchpad_contract_calls.getProjectByNftAddress(
+      currentAccount,
+      collection_address
+    );
+
+    console.log("xxx  fetchInitialValuesProject project", project);
+
+    const projectInfo = await launchpad_contract_calls.getProjectInfoByHash(
+      project.projectInfo
+    );
+    console.log("xxx  fetchInitialValuesProject projectInfo", projectInfo);
+
+    // Update initialValues
+    const {
+      isActive,
+      projectType,
+      projectOwner,
+      totalSupply,
+      startTime,
+      endTime,
+    } = project;
+    const {
+      name,
+      description,
+      website,
+      twitter,
+      discord,
+      nft_name,
+      nft_symbol,
+      header,
+      avatar,
+      team_members,
+      roadmaps,
+    } = projectInfo;
+
+    initialValues.isEditMode = true;
+    initialValues.nftName = nft_name;
+    initialValues.nftSymbol = nft_symbol;
+    initialValues.projectName = name;
+    initialValues.projectDescription = description;
+    initialValues.totalSupply = totalSupply;
+    initialValues.startTime = timestampWithoutCommas(startTime);
+    initialValues.endTime = timestampWithoutCommas(endTime);
+    initialValues.website = website;
+    initialValues.twitter = twitter;
+    initialValues.discord = discord;
+    initialValues.members = team_members;
+    initialValues.roadmap = roadmaps;
+
+    console.log("fetchInitialValuesProject initialValues", initialValues);
+
     return {
       initialValues,
-      avatarIPFSUrl: dataList[0].avatarImage,
-      headerIPFSUrl: dataList[0].headerImage,
+      avatarIPFSUrl: avatar,
+      headerIPFSUrl: header,
     };
   } catch (error) {
     console.log(error);
