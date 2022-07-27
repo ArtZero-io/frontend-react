@@ -232,7 +232,7 @@ async function stake(caller_account, token_ids, dispatch, txType, api) {
 
         if (status.isFinalized === true) {
           for (var i = 0; i < token_ids.length; i++) {
-            console.log("updateNFT token_ids", token_ids);
+
             await clientAPI("post", "/updateNFT", {
               collection_address: artzero_nft.CONTRACT_ADDRESS,
               token_id: token_ids[i],

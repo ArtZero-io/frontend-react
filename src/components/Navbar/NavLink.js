@@ -88,7 +88,7 @@ const MobileNavLink = ({ label = "", to = "", isExternal, ...props }) => {
           px="23px"
           href={to}
           isExternal
-          fontSize="32px"
+          fontSize="24px"
           fontFamily="Evogria, sans-serif"
           display="flex"
           alignItems="center"
@@ -115,7 +115,7 @@ const MobileNavLink = ({ label = "", to = "", isExternal, ...props }) => {
           px="23px"
           as={ReactRouterLink}
           to={to}
-          fontSize="32px"
+          fontSize="24px"
           fontFamily="Evogria, sans-serif"
           fontWeight="medium"
           display="flex"

@@ -524,7 +524,7 @@ function HomePage() {
               bgPosition="center"
               bgRepeat="no-repeat"
             >
-              <List spacing={[2.5, 6, 6]}>
+              <List spacing={[2.5, 5, 5]}>
                 {availableFeaturesText.map((item, idx) => (
                   <ListItem
                     display="flex"
@@ -723,20 +723,20 @@ export default HomePage;
 
 const availableFeaturesText = [
   "support erc721 (psp34) standard nft",
-  "support polkadot js, subWallet and talisman wallet",
+  "support subwallet, talisman wallet and polkadot js",
   "on-chain profile",
   "explore nft collections",
   "create collections in simple mode and advanced mode",
-  "create nft",
-  "list, unlist, buy, bid nfts",
-  "mint artzero nfts on testnet (only 200 available)",
-  "stake artzero nfts for trade discount and profit share",
+  "create, edit, lock,  burn nft",
+  "list, unlist, buy, bid nfts, mint artzero PMP nfts on testnet",
+  "stake, unstake artzero PMP nfts for trade discount and profit share",
+  "step-by-step tutorials",
+  "search for nfts and collections",
 ];
 
 const upComingFeaturesText = [
   "support erc1155 (psp1155) standard",
-  "more documentation and tutorials",
-  "search for nfts and collections",
   "launch pad for nft projects",
   "mobile support: subwallet and nova wallet",
+  "MARKETPLACE STATS & REVENUE DISTRIBUTION PAGE",
 ];

@@ -13,6 +13,7 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 import staking_calls from "@utils/blockchain/staking_calls";
 import useInterval from "use-interval";
 import { getPublicCurrentAccount } from "@utils";
+import { formatNumDynamicDecimal, shortenNumber } from "../../utils";
 const url =
   "https://api.coingecko.com/api/v3/simple/price?ids=aleph-zero&vs_currencies=usd";
 
@@ -33,14 +34,21 @@ function StatsPage() {
       const platformTotalStaked = await staking_calls.getTotalStaked(
         currentAccount || getPublicCurrentAccount()
       );
-      const platformTotalStakeholders =
-        await staking_calls.getTotalCountOfStakeholders(
-          currentAccount || getPublicCurrentAccount()
-        );
+      // const platformTotalStakeholders =
+      //   await staking_calls.getTotalCountOfStakeholders(
+      //     currentAccount || getPublicCurrentAccount()
+      //   );
+
+      // TODO: get total Payouts
 
       const currentProfit = await marketplace_contract_calls.getCurrentProfit(
         currentAccount || getPublicCurrentAccount()
       );
+
+      const totalVolume = await marketplace_contract_calls.getTotalVolume(
+        currentAccount || getPublicCurrentAccount()
+      );
+
       const totalProfit = await marketplace_contract_calls.getTotalProfit(
         currentAccount || getPublicCurrentAccount()
       );
@@ -66,24 +74,25 @@ function StatsPage() {
       const ret = {
         platformStatistics: [
           {
-            title: "Current Reward Share (platform)",
-            value: currentProfit,
+            title: "Total Payout",
+            value: 0,
+            unit: "azero",
+          },
+
+          {
+            title: "Total Volume",
+            value: totalVolume.toFixed(2),
             unit: "azero",
           },
           {
-            title: "Total Reward Share (platform)",
-            value: totalProfit,
+            title: "Next Payout",
+            value: (currentProfit * 0.3).toFixed(2),
             unit: "azero",
           },
           {
-            title: "Total NFT Staked (platform)",
+            title: "Total NFTs Staked",
             value: platformTotalStaked,
             unit: "NFTs",
-          },
-          {
-            title: "Total Stakeholders",
-            value: platformTotalStakeholders,
-            unit: "users",
           },
         ],
         topCollections: dataListWithFP,
@@ -141,11 +150,11 @@ function StatsPage() {
           {tabData.map((tab, index) => (
             <Tab
               key={index}
-              fontStyle="italic"
-              px="0.5px"
-              pb="20px"
-              fontSize="lg"
               mx="25px"
+              px="0.5px"
+              py={["8px", "20px", "20px"]}
+              fontSize={["md", "lg", "lg"]}
+              fontFamily="Evogria Italic, san serif"
             >
               {tab.label}
             </Tab>
@@ -155,8 +164,9 @@ function StatsPage() {
         <TabPanels h="full" minH="md" bg="#171717">
           {tabData.map((tab, index) => (
             <TabPanel
-              pt="40px"
-              pb="50px"
+              // pt="40px"
+              // pb="50px"
+              p={0}
               key={index}
               px={{ base: "12px", "2xl": "100px" }}
             >

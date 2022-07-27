@@ -1,24 +1,38 @@
 import {
   Avatar,
   Box,
+  Button,
   Flex,
   Heading,
   Text,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import MyNFTCard from "./MyNFT";
 import { createObjAttrsNFT } from "@utils/index";
 import ResponsivelySizedModal from "@components/Modal/Modal";
 import { getCachedImageShort } from "@utils";
 import { clientAPI } from "@api/client";
 import { useSubstrateState } from "@utils/substrate";
-import { AnimatePresence, motion, useAnimation } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import { ContractPromise } from "@polkadot/api-contract";
 import toast from "react-hot-toast";
 import { useHistory } from "react-router-dom";
+import { setTxStatus } from "@store/actions/txStatus";
+import {
+  START,
+  STAKE,
+  REQUEST_UNSTAKE,
+  CANCEL_REQUEST_UNSTAKE,
+  UNSTAKE,
+} from "@constants";
+import { useDispatch, useSelector } from "react-redux";
+import staking_calls from "@utils/blockchain/staking_calls";
+import staking from "@utils/blockchain/staking";
+import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
+import { delay } from "@utils";
 
 function MyNFTGroupCard({
   name,
@@ -37,7 +51,9 @@ function MyNFTGroupCard({
   const [selectedNFT, setSelectedNFT] = useState(null);
 
   const [listNFTFormatted, setListNFTFormatted] = useState(null);
+
   const history = useHistory();
+
   function onClickHandler(item) {
     setSelectedNFT(item);
     item?.stakeStatus === 0 && onOpen();
@@ -101,8 +117,9 @@ function MyNFTGroupCard({
 
     //console.log(listNFT,'showOnChainMetadata',showOnChainMetadata);
   }, [api, currentAccount, listNFT, nftContractAddress, showOnChainMetadata]);
+
   return (
-    <Box my={10}>
+    <Box my={10} position="relative">
       <ResponsivelySizedModal
         contractType={contractType}
         {...selectedNFT}
@@ -113,36 +130,33 @@ function MyNFTGroupCard({
         showOnChainMetadata={showOnChainMetadata}
         {...rest}
       />
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <Flex>
-            <Avatar
-              size={"lg"}
-              border="2px solid white"
-              src={getCachedImageShort(avatarImage, 100)}
-            />
-            <VStack align="start" ml={3} justifyContent="center">
-              <Heading
-                size="h6"
-                cursor="pointer"
-                _hover={{ color: "#7ae7ff" }}
-                onClick={() =>
-                  history.push(`/collection/${nftContractAddress}`)
-                }
-              >
-                {name}
-              </Heading>
-              <Text textAlign="left" color="brand.grayLight" size="2xs">
-                {listNFTFormatted?.length} items
-              </Text>
-            </VStack>
-          </Flex>
-        </motion.div>
-      </AnimatePresence>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        <Flex w="full">
+          <Avatar
+            size={"lg"}
+            border="2px solid white"
+            src={getCachedImageShort(avatarImage, 100)}
+          />
+          <VStack align="start" ml={3} justifyContent="center">
+            <Heading
+              size="h6"
+              cursor="pointer"
+              _hover={{ color: "#7ae7ff" }}
+              onClick={() => history.push(`/collection/${nftContractAddress}`)}
+            >
+              {name}
+            </Heading>
+            <Text textAlign="left" color="brand.grayLight" size="2xs">
+              {listNFTFormatted?.length} items
+            </Text>
+          </VStack>
+        </Flex>
+      </motion.div>
 
       {!listNFTFormatted?.length ? (
         <VStack
@@ -183,38 +197,260 @@ function GridNftA({
     controls.start("visible");
   }, [listNFTFormatted, controls]);
 
+  const txStatus = useSelector((state) => state.txStatus);
+
+  const dispatch = useDispatch();
+  const { currentAccount, api } = useSubstrateState();
+
+  const [multiStakeData, setMultiStakeData] = useState({
+    action: null,
+    list: [],
+  });
+
+  // const multiStakeDataRef = useRef(multiStakeData);
+
+  async function handleStakeAction(action, tokenIDArray) {
+    if (action === STAKE) {
+      dispatch(
+        setTxStatus({ txType: STAKE, txStatus: START, tokenID: tokenIDArray })
+      );
+
+      let res;
+      let allowance;
+
+      if (tokenIDArray?.length === 1) {
+        allowance = await artzero_nft_calls.allowance(
+          currentAccount,
+          currentAccount.address,
+          staking.CONTRACT_ADDRESS,
+          { u64: tokenIDArray[0] }
+        );
+
+        if (!allowance) {
+          toast.success("Step 1: Approving NFT for staking...");
+          res = await artzero_nft_calls.approve(
+            currentAccount,
+            staking.CONTRACT_ADDRESS,
+            { u64: tokenIDArray[0] },
+            true,
+            dispatch
+          );
+        }
+      }
+
+      if (tokenIDArray?.length > 1) {
+        allowance = await artzero_nft_calls.allowance(
+          currentAccount,
+          currentAccount.address,
+          staking.CONTRACT_ADDRESS,
+          null
+        );
+
+        if (!allowance) {
+          toast.success("Step 1: Approving NFT for staking...");
+
+          res = await artzero_nft_calls.approve(
+            currentAccount,
+            staking.CONTRACT_ADDRESS,
+            null,
+            true,
+            dispatch
+          );
+        }
+      }
+
+      if (res || allowance) {
+        //Token is unstaked, Stake Now
+
+        toast.success(res ? "Step 2: Staking..." : "Staking...");
+
+        await delay(3000).then(async () => {
+          await staking_calls.stake(
+            currentAccount,
+            tokenIDArray,
+            dispatch,
+            STAKE,
+            api
+          );
+        });
+        return;
+      }
+    }
+
+    if (action === REQUEST_UNSTAKE) {
+      dispatch(
+        setTxStatus({
+          txType: REQUEST_UNSTAKE,
+          txStatus: START,
+          tokenID: tokenIDArray,
+        })
+      );
+      //Token is staked, Request Unstake Now
+
+      toast.success("Request Unstaking NFT...");
+
+      await staking_calls.requestUnstake(
+        currentAccount,
+        tokenIDArray,
+        dispatch,
+        REQUEST_UNSTAKE,
+        api
+      );
+    }
+
+    if (action === UNSTAKE) {
+      dispatch(
+        setTxStatus({ txType: UNSTAKE, txStatus: START, tokenID: tokenIDArray })
+      );
+
+      toast.success("Unstaking NFT...");
+
+      await staking_calls.unstake(
+        currentAccount,
+        tokenIDArray,
+        dispatch,
+        UNSTAKE,
+        api
+      );
+    }
+
+    if (action === CANCEL_REQUEST_UNSTAKE) {
+      dispatch(
+        setTxStatus({
+          txType: CANCEL_REQUEST_UNSTAKE,
+          txStatus: START,
+          tokenID: tokenIDArray,
+        })
+      );
+
+      toast("Cancel Unstaking Request...");
+
+      await staking_calls.cancelRequestUnstake(
+        currentAccount,
+        tokenIDArray,
+        dispatch,
+        CANCEL_REQUEST_UNSTAKE,
+        api
+      );
+    }
+  }
+
+  function handleSelectMultiNfts(tokenID, action, isChecked) {
+    let newData = { ...multiStakeData };
+
+    // Initial data is empty
+    if (multiStakeData?.action === null) {
+      if (!isChecked) return;
+
+      newData.action = action;
+      newData.list = [tokenID];
+      setMultiStakeData(newData);
+      // multiStakeDataRef.current = newData;
+      return;
+    }
+
+    if (multiStakeData?.action !== action) {
+      return toast.error("Please select same action!");
+    }
+    const isExisted = multiStakeData?.list.includes(tokenID);
+
+    if (isChecked) {
+      if (isExisted) return toast.error("This item is already added!");
+      const newList = multiStakeData?.list;
+      newData.list = [...newList, tokenID];
+
+      setMultiStakeData(newData);
+      // multiStakeDataRef.current = newData;
+
+      return;
+    } else {
+      if (!isExisted) return toast.error("This item is not add yet!");
+
+      newData.list = multiStakeData?.list?.filter((item) => item !== tokenID);
+      if (newData?.list?.length === 0) {
+        newData.action = null;
+      }
+
+      setMultiStakeData(newData);
+      // multiStakeDataRef.current = newData;
+    }
+  }
+
   return (
-    <motion.div
-      initial="hidden"
-      animate={controls}
-      variants={{}}
-      id="grid-item-div"
-      style={{
-        marginTop: "2.5rem",
-        marginBottom: "2.5rem",
-        display: "grid",
-        // gridGap: "1.875rem",
-        // gridAutoRows: "20.625rem",
-        gridAutoFlow: "dense",
-        gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, 224px), 1fr))`,
-        // borderBottom: "0.125rem",
-        justifyItems: "center",
-      }}
-    >
-      {listNFTFormatted.length > 0 &&
-        listNFTFormatted?.map((c, i) => (
-          <GridItemA
-            key={i}
-            i={i}
-            delayPerPixel={delayPerPixel}
-            originOffset={originOffset}
-            id="grid-item-a"
-            onClick={() => onClickHandler(c)}
-          >
-            <MyNFTCard {...c} />
-          </GridItemA>
-        ))}
-    </motion.div>
+    <>
+      {multiStakeData?.action !== null ? (
+        <Button
+          isDisabled={
+            txStatus?.stakeStatus ||
+            txStatus?.unstakeStatus ||
+            txStatus?.cancelRequestUnstakeStatus ||
+            txStatus?.requestUnstakeStatus
+          }
+          position="absolute"
+          top="0"
+          right="0"
+          size="sm"
+          onClick={() =>
+            handleStakeAction(
+              multiStakeData?.action,
+              multiStakeData?.list,
+              dispatch,
+              api,
+              currentAccount
+            )
+          }
+        >
+          {multiStakeData?.action === REQUEST_UNSTAKE
+            ? "request unstake"
+            : multiStakeData?.action === CANCEL_REQUEST_UNSTAKE
+            ? "cancel request unstake"
+            : multiStakeData?.action}{" "}
+          tokens:
+          {multiStakeData?.list?.map((i, idx) => (
+            <Fragment key={idx}>
+              {idx === 0 ? "" : ","} #{i}
+            </Fragment>
+          ))}
+        </Button>
+      ) : null}
+
+      <motion.div
+        initial="hidden"
+        animate={controls}
+        variants={{}}
+        id="grid-item-div"
+        style={{
+          display: "grid",
+          marginTop: "2.5rem",
+          gridAutoFlow: "dense",
+          justifyItems: "center",
+          marginBottom: "2.5rem",
+          // gridGap: "1.875rem",
+          // borderBottom: "0.125rem",
+          // gridAutoRows: "20.625rem",
+          gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, 224px), 1fr))`,
+        }}
+      >
+        {listNFTFormatted.length > 0 &&
+          listNFTFormatted?.map((c, i) => (
+            <GridItemA
+              key={i}
+              i={i}
+              delayPerPixel={delayPerPixel}
+              originOffset={originOffset}
+              id="grid-item-a"
+              onClick={() => onClickHandler(c)}
+            >
+              <MyNFTCard
+                {...c}
+                handleStakeAction={handleStakeAction}
+                handleSelectMultiNfts={handleSelectMultiNfts}
+                multiStakeData={multiStakeData}
+              />
+            </GridItemA>
+          ))}
+      </motion.div>
+    </>
   );
 }
 

@@ -150,13 +150,18 @@ function MyCollectionsPage() {
       <Box
         mx="auto"
         maxW={{ base: "auto", "2xl": "7xl" }}
-        px={{ base: "8", "2xl": "4" }}
-        py={{ base: "12", "2xl": "20" }}
+        px={{ base: "6", xl: "8", "2xl": "4" }}
+        py={["4", "12", "20"]}
       >
-        <Flex w="full" alignItems="start" pb={12}>
-          <Heading size="h2">My collections</Heading>
+        <Flex
+          direction={{ base: "column", xl: "row" }}
+          w="full"
+          alignItems="start"
+          pb={["20px", "20px", "48px"]}
+        >
+          <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>My collections</Heading>
 
-          <Spacer />
+          <Spacer mt={{ base: "20px", xl: "0px" }} />
 
           <AddNewCollectionModal mode={formMode.ADD} />
         </Flex>

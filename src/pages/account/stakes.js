@@ -120,10 +120,11 @@ const MyStakesPage = () => {
     } catch (error) {
       setLoading(false);
     }
-  }, [activeTab, currentAccount]);
+  }, [activeTab, api, currentAccount]);
 
   useEffect(() => {
     fetchCollectionDetail();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, currentAccount]);
 
   useEffect(() => {
@@ -134,7 +135,7 @@ const MyStakesPage = () => {
         txStatus?.cancelRequestUnstakeStatus === FINALIZED ||
         txStatus?.requestUnstakeStatus === FINALIZED
       ) {
-        await delay(6000).then(() => {
+        await delay(7000).then(() => {
           txStatus?.stakeStatus && setActiveTab(tabList.STAKED);
           txStatus?.cancelRequestUnstakeStatus && setActiveTab(tabList.STAKED);
           txStatus?.requestUnstakeStatus &&
@@ -161,40 +162,76 @@ const MyStakesPage = () => {
         mx="auto"
         maxW={{ base: "6xl", "2xl": "7xl" }}
         px={{ base: "6", "2xl": "8" }}
-        py={{ base: "12", "2xl": "20" }}
+        py={{ base: "4", xl: "12", "2xl": "20" }}
       >
-        <Flex w="full" alignItems="start" pb={12}>
-          <Heading size="h2">My Stakes</Heading>
+        <Flex
+          w="full"
+          alignItems="start"
+          pb={{ base: "12px", xl: "48px" }}
+          direction={{ base: "column", xl: "row" }}
+        >
+          <Heading fontSize={["3xl-mid", "5xl", "5xl"]} minW="100px">
+            My Stakes
+          </Heading>
           <Spacer />
+          <HStack
+            maxW={{ base: "320px", xl: "600px" }}
+            mt="20px"
+            pb="8px"
+            overflowX="scroll"
+            sx={{
+              "&::-webkit-scrollbar": {
+                width: "4px",
+                height: "4px",
+                borderRadius: "0px",
+                backgroundColor: `transparent`,
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: `#7ae7ff`,
+              },
+              "&::-webkit-scrollbar-thumb:hover": {
+                backgroundColor: `#7ae7ff`,
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: `transparent`,
+              },
+            }}
+          >
+            {Object.keys(tabList).map((item) => (
+              <Button
+                mx={1}
+                key={item}
+                id={item}
+                variant="outline"
+                isActive={item === activeTab}
+                px={["16px", "32px", "32px"]}
+                onClick={() => setActiveTab(item)}
+              >
+                {item.replace("_", " ")}
+              </Button>
+            ))}
 
-          {Object.keys(tabList).map((item) => (
-            <Button
-              key={item}
-              isActive={item === activeTab}
-              id={item}
-              variant="outline"
+            <IconButton
+              onClick={() => refresh()}
               mx={1}
-              onClick={() => setActiveTab(item)}
-            >
-              {item.replace("_", " ")}
-            </Button>
-          ))}
-
-          <IconButton
-            onClick={() => refresh()}
-            mx={1}
-            aria-label="refresh"
-            icon={<RefreshIcon />}
-            size="icon"
-            variant="iconSolid"
-          />
+              aria-label="refresh"
+              icon={<RefreshIcon />}
+              size="icon"
+              variant="iconSolid"
+            />
+          </HStack>
         </Flex>
 
         <Text textAlign="left" color="#fff">
           Praying Mantis Predators NFT Stats:
         </Text>
 
-        <HStack py={5} borderBottomWidth={1} h="75px">
+        <Stack
+          py={5}
+          h={{ base: "195px", xl: "75px" }}
+          borderBottomWidth={1}
+          direction={{ base: "column", xl: "row" }}
+        >
           {statsInfo &&
             Object.keys(statsInfo).map((item) => (
               <motion.div
@@ -229,7 +266,7 @@ const MyStakesPage = () => {
                 </Flex>
               </motion.div>
             ))}
-        </HStack>
+        </Stack>
         <Stack minHeight="504px" h="full">
           {loading ? (
             <Stack h="574px">

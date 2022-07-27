@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
@@ -29,6 +30,8 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
   useEffect(() => {
     addNftTnxStatus?.status === "End" && onClose();
   }, [onClose, addNftTnxStatus?.status]);
+
+  const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
 
   return (
     <>
@@ -80,7 +83,7 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
         isCentered
         isOpen={isOpen}
         onClose={onClose}
-        size={"4xl"}
+        size={modalSize}
       >
         <ModalOverlay
           bg="blackAlpha.300"

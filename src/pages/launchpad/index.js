@@ -96,7 +96,7 @@ export const LaunchpadPage = () => {
   return (
     <Layout>
       <Box w="full" maxW="1400px" mx="auto" textAlign="center" my="80px">
-        <Heading size="h2" mb="10px">
+        <Heading fontSize={["3xl-mid", "5xl", "5xl"]} mb="10px">
           launchpad
         </Heading>
         <Text maxW="360px" fontSize="lg" mx="auto">

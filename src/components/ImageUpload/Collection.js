@@ -21,7 +21,7 @@ import { getCachedImageShort } from "@utils/index";
 import { formMode } from "@constants";
 
 const client = create(IPFS_CLIENT_URL);
-const supportedFormat = ["image/png", "image/jpg", "image/jpeg"];
+const supportedFormat = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
 
 const ImageUploadCollection = ({
   id,
@@ -50,7 +50,7 @@ const ImageUploadCollection = ({
       console.log("includes Date.now()", Date.now());
 
       toast.error(
-        `Please use .png .jpeg .jpeg format, the ${
+        `Please use .png .jpeg .jpeg .gif format, the ${
           e.target?.files[0] && e.target.files[0].type.split("/")[1]
         } format is not supported.`
       );
@@ -167,7 +167,7 @@ const ImageUploadCollection = ({
                 id={`${id}InputTag`}
                 onChange={retrieveNewAvatar}
                 type="file"
-                accept="image/png, image/jpg, image/jpeg"
+                accept="image/png, image/jpg, image/jpeg, image/gif"
               />
             </Flex>
           </label>

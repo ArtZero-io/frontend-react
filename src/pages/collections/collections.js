@@ -129,7 +129,7 @@ const CollectionsPage = () => {
     const prevCurrentPage = sessionStorage.getItem(
       "scroll-position-current-page"
     );
-    
+
     if (prevCurrentPage) {
       setCurrentPage(prevCurrentPage);
       sessionStorage.removeItem("scroll-position-current-page");
@@ -182,8 +182,12 @@ const CollectionsPage = () => {
               px={{ base: "22px", "2xl": "0" }}
               pt={{ base: "12", "2xl": "20" }}
             >
-              <Heading size="h2" my="5rem" textAlign="center">
-                Featured collections
+              <Heading
+                my="5rem"
+                textAlign="center"
+                fontSize={["3xl-mid", "5xl", "5xl"]}
+              >
+                featured collections
               </Heading>
               <>
                 {featuredCollections?.length ? (
@@ -209,7 +213,11 @@ const CollectionsPage = () => {
               pb="100px"
               // py={{ base: "12", "2xl": "20" }}
             >
-              <Heading size="h2" my="5rem" textAlign="center">
+              <Heading
+                my="5rem"
+                textAlign="center"
+                fontSize={["3xl-mid", "5xl", "5xl"]}
+              >
                 All collections
               </Heading>
               {collections?.length ? (
