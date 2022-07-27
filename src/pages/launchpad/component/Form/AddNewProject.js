@@ -571,11 +571,11 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
 export default AddNewProjectForm;
 
-export const fetchUserBalance = async ({ currentAccount, api }) => {
+export const fetchUserBalance = async ({ currentAccount, api, address }) => {
   if (currentAccount) {
     const {
       data: { free: balance },
-    } = await api.query.system.account(currentAccount?.address);
+    } = await api.query.system.account(address || currentAccount?.address);
 
     const [chainDecimals] = await api.registry.chainDecimals;
 
