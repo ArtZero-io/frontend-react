@@ -34,6 +34,7 @@ function RewardDistribution() {
   const [claimableReward,setClaimableReward] = useState(0);
   const [totalStaked,setTotalStaked] = useState(0);
   const [isLocked,setIsLocked] = useState(false);
+  const [rewardStarted,setIsRewardStarted] = useState(false);
   const [adminAddress,setAdminAddress] = useState("");
   const [stakersCount,setStakerCount] = useState(0);
   const [stakers,setStakers] = useState([]);
@@ -43,6 +44,7 @@ function RewardDistribution() {
     let claimable_reward = await staking_calls.getClaimableReward(currentAccount);
     let total_staked = await staking_calls.getTotalStaked(currentAccount);
     let is_locked = await staking_calls.getIsLocked(currentAccount);
+    let is_reward_started = await staking_calls.getRewardStarted(currentAccount);
     let admin_address = await staking_calls.getAdminAddress(currentAccount);
 
     // console.log(reward_pool,claimable_reward);
@@ -51,19 +53,19 @@ function RewardDistribution() {
     setTotalStaked(total_staked);
     setIsLocked(is_locked);
     setAdminAddress(admin_address);
-
+    setIsRewardStarted(is_reward_started)
   };
   const getStakers = async () => {
     let staker_count = await staking_calls.getTotalCountOfStakeholders(currentAccount);
     setStakerCount(staker_count);
     let stakers = [];
     for (var i=0;i<staker_count;i++){
-      let staker = await staking_calls.getStakedAccountsAccountByIndex(currentAccount,i);
-
+      let staker = await staking_calls.getStakedAccountsAccountByIndex(currentAccount,i+1);
+      console.log(staker)
       let staker_info = {
         address:staker,
         amount:await staking_calls.getTotalStakedByAccount(currentAccount,staker),
-        isClaimed:false
+        isClaimed:await staking_calls.isClaimed(currentAccount,staker)
       }
       stakers.push(staker_info);
     }
@@ -83,6 +85,24 @@ function RewardDistribution() {
     await delay(3000);
     await onRefresh();
   };
+  const setRewardDistribution = async (status) => {
+    if (activeAddress != adminAddress){
+      toast.error('Only Admin allowed');
+    }
+    if (status)
+      await staking_calls.startRewardDistribution(currentAccount);
+    else
+      await staking_calls.stopRewardDistribution(currentAccount);
+    await delay(3000);
+    await onRefresh();
+  };
+  const enableClaim = async (staker) =>{
+    if (activeAddress != adminAddress){
+      toast.error('Only Admin allowed');
+    }
+    await staking_calls.setClaimable(currentAccount,staker);
+    getStakers();
+  }
 
 
   useEffect(async () => {
@@ -116,7 +136,7 @@ function RewardDistribution() {
                     Step 1:
                   </Text>
                   <Text color="#7ae7ff" ml={2}>
-                    Add Rewards
+                    Lock Staking Contract
                   </Text>
                 </Flex>
 
@@ -125,7 +145,7 @@ function RewardDistribution() {
                     Step 2:
                   </Text>
                   <Text color="#7ae7ff" ml={2}>
-                    Set all stakers Claimable
+                    Add Rewards
                   </Text>
                 </Flex>
 
@@ -134,7 +154,7 @@ function RewardDistribution() {
                     Step 3:
                   </Text>
                   <Text  color="#7ae7ff" ml={2}>
-                    Lock Staking Contract
+                    Set all stakers Claimable
                   </Text>
                 </Flex>
 
@@ -143,7 +163,7 @@ function RewardDistribution() {
                      Step 4:
                   </Text>
                   <Text  color="#7ae7ff" ml={2}>
-                    UnLock Staking Contract after 3 days
+                    Enable Reward Distribution
                   </Text>
                 </Flex>
               </Stack>
@@ -152,6 +172,41 @@ function RewardDistribution() {
                 pb={5}
                 borderBottomWidth={1}
               >
+                <Flex
+                  alignItems="start"
+                  pr={{ base: 0, xl: 20 }}
+                  // pr={20}
+                >
+                  <Text ml={1} color="brand.grayLight">
+                    Step 5:
+                  </Text>
+                  <Text color="#7ae7ff" ml={2}>
+                    Stop Reward Distribution
+                  </Text>
+                </Flex>
+
+                <Flex alignItems="start" pr={20}>
+                  <Text ml={1} color="brand.grayLight">
+                    Step 6:
+                  </Text>
+                  <Text color="#7ae7ff" ml={2}>
+                    Unlock Staking Contract
+                  </Text>
+                </Flex>
+              </Stack>
+              <Stack
+                direction={{ base: "column", xl: "row" }}
+                pb={5}
+                borderBottomWidth={1}
+              >
+                <Flex alignItems="start" pr={20}>
+                  <Text ml={1} color="brand.grayLight">
+                    Admin
+                  </Text>
+                  <Text  color="#7ae7ff" ml={2}>
+                    {truncateStr(adminAddress,5)}
+                  </Text>
+                </Flex>
                 <Flex
                   alignItems="start"
                   pr={{ base: 0, xl: 20 }}
@@ -182,10 +237,17 @@ function RewardDistribution() {
                     {totalStaked}
                   </Text>
                 </Flex>
+              </Stack>
+              <Stack
+                direction={{ base: "column", xl: "row" }}
+                pb={5}
+                borderBottomWidth={1}
+              >
+
 
                 <Flex alignItems="start" pr={20}>
                   <Text ml={1} color="brand.grayLight">
-                    Pool Status
+                    Staking Contract Status
                   </Text>
                   <Text  color="#7ae7ff" ml={2}>
                     {isLocked ? "Locked" : "Unlocked"}
@@ -194,12 +256,13 @@ function RewardDistribution() {
 
                 <Flex alignItems="start" pr={20}>
                   <Text ml={1} color="brand.grayLight">
-                    Admin
+                    Reward Distribution
                   </Text>
                   <Text  color="#7ae7ff" ml={2}>
-                    {truncateStr(adminAddress,5)}
+                    {rewardStarted ? "Started" : "Not Started"}
                   </Text>
                 </Flex>
+
 
               </Stack>
               <Flex
@@ -210,6 +273,91 @@ function RewardDistribution() {
                 py={12}
                 textAlign="left"
               >
+                <Box
+                  mx={2}
+                  fontSize="lg"
+                  bg="brand.grayDark"
+                  padding={12}
+                  minH="xs"
+                  maxW="xl"
+                  w="100%"
+                >
+                  <Flex
+                    direction="column"
+                    justifyContent="space-between"
+                    h="full"
+                  >
+                    <Box h="full">
+                      <Heading size="h4">Staking Contract Control</Heading>
+
+                      <Box h="full">
+                        <Box mt={7}>
+                          <Text color={"#fff"} py={2}>
+                            Only Admin
+                          </Text>
+                          <Flex
+                            direction={{ base: "column", xl: "row" }}
+                            justify="space-between"
+                            alignItems="center"
+                          >
+                            <Button
+                              mt={7}
+                              variant="solid"
+                              w="100%"
+                              maxW={"3xs"}
+                              onClick={() => setStakingStatus(true)}
+                            >
+                              Lock Staking
+                            </Button>
+                            <Button
+                              mt={7}
+                              variant="solid"
+                              w="100%"
+                              maxW={"3xs"}
+                              onClick={() => setStakingStatus(false)}
+                            >
+                              Unlock Staking
+                            </Button>
+                          </Flex>
+                          <Flex
+                            direction={{ base: "column", xl: "row" }}
+                            justify="space-between"
+                            alignItems="center"
+                          >
+                            <Button
+                              mt={7}
+                              variant="solid"
+                              w="100%"
+                              maxW={"3xs"}
+                              onClick={() => setRewardDistribution(true)}
+                            >
+                              Start Reward Distribution
+                            </Button>
+                            <Button
+                              mt={7}
+                              variant="solid"
+                              w="100%"
+                              maxW={"3xs"}
+                              onClick={() => setRewardDistribution(false)}
+                            >
+                              Stop Reward Distribution
+                            </Button>
+                          </Flex>
+                          <Flex
+                            direction={{ base: "column", xl: "row" }}
+                            justify="space-between"
+                            alignItems="center"
+                          >
+                            <Text color={"#fff"} py={2}>
+                             To do Step 3, admin need to run the script on the server to set all stakers claimable from FALSE to TRUE
+                            </Text>
+                          </Flex>
+                        </Box>
+
+                      </Box>
+                    </Box>
+                  </Flex>
+                </Box>
                 <Box
                   mx={2}
                   fontSize="lg"
@@ -278,58 +426,7 @@ function RewardDistribution() {
                   </Flex>
                 </Box>
 
-                <Box
-                  mx={2}
-                  fontSize="lg"
-                  bg="brand.grayDark"
-                  padding={12}
-                  minH="xs"
-                  maxW="xl"
-                  w="100%"
-                >
-                  <Flex
-                    direction="column"
-                    justifyContent="space-between"
-                    h="full"
-                  >
-                    <Box h="full">
-                      <Heading size="h4">Lock/Unlock</Heading>
 
-                      <Box h="full">
-                        <Box mt={7}>
-                          <Text color={"#fff"} py={2}>
-                            Only Admin
-                          </Text>
-                          <Flex
-                            direction={{ base: "column", xl: "row" }}
-                            justify="space-between"
-                            alignItems="center"
-                          >
-                            <Button
-                              mt={7}
-                              variant="solid"
-                              w="100%"
-                              maxW={"3xs"}
-                              onClick={() => setStakingStatus(true)}
-                            >
-                              Lock Staking
-                            </Button>
-                            <Button
-                              mt={7}
-                              variant="solid"
-                              w="100%"
-                              maxW={"3xs"}
-                              onClick={() => setStakingStatus(false)}
-                            >
-                              Unlock Staking
-                            </Button>
-                          </Flex>
-                        </Box>
-
-                      </Box>
-                    </Box>
-                  </Flex>
-                </Box>
               </Flex>
             </Box>
 
@@ -399,6 +496,15 @@ function RewardDistribution() {
                       >
                         Claimed
                       </Th>
+                      <Th
+                        fontFamily="Evogria"
+                        fontSize="sm"
+                        fontWeight="normal"
+                        py={7}
+                        isNumeric
+                      >
+                        Action
+                      </Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -414,7 +520,18 @@ function RewardDistribution() {
                             {staker.amount}
                           </Td>
                           <Td py={7} isNumeric>
-                            {staker.isClaimed}
+                            {staker.isClaimed ? "Claimed" : "Not Claimed or Not Set"}
+                          </Td>
+                          <Td py={7} isNumeric>
+                            <Button
+                              mt={7}
+                              variant="solid"
+                              w="100%"
+                              maxW={"3xs"}
+                              onClick={() => enableClaim(staker.address)}
+                            >
+                              Enable Claim
+                            </Button>
                           </Td>
                         </Tr>
                       ))

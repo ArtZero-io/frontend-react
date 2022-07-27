@@ -53,7 +53,11 @@ function GeneralPage() {
   //const [platformTotalStaked,setPlatformTotalStaked] = useState(3);
   const [estimatedEarning, setEstimatedEarning] = useState(0);
   const [rewardHistory,setRewardHistory] = useState([]);
+  const [rewardStarted,setIsRewardStarted] = useState(false);
+  const [claimed,setClaimed] = useState(false);
+
   useEffect(() => {
+    checkRewardStatus();
     getRewardHistory();
     const fetchAllNfts = async () => {
       const options = {
@@ -148,6 +152,13 @@ function GeneralPage() {
     };
     getTradeFee();
   }, [currentAccount]);
+  const checkRewardStatus = async () =>{
+    let is_reward_started = await staking_calls.getRewardStarted(currentAccount);
+    setIsRewardStarted(is_reward_started);
+    let is_claimed = await staking_calls.isClaimed(currentAccount,currentAccount.address);
+    setClaimed(is_claimed);
+
+  }
   const getRewardHistory= async () => {
     const rewards = await clientAPI(
       "post",
@@ -158,6 +169,10 @@ function GeneralPage() {
     );
     console.log(rewards);
     setRewardHistory([]);
+  }
+  const claimReward = async () =>{
+    await staking_calls.claimReward(currentAccount);
+    await checkRewardStatus();
   }
 
   const [isLargerThan480] = useMediaQuery("(min-width: 480px)");
@@ -361,7 +376,11 @@ function GeneralPage() {
               </Box>
             </Flex>
 
-            <Flex w="full">
+            <Stack
+              direction={{ base: "column", xl: "row" }}
+              w="full"
+              align="flex-start"
+            >
               <Text
                 mt={0}
                 mb={1}
@@ -373,7 +392,13 @@ function GeneralPage() {
                   {totalStaked || 0} NFT{totalStaked > 1 ? "s" : ""}
                 </span>
               </Text>
-            </Flex>
+              <Text fontSize={{ base: "16px", xl: "lg" }}>
+                Reward Distribution Status:{" "}
+                <Text as="span" color="#7AE7FF" mr="30px">
+                {rewardStarted ? "ACTIVE" : "INACTIVE"}
+                </Text>
+              </Text>
+            </Stack>
             <Stack
               direction={{ base: "column", xl: "row" }}
               w="full"
@@ -396,9 +421,9 @@ function GeneralPage() {
                 </Text>
               </Text>
               <Text fontSize={{ base: "16px", xl: "lg" }}>
-                Next Payout:{" "}
+                Payout Schedule:{" "}
                 <Text as="span" color="#7AE7FF" mr="30px">
-                  Aug 01, 2022
+                the 27th of each month for 3 days
                 </Text>
               </Text>
             </Stack>
@@ -430,6 +455,15 @@ function GeneralPage() {
                   </TagLabel>
                 </Tag>
               </Box>
+              {rewardStarted && !claimed ?
+                <Button
+                  w={{ base: "full", xl: "auto" }}
+                  variant="solid"
+                  onClick={() => claimReward()}
+                >
+                  Claim Rewards
+                </Button>
+                 : null}
 
               <Button
                 w={{ base: "full", xl: "auto" }}

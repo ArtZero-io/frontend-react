@@ -1,10 +1,10 @@
 const staking = {
-  CONTRACT_ADDRESS: "5CbP7RFS6o3sqGwc3t3oPWGQdNsmZnoQGjS3VDMaDCNQG8to",
+  CONTRACT_ADDRESS: "5GJDt6Lmvcim49HVwxwxgXBUHj2rP1qvaSF4CAUgXzH5Xd4g",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x97ad221e33ea783fa7e2c4f742a26a1a50fda7d481ec0fa7b7973b466289df44",
+      "hash": "0x5fe94c8b14e1efb6c77d4b5ed7d587e7f48e3dee9149a065e53cc451d2ecd912",
       "language": "ink! 3.3.0",
-      "compiler": "rustc 1.61.0-nightly"
+      "compiler": "rustc 1.63.0-nightly"
     },
     "contract": {
       "name": "artzero_staking_nft",
@@ -392,6 +392,34 @@ const staking = {
           },
           {
             "args": [],
+            "docs": [],
+            "label": "start_reward_distribution",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 19
+            },
+            "selector": "0x95f19c6c"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "stop_reward_distribution",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 19
+            },
+            "selector": "0xcdcd1ca5"
+          },
+          {
+            "args": [],
             "docs": [
               " Add reward to reward_pool"
             ],
@@ -407,7 +435,17 @@ const staking = {
             "selector": "0x1b146ead"
           },
           {
-            "args": [],
+            "args": [
+              {
+                "label": "staker",
+                "type": {
+                  "displayName": [
+                    "AccountId"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
             "docs": [
               " Set Account so it can claim the reward. Must run by backend every month before add_reward"
             ],
@@ -467,7 +505,17 @@ const staking = {
             "selector": "0x411901a1"
           },
           {
-            "args": [],
+            "args": [
+              {
+                "label": "account",
+                "type": {
+                  "displayName": [
+                    "AccountId"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
             "docs": [],
             "label": "is_claimed",
             "mutates": false,
@@ -479,6 +527,20 @@ const staking = {
               "type": 4
             },
             "selector": "0xc58eed46"
+          },
+          {
+            "args": [],
+            "docs": [],
+            "label": "get_reward_started",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "bool"
+              ],
+              "type": 4
+            },
+            "selector": "0xca663a02"
           },
           {
             "args": [],
@@ -914,33 +976,6 @@ const staking = {
             "selector": "0x4fa43c8c"
           },
           {
-            "args": [],
-            "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 17
-            },
-            "selector": "0x5e228753"
-          },
-          {
             "args": [
               {
                 "label": "new_owner",
@@ -976,6 +1011,33 @@ const staking = {
               "type": 17
             },
             "selector": "0x11f43efd"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 17
+            },
+            "selector": "0x5e228753"
           },
           {
             "args": [
@@ -1270,6 +1332,15 @@ const staking = {
                       "layout": {
                         "cell": {
                           "key": "0x86a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                          "ty": 4
+                        }
+                      },
+                      "name": "reward_started"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0x87a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
                           "ty": 16
                         }
                       },
@@ -1278,14 +1349,14 @@ const staking = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0x87a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                          "dispatchKey": "0x88a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0x88a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                                      "key": "0x89a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
                                       "ty": 3
                                     }
                                   },

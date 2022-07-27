@@ -270,6 +270,28 @@ async function getIsLocked(caller_account) {
   return null;
 }
 
+async function getRewardStarted(caller_account) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const { result, output } = await contract.query.getRewardStarted(
+    address,
+    {
+      value: azero_value,
+      gasLimit,
+    }
+  );
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
 async function getClaimableReward(caller_account) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
@@ -384,6 +406,56 @@ async function claimReward(caller_account) {
 
   return unsubscribe;
 }
+
+async function setClaimable(caller_account,account){
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const value = 0;
+
+  const injector = await web3FromSource(caller_account?.meta?.source);
+
+  await contract.tx
+      .setClaimable({ gasLimit, value },account)
+      .signAndSend(
+        address,
+        { signer: injector.signer },
+        async ({ status, dispatchError }) => {
+          if (dispatchError) {
+            if (dispatchError.isModule) {
+              const decoded = contract.registry.findMetaError(
+                dispatchError.asModule
+              );
+              const { docs, name, section } = decoded;
+
+              console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
+            } else {
+              console.log(
+                "dispatchError claimReward",
+                dispatchError.toString()
+              );
+            }
+          }
+
+          if (status) {
+            const statusText = Object.keys(status.toHuman())[0];
+
+            toast.success(
+              `claim Reward ${
+                statusText === "0" ? "start" : statusText.toLowerCase()
+              }.`
+            );
+          }
+        }
+      )
+      .then((unsub) => (unsubscribe = unsub))
+      .catch((e) => console.log("e", e));
+
+  return unsubscribe;
+}
+
+
 async function addReward(caller_account, amount) {
   let unsubscribe;
 
@@ -467,6 +539,101 @@ async function updateIsLocked(caller_account,status) {
 
             toast.success(
               `add Reward ${
+                statusText === "0" ? "start" : statusText.toLowerCase()
+              }.`
+            );
+          }
+        }
+      )
+      .then((unsub) => (unsubscribe = unsub))
+      .catch((e) => console.log("e", e));
+
+  return unsubscribe;
+}
+
+async function startRewardDistribution(caller_account) {
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const value = 0;
+
+  const injector = await web3FromSource(caller_account?.meta?.source);
+
+  await contract.tx
+      .startRewardDistribution({ gasLimit, value })
+      .signAndSend(
+        address,
+        { signer: injector.signer },
+        async ({ status, dispatchError }) => {
+          if (dispatchError) {
+            if (dispatchError.isModule) {
+              const decoded = contract.registry.findMetaError(
+                dispatchError.asModule
+              );
+              const { docs, name, section } = decoded;
+
+              console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
+            } else {
+              console.log(
+                "dispatchError claimReward",
+                dispatchError.toString()
+              );
+            }
+          }
+
+          if (status) {
+            const statusText = Object.keys(status.toHuman())[0];
+
+            toast.success(
+              `start Reward Distribution ${
+                statusText === "0" ? "start" : statusText.toLowerCase()
+              }.`
+            );
+          }
+        }
+      )
+      .then((unsub) => (unsubscribe = unsub))
+      .catch((e) => console.log("e", e));
+
+  return unsubscribe;
+}
+async function stopRewardDistribution(caller_account) {
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const value = 0;
+
+  const injector = await web3FromSource(caller_account?.meta?.source);
+
+  await contract.tx
+      .stopRewardDistribution({ gasLimit, value })
+      .signAndSend(
+        address,
+        { signer: injector.signer },
+        async ({ status, dispatchError }) => {
+          if (dispatchError) {
+            if (dispatchError.isModule) {
+              const decoded = contract.registry.findMetaError(
+                dispatchError.asModule
+              );
+              const { docs, name, section } = decoded;
+
+              console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
+            } else {
+              console.log(
+                "dispatchError claimReward",
+                dispatchError.toString()
+              );
+            }
+          }
+
+          if (status) {
+            const statusText = Object.keys(status.toHuman())[0];
+
+            toast.success(
+              `stop Reward Distribution ${
                 statusText === "0" ? "start" : statusText.toLowerCase()
               }.`
             );
@@ -688,6 +855,10 @@ async function cancelRequestUnstake(
 }
 
 const staking_calls = {
+  setClaimable,
+  stopRewardDistribution,
+  startRewardDistribution,
+  getRewardStarted,
   getStakedAccountsAccountByIndex,
   getAdminAddress,
   updateIsLocked,
