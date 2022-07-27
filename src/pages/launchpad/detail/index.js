@@ -111,7 +111,8 @@ const LaunchpadDetailPage = () => {
             const currentWhitelistTmp =
               await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
                 currentAccount,
-                phaseCode
+                phaseCode,
+                currentAccount?.address
               );
             console.log(
               "LaunchpadDetailPage::currentWhitelistTmp",

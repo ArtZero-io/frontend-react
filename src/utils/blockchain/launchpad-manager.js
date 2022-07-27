@@ -1,8 +1,8 @@
 const launchpad_manager = {
-    CONTRACT_ADDRESS: "5F68HqW9Gzdd1XJzY7ZjsEPb3f8Y2KzSbefvB13zpfPqiE7P",
+    CONTRACT_ADDRESS: "5DLMuHsW49fJ2pthvCfgWcTj28S1FHV5giDUWaZxxUamus3F",
     CONTRACT_ABI: {
       "source": {
-        "hash": "0x102743cd9f2ca9ca4233439e53a025bd5237f10eaf199e5bbc94cb5d589f5219",
+        "hash": "0x054d1a54de168afdaddda5f017a2342bfc7f28781703693ae8a5ec0a9a2dfa8d",
         "language": "ink! 3.3.0",
         "compiler": "rustc 1.61.0-nightly"
       },
@@ -597,33 +597,6 @@ const launchpad_manager = {
               "selector": "0x4fa43c8c"
             },
             {
-              "args": [],
-              "docs": [
-                " Leaves the contract without owner. It will not be possible to call",
-                " owner's functions anymore. Can only be called by the current owner.",
-                "",
-                " NOTE: Renouncing ownership will leave the contract without an owner,",
-                " thereby removing any functionality that is only available to the owner.",
-                "",
-                " On success a `OwnershipTransferred` event is emitted.",
-                "",
-                " # Errors",
-                "",
-                " Panics with `CallerIsNotOwner` error if caller is not owner"
-              ],
-              "label": "Ownable::renounce_ownership",
-              "mutates": true,
-              "payable": false,
-              "returnType": {
-                "displayName": [
-                  "ownable_external",
-                  "RenounceOwnershipOutput"
-                ],
-                "type": 16
-              },
-              "selector": "0x5e228753"
-            },
-            {
               "args": [
                 {
                   "label": "new_owner",
@@ -659,6 +632,33 @@ const launchpad_manager = {
                 "type": 16
               },
               "selector": "0x11f43efd"
+            },
+            {
+              "args": [],
+              "docs": [
+                " Leaves the contract without owner. It will not be possible to call",
+                " owner's functions anymore. Can only be called by the current owner.",
+                "",
+                " NOTE: Renouncing ownership will leave the contract without an owner,",
+                " thereby removing any functionality that is only available to the owner.",
+                "",
+                " On success a `OwnershipTransferred` event is emitted.",
+                "",
+                " # Errors",
+                "",
+                " Panics with `CallerIsNotOwner` error if caller is not owner"
+              ],
+              "label": "Ownable::renounce_ownership",
+              "mutates": true,
+              "payable": false,
+              "returnType": {
+                "displayName": [
+                  "ownable_external",
+                  "RenounceOwnershipOutput"
+                ],
+                "type": 16
+              },
+              "selector": "0x5e228753"
             },
             {
               "args": [],

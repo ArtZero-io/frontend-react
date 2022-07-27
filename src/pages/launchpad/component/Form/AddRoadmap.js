@@ -29,7 +29,7 @@ function AddRoadmap({ name, isOpen, onClose, mode }) {
       <Flex>
         <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
           <Text fontSize={"lg"} color="#fff">
-            Type
+            Title
           </Text>
         </Box>
         <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
