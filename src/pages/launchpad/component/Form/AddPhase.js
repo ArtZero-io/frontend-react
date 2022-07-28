@@ -13,7 +13,6 @@ function AddPhase({ name, mode }) {
   const handlePhaseTime = (e, index) => {
     const valueAddHash = value.map((item, idx) => {
       if (!e) {
-
         return { ...item, start: null, end: null };
       }
 
@@ -27,7 +26,7 @@ function AddPhase({ name, mode }) {
   };
 
   const handleAddPhase = (arrayHelpers) => {
-    if (value?.length >= 1) {
+    if (value?.length === 1) {
       const prjStartTime = arrayHelpers?.form?.values?.startTime;
 
       const prjEndTime = arrayHelpers?.form?.values?.endTime;
@@ -36,7 +35,7 @@ function AddPhase({ name, mode }) {
       const phaseEnd = value[value?.length - 1]?.end;
 
       if (phaseStart < Date.now()) {
-        toast.error("Start time must be greater than current time!");
+        toast.error("Start time of phase must be greater than current time!");
         return;
       }
 
@@ -48,6 +47,22 @@ function AddPhase({ name, mode }) {
         arrayHelpers.push({ name: "", start: "", end: "" });
       } else {
         toast.error("Phase time is not valid.");
+      }
+    }
+
+    if (value?.length > 1) {
+      const allPhases = [...value];
+      const lastPhase = allPhases.pop();
+      const phaseBefore = allPhases.pop();
+
+      if (
+        phaseBefore?.start <= phaseBefore?.end &&
+        phaseBefore?.end <= lastPhase?.start &&
+        lastPhase?.start <= lastPhase?.end
+      ) {
+        arrayHelpers.push({ name: "", start: "", end: "" });
+      } else {
+        toast.error("Phase time is not valid or overlap.");
       }
     }
   };
@@ -91,7 +106,7 @@ function AddPhase({ name, mode }) {
                     <Input
                       mx={5}
                       type="text"
-                      width="25%"
+                      width="30%"
                       height={16}
                       flexGrow={10}
                       isRequired={true}
