@@ -33,17 +33,20 @@ function LaunchpadDetailHeader({ project, currentWhitelist }) {
   }, [phases, useState]);
 
   useInterval(() => {
-    const total = livePhase.endTime - Date.now();
-    const seconds = Math.floor((total / 1000) % 60);
-    const minutes = Math.floor((total / 1000 / 60) % 60);
-    const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
-    const days = Math.floor(total / (1000 * 60 * 60 * 24));
-    setCountDownTimer({
-      days: days,
-      hours: hours,
-      minutes: minutes,
-      seconds: seconds,
-    });
+    if (livePhase && livePhase.endTime) {
+      const total = livePhase.endTime - Date.now();
+      const seconds = Math.floor((total / 1000) % 60);
+      const minutes = Math.floor((total / 1000 / 60) % 60);
+      const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+      const days = Math.floor(total / (1000 * 60 * 60 * 24));
+      setCountDownTimer({
+        days: days,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds,
+      });
+    }
+    
   }, 1000);
 
   return (
@@ -151,8 +154,7 @@ function LaunchpadDetailHeader({ project, currentWhitelist }) {
               </VStack>
             </motion.div>
           </HStack>
-
-          <HStack
+          {(livePhase && livePhase) ? (<HStack
             flexWrap={["wrap", "noWrap", "noWrap"]}
             color="brand.blue"
             maxW="680px"
@@ -260,7 +262,8 @@ function LaunchpadDetailHeader({ project, currentWhitelist }) {
                 </motion.div>
               </>
             </VStack>
-          </HStack>
+          </HStack>) : ''}
+          
         </VStack>
       </Box>
       <Box

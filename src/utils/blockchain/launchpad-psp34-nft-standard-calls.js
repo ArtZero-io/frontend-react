@@ -167,7 +167,7 @@ async function getCurrentPhase(caller_account) {
   return null;
 }
 
-async function getWhitelistByAccountId(caller_account, phaseCode) {
+async function getPhaseAccountLastIndex(caller_account, phaseId) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -176,10 +176,48 @@ async function getWhitelistByAccountId(caller_account, phaseCode) {
   const gasLimit = -1;
   const azero_value = 0;
 
+  const { result, output } = await contract.query.getPhaseAccountLastIndex(address, {
+    value: azero_value,
+    gasLimit,
+  }, phaseId);
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
+async function getPhaseAccountLinkByPhaseId(caller_account, phaseId, index) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const { result, output } = await contract.query.getPhaseAccountLinkByPhaseId(address, {
+    value: azero_value,
+    gasLimit,
+  }, phaseId, index);
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
+async function getWhitelistByAccountId(caller_account, phaseCode, accountAddress) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
   const { result, output } = await contract.query.getWhitelistByAccountId(address, {
     value: azero_value,
     gasLimit,
-  }, address, phaseCode);
+  }, accountAddress, phaseCode);
+  console.log(accountAddress, phaseCode);
   if (result.isOk) {
     return output.toHuman();
   }
@@ -237,7 +275,9 @@ const launchpad_psp34_nft_standard_calls = {
   addWhitelist,
   getCurrentPhase,
   getWhitelistByAccountId,
-  whitelistMint
+  whitelistMint,
+  getPhaseAccountLastIndex,
+  getPhaseAccountLinkByPhaseId
 };
 
 export default launchpad_psp34_nft_standard_calls;

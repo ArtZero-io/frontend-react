@@ -40,6 +40,25 @@ async function getAttributes(caller_account, collection_address, attributes) {
   return attributeVals;
 }
 
+async function getProjectsByOwner(caller_account, ownerAddress) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
+
+  const { result, output } = await contract.query.getProjectsByOwner(address, {
+    value: azero_value,
+    gasLimit,
+  }, ownerAddress);
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
 async function setMultipleAttributes(
   account,
   collection_address,
@@ -404,6 +423,7 @@ const launchpad_contract_calls = {
   owner,
   updateIsActiveProject,
   editProject,
+  getProjectsByOwner
 };
 
 export default launchpad_contract_calls;
