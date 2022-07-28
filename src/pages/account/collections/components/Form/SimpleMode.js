@@ -149,23 +149,23 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               collectionName: Yup.string()
                 .trim()
                 .min(3, "Must be longer than 3 characters")
-                .max(30, "Must be less than 30 characters")
-                .required("Required"),
+                .max(30, "Must be at most 30 characters")
+                .required("This field is required"),
               collectionDescription: Yup.string()
                 .trim()
                 .min(3, "Must be longer than 3 characters")
-                .max(150, "Must be less than 150 characters")
-                .required("Required"),
+                .max(150, "Must be at most 150 characters")
+                .required("This field is required"),
               collectRoyalFee: Yup.boolean(),
               website: Yup.string()
                 .trim()
                 .url("URL must start with http:// or https://")
-                .max(50, "Must be less than 50 characters"),
+                .max(50, "Must be at most 50 characters"),
               twitter: Yup.string()
                 .trim()
                 .url("URL must start with http:// or https://")
                 .matches(/\btwitter.com\b/, "URL must be twitter.com")
-                .max(50, "Must be less than 50 characters"),
+                .max(50, "Must be at most 50 characters"),
               discord: Yup.string()
                 .trim()
                 .url("URL must start with http:// or https://")
@@ -173,7 +173,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   /\bdiscord.(com|gg)\b/,
                   "URL must be discord.com or discord.gg"
                 )
-                .max(50, "Must be less than 50 characters"),
+                .max(50, "Must be at most 50 characters"),
 
               nftName: Yup.string()
                 .trim()
@@ -181,8 +181,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   is: false,
                   then: Yup.string()
                     .min(3, "Must be longer than 3 characters")
-                    .max(25, "Must be less than 25 characters")
-                    .required("Required"),
+                    .max(25, "Must be at most 25 characters")
+                    .required("This field is required"),
                 }),
               nftSymbol: Yup.string()
                 .trim()
@@ -190,8 +190,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   is: false,
                   then: Yup.string()
                     .min(3, "Must be longer than 3 characters")
-                    .max(8, "Must be less than 8 characters")
-                    .required("Required"),
+                    .max(8, "Must be at most 8 characters")
+                    .required("This field is required"),
                 }),
               agreeTosCheckbox: Yup.boolean().when("isEditMode", {
                 is: false,

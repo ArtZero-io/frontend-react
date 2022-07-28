@@ -59,7 +59,7 @@ const LaunchpadDetailPage = () => {
         const projectInfo = await launchpad_contract_calls.getProjectInfoByHash(
           project.projectInfo
         );
-        console.log("projectInfo", projectInfo);
+
         const launchpad_psp34_nft_standard_contract = new ContractPromise(
           api,
           launchpad_psp34_nft_standard.CONTRACT_ABI,

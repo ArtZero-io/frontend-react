@@ -28,64 +28,69 @@ function AddRoadmap({ name, isOpen, onClose, mode }) {
 
   return (
     <>
-      <Flex>
-        <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
-          <Text fontSize={"lg"} color="#fff">
-            Title
-          </Text>
-        </Box>
-
-        <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
-          <Text fontSize={"lg"} color="#fff">
-            Content
-          </Text>
-        </Box>
-
-        <Box w={14} />
-      </Flex>
-
       <FieldArray
         name="roadmap"
         render={(arrayHelpers) => {
+          const roadmapErrors = arrayHelpers?.form?.errors?.roadmap;
+
           return (
             <div>
               {value?.map((roadmap, index) => (
                 <div key={index}>
                   <Stack
-                    direction={{ base: "column", md: "row" }}
-                    alignItems="start"
+                    height={index === 0 ? "112px" : "78px"}
                     mb={4}
+                    alignItems="flex-start"
+                    direction={{ base: "column", md: "row" }}
                   >
-                    <HStack w={{ base: "100%", md: "30%" }} align="center">
+                    <HStack
+                      align="center"
+                      alignItems="flex-end"
+                      w={{ base: "100%", md: "30%" }}
+                    >
                       <IconButton
-                        // width={{ base: "10%", md: "20%" }}
-                        aria-label="Delete"
-                        icon={<DeleteIcon fontSize="24px" />}
                         size="icon"
+                        aria-label="delete"
                         variant="iconOutline"
-                        isDisabled={index === 0 && value.length === 1}
+                        icon={<DeleteIcon fontSize="24px" />}
                         onClick={() => arrayHelpers.remove(index)}
+                        isDisabled={index === 0 && value.length === 1}
                       />
                       <Input
                         width="100%"
                         mx={5}
-                        mt="8px"
-                        height={16}
                         type="text"
+                        isRequired={true}
                         autoComplete="off"
                         name={`roadmap[${index}].type`}
-                        placeholder="Your type here"
+                        placeholder="Your milestone here"
+                        label={index === 0 && "Milestone"}
+                        height={index === 0 ? "84px" : "50px"}
                       />
                     </HStack>
+
                     <CommonTextArea
+                      rows={2}
+                      height={index === 0 ? "86px" : "50px"}
+                      label={index === 0 && "Content"}
                       w="full"
                       type="text"
-                      name={`roadmap.${index}.content`}
+                      isRequired={true}
                       placeholder="Your content here"
+                      name={`roadmap[${index}].content`}
                     />
                   </Stack>
                 </div>
               ))}
+
+              <Stack pb={"12px"}>
+                {typeof roadmapErrors === "string" ? (
+                  <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                    {roadmapErrors}
+                  </Text>
+                ) : null}
+              </Stack>
+
               <Flex pb={6}>
                 {/* TODO:
                   Temp add mode === formMode.ADD for edit mode
@@ -102,7 +107,7 @@ function AddRoadmap({ name, isOpen, onClose, mode }) {
                   }
                   onClick={() => arrayHelpers.push({ type: "", content: "" })}
                 >
-                  Add more
+                  add more
                 </Button>
               </Flex>
             </div>

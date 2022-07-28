@@ -97,13 +97,13 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
             NFTName: Yup.string()
               .trim()
               .min(3, "Must be longer than 3 characters")
-              .max(30, "Must be less than 30 characters")
-              .required("Required"),
+              .max(30, "Must be at most 30 characters")
+              .required("This field is required"),
             description: Yup.string()
               .trim()
               .min(3, "Must be longer than 3 characters")
               .max(150, "Must be 150 characters or less")
-              .required("Required"),
+              .required("This field is required"),
             properties: Yup.array()
               .of(
                 Yup.object().shape(
@@ -133,7 +133,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                           )
                           .required("Must have type value.")
                           .min(3, "Must be longer than 3 characters")
-                          .max(30, "Must be less than 30 characters"),
+                          .max(30, "Must be at most 30 characters"),
                         otherwise: Yup.string().notRequired(),
                       }),
                     name: Yup.string()
@@ -143,7 +143,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                         then: Yup.string()
                           .required("Must have name value.")
                           .min(3, "Must be longer than 3 characters")
-                          .max(30, "Must be less than 30 characters"),
+                          .max(30, "Must be at most 30 characters"),
                         otherwise: Yup.string().notRequired(),
                       }),
                   },
@@ -179,7 +179,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                         )
                         .required("Must have level name.")
                         .min(3, "Must be longer than 3 characters")
-                        .max(30, "Must be less than 30 characters"),
+                        .max(30, "Must be at most 30 characters"),
                       otherwise: Yup.string().notRequired(),
                     }),
                   level: Yup.number().when("levelMax", {

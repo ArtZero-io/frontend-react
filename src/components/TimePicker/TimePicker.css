@@ -110,7 +110,7 @@
   border: 1px yellow solid !important;
 } */
 
-// react-calendar
+/* react-calendar */
 #custom-time-picker
   .react-datetimerange-picker__calendar.react-datetimerange-picker__calendar--open,
 #custom-time-picker
@@ -237,7 +237,7 @@
   background-color: #e6e6e6;
 }
 
-// react-clock
+/* // react-clock */
 .react-clock {
   display: block;
   position: relative;

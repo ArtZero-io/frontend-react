@@ -1,41 +1,55 @@
-/* eslint-disable no-unused-vars */
 import { DeleteIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  IconButton,
-  Modal,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, IconButton, Stack, Text } from "@chakra-ui/react";
 import { FieldArray, useField } from "formik";
-import toast from "react-hot-toast";
 import Input from "@components/Input/Input";
 import { formMode } from "@constants";
-import ImageUpload from "@components/ImageUpload/Collection";
-import { useState } from "react";
 import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
+import toast from "react-hot-toast";
 
-function AddPhase({ name, isOpen, onClose, mode }) {
+function AddPhase({ name, mode }) {
   const [{ value }, , helpers] = useField(name);
-  const [phaseTime, setPhaseTime] = useState([new Date(), new Date()]);
-
   // const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
+
   const handlePhaseTime = (e, index) => {
     const valueAddHash = value.map((item, idx) => {
-      const startTime = idx !== index ? item.start : e[0].getTime();
-      const endTime = idx !== index ? item.end : e[1].getTime();
+      if (!e) {
+
+        return { ...item, start: null, end: null };
+      }
+
+      const startTime = idx !== index ? item?.start : e[0].getTime();
+      const endTime = idx !== index ? item?.end : e[1].getTime();
 
       return { ...item, start: startTime, end: endTime };
     });
 
     helpers.setValue(valueAddHash);
+  };
+
+  const handleAddPhase = (arrayHelpers) => {
+    if (value?.length >= 1) {
+      const prjStartTime = arrayHelpers?.form?.values?.startTime;
+
+      const prjEndTime = arrayHelpers?.form?.values?.endTime;
+
+      const phaseStart = value[value?.length - 1]?.start;
+      const phaseEnd = value[value?.length - 1]?.end;
+
+      if (phaseStart < Date.now()) {
+        toast.error("Start time must be greater than current time!");
+        return;
+      }
+
+      if (
+        prjStartTime <= phaseStart &&
+        phaseStart <= phaseEnd &&
+        phaseEnd <= prjEndTime
+      ) {
+        arrayHelpers.push({ name: "", start: "", end: "" });
+      } else {
+        toast.error("Phase time is not valid.");
+      }
+    }
   };
 
   return (
@@ -67,35 +81,35 @@ function AddPhase({ name, isOpen, onClose, mode }) {
                 <div key={index}>
                   <Flex alignItems="flex-start" mb={4}>
                     <IconButton
-                      aria-label="Delete"
-                      icon={<DeleteIcon fontSize="24px" />}
                       size="icon"
+                      aria-label="delete"
                       variant="iconOutline"
+                      icon={<DeleteIcon fontSize="24px" />}
                       isDisabled={index === 0 && value.length === 1}
                       onClick={() => arrayHelpers.remove(index)}
                     />
                     <Input
-                      isRequired={true}
-                      flexGrow={10}
                       mx={5}
-                      width="15%"
+                      type="text"
+                      width="25%"
                       height={16}
+                      flexGrow={10}
+                      isRequired={true}
                       autoComplete="off"
                       name={`phases[${index}].name`}
-                      type="text"
-                      placeholder="Your name here"
+                      placeholder="Phase name here"
                     />
                     <Stack w={{ base: "315px", xl: "775px" }} pb="30px">
                       <DateTimeRangePicker
                         onChange={(e) => handlePhaseTime(e, index)}
-                        value={[
-                          value[index].start
-                            ? new Date(value[index].start)
-                            : new Date(),
-                          value[index].end
-                            ? new Date(value[index].end)
-                            : new Date(),
-                        ]}
+                        value={
+                          !value[index].start
+                            ? null
+                            : [
+                                new Date(value[index].start),
+                                new Date(value[index].end),
+                              ]
+                        }
                         locale="en-EN"
                         name={`phase-time-${index}`}
                       />
@@ -113,9 +127,7 @@ function AddPhase({ name, isOpen, onClose, mode }) {
                     (!arrayHelpers?.form?.dirty ||
                       arrayHelpers.form?.errors?.levels)
                   }
-                  onClick={() => {
-                    arrayHelpers.push({ name: "", start: "", end: "" });
-                  }}
+                  onClick={() => handleAddPhase(arrayHelpers)}
                 >
                   Add more
                 </Button>

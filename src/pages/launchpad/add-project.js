@@ -11,8 +11,7 @@ const AddProject = () => {
           launchpad
         </Heading>
         <Text maxW="360px" fontSize="lg" mx="auto">
-          Dolore sint in sit enim proident ullamco quis eu veniam. Dolore sintin
-          proident ullamco quis.
+          Dolore sint in sit enim proident ullamco quis eu veniam. Dolore sintin proident ullamco quis.
         </Text>
       </Box>
       <Stack
@@ -24,10 +23,6 @@ const AddProject = () => {
         py="26px"
         mb="30px"
       >
-        <Heading size={"h5"} pb="30px" textAlign="center">
-          Add new project
-        </Heading>
-
         <AddNewProjectForm />
       </Stack>
     </Layout>

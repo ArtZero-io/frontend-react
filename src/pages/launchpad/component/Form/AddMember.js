@@ -1,165 +1,138 @@
-/* eslint-disable no-unused-vars */
 import { DeleteIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  HStack,
-  IconButton,
-  Modal,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Flex, HStack, IconButton, Stack } from "@chakra-ui/react";
 import { FieldArray, useField } from "formik";
 import toast from "react-hot-toast";
 import Input from "@components/Input/Input";
 import { formMode } from "@constants";
 import ImageUpload from "@components/ImageUpload/Collection";
-import { useState } from "react";
+// import { useState } from "react";
 
-function AddMember({ name, isOpen, onClose, mode }) {
+function AddMember({ name, mode }) {
   const [{ value }, , helpers] = useField(name);
-  const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
+  // const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
+
 
   // const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
+
   const handleAvatarUrl = (hash, index) => {
-    const valueAddHash = value.map((item, idx) => {
-      const avatarHash = idx !== index ? item.avatar : hash;
-      return { ...item, avatar: avatarHash };
+    const valueAddHash = value.map((i, idx) => {
+      const avatarHash = idx !== index ? i.avatar : hash;
+
+      return { ...i, avatar: avatarHash };
     });
 
     helpers.setValue(valueAddHash);
   };
+
+  const handleAddMore = (arrayHelpers) => {
+    const avatarArray = value.map((i) => i.avatar);
+
+    const isAllAvatarUpload = avatarArray.every((e) => e);
+
+    if (!isAllAvatarUpload) {
+      return toast.error("Please upload avatar!");
+    }
+
+    arrayHelpers.push({
+      name: "",
+      title: "",
+      socialLink: "",
+      avatar: "",
+    });
+  };
+
   return (
-    <>
-      <Flex>
-        <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
-          <Text fontSize={"lg"} color="#fff">
-            Name
-          </Text>
-        </Box>
-        <Box mb={4} flexGrow={1} textAlign="left" pl={3} w={16}>
-          <Text fontSize={"lg"} color="#fff">
-            Title
-          </Text>
-        </Box>
-        <Box mb={4} flexGrow={1} textAlign="left" pl={3} w={16}>
-          <Text fontSize={"lg"} color="#fff">
-            Social link
-          </Text>
-        </Box>
-        <Box mb={4} flexGrow={2} textAlign="left" pl={3} minW={16} w={20}>
-          <Text fontSize={"lg"} color="#fff">
-            Avatar
-          </Text>
-        </Box>
-      </Flex>
-
-      <FieldArray
-        name="members"
-        render={(arrayHelpers) => {
-          return (
-            <div>
-              {value?.map((members, index) => (
-                <div key={index}>
-                  <Stack
-                    direction={{ base: "column", md: "row" }}
-                    alignItems="flex-start"
-                    mb={4}
-                  >
-                    <HStack w="full">
-                      <IconButton
-                        aria-label="Delete"
-                        icon={<DeleteIcon fontSize="24px" />}
-                        size="icon"
-                        variant="iconOutline"
-                        isDisabled={index === 0 && value.length === 1}
-                        onClick={() => arrayHelpers.remove(index)}
-                      />
-                      <Input
-                        isRequired={true}
-                        flexGrow={10}
-                        mx={5}
-                        width="45%"
-                        height={16}
-                        autoComplete="off"
-                        name={`members[${index}].name`}
-                        type="text"
-                        placeholder="Your name here"
-                      />
-                      <Input
-                        isRequired={true}
-                        textAlign="center"
-                        flexGrow={0}
-                        mx={5}
-                        height={16}
-                        width={"45%"}
-                        autoComplete="off"
-                        name={`members.${index}.title`}
-                        type="text"
-                        placeholder="Your title here"
-                      />
-                    </HStack>
-                    <HStack w="full" justifyContent="start" alignItems="center">
-                      <Input
-                        isRequired={true}
-                        textAlign="center"
-                        flexGrow={0}
-                        mx={5}
-                        height={16}
-                        width={"30%"}
-                        autoComplete="off"
-                        name={`members.${index}.socialLink`}
-                        type="text"
-                        placeholder="Your link here"
-                      />
-
-                      <ImageUpload
-                        minH="20px"
-                        // isDisabled={addCollectionTnxStatus}
-                        id={`memberAvatar${index}`}
-                        index={index}
-                        mode={mode}
-                        isBanner={false}
-                        imageIPFSUrl={avatarIPFSUrl}
-                        setImageIPFSUrl={handleAvatarUrl}
-                      />
-                    </HStack>
-                  </Stack>
-                </div>
-              ))}
-              <Flex pb={6}>
-                <Button
-                  variant="outline"
-                  type="button"
-                  isDisabled={
-                    mode === formMode.ADD &&
-                    // (hasEmptyLevel ||
-                    (!arrayHelpers?.form?.dirty ||
-                      arrayHelpers.form?.errors?.levels)
-                  }
-                  onClick={() => {
-                    arrayHelpers.push({
-                      name: "",
-                      title: "",
-                      avatar: "",
-                      socialLink: "",
-                    });
-                  }}
+    <FieldArray
+      name="members"
+      render={(arrayHelpers) => {
+        return (
+          <div>
+            {value?.map((members, index) => (
+              <div key={index}>
+                <Stack
+                  mb={4}
+                  alignItems="flex-start"
+                  direction={{ base: "column", md: "row" }}
                 >
-                  Add more
-                </Button>
-              </Flex>
-            </div>
-          );
-        }}
-      />
-    </>
+                  <HStack w="full" alignItems="center">
+                    <IconButton
+                      size="icon"
+                      aria-label="delete"
+                      variant="iconOutline"
+                      mt={index === 0 ? "8px" : "-28px"}
+                      icon={<DeleteIcon fontSize="24px" />}
+                      onClick={() => arrayHelpers.remove(index)}
+                      isDisabled={index === 0 && value.length === 1}
+                    />
+                    <Input
+                      mx={5}
+                      type="text"
+                      width="45%"
+                      height={index === 0 ? "112px" : "78px"}
+                      isRequired={true}
+                      autoComplete="off"
+                      name={`members[${index}].name`}
+                      label={index === 0 && "Name"}
+                      placeholder="Your name here"
+                    />
+                    <Input
+                      mx={5}
+                      type="text"
+                      width="45%"
+                      height={index === 0 ? "112px" : "78px"}
+                      isRequired={true}
+                      autoComplete="off"
+                      name={`members[${index}].title`}
+                      label={index === 0 && "Title"}
+                      placeholder="Your title here"
+                    />
+                  </HStack>
+                  <HStack w="full" justifyContent="start" alignItems="center">
+                    <Input
+                      mx={5}
+                      width="30%"
+                      height={16}
+                      type="text"
+                      autoComplete="off"
+                      name={`members[${index}].socialLink`}
+                      label={index === 0 && "Social link"}
+                      placeholder="Your link here"
+                    />
+                    <ImageUpload
+                      // minH="50px"
+                      // title={index === 0 && "Avatar"}
+                      // isDisabled={addCollectionTnxStatus}
+                      index={index}
+                      mode={mode}
+                      isBanner={false}
+                      isRequired={true}
+                      id={`memberAvatar${index}`}
+                      // imageIPFSUrl={avatarIPFSUrl}
+                      setImageIPFSUrl={handleAvatarUrl}
+                    />
+                  </HStack>
+                </Stack>
+              </div>
+            ))}
+            <Flex pb={6}>
+              <Button
+                variant="outline"
+                type="button"
+                isDisabled={
+                  mode === formMode.ADD &&
+                  // (hasEmptyLevel ||
+                  (!arrayHelpers?.form?.dirty ||
+                    arrayHelpers.form?.errors?.levels)
+                }
+                onClick={() => handleAddMore(arrayHelpers)}
+              >
+                add more
+              </Button>
+            </Flex>
+          </div>
+        );
+      }}
+    />
   );
 }
 

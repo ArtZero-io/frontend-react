@@ -52,10 +52,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
   const [initialValues, setInitialValues] = useState(null);
   const [userBalance, setUserBalance] = useState(null);
-  const [scheduleProject, setScheduleProject] = useState([
-    new Date(),
-    new Date(),
-  ]);
+
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
   const { addCollectionTnxStatus } = useSelector(
@@ -87,7 +84,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
         });
 
       if (!error) {
-        console.log("initialValues", initialValues);
         setInitialValues(initialValues);
         setAvatarIPFSUrl(avatarIPFSUrl);
         setHeaderIPFSUrl(headerIPFSUrl);
@@ -101,218 +97,90 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     prepareData();
   }, [api, currentAccount, mode, nftContractAddress]);
 
+  const handleOnchangeSchedule = (e, setFieldValue) => {
+    if (!e) {
+      setFieldValue("startTime", null);
+      setFieldValue("endTime", null);
+      return;
+    }
+
+    if (e[0].getTime() < Date.now()) {
+      toast.error("Start time must be greater than current time!");
+      return;
+    }
+
+    setFieldValue("startTime", e[0].getTime());
+    setFieldValue("endTime", e[1].getTime());
+  };
+
   return (
     <>
       {initialValues && (
         <>
+          <Heading size={"h5"} pb="30px" textAlign="center">
+            {`${mode === "ADD" ? "Add new" : "Edit"} project`}
+          </Heading>
           <Formik
             initialValues={initialValues}
-            validationSchema={Yup.object().shape({
-              // isEditMode: Yup.boolean(),
-              // projectName: Yup.string()
-              //   .trim()
-              //   .min(3, "Must be longer than 3 characters")
-              //   .max(30, "Must be less than 30 characters")
-              //   .required("Required"),
-              // projectDescription: Yup.string()
-              //   .trim()
-              //   .min(3, "Must be longer than 3 characters")
-              //   .max(150, "Must be less than 150 characters")
-              //   .required("Required"),
-              // // projectRoadmap: Yup.string()
-              // //   .trim()
-              // //   .min(3, "Must be longer than 3 characters")
-              // //   .max(150, "Must be less than 150 characters")
-              // //   .required("Required"),
-              // // projectTeamMembers: Yup.string()
-              // //   .trim()
-              // //   .min(3, "Must be longer than 3 characters")
-              // //   .max(150, "Must be less than 150 characters")
-              // //   .required("Required"),
-              // roadmap: Yup.array()
-              //   .of(
-              //     Yup.object().shape(
-              //       {
-              //         type: Yup.string()
-              //           .trim()
-              //           // .when("content", {
-              //           //   is: (val) => val,
-              //           //   then: Yup.string()
-              //           //     .test(
-              //           //       "Test Prop",
-              //           //       "Duplicated Props Type!",
-              //           //       (value, schema) => {
-              //           //         const propsArr = schema?.from[1].value?.roadmap;
-              //           //         const keyPropsArr = propsArr.map((p) =>
-              //           //           p.type?.trim()
-              //           //         );
-              //           //         const [isDup] = keyPropsArr.filter(
-              //           //           (v, i) => i !== keyPropsArr.indexOf(v)
-              //           //         );
-              //           //         return !(
-              //           //           isDup && isDup.trim() === value.trim()
-              //           //         );
-              //           //       }
-              //           //     )
-              //           //     .required("Must have type value.")
-              //           //     .min(3, "Must be longer than 3 characters")
-              //           //     .max(30, "Must be less than 30 characters"),
-              //           //   otherwise: Yup.string().notRequired(),
-              //           // })
-              //           ,
-              //         content: Yup.string()
-              //           .trim()
-              //           .when("type", {
-              //             is: (val) => val,
-              //             then: Yup.string()
-              //               .required("Must have name value.")
-              //               .min(3, "Must be longer than 3 characters")
-              //               .max(30, "Must be less than 30 characters"),
-              //             otherwise: Yup.string().notRequired(),
-              //           }),
-              //       },
-              //       [["type", "content"]]
-              //     )
-              //   )
-              //   .min(0)
-              //   .max(10),
-              // members: Yup.array(
-              //   Yup.object().shape(
-              //     {
-              //       name: Yup.string()
-              //         .trim()
-              //         .when("level", {
-              //           is: (val) => val,
-              //           then: Yup.string()
-              //             .test(
-              //               "Test Level",
-              //               "Duplicated Levels Name!",
-              //               (value, schema) => {
-              //                 const levelsArr = schema?.from[1].value?.levels;
-              //                 const keyLevelsArr = levelsArr.map((p) =>
-              //                   p.name?.trim()
-              //                 );
-              //                 const [isDup] = keyLevelsArr.filter(
-              //                   (v, i) => i !== keyLevelsArr.indexOf(v)
-              //                 );
-              //                 return !(isDup && isDup.trim() === value.trim());
-              //               }
-              //             )
-              //             .required("Must have level name.")
-              //             .min(3, "Must be longer than 3 characters")
-              //             .max(30, "Must be less than 30 characters"),
-              //           otherwise: Yup.string().notRequired(),
-              //         }),
-              //       level: Yup.number().when("levelMax", {
-              //         is: (val) => val,
-              //         then: Yup.number()
-              //           .required("Must have min value.")
-              //           .min(1, "Must be bigger than 0")
-              //           .max(Yup.ref("levelMax"), "Must smaller than max"),
-              //         otherwise: Yup.number().notRequired(),
-              //       }),
-              //       levelMax: Yup.number().when("name", {
-              //         is: (val) => val,
-              //         then: Yup.number()
-              //           .required("Must have max value.")
-              //           .min(Yup.ref("level"), "Must greater than level")
-              //           .max(10, "Must be smaller than 10"),
-              //         otherwise: Yup.number().notRequired(),
-              //       }),
-              //     },
-              //     [["name", "level", "levelMax"]]
-              //   )
-              // )
-              //   .min(0)
-              //   .max(10),
-              // phases: Yup.array(
-              //   Yup.object().shape(
-              //     {
-              //       name: Yup.string()
-              //         .trim()
-              //         .when("level", {
-              //           is: (val) => val,
-              //           then: Yup.string()
-              //             .test(
-              //               "Test Level",
-              //               "Duplicated Levels Name!",
-              //               (value, schema) => {
-              //                 const levelsArr = schema?.from[1].value?.levels;
-              //                 const keyLevelsArr = levelsArr.map((p) =>
-              //                   p.name?.trim()
-              //                 );
-              //                 const [isDup] = keyLevelsArr.filter(
-              //                   (v, i) => i !== keyLevelsArr.indexOf(v)
-              //                 );
-              //                 return !(isDup && isDup.trim() === value.trim());
-              //               }
-              //             )
-              //             .required("Must have level name.")
-              //             .min(3, "Must be longer than 3 characters")
-              //             .max(30, "Must be less than 30 characters"),
-              //           otherwise: Yup.string().notRequired(),
-              //         }),
-              //       level: Yup.number().when("levelMax", {
-              //         is: (val) => val,
-              //         then: Yup.number()
-              //           .required("Must have min value.")
-              //           .min(1, "Must be bigger than 0")
-              //           .max(Yup.ref("levelMax"), "Must smaller than max"),
-              //         otherwise: Yup.number().notRequired(),
-              //       }),
-              //       levelMax: Yup.number().when("name", {
-              //         is: (val) => val,
-              //         then: Yup.number()
-              //           .required("Must have max value.")
-              //           .min(Yup.ref("level"), "Must greater than level")
-              //           .max(10, "Must be smaller than 10"),
-              //         otherwise: Yup.number().notRequired(),
-              //       }),
-              //     },
-              //     [["name", "level", "levelMax"]]
-              //   )
-              // )
-              //   .min(0)
-              //   .max(10),
-              // nftName: Yup.string()
-              //   .trim()
-              //   .when("isEditMode", {
-              //     is: false,
-              //     then: Yup.string()
-              //       .min(3, "Must be longer than 3 characters")
-              //       .max(25, "Must be less than 25 characters")
-              //       .required("Required"),
-              //   }),
-              // nftSymbol: Yup.string()
-              //   .trim()
-              //   .when("isEditMode", {
-              //     is: false,
-              //     then: Yup.string()
-              //       .min(3, "Must be longer than 3 characters")
-              //       .max(8, "Must be less than 8 characters")
-              //       .required("Required"),
-              //   }),
-              // agreeTosCheckbox: Yup.boolean().when("isEditMode", {
-              //   is: false,
-              //   then: Yup.boolean()
-              //     .required("The terms and conditions must be accepted.")
-              //     .oneOf([true], "The TOCs must be accepted."),
-              // }),
-            })}
+            validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
-              // if (!values.isEditMode && (!headerIPFSUrl || !avatarIPFSUrl)) {
-              //   return toast.error("Upload avatar or header please!");
-              // }
+              // check all image uploaded?
+              const memberAvatarAr = values?.members?.map((i) => i.avatar);
+              const isAllMemberAvatarUpload = memberAvatarAr?.every((e) => e);
+
+              if (
+                !values.isEditMode &&
+                (!headerIPFSUrl || !avatarIPFSUrl || !isAllMemberAvatarUpload)
+              ) {
+                return toast.error("Upload avatar or header please!");
+              }
+
               values.avatarIPFSUrl = avatarIPFSUrl;
               values.headerIPFSUrl = headerIPFSUrl;
 
+              // check prj time-frame is picked?
+              const prjStartTime = values?.startTime;
+              const prjEndTime = values?.endTime;
+              if (!values.isEditMode && (!prjStartTime || !prjStartTime)) {
+                return toast.error("Please pick time frame for project!");
+              }
+
+              // check all phase time-frame is picked?
+              const phasesArray = values?.members?.phases;
+
+              const startPhasesAr = phasesArray?.members?.map((i) => i.start);
+
+              const isPhaseTimePicked = startPhasesAr?.every((e) => e);
+
+              if (phasesArray && !isPhaseTimePicked) {
+                return toast.error("Please pick time frame for all phases!");
+              }
+
+              // check time is overlap?
+              if (phasesArray?.length) {
+                const startFirstPhase = phasesArray[0]?.start;
+                const endLastPhase = [...phasesArray].pop().end;
+
+                if (
+                  !(
+                    prjStartTime <= startFirstPhase &&
+                    startFirstPhase <= endLastPhase &&
+                    endLastPhase <= prjEndTime
+                  )
+                ) {
+                  toast.error("Phase time is not valid.");
+                  return;
+                }
+              }
+
+              //check low balance?
               if (userBalance < 1) {
                 return toast.error(`Your balance too low!`);
               }
 
               const project_info = {
-                name: values.projectName.trim(),
-                description: values.projectDescription.trim(),
+                name: values.name.trim(),
+                description: values.description.trim(),
                 website: values.website.trim(),
                 twitter: values.twitter.trim(),
                 discord: values.discord.trim(),
@@ -337,8 +205,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               }
               const data = {
                 total_supply: Number(values.totalSupply),
-                start_time: scheduleProject[0].getTime(),
-                end_time: scheduleProject[1].getTime(),
+                start_time: values.startTime,
+                end_time: values.endTime,
                 project_info: project_info_ipfs.path,
                 code_phases: code_phases,
                 start_time_phases: start_time_phases,
@@ -351,8 +219,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   status: "Start",
                 },
               });
-              console.log(data);
-              console.log(values);
+
               if (mode === formMode.ADD) {
                 await launchpad_contract_calls.addNewProject(
                   currentAccount,
@@ -374,60 +241,67 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               // }
             }}
           >
-            {({ values, dirty, isValid }) => (
+            {({ values, dirty, isValid, setFieldValue, ...rest }) => (
               <Form>
                 <Stack>
                   <Heading size="h4">1. Project info</Heading>
 
                   <Stack
-                    direction={{ base: "column", md: "row" }}
                     align="start"
+                    direction={{ base: "column", md: "row" }}
                   >
                     <Stack w={{ base: "100%", md: "50%" }}>
                       <Input
                         type="text"
+                        name="name"
                         isRequired={true}
-                        name="projectName"
                         label="Project name"
                         placeholder="Project name"
                         isDisabled={addCollectionTnxStatus}
                       />
                     </Stack>
-                    <Stack
-                      // w={{ base: "315px", xl: "775px" }}
-                      pb="30px"
-                    >
+                    <Stack pb="30px">
                       <Text fontSize="lg" ml={1} mb="10px">
                         Start time - End time
                       </Text>
                       <DateTimeRangePicker
-                        onChange={setScheduleProject}
-                        value={scheduleProject}
+                        onChange={(e) =>
+                          handleOnchangeSchedule(e, setFieldValue)
+                        }
+                        value={
+                          !values?.startTime
+                            ? null
+                            : [
+                                new Date(parseInt(values?.startTime)),
+                                new Date(parseInt(values?.endTime)),
+                              ]
+                        }
                         locale="en-EN"
                       />
+                      {/* TEMP FIX with parseInt */}
                     </Stack>
                   </Stack>
                   <Stack direction={["column", "row"]}>
                     <CommonInput
-                      isDisabled={addCollectionTnxStatus}
-                      label="Website URL"
+                      type="text"
                       name="website"
-                      type="text"
+                      label="Website URL"
                       placeholder={"Website URL"}
+                      isDisabled={addCollectionTnxStatus}
                     />
                     <CommonInput
-                      isDisabled={addCollectionTnxStatus}
-                      label="Twitter URL"
+                      type="text"
                       name="twitter"
-                      type="text"
+                      label="Twitter URL"
                       placeholder={"Twitter URL"}
+                      isDisabled={addCollectionTnxStatus}
                     />
                     <CommonInput
-                      isDisabled={addCollectionTnxStatus}
-                      label="Discord URL"
-                      name="discord"
                       type="text"
+                      name="discord"
+                      label="Discord URL"
                       placeholder={"Discord URL"}
+                      isDisabled={addCollectionTnxStatus}
                     />
                   </Stack>
                   <Stack>
@@ -435,7 +309,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       height="140"
                       type="text"
                       isRequired={true}
-                      name="projectDescription"
+                      name="description"
                       label="Project description"
                       placeholder="Project description"
                       isDisabled={addCollectionTnxStatus}
@@ -449,9 +323,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                   <Stack
                     py="20px"
-                    direction={{ base: "column", xl: "row" }}
                     alignItems="start"
                     justifyContent="space-between"
+                    direction={{ base: "column", xl: "row" }}
                   >
                     <Stack
                       w="50%"
@@ -513,17 +387,17 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       />
                       <Box pb="24px">
                         <NumberInput
+                          // step={1}
+                          // type="number"
+                          // placeholder="9999"
+                          max={9999}
                           height="52px"
-                          step={1}
-                          type="number"
                           precision={0}
                           name="totalSupply"
                           hasStepper={false}
-                          placeholder="10000"
                           inputWidth={"8rem"}
                           label="Total Supply"
-                          maxRoyalFeeRate={10000}
-                          isDisabled={addCollectionTnxStatus}
+                          // isDisabled={addCollectionTnxStatus}
                         />
                       </Box>
                     </Stack>
@@ -604,60 +478,34 @@ export const fetchInitialValuesProject = async ({
 }) => {
   let initialValues = {
     isEditMode: false,
+    name: "",
+    website: "",
+    twitter: "",
+    discord: "",
+    description: "",
+    roadmap: [{ type: "", content: "" }],
+    members: [{ name: "", title: "", socialLink: "", avatar: "" }],
     nftName: "",
     nftSymbol: "",
-    projectName: "",
-    projectDescription: "",
     totalSupply: 0,
+    phases: [{ name: "", start: "", end: "" }],
     agreeTosCheckbox: false,
-    roadmap: [{ type: "2022 Q1", content: "Do something" }],
-    members: [{ name: "Mr. A", title: "Boss", avatar: "", socialLink: "" }],
-    phases: [
-      { name: "OG mint", start: "", end: "" },
-      { name: "WhiteList mint", start: "", end: "" },
-      { name: "Public mint", start: "", end: "" },
-    ],
   };
 
-  console.log("mode", mode);
   // TEMP COMMENT
   if (mode === formMode.ADD) {
     return { initialValues };
   }
 
   try {
-    // const dataList = await APICall.getCollectionByAddress({
-    //   collection_address,
-    // });
-
-    // console.log("collection_address", collection_address);
-    // console.log("dataList", dataList);
-    // if (!dataList?.length) {
-    //   return { initialValues };
-    // }
-
-    // initialValues.projectName = dataList[0].name;
-    // initialValues.projectDescription = dataList[0].description;
-    // initialValues.nftName = dataList[0].nftName;
-    // initialValues.nftSymbol = dataList[0].nftSymbol;
-    // console.log("initialValues", initialValues);
-    // return {
-    //   initialValues,
-    //   avatarIPFSUrl: dataList[0].avatarImage,
-    //   headerIPFSUrl: dataList[0].headerImage,
-    // };
-
     const project = await launchpad_contract_calls.getProjectByNftAddress(
       currentAccount,
       collection_address
     );
 
-    console.log("xxx  fetchInitialValuesProject project", project);
-
     const projectInfo = await launchpad_contract_calls.getProjectInfoByHash(
-      project.projectInfo
+      project?.projectInfo
     );
-    console.log("xxx  fetchInitialValuesProject projectInfo", projectInfo);
 
     // Update initialValues
     const {
@@ -685,8 +533,8 @@ export const fetchInitialValuesProject = async ({
     initialValues.isEditMode = true;
     initialValues.nftName = nft_name;
     initialValues.nftSymbol = nft_symbol;
-    initialValues.projectName = name;
-    initialValues.projectDescription = description;
+    initialValues.name = name;
+    initialValues.description = description;
     initialValues.totalSupply = totalSupply;
     initialValues.startTime = timestampWithoutCommas(startTime);
     initialValues.endTime = timestampWithoutCommas(endTime);
@@ -695,8 +543,14 @@ export const fetchInitialValuesProject = async ({
     initialValues.discord = discord;
     initialValues.members = team_members;
     initialValues.roadmap = roadmaps;
-
-    console.log("fetchInitialValuesProject initialValues", initialValues);
+    initialValues.phases = [
+      {
+        name: "OG!!",
+        start: new Date(1659027600000),
+        end: new Date(1659286799999),
+      },
+    ];
+    // TEMP SET TIME FRAME
 
     return {
       initialValues,
@@ -710,3 +564,171 @@ export const fetchInitialValuesProject = async ({
     return { error };
   }
 };
+
+const validationName = Yup.string()
+  .trim()
+  .min(3, "Must be longer than 3 characters")
+  .max(30, "Must be at most 30 characters")
+  .required("This field is required");
+
+const validationWebsite = Yup.string()
+  .trim()
+  .url("URL must start with http:// or https://")
+  .max(50, "Must be at most 50 characters");
+
+const validationTwitter = Yup.string()
+  .trim()
+  .url("URL must start with http:// or https://")
+  .matches(/\btwitter.com\b/, "URL must be twitter.com")
+  .max(50, "Must be at most 50 characters");
+
+const validationDiscord = Yup.string()
+  .trim()
+  .url("URL must start with http:// or https://")
+  .matches(/\bdiscord.(com|gg)\b/, "URL must be discord.com or discord.gg")
+  .max(50, "Must be at most 50 characters");
+
+const validationDescription = Yup.string()
+  .trim()
+  .min(3, "Must be longer than 3 characters")
+  .max(150, "Must be at most 150 characters")
+  .required("This field is required");
+
+const validationNftName = Yup.string()
+  .trim()
+  .when("isEditMode", {
+    is: false,
+    then: Yup.string()
+      .min(3, "Must be longer than 3 characters")
+      .max(30, "Must be at most 30 characters")
+      .required("This field is required"),
+  });
+
+const validationNftSymbol = Yup.string()
+  .trim()
+  .when("isEditMode", {
+    is: false,
+    then: Yup.string()
+      .min(3, "Must be longer than 3 characters")
+      .max(8, "Must be at most 8 characters")
+      .required("This field is required"),
+  });
+
+const validationAgreeTosCheckbox = Yup.boolean().when("isEditMode", {
+  is: false,
+  then: Yup.boolean()
+    .required("The terms and conditions must be accepted.")
+    .oneOf([true], "The TOCs must be accepted."),
+});
+
+const validationSchema = Yup.object().shape({
+  isEditMode: Yup.boolean(),
+  name: validationName,
+  website: validationWebsite,
+  twitter: validationTwitter,
+  discord: validationDiscord,
+  description: validationDescription,
+  roadmap: Yup.array()
+    .min(1, "Roadmap must have at least 1 items")
+    .max(3, "Roadmap must have less than or equal to 3 items")
+    .of(
+      Yup.object().shape(
+        {
+          type: Yup.string()
+            .trim()
+            .when("content", {
+              is: (val) => val,
+              then: Yup.string()
+                .test("Test type", "Duplicated milestone!", (value, schema) => {
+                  const array = schema?.from[1].value?.roadmap;
+                  const keyArray = array.map((p) => p.type?.trim());
+                  const [isDup] = keyArray.filter(
+                    (v, i) => i !== keyArray.indexOf(v)
+                  );
+                  return !(isDup && isDup.trim() === value.trim());
+                })
+                .required("This field is required")
+                .min(3, "Must be longer than 3 characters")
+                .max(30, "Must be at most 30 characters"),
+              otherwise: Yup.string().notRequired(),
+            }),
+          content: Yup.string()
+            .trim()
+            .when("type", {
+              is: (val) => val,
+              then: Yup.string()
+                .required("This field is required")
+                .min(3, "Must be longer than 3 characters")
+                .max(150, "Must be at most 150 characters"),
+              otherwise: Yup.string().notRequired(),
+            }),
+        },
+        [["type", "content"]]
+      )
+    ),
+  members: Yup.array()
+    .min(1, "Members must have at least 1 items")
+    .max(3, "Members must have less than or equal to 3 items")
+    .of(
+      Yup.object().shape(
+        {
+          name: Yup.string()
+            .trim()
+            .when("title", {
+              is: (val) => val,
+              then: Yup.string()
+                .test(
+                  "Test name",
+                  "Duplicated member name!",
+                  (value, schema) => {
+                    const array = schema?.from[1].value?.members;
+                    const keyArray = array.map((p) => p.name?.trim());
+                    const [isDup] = keyArray.filter(
+                      (v, i) => i !== keyArray.indexOf(v)
+                    );
+                    return !(isDup && isDup.trim() === value.trim());
+                  }
+                )
+                .required("This field is required")
+                .min(3, "Must be longer than 3 characters")
+                .max(30, "Must be at most 30 characters"),
+              otherwise: Yup.string().notRequired(),
+            }),
+          title: Yup.string()
+            .trim()
+            .when("name", {
+              is: (val) => val,
+              then: Yup.string()
+                .required("This field is required")
+                .min(3, "Must be longer than 3 characters")
+                .max(30, "Must be at most 30 characters"),
+              otherwise: Yup.string().notRequired(),
+            }),
+          socialLink: validationWebsite,
+        },
+        [["name", "title"]]
+      )
+    ),
+  nftName: validationNftName,
+  nftSymbol: validationNftSymbol,
+  phases: Yup.array()
+    .min(1, "Phases must have at least 1 items")
+    .max(3, "Phases must have less than or equal to 3 items")
+    .of(
+      Yup.object().shape({
+        name: Yup.string()
+          .required("This field is required")
+          .min(3, "Must be longer than 3 characters")
+          .max(30, "Must be at most 30 characters")
+          .test("Test name", "Duplicated phase name!", (value, schema) => {
+            const array = schema?.from[1].value?.phases;
+            const keyArray = array.map((p) => p.name?.trim());
+            const [isDup] = keyArray.filter(
+              (v, i) => i !== keyArray.indexOf(v)
+            );
+            return !(isDup && isDup.trim() === value.trim());
+          }),
+      })
+    ),
+  agreeTosCheckbox: validationAgreeTosCheckbox,
+});

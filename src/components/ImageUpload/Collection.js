@@ -25,16 +25,16 @@ const supportedFormat = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
 
 const ImageUploadCollection = ({
   id,
-  isDisabled = false,
   mode,
-  isBanner,
-  imageIPFSUrl,
-  setImageIPFSUrl,
-  title,
-  //  title = "Upload Image",
-  limitedSize,
-  minH = "64px",
   index,
+  title,
+  isBanner,
+  limitedSize,
+  imageIPFSUrl,
+  minH = "64px",
+  setImageIPFSUrl,
+  isDisabled = false,
+  isRequired = false,
 }) => {
   const [imgURL, setImgURL] = useState("");
 
@@ -139,7 +139,12 @@ const ImageUploadCollection = ({
     >
       {title ? (
         <Text color="#fff" ml={0}>
-          {title}
+          {title}{" "}
+          {isRequired ? (
+            <Text as="span" color="#ff8c8c">
+              *
+            </Text>
+          ) : null}
         </Text>
       ) : null}
 

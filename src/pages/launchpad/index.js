@@ -32,13 +32,11 @@ export const LaunchpadPage = () => {
             i
           );
 
-          // console.log(nftAddress);
           const project = await launchpad_contract_calls.getProjectByNftAddress(
             currentAccount,
             nftAddress
           );
 
-          //  console.log(project);
           if (!project.isActive) {
             continue;
           }
@@ -47,7 +45,6 @@ export const LaunchpadPage = () => {
               project.projectInfo
             );
 
-          // console.log("xxx projectInfo", projectInfo);
           const currentTime = Date.now();
           const projectTmp = {
             index: i,
@@ -63,12 +60,12 @@ export const LaunchpadPage = () => {
           if (
             timestampWithoutCommas(project.startTime) < currentTime &&
             currentTime < timestampWithoutCommas(project.endTime) &&
-            Number(project.projectType) === 1
+            parseInt(project.projectType) === 1
           ) {
             liveProjectsArr.push(projectTmp);
           } else if (
             currentTime < timestampWithoutCommas(project.startTime) &&
-            Number(project.projectType)(project.projectType) === 1
+            parseInt(project.projectType) === 1
           ) {
             upcomingProjectsArr.push(projectTmp);
           } else {
