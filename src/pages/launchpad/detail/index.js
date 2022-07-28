@@ -232,7 +232,7 @@ const LaunchpadDetailPage = () => {
             variant="solid"
             onClick={() =>
               history.push({
-                state: { formMode: "ADD" },
+                state: { formMode: "EDIT", collection_address },
                 pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
               })
             }
