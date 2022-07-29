@@ -299,7 +299,7 @@ const LaunchpadDetailPage = () => {
               <>
                 <Flex w="full" mb="20px">
                   <Heading size="h6">
-                    Phase {++index}:{" "}
+                    {/* M {++index}:{" "} */}
                     <Text as="span" color="#7ae7ff">
                       {item.type}
                     </Text>

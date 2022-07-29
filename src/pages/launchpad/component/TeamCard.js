@@ -3,14 +3,17 @@ import {
   Flex,
   Heading,
   Image,
+  Link,
   Skeleton,
   Square,
+  Stack,
   Text,
 } from "@chakra-ui/react";
 import React from "react";
 import { getCachedImageShort } from "@utils/index";
 
 export const TeamCard = ({ team_member }) => {
+  console.log("team_member", team_member);
   return (
     <Flex
       direction="column"
@@ -44,6 +47,16 @@ export const TeamCard = ({ team_member }) => {
         <Text as="span" color="#888">
           {team_member.title}{" "}
         </Text>
+
+        <Stack>
+          <Link
+            color="brand.blue"
+            textTransform="capitalize"
+            to={team_member?.socialLink}
+          >
+            Social link
+          </Link>
+        </Stack>
       </Box>
     </Flex>
   );

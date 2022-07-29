@@ -34,10 +34,10 @@ function AddPhase({ name, mode }) {
       const phaseStart = value[value?.length - 1]?.start;
       const phaseEnd = value[value?.length - 1]?.end;
 
-      if (phaseStart < Date.now()) {
-        toast.error("Start time of phase must be greater than current time!");
-        return;
-      }
+      // if (phaseStart < Date.now()) {
+      //   toast.error("Start time of phase must be greater than current time!");
+      //   return;
+      // }
 
       if (
         prjStartTime <= phaseStart &&

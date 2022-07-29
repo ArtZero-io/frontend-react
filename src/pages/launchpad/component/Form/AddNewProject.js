@@ -104,8 +104,13 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
       return;
     }
 
-    if (e[0].getTime() < Date.now()) {
-      toast.error("Start time must be greater than current time!");
+    if (e[1].getTime() < Date.now()) {
+      toast.error("Project end time must be greater than current time!");
+      return;
+    }
+
+    if (e[0].getTime() > e[1].getTime()) {
+      toast.error("Project end time must be greater than start time!");
       return;
     }
 
