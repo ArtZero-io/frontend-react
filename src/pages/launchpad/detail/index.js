@@ -132,6 +132,8 @@ const LaunchpadDetailPage = () => {
           roadmaps: projectInfo.roadmaps,
           team_members: projectInfo.team_members,
           phases: phasesTmp,
+          ...project,
+          ...projectInfo,
         };
 
         setFormattedCollection(projectDetail);
@@ -159,6 +161,7 @@ const LaunchpadDetailPage = () => {
       variant="launchpad-detail"
     >
       <LaunchpadDetailHeader
+        collection_address={collection_address}
         project={formattedCollection}
         currentWhitelist={currentWhitelist}
       />
@@ -170,7 +173,7 @@ const LaunchpadDetailPage = () => {
         bg="#222"
         px="30px"
         py="26px"
-        mb="30px"
+        my="30px"
       >
         <Flex w="full" mb="15px">
           <Heading size="h6">Public Sale In Progress</Heading>
@@ -244,7 +247,7 @@ const LaunchpadDetailPage = () => {
         {phases && phases.length
           ? phases.map((item, index) => (
               <>
-                <Wrap key={index} flexWrap={true} w="full" mb="15px">
+                <Wrap key={index} flexWrap={true} w="full" my="15px">
                   <WrapItem>
                     <Tag w="full">{item.code}</Tag>
                   </WrapItem>
@@ -297,8 +300,8 @@ const LaunchpadDetailPage = () => {
         {formattedCollection.roadmaps && formattedCollection.roadmaps.length
           ? formattedCollection.roadmaps.map((item, index) => (
               <>
-                <Flex w="full" mb="20px">
-                  <Heading size="h6">
+                <Flex w="full" my="20px">
+                  <Heading fontSize="lg">
                     {/* M {++index}:{" "} */}
                     <Text as="span" color="#7ae7ff">
                       {item.type}
@@ -308,7 +311,7 @@ const LaunchpadDetailPage = () => {
                 </Flex>
 
                 <Box fontSize="lg" color="#888" px="20px" mb="30px">
-                  <Text as="span" color="#7ae7ff">
+                  <Text as="span" color="#888">
                     {item.content}
                   </Text>
                 </Box>

@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import {
   Box,
+  Button,
   Center,
   Divider,
   Flex,
@@ -8,6 +9,7 @@ import {
   HStack,
   Image,
   Skeleton,
+  Stack,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -18,11 +20,21 @@ import { IPFS_BASE_URL } from "@constants/index";
 import { convertStringToPrice } from "@utils";
 import useInterval from "use-interval";
 import { getCachedImageShort } from "@utils/index";
+import SocialCard from "@components/Card/Social";
+import * as ROUTES from "@constants/routes";
+import { useHistory } from "react-router-dom";
+import { truncateStr } from "../../../utils";
 
-function LaunchpadDetailHeader({ project, currentWhitelist }) {
+function LaunchpadDetailHeader({
+  project,
+  currentWhitelist,
+  collection_address,
+}) {
   const [livePhase, setLivePhase] = useState({});
-  const { phases } = project;
+  const { phases, projectOwner } = project;
   const [countDownTimer, setCountDownTimer] = useState({});
+  console.log("projectproject", project);
+  const history = useHistory();
 
   useEffect(() => {
     if (phases?.length > 0) {
@@ -30,7 +42,7 @@ function LaunchpadDetailHeader({ project, currentWhitelist }) {
       console.log("data", data);
       setLivePhase(data);
     }
-  }, [phases, useState]);
+  }, [phases]);
 
   useInterval(() => {
     if (livePhase && livePhase.endTime) {
@@ -46,7 +58,6 @@ function LaunchpadDetailHeader({ project, currentWhitelist }) {
         seconds: seconds,
       });
     }
-    
   }, 1000);
 
   return (
@@ -100,14 +111,31 @@ function LaunchpadDetailHeader({ project, currentWhitelist }) {
                 >
                   {project.name}{" "}
                 </Heading>
+                <Stack alignItems="center" direction="row">
+                  <Text mr="30px" fontSize={["sm", "md", "md"]}>
+                    Project creator: {truncateStr(projectOwner)}
+                  </Text>
+                  <Button
+                    px="16px"
+                    variant="outline"
+                    onClick={() =>
+                      history.push({
+                        state: { formMode: "EDIT", collection_address },
+                        pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
+                      })
+                    }
+                  >
+                    edit project
+                  </Button>{" "}
+                </Stack>
                 <Flex
+                  alignItems="start"
                   color="#fff"
                   w="full"
                   justifyContent="space-between"
                   maxW="730px"
                   fontSize={["15px", "18px", "18px"]}
-                  minH={{ base: "1rem", "2xl": "3.375rem" }}
-                  py="30px"
+                  minH={{ base: "120px", "2xl": "120px" }}
                 >
                   <Text>{project.description}</Text>
                 </Flex>
@@ -154,116 +182,119 @@ function LaunchpadDetailHeader({ project, currentWhitelist }) {
               </VStack>
             </motion.div>
           </HStack>
-          {(livePhase && livePhase) ? (<HStack
-            flexWrap={["wrap", "noWrap", "noWrap"]}
-            color="brand.blue"
-            maxW="680px"
-            maxH={["150px", "110px", "110px"]}
-            h={["full", "full", "full"]}
-            borderWidth={2}
-            borderColor="brand.blue"
-            px={{ base: 1, xl: 12, "2xl": 16 }}
-            py={{ base: "0.5rem", "2xl": "1.125rem" }}
-            justifyContent="space-between"
-            bg="black"
-            my="30px"
-          >
-            <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-              <>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <Text
-                    fontFamily="DS-Digital"
-                    fontSize={{ base: "32px", "2xl": "48px" }}
-                    lineHeight="none"
-                  >
-                    {countDownTimer.days}{" "}
-                  </Text>
-                  <Text fontSize={["13px", "16px", "16px"]}>Days</Text>
-                </motion.div>
-              </>
-            </VStack>
 
-            <Divider
-              transform="rotate(90deg)"
-              width="300px"
-              bg="#232323"
-              display={{ base: "none", xl: "inline" }}
-            />
-
-            <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-              <>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <Text
-                    fontFamily="DS-Digital"
-                    fontSize={{ base: "32px", "2xl": "48px" }}
-                    lineHeight="none"
+          {livePhase && livePhase ? (
+            <HStack
+              flexWrap={["wrap", "noWrap", "noWrap"]}
+              color="brand.blue"
+              maxW="680px"
+              maxH={["260px", "260px", "260px"]}
+              h={["full", "full", "full"]}
+              borderWidth={2}
+              borderColor="brand.blue"
+              px={{ base: 1, xl: 12, "2xl": 16 }}
+              py={{ base: "0.5rem", "2xl": "40px" }}
+              justifyContent="space-between"
+              my="30px"
+            >
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
+                <>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                   >
-                    {countDownTimer.hours}{" "}
-                  </Text>
-                  <Text fontSize={["13px", "16px", "16px"]}>Hours</Text>
-                </motion.div>
-              </>
-            </VStack>
+                    <Text
+                      fontFamily="DS-Digital"
+                      fontSize={{ base: "32px", "2xl": "48px" }}
+                      lineHeight="none"
+                    >
+                      {countDownTimer.days}{" "}
+                    </Text>
+                    <Text fontSize={["13px", "16px", "16px"]}>Days</Text>
+                  </motion.div>
+                </>
+              </VStack>
 
-            <Divider
-              transform="rotate(90deg)"
-              width="300px"
-              bg="#232323"
-              display={{ base: "none", xl: "inline" }}
-            />
-            <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-              <>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <Text
-                    fontFamily="DS-Digital"
-                    fontSize={{ base: "32px", "2xl": "48px" }}
-                    lineHeight="none"
-                  >
-                    {countDownTimer.minutes}{" "}
-                  </Text>
-                  <Text fontSize={["13px", "16px", "16px"]}>Mins</Text>
-                </motion.div>
-              </>
-            </VStack>
+              <Divider
+                transform="rotate(90deg)"
+                width="300px"
+                bg="#232323"
+                display={{ base: "none", xl: "inline" }}
+              />
 
-            <Divider
-              transform="rotate(90deg)"
-              width="300px"
-              bg="#232323"
-              display={{ base: "none", xl: "inline" }}
-            />
-            <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-              <>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <Text
-                    fontFamily="DS-Digital"
-                    fontSize={{ base: "32px", "2xl": "48px" }}
-                    lineHeight="none"
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
+                <>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                   >
-                    {countDownTimer.seconds}{" "}
-                  </Text>
-                  <Text fontSize={["13px", "16px", "16px"]}>Seconds</Text>
-                </motion.div>
-              </>
-            </VStack>
-          </HStack>) : ''}
-          
+                    <Text
+                      fontFamily="DS-Digital"
+                      fontSize={{ base: "32px", "2xl": "48px" }}
+                      lineHeight="none"
+                    >
+                      {countDownTimer.hours}{" "}
+                    </Text>
+                    <Text fontSize={["13px", "16px", "16px"]}>Hours</Text>
+                  </motion.div>
+                </>
+              </VStack>
+
+              <Divider
+                transform="rotate(90deg)"
+                width="300px"
+                bg="#232323"
+                display={{ base: "none", xl: "inline" }}
+              />
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
+                <>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Text
+                      fontFamily="DS-Digital"
+                      fontSize={{ base: "32px", "2xl": "48px" }}
+                      lineHeight="none"
+                    >
+                      {countDownTimer.minutes}{" "}
+                    </Text>
+                    <Text fontSize={["13px", "16px", "16px"]}>Mins</Text>
+                  </motion.div>
+                </>
+              </VStack>
+
+              <Divider
+                transform="rotate(90deg)"
+                width="300px"
+                bg="#232323"
+                display={{ base: "none", xl: "inline" }}
+              />
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
+                <>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Text
+                      fontFamily="DS-Digital"
+                      fontSize={{ base: "32px", "2xl": "48px" }}
+                      lineHeight="none"
+                    >
+                      {countDownTimer.seconds}{" "}
+                    </Text>
+                    <Text fontSize={["13px", "16px", "16px"]}>Seconds</Text>
+                  </motion.div>
+                </>
+              </VStack>
+            </HStack>
+          ) : (
+            ""
+          )}
         </VStack>
       </Box>
       <Box
@@ -272,7 +303,13 @@ function LaunchpadDetailHeader({ project, currentWhitelist }) {
         right={"100px"}
         top="30px"
       >
-        {/* <SocialCard profile={[{ website }, { twitter }, { discord }]} /> */}
+        <SocialCard
+          profile={[
+            { website: "https://twitter.com/ArtZero_io" },
+            { twitter: "https://twitter.com/ArtZero_io" },
+            { discord: "https://discord.gg/wzkZ2JTvN4" },
+          ]}
+        />
       </Box>
     </Box>
   );

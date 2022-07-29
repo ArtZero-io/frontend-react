@@ -93,15 +93,16 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
         mb="30px"
         py="60px"
         bg="#171717"
-        maxW="1400px"
+        maxW="1426px"
         alignItems="center"
         px={{ base: "25px", "2xl": "77px" }}
       >
         <Flex
+          px="15px"
           w="full"
           mx="auto"
           mb="40px"
-          maxW="1400px"
+          maxW="1426px"
           alignItems="center"
           direction={{ base: "column", xl: "row" }}
         >
@@ -121,7 +122,7 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
                 })
               }
             >
-              add project
+              create project
             </Button>
           )}
         </Flex>
@@ -130,22 +131,22 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
           <AnimationLoader />
         ) : (
           <Stack>
-            <Stack
-              direction={["column", "row"]}
-              gap="15px"
-              justifyContent="start"
-            >
-              {projectsList.length ? (
-                projectsList.map((p) => (
-                  <Card key={p.name} project={p} variant={variant} />
-                ))
-              ) : (
-                <HStack justify="center" w="full">
-                  <Heading size="h6">No project found.</Heading>
-                </HStack>
-              )}
-            </Stack>
             {projectsList.length ? (
+              <Flex
+                flexWrap="wrap"
+                justifyContent="center"
+                direction={["column", "row"]}
+              >
+                {projectsList.map((p) => (
+                  <Card key={p.name} project={p} variant={variant} />
+                ))}
+              </Flex>
+            ) : (
+              <HStack justify="center" w="full">
+                <Heading size="h6">No project found.</Heading>
+              </HStack>
+            )}
+            {projectsList.length > 4 ? (
               <Stack
                 w="full"
                 mx="auto"

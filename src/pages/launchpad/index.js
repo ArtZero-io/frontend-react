@@ -95,13 +95,13 @@ export const LaunchpadPage = () => {
 
   return (
     <Layout>
-      <Box w="full" maxW="1400px" mx="auto" textAlign="center" my="80px">
+      <Box w="full" mx="auto" my="80px" maxW="1400px" textAlign="center">
         <Heading fontSize={["3xl-mid", "5xl", "5xl"]} mb="10px">
           launchpad
         </Heading>
         <Text maxW="360px" fontSize="lg" mx="auto">
-          Dolore sint in sit enim proident ullamco quis eu veniam. Dolore sintin
-          proident ullamco quis.
+          The premier destination to launch your NFT Collection on Aleph Zero
+          Network.
         </Text>
       </Box>
 
@@ -145,5 +145,5 @@ export const LaunchpadPage = () => {
 //     volume: 0,
 //     nft_count: 8,
 //     __v: 0,
-//   } 
+//   }
 // ];

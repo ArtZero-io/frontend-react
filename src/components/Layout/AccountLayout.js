@@ -32,7 +32,7 @@ const AccountLayout = ({ children }) => {
       value: ROUTES.ACCOUNT_MY_PROJECTS,
     },
     {
-      label: "Manager WhiteList of Projects",
+      label: "WhiteList Manager",
       value: ROUTES.ACCOUNT_WHITELIST_PROJECTS,
     },
   ];
