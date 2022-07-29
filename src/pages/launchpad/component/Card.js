@@ -19,7 +19,7 @@ import * as ROUTES from "@constants/routes";
 import useInterval from "use-interval";
 import { getCachedImageShort } from "@utils/index";
 
-export const Card = ({ variant, project, collection_address }) => {
+export const Card = ({ variant, project }) => {
   const history = useHistory();
   const [countdown, setCountdown] = useState(null);
 
@@ -29,7 +29,7 @@ export const Card = ({ variant, project, collection_address }) => {
     progressPercent,
     name,
     nftContractAddress,
-    // countdownTime, fake below
+    startTime,
   } = project;
   console.log(project);
   useInterval(() => {
@@ -37,9 +37,9 @@ export const Card = ({ variant, project, collection_address }) => {
       return;
     }
 
-    let now = new Date().getTime() / 1000;
-    //fake countdown time
-    const timeLeft = 16529721963 + progressPercent - now;
+    const now = new Date().getTime() / 1000;
+
+    const timeLeft = startTime.replaceAll(",", "") - now;
 
     if (timeLeft <= 0) {
       setCountdown({ h: 0, m: 0, s: 0 });
