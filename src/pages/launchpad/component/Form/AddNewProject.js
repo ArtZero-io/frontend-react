@@ -60,6 +60,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const [initialValues, setInitialValues] = useState(null);
   const [userBalance, setUserBalance] = useState(null);
   const [isSetRoyal, setIsSetRoyal] = useState(false);
+  const [addingFee, setAddingFee] = useState(0);
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
   const { addCollectionTnxStatus } = useSelector(
@@ -68,6 +69,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const [maxRoyalFeeRate, setMaxRoyalFeeRate] = useState(0);
   const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
   const currentHeaderIPFSUrl = useRef(headerIPFSUrl);
+  
   // eslint-disable-next-line no-unused-vars
   const noImagesChange =
     currentAvatarIPFSUrl.current === avatarIPFSUrl &&
@@ -95,6 +97,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             await collection_manager_calls.getMaxRoyalFeeRate(currentAccount);
   
           setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
+          if (addingFee === 0) {
+            const addingFeeData =
+              await collection_manager_calls.getAdvanceModeAddingFee(
+                currentAccount
+              );
+    
+            setAddingFee(addingFeeData / 10 ** 12);
+          }
         }
       if (!error) {
         setInitialValues(initialValues);
@@ -229,6 +239,17 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 code_phases: code_phases,
                 start_time_phases: start_time_phases,
                 end_time_phases: end_time_phases,
+                collectionName: values.name.trim(),
+                collectionDescription: values.description.trim(),
+                avatarIPFSUrl: values.avatarIPFSUrl,
+                headerIPFSUrl: values.headerIPFSUrl,
+                headerSquareIPFSUrl: values.avatarIPFSUrl,
+                website: values.website.trim(),
+                twitter: values.twitter.trim(),
+                discord: values.discord.trim(),
+                collectRoyalFee: isSetRoyal,
+                royalFee: values.royalFee,
+                collectionAddingFee: addingFee
               };
 
               dispatch({
@@ -239,14 +260,50 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               });
 
               if (mode === formMode.ADD) {
-                console.log(values.royalFee);
                 await launchpad_contract_calls.addNewProject(
                   currentAccount,
                   data,
                   dispatch,
                   api
                 );
+
+                // Lay gia tri nft_address tu launchpad_contract_calls roi tao collection
+                const collectionData = {
+                  nftContractAddress: nft_address,
+                  attributes: [
+                    "name",
+                    "description",
+                    "avatar_image",
+                    "header_image",
+                    "header_square_image",
+                    "website",
+                    "twitter",
+                    "discord",
+                  ],
+
+                  attributeVals: [
+                    values.collectionName.trim(),
+                    values.collectionDescription.trim(),
+                    values.avatarIPFSUrl,
+                    values.headerIPFSUrl,
+                    values.avatarIPFSUrl,
+                    values.website,
+                    values.twitter,
+                    values.discord,
+                  ],
+                  collectionAllowRoyalFee: isSetRoyal,
+                  collectionRoyalFeeData: isSetRoyal
+                    ? Math.round(values.royalFee * 100)
+                    : 0,
+                };
                 
+                await collection_manager_calls.addNewCollection(
+                  currentAccount,
+                  collectionData,
+                  dispatch,
+                  api
+                );
+                //
               }
 
               // if (mode === formMode.EDIT) {

@@ -1,10 +1,10 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5FRAmmm98NsXDHEf8P4FZ8q8XHiEXFa8PwX7mUpdcLe2AJGY",
+  CONTRACT_ADDRESS: "5CVHjRzNaUfY8MsoqtbhS78FDNJ6dBygzJ1tTinE2WzEeKJH",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x665f16c0491d4f00ee94d0c65fc1aad7b57b40e170f09f690c191ebed9266671",
+      "hash": "0xdb53c224e4874778ec60fe1c7427a68824413c9c10257963a24b6606dfaeba57",
       "language": "ink! 3.3.0",
-      "compiler": "rustc 1.61.0-nightly"
+      "compiler": "rustc 1.63.0-nightly"
     },
     "contract": {
       "name": "artzero_launchpad_psp34",
@@ -86,12 +86,23 @@ const launchpad_manager = {
               {
                 "docs": [],
                 "indexed": false,
+                "label": "project_id",
+                "type": {
+                  "displayName": [
+                    "u64"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
                 "label": "nft_contract_address",
                 "type": {
                   "displayName": [
-                    "AccountId"
+                    "Option"
                   ],
-                  "type": 0
+                  "type": 22
                 }
               }
             ],
@@ -289,7 +300,7 @@ const launchpad_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 20
             },
             "selector": "0x2cafbf63"
           },
@@ -315,7 +326,7 @@ const launchpad_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 20
             },
             "selector": "0xb470cada"
           },
@@ -341,7 +352,7 @@ const launchpad_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 20
             },
             "selector": "0x0c3b5043"
           },
@@ -367,7 +378,7 @@ const launchpad_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 20
             },
             "selector": "0xa81f0494"
           },
@@ -393,7 +404,7 @@ const launchpad_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 20
             },
             "selector": "0xad51a976"
           },
@@ -428,7 +439,7 @@ const launchpad_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 20
             },
             "selector": "0x88efeaf2"
           },
@@ -532,7 +543,7 @@ const launchpad_manager = {
               "displayName": [
                 "Option"
               ],
-              "type": 23
+              "type": 22
             },
             "selector": "0xbe4185f5"
           },
@@ -584,53 +595,9 @@ const launchpad_manager = {
               "displayName": [
                 "Option"
               ],
-              "type": 24
+              "type": 23
             },
             "selector": "0x908e3150"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 15
-            },
-            "selector": "0x5e228753"
           },
           {
             "args": [
@@ -668,6 +635,50 @@ const launchpad_manager = {
               "type": 15
             },
             "selector": "0x11f43efd"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 15
+            },
+            "selector": "0x5e228753"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [],
@@ -1204,7 +1215,7 @@ const launchpad_manager = {
                   {
                     "fields": [
                       {
-                        "type": 5
+                        "type": 3
                       }
                     ],
                     "index": 0,
@@ -1225,7 +1236,7 @@ const launchpad_manager = {
             "params": [
               {
                 "name": "T",
-                "type": 5
+                "type": 3
               },
               {
                 "name": "E",
@@ -1298,48 +1309,6 @@ const launchpad_manager = {
               "variant": {
                 "variants": [
                   {
-                    "fields": [
-                      {
-                        "type": 3
-                      }
-                    ],
-                    "index": 0,
-                    "name": "Ok"
-                  },
-                  {
-                    "fields": [
-                      {
-                        "type": 21
-                      }
-                    ],
-                    "index": 1,
-                    "name": "Err"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "T",
-                "type": 3
-              },
-              {
-                "name": "E",
-                "type": 21
-              }
-            ],
-            "path": [
-              "Result"
-            ]
-          }
-        },
-        {
-          "id": 23,
-          "type": {
-            "def": {
-              "variant": {
-                "variants": [
-                  {
                     "index": 0,
                     "name": "None"
                   },
@@ -1367,7 +1336,7 @@ const launchpad_manager = {
           }
         },
         {
-          "id": 24,
+          "id": 23,
           "type": {
             "def": {
               "variant": {

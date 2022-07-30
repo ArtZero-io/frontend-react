@@ -5,10 +5,11 @@ import {
   handleContractCallAnimation,
   isValidAddressPolkadotAddress,
 } from "@utils";
-import { ContractPromise } from "@polkadot/api-contract";
+import { ContractPromise, Abi } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
 import { AccountActionTypes } from "@store/types/account.types";
-// import { txResponseErrorHandler } from "../../store/actions/txStatus";
+import { txResponseErrorHandler } from "../../store/actions/txStatus";
+import launchpad_manager from "@utils/blockchain/launchpad-manager";
 
 let contract;
 
@@ -247,31 +248,90 @@ async function addNewProject(caller_account, data, dispatch, txType, api) {
     .signAndSend(
       address,
       { signer: injector.signer },
-      async (result) => {
-        // txResponseErrorHandler({
-        //   status,
-        //   result.dispatchError,
-        //   dispatch,
-        //   txType,
-        //   api,
-        //   caller_account,
-        // });
-        // if (result.status.isFinalized === true) {
-        //   result.events.forEach(({ phase, event: { data, method, section } }) => {
-        //     console.log(`\t' ${phase}: ${section}.${method}:: ${data}`);
-        //   });
-        //   toast.success(`Success`);
-        // }
-        console.log(result);
-        console.log(result.toHuman());
-        // if (dispatchError) {
-        //   console.log(dispatchError.toString());
-        //   if (dispatchError.isModule) {
-        //     toast.error(`There is some error with your request`);
-        //   } else {
-        //     console.log("dispatchError ", dispatchError.toString());
-        //   }
-        // }
+      async ({status, events, dispatchError}) => {
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
+          if (dispatchError) {
+            console.log(dispatchError.toString());
+            if (dispatchError.isModule) {
+              toast.error(`There is some error with your request`);
+            } else {
+              console.log("dispatchError ", dispatchError.toString());
+            }
+          }
+          if (status.isInBlock) {
+            console.log('Included at block hash', status.asInBlock.toHex());
+            console.log('Events:');
+    
+            events.forEach(({ event: { data, method, section }, phase }) => {
+              if (section == "contracts" && method == "ContractEmitted") {
+                const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
+        
+                const contract_address = accId.toString();
+                if (contract_address == launchpad_manager.CONTRACT_ADDRESS) {
+                  const abi_launchpad_contract = new Abi(launchpad_manager.CONTRACT_ABI);
+                  const decodedEvent = abi_launchpad_contract.decodeEvent(bytes);
+                  let event_name = decodedEvent.event.identifier;
+                  console.log(event_name);
+                  if (event_name == 'AddNewProjectEvent') {
+                    const eventValues = [];
+                    for (let i = 0; i < decodedEvent.args.length; i++) {
+                      const value = decodedEvent.args[i];
+                      eventValues.push(value.toString());
+                    }
+                    const nft_address = eventValues[1];
+                    //Push nft_address -> sang file AddNewProject.js
+
+                    // const collectionData = {
+                    //   nftContractAddress: nft_address,
+                    //   attributes: [
+                    //     "name",
+                    //     "description",
+                    //     "avatar_image",
+                    //     "header_image",
+                    //     "header_square_image",
+                    //     "website",
+                    //     "twitter",
+                    //     "discord",
+                    //   ],
+    
+                    //   attributeVals: [
+                    //     data.collectionName.trim(),
+                    //     data.collectionDescription.trim(),
+                    //     data.avatarIPFSUrl,
+                    //     data.headerIPFSUrl,
+                    //     data.headerSquareIPFSUrl,
+                    //     data.website,
+                    //     data.twitter,
+                    //     data.discord,
+                    //   ],
+                    //   collectionAllowRoyalFee: data.collectRoyalFee,
+                    //   collectionRoyalFeeData: data.collectRoyalFee
+                    //     ? Math.round(data.royalFee * 100)
+                    //     : 0,
+                    // };
+                    
+                    // await collection_manager_calls.addNewCollection(
+                    //   currentAccount,
+                    //   collectionData,
+                    //   dispatch,
+                    //   api
+                    // );
+                  }
+                  
+                }
+              }
+              
+            });
+          } else if (status.isFinalized) {
+            toast.success(`Success`);
+          }
       }
     )
     .then((unsub) => {
