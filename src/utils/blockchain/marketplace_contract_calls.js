@@ -423,9 +423,8 @@ async function list(
           api,
           caller_account,
         });
+        handleContractCallAddNftAnimation(status, dispatchError, dispatch);
         if (status) {
-          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
-
           if (status?.isFinalized) {
             await APICall.askBeUpdateNftData({
               collection_address: nft_contract_address,
@@ -576,9 +575,8 @@ async function bid(
           caller_account,
         });
 
+        handleContractCallAddNftAnimation(status, dispatchError, dispatch);
         if (status?.isFinalized) {
-          //          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
-
           await APICall.askBeUpdateBidsData({
             collection_address: nft_contract_address,
             seller: seller,
@@ -639,9 +637,8 @@ async function removeBid(
           caller_account,
         });
 
+        handleContractCallAddNftAnimation(status, dispatchError, dispatch);
         if (status?.isFinalized) {
-          //          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
-
           await APICall.askBeUpdateBidsData({
             collection_address: nft_contract_address,
             seller: seller,
@@ -715,8 +712,9 @@ async function buy(
         //     console.log("dispatchError ", dispatchError.toString());
         //   }
         // }
+        handleContractCallAddNftAnimation(status, dispatchError, dispatch);
+        
         if (status?.isFinalized) {
-          // handleContractCallAddNftAnimation(status, dispatchError, dispatch);
           await APICall.askBeUpdateNftData({
             collection_address: nft_contract_address,
             token_id: token_id.u64,

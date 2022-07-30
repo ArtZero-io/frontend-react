@@ -303,7 +303,10 @@ const NFTTabCollectible = (props) => {
 
         <Stack alignItems="flex-start" w="full">
           <HStack>
-            <Heading color="#fff" fontSize={["xl", "3xl-mid", "3xl-mid"]}>
+            <Heading
+              fontSize={{ base: "xl", xl: "2xl", "2xl": "3xl-mid" }}
+              color="#fff"
+            >
               {nftName}
             </Heading>
 
@@ -377,8 +380,7 @@ const NFTTabCollectible = (props) => {
             <Heading
               isTruncated
               maxW={{ base: "260px", xl: "500px", "2xl": "610px" }}
-              size="h6"
-              pt={{ base: "6px", "2xl": "12px" }}
+              pt={{ base: "2px", "2xl": "12px" }}
               fontSize={["xs", "md", "md"]}
               color="brand.grayLight"
               lineHeight="1.35"
@@ -392,7 +394,7 @@ const NFTTabCollectible = (props) => {
               <Text
                 color="#fff"
                 maxW="max-content"
-                pt={{ base: "6px", "2xl": "12px" }}
+                pt={{ base: "2px", "2xl": "12px" }}
                 fontSize={{ base: "14px", "2xl": "16px" }}
               >
                 Owned by{" "}

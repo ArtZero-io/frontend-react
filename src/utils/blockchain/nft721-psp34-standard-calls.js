@@ -368,7 +368,7 @@ async function approve(
         });
 
         // if (status) {
-        // handleContractCallAddNftAnimation(status, dispatchError, dispatch);
+        handleContractCallAddNftAnimation(status, dispatchError, dispatch);
 
         // const statusText = Object.keys(status.toHuman())[0];
         if (status.isFinalized) {

@@ -20,7 +20,7 @@ import { motion, useAnimation } from "framer-motion";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import { ContractPromise } from "@polkadot/api-contract";
 import toast from "react-hot-toast";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { setTxStatus } from "@store/actions/txStatus";
 import {
   START,
@@ -55,14 +55,16 @@ function MyNFTGroupCard({
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   const history = useHistory();
+  const location = useLocation();
 
   function onClickHandler(item) {
-    console.log("item", item);
     if (isBigScreen) {
       setSelectedNFT(item);
       item?.stakeStatus === 0 && onOpen();
-    } else {
-      console.log("rest", rest);
+      return;
+    }
+
+    if (location?.pathname === "/account/nfts") {
       history.push(`/nft/${item.nftContractAddress}/${item.tokenID}`);
     }
   }
@@ -387,39 +389,61 @@ function GridNftA({
   return (
     <>
       {multiStakeData?.action !== null ? (
-        <Button
-          isDisabled={
-            txStatus?.stakeStatus ||
-            txStatus?.unstakeStatus ||
-            txStatus?.cancelRequestUnstakeStatus ||
-            txStatus?.requestUnstakeStatus
-          }
-          position="absolute"
-          top={["30px", "0"]}
-          right={["0", "0"]}
-          size="sm"
-          onClick={() =>
-            handleStakeAction(
-              multiStakeData?.action,
-              multiStakeData?.list,
-              dispatch,
-              api,
-              currentAccount
-            )
-          }
+        <motion.div
+          id="image-ufo-2"
+          style={{
+            position: "fixed",
+            bottom: "30px",
+            right: "30px",
+            zIndex: "9999",
+          }}
+          animate={{
+            y: [0, 1.5, 0],
+            rotate: 0,
+            scale: [1, 1, 1],
+          }}
+          transition={{
+            duration: 1.5,
+            curve: [0.42, 0, 0.58, 1],
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
         >
-          {multiStakeData?.action === REQUEST_UNSTAKE
-            ? "request unstake"
-            : multiStakeData?.action === CANCEL_REQUEST_UNSTAKE
-            ? "cancel request unstake"
-            : multiStakeData?.action}{" "}
-          tokens:
-          {multiStakeData?.list?.map((i, idx) => (
-            <Fragment key={idx}>
-              {idx === 0 ? "" : ","} #{i}
-            </Fragment>
-          ))}
-        </Button>
+          <Button
+            isDisabled={
+              txStatus?.stakeStatus ||
+              txStatus?.unstakeStatus ||
+              txStatus?.cancelRequestUnstakeStatus ||
+              txStatus?.requestUnstakeStatus
+            }
+            // position="fixed"
+            // bottom={["30px", "60px"]}
+            // right={["30px", "60px"]}
+            // size="sm"
+            // zIndex="modal"
+            onClick={() =>
+              handleStakeAction(
+                multiStakeData?.action,
+                multiStakeData?.list,
+                dispatch,
+                api,
+                currentAccount
+              )
+            }
+          >
+            {multiStakeData?.action === REQUEST_UNSTAKE
+              ? "request unstake"
+              : multiStakeData?.action === CANCEL_REQUEST_UNSTAKE
+              ? "cancel request unstake"
+              : multiStakeData?.action}{" "}
+            tokens:
+            {multiStakeData?.list?.map((i, idx) => (
+              <Fragment key={idx}>
+                {idx === 0 ? "" : ","} #{i}
+              </Fragment>
+            ))}
+          </Button>
+        </motion.div>
       ) : null}
 
       <motion.div

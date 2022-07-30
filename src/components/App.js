@@ -137,7 +137,6 @@ const Main = () => {
       txStatus?.lockStatus === "Start" ||
       txStatus?.step === "Start";
 
-    // console.log("txStatus?.stakeStatus", txStatus?.stakeStatus);
     const message = (
       <span>
         You have a transaction that needs to be signed.

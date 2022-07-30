@@ -11,7 +11,7 @@ const txStatusReducer = (state = {}, { type, payload }) => {
         type: payload.type || state.type,
         step: payload.step || state.step,
         tokenIDArray: payload.tokenIDArray || state.tokenIDArray,
-        timeStamp: payload.timeStamp|| state.timeStamp,
+        timeStamp: payload.timeStamp || state.timeStamp,
         endTimeStamp: payload.endTimeStamp,
       };
 
