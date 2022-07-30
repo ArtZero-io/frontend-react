@@ -25,8 +25,7 @@ function StatsHeader({ platformStatistics, isLoading }) {
             statistics
           </Heading>
           <Text maxW="320px" fontSize={["md", "lg", "lg"]} mx="auto">
-            Reward will be paid equally to all staked PMP NFTs on a random day
-            of the month without any prior notice
+          Payout Rewards will be paid on monthly basis to all staked PMP NFTs owner. Remember to claim your rewards.
           </Text>
         </Box>
 
