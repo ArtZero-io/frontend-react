@@ -69,7 +69,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const [maxRoyalFeeRate, setMaxRoyalFeeRate] = useState(0);
   const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
   const currentHeaderIPFSUrl = useRef(headerIPFSUrl);
-  
+
   // eslint-disable-next-line no-unused-vars
   const noImagesChange =
     currentAvatarIPFSUrl.current === avatarIPFSUrl &&
@@ -90,22 +90,22 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
           currentAccount,
           api,
           mode,
-          collection_address: nftContractAddress
+          collection_address: nftContractAddress,
         });
-        if (maxRoyalFeeRate === 0) {
-          const maxRoyalFeeRateData =
-            await collection_manager_calls.getMaxRoyalFeeRate(currentAccount);
-  
-          setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
-          if (addingFee === 0) {
-            const addingFeeData =
-              await collection_manager_calls.getAdvanceModeAddingFee(
-                currentAccount
-              );
-    
-            setAddingFee(addingFeeData / 10 ** 12);
-          }
+      if (maxRoyalFeeRate === 0) {
+        const maxRoyalFeeRateData =
+          await collection_manager_calls.getMaxRoyalFeeRate(currentAccount);
+
+        setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
+        if (addingFee === 0) {
+          const addingFeeData =
+            await collection_manager_calls.getAdvanceModeAddingFee(
+              currentAccount
+            );
+
+          setAddingFee(addingFeeData / 10 ** 12);
         }
+      }
       if (!error) {
         setInitialValues(initialValues);
         setAvatarIPFSUrl(avatarIPFSUrl);
@@ -249,7 +249,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 discord: values.discord.trim(),
                 collectRoyalFee: isSetRoyal,
                 royalFee: values.royalFee,
-                collectionAddingFee: addingFee
+                collectionAddingFee: addingFee,
               };
 
               dispatch({
@@ -258,52 +258,58 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   status: "Start",
                 },
               });
+              console.log("xOUTxxvalues", values);
 
               if (mode === formMode.ADD) {
+                const createNewCollection = async (nft_address) => {
+                  console.log("createNewCollection nft_address", nft_address);
+                  // Lay gia tri nft_address tu launchpad_contract_calls roi tao collection
+                  const collectionData = {
+                    nftContractAddress: nft_address,
+                    attributes: [
+                      "name",
+                      "description",
+                      "avatar_image",
+                      "header_image",
+                      "header_square_image",
+                      "website",
+                      "twitter",
+                      "discord",
+                    ],
+
+                    attributeVals: [
+                      values.name,
+                      values.description,
+                      values.avatarIPFSUrl,
+                      values.headerIPFSUrl,
+                      values.avatarIPFSUrl,
+                      values.website,
+                      values.twitter,
+                      values.discord,
+                    ],
+                    collectionAllowRoyalFee: isSetRoyal,
+                    collectionRoyalFeeData: isSetRoyal
+                      ? Math.round(values.royalFee * 100)
+                      : 0,
+                  };
+                  console.log("xxxcollectionData", collectionData);
+                  console.log("xxxvalues", values);
+                  await collection_manager_calls.addNewCollection(
+                    currentAccount,
+                    collectionData,
+                    dispatch,
+                    api
+                  );
+                  //
+                };
                 await launchpad_contract_calls.addNewProject(
                   currentAccount,
                   data,
                   dispatch,
-                  api
+                  "CREATE_PROJECT",
+                  api,
+                  createNewCollection
                 );
-
-                // Lay gia tri nft_address tu launchpad_contract_calls roi tao collection
-                const collectionData = {
-                  nftContractAddress: nft_address,
-                  attributes: [
-                    "name",
-                    "description",
-                    "avatar_image",
-                    "header_image",
-                    "header_square_image",
-                    "website",
-                    "twitter",
-                    "discord",
-                  ],
-
-                  attributeVals: [
-                    values.collectionName.trim(),
-                    values.collectionDescription.trim(),
-                    values.avatarIPFSUrl,
-                    values.headerIPFSUrl,
-                    values.avatarIPFSUrl,
-                    values.website,
-                    values.twitter,
-                    values.discord,
-                  ],
-                  collectionAllowRoyalFee: isSetRoyal,
-                  collectionRoyalFeeData: isSetRoyal
-                    ? Math.round(values.royalFee * 100)
-                    : 0,
-                };
-                
-                await collection_manager_calls.addNewCollection(
-                  currentAccount,
-                  collectionData,
-                  dispatch,
-                  api
-                );
-                //
               }
 
               // if (mode === formMode.EDIT) {
@@ -607,14 +613,20 @@ export const fetchInitialValuesProject = async ({
     );
 
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
-        api,
-        launchpad_psp34_nft_standard.CONTRACT_ABI,
-        collection_address
+      api,
+      launchpad_psp34_nft_standard.CONTRACT_ABI,
+      collection_address
     );
-    launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
-    
-    const projectInfoHash = await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
-    const projectInfo = await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(projectInfoHash);
+    launchpad_psp34_nft_standard_calls.setContract(
+      launchpad_psp34_nft_standard_contract
+    );
+
+    const projectInfoHash =
+      await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
+    const projectInfo =
+      await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
+        projectInfoHash
+      );
 
     // Update initialValues
     const {

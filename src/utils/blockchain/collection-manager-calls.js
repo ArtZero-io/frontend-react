@@ -22,6 +22,7 @@ export const setCollectionContract = (api, data) => {
 
 //SETTERS
 async function addNewCollection(caller_account, data, dispatch, api) {
+
   if (!isValidAddressPolkadotAddress(data?.nftContractAddress)) {
     return null;
   }

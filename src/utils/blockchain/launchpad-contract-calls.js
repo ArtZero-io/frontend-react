@@ -50,10 +50,14 @@ async function getProjectsByOwner(caller_account, ownerAddress) {
   const azero_value = 0;
   //console.log(contract);
 
-  const { result, output } = await contract.query.getProjectsByOwner(address, {
-    value: azero_value,
-    gasLimit,
-  }, ownerAddress);
+  const { result, output } = await contract.query.getProjectsByOwner(
+    address,
+    {
+      value: azero_value,
+      gasLimit,
+    },
+    ownerAddress
+  );
   if (result.isOk) {
     return output.toHuman();
   }
@@ -127,7 +131,7 @@ async function setMultipleAttributes(
 }
 
 async function owner(caller_account) {
-  console.log("zxczxc");
+
   if (!contract || !caller_account) {
     return null;
   }
@@ -226,13 +230,20 @@ async function getProjectByNftAddress(caller_account, nft_address) {
   return null;
 }
 
-async function addNewProject(caller_account, data, dispatch, txType, api) {
+async function addNewProject(
+  caller_account,
+  data,
+  dispatch,
+  txType,
+  api,
+  createNewCollection
+) {
   let unsubscribe;
   const address = caller_account?.address;
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
   const value = await getProjectAddingFee(caller_account);
-  console.log('addNewProject contract', contract)
+
   contract.tx
     .addNewProject(
       { gasLimit, value: value },
@@ -248,7 +259,7 @@ async function addNewProject(caller_account, data, dispatch, txType, api) {
     .signAndSend(
       address,
       { signer: injector.signer },
-      async ({status, events, dispatchError}) => {
+      async ({ status, events, dispatchError }) => {
         txResponseErrorHandler({
           status,
           dispatchError,
@@ -257,81 +268,83 @@ async function addNewProject(caller_account, data, dispatch, txType, api) {
           api,
           caller_account,
         });
-          if (dispatchError) {
-            console.log(dispatchError.toString());
-            if (dispatchError.isModule) {
-              toast.error(`There is some error with your request`);
-            } else {
-              console.log("dispatchError ", dispatchError.toString());
-            }
+        if (dispatchError) {
+          console.log(dispatchError.toString());
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError ", dispatchError.toString());
           }
-          if (status.isInBlock) {
-            console.log('Included at block hash', status.asInBlock.toHex());
-            console.log('Events:');
-    
-            events.forEach(({ event: { data, method, section }, phase }) => {
-              if (section == "contracts" && method == "ContractEmitted") {
-                const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
-        
-                const contract_address = accId.toString();
-                if (contract_address == launchpad_manager.CONTRACT_ADDRESS) {
-                  const abi_launchpad_contract = new Abi(launchpad_manager.CONTRACT_ABI);
-                  const decodedEvent = abi_launchpad_contract.decodeEvent(bytes);
-                  let event_name = decodedEvent.event.identifier;
-                  console.log(event_name);
-                  if (event_name == 'AddNewProjectEvent') {
-                    const eventValues = [];
-                    for (let i = 0; i < decodedEvent.args.length; i++) {
-                      const value = decodedEvent.args[i];
-                      eventValues.push(value.toString());
-                    }
-                    const nft_address = eventValues[1];
-                    //Push nft_address -> sang file AddNewProject.js
+        }
+        if (status.isInBlock) {
+          console.log("Included at block hash", status.asInBlock.toHex());
+          console.log("Events:");
 
-                    // const collectionData = {
-                    //   nftContractAddress: nft_address,
-                    //   attributes: [
-                    //     "name",
-                    //     "description",
-                    //     "avatar_image",
-                    //     "header_image",
-                    //     "header_square_image",
-                    //     "website",
-                    //     "twitter",
-                    //     "discord",
-                    //   ],
-    
-                    //   attributeVals: [
-                    //     data.collectionName.trim(),
-                    //     data.collectionDescription.trim(),
-                    //     data.avatarIPFSUrl,
-                    //     data.headerIPFSUrl,
-                    //     data.headerSquareIPFSUrl,
-                    //     data.website,
-                    //     data.twitter,
-                    //     data.discord,
-                    //   ],
-                    //   collectionAllowRoyalFee: data.collectRoyalFee,
-                    //   collectionRoyalFeeData: data.collectRoyalFee
-                    //     ? Math.round(data.royalFee * 100)
-                    //     : 0,
-                    // };
-                    
-                    // await collection_manager_calls.addNewCollection(
-                    //   currentAccount,
-                    //   collectionData,
-                    //   dispatch,
-                    //   api
-                    // );
+          events.forEach(({ event: { data, method, section }, phase }) => {
+            if (section == "contracts" && method == "ContractEmitted") {
+              const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
+
+              const contract_address = accId.toString();
+              if (contract_address == launchpad_manager.CONTRACT_ADDRESS) {
+                const abi_launchpad_contract = new Abi(
+                  launchpad_manager.CONTRACT_ABI
+                );
+                const decodedEvent = abi_launchpad_contract.decodeEvent(bytes);
+                let event_name = decodedEvent.event.identifier;
+                console.log(event_name);
+                if (event_name == "AddNewProjectEvent") {
+                  const eventValues = [];
+                  for (let i = 0; i < decodedEvent.args.length; i++) {
+                    const value = decodedEvent.args[i];
+                    eventValues.push(value.toString());
                   }
-                  
+                  const nft_address = eventValues[1];
+
+                  createNewCollection(nft_address);
+                  //Push nft_address -> sang file AddNewProject.js
+
+                  // const collectionData = {
+                  //   nftContractAddress: nft_address,
+                  //   attributes: [
+                  //     "name",
+                  //     "description",
+                  //     "avatar_image",
+                  //     "header_image",
+                  //     "header_square_image",
+                  //     "website",
+                  //     "twitter",
+                  //     "discord",
+                  //   ],
+
+                  //   attributeVals: [
+                  //     data.collectionName.trim(),
+                  //     data.collectionDescription.trim(),
+                  //     data.avatarIPFSUrl,
+                  //     data.headerIPFSUrl,
+                  //     data.headerSquareIPFSUrl,
+                  //     data.website,
+                  //     data.twitter,
+                  //     data.discord,
+                  //   ],
+                  //   collectionAllowRoyalFee: data.collectRoyalFee,
+                  //   collectionRoyalFeeData: data.collectRoyalFee
+                  //     ? Math.round(data.royalFee * 100)
+                  //     : 0,
+                  // };
+
+                  // await collection_manager_calls.addNewCollection(
+                  //   currentAccount,
+                  //   collectionData,
+                  //   dispatch,
+                  //   api
+                  // );
                 }
               }
-              
-            });
-          } else if (status.isFinalized) {
-            toast.success(`Success`);
-          }
+            }
+          });
+        } else if (status.isFinalized) {
+          toast.success(`Success`);
+        }
       }
     )
     .then((unsub) => {
@@ -397,7 +410,6 @@ async function editProject(caller_account, data, dispatch) {
 }
 
 async function getProjectAddingFee(caller_account) {
-
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -481,7 +493,7 @@ const launchpad_contract_calls = {
   owner,
   updateIsActiveProject,
   editProject,
-  getProjectsByOwner
+  getProjectsByOwner,
 };
 
 export default launchpad_contract_calls;
