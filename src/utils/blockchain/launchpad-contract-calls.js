@@ -8,7 +8,7 @@ import {
 import { ContractPromise } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
 import { AccountActionTypes } from "@store/types/account.types";
-import { txResponseErrorHandler } from "../../store/actions/txStatus";
+// import { txResponseErrorHandler } from "../../store/actions/txStatus";
 
 let contract;
 
@@ -123,12 +123,6 @@ async function setMultipleAttributes(
       });
 
   return unsubscribe;
-}
-
-async function getProjectInfoByHash(ipfsHash) {
-  const ipfsUrl = `https://ipfs.infura.io/ipfs/${ipfsHash}`;
-  const projecInfoRes = await clientAPI("get", ipfsUrl, {});
-  return projecInfoRes;
 }
 
 async function owner(caller_account) {
@@ -253,30 +247,35 @@ async function addNewProject(caller_account, data, dispatch, txType, api) {
     .signAndSend(
       address,
       { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-          caller_account,
-        });
-        if (status.isFinalized === true) {
-          toast.success(`Success`);
-        }
-
-        if (dispatchError) {
-          console.log(dispatchError.toString());
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
+      async (result) => {
+        // txResponseErrorHandler({
+        //   status,
+        //   result.dispatchError,
+        //   dispatch,
+        //   txType,
+        //   api,
+        //   caller_account,
+        // });
+        // if (result.status.isFinalized === true) {
+        //   result.events.forEach(({ phase, event: { data, method, section } }) => {
+        //     console.log(`\t' ${phase}: ${section}.${method}:: ${data}`);
+        //   });
+        //   toast.success(`Success`);
+        // }
+        console.log(result);
+        console.log(result.toHuman());
+        // if (dispatchError) {
+        //   console.log(dispatchError.toString());
+        //   if (dispatchError.isModule) {
+        //     toast.error(`There is some error with your request`);
+        //   } else {
+        //     console.log("dispatchError ", dispatchError.toString());
+        //   }
+        // }
       }
     )
     .then((unsub) => {
+      console.log(unsub);
       unsubscribe = unsub;
     })
     .catch((e) => {
@@ -418,7 +417,6 @@ const launchpad_contract_calls = {
   getProjectByNftAddress,
   getProjectById,
   getProjectAddingFee,
-  getProjectInfoByHash,
   getAdminAddress,
   owner,
   updateIsActiveProject,

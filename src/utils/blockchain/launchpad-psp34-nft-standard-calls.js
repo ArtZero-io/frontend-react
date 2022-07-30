@@ -205,7 +205,13 @@ async function getPhaseAccountLinkByPhaseId(caller_account, phaseId, index) {
   return null;
 }
 
-async function getWhitelistByAccountId(caller_account, phaseCode, accountAddress) {
+async function getProjectInfoByHash(ipfsHash) {
+  const ipfsUrl = `https://ipfs.infura.io/ipfs/${ipfsHash}`;
+  const projecInfoRes = await clientAPI("get", ipfsUrl, {});
+  return projecInfoRes;
+}
+
+async function getWhitelistByAccountId(caller_account, phaseId, accountAddress) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -216,8 +222,8 @@ async function getWhitelistByAccountId(caller_account, phaseCode, accountAddress
   const { result, output } = await contract.query.getWhitelistByAccountId(address, {
     value: azero_value,
     gasLimit,
-  }, accountAddress, phaseCode);
-  console.log(accountAddress, phaseCode);
+  }, accountAddress, phaseId);
+  console.log(accountAddress, phaseId);
   if (result.isOk) {
     return output.toHuman();
   }
@@ -266,6 +272,24 @@ async function whitelistMint(caller_account, phaseId, amount, minting_fee) {
   return unsubscribe;
 }
 
+async function getProjectInfo(caller_account) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const { result, output } = await contract.query.getProjectInfo(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
 const launchpad_psp34_nft_standard_calls = {
   getTotalSupply,
   getLastPhaseId,
@@ -277,7 +301,9 @@ const launchpad_psp34_nft_standard_calls = {
   getWhitelistByAccountId,
   whitelistMint,
   getPhaseAccountLastIndex,
-  getPhaseAccountLinkByPhaseId
+  getPhaseAccountLinkByPhaseId,
+  getProjectInfoByHash,
+  getProjectInfo
 };
 
 export default launchpad_psp34_nft_standard_calls;

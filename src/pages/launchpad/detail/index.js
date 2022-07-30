@@ -54,12 +54,8 @@ const LaunchpadDetailPage = () => {
         collection_address
       );
       console.log("LaunchpadDetailPage::project", project);
-
+        
       if (project.isActive) {
-        const projectInfo = await launchpad_contract_calls.getProjectInfoByHash(
-          project.projectInfo
-        );
-
         const launchpad_psp34_nft_standard_contract = new ContractPromise(
           api,
           launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -69,6 +65,11 @@ const LaunchpadDetailPage = () => {
         launchpad_psp34_nft_standard_calls.setContract(
           launchpad_psp34_nft_standard_contract
         );
+        const projectInfoHash = await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
+        const projectInfo = await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
+          projectInfoHash
+        );
+
         const totalSupply =
           await launchpad_psp34_nft_standard_calls.getTotalSupply(
             currentAccount
@@ -88,11 +89,8 @@ const LaunchpadDetailPage = () => {
               currentAccount,
               i
             );
-          const phaseCode =
-            await launchpad_psp34_nft_standard_calls.getPhasesCodeById(
-              currentAccount,
-              i
-            );
+            console.log(phaseSchedule);
+          const phaseCode = phaseSchedule.title;
 
           const phaseInfo = {
             id: i,
@@ -111,7 +109,7 @@ const LaunchpadDetailPage = () => {
             const currentWhitelistTmp =
               await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
                 currentAccount,
-                phaseCode,
+                i,
                 currentAccount?.address
               );
             console.log(

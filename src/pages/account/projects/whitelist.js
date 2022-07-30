@@ -67,7 +67,14 @@ import {
         if (!project.isActive) {
           continue;
         }
-        const projectInfo = await launchpad_contract_calls.getProjectInfoByHash(project.projectInfo);
+        const launchpad_psp34_nft_standard_contract = new ContractPromise(
+            api,
+            launchpad_psp34_nft_standard.CONTRACT_ABI,
+            projectAddress
+        );
+        launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
+        const projectInfoHash = await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
+        const projectInfo = await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(projectInfoHash);
         const projectTmp = {
           name: projectInfo.name,
           nftContractAddress: projectAddress,
@@ -89,7 +96,7 @@ import {
             projectAddress
         );
         launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
-        launchpad_psp34_nft_standard_calls.addWhitelist(
+        await launchpad_psp34_nft_standard_calls.addWhitelist(
             currentAccount,
             whitelistAddress,
             phaseCodeSelected,

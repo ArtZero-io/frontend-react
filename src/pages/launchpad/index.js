@@ -5,10 +5,13 @@ import React, { useEffect, useState } from "react";
 import { useSubstrateState } from "@utils/substrate";
 import { timestampWithoutCommas } from "@utils";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
+import { ContractPromise } from "@polkadot/api-contract";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 
 export const LaunchpadPage = () => {
   // eslint-disable-next-line no-unused-vars
-  const { currentAccount } = useSubstrateState();
+  const { api, currentAccount } = useSubstrateState();
 
   const [liveProjects, setLiveProjects] = useState([]);
   const [upcomingProjects, setUpcomingProjects] = useState([]);
@@ -40,9 +43,18 @@ export const LaunchpadPage = () => {
           if (!project.isActive) {
             continue;
           }
+          const launchpad_psp34_nft_standard_contract = new ContractPromise(
+              api,
+              launchpad_psp34_nft_standard.CONTRACT_ABI,
+              nftAddress
+          );
+          launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
+          const projectInfoHash = await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
+          console.log(projectInfoHash);
+          console.log('xxzxc');
           const projectInfo =
-            await launchpad_contract_calls.getProjectInfoByHash(
-              project.projectInfo
+            await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
+              projectInfoHash
             );
           console.log("projectInfo", projectInfo);
 

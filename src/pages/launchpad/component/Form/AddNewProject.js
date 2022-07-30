@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 // eslint-disable-next-line no-unused-vars
 import { APICall } from "@api/client";
-import { Box, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Stack, Text, Spacer } from "@chakra-ui/react";
 import StatusButton from "@components/Button/StatusButton";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import ImageUpload from "@components/ImageUpload/Collection";
@@ -27,6 +27,13 @@ import AddRoadmap from "./AddRoadmap";
 import CommonInput from "@components/Input/Input";
 import { timestampWithoutCommas } from "@utils";
 import { useLocation } from "react-router-dom";
+import { ContractPromise } from "@polkadot/api-contract";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import AdvancedModeInput from "@components/Input/Input";
+import AdvancedModeSwitch from "@components/Switch/Switch";
+import AddCollectionNumberInput from "@components/Input/NumberInput";
+import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 
 const client = create(IPFS_CLIENT_URL);
 
@@ -52,13 +59,13 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
   const [initialValues, setInitialValues] = useState(null);
   const [userBalance, setUserBalance] = useState(null);
-
+  const [isSetRoyal, setIsSetRoyal] = useState(false);
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
   const { addCollectionTnxStatus } = useSelector(
     (s) => s.account.accountLoaders
   );
-
+  const [maxRoyalFeeRate, setMaxRoyalFeeRate] = useState(0);
   const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
   const currentHeaderIPFSUrl = useRef(headerIPFSUrl);
   // eslint-disable-next-line no-unused-vars
@@ -79,10 +86,16 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
       const { error, initialValues, avatarIPFSUrl, headerIPFSUrl } =
         await fetchInitialValuesProject({
           currentAccount,
+          api,
           mode,
-          collection_address: nftContractAddress,
+          collection_address: nftContractAddress
         });
-
+        if (maxRoyalFeeRate === 0) {
+          const maxRoyalFeeRateData =
+            await collection_manager_calls.getMaxRoyalFeeRate(currentAccount);
+  
+          setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
+        }
       if (!error) {
         setInitialValues(initialValues);
         setAvatarIPFSUrl(avatarIPFSUrl);
@@ -226,12 +239,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               });
 
               if (mode === formMode.ADD) {
+                console.log(values.royalFee);
                 await launchpad_contract_calls.addNewProject(
                   currentAccount,
                   data,
                   dispatch,
                   api
                 );
+                
               }
 
               // if (mode === formMode.EDIT) {
@@ -317,15 +332,41 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       name="description"
                       label="Project description"
                       placeholder="Project description"
-                      isDisabled={addCollectionTnxStatus}
+                      // isDisabled={addCollectionTnxStatus}
                     />
+                    <Stack
+                      direction={{ base: "column", "2xl": "row" }}
+                      alignItems="end"
+                      minH={20}
+                      minW={52}
+                    >
+                      <AdvancedModeSwitch
+                        isDisabled={addCollectionTnxStatus}
+                        onChange={() => {
+                          values.collectRoyalFee = !values.collectRoyalFee;
+                          setIsSetRoyal(!isSetRoyal);
+                        }}
+                        label="Collect Royal Fee"
+                        name="collectRoyalFee"
+                      />
+                    </Stack>
+                    <AddCollectionNumberInput
+                      isDisabled={!isSetRoyal || addCollectionTnxStatus}
+                      isDisplay={isSetRoyal}
+                      max={maxRoyalFeeRate}
+                      label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
+                      name="royalFee"
+                      type="number"
+                      placeholder="Royal Fee"
+                      inputWidth={"8rem"}
+                    />
+                    <Spacer />
                     <Heading size="h6">project roadmap</Heading>
                     <AddRoadmap name="roadmap" />
 
                     <Heading size="h6">project team member</Heading>
                     <AddMember name="members" />
                   </Stack>
-
                   <Stack
                     py="20px"
                     alignItems="start"
@@ -395,7 +436,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           // step={1}
                           // type="number"
                           // placeholder="9999"
-                          max={9999}
                           height="52px"
                           precision={0}
                           name="totalSupply"
@@ -478,6 +518,7 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
 
 export const fetchInitialValuesProject = async ({
   currentAccount,
+  api,
   mode,
   collection_address,
 }) => {
@@ -508,9 +549,15 @@ export const fetchInitialValuesProject = async ({
       collection_address
     );
 
-    const projectInfo = await launchpad_contract_calls.getProjectInfoByHash(
-      project?.projectInfo
+    const launchpad_psp34_nft_standard_contract = new ContractPromise(
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        collection_address
     );
+    launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
+    
+    const projectInfoHash = await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
+    const projectInfo = await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(projectInfoHash);
 
     // Update initialValues
     const {

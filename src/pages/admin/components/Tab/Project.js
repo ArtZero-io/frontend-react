@@ -14,10 +14,13 @@ import {
   import toast from "react-hot-toast";
   import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
   import { timestampWithoutCommas } from "@utils";
+  import { ContractPromise } from "@polkadot/api-contract";
+  import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+  import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
   
   function ProjectAdmin() {
     const { activeAddress } = useSelector((s) => s.account);
-    const { currentAccount } = useSubstrateState();
+    const { api, currentAccount } = useSubstrateState();
   
     const [collectionCount, setCollectionCount] = useState(0);
   
@@ -61,17 +64,25 @@ import {
       // console.log('collections_inactives',collections_inactives);
       let tmpProjects = [];
       for (let i = 1; i <= projectCount; i++) {
-        const nftAddress = await launchpad_contract_calls.getProjectById(
+          const nftAddress = await launchpad_contract_calls.getProjectById(
             currentAccount,
             i
           );
-          console.log(nftAddress);
+          
           const project = await launchpad_contract_calls.getProjectByNftAddress(
             currentAccount,
             nftAddress
           );
-          console.log(project);
-          const projectInfo = await launchpad_contract_calls.getProjectInfoByHash(project.projectInfo);
+          console.log('xxxx');
+          const launchpad_psp34_nft_standard_contract = new ContractPromise(
+              api,
+              launchpad_psp34_nft_standard.CONTRACT_ABI,
+              nftAddress
+          );
+          launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
+          const projectInfoHash = await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
+          console.log(projectInfoHash);
+          const projectInfo = await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(projectInfoHash);;
           console.log('projectInfo', projectInfo);
           const currentTime = Date.now();
           let projectTypeLabel = 'live';
