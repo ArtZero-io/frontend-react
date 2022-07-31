@@ -24,6 +24,8 @@ import SocialCard from "@components/Card/Social";
 import * as ROUTES from "@constants/routes";
 import { useHistory } from "react-router-dom";
 import { truncateStr } from "../../../utils";
+import { useSubstrateState } from "@utils/substrate";
+import { async } from "rxjs";
 
 function LaunchpadDetailHeader({
   project,
@@ -35,6 +37,7 @@ function LaunchpadDetailHeader({
   const [countDownTimer, setCountDownTimer] = useState({});
   console.log("projectproject", project);
   const history = useHistory();
+  const { currentAccount } = useSubstrateState();
 
   useEffect(() => {
     if (phases?.length > 0) {
@@ -112,21 +115,39 @@ function LaunchpadDetailHeader({
                   {project.name}{" "}
                 </Heading>
                 <Stack alignItems="center" direction="row">
-                  <Text mr="30px" fontSize={["sm", "md", "md"]}>
+                  {/* <Text mr="30px" fontSize={["sm", "md", "md"]}>
                     Project creator: {truncateStr(projectOwner)}
-                  </Text>
-                  <Button
-                    px="16px"
-                    variant="outline"
-                    onClick={() =>
-                      history.push({
-                        state: { formMode: "EDIT", collection_address },
-                        pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
-                      })
-                    }
-                  >
-                    edit project
-                  </Button>{" "}
+                  </Text> */}
+                  {(currentAccount && currentAccount.address && projectOwner == currentAccount.address) && (
+                  <>
+                    <Button
+                      px="16px"
+                      variant="outline"
+                      onClick={() =>
+                        history.push({
+                          state: { formMode: "EDIT", collection_address },
+                          pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
+                        })
+                      }
+                    >
+                      edit project information
+                    </Button>
+                    <Button
+                      px="16px"
+                      variant="outline"
+                    >
+                      Update Base Uri
+                    </Button>
+                    <Button
+                      px="16px"
+                      variant="outline"
+                    >
+                      Update Phases
+                    </Button>
+                  </>
+                  
+                  )}
+                  {" "}
                 </Stack>
                 <Flex
                   alignItems="start"

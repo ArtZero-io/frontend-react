@@ -1,10 +1,10 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5H7V7ZxQ83is2kmB9L7mxsgit4AUtY2AJdSb4zPNcPLWAjFa",
+  CONTRACT_ADDRESS: "5GiBMN5BBqys2aTv1tZ3SpTrw78Pc58DnSzpTnnd3sLCptMq",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x1f4a853b4dc5dc672c488e9ce4a31476268996ea23ad96c0040dd2189b28e185",
+      "hash": "0xae8f0d8d48d3d2a51af8512ca0970862999fa81e5f04583eb0160f436b623cfc",
       "language": "ink! 3.3.0",
-      "compiler": "rustc 1.63.0-nightly"
+      "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
       "name": "artzero_launchpad_psp34",
@@ -618,23 +618,6 @@ const launchpad_manager = {
             "selector": "0x908e3150"
           },
           {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
             "args": [
               {
                 "label": "new_owner",
@@ -670,6 +653,23 @@ const launchpad_manager = {
               "type": 15
             },
             "selector": "0x11f43efd"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [],

@@ -75,6 +75,7 @@ async function addWhitelist(caller_account, account, phaseId, amount, price) {
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
   const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  console.log(contract);
   contract.tx
     .addWhitelist({ gasLimit, value: azero_value }, account, phaseId, amount, minting_fee)
     .signAndSend(
@@ -121,29 +122,6 @@ async function getLastPhaseId(caller_account) {
   );
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
-  }
-  return null;
-}
-
-
-async function getPhasesCodeById(caller_account, phaseId) {
-  // console.log("getTotalSupply before check", !caller_account);
-  if (!contract || !caller_account) {
-    return null;
-  }
-
-  const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  //console.log(collection_manager_contract);
-
-  const { result, output } = await contract.query.getPhasesCodeById(
-    address,
-    { value: azero_value, gasLimit },
-    phaseId
-  );
-  if (result.isOk) {
-    return output.toHuman();
   }
   return null;
 }
@@ -230,6 +208,47 @@ async function getWhitelistByAccountId(caller_account, phaseId, accountAddress) 
   return null;
 }
 
+
+async function editProjectInformation(caller_account, projectInfo) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+  contract.tx
+    .editProjectInformation({ gasLimit, value: azero_value }, projectInfo)
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError", dispatchError.toString());
+          }
+        }
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+          toast.success(
+            `Edit project information ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
+  return unsubscribe;
+}
+
 async function whitelistMint(caller_account, phaseId, amount, minting_fee) {
   if (!contract || !caller_account) {
     return null;
@@ -290,12 +309,51 @@ async function getProjectInfo(caller_account) {
   return null;
 }
 
+async function updateBaseUri(caller_account, uri) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+  console.log(contract);
+  contract.tx["launchPadPsp34NftStandardTraits::setBaseUri"]({ gasLimit, value: azero_value }, uri)
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError", dispatchError.toString());
+          }
+        }
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+          toast.success(
+            `Update base uri ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
+  return unsubscribe;
+}
+
 const launchpad_psp34_nft_standard_calls = {
   getTotalSupply,
   getLastPhaseId,
   setContract,
   getPhaseScheduleById,
-  getPhasesCodeById,
   addWhitelist,
   getCurrentPhase,
   getWhitelistByAccountId,
@@ -303,7 +361,9 @@ const launchpad_psp34_nft_standard_calls = {
   getPhaseAccountLastIndex,
   getPhaseAccountLinkByPhaseId,
   getProjectInfoByHash,
-  getProjectInfo
+  getProjectInfo,
+  editProjectInformation,
+  updateBaseUri
 };
 
 export default launchpad_psp34_nft_standard_calls;

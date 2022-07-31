@@ -228,18 +228,6 @@ const LaunchpadDetailPage = () => {
         <Flex w="full" mb="15px">
           <Heading size="h4">Phases</Heading>
           <Spacer />
-
-          <Button
-            variant="solid"
-            onClick={() =>
-              history.push({
-                state: { formMode: "EDIT", collection_address },
-                pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
-              })
-            }
-          >
-            edit project
-          </Button>
         </Flex>
 
         {phases && phases.length

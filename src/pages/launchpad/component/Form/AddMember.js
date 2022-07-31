@@ -10,14 +10,14 @@ import ImageUpload from "@components/ImageUpload/Collection";
 function AddMember({ name, mode }) {
   const [{ value }, , helpers] = useField(name);
   // const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
-
+  console.log(value);
 
   // const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
 
   const handleAvatarUrl = (hash, index) => {
     const valueAddHash = value.map((i, idx) => {
       const avatarHash = idx !== index ? i.avatar : hash;
-
+      console.log('handleAvatarUrl', avatarHash);
       return { ...i, avatar: avatarHash };
     });
 

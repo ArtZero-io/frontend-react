@@ -137,7 +137,8 @@ import {
       const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
       let phasesTmp = [];
       for (let i = 1; i <= totalPhase; i++) {
-        const phaseCode = await launchpad_psp34_nft_standard_calls.getPhasesCodeById(currentAccount, i);
+        const phaseSchedule = await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(currentAccount, i);
+        const phaseCode = phaseSchedule.title;
         const phaseInfo = {
           id: i,
           code: phaseCode
@@ -162,10 +163,9 @@ import {
         console.log('MyWhiteListProjectPage::totalPhaseAccountLink', totalPhaseAccountLink);
         for (let i = 1; i <= totalPhaseAccountLink; i++) {
           const whitelistPhaseAccountAddress = await launchpad_psp34_nft_standard_calls.getPhaseAccountLinkByPhaseId(currentAccount, phaseId, i);
-          const phaseCode = await launchpad_psp34_nft_standard_calls.getPhasesCodeById(currentAccount, phaseId);
-          console.log('MyWhiteListProjectPage::whitelistPhaseAccountAddress', whitelistPhaseAccountAddress);
-          console.log('MyWhiteListProjectPage::phaseCode', phaseCode);
-          const whiteListData = await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(currentAccount, phaseCode, whitelistPhaseAccountAddress);
+          const phaseSchedule = await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(currentAccount, phaseId);
+          const phaseCode = phaseSchedule.title;
+          const whiteListData = await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(currentAccount, i, whitelistPhaseAccountAddress);
           console.log('MyWhiteListProjectPage::whiteListData', whiteListData);
           if (whiteListData) {
             const whiteListDataItemTmp = {
