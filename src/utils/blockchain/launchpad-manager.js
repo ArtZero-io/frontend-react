@@ -1,8 +1,8 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5CVHjRzNaUfY8MsoqtbhS78FDNJ6dBygzJ1tTinE2WzEeKJH",
+  CONTRACT_ADDRESS: "5H7V7ZxQ83is2kmB9L7mxsgit4AUtY2AJdSb4zPNcPLWAjFa",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xdb53c224e4874778ec60fe1c7427a68824413c9c10257963a24b6606dfaeba57",
+      "hash": "0x1f4a853b4dc5dc672c488e9ce4a31476268996ea23ad96c0040dd2189b28e185",
       "language": "ink! 3.3.0",
       "compiler": "rustc 1.63.0-nightly"
     },
@@ -189,6 +189,24 @@ const launchpad_manager = {
                     "u64"
                   ],
                   "type": 5
+                }
+              },
+              {
+                "label": "total_public_minting_amount",
+                "type": {
+                  "displayName": [
+                    "u64"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "label": "public_minting_fee",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 13
                 }
               },
               {
@@ -600,6 +618,23 @@ const launchpad_manager = {
             "selector": "0x908e3150"
           },
           {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
+          },
+          {
             "args": [
               {
                 "label": "new_owner",
@@ -662,23 +697,6 @@ const launchpad_manager = {
               "type": 15
             },
             "selector": "0x5e228753"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
           },
           {
             "args": [],
