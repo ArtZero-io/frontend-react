@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -11,21 +10,21 @@ import {
   Skeleton,
   Stack,
   Text,
+  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { IPFS_BASE_URL } from "@constants/index";
 import { convertStringToPrice } from "@utils";
 import useInterval from "use-interval";
 import { getCachedImageShort } from "@utils/index";
 import SocialCard from "@components/Card/Social";
 import * as ROUTES from "@constants/routes";
 import { useHistory } from "react-router-dom";
-import { truncateStr } from "../../../utils";
 import { useSubstrateState } from "@utils/substrate";
-import { async } from "rxjs";
+import UpdateURIModal from "./Modal/UpdateURIModal";
+import UpdatePhasesModal from "./Modal/UpdatePhasesModal";
 
 function LaunchpadDetailHeader({
   project,
@@ -35,9 +34,20 @@ function LaunchpadDetailHeader({
   const [livePhase, setLivePhase] = useState({});
   const { phases, projectOwner } = project;
   const [countDownTimer, setCountDownTimer] = useState({});
-  console.log("projectproject", project);
+
   const history = useHistory();
   const { currentAccount } = useSubstrateState();
+
+  const {
+    isOpen: isOpenURI,
+    onOpen: onOpenURI,
+    onClose: onCloseURI,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenPhase,
+    onOpen: onOpenPhase,
+    onClose: onClosePhase,
+  } = useDisclosure();
 
   useEffect(() => {
     if (phases?.length > 0) {
@@ -118,36 +128,38 @@ function LaunchpadDetailHeader({
                   {/* <Text mr="30px" fontSize={["sm", "md", "md"]}>
                     Project creator: {truncateStr(projectOwner)}
                   </Text> */}
-                  {(currentAccount && currentAccount.address && projectOwner == currentAccount.address) && (
-                  <>
-                    <Button
-                      px="16px"
-                      variant="outline"
-                      onClick={() =>
-                        history.push({
-                          state: { formMode: "EDIT", collection_address },
-                          pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
-                        })
-                      }
-                    >
-                      edit project information
-                    </Button>
-                    <Button
-                      px="16px"
-                      variant="outline"
-                    >
-                      Update Base Uri
-                    </Button>
-                    <Button
-                      px="16px"
-                      variant="outline"
-                    >
-                      Update Phases
-                    </Button>
-                  </>
-                  
-                  )}
-                  {" "}
+                  {currentAccount &&
+                    currentAccount.address &&
+                    projectOwner === currentAccount.address && (
+                      <>
+                        <Button
+                          px="16px"
+                          variant="outline"
+                          onClick={() =>
+                            history.push({
+                              state: { formMode: "EDIT", collection_address },
+                              pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
+                            })
+                          }
+                        >
+                          edit project information
+                        </Button>
+                        <Button
+                          px="16px"
+                          variant="outline"
+                          onClick={() => onOpenURI()}
+                        >
+                          Update Base Uri
+                        </Button>
+                        <Button
+                          px="16px"
+                          variant="outline"
+                          onClick={() => onOpenPhase()}
+                        >
+                          Update Phases
+                        </Button>
+                      </>
+                    )}{" "}
                 </Stack>
                 <Flex
                   alignItems="start"
@@ -332,6 +344,8 @@ function LaunchpadDetailHeader({
           ]}
         />
       </Box>
+      <UpdateURIModal isOpen={isOpenURI} onClose={onCloseURI} />
+      <UpdatePhasesModal isOpen={isOpenPhase} onClose={onClosePhase} />
     </Box>
   );
 }

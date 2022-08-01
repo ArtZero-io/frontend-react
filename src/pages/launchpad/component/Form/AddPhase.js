@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Button, Heading, HStack, Stack, Text } from "@chakra-ui/react";
 import { FieldArray, useField } from "formik";
 import Input from "@components/Input/Input";
@@ -33,20 +34,22 @@ function AddPhase({ name, mode }) {
       const phaseStart = value[value?.length - 1]?.start;
       const phaseEnd = value[value?.length - 1]?.end;
 
+      // TEMP COMMENT DUE TO USE FOR UPDATE PHASES SEPARATELY
+
       // if (phaseStart < Date.now()) {
       //   toast.error("Start time of phase must be greater than current time!");
       //   return;
       // }
 
-      if (
-        prjStartTime <= phaseStart &&
-        phaseStart <= phaseEnd &&
-        phaseEnd <= prjEndTime
-      ) {
-        arrayHelpers.push({ name: "", start: "", end: "" });
-      } else {
-        toast.error("Phase time is not valid.");
-      }
+      // if (
+      //   prjStartTime <= phaseStart &&
+      //   phaseStart <= phaseEnd &&
+      //   phaseEnd <= prjEndTime
+      // ) {
+      arrayHelpers.push({ name: "", start: "", end: "" });
+      // } else {
+      //   toast.error("Phase time is not valid.");
+      // }
     }
 
     if (value?.length > 1) {
