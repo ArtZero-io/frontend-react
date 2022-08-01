@@ -12,39 +12,42 @@ import {
 import { Field } from "formik";
 
 export default function AddCollectionNumberInput({
-  label,
-  name,
-  isDisabled,
-  isDisplay = true,
-  inputWidth,
   max,
-  hasStepper = true,
-  precision = 2,
+  name,
+  label,
+  inputWidth,
+  isDisabled,
   step = 0.5,
+  precision = 2,
   height = "48px",
+  isDisplay = true,
+  hasStepper = true,
+  isRequired = false,
   ...props
 }) {
   return (
-    <Box style={{ display: isDisplay ? "block" : "none" }}>
+    <Box style={{ display: isDisplay ? "block" : "none" }} width="600px">
       <Field name={name}>
         {({ field, form }) => (
-          <FormControl id={name}>
+          <FormControl id={name} isRequired={isRequired}>
             <FormLabel ml={1} htmlFor={name}>
               {label}
             </FormLabel>
+
             <NumberInput
               {...field}
               min={0}
               id={name}
               bg="black"
+              max={max}
               step={step}
               w={inputWidth}
-              max={max}
               precision={precision}
               isDisabled={isDisabled}
               onChange={(val) => form.setFieldValue(field.name, val)}
             >
               <NumberInputField borderRadius="0" h={height} />
+
               {hasStepper && (
                 <NumberInputStepper>
                   <NumberIncrementStepper />

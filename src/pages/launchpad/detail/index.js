@@ -270,6 +270,7 @@ const LaunchpadDetailPage = () => {
             ))
           : ""}
       </Box>
+      
       <Box
         w="full"
         maxW="870px"

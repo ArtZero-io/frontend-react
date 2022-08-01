@@ -1,7 +1,16 @@
 /* eslint-disable no-unused-vars */
 // eslint-disable-next-line no-unused-vars
 import { APICall } from "@api/client";
-import { Box, Flex, Heading, Stack, Text, Spacer } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  Stack,
+  Text,
+  Spacer,
+  HStack,
+  VStack,
+} from "@chakra-ui/react";
 import StatusButton from "@components/Button/StatusButton";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import ImageUpload from "@components/ImageUpload/Collection";
@@ -34,25 +43,9 @@ import AdvancedModeInput from "@components/Input/Input";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import AddCollectionNumberInput from "@components/Input/NumberInput";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+import CommonStack from "./CommonStack";
 
 const client = create(IPFS_CLIENT_URL);
-
-// 1. Project info tab
-// project name
-// Start time - End time
-// project desc
-// project roadmap dang add more
-// project team member dang add more
-// Project Header Image
-
-// 2. NFT info tab
-// Name
-// Symbol
-// Total Supply
-
-// 3. Phase Info
-// có 3 item default (OG, Whitelist Mint, Public Mint) dạng add more
-// phase item gồm {code, name, start time, end time}
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -118,7 +111,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     };
 
     prepareData();
-  }, [api, currentAccount, mode, nftContractAddress]);
+  }, [
+    addingFee,
+    api,
+    currentAccount,
+    maxRoyalFeeRate,
+    mode,
+    nftContractAddress,
+  ]);
 
   const handleOnchangeSchedule = (e, setFieldValue) => {
     if (!e) {
@@ -144,10 +144,11 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   return (
     <>
       {initialValues && (
-        <>
-          <Heading size={"h5"} pb="30px" textAlign="center">
-            {`${mode === "ADD" ? "Add new" : "Edit"} project`}
+        <Stack pb="120px">
+          <Heading size={"h3"} pb="30px" textAlign="center">
+            {`${mode === "ADD" ? "create new" : "edit"} project`}
           </Heading>
+
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
@@ -254,8 +255,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 collectionAddingFee: addingFee,
               };
 
-              
-
               if (mode === formMode.ADD) {
                 dispatch({
                   type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
@@ -263,7 +262,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     status: "Start",
                   },
                 });
-                console.log("xOUTxxvalues", values);
+
                 const createNewCollection = async (nft_address) => {
                   console.log("createNewCollection nft_address", nft_address);
                   // Lay gia tri nft_address tu launchpad_contract_calls roi tao collection
@@ -327,45 +326,32 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     team_members: values.members,
                     roadmaps: values.roadmap,
                   };
-    
+
                   const project_info_ipfs = await client.add(
                     JSON.stringify(project_info)
                   );
-                  const launchpad_psp34_nft_standard_contract = new ContractPromise(
-                    api,
-                    launchpad_psp34_nft_standard.CONTRACT_ABI,
-                    location.state?.collection_address
+                  const launchpad_psp34_nft_standard_contract =
+                    new ContractPromise(
+                      api,
+                      launchpad_psp34_nft_standard.CONTRACT_ABI,
+                      location.state?.collection_address
+                    );
+                  launchpad_psp34_nft_standard_calls.setContract(
+                    launchpad_psp34_nft_standard_contract
                   );
-                  launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
                   await launchpad_psp34_nft_standard_calls.editProjectInformation(
                     currentAccount,
                     project_info_ipfs.path
                   );
-                  
-                  // await collection_manager_calls.setMultipleAttributes(
-                  //   currentAccount,
-                  //   nftContractAddress,
-                  //   data.attributes,
-                  //   data.attributeVals,
-                  //   dispatch,
-                  //   api
-                  // );
                 }
               }
-
-              
             }}
           >
             {({ values, dirty, isValid, setFieldValue, ...rest }) => (
               <Form>
-                <Stack>
-                  <Heading size="h4">1. Project info</Heading>
-
-                  <Stack
-                    align="start"
-                    direction={{ base: "column", md: "row" }}
-                  >
-                    <Stack w={{ base: "100%", md: "50%" }}>
+                <CommonStack stackTitle="1. project info">
+                  <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
+                    <Stack w={["100%", "406px"]}>
                       <Input
                         type="text"
                         name="name"
@@ -373,31 +359,34 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         label="Project name"
                         placeholder="Project name"
                         isDisabled={addCollectionTnxStatus}
-                      />
+                      />{" "}
                     </Stack>
-                    {mode === formMode.ADD && (
-                    <Stack pb="30px">
-                      <Text fontSize="lg" ml={1} mb="10px">
-                        Start time - End time
-                      </Text>
-                      <DateTimeRangePicker
-                        onChange={(e) =>
-                          handleOnchangeSchedule(e, setFieldValue)
-                        }
-                        value={
-                          !values?.startTime
-                            ? null
-                            : [
-                                new Date(parseInt(values?.startTime)),
-                                new Date(parseInt(values?.endTime)),
-                              ]
-                        }
-                        locale="en-EN"
-                      />
-                      {/* TEMP FIX with parseInt */}
-                    </Stack>)}
+
+                    <Stack w="full">
+                      <Stack pb="30px">
+                        <Text fontSize="lg" ml={1} mb="10px">
+                          Start time - End time
+                        </Text>
+                        <DateTimeRangePicker
+                          onChange={(e) =>
+                            handleOnchangeSchedule(e, setFieldValue)
+                          }
+                          value={
+                            !values?.startTime
+                              ? null
+                              : [
+                                  new Date(parseInt(values?.startTime)),
+                                  new Date(parseInt(values?.endTime)),
+                                ]
+                          }
+                          locale="en-EN"
+                        />
+                        {/* TEMP FIX with parseInt */}
+                      </Stack>
+                    </Stack>
                   </Stack>
-                  <Stack direction={["column", "row"]}>
+
+                  <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
                     <CommonInput
                       type="text"
                       name="website"
@@ -420,6 +409,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       isDisabled={addCollectionTnxStatus}
                     />
                   </Stack>
+
                   <Stack>
                     <TextArea
                       height="140"
@@ -430,23 +420,33 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       placeholder="Project description"
                       // isDisabled={addCollectionTnxStatus}
                     />
-                    {mode === formMode.ADD && (<Stack
-                      direction={{ base: "column", "2xl": "row" }}
-                      alignItems="end"
-                      minH={20}
-                      minW={52}
-                    >
-                      <AdvancedModeSwitch
-                        isDisabled={addCollectionTnxStatus}
-                        onChange={() => {
-                          values.collectRoyalFee = !values.collectRoyalFee;
-                          setIsSetRoyal(!isSetRoyal);
-                        }}
-                        label="Collect Royal Fee"
-                        name="collectRoyalFee"
-                      />
-                    </Stack>)}
-                    
+                  </Stack>
+
+                  <Stack
+                    minH="80px"
+                    alignItems={["start", "end"]}
+                    gap={["10px", "30px"]}
+                    direction={["column", "row"]}
+                  >
+                    {mode === formMode.ADD && (
+                      <Stack
+                        bg=""
+                        minW={52}
+                        alignItems="end"
+                        direction={{ base: "column", "2xl": "row" }}
+                      >
+                        <AdvancedModeSwitch
+                          name="collectRoyalFee"
+                          label="Collect Royal Fee"
+                          isDisabled={addCollectionTnxStatus}
+                          onChange={() => {
+                            values.collectRoyalFee = !values.collectRoyalFee;
+                            setIsSetRoyal(!isSetRoyal);
+                          }}
+                        />
+                      </Stack>
+                    )}
+
                     <AddCollectionNumberInput
                       isDisabled={!isSetRoyal || addCollectionTnxStatus}
                       isDisplay={isSetRoyal}
@@ -457,18 +457,27 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       placeholder="Royal Fee"
                       inputWidth={"8rem"}
                     />
-                    <Spacer />
-                    <Heading size="h6">project roadmap</Heading>
-                    <AddRoadmap name="roadmap" />
+                  </Stack>
 
-                    <Heading size="h6">project team member</Heading>
+                  <Stack my="30px">
+                    <Heading size="h5" mb="30px">
+                      project roadmap
+                    </Heading>
+                    <AddRoadmap name="roadmap" />
+                  </Stack>
+
+                  <Stack my="30px">
+                    <Heading size="h5" mb="30px">
+                      project team member
+                    </Heading>
                     <AddMember name="members" />
                   </Stack>
+
                   <Stack
                     py="20px"
                     alignItems="start"
                     justifyContent="space-between"
-                    direction={{ base: "column", xl: "row" }}
+                    direction={["column", "row"]}
                   >
                     <Stack
                       w="50%"
@@ -476,6 +485,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       alignItems="start"
                       justifyContent="end"
                     >
+                      <Heading size="h5">project avatar image</Heading>{" "}
+                      <Text pt="30px">Choose avatar image</Text>
                       <ImageUpload
                         isDisabled={addCollectionTnxStatus}
                         id="avatar"
@@ -483,8 +494,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         isBanner={false}
                         imageIPFSUrl={avatarIPFSUrl}
                         setImageIPFSUrl={setAvatarIPFSUrl}
-                        title="Project Avatar Image"
-                        limitedSize={{ width: "100", height: "100" }}
+                        // title="Project Avatar Image"
+                        limitedSize={{ width: "500", height: "500" }}
                       />
                     </Stack>
 
@@ -494,11 +505,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       alignItems="start"
                       justifyContent="end"
                     >
+                      <Heading size="h5">project header image</Heading>
+                      <Text pt="30px">Choose header image</Text>
+
                       <ImageUpload
                         id="header"
                         mode={mode}
                         isBanner={true}
-                        title="Project Header Image"
+                        // title="Project Header Image"
                         imageIPFSUrl={headerIPFSUrl}
                         isDisabled={addCollectionTnxStatus}
                         setImageIPFSUrl={setHeaderIPFSUrl}
@@ -506,116 +520,78 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       />
                     </Stack>
                   </Stack>
-                </Stack>
+                </CommonStack>
 
-                <Stack>
-                  <Heading size="h4"> 2. NFT info</Heading>
-                    <Stack direction={{ base: "row", xl: "row" }}>
-                      <>
-                        <Input
-                          type="text"
-                          name="nftName"
-                          label="NFT Name"
-                          isRequired={true}
-                          placeholder="NFT Name"
-                          isDisabled={addCollectionTnxStatus}
-                        />
-                        <Input
-                          type="text"
-                          name="nftSymbol"
-                          label="NFT Symbol"
-                          isRequired={true}
-                          placeholder="NFT Symbol"
-                          isDisabled={addCollectionTnxStatus}
-                        />
-                      </>
-                      {mode === formMode.ADD && (
-                        <Box pb="24px">
-                          <NumberInput
-                            // step={1}
-                            // type="number"
-                            // placeholder="9999"
-                            height="52px"
-                            precision={0}
-                            name="totalSupply"
-                            hasStepper={false}
-                            inputWidth={"8rem"}
-                            label="Total Supply"
-                            // isDisabled={addCollectionTnxStatus}
-                          />
-                        </Box>
-                      )}
-                    </Stack>
-                    {mode === formMode.ADD && (
-                    <Stack direction={{ base: "row", xl: "row" }}>
+                <CommonStack stackTitle="2. nft info">
+                  <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
+                    <CommonInput
+                      type="text"
+                      name="nftName"
+                      label="NFT Name"
+                      isRequired={true}
+                      placeholder="NFT Name"
+                      isDisabled={addCollectionTnxStatus}
+                    />
+
+                    <CommonInput
+                      type="text"
+                      name="nftSymbol"
+                      label="NFT Symbol"
+                      isRequired={true}
+                      placeholder="NFT Symbol"
+                      isDisabled={addCollectionTnxStatus}
+                    />
+
                     <NumberInput
-                          // step={1}
-                          // type="number"
-                          // placeholder="9999"
-                          height="52px"
-                          name="publicMintingFee"
-                          hasStepper={false}
-                          inputWidth={"10rem"}
-                          label="Public Minting Fee"
-                          // isDisabled={addCollectionTnxStatus}
-                        />
-                      <Box pb="24px">
-                        <NumberInput
-                          // step={1}
-                          // type="number"
-                          // placeholder="9999"
-                          height="52px"
-                          precision={0}
-                          name="totalPublicMintingAmount"
-                          hasStepper={false}
-                          inputWidth={"8rem"}
-                          label="Total Public Minting Amount"
-                          // isDisabled={addCollectionTnxStatus}
-                        />
-                      </Box>
-                      </Stack>)}
+                      height="52px"
+                      precision={0}
+                      isRequired={true}
+                      name="totalSupply"
+                      hasStepper={false}
+                      inputWidth={"260px"}
+                      label="Total Supply"
+                      // step={1}
+                      // type="number"
+                      // placeholder="9999"
+                      // isDisabled={addCollectionTnxStatus}
+                    />
+                  </Stack>
+                </CommonStack>
 
-                </Stack>
-                {mode === formMode.ADD && (
-                <Stack>
-                  <Heading size="h4"> 3. Phase Info</Heading>
+                <CommonStack stackTitle="3. phases info">
                   <AddPhase name="phases" />
-                </Stack>)}
+                </CommonStack>
 
-                {mode === formMode.ADD && (
-                  <Flex alignItems="center" minH={20} mt={5}>
-                    <Flex
-                      direction="column"
-                      justifyContent="flex-start"
-                      alignItems="flex-start"
-                      textAlign="left"
-                    >
-                      <Text color="#fff">
-                        Create new collection you will pay
-                        <strong> {"xxx"} $AZERO </strong> in fee to ArtZero.io
-                      </Text>
-
-                      <CommonCheckbox
-                        isDisabled={addCollectionTnxStatus}
-                        name="agreeTosCheckbox"
-                        content="I agree to ArtZero's Terms of Service"
-                      />
-                    </Flex>
-                  </Flex>
-                )}
-
-                <StatusButton
-                  mode={mode}
-                  text="project"
-                  isLoading={addCollectionTnxStatus}
-                  // disabled={!(dirty && isValid) && noImagesChange}
-                  loadingText={`${addCollectionTnxStatus?.status}`}
-                  type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
-                />
+                <VStack>
+                  <Text color="#fff">
+                    Create new collection you will pay
+                    <strong> 999 $AZERO </strong> in fee to ArtZero.io
+                  </Text>
+                  <HStack justifyContent="center">
+                    <CommonCheckbox
+                      justifyContent="center"
+                      isDisabled={addCollectionTnxStatus}
+                      name="agreeTosCheckbox"
+                      content="I agree to ArtZero's Terms of Service"
+                    />
+                  </HStack>
+                  <Stack w="940px">
+                    <StatusButton
+                      // w="940px"
+                      // w="full"
+                      mode={mode}
+                      text="project"
+                      isLoading={addCollectionTnxStatus}
+                      // disabled={!(dirty && isValid) && noImagesChange}
+                      loadingText={`${addCollectionTnxStatus?.status}`}
+                      type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
+                    />
+                  </Stack>
+                </VStack>
               </Form>
             )}
           </Formik>
-        </>
+        </Stack>
       )}
     </>
   );

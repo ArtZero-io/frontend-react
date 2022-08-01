@@ -1,5 +1,4 @@
-import { DeleteIcon } from "@chakra-ui/icons";
-import { Box, Button, Flex, IconButton, Stack, Text } from "@chakra-ui/react";
+import { Button, Heading, HStack, Stack, Text } from "@chakra-ui/react";
 import { FieldArray, useField } from "formik";
 import Input from "@components/Input/Input";
 import { formMode } from "@constants";
@@ -68,53 +67,37 @@ function AddPhase({ name, mode }) {
   };
 
   return (
-    <>
-      <Flex>
-        <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
-          <Text fontSize={"lg"} color="#fff">
-            Name
-          </Text>
-        </Box>
-        <Box mb={4} flexGrow={1} textAlign="left" pl={3} w={16}>
-          <Text fontSize={"lg"} color="#fff">
-            Start time
-          </Text>
-        </Box>
-        <Box mb={4} flexGrow={2} textAlign="left" pl={3} minW={16} w={20}>
-          <Text fontSize={"lg"} color="#fff">
-            End time
-          </Text>
-        </Box>
-      </Flex>
+    <FieldArray
+      name="phases"
+      render={(arrayHelpers) => {
+        const phasesErrors = arrayHelpers?.form?.errors?.members;
 
-      <FieldArray
-        name="phases"
-        render={(arrayHelpers) => {
-          return (
-            <div>
-              {value?.map((phases, index) => (
-                <div key={index}>
-                  <Flex alignItems="flex-start" mb={4}>
-                    <IconButton
-                      size="icon"
-                      aria-label="delete"
-                      variant="iconOutline"
-                      icon={<DeleteIcon fontSize="24px" />}
-                      isDisabled={index === 0 && value.length === 1}
-                      onClick={() => arrayHelpers.remove(index)}
-                    />
+        return (
+          <Stack>
+            {value?.map((_, index) => (
+              <Stack
+                key={index}
+                p={["10px", "30px"]}
+                gap={["0px", "0px"]}
+                border="2px solid #333"
+              >
+                <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
+                  <Stack w={["100%", "50%"]}>
                     <Input
-                      mx={5}
                       type="text"
-                      width="30%"
-                      height={16}
-                      flexGrow={10}
-                      isRequired={true}
-                      autoComplete="off"
                       name={`phases[${index}].name`}
+                      isRequired={true}
+                      label="Phase name"
                       placeholder="Phase name here"
-                    />
-                    <Stack w={{ base: "315px", xl: "775px" }} pb="30px">
+                      // isDisabled={addCollectionTnxStatus}
+                    />{" "}
+                  </Stack>
+
+                  <Stack w="full">
+                    <Stack pb="30px">
+                      <Text fontSize="lg" ml={1} mb="10px">
+                        Start time - End time
+                      </Text>
                       <DateTimeRangePicker
                         onChange={(e) => handlePhaseTime(e, index)}
                         value={
@@ -128,30 +111,61 @@ function AddPhase({ name, mode }) {
                         locale="en-EN"
                         name={`phase-time-${index}`}
                       />
+                      {/* TEMP FIX with parseInt */}
                     </Stack>
-                  </Flex>
-                </div>
-              ))}
-              <Flex pb={6}>
-                <Button
-                  variant="outline"
-                  type="button"
-                  isDisabled={
-                    mode === formMode.ADD &&
-                    // (hasEmptyLevel ||
-                    (!arrayHelpers?.form?.dirty ||
-                      arrayHelpers.form?.errors?.levels)
-                  }
-                  onClick={() => handleAddPhase(arrayHelpers)}
-                >
-                  Add more
-                </Button>
-              </Flex>
-            </div>
-          );
-        }}
-      />
-    </>
+                  </Stack>
+                </Stack>
+                <HStack justifyContent="end" w="full">
+                  <Heading
+                    _hover={{
+                      color: !(index === 0 && value.length === 1) && "#7ae7ff",
+                    }}
+                    fontSize="sm"
+                    color="#555"
+                    fontStyle="unset"
+                    cursor="pointer"
+                    fontFamily="Evogria"
+                    textDecoration="underline"
+                    onClick={() => {
+                      if (index === 0 && value.length === 1) return;
+                      arrayHelpers.remove(index);
+                    }}
+                    isDisabled={index === 0 && value.length === 1}
+                  >
+                    delete
+                  </Heading>
+                </HStack>
+              </Stack>
+            ))}
+
+            <Stack w="full" py="30px">
+              <Stack>
+                {typeof phasesErrors === "string" ? (
+                  <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                    {phasesErrors}
+                  </Text>
+                ) : null}
+              </Stack>
+
+              <Button
+                w="140px"
+                variant="solid"
+                type="button"
+                isDisabled={
+                  mode === formMode.ADD &&
+                  // (hasEmptyLevel ||
+                  (!arrayHelpers?.form?.dirty ||
+                    arrayHelpers.form?.errors?.levels)
+                }
+                onClick={() => handleAddPhase(arrayHelpers)}
+              >
+                add more
+              </Button>
+            </Stack>
+          </Stack>
+        );
+      }}
+    />
   );
 }
 

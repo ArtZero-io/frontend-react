@@ -1,23 +1,19 @@
-import { DeleteIcon } from "@chakra-ui/icons";
-import { Button, Flex, HStack, IconButton, Stack } from "@chakra-ui/react";
+import { Button, Heading, HStack, Stack, Text } from "@chakra-ui/react";
 import { FieldArray, useField } from "formik";
 import toast from "react-hot-toast";
 import Input from "@components/Input/Input";
 import { formMode } from "@constants";
 import ImageUpload from "@components/ImageUpload/Collection";
-// import { useState } from "react";
 
 function AddMember({ name, mode }) {
   const [{ value }, , helpers] = useField(name);
-  // const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
-  console.log(value);
 
   // const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
 
   const handleAvatarUrl = (hash, index) => {
     const valueAddHash = value.map((i, idx) => {
       const avatarHash = idx !== index ? i.avatar : hash;
-      console.log('handleAvatarUrl', avatarHash);
+      console.log("handleAvatarUrl", avatarHash);
       return { ...i, avatar: avatarHash };
     });
 
@@ -45,78 +41,96 @@ function AddMember({ name, mode }) {
     <FieldArray
       name="members"
       render={(arrayHelpers) => {
+        const membersErrors = arrayHelpers?.form?.errors?.members;
+
         return (
-          <div>
-            {value?.map((members, index) => (
-              <div key={index}>
-                <Stack
-                  mb={4}
-                  alignItems="flex-start"
-                  direction={{ base: "column", md: "row" }}
-                >
-                  <HStack w="full" alignItems="center">
-                    <IconButton
-                      size="icon"
-                      aria-label="delete"
-                      variant="iconOutline"
-                      mt={index === 0 ? "8px" : "-28px"}
-                      icon={<DeleteIcon fontSize="24px" />}
-                      onClick={() => arrayHelpers.remove(index)}
-                      isDisabled={index === 0 && value.length === 1}
-                    />
-                    <Input
-                      mx={5}
-                      type="text"
-                      width="45%"
-                      height={index === 0 ? "112px" : "78px"}
-                      isRequired={true}
-                      autoComplete="off"
-                      name={`members[${index}].name`}
-                      label={index === 0 && "Name"}
-                      placeholder="Your name here"
-                    />
-                    <Input
-                      mx={5}
-                      type="text"
-                      width="45%"
-                      height={index === 0 ? "112px" : "78px"}
-                      isRequired={true}
-                      autoComplete="off"
-                      name={`members[${index}].title`}
-                      label={index === 0 && "Title"}
-                      placeholder="Your title here"
-                    />
-                  </HStack>
-                  <HStack w="full" justifyContent="start" alignItems="center">
-                    <Input
-                      mx={5}
-                      width="30%"
-                      height={16}
-                      type="text"
-                      autoComplete="off"
-                      name={`members[${index}].socialLink`}
-                      label={index === 0 && "Social link"}
-                      placeholder="Your link here"
-                    />
-                    <ImageUpload
-                      // minH="50px"
-                      // title={index === 0 && "Avatar"}
-                      // isDisabled={addCollectionTnxStatus}
-                      index={index}
-                      mode={mode}
-                      isBanner={false}
-                      isRequired={true}
-                      id={`memberAvatar${index}`}
-                      // imageIPFSUrl={avatarIPFSUrl}
-                      setImageIPFSUrl={handleAvatarUrl}
-                    />
-                  </HStack>
+          <Stack>
+            {value?.map((_, index) => (
+              <Stack
+                key={index}
+                p={["10px", "30px"]}
+                gap={["0px", "0px"]}
+                border="2px solid #333"
+              >
+                <Stack direction={["column", "row"]} gap={["0px", "30px"]}>
+                  <Input
+                    type="text"
+                    width="100%"
+                    isRequired={true}
+                    autoComplete="off"
+                    name={`members[${index}].name`}
+                    label={"Name"}
+                    placeholder="Your name here"
+                  />
+                  <Input
+                    type="text"
+                    width="100%"
+                    isRequired={true}
+                    autoComplete="off"
+                    name={`members[${index}].title`}
+                    label={"Title"}
+                    placeholder="Your title here"
+                  />
                 </Stack>
-              </div>
+
+                <Stack direction={["column", "row"]} gap={["0px", "0px"]}>
+                  <Input
+                    width="100%"
+                    type="text"
+                    autoComplete="off"
+                    name={`members[${index}].socialLink`}
+                    label={"Social link"}
+                    placeholder="Your link here"
+                  />
+                </Stack>
+                <Stack direction={["column", "row"]} gap="30px">
+                  <ImageUpload
+                    title={"Member Avatar"}
+                    // isDisabled={addCollectionTnxStatus}
+                    index={index}
+                    mode={mode}
+                    isBanner={false}
+                    isRequired={true}
+                    id={`memberAvatar${index}`}
+                    // imageIPFSUrl={avatarIPFSUrl}
+                    setImageIPFSUrl={handleAvatarUrl}
+                    limitedSize={{ width: "500", height: "500" }}
+                  />
+                </Stack>
+                <HStack justifyContent="end" w="full">
+                  <Heading
+                    _hover={{
+                      color: !(index === 0 && value.length === 1) && "#7ae7ff",
+                    }}
+                    fontSize="sm"
+                    color="#555"
+                    fontStyle="unset"
+                    cursor="pointer"
+                    fontFamily="Evogria"
+                    textDecoration="underline"
+                    onClick={() => {
+                      if (index === 0 && value.length === 1) return;
+                      arrayHelpers.remove(index);
+                    }}
+                    isDisabled={index === 0 && value.length === 1}
+                  >
+                    delete
+                  </Heading>
+                </HStack>
+              </Stack>
             ))}
-            <Flex pb={6}>
+            <Stack w="full" py="30px">
+              <Stack>
+                {typeof membersErrors === "string" ? (
+                  <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                    {membersErrors}
+                  </Text>
+                ) : null}
+              </Stack>
+
               <Button
-                variant="outline"
+                w="140px"
+                variant="solid"
                 type="button"
                 isDisabled={
                   mode === formMode.ADD &&
@@ -128,8 +142,8 @@ function AddMember({ name, mode }) {
               >
                 add more
               </Button>
-            </Flex>
-          </div>
+            </Stack>
+          </Stack>
         );
       }}
     />

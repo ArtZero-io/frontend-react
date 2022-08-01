@@ -115,7 +115,7 @@ export const LaunchpadPage = () => {
           The premier destination to launch your NFT Collection on Aleph Zero
           Network.
         </Text>
-      </Box>
+      </Box> 
 
       <GroupCard variant="live" projectsList={liveProjects} loading={loading} />
 
