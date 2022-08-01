@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -14,6 +15,7 @@ import {
   Square,
   HStack,
   Checkbox,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -64,6 +66,8 @@ function MyNFTCard({
   const { location } = useHistory();
 
   const txStatus = useSelector((state) => state.txStatus);
+  const imgCardSize = useBreakpointValue([154, 220]);
+  const cardSize = useBreakpointValue([160, 226]);
 
   useInterval(() => {
     if (unstakeRequestTime) {
@@ -127,7 +131,7 @@ function MyNFTCard({
         borderColor: `${
           multiStakeData?.list?.includes(tokenID) ? "brand.blue" : "#7ae7ff00"
         }`,
-        maxWidth: "14rem",
+        maxWidth: cardSize,
 
         transitionDuration: "0.15s",
         transitionProperty: "all",
@@ -186,25 +190,29 @@ function MyNFTCard({
         h="full"
         shadow="lg"
       >
-        <Square h="13.75rem" w="13.75rem">
+        <Square h={imgCardSize} w={imgCardSize}>
           <Image
             alt={nftName}
             w="full"
             h="full"
             objectFit="cover"
             src={getCachedImageShort(avatar, 500)}
-            fallback={<Skeleton w="13.75rem" h="13.75rem" />}
+            fallback={<Skeleton w={imgCardSize} h={imgCardSize} />}
           />
         </Square>
 
         <Box w="full" p={3}>
-          <Heading mb={3} fontSize={["15px", "16px", "17px"]} textAlign="left">
+          <Heading mb={3} fontSize={["xs", "md"]} textAlign="left">
             {nftName}
           </Heading>
 
           <Flex align="center" justify="start" w="full" mb={3}>
             {stakeStatus === 3 ? (
-              <Text textAlign="center" color="brand.grayLight" size="2xs">
+              <Text
+                textAlign="center"
+                color="brand.grayLight"
+                fontSize={["xs", "md"]}
+              >
                 Unstake in {countdownTime?.h || 0}h : {countdownTime?.m || 0}m :{" "}
                 {countdownTime?.s || 0}s
               </Text>

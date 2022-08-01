@@ -5,6 +5,7 @@ import {
   Flex,
   Heading,
   Text,
+  useBreakpointValue,
   useDisclosure,
   useMediaQuery,
   VStack,
@@ -171,8 +172,8 @@ function MyNFTGroupCard({
       {!listNFTFormatted?.length ? (
         <VStack
           py={10}
-          align="start"
           ml={3}
+          align="start"
           justifyContent="center"
           borderBottomWidth={hasBottomBorder ? "1px" : "0px"}
         >
@@ -216,6 +217,8 @@ function GridNftA({
     action: null,
     list: [],
   });
+ 
+  const cardSize = useBreakpointValue([156, 224]);
 
   // const multiStakeDataRef = useRef(multiStakeData);
 
@@ -460,7 +463,7 @@ function GridNftA({
           // gridGap: "1.875rem",
           // borderBottom: "0.125rem",
           // gridAutoRows: "20.625rem",
-          gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, 224px), 1fr))`,
+          gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${cardSize}px), 1fr))`,
         }}
       >
         {listNFTFormatted.length > 0 &&

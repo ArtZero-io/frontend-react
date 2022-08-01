@@ -110,6 +110,7 @@ function CollectionHeader({
                       {name}
                     </Heading>
                     <Text
+                      px="30px"
                       w="full"
                       maxW="576px"
                       color="#fff"
@@ -237,15 +238,17 @@ function CollectionHeader({
 
             {/* // mobile + line */}
             <Divider
-              bg="#232323"
               width="300px"
+              borderWidth="1px"
+              borderColor="#232323"
               style={{ margin: 0 }}
               display={{ base: "inline", md: "none" }}
               transform="rotate(180deg) translateY(-10px) translateX(0px)"
             />
             <Divider
-              bg="#232323"
               width="267px"
+              borderWidth="1px"
+              borderColor="#232323"
               transform="rotate(90deg) translateY(5px)"
               display={{ base: "inline", md: "none" }}
             />

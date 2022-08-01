@@ -571,16 +571,22 @@ function MintHeader({ loading }) {
                 >
                   Enter amount to mint
                 </Text>
-                <Flex justify="space-between">
+                <Flex
+                  alignItems={"center"}
+                  justify="space-between"
+                  direction={["column", "row"]}
+                >
                   <NumberInput
-                    isDisabled={!whitelist}
                     bg="black"
-                    defaultValue={!whitelist ? "0" : "1"}
                     min={1}
-                    onChange={(valueString) => setWhitelistAmount(valueString)}
-                    value={whitelistAmount}
-                    mr={3}
+                    w="full"
+                    mr={[0, 3]}
                     h="3.125rem"
+                    mb={["10px", 0]}
+                    isDisabled={!whitelist}
+                    value={whitelistAmount}
+                    defaultValue={!whitelist ? "0" : "1"}
+                    onChange={(valueString) => setWhitelistAmount(valueString)}
                   >
                     <NumberInputField
                       h="3.125rem"
@@ -611,7 +617,7 @@ function MintHeader({ loading }) {
                     onClick={onWhiteListMint}
                     variant="outline"
                     maxW="full"
-                    minW={{ base: "195px", xl: "225px" }}
+                    // minW={{ base: "195px", xl: "225px" }}
                     height="50px"
                   />
                 </Flex>
