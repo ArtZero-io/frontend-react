@@ -28,9 +28,15 @@ const PaginationMP = ({
   const onEnterHandler = (e) => {
     if (e.charCode === 13) {
       e.preventDefault();
-      if (isNaN(e.target.value)) return toast.error("Number only!!!");
-      if (e.target.value <= 0 || e.target.value > pagesCount)
+
+      if (isNaN(e.target.value)) {
+        return toast.error("Number only!!!");
+      }
+
+      if (e.target.value <= 0 || e.target.value > pagesCount) {
         return toast.error("Out of page range!!!");
+      }
+
       setCurrentPage(e.target.value);
     }
   };
@@ -44,27 +50,28 @@ const PaginationMP = ({
       <Text color="brand.grayLight" ml="1" mb="19px">
         Page {currentPage} of {pagesCount}
       </Text>
+
       <Pagination
+        isDisabled={isDisabled}
         pagesCount={pagesCount}
         currentPage={currentPage}
-        isDisabled={isDisabled}
         onPageChange={handlePageChange}
       >
         <PaginationContainer
-          align="center"
-          justify="space-between"
           p={0}
           w="full"
+          align="center"
+          justify="space-between"
         >
           <IconButton
-            color="#fff"
             mr={2}
             size="icon"
-            icon={<ArrowLeftIcon />}
+            color="#fff"
             variant="iconSolid"
             aria-label="go-start"
-            onClick={() => setCurrentPage(1)}
+            icon={<ArrowLeftIcon />}
             disabled={currentPage === 1}
+            onClick={() => setCurrentPage(1)}
             _disabled={{
               bg: "#222",
               color: "#555",

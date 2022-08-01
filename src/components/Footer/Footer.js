@@ -1,9 +1,9 @@
-import { Box, Flex, Heading, Stack, Text, VStack } from "@chakra-ui/react";
 import * as React from "react";
-
-import { ArtZeroLogo } from "../../theme/assets/logo/ArtZeroLogo";
-import SocialCard from "@components/Card/Social";
 import { useLocation } from "react-router-dom";
+
+import { Box, Flex, Heading, Stack, Text, VStack } from "@chakra-ui/react";
+import SocialCard from "@components/Card/Social";
+import { ArtZeroLogo } from "@theme/assets/logo/ArtZeroLogo";
 
 const profile = [
   { discord: "https://discord.gg/wzkZ2JTvN4" },
@@ -73,18 +73,13 @@ export const Footer = () => {
             </Box>
 
             <VStack w="full">
-              <Heading
-                fontSize={["13px", null, "18px"]}
-                lineHeight={["21px", null, "30px"]}
-                color="brand.blue"
-                mt="2"
-              >
+              <Heading fontSize={["sm", "lg"]} color="brand.blue" mt="2">
                 discover, collect and trade nfts on artzero
               </Heading>
               <Text
-                pt={{ base: 3, xl: "auto" }}
                 color="#888"
-                fontSize={["13px", "16px", "16px"]}
+                fontSize={["sm", "md"]}
+                pt={{ base: 3, xl: "auto" }}
               >
                 &copy; Copyright {new Date().getFullYear()} ArtZero. All Rights
                 Reserved
@@ -105,11 +100,11 @@ export const Footer = () => {
               align="center"
             >
               <Text
-                fontFamily="Evogria "
-                size="h6"
                 mr="4"
+                size="h6"
                 fontSize="15px"
                 fontStyle="normal"
+                fontFamily="Evogria, sans-serif"
               >
                 contact
               </Text>

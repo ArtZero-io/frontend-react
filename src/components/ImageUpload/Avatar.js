@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
 import { create } from "ipfs-http-client";
@@ -8,10 +9,12 @@ import {
   HStack,
   Image,
   Spacer,
+  Square,
   Tag,
   TagLabel,
   TagLeftIcon,
   Text,
+  useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
 import { HiCloudUpload } from "react-icons/hi";
@@ -36,7 +39,7 @@ export default function ImageUploadAvatar({
 
   const [newAvatarData, setNewAvatarData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
-
+  const avatarProfileSize = useBreakpointValue([260, 360]);
   const ref = useRef();
 
   const retrieveNewAvatar = (e) => {
@@ -134,28 +137,34 @@ export default function ImageUploadAvatar({
     <VStack h="full" justifyContent="flex-start" alignItems="start">
       <Box>
         {imagePreviewUrl && (
-          <Image
-            alt="avatar"
-            boxShadow="base"
-            objectFit="cover"
-            boxSize={["260px", "360px"]}
-            src={imagePreviewUrl}
-          />
+          <Square size={["260px", "360px"]}>
+            <Image
+              h="full"
+              w="full"
+              alt="avatar"
+              boxShadow="base"
+              objectFit="cover"
+              objectPosition="center"
+              src={imagePreviewUrl}
+            />
+          </Square>
         )}
 
         {!imagePreviewUrl && profile?.avatar && (
-          <Image
-            alt="avatar"
-            boxShadow="base"
-            objectFit="cover"
-            boxSize={["260px", "360px"]}
-            src={getCachedImageShort(profile?.avatar, 500)}
-          />
+          <Square size={["260px", "360px"]}>
+            <Image
+              h="full"
+              w="full"
+              alt="avatar"
+              boxShadow="lg"
+              objectFit="cover"
+              objectPosition="center"
+              src={getCachedImageShort(profile?.avatar, 500)}
+            />
+          </Square>
         )}
 
-        {!imagePreviewUrl && !profile?.avatar && (
-          <IdenticonAvatar size={["260px", "360px"]} />
-        )}
+        {!imagePreviewUrl && !profile?.avatar && <IdenticonAvatar size={avatarProfileSize} />}
       </Box>
 
       <Center w="full" justifyContent="center">

@@ -10,6 +10,7 @@ import {
   IconButton,
   Link,
   Skeleton,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { FaInstagram, FaTwitter, FaTelegram, FaFacebook } from "react-icons/fa";
 import EditIcon from "@theme/assets/icon/Edit.js";
@@ -32,6 +33,8 @@ function ProfileHeader() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [profile, setProfile] = useState(null);
+
+  const avatarProfileSize = useBreakpointValue([64, 120]);
 
   const forceUpdate = useCallback(() => {
     setProfile(null);
@@ -99,7 +102,7 @@ function ProfileHeader() {
               }
             />
           )}
-          {!profile?.avatar && <IdenticonAvatar size={120} />}
+          {!profile?.avatar && <IdenticonAvatar size={avatarProfileSize} />}
         </Center>
 
         <HStack w="full" justifyContent="space-around" py={4}>

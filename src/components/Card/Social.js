@@ -1,4 +1,4 @@
-import { HStack, IconButton, Link } from "@chakra-ui/react";
+import { HStack, IconButton, Link, useBreakpointValue } from "@chakra-ui/react";
 import React, { Fragment } from "react";
 import {
   FaDiscord,
@@ -12,25 +12,27 @@ import { MdEmail } from "react-icons/md";
 import { BsMedium } from "react-icons/bs";
 
 function SocialCard({ profile, pos, right, top, bottom, justifyContent }) {
+  const iconSize = useBreakpointValue({ base: "20px", md: "24px" });
+
   const iconList = {
-    website: <FaGlobe size="24px" />,
-    telegram: <FaTelegram size="24px" />,
-    twitter: <FaTwitter size="24px" />,
-    facebook: <FaFacebook size="24px" />,
-    discord: <FaDiscord size="24px" />,
-    instagram: <FaInstagram size="24px" />,
-    mail: <MdEmail size="24px" />,
-    medium: <BsMedium size="24px" />,
+    mail: <MdEmail size={iconSize} />,
+    medium: <BsMedium size={iconSize} />,
+    website: <FaGlobe size={iconSize} />,
+    twitter: <FaTwitter size={iconSize} />,
+    discord: <FaDiscord size={iconSize} />,
+    telegram: <FaTelegram size={iconSize} />,
+    facebook: <FaFacebook size={iconSize} />,
+    instagram: <FaInstagram size={iconSize} />,
   };
 
   return (
     <HStack
       py="3"
-      textAlign="center"
       pos={pos}
-      right={right}
       top={top}
+      right={right}
       bottom={bottom}
+      textAlign="center"
       justifyContent={justifyContent}
     >
       {profile?.map((i, idx) => {
@@ -39,12 +41,13 @@ function SocialCard({ profile, pos, right, top, bottom, justifyContent }) {
             {Object.values(i)[0] ? (
               <Link isExternal href={`${Object.values(i)[0] || null}`}>
                 <IconButton
+                  variant="iconOutline"
+                  width={["40px", "50px"]}
+                  height={["40px", "50px"]}
                   aria-label={Object.keys(i)[0]}
                   icon={iconList[Object.keys(i)[0]]}
-                  size="icon"
-                  variant="iconOutline"
                   _hover={{
-                    bg: "#7ae7ff",
+                    bg: "brand.blue",
                     color: "black",
                     borderWidth: "0",
                   }}
@@ -53,10 +56,12 @@ function SocialCard({ profile, pos, right, top, bottom, justifyContent }) {
             ) : (
               <IconButton
                 isDisabled
+                variant="iconOutline"
+                width={["40px", "50px"]}
+                height={["40px", "50px"]}
                 aria-label={Object.keys(i)[0]}
                 icon={iconList[Object.keys(i)[0]]}
-                size="icon"
-                variant="iconOutline"
+                // size="icon"
                 _hover={{
                   bg: "#7ae7ff",
                   color: "black",

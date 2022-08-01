@@ -164,7 +164,7 @@ export const CollectionCard = ({
           <Text
             textTransform="none"
             textAlign="center"
-            noOfLines={[1, 3]}
+            noOfLines={3}
             maxW={{ base: "unset", md: "20rem" }}
             minH={"4.5rem"}
             color="#888"

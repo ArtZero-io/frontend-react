@@ -395,7 +395,7 @@ function GridNftA({
             position: "fixed",
             bottom: "30px",
             right: "30px",
-            zIndex: "9999",
+            zIndex: "98",
           }}
           animate={{
             y: [0, 1.5, 0],

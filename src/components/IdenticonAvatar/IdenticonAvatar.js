@@ -3,12 +3,16 @@ import { useSubstrateState } from "@utils/substrate";
 import { Circle } from "@chakra-ui/react";
 import Identicon from "@polkadot/react-identicon";
 
-function IdenticonAvatar({size}) {
+function IdenticonAvatar({ size }) {
   const { currentAccount } = useSubstrateState();
 
   return (
     <Circle bg="white">
-      <Identicon value={currentAccount?.address} size={size} theme="substrate" />
+      <Identicon
+        size={size}
+        theme="substrate"
+        value={currentAccount?.address}
+      />
     </Circle>
   );
 }
