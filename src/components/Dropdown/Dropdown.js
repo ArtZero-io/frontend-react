@@ -30,7 +30,7 @@ function Dropdown({ options, selectedItem, setSelectedItem, width }) {
           borderColor="transparent"
           textTransform="capitalize"
           color="#fff"
-          fontSize="lg"
+          fontSize={["md", "lg"]}
         >
           {options[selectedItem]}
         </MenuButton>

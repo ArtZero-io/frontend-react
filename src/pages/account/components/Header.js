@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Center,
@@ -25,6 +26,7 @@ import { getCachedImageShort } from "@utils";
 import ProfileModal from "./Modal/Profile";
 import toast from "react-hot-toast";
 import { truncateStr } from "@utils";
+import SocialCard from "@components/Card/Social";
 
 function ProfileHeader() {
   const dispatch = useDispatch();
@@ -108,7 +110,7 @@ function ProfileHeader() {
         <HStack w="full" justifyContent="space-around" py={4}>
           <VStack textAlign="center" justifyContent="space-between">
             <Center w="full" pos="relative">
-              <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>
+              <Heading fontSize={["3xl-mid", "5xl", "5xl"]} ml="40px">
                 {profile?.username || truncateStr(currentAccount.address)}
               </Heading>
               <IconButton
@@ -116,7 +118,12 @@ function ProfileHeader() {
                 bottom={["-4px", "-8px", "-8px"]}
                 right={["6px", "-8px", "-8px"]}
                 aria-label="edit"
-                icon={<EditIcon />}
+                icon={
+                  <EditIcon
+                    width={["20px", "28px"]}
+                    height={["20px", "28px"]}
+                  />
+                }
                 size="icon"
                 borderWidth={0}
                 variant="iconOutline"
@@ -135,80 +142,15 @@ function ProfileHeader() {
               {profile?.bio || "Something about yourself ..."}
             </Text>
 
-            <HStack textAlign="center">
-              {profile?.instagram ? (
-                <Link isexternal="true" href={`${profile?.instagram}`}>
-                  <IconButton
-                    aria-label="instagram"
-                    icon={<FaInstagram size="24px" />}
-                    size="icon"
-                    variant="iconOutline"
-                  />
-                </Link>
-              ) : (
-                <IconButton
-                  isDisabled
-                  aria-label="instagram"
-                  icon={<FaInstagram size="24px" />}
-                  size="icon"
-                  variant="iconOutline"
-                />
-              )}
-              {profile?.twitter ? (
-                <Link isexternal="true" href={`${profile?.twitter}`}>
-                  <IconButton
-                    aria-label="twitter"
-                    icon={<FaTwitter size="24px" />}
-                    size="icon"
-                    variant="iconOutline"
-                  />
-                </Link>
-              ) : (
-                <IconButton
-                  isDisabled
-                  aria-label="twitter"
-                  icon={<FaTwitter size="24px" />}
-                  size="icon"
-                  variant="iconOutline"
-                />
-              )}
-              {profile?.telegram ? (
-                <Link isexternal="true" href={`${profile?.telegram}`}>
-                  <IconButton
-                    aria-label="telegram"
-                    icon={<FaTelegram size="24px" />}
-                    size="icon"
-                    variant="iconOutline"
-                  />
-                </Link>
-              ) : (
-                <IconButton
-                  isDisabled
-                  aria-label="telegram"
-                  icon={<FaTelegram size="24px" />}
-                  size="icon"
-                  variant="iconOutline"
-                />
-              )}
-              {profile?.facebook ? (
-                <Link isexternal="true" href={`${profile?.facebook}`}>
-                  <IconButton
-                    aria-label="facebook"
-                    icon={<FaFacebook size="24px" />}
-                    size="icon"
-                    variant="iconOutline"
-                  />
-                </Link>
-              ) : (
-                <IconButton
-                  isDisabled
-                  aria-label="facebook"
-                  icon={<FaFacebook size="24px" />}
-                  size="icon"
-                  variant="iconOutline"
-                />
-              )}
-            </HStack>
+            {profile && (
+              <SocialCard
+                profile={Object.entries(profile)
+                  .splice(3, 4)
+                  .map(([k, v]) => {
+                    return { [k]: v };
+                  })}
+              />
+            )}
           </VStack>
         </HStack>
       </VStack>
