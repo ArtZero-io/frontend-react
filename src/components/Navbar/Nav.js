@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import { Box, Flex, Link, VisuallyHidden } from "@chakra-ui/react";
 import { NavContent } from "./NavContent";
@@ -31,11 +32,8 @@ function Nav() {
               alt="ArtZeroLogo"
             />
           </Link>
-          <NavContent.Mobile display={{ base: "flex", md: "none" }} />
-          <NavContent.Desktop
-            w={[0, "full", "full"]}
-            display={{ base: "none", md: "flex" }}
-          />
+          <NavContent.Mobile />
+          <NavContent.Desktop />
         </Flex>
       </Box>
     </Box>

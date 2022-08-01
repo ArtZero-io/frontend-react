@@ -46,7 +46,12 @@ const MobileNavContent = (props) => {
   const { currentAccount } = useSubstrateState();
 
   return (
-    <Flex w="full" {...props}>
+    <Flex
+      w="full"
+      {...props}
+      justifyContent="center"
+      display={{ base: "flex", md: "none" }}
+    >
       <Center
         position="absolute"
         top="13px"
@@ -59,15 +64,14 @@ const MobileNavContent = (props) => {
       >
         {isOpen ? <HiX size="20px" /> : <HiOutlineMenu size="20px" />}
       </Center>
-      <Flex w="full" ml="109px">
-        <ArtZeroLogo
-          zIndex="99"
-          alt="ArtZeroLogo"
-          height="20px"
-          width="138px"
-          display={{ base: "flex", md: "none" }}
-        />
-      </Flex>
+
+      <ArtZeroLogo
+        zIndex="99"
+        alt="ArtZeroLogo"
+        height="20px"
+        width="138px"
+        display={{ base: "flex", md: "none" }}
+      />
 
       <SearchDrawer
         position="absolute"
@@ -139,7 +143,7 @@ const MobileNavContent = (props) => {
             justifyContent="center"
             direction="column"
             pos="absolute"
-            bottom="150px"
+            bottom="160px"
             display={{ base: "flex", md: "none" }}
           >
             <Center w="full" textAlign="center">
@@ -166,7 +170,7 @@ const DesktopNavContent = (props) => {
   const { currentAccount } = useSubstrateState();
 
   return (
-    <Flex w="full">
+    <Flex w="full" display={{ base: "none", md: "flex" }}>
       <HStack
         w="full"
         align="stretch"

@@ -9,15 +9,15 @@ export const NavListItem = (props) => (
 )
 
 const variants = {
-  exit: {
-    opacity: 0,
-    y: 4,
-  },
-  enter: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.3,
-    },
-  },
+  // exit: {
+  //   opacity: 0,
+  //   y: 4,
+  // },
+  // enter: {
+  //   opacity: 1,
+  //   y: 0,
+  //   transition: {
+  //     duration: 0.3,
+  //   },
+  // },
 }
