@@ -344,8 +344,8 @@ function LaunchpadDetailHeader({
           ]}
         />
       </Box>
-      <UpdateURIModal isOpen={isOpenURI} onClose={onCloseURI} />
-      <UpdatePhasesModal isOpen={isOpenPhase} onClose={onClosePhase} />
+      <UpdateURIModal isOpen={isOpenURI} collection_address={collection_address} onClose={onCloseURI} />
+      <UpdatePhasesModal isOpen={isOpenPhase} collection_address={collection_address} onClose={onClosePhase} />
     </Box>
   );
 }

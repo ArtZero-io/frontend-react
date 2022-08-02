@@ -163,10 +163,13 @@ import {
         console.log('MyWhiteListProjectPage::totalPhaseAccountLink', totalPhaseAccountLink);
         for (let i = 1; i <= totalPhaseAccountLink; i++) {
           const whitelistPhaseAccountAddress = await launchpad_psp34_nft_standard_calls.getPhaseAccountLinkByPhaseId(currentAccount, phaseId, i);
+          console.log('whitelistPhaseAccountAddress', whitelistPhaseAccountAddress);
+          console.log('MyWhiteListProjectPage::phaseId', i);
           const phaseSchedule = await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(currentAccount, phaseId);
-          const phaseCode = phaseSchedule.title;
-          const whiteListData = await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(currentAccount, i, whitelistPhaseAccountAddress);
+          // const phaseCode = phaseSchedule.title;
+          const whiteListData = await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(currentAccount, phaseId, whitelistPhaseAccountAddress);
           console.log('MyWhiteListProjectPage::whiteListData', whiteListData);
+          
           if (whiteListData) {
             const whiteListDataItemTmp = {
               address: whitelistPhaseAccountAddress,

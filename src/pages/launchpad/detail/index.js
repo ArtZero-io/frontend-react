@@ -21,6 +21,8 @@ import Layout from "@components/Layout/Layout";
 import LaunchpadDetailHeader from "../component/Header";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { TeamCard } from "../component/TeamCard";
+import { clientAPI } from "@api/client";
+import MyLaunchPadNFTCard from './components/MyNFTCard';
 import {
   Link as ReactRouterLink,
   useHistory,
@@ -31,7 +33,7 @@ import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
 import { IPFS_BASE_URL } from "@constants/index";
-import { timestampWithoutCommas } from "@utils";
+import { timestampWithoutCommas, convertStringToPrice } from "@utils";
 import * as ROUTES from "@constants/routes";
 import { getCachedImageShort } from "@utils/index";
 
@@ -44,9 +46,12 @@ const LaunchpadDetailPage = () => {
   const [totalClaimedAmount, setTotalClaimedAmount] = useState(0);
   const [currentPhaseId, setCurrentPhaseId] = useState(0);
   const [currentWhitelist, setCurrentWhitelist] = useState({});
-
+  const [myNFTs, setMyNFTs] = useState([]);
+  const [publicMintingFee, setPublicMintingFee] = useState(0);
   const history = useHistory();
-
+  const [publicMintedCount, setPublicMintedCount] = useState(0);
+  const [totalPublicMintingAmount, setTotalPublicMintingAmount] = useState(0);
+  const [publicMintingPhaseId, setPublicMintingPhaseId] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
       const project = await launchpad_contract_calls.getProjectByNftAddress(
@@ -55,7 +60,7 @@ const LaunchpadDetailPage = () => {
       );
       console.log("LaunchpadDetailPage::project", project);
         
-      if (project.isActive) {
+      if (project && project.isActive) {
         const launchpad_psp34_nft_standard_contract = new ContractPromise(
           api,
           launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -69,6 +74,16 @@ const LaunchpadDetailPage = () => {
         const projectInfo = await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
           projectInfoHash
         );
+        
+        let publicMintingFeeTmp = await launchpad_psp34_nft_standard_calls.getPublicMintingFee(currentAccount);
+        publicMintingFeeTmp = publicMintingFeeTmp / (10 ** 12);
+        setPublicMintingFee(publicMintingFeeTmp);
+
+        let totalPublicMintingAmountTmp = await launchpad_psp34_nft_standard_calls.getTotalPublicMintingAmount(currentAccount);
+        setTotalPublicMintingAmount(totalPublicMintingAmountTmp);
+
+        let publicMintedCountTmp = await launchpad_psp34_nft_standard_calls.getPublicMintedCount(currentAccount);
+        setPublicMintedCount(publicMintedCountTmp);
 
         const totalSupply =
           await launchpad_psp34_nft_standard_calls.getTotalSupply(
@@ -83,7 +98,13 @@ const LaunchpadDetailPage = () => {
           await launchpad_psp34_nft_standard_calls.getCurrentPhase(
             currentAccount
           );
+        const publicMintingPhaseIdTmp = await launchpad_psp34_nft_standard_calls.getPublicMintingPhaseId(
+          currentAccount
+        );
+        setPublicMintingPhaseId(publicMintingPhaseIdTmp);
+
         for (let i = 1; i <= totalPhase; i++) {
+          const whiteListData = await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(currentAccount, i, currentAccount.address);
           const phaseSchedule =
             await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
               currentAccount,
@@ -91,14 +112,18 @@ const LaunchpadDetailPage = () => {
             );
             console.log(phaseSchedule);
           const phaseCode = phaseSchedule.title;
-
+          const totalWhiteListPhase = await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(currentAccount, i);
           const phaseInfo = {
             id: i,
             code: phaseCode,
             startTime: timestampWithoutCommas(phaseSchedule.startTime),
             endTime: timestampWithoutCommas(phaseSchedule.endTime),
             isLive: i == currentPhaseIdTmp ? 1 : 0,
+            totalWhiteList: (totalWhiteListPhase) ? totalWhiteListPhase : 0,
+            publicPhase: (i == publicMintingPhaseIdTmp) ? 1 : 0,
+            whitelist: whiteListData
           };
+          
           phasesTmp.push(phaseInfo);
 
           if (i == currentPhaseIdTmp) {
@@ -136,20 +161,67 @@ const LaunchpadDetailPage = () => {
 
         setFormattedCollection(projectDetail);
         setPhases(phasesTmp);
+        
+        let totalTokenSupply = await launchpad_psp34_nft_standard_calls.getLastTokenId(currentAccount);
+        console.log("totalTokenSupply", totalTokenSupply);
+        let myNFTsTmp = [];
+        let tokenUriFull = await launchpad_psp34_nft_standard_calls.tokenUri(
+          currentAccount,
+          1
+        );
+        tokenUriFull = tokenUriFull.replace("1.json", "");
+        for (let tokenID = 1; tokenID <= totalTokenSupply; tokenID++) {
+          let owner = await launchpad_psp34_nft_standard_calls.ownerOf(currentAccount,{"u64":tokenID});
+          console.log('tokenUriFull', tokenUriFull);
+          if (owner == currentAccount.address) {
+            let metaData = await getMetaDataType1(tokenID, tokenUriFull);
+            myNFTsTmp.push(metaData);
+          }
+        }
+        setMyNFTs(myNFTsTmp);
+        
       }
     };
 
     fetchData();
   }, []);
 
+
+  const getMetaDataType1 = async (tokenID, token_uri) => {
+    const metadata = await clientAPI(
+      "get",
+      "/getJSON?input=" + token_uri + tokenID.toString() + ".json",
+      {}
+    );
+  
+    if (metadata) {
+      const attrsList = metadata?.attributes?.map((item) => {
+        return { [item.trait_type]: item.value };
+      });
+  
+      return {
+        ...metadata,
+        attrsList,
+        avatar: metadata.image,
+        nftName: metadata.name,
+      };
+    }
+  };
+
   const onWhiteListMint = async () => {
-    console.log("LaunchpadDetailPage::currentWhitelist", currentWhitelist);
     const mintingFee = currentWhitelist.mintingFee.replace(/,/g, "");
     await launchpad_psp34_nft_standard_calls.whitelistMint(
       currentAccount,
       currentPhaseId,
       1,
       mintingFee
+    );
+  };
+
+  const onPublicMint = async () => {
+    await launchpad_psp34_nft_standard_calls.publicMint(
+      currentAccount,
+      publicMintingPhaseId
     );
   };
 
@@ -205,14 +277,19 @@ const LaunchpadDetailPage = () => {
         ) : (
           ""
         )}
-        {currentAccount && currentWhitelist.whitelistAmount ? (
+        {currentAccount && publicMintingPhaseId != currentPhaseId && currentWhitelist.whitelistAmount && (
           <Flex w="full" justifyContent="center">
             <Button onClick={() => onWhiteListMint()} variant="outline">
               mint
             </Button>
           </Flex>
-        ) : (
-          "No whitelist amount in current phase"
+        )}
+        {currentAccount &&  publicMintingPhaseId == currentPhaseId && (
+          <Flex w="full" justifyContent="center">
+            <Button onClick={() => onPublicMint()} variant="outline">
+              Public Mint
+            </Button>
+          </Flex>
         )}
       </Box>
 
@@ -237,7 +314,36 @@ const LaunchpadDetailPage = () => {
                   <WrapItem>
                     <Tag w="full">{item.code}</Tag>
                   </WrapItem>
-                  <Flex
+                  {(item.publicPhase == 1) && (<><Flex
+                    color="#888"
+                    w="full"
+                    minW="500px"
+                    alignContent="center"
+                    fontSize={["15px", "18px", "18px"]}
+                    minH={{ base: "1rem", "2xl": "3.375rem" }}
+                  >
+                    <Text mr="30px">
+                      Total:{" "}
+                      <Text as="span" color="#fff">
+                        {totalPublicMintingAmount}
+                      </Text>
+                    </Text>
+                    <Text mr="30px">
+                      Minted:{" "}
+                      <Text as="span" color="#fff">
+                        {publicMintedCount}
+                      </Text>
+                    </Text>
+                    <Text>
+                      Price:{" "}
+                      <Text as="span" color="#fff">
+                        {publicMintingFee} <AzeroIcon mb="5px" />
+                      </Text>
+                    </Text>
+                    
+                  </Flex></>)}
+
+                  {(item.publicPhase == 0) && (<><Flex
                     color="#888"
                     w="full"
                     minW="500px"
@@ -248,22 +354,24 @@ const LaunchpadDetailPage = () => {
                     <Text mr="30px">
                       Whitelist:{" "}
                       <Text as="span" color="#fff">
-                        162
+                        {item.totalWhiteList}
                       </Text>
                     </Text>
-                    <Text mr="30px">
+                    {(item.whitelist && item.whitelist.whitelistAmount) && (<Text mr="30px">
                       Max:{" "}
                       <Text as="span" color="#fff">
-                        3 Tokens
+                        {(Number(item.whitelist.whitelistAmount) - Number(item.whitelist.claimedAmount))} Tokens
                       </Text>
-                    </Text>
-                    <Text>
+                    </Text>)}
+                    {(item.whitelist && item.whitelist.mintingFee) && (<Text>
                       Price:{" "}
                       <Text as="span" color="#fff">
-                        1.20 <AzeroIcon mb="5px" />
+                        {convertStringToPrice(item.whitelist.mintingFee)} <AzeroIcon mb="5px" />
                       </Text>
-                    </Text>
-                  </Flex>
+                    </Text>)}
+                    
+                  </Flex></>)}
+                  
                 </Wrap>
                 <Divider />
               </>
@@ -331,6 +439,37 @@ const LaunchpadDetailPage = () => {
             ? formattedCollection.team_members.map((item) => (
                 <GridItem>
                   <TeamCard team_member={item} />
+                </GridItem>
+              ))
+            : ""}
+        </Grid>
+      </Box>
+      <Box
+        w="full"
+        maxW="870px"
+        mx="auto"
+        bg="#222"
+        px="30px"
+        py="26px"
+        mb="30px"
+      >
+        <Flex w="full" mb="30px">
+          <Heading size="h4">My NFTs</Heading>
+          <Spacer />
+        </Flex>
+        <Grid
+          templateColumns={`repeat(auto-fill, minmax(min(100%, 250px), 1fr))`}
+          gap="30px"
+        >
+          {console.log('myNFTs', myNFTs)}
+          {myNFTs &&
+          myNFTs.length
+            ? myNFTs.map((item, idx) => (
+                <GridItem>
+                  <MyLaunchPadNFTCard
+                    key={idx}
+                    {...item}
+                  />
                 </GridItem>
               ))
             : ""}

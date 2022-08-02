@@ -202,6 +202,8 @@ async function getWhitelistByAccountId(caller_account, phaseId, accountAddress) 
     gasLimit,
   }, accountAddress, phaseId);
   console.log(accountAddress, phaseId);
+  console.log('getWhitelistByAccountId', accountAddress);
+  console.log('getWhitelistByAccountId::index', phaseId);
   if (result.isOk) {
     return output.toHuman();
   }
@@ -238,6 +240,47 @@ async function editProjectInformation(caller_account, projectInfo) {
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Edit project information ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
+  return unsubscribe;
+}
+
+async function publicMint(caller_account, phaseId) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+
+  const azero_value = await getPublicMintingFee(caller_account);
+  const injector = await web3FromSource(caller_account?.meta?.source);
+  contract.tx
+    .publicMint({ gasLimit, value: azero_value }, phaseId)
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError", dispatchError.toString());
+          }
+        }
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+          toast.success(
+            `Add Whitelist ${
               statusText === "0" ? "started" : statusText.toLowerCase()
             }.`
           );
@@ -349,6 +392,138 @@ async function updateBaseUri(caller_account, uri) {
   return unsubscribe;
 }
 
+async function getLastTokenId(caller_account) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const { result, output } = await contract.query.getLastTokenId(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+
+async function ownerOf(caller_account, tokenID) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const { result, output } = await contract.query["psp34::ownerOf"](address, {
+    value: azero_value,
+    gasLimit,
+  }, tokenID);
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
+async function tokenUri(caller_account, tokenId) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const { result, output } = await contract.query["launchPadPsp34NftStandardTraits::tokenUri"](
+    address,
+    {
+      value: azero_value,
+      gasLimit,
+    },
+    tokenId
+  );
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
+async function getPublicMintingPhaseId(caller_account) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const { result, output } = await contract.query.getPublicMintingPhaseId(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+
+async function getPublicMintingFee(caller_account) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
+
+  const { result, output } = await contract.query.getPublicMintingFee(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+
+async function getTotalPublicMintingAmount(caller_account) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const { result, output } = await contract.query.getTotalPublicMintingAmount(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+
+async function getPublicMintedCount(caller_account) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const { result, output } = await contract.query.getPublicMintedCount(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+
 const launchpad_psp34_nft_standard_calls = {
   getTotalSupply,
   getLastPhaseId,
@@ -363,7 +538,15 @@ const launchpad_psp34_nft_standard_calls = {
   getProjectInfoByHash,
   getProjectInfo,
   editProjectInformation,
-  updateBaseUri
+  updateBaseUri,
+  getLastTokenId,
+  ownerOf,
+  tokenUri,
+  getPublicMintingPhaseId,
+  getPublicMintingFee,
+  getTotalPublicMintingAmount,
+  getPublicMintedCount,
+  publicMint
 };
 
 export default launchpad_psp34_nft_standard_calls;

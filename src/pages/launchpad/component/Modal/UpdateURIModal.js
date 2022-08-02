@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+// eslint-disable-next-line no-unused-vars
 import {
   Button,
   Heading,
@@ -14,13 +16,18 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
 import { onCloseButtonModal } from "@utils";
+import { useSubstrateState } from "@utils/substrate";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { ContractPromise } from "@polkadot/api-contract";
 
-export default function UpdateURIModal({ isOpen, onClose, forceUpdate }) {
+export default function UpdateURIModal({ collection_address, isOpen, onClose, forceUpdate }) {
   const dispatch = useDispatch();
   const { addCollectionTnxStatus } = useSelector(
     (state) => state.account.accountLoaders
   );
   const [newURI, setNewURI] = useState("your new URI");
+  const { currentAccount, api } = useSubstrateState();
 
   useEffect(() => {
     function onCloseHandler() {
@@ -43,6 +50,19 @@ export default function UpdateURIModal({ isOpen, onClose, forceUpdate }) {
 
     onCloseHandler();
   }, [addCollectionTnxStatus, dispatch, forceUpdate, onClose]);
+
+  const updateBaseUri = async () => {
+    const launchpad_psp34_nft_standard_contract =
+      new ContractPromise(
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        collection_address
+      );
+    launchpad_psp34_nft_standard_calls.setContract(
+      launchpad_psp34_nft_standard_contract
+    );
+    await launchpad_psp34_nft_standard_calls.updateBaseUri(currentAccount, newURI);
+  }
 
   return (
     <Modal
@@ -93,7 +113,7 @@ export default function UpdateURIModal({ isOpen, onClose, forceUpdate }) {
               onChange={({ target }) => setNewURI(target.value)}
             />
 
-            <Button variant="solid" onClick={() => alert(newURI)}>
+            <Button variant="solid" onClick={updateBaseUri}>
               Submit
             </Button>
           </VStack>
