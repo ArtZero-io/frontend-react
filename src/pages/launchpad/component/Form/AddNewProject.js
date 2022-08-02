@@ -363,7 +363,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     </Stack>
 
                     <Stack w="full">
-                      <Stack pb="30px">
+                      {(mode === formMode.ADD) && (<Stack pb="30px">
                         <Text fontSize="lg" ml={1} mb="10px">
                           Start time - End time
                         </Text>
@@ -382,7 +382,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           locale="en-EN"
                         />
                         {/* TEMP FIX with parseInt */}
-                      </Stack>
+                      </Stack>)}
                     </Stack>
                   </Stack>
 
@@ -541,7 +541,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       placeholder="NFT Symbol"
                       isDisabled={addCollectionTnxStatus}
                     />
-
+                    {mode === formMode.ADD && (
                     <NumberInput
                       height="52px"
                       precision={0}
@@ -554,14 +554,42 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       // type="number"
                       // placeholder="9999"
                       // isDisabled={addCollectionTnxStatus}
-                    />
+                    />)}
                   </Stack>
+                  {mode === formMode.ADD && (
+                    <Stack direction={{ base: "row", xl: "row" }}>
+                    <NumberInput
+                          // step={1}
+                          // type="number"
+                          // placeholder="9999"
+                          height="52px"
+                          name="publicMintingFee"
+                          hasStepper={false}
+                          inputWidth={"10rem"}
+                          label="Public Minting Fee"
+                          // isDisabled={addCollectionTnxStatus}
+                        />
+                      <Box pb="24px">
+                        <NumberInput
+                          // step={1}
+                          // type="number"
+                          // placeholder="9999"
+                          height="52px"
+                          precision={0}
+                          name="totalPublicMintingAmount"
+                          hasStepper={false}
+                          inputWidth={"8rem"}
+                          label="Total Public Minting Amount"
+                          // isDisabled={addCollectionTnxStatus}
+                        />
+                      </Box>
+                      </Stack>)}
                 </CommonStack>
-
+                {mode === formMode.ADD && (
                 <CommonStack stackTitle="3. phases info">
                   <AddPhase name="phases" />
                 </CommonStack>
-
+                )}
                 <VStack>
                   <Text color="#fff">
                     Create new collection you will pay
