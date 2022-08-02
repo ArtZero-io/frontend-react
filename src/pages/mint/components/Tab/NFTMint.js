@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Box, Grid, Heading, useBreakpointValue } from "@chakra-ui/react";
 import React, { Fragment } from "react";
-import MyNFTCard from "../../../account/components/Card/MyNFT";
+import MyNFTCard from "@components/Card/MyNFT";
 
 function NFTMintTab({ myAZNFTs }) {
   const cardSize = useBreakpointValue([156, 224]);

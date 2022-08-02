@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
-import MyNFTGroupCard from "../components/Card/MyNFTGroup";
+import MyNFTGroupCard from "@components/Card/MyNFTGroup";
 import { useSubstrateState } from "@utils/substrate";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import { clientAPI } from "@api/client";

@@ -18,7 +18,7 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import BN from "bn.js";
 import { clientAPI } from "@api/client";
-import MyNFTGroupCard from "../account/components/Card/MyNFTGroup";
+import MyNFTGroupCard from "@components/Card/MyNFTGroup";
 
 import { useDispatch, useSelector } from "react-redux";
 import { APICall } from "../../api/client";
