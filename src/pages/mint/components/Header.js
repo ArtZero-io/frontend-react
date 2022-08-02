@@ -36,6 +36,7 @@ import {
   fetchMyPMPPendingCount,
   fetchMyPMPStakedCount,
 } from "../../account/stakes";
+import { motion } from "framer-motion";
 
 const MAX_MINT_COUNT = 200;
 
@@ -131,30 +132,6 @@ function MintHeader({ loading }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const getBalance = async () => {
-        let unstakedCount = await artzero_nft_calls.balanceOf(
-          currentAccount,
-          currentAccount?.address
-        );
-        const stakedCount = await fetchMyPMPStakedCount(
-          currentAccount,
-          staking_calls
-        );
-        setBalanceStake(stakedCount);
-        const pendingCount = await fetchMyPMPPendingCount(
-          currentAccount,
-          staking_calls
-        );
-        setBalancePending(pendingCount);
-        const totalCount = stakedCount + pendingCount + unstakedCount;
-
-        if (totalCount) {
-          setBalance(totalCount);
-        } else {
-          setBalance(0);
-        }
-      };
-
       try {
         setIsLoadingMintData(true);
 
@@ -170,7 +147,29 @@ function MintHeader({ loading }) {
         } else {
           setWhitelist(null);
         }
+        const getBalance = async () => {
+          let unstakedCount = await artzero_nft_calls.balanceOf(
+            currentAccount,
+            currentAccount?.address
+          );
+          const stakedCount = await fetchMyPMPStakedCount(
+            currentAccount,
+            staking_calls
+          );
+          setBalanceStake(stakedCount);
+          const pendingCount = await fetchMyPMPPendingCount(
+            currentAccount,
+            staking_calls
+          );
+          setBalancePending(pendingCount);
+          const totalCount = stakedCount + pendingCount + unstakedCount;
 
+          if (totalCount) {
+            setBalance(totalCount);
+          } else {
+            setBalance(0);
+          }
+        };
         await getBalance(currentAccount);
 
         const mintModeData = await getMintMode(currentAccount);
@@ -452,7 +451,11 @@ function MintHeader({ loading }) {
 
                   <Text mt={3}>
                     Total own:{" "}
-                    <span style={{ color: "#fff" }}>{balance} NFTs</span>
+                    <span style={{ color: "#fff" }}>
+                      <Skeleton as="span" isLoaded={!isLoadingMintData}>
+                        {balance} NFTs
+                      </Skeleton>
+                    </span>
                   </Text>
                 </Stack>
 
@@ -465,13 +468,23 @@ function MintHeader({ loading }) {
                   <Text mt={2}>
                     Staked/pending:{" "}
                     <span style={{ color: "#fff" }}>
-                      {balanceStake + balancePending} NFTs
+                      <Skeleton as="span" isLoaded={!isLoadingMintData}>
+                        {balanceStake + balancePending} NFTs
+                      </Skeleton>
                     </span>
                   </Text>
                   <Text mt={2}>
                     Available:{" "}
                     <span style={{ color: "#fff" }}>
-                      {balance - balanceStake - balancePending} NFTs
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        <Skeleton as="span" isLoaded={!isLoadingMintData}>
+                          {balance - balanceStake - balancePending} NFTs
+                        </Skeleton>
+                      </motion.span>
                     </span>
                   </Text>
                 </Stack>
