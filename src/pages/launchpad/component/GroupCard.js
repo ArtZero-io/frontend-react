@@ -15,6 +15,7 @@ import AnimationLoader from "@components/Loader/AnimationLoader";
 
 import * as ROUTES from "@constants/routes";
 
+
 export const GroupCard = ({ variant = "live", projectsList, loading }) => {
   const history = useHistory();
 
@@ -44,7 +45,6 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
           </Heading>
 
           <Spacer />
-
           {variant === "live" && (
             <Button
               variant="solid"

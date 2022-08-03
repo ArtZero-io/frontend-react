@@ -44,6 +44,7 @@ import AdvancedModeSwitch from "@components/Switch/Switch";
 import AddCollectionNumberInput from "@components/Input/NumberInput";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import CommonStack from "./CommonStack";
+import emailjs from '@emailjs/browser';
 
 const client = create(IPFS_CLIENT_URL);
 
@@ -298,7 +299,18 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     dispatch,
                     api
                   );
-                  //
+                  var templateParams = {
+                    email_owner: values.email_owner,
+                    nft_address: nft_address,
+                    project_name: values.name,
+                    reply_to: values.email_owner
+                  };
+                  emailjs.send('service_gz6dl9u', 'template_980idtm', templateParams, 'q4EO2tL6l8kY1jEZh')
+                  .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                  }, function(error) {
+                    console.log('FAILED...', error);
+                  });
                 };
                 await launchpad_contract_calls.addNewProject(
                   currentAccount,
@@ -558,6 +570,17 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 {mode === formMode.ADD && (
                 <CommonStack stackTitle="3. phases info">
                   <AddPhase name="phases" />
+                </CommonStack>
+                )}
+                {mode === formMode.ADD && (
+                <CommonStack stackTitle="4. Contact info">
+                  <CommonInput
+                      type="text"
+                      name="email_owner"
+                      label="This email not save on our platform, we just use this field to contact with you!"
+                      placeholder={"Email Contact"}
+                      isDisabled={addCollectionTnxStatus}
+                    />
                 </CommonStack>
                 )}
                 <VStack>
