@@ -138,7 +138,7 @@ function ProfileHeader() {
               />
             </Center>
 
-            <Text fontSize={["md", "lg", "lg"]} maxW="md">
+            <Text fontSize={["md", "lg", "lg"]} maxW="md" px="30px">
               {profile?.bio || "Something about yourself ..."}
             </Text>
 

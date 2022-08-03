@@ -177,7 +177,7 @@ function GeneralPage() {
                 <Text fontFamily="Oswald">
                   {isLargerThan480
                     ? currentAccount?.address
-                    : truncateStr(currentAccount?.address, 16)}
+                    : truncateStr(currentAccount?.address, 6)}
                 </Text>
                 <Input
                   display="none"
@@ -208,7 +208,7 @@ function GeneralPage() {
         <Grid
           w="full"
           minH={"7rem"}
-          gap={{ base: "10px", md: "30px" }}
+          gap={{ base: "15px", md: "30px" }}
           templateColumns={{
             base: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))",
             lg: "repeat(auto-fill, minmax(min(100%, 290px), 1fr))",
