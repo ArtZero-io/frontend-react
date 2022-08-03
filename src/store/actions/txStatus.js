@@ -62,10 +62,7 @@ export const txResponseErrorHandler = async ({
     const statusToHuman = Object.entries(status.toHuman());
 
     const url = `https://test.azero.dev/#/explorer/query/`;
-    console.log(
-      "Object.keys(status.toHuman(",
-      Object.keys(status.toHuman())[0]
-    );
+
     if (Object.keys(status.toHuman())[0] === "0") {
       dispatch(setTxStatus({ txType, txStatus: READY, step: READY, type }));
 

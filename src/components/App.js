@@ -7,6 +7,7 @@ import {
   ModalContent,
   ModalOverlay,
   ChakraProvider,
+  Text,
 } from "@chakra-ui/react";
 import "@fontsource/oswald";
 import theme from "@theme/theme";
@@ -138,11 +139,11 @@ const Main = () => {
       txStatus?.step === "Start";
 
     const message = (
-      <span>
+      <Text as='span' fontSize={['sm','md']}>
         You have a transaction that needs to be signed.
         <br />
         Please <b>Sign</b> or <b>Cancel</b> in the pop-up window.
-      </span>
+      </Text>
     );
 
     if (!id.current && hasPendingTx) {

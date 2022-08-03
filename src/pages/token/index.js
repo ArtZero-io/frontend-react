@@ -1,10 +1,8 @@
-/* eslint-disable no-unused-vars */
 import React, { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Breadcrumb,
   BreadcrumbItem,
-  // BreadcrumbLink,
   Flex,
   Grid,
   GridItem,
@@ -27,7 +25,6 @@ import {
   InputRightElement,
   Tooltip,
   Icon,
-  Button,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { MdOutlineArrowBackIos } from "react-icons/md";
@@ -40,7 +37,6 @@ import {
 } from "react-router-dom";
 
 import { APICall } from "@api/client";
-import * as ROUTES from "@constants/routes";
 import { useSubstrateState } from "@utils/substrate";
 
 import {
@@ -64,7 +60,7 @@ import CommonButton from "@components/Button/CommonButton";
 import ModalLoader from "@components/Loader/ModalLoader";
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
 import { useDispatch } from "react-redux";
-import { clearTxStatus, setTxStatus } from "../../store/actions/txStatus";
+import { clearTxStatus, setTxStatus } from "@store/actions/txStatus";
 import {
   BUY,
   BID,
@@ -74,17 +70,17 @@ import {
   LIST_TOKEN,
   UNLIST_TOKEN,
 } from "@constants";
-import useTxStatus from "../../hooks/useTxStatus";
-import useForceUpdate from "../../hooks/useForceUpdate";
+import useTxStatus from "@hooks/useTxStatus";
+import useForceUpdate from "@hooks/useForceUpdate";
 import { ContractPromise } from "@polkadot/api-contract";
-import { delay } from "../../utils";
-import { getUsernameOnchain } from "../../utils/blockchain/profile_calls";
+import { delay } from "@utils";
+import { getUsernameOnchain } from "@utils/blockchain/profile_calls";
 import { AiOutlineUnlock, AiOutlineLock } from "react-icons/ai";
 
-import LockNFTModalMobile from "../../components/Modal/LockNFTModalMobile";
-import { SCROLLBAR } from "../../constants";
+import LockNFTModalMobile from "@components/Modal/LockNFTModalMobile";
+import { SCROLLBAR } from "@constants";
 import { formMode } from "@constants";
-import AddNewNFTModal from "../../pages/collection/component/Modal/AddNewNFT";
+import AddNewNFTModal from "@pages/collection/component/Modal/AddNewNFT";
 import {
   fetchMyPMPStakedCount,
   fetchMyTradingFee,

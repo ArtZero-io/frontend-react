@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Flex,
   Heading,
   Text,
@@ -30,11 +29,13 @@ import {
   CANCEL_REQUEST_UNSTAKE,
   UNSTAKE,
 } from "@constants";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import staking_calls from "@utils/blockchain/staking_calls";
 import staking from "@utils/blockchain/staking";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { delay } from "@utils";
+import CommonButton from "../Button/CommonButton";
+import useTxStatus from "@hooks/useTxStatus";
 
 function MyNFTGroupCard({
   name,
@@ -208,8 +209,6 @@ function GridNftA({
     controls.start("visible");
   }, [listNFTFormatted, controls]);
 
-  const txStatus = useSelector((state) => state.txStatus);
-
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
 
@@ -217,16 +216,14 @@ function GridNftA({
     action: null,
     list: [],
   });
- 
+
   const cardSize = useBreakpointValue([156, 224]);
 
   // const multiStakeDataRef = useRef(multiStakeData);
 
   async function handleStakeAction(action, tokenIDArray) {
     if (action === STAKE) {
-      dispatch(
-        setTxStatus({ txType: STAKE, txStatus: START, tokenID: tokenIDArray })
-      );
+      dispatch(setTxStatus({ type: STAKE, step: START, tokenIDArray }));
 
       let res;
       let allowance;
@@ -291,13 +288,18 @@ function GridNftA({
     }
 
     if (action === REQUEST_UNSTAKE) {
+      // dispatch(
+      //   setTxStatus({
+      //     txType: REQUEST_UNSTAKE,
+      //     txStatus: START,
+      //     tokenID: tokenIDArray,
+      //   })
+      // );
+
       dispatch(
-        setTxStatus({
-          txType: REQUEST_UNSTAKE,
-          txStatus: START,
-          tokenID: tokenIDArray,
-        })
+        setTxStatus({ type: REQUEST_UNSTAKE, step: START, tokenIDArray })
       );
+
       //Token is staked, Request Unstake Now
 
       toast.success("Request Unstaking NFT...");
@@ -312,9 +314,10 @@ function GridNftA({
     }
 
     if (action === UNSTAKE) {
-      dispatch(
-        setTxStatus({ txType: UNSTAKE, txStatus: START, tokenID: tokenIDArray })
-      );
+      // dispatch(
+      //   setTxStatus({ txType: UNSTAKE, txStatus: START, tokenID: tokenIDArray })
+      // );
+      dispatch(setTxStatus({ type: UNSTAKE, step: START, tokenIDArray }));
 
       toast.success("Unstaking NFT...");
 
@@ -328,12 +331,16 @@ function GridNftA({
     }
 
     if (action === CANCEL_REQUEST_UNSTAKE) {
+      // dispatch(
+      //   setTxStatus({
+      //     txType: CANCEL_REQUEST_UNSTAKE,
+      //     txStatus: START,
+      //     tokenID: tokenIDArray,
+      //   })
+      // );
+
       dispatch(
-        setTxStatus({
-          txType: CANCEL_REQUEST_UNSTAKE,
-          txStatus: START,
-          tokenID: tokenIDArray,
-        })
+        setTxStatus({ type: CANCEL_REQUEST_UNSTAKE, step: START, tokenIDArray })
       );
 
       toast("Cancel Unstaking Request...");
@@ -389,15 +396,31 @@ function GridNftA({
     }
   }
 
+  const multiStakeButtonText = () => {
+    const actionText =
+      multiStakeData?.action === REQUEST_UNSTAKE
+        ? "request unstake"
+        : multiStakeData?.action === CANCEL_REQUEST_UNSTAKE
+        ? "cancel unstake"
+        : multiStakeData?.action;
+
+    const tokenList = multiStakeData?.list?.map((i, idx) => {
+      return i;
+    });
+
+    return actionText + " tokens: " + tokenList;
+  };
+
+  const { actionType, tokenIDArray, ...rest } = useTxStatus();
+
   return (
     <>
       {multiStakeData?.action !== null ? (
         <motion.div
-          id="image-ufo-2"
           style={{
             position: "fixed",
             bottom: "30px",
-            right: "30px",
+            right: "15px",
             zIndex: "98",
           }}
           animate={{
@@ -412,18 +435,28 @@ function GridNftA({
             repeatType: "reverse",
           }}
         >
-          <Button
+          <CommonButton
+            {...rest}
+            height={["36px", "40px"]}
+            text={multiStakeButtonText()}
+            onClick={() =>
+              handleStakeAction(
+                multiStakeData?.action,
+                multiStakeData?.list,
+                dispatch,
+                api,
+                currentAccount
+              )
+            }
+          />
+          {/* <Button
             isDisabled={
               txStatus?.stakeStatus ||
               txStatus?.unstakeStatus ||
               txStatus?.cancelRequestUnstakeStatus ||
               txStatus?.requestUnstakeStatus
             }
-            // position="fixed"
-            // bottom={["30px", "60px"]}
-            // right={["30px", "60px"]}
-            // size="sm"
-            // zIndex="modal"
+            
             onClick={() =>
               handleStakeAction(
                 multiStakeData?.action,
@@ -434,18 +467,8 @@ function GridNftA({
               )
             }
           >
-            {multiStakeData?.action === REQUEST_UNSTAKE
-              ? "request unstake"
-              : multiStakeData?.action === CANCEL_REQUEST_UNSTAKE
-              ? "cancel request unstake"
-              : multiStakeData?.action}{" "}
-            tokens:
-            {multiStakeData?.list?.map((i, idx) => (
-              <Fragment key={idx}>
-                {idx === 0 ? "" : ","} #{i}
-              </Fragment>
-            ))}
-          </Button>
+            {}
+          </Button> */}
         </motion.div>
       ) : null}
 

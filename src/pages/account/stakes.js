@@ -17,25 +17,25 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import BN from "bn.js";
-import { clientAPI } from "@api/client";
+import { clientAPI, APICall } from "@api/client";
 import MyNFTGroupCard from "@components/Card/MyNFTGroup";
 
-import { useDispatch, useSelector } from "react-redux";
-import { APICall } from "../../api/client";
 import { getMetaDataType1 } from "../collection/collection";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { motion } from "framer-motion";
-import { FINALIZED } from "@constants";
-import { clearTxStatus } from "../../store/actions/txStatus";
-import { delay } from "@utils";
-import CommonContainer from "../../components/Container/CommonContainer";
-import CommonButton from "../../components/Button/CommonButton";
-import { SCROLLBAR } from "../../constants";
+import {
+  STAKE,
+  UNSTAKE,
+  REQUEST_UNSTAKE,
+  CANCEL_REQUEST_UNSTAKE,
+} from "@constants";
+import CommonContainer from "@components/Container/CommonContainer";
+import CommonButton from "@components/Button/CommonButton";
+import { SCROLLBAR } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
+import useForceUpdate from "@hooks/useForceUpdate";
 
 const MyStakesPage = () => {
-  const txStatus = useSelector((state) => state.txStatus);
-  const dispatch = useDispatch();
-
   const { currentAccount, api } = useSubstrateState();
 
   const [loading, setLoading] = useState(false);
@@ -44,8 +44,11 @@ const MyStakesPage = () => {
   const [PMPCollectionDetail, setPMPCollectionDetail] = useState(null);
   const [platformTradingFee, setPlatformTradingFee] = useState(0);
 
+  const { actionType } = useTxStatus();
+
   const fetchCollectionDetail = useCallback(async () => {
     setLoading(true);
+
     try {
       const stakedCount = await fetchMyPMPStakedCount(
         currentAccount,
@@ -119,43 +122,27 @@ const MyStakesPage = () => {
       setPMPCollectionDetail(PMPCollectionDetail);
       setLoading(false);
     } catch (error) {
+      console.log("x_x error fetchCollectionDetail:", error);
       setLoading(false);
     }
   }, [activeTab, api, currentAccount]);
+
+  const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
+    [STAKE, UNSTAKE, REQUEST_UNSTAKE, CANCEL_REQUEST_UNSTAKE],
+    () => handleForceUpdate()
+  );
+
+  const handleForceUpdate = async () => {
+    actionType === STAKE && setActiveTab(tabList.STAKED);
+    actionType === REQUEST_UNSTAKE && setActiveTab(tabList.PENDING_UNSTAKE);
+    actionType === CANCEL_REQUEST_UNSTAKE && setActiveTab(tabList.STAKED);
+    actionType === UNSTAKE && setActiveTab(tabList.NOT_STAKED);
+  };
 
   useEffect(() => {
     fetchCollectionDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, currentAccount]);
-
-  useEffect(() => {
-    const forceUpdate = async () => {
-      if (
-        txStatus?.stakeStatus === FINALIZED ||
-        txStatus?.unstakeStatus === FINALIZED ||
-        txStatus?.cancelRequestUnstakeStatus === FINALIZED ||
-        txStatus?.requestUnstakeStatus === FINALIZED
-      ) {
-        await delay(7000).then(() => {
-          txStatus?.stakeStatus && setActiveTab(tabList.STAKED);
-          txStatus?.cancelRequestUnstakeStatus && setActiveTab(tabList.STAKED);
-          txStatus?.requestUnstakeStatus &&
-            setActiveTab(tabList.PENDING_UNSTAKE);
-          txStatus?.unstakeStatus && setActiveTab(tabList.NOT_STAKED);
-
-          dispatch(clearTxStatus());
-          refresh();
-        });
-      }
-    };
-
-    forceUpdate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, txStatus]);
-
-  const refresh = () => {
-    fetchCollectionDetail();
-  };
 
   return (
     <CommonContainer>
@@ -180,7 +167,7 @@ const MyStakesPage = () => {
         >
           {Object.keys(tabList).map((item) => (
             <CommonButton
-              minW="140"
+              // minW="140"
               key={item}
               variant="outline"
               text={item.replace("_", " ")}
@@ -195,7 +182,7 @@ const MyStakesPage = () => {
             variant="iconSolid"
             aria-label="refresh"
             icon={<RefreshIcon />}
-            onClick={() => refresh()}
+            onClick={() => fetchCollectionDetail()}
           />
         </HStack>
       </Flex>
@@ -246,9 +233,9 @@ const MyStakesPage = () => {
           ))}
       </Stack>
       <Stack minHeight="504px" h="full">
-        {loading ? (
+        {loading || loadingForceUpdate ? (
           <Stack h="574px">
-            <AnimationLoader />
+            <AnimationLoader loadingTime={loadingTime || 3} />
           </Stack>
         ) : PMPCollectionDetail?.listNFT?.length === 0 ? (
           <Heading py="3rem" size="h6">

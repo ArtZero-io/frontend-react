@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@chakra-ui/react";
-import { END, FINALIZED } from "@constants/index";
+import { END, FINALIZED } from "@constants";
 import { ClipLoader } from "react-spinners";
 
 function CommonButton(props) {
@@ -15,6 +15,7 @@ function CommonButton(props) {
     isLoading,
     onEndClick,
     isDisabled,
+    height,
     ...rest
   } = props;
 
@@ -40,10 +41,13 @@ function CommonButton(props) {
     <Button
       {...rest}
       mx={mx || "4px"}
-      minW={minW || "120px"}
+      // minW={minW || "120px"}
+      height={height}
       onClick={handleOnClick}
       isDisabled={isDisabled}
-      px={px || ["16px", "32px"]}
+      fontSize={["13px", "15px"]}
+      px={px || ["8px", "32px"]}
+      minW={minW || ["content", "120px"]}
       isLoading={isDisabled ? false : isLoading}
       spinner={<ClipLoader color="#7ae7ff" size={14} loading />}
       variant={variant || step === FINALIZED ? "outline" : "solid"}

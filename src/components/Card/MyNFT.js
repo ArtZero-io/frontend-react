@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
-  Button,
   Flex,
   Heading,
   Image,
@@ -37,6 +35,8 @@ import {
   CANCEL_REQUEST_UNSTAKE,
 } from "@constants";
 import { useHistory } from "react-router-dom";
+import CommonButton from "../Button/CommonButton";
+import useTxStatus from "@hooks/useTxStatus";
 
 // Stake Status
 // 0 not show, 1 not staked,
@@ -61,6 +61,7 @@ function MyNFTCard({
   const [countdownTime, setCountdownTime] = useState(0);
   const [isUnstakeTime, setIsUnstakeTime] = useState(false);
   const [limitUnstakeTime, setLimitUnstakeTime] = useState(0);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const { location } = useHistory();
@@ -68,6 +69,8 @@ function MyNFTCard({
   const txStatus = useSelector((state) => state.txStatus);
   const imgCardSize = useBreakpointValue([154, 220]);
   const cardSize = useBreakpointValue([160, 226]);
+
+  const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useInterval(() => {
     if (unstakeRequestTime) {
@@ -129,7 +132,7 @@ function MyNFTCard({
         position: "relative",
         borderWidth: "2px",
         borderColor: `${
-          multiStakeData?.list?.includes(tokenID) ? "brand.blue" : "#7ae7ff00"
+          multiStakeData?.list?.includes(tokenID) ? "#7ae7ff" : "transparent"
         }`,
         maxWidth: cardSize,
 
@@ -206,8 +209,8 @@ function MyNFTCard({
             {nftName}
           </Heading>
 
-          <Flex align="center" justify="start" w="full" mb={3}>
-            {stakeStatus === 3 ? (
+          {stakeStatus === 3 ? (
+            <Flex align="center" justify="start" w="full" mb={3}>
               <Text
                 textAlign="center"
                 color="brand.grayLight"
@@ -216,36 +219,44 @@ function MyNFTCard({
                 Unstake in {countdownTime?.h || 0}h : {countdownTime?.m || 0}m :{" "}
                 {countdownTime?.s || 0}s
               </Text>
-            ) : null}
-          </Flex>
+            </Flex>
+          ) : null}
 
           {!is_for_sale && stakeStatus !== 0 ? (
             <Flex align="center" justify="start" w="full">
-              <Button
-                isLoading={isLoading || txStatus?.tokenID?.includes(tokenID)}
-                isDisabled={
-                  txStatus?.stakeStatus ||
-                  txStatus?.unstakeStatus ||
-                  txStatus?.cancelRequestUnstakeStatus ||
-                  txStatus?.requestUnstakeStatus ||
-                  multiStakeData?.action
+              <CommonButton
+                {...rest}
+                isLoading={
+                  isLoading || rest.isLoading
+                  // || tokenIDArray?.includes(tokenID)
                 }
+                mx="0"
                 variant="outline"
+                // minW="100px"
+                height={["36px", "40px"]}
+                text={
+                  stakeStatus === 1
+                    ? "Stake"
+                    : stakeStatus === 2
+                    ? "Request Unstake"
+                    : !isUnstakeTime
+                    ? "Cancel Unstake"
+                    : "Unstake"
+                }
                 onClick={() =>
                   handleStakeAction(
                     getStakeAction(stakeStatus, isUnstakeTime),
                     [tokenID]
                   )
                 }
-              >
-                {stakeStatus === 1
-                  ? "Stake"
-                  : stakeStatus === 2
-                  ? "Request Unstake"
-                  : !isUnstakeTime
-                  ? "Cancel Unstake"
-                  : "Unstake"}
-              </Button>
+                isDisabled={
+                  actionType && !tokenIDArray?.includes(tokenID)
+                    ? true
+                    : multiStakeData?.action
+                    ? true
+                    : false
+                }
+              />
             </Flex>
           ) : null}
 
@@ -290,7 +301,6 @@ function MyNFTCard({
                       align="center"
                       textAlign="right"
                       color="brand.grayLight"
-                      // direction="column"
                     >
                       <Text textAlign="center" w="full">
                         {highest_bid ? "  Best offer" : "No offer"}
