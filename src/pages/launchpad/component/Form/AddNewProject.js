@@ -236,8 +236,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 total_supply: Number(values.totalSupply),
                 start_time: values.startTime,
                 end_time: values.endTime,
-                totalPublicMintingAmount: values.totalPublicMintingAmount,
-                publicMintingFee: values.publicMintingFee,
                 project_info: project_info_ipfs.path,
                 code_phases: code_phases,
                 start_time_phases: start_time_phases,
@@ -556,34 +554,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       // isDisabled={addCollectionTnxStatus}
                     />)}
                   </Stack>
-                  {mode === formMode.ADD && (
-                    <Stack direction={{ base: "row", xl: "row" }}>
-                    <NumberInput
-                          // step={1}
-                          // type="number"
-                          // placeholder="9999"
-                          height="52px"
-                          name="publicMintingFee"
-                          hasStepper={false}
-                          inputWidth={"10rem"}
-                          label="Public Minting Fee"
-                          // isDisabled={addCollectionTnxStatus}
-                        />
-                      <Box pb="24px">
-                        <NumberInput
-                          // step={1}
-                          // type="number"
-                          // placeholder="9999"
-                          height="52px"
-                          precision={0}
-                          name="totalPublicMintingAmount"
-                          hasStepper={false}
-                          inputWidth={"8rem"}
-                          label="Total Public Minting Amount"
-                          // isDisabled={addCollectionTnxStatus}
-                        />
-                      </Box>
-                      </Stack>)}
                 </CommonStack>
                 {mode === formMode.ADD && (
                 <CommonStack stackTitle="3. phases info">
@@ -666,8 +636,6 @@ export const fetchInitialValuesProject = async ({
     nftName: "",
     nftSymbol: "",
     totalSupply: 0,
-    totalPublicMintingAmount: 0,
-    publicMintingFee: 0,
     phases: [{ name: "", start: "", end: "" }],
     agreeTosCheckbox: false,
   };
@@ -705,8 +673,6 @@ export const fetchInitialValuesProject = async ({
       projectType,
       projectOwner,
       totalSupply,
-      totalPublicMintingAmount,
-      publicMintingFee,
       startTime,
       endTime,
     } = project;
@@ -730,8 +696,6 @@ export const fetchInitialValuesProject = async ({
     initialValues.name = name;
     initialValues.description = description;
     initialValues.totalSupply = totalSupply;
-    initialValues.totalPublicMintingAmount = totalPublicMintingAmount;
-    initialValues.publicMintingFee = publicMintingFee;
     initialValues.startTime = timestampWithoutCommas(startTime);
     initialValues.endTime = timestampWithoutCommas(endTime);
     initialValues.website = website;

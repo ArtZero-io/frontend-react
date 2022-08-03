@@ -105,18 +105,30 @@ import {
         );
         
         await delay(10000);
-        await onRefreshAZNFT();
     };
 
     const onAddWhitelistUpdate = async () => {
       //check whitelistAddress
-      await artzero_nft_calls.updateWhitelistAmount(
-        currentAccount,
-        whitelistAddress,
-        whitelistAmount
+      if (projectAddress == '') {
+          setProjecPhases([]);
+          toast.error(`Print your project address!`);
+          return;
+      }
+      const launchpad_psp34_nft_standard_contract = new ContractPromise(
+          api,
+          launchpad_psp34_nft_standard.CONTRACT_ABI,
+          projectAddress
       );
+      launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
+      await launchpad_psp34_nft_standard_calls.updateWhitelist(
+          currentAccount,
+          whitelistAddress,
+          phaseCodeSelected,
+          whitelistAmount,
+          whiteListPrice
+      );
+      
       await delay(10000);
-      await onRefreshAZNFT();
     };
   
     const updateProjectAddress = async (address) => {
