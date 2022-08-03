@@ -25,7 +25,6 @@ import {
 import staking_calls from "@utils/blockchain/staking_calls";
 import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
 import useInterval from "use-interval";
 import { motion } from "framer-motion";
 import {
@@ -66,7 +65,6 @@ function MyNFTCard({
 
   const { location } = useHistory();
 
-  const txStatus = useSelector((state) => state.txStatus);
   const imgCardSize = useBreakpointValue([154, 220]);
   const cardSize = useBreakpointValue([160, 226]);
 
@@ -124,7 +122,7 @@ function MyNFTCard({
 
   return (
     <motion.div
-      className="my-collection-card"
+      className="my-nft-card"
       whileHover={{
         borderColor: "#7ae7ff",
       }}
@@ -159,10 +157,7 @@ function MyNFTCard({
           right="10px"
           position="absolute"
           isDisabled={
-            txStatus?.stakeStatus ||
-            txStatus?.unstakeStatus ||
-            txStatus?.cancelRequestUnstakeStatus ||
-            txStatus?.requestUnstakeStatus ||
+            actionType ||
             (multiStakeData?.action &&
               multiStakeData?.action !==
                 getStakeAction(stakeStatus, isUnstakeTime))

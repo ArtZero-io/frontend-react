@@ -19,8 +19,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { onCloseButtonModal } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
 import EditIcon from "@theme/assets/icon/Edit.js";
-import { formMode } from "@constants";
-import { SCROLLBAR } from "../../../../../constants";
+import { formMode, SCROLLBAR, END } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
+import { useEffect } from "react";
 
 function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -29,12 +30,19 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
     (s) => s.account.accountLoaders
   );
   const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
+  const { step } = useTxStatus();
+
+  useEffect(() => {
+    step === END && onClose();
+  }, [step, onClose]);
 
   return (
     <>
       {mode === formMode.ADD && (
         <Tooltip
           hasArrow
+          bg="#333"
+          color="#fff"
           label="Advanced mode is designed for those who wants to use customized NFT smart contract for example dedicated 5k or 10k collections with whitelisted options."
         >
           <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
@@ -115,8 +123,10 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
             <Heading fontSize={["2xl", "3xl", "3xl"]} m={2}>
               {mode === formMode.ADD ? "Advanced Mode" : "Edit Collection"}{" "}
               <Tooltip
-                label="Advanced mode is designed for those who wants to use customized NFT smart contract for example dedicated 5k or 10k collections with whitelisted options."
+                bg="#333"
+                color="#fff"
                 fontSize="md"
+                label="Advanced mode is designed for those who wants to use customized NFT smart contract for example dedicated 5k or 10k collections with whitelisted options."
               >
                 <QuestionIcon fontSize="md" />
               </Tooltip>

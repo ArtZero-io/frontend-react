@@ -5,6 +5,7 @@ import { ClipLoader } from "react-spinners";
 
 function CommonButton(props) {
   const {
+    type,
     px,
     mx,
     text,
@@ -40,15 +41,15 @@ function CommonButton(props) {
   return (
     <Button
       {...rest}
+      type={type}
       mx={mx || "4px"}
-      // minW={minW || "120px"}
       height={height}
       onClick={handleOnClick}
       isDisabled={isDisabled}
       fontSize={["13px", "15px"]}
       px={px || ["8px", "32px"]}
       minW={minW || ["content", "120px"]}
-      isLoading={isDisabled ? false : isLoading}
+      isLoading={!isDisabled && isLoading ? true : false}
       spinner={<ClipLoader color="#7ae7ff" size={14} loading />}
       variant={variant || step === FINALIZED ? "outline" : "solid"}
     >

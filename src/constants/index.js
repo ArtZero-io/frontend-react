@@ -2,6 +2,7 @@ export const formMode = {
   ADD: "ADD",
   EDIT: "EDIT",
 };
+
 // TX STATUS
 export const START = "Start";
 export const READY = "Ready";
@@ -29,6 +30,11 @@ export const UNLIST_TOKEN = "unlistToken";
 export const PUBLIC_MINT = "publicMint";
 export const WHITELIST_MINT = "whitelistMint";
 
+//COLLECTION ACTIONS
+export const CREATE_COLLECTION = "createCollection";
+export const EDIT_COLLECTION = "editCollection";
+
+// OTHERS
 export const NUMBER_PER_PAGE = 6;
 
 export const SCROLLBAR = {

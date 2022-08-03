@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Button,
   Heading,
@@ -20,36 +19,34 @@ import { useDispatch, useSelector } from "react-redux";
 import { onCloseButtonModal } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
 import EditIcon from "@theme/assets/icon/Edit.js";
-import { formMode } from "@constants";
-import { SCROLLBAR } from "../../../../../constants";
+import { formMode, SCROLLBAR, END } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
+import { useEffect } from "react";
 
 function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
-  const {
-    isOpen: isOpenSimpleMode,
-    onOpen: onOpenSimpleMode,
-    onClose: onCloseSimpleMode,
-  } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const dispatch = useDispatch();
   const { addCollectionTnxStatus } = useSelector(
     (s) => s.account.accountLoaders
   );
   const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
+  const { step } = useTxStatus();
+
+  useEffect(() => {
+    step === END && onClose();
+  }, [step, onClose]);
 
   return (
     <>
       {mode === formMode.ADD && (
         <Tooltip
           hasArrow
+          bg="#333"
+          color="#fff"
           label="Simple Mode is designed for non-tech people. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
         >
-          <Button
-            variant="outline"
-            color="brand.blue"
-            onClick={() => {
-              onOpenSimpleMode();
-            }}
-          >
+          <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
             Simple Mode
           </Button>
         </Tooltip>
@@ -83,19 +80,19 @@ function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
             }}
             bg="black"
             color="#7ae7ff"
-            onClick={() => onOpenSimpleMode()}
+            onClick={() => onOpen()}
           />
         </>
       )}
 
       <Modal
         isCentered
+        isOpen={isOpen}
         size={modalSize}
+        onClose={onClose}
         closeOnEsc={false}
-        isOpen={isOpenSimpleMode}
         scrollBehavior={"inside"}
         closeOnOverlayClick={false}
-        onClose={onCloseSimpleMode}
       >
         <ModalOverlay
           bg="blackAlpha.300"
@@ -127,8 +124,10 @@ function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
             <Heading fontSize={["2xl", "3xl", "3xl"]} m={2}>
               {mode === formMode.ADD ? "Simple Mode" : "Edit Collection"}{" "}
               <Tooltip
-                label="Simple Mode is designed for non-tech people. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
+                bg="#333"
+                color="#fff"
                 fontSize="md"
+                label="Simple Mode is designed for non-tech people. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
               >
                 <QuestionIcon fontSize="md" />
               </Tooltip>
@@ -140,7 +139,6 @@ function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
               id={id}
               maxH="60rem"
               mode={mode}
-              onClose={onCloseSimpleMode}
               nftContractAddress={nftContractAddress}
             />
           </ModalBody>

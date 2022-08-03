@@ -1,6 +1,6 @@
 import { Flex, Heading, Spacer, Text } from "@chakra-ui/react";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { usePagination } from "@ajna/pagination";
 import toast from "react-hot-toast";
 
@@ -11,22 +11,26 @@ import { clientAPI } from "@api/client";
 import { useSubstrateState } from "@utils/substrate";
 
 import AddNewCollectionModal from "./components/Modal/AddNew";
-import { AccountActionTypes } from "@store/types/account.types";
-import { delay } from "@utils";
-import { useDispatch, useSelector } from "react-redux";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
 import GridA from "@components/Grid/GridA";
 import { motion } from "framer-motion";
-import { formMode } from "@constants";
-import CommonContainer from "../../../components/Container/CommonContainer";
+import { formMode, CREATE_COLLECTION, EDIT_COLLECTION } from "@constants";
+import CommonContainer from "@components/Container/CommonContainer";
+import useForceUpdate from "@hooks/useForceUpdate";
 
 function MyCollectionsPage() {
   const [collections, setCollections] = useState(null);
-  const [owner, setOwner] = useState(null);
+  const [, setOwner] = useState(null);
   const { currentAccount } = useSubstrateState();
   const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
+    [CREATE_COLLECTION, EDIT_COLLECTION],
+    () => fetchCollectionsOwned()
+  );
 
   const {
     pagesCount,
@@ -44,107 +48,107 @@ function MyCollectionsPage() {
     },
   });
 
-  useEffect(() => {
-    const fetchCollectionsOwned = async () => {
-      const options = {
-        owner: currentAccount?.address,
-        limit: pageSize,
-        offset: offset,
-        sort: -1,
-      };
+  const fetchCollectionsOwned = useCallback(async () => {
+    console.log("first...");
+    setLoading(true);
 
-      try {
-        const totalCollectionsCountData = await clientAPI(
-          "post",
-          "/countCollectionsByOwner",
-          { owner: currentAccount?.address }
-        );
+    const options = {
+      owner: currentAccount?.address,
+      limit: pageSize,
+      offset: offset,
+      sort: -1,
+    };
+    console.log("options", options);
+    try {
+      const totalCollectionsCountData = await clientAPI(
+        "post",
+        "/countCollectionsByOwner",
+        { owner: currentAccount?.address }
+      );
+      console.log("totalCollectionsCountData", totalCollectionsCountData);
+      setTotalCollectionsCount(totalCollectionsCountData);
 
-        setTotalCollectionsCount(totalCollectionsCountData);
+      const dataList = await clientAPI(
+        "post",
+        "/getCollectionsByOwner",
+        options
+      );
+      console.log("dataList", dataList);
 
-        const dataList = await clientAPI(
-          "post",
-          "/getCollectionsByOwner",
-          options
-        );
+      let listCollection = [];
+      let ownerAddress;
 
-        if (dataList?.length) {
-          setOwner(dataList[0].collectionOwner || options.owner);
+      if (!dataList?.length) {
+        ownerAddress = options.owner;
+      }
 
-          const listCollection = [];
+      if (dataList?.length) {
+        ownerAddress = dataList[0].collectionOwner;
 
-          for (let item of dataList) {
-            item.volume =
-              await marketplace_contract_calls.getVolumeByCollection(
-                currentAccount,
-                item.nftContractAddress
-              );
-            listCollection.push(item);
-          }
-          return setCollections(listCollection);
+        for (let item of dataList) {
+          item.volume = await marketplace_contract_calls.getVolumeByCollection(
+            currentAccount,
+            item.nftContractAddress
+          );
+
+          listCollection.push(item);
         }
-        setOwner(options.owner);
-        setCollections([]);
-      } catch (error) {
-        console.log(error);
-
-        toast.error("There was an error while fetching the collections.");
       }
-    };
 
-    if (!collections || owner !== currentAccount?.address) {
-      fetchCollectionsOwned();
+      setOwner(ownerAddress);
+      setCollections(listCollection);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+
+      setLoading(false);
+
+      toast.error("There was an error while fetching the collections.");
     }
-  }, [
-    currentPage,
-    collections,
-    owner,
-    currentAccount?.address,
-    offset,
-    pageSize,
-    currentAccount,
-  ]);
+  }, [currentAccount, offset, pageSize]);
 
-  const dispatch = useDispatch();
-  const { addCollectionTnxStatus } = useSelector(
-    (s) => s.account.accountLoaders
-  );
-  const [loading, setLoading] = useState(false);
-  const [loadingTime, setLoadingTime] = useState(null);
   useEffect(() => {
-    const forceUpdateAfterMint = async () => {
-      if (addCollectionTnxStatus?.status !== "End") {
-        return;
-      }
+    // if (!collections || owner !== currentAccount?.address) {
+    //   fetchCollectionsOwned();
+    // }
+    fetchCollectionsOwned();
+  }, [currentAccount, fetchCollectionsOwned]);
 
-      const { status, timeStamp, endTimeStamp } = addCollectionTnxStatus;
+  // const dispatch = useDispatch();
+  // const { addCollectionTnxStatus } = useSelector(
+  //   (s) => s.account.accountLoaders
+  // );
+  // const [loadingTime, setLoadingTime] = useState(null);
 
-      if (status && timeStamp && endTimeStamp) {
-        const diffTime = 9000 - Number(endTimeStamp - timeStamp);
-        const delayTime = diffTime >= 0 ? diffTime : 500;
+  // const forceUpdateAfterMint = useCallback(async () => {
+  //   if (addCollectionTnxStatus?.status !== "End") {
+  //     return;
+  //   }
 
-        setLoading(true);
+  //   const { status, timeStamp, endTimeStamp } = addCollectionTnxStatus;
 
-        setLoadingTime(delayTime / 1000);
+  //   if (status && timeStamp && endTimeStamp) {
+  //     const diffTime = 9000 - Number(endTimeStamp - timeStamp);
+  //     const delayTime = diffTime >= 0 ? diffTime : 500;
 
-        await delay(delayTime).then(() => {
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-          });
+  //     setLoading(true);
 
-          setCollections(null);
-          setLoading(false);
-        });
-      }
-    };
+  //     setLoadingTime(delayTime / 1000);
 
-    forceUpdateAfterMint();
-  }, [
-    addCollectionTnxStatus,
-    addCollectionTnxStatus?.status,
-    dispatch,
-    loadingTime,
-  ]);
+  //     await delay(delayTime).then(() => {
+  //       dispatch({
+  //         type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+  //       });
+
+  //       setCollections(null);
+  //       setLoading(false);
+  //     });
+  //   }
+  // }, [addCollectionTnxStatus, dispatch]);
+
+  // useEffect(() => {
+  //   forceUpdateAfterMint();
+  // }, [currentAccount, forceUpdateAfterMint]);
 
   return (
     <CommonContainer>
@@ -161,8 +165,8 @@ function MyCollectionsPage() {
         <AddNewCollectionModal mode={formMode.ADD} />
       </Flex>
 
-      {loading ? (
-        <AnimationLoader loadingTime={loadingTime} />
+      {loading || loadingForceUpdate ? (
+        <AnimationLoader loadingTime={loadingTime || 2} />
       ) : (
         <>
           <motion.div
