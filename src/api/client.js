@@ -190,6 +190,15 @@ export const APICall = {
     return ret;
   },
 
+  getCollectionsCountByOwner: async ({ owner, noNFT }) => {
+    const ret = await client("POST", "/countCollectionsByOwner", {
+      owner,
+      noNFT,
+    });
+
+    return ret;
+  },
+
   getCollectionFloorPrice: async ({ collection_address }) => {
     return await client("POST", "/getFloorPrice", {
       collection_address,

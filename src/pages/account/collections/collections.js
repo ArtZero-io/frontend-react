@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 import { NUMBER_PER_PAGE } from "@constants/index";
 import PaginationMP from "@components/Pagination/Pagination";
 
-import { clientAPI } from "@api/client";
 import { useSubstrateState } from "@utils/substrate";
 
 import AddNewCollectionModal from "./components/Modal/AddNew";
@@ -19,6 +18,7 @@ import { motion } from "framer-motion";
 import { formMode, CREATE_COLLECTION, EDIT_COLLECTION } from "@constants";
 import CommonContainer from "@components/Container/CommonContainer";
 import useForceUpdate from "@hooks/useForceUpdate";
+import { APICall } from "@api/client";
 
 function MyCollectionsPage() {
   const [collections, setCollections] = useState(null);
@@ -59,19 +59,15 @@ function MyCollectionsPage() {
     };
 
     try {
-      const totalCollectionsCountData = await clientAPI(
-        "post",
-        "/countCollectionsByOwner",
-        { owner: currentAccount?.address }
-      );
+      const totalCollectionsCountData =
+        await APICall.getCollectionsCountByOwner({
+          owner: currentAccount?.address,
+          noNFT: true,
+        });
 
       setTotalCollectionsCount(totalCollectionsCountData);
 
-      const dataList = await clientAPI(
-        "post",
-        "/getCollectionsByOwner",
-        options
-      );
+      const dataList = await APICall.getCollectionsByOwner(options);
 
       let listCollection = [];
       let ownerAddress;
