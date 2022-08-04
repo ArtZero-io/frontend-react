@@ -1,10 +1,10 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5CJGVnBLUouT1CzASEe93iQ5oCjin19s61XrNZcAnWchULjZ",
+  CONTRACT_ADDRESS: "5HX7LQgmYrr8TezLKfmu1HMyZXL5QZWPuuoepZybeV1GF7oC",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x5b62dac8a0d6d0bf592800b2cf2a141c65e021ffdff86b9453036915aef4d33e",
+      "hash": "0xadec3e8168fc5a97876113188b8ab0cd8dea76d444e6b61f087d12cbb2ac9d27",
       "language": "ink! 3.3.0",
-      "compiler": "rustc 1.63.0-nightly"
+      "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
       "name": "artzero_launchpad_psp34",
