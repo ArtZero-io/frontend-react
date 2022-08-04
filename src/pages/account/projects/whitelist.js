@@ -151,11 +151,13 @@ import {
       for (let i = 1; i <= totalPhase; i++) {
         const phaseSchedule = await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(currentAccount, i);
         const phaseCode = phaseSchedule.title;
-        const phaseInfo = {
-          id: i,
-          code: phaseCode
-        };
-        phasesTmp.push(phaseInfo);
+        if (!phaseSchedule.isPublic) {
+          const phaseInfo = {
+            id: i,
+            code: phaseCode
+          };
+          phasesTmp.push(phaseInfo);
+        }
       }
       setProjecPhases(phasesTmp);
     }

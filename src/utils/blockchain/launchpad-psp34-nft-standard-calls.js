@@ -299,7 +299,7 @@ async function editProjectInformation(caller_account, projectInfo) {
   return unsubscribe;
 }
 
-async function publicMint(caller_account, phaseId) {
+async function publicMint(caller_account, phaseId, mintingFee) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -309,7 +309,7 @@ async function publicMint(caller_account, phaseId) {
   const address = caller_account?.address;
   const gasLimit = -1;
 
-  const azero_value = await getPublicMintingFee(caller_account);
+  const azero_value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 6)).toString();
   const injector = await web3FromSource(caller_account?.meta?.source);
   contract.tx
     .publicMint({ gasLimit, value: azero_value }, phaseId)
@@ -498,62 +498,6 @@ async function tokenUri(caller_account, tokenId) {
   return null;
 }
 
-async function getPublicMintingPhaseId(caller_account) {
-  if (!contract || !caller_account) {
-    console.log("invalid inputs");
-    return null;
-  }
-  const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const { result, output } = await contract.query.getPublicMintingPhaseId(address, {
-    value: azero_value,
-    gasLimit,
-  });
-  if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
-  }
-  return null;
-}
-
-async function getPublicMintingFee(caller_account) {
-  if (!contract || !caller_account) {
-    console.log("invalid inputs");
-    return null;
-  }
-  const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  //console.log(contract);
-
-  const { result, output } = await contract.query.getPublicMintingFee(address, {
-    value: azero_value,
-    gasLimit,
-  });
-  if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
-  }
-  return null;
-}
-
-async function getTotalPublicMintingAmount(caller_account) {
-  if (!contract || !caller_account) {
-    console.log("invalid inputs");
-    return null;
-  }
-  const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const { result, output } = await contract.query.getTotalPublicMintingAmount(address, {
-    value: azero_value,
-    gasLimit,
-  });
-  if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
-  }
-  return null;
-}
-
 async function getPublicMintedCount(caller_account) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
@@ -590,9 +534,6 @@ const launchpad_psp34_nft_standard_calls = {
   getLastTokenId,
   ownerOf,
   tokenUri,
-  getPublicMintingPhaseId,
-  getPublicMintingFee,
-  getTotalPublicMintingAmount,
   getPublicMintedCount,
   publicMint,
   updateWhitelist

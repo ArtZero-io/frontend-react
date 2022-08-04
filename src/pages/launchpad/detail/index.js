@@ -48,11 +48,10 @@ const LaunchpadDetailPage = () => {
   const [currentPhaseId, setCurrentPhaseId] = useState(0);
   const [currentWhitelist, setCurrentWhitelist] = useState({});
   const [myNFTs, setMyNFTs] = useState([]);
-  const [publicMintingFee, setPublicMintingFee] = useState(0);
   const history = useHistory();
   const [publicMintedCount, setPublicMintedCount] = useState(0);
-  const [totalPublicMintingAmount, setTotalPublicMintingAmount] = useState(0);
   const [publicMintingPhaseId, setPublicMintingPhaseId] = useState(0);
+  const [currentPhase, setCurrentPhase] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,19 +80,6 @@ const LaunchpadDetailPage = () => {
             projectInfoHash
           );
 
-        let publicMintingFeeTmp =
-          await launchpad_psp34_nft_standard_calls.getPublicMintingFee(
-            currentAccount
-          );
-        publicMintingFeeTmp = publicMintingFeeTmp / 10 ** 12;
-        setPublicMintingFee(publicMintingFeeTmp);
-
-        let totalPublicMintingAmountTmp =
-          await launchpad_psp34_nft_standard_calls.getTotalPublicMintingAmount(
-            currentAccount
-          );
-        setTotalPublicMintingAmount(totalPublicMintingAmountTmp);
-
         let publicMintedCountTmp =
           await launchpad_psp34_nft_standard_calls.getPublicMintedCount(
             currentAccount
@@ -113,11 +99,7 @@ const LaunchpadDetailPage = () => {
           await launchpad_psp34_nft_standard_calls.getCurrentPhase(
             currentAccount
           );
-        const publicMintingPhaseIdTmp =
-          await launchpad_psp34_nft_standard_calls.getPublicMintingPhaseId(
-            currentAccount
-          );
-        setPublicMintingPhaseId(publicMintingPhaseIdTmp);
+      
 
         for (let i = 1; i <= totalPhase; i++) {
           const whiteListData =
@@ -131,7 +113,7 @@ const LaunchpadDetailPage = () => {
               currentAccount,
               i
             );
-          console.log(phaseSchedule);
+          console.log('phaseSchedule', phaseSchedule);
           const phaseCode = phaseSchedule.title;
           const totalWhiteListPhase =
             await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(
@@ -145,8 +127,10 @@ const LaunchpadDetailPage = () => {
             endTime: timestampWithoutCommas(phaseSchedule.endTime),
             isLive: i == currentPhaseIdTmp ? 1 : 0,
             totalWhiteList: totalWhiteListPhase ? totalWhiteListPhase : 0,
-            publicPhase: i == publicMintingPhaseIdTmp ? 1 : 0,
+            publicPhase: phaseSchedule.isPublic,
             whitelist: whiteListData,
+            publicMintingAmout: phaseSchedule.publicMintingAmout,
+            publicMintingFee: phaseSchedule.publicMintingFee
           };
 
           phasesTmp.push(phaseInfo);
@@ -156,6 +140,7 @@ const LaunchpadDetailPage = () => {
             setTotalWhitelistAmount(parseInt(phaseSchedule.whitelistAmount));
             setTotalClaimedAmount(parseInt(phaseSchedule.claimedAmount));
             setCurrentPhaseId(currentPhaseIdTmp);
+            setCurrentPhase(phaseInfo);
             const currentWhitelistTmp =
               await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
                 currentAccount,
@@ -192,24 +177,28 @@ const LaunchpadDetailPage = () => {
             currentAccount
           );
         console.log("totalTokenSupply", totalTokenSupply);
-        let myNFTsTmp = [];
-        let tokenUriFull = await launchpad_psp34_nft_standard_calls.tokenUri(
-          currentAccount,
-          1
-        );
-        tokenUriFull = tokenUriFull.replace("1.json", "");
-        for (let tokenID = 1; tokenID <= totalTokenSupply; tokenID++) {
-          let owner = await launchpad_psp34_nft_standard_calls.ownerOf(
+        if (totalTokenSupply > 0) {
+          let myNFTsTmp = [];
+          let tokenUriFull = await launchpad_psp34_nft_standard_calls.tokenUri(
             currentAccount,
-            { u64: tokenID }
+            1
           );
-          console.log("tokenUriFull", tokenUriFull);
-          if (owner == currentAccount.address) {
-            let metaData = await getMetaDataType1(tokenID, tokenUriFull);
-            myNFTsTmp.push(metaData);
+          tokenUriFull = tokenUriFull.replace("1.json", "");
+          for (let tokenID = 1; tokenID <= totalTokenSupply; tokenID++) {
+            let owner = await launchpad_psp34_nft_standard_calls.ownerOf(
+              currentAccount,
+              { u64: tokenID }
+            );
+            console.log("tokenUriFull", tokenUriFull);
+            if (owner == currentAccount.address) {
+              let metaData = await getMetaDataType1(tokenID, tokenUriFull);
+              myNFTsTmp.push(metaData);
+            }
           }
+          setMyNFTs(myNFTsTmp);
+          console.log('After Set My NFTS')
         }
-        setMyNFTs(myNFTsTmp);
+       
       }
     };
 
@@ -238,6 +227,15 @@ const LaunchpadDetailPage = () => {
   };
 
   const onWhiteListMint = async () => {
+    const launchpad_psp34_nft_standard_contract = new ContractPromise(
+      api,
+      launchpad_psp34_nft_standard.CONTRACT_ABI,
+      collection_address
+    );
+
+    launchpad_psp34_nft_standard_calls.setContract(
+      launchpad_psp34_nft_standard_contract
+    );
     const mintingFee = currentWhitelist.mintingFee.replace(/,/g, "");
     await launchpad_psp34_nft_standard_calls.whitelistMint(
       currentAccount,
@@ -248,9 +246,20 @@ const LaunchpadDetailPage = () => {
   };
 
   const onPublicMint = async () => {
+    const launchpad_psp34_nft_standard_contract = new ContractPromise(
+      api,
+      launchpad_psp34_nft_standard.CONTRACT_ABI,
+      collection_address
+    );
+
+    launchpad_psp34_nft_standard_calls.setContract(
+      launchpad_psp34_nft_standard_contract
+    );
+    const mintingFee = convertStringToPrice(currentPhase.publicMintingFee);
     await launchpad_psp34_nft_standard_calls.publicMint(
       currentAccount,
-      publicMintingPhaseId
+      currentPhase.id,
+      mintingFee
     );
   };
 
@@ -278,7 +287,7 @@ const LaunchpadDetailPage = () => {
           <Heading size="h6">Public Sale In Progress</Heading>
 
           <Spacer />
-          {totalWhitelistAmount != 0 ? (
+          {!currentPhase.publicPhase && totalWhitelistAmount != 0 ? (
             <Text color="#888">
               {Math.round(totalClaimedAmount / totalWhitelistAmount)}% (
               {totalClaimedAmount}/{totalWhitelistAmount})
@@ -288,16 +297,32 @@ const LaunchpadDetailPage = () => {
               0% ({totalClaimedAmount}/{totalWhitelistAmount})
             </Text>
           )}
+          {currentPhase.publicPhase ? (
+            <Text color="#888">
+              {Math.round(totalClaimedAmount / currentPhase.publicMintingAmout)}% (
+              {totalClaimedAmount}/{currentPhase.publicMintingAmout})
+            </Text>
+          ) : (
+            <Text color="#888">
+              0% ({totalClaimedAmount}/{currentPhase.publicMintingAmout})
+            </Text>
+          )}
         </Flex>
-        {totalWhitelistAmount != 0 ? (
+        {!currentPhase.publicPhase && totalWhitelistAmount != 0 ? (
           <Progress
             value={Math.round(totalClaimedAmount / totalWhitelistAmount)}
             mb="20px"
             h="8px"
           />
-        ) : (
-          <Progress value="0" mb="20px" h="8px" />
-        )}
+        ) : ''}
+
+        {currentPhase.publicPhase ? (
+          <Progress
+            value={Math.round(totalClaimedAmount / currentPhase.publicMintingAmout)}
+            mb="20px"
+            h="8px"
+          />
+        ) : ''}
 
         {!currentAccount ? (
           <Flex w="full" justifyContent="center">
@@ -306,8 +331,9 @@ const LaunchpadDetailPage = () => {
         ) : (
           ""
         )}
+        {console.log('currentPhase', currentPhase)}
         {currentAccount &&
-          publicMintingPhaseId != currentPhaseId &&
+          !currentPhase.publicPhase &&
           currentWhitelist.whitelistAmount && (
             <Flex w="full" justifyContent="center">
               <Button onClick={() => onWhiteListMint()} variant="outline">
@@ -315,7 +341,7 @@ const LaunchpadDetailPage = () => {
               </Button>
             </Flex>
           )}
-        {currentAccount && publicMintingPhaseId == currentPhaseId && (
+        {currentAccount && currentPhase.publicPhase && (
           <Flex w="full" justifyContent="center">
             <Button onClick={() => onPublicMint()} variant="outline">
               Public Mint
@@ -345,7 +371,7 @@ const LaunchpadDetailPage = () => {
                   <WrapItem>
                     <Tag w="full">{item.code}</Tag>
                   </WrapItem>
-                  {item.publicPhase == 1 && (
+                  {item.publicPhase && (
                     <>
                       <Flex
                         color="#888"
@@ -358,7 +384,7 @@ const LaunchpadDetailPage = () => {
                         <Text mr="30px">
                           Total:{" "}
                           <Text as="span" color="#fff">
-                            {totalPublicMintingAmount}
+                            {item.publicMintingAmout}
                           </Text>
                         </Text>
                         <Text mr="30px">
@@ -370,7 +396,7 @@ const LaunchpadDetailPage = () => {
                         <Text>
                           Price:{" "}
                           <Text as="span" color="#fff">
-                            {publicMintingFee} <AzeroIcon mb="5px" />
+                            {convertStringToPrice(item.publicMintingFee)} <AzeroIcon mb="5px" />
                           </Text>
                         </Text>
                       </Flex>

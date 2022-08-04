@@ -186,12 +186,26 @@ function LaunchpadDetailHeader({
                       {project.totalSupply}
                     </Text>
                   </Text>
-                  {livePhase && currentWhitelist.mintingFee ? (
+                  {console.log('livePhase', livePhase)}
+                  {livePhase && !livePhase.publicPhase && currentWhitelist.mintingFee ? (
                     <>
                       <Text>
                         Price:{" "}
                         <Text as="span" color="#fff">
                           {convertStringToPrice(currentWhitelist.mintingFee)}{" "}
+                          <AzeroIcon mb="5px" />
+                        </Text>
+                      </Text>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  {livePhase && livePhase.publicPhase ? (
+                    <>
+                      <Text>
+                        Price:{" "}
+                        <Text as="span" color="#fff">
+                          {convertStringToPrice(livePhase.publicMintingFee)}{" "}
                           <AzeroIcon mb="5px" />
                         </Text>
                       </Text>
