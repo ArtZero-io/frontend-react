@@ -6,8 +6,14 @@ import { formMode } from "@constants";
 import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
 import toast from "react-hot-toast";
 
+import AdvancedModeSwitch from "@components/Switch/Switch";
+import NumberInput from "@components/Input/NumberInput";
+import { useState } from "react";
+
 function AddPhase({ name, mode }) {
   const [{ value }, , helpers] = useField(name);
+  const [isPublic, setIsPublic] = useState(false);
+
   // const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
 
   const handlePhaseTime = (e, index) => {
@@ -118,6 +124,46 @@ function AddPhase({ name, mode }) {
                     </Stack>
                   </Stack>
                 </Stack>
+
+                <Stack
+                  minH="80px"
+                  alignItems={["start", "end"]}
+                  gap={["10px", "30px"]}
+                  direction={["column", "row"]}
+                >
+                  <Stack
+                    minW={52}
+                    alignItems="end"
+                    direction={{ base: "column", "2xl": "row" }}
+                  >
+                    <AdvancedModeSwitch
+                      name={`phases[${index}].isPublic`}
+                      label="Set public"
+                      // isDisabled={addCollectionTnxStatus}
+                      onChange={() => {
+                        value[index].isPublic = !value[index].isPublic;
+                        setIsPublic(!isPublic);
+                      }}
+                    />
+                  </Stack>
+                  <NumberInput
+                    isDisplay={value[index].isPublic}
+                    type="number"
+                    name={`phases[${index}].publicMintingFee`}
+                    // isRequired={true}
+                    label="Public Minting Fee"
+                    // isDisabled={addCollectionTnxStatus}
+                  />{" "}
+                  <NumberInput
+                    // isDisabled={!isPublic || addCollectionTnxStatus}
+                    isDisplay={value[index].isPublic}
+                    max={999}
+                    label="Public amount"
+                    name={`phases[${index}].publicAmount`}
+                    type="number"
+                  />
+                </Stack>
+
                 <HStack justifyContent="end" w="full">
                   <Heading
                     _hover={{

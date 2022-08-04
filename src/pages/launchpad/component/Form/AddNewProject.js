@@ -39,12 +39,11 @@ import { useLocation } from "react-router-dom";
 import { ContractPromise } from "@polkadot/api-contract";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
-import AdvancedModeInput from "@components/Input/Input";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import AddCollectionNumberInput from "@components/Input/NumberInput";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import CommonStack from "./CommonStack";
-import emailjs from '@emailjs/browser';
+import emailjs from "@emailjs/browser";
 
 const client = create(IPFS_CLIENT_URL);
 
@@ -154,6 +153,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
+              console.log('addNewProject values', values)
               // check all image uploaded?
               const memberAvatarAr = values?.members?.map((i) => i.avatar);
               const isAllMemberAvatarUpload = memberAvatarAr?.every((e) => e);
@@ -228,11 +228,21 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               let code_phases = [];
               let start_time_phases = [];
               let end_time_phases = [];
+
               for (let phase of values.phases) {
                 code_phases.push(phase.name);
                 start_time_phases.push(phase.start);
                 end_time_phases.push(phase.end);
               }
+
+              // is_public, public_minting_fee, public_amount
+
+              const is_public = values.phases.map((i) => i.isPublic);
+              const public_minting_fee = values.phases.map(
+                (i) => i.publicMintingFee
+              );
+              const public_amount = values.phases.map((i) => i.publicAmount);
+
               const data = {
                 total_supply: Number(values.totalSupply),
                 start_time: values.startTime,
@@ -252,6 +262,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 collectRoyalFee: isSetRoyal,
                 royalFee: values.royalFee,
                 collectionAddingFee: addingFee,
+                is_public,
+                public_minting_fee,
+                public_amount,
               };
 
               if (mode === formMode.ADD) {
@@ -303,15 +316,26 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     email_owner: values.email_owner,
                     nft_address: nft_address,
                     project_name: values.name,
-                    reply_to: values.email_owner
+                    reply_to: values.email_owner,
                   };
-                  emailjs.send('service_gz6dl9u', 'template_980idtm', templateParams, 'q4EO2tL6l8kY1jEZh')
-                  .then(function(response) {
-                    console.log('SUCCESS!', response.status, response.text);
-                  }, function(error) {
-                    console.log('FAILED...', error);
-                  });
+                  emailjs
+                    .send(
+                      "service_gz6dl9u",
+                      "template_980idtm",
+                      templateParams,
+                      "q4EO2tL6l8kY1jEZh"
+                    )
+                    .then(
+                      function (response) {
+                        console.log("SUCCESS!", response.status, response.text);
+                      },
+                      function (error) {
+                        console.log("FAILED...", error);
+                      }
+                    );
                 };
+
+                console.log("addNewProject data", data);
                 await launchpad_contract_calls.addNewProject(
                   currentAccount,
                   data,
@@ -373,26 +397,28 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     </Stack>
 
                     <Stack w="full">
-                      {(mode === formMode.ADD) && (<Stack pb="30px">
-                        <Text fontSize="lg" ml={1} mb="10px">
-                          Start time - End time
-                        </Text>
-                        <DateTimeRangePicker
-                          onChange={(e) =>
-                            handleOnchangeSchedule(e, setFieldValue)
-                          }
-                          value={
-                            !values?.startTime
-                              ? null
-                              : [
-                                  new Date(parseInt(values?.startTime)),
-                                  new Date(parseInt(values?.endTime)),
-                                ]
-                          }
-                          locale="en-EN"
-                        />
-                        {/* TEMP FIX with parseInt */}
-                      </Stack>)}
+                      {mode === formMode.ADD && (
+                        <Stack pb="30px">
+                          <Text fontSize="lg" ml={1} mb="10px">
+                            Start time - End time
+                          </Text>
+                          <DateTimeRangePicker
+                            onChange={(e) =>
+                              handleOnchangeSchedule(e, setFieldValue)
+                            }
+                            value={
+                              !values?.startTime
+                                ? null
+                                : [
+                                    new Date(parseInt(values?.startTime)),
+                                    new Date(parseInt(values?.endTime)),
+                                  ]
+                            }
+                            locale="en-EN"
+                          />
+                          {/* TEMP FIX with parseInt */}
+                        </Stack>
+                      )}
                     </Stack>
                   </Stack>
 
@@ -552,36 +578,38 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       isDisabled={addCollectionTnxStatus}
                     />
                     {mode === formMode.ADD && (
-                    <NumberInput
-                      height="52px"
-                      precision={0}
-                      isRequired={true}
-                      name="totalSupply"
-                      hasStepper={false}
-                      inputWidth={"260px"}
-                      label="Total Supply"
-                      // step={1}
-                      // type="number"
-                      // placeholder="9999"
-                      // isDisabled={addCollectionTnxStatus}
-                    />)}
+                      <NumberInput
+                        height="52px"
+                        precision={0}
+                        isRequired={true}
+                        name="totalSupply"
+                        hasStepper={false}
+                        inputWidth={"260px"}
+                        label="Total Supply"
+                        max={9999}
+                        // step={1}
+                        // type="number"
+                        // placeholder="9999"
+                        // isDisabled={addCollectionTnxStatus}
+                      />
+                    )}
                   </Stack>
                 </CommonStack>
                 {mode === formMode.ADD && (
-                <CommonStack stackTitle="3. phases info">
-                  <AddPhase name="phases" />
-                </CommonStack>
+                  <CommonStack stackTitle="3. phases info">
+                    <AddPhase name="phases" />
+                  </CommonStack>
                 )}
                 {mode === formMode.ADD && (
-                <CommonStack stackTitle="4. Contact info">
-                  <CommonInput
+                  <CommonStack stackTitle="4. Contact info">
+                    <CommonInput
                       type="text"
                       name="email_owner"
                       label="This email not save on our platform, we just use this field to contact with you!"
                       placeholder={"Email Contact"}
                       isDisabled={addCollectionTnxStatus}
                     />
-                </CommonStack>
+                  </CommonStack>
                 )}
                 <VStack>
                   <Text color="#fff">
@@ -659,7 +687,16 @@ export const fetchInitialValuesProject = async ({
     nftName: "",
     nftSymbol: "",
     totalSupply: 0,
-    phases: [{ name: "", start: "", end: "" }],
+    phases: [
+      {
+        name: "",
+        start: "",
+        end: "",
+        isPublic: false,
+        publicMintingFee: 0,
+        publicAmount: 0,
+      },
+    ],
     agreeTosCheckbox: false,
   };
 
@@ -911,6 +948,9 @@ const validationSchema = Yup.object().shape({
             );
             return !(isDup && isDup.trim() === value.trim());
           }),
+        isPublic: Yup.boolean(),
+        publicMintingFee: "",
+        publicAmount: "",
       })
     ),
   agreeTosCheckbox: validationAgreeTosCheckbox,
