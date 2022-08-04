@@ -4,19 +4,20 @@ import toast from "react-hot-toast";
 import Input from "@components/Input/Input";
 import { formMode } from "@constants";
 import ImageUpload from "@components/ImageUpload/Collection";
+import { useState } from "react";
 
 function AddMember({ name, mode }) {
   const [{ value }, , helpers] = useField(name);
-
+  const [avatarIPFSUrl, setAvatarIPFSUrl] = useState(null);
   // const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
 
   const handleAvatarUrl = (hash, index) => {
     const valueAddHash = value.map((i, idx) => {
       const avatarHash = idx !== index ? i.avatar : hash;
-      console.log("handleAvatarUrl", avatarHash);
+
       return { ...i, avatar: avatarHash };
     });
-
+    setAvatarIPFSUrl(hash);
     helpers.setValue(valueAddHash);
   };
 
@@ -92,7 +93,7 @@ function AddMember({ name, mode }) {
                     isBanner={false}
                     isRequired={true}
                     id={`memberAvatar${index}`}
-                    // imageIPFSUrl={avatarIPFSUrl}
+                    imageIPFSUrl={avatarIPFSUrl || value[index].avatar}
                     setImageIPFSUrl={handleAvatarUrl}
                     limitedSize={{ width: "500", height: "500" }}
                   />
