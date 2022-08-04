@@ -52,7 +52,14 @@ function AddPhase({ name, mode }) {
       //   phaseStart <= phaseEnd &&
       //   phaseEnd <= prjEndTime
       // ) {
-      arrayHelpers.push({ name: "", start: "", end: "" });
+      arrayHelpers.push({
+        name: "",
+        start: "",
+        end: "",
+        isPublic: false,
+        publicMintingFee: "",
+        publicAmount: "",
+      });
       // } else {
       //   toast.error("Phase time is not valid.");
       // }

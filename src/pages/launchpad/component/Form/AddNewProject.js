@@ -154,7 +154,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
-              console.log('addNewProject values', values)
+              console.log("addNewProject values", values);
               // check all image uploaded?
               const memberAvatarAr = values?.members?.map((i) => i.avatar);
               const isAllMemberAvatarUpload = memberAvatarAr?.every((e) => e);
@@ -235,10 +235,17 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               for (let phase of values.phases) {
                 code_phases.push(phase.name);
                 is_public_phases.push(phase.isPublic);
-                let public_minting_fee_phase_tmp = (phase.isPublic) ? new BN(phase.publicMintingFee * 10 ** 6).mul(new BN(10 ** 6)).toString() : 0;
+                let public_minting_fee_phase_tmp = phase.isPublic
+                  ? new BN(phase.publicMintingFee * 10 ** 6)
+                      .mul(new BN(10 ** 6))
+                      .toString()
+                  : 0;
                 public_minting_fee_phases.push(public_minting_fee_phase_tmp);
-                let public_minting_amout_phase_tmp = (phase.isPublic && phase.publicAmount) ? phase.publicAmount : 0;
-                public_minting_amout_phases.push(public_minting_amout_phase_tmp);
+                let public_minting_amout_phase_tmp =
+                  phase.isPublic && phase.publicAmount ? phase.publicAmount : 0;
+                public_minting_amout_phases.push(
+                  public_minting_amout_phase_tmp
+                );
                 start_time_phases.push(phase.start);
                 end_time_phases.push(phase.end);
               }
@@ -506,7 +513,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     <Heading size="h5" mb="30px">
                       project team member
                     </Heading>
-                    <AddMember name="members" />
+                    <AddMember name="members" mode={mode} />
                   </Stack>
 
                   <Stack
@@ -809,8 +816,8 @@ const validationDiscord = Yup.string()
 
 const validationDescription = Yup.string()
   .trim()
-  .min(3, "Must be longer than 3 characters")
-  .max(150, "Must be at most 150 characters")
+  .min(120, "Must be longer than 120 characters")
+  .max(500, "Must be at most 500 characters")
   .required("This field is required");
 
 const validationNftName = Yup.string()

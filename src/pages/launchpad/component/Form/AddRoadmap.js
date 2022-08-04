@@ -1,12 +1,22 @@
+/* eslint-disable no-unused-vars */
 import { Button, Heading, HStack, Stack, Text } from "@chakra-ui/react";
 import { FieldArray, useField } from "formik";
-import Input from "@components/Input/Input";
+
 import { formMode } from "@constants";
-import CommonTextArea from "@components/TextArea/TextArea";
+
+import Input from "@components/Input/Input";
+import Editor from "@components/Editor/Editor";
 
 function AddRoadmap({ name, mode }) {
-  const [{ value }] = useField(name);
+  const [{ value }, , helpers] = useField(name);
 
+  const handleChange = (v, index) => {
+    const newValue = value.map((i, idx) => {
+      return idx === index ? { ...i, content: v } : i;
+    });
+
+    helpers.setValue(newValue);
+  };
   // const hasEmptyProp = value.some((p) => p.type?.trim() === "");
 
   return (
@@ -34,7 +44,14 @@ function AddRoadmap({ name, mode }) {
                   label={"Milestone"}
                 />
 
-                <CommonTextArea
+                <Editor
+                  isRequired={true}
+                  name={`roadmap[${index}].content`}
+                  editorContent={value[index].content}
+                  handleChange={(v) => handleChange(v, index)}
+                />
+
+                {/* <CommonTextArea
                   rows={3}
                   height={"144px"}
                   label={"Content"}
@@ -43,7 +60,7 @@ function AddRoadmap({ name, mode }) {
                   isRequired={true}
                   placeholder="Your content here"
                   name={`roadmap[${index}].content`}
-                />
+                /> */}
                 <HStack justifyContent="end" w="full">
                   <Heading
                     _hover={{
