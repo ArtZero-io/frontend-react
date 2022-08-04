@@ -157,10 +157,13 @@ function AddPhase({ name, mode }) {
                   <NumberInput
                     // isDisabled={!isPublic || addCollectionTnxStatus}
                     isDisplay={value[index].isPublic}
-                    max={999}
                     label="Public amount"
                     name={`phases[${index}].publicAmount`}
                     type="number"
+                    height="52px"
+                    precision={0}
+                    hasStepper={false}
+                    inputWidth={"260px"}
                   />
                 </Stack>
 

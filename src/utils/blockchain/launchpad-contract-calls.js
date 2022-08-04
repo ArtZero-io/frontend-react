@@ -243,18 +243,18 @@ async function addNewProject(
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
   const value = await getProjectAddingFee(caller_account);
-  const public_minting_fee = new BN(data.publicMintingFee * 10 ** 6).mul(new BN(10 ** 6)).toString();
   contract.tx
     .addNewProject(
       { gasLimit, value: value },
       address,
       data.total_supply,
-      data.totalPublicMintingAmount,
-      public_minting_fee,
       data.start_time,
       data.end_time,
       data.project_info,
       data.code_phases,
+      data.is_public_phases,
+      data.public_minting_fee_phases,
+      data.public_minting_amout_phases,
       data.start_time_phases,
       data.end_time_phases
     )

@@ -2,7 +2,7 @@ const launchpad_manager = {
   CONTRACT_ADDRESS: "5CJGVnBLUouT1CzASEe93iQ5oCjin19s61XrNZcAnWchULjZ",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xf7b9f4187288569aba60483fee69c855d8f0ab3ab358e8e99f2fe5f7a39a29e3",
+      "hash": "0x5b62dac8a0d6d0bf592800b2cf2a141c65e021ffdff86b9453036915aef4d33e",
       "language": "ink! 3.3.0",
       "compiler": "rustc 1.63.0-nightly"
     },
@@ -60,7 +60,7 @@ const launchpad_manager = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 14
+                  "type": 13
                 }
               },
               {
@@ -69,7 +69,7 @@ const launchpad_manager = {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 15
+                  "type": 14
                 }
               }
             ],
@@ -80,7 +80,36 @@ const launchpad_manager = {
           }
         ],
         "docs": [],
-        "events": [],
+        "events": [
+          {
+            "args": [
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "project_id",
+                "type": {
+                  "displayName": [
+                    "u64"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "docs": [],
+                "indexed": false,
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "Option"
+                  ],
+                  "type": 24
+                }
+              }
+            ],
+            "docs": [],
+            "label": "AddNewProjectEvent"
+          }
+        ],
         "messages": [
           {
             "args": [
@@ -117,7 +146,7 @@ const launchpad_manager = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 14
+                  "type": 13
                 }
               },
               {
@@ -126,7 +155,7 @@ const launchpad_manager = {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 15
+                  "type": 14
                 }
               }
             ],
@@ -138,7 +167,7 @@ const launchpad_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 16
+              "type": 15
             },
             "selector": "0xf2f6dba3"
           },
@@ -186,7 +215,7 @@ const launchpad_manager = {
                   "displayName": [
                     "String"
                   ],
-                  "type": 18
+                  "type": 17
                 }
               },
               {
@@ -195,7 +224,34 @@ const launchpad_manager = {
                   "displayName": [
                     "Vec"
                   ],
+                  "type": 18
+                }
+              },
+              {
+                "label": "is_public_phases",
+                "type": {
+                  "displayName": [
+                    "Vec"
+                  ],
                   "type": 19
+                }
+              },
+              {
+                "label": "public_minting_fee_phases",
+                "type": {
+                  "displayName": [
+                    "Vec"
+                  ],
+                  "type": 20
+                }
+              },
+              {
+                "label": "public_minting_amout_phases",
+                "type": {
+                  "displayName": [
+                    "Vec"
+                  ],
+                  "type": 21
                 }
               },
               {
@@ -204,7 +260,7 @@ const launchpad_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 20
+                  "type": 21
                 }
               },
               {
@@ -213,7 +269,7 @@ const launchpad_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 20
+                  "type": 21
                 }
               }
             ],
@@ -227,7 +283,7 @@ const launchpad_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 21
+              "type": 22
             },
             "selector": "0x4b0a448e"
           },
@@ -259,15 +315,6 @@ const launchpad_manager = {
                   ],
                   "type": 5
                 }
-              },
-              {
-                "label": "project_info",
-                "type": {
-                  "displayName": [
-                    "String"
-                  ],
-                  "type": 18
-                }
               }
             ],
             "docs": [
@@ -280,7 +327,7 @@ const launchpad_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 21
+              "type": 22
             },
             "selector": "0x2cafbf63"
           },
@@ -306,7 +353,7 @@ const launchpad_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 21
+              "type": 22
             },
             "selector": "0xb470cada"
           },
@@ -318,7 +365,7 @@ const launchpad_manager = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 14
+                  "type": 13
                 }
               }
             ],
@@ -332,7 +379,7 @@ const launchpad_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 21
+              "type": 22
             },
             "selector": "0x0c3b5043"
           },
@@ -344,7 +391,7 @@ const launchpad_manager = {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 15
+                  "type": 14
                 }
               }
             ],
@@ -358,7 +405,7 @@ const launchpad_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 21
+              "type": 22
             },
             "selector": "0xa81f0494"
           },
@@ -384,7 +431,7 @@ const launchpad_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 21
+              "type": 22
             },
             "selector": "0xad51a976"
           },
@@ -419,7 +466,7 @@ const launchpad_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 21
+              "type": 22
             },
             "selector": "0x88efeaf2"
           },
@@ -435,7 +482,7 @@ const launchpad_manager = {
               "displayName": [
                 "Balance"
               ],
-              "type": 14
+              "type": 13
             },
             "selector": "0x57fe17e8"
           },
@@ -523,7 +570,7 @@ const launchpad_manager = {
               "displayName": [
                 "Option"
               ],
-              "type": 23
+              "type": 24
             },
             "selector": "0xbe4185f5"
           },
@@ -549,7 +596,7 @@ const launchpad_manager = {
               "displayName": [
                 "Vec"
               ],
-              "type": 13
+              "type": 12
             },
             "selector": "0xf25b0961"
           },
@@ -575,26 +622,9 @@ const launchpad_manager = {
               "displayName": [
                 "Option"
               ],
-              "type": 24
+              "type": 25
             },
             "selector": "0x908e3150"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
           },
           {
             "args": [
@@ -629,9 +659,26 @@ const launchpad_manager = {
                 "ownable_external",
                 "TransferOwnershipOutput"
               ],
-              "type": 16
+              "type": 15
             },
             "selector": "0x11f43efd"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [],
@@ -656,7 +703,7 @@ const launchpad_manager = {
                 "ownable_external",
                 "RenounceOwnershipOutput"
               ],
-              "type": 16
+              "type": 15
             },
             "selector": "0x5e228753"
           },
@@ -673,7 +720,7 @@ const launchpad_manager = {
                 "crossartzerolaunchpadpsp34_external",
                 "GetProjectMintFeeRateOutput"
               ],
-              "type": 15
+              "type": 14
             },
             "selector": "0x4832ed9e"
           }
@@ -766,7 +813,7 @@ const launchpad_manager = {
               "layout": {
                 "cell": {
                   "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 11
+                  "ty": 10
                 }
               },
               "name": "projects_by_id"
@@ -775,7 +822,7 @@ const launchpad_manager = {
               "layout": {
                 "cell": {
                   "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 12
+                  "ty": 11
                 }
               },
               "name": "projects_by_owner"
@@ -802,7 +849,7 @@ const launchpad_manager = {
               "layout": {
                 "cell": {
                   "key": "0x0800000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 14
+                  "ty": 13
                 }
               },
               "name": "project_adding_fee"
@@ -811,7 +858,7 @@ const launchpad_manager = {
               "layout": {
                 "cell": {
                   "key": "0x0900000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 15
+                  "ty": 14
                 }
               },
               "name": "project_mint_fee_rate"
@@ -903,7 +950,7 @@ const launchpad_manager = {
                 "fields": [
                   {
                     "name": "offset_key",
-                    "type": 10,
+                    "type": 9,
                     "typeName": "Key"
                   }
                 ]
@@ -962,11 +1009,6 @@ const launchpad_manager = {
                     "name": "end_time",
                     "type": 5,
                     "typeName": "Timestamp"
-                  },
-                  {
-                    "name": "project_info",
-                    "type": 9,
-                    "typeName": "Vec<u8>"
                   }
                 ]
               }
@@ -990,16 +1032,6 @@ const launchpad_manager = {
           "id": 9,
           "type": {
             "def": {
-              "sequence": {
-                "type": 2
-              }
-            }
-          }
-        },
-        {
-          "id": 10,
-          "type": {
-            "def": {
               "composite": {
                 "fields": [
                   {
@@ -1016,14 +1048,14 @@ const launchpad_manager = {
           }
         },
         {
-          "id": 11,
+          "id": 10,
           "type": {
             "def": {
               "composite": {
                 "fields": [
                   {
                     "name": "offset_key",
-                    "type": 10,
+                    "type": 9,
                     "typeName": "Key"
                   }
                 ]
@@ -1048,14 +1080,14 @@ const launchpad_manager = {
           }
         },
         {
-          "id": 12,
+          "id": 11,
           "type": {
             "def": {
               "composite": {
                 "fields": [
                   {
                     "name": "offset_key",
-                    "type": 10,
+                    "type": 9,
                     "typeName": "Key"
                   }
                 ]
@@ -1068,7 +1100,7 @@ const launchpad_manager = {
               },
               {
                 "name": "V",
-                "type": 13
+                "type": 12
               }
             ],
             "path": [
@@ -1080,7 +1112,7 @@ const launchpad_manager = {
           }
         },
         {
-          "id": 13,
+          "id": 12,
           "type": {
             "def": {
               "sequence": {
@@ -1090,7 +1122,7 @@ const launchpad_manager = {
           }
         },
         {
-          "id": 14,
+          "id": 13,
           "type": {
             "def": {
               "primitive": "u128"
@@ -1098,7 +1130,7 @@ const launchpad_manager = {
           }
         },
         {
-          "id": 15,
+          "id": 14,
           "type": {
             "def": {
               "primitive": "u32"
@@ -1106,7 +1138,7 @@ const launchpad_manager = {
           }
         },
         {
-          "id": 16,
+          "id": 15,
           "type": {
             "def": {
               "variant": {
@@ -1123,7 +1155,7 @@ const launchpad_manager = {
                   {
                     "fields": [
                       {
-                        "type": 17
+                        "type": 16
                       }
                     ],
                     "index": 1,
@@ -1139,7 +1171,7 @@ const launchpad_manager = {
               },
               {
                 "name": "E",
-                "type": 17
+                "type": 16
               }
             ],
             "path": [
@@ -1148,7 +1180,7 @@ const launchpad_manager = {
           }
         },
         {
-          "id": 17,
+          "id": 16,
           "type": {
             "def": {
               "variant": {
@@ -1174,10 +1206,20 @@ const launchpad_manager = {
           }
         },
         {
-          "id": 18,
+          "id": 17,
           "type": {
             "def": {
               "primitive": "str"
+            }
+          }
+        },
+        {
+          "id": 18,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 17
+              }
             }
           }
         },
@@ -1186,7 +1228,7 @@ const launchpad_manager = {
           "type": {
             "def": {
               "sequence": {
-                "type": 18
+                "type": 8
               }
             }
           }
@@ -1196,13 +1238,23 @@ const launchpad_manager = {
           "type": {
             "def": {
               "sequence": {
-                "type": 5
+                "type": 13
               }
             }
           }
         },
         {
           "id": 21,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 5
+              }
+            }
+          }
+        },
+        {
+          "id": 22,
           "type": {
             "def": {
               "variant": {
@@ -1219,7 +1271,7 @@ const launchpad_manager = {
                   {
                     "fields": [
                       {
-                        "type": 22
+                        "type": 23
                       }
                     ],
                     "index": 1,
@@ -1235,7 +1287,7 @@ const launchpad_manager = {
               },
               {
                 "name": "E",
-                "type": 22
+                "type": 23
               }
             ],
             "path": [
@@ -1244,7 +1296,7 @@ const launchpad_manager = {
           }
         },
         {
-          "id": 22,
+          "id": 23,
           "type": {
             "def": {
               "variant": {
@@ -1252,7 +1304,7 @@ const launchpad_manager = {
                   {
                     "fields": [
                       {
-                        "type": 18,
+                        "type": 17,
                         "typeName": "String"
                       }
                     ],
@@ -1298,7 +1350,7 @@ const launchpad_manager = {
           }
         },
         {
-          "id": 23,
+          "id": 24,
           "type": {
             "def": {
               "variant": {
@@ -1331,7 +1383,7 @@ const launchpad_manager = {
           }
         },
         {
-          "id": 24,
+          "id": 25,
           "type": {
             "def": {
               "variant": {
@@ -1365,7 +1417,7 @@ const launchpad_manager = {
         }
       ]
     }
-  },
+  }
 };
 
 export default launchpad_manager;

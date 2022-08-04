@@ -11,6 +11,7 @@ import {
   HStack,
   VStack,
 } from "@chakra-ui/react";
+import BN from "bn.js";
 import StatusButton from "@components/Button/StatusButton";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import ImageUpload from "@components/ImageUpload/Collection";
@@ -228,20 +229,19 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               let code_phases = [];
               let start_time_phases = [];
               let end_time_phases = [];
-
+              let is_public_phases = [];
+              let public_minting_fee_phases = [];
+              let public_minting_amout_phases = [];
               for (let phase of values.phases) {
                 code_phases.push(phase.name);
+                is_public_phases.push(phase.isPublic);
+                let public_minting_fee_phase_tmp = (phase.isPublic) ? new BN(phase.publicMintingFee * 10 ** 6).mul(new BN(10 ** 6)).toString() : 0;
+                public_minting_fee_phases.push(public_minting_fee_phase_tmp);
+                let public_minting_amout_phase_tmp = (phase.isPublic && phase.publicAmount) ? phase.publicAmount : 0;
+                public_minting_amout_phases.push(public_minting_amout_phase_tmp);
                 start_time_phases.push(phase.start);
                 end_time_phases.push(phase.end);
               }
-
-              // is_public, public_minting_fee, public_amount
-
-              const is_public = values.phases.map((i) => i.isPublic);
-              const public_minting_fee = values.phases.map(
-                (i) => i.publicMintingFee
-              );
-              const public_amount = values.phases.map((i) => i.publicAmount);
 
               const data = {
                 total_supply: Number(values.totalSupply),
@@ -262,9 +262,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 collectRoyalFee: isSetRoyal,
                 royalFee: values.royalFee,
                 collectionAddingFee: addingFee,
-                is_public,
-                public_minting_fee,
-                public_amount,
+                is_public_phases: is_public_phases,
+                public_minting_fee_phases: public_minting_fee_phases,
+                public_minting_amout_phases: public_minting_amout_phases,
               };
 
               if (mode === formMode.ADD) {
@@ -586,7 +586,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         hasStepper={false}
                         inputWidth={"260px"}
                         label="Total Supply"
-                        max={9999}
                         // step={1}
                         // type="number"
                         // placeholder="9999"
