@@ -44,7 +44,7 @@ const ImageUploadCollection = ({
     if (e) data = e.target.files[0];
 
     if (!supportedFormat.includes(data?.type)) {
-      console.log("includes Date.now()", Date.now());
+      // console.log("includes Date.now()", Date.now());
 
       toast.error(
         `Please use .png .jpeg .jpeg .gif format, the ${
@@ -86,11 +86,11 @@ const ImageUploadCollection = ({
 
       setImagePreviewUrl(src);
     }
-    console.log("End retrieveNewAvatar Date.now()", Date.now());
+    // console.log("End retrieveNewAvatar Date.now()", Date.now());
   };
 
   const onUploadHandler = async (e) => {
-    console.log("onUploadHandler Date.now()", Date.now());
+    // console.log("onUploadHandler Date.now()", Date.now());
 
     try {
       if (newAvatarData) {
@@ -112,7 +112,7 @@ const ImageUploadCollection = ({
               input: created?.path,
               is1920: isBanner,
             });
-            console.log("update_nft_api_res", update_nft_api_res);
+            // console.log("update_nft_api_res", update_nft_api_res);
           }),
           {
             loading: "Uploading...",

@@ -49,7 +49,6 @@ function MyCollectionsPage() {
   });
 
   const fetchCollectionsOwned = useCallback(async () => {
-    console.log("first...");
     setLoading(true);
 
     const options = {
@@ -58,14 +57,14 @@ function MyCollectionsPage() {
       offset: offset,
       sort: -1,
     };
-    console.log("options", options);
+
     try {
       const totalCollectionsCountData = await clientAPI(
         "post",
         "/countCollectionsByOwner",
         { owner: currentAccount?.address }
       );
-      console.log("totalCollectionsCountData", totalCollectionsCountData);
+
       setTotalCollectionsCount(totalCollectionsCountData);
 
       const dataList = await clientAPI(
@@ -73,7 +72,6 @@ function MyCollectionsPage() {
         "/getCollectionsByOwner",
         options
       );
-      console.log("dataList", dataList);
 
       let listCollection = [];
       let ownerAddress;

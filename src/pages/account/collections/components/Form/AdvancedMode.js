@@ -50,7 +50,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
     currentHeaderSquareIPFSUrl.current === headerSquareIPFSUrl;
 
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
-  console.log("rest", rest);
+
   useEffect(() => {
     const fetchFee = async () => {
       if (addingFee === 0) {
@@ -469,7 +469,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 text={`${
                   mode === formMode.ADD ? "create" : "update"
                 } collection`}
-                disabled={!(dirty && isValid) && noImagesChange}
+                isDisabled={!(dirty && isValid) && noImagesChange}
               />
             </Form>
           )}

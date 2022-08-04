@@ -473,7 +473,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 text={`${
                   mode === formMode.ADD ? "create" : "update"
                 } collection`}
-                disabled={!(dirty && isValid) && noImagesChange}
+                isDisabled={!(dirty && isValid) && noImagesChange}
               />
             </Form>
           )}
