@@ -8,7 +8,7 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AccountActionTypes } from "@store/types/account.types";
 import { onCloseButtonModal } from "@utils";
@@ -17,14 +17,22 @@ import CommonStack from "../Form/CommonStack";
 import AddPhase from "../Form/AddPhase";
 import StatusButton from "@components/Button/StatusButton";
 import * as Yup from "yup";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { ContractPromise } from "@polkadot/api-contract";
+import { useSubstrateState } from "@utils/substrate";
+import { timestampWithoutCommas } from "@utils";
 
-export default function UpdatePhasesModal({ isOpen, onClose, mode }) {
+export default function UpdatePhasesModal({ collection_address, isOpen, onClose, mode }) {
   const dispatch = useDispatch();
   const { addCollectionTnxStatus } = useSelector(
     (state) => state.account.accountLoaders
   );
-
+  const [currentPhaseId, setCurrentPhaseId] = useState(0);
+  const { api, currentAccount } = useSubstrateState();
   useEffect(() => {
+    const initialValues = async () => await fetchInitialPhasesValue(collection_address, currentAccount, api);
+    initialValues();
     function onCloseHandler() {
       onClose();
 
@@ -46,7 +54,7 @@ export default function UpdatePhasesModal({ isOpen, onClose, mode }) {
     onCloseHandler();
   }, [addCollectionTnxStatus, dispatch, onClose]);
 
-  const initialValues = async () => await fetchInitialPhasesValue();
+  const initialValues = async () => await fetchInitialPhasesValue(collection_address, currentAccount, api);
 
   return (
     <Modal
@@ -169,7 +177,51 @@ export default function UpdatePhasesModal({ isOpen, onClose, mode }) {
   );
 }
 
-export const fetchInitialPhasesValue = async () => {
+export const fetchInitialPhasesValue = async (collection_address, currentAccount, api) => {
+  const launchpad_psp34_nft_standard_contract =
+      new ContractPromise(
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        collection_address
+      );
+    launchpad_psp34_nft_standard_calls.setContract(
+      launchpad_psp34_nft_standard_contract
+    );
+    const totalPhase =
+    await launchpad_psp34_nft_standard_calls.getLastPhaseId(
+      currentAccount
+    );
+    console.log('UpdatePhasesModal::totalPhase', totalPhase);
+    const currentPhaseIdTmp = await launchpad_psp34_nft_standard_calls.getCurrentPhase(
+        currentAccount
+      );
+    let phasesTmp = [];
+    for (let i = 1; i <= totalPhase; i++) {
+      const phaseSchedule =
+        await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
+          currentAccount,
+          i
+        );
+      console.log('UpdatePhasesModal::phaseSchedule', phaseSchedule);
+      const phaseInfo = {
+        id: i,
+        code: phaseSchedule.title,
+        startTime: timestampWithoutCommas(phaseSchedule.startTime),
+        endTime: timestampWithoutCommas(phaseSchedule.endTime),
+        isLive: i == currentPhaseIdTmp ? 1 : 0,
+        publicPhase: phaseSchedule.isPublic,
+        publicMintingAmout: phaseSchedule.publicMintingAmout,
+        publicMintingFee: phaseSchedule.publicMintingFee
+      };
+
+      phasesTmp.push(phaseInfo);
+
+      if (i == currentPhaseIdTmp) {
+        console.log("LaunchpadDetailPage::phaseSchedule", phaseSchedule);
+        setCurrentPhaseId(currentPhaseIdTmp);
+        setCurrentPhase(phaseInfo);
+      }
+    }
   const initialValues = {};
 
   return initialValues;
