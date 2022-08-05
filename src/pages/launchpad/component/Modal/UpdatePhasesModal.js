@@ -23,38 +23,55 @@ import { ContractPromise } from "@polkadot/api-contract";
 import { useSubstrateState } from "@utils/substrate";
 import { timestampWithoutCommas } from "@utils";
 
-export default function UpdatePhasesModal({ collection_address, isOpen, onClose, mode }) {
-  const dispatch = useDispatch();
-  const { addCollectionTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
-  );
+export default function UpdatePhasesModal({
+  collection_address,
+  isOpen,
+  onClose,
+  mode,
+}) {
+  const [initialValuesData, setInitialValuesData] = useState({
+    phases: [
+      {
+        name: "",
+        start: "",
+        end: "",
+        isPublic: false,
+        publicMintingFee: "",
+        publicAmount: "",
+      },
+    ],
+  });
   const [currentPhaseId, setCurrentPhaseId] = useState(0);
+  const [phases, setPhases] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { api, currentAccount } = useSubstrateState();
+
   useEffect(() => {
-    const initialValues = async () => await fetchInitialPhasesValue(collection_address, currentAccount, api);
-    initialValues();
-    function onCloseHandler() {
-      onClose();
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const { phases, currentPhaseId } = await fetchInitialPhasesValue(
+          collection_address,
+          currentAccount,
+          api
+        );
 
-      if (addCollectionTnxStatus?.status === "End") {
-        // dispatch({
-        //   type: AccountActionTypes.SET_TNX_STATUS,
-        //   payload: null,
-        // });
-        // delay(300).then(() => {
-        //   forceUpdate();
-        // onClose();
-        // dispatch({
-        //   type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-        // });
-        // });
+        setCurrentPhaseId(currentPhaseId);
+        setPhases(phases);
+
+        // format for initialValuesData
+        let data;
+        setInitialValuesData(data);
+
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
       }
-    }
+    };
 
-    onCloseHandler();
-  }, [addCollectionTnxStatus, dispatch, onClose]);
-
-  const initialValues = async () => await fetchInitialPhasesValue(collection_address, currentAccount, api);
+    fetchData();
+  }, [api, collection_address, currentAccount]);
 
   return (
     <Modal
@@ -121,7 +138,7 @@ export default function UpdatePhasesModal({ collection_address, isOpen, onClose,
         >
           {initialValues && (
             <Formik
-              initialValues={{ phases: [{ name: "", start: "", end: "" }] }}
+              initialValues={initialValues}
               validationSchema={Yup.object().shape({
                 phases: Yup.array()
                   .min(1, "Phases must have at least 1 items")
@@ -177,52 +194,55 @@ export default function UpdatePhasesModal({ collection_address, isOpen, onClose,
   );
 }
 
-export const fetchInitialPhasesValue = async (collection_address, currentAccount, api) => {
-  const launchpad_psp34_nft_standard_contract =
-      new ContractPromise(
-        api,
-        launchpad_psp34_nft_standard.CONTRACT_ABI,
-        collection_address
+export const fetchInitialPhasesValue = async (
+  collection_address,
+  currentAccount,
+  api
+) => {
+  const launchpad_psp34_nft_standard_contract = new ContractPromise(
+    api,
+    launchpad_psp34_nft_standard.CONTRACT_ABI,
+    collection_address
+  );
+  launchpad_psp34_nft_standard_calls.setContract(
+    launchpad_psp34_nft_standard_contract
+  );
+  const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(
+    currentAccount
+  );
+  console.log("UpdatePhasesModal::totalPhase", totalPhase);
+  const currentPhaseIdTmp =
+    await launchpad_psp34_nft_standard_calls.getCurrentPhase(currentAccount);
+  let phasesTmp = [];
+  for (let i = 1; i <= totalPhase; i++) {
+    const phaseSchedule =
+      await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
+        currentAccount,
+        i
       );
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
-    const totalPhase =
-    await launchpad_psp34_nft_standard_calls.getLastPhaseId(
-      currentAccount
-    );
-    console.log('UpdatePhasesModal::totalPhase', totalPhase);
-    const currentPhaseIdTmp = await launchpad_psp34_nft_standard_calls.getCurrentPhase(
-        currentAccount
-      );
-    let phasesTmp = [];
-    for (let i = 1; i <= totalPhase; i++) {
-      const phaseSchedule =
-        await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-          currentAccount,
-          i
-        );
-      console.log('UpdatePhasesModal::phaseSchedule', phaseSchedule);
-      const phaseInfo = {
-        id: i,
-        code: phaseSchedule.title,
-        startTime: timestampWithoutCommas(phaseSchedule.startTime),
-        endTime: timestampWithoutCommas(phaseSchedule.endTime),
-        isLive: i == currentPhaseIdTmp ? 1 : 0,
-        publicPhase: phaseSchedule.isPublic,
-        publicMintingAmout: phaseSchedule.publicMintingAmout,
-        publicMintingFee: phaseSchedule.publicMintingFee
-      };
+    console.log("UpdatePhasesModal::phaseSchedule", phaseSchedule);
+    const phaseInfo = {
+      id: i,
+      code: phaseSchedule.title,
+      startTime: timestampWithoutCommas(phaseSchedule.startTime),
+      endTime: timestampWithoutCommas(phaseSchedule.endTime),
+      isLive: i == currentPhaseIdTmp ? 1 : 0,
+      publicPhase: phaseSchedule.isPublic,
+      publicMintingAmout: phaseSchedule.publicMintingAmout,
+      publicMintingFee: phaseSchedule.publicMintingFee,
+    };
 
-      phasesTmp.push(phaseInfo);
+    phasesTmp.push(phaseInfo);
 
-      if (i == currentPhaseIdTmp) {
-        console.log("LaunchpadDetailPage::phaseSchedule", phaseSchedule);
-        setCurrentPhaseId(currentPhaseIdTmp);
-        setCurrentPhase(phaseInfo);
-      }
+    if (i === currentPhaseIdTmp) {
+      console.log("LaunchpadDetailPage::phaseSchedule", phaseSchedule);
+      // setCurrentPhaseId(currentPhaseIdTmp);
+      // setCurrentPhase(phaseInfo);
     }
-  const initialValues = {};
+  }
+  // ...
+  //format data to phase & currentPhaseId
+  let phases, currentPhaseId;
 
-  return initialValues;
+  return { phases, currentPhaseId };
 };
