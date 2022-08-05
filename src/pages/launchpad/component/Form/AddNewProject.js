@@ -625,7 +625,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     <CommonInput
                       type="text"
                       name="email_owner"
-                      label="This email not save on our platform, we just use this field to contact with you!"
+                      label="This email not saved on our platform, we just use this field to contact with you!"
                       placeholder={"Email Contact"}
                       isDisabled={addCollectionTnxStatus}
                     />

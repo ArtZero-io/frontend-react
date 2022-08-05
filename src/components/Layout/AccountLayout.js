@@ -84,7 +84,7 @@ const AccountLayout = ({ children }) => {
             p={0}
             bg="#171717"
             className="TabPanels"
-            minH="calc(100vh - 480px)"
+            minH="calc(100vh - 48px)"
           >
             {children}
           </TabPanels>

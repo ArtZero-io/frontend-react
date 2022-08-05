@@ -56,7 +56,7 @@ const MyProjectsPage = () => {
       ) : (
         <Stack>
           <Text textAlign="left" color="brand.grayLight">
-            There are {projects?.length || 0} collections
+            There are {projects?.length || 0} projects
           </Text>
 
           {projects?.length ? (

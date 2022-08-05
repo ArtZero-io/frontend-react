@@ -25,6 +25,7 @@ import { useHistory } from "react-router-dom";
 import { useSubstrateState } from "@utils/substrate";
 import UpdateURIModal from "./Modal/UpdateURIModal";
 import UpdatePhasesModal from "./Modal/UpdatePhasesModal";
+import { getUsernameOnchain } from "@utils/blockchain/profile_calls";
 
 function LaunchpadDetailHeader({
   project,
@@ -34,6 +35,7 @@ function LaunchpadDetailHeader({
   const [livePhase, setLivePhase] = useState({});
   const { phases, projectOwner } = project;
   const [countDownTimer, setCountDownTimer] = useState({});
+  const [ownerName, setOwnerName] = useState(null);
 
   const history = useHistory();
   const { currentAccount } = useSubstrateState();
@@ -72,6 +74,18 @@ function LaunchpadDetailHeader({
       });
     }
   }, 1000);
+
+  useEffect(() => {
+    const fetchOwnerName = async () => {
+      const name = await getUsernameOnchain({
+        accountAddress: projectOwner,
+      });
+
+      setOwnerName(name);
+    };
+
+    fetchOwnerName();
+  }, [projectOwner]);
 
   return (
     <Box as="section" position="relative" w="full" mt="320px">
@@ -120,14 +134,17 @@ function LaunchpadDetailHeader({
                   fontSize={["32px", "48px", "48px"]}
                   lineHeight={["38px", "60px", "60px"]}
                   minH={{ base: "2.5rem", "2xl": "3.75rem" }}
-                  py="30px"
+                  pt="30px"
                 >
                   {project.name}{" "}
                 </Heading>
+                <Heading py="15px" fontSize={["sm", "md", "md"]}>
+                  Project creator:{" "}
+                  <Text as="span" color="#7ae7ff">
+                    {ownerName}
+                  </Text>
+                </Heading>
                 <Stack alignItems="center" direction="row">
-                  {/* <Text mr="30px" fontSize={["sm", "md", "md"]}>
-                    Project creator: {truncateStr(projectOwner)}
-                  </Text> */}
                   {currentAccount &&
                     currentAccount.address &&
                     projectOwner === currentAccount.address && (
@@ -186,8 +203,10 @@ function LaunchpadDetailHeader({
                       {project.totalSupply}
                     </Text>
                   </Text>
-                  {console.log('livePhase', livePhase)}
-                  {livePhase && !livePhase.publicPhase && currentWhitelist.mintingFee ? (
+                  {console.log("livePhase", livePhase)}
+                  {livePhase &&
+                  !livePhase.publicPhase &&
+                  currentWhitelist.mintingFee ? (
                     <>
                       <Text>
                         Price:{" "}
@@ -358,8 +377,16 @@ function LaunchpadDetailHeader({
           ]}
         />
       </Box>
-      <UpdateURIModal isOpen={isOpenURI} collection_address={collection_address} onClose={onCloseURI} />
-      <UpdatePhasesModal isOpen={isOpenPhase} collection_address={collection_address} onClose={onClosePhase} />
+      <UpdateURIModal
+        isOpen={isOpenURI}
+        collection_address={collection_address}
+        onClose={onCloseURI}
+      />
+      <UpdatePhasesModal
+        isOpen={isOpenPhase}
+        collection_address={collection_address}
+        onClose={onClosePhase}
+      />
     </Box>
   );
 }

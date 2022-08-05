@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import NumberInput from "@components/Input/NumberInput";
 import { useState } from "react";
+import { isPhaseTimeOverlap } from "../../../../utils";
 
 function AddPhase({ name, mode, isDisabled }) {
   const [{ value }, , helpers] = useField(name);
@@ -17,76 +18,66 @@ function AddPhase({ name, mode, isDisabled }) {
   // const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
 
   const handlePhaseTime = (e, index) => {
-    const valueAddHash = value.map((item, idx) => {
-      if (!e) {
-        return { ...item, start: null, end: null };
+    if (e) {
+      if (value.length >= 1) {
+        const end = e[1].getTime();
+        const start = e[0].getTime();
+
+        const newValue = [...value];
+        console.log("newValue", newValue);
+        newValue.push({ start, end });
+        console.log("newValue11", newValue);
+
+        const isOverlap = isPhaseTimeOverlap(newValue);
+
+        if (isOverlap) {
+          return toast.error("Phase time is not valid or overlap.");
+        }
       }
 
-      const startTime = idx !== index ? item?.start : e[0].getTime();
-      const endTime = idx !== index ? item?.end : e[1].getTime();
+      const valueAddHash = value.map((item, idx) => {
+        if (!e) {
+          return { ...item, start: null, end: null };
+        }
 
-      return { ...item, start: startTime, end: endTime };
-    });
+        const startTime = idx !== index ? item?.start : e[0].getTime();
+        const endTime = idx !== index ? item?.end : e[1].getTime();
 
-    helpers.setValue(valueAddHash);
+        return { ...item, start: startTime, end: endTime };
+      });
+
+      helpers.setValue(valueAddHash);
+    }
   };
 
   const handleAddPhase = (arrayHelpers) => {
-    if (value?.length === 1) {
-      const prjStartTime = arrayHelpers?.form?.values?.startTime;
+    const allPhases = [...value];
+    allPhases.sort((a, b) => a.start - b.start);
 
-      const prjEndTime = arrayHelpers?.form?.values?.endTime;
+    const lastPhase = allPhases[allPhases?.length - 1];
+    const firstPhase = allPhases[0];
 
-      const phaseStart = value[value?.length - 1]?.start;
-      const phaseEnd = value[value?.length - 1]?.end;
+    const prjEndTime = arrayHelpers?.form?.values?.endTime;
+    const prjStartTime = arrayHelpers?.form?.values?.startTime;
 
-      // TEMP COMMENT DUE TO USE FOR UPDATE PHASES SEPARATELY
-
-      // if (phaseStart < Date.now()) {
-      //   toast.error("Start time of phase must be greater than current time!");
-      //   return;
-      // }
-
-      // if (
-      //   prjStartTime <= phaseStart &&
-      //   phaseStart <= phaseEnd &&
-      //   phaseEnd <= prjEndTime
-      // ) {
-      arrayHelpers.push({
-        name: "",
-        start: "",
-        end: "",
-        isPublic: false,
-        publicMintingFee: "",
-        publicAmount: "",
+    if (prjEndTime < lastPhase?.end || prjStartTime > firstPhase?.start) {
+      const newValue = value.map((i, idx) => {
+        return idx === value.length - 1 ? { ...i, start: null, end: null } : i;
       });
-      // } else {
-      //   toast.error("Phase time is not valid.");
-      // }
+
+      helpers.setValue(newValue);
+
+      return toast.error("Phase time can not overlaps project time.");
     }
 
-    if (value?.length > 1) {
-      const allPhases = [...value];
-      const lastPhase = allPhases.pop();
-      const phaseBefore = allPhases.pop();
-
-      if (
-        phaseBefore?.start <= phaseBefore?.end &&
-        phaseBefore?.end <= lastPhase?.start &&
-        lastPhase?.start <= lastPhase?.end
-      ) {
-        arrayHelpers.push({
-          name: "",
-          start: "",
-          end: "",
-          isPublic: false,
-          publicMintingFee: "",
-          publicAmount: "",
-        });
-      } else {
-        toast.error("Phase time is not valid or overlap.");
-      }
-    }
+    arrayHelpers.push({
+      name: "",
+      start: "",
+      end: "",
+      isPublic: false,
+      publicMintingFee: "",
+      publicAmount: "",
+    });
   };
 
   return (
@@ -168,6 +159,7 @@ function AddPhase({ name, mode, isDisabled }) {
                     // isRequired={true}
                     label="Public Minting Fee"
                     isDisabled={isDisabled}
+                    hasStepper={false}
                   />{" "}
                   <NumberInput
                     isDisabled={isDisabled}
