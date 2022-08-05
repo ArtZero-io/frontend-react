@@ -44,14 +44,19 @@ export const LaunchpadPage = () => {
             continue;
           }
           const launchpad_psp34_nft_standard_contract = new ContractPromise(
-              api,
-              launchpad_psp34_nft_standard.CONTRACT_ABI,
-              nftAddress
+            api,
+            launchpad_psp34_nft_standard.CONTRACT_ABI,
+            nftAddress
           );
-          launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
-          const projectInfoHash = await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
+          launchpad_psp34_nft_standard_calls.setContract(
+            launchpad_psp34_nft_standard_contract
+          );
+          const projectInfoHash =
+            await launchpad_psp34_nft_standard_calls.getProjectInfo(
+              currentAccount
+            );
           console.log(projectInfoHash);
-          console.log('xxzxc');
+          console.log("xxzxc");
           const projectInfo =
             await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
               projectInfoHash
@@ -115,7 +120,7 @@ export const LaunchpadPage = () => {
           The premier destination to launch your NFT Collection on Aleph Zero
           Network.
         </Text>
-      </Box> 
+      </Box>
 
       <GroupCard variant="live" projectsList={liveProjects} loading={loading} />
 
@@ -133,29 +138,3 @@ export const LaunchpadPage = () => {
     </Layout>
   );
 };
-
-// const projectsList = [
-//   {
-//     status: "live",
-//     progressPercent: 2500,
-//     _id: "62c2911cfb7f4ddb2f6010cd",
-//     index: 8,
-//     collectionOwner: "5ENvCvuTxstJZbP59Ubx47qcVSc7EUctudowPC7CAP3GfZCk",
-//     nftContractAddress: "5EQqAeKFZwKmNdcF5mUE4s955PtnLkYHQE3uTvpRy9pqfoVb",
-//     contractType: 2,
-//     isCollectRoyalFee: true,
-//     isActive: true,
-//     showOnChainMetadata: true,
-//     name: "Abstract",
-//     description: "Abstract",
-//     avatarImage: "QmYRNac8K4ASALeN36knEwwdzrzNzmvKrN3H3DFKtbXUbn",
-//     squareImage: "QmcjMTXHKiByiLudysm41i5WkimKCGvwf3nWUVgMDPBjbc",
-//     headerImage: "QmSGMqQtxeDAUnwtc1pFVVGCoQoMKgdZA8Zhyb4HgnV9F3",
-//     website: "",
-//     twitter: "",
-//     discord: "",
-//     volume: 0,
-//     nft_count: 8,
-//     __v: 0,
-//   }
-// ];

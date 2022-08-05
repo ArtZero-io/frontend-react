@@ -102,47 +102,8 @@ function MyCollectionsPage() {
   }, [currentAccount, offset, pageSize]);
 
   useEffect(() => {
-    // if (!collections || owner !== currentAccount?.address) {
-    //   fetchCollectionsOwned();
-    // }
     fetchCollectionsOwned();
   }, [currentAccount, fetchCollectionsOwned]);
-
-  // const dispatch = useDispatch();
-  // const { addCollectionTnxStatus } = useSelector(
-  //   (s) => s.account.accountLoaders
-  // );
-  // const [loadingTime, setLoadingTime] = useState(null);
-
-  // const forceUpdateAfterMint = useCallback(async () => {
-  //   if (addCollectionTnxStatus?.status !== "End") {
-  //     return;
-  //   }
-
-  //   const { status, timeStamp, endTimeStamp } = addCollectionTnxStatus;
-
-  //   if (status && timeStamp && endTimeStamp) {
-  //     const diffTime = 9000 - Number(endTimeStamp - timeStamp);
-  //     const delayTime = diffTime >= 0 ? diffTime : 500;
-
-  //     setLoading(true);
-
-  //     setLoadingTime(delayTime / 1000);
-
-  //     await delay(delayTime).then(() => {
-  //       dispatch({
-  //         type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-  //       });
-
-  //       setCollections(null);
-  //       setLoading(false);
-  //     });
-  //   }
-  // }, [addCollectionTnxStatus, dispatch]);
-
-  // useEffect(() => {
-  //   forceUpdateAfterMint();
-  // }, [currentAccount, forceUpdateAfterMint]);
 
   return (
     <CommonContainer>
@@ -175,7 +136,7 @@ function MyCollectionsPage() {
 
           {collections?.length ? (
             <>
-              <GridA collections={collections} />
+              <GridA collections={collections} variant="my-collection" />
 
               <Flex w="full">
                 <PaginationMP

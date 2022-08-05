@@ -33,11 +33,13 @@ const AccountLayout = ({ children }) => {
     },
     {
       label: "My Projects",
-      value: ROUTES.ACCOUNT_MY_PROJECTS,
+      isDisabled: false,
+      route: ROUTES.ACCOUNT_MY_PROJECTS,
     },
     {
       label: "WhiteList Manager",
-      value: ROUTES.ACCOUNT_WHITELIST_PROJECTS,
+      isDisabled: false,
+      route: ROUTES.ACCOUNT_WHITELIST_PROJECTS,
     },
   ];
 

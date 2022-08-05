@@ -7,6 +7,10 @@ import { clientAPI } from "@api/client";
 import { AccountActionTypes } from "@store/types/account.types";
 import { APICall } from "../../api/client";
 import { isValidAddressPolkadotAddress, convertStringToPrice } from "@utils";
+import launchpad_contract_calls from "./launchpad-contract-calls";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+
+import { ContractPromise } from "@polkadot/api-contract";
 
 let contract;
 
@@ -25,10 +29,10 @@ async function getTotalSupply(caller_account) {
   const azero_value = 0;
   //console.log(collection_manager_contract);
 
-  const { result, output } = await contract.query.getTotalSupply(
-    address,
-    { value: azero_value, gasLimit }
-  );
+  const { result, output } = await contract.query.getTotalSupply(address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
@@ -57,7 +61,13 @@ async function getPhaseScheduleById(caller_account, phaseId) {
   return null;
 }
 
-async function updateWhitelist(caller_account, account, phaseId, amount, price) {
+async function updateWhitelist(
+  caller_account,
+  account,
+  phaseId,
+  amount,
+  price
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -77,7 +87,13 @@ async function updateWhitelist(caller_account, account, phaseId, amount, price) 
   const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
   console.log(contract);
   contract.tx
-    .updateWhitelist({ gasLimit, value: azero_value }, account, phaseId, amount, minting_fee)
+    .updateWhitelist(
+      { gasLimit, value: azero_value },
+      account,
+      phaseId,
+      amount,
+      minting_fee
+    )
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -125,7 +141,13 @@ async function addWhitelist(caller_account, account, phaseId, amount, price) {
   const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
   console.log(contract);
   contract.tx
-    .addWhitelist({ gasLimit, value: azero_value }, account, phaseId, amount, minting_fee)
+    .addWhitelist(
+      { gasLimit, value: azero_value },
+      account,
+      phaseId,
+      amount,
+      minting_fee
+    )
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -164,10 +186,10 @@ async function getLastPhaseId(caller_account) {
   const azero_value = 0;
   //console.log(collection_manager_contract);
 
-  const { result, output } = await contract.query.getLastPhaseId(
-    address,
-    { value: azero_value, gasLimit }
-  );
+  const { result, output } = await contract.query.getLastPhaseId(address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
@@ -202,10 +224,14 @@ async function getPhaseAccountLastIndex(caller_account, phaseId) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getPhaseAccountLastIndex(address, {
-    value: azero_value,
-    gasLimit,
-  }, phaseId);
+  const { result, output } = await contract.query.getPhaseAccountLastIndex(
+    address,
+    {
+      value: azero_value,
+      gasLimit,
+    },
+    phaseId
+  );
   if (result.isOk) {
     return output.toHuman();
   }
@@ -221,10 +247,15 @@ async function getPhaseAccountLinkByPhaseId(caller_account, phaseId, index) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getPhaseAccountLinkByPhaseId(address, {
-    value: azero_value,
-    gasLimit,
-  }, phaseId, index);
+  const { result, output } = await contract.query.getPhaseAccountLinkByPhaseId(
+    address,
+    {
+      value: azero_value,
+      gasLimit,
+    },
+    phaseId,
+    index
+  );
   if (result.isOk) {
     return output.toHuman();
   }
@@ -237,7 +268,11 @@ async function getProjectInfoByHash(ipfsHash) {
   return projecInfoRes;
 }
 
-async function getWhitelistByAccountId(caller_account, phaseId, accountAddress) {
+async function getWhitelistByAccountId(
+  caller_account,
+  phaseId,
+  accountAddress
+) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -245,19 +280,23 @@ async function getWhitelistByAccountId(caller_account, phaseId, accountAddress) 
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  const { result, output } = await contract.query.getWhitelistByAccountId(address, {
-    value: azero_value,
-    gasLimit,
-  }, accountAddress, phaseId);
+  const { result, output } = await contract.query.getWhitelistByAccountId(
+    address,
+    {
+      value: azero_value,
+      gasLimit,
+    },
+    accountAddress,
+    phaseId
+  );
   console.log(accountAddress, phaseId);
-  console.log('getWhitelistByAccountId', accountAddress);
-  console.log('getWhitelistByAccountId::index', phaseId);
+  console.log("getWhitelistByAccountId", accountAddress);
+  console.log("getWhitelistByAccountId::index", phaseId);
   if (result.isOk) {
     return output.toHuman();
   }
   return null;
 }
-
 
 async function editProjectInformation(caller_account, projectInfo) {
   if (!contract || !caller_account) {
@@ -309,7 +348,9 @@ async function publicMint(caller_account, phaseId, mintingFee) {
   const address = caller_account?.address;
   const gasLimit = -1;
 
-  const azero_value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const azero_value = new BN(mintingFee * 10 ** 6)
+    .mul(new BN(10 ** 6))
+    .toString();
   const injector = await web3FromSource(caller_account?.meta?.source);
   contract.tx
     .publicMint({ gasLimit, value: azero_value }, phaseId)
@@ -349,10 +390,12 @@ async function whitelistMint(caller_account, phaseId, amount, minting_fee) {
 
   const address = caller_account?.address;
   const gasLimit = -1;
-  console.log('whitelistMint::minting_fee', minting_fee);
-  const azero_value = new BN(minting_fee / 10 ** 6).mul(new BN(10 ** 6)).toString();
+  console.log("whitelistMint::minting_fee", minting_fee);
+  const azero_value = new BN(minting_fee / 10 ** 6)
+    .mul(new BN(10 ** 6))
+    .toString();
   const injector = await web3FromSource(caller_account?.meta?.source);
-  console.log('whitelistMint::azero_value', azero_value);
+  console.log("whitelistMint::azero_value", azero_value);
   contract.tx
     .whitelistMint({ gasLimit, value: azero_value }, phaseId, amount)
     .signAndSend(
@@ -412,7 +455,10 @@ async function updateBaseUri(caller_account, uri) {
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
   console.log(contract);
-  contract.tx["launchPadPsp34NftStandardTraits::setBaseUri"]({ gasLimit, value: azero_value }, uri)
+  contract.tx["launchPadPsp34NftStandardTraits::setBaseUri"](
+    { gasLimit, value: azero_value },
+    uri
+  )
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -466,10 +512,14 @@ async function ownerOf(caller_account, tokenID) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  const { result, output } = await contract.query["psp34::ownerOf"](address, {
-    value: azero_value,
-    gasLimit,
-  }, tokenID);
+  const { result, output } = await contract.query["psp34::ownerOf"](
+    address,
+    {
+      value: azero_value,
+      gasLimit,
+    },
+    tokenID
+  );
   if (result.isOk) {
     return output.toHuman();
   }
@@ -484,7 +534,9 @@ async function tokenUri(caller_account, tokenId) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query["launchPadPsp34NftStandardTraits::tokenUri"](
+  const { result, output } = await contract.query[
+    "launchPadPsp34NftStandardTraits::tokenUri"
+  ](
     address,
     {
       value: azero_value,
@@ -506,15 +558,81 @@ async function getPublicMintedCount(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  const { result, output } = await contract.query.getPublicMintedCount(address, {
-    value: azero_value,
-    gasLimit,
-  });
+  const { result, output } = await contract.query.getPublicMintedCount(
+    address,
+    {
+      value: azero_value,
+      gasLimit,
+    }
+  );
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
+// jjj
+
+export const getProjectListDetails = async ({ currentAccount, api }) => {
+  let ret = [];
+
+  const projectTotalCount = await launchpad_contract_calls.getProjectCount(
+    currentAccount
+  );
+
+  for (let i = 1; i <= projectTotalCount; i++) {
+    const nftAddress = await launchpad_contract_calls.getProjectById(
+      currentAccount,
+      i
+    );
+
+    const project = await launchpad_contract_calls.getProjectByNftAddress(
+      currentAccount,
+      nftAddress
+    );
+
+    const contract = new ContractPromise(
+      api,
+      launchpad_psp34_nft_standard.CONTRACT_ABI,
+      nftAddress
+    );
+
+    setContract(contract);
+
+    const projectHash = await getProjectInfo(currentAccount);
+
+    const { avatar, header, ...rest } = await APICall.getProjectInfoByHash({
+      projectHash,
+    });
+
+    const proj = {
+      ...rest,
+      ...project,
+      nftContractAddress: nftAddress,
+      squareImage: avatar,
+      avatarImage: avatar,
+      endTime: parseInt(project?.endTime?.replaceAll(",", "")),
+      startTime: parseInt(project?.startTime?.replaceAll(",", "")),
+    };
+    ret.push(proj);
+
+    // const currentTime = Date.now();
+    // if (
+    //   timestampWithoutCommas(project.startTime) < currentTime &&
+    //   currentTime < timestampWithoutCommas(project.endTime) &&
+    //   parseInt(project.projectType) === 1
+    // ) {
+    //   liveProjectsArr.push(projectTmp);
+    // } else if (
+    //   currentTime < timestampWithoutCommas(project.startTime) &&
+    //   parseInt(project.projectType) === 1
+    // ) {
+    //   upcomingProjectsArr.push(projectTmp);
+    // } else {
+    //   endedProjectsArr.push(projectTmp);
+    // }
+  }
+  return ret;
+};
 
 const launchpad_psp34_nft_standard_calls = {
   getTotalSupply,
@@ -536,7 +654,7 @@ const launchpad_psp34_nft_standard_calls = {
   tokenUri,
   getPublicMintedCount,
   publicMint,
-  updateWhitelist
+  updateWhitelist,
 };
 
 export default launchpad_psp34_nft_standard_calls;

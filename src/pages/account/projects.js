@@ -1,28 +1,70 @@
-import React from "react";
-import {
-  Box,
-  Flex,
-  Heading,
-  Spacer,
-} from "@chakra-ui/react";
-
+import React, { useEffect, useState } from "react";
+import { Flex, Heading, Spacer, Stack, Text } from "@chakra-ui/react";
+import { useSubstrateState } from "@utils/substrate";
+import { getProjectListDetails } from "../../utils/blockchain/launchpad-psp34-nft-standard-calls";
+import CommonContainer from "@components/Container/CommonContainer";
+import AnimationLoader from "@components/Loader/AnimationLoader";
+import GridA from "@components/Grid/GridA";
 
 const MyProjectsPage = () => {
+  const { api, currentAccount } = useSubstrateState();
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const fetchMyProjectListDetails = async () => {
+      try {
+        setLoading(true);
+
+        const projectListDetails = await getProjectListDetails({
+          currentAccount,
+          api,
+        });
+        console.log("projectListDetails", projectListDetails);
+        const myProjectListDetails = projectListDetails.filter(
+          (i) => i.projectOwner === currentAccount?.address
+        );
+
+        setProjects(myProjectListDetails);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+      }
+    };
+
+    fetchMyProjectListDetails();
+  }, [api, currentAccount]);
+  console.log("projects", projects);
   return (
-    <Box as="section" maxW="container.3xl">
-      <Box
-        mx="auto"
-        maxW={{ base: "6xl", "2xl": "7xl" }}
-        px={{ base: "6", "2xl": "8" }}
-        py={{ base: "12", "2xl": "20" }}
+    <CommonContainer>
+      <Flex
+        w="full"
+        alignItems="start"
+        pb={["20px", "20px", "48px"]}
+        direction={{ base: "column", xl: "row" }}
       >
-        <Flex w="full" alignItems="start" pb={12}>
-          <Heading size="h2">My Projects</Heading>
-          <Spacer />
-        </Flex>
-      </Box>
-    </Box>
+        <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>my projects</Heading>
+
+        <Spacer mt={{ base: "20px", xl: "0px" }} />
+
+        {/* <AddNewCollectionModal mode={formMode.ADD} /> */}
+      </Flex>
+
+      {loading ? (
+        <AnimationLoader />
+      ) : (
+        <Stack>
+          <Text textAlign="left" color="brand.grayLight">
+            There are {projects?.length || 0} collections
+          </Text>
+
+          {projects?.length ? (
+            <GridA collections={projects} variant="my-projects" />
+          ) : null}
+        </Stack>
+      )}
+    </CommonContainer>
   );
 };
 

@@ -75,7 +75,11 @@ function GridA({
           )}
           <Link
             as={ReactRouterLink}
-            to={`${ROUTES.DETAIL_COLLECTION_BASE}/${c?.nftContractAddress}`}
+            to={
+              variant === "my-projects"
+                ? `${ROUTES.LAUNCHPAD_BASE}/${c?.nftContractAddress}`
+                : `${ROUTES.DETAIL_COLLECTION_BASE}/${c?.nftContractAddress}`
+            }
             style={{ textDecoration: "none" }}
             onClick={() =>
               sessionStorage.setItem(
