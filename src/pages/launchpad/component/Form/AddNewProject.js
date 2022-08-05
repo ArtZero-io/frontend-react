@@ -24,7 +24,8 @@ import { formatBalance } from "@polkadot/util";
 import { AccountActionTypes } from "@store/types/account.types";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 import { useSubstrateState } from "@utils/substrate";
-import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker";
+import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
+
 import { Form, Formik } from "formik";
 import { create } from "ipfs-http-client";
 import React, { useEffect, useRef, useState } from "react";
@@ -410,6 +411,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                             Start time - End time
                           </Text>
                           <DateTimeRangePicker
+                            disabled={addCollectionTnxStatus}
                             onChange={(e) =>
                               handleOnchangeSchedule(e, setFieldValue)
                             }

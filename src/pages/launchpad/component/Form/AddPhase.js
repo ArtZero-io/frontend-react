@@ -122,6 +122,7 @@ function AddPhase({ name, mode, isDisabled }) {
                         Start time - End time
                       </Text>
                       <DateTimeRangePicker
+                        disabled={isDisabled}
                         onChange={(e) => handlePhaseTime(e, index)}
                         value={
                           !value[index].start
@@ -217,11 +218,12 @@ function AddPhase({ name, mode, isDisabled }) {
                 w="140px"
                 variant="solid"
                 type="button"
-                isDisabled={ isDisabled||
-                  mode === formMode.ADD &&
-                  // (hasEmptyLevel ||
-                  (!arrayHelpers?.form?.dirty ||
-                    arrayHelpers.form?.errors?.levels)
+                isDisabled={
+                  isDisabled ||
+                  (mode === formMode.ADD &&
+                    // (hasEmptyLevel ||
+                    (!arrayHelpers?.form?.dirty ||
+                      arrayHelpers.form?.errors?.levels))
                 }
                 onClick={() => handleAddPhase(arrayHelpers)}
               >
