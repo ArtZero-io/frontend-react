@@ -47,11 +47,13 @@ function AddRoadmap({ name, mode, isDisabled }) {
                 />
 
                 <Editor
+                  mode={mode}
+                  index={index}
                   isDisabled={isDisabled}
                   isRequired={true}
                   name={`roadmap[${index}].content`}
                   editorContent={value[index].content}
-                  handleChange={(v) => handleChange(v, index)}
+                  handleChange={handleChange}
                 />
 
                 <Stack>
@@ -61,6 +63,7 @@ function AddRoadmap({ name, mode, isDisabled }) {
                     </Text>
                   ) : null}
                 </Stack>
+
                 <HStack justifyContent="end" w="full">
                   <Heading
                     _hover={{

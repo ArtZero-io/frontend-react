@@ -8,6 +8,7 @@ import {
   HStack,
   Image,
   Skeleton,
+  Spacer,
   Stack,
   Text,
   useDisclosure,
@@ -26,6 +27,7 @@ import { useSubstrateState } from "@utils/substrate";
 import UpdateURIModal from "./Modal/UpdateURIModal";
 import UpdatePhasesModal from "./Modal/UpdatePhasesModal";
 import { getUsernameOnchain } from "@utils/blockchain/profile_calls";
+import { MdOutlineArrowBackIos } from "react-icons/md";
 
 function LaunchpadDetailHeader({
   project,
@@ -124,11 +126,30 @@ function LaunchpadDetailHeader({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
+              {" "}
+              <HStack
+                h="full"
+                px="4px"
+                py="10px"
+                display="flex"
+                cursor="pointer"
+                maxW="max-content"
+                alignItems="center"
+                onClick={() => history.goBack()}
+                _hover={{ bg: "#7ae7ff", color: "black" }}
+              >
+                <MdOutlineArrowBackIos />
+                <Text fontFamily="Evogria, sans-serif" size="h6" pl="8px">
+                  GO BACK{" "}
+                </Text>
+                <Spacer />
+              </HStack>
               <VStack
                 textAlign="center"
                 justifyContent="space-between"
                 minH={{ base: "3.5rem", "2xl": "7.125rem" }}
               >
+                {" "}
                 <Heading
                   color="#fff"
                   fontSize={["32px", "48px", "48px"]}
@@ -248,7 +269,6 @@ function LaunchpadDetailHeader({
               </VStack>
             </motion.div>
           </HStack>
-
           {livePhase && livePhase ? (
             <HStack
               flexWrap={["wrap", "noWrap", "noWrap"]}
