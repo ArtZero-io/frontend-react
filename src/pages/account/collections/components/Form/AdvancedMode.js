@@ -169,39 +169,39 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           validationSchema={Yup.object().shape({
             isEditMode: Yup.boolean(),
 
-            nftContractAddress: Yup.string()
-              .trim()
-              .min(3, "Must be longer than 3 characters")
-              .max(48, "Must be less than 48 characters")
-              .required("Required"),
-            collectionName: Yup.string()
-              .trim()
-              .min(3, "Must be longer than 3 characters")
-              .max(30, "Must be less than 30 characters")
-              .required("Required"),
-            collectionDescription: Yup.string()
-              .trim()
-              .min(3, "Must be longer than 3 characters")
-              .max(150, "Must be less than 150 characters")
-              .required("Required"),
-            collectRoyalFee: Yup.boolean(),
-            website: Yup.string()
-              .trim()
-              .url("URL must start with http:// or https://")
-              .max(50, "Must be less than 50 characters"),
-            twitter: Yup.string()
-              .trim()
-              .url("URL must start with http:// or https://")
-              .matches(/\btwitter.com\b/, "URL must be twitter.com")
-              .max(50, "Must be less than 50 characters"),
-            discord: Yup.string()
-              .trim()
-              .url("URL must start with http:// or https://")
-              .matches(
-                /\bdiscord.(com|gg)\b/,
-                "URL must be discord.com or discord.gg"
-              )
-              .max(50, "Must be less than 50 characters"),
+              nftContractAddress: Yup.string()
+                .trim()
+                .min(3, "Must be longer than 3 characters")
+                .max(48, "Must be at most 48 characters")
+                .required("This field is required"),
+              collectionName: Yup.string()
+                .trim()
+                .min(3, "Must be longer than 3 characters")
+                .max(30, "Must be at most 30 characters")
+                .required("This field is required"),
+              collectionDescription: Yup.string()
+                .trim()
+                .min(3, "Must be longer than 3 characters")
+                .max(150, "Must be at most 150 characters")
+                .required("This field is required"),
+              collectRoyalFee: Yup.boolean(),
+              website: Yup.string()
+                .trim()
+                .url("URL must start with http:// or https://")
+                .max(50, "Must be at most 50 characters"),
+              twitter: Yup.string()
+                .trim()
+                .url("URL must start with http:// or https://")
+                .matches(/\btwitter.com\b/, "URL must be twitter.com")
+                .max(50, "Must be at most 50 characters"),
+              discord: Yup.string()
+                .trim()
+                .url("URL must start with http:// or https://")
+                .matches(
+                  /\bdiscord.(com|gg)\b/,
+                  "URL must be discord.com or discord.gg"
+                )
+                .max(50, "Must be at most 50 characters"),
 
             agreeTosCheckbox: Yup.boolean().when("isEditMode", {
               is: false,

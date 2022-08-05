@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Avatar,
   Button,
@@ -16,90 +17,92 @@ import { create } from "ipfs-http-client";
 import { Buffer } from "buffer";
 import { IPFS_CLIENT_URL } from "@constants/index";
 import toast from "react-hot-toast";
-import { clientAPI } from "@api/client";
-import { getCachedImageShort } from "@utils/index";
-import { formMode } from "@constants";
+// import { clientAPI } from "@api/client";
+// import { getCachedImageShort } from "@utils/index";
+// import { formMode } from "@constants";
 
 const client = create(IPFS_CLIENT_URL);
-const supportedFormat = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
+const supportedFormat = ["application/json"];
 
-const ImageUploadCollection = ({
+const JsonUpload = ({
   id,
-  mode,
-  index,
-  title,
-  isBanner,
-  limitedSize,
-  imageIPFSUrl,
-  minH = "64px",
-  setImageIPFSUrl,
   isDisabled = false,
-  isRequired = false,
+  mode,
+  jsonIPFSUrl,
+  setJsonIPFSUrl,
+  title = "Upload Json",
 }) => {
-  const [imgURL, setImgURL] = useState("");
+  const [jsonURL, setJsonURL] = useState("");
 
-  const [newAvatarData, setNewAvatarData] = useState(null);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+  const [newJsonData, setNewJsonData] = useState(null);
+  const [JsonPreviewUrl, setJsonPreviewUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+
   const ref = useRef();
 
-  const retrieveNewAvatar = (e) => {
+  const retrieveNewJson = (e) => {
+    e.preventDefault();
+
     let data;
     if (e) data = e.target.files[0];
 
     if (!supportedFormat.includes(data?.type)) {
-      // console.log("includes Date.now()", Date.now());
-
       toast.error(
-        `Please use .png .jpeg .jpeg .gif format, the ${
+        `Please upload .json format only, the ${
           e.target?.files[0] && e.target.files[0].type.split("/")[1]
         } format is not supported.`
       );
       ref.current.value = null;
-      setNewAvatarData(null);
-      setImagePreviewUrl("");
+      setNewJsonData(null);
+      setJsonPreviewUrl("");
       return;
     }
 
     if (data?.size >= 5242880) {
       toast.error(
-        `Maximum size support is 5MB, your image size is ${(
+        `Maximum size support is 5MB, your file size is ${(
           data?.size / 1000000
         ).toFixed(2)}MB.`
       );
       ref.current.value = null;
-      setNewAvatarData(null);
-      setImagePreviewUrl("");
+      setNewJsonData(null);
+      setJsonPreviewUrl("");
       return;
     }
 
-    setImgURL(null);
+    setJsonURL(null);
 
     const reader = new window.FileReader();
 
     reader.readAsArrayBuffer(data);
 
     reader.onloadend = () => {
-      setNewAvatarData(Buffer(reader.result));
+      console.log("Buffer(reader.result)", Buffer(reader.result));
+      setNewJsonData(Buffer(reader.result));
     };
-
+    console.log("reader", reader);
     e.preventDefault();
 
     if (e.target.value !== "") {
       const src = URL.createObjectURL(e.target.files[0]);
+      console.log("src", src);
+      console.log("e.target.files[0]", e.target.files[0].name);
+      setJsonPreviewUrl(src);
 
-      setImagePreviewUrl(src);
+      const fileName = e.target.files[0].name;
+      console.log("fileName", fileName);
+      setFileName(fileName);
     }
-    // console.log("End retrieveNewAvatar Date.now()", Date.now());
   };
 
   const onUploadHandler = async (e) => {
-    // console.log("onUploadHandler Date.now()", Date.now());
+    e.preventDefault();
 
     try {
-      if (newAvatarData) {
+      if (newJsonData) {
         const uploadPromise = () =>
           new Promise(function (resolve) {
-            const created = client.add(newAvatarData);
+            const created = client.add(newJsonData);
 
             if (created) {
               resolve(created);
@@ -108,19 +111,21 @@ const ImageUploadCollection = ({
 
         toast.promise(
           uploadPromise().then((created) => {
-            setImageIPFSUrl(created?.path, index);
-            setImgURL(created?.path);
+            setJsonIPFSUrl(created?.path);
+            setJsonURL(created?.path);
+
             // eslint-disable-next-line no-unused-vars
-            const update_nft_api_res = clientAPI("post", "/cacheImage", {
-              input: created?.path,
-              is1920: isBanner,
-            });
+            // const update_nft_api_res = clientAPI("post", "/cacheImage", {
+            //   input: created?.path,
+            //   is1920: isBanner,
+            // });
             // console.log("update_nft_api_res", update_nft_api_res);
           }),
           {
             loading: "Uploading...",
             success: "Upload successful!",
-            error: "Could not upload your image!!!.",
+            error: (error) =>
+              console.log("Could not upload your file!!!.", error),
           }
         );
       }
@@ -131,25 +136,13 @@ const ImageUploadCollection = ({
   };
 
   return (
-    <VStack
-      minW={52}
-      alignItems="start"
-      //  pt={6}
-      fontSize="lg"
-    >
-      {title ? (
-        <Text color="#fff" ml={0}>
-          {title}{" "}
-          {isRequired ? (
-            <Text as="span" color="#ff8c8c">
-              *
-            </Text>
-          ) : null}
-        </Text>
-      ) : null}
+    <VStack minW={52} alignItems="start" pt={6} fontSize="lg">
+      <Text color="#fff" ml={0}>
+        {title}
+      </Text>
 
       <Center w="full" justifyContent="center">
-        <HStack py="1" justifyContent="center" minH={minH}>
+        <HStack py="1" justifyContent="center" minH={16}>
           <label htmlFor={`${id}InputTag`} style={{ cursor: "pointer" }}>
             <Flex alignItems="center">
               <Button
@@ -158,48 +151,45 @@ const ImageUploadCollection = ({
                 variant="outline"
                 color="brand.blue"
                 fontFamily="Evogria"
-                fontSize={["sm", "md", "md"]}
-                px={["12px", "32px", "32px"]}
+                fontSize="md"
               >
-                {!imagePreviewUrl ? "select image" : "pick another"}
+                {!JsonPreviewUrl ? "Select File" : "Pick another"}
               </Button>
-              <Text hidden minW={28} ml={4} color="brand.grayLight">
-                No file chosen
-              </Text>
+              {!JsonPreviewUrl && (
+                <Text minW={28} ml={4} color="brand.grayLight">
+                  No file chosen
+                </Text>
+              )}
               <input
                 disabled={isDisabled}
                 ref={ref}
                 style={{ display: "none" }}
                 id={`${id}InputTag`}
-                onChange={retrieveNewAvatar}
+                onChange={retrieveNewJson}
                 type="file"
-                accept="image/png, image/jpg, image/jpeg, image/gif"
+                accept="application/json"
               />
             </Flex>
           </label>
         </HStack>
 
-        {mode === formMode.EDIT && !imagePreviewUrl && (
+        {/* {mode === formMode.EDIT && !JsonPreviewUrl && (
           <Avatar
-            minH={minH}
+            minH={16}
             minW={16}
             ml={2}
             src={getCachedImageShort(imageIPFSUrl, 100)}
           />
-        )}
+        )} */}
 
-        {imagePreviewUrl && (
+        {JsonPreviewUrl && (
           <HStack justifyContent="center" minH={16}>
-            <Avatar
-              minH={["52px", "64px", "64px"]}
-              minW={["52px", "64px", "64px"]}
-              ml={2}
-              src={imagePreviewUrl}
-            />
-
-            {imgURL ? (
-              <Text minW={[4, 28, 28]} color="brand.blue">
-                Ready!
+            <Text mx="20px" minW={28} color="brand.blue">
+              {fileName}
+            </Text>
+            {jsonURL ? (
+              <Text minW={28} color="brand.blue">
+                Ready for submit !
               </Text>
             ) : (
               <Button
@@ -207,20 +197,18 @@ const ImageUploadCollection = ({
                 leftIcon={<HiCloudUpload />}
                 onClick={onUploadHandler}
               >
-                upload
+                Upload File
               </Button>
             )}
           </HStack>
         )}
         <Spacer />
       </Center>
-      {limitedSize ? (
-        <Text ml={2} fontSize={["xs", "sm", "sm"]} color="brand.grayLight">
-          Recommended file size is {limitedSize.width}x{limitedSize.height} px
-        </Text>
-      ) : null}
+      <Text ml={2} fontSize="14px" color="brand.grayLight">
+        Recommended file format is <code>.json</code>
+      </Text>
     </VStack>
   );
 };
 
-export default ImageUploadCollection;
+export default JsonUpload;

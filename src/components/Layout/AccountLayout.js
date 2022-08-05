@@ -31,6 +31,14 @@ const AccountLayout = ({ children }) => {
       isDisabled: false,
       route: ROUTES.ACCOUNT_MY_STAKES,
     },
+    {
+      label: "My Projects",
+      value: ROUTES.ACCOUNT_MY_PROJECTS,
+    },
+    {
+      label: "WhiteList Manager",
+      value: ROUTES.ACCOUNT_WHITELIST_PROJECTS,
+    },
   ];
 
   const handleTabsChange = (index) => {

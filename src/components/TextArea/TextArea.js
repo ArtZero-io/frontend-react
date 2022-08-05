@@ -19,13 +19,12 @@ export default function SimpleModeTextarea({
       color="#fff"
       w={width}
     >
-      <FormLabel
-        fontSize={["md", "lg", "lg"]}
-        ml={1}
-        htmlFor={props.id || props.name}
-      >
-        {label}
-      </FormLabel>
+      {label && (
+        <FormLabel fontSize="lg" ml={1} htmlFor={props.id || props.name}>
+          {label}
+        </FormLabel>
+      )}
+
       <Field
         _placeholder={{
           fontSize: "md",

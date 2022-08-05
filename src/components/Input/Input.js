@@ -6,6 +6,7 @@ export default function SimpleModeInput({
   label,
   height,
   width,
+  mx = "4px",
   isRequired = false,
   ...props
 }) {
