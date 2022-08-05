@@ -384,7 +384,7 @@
   font-size: 2.5em;
 }
 .ql-editor .ql-direction-rtl {
-  direction: rtl;
+  direction: ltr;
   text-align: inherit;
 }
 .ql-editor .ql-align-center {
