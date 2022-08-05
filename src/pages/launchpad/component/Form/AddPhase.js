@@ -10,7 +10,7 @@ import AdvancedModeSwitch from "@components/Switch/Switch";
 import NumberInput from "@components/Input/NumberInput";
 import { useState } from "react";
 
-function AddPhase({ name, mode }) {
+function AddPhase({ name, mode, isDisabled }) {
   const [{ value }, , helpers] = useField(name);
   const [isPublic, setIsPublic] = useState(false);
 
@@ -75,7 +75,14 @@ function AddPhase({ name, mode }) {
         phaseBefore?.end <= lastPhase?.start &&
         lastPhase?.start <= lastPhase?.end
       ) {
-        arrayHelpers.push({ name: "", start: "", end: "" });
+        arrayHelpers.push({
+          name: "",
+          start: "",
+          end: "",
+          isPublic: false,
+          publicMintingFee: "",
+          publicAmount: "",
+        });
       } else {
         toast.error("Phase time is not valid or overlap.");
       }
@@ -105,7 +112,7 @@ function AddPhase({ name, mode }) {
                       isRequired={true}
                       label="Phase name"
                       placeholder="Phase name here"
-                      // isDisabled={addCollectionTnxStatus}
+                      isDisabled={isDisabled}
                     />{" "}
                   </Stack>
 
@@ -146,7 +153,7 @@ function AddPhase({ name, mode }) {
                     <AdvancedModeSwitch
                       name={`phases[${index}].isPublic`}
                       label="Set public"
-                      // isDisabled={addCollectionTnxStatus}
+                      isDisabled={isDisabled}
                       onChange={() => {
                         value[index].isPublic = !value[index].isPublic;
                         setIsPublic(!isPublic);
@@ -159,10 +166,10 @@ function AddPhase({ name, mode }) {
                     name={`phases[${index}].publicMintingFee`}
                     // isRequired={true}
                     label="Public Minting Fee"
-                    // isDisabled={addCollectionTnxStatus}
+                    isDisabled={isDisabled}
                   />{" "}
                   <NumberInput
-                    // isDisabled={!isPublic || addCollectionTnxStatus}
+                    isDisabled={isDisabled}
                     isDisplay={value[index].isPublic}
                     label="Public amount"
                     name={`phases[${index}].publicAmount`}
@@ -210,7 +217,7 @@ function AddPhase({ name, mode }) {
                 w="140px"
                 variant="solid"
                 type="button"
-                isDisabled={
+                isDisabled={ isDisabled||
                   mode === formMode.ADD &&
                   // (hasEmptyLevel ||
                   (!arrayHelpers?.form?.dirty ||

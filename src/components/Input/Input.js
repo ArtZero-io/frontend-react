@@ -6,6 +6,7 @@ export default function SimpleModeInput({
   label,
   height,
   width,
+  mx = "4px",
   isRequired = false,
   ...props
 }) {
@@ -13,7 +14,7 @@ export default function SimpleModeInput({
   return (
     <FormControl
       isRequired={isRequired}
-      mx={1}
+      mx={mx}
       fontSize="lg"
       color="#fff"
       h={height || 28}

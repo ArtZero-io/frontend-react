@@ -461,7 +461,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       name="description"
                       label="Project description"
                       placeholder="Project description"
-                      // isDisabled={addCollectionTnxStatus}
+                      isDisabled={addCollectionTnxStatus}
                     />
                   </Stack>
 
@@ -506,14 +506,22 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     <Heading size="h5" mb="30px">
                       project roadmap
                     </Heading>
-                    <AddRoadmap name="roadmap" />
+                    <AddRoadmap
+                      name="roadmap"
+                      mode={mode}
+                      isDisabled={addCollectionTnxStatus}
+                    />
                   </Stack>
 
                   <Stack my="30px">
                     <Heading size="h5" mb="30px">
                       project team member
                     </Heading>
-                    <AddMember name="members" mode={mode} />
+                    <AddMember
+                      name="members"
+                      mode={mode}
+                      isDisabled={addCollectionTnxStatus}
+                    />
                   </Stack>
 
                   <Stack
@@ -596,14 +604,18 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         // step={1}
                         // type="number"
                         // placeholder="9999"
-                        // isDisabled={addCollectionTnxStatus}
+                        isDisabled={addCollectionTnxStatus}
                       />
                     )}
                   </Stack>
                 </CommonStack>
                 {mode === formMode.ADD && (
                   <CommonStack stackTitle="3. phases info">
-                    <AddPhase name="phases" />
+                    <AddPhase
+                      name="phases"
+                      mode={mode}
+                      isDisabled={addCollectionTnxStatus}
+                    />
                   </CommonStack>
                 )}
                 {mode === formMode.ADD && (
@@ -816,8 +828,8 @@ const validationDiscord = Yup.string()
 
 const validationDescription = Yup.string()
   .trim()
-  .min(120, "Must be longer than 120 characters")
-  .max(500, "Must be at most 500 characters")
+  .min(3, "Must be longer than 3 characters")
+  .max(1000, "Must be at most 1000 characters")
   .required("This field is required");
 
 const validationNftName = Yup.string()
@@ -856,7 +868,6 @@ const validationSchema = Yup.object().shape({
   description: validationDescription,
   roadmap: Yup.array()
     .min(1, "Roadmap must have at least 1 items")
-    .max(3, "Roadmap must have less than or equal to 3 items")
     .of(
       Yup.object().shape(
         {
@@ -885,7 +896,7 @@ const validationSchema = Yup.object().shape({
               then: Yup.string()
                 .required("This field is required")
                 .min(3, "Must be longer than 3 characters")
-                .max(150, "Must be at most 150 characters"),
+                .max(1000, "Must be at most 1000 characters"),
               otherwise: Yup.string().notRequired(),
             }),
         },
@@ -894,7 +905,6 @@ const validationSchema = Yup.object().shape({
     ),
   members: Yup.array()
     .min(1, "Members must have at least 1 items")
-    .max(3, "Members must have less than or equal to 3 items")
     .of(
       Yup.object().shape(
         {
@@ -939,12 +949,11 @@ const validationSchema = Yup.object().shape({
   nftSymbol: validationNftSymbol,
   phases: Yup.array()
     .min(1, "Phases must have at least 1 items")
-    .max(3, "Phases must have less than or equal to 3 items")
     .of(
       Yup.object().shape({
         name: Yup.string()
           .required("This field is required")
-          .min(3, "Must be longer than 3 characters")
+          .min(2, "Must be longer than 2 characters")
           .max(30, "Must be at most 30 characters")
           .test("Test name", "Duplicated phase name!", (value, schema) => {
             const array = schema?.from[1].value?.phases;

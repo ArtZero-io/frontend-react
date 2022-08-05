@@ -6,7 +6,7 @@ import { formMode } from "@constants";
 import ImageUpload from "@components/ImageUpload/Collection";
 import { useState } from "react";
 
-function AddMember({ name, mode }) {
+function AddMember({ name, mode, isDisabled }) {
   const [{ value }, , helpers] = useField(name);
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState(null);
   // const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
@@ -55,6 +55,8 @@ function AddMember({ name, mode }) {
               >
                 <Stack direction={["column", "row"]} gap={["0px", "30px"]}>
                   <Input
+                    isDisabled={isDisabled}
+                    mx="0"
                     type="text"
                     width="100%"
                     isRequired={true}
@@ -64,6 +66,8 @@ function AddMember({ name, mode }) {
                     placeholder="Your name here"
                   />
                   <Input
+                    isDisabled={isDisabled}
+                    mx="0"
                     type="text"
                     width="100%"
                     isRequired={true}
@@ -76,6 +80,8 @@ function AddMember({ name, mode }) {
 
                 <Stack direction={["column", "row"]} gap={["0px", "0px"]}>
                   <Input
+                    isDisabled={isDisabled}
+                    mx="0"
                     width="100%"
                     type="text"
                     autoComplete="off"
@@ -87,7 +93,7 @@ function AddMember({ name, mode }) {
                 <Stack direction={["column", "row"]} gap="30px">
                   <ImageUpload
                     title={"Member Avatar"}
-                    // isDisabled={addCollectionTnxStatus}
+                    isDisabled={isDisabled}
                     index={index}
                     mode={mode}
                     isBanner={false}
@@ -134,10 +140,11 @@ function AddMember({ name, mode }) {
                 variant="solid"
                 type="button"
                 isDisabled={
-                  mode === formMode.ADD &&
-                  // (hasEmptyLevel ||
-                  (!arrayHelpers?.form?.dirty ||
-                    arrayHelpers.form?.errors?.levels)
+                  isDisabled ||
+                  (mode === formMode.ADD &&
+                    // (hasEmptyLevel ||
+                    (!arrayHelpers?.form?.dirty ||
+                      arrayHelpers.form?.errors?.levels))
                 }
                 onClick={() => handleAddMore(arrayHelpers)}
               >

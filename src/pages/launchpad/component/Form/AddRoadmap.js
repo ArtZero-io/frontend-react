@@ -7,8 +7,8 @@ import { formMode } from "@constants";
 import Input from "@components/Input/Input";
 import Editor from "@components/Editor/Editor";
 
-function AddRoadmap({ name, mode }) {
-  const [{ value }, , helpers] = useField(name);
+function AddRoadmap({ name, mode, isDisabled }) {
+  const [{ value }, { error }, helpers] = useField(name);
 
   const handleChange = (v, index) => {
     const newValue = value.map((i, idx) => {
@@ -24,7 +24,7 @@ function AddRoadmap({ name, mode }) {
       name="roadmap"
       render={(arrayHelpers) => {
         const roadmapErrors = arrayHelpers?.form?.errors?.roadmap;
-
+        console.log(arrayHelpers);
         return (
           <Stack>
             {value?.map((_, index) => (
@@ -37,30 +37,30 @@ function AddRoadmap({ name, mode }) {
                 <Input
                   width="100%"
                   type="text"
+                  mx="0"
                   isRequired={true}
                   autoComplete="off"
                   name={`roadmap[${index}].type`}
                   placeholder="Your milestone here"
                   label={"Milestone"}
+                  isDisabled={isDisabled}
                 />
 
                 <Editor
+                  isDisabled={isDisabled}
                   isRequired={true}
                   name={`roadmap[${index}].content`}
                   editorContent={value[index].content}
                   handleChange={(v) => handleChange(v, index)}
                 />
 
-                {/* <CommonTextArea
-                  rows={3}
-                  height={"144px"}
-                  label={"Content"}
-                  w="full"
-                  type="text"
-                  isRequired={true}
-                  placeholder="Your content here"
-                  name={`roadmap[${index}].content`}
-                /> */}
+                <Stack>
+                  {error?.length ? (
+                    <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                      {error[index]?.content}
+                    </Text>
+                  ) : null}
+                </Stack>
                 <HStack justifyContent="end" w="full">
                   <Heading
                     _hover={{
@@ -97,10 +97,11 @@ function AddRoadmap({ name, mode }) {
                 w="140px"
                 type="button"
                 isDisabled={
-                  mode === formMode.ADD &&
-                  // (hasEmptyProp ||
-                  (!arrayHelpers?.form?.dirty ||
-                    arrayHelpers.form?.errors?.roadmap)
+                  isDisabled ||
+                  (mode === formMode.ADD &&
+                    // (hasEmptyProp ||
+                    (!arrayHelpers?.form?.dirty ||
+                      arrayHelpers.form?.errors?.roadmap))
                 }
                 onClick={() => arrayHelpers.push({ type: "", content: "" })}
               >
