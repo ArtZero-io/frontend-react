@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Avatar,
   Button,
@@ -5,12 +6,17 @@ import {
   Flex,
   HStack,
   Spacer,
+  Spinner,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import React, { useState, useRef } from "react";
+import ActiveIcon from "@theme/assets/icon/Active.js";
 
-import { HiCloudUpload } from "react-icons/hi";
+// import { HiCloudUpload } from "react-icons/hi";
 
 import { create } from "ipfs-http-client";
 import { Buffer } from "buffer";
@@ -38,7 +44,6 @@ const ImageUploadCollection = ({
 }) => {
   const [imgURL, setImgURL] = useState("");
 
-  const [newAvatarData, setNewAvatarData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const ref = useRef();
 
@@ -55,7 +60,7 @@ const ImageUploadCollection = ({
         } format is not supported.`
       );
       ref.current.value = null;
-      setNewAvatarData(null);
+      // setNewAvatarData(null);
       setImagePreviewUrl("");
       return;
     }
@@ -67,7 +72,7 @@ const ImageUploadCollection = ({
         ).toFixed(2)}MB.`
       );
       ref.current.value = null;
-      setNewAvatarData(null);
+      // setNewAvatarData(null);
       setImagePreviewUrl("");
       return;
     }
@@ -79,7 +84,33 @@ const ImageUploadCollection = ({
     reader.readAsArrayBuffer(data);
 
     reader.onloadend = () => {
-      setNewAvatarData(Buffer(reader.result));
+      // setNewAvatarData(Buffer(reader.result));
+
+      const uploadPromise = () =>
+        new Promise(function (resolve) {
+          const created = client.add(Buffer(reader.result));
+
+          if (created) {
+            resolve(created);
+          }
+        });
+
+      toast.promise(
+        uploadPromise().then((created) => {
+          setImageIPFSUrl(created?.path, index);
+          setImgURL(created?.path);
+
+          clientAPI("post", "/cacheImage", {
+            input: created?.path,
+            is1920: isBanner,
+          });
+        }),
+        {
+          loading: "Uploading...",
+          success: "Upload successful!",
+          error: "Could not upload your image!!!.",
+        }
+      );
     };
 
     e.preventDefault();
@@ -88,45 +119,6 @@ const ImageUploadCollection = ({
       const src = URL.createObjectURL(e.target.files[0]);
 
       setImagePreviewUrl(src);
-    }
-    // console.log("End retrieveNewAvatar Date.now()", Date.now());
-  };
-
-  const onUploadHandler = async (e) => {
-    // console.log("onUploadHandler Date.now()", Date.now());
-
-    try {
-      if (newAvatarData) {
-        const uploadPromise = () =>
-          new Promise(function (resolve) {
-            const created = client.add(newAvatarData);
-
-            if (created) {
-              resolve(created);
-            }
-          });
-
-        toast.promise(
-          uploadPromise().then((created) => {
-            setImageIPFSUrl(created?.path, index);
-            setImgURL(created?.path);
-            // eslint-disable-next-line no-unused-vars
-            const update_nft_api_res = clientAPI("post", "/cacheImage", {
-              input: created?.path,
-              is1920: isBanner,
-            });
-            // console.log("update_nft_api_res", update_nft_api_res);
-          }),
-          {
-            loading: "Uploading...",
-            success: "Upload successful!",
-            error: "Could not upload your image!!!.",
-          }
-        );
-      }
-    } catch (error) {
-      console.log(error.message);
-      toast.error(error.message);
     }
   };
 
@@ -193,23 +185,25 @@ const ImageUploadCollection = ({
             <Avatar
               minH={["52px", "64px", "64px"]}
               minW={["52px", "64px", "64px"]}
-              ml={2}
+              mx={4}
               src={imagePreviewUrl}
             />
 
-            {imgURL ? (
-              <Text minW={[4, 28, 28]} color="brand.blue">
-                Ready!
-              </Text>
+            {/* {imgURL ? (
+              <Tag variant="active" minW={[4, 16, 16]} color="brand.blue">
+                <TagLeftIcon as={ActiveIcon} />
+                <TagLabel>Ready !</TagLabel>
+              </Tag>
             ) : (
-              <Button
-                size="xs"
-                leftIcon={<HiCloudUpload />}
-                onClick={onUploadHandler}
-              >
-                upload
-              </Button>
-            )}
+              <Spinner
+                mx="14px"
+                p={"8px"}
+                speed="0.5s"
+                thickness="2px"
+                color="#7ae7ff"
+                emptyColor="#333"
+              />
+            )} */}
           </HStack>
         )}
         <Spacer />
