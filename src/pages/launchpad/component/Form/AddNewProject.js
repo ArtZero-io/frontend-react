@@ -65,6 +65,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
   const currentHeaderIPFSUrl = useRef(headerIPFSUrl);
 
+  const [addProjectTotalFee, setAddProjectTotalFee] = useState(null);
+
   // eslint-disable-next-line no-unused-vars
   const noImagesChange =
     currentAvatarIPFSUrl.current === avatarIPFSUrl &&
@@ -142,6 +144,23 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     setFieldValue("startTime", e[0].getTime());
     setFieldValue("endTime", e[1].getTime());
   };
+
+  useEffect(() => {
+    const fetchAddProjectFee = async () => {
+      const addProjFee = await launchpad_contract_calls.getProjectAddingFee(
+        currentAccount
+      );
+
+      const addCollectionFee =
+        await collection_manager_calls.getAdvanceModeAddingFee(currentAccount);
+
+      const totalFee =
+        addProjFee.toNumber() / 10 ** 12 + addCollectionFee / 10 ** 12;
+      setAddProjectTotalFee(totalFee);
+    };
+
+    fetchAddProjectFee();
+  }, [currentAccount]);
 
   return (
     <>
@@ -634,7 +653,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 <VStack>
                   <Text color="#fff">
                     Create new collection you will pay
-                    <strong> 999 $AZERO </strong> in fee to ArtZero.io
+                    <strong> {addProjectTotalFee} $AZERO </strong> in fee to
+                    ArtZero.io
                   </Text>
                   <HStack justifyContent="center">
                     <CommonCheckbox

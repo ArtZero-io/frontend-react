@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -13,7 +12,6 @@ import {
   Text,
   Wrap,
   WrapItem,
-  Link,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
@@ -23,19 +21,12 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { TeamCard } from "../component/TeamCard";
 import { clientAPI } from "@api/client";
 import MyLaunchPadNFTCard from "./components/MyNFTCard";
-import {
-  Link as ReactRouterLink,
-  useHistory,
-  useParams,
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSubstrateState } from "@utils/substrate";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
-import { IPFS_BASE_URL } from "@constants/index";
 import { timestampWithoutCommas, convertStringToPrice } from "@utils";
-import * as ROUTES from "@constants/routes";
-import { getCachedImageShort } from "@utils/index";
 import { Interweave } from "interweave";
 
 const LaunchpadDetailPage = () => {
@@ -48,9 +39,11 @@ const LaunchpadDetailPage = () => {
   const [currentPhaseId, setCurrentPhaseId] = useState(0);
   const [currentWhitelist, setCurrentWhitelist] = useState({});
   const [myNFTs, setMyNFTs] = useState([]);
-  const history = useHistory();
   const [publicMintedCount, setPublicMintedCount] = useState(0);
+
+  // eslint-disable-next-line no-unused-vars
   const [publicMintingPhaseId, setPublicMintingPhaseId] = useState(0);
+
   const [currentPhase, setCurrentPhase] = useState({});
 
   useEffect(() => {
@@ -99,7 +92,6 @@ const LaunchpadDetailPage = () => {
           await launchpad_psp34_nft_standard_calls.getCurrentPhase(
             currentAccount
           );
-      
 
         for (let i = 1; i <= totalPhase; i++) {
           const whiteListData =
@@ -113,7 +105,7 @@ const LaunchpadDetailPage = () => {
               currentAccount,
               i
             );
-          console.log('phaseSchedule', phaseSchedule);
+          console.log("phaseSchedule", phaseSchedule);
           const phaseCode = phaseSchedule.title;
           const totalWhiteListPhase =
             await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(
@@ -130,7 +122,7 @@ const LaunchpadDetailPage = () => {
             publicPhase: phaseSchedule.isPublic,
             whitelist: whiteListData,
             publicMintingAmout: phaseSchedule.publicMintingAmout,
-            publicMintingFee: phaseSchedule.publicMintingFee
+            publicMintingFee: phaseSchedule.publicMintingFee,
           };
 
           phasesTmp.push(phaseInfo);
@@ -196,9 +188,8 @@ const LaunchpadDetailPage = () => {
             }
           }
           setMyNFTs(myNFTsTmp);
-          console.log('After Set My NFTS')
+          console.log("After Set My NFTS");
         }
-       
       }
     };
 
@@ -289,22 +280,23 @@ const LaunchpadDetailPage = () => {
           <Spacer />
           {!currentPhase.publicPhase && totalWhitelistAmount != 0 ? (
             <Text color="#888">
-              {Math.round(totalClaimedAmount / totalWhitelistAmount)}% (
+              1 {Math.round(totalClaimedAmount / totalWhitelistAmount)}% (
               {totalClaimedAmount}/{totalWhitelistAmount})
             </Text>
           ) : (
             <Text color="#888">
-              0% ({totalClaimedAmount}/{totalWhitelistAmount})
+              2 0% ({totalClaimedAmount}/{totalWhitelistAmount})
             </Text>
           )}
           {currentPhase.publicPhase ? (
             <Text color="#888">
-              {Math.round(totalClaimedAmount / currentPhase.publicMintingAmout)}% (
-              {totalClaimedAmount}/{currentPhase.publicMintingAmout})
+              3{" "}
+              {Math.round(totalClaimedAmount / currentPhase.publicMintingAmout)}
+              % ({totalClaimedAmount}/{currentPhase.publicMintingAmout})
             </Text>
           ) : (
             <Text color="#888">
-              0% ({totalClaimedAmount}/{currentPhase.publicMintingAmout})
+              4 0% ({totalClaimedAmount}/{currentPhase.publicMintingAmout})
             </Text>
           )}
         </Flex>
@@ -314,15 +306,21 @@ const LaunchpadDetailPage = () => {
             mb="20px"
             h="8px"
           />
-        ) : ''}
+        ) : (
+          ""
+        )}
 
         {currentPhase.publicPhase ? (
           <Progress
-            value={Math.round(totalClaimedAmount / currentPhase.publicMintingAmout)}
+            value={Math.round(
+              totalClaimedAmount / currentPhase.publicMintingAmout
+            )}
             mb="20px"
             h="8px"
           />
-        ) : ''}
+        ) : (
+          ""
+        )}
 
         {!currentAccount ? (
           <Flex w="full" justifyContent="center">
@@ -331,7 +329,7 @@ const LaunchpadDetailPage = () => {
         ) : (
           ""
         )}
-        {console.log('currentPhase', currentPhase)}
+        {console.log("currentPhase", currentPhase)}
         {currentAccount &&
           !currentPhase.publicPhase &&
           currentWhitelist.whitelistAmount && (
@@ -396,7 +394,8 @@ const LaunchpadDetailPage = () => {
                         <Text>
                           Price:{" "}
                           <Text as="span" color="#fff">
-                            {convertStringToPrice(item.publicMintingFee)} <AzeroIcon mb="5px" />
+                            {convertStringToPrice(item.publicMintingFee)}{" "}
+                            <AzeroIcon mb="5px" />
                           </Text>
                         </Text>
                       </Flex>
