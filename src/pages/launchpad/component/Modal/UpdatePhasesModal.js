@@ -18,11 +18,10 @@ import StatusButton from "@components/Button/StatusButton";
 import * as Yup from "yup";
 import { SCROLLBAR } from "@constants";
 import { useSubstrateState } from "@utils/substrate";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
-import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
-import { ContractPromise } from "@polkadot/api-contract";
-import { useSubstrateState } from "@utils/substrate";
-import { timestampWithoutCommas } from "@utils";
+// import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+// import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+// import { ContractPromise } from "@polkadot/api-contract";
+// import { timestampWithoutCommas } from "@utils";
 
 export default function UpdatePhasesModal({
   isOpen,
@@ -32,16 +31,18 @@ export default function UpdatePhasesModal({
 }) {
   const { currentAccount, api } = useSubstrateState();
 
-  const [initialValues, setInitialValues] = useState([
-    {
-      name: "",
-      start: "",
-      end: "",
-      isPublic: false,
-      publicMintingFee: 0,
-      publicAmount: 0,
-    },
-  ]);
+  const [initialValues, setInitialValues] = useState({
+    phases: [
+      {
+        name: "",
+        start: "",
+        end: "",
+        isPublic: false,
+        publicMintingFee: 0,
+        publicAmount: 0,
+      },
+    ],
+  });
 
   const [currentPhaseId, setCurrentPhaseId] = useState(null);
 
