@@ -34,7 +34,11 @@ export const WHITELIST_MINT = "whitelistMint";
 export const CREATE_COLLECTION = "createCollection";
 export const EDIT_COLLECTION = "editCollection";
 
-// OTHERS
+// PROJECT STATUS
+export const LIVE = "live";
+export const UPCOMING = "upcoming";
+export const ENDED = "ended";
+
 export const NUMBER_PER_PAGE = 6;
 
 export const SCROLLBAR = {

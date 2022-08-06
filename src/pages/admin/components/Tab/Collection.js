@@ -207,6 +207,14 @@ function CollectionAdmin() {
                   fontWeight="normal"
                   py={7}
                 >
+                  Name
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
                   Owner
                 </Th>
                 <Th
@@ -263,6 +271,7 @@ function CollectionAdmin() {
                     <Td py={7}>
                       {truncateStr(collection.nftContractAddress, 5)}
                     </Td>
+                    <Td py={7}>{collection.name}</Td>
                     <Td py={7}>{truncateStr(collection.collectionOwner, 5)}</Td>
                     <Td>
                       {collection.contractType === 2 ? "Auto" : "Manual"}{" "}

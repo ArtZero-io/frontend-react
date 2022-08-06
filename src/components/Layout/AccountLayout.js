@@ -31,6 +31,16 @@ const AccountLayout = ({ children }) => {
       isDisabled: false,
       route: ROUTES.ACCOUNT_MY_STAKES,
     },
+    {
+      label: "My Projects",
+      isDisabled: false,
+      route: ROUTES.ACCOUNT_MY_PROJECTS,
+    },
+    {
+      label: "WhiteList Manager",
+      isDisabled: false,
+      route: ROUTES.ACCOUNT_WHITELIST_PROJECTS,
+    },
   ];
 
   const handleTabsChange = (index) => {
@@ -74,7 +84,7 @@ const AccountLayout = ({ children }) => {
             p={0}
             bg="#171717"
             className="TabPanels"
-            minH="calc(100vh - 480px)"
+            minH="calc(100vh - 48px)"
           >
             {children}
           </TabPanels>

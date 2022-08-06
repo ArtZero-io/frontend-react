@@ -5,405 +5,136 @@ import React, { useEffect, useState } from "react";
 import { useSubstrateState } from "@utils/substrate";
 import { timestampWithoutCommas } from "@utils";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
+import { ContractPromise } from "@polkadot/api-contract";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 
 export const LaunchpadPage = () => {
   // eslint-disable-next-line no-unused-vars
-  const { currentAccount } = useSubstrateState();
+  const { api, currentAccount } = useSubstrateState();
 
   const [liveProjects, setLiveProjects] = useState([]);
   const [upcomingProjects, setUpcomingProjects] = useState([]);
   const [endedProjects, setEndedProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      const projects = await getLaunchpadProjects();
-      const live = projects.filter((p) => p.status === "live");
-      const upcoming = projects.filter((p) => p.status === "upcoming");
-      const ended = projects.filter((p) => p.status === "ended");
+      try {
+        setLoading(true);
+        const projectCount = await launchpad_contract_calls.getProjectCount(
+          currentAccount
+        );
+        let liveProjectsArr = [];
+        let upcomingProjectsArr = [];
+        let endedProjectsArr = [];
 
-      setLiveProjects(live);
-      setUpcomingProjects(upcoming);
-      setEndedProjects(ended);
+        for (let i = 1; i <= projectCount; i++) {
+          const nftAddress = await launchpad_contract_calls.getProjectById(
+            currentAccount,
+            i
+          );
+
+          const project = await launchpad_contract_calls.getProjectByNftAddress(
+            currentAccount,
+            nftAddress
+          );
+
+          if (!project.isActive) {
+            continue;
+          }
+          const launchpad_psp34_nft_standard_contract = new ContractPromise(
+            api,
+            launchpad_psp34_nft_standard.CONTRACT_ABI,
+            nftAddress
+          );
+          launchpad_psp34_nft_standard_calls.setContract(
+            launchpad_psp34_nft_standard_contract
+          );
+          const projectInfoHash =
+            await launchpad_psp34_nft_standard_calls.getProjectInfo(
+              currentAccount
+            );
+          console.log(projectInfoHash);
+          console.log("xxzxc");
+          const projectInfo =
+            await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
+              projectInfoHash
+            );
+          console.log("projectInfo", projectInfo);
+
+          const currentTime = Date.now();
+          const projectTmp = {
+            index: i,
+            collectionOwner: project.projectOwner,
+            nftContractAddress: nftAddress,
+            name: projectInfo.name,
+            description: projectInfo.description,
+            avatarImage: projectInfo.avatar,
+            squareImage: projectInfo.avatar,
+            headerImage: projectInfo.header,
+            ...project,
+            ...projectInfo,
+          };
+
+          if (
+            timestampWithoutCommas(project.startTime) < currentTime &&
+            currentTime < timestampWithoutCommas(project.endTime) &&
+            parseInt(project.projectType) === 1
+          ) {
+            liveProjectsArr.push(projectTmp);
+          } else if (
+            currentTime < timestampWithoutCommas(project.startTime) &&
+            parseInt(project.projectType) === 1
+          ) {
+            upcomingProjectsArr.push(projectTmp);
+          } else {
+            endedProjectsArr.push(projectTmp);
+          }
+        }
+
+        // const live = projects.filter((p) => p.status === "live");
+        // const upcoming = projects.filter((p) => p.status === "upcoming");
+        // const ended = projects.filter((p) => p.status === "ended");
+
+        setLiveProjects(liveProjectsArr);
+        setUpcomingProjects(upcomingProjectsArr);
+        setEndedProjects(endedProjectsArr);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
     };
 
     fetchData();
-  }, []);
-  // const [isLoadedProject, setIsLoadedProject] = useState(false);
-
-  // useEffect(async () => {
-  //   if (!isLoadedProject) {
-  //     const projectCount = await launchpad_contract_calls.getProjectCount(currentAccount);
-  //     console.log(projectCount);
-  //     let liveProjectsArr = [];
-  //     let upcomingProjectsArr = [];
-  //     let endedProjectsArr = [];
-  //     for (let i = 1; i <= projectCount; i++) {
-  //       const nftAddress = await launchpad_contract_calls.getProjectById(currentAccount, i);
-  //       console.log(nftAddress);
-  //       const project = await launchpad_contract_calls.getProjectByNftAddress(currentAccount, nftAddress);
-  //       console.log(project);
-  //       const currentTime = Date.now();
-  //       if (timestampWithoutCommas(project.startTime) < currentTime && currentTime < timestampWithoutCommas(project.endTime) && project.projectType == 2) {
-  //         liveProjectsArr.push(project);
-  //       } else if (currentTime < timestampWithoutCommas(project.startTime) && project.projectType == 2) {
-  //         upcomingProjectsArr.push(project);
-  //       } else {
-  //         endedProjectsArr.push(project);
-  //       }
-  //     }
-  //     setLiveProjects(liveProjectsArr);
-  //     setUpcomingProjects(upcomingProjectsArr);
-  //     setEndedProjects(endedProjectsArr);
-  //     setIsLoadedProject(true);
-  //   }
-  // }, [isLoadedProject]);
+  }, [currentAccount]);
 
   return (
     <Layout>
-      <Box w="full" maxW="1400px" mx="auto" textAlign="center" my="80px">
+      <Box w="full" mx="auto" my="80px" maxW="1400px" textAlign="center">
         <Heading fontSize={["3xl-mid", "5xl", "5xl"]} mb="10px">
           launchpad
         </Heading>
         <Text maxW="360px" fontSize="lg" mx="auto">
-          Dolore sint in sit enim proident ullamco quis eu veniam. Dolore sintin
-          proident ullamco quis.
+          The premier destination to launch your NFT Collection on Aleph Zero
+          Network.
         </Text>
       </Box>
 
-      <GroupCard variant="live" projectsList={liveProjects} />
+      <GroupCard variant="live" projectsList={liveProjects} loading={loading} />
 
-      <GroupCard variant="upcoming" projectsList={upcomingProjects} />
+      <GroupCard
+        variant="upcoming"
+        projectsList={upcomingProjects}
+        loading={loading}
+      />
 
-      <GroupCard variant="ended" projectsList={endedProjects} />
-
-      {/* <GroupCard projects={liveProjects} variant="live" />
-      <GroupCard projects={upcomingProjects} variant="upcoming" />
-      <GroupCard projects={endedProjects} variant="ended" /> */}
+      <GroupCard
+        variant="ended"
+        projectsList={endedProjects}
+        loading={loading}
+      />
     </Layout>
   );
 };
-
-export const getLaunchpadProjects = async ({ currentAccount }) => {
-  // call the smart contract to get the list of all projects
-  // return the list of projects with status is live, upcoming or ended
-  const projectCount = await launchpad_contract_calls.getProjectCount(
-    currentAccount
-  );
-  console.log(projectCount);
-  let liveProjectsArr = [];
-  let upcomingProjectsArr = [];
-  let endedProjectsArr = [];
-  for (let i = 1; i <= projectCount; i++) {
-    const nftAddress = await launchpad_contract_calls.getProjectById(
-      currentAccount,
-      i
-    );
-    console.log(nftAddress);
-    const project = await launchpad_contract_calls.getProjectByNftAddress(
-      currentAccount,
-      nftAddress
-    );
-    console.log(project);
-    const currentTime = Date.now();
-    if (
-      timestampWithoutCommas(project.startTime) < currentTime &&
-      currentTime < timestampWithoutCommas(project.endTime) &&
-      project.projectType === 2
-    ) {
-      liveProjectsArr.push(project);
-    } else if (
-      currentTime < timestampWithoutCommas(project.startTime) &&
-      project.projectType === 2
-    ) {
-      upcomingProjectsArr.push(project);
-    } else {
-      endedProjectsArr.push(project);
-    }
-  }
-
-  return projectsList;
-};
-
-const projectsList = [
-  {
-    status: "live",
-    progressPercent: 2500,
-    _id: "62c2911cfb7f4ddb2f6010cd",
-    index: 8,
-    collectionOwner: "5ENvCvuTxstJZbP59Ubx47qcVSc7EUctudowPC7CAP3GfZCk",
-    nftContractAddress: "5EQqAeKFZwKmNdcF5mUE4s955PtnLkYHQE3uTvpRy9pqfoVb",
-    contractType: 2,
-    isCollectRoyalFee: true,
-    isActive: true,
-    showOnChainMetadata: true,
-    name: "Abstract",
-    description: "Abstract",
-    avatarImage: "QmYRNac8K4ASALeN36knEwwdzrzNzmvKrN3H3DFKtbXUbn",
-    squareImage: "QmcjMTXHKiByiLudysm41i5WkimKCGvwf3nWUVgMDPBjbc",
-    headerImage: "QmSGMqQtxeDAUnwtc1pFVVGCoQoMKgdZA8Zhyb4HgnV9F3",
-    website: "",
-    twitter: "",
-    discord: "",
-    volume: 0,
-    nft_count: 8,
-    __v: 0,
-  },
-  {
-    status: "live",
-    progressPercent: 3000,
-    _id: "62c290ccfb7f4ddb2f6010ab",
-    index: 7,
-    collectionOwner: "5ENvCvuTxstJZbP59Ubx47qcVSc7EUctudowPC7CAP3GfZCk",
-    nftContractAddress: "5CfDRhdEJXc8aT1mNVN5VDx2iUFg7aUBnLdqJnFrZV4YURxu",
-    contractType: 2,
-    isCollectRoyalFee: true,
-    isActive: true,
-    showOnChainMetadata: true,
-    name: "Tornado",
-    description: "Tornado",
-    avatarImage: "QmXXm6c2fFjQ1PPfznXnqacK8KheN89XnVNHN5LjdFjzAA",
-    squareImage: "QmTu5QhrxndZ1QyzfiP5AVHXLN4xpu7a263BteMDgtTGiM",
-    headerImage: "QmaMDX219SFQDMx1iCnjWyo2YjdMcWZWK4rnJrhveBP8sf",
-    website: "",
-    twitter: "",
-    discord: "",
-    volume: 0,
-    nft_count: 6,
-    __v: 0,
-  },
-  {
-    status: "live",
-    progressPercent: 3500,
-    _id: "62c29036fb7f4ddb2f601070",
-    index: 6,
-    collectionOwner: "5ENvCvuTxstJZbP59Ubx47qcVSc7EUctudowPC7CAP3GfZCk",
-    nftContractAddress: "5EVN9zwTWR2ezikzFbokiv7uwCt6HiKnDV3ZQnAQxedyAiZ5",
-    contractType: 2,
-    isCollectRoyalFee: true,
-    isActive: true,
-    showOnChainMetadata: true,
-    name: "Poisonous Frogs",
-    description: "Poisonous Frogs",
-    avatarImage: "QmR1RwGC7iFkUoKMWGCn7oZRb6mkb8v39fMX8pr2w45HEA",
-    squareImage: "QmUDo9Tf2fCDHUsUkLTvKjV6Ze7B6XjKDTy7q7MRp2BGL6",
-    headerImage: "QmTZrbXVxoixsdQ13kaUcbBaFLhFedcEsWhW7psVD7cMY6",
-    website: "",
-    twitter: "",
-    discord: "",
-    volume: 0,
-    nft_count: 8,
-    __v: 0,
-  },
-  {
-    status: "live",
-    progressPercent: 4000,
-    _id: "62c28f8cfb7f4ddb2f60102e",
-    index: 5,
-    collectionOwner: "5ENvCvuTxstJZbP59Ubx47qcVSc7EUctudowPC7CAP3GfZCk",
-    nftContractAddress: "5F5Wz6UzgNq1cieMs9T2BTmLRpWqup2hJXNz8msTG9uLuJSj",
-    contractType: 2,
-    isCollectRoyalFee: true,
-    isActive: true,
-    showOnChainMetadata: true,
-    name: "Crochet",
-    description: "Crochet",
-    avatarImage: "Qmc776mf1P6ZAnsEWXv7zk9TFtLCuhsLYbqocVZEUZ3sC3",
-    squareImage: "Qmbb9EjqMdHVxTXreuwrpC3xRENSLxkLXS4eu7VQ8N9w9Q",
-    headerImage: "QmZUY9TAMzFxzXSb9f7GDpYMD4Q8H6dk4TPKDmw2iMJH7R",
-    website: "",
-    twitter: "",
-    discord: "",
-    volume: 0,
-    nft_count: 6,
-    __v: 0,
-  },
-
-  {
-    status: "upcoming",
-    progressPercent: 4000,
-    _id: "62c28f8cfb7f4ddb2f60102e",
-    index: 5,
-    collectionOwner: "5ENvCvuTxstJZbP59Ubx47qcVSc7EUctudowPC7CAP3GfZCk",
-    nftContractAddress: "5F5Wz6UzgNq1cieMs9T2BTmLRpWqup2hJXNz8msTG9uLuJSj",
-    contractType: 2,
-    isCollectRoyalFee: true,
-    isActive: true,
-    showOnChainMetadata: true,
-    name: "Crochet",
-    description: "Crochet",
-    avatarImage: "Qmc776mf1P6ZAnsEWXv7zk9TFtLCuhsLYbqocVZEUZ3sC3",
-    squareImage: "Qmbb9EjqMdHVxTXreuwrpC3xRENSLxkLXS4eu7VQ8N9w9Q",
-    headerImage: "QmZUY9TAMzFxzXSb9f7GDpYMD4Q8H6dk4TPKDmw2iMJH7R",
-    website: "",
-    twitter: "",
-    discord: "",
-    volume: 0,
-    nft_count: 6,
-    __v: 0,
-  },
-  {
-    status: "upcoming",
-    progressPercent: 5000,
-    _id: "62c285fffb7f4ddb2f600cad",
-    index: 3,
-    collectionOwner: "5ENvCvuTxstJZbP59Ubx47qcVSc7EUctudowPC7CAP3GfZCk",
-    nftContractAddress: "5EMR98oeHAzBkQGtfWYVKSWGr7srCVEek3pymmjcVrEZgnvS",
-    contractType: 2,
-    isCollectRoyalFee: true,
-    isActive: true,
-    showOnChainMetadata: true,
-    name: "Flower",
-    description: "Flower",
-    avatarImage: "QmSR89HTWe45YmRBUhFz2mHr63a4JLUMGguGk2PhuzGfmN",
-    squareImage: "QmVo9str7U4EfqBN1y5g5btkwWmvZqruaaN1ezTVJYa6uJ",
-    headerImage: "QmU9F8BUFNZvqZ3rSQU2KZdjxtbFuYZtcHevkoiPb4teBT",
-    website: "",
-    twitter: "",
-    discord: "",
-    volume: 199,
-    nft_count: 12,
-    __v: 0,
-  },
-  {
-    status: "upcoming",
-    progressPercent: 4500,
-    _id: "62c246e8fb7f4ddb2f5ff67c",
-    index: 2,
-    collectionOwner: "5EfUESCp28GXw1v9CXmpAL5BfoCNW2y4skipcEoKAbN5Ykfn",
-    nftContractAddress: "5G7WvWKkZFucDmXUqEBARyjEZm4kGDB7WqnzjAGKySE2EGKM",
-    contractType: 2,
-    isCollectRoyalFee: true,
-    isActive: true,
-    showOnChainMetadata: true,
-    name: "Azero Frog Collection",
-    description:
-      "Labore voluptate in nisi et labore ut commodo id do aute veniam aute. Quis irure magna magna tempor aliqua incididunt et tempor nulla sit.",
-    avatarImage: "QmSTPtfv9JfKJLdUuw5d7axoGfeezS3uRAQ3HFDQ6kCAa9",
-    squareImage: "QmTZrbXVxoixsdQ13kaUcbBaFLhFedcEsWhW7psVD7cMY6",
-    headerImage: "QmTZrbXVxoixsdQ13kaUcbBaFLhFedcEsWhW7psVD7cMY6",
-    website: "http://localhost.com/",
-    twitter: "http://twitter.com/",
-    discord: "http://discord.com/",
-    volume: 0,
-    nft_count: 5,
-    __v: 0,
-  },
-  {
-    status: "upcoming",
-    progressPercent: 5000,
-    _id: "62c1df80fb7f4ddb2f5fd07f",
-    index: 1,
-    collectionOwner: "5EfUESCp28GXw1v9CXmpAL5BfoCNW2y4skipcEoKAbN5Ykfn",
-    nftContractAddress: "5D7AgkJ8dJ53gcmqCK8pYNCqgQxMqoQcQdMC8NARRx3a2XHq",
-    contractType: 1,
-    isCollectRoyalFee: true,
-    isActive: true,
-    showOnChainMetadata: false,
-    name: "Praying Mantis Predators",
-    description:
-      "Praying Mantis Predators NFTs are a collection of 10K unique and programmatically generated NFTs with vastly varying traits, attributes, and rarity.",
-    avatarImage: "QmWyHLrMuRApjtQR1M6ujm7vp1u9SBmsoTFdRNAEWk21z6",
-    squareImage: "QmWyHLrMuRApjtQR1M6ujm7vp1u9SBmsoTFdRNAEWk21z6",
-    headerImage: "QmTKtt2Q1czrJGB7xZ16Nx8PzHTdnqhNqinSNtSnznnAYw",
-    website: "https://artzero.io/",
-    twitter: "https://twitter.com/ArtZero_io",
-    discord: "https://discord.com/invite/wzkZ2JTvN4",
-    volume: 0,
-    nft_count: 26,
-    __v: 0,
-  },
-  {
-    status: "ended",
-    progressPercent: 4000,
-    _id: "62c28f8cfb7f4ddb2f60102e",
-    index: 5,
-    collectionOwner: "5ENvCvuTxstJZbP59Ubx47qcVSc7EUctudowPC7CAP3GfZCk",
-    nftContractAddress: "5F5Wz6UzgNq1cieMs9T2BTmLRpWqup2hJXNz8msTG9uLuJSj",
-    contractType: 2,
-    isCollectRoyalFee: true,
-    isActive: true,
-    showOnChainMetadata: true,
-    name: "Crochet",
-    description: "Crochet",
-    avatarImage: "Qmc776mf1P6ZAnsEWXv7zk9TFtLCuhsLYbqocVZEUZ3sC3",
-    squareImage: "Qmbb9EjqMdHVxTXreuwrpC3xRENSLxkLXS4eu7VQ8N9w9Q",
-    headerImage: "QmZUY9TAMzFxzXSb9f7GDpYMD4Q8H6dk4TPKDmw2iMJH7R",
-    website: "",
-    twitter: "",
-    discord: "",
-    volume: 0,
-    nft_count: 6,
-    __v: 0,
-  },
-  {
-    status: "ended",
-    progressPercent: 5000,
-    _id: "62c285fffb7f4ddb2f600cad",
-    index: 3,
-    collectionOwner: "5ENvCvuTxstJZbP59Ubx47qcVSc7EUctudowPC7CAP3GfZCk",
-    nftContractAddress: "5EMR98oeHAzBkQGtfWYVKSWGr7srCVEek3pymmjcVrEZgnvS",
-    contractType: 2,
-    isCollectRoyalFee: true,
-    isActive: true,
-    showOnChainMetadata: true,
-    name: "Flower",
-    description: "Flower",
-    avatarImage: "QmSR89HTWe45YmRBUhFz2mHr63a4JLUMGguGk2PhuzGfmN",
-    squareImage: "QmVo9str7U4EfqBN1y5g5btkwWmvZqruaaN1ezTVJYa6uJ",
-    headerImage: "QmU9F8BUFNZvqZ3rSQU2KZdjxtbFuYZtcHevkoiPb4teBT",
-    website: "",
-    twitter: "",
-    discord: "",
-    volume: 199,
-    nft_count: 12,
-    __v: 0,
-  },
-  {
-    status: "ended",
-    progressPercent: 4500,
-    _id: "62c246e8fb7f4ddb2f5ff67c",
-    index: 2,
-    collectionOwner: "5EfUESCp28GXw1v9CXmpAL5BfoCNW2y4skipcEoKAbN5Ykfn",
-    nftContractAddress: "5G7WvWKkZFucDmXUqEBARyjEZm4kGDB7WqnzjAGKySE2EGKM",
-    contractType: 2,
-    isCollectRoyalFee: true,
-    isActive: true,
-    showOnChainMetadata: true,
-    name: "Azero Frog Collection",
-    description:
-      "Labore voluptate in nisi et labore ut commodo id do aute veniam aute. Quis irure magna magna tempor aliqua incididunt et tempor nulla sit.",
-    avatarImage: "QmSTPtfv9JfKJLdUuw5d7axoGfeezS3uRAQ3HFDQ6kCAa9",
-    squareImage: "QmTZrbXVxoixsdQ13kaUcbBaFLhFedcEsWhW7psVD7cMY6",
-    headerImage: "QmTZrbXVxoixsdQ13kaUcbBaFLhFedcEsWhW7psVD7cMY6",
-    website: "http://localhost.com/",
-    twitter: "http://twitter.com/",
-    discord: "http://discord.com/",
-    volume: 0,
-    nft_count: 5,
-    __v: 0,
-  },
-  {
-    status: "ended",
-    progressPercent: 5000,
-    _id: "62c1df80fb7f4ddb2f5fd07f",
-    index: 1,
-    collectionOwner: "5EfUESCp28GXw1v9CXmpAL5BfoCNW2y4skipcEoKAbN5Ykfn",
-    nftContractAddress: "5D7AgkJ8dJ53gcmqCK8pYNCqgQxMqoQcQdMC8NARRx3a2XHq",
-    contractType: 1,
-    isCollectRoyalFee: true,
-    isActive: true,
-    showOnChainMetadata: false,
-    name: "Praying Mantis Predators",
-    description:
-      "Praying Mantis Predators NFTs are a collection of 10K unique and programmatically generated NFTs with vastly varying traits, attributes, and rarity.",
-    avatarImage: "QmWyHLrMuRApjtQR1M6ujm7vp1u9SBmsoTFdRNAEWk21z6",
-    squareImage: "QmWyHLrMuRApjtQR1M6ujm7vp1u9SBmsoTFdRNAEWk21z6",
-    headerImage: "QmTKtt2Q1czrJGB7xZ16Nx8PzHTdnqhNqinSNtSnznnAYw",
-    website: "https://artzero.io/",
-    twitter: "https://twitter.com/ArtZero_io",
-    discord: "https://discord.com/invite/wzkZ2JTvN4",
-    volume: 0,
-    nft_count: 26,
-    __v: 0,
-  },
-];

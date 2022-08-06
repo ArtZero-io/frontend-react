@@ -25,6 +25,7 @@ import { setStakingContract } from "@utils/blockchain/staking_calls";
 import { setLaunchPadContract } from "@utils/blockchain/launchpad-contract-calls";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import "@theme/assets/TimePicker.css";
 
 export default function App() {
   const { apiState, apiError } = useSubstrateState();

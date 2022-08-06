@@ -9,6 +9,7 @@ import {
   HStack,
   Image,
   Spacer,
+  Spinner,
   Square,
   Tag,
   TagLabel,
@@ -17,7 +18,7 @@ import {
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
-import { HiCloudUpload } from "react-icons/hi";
+// import { HiCloudUpload } from "react-icons/hi";
 import ActiveIcon from "@theme/assets/icon/Active.js";
 import { IPFS_CLIENT_URL } from "@constants/index";
 import { Buffer } from "buffer";
@@ -37,7 +38,7 @@ export default function ImageUploadAvatar({
 }) {
   const [imgURL, setImgURL] = useState(null);
 
-  const [newAvatarData, setNewAvatarData] = useState(null);
+  // const [newAvatarData, setNewAvatarData] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const avatarProfileSize = useBreakpointValue([260, 360]);
   const ref = useRef();
@@ -55,7 +56,7 @@ export default function ImageUploadAvatar({
         } format is not supported.`
       );
       ref.current.value = null;
-      setNewAvatarData(null);
+      // setNewAvatarData(null);
       setImagePreviewUrl("");
       return;
     }
@@ -67,7 +68,7 @@ export default function ImageUploadAvatar({
         ).toFixed(2)}MB.`
       );
       ref.current.value = null;
-      setNewAvatarData(null);
+      // setNewAvatarData(null);
       setImagePreviewUrl("");
       return;
     }
@@ -79,7 +80,33 @@ export default function ImageUploadAvatar({
     reader.readAsArrayBuffer(data);
 
     reader.onloadend = () => {
-      setNewAvatarData(Buffer(reader.result));
+      // setNewAvatarData(Buffer(reader.result));
+
+      const uploadPromise = () =>
+        new Promise(function (resolve) {
+          const created = client.add(Buffer(reader.result));
+
+          if (created) {
+            resolve(created);
+          }
+        });
+
+      toast.promise(
+        uploadPromise().then(async (created) => {
+          setImageIPFSUrl(created?.path);
+          setImgURL(created?.path);
+
+          await clientAPI("post", "/cacheImage", {
+            input: created?.path,
+            is1024: true,
+          });
+        }),
+        {
+          loading: "Uploading...",
+          success: `Upload Avatar successful!`,
+          error: "Could not upload Avatar.",
+        }
+      );
     };
 
     e.preventDefault();
@@ -91,39 +118,39 @@ export default function ImageUploadAvatar({
     }
   };
 
-  const onUploadHandler = async (e) => {
-    try {
-      if (newAvatarData) {
-        const uploadPromise = () =>
-          new Promise(function (resolve) {
-            const created = client.add(newAvatarData);
+  // const onUploadHandler = async (e) => {
+  //   try {
+  //     if (newAvatarData) {
+  //       const uploadPromise = () =>
+  //         new Promise(function (resolve) {
+  //           const created = client.add(newAvatarData);
 
-            if (created) {
-              resolve(created);
-            }
-          });
+  //           if (created) {
+  //             resolve(created);
+  //           }
+  //         });
 
-        toast.promise(
-          uploadPromise().then(async (created) => {
-            setImageIPFSUrl(created?.path);
-            setImgURL(created?.path);
-            await clientAPI("post", "/cacheImage", {
-              input: created?.path,
-              is1024: true,
-            });
-          }),
-          {
-            loading: "Uploading...",
-            success: `Upload Avatar successful!`,
-            error: "Could not upload Avatar.",
-          }
-        );
-      }
-    } catch (error) {
-      console.log(error.message);
-      toast.error(error.message);
-    }
-  };
+  //       toast.promise(
+  //         uploadPromise().then(async (created) => {
+  //           setImageIPFSUrl(created?.path);
+  //           setImgURL(created?.path);
+  //           await clientAPI("post", "/cacheImage", {
+  //             input: created?.path,
+  //             is1024: true,
+  //           });
+  //         }),
+  //         {
+  //           loading: "Uploading...",
+  //           success: `Upload Avatar successful!`,
+  //           error: "Could not upload Avatar.",
+  //         }
+  //       );
+  //     }
+  //   } catch (error) {
+  //     console.log(error.message);
+  //     toast.error(error.message);
+  //   }
+  // };
 
   useEffect(() => {
     if (imgURL && imagePreviewUrl) {
@@ -164,7 +191,9 @@ export default function ImageUploadAvatar({
           </Square>
         )}
 
-        {!imagePreviewUrl && !profile?.avatar && <IdenticonAvatar size={avatarProfileSize} />}
+        {!imagePreviewUrl && !profile?.avatar && (
+          <IdenticonAvatar size={avatarProfileSize} />
+        )}
       </Box>
 
       <Center w="full" justifyContent="center">
@@ -193,25 +222,23 @@ export default function ImageUploadAvatar({
         </VStack>
         <Spacer />
 
-        <HStack justifyContent="center">
+        {/* <HStack justifyContent="center">
           {imgURL ? (
             <Tag variant="active">
               <TagLeftIcon as={ActiveIcon} />
               <TagLabel>Ready !</TagLabel>
             </Tag>
           ) : (
-            <Button
-              variant="solid"
-              fontSize={["sm", "md"]}
-              px={["16px", "32px"]}
-              leftIcon={<HiCloudUpload />}
-              onClick={onUploadHandler}
-              isDisabled={!imagePreviewUrl}
-            >
-              upload
-            </Button>
+            <Spinner
+              mx="14px"
+              p={"8px"}
+              speed="0.5s"
+              thickness="2px"
+              color="#7ae7ff"
+              emptyColor="#333"
+            />
           )}
-        </HStack>
+        </HStack> */}
       </Center>
       <Text ml={2} fontSize="14px" color="brand.grayLight">
         Recommended file size is {limitedSize.width}x{limitedSize.height} px

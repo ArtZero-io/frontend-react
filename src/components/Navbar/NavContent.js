@@ -208,10 +208,12 @@ export const NavContent = {
 };
 
 const myAccountList = [
-  { label: "general", href: ROUTES.ACCOUNT },
-  { label: "my collections", href: ROUTES.ACCOUNT_MY_COLLECTIONS },
-  { label: "my NFTs", href: ROUTES.ACCOUNT_MY_NFTS },
-  { label: "my stakes", href: ROUTES.ACCOUNT_MY_STAKES },
+  { label: "General", href: ROUTES.ACCOUNT },
+  { label: "My Collections", href: ROUTES.ACCOUNT_MY_COLLECTIONS },
+  { label: "My NFTs", href: ROUTES.ACCOUNT_MY_NFTS },
+  { label: "My Stakes", href: ROUTES.ACCOUNT_MY_STAKES },
+  { label: "My Projects", href: ROUTES.ACCOUNT_MY_PROJECTS },
+  { label: "WhiteList Manager", href: ROUTES.ACCOUNT_WHITELIST_PROJECTS },
 ];
 
 const MyAccountDropdown = () => {

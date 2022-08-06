@@ -1,86 +1,24 @@
-/* eslint-disable no-unused-vars */
 import {
   Button,
   Flex,
   Heading,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Spacer,
-  useDisclosure,
   Box,
   HStack,
+  Stack,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import React from "react";
 import { Card } from "./Card";
-import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
-// import { Formik, Form } from "formik";
-import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { AccountActionTypes } from "@store/types/account.types";
-import { useSubstrateState } from "@utils/substrate";
-import { convertDateToTimeStamp } from "@utils";
-import AddNewProject from "./Form/AddNewProject";
-import { SCROLLBAR } from "../../../constants";
 
-export const GroupCard = ({ variant = "live", projectsList }) => {
-  const [projectName, setProjectName] = useState("");
-  const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
-  const [totalSupply, setTotalSupply] = useState(0);
-  const [projectDescription, setProjectDescription] = useState("");
-  const [roadmap, setRoadmap] = useState("");
-  const [teamMembers, setTeamMembers] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const dispatch = useDispatch();
-  const { currentAccount } = useSubstrateState();
-  const {
-    isOpen: isOpenAddNew,
-    onOpen: onOpenAddProject,
-    onClose: onCloseAddNewProject,
-  } = useDisclosure();
-  const { addCollectionTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
-  );
+import { useHistory } from "react-router-dom";
+import AnimationLoader from "@components/Loader/AnimationLoader";
 
-  const submitForm = async () => {
-    if (!avatarIPFSUrl) {
-      return toast.error("Upload avatar");
-    }
+import * as ROUTES from "@constants/routes";
 
-    const data = {
-      name: projectName,
-      description: projectDescription,
-      total_supply: totalSupply,
-      roadmap: roadmap,
-      team_members: teamMembers,
-      start_time: convertDateToTimeStamp(startTime),
-      end_time: convertDateToTimeStamp(endTime),
-      attributes: ["avatar"],
-      attribute_vals: [avatarIPFSUrl],
-    };
 
-    dispatch({
-      type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-      payload: {
-        status: "Start",
-      },
-    });
+export const GroupCard = ({ variant = "live", projectsList, loading }) => {
+  const history = useHistory();
 
-    await launchpad_contract_calls.addNewProject(
-      currentAccount,
-      data,
-      dispatch
-    );
-
-    // }
-  };
-
-  // export const GroupCard = ({ variant = "live", projectsList }) => {
   return (
     <>
       <Box
@@ -89,15 +27,16 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
         mb="30px"
         py="60px"
         bg="#171717"
-        maxW="1400px"
+        maxW="1426px"
         alignItems="center"
         px={{ base: "25px", "2xl": "77px" }}
       >
         <Flex
+          px="15px"
           w="full"
           mx="auto"
           mb="40px"
-          maxW="1400px"
+          maxW="1426px"
           alignItems="center"
           direction={{ base: "column", xl: "row" }}
         >
@@ -106,159 +45,55 @@ export const GroupCard = ({ variant = "live", projectsList }) => {
           </Heading>
 
           <Spacer />
-
           {variant === "live" && (
-            <Button variant="solid" onClick={() => onOpenAddProject()}>
-              add project
+            <Button
+              variant="solid"
+              onClick={() =>
+                history.push({
+                  state: { formMode: "ADD" },
+                  pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
+                })
+              }
+            >
+              create project
             </Button>
           )}
         </Flex>
 
-        <Flex justifyContent="space-between">
-          {projectsList.length ? (
-            projectsList.map((p) => <Card key={p.name} project={p} />)
-          ) : (
-            <HStack justify="center" w="full">
-              <Heading size="h6">No project found.</Heading>
-            </HStack>
-          )}
-        </Flex>
-
-        {projectsList.length ? (
-          <Flex
-            w="full"
-            mx="auto"
-            mt="60px"
-            alignItems="center"
-            justifyContent="center"
-            direction={{ base: "column", xl: "row" }}
-          >
-            <Button variant="outline">show more</Button>
-          </Flex>
-        ) : null}
+        {loading ? (
+          <AnimationLoader />
+        ) : (
+          <Stack>
+            {projectsList.length ? (
+              <Flex
+                flexWrap="wrap"
+                justifyContent="center"
+                direction={["column", "row"]}
+              >
+                {projectsList.map((p) => (
+                  <Card key={p.name} project={p} variant={variant} />
+                ))}
+              </Flex>
+            ) : (
+              <HStack justify="center" w="full">
+                <Heading size="h6">No project found.</Heading>
+              </HStack>
+            )}
+            {projectsList.length > 4 ? (
+              <Stack
+                w="full"
+                mx="auto"
+                pt="60px"
+                alignItems="center"
+                justifyContent="center"
+                direction={{ base: "column", xl: "row" }}
+              >
+                <Button variant="outline">show more</Button>
+              </Stack>
+            ) : null}
+          </Stack>
+        )}
       </Box>
-
-      <Modal
-        isCentered
-        isOpen={isOpenAddNew}
-        onClose={onCloseAddNewProject}
-        size="4xl"
-        scrollBehavior={"inside"}
-      >
-        <ModalOverlay
-          bg="blackAlpha.300"
-          backdropFilter="blur(10px) hue-rotate(90deg)"
-        />
-        <ModalContent
-          position="relative"
-          bg="brand.grayDark"
-          px={6}
-          pb={8}
-          borderRadius="0"
-          textAlign="center"
-        >
-          <ModalCloseButton
-            position="absolute"
-            top="-8"
-            right="-8"
-            borderWidth={2}
-            borderRadius="0"
-          />
-          <ModalHeader textAlign="center">
-            <Heading fontSize={["2xl", "3xl", "3xl"]} m={2}>
-              Add new project
-            </Heading>
-          </ModalHeader>
-
-          <ModalBody sx={SCROLLBAR}>
-            <AddNewProject />
-
-            <Flex>
-              <form>
-                <label>
-                  Project Name
-                  <input
-                    type="text"
-                    value={projectName}
-                    onChange={(val) => setProjectName(val.target.value)}
-                  />
-                </label>
-                <br />
-                <label>
-                  Project description
-                  <textarea
-                    value={projectDescription}
-                    onChange={(val) => setProjectDescription(val.target.value)}
-                  />
-                </label>
-                <br />
-                <label>
-                  Project Avatar
-                  <input
-                    type="text"
-                    value={avatarIPFSUrl}
-                    onChange={(val) => setAvatarIPFSUrl(val.target.value)}
-                  />
-                </label>
-                <br />
-                <label>
-                  Total Supply
-                  <input
-                    type=""
-                    value={totalSupply}
-                    onChange={(val) => setTotalSupply(val.target.value)}
-                  />
-                </label>
-                <br />
-                <label>
-                  Road maps
-                  <input
-                    type="text"
-                    value={roadmap}
-                    onChange={(val) => setRoadmap(val.target.value)}
-                  />
-                </label>
-                <label>
-                  Team Members
-                  <input
-                    type="text"
-                    value={teamMembers}
-                    onChange={(val) => setTeamMembers(val.target.value)}
-                  />
-                </label>
-                <br />
-                <label>
-                  {" "}
-                  Start time
-                  <input
-                    type="date"
-                    onChange={(val) => setStartTime(val.target.value)}
-                  />
-                </label>
-                <br />
-                <label>
-                  {" "}
-                  End time
-                  <input
-                    type="date"
-                    onChange={(val) => setEndTime(val.target.value)}
-                  />
-                </label>
-                <br />
-                <div
-                  w="full"
-                  type="submit"
-                  mt={6}
-                  mb={{ xl: "16px", "2xl": "32px" }}
-                  onClick={submitForm}
-                >
-                  Add new Project
-                </div>
-              </form>
-            </Flex>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
     </>
   );
 };

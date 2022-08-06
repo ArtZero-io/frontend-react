@@ -3,13 +3,17 @@ import {
   Flex,
   Heading,
   Image,
+  Link,
   Skeleton,
   Square,
+  Stack,
   Text,
 } from "@chakra-ui/react";
 import React from "react";
+import { getCachedImageShort } from "@utils/index";
 
-export const TeamCard = () => {
+export const TeamCard = ({ team_member }) => {
+  console.log("team_member", team_member);
   return (
     <Flex
       direction="column"
@@ -28,7 +32,7 @@ export const TeamCard = () => {
           w="full"
           h="full"
           objectFit="cover"
-          src="https://api.artzero.io/getImage?input=ipfs://QmdFprEsYt3yDkPrgqCqzZBdGD3ScVUUU9gwPnXRZD6KpN/49.png&size=500&url=https://ipfs.infura.io/ipfs/QmdFprEsYt3yDkPrgqCqzZBdGD3ScVUUU9gwPnXRZD6KpN/49.png"
+          src={getCachedImageShort(team_member?.avatar, 500)}
           fallback={<Skeleton w="250px" h="250px" />}
         />
       </Square>
@@ -38,11 +42,21 @@ export const TeamCard = () => {
           textAlign="center"
           mb="5px"
         >
-          Berk Kadir Sert{" "}
+          {team_member.name}{" "}
         </Heading>
         <Text as="span" color="#888">
-          Ceo Founder / Interior Architecture{" "}
+          {team_member.title}{" "}
         </Text>
+
+        <Stack>
+          <Link
+            color="brand.blue"
+            textTransform="capitalize"
+            to={team_member?.socialLink}
+          >
+            Social link
+          </Link>
+        </Stack>
       </Box>
     </Flex>
   );

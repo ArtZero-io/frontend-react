@@ -346,3 +346,14 @@ export const formatNumDynamicDecimal = (num = 0, dec = 6) => {
 
   return intPart + `${dotIdx === -1 ? "" : `.${decPart}`}`;
 };
+
+export const isPhaseTimeOverlap = (phaseArr) => {
+
+  phaseArr.sort((a, b) => a.start - b.start);
+
+  for (let i = 1; i < phaseArr?.length; i++) {
+    if (phaseArr[i - 1].end > phaseArr[i].start) return true;
+  }
+
+  return false;
+};

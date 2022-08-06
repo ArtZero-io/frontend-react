@@ -43,13 +43,13 @@ const ProfileForm = ({ profile }) => {
           username: Yup.string()
             .trim()
             .min(3, "Must be longer than 3 characters")
-            .max(30, "Must be less than 30 characters")
-            .required("Required"),
+            .max(30, "Must be at most 30 characters")
+            .required("This field is required"),
 
           bio: Yup.string()
             .trim()
             .min(3, "Must be longer than 3 characters")
-            .max(150, "Must be less than 150 characters"),
+            .max(150, "Must be at most 150 characters"),
           twitter: Yup.string()
             .trim()
             .url("URL must start with http:// or https://")
