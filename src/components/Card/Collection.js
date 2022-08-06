@@ -164,7 +164,7 @@ export const CollectionCard = ({
           <Text
             textTransform="none"
             textAlign="center"
-            noOfLines={[1, 3]}
+            noOfLines={3}
             maxW={{ base: "unset", md: "20rem" }}
             minH={"4.5rem"}
             color="#888"
@@ -173,30 +173,39 @@ export const CollectionCard = ({
           </Text>
 
           <Flex
-            w={variant === "my-collection" ? "full" : 36}
+            w={
+              variant === "my-collection" || variant === "my-projects"
+                ? "full"
+                : 36
+            }
             alignItems="center"
             justify="center"
           >
-            <Tag>
-              <TagLeftIcon w="18px" h="18px">
-                <AzeroIcon fill={isActive ? "#7AE7FF" : "#888"} />
-              </TagLeftIcon>
-              <TagLabel
-                color={isActive ? "#fff" : "#888"}
-                textTransform="capitalize"
-              >
-                <Text as="span" fontWeight="400">
-                  Volume
-                </Text>{" "}
-                <Text as="span" fontWeight="600">
-                  {shortenNumber(volume) || 0}
-                </Text>
-              </TagLabel>
-            </Tag>
-
-            {variant === "my-collection" && (
-              <>
-                <Spacer />
+            {variant !== "my-projects" && (
+              <Tag mr="8px">
+                <TagLeftIcon
+                  h={["12px", "16px", "16px"]}
+                  w={["12px", "16px", "16px"]}
+                >
+                  <AzeroIcon fill={isActive ? "#7AE7FF" : "#888"} />
+                </TagLeftIcon>
+                <TagLabel
+                  color={isActive ? "#fff" : "#888"}
+                  textTransform="capitalize"
+                  fontSize={["14px", "16px"]}
+                >
+                  <Text as="span" fontWeight="400">
+                    Volume
+                  </Text>{" "}
+                  <Text as="span" fontWeight="600">
+                    {shortenNumber(volume) || 0}
+                  </Text>
+                </TagLabel>
+              </Tag>
+            )}
+            <Spacer />
+            <>
+              {variant === "my-collection" && (
                 <Box
                   textTransform="capitalize"
                   px="3px"
@@ -206,20 +215,24 @@ export const CollectionCard = ({
                 >
                   {royalFee / 100}% Royalty
                 </Box>
-                {isActive && (
-                  <Tag variant="active">
-                    <TagLeftIcon as={ActiveIcon} />
-                    <TagLabel textTransform="capitalize">Active</TagLabel>
-                  </Tag>
-                )}
-                {!isActive && (
-                  <Tag variant="inActive">
-                    <TagLeftIcon as={InActiveIcon} />
-                    <TagLabel textTransform="capitalize">Inactive</TagLabel>
-                  </Tag>
-                )}
-              </>
-            )}
+              )}
+              {variant !== "marketplace-collection" && (
+                <>
+                  {isActive && (
+                    <Tag variant="active" fontSize={["14px", "16px"]}>
+                      <TagLeftIcon as={ActiveIcon} />
+                      <TagLabel textTransform="capitalize">Active</TagLabel>
+                    </Tag>
+                  )}
+                  {!isActive && (
+                    <Tag variant="inActive" fontSize={["14px", "16px"]}>
+                      <TagLeftIcon as={InActiveIcon} />
+                      <TagLabel textTransform="capitalize">Inactive</TagLabel>
+                    </Tag>
+                  )}
+                </>
+              )}
+            </>
           </Flex>
         </VStack>
       </Flex>

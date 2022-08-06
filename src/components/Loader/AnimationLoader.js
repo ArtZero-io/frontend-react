@@ -2,15 +2,17 @@ import { Heading, Center, Stack } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 
 const AnimationLoader = ({
-  loadingTime = 7,
-  addText = "Please wait a moment...",
   minH = "4rem",
   maxH = "6rem",
+  loadingTime = 5,
+  addText = "wait a moment...",
+  ...rest
 }) => {
   return (
-    <Center width="full" height="full" maxH={maxH} minH={minH}>
+    <Center width="full" height="full" maxH={maxH} minH={minH} {...rest}>
       <Stack direction="column" alignItems="center" spacing={2}>
         <AzeroAnimation loadingTime={loadingTime} />
+
         <Heading color="#7ae7ff" size="h6" px={5}>
           {addText}
         </Heading>
@@ -21,7 +23,7 @@ const AnimationLoader = ({
 
 export default AnimationLoader;
 
-export const AzeroAnimation = ({ loadingTime = 7 }) => {
+export const AzeroAnimation = ({ loadingTime = 5 }) => {
   const icon = {
     hidden: {
       opacity: 0,
@@ -39,25 +41,25 @@ export const AzeroAnimation = ({ loadingTime = 7 }) => {
     <div
       className="container"
       style={{
+        display: "flex",
         width: "4.25rem",
         height: "4.25rem",
-        display: "flex",
-        placeContent: "center",
         overflow: "hidden",
+        placeContent: "center",
         background: "transparent",
       }}
     >
       <motion.svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 300 300"
         className="item"
+        viewBox="0 0 300 300"
+        xmlns="http://www.w3.org/2000/svg"
         style={{
           width: "68%",
-          overflow: "visible",
-          stroke: "#7ae7ff",
           strokeWidth: 2,
-          strokeLinejoin: "round",
+          stroke: "#7ae7ff",
+          overflow: "visible",
           strokeLinecap: "round",
+          strokeLinejoin: "round",
         }}
       >
         <motion.path
@@ -66,7 +68,7 @@ export const AzeroAnimation = ({ loadingTime = 7 }) => {
           initial="hidden"
           animate="visible"
           transition={{
-            default: { duration: loadingTime - 5, ease: "easeInOut" },
+            default: { duration: loadingTime * 0.8, ease: "easeInOut" },
             fill: { duration: loadingTime, ease: [1, 0, 0.8, 1] },
           }}
         />

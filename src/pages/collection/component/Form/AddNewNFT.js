@@ -66,7 +66,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
       newInitialValues.description = rest.description;
 
       newInitialValues.properties = rest.attrsList
-        .filter((item) => !JSON.stringify(Object.values(item)).includes("|"))
+        ?.filter((item) => !JSON.stringify(Object.values(item)).includes("|"))
         .map((item) => {
           return { type: Object.keys(item)[0], name: Object.values(item)[0] };
         });
@@ -97,13 +97,13 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
             NFTName: Yup.string()
               .trim()
               .min(3, "Must be longer than 3 characters")
-              .max(30, "Must be less than 30 characters")
-              .required("Required"),
+              .max(30, "Must be at most 30 characters")
+              .required("This field is required"),
             description: Yup.string()
               .trim()
               .min(3, "Must be longer than 3 characters")
               .max(150, "Must be 150 characters or less")
-              .required("Required"),
+              .required("This field is required"),
             properties: Yup.array()
               .of(
                 Yup.object().shape(
@@ -133,7 +133,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                           )
                           .required("Must have type value.")
                           .min(3, "Must be longer than 3 characters")
-                          .max(30, "Must be less than 30 characters"),
+                          .max(30, "Must be at most 30 characters"),
                         otherwise: Yup.string().notRequired(),
                       }),
                     name: Yup.string()
@@ -143,7 +143,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                         then: Yup.string()
                           .required("Must have name value.")
                           .min(3, "Must be longer than 3 characters")
-                          .max(30, "Must be less than 30 characters"),
+                          .max(30, "Must be at most 30 characters"),
                         otherwise: Yup.string().notRequired(),
                       }),
                   },
@@ -179,7 +179,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                         )
                         .required("Must have level name.")
                         .min(3, "Must be longer than 3 characters")
-                        .max(30, "Must be less than 30 characters"),
+                        .max(30, "Must be at most 30 characters"),
                       otherwise: Yup.string().notRequired(),
                     }),
                   level: Yup.number().when("levelMax", {
@@ -318,6 +318,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     placeholder="NFT Name"
                   />
                 </HStack>
+
                 <AddNewNFTTextArea
                   isDisabled={addNftTnxStatus}
                   isRequired={true}
@@ -326,6 +327,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   type="text"
                   placeholder="Description"
                 />
+
                 <AddNewNFTImageUpload
                   isDisabled={addNftTnxStatus}
                   mode={mode}
@@ -335,17 +337,22 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   limitedSize={{ width: "1000", height: "1000" }}
                   isBanner={false}
                 />
+
                 {/* Add Props  */}
                 <Box py={6} borderBottomWidth={1}>
                   <Flex w="full" pb={3}>
                     <VStack alignItems="start">
-                      <Heading size="h5">properties</Heading>
+                      <Heading fontSize={["lg", "xl", "xl"]}>
+                        properties
+                      </Heading>
                       <Text fontSize={"lg"}>
                         {/* Textural trails that show up as restangles */}
                       </Text>
                     </VStack>
                     <Spacer />
                     <Button
+                      fontSize={["sm", "md", "md"]}
+                      px={["12px", "32px", "32px"]}
                       isDisabled={addNftTnxStatus}
                       variant="outline"
                       color="brand.blue"
@@ -407,16 +414,19 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   />
                 </Box>
                 {/* End Add Props  */}
+
                 <Box py={6} borderBottomWidth={1}>
                   <Flex w="full" pb={3}>
                     <VStack alignItems="start">
-                      <Heading size="h5">Levels</Heading>
+                      <Heading fontSize={["lg", "xl", "xl"]}>Levels</Heading>
                       <Text fontSize={"lg"}>
                         {/* Textural trails that show up as restangles */}
                       </Text>
                     </VStack>
                     <Spacer />
                     <Button
+                      fontSize={["sm", "md", "md"]}
+                      px={["12px", "32px", "32px"]}
                       isDisabled={addNftTnxStatus}
                       variant="outline"
                       color="brand.blue"
@@ -470,6 +480,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     isOpen={modifierToEdit === "levels"}
                   />
                 </Box>
+
                 <StatusButton
                   text="NFT"
                   type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
@@ -478,18 +489,6 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   isLoading={addNftTnxStatus}
                   loadingText={`${addNftTnxStatus?.status}`}
                 />
-                {/* <Button
-                spinnerPlacement="start"
-                isLoading={tnxStatus}
-                loadingText={`${tnxStatus?.status}`}
-                variant="solid"
-                w="full"
-                type="submit"
-                mt={8}
-                mb={{ xl: "16px", "2xl": "32px" }}
-              >
-                Add new NFT
-              </Button> */}
               </Form>
             </div>
           )}

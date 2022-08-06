@@ -7,6 +7,7 @@ import { getPublicCurrentAccount, truncateStr } from "@utils";
 import profile_calls from "@utils/blockchain/profile_calls";
 import { APICall, clientAPI } from "../../../api/client";
 import AnimationLoader from "@components/Loader/AnimationLoader";
+import { SCROLLBAR } from "../../../constants";
 
 function TabActivity({
   tokenUriType1,
@@ -83,14 +84,14 @@ function TabActivity({
               }
 
               if (contractType === 1) {
-                const { name, avatar } = await getMetaDataType1(
+                const { nftName, avatar } = await getMetaDataType1(
                   event.tokenID,
                   tokenUriType1
                 );
 
                 event = {
                   ...event,
-                  nftName: name,
+                  nftName,
                   avatar,
                 };
               }
@@ -108,6 +109,7 @@ function TabActivity({
     };
     latestBlockNumberRef.current = latestBlockNumber;
     collectionEventsFull();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldUpdate]);
 
   useEffect(() => {
@@ -187,41 +189,25 @@ function TabActivity({
         // orientation={{ base: "horizontal", xl: "vertical" }}
       >
         <TabList
-          justifyContent="start"
-          borderColor="#171717"
           pt="11px"
           pr="5px"
           pb="8px"
+          sx={SCROLLBAR}
           overflowX="scroll"
-          maxW={{ base: "320px", xl: "600px" }}
-          sx={{
-            "&::-webkit-scrollbar": {
-              width: "4px",
-              height: "4px",
-              borderRadius: "0px",
-              backgroundColor: `transparent`,
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: `#7ae7ff`,
-            },
-            "&::-webkit-scrollbar-thumb:hover": {
-              backgroundColor: `#7ae7ff`,
-            },
-            "&::-webkit-scrollbar-track": {
-              backgroundColor: `transparent`,
-            },
-          }}
+          borderColor="#171717"
+          justifyContent="start"
+          // maxW={{ base: "320px", xl: "600px" }}
         >
           {tabData.map((tab, index) => (
             <Tab
-              _selected={{ bg: "#7ae7ff", color: "#000" }}
-              fontSize="15px"
-              minW="130px"
+              minW="50px"
+              key={index}
               alignItems="center"
               justifyContent="center"
-              key={index}
-              textAlign="left"
-              py="15px"
+              py={{ base: "4px", xl: "12px" }}
+              fontSize={{ base: "md", xl: "lg" }}
+              fontFamily="Evogria Italic, san serif"
+              _selected={{ bg: "#7ae7ff", color: "#000" }}
             >
               {tab.label}
             </Tab>
@@ -247,45 +233,45 @@ export default TabActivity;
 
 const headers = {
   purchase: {
-    collectionName: "Collection Name",
-    nftName: "NFT Name",
-    avatar: "Image",
-    type: "Type",
-    price: "Price",
-    platformFee: "Platform Fee",
-    royalFee: "Royal Fee",
-    sellerName: "Seller",
-    buyerName: "Buyer",
-    blockNumber: "Block No#",
+    collectionName: "collection name",
+    nftName: "nft name",
+    avatar: "image",
+    type: "type",
+    price: "price",
+    platformFee: "platform Fee",
+    royalFee: "royal fee",
+    sellerName: "seller",
+    buyerName: "buyer",
+    blockNumber: "block no#",
   },
   list: {
-    collectionName: "Collection Name",
-    nftName: "NFT Name",
-    avatar: "Image",
-    type: "Type",
-    price: "Price",
-    traderName: "Trader",
-    blockNumber: "Block No#",
+    collectionName: "collection name",
+    nftName: "nft name",
+    avatar: "image",
+    type: "type",
+    price: "price",
+    traderName: "trader",
+    blockNumber: "block no#",
   },
   unlist: {
-    collectionName: "Collection Name",
-    nftName: "NFT Name",
-    avatar: "Image",
-    type: "Type",
-    traderName: "Trader",
-    blockNumber: "Block No#",
+    collectionName: "collection name",
+    nftName: "nft name",
+    avatar: "image",
+    type: "type",
+    traderName: "trader",
+    blockNumber: "block no#",
   },
   bidAccepted: {
-    collectionName: "Collection Name",
-    nftName: "NFT Name",
-    avatar: "Image",
-    type: "Type",
-    price: "Price",
-    platformFee: "Platform Fee",
-    royalFee: "Royal Fee",
-    sellerName: "Seller",
-    buyerName: "Buyer",
-    blockNumber: "Block No#",
+    collectionName: "collection name",
+    nftName: "nft name",
+    avatar: "image",
+    type: "type",
+    price: "price",
+    platformFee: "platform fee",
+    royalFee: "royal fee",
+    sellerName: "seller",
+    buyerName: "buyer",
+    blockNumber: "block no#",
   },
 };
 
@@ -301,11 +287,14 @@ const getMetaDataType1 = async (tokenID, token_uri) => {
       return { [item.trait_type]: item.value };
     });
 
-    return {
-      ...metadata,
+    const ret = {
+      // ...metadata,
       attrsList,
       avatar: metadata.image,
       nftName: metadata.name,
+      description: metadata.description,
     };
+
+    return ret;
   }
 };

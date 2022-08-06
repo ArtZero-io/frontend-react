@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Switch, Route } from "react-router-dom";
 import * as ROUTES from "@constants/routes";
 
@@ -19,6 +20,10 @@ import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import AccountLayout from "./Layout/AccountLayout";
 import AdminLayout from "./Layout/AdminLayout";
 import LaunchpadDetailPage from "../pages/launchpad/detail";
+import AddProject from "../pages/launchpad/add-project";
+import MyProjectsPage from "@pages/account/projects";
+import MyWhiteListProjectPage from "@pages/account/projects/whitelist";
+import NftDetailPage from "../pages/token/";
 // import NotFound from "./NotFound/NotFound";
 // import MintLayout from "./Layout/MintLayout";
 
@@ -42,6 +47,16 @@ const Router = () => {
               path={ROUTES.ACCOUNT_MY_STAKES}
               component={MyStakesPage}
             />
+            <Route
+              exact
+              path={ROUTES.ACCOUNT_MY_PROJECTS}
+              component={MyProjectsPage}
+            />
+            <Route
+              exact
+              path={ROUTES.ACCOUNT_WHITELIST_PROJECTS}
+              component={MyWhiteListProjectPage}
+            />
           </AccountLayout>
         )}
       />
@@ -55,10 +70,12 @@ const Router = () => {
         )}
       />
 
-      <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />
-      <Route exact path={ROUTES.DETAIL_COLLECTION} component={CollectionPage} />
-      <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
       <Route exact path={ROUTES.STATS} component={StatsPage} />
+      <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />
+      <Route exact path={ROUTES.NFT_DETAIL} component={NftDetailPage} />
+      <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
+      <Route exact path={ROUTES.DETAIL_COLLECTION} component={CollectionPage} />
+      <Route exact path={ROUTES.LAUNCHPAD_ADD_PROJECT} component={AddProject} />
       <Route
         exact
         path={ROUTES.LAUNCHPAD_DETAIL}

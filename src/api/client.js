@@ -1,5 +1,6 @@
 import axios from "axios";
 import process from "process";
+import { IPFS_BASE_URL } from "@constants/index";
 
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
@@ -36,7 +37,12 @@ export const clientAPI = async (method, url, options) => {
 };
 
 // new API client call
-const client = async (method, url, options = {}) => {
+const client = async (
+  method,
+  url,
+  options = {},
+  baseURL = process.env.REACT_APP_API_BASE_URL
+) => {
   const headers = {
     Accept: "*/*",
     "Content-Type": "application/x-www-form-urlencoded",
@@ -57,7 +63,7 @@ const client = async (method, url, options = {}) => {
   const { status, ret, message } = data;
 
   if (status === "OK") {
-    return ret || "OK";
+    return ret;
   }
 
   if (status === "FAILED") {
@@ -190,23 +196,18 @@ export const APICall = {
     return ret;
   },
 
+  getCollectionsCountByOwner: async ({ owner, noNFT }) => {
+    const ret = await client("POST", "/countCollectionsByOwner", {
+      owner,
+      noNFT,
+    });
+
+    return ret;
+  },
+
   getCollectionFloorPrice: async ({ collection_address }) => {
     return await client("POST", "/getFloorPrice", {
       collection_address,
-    });
-  },
-
-  // NFT API Calls
-  getNFTsByOwner: async ({ owner }) => {
-    return await client("POST", "/getNFTsByOwner", {
-      owner,
-    });
-  },
-
-  getNFTByID: async ({ collection_address, token_id }) => {
-    return await client("POST", "/getNFTByID", {
-      collection_address,
-      token_id,
     });
   },
 
@@ -224,5 +225,24 @@ export const APICall = {
     });
 
     return result;
+  },
+
+  // NFT API Calls
+  getNFTsByOwner: async ({ owner }) => {
+    return await client("POST", "/getNFTsByOwner", {
+      owner,
+    });
+  },
+
+  getNFTByID: async ({ collection_address, token_id }) => {
+    return await client("POST", "/getNFTByID", {
+      collection_address,
+      token_id,
+    });
+  },
+
+  // Project API Calls
+  getProjectInfoByHash: async ({ projectHash }) => {
+    return await client("GET", `/${projectHash}`, {}, IPFS_BASE_URL);
   },
 };

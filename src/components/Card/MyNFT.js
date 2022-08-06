@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   Heading,
   Image,
@@ -14,6 +13,7 @@ import {
   Square,
   HStack,
   Checkbox,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -25,16 +25,17 @@ import {
 import staking_calls from "@utils/blockchain/staking_calls";
 import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
 import useInterval from "use-interval";
 import { motion } from "framer-motion";
 import {
   STAKE,
+  UNSTAKE,
   REQUEST_UNSTAKE,
   CANCEL_REQUEST_UNSTAKE,
-  UNSTAKE,
 } from "@constants";
 import { useHistory } from "react-router-dom";
+import CommonButton from "../Button/CommonButton";
+import useTxStatus from "@hooks/useTxStatus";
 
 // Stake Status
 // 0 not show, 1 not staked,
@@ -59,11 +60,15 @@ function MyNFTCard({
   const [countdownTime, setCountdownTime] = useState(0);
   const [isUnstakeTime, setIsUnstakeTime] = useState(false);
   const [limitUnstakeTime, setLimitUnstakeTime] = useState(0);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const { location } = useHistory();
 
-  const txStatus = useSelector((state) => state.txStatus);
+  const imgCardSize = useBreakpointValue([154, 220]);
+  const cardSize = useBreakpointValue([160, 226]);
+
+  const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useInterval(() => {
     if (unstakeRequestTime) {
@@ -95,10 +100,12 @@ function MyNFTCard({
       );
       setLimitUnstakeTime(limitUnstakeTimeTmp);
 
-
       if (unstakeRequestTimeTmp) {
         let now = new Date().getTime() / 1000;
-        let valid_time = unstakeRequestTimeTmp / 1000 + limitUnstakeTimeTmp * 60;
+
+        let valid_time =
+          unstakeRequestTimeTmp / 1000 + limitUnstakeTimeTmp * 60;
+
         if (valid_time - now > 0)
           setCountdownTime(secondsToTime(valid_time - now));
         else {
@@ -106,7 +113,6 @@ function MyNFTCard({
           setCountdownTime({ h: 0, m: 0, s: 0 });
         }
       }
-
 
       setIsLoading(false);
     };
@@ -116,7 +122,7 @@ function MyNFTCard({
 
   return (
     <motion.div
-      className="my-collection-card"
+      className="my-nft-card"
       whileHover={{
         borderColor: "#7ae7ff",
       }}
@@ -124,9 +130,9 @@ function MyNFTCard({
         position: "relative",
         borderWidth: "2px",
         borderColor: `${
-          multiStakeData?.list?.includes(tokenID) ? "brand.blue" : "#7ae7ff00"
+          multiStakeData?.list?.includes(tokenID) ? "#7ae7ff" : "transparent"
         }`,
-        maxWidth: "14rem",
+        maxWidth: cardSize,
 
         transitionDuration: "0.15s",
         transitionProperty: "all",
@@ -135,24 +141,23 @@ function MyNFTCard({
     >
       {location?.pathname === "/account/stakes" ? (
         <Checkbox
-          id="aaa"
           sx={{
             "span.chakra-checkbox__control": {
               borderRadius: "0",
               borderWidth: "0.2px",
+              borderColor: "brand.blue",
+              backgroundColor: "brand.semiBlack",
+            },
+            "span.chakra-checkbox__control[data-checked] > div": {
+              color: "brand.blue",
             },
           }}
-          _hover={{ borderColor: "#171717", borderWidth: "0.2px" }}
-          _checked={{ borderColor: "#171717", borderWidth: "0.2px" }}
           size="lg"
           top="10px"
           right="10px"
           position="absolute"
           isDisabled={
-            txStatus?.stakeStatus ||
-            txStatus?.unstakeStatus ||
-            txStatus?.cancelRequestUnstakeStatus ||
-            txStatus?.requestUnstakeStatus ||
+            actionType ||
             (multiStakeData?.action &&
               multiStakeData?.action !==
                 getStakeAction(stakeStatus, isUnstakeTime))
@@ -183,58 +188,70 @@ function MyNFTCard({
         h="full"
         shadow="lg"
       >
-        <Square h="13.75rem" w="13.75rem">
+        <Square h={imgCardSize} w={imgCardSize}>
           <Image
             alt={nftName}
             w="full"
             h="full"
             objectFit="cover"
             src={getCachedImageShort(avatar, 500)}
-            fallback={<Skeleton w="13.75rem" h="13.75rem" />}
+            fallback={<Skeleton w={imgCardSize} h={imgCardSize} />}
           />
         </Square>
 
         <Box w="full" p={3}>
-          <Heading mb={3} fontSize={["15px", "16px", "17px"]} textAlign="left">
+          <Heading mb={3} fontSize={["xs", "md"]} textAlign="left">
             {nftName}
           </Heading>
 
-          <Flex align="center" justify="start" w="full" mb={3}>
-            {stakeStatus === 3 ? (
-              <Text textAlign="center" color="brand.grayLight" size="2xs">
+          {stakeStatus === 3 ? (
+            <Flex align="center" justify="start" w="full" mb={3}>
+              <Text
+                textAlign="center"
+                color="brand.grayLight"
+                fontSize={["xs", "md"]}
+              >
                 Unstake in {countdownTime?.h || 0}h : {countdownTime?.m || 0}m :{" "}
                 {countdownTime?.s || 0}s
               </Text>
-            ) : null}
-          </Flex>
+            </Flex>
+          ) : null}
 
           {!is_for_sale && stakeStatus !== 0 ? (
             <Flex align="center" justify="start" w="full">
-              <Button
-                isLoading={isLoading || txStatus?.tokenID?.includes(tokenID)}
-                isDisabled={
-                  txStatus?.stakeStatus ||
-                  txStatus?.unstakeStatus ||
-                  txStatus?.cancelRequestUnstakeStatus ||
-                  txStatus?.requestUnstakeStatus ||
-                  multiStakeData?.action
+              <CommonButton
+                {...rest}
+                isLoading={
+                  isLoading || rest.isLoading
+                  // || tokenIDArray?.includes(tokenID)
                 }
+                mx="0"
                 variant="outline"
+                // minW="100px"
+                height={["36px", "40px"]}
+                text={
+                  stakeStatus === 1
+                    ? "Stake"
+                    : stakeStatus === 2
+                    ? "Request Unstake"
+                    : !isUnstakeTime
+                    ? "Cancel Unstake"
+                    : "Unstake"
+                }
                 onClick={() =>
                   handleStakeAction(
                     getStakeAction(stakeStatus, isUnstakeTime),
                     [tokenID]
                   )
                 }
-              >
-                {stakeStatus === 1
-                  ? "Stake"
-                  : stakeStatus === 2
-                  ? "Request Unstake"
-                  : !isUnstakeTime
-                  ? "Cancel Unstake"
-                  : "Unstake"}
-              </Button>
+                isDisabled={
+                  actionType && !tokenIDArray?.includes(tokenID)
+                    ? true
+                    : multiStakeData?.action
+                    ? true
+                    : false
+                }
+              />
             </Flex>
           ) : null}
 
@@ -279,7 +296,6 @@ function MyNFTCard({
                       align="center"
                       textAlign="right"
                       color="brand.grayLight"
-                      // direction="column"
                     >
                       <Text textAlign="center" w="full">
                         {highest_bid ? "  Best offer" : "No offer"}

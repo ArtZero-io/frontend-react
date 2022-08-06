@@ -1,13 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  Box,
   Flex,
   Heading,
   Spacer,
   IconButton,
   Text,
   HStack,
-  Button,
   Stack,
 } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
@@ -19,22 +17,25 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import BN from "bn.js";
-import { clientAPI } from "@api/client";
-import MyNFTGroupCard from "../account/components/Card/MyNFTGroup";
+import { clientAPI, APICall } from "@api/client";
+import MyNFTGroupCard from "@components/Card/MyNFTGroup";
 
-import { useDispatch, useSelector } from "react-redux";
-import { APICall } from "../../api/client";
 import { getMetaDataType1 } from "../collection/collection";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { motion } from "framer-motion";
-import { FINALIZED } from "@constants";
-import { clearTxStatus } from "../../store/actions/txStatus";
-import { delay } from "@utils";
+import {
+  STAKE,
+  UNSTAKE,
+  REQUEST_UNSTAKE,
+  CANCEL_REQUEST_UNSTAKE,
+} from "@constants";
+import CommonContainer from "@components/Container/CommonContainer";
+import CommonButton from "@components/Button/CommonButton";
+import { SCROLLBAR } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
+import useForceUpdate from "@hooks/useForceUpdate";
 
 const MyStakesPage = () => {
-  const txStatus = useSelector((state) => state.txStatus);
-  const dispatch = useDispatch();
-
   const { currentAccount, api } = useSubstrateState();
 
   const [loading, setLoading] = useState(false);
@@ -43,8 +44,11 @@ const MyStakesPage = () => {
   const [PMPCollectionDetail, setPMPCollectionDetail] = useState(null);
   const [platformTradingFee, setPlatformTradingFee] = useState(0);
 
+  const { actionType } = useTxStatus();
+
   const fetchCollectionDetail = useCallback(async () => {
     setLoading(true);
+
     try {
       const stakedCount = await fetchMyPMPStakedCount(
         currentAccount,
@@ -118,182 +122,142 @@ const MyStakesPage = () => {
       setPMPCollectionDetail(PMPCollectionDetail);
       setLoading(false);
     } catch (error) {
+      console.log("x_x error fetchCollectionDetail:", error);
       setLoading(false);
     }
   }, [activeTab, api, currentAccount]);
 
-  useEffect(() => {
-    fetchCollectionDetail();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab, currentAccount]);
+  const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
+    [STAKE, UNSTAKE, REQUEST_UNSTAKE, CANCEL_REQUEST_UNSTAKE],
+    () => handleForceUpdate()
+  );
 
-  useEffect(() => {
-    const forceUpdate = async () => {
-      if (
-        txStatus?.stakeStatus === FINALIZED ||
-        txStatus?.unstakeStatus === FINALIZED ||
-        txStatus?.cancelRequestUnstakeStatus === FINALIZED ||
-        txStatus?.requestUnstakeStatus === FINALIZED
-      ) {
-        await delay(7000).then(() => {
-          txStatus?.stakeStatus && setActiveTab(tabList.STAKED);
-          txStatus?.cancelRequestUnstakeStatus && setActiveTab(tabList.STAKED);
-          txStatus?.requestUnstakeStatus &&
-            setActiveTab(tabList.PENDING_UNSTAKE);
-          txStatus?.unstakeStatus && setActiveTab(tabList.NOT_STAKED);
-
-          dispatch(clearTxStatus());
-          refresh();
-        });
-      }
-    };
-
-    forceUpdate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, txStatus]);
-
-  const refresh = () => {
-    fetchCollectionDetail();
+  const handleForceUpdate = async () => {
+    actionType === STAKE && setActiveTab(tabList.STAKED);
+    actionType === REQUEST_UNSTAKE && setActiveTab(tabList.PENDING_UNSTAKE);
+    actionType === CANCEL_REQUEST_UNSTAKE && setActiveTab(tabList.STAKED);
+    actionType === UNSTAKE && setActiveTab(tabList.NOT_STAKED);
   };
 
+  useEffect(() => {
+    fetchCollectionDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab, currentAccount]);
+
   return (
-    <Box as="section" maxW="container.3xl">
-      <Box
-        mx="auto"
-        maxW={{ base: "6xl", "2xl": "7xl" }}
-        px={{ base: "6", "2xl": "8" }}
-        py={{ base: "4", xl: "12", "2xl": "20" }}
+    <CommonContainer>
+      <Flex
+        w="full"
+        alignItems="start"
+        pb={{ base: "12px", xl: "48px" }}
+        direction={{ base: "column", xl: "row" }}
       >
-        <Flex
-          w="full"
-          alignItems="start"
-          pb={{ base: "12px", xl: "48px" }}
-          direction={{ base: "column", xl: "row" }}
-        >
-          <Heading fontSize={["3xl-mid", "5xl", "5xl"]} minW="100px">
-            My Stakes
-          </Heading>
-          <Spacer />
-          <HStack
-            maxW={{ base: "320px", xl: "600px" }}
-            mt="20px"
-            pb="8px"
-            overflowX="scroll"
-            sx={{
-              "&::-webkit-scrollbar": {
-                width: "4px",
-                height: "4px",
-                borderRadius: "0px",
-                backgroundColor: `transparent`,
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-thumb:hover": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: `transparent`,
-              },
-            }}
-          >
-            {Object.keys(tabList).map((item) => (
-              <Button
-                mx={1}
-                key={item}
-                id={item}
-                variant="outline"
-                isActive={item === activeTab}
-                px={["16px", "32px", "32px"]}
-                onClick={() => setActiveTab(item)}
-              >
-                {item.replace("_", " ")}
-              </Button>
-            ))}
+        <Heading fontSize={["3xl-mid", "5xl", "5xl"]} minW="100px">
+          my stakes
+        </Heading>
 
-            <IconButton
-              onClick={() => refresh()}
-              mx={1}
-              aria-label="refresh"
-              icon={<RefreshIcon />}
-              size="icon"
-              variant="iconSolid"
+        <Spacer />
+
+        <HStack
+          pb="8px"
+          mt="20px"
+          sx={SCROLLBAR}
+          overflowX="scroll"
+          maxW={{ base: "320px", md: "600px" }}
+        >
+          {Object.keys(tabList).map((item) => (
+            <CommonButton
+              // minW="140"
+              key={item}
+              variant="outline"
+              text={item.replace("_", " ")}
+              isActive={item === activeTab}
+              onClick={() => setActiveTab(item)}
             />
-          </HStack>
-        </Flex>
+          ))}
 
-        <Text textAlign="left" color="#fff">
-          Praying Mantis Predators NFT Stats:
-        </Text>
+          <IconButton
+            mx={1}
+            size="icon"
+            variant="iconSolid"
+            aria-label="refresh"
+            icon={<RefreshIcon />}
+            onClick={() => fetchCollectionDetail()}
+          />
+        </HStack>
+      </Flex>
 
-        <Stack
-          py={5}
-          h={{ base: "195px", xl: "75px" }}
-          borderBottomWidth={1}
-          direction={{ base: "column", xl: "row" }}
-        >
-          {statsInfo &&
-            Object.keys(statsInfo).map((item) => (
-              <motion.div
-                key={item}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <Flex alignItems="start" pr={"5rem"}>
-                  <Text color="brand.grayLight">
-                    {item === "totalCount"
-                      ? "Total"
-                      : item === "unstakedCount"
-                      ? "Total Not Staked"
-                      : item === "pendingCount"
-                      ? "Total Pending Unstake"
-                      : item === "stakedCount"
-                      ? "Total Staked"
-                      : item === "myTradingFee"
-                      ? "Trading Fee"
-                      : null}
-                    :
-                  </Text>
+      <Text textAlign="left" color="#fff">
+        Praying Mantis Predators NFT Stats:
+      </Text>
 
-                  <Text ml={1}>
-                    {item === "myTradingFee"
-                      ? `${statsInfo[item] || platformTradingFee} %`
-                      : statsInfo[item] > 1
-                      ? `${statsInfo[item]} items`
-                      : `${statsInfo[item]} item`}
-                  </Text>
-                </Flex>
-              </motion.div>
-            ))}
-        </Stack>
-        <Stack minHeight="504px" h="full">
-          {loading ? (
-            <Stack h="574px">
-              <AnimationLoader />
-            </Stack>
-          ) : PMPCollectionDetail?.listNFT?.length === 0 ? (
-            <Heading py="3rem" size="h6">
-              No NFTs found
-            </Heading>
-          ) : (
+      <Stack
+        py={5}
+        borderBottomWidth={1}
+        h={{ base: "195px", xl: "75px" }}
+        direction={{ base: "column", lg: "row" }}
+      >
+        {statsInfo &&
+          Object.keys(statsInfo).map((item) => (
             <motion.div
-              style={{ minHeight: "574px" }}
+              key={item}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              {
-                <MyNFTGroupCard
-                  {...PMPCollectionDetail}
-                  hasBottomBorder={false}
-                />
-              }
+              <Flex alignItems="start" pr={"5rem"}>
+                <Text color="brand.grayLight">
+                  {item === "totalCount"
+                    ? "Total"
+                    : item === "unstakedCount"
+                    ? "Total Not Staked"
+                    : item === "pendingCount"
+                    ? "Total Pending Unstake"
+                    : item === "stakedCount"
+                    ? "Total Staked"
+                    : item === "myTradingFee"
+                    ? "Trading Fee"
+                    : null}
+                  :
+                </Text>
+
+                <Text ml={1}>
+                  {item === "myTradingFee"
+                    ? `${statsInfo[item] || platformTradingFee} %`
+                    : statsInfo[item] > 1
+                    ? `${statsInfo[item]} items`
+                    : `${statsInfo[item]} item`}
+                </Text>
+              </Flex>
             </motion.div>
-          )}
-        </Stack>
-      </Box>
-    </Box>
+          ))}
+      </Stack>
+      <Stack minHeight="504px" h="full">
+        {loading || loadingForceUpdate ? (
+          <Stack h="574px">
+            <AnimationLoader loadingTime={loadingTime || 3} />
+          </Stack>
+        ) : PMPCollectionDetail?.listNFT?.length === 0 ? (
+          <Heading py="3rem" size="h6">
+            No NFTs found
+          </Heading>
+        ) : (
+          <motion.div
+            style={{ minHeight: "574px" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {
+              <MyNFTGroupCard
+                {...PMPCollectionDetail}
+                hasBottomBorder={false}
+              />
+            }
+          </motion.div>
+        )}
+      </Stack>
+    </CommonContainer>
   );
 };
 

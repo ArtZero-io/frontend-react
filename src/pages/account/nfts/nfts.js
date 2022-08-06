@@ -1,16 +1,14 @@
 import {
-  Box,
   Flex,
   Heading,
   Spacer,
-  Button,
   IconButton,
   Text,
   HStack,
 } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
-import MyNFTGroupCard from "../components/Card/MyNFTGroup";
+import MyNFTGroupCard from "@components/Card/MyNFTGroup";
 import { useSubstrateState } from "@utils/substrate";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import { clientAPI } from "@api/client";
@@ -20,6 +18,9 @@ import { AccountActionTypes } from "@store/types/account.types";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { FINALIZED } from "@constants";
 import { clearTxStatus } from "../../../store/actions/txStatus";
+import CommonButton from "../../../components/Button/CommonButton";
+import CommonContainer from "../../../components/Container/CommonContainer";
+import { SCROLLBAR } from "../../../constants";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
@@ -217,125 +218,84 @@ const MyNFTsPage = () => {
   }, [addNftTnxStatus, dispatch, txStatus?.lockStatus]);
 
   return (
-    <Box as="section" maxW="container.3xl">
-      <Box
-        mx="auto"
-        maxW={{ base: "6xl", "2xl": "7xl" }}
-        px={{ base: "6", "2xl": "8" }}
-        py={{ base: "4", xl: "12", "2xl": "20" }}
+    <CommonContainer>
+      <Flex
+        w="full"
+        alignItems="start"
+        justify="space-between"
+        pb={{ base: "12px", xl: "48px" }}
+        direction={{ base: "column", xl: "row" }}
       >
-        <Flex
-          w="full"
-          alignItems="start"
-          justify="space-between"
-          pb={{ base: "12px", xl: "48px" }}
-          direction={{ base: "column", xl: "row" }}
+        <Heading fontSize={["3xl-mid", "5xl", "5xl"]} minW="100px">
+          MY NFTs
+        </Heading>
+
+        <Spacer />
+
+        <HStack
+          pb="8px"
+          mt="20px"
+          sx={SCROLLBAR}
+          overflowX="scroll"
+          maxW={{ base: "320px", md: "500px" }}
         >
-          <Heading fontSize={["3xl-mid", "5xl", "5xl"]} minW="100px">
-            MY NFTs
-          </Heading>
-
-          <Spacer />
-          <HStack
-            maxW={{ base: "320px", xl: "500px" }}
-            overflowX="scroll"
-            mt="20px"
-            pb="8px"
-            sx={{
-              "&::-webkit-scrollbar": {
-                width: "4px",
-                height: "4px",
-                borderRadius: "0px",
-                backgroundColor: `transparent`,
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-thumb:hover": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: `transparent`,
-              },
-            }}
-          >
-            <Button
-              mx={1}
-              id="collected"
+          {[
+            { id: "collected", text: "collected" },
+            { id: "listed", text: "my listing" },
+            { id: "bid", text: "my bids" },
+          ].map((i, idx) => (
+            <CommonButton
+              {...i}
+              key={i.id}
               variant="outline"
-              isActive={filterSelected === 0}
-              px={["16px", "32px", "32px"]}
-              onClick={() => onClickHandler(0)}
-            >
-              Collected
-            </Button>
-
-            <Button
-              mx={1}
-              id="listed"
-              variant="outline"
-              isActive={filterSelected === 1}
-              px={["16px", "32px", "32px"]}
-              onClick={() => onClickHandler(1)}
-            >
-              My Listing
-            </Button>
-
-            <Button
-              mx={1}
-              id="bid"
-              variant="outline"
-              isActive={filterSelected === 2}
-              px={["16px", "32px", "32px"]}
-              onClick={() => onClickHandler(2)}
-            >
-              My Bids
-            </Button>
-
-            <IconButton
-              mx={1}
-              aria-label="refresh"
-              icon={<RefreshIcon />}
-              size="icon"
-              variant="iconSolid"
-              onClick={() => setMyCollections(null)}
+              isActive={filterSelected === idx}
+              onClick={() => onClickHandler(idx)}
             />
-          </HStack>
-        </Flex>
+          ))}
 
-        {loading ? (
-          <AnimationLoader loadingTime={loadingTime} />
-        ) : (
-          <>
-            {(!myCollections || myCollections?.length === 0) && (
-              <HStack
-                py={10}
-                align="start"
-                ml={3}
-                justifyContent="center"
-                w={"full"}
-              >
-                <Text textAlign="center" color="brand.grayLight" size="2xs">
-                  No NFT found.
-                </Text>
-              </HStack>
-            )}
+          <IconButton
+            mx={1}
+            size="icon"
+            variant="iconSolid"
+            aria-label="refresh"
+            icon={<RefreshIcon />}
+            onClick={() => setMyCollections(null)}
+          />
+        </HStack>
+      </Flex>
 
-            {myCollections &&
-              myCollections?.map((item, idx) => {
-                return (
-                  <MyNFTGroupCard
-                    {...item}
-                    key={idx}
-                    filterSelected={filterSelected}
-                    hasBottomBorder={true}
-                  />
-                );
-              })}
-          </>
-        )}
-      </Box>
-    </Box>
+      {loading ? (
+        <AnimationLoader loadingTime={loadingTime} />
+      ) : (
+        <>
+          {(!myCollections || myCollections?.length === 0) && (
+            <HStack
+              py={10}
+              ml={3}
+              w={"full"}
+              align="start"
+              justifyContent="center"
+            >
+              <Text textAlign="center" color="brand.grayLight" size="2xs">
+                No NFT found.
+              </Text>
+            </HStack>
+          )}
+
+          {myCollections &&
+            myCollections?.map((item, idx) => {
+              return (
+                <MyNFTGroupCard
+                  {...item}
+                  key={idx}
+                  filterSelected={filterSelected}
+                  hasBottomBorder={true}
+                />
+              );
+            })}
+        </>
+      )}
+    </CommonContainer>
   );
 };
 

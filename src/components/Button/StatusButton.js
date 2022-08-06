@@ -54,7 +54,7 @@ function StatusButton({ isLoading, loadingText, mode, disabled, text, type }) {
           : loadingText === "InBlock"
           ? "Your Tnx is inblock"
           : loadingText === "Finalized"
-          ? `Your Tnx is finalized! Check new ${text}`
+          ? `All done! Check new ${text}`
           : ""}
       </Button>
     </>

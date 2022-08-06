@@ -1,13 +1,17 @@
-import { Box, Grid, Heading } from "@chakra-ui/react";
+/* eslint-disable no-unused-vars */
+import { Box, Grid, Heading, useBreakpointValue } from "@chakra-ui/react";
 import React, { Fragment } from "react";
-import MyNFTCard from "../../../account/components/Card/MyNFT";
+import MyNFTCard from "@components/Card/MyNFT";
 
 function NFTMintTab({ myAZNFTs }) {
+  const cardSize = useBreakpointValue([156, 224]);
+  const gapCardSize = useBreakpointValue([3, 6]);
+
   return (
     <Box
-      minH={"xs"}
       mx="auto"
-      px={{ base: "6", "2xl": "8" }}
+      minH={"xs"}
+      px={{ base: "2", "2xl": "8" }}
       py={{ base: "8", "2xl": "4" }}
     >
       {myAZNFTs?.length === 0 ? (
@@ -16,11 +20,11 @@ function NFTMintTab({ myAZNFTs }) {
         </Heading>
       ) : (
         <Grid
-          templateColumns="repeat(auto-fill, minmax(min(100%, 224px), 1fr))"
-          gap={6}
-          maxW="6xl-mid"
-          mx="auto"
           mb={12}
+          mx="auto"
+          maxW="6xl-mid"
+          gap={gapCardSize}
+          templateColumns={`repeat(auto-fill, minmax(min(100%, ${cardSize}px), 1fr))`}
         >
           {myAZNFTs?.map((item, idx) => (
             <Fragment key={idx}>

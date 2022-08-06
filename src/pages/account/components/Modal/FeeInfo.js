@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Flex,
-  // Grid,
   Heading,
   Text,
   useDisclosure,
@@ -12,14 +11,19 @@ import {
   ModalCloseButton,
   ModalHeader,
   ModalBody,
-  // Stack,
   HStack,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { Fragment } from "react";
 
 const FeeInfoModal = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
+  const modalSize = useBreakpointValue({
+    base: `xs`,
+    xl: `3xl`,
+  });
+  
   return (
     <>
       <Button
@@ -32,11 +36,12 @@ const FeeInfoModal = () => {
         more information
       </Button>
 
-      <Modal isCentered isOpen={isOpen} onClose={onClose} size="2xl">
+      <Modal isCentered isOpen={isOpen} onClose={onClose} size={modalSize}>
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
         />
+
         <ModalContent
           position="relative"
           bg="brand.semiBlack"
@@ -44,74 +49,78 @@ const FeeInfoModal = () => {
           borderRadius="0"
         >
           <ModalCloseButton
-            position="absolute"
-            top="-8"
-            right="-8"
             borderWidth={2}
             borderRadius="0"
+            position="absolute"
+            top={["0", "-8", "-8"]}
+            right={["0", "-8", "-8"]}
           />
+
           <ModalHeader textAlign="center">
-            <Heading fontSize={{ base: "24px", xl: "32px" }} my={3}>
-              Trade discount for Artzero NFT staked
+            <Heading fontSize={{ base: "xl", xl: "32px" }} my={3}>
+              trade discount for artzero NFT staked
             </Heading>
           </ModalHeader>
 
           <ModalBody>
             <HStack>
               <Box
-                w={{ base: "30%", xl: "50%" }}
                 textAlign="center"
                 p={{ base: "1", xl: "4" }}
+                w={{ base: "30%", xl: "50%" }}
               >
                 <Flex direction="column" w="full">
-                  <Heading fontSize={{ base: "16px", xl: "24px" }} mb={3} p={0}>
-                    Stakers
+                  <Heading fontSize={{ base: "sm", xl: "24px" }} mb={3} p={0}>
+                    stakers
                   </Heading>
                   {feeChart.map((item, idx) => (
                     <Fragment key={idx}>
                       <Flex align="center" justify="center" borderWidth={1}>
-                        <Box
-                          minH={{ base: "4.5rem", "2xl": "5rem" }}
-                          py={{ base: "4", "2xl": "6" }}
-                        >
+                        <Flex minH={{ base: "4.5rem", "2xl": "5rem" }}>
                           <Heading
-                            fontSize={{ base: "16px", xl: "24px" }}
+                            m="auto"
                             minW={"5rem"}
+                            fontSize={{ base: "sm", xl: "24px" }}
                           >
                             {item.qty} NFTs
                           </Heading>
-                        </Box>
+                        </Flex>
                       </Flex>
                     </Fragment>
                   ))}
                 </Flex>
               </Box>
+
               <Box
-                px={4}
+                px={[0, 4]}
                 textAlign="left"
                 w={{ base: "70%", xl: "50%" }}
                 py={{ base: "1", "2xl": "4" }}
               >
                 <Flex direction="column" w="full" align="center">
-                  <Heading fontSize={{ base: "16px", xl: "24px" }} mb={3}>
-                    Trade discount
+                  <Heading fontSize={{ base: "sm", xl: "24px" }} mb={3}>
+                    trade discount
                   </Heading>
+
                   {feeChart.map((item, idx) => (
                     <Fragment key={idx}>
                       <Flex
-                        borderWidth={1}
                         w="full"
+                        borderWidth={1}
+                        alignItems="center"
                         pl={{ base: "16px", "2xl": "40px" }}
                       >
-                        <Box minH={{ base: "4.5rem", "2xl": "5rem" }} mr={3}>
+                        <Flex minH={{ base: "4.5rem", "2xl": "5rem" }} mr={3}>
                           <Text
-                            fontFamily="DS-Digital"
-                            fontSize={{ base: "36px", xl: "5xl" }}
+                            m="auto"
                             color="#fff"
+                            fontFamily="DS-Digital"
+                            fontSize={{ base: "4xl", xl: "5xl" }}
                           >
                             {item.percent}%
                           </Text>
-                        </Box>
+                        </Flex>
+
                         <Flex
                           direction="column"
                           align="start"
@@ -119,14 +128,14 @@ const FeeInfoModal = () => {
                           pr={3}
                         >
                           <Heading
-                            fontSize={{ base: "16px", xl: "24px" }}
-                            color="#7AE7FF"
                             mb="2"
+                            color="#7AE7FF"
+                            fontSize={{ base: "sm", xl: "24px" }}
                           >
-                            Off
+                            off
                           </Heading>
-                          <Heading fontSize={{ base: "14px", xl: "24px" }}>
-                            Trade Fee
+                          <Heading fontSize={{ base: "sm", xl: "24px" }}>
+                            trade fee
                           </Heading>
                         </Flex>
                       </Flex>

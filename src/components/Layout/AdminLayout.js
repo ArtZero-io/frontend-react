@@ -6,6 +6,8 @@ import AdminHeader from "@pages/admin/components/Header";
 import ContractTab from "@pages/admin/components/Tab/Contract";
 import CollectionTab from "@pages/admin/components/Tab/Collection";
 import CheckCollection from "@pages/admin/components/Tab/CheckCollection";
+import ProjectTab from "@pages/admin/components/Tab/Project";
+
 const AdminLayout = () => {
   const tabData = [
     {
@@ -19,6 +21,10 @@ const AdminLayout = () => {
     {
       label: "Check Advanced Mode Collection",
       content: <CheckCollection />,
+    },
+    {
+      label: "Project Management",
+      content: <ProjectTab />,
     },
   ];
 
@@ -36,7 +42,6 @@ const AdminLayout = () => {
                 color="#fff"
                 mx={4}
                 fontSize="lg"
-                // fontStyle="italic"
                 px="0.5px"
                 py="20px"
               >

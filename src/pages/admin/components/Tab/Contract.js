@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { delay, truncateStr } from "@utils";
 import toast from "react-hot-toast";
 import BN from "bn.js";
+import { SCROLLBAR } from "../../../../constants";
 
 let wl_count = 0;
 function ContractTab() {
@@ -54,8 +55,13 @@ function ContractTab() {
     await getAllWhiteList();
   };
 
-  useEffect(async () => {
-    onRefreshAZNFT();
+  useEffect(() => {
+    const fetch = async () => {
+      await onRefreshAZNFT();
+    };
+
+    fetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAccount]);
 
   const getAZNFTContractBalance = async () => {
@@ -247,7 +253,9 @@ function ContractTab() {
                       >
                         Initialize
                       </Button>*/}
-                      <Heading size="h4">Owner Withdraw AZERO</Heading>
+                      <Heading fontSize={["2xl", "3xl", "3xl"]}>
+                        Owner Withdraw AZERO
+                      </Heading>
                       <Box mt={7}>
                         <Text color={!whitelist ? "F888" : "#fff"} py={2}>
                           Owner Withdraw AZERO
@@ -307,7 +315,9 @@ function ContractTab() {
                     h="full"
                   >
                     <Box h="full">
-                      <Heading size="h4">Add Whitelist</Heading>
+                      <Heading fontSize={["2xl", "3xl", "3xl"]}>
+                        Add Whitelist
+                      </Heading>
 
                       <Box h="full">
                         {" "}
@@ -411,27 +421,11 @@ function ContractTab() {
                 </Flex>
               </HStack>
               <TableContainer
+                h="full"
                 maxW="6xl-mid"
                 fontSize="lg"
-                h="full"
                 overflow="auto"
-                sx={{
-                  "&::-webkit-scrollbar": {
-                    width: "4px",
-                    height: "4px",
-                    borderRadius: "0px",
-                    backgroundColor: `transparent`,
-                  },
-                  "&::-webkit-scrollbar-thumb": {
-                    backgroundColor: `#7ae7ff`,
-                  },
-                  "&::-webkit-scrollbar-thumb:hover": {
-                    backgroundColor: `#7ae7ff`,
-                  },
-                  "&::-webkit-scrollbar-track": {
-                    backgroundColor: `transparent`,
-                  },
-                }}
+                sx={SCROLLBAR}
               >
                 <Table
                   variant="striped"

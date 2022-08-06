@@ -1,13 +1,13 @@
 import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
-import {
-  handleContractCallAnimation,
-  isValidAddressPolkadotAddress,
-} from "@utils";
+import { isValidAddressPolkadotAddress } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
-import { clientAPI } from "@api/client";
-import { AccountActionTypes } from "@store/types/account.types";
+import {
+  txErrorHandler,
+  txResponseErrorHandler,
+} from "@store/actions/txStatus";
+import { APICall } from "@api/client";
 
 let contract;
 
@@ -21,7 +21,9 @@ export const setCollectionContract = (api, data) => {
 };
 
 //SETTERS
-async function addNewCollection(caller_account, data, dispatch, api) {
+
+// CREATE COLLECTION ADVANCED MODE
+async function addNewCollection(caller_account, data, dispatch, txType, api) {
   if (!isValidAddressPolkadotAddress(data?.nftContractAddress)) {
     return null;
   }
@@ -44,54 +46,30 @@ async function addNewCollection(caller_account, data, dispatch, api) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (status.isFinalized === true) {
-          await clientAPI("post", "/updateCollection", {
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
+
+        if (status?.isFinalized) {
+          await APICall.askBeUpdateCollectionData({
             collection_address: data.nftContractAddress,
           });
         }
-
-        if (dispatchError) {
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-          });
-
-          if (dispatchError.isModule) {
-            // toast.error(`There is some error with your request`);
-            const decoded = api.registry.findMetaError(dispatchError.asModule);
-
-            return toast.error(`Error: ${decoded?.docs.join(" ")}`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          handleContractCallAnimation(status, dispatchError, dispatch);
-
-          // const statusText = Object.keys(status.toHuman())[0];
-          // toast.success(
-          //   `Add New Collection ${
-          //     statusText === "0" ? "started" : statusText.toLowerCase()
-          //   }.`
-          // );
-        }
       }
     )
-    .then((unsub) => {
-      unsubscribe = unsub;
-    })
-    .catch((e) => {
-      dispatch({
-        type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-      });
-      const mess = `Tnx is ${e.message}`;
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
 
-      toast.error(mess);
-    });
   return unsubscribe;
 }
 
-async function autoNewCollection(caller_account, data, dispatch, api) {
+// CREATE COLLECTION SIMPLE MODE
+async function autoNewCollection(caller_account, data, dispatch, txType, api) {
   let unsubscribe;
   const address = caller_account?.address;
   const gasLimit = -1;
@@ -118,46 +96,24 @@ async function autoNewCollection(caller_account, data, dispatch, api) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
+        if (status?.isFinalized) {
+          await APICall.askBeUpdateCollectionData({
+            collection_address: data.nftContractAddress,
           });
-          if (dispatchError.isModule) {
-            const decoded = api.registry.findMetaError(dispatchError.asModule);
-
-            return toast.error(`Error: ${decoded?.docs.join(" ")}`);
-
-            // toast.error(`There is some error with your request`);
-            // console.log("dispatchError.isModule", dispatchError);
-          } else {
-            toast.error("dispatchError ", dispatchError.toString());
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          handleContractCallAnimation(status, dispatchError, dispatch);
-
-          // const statusText = Object.keys(status.toHuman())[0];
-          // toast.success(
-          //   `Add New Collection ${
-          //     statusText === "0" ? "started" : statusText.toLowerCase()
-          //   }.`
-          // );
         }
       }
     )
-    .then((unsub) => {
-      unsubscribe = unsub;
-    })
-    .catch((e) => {
-      dispatch({
-        type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-      });
-      const mess = `Tnx is ${e.message}`;
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
 
-      toast.error(mess);
-    });
   return unsubscribe;
 }
 
@@ -201,8 +157,9 @@ async function updateIsActive(caller_account, collection_address, isActive) {
               statusText === "0" ? "started" : statusText.toLowerCase()
             }.`
           );
-          if (status.isFinalized === true) {
-            await clientAPI("post", "/updateCollection", {
+
+          if (status?.isFinalized) {
+            await APICall.askBeUpdateCollectionData({
               collection_address: collection_address,
             });
           }
@@ -417,6 +374,7 @@ async function getSimpleModeAddingFee(caller_account) {
   }
   return null;
 }
+
 async function getAdvanceModeAddingFee(caller_account) {
   const gasLimit = -1;
   const address = caller_account?.address;
@@ -507,21 +465,23 @@ async function getAttributes(caller_account, collection_address, attributes) {
 }
 
 async function setMultipleAttributes(
-  account,
+  caller_account,
   collection_address,
   attributes,
   values,
-  dispatch
+  dispatch,
+  txType,
+  api
 ) {
   let unsubscribe;
 
-  const address = account?.address;
+  const address = caller_account?.address;
   const gasLimit = -1;
   const value = 0;
 
-  const injector = await web3FromSource(account?.meta?.source);
+  const injector = await web3FromSource(caller_account?.meta?.source);
 
-  account &&
+  caller_account &&
     contract.tx
       .setMultipleAttributes(
         { gasLimit, value },
@@ -533,41 +493,24 @@ async function setMultipleAttributes(
         address,
         { signer: injector.signer },
         async ({ status, dispatchError }) => {
-          if (dispatchError) {
-            if (dispatchError.isModule) {
-              toast.error(`There is some error with your request`);
-            } else {
-              console.log("dispatchError ", dispatchError.toString());
-            }
-          }
+          txResponseErrorHandler({
+            status,
+            dispatchError,
+            dispatch,
+            txType,
+            api,
+            caller_account,
+          });
 
-          if (status) {
-            handleContractCallAnimation(status, dispatchError, dispatch);
-
-            if (status.isFinalized === true) {
-              await clientAPI("post", "/updateCollection", {
-                collection_address: collection_address,
-              });
-            }
-
-            // const statusText = Object.keys(status.toHuman())[0];
-            // toast.success(
-            //   `Update Collection Attributes ${
-            //     statusText === "0" ? "started" : statusText.toLowerCase()
-            //   }.`
-            // );
+          if (status?.isFinalized) {
+            await APICall.askBeUpdateCollectionData({
+              collection_address: collection_address,
+            });
           }
         }
       )
       .then((unsub) => (unsubscribe = unsub))
-      .catch((e) => {
-        dispatch({
-          type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-        });
-        const mess = `Tnx is ${e.message}`;
-
-        toast.error(mess);
-      });
+      .catch((error) => txErrorHandler({ error, dispatch }));
 
   return unsubscribe;
 }

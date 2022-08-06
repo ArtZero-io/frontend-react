@@ -15,22 +15,22 @@ function Dropdown({ options, selectedItem, setSelectedItem, width }) {
     <Box color="brand.blue" height="100%" w={width}>
       <Menu w="full" autoSelect={false} placement="bottom-end">
         <MenuButton
-          _hover={{ borderColor: "#7ae7ff" }}
-          _active={{ bg: "brand.grayDark" }}
-          fontFamily="Oswald"
-          ring={0}
-          minW="195px"
-          w="full"
-          textAlign="left"
           px={4}
-          variant="outline"
+          ring={0}
+          w="full"
           as={Button}
-          rightIcon={<ChevronDownIcon fontSize="2xl" />}
+          color="#fff"
+          minW="195px"
+          textAlign="left"
+          variant="outline"
           bg="brand.grayDark"
+          fontFamily="Oswald"
+          fontSize={["md", "lg"]}
           borderColor="transparent"
           textTransform="capitalize"
-          color="#fff"
-          fontSize="lg"
+          _active={{ bg: "brand.grayDark" }}
+          _hover={{ borderColor: "#7ae7ff" }}
+          rightIcon={<ChevronDownIcon fontSize="2xl" />}
         >
           {options[selectedItem]}
         </MenuButton>
@@ -39,14 +39,14 @@ function Dropdown({ options, selectedItem, setSelectedItem, width }) {
             return (
               <MenuItem
                 w="full"
-                color="#fff"
-                fontSize="lg"
-                textTransform="capitalize"
-                _hover={{ bg: "brand.grayLight", color: "white" }}
-                fontFamily="Oswald"
-                onClick={() => onClickHandler(idx)}
                 key={idx}
+                color="#fff"
+                fontFamily="Oswald"
+                fontSize={["md", "lg"]}
+                textTransform="capitalize"
+                onClick={() => onClickHandler(idx)}
                 display={idx === selectedItem ? "none" : ""}
+                _hover={{ bg: "brand.grayLight", color: "white" }}
               >
                 {options[idx]}
               </MenuItem>

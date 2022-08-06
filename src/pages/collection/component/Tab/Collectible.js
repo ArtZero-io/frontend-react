@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Flex,
@@ -54,6 +55,7 @@ import LockNFTModal from "@components/Modal/LockNFTModal";
 import StatusBuyButton from "@components/Button/StatusBuyButton";
 
 import AddNewNFTModal from "../Modal/AddNewNFT";
+import { SCROLLBAR } from "../../../../constants";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -282,8 +284,12 @@ const NFTTabCollectible = (props) => {
 
   return (
     <>
-      <HStack spacing={{ base: "30px", "2xl": "40px" }} alignItems="stretch">
-        <Square size={{ base: "360px", "2xl": "480px" }}>
+      <Stack
+        alignItems="stretch"
+        direction={{ base: "column", xl: "row" }}
+        spacing={["15px", "30px", "40px"]}
+      >
+        <Square size={{ base: "272px", xl: "360px", "2xl": "480px" }}>
           <Image
             w="full"
             h="full"
@@ -298,9 +304,8 @@ const NFTTabCollectible = (props) => {
         <Stack alignItems="flex-start" w="full">
           <HStack>
             <Heading
+              fontSize={{ base: "xl", xl: "2xl", "2xl": "3xl-mid" }}
               color="#fff"
-              size="h4"
-              fontSize={{ base: "1rem", "2xl": "2rem" }}
             >
               {nftName}
             </Heading>
@@ -310,11 +315,11 @@ const NFTTabCollectible = (props) => {
             <HStack
               pos="absolute"
               top={{
-                base: `20px`,
+                base: `10px`,
                 xl: `20px`,
               }}
               right={{
-                base: `20px`,
+                base: `50px`,
                 xl: `20px`,
               }}
             >
@@ -374,10 +379,9 @@ const NFTTabCollectible = (props) => {
           <Stack>
             <Heading
               isTruncated
-              maxW={{ base: "500px", "2xl": "610px" }}
-              size="h6"
-              pt={{ base: "6px", "2xl": "12px" }}
-              fontSize={{ base: "0.8rem", "2xl": "1rem" }}
+              maxW={{ base: "260px", xl: "500px", "2xl": "610px" }}
+              pt={{ base: "2px", "2xl": "12px" }}
+              fontSize={["xs", "md", "md"]}
               color="brand.grayLight"
               lineHeight="1.35"
             >
@@ -390,7 +394,7 @@ const NFTTabCollectible = (props) => {
               <Text
                 color="#fff"
                 maxW="max-content"
-                pt={{ base: "6px", "2xl": "12px" }}
+                pt={{ base: "2px", "2xl": "12px" }}
                 fontSize={{ base: "14px", "2xl": "16px" }}
               >
                 Owned by{" "}
@@ -610,7 +614,7 @@ const NFTTabCollectible = (props) => {
               </motion.div>
             </Stack>
 
-            <Stack w="full" flexGrow="1">
+            <Stack display={["none", "flex", "flex"]} w="full" flexGrow="1">
               {attrsList?.length === 0 ? (
                 <Stack>
                   <Text
@@ -648,23 +652,7 @@ const NFTTabCollectible = (props) => {
                     gap={{ base: "0.5rem", xl: "1rem", "2xl": "1.25rem" }}
                     pr="22px"
                     overflowY="auto"
-                    sx={{
-                      "&::-webkit-scrollbar": {
-                        width: "4px",
-                        height: "4px",
-                        borderRadius: "0px",
-                        backgroundColor: `transparent`,
-                      },
-                      "&::-webkit-scrollbar-thumb": {
-                        backgroundColor: `#7ae7ff`,
-                      },
-                      "&::-webkit-scrollbar-thumb:hover": {
-                        backgroundColor: `#7ae7ff`,
-                      },
-                      "&::-webkit-scrollbar-track": {
-                        backgroundColor: `transparent`,
-                      },
-                    }}
+                    sx={SCROLLBAR}
                   >
                     {attrsList?.length
                       ? attrsList
@@ -794,7 +782,7 @@ const NFTTabCollectible = (props) => {
             </Stack>
           </Stack>
         </Stack>
-      </HStack>
+      </Stack>
     </>
   );
 };

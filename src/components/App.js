@@ -1,5 +1,5 @@
 import { Toaster } from "react-hot-toast";
-import { GridLoader } from "react-spinners";
+import { PuffLoader } from "react-spinners";
 
 import {
   Modal,
@@ -7,6 +7,7 @@ import {
   ModalContent,
   ModalOverlay,
   ChakraProvider,
+  Text,
 } from "@chakra-ui/react";
 import "@fontsource/oswald";
 import theme from "@theme/theme";
@@ -24,6 +25,7 @@ import { setStakingContract } from "@utils/blockchain/staking_calls";
 import { setLaunchPadContract } from "@utils/blockchain/launchpad-contract-calls";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import "@theme/assets/TimePicker.css";
 
 export default function App() {
   const { apiState, apiError } = useSubstrateState();
@@ -51,27 +53,25 @@ const InitModal = ({ apiState, loadingErrorMess }) => {
         bg="#33333330"
         backdropFilter="blur(50px) hue-rotate(90deg)"
       />
+
       <ModalContent
         bg="transparent"
         boxShadow={"none"}
         justifyContent="center"
         alignItems="center"
       >
-        <GridLoader
-          color="#7ae7ff"
-          size={15}
-          margin={3}
-          speedMultiplier={1.8}
-        />
+        <PuffLoader color="#7ae7ff" />
+
         <Heading
           size="h6"
-          my={14}
+          my="30px"
           mx="auto"
           maxW="250px"
           minH="100px"
+          color="#7ae7ff"
           textAlign="center"
         >
-          Connecting {loadingErrorMess}
+          connecting {loadingErrorMess}
         </Heading>
       </ModalContent>
     </Modal>
@@ -80,8 +80,14 @@ const InitModal = ({ apiState, loadingErrorMess }) => {
 
 const Main = () => {
   const { api, apiState } = useSubstrateState();
-  const { artzeroNft, collection, marketplace, profile, staking, launchpad_manager } =
-    contractData;
+  const {
+    profile,
+    staking,
+    artzeroNft,
+    collection,
+    marketplace,
+    launchpad_manager,
+  } = contractData;
   const [loadContractDone, setLoadContractDone] = useState(false);
 
   useEffect(() => {
@@ -94,7 +100,7 @@ const Main = () => {
           await setStakingContract(api, staking);
           await setAZNFTContract(api, artzeroNft);
           await setLaunchPadContract(api, launchpad_manager);
-          
+
           setLoadContractDone(true);
         }
       } catch (e) {
@@ -103,7 +109,16 @@ const Main = () => {
     };
     initContract();
     // console.log("initContract()...");
-  }, [api, apiState, artzeroNft, collection, marketplace, profile, staking, launchpad_manager]);
+  }, [
+    api,
+    apiState,
+    artzeroNft,
+    collection,
+    marketplace,
+    profile,
+    staking,
+    launchpad_manager,
+  ]);
 
   const { addNftTnxStatus, tnxStatus, addCollectionTnxStatus } = useSelector(
     (state) => state.account.accountLoaders
@@ -121,15 +136,15 @@ const Main = () => {
       txStatus?.requestUnstakeStatus === "Start" ||
       txStatus?.cancelRequestUnstakeStatus === "Start" ||
       txStatus?.unstakeStatus === "Start" ||
-      txStatus?.lockStatus === "Start";
+      txStatus?.lockStatus === "Start" ||
+      txStatus?.step === "Start";
 
-    // console.log("txStatus?.stakeStatus", txStatus?.stakeStatus);
     const message = (
-      <span>
+      <Text as='span' fontSize={['sm','md']}>
         You have a transaction that needs to be signed.
         <br />
-        Please <b>Sign</b> or <b>Cancel</b> it in the pop-up window.
-      </span>
+        Please <b>Sign</b> or <b>Cancel</b> in the pop-up window.
+      </Text>
     );
 
     if (!id.current && hasPendingTx) {
@@ -152,6 +167,7 @@ const Main = () => {
     txStatus?.lockStatus,
     txStatus?.requestUnstakeStatus,
     txStatus?.stakeStatus,
+    txStatus?.step,
     txStatus?.unstakeStatus,
   ]);
 

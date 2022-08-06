@@ -16,6 +16,7 @@ import { delay, truncateStr } from "@utils";
 import toast from "react-hot-toast";
 import BN from "bn.js";
 import { clientAPI } from "@api/client";
+import { SCROLLBAR } from "../../../../constants";
 
 let collection_count = 0;
 
@@ -37,6 +38,7 @@ function CollectionAdmin() {
     await onGetCollectionCount();
     await delay(1000);
     await getAllCollections();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -95,13 +97,13 @@ function CollectionAdmin() {
       ignoreNoNFT: true,
     };
 
-    const collections_inactives = await clientAPI(
+    const collections_inactive = await clientAPI(
       "post",
       "/getCollections",
       options_inactive
     );
-    // console.log('collections_inactives',collections_inactives);
-    let collections = collections_actives.concat(collections_inactives);
+    // console.log('collections_inactive',collections_inactive);
+    let collections = collections_actives.concat(collections_inactive);
     // console.log('collections',collections);
     setCollections(collections);
   };
@@ -174,29 +176,11 @@ function CollectionAdmin() {
           </Stack>
         </Stack>
         <TableContainer
-          maxW="6xl-mid"
-          // maxH={{ base: "20rem", "2xl": "30rem" }}
-
-          fontSize="lg"
           h="full"
+          maxW="6xl-mid"
+          fontSize="lg"
           overflow="auto"
-          sx={{
-            "&::-webkit-scrollbar": {
-              width: "4px",
-              height: "4px",
-              borderRadius: "0px",
-              backgroundColor: `transparent`,
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: `#7ae7ff`,
-            },
-            "&::-webkit-scrollbar-thumb:hover": {
-              backgroundColor: `#7ae7ff`,
-            },
-            "&::-webkit-scrollbar-track": {
-              backgroundColor: `transparent`,
-            },
-          }}
+          sx={SCROLLBAR}
         >
           <Table variant="striped" colorScheme="blackAlpha" overflow="auto">
             <Thead>
@@ -216,6 +200,14 @@ function CollectionAdmin() {
                   py={7}
                 >
                   Address
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  Name
                 </Th>
                 <Th
                   fontFamily="Evogria"
@@ -279,6 +271,7 @@ function CollectionAdmin() {
                     <Td py={7}>
                       {truncateStr(collection.nftContractAddress, 5)}
                     </Td>
+                    <Td py={7}>{collection.name}</Td>
                     <Td py={7}>{truncateStr(collection.collectionOwner, 5)}</Td>
                     <Td>
                       {collection.contractType === 2 ? "Auto" : "Manual"}{" "}

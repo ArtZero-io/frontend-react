@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Button,
   Heading,
@@ -11,151 +10,115 @@ import {
   useDisclosure,
   IconButton,
   Tooltip,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { QuestionIcon } from "@chakra-ui/icons";
-
-import SimpleModeForm from "../Form/SimpleMode";
-import { useDispatch, useSelector } from "react-redux";
-import { onCloseButtonModal } from "@utils";
-import { AccountActionTypes } from "@store/types/account.types";
 import EditIcon from "@theme/assets/icon/Edit.js";
-import { formMode } from "@constants";
+
+import { useEffect } from "react";
+import useTxStatus from "@hooks/useTxStatus";
+import SimpleModeForm from "../Form/SimpleMode";
+import { formMode, SCROLLBAR, END } from "@constants";
 
 function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
-  const {
-    isOpen: isOpenSimpleMode,
-    onOpen: onOpenSimpleMode,
-    onClose: onCloseSimpleMode,
-  } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { step, onEndClick } = useTxStatus();
+  const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
 
-  const dispatch = useDispatch();
-  const { addCollectionTnxStatus } = useSelector(
-    (s) => s.account.accountLoaders
-  );
+  useEffect(() => {
+    step === END && onClose();
+  }, [step, onClose]);
 
   return (
     <>
       {mode === formMode.ADD && (
         <Tooltip
           hasArrow
+          bg="#333"
+          color="#fff"
           label="Simple Mode is designed for non-tech people. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
         >
-          <Button
-            variant="outline"
-            color="brand.blue"
-            onClick={() => {
-              onOpenSimpleMode();
-            }}
-          >
+          <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
             Simple Mode
           </Button>
         </Tooltip>
       )}
+
       {mode === formMode.EDIT && (
         <>
           <IconButton
+            h="40px"
+            top="2px"
+            bg="black"
+            right="2px"
+            minW="40px"
+            size="icon"
             zIndex={"1"}
             pos="absolute"
-            top="2px"
-            right="2px"
-            h="40px"
-            minW="40px"
-            aria-label="edit"
-            icon={
-              <EditIcon
-                id="abc1"
-                color="currentColor"
-                width="17px"
-                height="17px"
-                p="0"
-              />
-            }
-            size="icon"
             borderWidth={0}
+            color="#7ae7ff"
+            aria-label="edit"
             variant="iconSolid"
+            onClick={() => onOpen()}
             _hover={{
               color: "#000",
               bg: "#7ae7ff",
             }}
-            bg="black"
-            color="#7ae7ff"
-            onClick={() => onOpenSimpleMode()}
+            icon={
+              <EditIcon p="0" width="17px" height="17px" color="currentColor" />
+            }
           />
         </>
       )}
+
       <Modal
+        isCentered
+        isOpen={isOpen}
+        size={modalSize}
+        onClose={onClose}
+        closeOnEsc={false}
         scrollBehavior={"inside"}
         closeOnOverlayClick={false}
-        closeOnEsc={false}
-        isCentered
-        isOpen={isOpenSimpleMode}
-        onClose={onCloseSimpleMode}
-        size="4xl"
       >
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
         />
         <ModalContent
-          position="relative"
-          bg="brand.grayDark"
-          px={6}
-          pb={8}
           borderRadius="0"
           textAlign="center"
+          position="relative"
+          bg="brand.grayDark"
+          px={["4px", "24px", "24px"]}
+          pb={["4px", "32px", "32px"]}
         >
           <ModalCloseButton
-            position="absolute"
-            top="-8"
-            right="-8"
             borderWidth={2}
             borderRadius="0"
-            onClick={() => {
-              onCloseButtonModal({
-                status: addCollectionTnxStatus?.status,
-                dispatch,
-                type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-              });
-            }}
+            position="absolute"
+            top={["0", "-8", "-8"]}
+            right={["0", "-8", "-8"]}
+            onClick={() => onEndClick()}
           />
           <ModalHeader>
-            <Heading size="h4" m={2}>
+            <Heading fontSize={["2xl", "3xl", "3xl"]} m={2}>
               {mode === formMode.ADD ? "Simple Mode" : "Edit Collection"}{" "}
               <Tooltip
-                label="Simple Mode is designed for non-tech people. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
+                bg="#333"
+                color="#fff"
                 fontSize="md"
+                label="Simple Mode is designed for non-tech people. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
               >
                 <QuestionIcon fontSize="md" />
               </Tooltip>
             </Heading>
           </ModalHeader>
 
-          <ModalBody
-            shadow="lg"
-            overflowY="auto"
-            sx={{
-              "&::-webkit-scrollbar": {
-                width: "4px",
-                height: "4px",
-                borderRadius: "0px",
-                backgroundColor: `transparent`,
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-thumb:hover": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: `transparent`,
-              },
-            }}
-          >
+          <ModalBody shadow="lg" overflowY="auto" sx={SCROLLBAR}>
             <SimpleModeForm
-              maxH="60rem"
-              onClose={onCloseSimpleMode}
-              mode={mode}
               id={id}
+              mode={mode}
+              maxH="60rem"
               nftContractAddress={nftContractAddress}
             />
           </ModalBody>

@@ -1,13 +1,13 @@
 import {
   Button,
   Heading,
-  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Tooltip,
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -16,8 +16,9 @@ import { useDispatch, useSelector } from "react-redux";
 import AddNewNFTForm from "../Form/AddNewNFT";
 import { onCloseButtonModal } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
-import { EditIcon } from "@chakra-ui/icons";
+import EditIcon from "@theme/assets/icon/Edit.js";
 import { formMode } from "@constants";
+import { SCROLLBAR } from "../../../../constants";
 
 const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -40,70 +41,61 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
           Add new NFT
         </Button>
       )}
+
       {mode === formMode.EDIT && (
         <>
-          <IconButton
-            isDisabled={isDisabled}
-            pos="absolute"
-            top={{
-              base: `10px`,
-              xl: `10px`,
-            }}
-            right={{
-              base: `60px`,
-              xl: `60px`,
-            }}
-            w={["20px", "20px", "40px"]}
-            h={["20px", "20px", "40px"]}
-            aria-label="edit"
-            icon={
-              <EditIcon color="currentColor" width="17px" height="17px" p="0" />
-            }
-            size="icon"
-            borderWidth="0px"
-            variant="iconSolid"
-            _hover={{
-              color: "#000",
-              bg: "#7ae7ff",
-              borderWidth: "2px",
-            }}
-            _disabled={{
-              bg: "transparent",
-            }}
-            bg="transparent"
-            color="#7ae7ff"
-            onClick={() => onOpen()}
-          />
+          <Tooltip
+            hasArrow
+            mx="8px"
+            bg="#333"
+            color="#fff"
+            borderRadius="0"
+            label="Edit NFT"
+          >
+            <span
+              onClick={() => onOpen()}
+              style={{
+                padding: "6px",
+                display: "flex",
+                cursor: "pointer",
+                alignItems: "center",
+                border: "2px solid #333333",
+              }}
+            >
+              <EditIcon width="14px" height="14px" color="currentColor" />
+            </span>
+          </Tooltip>
         </>
       )}
+
       <Modal
-        closeOnOverlayClick={false}
-        closeOnEsc={false}
-        scrollBehavior="inside"
         isCentered
         isOpen={isOpen}
-        onClose={onClose}
         size={modalSize}
+        onClose={onClose}
+        closeOnEsc={false}
+        scrollBehavior="inside"
+        closeOnOverlayClick={false}
       >
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
         />
         <ModalContent
-          position="relative"
-          bg="brand.grayDark"
-          px={6}
-          pb={8}
           borderRadius="0"
           textAlign="center"
           minH={{ xl: "md" }}
+          position="relative"
+          bg="brand.grayDark"
+          px={["4px", "24px", "24px"]}
+          pb={["4px", "32px", "32px"]}
         >
           <ModalCloseButton
-            position="absolute"
-            top="-8"
-            right="-8"
             borderWidth={2}
             borderRadius="0"
+            position="absolute"
+            top={["0", "-8", "-8"]}
+            right={["0", "-8", "-8"]}
             onClick={() =>
               onCloseButtonModal({
                 status: addNftTnxStatus?.status,
@@ -113,32 +105,12 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
             }
           />
           <ModalHeader>
-            <Heading size="h4" my={2}>
+            <Heading fontSize={["2xl", "3xl", "3xl"]} my={2}>
               {mode === formMode.ADD ? "Add new NFT" : "Edit NFT"}
             </Heading>
           </ModalHeader>
 
-          <ModalBody
-            shadow="lg"
-            overflowY="auto"
-            sx={{
-              "&::-webkit-scrollbar": {
-                width: "4px",
-                height: "4px",
-                borderRadius: "0px",
-                backgroundColor: `transparent`,
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-thumb:hover": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: `transparent`,
-              },
-            }}
-          >
+          <ModalBody shadow="lg" overflowY="auto" sx={SCROLLBAR}>
             <AddNewNFTForm mode={mode} {...rest} />
           </ModalBody>
         </ModalContent>

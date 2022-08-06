@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Box,
   Center,
@@ -35,6 +36,7 @@ import {
   fetchMyPMPPendingCount,
   fetchMyPMPStakedCount,
 } from "../../account/stakes";
+import { motion } from "framer-motion";
 
 const MAX_MINT_COUNT = 200;
 
@@ -130,30 +132,6 @@ function MintHeader({ loading }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const getBalance = async () => {
-        let unstakedCount = await artzero_nft_calls.balanceOf(
-          currentAccount,
-          currentAccount?.address
-        );
-        const stakedCount = await fetchMyPMPStakedCount(
-          currentAccount,
-          staking_calls
-        );
-        setBalanceStake(stakedCount);
-        const pendingCount = await fetchMyPMPPendingCount(
-          currentAccount,
-          staking_calls
-        );
-        setBalancePending(pendingCount);
-        const totalCount = stakedCount + pendingCount + unstakedCount;
-
-        if (totalCount) {
-          setBalance(totalCount);
-        } else {
-          setBalance(0);
-        }
-      };
-
       try {
         setIsLoadingMintData(true);
 
@@ -161,7 +139,6 @@ function MintHeader({ loading }) {
         setTotalMinted(totalMintedData);
 
         const whitelistData = await getWhiteList(currentAccount);
-        console.log("whitelistData", whitelistData);
 
         if (whitelistData) {
           setWhitelist((prev) => {
@@ -170,7 +147,29 @@ function MintHeader({ loading }) {
         } else {
           setWhitelist(null);
         }
+        const getBalance = async () => {
+          let unstakedCount = await artzero_nft_calls.balanceOf(
+            currentAccount,
+            currentAccount?.address
+          );
+          const stakedCount = await fetchMyPMPStakedCount(
+            currentAccount,
+            staking_calls
+          );
+          setBalanceStake(stakedCount);
+          const pendingCount = await fetchMyPMPPendingCount(
+            currentAccount,
+            staking_calls
+          );
+          setBalancePending(pendingCount);
+          const totalCount = stakedCount + pendingCount + unstakedCount;
 
+          if (totalCount) {
+            setBalance(totalCount);
+          } else {
+            setBalance(0);
+          }
+        };
         await getBalance(currentAccount);
 
         const mintModeData = await getMintMode(currentAccount);
@@ -452,7 +451,11 @@ function MintHeader({ loading }) {
 
                   <Text mt={3}>
                     Total own:{" "}
-                    <span style={{ color: "#fff" }}>{balance} NFTs</span>
+                    <span style={{ color: "#fff" }}>
+                      <Skeleton as="span" isLoaded={!isLoadingMintData}>
+                        {balance} NFTs
+                      </Skeleton>
+                    </span>
                   </Text>
                 </Stack>
 
@@ -465,13 +468,23 @@ function MintHeader({ loading }) {
                   <Text mt={2}>
                     Staked/pending:{" "}
                     <span style={{ color: "#fff" }}>
-                      {balanceStake + balancePending} NFTs
+                      <Skeleton as="span" isLoaded={!isLoadingMintData}>
+                        {balanceStake + balancePending} NFTs
+                      </Skeleton>
                     </span>
                   </Text>
                   <Text mt={2}>
                     Available:{" "}
                     <span style={{ color: "#fff" }}>
-                      {balance - balanceStake - balancePending} NFTs
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        <Skeleton as="span" isLoaded={!isLoadingMintData}>
+                          {balance - balanceStake - balancePending} NFTs
+                        </Skeleton>
+                      </motion.span>
                     </span>
                   </Text>
                 </Stack>
@@ -571,16 +584,22 @@ function MintHeader({ loading }) {
                 >
                   Enter amount to mint
                 </Text>
-                <Flex justify="space-between">
+                <Flex
+                  alignItems={"center"}
+                  justify="space-between"
+                  direction={["column", "row"]}
+                >
                   <NumberInput
-                    isDisabled={!whitelist}
                     bg="black"
-                    defaultValue={!whitelist ? "0" : "1"}
                     min={1}
-                    onChange={(valueString) => setWhitelistAmount(valueString)}
-                    value={whitelistAmount}
-                    mr={3}
+                    w="full"
+                    mr={[0, 3]}
                     h="3.125rem"
+                    mb={["10px", 0]}
+                    isDisabled={!whitelist}
+                    value={whitelistAmount}
+                    defaultValue={!whitelist ? "0" : "1"}
+                    onChange={(valueString) => setWhitelistAmount(valueString)}
                   >
                     <NumberInputField
                       h="3.125rem"
@@ -611,7 +630,7 @@ function MintHeader({ loading }) {
                     onClick={onWhiteListMint}
                     variant="outline"
                     maxW="full"
-                    minW={{ base: "195px", xl: "225px" }}
+                    // minW={{ base: "195px", xl: "225px" }}
                     height="50px"
                   />
                 </Flex>
@@ -725,7 +744,7 @@ const getWhiteList = async (currentAccount) => {
     currentAccount,
     currentAccount?.address
   );
-  console.log("getWhiteList res", res);
+
   return res;
 };
 

@@ -36,6 +36,7 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 import BN from "bn.js";
 import { motion, AnimatePresence } from "framer-motion";
 import { truncateStr } from "@utils";
+import CommonContainer from "../../components/Container/CommonContainer";
 
 function GeneralPage() {
   const history = useHistory();
@@ -48,6 +49,7 @@ function GeneralPage() {
   const [tradeFee, setTradeFee] = useState(null);
   //const [platformTotalStaked,setPlatformTotalStaked] = useState(3);
   const [estimatedEarning, setEstimatedEarning] = useState(0);
+
   useEffect(() => {
     const fetchAllNfts = async () => {
       const options = {
@@ -116,14 +118,18 @@ function GeneralPage() {
         currentAccount,
         currentAccount.address
       );
+
       let stakingDiscountCriteria =
         await marketplace_contract_calls.getStakingDiscountCriteria(
           currentAccount
         );
+
       let stakingDiscountRate =
         await marketplace_contract_calls.getStakingDiscountRate(currentAccount);
+
       let my_discount_rate =
         (await marketplace_contract_calls.getPlatformFee(currentAccount)) / 100;
+
       let length = stakingDiscountRate.length;
 
       for (var index = 0; index < length; index++) {
@@ -141,102 +147,101 @@ function GeneralPage() {
       setTradeFee(my_discount_rate);
     };
     getTradeFee();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAccount]);
 
   const [isLargerThan480] = useMediaQuery("(min-width: 480px)");
 
   return (
-    <Box as="section" maxW="container.3xl">
-      <Box
-        mx="auto"
-        maxW={{ base: "6xl", "2xl": "7xl" }}
-        px={{ base: "6", "2xl": "8" }}
-        py={["4", "12", "20"]}
-      >
-        <VStack as="section" w="full">
-          <Box w="full" textAlign="left" mb={6}>
-            <AnimatePresence>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>
-                  DASHBOARD
-                </Heading>
-
-                <Flex alignItems="center">
-                  <Button
-                    variant="outline"
-                    onClick={onCopy}
-                    borderWidth={1}
-                    borderColor="#7AE7FF"
-                    p={2}
-                    my={3}
-                    mr={3}
-                    h={9}
-                  >
-                    <Text fontFamily="Oswald">
-                      {isLargerThan480
-                        ? currentAccount?.address
-                        : truncateStr(currentAccount?.address, 16)}
-                    </Text>
-                    <Input
-                      display="none"
-                      defaultValue={currentAccount?.address}
-                      px={2}
-                      h={8}
-                      mx={0}
-                      minW={"sm"}
-                      readOnly={true}
-                      cursor="pointer"
-                      color="brand.blue"
-                      borderWidth={1}
-                      borderColor="brand.blue"
-                    />
-                  </Button>
-                  {hasCopied ? (
-                    <Tag variant="outline">
-                      <TagLabel>Copied</TagLabel>
-                    </Tag>
-                  ) : (
-                    ""
-                  )}
-                  <Spacer />
-                </Flex>
-              </motion.div>
-            </AnimatePresence>
-          </Box>
-
-          <Grid
-            w="full"
-            templateColumns="repeat(auto-fill, minmax(min(100%, 20rem), 1fr))"
-            gap={6}
-            minH={"7rem"}
+    <CommonContainer>
+      <VStack as="section" w="full">
+        <Box w="full" textAlign="left" mb={6}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            {dashboardInfo
-              ?.filter((item) => !Object.keys(item).includes("address"))
-              .map((item, idx) => {
-                return (
-                  <GridItem key={idx} w="100%" h="100%">
-                    <Box
-                      w="full"
-                      textAlign="left"
-                      bg="brand.grayDark"
-                      px={4}
-                      py={3}
-                      fontSize="lg"
-                    >
-                      <AnimatePresence>
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                        >
-                          <Flex w="full">
-                            <Box>
-                              <Text>{item.name}</Text>
-                              {/* <Flex alignItems="center">
+            <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>dashboard</Heading>
+
+            <Flex alignItems="center">
+              <Button
+                variant="outline"
+                onClick={onCopy}
+                borderWidth={1}
+                borderColor="#7AE7FF"
+                p={2}
+                my={3}
+                mr={3}
+                h={9}
+              >
+                <Text fontFamily="Oswald">
+                  {isLargerThan480
+                    ? currentAccount?.address
+                    : truncateStr(currentAccount?.address, 6)}
+                </Text>
+                <Input
+                  display="none"
+                  defaultValue={currentAccount?.address}
+                  px={2}
+                  h={8}
+                  mx={0}
+                  minW={"sm"}
+                  readOnly={true}
+                  cursor="pointer"
+                  color="brand.blue"
+                  borderWidth={1}
+                  borderColor="brand.blue"
+                />
+              </Button>
+              {hasCopied ? (
+                <Tag variant="outline">
+                  <TagLabel>Copied</TagLabel>
+                </Tag>
+              ) : (
+                ""
+              )}
+              <Spacer />
+            </Flex>
+          </motion.div>
+        </Box>
+
+        <Grid
+          w="full"
+          minH={"7rem"}
+          gap={{ base: "15px", md: "30px" }}
+          templateColumns={{
+            base: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))",
+            lg: "repeat(auto-fill, minmax(min(100%, 290px), 1fr))",
+            xl: "repeat(auto-fill, minmax(min(100%, 320px), 1fr))",
+          }}
+        >
+          {dashboardInfo
+            ?.filter((item) => !Object.keys(item).includes("address"))
+            .map((item, idx) => {
+              return (
+                <GridItem key={idx} w="100%" h="100%">
+                  <Box
+                    w="full"
+                    textAlign="left"
+                    bg="brand.grayDark"
+                    px={4}
+                    py={3}
+                  >
+                    <AnimatePresence>
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        <Flex w="full">
+                          <Box>
+                            <Text
+                              fontSize={{ base: "md", md: "lg" }}
+                              color="#888"
+                            >
+                              {item.name}
+                            </Text>
+                            {/* <Flex alignItems="center">
                                 <Tag bg="transparent" pl={0}>
                                   <TagLabel
                                     bg="transparent"
@@ -253,181 +258,178 @@ function GeneralPage() {
                                   )}
                                 </Tag>
                               </Flex> */}
-                            </Box>
-                            <Spacer />
+                          </Box>
+                          <Spacer />
+                        </Flex>
+                        <Flex w="full" textAlign="left">
+                          <Spacer />
+                          <Flex alignItems="center">
+                            <Tag bg="transparent" pl={0}>
+                              <TagLabel
+                                bg="transparent"
+                                fontSize={["4xl", "5xl", "5xl"]}
+                                fontFamily="DS-Digital"
+                              >
+                                {item.value}
+                              </TagLabel>
+                              {item.name === "Amount Trades" && (
+                                <TagRightIcon fontSize="2xl" as={AzeroIcon} />
+                              )}
+                            </Tag>
                           </Flex>
-                          <Flex w="full" textAlign="left">
-                            <Spacer />
-                            <Flex alignItems="center">
-                              <Tag bg="transparent" pl={0}>
-                                <TagLabel
-                                  bg="transparent"
-                                  fontSize="5xl"
-                                  fontFamily="DS-Digital"
-                                >
-                                  {item.value}
-                                </TagLabel>
-                                {item.name === "Amount Trades" && (
-                                  <TagRightIcon fontSize="2xl" as={AzeroIcon} />
-                                )}
-                              </Tag>
-                            </Flex>
-                            {/* <Text color="brand.blue"> $ {item.text1}</Text> */}
-                          </Flex>
-                        </motion.div>
-                      </AnimatePresence>
-                    </Box>
-                  </GridItem>
-                );
-              })}
-          </Grid>
-        </VStack>
+                        </Flex>
+                      </motion.div>
+                    </AnimatePresence>
+                  </Box>
+                </GridItem>
+              );
+            })}
+        </Grid>
+      </VStack>
 
-        <Stack
-          direction={{ base: "column", xl: "row" }}
-          h="full"
-          my={10}
-          p={{ base: "35px", "2xl": "7" }}
-          maxW="container.xl"
-          bg="black"
-          pos="relative"
+      <Stack
+        h="full"
+        my={10}
+        bg="black"
+        pos="relative"
+        maxW="container.xl"
+        p={{ base: "35px", "2xl": "7" }}
+        direction={{ base: "column", xl: "row" }}
+      >
+        <Square
+          mx="auto"
+          bg="#222"
+          size={{ base: "240px", xl: "18rem", "2xl": "20rem" }}
         >
-          <Square
-            size={{ base: "16rem", xl: "18rem", "2xl": "20rem" }}
-            bg="#222"
-          >
-            <Image
-              w="full"
-              h="full"
-              src="https://api.artzero.io/getImage?input=QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH&size=500&url=https://ipfs.infura.io/ipfs/QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH"
-            />
-          </Square>
-
-          <VStack
+          <Image
             w="full"
-            h={{ xl: "288px" }}
-            pr={2}
-            pl={{ base: "0", xl: "4", "2xl": "10" }}
-            textAlign="left"
-          >
-            <Flex w="full">
-              <Box
-                w="full"
-                fontFamily="Evogria Italic"
-                fontSize={{ base: "24px", xl: "3xl-mid" }}
-                color="#FFF"
-              >
-                <span>stake your </span>
-                <span style={{ color: "#7AE7FF" }}>
-                  praying mantis predators
-                </span>
-                <div />
-                <span>to reduce your </span>
-                <span style={{ color: "#7AE7FF" }}>fees</span>
-                <span> and earn </span>
-                <span style={{ color: "#7AE7FF" }}>AZERO</span>
-              </Box>
-              <Spacer />
-              <Box
-                display={{ base: "none", xl: "flex" }}
-                variant="outline"
-                h={32}
-                w={28}
-              >
-                <Tag variant="outline" h={6} w={"128px"} mt={3}>
-                  {
-                    <TagLabel fontSize="14px">
-                      Trade Fee: {tradeFee && `${tradeFee}%`}
-                    </TagLabel>
-                  }
-                </Tag>
-              </Box>
-            </Flex>
+            h="full"
+            src="https://api.artzero.io/getImage?input=QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH&size=500&url=https://ipfs.infura.io/ipfs/QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH"
+          />
+        </Square>
 
-            <Flex w="full">
-              <Text
-                mt={0}
-                mb={1}
-                fontSize={{ base: "16px", xl: "lg" }}
-                color="#fff"
-              >
-                Your Total Stake:{" "}
-                <span style={{ color: "#7AE7FF" }}>
-                  {totalStaked || 0} NFT{totalStaked > 1 ? "s" : ""}
-                </span>
-              </Text>
-            </Flex>
-            <Stack
-              direction={{ base: "column", xl: "row" }}
+        <VStack
+          pr={2}
+          w="full"
+          textAlign="left"
+          h={{ xl: "288px" }}
+          pl={{ base: "0", xl: "40px" }}
+        >
+          <Flex w="full">
+            <Box
               w="full"
-              align="flex-start"
+              fontFamily="Evogria Italic"
+              fontSize={{ base: "24px", xl: "3xl-mid" }}
+              color="#FFF"
             >
-              <Text
-                mt={0}
-                mb={1}
-                fontSize={{ base: "16px", xl: "lg" }}
-                color="#fff"
-              >
-                Your Estimated Earning:{" "}
-                <Text as="span" color="#7AE7FF" mr="30px">
-                  {parseFloat(estimatedEarning).toFixed(3) || 0}{" "}
-                  <AzeroIcon
-                    mb="2px"
-                    w={["14px", "16px", "16px"]}
-                    h={["14px", "16px", "16px"]}
-                  />
-                </Text>
-              </Text>
-              <Text fontSize={{ base: "16px", xl: "lg" }}>
-                Next Payout:{" "}
-                <Text as="span" color="#7AE7FF" mr="30px">
-                  Aug 01, 2022
-                </Text>
-              </Text>
-            </Stack>
-
-            <Stack
-              pt="20px"
-              // align="center"
-              w="full"
-              align="center"
-              justify="flex-start"
-              direction={{ base: "column", xl: "row" }}
+              <span>stake your </span>
+              <span style={{ color: "#7AE7FF" }}>praying mantis predators</span>
+              <div />
+              <span>to reduce your </span>
+              <span style={{ color: "#7AE7FF" }}>fees</span>
+              <span> and earn </span>
+              <span style={{ color: "#7AE7FF" }}>AZERO</span>
+            </Box>
+            <Spacer />
+            <Box
+              h={32}
+              w={28}
+              variant="outline"
+              display={{ base: "none", xl: "flex" }}
             >
-              <Box
-                pb="20px"
-                w={"full"}
-                variant="outline"
-                display={{ base: "flex", xl: "none" }}
-              >
-                <Tag
-                  h={6}
-                  // w={"full"}
-                  mt={3}
-                  mx="auto"
-                  textAlign="center"
-                  variant="outline"
-                >
-                  <TagLabel textAlign="center">
-                    Your Current Trade Fee: {tradeFee && `${tradeFee}%`}
+              <Tag variant="outline" h={6} w={"128px"} mt={3}>
+                {
+                  <TagLabel fontSize="14px">
+                    Trade Fee: {tradeFee && `${tradeFee}%`}
                   </TagLabel>
-                </Tag>
-              </Box>
+                }
+              </Tag>
+            </Box>
+          </Flex>
 
-              <Button
-                w={{ base: "full", xl: "auto" }}
-                variant="solid"
-                onClick={() => history.push(ROUTES.ACCOUNT_MY_STAKES)}
+          <Flex w="full">
+            <Text
+              mt={0}
+              mb={1}
+              color="#fff"
+              fontSize={{ base: "16px", xl: "lg" }}
+            >
+              Your Total Stake:{" "}
+              <span style={{ color: "#7AE7FF" }}>
+                {totalStaked || 0} NFT{totalStaked > 1 ? "s" : ""}
+              </span>
+            </Text>
+          </Flex>
+          <Stack
+            direction={{ base: "column", xl: "row" }}
+            w="full"
+            align="flex-start"
+          >
+            <Text
+              mt={0}
+              mb={1}
+              color="#fff"
+              fontSize={{ base: "16px", xl: "lg" }}
+            >
+              Your Estimated Earning:{" "}
+              <Text as="span" color="#7AE7FF" mr="30px">
+                {parseFloat(estimatedEarning).toFixed(3) || 0}{" "}
+                <AzeroIcon
+                  mb="2px"
+                  w={["14px", "16px", "16px"]}
+                  h={["14px", "16px", "16px"]}
+                />
+              </Text>
+            </Text>
+            <Text fontSize={{ base: "16px", xl: "lg" }}>
+              Next Payout:{" "}
+              <Text as="span" color="#7AE7FF" mr="30px">
+                Aug 01, 2022
+              </Text>
+            </Text>
+          </Stack>
+
+          <Stack
+            // align="center"
+            pt="20px"
+            w="full"
+            align="center"
+            justify="flex-start"
+            direction={{ base: "column", xl: "row" }}
+          >
+            <Box
+              pb="20px"
+              w={"full"}
+              variant="outline"
+              display={{ base: "flex", xl: "none" }}
+            >
+              <Tag
+                h={6}
+                // w={"full"}
+                mt={3}
+                mx="auto"
+                textAlign="center"
+                variant="outline"
               >
-                Stake now
-              </Button>
+                <TagLabel textAlign="center">
+                  Your Current Trade Fee: {tradeFee && `${tradeFee}%`}
+                </TagLabel>
+              </Tag>
+            </Box>
 
-              <FeeInfoModal />
-            </Stack>
-          </VStack>
-        </Stack>
-      </Box>
-    </Box>
+            <Button
+              w={{ base: "full", xl: "auto" }}
+              variant="solid"
+              onClick={() => history.push(ROUTES.ACCOUNT_MY_STAKES)}
+            >
+              stake now
+            </Button>
+
+            <FeeInfoModal />
+          </Stack>
+        </VStack>
+      </Stack>
+    </CommonContainer>
   );
 }
 

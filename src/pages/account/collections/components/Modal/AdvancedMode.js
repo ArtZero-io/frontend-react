@@ -1,4 +1,3 @@
-import { QuestionIcon } from "@chakra-ui/icons";
 import {
   Button,
   Heading,
@@ -10,27 +9,33 @@ import {
   ModalHeader,
   ModalOverlay,
   Tooltip,
+  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import React from "react";
-import AdvancedModeForm from "../Form/AdvancedMode";
-import { useDispatch, useSelector } from "react-redux";
-import { onCloseButtonModal } from "@utils";
-import { AccountActionTypes } from "@store/types/account.types";
+import { QuestionIcon } from "@chakra-ui/icons";
 import EditIcon from "@theme/assets/icon/Edit.js";
-import { formMode } from "@constants";
+
+import { useEffect } from "react";
+import useTxStatus from "@hooks/useTxStatus";
+import AdvancedModeForm from "../Form/AdvancedMode";
+import { formMode, SCROLLBAR, END } from "@constants";
 
 function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const dispatch = useDispatch();
-  const { addCollectionTnxStatus } = useSelector(
-    (s) => s.account.accountLoaders
-  );
+  const { step, onEndClick } = useTxStatus();
+  const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
+
+  useEffect(() => {
+    step === END && onClose();
+  }, [step, onClose]);
+
   return (
     <>
       {mode === formMode.ADD && (
         <Tooltip
           hasArrow
+          bg="#333"
+          color="#fff"
           label="Advanced mode is designed for those who wants to use customized NFT smart contract for example dedicated 5k or 10k collections with whitelisted options."
         >
           <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
@@ -38,110 +43,82 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
           </Button>
         </Tooltip>
       )}
+
       {mode === formMode.EDIT && (
         <>
           <IconButton
-            zIndex={"1"}
-            pos="absolute"
-            top="2px"
-            right="2px"
             h="40px"
-            minW="40px"
-            aria-label="edit"
-            icon={
-              <EditIcon
-                id="abc1"
-                color="currentColor"
-                width="17px"
-                height="17px"
-                p="0"
-              />
-            }
+            top="2px"
+            bg="black"
             size="icon"
+            right="2px"
+            minW="40px"
+            zIndex={"1"}
             borderWidth={0}
+            pos="absolute"
+            aria-label="edit"
             variant="iconSolid"
+            color="#7ae7ff"
+            onClick={() => onOpen()}
             _hover={{
               color: "#000",
               bg: "#7ae7ff",
             }}
-            bg="black"
-            color="#7ae7ff"
-            onClick={() => onOpen()}
+            icon={
+              <EditIcon p="0" width="17px" height="17px" color="currentColor" />
+            }
           />
         </>
       )}
 
       <Modal
-        scrollBehavior={"inside"}
-        closeOnOverlayClick={false}
-        closeOnEsc={false}
         isCentered
         isOpen={isOpen}
+        size={modalSize}
         onClose={onClose}
-        size="4xl"
+        closeOnEsc={false}
+        scrollBehavior={"inside"}
+        closeOnOverlayClick={false}
       >
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
         />
         <ModalContent
+          borderRadius="0"
           position="relative"
           bg="brand.grayDark"
-          px={6}
-          pb={8}
-          borderRadius="0"
           textAlign="center"
+          px={["4px", "24px", "24px"]}
+          pb={["4px", "32px", "32px"]}
         >
           <ModalCloseButton
-            position="absolute"
-            top="-8"
-            right="-8"
             borderWidth={2}
             borderRadius="0"
-            onClick={() => {
-              onCloseButtonModal({
-                status: addCollectionTnxStatus?.status,
-                dispatch,
-                type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-              });
-            }}
+            position="absolute"
+            top={["0", "-8", "-8"]}
+            right={["0", "-8", "-8"]}
+            onClick={() => onEndClick()}
           />
           <ModalHeader>
-            <Heading size="h4" m={2}>
+            <Heading fontSize={["2xl", "3xl", "3xl"]} m={2}>
               {mode === formMode.ADD ? "Advanced Mode" : "Edit Collection"}{" "}
               <Tooltip
-                label="Advanced mode is designed for those who wants to use customized NFT smart contract for example dedicated 5k or 10k collections with whitelisted options."
+                bg="#333"
+                color="#fff"
                 fontSize="md"
+                label="Advanced mode is designed for those who wants to use customized NFT smart contract for example dedicated 5k or 10k collections with whitelisted options."
               >
                 <QuestionIcon fontSize="md" />
               </Tooltip>
             </Heading>
           </ModalHeader>
-          <ModalBody
-            shadow="lg"
-            overflowY="auto"
-            sx={{
-              "&::-webkit-scrollbar": {
-                width: "4px",
-                height: "4px",
-                borderRadius: "0px",
-                backgroundColor: `transparent`,
-              },
-              "&::-webkit-scrollbar-thumb": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-thumb:hover": {
-                backgroundColor: `#7ae7ff`,
-              },
-              "&::-webkit-scrollbar-track": {
-                backgroundColor: `transparent`,
-              },
-            }}
-          >
+
+          <ModalBody shadow="lg" overflowY="auto" sx={SCROLLBAR}>
             <AdvancedModeForm
-              onClose={onClose}
-              mode={mode}
               id={id}
+              mode={mode}
+              onClose={onClose}
               nftContractAddress={nftContractAddress}
             />
           </ModalBody>

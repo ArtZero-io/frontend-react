@@ -1,5 +1,5 @@
-import { Box, Flex, HStack, Spacer, Stack, Text } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
+import { Box, Flex, Spacer, Stack, Text } from "@chakra-ui/react";
+import { useDispatch } from "react-redux";
 import React, { useState, useEffect, useRef } from "react";
 import { Formik, Form } from "formik";
 import toast from "react-hot-toast";
@@ -16,9 +16,15 @@ import collection_manager_calls from "@utils/blockchain/collection-manager-calls
 import AddCollectionNumberInput from "@components/Input/NumberInput";
 import { clientAPI } from "@api/client";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
-import { AccountActionTypes } from "@store/types/account.types";
-import StatusButton from "@components/Button/StatusButton";
-import { formMode } from "@constants";
+import {
+  formMode,
+  CREATE_COLLECTION,
+  EDIT_COLLECTION,
+  START,
+} from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
+import CommonButton from "@components/Button/CommonButton";
+import { setTxStatus } from "@store/actions/txStatus";
 
 const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -31,18 +37,18 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
 
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
-  const { addCollectionTnxStatus } = useSelector(
-    (s) => s.account.accountLoaders
-  );
 
   const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
   const currentHeaderIPFSUrl = useRef(headerIPFSUrl);
   const currentHeaderSquareIPFSUrl = useRef(headerSquareIPFSUrl);
 
+  // eslint-disable-next-line no-unused-vars
   const noImagesChange =
     currentAvatarIPFSUrl.current === avatarIPFSUrl &&
     currentHeaderIPFSUrl.current === headerIPFSUrl &&
     currentHeaderSquareIPFSUrl.current === headerSquareIPFSUrl;
+
+  const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
     const fetchFee = async () => {
@@ -140,40 +146,39 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
   return (
     <>
       {initialValues && (
-        <>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={Yup.object().shape({
-              isEditMode: Yup.boolean(),
+        <Formik
+          initialValues={initialValues}
+          validationSchema={Yup.object().shape({
+            isEditMode: Yup.boolean(),
 
-              collectionName: Yup.string()
-                .trim()
-                .min(3, "Must be longer than 3 characters")
-                .max(30, "Must be less than 30 characters")
-                .required("Required"),
-              collectionDescription: Yup.string()
-                .trim()
-                .min(3, "Must be longer than 3 characters")
-                .max(150, "Must be less than 150 characters")
-                .required("Required"),
-              collectRoyalFee: Yup.boolean(),
-              website: Yup.string()
-                .trim()
-                .url("URL must start with http:// or https://")
-                .max(50, "Must be less than 50 characters"),
-              twitter: Yup.string()
-                .trim()
-                .url("URL must start with http:// or https://")
-                .matches(/\btwitter.com\b/, "URL must be twitter.com")
-                .max(50, "Must be less than 50 characters"),
-              discord: Yup.string()
-                .trim()
-                .url("URL must start with http:// or https://")
-                .matches(
-                  /\bdiscord.(com|gg)\b/,
-                  "URL must be discord.com or discord.gg"
-                )
-                .max(50, "Must be less than 50 characters"),
+            collectionName: Yup.string()
+              .trim()
+              .min(3, "Must be longer than 3 characters")
+              .max(30, "Must be at most 30 characters")
+              .required("This field is required"),
+            collectionDescription: Yup.string()
+              .trim()
+              .min(3, "Must be longer than 3 characters")
+              .max(150, "Must be at most 150 characters")
+              .required("This field is required"),
+            collectRoyalFee: Yup.boolean(),
+            website: Yup.string()
+              .trim()
+              .url("URL must start with http:// or https://")
+              .max(50, "Must be at most 50 characters"),
+            twitter: Yup.string()
+              .trim()
+              .url("URL must start with http:// or https://")
+              .matches(/\btwitter.com\b/, "URL must be twitter.com")
+              .max(50, "Must be at most 50 characters"),
+            discord: Yup.string()
+              .trim()
+              .url("URL must start with http:// or https://")
+              .matches(
+                /\bdiscord.(com|gg)\b/,
+                "URL must be discord.com or discord.gg"
+              )
+              .max(50, "Must be at most 50 characters"),
 
               nftName: Yup.string()
                 .trim()
@@ -181,8 +186,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   is: false,
                   then: Yup.string()
                     .min(3, "Must be longer than 3 characters")
-                    .max(25, "Must be less than 25 characters")
-                    .required("Required"),
+                    .max(25, "Must be at most 25 characters")
+                    .required("This field is required"),
                 }),
               nftSymbol: Yup.string()
                 .trim()
@@ -190,8 +195,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   is: false,
                   then: Yup.string()
                     .min(3, "Must be longer than 3 characters")
-                    .max(8, "Must be less than 8 characters")
-                    .required("Required"),
+                    .max(8, "Must be at most 8 characters")
+                    .required("This field is required"),
                 }),
               agreeTosCheckbox: Yup.boolean().when("isEditMode", {
                 is: false,
@@ -208,266 +213,270 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 return toast.error("Upload avatar or header too");
               }
 
-              // if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
-              values.avatarIPFSUrl = avatarIPFSUrl;
-              values.headerIPFSUrl = headerIPFSUrl;
-              values.headerSquareIPFSUrl = headerSquareIPFSUrl;
+            // if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
+            values.avatarIPFSUrl = avatarIPFSUrl;
+            values.headerIPFSUrl = headerIPFSUrl;
+            values.headerSquareIPFSUrl = headerSquareIPFSUrl;
 
-              if (!checkCurrentBalance) {
-                return toast.error(`Your balance not enough`);
-              } else {
-                const data = {
-                  nftName: values.nftName,
-                  nftSymbol: values.nftSymbol,
+            if (!checkCurrentBalance) {
+              return toast.error(`Your balance not enough`);
+            } else {
+              const data = {
+                nftName: values.nftName,
+                nftSymbol: values.nftSymbol,
 
-                  attributes: [
-                    "name",
-                    "description",
-                    "avatar_image",
-                    "header_image",
-                    "header_square_image",
-                    "website",
-                    "twitter",
-                    "discord",
-                  ],
+                attributes: [
+                  "name",
+                  "description",
+                  "avatar_image",
+                  "header_image",
+                  "header_square_image",
+                  "website",
+                  "twitter",
+                  "discord",
+                ],
 
-                  attributeVals: [
-                    values.collectionName.trim(),
-                    values.collectionDescription.trim(),
-                    values.avatarIPFSUrl,
-                    values.headerIPFSUrl,
-                    values.headerSquareIPFSUrl,
-                    values.website,
-                    values.twitter,
-                    values.discord,
-                  ],
+                attributeVals: [
+                  values.collectionName.trim(),
+                  values.collectionDescription.trim(),
+                  values.avatarIPFSUrl,
+                  values.headerIPFSUrl,
+                  values.headerSquareIPFSUrl,
+                  values.website,
+                  values.twitter,
+                  values.discord,
+                ],
 
-                  collectionAllowRoyalFee: values.collectRoyalFee,
-                  collectionRoyalFeeData: values.collectRoyalFee
-                    ? Math.round(values.royalFee * 100)
-                    : 0,
-                };
+                collectionAllowRoyalFee: values.collectRoyalFee,
+                collectionRoyalFeeData: values.collectRoyalFee
+                  ? Math.round(values.royalFee * 100)
+                  : 0,
+              };
 
-                dispatch({
-                  type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-                  payload: {
-                    status: "Start",
-                  },
-                });
+              if (mode === formMode.ADD) {
+                dispatch(setTxStatus({ type: CREATE_COLLECTION, step: START }));
 
-                if (mode === formMode.ADD) {
-                  await collection_manager_calls.autoNewCollection(
-                    currentAccount,
-                    data,
-                    dispatch,
-                    api
-                  );
-                }
-
-                if (mode === formMode.EDIT) {
-                  await collection_manager_calls.setMultipleAttributes(
-                    currentAccount,
-                    nftContractAddress,
-                    data.attributes,
-                    data.attributeVals,
-                    dispatch,
-                    api
-                  );
-                }
+                await collection_manager_calls.autoNewCollection(
+                  currentAccount,
+                  data,
+                  dispatch,
+                  CREATE_COLLECTION,
+                  api
+                );
               }
-            }}
-          >
-            {({ values, dirty, isValid }) => (
-              <Form>
-                <HStack>
-                  {mode === formMode.ADD && (
-                    <>
-                      <SimpleModeInput
-                        isDisabled={addCollectionTnxStatus}
-                        isRequired={true}
-                        label="NFT Name"
-                        name="nftName"
-                        type="text"
-                        placeholder="NFT Name"
-                      />
-                      <SimpleModeInput
-                        isDisabled={addCollectionTnxStatus}
-                        isRequired={true}
-                        label="NFT Symbol"
-                        name="nftSymbol"
-                        type="text"
-                        placeholder="NFT Symbol"
-                      />
-                    </>
-                  )}
-                  <SimpleModeInput
-                    isDisabled={addCollectionTnxStatus}
-                    isRequired={true}
-                    label="Collection Name"
-                    name="collectionName"
-                    type="text"
-                    placeholder="Collection Name"
-                  />
-                </HStack>
 
-                <HStack>
-                  <SimpleModeInput
-                    isDisabled={addCollectionTnxStatus}
-                    label="Website URL"
-                    name="website"
-                    type="text"
-                    placeholder={"Website URL"}
-                  />
-                  <SimpleModeInput
-                    isDisabled={addCollectionTnxStatus}
-                    label="Twitter URL"
-                    name="twitter"
-                    type="text"
-                    placeholder={"Twitter URL"}
-                  />
-                  <SimpleModeInput
-                    isDisabled={addCollectionTnxStatus}
-                    label="Discord URL"
-                    name="discord"
-                    type="text"
-                    placeholder={"Discord URL"}
-                  />
-                </HStack>
+              if (mode === formMode.EDIT) {
+                dispatch(setTxStatus({ type: EDIT_COLLECTION, step: START }));
 
-                <SimpleModeTextArea
-                  isDisabled={addCollectionTnxStatus}
-                  isRequired={true}
-                  label="Collection Description"
-                  name="collectionDescription"
+                await collection_manager_calls.setMultipleAttributes(
+                  currentAccount,
+                  nftContractAddress,
+                  data.attributes,
+                  data.attributeVals,
+                  dispatch,
+                  EDIT_COLLECTION,
+                  api
+                );
+              }
+            }
+          }}
+        >
+          {({ values, dirty, isValid, submitForm, handleSubmitForm }) => (
+            <Form>
+              <Stack direction={{ base: "column", md: "row" }}>
+                {mode === formMode.ADD && (
+                  <>
+                    <SimpleModeInput
+                      type="text"
+                      name="nftName"
+                      label="NFT Name"
+                      isRequired={true}
+                      isDisabled={actionType}
+                      placeholder="NFT Name"
+                    />
+                    <SimpleModeInput
+                      type="text"
+                      name="nftSymbol"
+                      isRequired={true}
+                      label="NFT Symbol"
+                      isDisabled={actionType}
+                      placeholder="NFT Symbol"
+                    />
+                  </>
+                )}
+                <SimpleModeInput
                   type="text"
-                  placeholder="Collection Description"
+                  isRequired={true}
+                  name="collectionName"
+                  label="Collection Name"
+                  isDisabled={actionType}
+                  placeholder="Collection Name"
                 />
+              </Stack>
 
+              <Stack direction={{ base: "column", md: "row" }}>
+                <SimpleModeInput
+                  type="text"
+                  name="website"
+                  label="Website URL"
+                  isDisabled={actionType}
+                  placeholder={"Website URL"}
+                />
+                <SimpleModeInput
+                  type="text"
+                  name="twitter"
+                  label="Twitter URL"
+                  isDisabled={actionType}
+                  placeholder={"Twitter URL"}
+                />
+                <SimpleModeInput
+                  type="text"
+                  name="discord"
+                  label="Discord URL"
+                  isDisabled={actionType}
+                  placeholder={"Discord URL"}
+                />
+              </Stack>
+
+              <SimpleModeTextArea
+                type="text"
+                isRequired={true}
+                isDisabled={actionType}
+                name="collectionDescription"
+                label="Collection Description"
+                placeholder="Collection Description"
+              />
+
+              <Stack
+                alignItems="start"
+                justifyContent="space-between"
+                direction={{ base: "column", md: "row" }}
+              >
                 <Stack
-                  direction="row"
+                  w="50%"
+                  direction="column"
                   alignItems="start"
-                  justifyContent="space-between"
+                  justifyContent="end"
                 >
-                  <Stack
-                    w="50%"
-                    direction="column"
-                    alignItems="start"
-                    justifyContent="end"
-                  >
-                    <CollectionImageUpload
-                      isDisabled={addCollectionTnxStatus}
-                      id="avatar"
-                      mode={mode}
-                      isBanner={false}
-                      imageIPFSUrl={avatarIPFSUrl}
-                      setImageIPFSUrl={setAvatarIPFSUrl}
-                      title="Collection Avatar Image"
-                      limitedSize={{ width: "100", height: "100" }}
-                    />
+                  <CollectionImageUpload
+                    id="avatar"
+                    mode={mode}
+                    isBanner={false}
+                    isDisabled={actionType}
+                    imageIPFSUrl={avatarIPFSUrl}
+                    title="Collection Avatar Image"
+                    setImageIPFSUrl={setAvatarIPFSUrl}
+                    limitedSize={{ width: "100", height: "100" }}
+                  />
 
-                    <CollectionImageUpload
-                      isDisabled={addCollectionTnxStatus}
-                      id="header"
-                      mode={mode}
-                      isBanner={true}
-                      imageIPFSUrl={headerIPFSUrl}
-                      setImageIPFSUrl={setHeaderIPFSUrl}
-                      title="Collection Main Header"
-                      limitedSize={{ width: "1920", height: "600" }}
-                    />
-                  </Stack>
-
-                  <Stack
-                    w="50%"
-                    direction="column"
-                    alignItems="start"
-                    justifyContent="end"
-                  >
-                    <CollectionImageUpload
-                      isDisabled={addCollectionTnxStatus}
-                      id="header_square"
-                      mode={mode}
-                      isBanner={false}
-                      imageIPFSUrl={headerSquareIPFSUrl}
-                      setImageIPFSUrl={setHeaderSquareIPFSUrl}
-                      title="Collection Square Header"
-                      limitedSize={{ width: "500", height: "500" }}
-                    />
-
-                    {mode === formMode.EDIT && (
-                      <Box my="30px" py="30px">
-                        <Box
-                          textTransform="capitalize"
-                          px="3px"
-                          borderWidth="1px"
-                          borderColor="#7ae7ff"
-                        >
-                          {initialValues.royalFee}% Royalty
-                        </Box>
-                      </Box>
-                    )}
-                  </Stack>
+                  <CollectionImageUpload
+                    id="header"
+                    mode={mode}
+                    isBanner={true}
+                    isDisabled={actionType}
+                    imageIPFSUrl={headerIPFSUrl}
+                    title="Collection Main Header"
+                    setImageIPFSUrl={setHeaderIPFSUrl}
+                    limitedSize={{ width: "1920", height: "600" }}
+                  />
                 </Stack>
 
-                {mode === formMode.ADD && (
-                  <Flex alignItems="center" minH={20} mt={5}>
-                    <Box w="12rem">
-                      <SimpleModeSwitch
-                        isDisabled={addCollectionTnxStatus}
-                        onChange={() => {
-                          values.collectRoyalFee = !values.collectRoyalFee;
-                          setIsSetRoyal(!isSetRoyal);
-                        }}
-                        label="Collect Royal Fee"
-                        name="collectRoyalFee"
-                      />
+                <Stack
+                  w="50%"
+                  direction="column"
+                  alignItems="start"
+                  justifyContent="end"
+                >
+                  <CollectionImageUpload
+                    mode={mode}
+                    isBanner={false}
+                    id="header_square"
+                    isDisabled={actionType}
+                    title="Collection Square Header"
+                    imageIPFSUrl={headerSquareIPFSUrl}
+                    setImageIPFSUrl={setHeaderSquareIPFSUrl}
+                    limitedSize={{ width: "500", height: "500" }}
+                  />
+
+                  {mode === formMode.EDIT && (
+                    <Box my="30px" py="30px">
+                      <Box
+                        px="3px"
+                        borderWidth="1px"
+                        borderColor="#7ae7ff"
+                        textTransform="capitalize"
+                      >
+                        {initialValues.royalFee}% Royalty
+                      </Box>
                     </Box>
-                    <AddCollectionNumberInput
-                      isDisabled={!isSetRoyal || addCollectionTnxStatus}
-                      isDisplay={isSetRoyal}
-                      max={maxRoyalFeeRate}
-                      label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
-                      name="royalFee"
-                      type="number"
-                      placeholder="Royal Fee"
-                      inputWidth={"8rem"}
+                  )}
+                </Stack>
+              </Stack>
+
+              {mode === formMode.ADD && (
+                <Stack
+                  mt={5}
+                  minH={20}
+                  direction={{ base: "column", md: "row" }}
+                  alignItems={{ base: "start", md: "center" }}
+                >
+                  <Box w="12rem">
+                    <SimpleModeSwitch
+                      name="collectRoyalFee"
+                      isDisabled={actionType}
+                      label="Collect Royal Fee"
+                      onChange={() => {
+                        values.collectRoyalFee = !values.collectRoyalFee;
+                        setIsSetRoyal(!isSetRoyal);
+                      }}
                     />
+                  </Box>
 
-                    <Spacer />
+                  <AddCollectionNumberInput
+                    type="number"
+                    name="royalFee"
+                    inputWidth={"8rem"}
+                    isDisplay={isSetRoyal}
+                    max={maxRoyalFeeRate}
+                    placeholder="Royal Fee"
+                    isDisabled={!isSetRoyal || actionType}
+                    label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
+                  />
 
-                    <Flex
-                      direction="column"
-                      justifyContent="flex-start"
-                      alignItems="flex-start"
-                      textAlign="left"
-                    >
-                      <Text color="#fff">
-                        Create new collection you will pay
-                        <strong> {addingFee} $AZERO </strong> in fee to
-                        ArtZero.io
-                      </Text>
+                  <Spacer />
 
-                      <CommonCheckbox
-                        isDisabled={addCollectionTnxStatus}
-                        name="agreeTosCheckbox"
-                        content="I agree to ArtZero's Terms of Service"
-                      />
-                    </Flex>
+                  <Flex
+                    textAlign="left"
+                    direction="column"
+                    alignItems="flex-start"
+                    justifyContent="flex-start"
+                  >
+                    <Text color="#fff" fontSize={["md", "lg", "lg"]}>
+                      Create new collection you will pay
+                      <strong> {addingFee} $AZERO </strong> in fee to ArtZero.io
+                    </Text>
+
+                    <CommonCheckbox
+                      isDisabled={actionType}
+                      name="agreeTosCheckbox"
+                      content="I agree to ArtZero's Terms of Service"
+                    />
                   </Flex>
-                )}
-
-                <StatusButton
-                  type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
-                  text="collection"
-                  disabled={!(dirty && isValid) && noImagesChange}
-                  isLoading={addCollectionTnxStatus}
-                  loadingText={`${addCollectionTnxStatus?.status}`}
-                  mode={mode}
-                />
-              </Form>
-            )}
-          </Formik>
-        </>
+                </Stack>
+              )}
+              <CommonButton
+                w="full"
+                my="24px"
+                {...rest}
+                type="submit"
+                text={`${
+                  mode === formMode.ADD ? "create" : "update"
+                } collection`}
+                isDisabled={!(dirty && isValid) && noImagesChange}
+              />
+            </Form>
+          )}
+        </Formik>
       )}
     </>
   );

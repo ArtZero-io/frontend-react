@@ -1,8 +1,7 @@
 import {
   Button,
-  Flex,
   Heading,
-  IconButton,
+  // IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -10,95 +9,76 @@ import {
   ModalHeader,
   ModalOverlay,
   Spacer,
+  Stack,
+  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import AdvancedMode from "./AdvancedMode";
 import SimpleMode from "./SimpleMode";
 
 import AddCollectionIcon from "@theme/assets/icon/AddCollection";
-import { useSelector } from "react-redux";
 import { useEffect } from "react";
-import { EditIcon } from "@chakra-ui/icons";
-import { formMode } from "@constants";
+// import { EditIcon } from "@chakra-ui/icons";
+import { formMode, END } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
 
 function AddNewCollection({ mode = formMode.ADD, id }) {
-  const {
-    isOpen: isOpenAddNew,
-    onOpen: onOpenAddNew,
-    onClose: onCloseAddNew,
-  } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { addCollectionTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
-  );
+  const { step } = useTxStatus();
 
   useEffect(() => {
-    addCollectionTnxStatus?.status === "End" && onCloseAddNew();
-  }, [onCloseAddNew, addCollectionTnxStatus?.status]);
+    step === END && onClose();
+  }, [step, onClose]);
+
+  const modalSize = useBreakpointValue({ base: "xs", md: "xl" });
 
   return (
     <>
       {mode === formMode.ADD && (
-        <Button
-          variant="outline"
-          color="brand.blue"
-          onClick={() => onOpenAddNew()}
-        >
-          Add Collection
+        <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
+          create Collection
         </Button>
       )}
-      {mode === formMode.EDIT && (
-        <IconButton
-          pos="absolute"
-          top="1.5rem"
-          right="1rem"
-          aria-label="edit"
-          icon={<EditIcon color="#7ae7ff" fontSize="24px" />}
-          size="icon"
-          borderWidth={0}
-          variant="iconOutline"
-          onClick={() => onOpenAddNew()}
-          h={0}
-          _hover={{
-            h: 0,
-          }}
-          _focus={{
-            h: 0,
-          }}
-        />
-      )}
-      <Modal isCentered isOpen={isOpenAddNew} onClose={onCloseAddNew} size="xl">
+
+      <Modal isCentered size={modalSize} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
         />
         <ModalContent
+          borderRadius="0"
           position="relative"
           bg="brand.grayDark"
-          py={10}
-          px={20}
-          borderRadius="0"
+          px={["4px", "24px", "24px"]}
+          py={["4px", "32px", "32px"]}
         >
           <ModalCloseButton
-            position="absolute"
-            top="-8"
-            right="-8"
             borderWidth={2}
             borderRadius="0"
+            position="absolute"
+            top={["0", "-8", "-8"]}
+            right={["0", "-8", "-8"]}
           />
           <ModalHeader textAlign="center">
-            <AddCollectionIcon />
-            <Heading size="h4" my={3}>
-              {mode === formMode.ADD ? "Add collection" : "Edit collection"}
+            <AddCollectionIcon
+              width={["36px", "48px"]}
+              height={["36px", "48px"]}
+            />
+
+            <Heading fontSize={["xl", "3xl", "3xl"]} my={3}>
+              create new collection
             </Heading>
           </ModalHeader>
 
           <ModalBody>
-            <Flex>
+            <Stack w="75%" mx="auto" direction={{ base: "column", md: "row" }}>
               <SimpleMode mode={mode} id={id} />
+
               <Spacer />
+
               <AdvancedMode mode={mode} id={id} />
-            </Flex>
+            </Stack>
           </ModalBody>
         </ModalContent>
       </Modal>

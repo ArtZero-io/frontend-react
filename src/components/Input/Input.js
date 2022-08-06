@@ -6,25 +6,33 @@ export default function SimpleModeInput({
   label,
   height,
   width,
+  mx = "4px",
   isRequired = false,
   ...props
 }) {
   const [field, meta] = useField(props);
   return (
     <FormControl
-      isRequired={isRequired}
-      mx={1}
-      fontSize="lg"
+      mx={[0, 1]}
       color="#fff"
       h={height || 28}
       w={width || "full"}
+      isRequired={isRequired}
+      fontSize={["md", "lg", "lg"]}
     >
       {label && (
-        <FormLabel fontSize="lg" ml={1} htmlFor={props.id || props.name}>
+        <FormLabel
+          ml={1}
+          fontSize={["md", "lg", "lg"]}
+          htmlFor={props.id || props.name}
+        >
           {label}
         </FormLabel>
       )}
       <Field
+        _placeholder={{
+          fontSize: "md",
+        }}
         ml={0}
         pl={2}
         as={Input}

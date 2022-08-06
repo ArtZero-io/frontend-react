@@ -9,11 +9,16 @@
     "isexternal",
     "Menlo",
     "monospace",
+    "nostyle",
     "restangles",
     "tsparticles",
     "tzero",
     "unlist",
     "unstaked",
-    "Unstaking"
-  ]
+    "Unstaking",
+    "wojtekmaj"
+  ],
+  "editor.fontFamily": "'Courier Prime', 'Haskplex Nerd' , Monaco, Consolas, 'Courier New', monospace",
+  "files.autoSave": "afterDelay",
+  "editor.fontSize": 14
 }

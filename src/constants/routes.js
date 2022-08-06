@@ -8,13 +8,19 @@ export const ACCOUNT_MY_COLLECTIONS = "/account/collections";
 export const ACCOUNT_MY_NFTS = "/account/nfts";
 export const ACCOUNT_MY_STAKES = "/account/stakes";
 export const ACCOUNT_ADMIN = "/admin";
+export const ACCOUNT_MY_PROJECTS = "/account/projects";
+export const ACCOUNT_WHITELIST_PROJECTS = "/account/projects/whitelist";
 
 // COLLECTION
 
 export const DETAIL_COLLECTION = "/collection/:collection_address";
 export const DETAIL_COLLECTION_BASE = "/collection";
 export const LAUNCHPAD_BASE = "/launchpad";
+export const LAUNCHPAD_ADD_PROJECT = "/launchpad/add";
 export const LAUNCHPAD_DETAIL = "/launchpad/:collection_address";
+
+// NFT TOKEN 
+export const NFT_DETAIL = "/nft/:collection_address/:token_id";
 
 // MINTING EVENT
 export const MINTING_EVENT = "/mint";

@@ -44,6 +44,8 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
     },
   ];
 
+  const modalSize = useBreakpointValue(["xs", "7xl", "7xl"]);
+
   return (
     <Modal
       closeOnOverlayClick={false}
@@ -52,7 +54,7 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
       isCentered
       onClose={onClose}
       isOpen={isOpen}
-      size={"7xl"}
+      size={modalSize}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -66,15 +68,18 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
         p={0}
         h="full"
         w="full"
-        maxH={{ base: "28rem", xl: "30rem", "2xl": "40rem" }}
-        maxW={{ base: "58rem", xl: "60rem", "2xl": "78rem" }}
+        maxH={{ base: "calc(100% - 7.5rem)", xl: "30rem", "2xl": "40rem" }}
+        maxW={{ base: "20rem", xl: "60rem", "2xl": "78rem" }}
       >
         <ModalCloseButton
-          position="absolute"
-          top="-8"
-          right="-8"
-          borderWidth={2}
+          w="42px"
+          h="42px"
+          border="none"
+          // borderWidth={2}
           borderRadius="0"
+          position="absolute"
+          top={["0", "-8", "-8"]}
+          right={["0", "-8", "-8"]}
           onClick={() =>
             onCloseButtonModal({
               status: addNftTnxStatus?.status,
@@ -88,16 +93,15 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
           <TabList bg="#171717">
             {tabData.map((tab, index) => (
               <Tab
-                isDisabled={tab.isDisabled}
-                ml={12}
+                px="0.5px"
                 key={index}
+                ml={[6, 12, 12]}
+                minH={tabHeight}
+                isDisabled={tab.isDisabled}
+                fontFamily="Evogria Italic"
+                py={["10px", "20px", "20px"]}
                 fontSize={["13px", null, "18px"]}
                 lineHeight={["21px", null, "30px"]}
-                fontFamily="Evogria Italic"
-                minH={tabHeight}
-                fontStyle="italic"
-                px="0.5px"
-                py={["10px", "20px", "20px"]}
               >
                 {tab.label}
               </Tab>
@@ -107,10 +111,10 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
           <TabPanels style={{ height: `calc(100% - ${tabHeight})` }}>
             {tabData.map((tab, index) => (
               <TabPanel
-              px={{ base: 6, "2xl": 12 }}
-              py={{ base: "22px", "2xl": "44px" }}
-              h="full"
-              key={index}
+                h="full"
+                key={index}
+                px={{ base: 6, "2xl": 12 }}
+                py={{ base: "22px", "2xl": "44px" }}
               >
                 {tab.content}
               </TabPanel>
