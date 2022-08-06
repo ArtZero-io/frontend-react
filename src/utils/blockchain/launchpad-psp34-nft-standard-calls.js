@@ -550,6 +550,98 @@ async function tokenUri(caller_account, tokenId) {
   return null;
 }
 
+async function addNewPhase(caller_account, phaseCode, isPublic, publicMintingFee, publicMintingAmout, startTime, endTime) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+  publicMintingFee = new BN(publicMintingFee * 10 ** 6)
+  .mul(new BN(10 ** 6))
+  .toString();
+  console.log(contract);
+  contract.tx.addNewPhase(
+    { gasLimit, value: azero_value },
+    phaseCode, isPublic, publicMintingFee, publicMintingAmout, startTime, endTime
+  )
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError", dispatchError.toString());
+          }
+        }
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+          toast.success(
+            `Add New Phase ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
+  return unsubscribe;
+}
+
+async function updateSchedulePhase(caller_account, phaseCode, isPublic, publicMintingFee, publicMintingAmout, startTime, endTime) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+  publicMintingFee = new BN(publicMintingFee * 10 ** 6)
+  .mul(new BN(10 ** 6))
+  .toString();
+  console.log(contract);
+  contract.tx.updateSchedulePhase(
+    { gasLimit, value: azero_value },
+    phaseId, phaseCode, isPublic, publicMintingFee, publicMintingAmout, startTime, endTime
+  )
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError", dispatchError.toString());
+          }
+        }
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+          toast.success(
+            `Add New Phase ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
+  return unsubscribe;
+}
+
 async function getPublicMintedCount(caller_account) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
@@ -655,6 +747,8 @@ const launchpad_psp34_nft_standard_calls = {
   getPublicMintedCount,
   publicMint,
   updateWhitelist,
+  addNewPhase,
+  updateSchedulePhase
 };
 
 export default launchpad_psp34_nft_standard_calls;

@@ -18,16 +18,16 @@ import StatusButton from "@components/Button/StatusButton";
 import * as Yup from "yup";
 import { SCROLLBAR } from "@constants";
 import { useSubstrateState } from "@utils/substrate";
-// import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
-// import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
-// import { ContractPromise } from "@polkadot/api-contract";
-// import { timestampWithoutCommas } from "@utils";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { ContractPromise } from "@polkadot/api-contract";
+import { timestampWithoutCommas, convertStringToPrice, convertNumberWithoutCommas } from "@utils";
 
 export default function UpdatePhasesModal({
   isOpen,
   onClose,
   mode,
-  nftContractAddress,
+  collection_address,
 }) {
   const { currentAccount, api } = useSubstrateState();
 
@@ -48,22 +48,43 @@ export default function UpdatePhasesModal({
 
   useEffect(() => {
     const fetchData = async () => {
-      const { initialValuesData, currentPhaseId } =
-        await fetchInitialPhasesValue({
-          currentAccount,
-          nftContractAddress,
+      let initialValuesData = {};
+        console.log(collection_address);
+      const launchpad_psp34_nft_standard_contract = new ContractPromise(
           api,
-        });
+          launchpad_psp34_nft_standard.CONTRACT_ABI,
+          collection_address
+      );
+      launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
+      const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
+      console.log('UpdatePhasesModal::totalPhase', totalPhase)
+      let phasesTmp = [];
+      for (let i = 1; i <= totalPhase; i++) {
+        let phaseSchedule = await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(currentAccount, i);
+        let phaseInfo = {
+          id: i,
+          canEdit: false,
+          name: phaseSchedule.title,
+          start: Number(timestampWithoutCommas(phaseSchedule.startTime)),
+          end: Number(timestampWithoutCommas(phaseSchedule.endTime)),
+          isPublic: phaseSchedule.isPublic,
+          publicAmount: Number(convertNumberWithoutCommas(phaseSchedule.publicMintingAmout)),
+          publicMintingFee: convertStringToPrice(phaseSchedule.publicMintingFee),
+        };
 
+        phasesTmp.push(phaseInfo);
+      }
+      initialValuesData.phases = phasesTmp;
+      console.log('UpdatePhasesModal::phasesTmp', phasesTmp);
       setInitialValues(initialValuesData);
       setCurrentPhaseId(currentPhaseId);
 
-      console.log("initialValuesData", initialValuesData);
+      console.log("initialValuesData", phasesTmp);
       console.log("currentPhaseId", currentPhaseId);
     };
 
     fetchData();
-  }, [api, currentAccount, nftContractAddress]);
+  }, [api, currentAccount, collection_address]);
 
   return (
     <Modal
@@ -97,7 +118,7 @@ export default function UpdatePhasesModal({
         />
         <ModalHeader textAlign="center">
           <Heading size="h4" my={2}>
-            edit phases. current phase: {currentPhaseId}
+            edit phases
           </Heading>
         </ModalHeader>
 
@@ -135,21 +156,20 @@ export default function UpdatePhasesModal({
               {({ values, dirty, isValid, setFieldValue }) => (
                 <Form>
                   <CommonStack>
-                    <AddPhase name="phases" mode="EDIT" />
+                    <AddPhase name="phases" mode="EDIT" collection_address={collection_address} />
                   </CommonStack>
-
-                  <Stack>
+                  
+                  {/* <Stack>
                     <StatusButton
                       // w="940px"
-                      // w="full"
-                      mode={mode}
+                      // w="full"AddPhase
                       text="project"
                       // isLoading={addCollectionTnxStatus}
                       // disabled={!(dirty && isValid) && noImagesChange}
                       // loadingText={`${addCollectionTnxStatus?.status}`}
                       // type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
                     />
-                  </Stack>
+                  </Stack> */}
                 </Form>
               )}
             </Formik>

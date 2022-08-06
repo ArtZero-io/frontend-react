@@ -5,16 +5,19 @@ import Input from "@components/Input/Input";
 import { formMode } from "@constants";
 import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
 import toast from "react-hot-toast";
-
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { ContractPromise } from "@polkadot/api-contract";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import NumberInput from "@components/Input/NumberInput";
 import { useState } from "react";
 import { isPhaseTimeOverlap } from "@utils";
+import { useSubstrateState } from "@utils/substrate";
 
-function AddPhase({ name, mode, isDisabled }) {
+function AddPhase({ name, mode, isDisabled, collection_address = '' }) {
   const [{ value }, , helpers] = useField(name);
   const [isPublic, setIsPublic] = useState(false);
-
+  const { currentAccount, api } = useSubstrateState();
   // const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
 
   const handlePhaseTime = (e, index) => {
@@ -80,12 +83,52 @@ function AddPhase({ name, mode, isDisabled }) {
     });
   };
 
+  const onUpdatePhase = async (index) => {
+    const launchpad_psp34_nft_standard_contract = new ContractPromise(
+      api,
+      launchpad_psp34_nft_standard.CONTRACT_ABI,
+      collection_address
+    );
+    launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
+
+    // launchpad_psp34_nft_standard_calls.updateSchedulePhase(
+    //   caller_account, 
+    //   phaseCode, 
+    //   isPublic, 
+    //   publicMintingFee, 
+    //   publicMintingAmout, 
+    //   startTime, 
+    //   endTime
+    // );
+    console.log(index);
+    console.log(collection_address);
+    const newValue = value.map((i, idx) => {
+      return idx === value.length - 1 ? { ...i, start: null, end: null } : i;
+    });
+    console.log(newValue);
+    
+  }
+
+  const onAddNewPhase = async (index) => {
+    console.log(index);
+    const newValue = value.map((i, idx) => {
+      return idx === value.length - 1 ? { ...i, start: null, end: null } : i;
+    });
+    const launchpad_psp34_nft_standard_contract = new ContractPromise(
+      api,
+      launchpad_psp34_nft_standard.CONTRACT_ABI,
+      collection_address
+    );
+    launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
+
+    // launchpad_psp34_nft_standard_calls.addNewPhase(caller_account, phaseCode, isPublic, publicMintingFee, publicMintingAmout, startTime, endTime)
+  }
+
   return (
     <FieldArray
       name="phases"
       render={(arrayHelpers) => {
         const phasesErrors = arrayHelpers?.form?.errors?.members;
-
         return (
           <Stack>
             {value?.map((_, index) => (
@@ -176,7 +219,7 @@ function AddPhase({ name, mode, isDisabled }) {
                 </Stack>
 
                 <HStack justifyContent="end" w="full">
-                  <Heading
+                  {(mode != 'EDIT') ? (<Heading
                     _hover={{
                       color: !(index === 0 && value.length === 1) && "#7ae7ff",
                     }}
@@ -193,6 +236,37 @@ function AddPhase({ name, mode, isDisabled }) {
                     isDisabled={index === 0 && value.length === 1}
                   >
                     delete
+                  </Heading>) : ''}
+                  
+                  <Heading
+                    _hover={{
+                      color: !(index === 0 && value.length === 1) && "#7ae7ff",
+                    }}
+                    fontSize="sm"
+                    color="#555"
+                    fontStyle="unset"
+                    cursor="pointer"
+                    fontFamily="Evogria"
+                    textDecoration="underline"
+                    onClick={() => onUpdatePhase(index)}
+                    isDisabled={index === 0 && value.length === 1}
+                  >
+                    Update
+                  </Heading>
+                  <Heading
+                    _hover={{
+                      color: !(index === 0 && value.length === 1) && "#7ae7ff",
+                    }}
+                    fontSize="sm"
+                    color="#555"
+                    fontStyle="unset"
+                    cursor="pointer"
+                    fontFamily="Evogria"
+                    textDecoration="underline"
+                    onClick={() => onAddNewPhase(index)}
+                    isDisabled={index === 0 && value.length === 1}
+                  >
+                    Add
                   </Heading>
                 </HStack>
               </Stack>

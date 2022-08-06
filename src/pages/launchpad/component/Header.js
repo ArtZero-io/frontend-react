@@ -224,7 +224,6 @@ function LaunchpadDetailHeader({
                       {project.totalSupply}
                     </Text>
                   </Text>
-                  {console.log("livePhase", livePhase)}
                   {livePhase &&
                   !livePhase.publicPhase &&
                   currentWhitelist.mintingFee ? (
