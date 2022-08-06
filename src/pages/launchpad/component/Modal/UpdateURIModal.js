@@ -26,7 +26,7 @@ export default function UpdateURIModal({ collection_address, isOpen, onClose, fo
   const { addCollectionTnxStatus } = useSelector(
     (state) => state.account.accountLoaders
   );
-  const [newURI, setNewURI] = useState("your new URI");
+  const [newURI, setNewURI] = useState("Your new URI here");
   const { currentAccount, api } = useSubstrateState();
 
   useEffect(() => {

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Heading,
   Modal,
@@ -8,45 +9,55 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AccountActionTypes } from "@store/types/account.types";
-import { onCloseButtonModal } from "@utils";
+import React, { useEffect, useState } from "react";
+
 import { Form, Formik } from "formik";
 import CommonStack from "../Form/CommonStack";
 import AddPhase from "../Form/AddPhase";
 import StatusButton from "@components/Button/StatusButton";
 import * as Yup from "yup";
+import { SCROLLBAR } from "@constants";
+import { useSubstrateState } from "@utils/substrate";
 
-export default function UpdatePhasesModal({ isOpen, onClose, mode }) {
-  const dispatch = useDispatch();
-  const { addCollectionTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
-  );
+export default function UpdatePhasesModal({
+  isOpen,
+  onClose,
+  mode,
+  nftContractAddress,
+}) {
+  const { currentAccount, api } = useSubstrateState();
+
+  const [initialValues, setInitialValues] = useState([
+    {
+      name: "",
+      start: "",
+      end: "",
+      isPublic: false,
+      publicMintingFee: 0,
+      publicAmount: 0,
+    },
+  ]);
+
+  const [currentPhaseId, setCurrentPhaseId] = useState(null);
 
   useEffect(() => {
-    function onCloseHandler() {
-      onClose();
+    const fetchData = async () => {
+      const { initialValuesData, currentPhaseId } =
+        await fetchInitialPhasesValue({
+          currentAccount,
+          nftContractAddress,
+          api,
+        });
 
-      if (addCollectionTnxStatus?.status === "End") {
-        // dispatch({
-        //   type: AccountActionTypes.SET_TNX_STATUS,
-        //   payload: null,
-        // });
-        // delay(300).then(() => {
-        //   forceUpdate();
-        // onClose();
-        // dispatch({
-        //   type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-        // });
-        // });
-      }
-    }
+      setInitialValues(initialValuesData);
+      setCurrentPhaseId(currentPhaseId);
 
-    onCloseHandler();
-  }, [addCollectionTnxStatus, dispatch, onClose]);
+      console.log("initialValuesData", initialValuesData);
+      console.log("currentPhaseId", currentPhaseId);
+    };
 
-  const initialValues = async () => await fetchInitialPhasesValue();
+    fetchData();
+  }, [api, currentAccount, nftContractAddress]);
 
   return (
     <Modal
@@ -76,44 +87,18 @@ export default function UpdatePhasesModal({ isOpen, onClose, mode }) {
           right="-8"
           borderWidth={2}
           borderRadius="0"
-          onClick={() => {
-            onCloseButtonModal({
-              status: addCollectionTnxStatus?.status,
-              dispatch,
-              type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-            });
-          }}
+          onClick={() => {}}
         />
         <ModalHeader textAlign="center">
           <Heading size="h4" my={2}>
-            edit phases
+            edit phases. current phase: {currentPhaseId}
           </Heading>
         </ModalHeader>
 
-        <ModalBody
-          shadow="lg"
-          overflowY="auto"
-          sx={{
-            "&::-webkit-scrollbar": {
-              width: "4px",
-              height: "4px",
-              borderRadius: "0px",
-              backgroundColor: `transparent`,
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: `#7ae7ff`,
-            },
-            "&::-webkit-scrollbar-thumb:hover": {
-              backgroundColor: `#7ae7ff`,
-            },
-            "&::-webkit-scrollbar-track": {
-              backgroundColor: `transparent`,
-            },
-          }}
-        >
+        <ModalBody shadow="lg" overflowY="auto" sx={SCROLLBAR}>
           {initialValues && (
             <Formik
-              initialValues={{ phases: [{ name: "", start: "", end: "" }] }}
+              initialValues={initialValues}
               validationSchema={Yup.object().shape({
                 phases: Yup.array()
                   .min(1, "Phases must have at least 1 items")
@@ -122,7 +107,7 @@ export default function UpdatePhasesModal({ isOpen, onClose, mode }) {
                     Yup.object().shape({
                       name: Yup.string()
                         .required("This field is required")
-                        .min(3, "Must be longer than 3 characters")
+                        .min(1, "Must be longer than 3 characters")
                         .max(30, "Must be at most 30 characters")
                         .test(
                           "Test name",
@@ -141,10 +126,10 @@ export default function UpdatePhasesModal({ isOpen, onClose, mode }) {
               })}
               onSubmit={async (values, { setSubmitting }) => {}}
             >
-              {({ values, dirty, isValid, setFieldValue, ...rest }) => (
+              {({ values, dirty, isValid, setFieldValue }) => (
                 <Form>
                   <CommonStack>
-                    <AddPhase name="phases" mode={"EDIT"} />
+                    <AddPhase name="phases" mode="EDIT" />
                   </CommonStack>
 
                   <Stack>
@@ -153,10 +138,10 @@ export default function UpdatePhasesModal({ isOpen, onClose, mode }) {
                       // w="full"
                       mode={mode}
                       text="project"
-                      isLoading={addCollectionTnxStatus}
+                      // isLoading={addCollectionTnxStatus}
                       // disabled={!(dirty && isValid) && noImagesChange}
-                      loadingText={`${addCollectionTnxStatus?.status}`}
-                      type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
+                      // loadingText={`${addCollectionTnxStatus?.status}`}
+                      // type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
                     />
                   </Stack>
                 </Form>
@@ -170,7 +155,60 @@ export default function UpdatePhasesModal({ isOpen, onClose, mode }) {
 }
 
 export const fetchInitialPhasesValue = async () => {
-  const initialValues = {};
+  let initialValuesData = {
+    phases: [
+      {
+        name: "",
+        start: "",
+        end: "",
+        isPublic: false,
+        publicMintingFee: 0,
+        publicAmount: 0,
+      },
+    ],
+  };
 
-  return initialValues;
+  let currentPhaseId;
+
+  // fetch and reformat phases data to form formik initial values
+  // format start
+  // ...
+  // ...
+  // format start
+
+  initialValuesData = {
+    phases: [
+      {
+        id: 1,
+        name: "OG",
+        start: 1659805200000,
+        end: 1660496399999,
+        isPublic: false,
+        publicAmount: 0,
+        publicMintingFee: 0,
+      },
+      {
+        id: 2,
+        name: "WL",
+        start: 1660496400000,
+        end: 1661014799999,
+        isPublic: false,
+        publicAmount: 0,
+        publicMintingFee: 0,
+      },
+      {
+        id: 3,
+        name: "Public",
+        start: 1661792400000,
+        end: 1661965199999,
+        isPublic: true,
+        publicAmount: 3,
+        publicMintingFee: 99,
+      },
+    ],
+  };
+
+  currentPhaseId = 1;
+
+  return { initialValuesData, currentPhaseId };
 };

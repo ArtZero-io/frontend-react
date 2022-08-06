@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import NumberInput from "@components/Input/NumberInput";
 import { useState } from "react";
-import { isPhaseTimeOverlap } from "../../../../utils";
+import { isPhaseTimeOverlap } from "@utils";
 
 function AddPhase({ name, mode, isDisabled }) {
   const [{ value }, , helpers] = useField(name);
@@ -143,9 +143,10 @@ function AddPhase({ name, mode, isDisabled }) {
                     direction={{ base: "column", "2xl": "row" }}
                   >
                     <AdvancedModeSwitch
-                      name={`phases[${index}].isPublic`}
                       label="Set public"
                       isDisabled={isDisabled}
+                      isChecked={value[index].isPublic}
+                      name={`phases[${index}].isPublic`}
                       onChange={() => {
                         value[index].isPublic = !value[index].isPublic;
                         setIsPublic(!isPublic);
@@ -153,24 +154,24 @@ function AddPhase({ name, mode, isDisabled }) {
                     />
                   </Stack>
                   <NumberInput
-                    isDisplay={value[index].isPublic}
                     type="number"
-                    name={`phases[${index}].publicMintingFee`}
                     // isRequired={true}
-                    label="Public Minting Fee"
-                    isDisabled={isDisabled}
                     hasStepper={false}
+                    isDisabled={isDisabled}
+                    label="Public Minting Fee"
+                    isDisplay={value[index].isPublic}
+                    name={`phases[${index}].publicMintingFee`}
                   />{" "}
                   <NumberInput
-                    isDisabled={isDisabled}
-                    isDisplay={value[index].isPublic}
-                    label="Public amount"
-                    name={`phases[${index}].publicAmount`}
                     type="number"
                     height="52px"
                     precision={0}
                     hasStepper={false}
+                    label="Public amount"
                     inputWidth={"260px"}
+                    isDisabled={isDisabled}
+                    isDisplay={value[index].isPublic}
+                    name={`phases[${index}].publicAmount`}
                   />
                 </Stack>
 

@@ -465,7 +465,6 @@ const LaunchpadDetailPage = () => {
               <>
                 <Flex w="full" my="20px">
                   <Heading fontSize="lg">
-                    {/* M {++index}:{" "} */}
                     <Text as="span" color="#7ae7ff">
                       {item.type}
                     </Text>
@@ -476,9 +475,6 @@ const LaunchpadDetailPage = () => {
                 <Box fontSize="lg" color="#888" px="20px" mb="30px">
                   <Interweave content={item.content} />
 
-                  {/* <Text as="span" color="#888">
-                    {item.content}
-                  </Text> */}
                 </Box>
 
                 <Divider />
