@@ -98,7 +98,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
     //   phaseCode,
     //   isPublic,
     //   publicMintingFee,
-    //   publicMintingAmout,
+    //   publicMintingAmount,
     //   startTime,
     //   endTime
     // );

@@ -2,6 +2,8 @@ import React from "react";
 import { Button } from "@chakra-ui/react";
 import { END, FINALIZED } from "@constants";
 import { ClipLoader } from "react-spinners";
+import { clearTxStatus } from "@store/actions/txStatus";
+import { useDispatch } from "react-redux";
 
 function CommonButton(props) {
   const {
@@ -17,8 +19,10 @@ function CommonButton(props) {
     onEndClick,
     isDisabled,
     height,
+    onRedirect,
     ...rest
   } = props;
+  const dispatch = useDispatch();
 
   const handleOnClick = async () => {
     if (!step) {
@@ -35,6 +39,11 @@ function CommonButton(props) {
       return;
     }
 
+    if (onRedirect) {
+      onRedirect();
+      dispatch(clearTxStatus());
+      return;
+    }
     onEndClick();
   };
 

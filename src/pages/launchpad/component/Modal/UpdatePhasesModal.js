@@ -21,7 +21,11 @@ import { useSubstrateState } from "@utils/substrate";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
-import { timestampWithoutCommas, convertStringToPrice, convertNumberWithoutCommas } from "@utils";
+import {
+  timestampWithoutCommas,
+  convertStringToPrice,
+  convertNumberWithoutCommas,
+} from "@utils";
 
 export default function UpdatePhasesModal({
   isOpen,
@@ -49,18 +53,38 @@ export default function UpdatePhasesModal({
   useEffect(() => {
     const fetchData = async () => {
       let initialValuesData = {};
-        console.log(collection_address);
+
+      console.log(collection_address);
       const launchpad_psp34_nft_standard_contract = new ContractPromise(
-          api,
-          launchpad_psp34_nft_standard.CONTRACT_ABI,
-          collection_address
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        collection_address
       );
-      launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
-      const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
-      console.log('UpdatePhasesModal::totalPhase', totalPhase)
+
+      launchpad_psp34_nft_standard_calls.setContract(
+        launchpad_psp34_nft_standard_contract
+      );
+
+      const totalPhase =
+        await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
+      console.log("UpdatePhasesModal::totalPhase", totalPhase);
+
       let phasesTmp = [];
+      console.log("xxx phasesTmp", phasesTmp);
+
       for (let i = 1; i <= totalPhase; i++) {
-        let phaseSchedule = await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(currentAccount, i);
+        console.log('xxx i', i)
+        let phaseSchedule =
+          await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
+            currentAccount,
+            i
+          );
+
+          console.log("xxx phaseSchedule", phaseSchedule);
+
+
+
+
         let phaseInfo = {
           id: i,
           canEdit: false,
@@ -68,14 +92,22 @@ export default function UpdatePhasesModal({
           start: Number(timestampWithoutCommas(phaseSchedule.startTime)),
           end: Number(timestampWithoutCommas(phaseSchedule.endTime)),
           isPublic: phaseSchedule.isPublic,
-          publicAmount: Number(convertNumberWithoutCommas(phaseSchedule.publicMintingAmout)),
-          publicMintingFee: convertStringToPrice(phaseSchedule.publicMintingFee),
+          publicAmount: Number(
+            convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
+          ),
+          publicMintingFee: convertStringToPrice(
+            phaseSchedule.publicMintingFee
+          ),
         };
-
+        console.log("phaseInfo", phaseInfo);
         phasesTmp.push(phaseInfo);
       }
+
       initialValuesData.phases = phasesTmp;
-      console.log('UpdatePhasesModal::phasesTmp', phasesTmp);
+
+      // console.log("UpdatePhasesModal::phasesTmp", phasesTmp);
+      console.log("xxxinitialValuesData", initialValuesData);
+      console.log("xxxcurrentPhaseId", currentPhaseId);
       setInitialValues(initialValuesData);
       setCurrentPhaseId(currentPhaseId);
 
@@ -84,7 +116,7 @@ export default function UpdatePhasesModal({
     };
 
     fetchData();
-  }, [api, currentAccount, collection_address]);
+  }, [api, currentAccount, collection_address, currentPhaseId]);
 
   return (
     <Modal
@@ -156,9 +188,13 @@ export default function UpdatePhasesModal({
               {({ values, dirty, isValid, setFieldValue }) => (
                 <Form>
                   <CommonStack>
-                    <AddPhase name="phases" mode="EDIT" collection_address={collection_address} />
+                    <AddPhase
+                      name="phases"
+                      mode="EDIT"
+                      collection_address={collection_address}
+                    />
                   </CommonStack>
-                  
+
                   {/* <Stack>
                     <StatusButton
                       // w="940px"

@@ -18,7 +18,7 @@ import EditIcon from "@theme/assets/icon/Edit.js";
 import { useEffect } from "react";
 import useTxStatus from "@hooks/useTxStatus";
 import AdvancedModeForm from "../Form/AdvancedMode";
-import { formMode, SCROLLBAR, END } from "@constants";
+import { formMode, SCROLLBAR, END, FINALIZED } from "@constants";
 
 function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -98,7 +98,7 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
             position="absolute"
             top={["0", "-8", "-8"]}
             right={["0", "-8", "-8"]}
-            onClick={() => onEndClick()}
+            onClick={() => step === FINALIZED && onEndClick()}
           />
           <ModalHeader>
             <Heading fontSize={["2xl", "3xl", "3xl"]} m={2}>

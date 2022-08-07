@@ -14,7 +14,7 @@
   box-sizing: border-box;
 }
 .react-datetimerange-picker--disabled {
-  background-color: #f0f0f0;
+  background-color: #000;
   color: #6d6d6d;
 }
 .react-datetimerange-picker__wrapper {

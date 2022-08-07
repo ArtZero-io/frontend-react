@@ -1,16 +1,17 @@
-/* eslint-disable no-unused-vars */
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import BN from "bn.js";
-import { TypeRegistry, U64 } from "@polkadot/types";
 import { clientAPI } from "@api/client";
-import { AccountActionTypes } from "@store/types/account.types";
 import { APICall } from "../../api/client";
-import { isValidAddressPolkadotAddress, convertStringToPrice } from "@utils";
+import { isValidAddressPolkadotAddress } from "@utils";
 import launchpad_contract_calls from "./launchpad-contract-calls";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 
 import { ContractPromise } from "@polkadot/api-contract";
+import {
+  txErrorHandler,
+  txResponseErrorHandler,
+} from "@store/actions/txStatus";
 
 let contract;
 
@@ -298,7 +299,13 @@ async function getWhitelistByAccountId(
   return null;
 }
 
-async function editProjectInformation(caller_account, projectInfo) {
+async function editProjectInformation(
+  caller_account,
+  projectInfo,
+  dispatch,
+  txType,
+  api
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -309,32 +316,26 @@ async function editProjectInformation(caller_account, projectInfo) {
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
+
   contract.tx
     .editProjectInformation({ gasLimit, value: azero_value }, projectInfo)
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Edit project information ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
@@ -443,7 +444,7 @@ async function getProjectInfo(caller_account) {
   return null;
 }
 
-async function updateBaseUri(caller_account, uri) {
+async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -463,26 +464,19 @@ async function updateBaseUri(caller_account, uri) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Update base uri ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
@@ -550,7 +544,15 @@ async function tokenUri(caller_account, tokenId) {
   return null;
 }
 
-async function addNewPhase(caller_account, phaseCode, isPublic, publicMintingFee, publicMintingAmout, startTime, endTime) {
+async function addNewPhase(
+  caller_account,
+  phaseCode,
+  isPublic,
+  publicMintingFee,
+  publicMintingAmout,
+  startTime,
+  endTime
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -562,13 +564,19 @@ async function addNewPhase(caller_account, phaseCode, isPublic, publicMintingFee
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
   publicMintingFee = new BN(publicMintingFee * 10 ** 6)
-  .mul(new BN(10 ** 6))
-  .toString();
+    .mul(new BN(10 ** 6))
+    .toString();
   console.log(contract);
-  contract.tx.addNewPhase(
-    { gasLimit, value: azero_value },
-    phaseCode, isPublic, publicMintingFee, publicMintingAmout, startTime, endTime
-  )
+  contract.tx
+    .addNewPhase(
+      { gasLimit, value: azero_value },
+      phaseCode,
+      isPublic,
+      publicMintingFee,
+      publicMintingAmout,
+      startTime,
+      endTime
+    )
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -596,7 +604,16 @@ async function addNewPhase(caller_account, phaseCode, isPublic, publicMintingFee
   return unsubscribe;
 }
 
-async function updateSchedulePhase(caller_account,phaseId, phaseCode, isPublic, publicMintingFee, publicMintingAmout, startTime, endTime) {
+async function updateSchedulePhase(
+  caller_account,
+  phaseId,
+  phaseCode,
+  isPublic,
+  publicMintingFee,
+  publicMintingAmout,
+  startTime,
+  endTime
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -608,13 +625,20 @@ async function updateSchedulePhase(caller_account,phaseId, phaseCode, isPublic, 
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
   publicMintingFee = new BN(publicMintingFee * 10 ** 6)
-  .mul(new BN(10 ** 6))
-  .toString();
+    .mul(new BN(10 ** 6))
+    .toString();
   console.log(contract);
-  contract.tx.updateSchedulePhase(
-    { gasLimit, value: azero_value },
-    phaseId, phaseCode, isPublic, publicMintingFee, publicMintingAmout, startTime, endTime
-  )
+  contract.tx
+    .updateSchedulePhase(
+      { gasLimit, value: azero_value },
+      phaseId,
+      phaseCode,
+      isPublic,
+      publicMintingFee,
+      publicMintingAmout,
+      startTime,
+      endTime
+    )
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -748,7 +772,7 @@ const launchpad_psp34_nft_standard_calls = {
   publicMint,
   updateWhitelist,
   addNewPhase,
-  updateSchedulePhase
+  updateSchedulePhase,
 };
 
 export default launchpad_psp34_nft_standard_calls;
