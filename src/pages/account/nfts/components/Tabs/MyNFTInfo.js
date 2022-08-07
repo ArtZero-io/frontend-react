@@ -49,6 +49,7 @@ import { formMode } from "@constants";
 import { AccountActionTypes } from "@store/types/account.types";
 
 import LockNFTModal from "@components/Modal/LockNFTModal";
+import TransferNFTModal from "@components/Modal/TransferNFTModal";
 import StatusBuyButton from "@components/Button/StatusBuyButton";
 import StatusPushForSaleButton from "@components/Button/StatusPushForSaleButton";
 
@@ -424,6 +425,9 @@ function MyNFTTabInfo(props) {
 
               {!is_locked && owner === currentAccount?.address && (
                 <LockNFTModal {...props} isDisabled={addNftTnxStatus} />
+              )}
+              {owner === currentAccount?.address && (
+                <TransferNFTModal {...props} isDisabled={addNftTnxStatus} />
               )}
             </HStack>
 
