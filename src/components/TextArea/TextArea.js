@@ -32,6 +32,7 @@ export default function SimpleModeTextarea({
         fontSize={["md", "lg", "lg"]}
         pl={2}
         borderRadius="0"
+        borderWidth="0"
         as={Textarea}
         bg="black"
         {...field}

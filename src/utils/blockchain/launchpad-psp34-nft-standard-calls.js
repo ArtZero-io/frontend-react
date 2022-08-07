@@ -596,7 +596,7 @@ async function addNewPhase(caller_account, phaseCode, isPublic, publicMintingFee
   return unsubscribe;
 }
 
-async function updateSchedulePhase(caller_account, phaseCode, isPublic, publicMintingFee, publicMintingAmout, startTime, endTime) {
+async function updateSchedulePhase(caller_account,phaseId, phaseCode, isPublic, publicMintingFee, publicMintingAmout, startTime, endTime) {
   if (!contract || !caller_account) {
     return null;
   }

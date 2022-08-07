@@ -13,7 +13,7 @@ export default function SimpleModeInput({
   const [field, meta] = useField(props);
   return (
     <FormControl
-      mx={[0, 1]}
+      mx={mx || [0, 1]}
       color="#fff"
       h={height || 28}
       w={width || "full"}

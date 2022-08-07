@@ -15,7 +15,6 @@ import BN from "bn.js";
 import StatusButton from "@components/Button/StatusButton";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import ImageUpload from "@components/ImageUpload/Collection";
-import Input from "@components/Input/Input";
 import NumberInput from "@components/Input/NumberInput";
 import TextArea from "@components/TextArea/TextArea";
 import { formMode } from "@constants";
@@ -412,8 +411,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               <Form>
                 <CommonStack stackTitle="1. project info">
                   <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
-                    <Stack w={["100%", "406px"]}>
-                      <Input
+                    <Stack w={["100%", "416px"]}>
+                      <CommonInput
+                        mx="0"
                         type="text"
                         name="name"
                         isRequired={true}
@@ -426,8 +426,11 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     <Stack w="full">
                       {mode === formMode.ADD && (
                         <Stack pb="30px">
-                          <Text fontSize="lg" ml={1} mb="10px">
-                            Start time - End time
+                          <Text fontSize="lg" ml={1}>
+                            Start time - End time{" "}
+                            <Text as="span" fontSize="lg" color="#fc8181">
+                              *
+                            </Text>
                           </Text>
                           <DateTimeRangePicker
                             disabled={addCollectionTnxStatus}
@@ -452,6 +455,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                   <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
                     <CommonInput
+                      mx="0"
                       type="text"
                       name="website"
                       label="Website URL"
@@ -459,6 +463,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       isDisabled={addCollectionTnxStatus}
                     />
                     <CommonInput
+                      mx="0"
                       type="text"
                       name="twitter"
                       label="Twitter URL"
@@ -466,6 +471,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       isDisabled={addCollectionTnxStatus}
                     />
                     <CommonInput
+                      mx="0"
                       type="text"
                       name="discord"
                       label="Discord URL"
@@ -476,6 +482,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                   <Stack>
                     <TextArea
+                      mx="0"
                       height="140"
                       type="text"
                       isRequired={true}
@@ -615,7 +622,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     />
                     {mode === formMode.ADD && (
                       <NumberInput
-                        height="52px"
+                        // height="52px"
                         precision={0}
                         isRequired={true}
                         name="totalSupply"
@@ -642,6 +649,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 {mode === formMode.ADD && (
                   <CommonStack stackTitle="4. Contact info">
                     <CommonInput
+                      isRequired={true}
                       type="text"
                       name="email_owner"
                       label="This email not saved on our platform, we just use this field to contact with you!"

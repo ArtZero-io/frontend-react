@@ -14,7 +14,7 @@ import { useState } from "react";
 import { isPhaseTimeOverlap } from "@utils";
 import { useSubstrateState } from "@utils/substrate";
 
-function AddPhase({ name, mode, isDisabled, collection_address = '' }) {
+function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
   const [{ value }, , helpers] = useField(name);
   const [isPublic, setIsPublic] = useState(false);
   const { currentAccount, api } = useSubstrateState();
@@ -89,15 +89,17 @@ function AddPhase({ name, mode, isDisabled, collection_address = '' }) {
       launchpad_psp34_nft_standard.CONTRACT_ABI,
       collection_address
     );
-    launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
+    launchpad_psp34_nft_standard_calls.setContract(
+      launchpad_psp34_nft_standard_contract
+    );
 
     // launchpad_psp34_nft_standard_calls.updateSchedulePhase(
-    //   caller_account, 
-    //   phaseCode, 
-    //   isPublic, 
-    //   publicMintingFee, 
-    //   publicMintingAmout, 
-    //   startTime, 
+    //   caller_account,
+    //   phaseCode,
+    //   isPublic,
+    //   publicMintingFee,
+    //   publicMintingAmout,
+    //   startTime,
     //   endTime
     // );
     console.log(index);
@@ -106,8 +108,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = '' }) {
       return idx === value.length - 1 ? { ...i, start: null, end: null } : i;
     });
     console.log(newValue);
-    
-  }
+  };
 
   const onAddNewPhase = async (index) => {
     console.log(index);
@@ -119,10 +120,12 @@ function AddPhase({ name, mode, isDisabled, collection_address = '' }) {
       launchpad_psp34_nft_standard.CONTRACT_ABI,
       collection_address
     );
-    launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
+    launchpad_psp34_nft_standard_calls.setContract(
+      launchpad_psp34_nft_standard_contract
+    );
 
     // launchpad_psp34_nft_standard_calls.addNewPhase(caller_account, phaseCode, isPublic, publicMintingFee, publicMintingAmout, startTime, endTime)
-  }
+  };
 
   return (
     <FieldArray
@@ -141,6 +144,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = '' }) {
                 <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
                   <Stack w={["100%", "50%"]}>
                     <Input
+                      mx="0"
                       type="text"
                       name={`phases[${index}].name`}
                       isRequired={true}
@@ -152,8 +156,11 @@ function AddPhase({ name, mode, isDisabled, collection_address = '' }) {
 
                   <Stack w="full">
                     <Stack pb="30px">
-                      <Text fontSize="lg" ml={1} mb="10px">
-                        Start time - End time
+                      <Text fontSize="lg" ml={1}>
+                        Start time - End time{" "}
+                        <Text as="span" fontSize="lg" color="#fc8181">
+                          *
+                        </Text>
                       </Text>
                       <DateTimeRangePicker
                         disabled={isDisabled}
@@ -181,7 +188,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = '' }) {
                   direction={["column", "row"]}
                 >
                   <Stack
-                    minW={52}
+                    minW="260px"
                     alignItems="end"
                     direction={{ base: "column", "2xl": "row" }}
                   >
@@ -199,6 +206,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = '' }) {
                   <NumberInput
                     type="number"
                     // isRequired={true}
+                    height="50px"
                     hasStepper={false}
                     isDisabled={isDisabled}
                     label="Public Minting Fee"
@@ -207,7 +215,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = '' }) {
                   />{" "}
                   <NumberInput
                     type="number"
-                    height="52px"
+                    height="50px"
                     precision={0}
                     hasStepper={false}
                     label="Public amount"
@@ -219,25 +227,30 @@ function AddPhase({ name, mode, isDisabled, collection_address = '' }) {
                 </Stack>
 
                 <HStack justifyContent="end" w="full">
-                  {(mode != 'EDIT') ? (<Heading
-                    _hover={{
-                      color: !(index === 0 && value.length === 1) && "#7ae7ff",
-                    }}
-                    fontSize="sm"
-                    color="#555"
-                    fontStyle="unset"
-                    cursor="pointer"
-                    fontFamily="Evogria"
-                    textDecoration="underline"
-                    onClick={() => {
-                      if (index === 0 && value.length === 1) return;
-                      arrayHelpers.remove(index);
-                    }}
-                    isDisabled={index === 0 && value.length === 1}
-                  >
-                    delete
-                  </Heading>) : ''}
-                  
+                  {mode != "EDIT" ? (
+                    <Heading
+                      _hover={{
+                        color:
+                          !(index === 0 && value.length === 1) && "#7ae7ff",
+                      }}
+                      fontSize="sm"
+                      color="#555"
+                      fontStyle="unset"
+                      cursor="pointer"
+                      fontFamily="Evogria"
+                      textDecoration="underline"
+                      onClick={() => {
+                        if (index === 0 && value.length === 1) return;
+                        arrayHelpers.remove(index);
+                      }}
+                      isDisabled={index === 0 && value.length === 1}
+                    >
+                      delete
+                    </Heading>
+                  ) : (
+                    ""
+                  )}
+
                   <Heading
                     _hover={{
                       color: !(index === 0 && value.length === 1) && "#7ae7ff",
