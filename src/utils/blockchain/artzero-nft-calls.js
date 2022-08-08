@@ -542,7 +542,7 @@ async function withdrawFee(caller_account, amount) {
   contract.tx
     .withdrawFee(
       { gasLimit, value: azero_value },
-      parseFloat(amount) * 10 ** 12
+      new BN(parseFloat(amount) * 10 ** 6).mul(new BN(10**6)).toString()
     )
     .signAndSend(
       address,

@@ -6,6 +6,7 @@ import AdminHeader from "@pages/admin/components/Header";
 import ContractTab from "@pages/admin/components/Tab/Contract";
 import CollectionTab from "@pages/admin/components/Tab/Collection";
 import CheckCollection from "@pages/admin/components/Tab/CheckCollection";
+import RewardDistribution from "@pages/admin/components/Tab/RewardDistribution";
 import ProjectTab from "@pages/admin/components/Tab/Project";
 
 const AdminLayout = () => {
@@ -25,6 +26,10 @@ const AdminLayout = () => {
     {
       label: "Project Management",
       content: <ProjectTab />,
+    },
+    {
+      label: "Reward Distribution",
+      content: <RewardDistribution />,
     },
   ];
 
