@@ -448,6 +448,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                             </Text>
                           </Text>
                           <DateTimeRangePicker
+                            disableClock
                             disabled={actionType}
                             onChange={(e) =>
                               handleOnchangeSchedule(e, setFieldValue)
@@ -509,7 +510,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   </Stack>
 
                   <Stack
-                    minH="80px"
+                    minH="86px"
                     alignItems={["start", "end"]}
                     gap={["10px", "30px"]}
                     direction={["column", "row"]}
@@ -574,13 +575,15 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     direction={["column", "row"]}
                   >
                     <Stack
-                      w="50%"
+                      w={{ base: "full", xl: "50%" }}
                       direction="column"
                       alignItems="start"
                       justifyContent="end"
                     >
                       <Heading size="h5">project avatar image</Heading>{" "}
-                      <Text pt="30px">Choose avatar image</Text>
+                      <Text pt={{ base: "10px", xl: "30px" }}>
+                        Choose avatar image
+                      </Text>
                       <ImageUpload
                         isDisabled={actionType}
                         id="avatar"
@@ -593,13 +596,16 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     </Stack>
 
                     <Stack
-                      w="50%"
+                      pt={{ base: "30px", xl: "0px" }}
+                      w={{ base: "full", xl: "50%" }}
                       direction="column"
                       alignItems="start"
                       justifyContent="end"
                     >
                       <Heading size="h5">project header image</Heading>
-                      <Text pt="30px">Choose header image</Text>
+                      <Text pt={{ base: "10px", xl: "30px" }}>
+                        Choose header image
+                      </Text>
 
                       <ImageUpload
                         id="header"
@@ -639,7 +645,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         isRequired={true}
                         name="totalSupply"
                         hasStepper={false}
-                        inputWidth={"260px"}
+                        inputWidth={{ base: "full", xl: "260px" }}
                         label="Total Supply"
                         isDisabled={actionType}
                       />
@@ -673,7 +679,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 <VStack>
                   {mode === formMode.ADD && (
                     <>
-                      <Text color="#fff">
+                      <Text textAlign="center" color="#fff">
                         Create new collection you will pay
                         <strong> {addProjectTotalFee} $AZERO </strong> in fee to
                         ArtZero.io
@@ -690,8 +696,12 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     </>
                   )}
 
-                  <Stack w="940px">
+                  <Stack
+                    w={{ base: "full", xl: "940px" }}
+                    px={{ base: "15px", xl: "0px" }}
+                  >
                     <CommonButton
+                      mx="0"
                       onRedirect={() =>
                         mode === formMode.ADD
                           ? history.push(`/account/projects`)

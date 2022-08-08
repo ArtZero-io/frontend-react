@@ -31,8 +31,18 @@
   min-width: calc(4px + (4px * 3) + 0.54em * 6 + 0.217em * 2);
   height: 100%;
   flex-grow: 1;
-  padding: 0 20px;
+  padding: 0 2px;
 }
+
+@media only screen and (min-width: 414px) {
+  .react-datetimerange-picker__inputGroup {
+    min-width: calc(4px + (4px * 3) + 0.54em * 6 + 0.217em * 2);
+    height: 100%;
+    flex-grow: 1;
+    padding: 0 20px;
+  }
+}
+
 .react-datetimerange-picker__inputGroup__divider {
   padding: 1px 0;
 }
@@ -67,7 +77,18 @@
   border: 0;
   background: transparent;
   padding: 4px 6px;
+  display: none;
 }
+
+@media only screen and (min-width: 414px) {
+  .react-datetimerange-picker__button {
+    border: 0;
+    background: transparent;
+    padding: 4px 6px;
+    display: flex;
+  }
+}
+
 .react-datetimerange-picker__button:enabled {
   cursor: pointer;
 }
@@ -75,7 +96,7 @@
   .react-datetimerange-picker__button__icon,
 .react-datetimerange-picker__button:enabled:focus
   .react-datetimerange-picker__button__icon {
-  stroke: #0078d7;
+  stroke: #555;
 }
 .react-datetimerange-picker__button:disabled
   .react-datetimerange-picker__button__icon {

@@ -1,4 +1,4 @@
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Heading, Text, VStack } from "@chakra-ui/react";
 import Layout from "@components/Layout/Layout";
 import { GroupCard } from "./component/GroupCard";
 import React, { useEffect, useState } from "react";
@@ -112,13 +112,15 @@ export const LaunchpadPage = () => {
   return (
     <Layout>
       <Box w="full" mx="auto" my="80px" maxW="1400px" textAlign="center">
-        <Heading fontSize={["3xl-mid", "5xl", "5xl"]} mb="10px">
-          launchpad
-        </Heading>
-        <Text maxW="360px" fontSize="lg" mx="auto">
-          The premier destination to launch your NFT Collection on Aleph Zero
-          Network.
-        </Text>
+        <VStack px="30px">
+          <Heading fontSize={["3xl-mid", "5xl", "5xl"]} mb="10px">
+            launchpad
+          </Heading>
+          <Text maxW="360px" fontSize="lg" mx="auto">
+            The premier destination to launch your NFT Collection on Aleph Zero
+            Network.
+          </Text>
+        </VStack>
       </Box>
 
       <GroupCard variant="live" projectsList={liveProjects} loading={loading} />

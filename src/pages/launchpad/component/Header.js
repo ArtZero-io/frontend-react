@@ -130,6 +130,7 @@ function LaunchpadDetailHeader({
               >
                 {" "}
                 <HStack
+                  ml="-70px"
                   h="full"
                   px="4px"
                   py="10px"
@@ -189,14 +190,14 @@ function LaunchpadDetailHeader({
                             variant="outline"
                             onClick={() => onOpenURI()}
                           >
-                            Update Base Uri
+                            update base uri
                           </Button>
                           <Button
                             px="16px"
                             variant="outline"
                             onClick={() => onOpenPhase()}
                           >
-                            Update Phases
+                            update phases
                           </Button>
                         </>
                       )}{" "}
@@ -388,12 +389,7 @@ function LaunchpadDetailHeader({
       )}
 
       {!loading && (
-        <Box
-          justifyContent="center"
-          pos={{ base: "", xl: "absolute" }}
-          right={"100px"}
-          top="30px"
-        >
+        <VStack>
           <SocialCard
             profile={[
               { website: "https://twitter.com/ArtZero_io" },
@@ -401,7 +397,7 @@ function LaunchpadDetailHeader({
               { discord: "https://discord.gg/wzkZ2JTvN4" },
             ]}
           />
-        </Box>
+        </VStack>
       )}
 
       <UpdateURIModal
