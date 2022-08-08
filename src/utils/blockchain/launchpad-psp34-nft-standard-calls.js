@@ -549,9 +549,12 @@ async function addNewPhase(
   phaseCode,
   isPublic,
   publicMintingFee,
-  publicMintingAmout,
+  publicMintingAmount,
   startTime,
-  endTime
+  endTime,
+  dispatch,
+  txType,
+  api
 ) {
   if (!contract || !caller_account) {
     return null;
@@ -563,44 +566,41 @@ async function addNewPhase(
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
+
   publicMintingFee = new BN(publicMintingFee * 10 ** 6)
     .mul(new BN(10 ** 6))
     .toString();
+
   console.log(contract);
-  contract.tx
-    .addNewPhase(
-      { gasLimit, value: azero_value },
-      phaseCode,
-      isPublic,
-      publicMintingFee,
-      publicMintingAmout,
-      startTime,
-      endTime
-    )
+
+  const txNotSign = contract.tx.addNewPhase(
+    { gasLimit, value: azero_value },
+    phaseCode,
+    isPublic,
+    publicMintingFee,
+    publicMintingAmount,
+    startTime,
+    endTime
+  );
+
+  await txNotSign
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Add New Phase ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
@@ -610,9 +610,12 @@ async function updateSchedulePhase(
   phaseCode,
   isPublic,
   publicMintingFee,
-  publicMintingAmout,
+  publicMintingAmount,
   startTime,
-  endTime
+  endTime,
+  dispatch,
+  txType,
+  api
 ) {
   if (!contract || !caller_account) {
     return null;
@@ -624,45 +627,42 @@ async function updateSchedulePhase(
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
+
   publicMintingFee = new BN(publicMintingFee * 10 ** 6)
     .mul(new BN(10 ** 6))
     .toString();
+
   console.log(contract);
-  contract.tx
-    .updateSchedulePhase(
-      { gasLimit, value: azero_value },
-      phaseId,
-      phaseCode,
-      isPublic,
-      publicMintingFee,
-      publicMintingAmout,
-      startTime,
-      endTime
-    )
+
+  const txNotSign = contract.tx.updateSchedulePhase(
+    { gasLimit, value: azero_value },
+    phaseId,
+    phaseCode,
+    isPublic,
+    publicMintingFee,
+    publicMintingAmount,
+    startTime,
+    endTime
+  );
+
+  await txNotSign
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Add New Phase ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
