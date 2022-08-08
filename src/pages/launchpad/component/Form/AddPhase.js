@@ -306,7 +306,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                     </Heading>
                   ) : null}
 
-                  {value[index].new && (
+                  {value[index].new && mode === formMode.EDIT && (
                     <>
                       <Heading
                         _hover={{
@@ -358,7 +358,8 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                 ) : null}
               </Stack>
               <CommonButton
-                w="full"
+                w="140px"
+                // w={{ base: "full", lg: "140px" }}
                 my="24px"
                 {...rest}
                 onClick={() => handleAddPhase(arrayHelpers)}

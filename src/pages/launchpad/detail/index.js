@@ -328,7 +328,7 @@ const LaunchpadDetailPage = () => {
         currentWhitelist={currentWhitelist}
       />
       {loading ? (
-        <AnimationLoader loadingTime={2} />
+        <AnimationLoader loadingTime={3.5} />
       ) : (
         <>
           <Box

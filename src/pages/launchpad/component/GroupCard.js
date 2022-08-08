@@ -29,7 +29,7 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
         bg="#171717"
         maxW="1426px"
         alignItems="center"
-        px={{ base: "25px", "2xl": "77px" }}
+        px={{ base: "15px", "2xl": "77px" }}
       >
         <Flex
           px="15px"
