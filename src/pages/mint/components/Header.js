@@ -187,7 +187,9 @@ function MintHeader({ loading }) {
         await Promise.all([amount1Data, publicSaleMintedCountData]).then(
           ([amount1Data, publicSaleMintedCountData]) => {
             setAmount1(amount1Data);
-            setPublicSaleMintedCount(publicSaleMintedCountData);
+            setPublicSaleMintedCount(
+              publicSaleMintedCountData >= 0 ? publicSaleMintedCountData : 0
+            );
           }
         );
 
@@ -676,7 +678,9 @@ function MintHeader({ loading }) {
                     >
                       Minting fee:{" "}
                       <Skeleton as="span" isLoaded={!isLoadingMintData}>
-                        <span style={{ color: "#fff" }}>{fee1}</span>{" "}
+                        <span style={{ color: "#fff" }}>
+                          {fee1 >= 0 ? fee1 : 0}
+                        </span>{" "}
                         <AzeroIcon mb={1.5} />
                       </Skeleton>
                     </Text>
