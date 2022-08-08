@@ -1,10 +1,10 @@
 const staking = {
-  CONTRACT_ADDRESS: "5GJDt6Lmvcim49HVwxwxgXBUHj2rP1qvaSF4CAUgXzH5Xd4g",
+  CONTRACT_ADDRESS: "5GDtdrXAwWSVcCDbaKuaFkjYZ7xacMLBrZCS7ForDcZCDM3P",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x5fe94c8b14e1efb6c77d4b5ed7d587e7f48e3dee9149a065e53cc451d2ecd912",
+      "hash": "0x0181febd4e00ac38a98e750b6be9baadaf643f45deca9581df4c828bc2dc2cff",
       "language": "ink! 3.3.0",
-      "compiler": "rustc 1.63.0-nightly"
+      "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
       "name": "artzero_staking_nft",
@@ -299,7 +299,7 @@ const staking = {
               }
             ],
             "docs": [
-              "Set new NFT contract address - Only Owner"
+              " Set new NFT contract address - Only Owner"
             ],
             "label": "set_artzero_nft_contract",
             "mutates": true,
@@ -325,7 +325,7 @@ const staking = {
               }
             ],
             "docs": [
-              "Set new Limit Unstake Time (Minutes) - Only Owner"
+              " Set new Limit Unstake Time (Minutes) - Only Owner"
             ],
             "label": "set_limit_unstake_time",
             "mutates": true,
@@ -449,7 +449,7 @@ const staking = {
             "docs": [
               " Set Account so it can claim the reward. Must run by backend every month before add_reward"
             ],
-            "label": "set_claimable",
+            "label": "set_claimed_status",
             "mutates": true,
             "payable": false,
             "returnType": {
@@ -458,7 +458,7 @@ const staking = {
               ],
               "type": 19
             },
-            "selector": "0x81b402da"
+            "selector": "0xa625d829"
           },
           {
             "args": [],
@@ -545,7 +545,7 @@ const staking = {
           {
             "args": [],
             "docs": [
-              "Get NFT contract address"
+              " Get NFT contract address"
             ],
             "label": "get_artzero_nft_contract",
             "mutates": false,
@@ -561,7 +561,7 @@ const staking = {
           {
             "args": [],
             "docs": [
-              "Get Is Locked Status"
+              " Get Is Locked Status"
             ],
             "label": "get_is_locked",
             "mutates": false,
@@ -577,7 +577,7 @@ const staking = {
           {
             "args": [],
             "docs": [
-              "Get Admin Account"
+              " Get Admin Account"
             ],
             "label": "get_admin_address",
             "mutates": false,
@@ -612,7 +612,7 @@ const staking = {
               }
             ],
             "docs": [
-              "Get request unstake Time"
+              " Get request unstake Time"
             ],
             "label": "get_request_unstake_time",
             "mutates": false,
@@ -647,7 +647,7 @@ const staking = {
               }
             ],
             "docs": [
-              "Get staked token ids by AccountId"
+              " Get staked token ids by AccountId"
             ],
             "label": "get_staked_id",
             "mutates": false,
@@ -673,7 +673,7 @@ const staking = {
               }
             ],
             "docs": [
-              "Get staked accounts: index by AccountId"
+              " Get staked accounts: index by AccountId"
             ],
             "label": "get_staked_accounts_index_by_account",
             "mutates": false,
@@ -699,7 +699,7 @@ const staking = {
               }
             ],
             "docs": [
-              "Get staked accounts: account by Index"
+              " Get staked accounts: account by Index"
             ],
             "label": "get_staked_accounts_account_by_index",
             "mutates": false,
@@ -734,7 +734,7 @@ const staking = {
               }
             ],
             "docs": [
-              "Get pending unstaked token ids by AccountId"
+              " Get pending unstaked token ids by AccountId"
             ],
             "label": "get_pending_unstaked_id",
             "mutates": false,
@@ -750,7 +750,7 @@ const staking = {
           {
             "args": [],
             "docs": [
-              "Get total NFT staked in the contract"
+              " Get total NFT staked in the contract"
             ],
             "label": "get_total_staked",
             "mutates": false,
@@ -945,7 +945,7 @@ const staking = {
               }
             ],
             "docs": [
-              "Transfer NFT token"
+              " Transfer NFT token"
             ],
             "label": "tranfer_nft",
             "mutates": true,
@@ -961,19 +961,29 @@ const staking = {
           {
             "args": [],
             "docs": [
-              " Returns the address of the current owner."
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
             ],
-            "label": "Ownable::owner",
-            "mutates": false,
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
                 "ownable_external",
-                "OwnerOutput"
+                "RenounceOwnershipOutput"
               ],
-              "type": 0
+              "type": 17
             },
-            "selector": "0x4fa43c8c"
+            "selector": "0x5e228753"
           },
           {
             "args": [
@@ -1015,29 +1025,19 @@ const staking = {
           {
             "args": [],
             "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
+              " Returns the address of the current owner."
             ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
+            "label": "Ownable::owner",
+            "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "ownable_external",
-                "RenounceOwnershipOutput"
+                "OwnerOutput"
               ],
-              "type": 17
+              "type": 0
             },
-            "selector": "0x5e228753"
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [
@@ -1053,7 +1053,7 @@ const staking = {
               }
             ],
             "docs": [
-              "Get User NFT staked in the contract"
+              " Get User NFT staked in the contract"
             ],
             "label": "CrossArtZeroStaking::get_total_staked_by_account",
             "mutates": false,
@@ -1081,7 +1081,7 @@ const staking = {
               }
             ],
             "docs": [
-              "Get User NFT staked in the contract"
+              " Get User NFT staked in the contract"
             ],
             "label": "CrossArtZeroStaking::get_total_pending_unstaked_by_account",
             "mutates": false,
