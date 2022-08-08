@@ -1,4 +1,4 @@
-import { Box, Flex, Spacer, Stack, Text } from "@chakra-ui/react";
+import { Box, HStack, Stack, Text, VStack } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import React, { useState, useEffect, useRef } from "react";
 import { Formik, Form } from "formik";
@@ -180,38 +180,38 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               )
               .max(50, "Must be at most 50 characters"),
 
-              nftName: Yup.string()
-                .trim()
-                .when("isEditMode", {
-                  is: false,
-                  then: Yup.string()
-                    .min(3, "Must be longer than 3 characters")
-                    .max(25, "Must be at most 25 characters")
-                    .required("This field is required"),
-                }),
-              nftSymbol: Yup.string()
-                .trim()
-                .when("isEditMode", {
-                  is: false,
-                  then: Yup.string()
-                    .min(3, "Must be longer than 3 characters")
-                    .max(8, "Must be at most 8 characters")
-                    .required("This field is required"),
-                }),
-              agreeTosCheckbox: Yup.boolean().when("isEditMode", {
+            nftName: Yup.string()
+              .trim()
+              .when("isEditMode", {
                 is: false,
-                then: Yup.boolean()
-                  .required("The terms and conditions must be accepted.")
-                  .oneOf([true], "The TOCs must be accepted."),
+                then: Yup.string()
+                  .min(3, "Must be longer than 3 characters")
+                  .max(25, "Must be at most 25 characters")
+                  .required("This field is required"),
               }),
-            })}
-            onSubmit={async (values, { setSubmitting }) => {
-              if (
-                !values.isEditMode &&
-                (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl)
-              ) {
-                return toast.error("Upload avatar or header too");
-              }
+            nftSymbol: Yup.string()
+              .trim()
+              .when("isEditMode", {
+                is: false,
+                then: Yup.string()
+                  .min(3, "Must be longer than 3 characters")
+                  .max(8, "Must be at most 8 characters")
+                  .required("This field is required"),
+              }),
+            agreeTosCheckbox: Yup.boolean().when("isEditMode", {
+              is: false,
+              then: Yup.boolean()
+                .required("The terms and conditions must be accepted.")
+                .oneOf([true], "The TOCs must be accepted."),
+            }),
+          })}
+          onSubmit={async (values, { setSubmitting }) => {
+            if (
+              !values.isEditMode &&
+              (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl)
+            ) {
+              return toast.error("Upload avatar or header too");
+            }
 
             // if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
             values.avatarIPFSUrl = avatarIPFSUrl;
@@ -283,7 +283,10 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
         >
           {({ values, dirty, isValid, submitForm, handleSubmitForm }) => (
             <Form>
-              <Stack direction={{ base: "column", md: "row" }}>
+              <Stack
+                gap={["10px", "30px"]}
+                direction={{ base: "column", md: "row" }}
+              >
                 {mode === formMode.ADD && (
                   <>
                     <SimpleModeInput
@@ -314,7 +317,10 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 />
               </Stack>
 
-              <Stack direction={{ base: "column", md: "row" }}>
+              <Stack
+                gap={["10px", "30px"]}
+                direction={{ base: "column", md: "row" }}
+              >
                 <SimpleModeInput
                   type="text"
                   name="website"
@@ -414,54 +420,44 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               </Stack>
 
               {mode === formMode.ADD && (
-                <Stack
-                  mt={5}
-                  minH={20}
-                  direction={{ base: "column", md: "row" }}
-                  alignItems={{ base: "start", md: "center" }}
-                >
-                  <Box w="12rem">
-                    <SimpleModeSwitch
-                      name="collectRoyalFee"
-                      isDisabled={actionType}
-                      label="Collect Royal Fee"
-                      onChange={() => {
-                        values.collectRoyalFee = !values.collectRoyalFee;
-                        setIsSetRoyal(!isSetRoyal);
-                      }}
+                <Stack mt={5} minH={20}>
+                  <Stack direction={["column", "row"]} minH="85px">
+                    <Stack minW="225px">
+                      <SimpleModeSwitch
+                        name="collectRoyalFee"
+                        isDisabled={actionType}
+                        label="Collect Royal Fee"
+                        onChange={() => {
+                          values.collectRoyalFee = !values.collectRoyalFee;
+                          setIsSetRoyal(!isSetRoyal);
+                        }}
+                      />
+                    </Stack>
+                    <AddCollectionNumberInput
+                      type="number"
+                      name="royalFee"
+                      inputWidth={"8rem"}
+                      isDisplay={isSetRoyal}
+                      max={maxRoyalFeeRate}
+                      placeholder="Royal Fee"
+                      isDisabled={!isSetRoyal || actionType}
+                      label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
                     />
-                  </Box>
+                  </Stack>
 
-                  <AddCollectionNumberInput
-                    type="number"
-                    name="royalFee"
-                    inputWidth={"8rem"}
-                    isDisplay={isSetRoyal}
-                    max={maxRoyalFeeRate}
-                    placeholder="Royal Fee"
-                    isDisabled={!isSetRoyal || actionType}
-                    label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
-                  />
-
-                  <Spacer />
-
-                  <Flex
-                    textAlign="left"
-                    direction="column"
-                    alignItems="flex-start"
-                    justifyContent="flex-start"
-                  >
+                  <VStack pt="30px">
                     <Text color="#fff" fontSize={["md", "lg", "lg"]}>
                       Create new collection you will pay
                       <strong> {addingFee} $AZERO </strong> in fee to ArtZero.io
                     </Text>
-
-                    <CommonCheckbox
-                      isDisabled={actionType}
-                      name="agreeTosCheckbox"
-                      content="I agree to ArtZero's Terms of Service"
-                    />
-                  </Flex>
+                    <HStack justifyContent="center">
+                      <CommonCheckbox
+                        isDisabled={actionType}
+                        name="agreeTosCheckbox"
+                        content="I agree to ArtZero's Terms of Service"
+                      />
+                    </HStack>
+                  </VStack>
                 </Stack>
               )}
               <CommonButton

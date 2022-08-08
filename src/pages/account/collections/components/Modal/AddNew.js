@@ -72,7 +72,12 @@ function AddNewCollection({ mode = formMode.ADD, id }) {
           </ModalHeader>
 
           <ModalBody>
-            <Stack w="75%" mx="auto" direction={{ base: "column", md: "row" }}>
+            <Stack
+              w="80%"
+              mx="auto"
+              gap={["10px", "30px"]}
+              direction={{ base: "column", md: "row" }}
+            >
               <SimpleMode mode={mode} id={id} />
 
               <Spacer />

@@ -1,27 +1,12 @@
-/* eslint-disable no-unused-vars */
-// eslint-disable-next-line no-unused-vars
-import { APICall } from "@api/client";
-import {
-  Box,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-  Spacer,
-  HStack,
-  VStack,
-} from "@chakra-ui/react";
+import { Heading, Stack, Text, HStack, VStack } from "@chakra-ui/react";
 import BN from "bn.js";
-import StatusButton from "@components/Button/StatusButton";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import ImageUpload from "@components/ImageUpload/Collection";
-import Input from "@components/Input/Input";
 import NumberInput from "@components/Input/NumberInput";
 import TextArea from "@components/TextArea/TextArea";
 import { formMode } from "@constants";
 import { IPFS_CLIENT_URL } from "@constants/index";
 import { formatBalance } from "@polkadot/util";
-import { AccountActionTypes } from "@store/types/account.types";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 import { useSubstrateState } from "@utils/substrate";
 import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
@@ -30,14 +15,14 @@ import { Form, Formik } from "formik";
 import { create } from "ipfs-http-client";
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import AddMember from "./AddMember";
 import AddPhase from "./AddPhase";
 import AddRoadmap from "./AddRoadmap";
 import CommonInput from "@components/Input/Input";
 import { timestampWithoutCommas } from "@utils";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { ContractPromise } from "@polkadot/api-contract";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
@@ -47,25 +32,39 @@ import collection_manager_calls from "@utils/blockchain/collection-manager-calls
 import CommonStack from "./CommonStack";
 import emailjs from "@emailjs/browser";
 
+import useTxStatus from "@hooks/useTxStatus";
+import { setTxStatus } from "@store/actions/txStatus";
+import CommonButton from "@components/Button/CommonButton";
+import {
+  CREATE_PROJECT,
+  EDIT_PROJECT,
+  CREATE_COLLECTION,
+  START,
+} from "@constants";
+import * as ROUTES from "@constants/routes";
+
 const client = create(IPFS_CLIENT_URL);
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const { currentAccount, api } = useSubstrateState();
+
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
   const [initialValues, setInitialValues] = useState(null);
   const [userBalance, setUserBalance] = useState(null);
   const [isSetRoyal, setIsSetRoyal] = useState(false);
   const [addingFee, setAddingFee] = useState(0);
-  const dispatch = useDispatch();
-  const { currentAccount, api } = useSubstrateState();
-  const { addCollectionTnxStatus } = useSelector(
-    (s) => s.account.accountLoaders
-  );
   const [maxRoyalFeeRate, setMaxRoyalFeeRate] = useState(0);
+  const [addProjectTotalFee, setAddProjectTotalFee] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [newNFTAddress, setNewNFTAddress] = useState(null);
+
   const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
   const currentHeaderIPFSUrl = useRef(headerIPFSUrl);
 
-  const [addProjectTotalFee, setAddProjectTotalFee] = useState(null);
+  const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   // eslint-disable-next-line no-unused-vars
   const noImagesChange =
@@ -73,7 +72,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     currentHeaderIPFSUrl.current === headerIPFSUrl;
 
   const location = useLocation();
-
+  console.log("nftContractAddress add new", nftContractAddress);
   mode = location.state?.formMode;
 
   if (mode === "EDIT") {
@@ -295,14 +294,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               };
 
               if (mode === formMode.ADD) {
-                dispatch({
-                  type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-                  payload: {
-                    status: "Start",
-                  },
-                });
-
                 const createNewCollection = async (nft_address) => {
+                  setNewNFTAddress(nft_address);
                   console.log("createNewCollection nft_address", nft_address);
                   // Lay gia tri nft_address tu launchpad_contract_calls roi tao collection
                   const collectionData = {
@@ -333,10 +326,18 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       ? Math.round(values.royalFee * 100)
                       : 0,
                   };
+
+                  dispatch(
+                    setTxStatus({ type: CREATE_COLLECTION, step: START })
+                  );
+
+                  toast.success("Step 2. Creating collection...");
+
                   await collection_manager_calls.addNewCollection(
                     currentAccount,
                     collectionData,
                     dispatch,
+                    CREATE_COLLECTION,
                     api
                   );
                   var templateParams = {
@@ -363,11 +364,16 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 };
 
                 console.log("addNewProject data", data);
+
+                dispatch(setTxStatus({ type: CREATE_PROJECT, step: START }));
+
+                toast.success("Step 1. Creating project...");
+
                 await launchpad_contract_calls.addNewProject(
                   currentAccount,
                   data,
                   dispatch,
-                  "CREATE_PROJECT",
+                  CREATE_PROJECT,
                   api,
                   createNewCollection
                 );
@@ -391,46 +397,58 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   const project_info_ipfs = await client.add(
                     JSON.stringify(project_info)
                   );
+
                   const launchpad_psp34_nft_standard_contract =
                     new ContractPromise(
                       api,
                       launchpad_psp34_nft_standard.CONTRACT_ABI,
                       location.state?.collection_address
                     );
+
                   launchpad_psp34_nft_standard_calls.setContract(
                     launchpad_psp34_nft_standard_contract
                   );
+
+                  dispatch(setTxStatus({ type: EDIT_PROJECT, step: START }));
+
                   await launchpad_psp34_nft_standard_calls.editProjectInformation(
                     currentAccount,
-                    project_info_ipfs.path
+                    project_info_ipfs.path,
+                    dispatch,
+                    EDIT_PROJECT,
+                    api
                   );
                 }
               }
             }}
           >
-            {({ values, dirty, isValid, setFieldValue, ...rest }) => (
+            {({ values, dirty, isValid, setFieldValue }) => (
               <Form>
                 <CommonStack stackTitle="1. project info">
                   <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
-                    <Stack w={["100%", "406px"]}>
-                      <Input
+                    <Stack w={["100%", "416px"]}>
+                      <CommonInput
+                        mx="0"
                         type="text"
                         name="name"
                         isRequired={true}
                         label="Project name"
                         placeholder="Project name"
-                        isDisabled={addCollectionTnxStatus}
-                      />{" "}
+                        isDisabled={actionType}
+                      />
                     </Stack>
 
                     <Stack w="full">
                       {mode === formMode.ADD && (
                         <Stack pb="30px">
-                          <Text fontSize="lg" ml={1} mb="10px">
-                            Start time - End time
+                          <Text fontSize="lg" ml={1}>
+                            Start time - End time{" "}
+                            <Text as="span" fontSize="lg" color="#fc8181">
+                              *
+                            </Text>
                           </Text>
                           <DateTimeRangePicker
-                            disabled={addCollectionTnxStatus}
+                            disabled={actionType}
                             onChange={(e) =>
                               handleOnchangeSchedule(e, setFieldValue)
                             }
@@ -452,37 +470,41 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                   <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
                     <CommonInput
+                      mx="0"
                       type="text"
                       name="website"
                       label="Website URL"
                       placeholder={"Website URL"}
-                      isDisabled={addCollectionTnxStatus}
+                      isDisabled={actionType}
                     />
                     <CommonInput
+                      mx="0"
                       type="text"
                       name="twitter"
                       label="Twitter URL"
                       placeholder={"Twitter URL"}
-                      isDisabled={addCollectionTnxStatus}
+                      isDisabled={actionType}
                     />
                     <CommonInput
+                      mx="0"
                       type="text"
                       name="discord"
                       label="Discord URL"
                       placeholder={"Discord URL"}
-                      isDisabled={addCollectionTnxStatus}
+                      isDisabled={actionType}
                     />
                   </Stack>
 
                   <Stack>
                     <TextArea
+                      mx="0"
                       height="140"
                       type="text"
                       isRequired={true}
                       name="description"
                       label="Project description"
                       placeholder="Project description"
-                      isDisabled={addCollectionTnxStatus}
+                      isDisabled={actionType}
                     />
                   </Stack>
 
@@ -495,14 +517,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     {mode === formMode.ADD && (
                       <Stack
                         bg=""
-                        minW={52}
+                        minW={"238px"}
                         alignItems="end"
                         direction={{ base: "column", "2xl": "row" }}
                       >
                         <AdvancedModeSwitch
                           name="collectRoyalFee"
                           label="Collect Royal Fee"
-                          isDisabled={addCollectionTnxStatus}
+                          isDisabled={actionType}
                           onChange={() => {
                             values.collectRoyalFee = !values.collectRoyalFee;
                             setIsSetRoyal(!isSetRoyal);
@@ -512,7 +534,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     )}
 
                     <AddCollectionNumberInput
-                      isDisabled={!isSetRoyal || addCollectionTnxStatus}
+                      isDisabled={!isSetRoyal || actionType}
                       isDisplay={isSetRoyal}
                       max={maxRoyalFeeRate}
                       label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
@@ -530,7 +552,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     <AddRoadmap
                       name="roadmap"
                       mode={mode}
-                      isDisabled={addCollectionTnxStatus}
+                      isDisabled={actionType}
                     />
                   </Stack>
 
@@ -541,7 +563,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     <AddMember
                       name="members"
                       mode={mode}
-                      isDisabled={addCollectionTnxStatus}
+                      isDisabled={actionType}
                     />
                   </Stack>
 
@@ -560,13 +582,12 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       <Heading size="h5">project avatar image</Heading>{" "}
                       <Text pt="30px">Choose avatar image</Text>
                       <ImageUpload
-                        isDisabled={addCollectionTnxStatus}
+                        isDisabled={actionType}
                         id="avatar"
                         mode={mode}
                         isBanner={false}
                         imageIPFSUrl={avatarIPFSUrl}
                         setImageIPFSUrl={setAvatarIPFSUrl}
-                        // title="Project Avatar Image"
                         limitedSize={{ width: "500", height: "500" }}
                       />
                     </Stack>
@@ -584,9 +605,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         id="header"
                         mode={mode}
                         isBanner={true}
-                        // title="Project Header Image"
                         imageIPFSUrl={headerIPFSUrl}
-                        isDisabled={addCollectionTnxStatus}
+                        isDisabled={actionType}
                         setImageIPFSUrl={setHeaderIPFSUrl}
                         limitedSize={{ width: "1920", height: "600" }}
                       />
@@ -602,7 +622,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       label="NFT Name"
                       isRequired={true}
                       placeholder="NFT Name"
-                      isDisabled={addCollectionTnxStatus}
+                      isDisabled={actionType}
                     />
 
                     <CommonInput
@@ -611,69 +631,82 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       label="NFT Symbol"
                       isRequired={true}
                       placeholder="NFT Symbol"
-                      isDisabled={addCollectionTnxStatus}
+                      isDisabled={actionType}
                     />
                     {mode === formMode.ADD && (
                       <NumberInput
-                        height="52px"
                         precision={0}
                         isRequired={true}
                         name="totalSupply"
                         hasStepper={false}
                         inputWidth={"260px"}
                         label="Total Supply"
-                        // step={1}
-                        // type="number"
-                        // placeholder="9999"
-                        isDisabled={addCollectionTnxStatus}
+                        isDisabled={actionType}
                       />
                     )}
                   </Stack>
                 </CommonStack>
+
                 {mode === formMode.ADD && (
                   <CommonStack stackTitle="3. phases info">
                     <AddPhase
                       name="phases"
                       mode={mode}
-                      isDisabled={addCollectionTnxStatus}
+                      isDisabled={actionType}
                     />
                   </CommonStack>
                 )}
+
                 {mode === formMode.ADD && (
                   <CommonStack stackTitle="4. Contact info">
                     <CommonInput
+                      isRequired={true}
                       type="text"
                       name="email_owner"
                       label="This email not saved on our platform, we just use this field to contact with you!"
                       placeholder={"Email Contact"}
-                      isDisabled={addCollectionTnxStatus}
+                      isDisabled={actionType}
                     />
                   </CommonStack>
                 )}
+
                 <VStack>
-                  <Text color="#fff">
-                    Create new collection you will pay
-                    <strong> {addProjectTotalFee} $AZERO </strong> in fee to
-                    ArtZero.io
-                  </Text>
-                  <HStack justifyContent="center">
-                    <CommonCheckbox
-                      justifyContent="center"
-                      isDisabled={addCollectionTnxStatus}
-                      name="agreeTosCheckbox"
-                      content="I agree to ArtZero's Terms of Service"
-                    />
-                  </HStack>
+                  {mode === formMode.ADD && (
+                    <>
+                      <Text color="#fff">
+                        Create new collection you will pay
+                        <strong> {addProjectTotalFee} $AZERO </strong> in fee to
+                        ArtZero.io
+                      </Text>
+
+                      <HStack justifyContent="center">
+                        <CommonCheckbox
+                          justifyContent="center"
+                          isDisabled={actionType}
+                          name="agreeTosCheckbox"
+                          content="I agree to ArtZero's Terms of Service"
+                        />
+                      </HStack>
+                    </>
+                  )}
+
                   <Stack w="940px">
-                    <StatusButton
-                      // w="940px"
-                      // w="full"
-                      mode={mode}
-                      text="project"
-                      isLoading={addCollectionTnxStatus}
-                      // disabled={!(dirty && isValid) && noImagesChange}
-                      loadingText={`${addCollectionTnxStatus?.status}`}
-                      type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
+                    <CommonButton
+                      onRedirect={() =>
+                        mode === formMode.ADD
+                          ? history.push(`/account/projects`)
+                          : history.push(
+                              `${ROUTES.LAUNCHPAD_BASE}/${nftContractAddress}`
+                            )
+                      }
+                      w="full"
+                      my="24px"
+                      {...rest}
+                      type="submit"
+                      text={`${
+                        mode === formMode.ADD ? "create" : "update"
+                      } project`}
+                      isDisabled={!(dirty && isValid) && noImagesChange}
                     />
                   </Stack>
                 </VStack>
@@ -689,7 +722,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 export default AddNewProjectForm;
 
 export const fetchUserBalance = async ({ currentAccount, api, address }) => {
-  if (currentAccount) {
+  if (currentAccount && api) {
     const {
       data: { free: balance },
     } = await api.query.system.account(address || currentAccount?.address);
@@ -769,9 +802,9 @@ export const fetchInitialValuesProject = async ({
 
     // Update initialValues
     const {
-      isActive,
-      projectType,
-      projectOwner,
+      // isActive,
+      // projectType,
+      // projectOwner,
       totalSupply,
       startTime,
       endTime,

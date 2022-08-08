@@ -1,4 +1,7 @@
 .react-datetimerange-picker {
+  margin-top: 0;
+  height: 50px;
+  background: #171717;
   display: inline-flex;
   position: relative;
 }
@@ -11,7 +14,7 @@
   box-sizing: border-box;
 }
 .react-datetimerange-picker--disabled {
-  background-color: #f0f0f0;
+  background-color: #000;
   color: #6d6d6d;
 }
 .react-datetimerange-picker__wrapper {
@@ -19,14 +22,16 @@
   flex-grow: 1;
   flex-shrink: 0;
   align-items: center;
-  border: thin solid gray;
+  border: 0 solid gray;
+  padding-left: 8px;
+  padding-right: 8px;
   /* min-height: "100px"; */
 }
 .react-datetimerange-picker__inputGroup {
   min-width: calc(4px + (4px * 3) + 0.54em * 6 + 0.217em * 2);
   height: 100%;
   flex-grow: 1;
-  padding: 0 2px;
+  padding: 0 20px;
 }
 .react-datetimerange-picker__inputGroup__divider {
   padding: 1px 0;

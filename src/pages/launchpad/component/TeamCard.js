@@ -50,9 +50,10 @@ export const TeamCard = ({ team_member }) => {
 
         <Stack>
           <Link
+            isExternal
             color="brand.blue"
             textTransform="capitalize"
-            to={team_member?.socialLink}
+            href={team_member?.socialLink}
           >
             Social link
           </Link>

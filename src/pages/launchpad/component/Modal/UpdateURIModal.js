@@ -1,7 +1,4 @@
-/* eslint-disable no-unused-vars */
-// eslint-disable-next-line no-unused-vars
 import {
-  Button,
   Heading,
   Input,
   Modal,
@@ -13,56 +10,58 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AccountActionTypes } from "@store/types/account.types";
-import { onCloseButtonModal } from "@utils";
+import { useDispatch } from "react-redux";
 import { useSubstrateState } from "@utils/substrate";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
+import useTxStatus from "@hooks/useTxStatus";
+import { setTxStatus } from "@store/actions/txStatus";
+import CommonButton from "@components/Button/CommonButton";
+import { UPDATE_BASE_URI, START, FINALIZED, END } from "@constants";
+import { clearTxStatus } from "@store/actions/txStatus";
 
-export default function UpdateURIModal({ collection_address, isOpen, onClose, forceUpdate }) {
+export default function UpdateURIModal({
+  collection_address,
+  isOpen,
+  onClose,
+}) {
   const dispatch = useDispatch();
-  const { addCollectionTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
-  );
+
   const [newURI, setNewURI] = useState("Your new URI here");
   const { currentAccount, api } = useSubstrateState();
+  const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
-    function onCloseHandler() {
+    console.log("rest.step", rest.step);
+    if (rest.step === END) {
+      console.log("rest.step IN", rest.step);
+      dispatch(clearTxStatus());
       onClose();
-
-      if (addCollectionTnxStatus?.status === "End") {
-        // dispatch({
-        //   type: AccountActionTypes.SET_TNX_STATUS,
-        //   payload: null,
-        // });
-        // delay(300).then(() => {
-        //   forceUpdate();
-        // onClose();
-        // dispatch({
-        //   type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-        // });
-        // });
-      }
     }
-
-    onCloseHandler();
-  }, [addCollectionTnxStatus, dispatch, forceUpdate, onClose]);
+  }, [dispatch, onClose, rest.step]);
 
   const updateBaseUri = async () => {
-    const launchpad_psp34_nft_standard_contract =
-      new ContractPromise(
-        api,
-        launchpad_psp34_nft_standard.CONTRACT_ABI,
-        collection_address
-      );
+    const launchpad_psp34_nft_standard_contract = new ContractPromise(
+      api,
+      launchpad_psp34_nft_standard.CONTRACT_ABI,
+      collection_address
+    );
+
     launchpad_psp34_nft_standard_calls.setContract(
       launchpad_psp34_nft_standard_contract
     );
-    await launchpad_psp34_nft_standard_calls.updateBaseUri(currentAccount, newURI);
-  }
+
+    dispatch(setTxStatus({ type: UPDATE_BASE_URI, step: START }));
+
+    await launchpad_psp34_nft_standard_calls.updateBaseUri(
+      currentAccount,
+      newURI,
+      dispatch,
+      UPDATE_BASE_URI,
+      api
+    );
+  };
 
   return (
     <Modal
@@ -91,13 +90,7 @@ export default function UpdateURIModal({ collection_address, isOpen, onClose, fo
           right="-8"
           borderWidth={2}
           borderRadius="0"
-          onClick={() => {
-            onCloseButtonModal({
-              status: addCollectionTnxStatus?.status,
-              dispatch,
-              type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-            });
-          }}
+          onClick={() => rest?.step === FINALIZED && rest?.onEndClick()}
         />
         <ModalHeader textAlign="center">
           <Heading size="h4" my={2}>
@@ -108,14 +101,19 @@ export default function UpdateURIModal({ collection_address, isOpen, onClose, fo
         <ModalBody shadow="lg">
           <VStack>
             <Input
+              bg="black"
+              mb="15px"
+              isDisabled={actionType}
               value={newURI}
               border="1px  solid #555"
               onChange={({ target }) => setNewURI(target.value)}
             />
-
-            <Button variant="solid" onClick={updateBaseUri}>
-              Submit
-            </Button>
+            <CommonButton
+              {...rest}
+              w="full"
+              onClick={updateBaseUri}
+              text="update base URI"
+            />
           </VStack>
         </ModalBody>
       </ModalContent>

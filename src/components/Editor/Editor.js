@@ -3,7 +3,7 @@ import "./quill.bubble.css";
 import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import EditorToolbar, { modules, formats } from "./CustomToolbar";
-import { Text } from "@chakra-ui/react";
+import { Stack, Text } from "@chakra-ui/react";
 
 export const Editor = ({
   editorContent,
@@ -30,13 +30,14 @@ export const Editor = ({
   return (
     <div className="text-editor">
       <EditorToolbar />
-
-      <Text as="span" fontSize="lg">
-        Content{" "}
-        <Text as="span" fontSize="lg" color="#fc8181">
-          {isRequired && "*"}
+      <Stack pb="6px" pl="4px">
+        <Text as="span" fontSize="lg">
+          Content{" "}
+          <Text as="span" fontSize="lg" color="#fc8181">
+            {isRequired && "*"}
+          </Text>
         </Text>
-      </Text>
+      </Stack>
 
       <ReactQuill
         readOnly={isDisabled}

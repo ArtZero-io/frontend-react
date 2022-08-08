@@ -8,7 +8,10 @@ import {
 import { ContractPromise, Abi } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
 import { AccountActionTypes } from "@store/types/account.types";
-import { txResponseErrorHandler } from "../../store/actions/txStatus";
+import {
+  txErrorHandler,
+  txResponseErrorHandler,
+} from "@store/actions/txStatus";
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 
 let contract;
@@ -131,7 +134,6 @@ async function setMultipleAttributes(
 }
 
 async function owner(caller_account) {
-
   if (!contract || !caller_account) {
     return null;
   }
@@ -239,10 +241,12 @@ async function addNewProject(
   createNewCollection
 ) {
   let unsubscribe;
+
   const address = caller_account?.address;
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
   const value = await getProjectAddingFee(caller_account);
+
   contract.tx
     .addNewProject(
       { gasLimit, value: value },
@@ -270,14 +274,7 @@ async function addNewProject(
           api,
           caller_account,
         });
-        if (dispatchError) {
-          console.log(dispatchError.toString());
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
+
         if (status.isInBlock) {
           console.log("Included at block hash", status.asInBlock.toHex());
           console.log("Events:");
@@ -303,64 +300,16 @@ async function addNewProject(
                   const nft_address = eventValues[1];
 
                   createNewCollection(nft_address);
-                  //Push nft_address -> sang file AddNewProject.js
-
-                  // const collectionData = {
-                  //   nftContractAddress: nft_address,
-                  //   attributes: [
-                  //     "name",
-                  //     "description",
-                  //     "avatar_image",
-                  //     "header_image",
-                  //     "header_square_image",
-                  //     "website",
-                  //     "twitter",
-                  //     "discord",
-                  //   ],
-
-                  //   attributeVals: [
-                  //     data.collectionName.trim(),
-                  //     data.collectionDescription.trim(),
-                  //     data.avatarIPFSUrl,
-                  //     data.headerIPFSUrl,
-                  //     data.headerSquareIPFSUrl,
-                  //     data.website,
-                  //     data.twitter,
-                  //     data.discord,
-                  //   ],
-                  //   collectionAllowRoyalFee: data.collectRoyalFee,
-                  //   collectionRoyalFeeData: data.collectRoyalFee
-                  //     ? Math.round(data.royalFee * 100)
-                  //     : 0,
-                  // };
-
-                  // await collection_manager_calls.addNewCollection(
-                  //   currentAccount,
-                  //   collectionData,
-                  //   dispatch,
-                  //   api
-                  // );
                 }
               }
             }
           });
-        } else if (status.isFinalized) {
-          toast.success(`Success`);
         }
       }
     )
-    .then((unsub) => {
-      console.log(unsub);
-      unsubscribe = unsub;
-    })
-    .catch((e) => {
-      dispatch({
-        type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-      });
-      const mess = `Tnx is ${e.message}`;
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
 
-      toast.error(mess);
-    });
   return unsubscribe;
 }
 

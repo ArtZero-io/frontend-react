@@ -1,21 +1,30 @@
-/* eslint-disable no-unused-vars */
-import { Button, Heading, HStack, Stack, Text } from "@chakra-ui/react";
+import { Heading, HStack, Stack, Text } from "@chakra-ui/react";
 import { FieldArray, useField } from "formik";
 import Input from "@components/Input/Input";
 import { formMode } from "@constants";
 import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
 import toast from "react-hot-toast";
-
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { ContractPromise } from "@polkadot/api-contract";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import NumberInput from "@components/Input/NumberInput";
 import { useState } from "react";
 import { isPhaseTimeOverlap } from "@utils";
+import { useSubstrateState } from "@utils/substrate";
+import { setTxStatus } from "@store/actions/txStatus";
+import { UPDATE_PHASE, ADD_PHASE, START } from "@constants";
+import { useDispatch } from "react-redux";
+import useTxStatus from "@hooks/useTxStatus";
+import CommonButton from "@components/Button/CommonButton";
 
-function AddPhase({ name, mode, isDisabled }) {
+function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
   const [{ value }, , helpers] = useField(name);
   const [isPublic, setIsPublic] = useState(false);
-
+  const { currentAccount, api } = useSubstrateState();
   // const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
+  const dispatch = useDispatch();
+  const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   const handlePhaseTime = (e, index) => {
     if (e) {
@@ -77,7 +86,81 @@ function AddPhase({ name, mode, isDisabled }) {
       isPublic: false,
       publicMintingFee: "",
       publicAmount: "",
+      new: true,
     });
+  };
+
+  const onUpdatePhase = async (index) => {
+    const launchpad_psp34_nft_standard_contract = new ContractPromise(
+      api,
+      launchpad_psp34_nft_standard.CONTRACT_ABI,
+      collection_address
+    );
+    launchpad_psp34_nft_standard_calls.setContract(
+      launchpad_psp34_nft_standard_contract
+    );
+
+    const { name, id, isPublic, publicMintingFee, publicAmount, start, end } =
+      value[index];
+
+    console.log("value[index]", value[index]);
+
+    dispatch(
+      setTxStatus({ type: UPDATE_PHASE, step: START, tokenIDArray: [index] })
+    );
+
+    await launchpad_psp34_nft_standard_calls.updateSchedulePhase(
+      currentAccount,
+      id,
+      name,
+      isPublic,
+      publicMintingFee,
+      publicAmount,
+      start,
+      end,
+      dispatch,
+      UPDATE_PHASE,
+      api
+    );
+  };
+
+  const onAddNewPhase = async (index) => {
+    // console.log(index);
+    // const newValue = value.map((i, idx) => {
+    //   return idx === value.length - 1 ? { ...i, start: null, end: null } : i;
+    // });
+
+    const launchpad_psp34_nft_standard_contract = new ContractPromise(
+      api,
+      launchpad_psp34_nft_standard.CONTRACT_ABI,
+      collection_address
+    );
+
+    launchpad_psp34_nft_standard_calls.setContract(
+      launchpad_psp34_nft_standard_contract
+    );
+
+    const { name, isPublic, publicMintingFee, publicAmount, start, end } =
+      value[index];
+
+    console.log("value[index]", value[index]);
+
+    dispatch(
+      setTxStatus({ type: ADD_PHASE, step: START, tokenIDArray: [index] })
+    );
+
+    await launchpad_psp34_nft_standard_calls.addNewPhase(
+      currentAccount,
+      name,
+      isPublic,
+      publicMintingFee,
+      publicAmount,
+      start,
+      end,
+      dispatch,
+      ADD_PHASE,
+      api
+    );
   };
 
   return (
@@ -85,7 +168,6 @@ function AddPhase({ name, mode, isDisabled }) {
       name="phases"
       render={(arrayHelpers) => {
         const phasesErrors = arrayHelpers?.form?.errors?.members;
-
         return (
           <Stack>
             {value?.map((_, index) => (
@@ -98,22 +180,26 @@ function AddPhase({ name, mode, isDisabled }) {
                 <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
                   <Stack w={["100%", "50%"]}>
                     <Input
+                      mx="0"
                       type="text"
                       name={`phases[${index}].name`}
                       isRequired={true}
                       label="Phase name"
                       placeholder="Phase name here"
-                      isDisabled={isDisabled}
+                      isDisabled={actionType}
                     />{" "}
                   </Stack>
 
                   <Stack w="full">
                     <Stack pb="30px">
-                      <Text fontSize="lg" ml={1} mb="10px">
-                        Start time - End time
+                      <Text fontSize="lg" ml={1}>
+                        Start time - End time{" "}
+                        <Text as="span" fontSize="lg" color="#fc8181">
+                          *
+                        </Text>
                       </Text>
                       <DateTimeRangePicker
-                        disabled={isDisabled}
+                        disabled={actionType}
                         onChange={(e) => handlePhaseTime(e, index)}
                         value={
                           !value[index].start
@@ -138,13 +224,13 @@ function AddPhase({ name, mode, isDisabled }) {
                   direction={["column", "row"]}
                 >
                   <Stack
-                    minW={52}
+                    minW="260px"
                     alignItems="end"
                     direction={{ base: "column", "2xl": "row" }}
                   >
                     <AdvancedModeSwitch
                       label="Set public"
-                      isDisabled={isDisabled}
+                      isDisabled={actionType}
                       isChecked={value[index].isPublic}
                       name={`phases[${index}].isPublic`}
                       onChange={() => {
@@ -156,44 +242,109 @@ function AddPhase({ name, mode, isDisabled }) {
                   <NumberInput
                     type="number"
                     // isRequired={true}
+                    height="50px"
                     hasStepper={false}
-                    isDisabled={isDisabled}
+                    isDisabled={actionType}
                     label="Public Minting Fee"
                     isDisplay={value[index].isPublic}
                     name={`phases[${index}].publicMintingFee`}
                   />{" "}
                   <NumberInput
                     type="number"
-                    height="52px"
+                    height="50px"
                     precision={0}
                     hasStepper={false}
                     label="Public amount"
                     inputWidth={"260px"}
-                    isDisabled={isDisabled}
+                    isDisabled={actionType}
                     isDisplay={value[index].isPublic}
                     name={`phases[${index}].publicAmount`}
                   />
                 </Stack>
 
                 <HStack justifyContent="end" w="full">
-                  <Heading
-                    _hover={{
-                      color: !(index === 0 && value.length === 1) && "#7ae7ff",
-                    }}
-                    fontSize="sm"
-                    color="#555"
-                    fontStyle="unset"
-                    cursor="pointer"
-                    fontFamily="Evogria"
-                    textDecoration="underline"
-                    onClick={() => {
-                      if (index === 0 && value.length === 1) return;
-                      arrayHelpers.remove(index);
-                    }}
-                    isDisabled={index === 0 && value.length === 1}
-                  >
-                    delete
-                  </Heading>
+                  {mode === formMode.ADD ? (
+                    <Heading
+                      _hover={{
+                        color:
+                          !(index === 0 && value.length === 1) && "#7ae7ff",
+                      }}
+                      fontSize="sm"
+                      color="#555"
+                      fontStyle="unset"
+                      cursor="pointer"
+                      fontFamily="Evogria"
+                      textDecoration="underline"
+                      onClick={() => {
+                        if (index === 0 && value.length === 1) return;
+                        arrayHelpers.remove(index);
+                      }}
+                      isDisabled={index === 0 && value.length === 1}
+                    >
+                      delete
+                    </Heading>
+                  ) : null}
+
+                  {!value[index].new &&
+                  mode === formMode.EDIT &&
+                  canEditPhase(value[index].start) ? (
+                    <Heading
+                      _hover={{
+                        color:
+                          !(index === 0 && value.length === 1) && "#7ae7ff",
+                      }}
+                      fontSize="sm"
+                      color="#555"
+                      fontStyle="unset"
+                      cursor="pointer"
+                      fontFamily="Evogria"
+                      textDecoration="underline"
+                      onClick={() => onUpdatePhase(index)}
+                      isDisabled={index === 0 && value.length === 1}
+                    >
+                      Update
+                    </Heading>
+                  ) : null}
+
+                  {value[index].new && (
+                    <>
+                      <Heading
+                        _hover={{
+                          color:
+                            !(index === 0 && value.length === 1) && "#7ae7ff",
+                        }}
+                        fontSize="sm"
+                        color="#555"
+                        fontStyle="unset"
+                        cursor="pointer"
+                        fontFamily="Evogria"
+                        textDecoration="underline"
+                        onClick={() => onAddNewPhase(index)}
+                        isDisabled={index === 0 && value.length === 1}
+                      >
+                        add
+                      </Heading>
+                      <Heading
+                        _hover={{
+                          color:
+                            !(index === 0 && value.length === 1) && "#7ae7ff",
+                        }}
+                        fontSize="sm"
+                        color="#555"
+                        fontStyle="unset"
+                        cursor="pointer"
+                        fontFamily="Evogria"
+                        textDecoration="underline"
+                        onClick={() => {
+                          if (index === 0 && value.length === 1) return;
+                          arrayHelpers.remove(index);
+                        }}
+                        isDisabled={index === 0 && value.length === 1}
+                      >
+                        delete
+                      </Heading>
+                    </>
+                  )}
                 </HStack>
               </Stack>
             ))}
@@ -206,8 +357,15 @@ function AddPhase({ name, mode, isDisabled }) {
                   </Text>
                 ) : null}
               </Stack>
-
-              <Button
+              <CommonButton
+                w="full"
+                my="24px"
+                {...rest}
+                onClick={() => handleAddPhase(arrayHelpers)}
+                text={`${mode === formMode.ADD ? "add more" : "add new phase"}`}
+                // isDisabled={!(dirty && isValid) && noImagesChange}
+              />
+              {/* <Button
                 w="140px"
                 variant="solid"
                 type="button"
@@ -221,7 +379,7 @@ function AddPhase({ name, mode, isDisabled }) {
                 onClick={() => handleAddPhase(arrayHelpers)}
               >
                 add more
-              </Button>
+              </Button> */}
             </Stack>
           </Stack>
         );
@@ -231,3 +389,19 @@ function AddPhase({ name, mode, isDisabled }) {
 }
 
 export default AddPhase;
+
+// Logic add phase + update phase:
+// - Không update được những phase đã end hoặc đang chạy (Những phase không thẻ update sẽ không hiện button update)
+// - Update sẽ cho update từng phase một
+// - Add new sẽ add new từng phase một
+// Button delete sẽ không hiển thị ở những phase đã có sẵn
+// end > Date.now()
+//
+
+const canEditPhase = (startTime) => {
+  const now = new Date();
+
+  if (startTime > now) return true;
+
+  return false;
+};

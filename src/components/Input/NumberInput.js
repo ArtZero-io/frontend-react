@@ -19,7 +19,7 @@ export default function AddCollectionNumberInput({
   isDisabled,
   step = 0.5,
   precision = 2,
-  height = "48px",
+  height = "50px",
   isDisplay = true,
   hasStepper = true,
   isRequired = false,
@@ -30,7 +30,7 @@ export default function AddCollectionNumberInput({
       <Field name={name}>
         {({ field, form }) => (
           <FormControl id={name} isRequired={isRequired}>
-            <FormLabel ml={[0, 1]} htmlFor={name}>
+            <FormLabel fontSize={["md", "lg", "lg"]} ml={[0, 1]} htmlFor={name}>
               {label}
             </FormLabel>
 
@@ -46,7 +46,7 @@ export default function AddCollectionNumberInput({
               isDisabled={isDisabled}
               onChange={(val) => form.setFieldValue(field.name, val)}
             >
-              <NumberInputField borderRadius="0" h={height} />
+              <NumberInputField borderWidth="0px" borderRadius="0" h={height} />
 
               {hasStepper && (
                 <NumberInputStepper>

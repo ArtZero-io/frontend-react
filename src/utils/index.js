@@ -75,6 +75,10 @@ export function convertStringToPrice(stringPrice) {
   }
 }
 
+export function convertNumberWithoutCommas(input) {
+  return input.replace(/,/g, "");
+}
+
 export function convertStringToDateTime(stringTimeStamp) {
   /* eslint-disable no-useless-escape */
   const a = stringTimeStamp.replace(/\,/g, "");

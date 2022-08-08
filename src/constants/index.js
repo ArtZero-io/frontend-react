@@ -39,6 +39,15 @@ export const LIVE = "live";
 export const UPCOMING = "upcoming";
 export const ENDED = "ended";
 
+// PROJECT ACTIONS
+export const EDIT_PROJECT = "editProject";
+export const CREATE_PROJECT = "createProject";
+export const UPDATE_BASE_URI = "updateBaseUri";
+export const UPDATE_PHASE = "updatePhase";
+export const ADD_PHASE = "addPhase";
+export const DELETE_PHASE = "deletePhase";
+
+// OTHERS
 export const NUMBER_PER_PAGE = 6;
 
 export const SCROLLBAR = {

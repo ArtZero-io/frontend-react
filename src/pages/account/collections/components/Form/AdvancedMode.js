@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { Stack, Spacer, Flex, Text, Box } from "@chakra-ui/react";
+import { Stack, Text, Box, HStack, VStack } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import React, { useState, useEffect, useRef } from "react";
 import { Formik, Form } from "formik";
@@ -169,39 +168,39 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           validationSchema={Yup.object().shape({
             isEditMode: Yup.boolean(),
 
-              nftContractAddress: Yup.string()
-                .trim()
-                .min(3, "Must be longer than 3 characters")
-                .max(48, "Must be at most 48 characters")
-                .required("This field is required"),
-              collectionName: Yup.string()
-                .trim()
-                .min(3, "Must be longer than 3 characters")
-                .max(30, "Must be at most 30 characters")
-                .required("This field is required"),
-              collectionDescription: Yup.string()
-                .trim()
-                .min(3, "Must be longer than 3 characters")
-                .max(150, "Must be at most 150 characters")
-                .required("This field is required"),
-              collectRoyalFee: Yup.boolean(),
-              website: Yup.string()
-                .trim()
-                .url("URL must start with http:// or https://")
-                .max(50, "Must be at most 50 characters"),
-              twitter: Yup.string()
-                .trim()
-                .url("URL must start with http:// or https://")
-                .matches(/\btwitter.com\b/, "URL must be twitter.com")
-                .max(50, "Must be at most 50 characters"),
-              discord: Yup.string()
-                .trim()
-                .url("URL must start with http:// or https://")
-                .matches(
-                  /\bdiscord.(com|gg)\b/,
-                  "URL must be discord.com or discord.gg"
-                )
-                .max(50, "Must be at most 50 characters"),
+            nftContractAddress: Yup.string()
+              .trim()
+              .min(3, "Must be longer than 3 characters")
+              .max(48, "Must be at most 48 characters")
+              .required("This field is required"),
+            collectionName: Yup.string()
+              .trim()
+              .min(3, "Must be longer than 3 characters")
+              .max(30, "Must be at most 30 characters")
+              .required("This field is required"),
+            collectionDescription: Yup.string()
+              .trim()
+              .min(3, "Must be longer than 3 characters")
+              .max(150, "Must be at most 150 characters")
+              .required("This field is required"),
+            collectRoyalFee: Yup.boolean(),
+            website: Yup.string()
+              .trim()
+              .url("URL must start with http:// or https://")
+              .max(50, "Must be at most 50 characters"),
+            twitter: Yup.string()
+              .trim()
+              .url("URL must start with http:// or https://")
+              .matches(/\btwitter.com\b/, "URL must be twitter.com")
+              .max(50, "Must be at most 50 characters"),
+            discord: Yup.string()
+              .trim()
+              .url("URL must start with http:// or https://")
+              .matches(
+                /\bdiscord.(com|gg)\b/,
+                "URL must be discord.com or discord.gg"
+              )
+              .max(50, "Must be at most 50 characters"),
 
             agreeTosCheckbox: Yup.boolean().when("isEditMode", {
               is: false,
@@ -293,7 +292,10 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
         >
           {({ values, dirty, isValid }) => (
             <Form>
-              <Stack direction={{ base: "column", md: "row" }}>
+              <Stack
+                gap={["10px", "30px"]}
+                direction={{ base: "column", md: "row" }}
+              >
                 <AdvancedModeInput
                   type="text"
                   isRequired={true}
@@ -312,7 +314,10 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 />
               </Stack>
 
-              <Stack direction={{ base: "column", md: "row" }}>
+              <Stack
+                gap={["10px", "30px"]}
+                direction={{ base: "column", md: "row" }}
+              >
                 <AdvancedModeInput
                   type="text"
                   name="website"
@@ -411,54 +416,46 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               </Stack>
 
               {mode === formMode.ADD && (
-                <Stack
-                  mt={5}
-                  minH={20}
-                  direction={{ base: "column", md: "row" }}
-                  alignItems={{ base: "start", md: "center" }}
-                >
-                  <Box w="12rem">
-                    <AdvancedModeSwitch
-                      name="collectRoyalFee"
-                      isDisabled={actionType}
-                      label="Collect Royal Fee"
-                      onChange={() => {
-                        values.collectRoyalFee = !values.collectRoyalFee;
-                        setIsSetRoyal(!isSetRoyal);
-                      }}
+                <Stack mt={5} minH={20}>
+                  <Stack direction={["column", "row"]} minH="85px">
+                    <Stack minW="225px">
+                      <Box w="12rem">
+                        <AdvancedModeSwitch
+                          name="collectRoyalFee"
+                          isDisabled={actionType}
+                          label="Collect Royal Fee"
+                          onChange={() => {
+                            values.collectRoyalFee = !values.collectRoyalFee;
+                            setIsSetRoyal(!isSetRoyal);
+                          }}
+                        />
+                      </Box>
+                    </Stack>
+                    <AddCollectionNumberInput
+                      type="number"
+                      name="royalFee"
+                      inputWidth={"8rem"}
+                      max={maxRoyalFeeRate}
+                      placeholder="Royal Fee"
+                      isDisplay={isSetRoyal}
+                      isDisabled={!isSetRoyal || actionType}
+                      label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
                     />
-                  </Box>
+                  </Stack>
 
-                  <AddCollectionNumberInput
-                    type="number"
-                    name="royalFee"
-                    inputWidth={"8rem"}
-                    max={maxRoyalFeeRate}
-                    placeholder="Royal Fee"
-                    isDisplay={isSetRoyal}
-                    isDisabled={!isSetRoyal || actionType}
-                    label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
-                  />
-
-                  <Spacer />
-
-                  <Flex
-                    textAlign="left"
-                    direction="column"
-                    alignItems="flex-start"
-                    justifyContent="flex-start"
-                  >
+                  <VStack pt="30px">
                     <Text color="#fff" fontSize={["md", "lg", "lg"]}>
                       Create new collection you will pay
                       <strong> {addingFee} $AZERO </strong> in fee to ArtZero.io
                     </Text>
-
-                    <CommonCheckbox
-                      isDisabled={actionType}
-                      name="agreeTosCheckbox"
-                      content="I agree to ArtZero's Terms of Service"
-                    />
-                  </Flex>
+                    <HStack justifyContent="center">
+                      <CommonCheckbox
+                        isDisabled={actionType}
+                        name="agreeTosCheckbox"
+                        content="I agree to ArtZero's Terms of Service"
+                      />
+                    </HStack>
+                  </VStack>
                 </Stack>
               )}
               <CommonButton

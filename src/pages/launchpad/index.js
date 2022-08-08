@@ -10,7 +10,6 @@ import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 
 export const LaunchpadPage = () => {
-  // eslint-disable-next-line no-unused-vars
   const { api, currentAccount } = useSubstrateState();
 
   const [liveProjects, setLiveProjects] = useState([]);

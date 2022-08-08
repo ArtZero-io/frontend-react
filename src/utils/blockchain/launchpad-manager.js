@@ -1,8 +1,8 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5HX7LQgmYrr8TezLKfmu1HMyZXL5QZWPuuoepZybeV1GF7oC",
+  CONTRACT_ADDRESS: "5Dd8r5Y9dMEr5RrTCQWGQH99ri9TxvKiJoH8QF4jarG1Xcoj",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xadec3e8168fc5a97876113188b8ab0cd8dea76d444e6b61f087d12cbb2ac9d27",
+      "hash": "0x7967f458ed964751e51a8cfc0ef069eca3557478508b6c2ddf3c12db89adec77",
       "language": "ink! 3.3.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -246,7 +246,7 @@ const launchpad_manager = {
                 }
               },
               {
-                "label": "public_minting_amout_phases",
+                "label": "public_minting_amount_phases",
                 "type": {
                   "displayName": [
                     "Vec"
@@ -627,43 +627,6 @@ const launchpad_manager = {
             "selector": "0x908e3150"
           },
           {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Transfers ownership of the contract to a `new_owner`.",
-              " Can only be called by the current owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner.",
-              "",
-              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
-            ],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 15
-            },
-            "selector": "0x11f43efd"
-          },
-          {
             "args": [],
             "docs": [
               " Returns the address of the current owner."
@@ -706,6 +669,43 @@ const launchpad_manager = {
               "type": 15
             },
             "selector": "0x5e228753"
+          },
+          {
+            "args": [
+              {
+                "label": "new_owner",
+                "type": {
+                  "displayName": [
+                    "ownable_external",
+                    "TransferOwnershipInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Transfers ownership of the contract to a `new_owner`.",
+              " Can only be called by the current owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner.",
+              "",
+              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
+            ],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "TransferOwnershipOutput"
+              ],
+              "type": 15
+            },
+            "selector": "0x11f43efd"
           },
           {
             "args": [],
@@ -775,93 +775,128 @@ const launchpad_manager = {
             },
             {
               "layout": {
-                "cell": {
-                  "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 0
+                "struct": {
+                  "fields": [
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xacf97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "ty": 0
+                        }
+                      },
+                      "name": "admin_address"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xadf97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "ty": 4
+                        }
+                      },
+                      "name": "standard_nft_hash"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xaef97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "ty": 5
+                        }
+                      },
+                      "name": "project_count"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xaff97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "ty": 6
+                        }
+                      },
+                      "name": "projects"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xb0f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "ty": 10
+                        }
+                      },
+                      "name": "projects_by_id"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xb1f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "ty": 11
+                        }
+                      },
+                      "name": "projects_by_owner"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xb2f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "ty": 5
+                        }
+                      },
+                      "name": "active_project_count"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xb3f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "ty": 2
+                        }
+                      },
+                      "name": "max_phases_per_project"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xb4f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "ty": 13
+                        }
+                      },
+                      "name": "project_adding_fee"
+                    },
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xb5f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "ty": 14
+                        }
+                      },
+                      "name": "project_mint_fee_rate"
+                    },
+                    {
+                      "layout": {
+                        "enum": {
+                          "dispatchKey": "0xb6f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "variants": {
+                            "0": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0xb7f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                                      "ty": 3
+                                    }
+                                  },
+                                  "name": null
+                                }
+                              ]
+                            },
+                            "1": {
+                              "fields": []
+                            }
+                          }
+                        }
+                      },
+                      "name": "_reserved"
+                    }
+                  ]
                 }
               },
-              "name": "admin_address"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 4
-                }
-              },
-              "name": "standard_nft_hash"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0200000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 5
-                }
-              },
-              "name": "project_count"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 6
-                }
-              },
-              "name": "projects"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 10
-                }
-              },
-              "name": "projects_by_id"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 11
-                }
-              },
-              "name": "projects_by_owner"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0600000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 5
-                }
-              },
-              "name": "active_project_count"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0700000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 2
-                }
-              },
-              "name": "max_phases_per_project"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0800000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 13
-                }
-              },
-              "name": "project_adding_fee"
-            },
-            {
-              "layout": {
-                "cell": {
-                  "key": "0x0900000000000000000000000000000000000000000000000000000000000000",
-                  "ty": 14
-                }
-              },
-              "name": "project_mint_fee_rate"
+              "name": "manager"
             }
           ]
         }
