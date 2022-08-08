@@ -20,7 +20,12 @@ import {
   TableContainer,
   HStack,
   Table,
-  Thead, Tr,Tbody,Th,Center, Td
+  Thead,
+  Tr,
+  Tbody,
+  Th,
+  Center,
+  Td,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 
@@ -53,9 +58,9 @@ function GeneralPage() {
   const [tradeFee, setTradeFee] = useState(null);
   //const [platformTotalStaked,setPlatformTotalStaked] = useState(3);
   const [estimatedEarning, setEstimatedEarning] = useState(0);
-  const [rewardHistory,setRewardHistory] = useState([]);
-  const [rewardStarted,setIsRewardStarted] = useState(false);
-  const [claimed,setClaimed] = useState(false);
+  const [rewardHistory, setRewardHistory] = useState([]);
+  const [rewardStarted, setIsRewardStarted] = useState(false);
+  const [claimed, setClaimed] = useState(false);
 
   useEffect(() => {
     checkRewardStatus();
@@ -158,28 +163,28 @@ function GeneralPage() {
     getTradeFee();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAccount]);
-  const checkRewardStatus = async () =>{
-    let is_reward_started = await staking_calls.getRewardStarted(currentAccount);
-    setIsRewardStarted(is_reward_started);
-    let is_claimed = await staking_calls.isClaimed(currentAccount,currentAccount.address);
-    setClaimed(is_claimed);
-
-  }
-  const getRewardHistory= async () => {
-    const rewards = await clientAPI(
-      "post",
-      "/getClaimRewardHistory",
-      {
-        staker_address:currentAccount.address
-      }
+  const checkRewardStatus = async () => {
+    let is_reward_started = await staking_calls.getRewardStarted(
+      currentAccount
     );
+    setIsRewardStarted(is_reward_started);
+    let is_claimed = await staking_calls.isClaimed(
+      currentAccount,
+      currentAccount.address
+    );
+    setClaimed(is_claimed);
+  };
+  const getRewardHistory = async () => {
+    const rewards = await clientAPI("post", "/getClaimRewardHistory", {
+      staker_address: currentAccount.address,
+    });
     console.log(rewards);
     setRewardHistory([]);
-  }
-  const claimReward = async () =>{
+  };
+  const claimReward = async () => {
     await staking_calls.claimReward(currentAccount);
     await checkRewardStatus();
-  }
+  };
 
   const [isLargerThan480] = useMediaQuery("(min-width: 480px)");
 
@@ -390,12 +395,12 @@ function GeneralPage() {
                 {totalStaked || 0} NFT{totalStaked > 1 ? "s" : ""}
               </span>
             </Text>
-            <Text fontSize={{ base: "16px", xl: "lg" }}>
-                Reward Distribution Status:{" "}
-                <Text as="span" color="#7AE7FF" mr="30px">
-                {rewardStarted ? "ACTIVE" : "INACTIVE"}
-                </Text>
+            <Text mx="30px" fontSize={{ base: "16px", xl: "lg" }}>
+              Reward Distribution Status:{" "}
+              <Text as="span" color="#7AE7FF" mr="30px">
+                {rewardStarted ? "Active" : "Inactive"}
               </Text>
+            </Text>
           </Flex>
           <Stack
             direction={{ base: "column", xl: "row" }}
@@ -426,42 +431,42 @@ function GeneralPage() {
             </Text>
           </Stack>
 
-            <Stack
-              pt="20px"
-              // align="center"
-              w="full"
-              align="center"
-              justify="flex-start"
-              direction={{ base: "column", xl: "row" }}
+          <Stack
+            pt="20px"
+            // align="center"
+            w="full"
+            align="center"
+            justify="flex-start"
+            direction={{ base: "column", xl: "row" }}
+          >
+            <Box
+              pb="20px"
+              w={"full"}
+              variant="outline"
+              display={{ base: "flex", xl: "none" }}
             >
-              <Box
-                pb="20px"
-                w={"full"}
+              <Tag
+                h={6}
+                // w={"full"}
+                mt={3}
+                mx="auto"
+                textAlign="center"
                 variant="outline"
-                display={{ base: "flex", xl: "none" }}
               >
-                <Tag
-                  h={6}
-                  // w={"full"}
-                  mt={3}
-                  mx="auto"
-                  textAlign="center"
-                  variant="outline"
-                >
-                  <TagLabel textAlign="center">
-                    Your Current Trade Fee: {tradeFee && `${tradeFee}%`}
-                  </TagLabel>
-                </Tag>
-              </Box>
-              {rewardStarted && !claimed ?
-                <Button
-                  w={{ base: "full", xl: "auto" }}
-                  variant="solid"
-                  onClick={() => claimReward()}
-                >
-                  Claim Rewards
-                </Button>
-                 : null}
+                <TagLabel textAlign="center">
+                  Your Current Trade Fee: {tradeFee && `${tradeFee}%`}
+                </TagLabel>
+              </Tag>
+            </Box>
+            {rewardStarted && !claimed ? (
+              <Button
+                w={{ base: "full", xl: "auto" }}
+                variant="solid"
+                onClick={() => claimReward()}
+              >
+                Claim Rewards
+              </Button>
+            ) : null}
 
             <Button
               w={{ base: "full", xl: "auto" }}
@@ -471,11 +476,12 @@ function GeneralPage() {
               stake now
             </Button>
 
-              <FeeInfoModal />
+            <FeeInfoModal />
+          </Stack>
+        </VStack>
+      </Stack>
 
-            </Stack>
-          </VStack>
-        </Stack>
+      <Stack>
         <Box maxW="6xl-mid" fontSize="lg">
           <HStack pb={5} borderBottomWidth={1}>
             <Flex alignItems="start" pr={20}>
@@ -507,11 +513,7 @@ function GeneralPage() {
               },
             }}
           >
-            <Table
-              variant="striped"
-              colorScheme="blackAlpha"
-              overflow="auto"
-            >
+            <Table variant="striped" colorScheme="blackAlpha" overflow="auto">
               <Thead>
                 <Tr>
                   <Th
@@ -551,9 +553,9 @@ function GeneralPage() {
                 </Tr>
               </Thead>
               <Tbody>
-                {rewardHistory.length == 0 ? (
+                {rewardHistory.length === 0 ? (
                   <Tr color="#fff">
-                    <Center py={7}>No Record found or Loading for data.</Center>
+                    <Center py={7}>No record found</Center>
                   </Tr>
                 ) : (
                   rewardHistory.map((reward, index) => (
@@ -562,9 +564,7 @@ function GeneralPage() {
                       <Td py={7} isNumeric>
                         {reward.blockNumber}
                       </Td>
-                      <Td py={7}>
-                        {reward.staker}
-                      </Td>
+                      <Td py={7}>{reward.staker}</Td>
                       <Td py={7} isNumeric>
                         {reward.stakedAmount}
                       </Td>
@@ -578,8 +578,8 @@ function GeneralPage() {
             </Table>
           </TableContainer>
         </Box>
-      </Box>
-    </Box>
+      </Stack>
+    </CommonContainer>
   );
 }
 
