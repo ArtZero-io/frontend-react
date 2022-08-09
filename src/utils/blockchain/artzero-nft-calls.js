@@ -1,13 +1,13 @@
 import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
-import {
-  isValidAddressPolkadotAddress,
-  handleContractCallAddNftAnimation,
-} from "@utils";
+import { isValidAddressPolkadotAddress } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
-import { AccountActionTypes } from "@store/types/account.types";
-import { clearTxStatus } from "../../store/actions/txStatus";
+import {
+  clearTxStatus,
+  txErrorHandler,
+  txResponseErrorHandler,
+} from "../../store/actions/txStatus";
 
 let contract;
 
@@ -271,7 +271,13 @@ async function tokenUri(caller_account, tokenId) {
   return null;
 }
 
-async function whitelistMint(caller_account, mint_amount, dispatch) {
+async function whitelistMint(
+  caller_account,
+  mint_amount,
+  dispatch,
+  txType,
+  api
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -282,48 +288,32 @@ async function whitelistMint(caller_account, mint_amount, dispatch) {
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  contract.tx
-    .whitelistMint({ gasLimit, value: azero_value }, mint_amount)
+  const txNotSign = contract.tx.whitelistMint(
+    { gasLimit, value: azero_value },
+    mint_amount
+  );
+
+  await txNotSign
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-          });
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
-
-          // const statusText = Object.keys(status.toHuman())[0];
-          // toast.success(
-          //   `Whitelist minting ${
-          //     statusText === "0" ? "started" : statusText.toLowerCase()
-          //   }.`
-          // );
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+        });
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => {
-      dispatch({
-        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-      });
-      const mess = `Tnx is ${e.message}`;
-      // console.log("e.message", e.message);
-      toast.error(mess);
-    });
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
-async function paidMint(caller_account, fee, dispatch) {
+async function paidMint(caller_account, fee, dispatch, txType, api) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -334,41 +324,25 @@ async function paidMint(caller_account, fee, dispatch) {
   const azero_value = Math.round(fee * 10 ** 12);
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  contract.tx
-    .paidMint({ gasLimit, value: azero_value })
+  const txNotSign = contract.tx.paidMint({ gasLimit, value: azero_value });
+
+  await txNotSign
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
-
-          // const statusText = Object.keys(status.toHuman())[0];
-          // toast.success(
-          //   `Public Minting ${
-          //     statusText === "0" ? "started" : statusText.toLowerCase()
-          //   }.`
-          // );
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+        });
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => {
-      dispatch({
-        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-      });
-      const mess = `Tnx is ${e.message}`;
-      // console.log("e.message", e.message);
-      toast.error(mess);
-    });
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
@@ -542,7 +516,7 @@ async function withdrawFee(caller_account, amount) {
   contract.tx
     .withdrawFee(
       { gasLimit, value: azero_value },
-      new BN(parseFloat(amount) * 10 ** 6).mul(new BN(10**6)).toString()
+      new BN(parseFloat(amount) * 10 ** 6).mul(new BN(10 ** 6)).toString()
     )
     .signAndSend(
       address,
