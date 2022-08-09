@@ -182,7 +182,7 @@ export const CollectionCard = ({
             justify="center"
           >
             {variant !== "my-projects" && (
-              <Tag mr="8px">
+              <Tag>
                 <TagLeftIcon
                   h={["12px", "16px", "16px"]}
                   w={["12px", "16px", "16px"]}
@@ -203,18 +203,20 @@ export const CollectionCard = ({
                 </TagLabel>
               </Tag>
             )}
-            <Spacer />
             <>
               {variant === "my-collection" && (
-                <Box
-                  textTransform="capitalize"
-                  px="3px"
-                  borderWidth="1px"
-                  borderColor="#7ae7ff"
-                  fontSize="12px"
-                >
-                  {royalFee / 100}% Royalty
-                </Box>
+                <>
+                  <Spacer />
+                  <Box
+                    textTransform="capitalize"
+                    px="3px"
+                    borderWidth="1px"
+                    borderColor="#7ae7ff"
+                    fontSize="12px"
+                  >
+                    {royalFee / 100}% Royalty
+                  </Box>
+                </>
               )}
               {variant !== "marketplace-collection" && (
                 <>
