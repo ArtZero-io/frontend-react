@@ -116,19 +116,19 @@ function TokenPage() {
     async function () {
       try {
         setLoading(true);
+        if (currentAccount) {
+          const stakedCount = await fetchMyPMPStakedCount(
+            currentAccount,
+            staking_calls
+          );
+          const myTradingFeeData = await fetchMyTradingFee(
+            stakedCount,
+            currentAccount,
+            marketplace_contract_calls
+          );
 
-        const stakedCount = await fetchMyPMPStakedCount(
-          currentAccount,
-          staking_calls
-        );
-
-        const myTradingFeeData = await fetchMyTradingFee(
-          stakedCount,
-          currentAccount,
-          marketplace_contract_calls
-        );
-
-        setMyTradingFee(myTradingFeeData);
+          setMyTradingFee(myTradingFeeData);
+        }
 
         const [collectionDetails] = await APICall.getCollectionByAddress({
           collection_address,
@@ -215,6 +215,10 @@ function TokenPage() {
   );
 
   useEffect(() => {
+    if (!currentAccount) {
+      toast.error("Please connect wallet for full-function using!");
+    }
+
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collection_address, currentAccount, token_id]);
@@ -525,7 +529,7 @@ function TokenPage() {
                 >
                   <>
                     {token?.is_for_sale ? (
-                      <HStack fontSize="md">
+                      <HStack fontSize="md" pl="2px">
                         <Text>Current price</Text>
                         <Tag h={4} pr={0} bg="transparent">
                           <TagLabel bg="transparent">
@@ -539,7 +543,7 @@ function TokenPage() {
                         ) : !isOwner ? (
                           <CommonButton
                             {...rest}
-                            minW="76px"
+                            minW="86px"
                             text="buy now"
                             onClick={handleBuyAction}
                             isDisabled={actionType && actionType !== BUY}
@@ -662,7 +666,7 @@ function TokenPage() {
                       ) : (
                         <HStack>
                           <NumberInput
-                            minW={"85px"}
+                            minW={"50%"}
                             isDisabled={actionType}
                             bg="black"
                             max={999000000}
@@ -670,7 +674,6 @@ function TokenPage() {
                             precision={6}
                             onChange={(v) => setBidPrice(v)}
                             value={bidPrice}
-                            ml={3}
                             h="50px"
                           >
                             <NumberInputField
@@ -693,7 +696,7 @@ function TokenPage() {
 
                           <CommonButton
                             mx="0"
-                            minW="76px"
+                            minW="86px"
                             {...rest}
                             text="place bid"
                             onClick={handleBidAction}
