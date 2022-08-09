@@ -42,6 +42,7 @@ import {
   START,
 } from "@constants";
 import * as ROUTES from "@constants/routes";
+import { getPublicCurrentAccount } from "@utils";
 
 const client = create(IPFS_CLIENT_URL);
 
@@ -159,11 +160,13 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   useEffect(() => {
     const fetchAddProjectFee = async () => {
       const addProjFee = await launchpad_contract_calls.getProjectAddingFee(
-        currentAccount
+        currentAccount || getPublicCurrentAccount()
       );
 
       const addCollectionFee =
-        await collection_manager_calls.getAdvanceModeAddingFee(currentAccount);
+        await collection_manager_calls.getAdvanceModeAddingFee(
+          currentAccount || getPublicCurrentAccount()
+        );
 
       const totalFee =
         addProjFee.toNumber() / 10 ** 12 + addCollectionFee / 10 ** 12;
@@ -185,7 +188,11 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
-              console.log("addNewProject values", values);
+              // check wallet connect?
+              if (!currentAccount) {
+                return toast.error("Please connect wallet first!");
+              }
+
               // check all image uploaded?
               const memberAvatarAr = values?.members?.map((i) => i.avatar);
               const isAllMemberAvatarUpload = memberAvatarAr?.every((e) => e);
@@ -437,6 +444,55 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             {({ values, dirty, isValid, setFieldValue }) => (
               <Form>
                 <CommonStack stackTitle="1. project info">
+                  <Stack
+                    pb="30px"
+                    alignItems="start"
+                    justifyContent="space-between"
+                    direction={["column", "row"]}
+                  >
+                    <Stack
+                      w={{ base: "full", xl: "50%" }}
+                      direction="column"
+                      alignItems="start"
+                      justifyContent="end"
+                    >
+                      {/* <Heading size="h5">project avatar image</Heading>{" "} */}
+                      {/* <Text pt={{ base: "10px", xl: "30px" }}> */}
+                      <Text>Choose avatar image</Text>
+                      <ImageUpload
+                        isDisabled={actionType}
+                        id="avatar"
+                        mode={mode}
+                        isBanner={false}
+                        imageIPFSUrl={avatarIPFSUrl}
+                        setImageIPFSUrl={setAvatarIPFSUrl}
+                        limitedSize={{ width: "500", height: "500" }}
+                      />
+                    </Stack>
+
+                    <Stack
+                      pt={{ base: "30px", xl: "0px" }}
+                      w={{ base: "full", xl: "50%" }}
+                      direction="column"
+                      alignItems="start"
+                      justifyContent="end"
+                    >
+                      {/* <Heading size="h5">project header image</Heading> */}
+                      {/* <Text pt={{ base: "10px", xl: "30px" }}> */}
+                      <Text>Choose header image</Text>
+
+                      <ImageUpload
+                        id="header"
+                        mode={mode}
+                        isBanner={true}
+                        imageIPFSUrl={headerIPFSUrl}
+                        isDisabled={actionType}
+                        setImageIPFSUrl={setHeaderIPFSUrl}
+                        limitedSize={{ width: "1920", height: "600" }}
+                      />
+                    </Stack>
+                  </Stack>
+
                   <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
                     <Stack w={["100%", "416px"]}>
                       <CommonInput
@@ -573,6 +629,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     <Heading size="h5" mb="30px">
                       project team member
                     </Heading>
+
                     <AddMember
                       name="members"
                       mode={mode}
@@ -580,7 +637,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     />
                   </Stack>
 
-                  <Stack
+                  {/* <Stack
                     py="20px"
                     alignItems="start"
                     justifyContent="space-between"
@@ -629,7 +686,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         limitedSize={{ width: "1920", height: "600" }}
                       />
                     </Stack>
-                  </Stack>
+                  </Stack> */}
                 </CommonStack>
 
                 <CommonStack stackTitle="2. nft info">
@@ -681,17 +738,17 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       isRequired={true}
                       type="text"
                       name="email_owner"
-                      label="This email not saved on our platform, we just use this field to contact with you!"
+                      label="Enter your email so we can contact for additional information."
                       placeholder={"Email Contact"}
                       isDisabled={actionType}
                     />
                   </CommonStack>
                 )}
 
-                <VStack>
+                <VStack maxW="900px" mx="auto">
                   {mode === formMode.ADD && (
                     <>
-                      <HStack justifyContent="center">
+                      <HStack w="full" px="15px">
                         <CommonCheckbox
                           justifyContent="center"
                           isDisabled={actionType}
@@ -700,9 +757,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           ArtZero.io. This fee is non-refundable.`}
                         />
                       </HStack>
-                      <HStack justifyContent="center">
+                      <HStack justifyContent="center" w="full" px="15px">
                         <CommonCheckbox
-                          justifyContent="center"
                           isDisabled={actionType}
                           name="agreeTosCheckbox"
                           content="I agree to ArtZero's Terms of Service."

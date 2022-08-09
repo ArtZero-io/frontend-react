@@ -32,7 +32,7 @@ export const Editor = ({
       <EditorToolbar />
       <Stack pb="6px" pl="4px">
         <Text as="span" fontSize="lg">
-          Content{" "}
+          Milestone description{" "}
           <Text as="span" fontSize="lg" color="#fc8181">
             {isRequired && "*"}
           </Text>
@@ -44,7 +44,7 @@ export const Editor = ({
         theme="bubble"
         value={state.value}
         onChange={handleOnChange}
-        placeholder="Your content here"
+        placeholder="Your milestone description here"
         modules={modules}
         formats={formats}
       />

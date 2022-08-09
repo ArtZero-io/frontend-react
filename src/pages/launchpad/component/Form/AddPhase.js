@@ -1,21 +1,24 @@
-import { Heading, HStack, Stack, Text } from "@chakra-ui/react";
-import { FieldArray, useField } from "formik";
-import Input from "@components/Input/Input";
-import { formMode } from "@constants";
-import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
+import { useState } from "react";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { FieldArray, useField } from "formik";
+import { Heading, HStack, Stack, Text } from "@chakra-ui/react";
+import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
+
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
-import AdvancedModeSwitch from "@components/Switch/Switch";
-import NumberInput from "@components/Input/NumberInput";
-import { useState } from "react";
+
 import { isPhaseTimeOverlap } from "@utils";
 import { useSubstrateState } from "@utils/substrate";
-import { setTxStatus } from "@store/actions/txStatus";
-import { UPDATE_PHASE, ADD_PHASE, START } from "@constants";
-import { useDispatch } from "react-redux";
+import { formMode, UPDATE_PHASE, ADD_PHASE, START } from "@constants";
+
 import useTxStatus from "@hooks/useTxStatus";
+import { setTxStatus } from "@store/actions/txStatus";
+
+import Input from "@components/Input/Input";
+import NumberInput from "@components/Input/NumberInput";
+import AdvancedModeSwitch from "@components/Switch/Switch";
 import CommonButton from "@components/Button/CommonButton";
 
 function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
@@ -125,11 +128,6 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
   };
 
   const onAddNewPhase = async (index) => {
-    // console.log(index);
-    // const newValue = value.map((i, idx) => {
-    //   return idx === value.length - 1 ? { ...i, start: null, end: null } : i;
-    // });
-
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
       api,
       launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -218,7 +216,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                 </Stack>
 
                 <Stack
-                  minH="80px"
+                  minH="86px"
                   alignItems={["start", "end"]}
                   gap={["10px", "30px"]}
                   direction={["column", "row"]}
@@ -229,7 +227,8 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                     direction={{ base: "column", "2xl": "row" }}
                   >
                     <AdvancedModeSwitch
-                      label="Set public"
+                      hasTooltipPublicMint={true}
+                      label="Set public mint"
                       isDisabled={actionType}
                       isChecked={value[index].isPublic}
                       name={`phases[${index}].isPublic`}
@@ -245,7 +244,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                     height="50px"
                     hasStepper={false}
                     isDisabled={actionType}
-                    label="Public Minting Fee"
+                    label="Public minting fee"
                     isDisplay={value[index].isPublic}
                     name={`phases[${index}].publicMintingFee`}
                   />{" "}
@@ -254,9 +253,9 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                     height="50px"
                     precision={0}
                     hasStepper={false}
-                    label="Public amount"
-                    inputWidth={"260px"}
                     isDisabled={actionType}
+                    label="Public amount"
+                    // inputWidth={"100%"}
                     isDisplay={value[index].isPublic}
                     name={`phases[${index}].publicAmount`}
                   />
@@ -366,21 +365,6 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                 text={`${mode === formMode.ADD ? "add more" : "add new phase"}`}
                 // isDisabled={!(dirty && isValid) && noImagesChange}
               />
-              {/* <Button
-                w="140px"
-                variant="solid"
-                type="button"
-                isDisabled={
-                  isDisabled ||
-                  (mode === formMode.ADD &&
-                    // (hasEmptyLevel ||
-                    (!arrayHelpers?.form?.dirty ||
-                      arrayHelpers.form?.errors?.levels))
-                }
-                onClick={() => handleAddPhase(arrayHelpers)}
-              >
-                add more
-              </Button> */}
             </Stack>
           </Stack>
         );

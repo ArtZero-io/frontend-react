@@ -42,7 +42,7 @@ function AddRoadmap({ name, mode, isDisabled }) {
                   autoComplete="off"
                   name={`roadmap[${index}].type`}
                   placeholder="Your milestone here"
-                  label={"Milestone"}
+                  label={"Milestone name"}
                   isDisabled={isDisabled}
                 />
 

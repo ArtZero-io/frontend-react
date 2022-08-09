@@ -4,11 +4,17 @@ import {
   FormLabel,
   Switch,
   Text,
+  Tooltip,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useField, Field } from "formik";
+import { InfoIcon } from "@chakra-ui/icons";
 
-export default function SimpleModeSwitch({ label, ...props }) {
+export default function SimpleModeSwitch({
+  label,
+  hasTooltipPublicMint = false,
+  ...props
+}) {
   const [field, meta] = useField(props);
   const switchSize = useBreakpointValue(["md", "lg", "lg"]);
 
@@ -24,7 +30,17 @@ export default function SimpleModeSwitch({ label, ...props }) {
         fontSize={["md", "lg", "lg"]}
         htmlFor={props.id || props.name}
       >
-        {label}
+        {label}{" "}
+        {hasTooltipPublicMint && (
+          <Tooltip
+            hasArrow
+            bg="#333"
+            color="#fff"
+            label="When Public Mint is selected, anyone can mint the NFTs. When Public Mint is NOT selected, only whitelisted addresses can mint the NFTs."
+          >
+            <InfoIcon p="2px" fontSize="20px" />
+          </Tooltip>
+        )}
       </FormLabel>
       <Field
         pl={2}

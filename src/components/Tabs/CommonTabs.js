@@ -16,6 +16,7 @@ function CommonTabs(props) {
             pb={{ base: "12px", xl: "20px" }}
             fontSize={{ base: "md", xl: "lg" }}
             fontFamily="Evogria Italic, san serif"
+            _selected={{ color: "#7ae7ff", borderBottom: "2px solid #7ae7ff" }}
           >
             {tab.label}
           </Tab>

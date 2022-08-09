@@ -26,7 +26,7 @@ export default function AddCollectionNumberInput({
   ...props
 }) {
   return (
-    <Box style={{ display: isDisplay ? "block" : "none" }}>
+    <Box style={{ display: isDisplay ? "block" : "none" }} w="full">
       <Field name={name}>
         {({ field, form }) => (
           <FormControl id={name} isRequired={isRequired}>

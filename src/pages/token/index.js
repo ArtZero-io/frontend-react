@@ -758,7 +758,7 @@ function TokenPage() {
                             py={2}
                             // my={2}
                             minW="30%"
-                            maxH={"4.625rem"}
+                            // maxH={"4.625rem"}
                           >
                             <Flex w="full" my={2}>
                               <Heading
@@ -898,6 +898,7 @@ const placeBid = async (
     toast.error("Please connect wallet first!");
     return;
   }
+  
   //check owner of the NFT
   if (isOwner) {
     toast.error(`Can not bid your own NFT!`);

@@ -113,17 +113,17 @@ function CommonTable({
                             <CommonButton
                               isDisabled={
                                 (addNftTnxStatus?.status &&
-                                  idSelected !== idx) ||
+                                  idSelected !== item?.bidId) ||
                                 (actionType &&
                                   !tokenIDArray.includes(item.bidId))
                               }
                               mx="auto"
-                              isDo={idSelected === idx}
+                              isDo={idSelected === item?.bidId}
                               type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
                               text="accept bid"
                               isLoading={addNftTnxStatus}
                               loadingText={`${addNftTnxStatus?.status}`}
-                              onClick={() => onClickHandler(idx)}
+                              onClick={() => onClickHandler(item?.bidId)}
                             />
                           </Flex>
                         </Td>

@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 import React, { useEffect, useState } from "react";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { useSubstrateState } from "@utils/substrate";
@@ -13,7 +14,7 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
   const [saleInfo, setSaleInfo] = useState({});
   const dispatch = useDispatch();
   const [idSelected, setIdSelected] = useState(null);
-  const headers = ["Address", "Time", "Price", "Action"];
+  const headers = ["address", "time", "price", "action"];
 
   const acceptBid = async (bidId) => {
     if (currentAccount.address === saleInfo.nftOwner) {
@@ -54,13 +55,17 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
       setSaleInfo(sale_info);
 
       if (sale_info) {
-        const listBidder = await marketplace_contract_calls.getAllBids(
+        let listBidder = await marketplace_contract_calls.getAllBids(
           currentAccount,
           nftContractAddress,
           sale_info?.nftOwner,
           { u64: tokenID }
         );
-        console.log("listBidder", listBidder);
+
+        // map array index to bidId
+        listBidder = listBidder.map((i, idx) => {
+          return { ...i, bidId: idx };
+        });
 
         //sort highest price first
         listBidder?.length &&
