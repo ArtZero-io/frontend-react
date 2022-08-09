@@ -9,131 +9,89 @@ import {
   Center,
 } from "@chakra-ui/react";
 
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import Layout from "@components/Layout/Layout";
 
 import MintHeader from "./components/Header";
 import NFTMintTab from "./components/Tab/NFTMint";
 
-import { delay } from "@utils";
 import { clientAPI } from "@api/client";
-import { AccountActionTypes } from "@store/types/account.types";
 
 import { useSubstrateState } from "@utils/substrate";
 import artzero_nft from "@utils/blockchain/artzero-nft";
 import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import AnimationLoader from "@components/Loader/AnimationLoader";
+import { PUBLIC_MINT, WHITELIST_MINT } from "@constants";
+import useForceUpdate from "@hooks/useForceUpdate";
 
 const MintPage = () => {
   const { currentAccount, keyringState } = useSubstrateState();
   const [myAZNFTs, setMyAZNFTs] = useState(null);
   const [, setOwner] = useState(null);
   const [loading, setLoading] = useState(null);
-  const [loadingTime, setLoadingTime] = useState(null);
 
-  const dispatch = useDispatch();
-
-  const { addNftTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
+  const { loading: loadingForceUpdate } = useForceUpdate(
+    [PUBLIC_MINT, WHITELIST_MINT],
+    () => fetchMyAZNFTs()
   );
 
-  useEffect(() => {
-    const forceUpdateAfterMint = async () => {
-      if (addNftTnxStatus?.status !== "End") {
-        return;
-      }
+  const fetchMyAZNFTs = useCallback(async () => {
+    setLoading(true);
 
-      const { status, timeStamp, endTimeStamp } = addNftTnxStatus;
+    let tokenUri = await artzero_nft_calls.tokenUri(currentAccount?.address, 1);
+    tokenUri = tokenUri?.replace("1.json", "");
 
-      if (status && timeStamp && endTimeStamp) {
-        const diffTime = 9000 - Number(endTimeStamp - timeStamp);
-        const delayTime = diffTime >= 0 ? diffTime : 500;
-
-        setLoading(true);
-
-        setLoadingTime(delayTime / 1000);
-
-        await delay(delayTime).then(() => {
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-          });
-          setLoadingTime(null);
-          setLoading(false);
-        });
-      }
+    const options = {
+      collection_address: artzero_nft.CONTRACT_ADDRESS,
+      owner: currentAccount?.address,
+      limit: 10000,
+      offset: 0,
+      sort: -1,
     };
 
-    forceUpdateAfterMint();
-  }, [addNftTnxStatus, addNftTnxStatus?.status, dispatch, loadingTime]);
+    const dataList = await clientAPI(
+      "post",
+      "/getNFTsByOwnerAndCollection",
+      options
+    );
 
-  useEffect(() => {
-    const fetchMyAZNFTs = async () => {
-      setLoading(true);
-
-      let tokenUri = await artzero_nft_calls.tokenUri(
-        currentAccount?.address,
-        1
+    const length = dataList.length;
+    let myNFTs = [];
+    for (var i = 0; i < length; i++) {
+      //get the off-chain metadata
+      const metadata = await clientAPI(
+        "get",
+        "/getJSON?input=" +
+          tokenUri +
+          dataList[i].tokenID?.toString() +
+          ".json",
+        {}
       );
-      tokenUri = tokenUri?.replace("1.json", "");
 
-      const options = {
-        collection_address: artzero_nft.CONTRACT_ADDRESS,
-        owner: currentAccount?.address,
-        limit: 10000,
-        offset: 0,
-        sort: -1,
+      var obj = {
+        is_for_sale: dataList[i].is_for_sale,
+        price: dataList[i].price,
+        avatar: metadata.image,
+        nftName: metadata.name,
+        stakeStatus: 0,
+        isBid: false,
       };
+      myNFTs.push(obj);
+    }
 
-      const dataList = await clientAPI(
-        "post",
-        "/getNFTsByOwnerAndCollection",
-        options
-      );
+    setLoading(false);
+    setOwner(currentAccount?.address);
+    return setMyAZNFTs(myNFTs);
+  }, [currentAccount?.address]);
 
-      const length = dataList.length;
-      let myNFTs = [];
-      for (var i = 0; i < length; i++) {
-        //get the off-chain metadata
-        const metadata = await clientAPI(
-          "get",
-          "/getJSON?input=" +
-            tokenUri +
-            dataList[i].tokenID?.toString() +
-            ".json",
-          {}
-        );
-
-        var obj = {
-          is_for_sale: dataList[i].is_for_sale,
-          price: dataList[i].price,
-          avatar: metadata.image,
-          nftName: metadata.name,
-          stakeStatus: 0,
-          isBid: false,
-        };
-        myNFTs.push(obj);
-      }
-
-      setLoading(false);
-      setLoadingTime(null);
-      setOwner(currentAccount?.address);
-      return setMyAZNFTs(myNFTs);
-    };
-
-    !loadingTime && fetchMyAZNFTs();
-  }, [currentAccount?.address, loadingTime]);
+  useEffect(() => {
+    fetchMyAZNFTs();
+  }, [currentAccount, fetchMyAZNFTs]);
 
   return (
     <Layout>
-      <Box
-        as="section"
-        h="full"
-        // maxW="container.3xl"
-        position="relative"
-        mx="auto"
-      >
+      <Box as="section" h="full" position="relative" mx="auto">
         <MintHeader loading={loading} />
 
         <Tabs isLazy align="center" colorScheme="brand.blue">
@@ -151,7 +109,7 @@ const MintPage = () => {
                 h="full"
                 minH="600px"
               >
-                {loading ? (
+                {loading || loadingForceUpdate ? (
                   <Center h="full">
                     <AnimationLoader />
                   </Center>
