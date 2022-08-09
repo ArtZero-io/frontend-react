@@ -56,6 +56,7 @@ import StatusBuyButton from "@components/Button/StatusBuyButton";
 
 import AddNewNFTModal from "../Modal/AddNewNFT";
 import { SCROLLBAR } from "../../../../constants";
+import * as ROUTES from "@constants/routes";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -303,12 +304,17 @@ const NFTTabCollectible = (props) => {
 
         <Stack alignItems="flex-start" w="full">
           <HStack>
-            <Heading
-              fontSize={{ base: "xl", xl: "2xl", "2xl": "3xl-mid" }}
-              color="#fff"
+            <Link
+              as={ReactRouterLink}
+              to={`/nft/${nftContractAddress}/${tokenID}`}
             >
-              {nftName}
-            </Heading>
+              <Heading
+                fontSize={{ base: "xl", xl: "2xl", "2xl": "3xl-mid" }}
+                color="#fff"
+              >
+                {nftName}
+              </Heading>
+            </Link>
 
             <Spacer />
 
