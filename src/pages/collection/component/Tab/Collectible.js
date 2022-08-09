@@ -622,7 +622,7 @@ const NFTTabCollectible = (props) => {
                     display={{ base: "none", xl: "block" }}
                     fontSize={{ base: "14px", "2xl": "16px" }}
                   >
-                    This NFT have no props/ levels.
+                    This NFT has no props/ levels.
                   </Text>
                 </Stack>
               ) : (

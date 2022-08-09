@@ -676,7 +676,7 @@ function TokenPage() {
               </Heading>{" "}
               {token?.attrsList?.length === 0 ? (
                 <Text textAlign="center" py="2rem">
-                  This NFT have no props/ levels.
+                  This NFT has no props/ levels.
                 </Text>
               ) : (
                 <Grid

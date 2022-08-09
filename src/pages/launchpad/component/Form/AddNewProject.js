@@ -79,6 +79,39 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     nftContractAddress = location.state?.collection_address;
   }
 
+  const handleOnchangeSchedule = (e, setFieldValue) => {
+    if (!e) {
+      setFieldValue("startTime", null);
+      setFieldValue("endTime", null);
+      return;
+    }
+
+    if (e[1].getTime() < Date.now()) {
+      toast.error("Project end time must be greater than current time!");
+      return;
+    }
+
+    if (e[0].getTime() > e[1].getTime()) {
+      toast.error("Project end time must be greater than start time!");
+      return;
+    }
+
+    setFieldValue("startTime", e[0].getTime());
+    setFieldValue("endTime", e[1].getTime());
+  };
+
+  const handleOnRedirect = () => {
+    if (mode === formMode.ADD) {
+      toast.success(
+        "Thank you for submitting. Our team member will get in touch with you in the next 48 hours."
+      );
+
+      history.push(`/account/projects`);
+    } else {
+      history.push(`${ROUTES.LAUNCHPAD_BASE}/${nftContractAddress}`);
+    }
+  };
+
   useEffect(() => {
     const prepareData = async () => {
       const { error, initialValues, avatarIPFSUrl, headerIPFSUrl } =
@@ -122,27 +155,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     mode,
     nftContractAddress,
   ]);
-
-  const handleOnchangeSchedule = (e, setFieldValue) => {
-    if (!e) {
-      setFieldValue("startTime", null);
-      setFieldValue("endTime", null);
-      return;
-    }
-
-    if (e[1].getTime() < Date.now()) {
-      toast.error("Project end time must be greater than current time!");
-      return;
-    }
-
-    if (e[0].getTime() > e[1].getTime()) {
-      toast.error("Project end time must be greater than start time!");
-      return;
-    }
-
-    setFieldValue("startTime", e[0].getTime());
-    setFieldValue("endTime", e[1].getTime());
-  };
 
   useEffect(() => {
     const fetchAddProjectFee = async () => {
@@ -679,18 +691,21 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 <VStack>
                   {mode === formMode.ADD && (
                     <>
-                      <Text textAlign="center" color="#fff">
-                        Create new collection you will pay
-                        <strong> {addProjectTotalFee} $AZERO </strong> in fee to
-                        ArtZero.io
-                      </Text>
-
+                      <HStack justifyContent="center">
+                        <CommonCheckbox
+                          justifyContent="center"
+                          isDisabled={actionType}
+                          name="agreeFeeCheckbox"
+                          content={`Create new project you will pay ${addProjectTotalFee} $AZERO in fee to
+                          ArtZero.io. This fee is non-refundable.`}
+                        />
+                      </HStack>
                       <HStack justifyContent="center">
                         <CommonCheckbox
                           justifyContent="center"
                           isDisabled={actionType}
                           name="agreeTosCheckbox"
-                          content="I agree to ArtZero's Terms of Service"
+                          content="I agree to ArtZero's Terms of Service."
                         />
                       </HStack>
                     </>
@@ -702,13 +717,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   >
                     <CommonButton
                       mx="0"
-                      onRedirect={() =>
-                        mode === formMode.ADD
-                          ? history.push(`/account/projects`)
-                          : history.push(
-                              `${ROUTES.LAUNCHPAD_BASE}/${nftContractAddress}`
-                            )
-                      }
+                      onRedirect={handleOnRedirect}
                       w="full"
                       my="24px"
                       {...rest}
@@ -781,6 +790,7 @@ export const fetchInitialValuesProject = async ({
       },
     ],
     agreeTosCheckbox: false,
+    agreeFeeCheckbox: false,
   };
 
   // TEMP COMMENT
@@ -924,6 +934,13 @@ const validationAgreeTosCheckbox = Yup.boolean().when("isEditMode", {
     .oneOf([true], "The TOCs must be accepted."),
 });
 
+const validationAgreeFeeCheckbox = Yup.boolean().when("isEditMode", {
+  is: false,
+  then: Yup.boolean()
+    .required("This terms must be accepted.")
+    .oneOf([true], "This terms must be accepted."),
+});
+
 const validationSchema = Yup.object().shape({
   isEditMode: Yup.boolean(),
   name: validationName,
@@ -1034,4 +1051,5 @@ const validationSchema = Yup.object().shape({
       })
     ),
   agreeTosCheckbox: validationAgreeTosCheckbox,
+  agreeFeeCheckbox: validationAgreeFeeCheckbox,
 });
