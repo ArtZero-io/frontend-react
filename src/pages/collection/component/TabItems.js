@@ -27,9 +27,9 @@ import NFTDetailModal from "./Modal/NFTDetail";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import NFTChangeSizeCard from "@components/Card/NFTChangeSize";
 import { formMode } from "@constants";
-import CommonButton from "../../../components/Button/CommonButton";
+import CommonButton from "@components/Button/CommonButton";
 import { useHistory } from "react-router-dom";
-import { SCROLLBAR } from "../../../constants";
+import { SCROLLBAR } from "@constants";
 
 const CollectionItems = ({
   NFTListFormatted,
@@ -38,10 +38,9 @@ const CollectionItems = ({
   loading,
   forceUpdate,
   loadingTime,
-  setIsShowUnlisted,
-  isShowUnlisted,
+
   totalCollectionsCount,
-  offset,
+
   activeTab,
   setActiveTab,
   showOnChainMetadata,

@@ -1,46 +1,38 @@
-/* eslint-disable no-unreachable */
 import React, { useEffect, useState } from "react";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import { useSubstrateState } from "@utils/substrate";
 import CommonTable from "@components/Table/Table";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { AccountActionTypes } from "@store/types/account.types";
 import { Text } from "@chakra-ui/react";
+import { acceptBid } from "../../../token";
+import { clearTxStatus } from "@store/actions/txStatus";
 
 function NFTTabActivity({ nftContractAddress, tokenID }) {
-  const [bidders, setBidders] = useState(null);
-  const { currentAccount } = useSubstrateState();
-  const [saleInfo, setSaleInfo] = useState({});
+  const { currentAccount, api } = useSubstrateState();
   const dispatch = useDispatch();
-  const [idSelected, setIdSelected] = useState(null);
+
+  const [bidders, setBidders] = useState(null);
+  const [saleInfo, setSaleInfo] = useState({});
+  const [isOwner, setIsOwner] = useState(false);
+
   const headers = ["address", "time", "price", "action"];
 
-  const acceptBid = async (bidId) => {
-    if (currentAccount.address === saleInfo.nftOwner) {
-      setIdSelected(bidId);
-
-      dispatch({
-        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-        payload: {
-          status: "Start",
-        },
-      });
-
-      await marketplace_contract_calls.acceptBid(
+  const handleAcceptBidAction = async (bidId) => {
+    try {
+      await acceptBid(
+        api,
         currentAccount,
+        isOwner,
         nftContractAddress,
-        saleInfo.nftOwner,
-        { u64: tokenID },
+        tokenID,
         bidId,
         dispatch
       );
-    } else {
-      dispatch({
-        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-      });
-      setIdSelected(null);
-      toast.error(`You not owner of token`);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      dispatch(clearTxStatus());
     }
   };
 
@@ -51,10 +43,17 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
         nftContractAddress,
         { u64: tokenID }
       );
-      console.log("sale_info", sale_info);
       setSaleInfo(sale_info);
 
       if (sale_info) {
+        const ownerAddress = sale_info?.isForSale
+          ? sale_info?.nftOwner
+          : sale_info?.owner;
+
+        if (ownerAddress === currentAccount?.address) {
+          setIsOwner(true);
+        }
+
         let listBidder = await marketplace_contract_calls.getAllBids(
           currentAccount,
           nftContractAddress,
@@ -99,11 +98,9 @@ function NFTTabActivity({ nftContractAddress, tokenID }) {
         </Text>
       ) : (
         <CommonTable
-          idSelected={idSelected}
           tableHeaders={headers}
           tableData={bidders}
-          saleInfo={saleInfo}
-          onClickHandler={acceptBid}
+          onClickHandler={handleAcceptBidAction}
           isOwner={currentAccount?.address === saleInfo?.nftOwner}
         />
       )}

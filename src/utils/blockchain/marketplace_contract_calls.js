@@ -582,13 +582,11 @@ async function bid(
             seller: seller,
             token_id: token_id.u64,
           });
-          // const statusText = Object.keys(status.toHuman())[0];
 
-          // toast.success(
-          //   `Bid NFT ${
-          //     statusText === "0" ? "started" : statusText.toLowerCase()
-          //   }.`
-          // );
+          await APICall.askBeUpdateNftData({
+            collection_address: nft_contract_address,
+            token_id: token_id.u64,
+          });
         }
       }
     )
@@ -649,12 +647,6 @@ async function removeBid(
             collection_address: nft_contract_address,
             token_id: token_id.u64,
           });
-          // const statusText = Object.keys(status.toHuman())[0];
-          // toast.success(
-          //   `Remove Bid NFT ${
-          //     statusText === "0" ? "started" : statusText.toLowerCase()
-          //   }.`
-          // );
         }
       }
     )
@@ -713,7 +705,7 @@ async function buy(
         //   }
         // }
         handleContractCallAddNftAnimation(status, dispatchError, dispatch);
-        
+
         if (status?.isFinalized) {
           await APICall.askBeUpdateNftData({
             collection_address: nft_contract_address,

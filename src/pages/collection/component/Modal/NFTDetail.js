@@ -9,9 +9,8 @@ import React, { useEffect } from "react";
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import NFTTabCollectible from "../Tab/Collectible";
 import NFTTabActivity from "../Tab/Activity";
-import { useDispatch, useSelector } from "react-redux";
-import { onCloseButtonModal } from "@utils";
-import { AccountActionTypes } from "@store/types/account.types";
+import useTxStatus from "@hooks/useTxStatus";
+import { FINALIZED, END } from "@constants";
 
 function NFTDetailModal({ isOpen, onClose, ...rest }) {
   const tabHeight = useBreakpointValue({
@@ -20,27 +19,23 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
     "2xl": `4.5rem`,
   });
 
-  const dispatch = useDispatch();
-
-  const { addNftTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
-  );
+  const { step, onEndClick, actionType } = useTxStatus();
 
   useEffect(() => {
-    addNftTnxStatus?.status === "End" && onClose();
-  }, [onClose, addNftTnxStatus?.status]);
+    step === END && onClose();
+  }, [step, onClose]);
 
   const tabData = [
     {
-      label: "Collectible",
+      label: "collectible",
       content: <NFTTabCollectible {...rest} />,
-      isDisabled: false,
+      isDisabled: actionType,
     },
     {
       // Before is label: "Activity",
-      label: "Offers",
+      label: "offers",
       content: <NFTTabActivity {...rest} />,
-      isDisabled: addNftTnxStatus?.status ? true : false,
+      isDisabled: actionType || !rest?.is_for_sale,
     },
   ];
 
@@ -48,13 +43,13 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
 
   return (
     <Modal
-      closeOnOverlayClick={false}
-      closeOnEsc={false}
-      scrollBehavior="inside"
       isCentered
-      onClose={onClose}
       isOpen={isOpen}
       size={modalSize}
+      onClose={onClose}
+      closeOnEsc={false}
+      scrollBehavior="inside"
+      closeOnOverlayClick={false}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -62,31 +57,25 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
       />
 
       <ModalContent
-        position="relative"
-        bg="brand.grayDark"
-        borderRadius="0"
         p={0}
         h="full"
         w="full"
+        borderRadius="0"
+        position="relative"
+        bg="brand.grayDark"
         maxH={{ base: "calc(100% - 7.5rem)", xl: "30rem", "2xl": "40rem" }}
         maxW={{ base: "20rem", xl: "60rem", "2xl": "78rem" }}
       >
         <ModalCloseButton
-          w="42px"
-          h="42px"
+          w="35px"
+          h="35px"
           border="none"
           // borderWidth={2}
           borderRadius="0"
           position="absolute"
           top={["0", "-8", "-8"]}
           right={["0", "-8", "-8"]}
-          onClick={() =>
-            onCloseButtonModal({
-              status: addNftTnxStatus?.status,
-              dispatch,
-              type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-            })
-          }
+          onClick={() => step === FINALIZED && onEndClick()}
         />
 
         <Tabs isLazy align="left" colorScheme="brand.blue">

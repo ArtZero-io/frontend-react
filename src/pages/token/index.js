@@ -394,8 +394,12 @@ function TokenPage() {
                 />
               </Square>
 
-              <Stack w="full" px={["0px", "30px"]}>
-                <Stack w="full" py="15px">
+              <Stack minW={["auto", "520px"]} w="full" px={["0px", "30px"]}>
+                <Stack
+                  // maxW={["374px", "full"]}
+                  w="full"
+                  py="15px"
+                >
                   <HStack align="center" justify="space-between" px="5px">
                     <Heading fontSize={["xl", "3xl"]} pr="2px" isTruncated>
                       {token?.nftName}
@@ -523,7 +527,8 @@ function TokenPage() {
 
                 <Stack
                   w="full"
-                  // maxW="300px"
+                  // maxW={["374px", "full"]}
+
                   p="15px 10px"
                   border="1px solid #333"
                 >
@@ -537,17 +542,19 @@ function TokenPage() {
                           </TagLabel>
                           <TagRightIcon as={AzeroIcon} />
                         </Tag>
-                        <Spacer />
                         {!token?.is_for_sale ? (
                           <Heading size="h6">This item not for sale</Heading>
                         ) : !isOwner ? (
-                          <CommonButton
-                            {...rest}
-                            minW="86px"
-                            text="buy now"
-                            onClick={handleBuyAction}
-                            isDisabled={actionType && actionType !== BUY}
-                          />
+                          <>
+                            <Spacer />
+                            <CommonButton
+                              {...rest}
+                              minW="150px"
+                              text="buy now"
+                              onClick={handleBuyAction}
+                              isDisabled={actionType && actionType !== BUY}
+                            />
+                          </>
                         ) : null}
                         {/* TODO: update bid price */}
                       </HStack>
@@ -666,7 +673,7 @@ function TokenPage() {
                       ) : (
                         <HStack>
                           <NumberInput
-                            minW={"50%"}
+                            minW={"40%"}
                             isDisabled={actionType}
                             bg="black"
                             max={999000000}
@@ -696,8 +703,8 @@ function TokenPage() {
 
                           <CommonButton
                             mx="0"
-                            minW="86px"
                             {...rest}
+                            minW="150px"
                             text="place bid"
                             onClick={handleBidAction}
                             isDisabled={actionType && actionType !== BID}
@@ -708,13 +715,17 @@ function TokenPage() {
                   ) : null}
                 </Stack>
 
-                <Stack w="full" py="15px">
+                <Stack
+                  w="full"
+                  // maxW={["374px", "full"]}
+                  py="15px"
+                >
                   <Heading pl="4px" fontSize="xl">
                     attributes
                   </Heading>{" "}
                   {token?.attrsList?.length === 0 ? (
                     <Text textAlign="center" py="2rem">
-                      This NFT have no props/ levels.
+                      This NFT has no props/ levels.
                     </Text>
                   ) : (
                     <Grid
@@ -851,6 +862,8 @@ function TokenPage() {
                 </Stack>
 
                 <Stack
+                  // maxW={["374px", "full"]}
+
                   w="full"
                   py="15px"
                   display={["flex", "none"]}
@@ -915,7 +928,7 @@ export default TokenPage;
 
 const headers = ["address", "time", "price", "action"];
 
-const buyToken = async (
+export const buyToken = async (
   api,
   currentAccount,
   isOwner,
@@ -960,7 +973,7 @@ const buyToken = async (
   );
 };
 
-const placeBid = async (
+export const placeBid = async (
   api,
   currentAccount,
   isOwner,
@@ -976,7 +989,7 @@ const placeBid = async (
     toast.error("Please connect wallet first!");
     return;
   }
-  
+
   //check owner of the NFT
   if (isOwner) {
     toast.error(`Can not bid your own NFT!`);
@@ -1018,7 +1031,7 @@ const placeBid = async (
   );
 };
 
-const removeBid = async (
+export const removeBid = async (
   api,
   currentAccount,
   nftContractAddress,
@@ -1183,7 +1196,7 @@ const unlistToken = async (
   );
 };
 
-const acceptBid = async (
+export const acceptBid = async (
   api,
   currentAccount,
   isOwner,

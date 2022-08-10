@@ -27,7 +27,7 @@ function useForceUpdate(typeArray, cb) {
       return;
     }
 
-    const diffTime = 7000 - Number(endTimeStamp - timeStamp);
+    const diffTime = 9000 - Number(endTimeStamp - timeStamp);
     const delayTime = diffTime > 500 ? diffTime : 500;
 
     const doDelay = async () => {
@@ -44,7 +44,6 @@ function useForceUpdate(typeArray, cb) {
         });
       } catch (error) {
         setLoading(false);
-        // setLoadingTime(null);
 
         console.log(error);
       }
