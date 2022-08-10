@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Flex,
@@ -55,8 +54,7 @@ import LockNFTModal from "@components/Modal/LockNFTModal";
 import StatusBuyButton from "@components/Button/StatusBuyButton";
 
 import AddNewNFTModal from "../Modal/AddNewNFT";
-import { SCROLLBAR } from "../../../../constants";
-import * as ROUTES from "@constants/routes";
+import { SCROLLBAR } from "@constants";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -86,8 +84,7 @@ const NFTTabCollectible = (props) => {
   const [saleInfo, setSaleInfo] = useState(null);
   const [action, setAction] = useState("");
   const [ownerName, setOwnerName] = useState("");
-
-  // const [isOfferBtnFocus, setIsOfferBtnFocus] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
     const doLoad = async () => {
@@ -283,6 +280,18 @@ const NFTTabCollectible = (props) => {
     saleInfo?.nftOwner,
   ]);
 
+  useEffect(() => {
+    const fetchIsOwner = async () => {
+      const accountAddress = is_for_sale ? saleInfo?.nftOwner : owner;
+
+      if (accountAddress === currentAccount?.address) {
+        setIsOwner(true);
+      }
+    };
+
+    fetchIsOwner();
+  }, [currentAccount?.address, is_for_sale, owner, saleInfo?.nftOwner]);
+
   return (
     <>
       <Stack
@@ -329,20 +338,18 @@ const NFTTabCollectible = (props) => {
                 xl: `20px`,
               }}
             >
-              {!is_locked &&
-                showOnChainMetadata &&
-                owner !== currentAccount?.address && (
-                  <Tooltip
-                    hasArrow
-                    label="Unlocked on-chain metadata"
-                    bg="gray.300"
-                    color="black"
-                  >
-                    <span>
-                      <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
-                    </span>
-                  </Tooltip>
-                )}
+              {!is_locked && showOnChainMetadata && !isOwner && (
+                <Tooltip
+                  hasArrow
+                  label="Unlocked on-chain metadata"
+                  bg="gray.300"
+                  color="black"
+                >
+                  <span>
+                    <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
+                  </span>
+                </Tooltip>
+              )}
 
               {!is_locked && !showOnChainMetadata && (
                 <Tooltip
@@ -370,16 +377,12 @@ const NFTTabCollectible = (props) => {
                 </Tooltip>
               )}
 
-              {!is_locked && owner === currentAccount?.address && (
-                <LockNFTModal {...props} />
-              )}
+              {!is_locked && isOwner && <LockNFTModal {...props} />}
             </HStack>
 
-            {!is_locked &&
-              showOnChainMetadata &&
-              owner === currentAccount.address && (
-                <AddNewNFTModal mode={formMode.EDIT} {...props} />
-              )}
+            {!is_locked && showOnChainMetadata && isOwner && (
+              <AddNewNFTModal mode={formMode.EDIT} {...props} />
+            )}
           </HStack>
 
           <Stack>
@@ -430,7 +433,7 @@ const NFTTabCollectible = (props) => {
                 }}
               >
                 {/* is_for_sale true  no sale*/}
-                {!is_for_sale && currentAccount?.address !== owner ? (
+                {!is_for_sale && !isOwner ? (
                   <Flex alignItems="center" pt="8px">
                     <Heading size="h6">Not for sale</Heading>
                   </Flex>
@@ -438,11 +441,7 @@ const NFTTabCollectible = (props) => {
 
                 <Stack
                   display={
-                    saleInfo &&
-                    is_for_sale &&
-                    currentAccount?.address !== saleInfo?.nftOwner
-                      ? "flex"
-                      : "none"
+                    saleInfo && is_for_sale && !isOwner ? "flex" : "none"
                   }
                   direction={{ base: "column", xl: "row" }}
                   w="full"
@@ -451,171 +450,163 @@ const NFTTabCollectible = (props) => {
                   my={{ base: "8px", xl: "2px", "2xl": "22px" }}
                   pr={{ base: "0", "2xl": "28px" }}
                 >
-                  {is_for_sale &&
-                    saleInfo &&
-                    currentAccount?.address !== saleInfo?.nftOwner && (
-                      <>
-                        <Flex
-                          mr="22px"
-                          w="full"
-                          alignItems="center"
-                          borderColor="#343333"
-                          px={["8px", "16px"]}
-                          borderWidth={2}
-                          minH={["4.15rem", "4.75rem", "4.75rem"]}
-                        >
-                          <StatusBuyButton
-                            shouldDisabled={
-                              addNftTnxStatus?.status &&
-                              action &&
-                              action !== "buy"
-                            }
-                            isDisabled={true}
-                            isDo={action === "buy"}
-                            type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
-                            text="buy"
-                            isLoading={addNftTnxStatus}
-                            loadingText={`${addNftTnxStatus?.status}`}
-                            onClick={buyToken}
-                          />
+                  {is_for_sale && saleInfo && !isOwner && (
+                    <>
+                      <Flex
+                        mr="22px"
+                        w="full"
+                        alignItems="center"
+                        borderColor="#343333"
+                        px={["8px", "16px"]}
+                        borderWidth={2}
+                        minH={["4.15rem", "4.75rem", "4.75rem"]}
+                      >
+                        <StatusBuyButton
+                          shouldDisabled={
+                            addNftTnxStatus?.status &&
+                            action &&
+                            action !== "buy"
+                          }
+                          isDisabled={true}
+                          isDo={action === "buy"}
+                          type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                          text="buy"
+                          isLoading={addNftTnxStatus}
+                          loadingText={`${addNftTnxStatus?.status}`}
+                          onClick={buyToken}
+                        />
 
+                        <Spacer />
+
+                        <Flex w="full">
                           <Spacer />
 
                           <Flex w="full">
                             <Spacer />
+                            <Box
+                              h="52px"
+                              textAlign="right"
+                              color="brand.grayLight"
+                            >
+                              <Text>Current price</Text>
+                              <Tag h={4} pr={0} bg="transparent" maxW="95px">
+                                <TagLabel bg="transparent">
+                                  <Tooltip
+                                    bg="#171717"
+                                    color="#fff"
+                                    border="1px solid #7ae7ff"
+                                    borderRadius="0"
+                                    label={formatNumDynamicDecimal(
+                                      price / 10 ** 12
+                                    )}
+                                    aria-label="A tooltip"
+                                  >
+                                    {formatNumDynamicDecimal(price / 10 ** 12)}
+                                  </Tooltip>
+                                </TagLabel>
+                                <TagRightIcon as={AzeroIcon} />
+                              </Tag>
+                            </Box>
+                          </Flex>
+                        </Flex>
+                      </Flex>
+                      {!doOffer && is_for_sale && (
+                        <Flex
+                          mr="30px"
+                          w="full"
+                          alignItems="center"
+                          borderColor="#333"
+                          px={["8px", "16px"]}
+                          py={1}
+                          id="ac"
+                          borderWidth={2}
+                          minH={["4.15rem", "4.75rem", "4.75rem"]}
+                        >
+                          {!isBided && (
+                            <>
+                              <StatusBuyButton
+                                // isOfferBtnFocus={isOfferBtnFocus}
+                                shouldDisabled={
+                                  addNftTnxStatus?.status &&
+                                  action &&
+                                  action !== "offer"
+                                }
+                                isDo={action === "offer"}
+                                type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                                text="offer"
+                                isLoading={addNftTnxStatus}
+                                loadingText={`${addNftTnxStatus?.status}`}
+                                onClick={placeOffer}
+                              />
 
-                            <Flex w="full">
+                              <NumberInput
+                                // maxW={"128px"}
+                                minW={"85px"}
+                                isDisabled={addNftTnxStatus?.status}
+                                bg="black"
+                                max={999000000}
+                                min={1}
+                                precision={6}
+                                onChange={(v) => setBidPrice(v)}
+                                value={bidPrice}
+                                ml={3}
+                                h="50px"
+                                // onFocus={() => setIsOfferBtnFocus(true)}
+                                // onBlur={() => setIsOfferBtnFocus(false)}
+                              >
+                                <NumberInputField
+                                  h="50px"
+                                  borderRadius={0}
+                                  borderWidth={0}
+                                  color="#fff"
+                                />
+                                <InputRightElement
+                                  bg="transparent"
+                                  h={"50px"}
+                                  w={8}
+                                >
+                                  <AzeroIcon />
+                                </InputRightElement>
+                              </NumberInput>
+                            </>
+                          )}
+
+                          {isBided && (
+                            <>
+                              <StatusBuyButton
+                                shouldDisabled={
+                                  addNftTnxStatus?.status &&
+                                  action &&
+                                  action !== "remove bid"
+                                }
+                                isDo={action === "remove bid"}
+                                type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                                text="remove bid"
+                                isLoading={addNftTnxStatus}
+                                loadingText={`${addNftTnxStatus?.status}`}
+                                onClick={removeBid}
+                              />
+
                               <Spacer />
                               <Box
                                 h="52px"
                                 textAlign="right"
                                 color="brand.grayLight"
                               >
-                                <Text>Current price</Text>
-                                <Tag h={4} pr={0} bg="transparent" maxW="95px">
+                                <Text>Your offer</Text>
+                                <Tag h={4} pr={0} bg="transparent">
                                   <TagLabel bg="transparent">
-                                    <Tooltip
-                                      bg="#171717"
-                                      color="#fff"
-                                      border="1px solid #7ae7ff"
-                                      borderRadius="0"
-                                      label={formatNumDynamicDecimal(
-                                        price / 10 ** 12
-                                      )}
-                                      aria-label="A tooltip"
-                                    >
-                                      {formatNumDynamicDecimal(
-                                        price / 10 ** 12
-                                      )}
-                                    </Tooltip>
+                                    {bidPrice}
                                   </TagLabel>
                                   <TagRightIcon as={AzeroIcon} />
                                 </Tag>
                               </Box>
-                            </Flex>
-                          </Flex>
+                            </>
+                          )}
                         </Flex>
-                        {!doOffer && is_for_sale && (
-                          <Flex
-                            mr="30px"
-                            w="full"
-                            alignItems="center"
-                            borderColor="#333"
-                            px={["8px", "16px"]}
-                            py={1}
-                            id="ac"
-                            borderWidth={2}
-                            minH={["4.15rem", "4.75rem", "4.75rem"]}
-                          >
-                            {!isBided && (
-                              <>
-                                <StatusBuyButton
-                                  // isOfferBtnFocus={isOfferBtnFocus}
-                                  shouldDisabled={
-                                    addNftTnxStatus?.status &&
-                                    action &&
-                                    action !== "offer"
-                                  }
-                                  isDo={action === "offer"}
-                                  type={
-                                    AccountActionTypes.SET_ADD_NFT_TNX_STATUS
-                                  }
-                                  text="offer"
-                                  isLoading={addNftTnxStatus}
-                                  loadingText={`${addNftTnxStatus?.status}`}
-                                  onClick={placeOffer}
-                                />
-
-                                <NumberInput
-                                  // maxW={"128px"}
-                                  minW={"85px"}
-                                  isDisabled={addNftTnxStatus?.status}
-                                  bg="black"
-                                  max={999000000}
-                                  min={1}
-                                  precision={6}
-                                  onChange={(v) => setBidPrice(v)}
-                                  value={bidPrice}
-                                  ml={3}
-                                  h="50px"
-                                  // onFocus={() => setIsOfferBtnFocus(true)}
-                                  // onBlur={() => setIsOfferBtnFocus(false)}
-                                >
-                                  <NumberInputField
-                                    h="50px"
-                                    borderRadius={0}
-                                    borderWidth={0}
-                                    color="#fff"
-                                  />
-                                  <InputRightElement
-                                    bg="transparent"
-                                    h={"50px"}
-                                    w={8}
-                                  >
-                                    <AzeroIcon />
-                                  </InputRightElement>
-                                </NumberInput>
-                              </>
-                            )}
-
-                            {isBided && (
-                              <>
-                                <StatusBuyButton
-                                  shouldDisabled={
-                                    addNftTnxStatus?.status &&
-                                    action &&
-                                    action !== "remove bid"
-                                  }
-                                  isDo={action === "remove bid"}
-                                  type={
-                                    AccountActionTypes.SET_ADD_NFT_TNX_STATUS
-                                  }
-                                  text="remove bid"
-                                  isLoading={addNftTnxStatus}
-                                  loadingText={`${addNftTnxStatus?.status}`}
-                                  onClick={removeBid}
-                                />
-
-                                <Spacer />
-                                <Box
-                                  h="52px"
-                                  textAlign="right"
-                                  color="brand.grayLight"
-                                >
-                                  <Text>Your offer</Text>
-                                  <Tag h={4} pr={0} bg="transparent">
-                                    <TagLabel bg="transparent">
-                                      {bidPrice}
-                                    </TagLabel>
-                                    <TagRightIcon as={AzeroIcon} />
-                                  </Tag>
-                                </Box>
-                              </>
-                            )}
-                          </Flex>
-                        )}
-                      </>
-                    )}
+                      )}
+                    </>
+                  )}
                 </Stack>
               </motion.div>
             </Stack>
