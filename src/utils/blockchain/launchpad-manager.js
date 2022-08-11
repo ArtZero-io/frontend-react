@@ -1,9 +1,9 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5C97zUnyFfn2KWTqv2uijadu9idW8tQDCqYKThQrFAiWWjAv",
+  CONTRACT_ADDRESS: "5E6TLVc5xUSVLGjyjqaNFtmZu4mNoJ6xZkJxck33zegzmZF2",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x7967f458ed964751e51a8cfc0ef069eca3557478508b6c2ddf3c12db89adec77",
-      "language": "ink! 3.3.0",
+      "hash": "0x0da2f1783191f8ad7fef4630eceaf0fa28cafbff10ce9a053dba55ed9820d4e9",
+      "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
@@ -70,6 +70,15 @@ const launchpad_manager = {
                     "u32"
                   ],
                   "type": 14
+                }
+              },
+              {
+                "label": "public_max_minting_amount",
+                "type": {
+                  "displayName": [
+                    "u64"
+                  ],
+                  "type": 5
                 }
               }
             ],
@@ -156,6 +165,15 @@ const launchpad_manager = {
                     "u32"
                   ],
                   "type": 14
+                }
+              },
+              {
+                "label": "public_max_minting_amount",
+                "type": {
+                  "displayName": [
+                    "u64"
+                  ],
+                  "type": 5
                 }
               }
             ],
@@ -255,6 +273,15 @@ const launchpad_manager = {
                 }
               },
               {
+                "label": "public_max_minting_amount_phases",
+                "type": {
+                  "displayName": [
+                    "Vec"
+                  ],
+                  "type": 21
+                }
+              },
+              {
                 "label": "start_time_phases",
                 "type": {
                   "displayName": [
@@ -334,6 +361,32 @@ const launchpad_manager = {
           {
             "args": [
               {
+                "label": "value",
+                "type": {
+                  "displayName": [
+                    "Balance"
+                  ],
+                  "type": 13
+                }
+              }
+            ],
+            "docs": [
+              " Withdraw Fees - only Owner"
+            ],
+            "label": "withdraw_fee",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 22
+            },
+            "selector": "0x07fdb555"
+          },
+          {
+            "args": [
+              {
                 "label": "admin_address",
                 "type": {
                   "displayName": [
@@ -370,7 +423,7 @@ const launchpad_manager = {
               }
             ],
             "docs": [
-              " update project adding fee - Only Admin"
+              " Update project adding fee - Only Admin"
             ],
             "label": "update_project_adding_fee",
             "mutates": true,
@@ -382,6 +435,32 @@ const launchpad_manager = {
               "type": 22
             },
             "selector": "0x0c3b5043"
+          },
+          {
+            "args": [
+              {
+                "label": "public_max_minting_amount",
+                "type": {
+                  "displayName": [
+                    "u64"
+                  ],
+                  "type": 5
+                }
+              }
+            ],
+            "docs": [
+              " Update public max minting amount - Only Admin"
+            ],
+            "label": "update_public_max_minting_amount",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 22
+            },
+            "selector": "0x15b7463b"
           },
           {
             "args": [
@@ -644,33 +723,6 @@ const launchpad_manager = {
             "selector": "0x4fa43c8c"
           },
           {
-            "args": [],
-            "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 15
-            },
-            "selector": "0x5e228753"
-          },
-          {
             "args": [
               {
                 "label": "new_owner",
@@ -706,6 +758,50 @@ const launchpad_manager = {
               "type": 15
             },
             "selector": "0x11f43efd"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 15
+            },
+            "selector": "0x5e228753"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Get public max minting amount"
+            ],
+            "label": "CrossArtZeroLaunchPadPSP34::get_public_max_minting_amount",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerolaunchpadpsp34_external",
+                "GetPublicMaxMintingAmountOutput"
+              ],
+              "type": 5
+            },
+            "selector": "0x529efd6b"
           },
           {
             "args": [],
@@ -869,15 +965,24 @@ const launchpad_manager = {
                     },
                     {
                       "layout": {
+                        "cell": {
+                          "key": "0xb6f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "ty": 5
+                        }
+                      },
+                      "name": "public_max_minting_amount"
+                    },
+                    {
+                      "layout": {
                         "enum": {
-                          "dispatchKey": "0xb6f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "dispatchKey": "0xb7f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0xb7f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                                      "key": "0xb8f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
                                       "ty": 3
                                     }
                                   },

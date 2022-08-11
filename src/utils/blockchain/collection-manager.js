@@ -1,9 +1,9 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5G7jqnkp1naHUqnnevmtLzAMbJS2Dudw2ZGytmNpEwDg7o7m",
+  CONTRACT_ADDRESS: "5Gky7SzwTpKWT75Zg6SsZFeSWXpEzxv97tqXZAMvdthqmVGS",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xe3cb2f7718ef52cc9c9c8a0f36c1c59cd072448f857cafa607133e72c7da432b",
-      "language": "ink! 3.3.0",
+      "hash": "0x2b8390edc6a55dd2f03172f112eb4e755b90ea6cc8f6eeb57b67aae78af900c5",
+      "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
@@ -271,7 +271,7 @@ const collection_manager = {
               }
             ],
             "docs": [
-              "Simple New Collection Creation - Auto create NFT Contract - Collection_Owner is owner of NFT contract and receive royal fee"
+              " Simple New Collection Creation - Auto create NFT Contract - Collection_Owner is owner of NFT contract and receive royal fee"
             ],
             "label": "auto_new_collection",
             "mutates": true,
@@ -456,7 +456,7 @@ const collection_manager = {
               }
             ],
             "docs": [
-              " Set multiple profile attribute, username, description, title, profile_image, twitter, facebook, telegram, instagram"
+              " Set multiple profile attributes"
             ],
             "label": "set_multiple_attributes",
             "mutates": true,
@@ -962,7 +962,7 @@ const collection_manager = {
           {
             "args": [],
             "docs": [
-              "Get Simple Mode Adding Fee"
+              " Get Simple Mode Adding Fee"
             ],
             "label": "get_simple_mode_adding_fee",
             "mutates": false,
@@ -978,7 +978,7 @@ const collection_manager = {
           {
             "args": [],
             "docs": [
-              "Get Advance Mode Adding Fee"
+              " Get Advance Mode Adding Fee"
             ],
             "label": "get_advance_mode_adding_fee",
             "mutates": false,
@@ -1022,43 +1022,6 @@ const collection_manager = {
               "type": 10
             },
             "selector": "0x389a10e6"
-          },
-          {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Transfers ownership of the contract to a `new_owner`.",
-              " Can only be called by the current owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner.",
-              "",
-              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
-            ],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 18
-            },
-            "selector": "0x11f43efd"
           },
           {
             "args": [],
@@ -1107,6 +1070,43 @@ const collection_manager = {
           {
             "args": [
               {
+                "label": "new_owner",
+                "type": {
+                  "displayName": [
+                    "ownable_external",
+                    "TransferOwnershipInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Transfers ownership of the contract to a `new_owner`.",
+              " Can only be called by the current owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner.",
+              "",
+              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
+            ],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "TransferOwnershipOutput"
+              ],
+              "type": 18
+            },
+            "selector": "0x11f43efd"
+          },
+          {
+            "args": [
+              {
                 "label": "nft_contract_address",
                 "type": {
                   "displayName": [
@@ -1118,7 +1118,7 @@ const collection_manager = {
               }
             ],
             "docs": [
-              "Get royal fee of the Collection"
+              " Get royal fee of the Collection"
             ],
             "label": "CrossArtZeroCollection::get_royal_fee",
             "mutates": false,
@@ -1139,34 +1139,6 @@ const collection_manager = {
                 "type": {
                   "displayName": [
                     "crossartzerocollection_external",
-                    "IsActiveInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              "Check if the Collection is active not"
-            ],
-            "label": "CrossArtZeroCollection::is_active",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "IsActiveOutput"
-              ],
-              "type": 9
-            },
-            "selector": "0x74687faf"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
                     "GetContractTypeInput1"
                   ],
                   "type": 0
@@ -1174,7 +1146,7 @@ const collection_manager = {
               }
             ],
             "docs": [
-              "Get NFT Contract Type 1 or 2 for PSP34"
+              " Get NFT Contract Type 1 or 2 for PSP34"
             ],
             "label": "CrossArtZeroCollection::get_contract_type",
             "mutates": false,
@@ -1215,6 +1187,34 @@ const collection_manager = {
               "type": 26
             },
             "selector": "0xb1f1e401"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "IsActiveInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Check if the Collection is active not"
+            ],
+            "label": "CrossArtZeroCollection::is_active",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "IsActiveOutput"
+              ],
+              "type": 9
+            },
+            "selector": "0x74687faf"
           }
         ]
       },
@@ -1877,39 +1877,19 @@ const collection_manager = {
                   },
                   {
                     "index": 1,
-                    "name": "AddressAlreadyExists"
-                  },
-                  {
-                    "index": 2,
-                    "name": "CollectionNotExist"
-                  },
-                  {
-                    "index": 3,
                     "name": "CollectionOwnerAndAdmin"
                   },
                   {
-                    "index": 4,
+                    "index": 2,
                     "name": "OnlyOwner"
                   },
                   {
-                    "index": 5,
+                    "index": 3,
                     "name": "OnlyAdmin"
                   },
                   {
-                    "index": 6,
+                    "index": 4,
                     "name": "InvalidCaller"
-                  },
-                  {
-                    "index": 7,
-                    "name": "InvalidFee"
-                  },
-                  {
-                    "index": 8,
-                    "name": "InvalidRoyalFee"
-                  },
-                  {
-                    "index": 9,
-                    "name": "NotEnoughBalance"
                   }
                 ]
               }

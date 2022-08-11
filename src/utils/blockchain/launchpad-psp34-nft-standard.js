@@ -1,8 +1,8 @@
 const launchpad_psp34_nft_standard = {
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x21225edf3e21dac2880b2dda6db5bab00490be84fb6c8113bc6de88da091d283",
-      "language": "ink! 3.3.0",
+      "hash": "0x4bbf6204cd165c1253a08e810b1b1b47a326a2e9cf280ff29aa7b7005ce79b8a",
+      "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
@@ -99,6 +99,15 @@ const launchpad_psp34_nft_standard = {
                 }
               },
               {
+                "label": "public_max_minting_amount_phases",
+                "type": {
+                  "displayName": [
+                    "Vec"
+                  ],
+                  "type": 44
+                }
+              },
+              {
                 "label": "start_time_phases",
                 "type": {
                   "displayName": [
@@ -157,6 +166,15 @@ const launchpad_psp34_nft_standard = {
               },
               {
                 "label": "public_minting_amount",
+                "type": {
+                  "displayName": [
+                    "u64"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "label": "public_max_minting_amount",
                 "type": {
                   "displayName": [
                     "u64"
@@ -329,6 +347,15 @@ const launchpad_psp34_nft_standard = {
                   ],
                   "type": 2
                 }
+              },
+              {
+                "label": "mint_amount",
+                "type": {
+                  "displayName": [
+                    "u64"
+                  ],
+                  "type": 5
+                }
               }
             ],
             "docs": [],
@@ -487,6 +514,15 @@ const launchpad_psp34_nft_standard = {
                 }
               },
               {
+                "label": "public_max_minting_amount",
+                "type": {
+                  "displayName": [
+                    "u64"
+                  ],
+                  "type": 5
+                }
+              },
+              {
                 "label": "start_time",
                 "type": {
                   "displayName": [
@@ -558,7 +594,16 @@ const launchpad_psp34_nft_standard = {
                 }
               },
               {
-                "label": "public_minting_amount",
+                "label": "public_minting_amount_phases",
+                "type": {
+                  "displayName": [
+                    "Vec"
+                  ],
+                  "type": 44
+                }
+              },
+              {
+                "label": "public_max_minting_amount_phases",
                 "type": {
                   "displayName": [
                     "Vec"
@@ -1132,36 +1177,6 @@ const launchpad_psp34_nft_standard = {
                 "type": {
                   "displayName": [
                     "psp34_external",
-                    "BalanceOfInput1"
-                  ],
-                  "type": 8
-                }
-              }
-            ],
-            "docs": [
-              " Returns the balance of the owner.",
-              "",
-              " This represents the amount of unique tokens the owner has."
-            ],
-            "label": "PSP34::balance_of",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "BalanceOfOutput"
-              ],
-              "type": 4
-            },
-            "selector": "0xcde7e55f"
-          },
-          {
-            "args": [
-              {
-                "label": "owner",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
                     "AllowanceInput1"
                   ],
                   "type": 8
@@ -1205,23 +1220,32 @@ const launchpad_psp34_nft_standard = {
             "selector": "0x4790f55a"
           },
           {
-            "args": [],
-            "docs": [
-              " Returns the collection `Id` of the NFT token.",
-              "",
-              " This can represents the relationship between tokens/contracts/pallets."
+            "args": [
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "OwnerOfInput1"
+                  ],
+                  "type": 1
+                }
+              }
             ],
-            "label": "PSP34::collection_id",
+            "docs": [
+              " Returns the owner of the token if any."
+            ],
+            "label": "PSP34::owner_of",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34_external",
-                "CollectionIdOutput"
+                "OwnerOfOutput"
               ],
-              "type": 1
+              "type": 19
             },
-            "selector": "0xffa27a5f"
+            "selector": "0x1168624d"
           },
           {
             "args": [
@@ -1283,34 +1307,6 @@ const launchpad_psp34_nft_standard = {
           {
             "args": [
               {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "OwnerOfInput1"
-                  ],
-                  "type": 1
-                }
-              }
-            ],
-            "docs": [
-              " Returns the owner of the token if any."
-            ],
-            "label": "PSP34::owner_of",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "OwnerOfOutput"
-              ],
-              "type": 19
-            },
-            "selector": "0x1168624d"
-          },
-          {
-            "args": [
-              {
                 "label": "to",
                 "type": {
                   "displayName": [
@@ -1367,6 +1363,36 @@ const launchpad_psp34_nft_standard = {
             "selector": "0x3128d61b"
           },
           {
+            "args": [
+              {
+                "label": "owner",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "BalanceOfInput1"
+                  ],
+                  "type": 8
+                }
+              }
+            ],
+            "docs": [
+              " Returns the balance of the owner.",
+              "",
+              " This represents the amount of unique tokens the owner has."
+            ],
+            "label": "PSP34::balance_of",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "BalanceOfOutput"
+              ],
+              "type": 4
+            },
+            "selector": "0xcde7e55f"
+          },
+          {
             "args": [],
             "docs": [
               " Returns current NFT total supply."
@@ -1382,6 +1408,25 @@ const launchpad_psp34_nft_standard = {
               "type": 6
             },
             "selector": "0x628413fe"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the collection `Id` of the NFT token.",
+              "",
+              " This can represents the relationship between tokens/contracts/pallets."
+            ],
+            "label": "PSP34::collection_id",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "CollectionIdOutput"
+              ],
+              "type": 1
+            },
+            "selector": "0xffa27a5f"
           },
           {
             "args": [
@@ -1498,7 +1543,7 @@ const launchpad_psp34_nft_standard = {
                 "type": {
                   "displayName": [
                     "launchpadpsp34nftstandardtraits_external",
-                    "GetAttributesInput1"
+                    "SetMultipleAttributesInput1"
                   ],
                   "type": 1
                 }
@@ -1508,26 +1553,64 @@ const launchpad_psp34_nft_standard = {
                 "type": {
                   "displayName": [
                     "launchpadpsp34nftstandardtraits_external",
-                    "GetAttributesInput2"
+                    "SetMultipleAttributesInput2"
+                  ],
+                  "type": 41
+                }
+              },
+              {
+                "label": "values",
+                "type": {
+                  "displayName": [
+                    "launchpadpsp34nftstandardtraits_external",
+                    "SetMultipleAttributesInput3"
                   ],
                   "type": 41
                 }
               }
             ],
             "docs": [
-              " Get multiple  attributes"
+              "Only Owner can set multiple attributes to a token"
             ],
-            "label": "LaunchPadPsp34NftStandardTraits::get_attributes",
+            "label": "LaunchPadPsp34NftStandardTraits::set_multiple_attributes",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "launchpadpsp34nftstandardtraits_external",
+                "SetMultipleAttributesOutput"
+              ],
+              "type": 45
+            },
+            "selector": "0xeb886f74"
+          },
+          {
+            "args": [
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "launchpadpsp34nftstandardtraits_external",
+                    "TokenUriInput1"
+                  ],
+                  "type": 5
+                }
+              }
+            ],
+            "docs": [
+              " Get URI from token ID"
+            ],
+            "label": "LaunchPadPsp34NftStandardTraits::token_uri",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "launchpadpsp34nftstandardtraits_external",
-                "GetAttributesOutput"
+                "TokenUriOutput"
               ],
-              "type": 41
+              "type": 40
             },
-            "selector": "0x9ff76320"
+            "selector": "0x71b88aef"
           },
           {
             "args": [
@@ -1577,6 +1660,44 @@ const launchpad_psp34_nft_standard = {
           {
             "args": [
               {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "launchpadpsp34nftstandardtraits_external",
+                    "GetAttributesInput1"
+                  ],
+                  "type": 1
+                }
+              },
+              {
+                "label": "attributes",
+                "type": {
+                  "displayName": [
+                    "launchpadpsp34nftstandardtraits_external",
+                    "GetAttributesInput2"
+                  ],
+                  "type": 41
+                }
+              }
+            ],
+            "docs": [
+              " Get multiple  attributes"
+            ],
+            "label": "LaunchPadPsp34NftStandardTraits::get_attributes",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "launchpadpsp34nftstandardtraits_external",
+                "GetAttributesOutput"
+              ],
+              "type": 41
+            },
+            "selector": "0x9ff76320"
+          },
+          {
+            "args": [
+              {
                 "label": "index",
                 "type": {
                   "displayName": [
@@ -1601,82 +1722,6 @@ const launchpad_psp34_nft_standard = {
               "type": 40
             },
             "selector": "0x85eb89f4"
-          },
-          {
-            "args": [
-              {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "launchpadpsp34nftstandardtraits_external",
-                    "TokenUriInput1"
-                  ],
-                  "type": 5
-                }
-              }
-            ],
-            "docs": [
-              " Get URI from token ID"
-            ],
-            "label": "LaunchPadPsp34NftStandardTraits::token_uri",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "launchpadpsp34nftstandardtraits_external",
-                "TokenUriOutput"
-              ],
-              "type": 40
-            },
-            "selector": "0x71b88aef"
-          },
-          {
-            "args": [
-              {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "launchpadpsp34nftstandardtraits_external",
-                    "SetMultipleAttributesInput1"
-                  ],
-                  "type": 1
-                }
-              },
-              {
-                "label": "attributes",
-                "type": {
-                  "displayName": [
-                    "launchpadpsp34nftstandardtraits_external",
-                    "SetMultipleAttributesInput2"
-                  ],
-                  "type": 41
-                }
-              },
-              {
-                "label": "values",
-                "type": {
-                  "displayName": [
-                    "launchpadpsp34nftstandardtraits_external",
-                    "SetMultipleAttributesInput3"
-                  ],
-                  "type": 41
-                }
-              }
-            ],
-            "docs": [
-              "Only Owner can set multiple attributes to a token"
-            ],
-            "label": "LaunchPadPsp34NftStandardTraits::set_multiple_attributes",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "launchpadpsp34nftstandardtraits_external",
-                "SetMultipleAttributesOutput"
-              ],
-              "type": 45
-            },
-            "selector": "0xeb886f74"
           }
         ]
       },
@@ -2714,6 +2759,11 @@ const launchpad_psp34_nft_standard = {
                   },
                   {
                     "name": "public_minting_amount",
+                    "type": 5,
+                    "typeName": "u64"
+                  },
+                  {
+                    "name": "public_max_minting_amount",
                     "type": 5,
                     "typeName": "u64"
                   },
