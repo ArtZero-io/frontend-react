@@ -61,6 +61,8 @@ function MyNFTCard({
   const [isUnstakeTime, setIsUnstakeTime] = useState(false);
   const [limitUnstakeTime, setLimitUnstakeTime] = useState(0);
 
+  const [isTicked, setIsTicked] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const { location } = useHistory();
@@ -69,6 +71,32 @@ function MyNFTCard({
   const cardSize = useBreakpointValue([160, 226]);
 
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
+
+  const MAX_ITEM_STAKE = 5;
+
+  const handleOnChangeCheckbox = ({ target }) => {
+    if (target.checked && multiStakeData?.list?.length >= MAX_ITEM_STAKE) {
+      !multiStakeData?.list?.includes(tokenID) && setIsTicked(false);
+
+      return toast.error(`Max items allowed limited to ${MAX_ITEM_STAKE}!`);
+    }
+
+    target.checked ? setIsTicked(true) : setIsTicked(false);
+
+    if (
+      !multiStakeData?.action ||
+      multiStakeData?.action === getStakeAction(stakeStatus, isUnstakeTime)
+    ) {
+      handleSelectMultiNfts(
+        tokenID,
+        getStakeAction(stakeStatus, isUnstakeTime),
+        target.checked
+      );
+      return;
+    }
+
+    return toast.error("Please select same action!");
+  };
 
   useInterval(() => {
     if (unstakeRequestTime) {
@@ -139,7 +167,7 @@ function MyNFTCard({
         transitionTimingFunction: "cubic-bezier(.17,.67,.83,.67)",
       }}
     >
-      {location?.pathname === "/account/stakes" ? (
+      {!is_for_sale && location?.pathname === "/account/stakes" ? (
         <Checkbox
           sx={{
             "span.chakra-checkbox__control": {
@@ -156,28 +184,14 @@ function MyNFTCard({
           top="10px"
           right="10px"
           position="absolute"
+          isChecked={isTicked}
           isDisabled={
             actionType ||
             (multiStakeData?.action &&
               multiStakeData?.action !==
                 getStakeAction(stakeStatus, isUnstakeTime))
           }
-          onChange={({ target }) => {
-            if (
-              !multiStakeData?.action ||
-              multiStakeData?.action ===
-                getStakeAction(stakeStatus, isUnstakeTime)
-            ) {
-              handleSelectMultiNfts(
-                tokenID,
-                getStakeAction(stakeStatus, isUnstakeTime),
-                target.checked
-              );
-              return;
-            }
-
-            return toast.error("Please select same action!");
-          }}
+          onChange={(e) => handleOnChangeCheckbox(e)}
         />
       ) : null}{" "}
       <Flex
