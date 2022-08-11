@@ -294,7 +294,7 @@ const NFTTabCollectible = (props) => {
                     <Icon
                       width={{ base: "14px", "2xl": "20px" }}
                       height={{ base: "14px", "2xl": "20px" }}
-                      as={AiOutlineLock}
+                      as={AiOutlineUnlock}
                     />
                   </span>
                 </Tooltip>

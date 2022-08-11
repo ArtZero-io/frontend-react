@@ -1,4 +1,4 @@
- import {
+import {
   Box,
   Flex,
   Grid,
@@ -20,9 +20,9 @@
   NumberInputField,
   InputRightElement,
   useBreakpointValue,
+  Icon,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { ImLock, ImUnlocked } from "react-icons/im";
 
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -59,6 +59,7 @@ import {
   fetchMyTradingFee,
 } from "@pages/account/stakes";
 import { SCROLLBAR } from "@constants";
+import { AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
 
 function MyNFTTabInfo(props) {
   const {
@@ -123,7 +124,7 @@ function MyNFTTabInfo(props) {
               setBidPrice(convertStringToPrice(item.bidValue));
             }
           }
-        }  
+        }
       }
     };
     !saleInfo && doLoad();
@@ -347,7 +348,7 @@ function MyNFTTabInfo(props) {
             >
               {nftName}
             </Heading>
-            
+
             <Spacer />
 
             <HStack
@@ -367,12 +368,23 @@ function MyNFTTabInfo(props) {
                 owner !== currentAccount?.address && (
                   <Tooltip
                     hasArrow
+                    bg="#333"
+                    color="#fff"
                     label="Unlocked on-chain metadata"
-                    bg="gray.300"
-                    color="black"
                   >
-                    <span>
-                      <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
+                    <span
+                      style={{
+                        padding: "6px",
+                        display: "flex",
+                        alignItems: "center",
+                        border: "2px solid #333333",
+                      }}
+                    >
+                      <Icon
+                        width={{ base: "14px", "2xl": "20px" }}
+                        height={{ base: "14px", "2xl": "20px" }}
+                        as={AiOutlineUnlock}
+                      />
                     </span>
                   </Tooltip>
                 )}
@@ -380,12 +392,23 @@ function MyNFTTabInfo(props) {
               {!is_locked && !showOnChainMetadata && (
                 <Tooltip
                   hasArrow
+                  bg="#333"
+                  color="#fff"
                   label="Off-chain metadata"
-                  bg="gray.300"
-                  color="black"
                 >
-                  <span>
-                    <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
+                  <span
+                    style={{
+                      padding: "6px",
+                      display: "flex",
+                      alignItems: "center",
+                      border: "2px solid #333333",
+                    }}
+                  >
+                    <Icon
+                      width={{ base: "14px", "2xl": "20px" }}
+                      height={{ base: "14px", "2xl": "20px" }}
+                      as={AiOutlineUnlock}
+                    />
                   </span>
                 </Tooltip>
               )}
@@ -393,12 +416,23 @@ function MyNFTTabInfo(props) {
               {is_locked && showOnChainMetadata && (
                 <Tooltip
                   hasArrow
+                  bg="#333"
+                  color="#fff"
                   label="Locked on-chain metadata"
-                  bg="gray.300"
-                  color="black"
                 >
-                  <span>
-                    <TagRightIcon ml="6px" as={ImLock} size="22px" />
+                  <span
+                    style={{
+                      padding: "6px",
+                      display: "flex",
+                      alignItems: "center",
+                      border: "2px solid #333333",
+                    }}
+                  >
+                    <Icon
+                      width={{ base: "14px", "2xl": "20px" }}
+                      height={{ base: "14px", "2xl": "20px" }}
+                      as={AiOutlineLock}
+                    />
                   </span>
                 </Tooltip>
               )}
@@ -422,7 +456,6 @@ function MyNFTTabInfo(props) {
                 <TransferNFTModal {...props} isDisabled={addNftTnxStatus} />
               )}
             </HStack>
-
           </HStack>
 
           <Stack>
