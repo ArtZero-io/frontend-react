@@ -253,7 +253,7 @@ function CollectionPage() {
           loadingTime={loadingTime}
           setActiveTab={setActiveTab}
           loading={loading || loadingForceUpdate}
-          forceUpdate={() => fetchCollectionDetail()}
+          forceUpdate={() => fetchCollectionDetail({ activeTab })}
           totalCollectionsCount={totalCollectionsCount}
         />
       ),

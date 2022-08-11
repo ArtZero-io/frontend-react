@@ -10,6 +10,7 @@
       "@actions": ["src/store/actions"],
       "@theme": ["src/theme"],
       "@utils": ["src/utils"],
+      "@blockchain": ["src/utils/blockchain"],
       "@api": ["src/api"]
     }
   }

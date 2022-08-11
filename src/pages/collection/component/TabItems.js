@@ -111,7 +111,7 @@ const CollectionItems = ({
             justifyContent="space-between"
           >
             <IconButton
-              mr={1.5}
+              m={1.5}
               size="icon"
               variant="iconSolid"
               aria-label="refresh"
@@ -166,25 +166,7 @@ const CollectionItems = ({
             )}
 
             <Spacer />
-            {/* <Text color="#888" px={2} display={{ base: "block", xl: "none" }}>
-              {totalCollectionsCount || 0} asd items{" "}
-              {activeTab === tabList.ALL
-                ? "in total"
-                : activeTab === tabList.LISTED
-                ? "listed"
-                : activeTab === tabList.UNLISTED
-                ? "unlisted"
-                : ""}
-            </Text> */}
-            {/* <IconButton
-              display={{ base: "flex", xl: "none" }}
-              aria-label="refresh"
-              icon={<RefreshIcon />}
-              size="icon"
-              variant="iconSolid"
-              mx={1.5}
-              onClick={() => forceUpdate()}
-            /> */}
+
             <Dropdown
               // width="full"
               mx={1.5}
@@ -203,7 +185,7 @@ const CollectionItems = ({
             bg={bigCard ? "#7ae7ff" : "#222"}
             color={bigCard ? "#000" : "#fff"}
             display={{ base: "none", xl: "flex" }}
-            icon={<RiLayoutGridLine fontSize="24px" />}
+            icon={<RiLayoutGridLine fontSize="32px" />}
             onClick={() => setBigCard(true)}
           />
 
@@ -215,7 +197,7 @@ const CollectionItems = ({
             bg={!bigCard ? "#7ae7ff" : "#222"}
             color={!bigCard ? "#000" : "#fff"}
             display={{ base: "none", xl: "flex" }}
-            icon={<BsGrid3X3 fontSize="24px" />}
+            icon={<BsGrid3X3 fontSize="22px" />}
             onClick={() => setBigCard(false)}
           />
         </Stack>

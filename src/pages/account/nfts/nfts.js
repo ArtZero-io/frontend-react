@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Flex,
   Heading,
@@ -12,15 +13,20 @@ import MyNFTGroupCard from "@components/Card/MyNFTGroup";
 import { useSubstrateState } from "@utils/substrate";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import { clientAPI } from "@api/client";
-import { useDispatch, useSelector } from "react-redux";
-import { delay } from "@utils";
-import { AccountActionTypes } from "@store/types/account.types";
 import AnimationLoader from "@components/Loader/AnimationLoader";
-import { FINALIZED } from "@constants";
-import { clearTxStatus } from "../../../store/actions/txStatus";
-import CommonButton from "../../../components/Button/CommonButton";
-import CommonContainer from "../../../components/Container/CommonContainer";
-import { SCROLLBAR } from "../../../constants";
+import CommonButton from "@components/Button/CommonButton";
+import CommonContainer from "@components/Container/CommonContainer";
+import useForceUpdate from "@hooks/useForceUpdate";
+import useTxStatus from "@hooks/useTxStatus";
+
+import {
+  REMOVE_BID,
+  UNLIST_TOKEN,
+  LIST_TOKEN,
+  SCROLLBAR,
+  LOCK,
+  TRANSFER,
+} from "@constants";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
@@ -30,12 +36,21 @@ const MyNFTsPage = () => {
 
   const [filterSelected, setFilterSelected] = useState(0);
 
-  const dispatch = useDispatch();
-  const { addNftTnxStatus } = useSelector((s) => s.account.accountLoaders);
-  const txStatus = useSelector((state) => state.txStatus);
-
   const [loading, setLoading] = useState(null);
-  const [loadingTime, setLoadingTime] = useState(null);
+
+  // eslint-disable-next-line no-unused-vars
+  const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
+    [REMOVE_BID, UNLIST_TOKEN, LIST_TOKEN, LOCK, TRANSFER],
+    () => handleForceUpdate()
+  );
+  const { actionType } = useTxStatus();
+
+  const handleForceUpdate = async () => {
+    // 1/ List xong thì về My listed - (Page My NFT) PUSH FOR SALE => (Page My NFT) Tab My Listing?
+    // 2/ Unlist xong thì về Unlisted -  (Page My NFT) REMOVE FROM SALE => (Page My NFT) Tab Collected?
+    actionType === LIST_TOKEN && setFilterSelected(1);
+    actionType === UNLIST_TOKEN && setFilterSelected(0);
+  };
 
   function onClickHandler(v) {
     if (filterSelected !== v) {
@@ -43,6 +58,7 @@ const MyNFTsPage = () => {
       setMyCollections(null);
     }
   }
+
   useEffect(() => {
     const fetchMyCollections = async () => {
       const allCollectionsOwned = await clientAPI("post", "/getCollections", {
@@ -153,69 +169,11 @@ const MyNFTsPage = () => {
         setMyCollections(null);
       }
     };
+
     if (!myCollections || owner !== currentAccount?.address) {
       filterSelected !== 2 ? fetchMyCollections() : fetchMyBids();
     }
   }, [currentAccount?.address, filterSelected, myCollections, owner]);
-
-  useEffect(() => {
-    const forceUpdateAfterPushForSale = async () => {
-      if (
-        addNftTnxStatus?.status === "End" ||
-        txStatus?.lockStatus === FINALIZED
-      ) {
-        if (
-          addNftTnxStatus?.status &&
-          addNftTnxStatus?.timeStamp &&
-          addNftTnxStatus?.endTimeStamp
-        ) {
-          const diffTime =
-            9000 -
-            Number(addNftTnxStatus?.endTimeStamp - addNftTnxStatus?.timeStamp);
-          const delayTime = diffTime >= 0 ? diffTime : 500;
-
-          setLoading(true);
-
-          setLoadingTime(delayTime / 1000);
-
-          await delay(delayTime).then(() => {
-            dispatch({
-              type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-            });
-            dispatch(clearTxStatus());
-            setMyCollections(null);
-
-            setLoading(false);
-          });
-        }
-      }
-    };
-
-    forceUpdateAfterPushForSale();
-  }, [
-    addNftTnxStatus,
-    addNftTnxStatus?.status,
-    dispatch,
-    loadingTime,
-    txStatus.lockStatus,
-  ]);
-
-  useEffect(() => {
-    const forceUpdateAfterLockNFT = async () => {
-      if (txStatus?.lockStatus === FINALIZED) {
-        setLoading(true);
-
-        await delay(8000).then(() => {
-          dispatch(clearTxStatus());
-          setMyCollections(null);
-
-          setLoading(false);
-        });
-      }
-    };
-
-    forceUpdateAfterLockNFT();
-  }, [addNftTnxStatus, dispatch, txStatus?.lockStatus]);
 
   return (
     <CommonContainer>
@@ -227,7 +185,7 @@ const MyNFTsPage = () => {
         direction={{ base: "column", xl: "row" }}
       >
         <Heading fontSize={["3xl-mid", "5xl", "5xl"]} minW="100px">
-          MY NFTs
+          my nfts
         </Heading>
 
         <Spacer />

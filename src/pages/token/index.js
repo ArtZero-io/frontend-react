@@ -1080,7 +1080,7 @@ export const removeBid = async (
   );
 };
 
-const listToken = async (
+export const listToken = async (
   api,
   currentAccount,
   isOwner,
@@ -1166,7 +1166,7 @@ const listToken = async (
   }
 };
 
-const unlistToken = async (
+export const unlistToken = async (
   api,
   currentAccount,
   isOwner,

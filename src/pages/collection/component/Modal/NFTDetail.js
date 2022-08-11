@@ -4,13 +4,17 @@ import {
   ModalContent,
   ModalOverlay,
   useBreakpointValue,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import NFTTabCollectible from "../Tab/Collectible";
-import NFTTabActivity from "../Tab/Activity";
 import useTxStatus from "@hooks/useTxStatus";
 import { FINALIZED, END } from "@constants";
+import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
 
 function NFTDetailModal({ isOpen, onClose, ...rest }) {
   const tabHeight = useBreakpointValue({
@@ -32,20 +36,16 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
       isDisabled: actionType,
     },
     {
-      // Before is label: "Activity",
       label: "offers",
-      content: <NFTTabActivity {...rest} />,
+      content: <MyNFTOffer {...rest} />,
       isDisabled: actionType || !rest?.is_for_sale,
     },
   ];
-
-  const modalSize = useBreakpointValue(["xs", "7xl", "7xl"]);
-
   return (
     <Modal
       isCentered
       isOpen={isOpen}
-      size={modalSize}
+      size={"7xl"}
       onClose={onClose}
       closeOnEsc={false}
       scrollBehavior="inside"
@@ -63,16 +63,13 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
         borderRadius="0"
         position="relative"
         bg="brand.grayDark"
-        maxH={{ base: "calc(100% - 7.5rem)", xl: "30rem", "2xl": "40rem" }}
         maxW={{ base: "20rem", xl: "60rem", "2xl": "78rem" }}
+        maxH={{ base: "calc(100% - 7.5rem)", xl: "30rem", "2xl": "40rem" }}
       >
         <ModalCloseButton
-          w="35px"
-          h="35px"
-          border="none"
-          // borderWidth={2}
           borderRadius="0"
           position="absolute"
+          borderWidth={[0, "2px"]}
           top={["0", "-8", "-8"]}
           right={["0", "-8", "-8"]}
           onClick={() => step === FINALIZED && onEndClick()}
@@ -82,9 +79,14 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
           <TabList bg="#171717">
             {tabData.map((tab, index) => (
               <Tab
+                ml={12}
                 px="0.5px"
                 key={index}
-                ml={[6, 12, 12]}
+                color="#fff"
+                _selected={{
+                  color: "brand.blue",
+                  borderBottom: "2px solid #7ae7ff",
+                }}
                 minH={tabHeight}
                 isDisabled={tab.isDisabled}
                 fontFamily="Evogria Italic"

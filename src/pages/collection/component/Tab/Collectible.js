@@ -242,9 +242,9 @@ const NFTTabCollectible = (props) => {
             >
               {!is_locked && showOnChainMetadata && isOwner && (
                 <AddNewNFTModal
-                  isDisabled={actionType}
-                  mode={formMode.EDIT}
                   {...props}
+                  mode={formMode.EDIT}
+                  isDisabled={actionType}
                 />
               )}
 
