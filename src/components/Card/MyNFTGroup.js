@@ -372,10 +372,12 @@ function GridNftA({
     if (multiStakeData?.action !== action) {
       return toast.error("Please select same action!");
     }
+
     const isExisted = multiStakeData?.list.includes(tokenID);
 
     if (isChecked) {
       if (isExisted) return toast.error("This item is already added!");
+
       const newList = multiStakeData?.list;
       newData.list = [...newList, tokenID];
 
