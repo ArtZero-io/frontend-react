@@ -313,7 +313,7 @@ async function whitelistMint(
   return unsubscribe;
 }
 
-async function paidMint(caller_account, fee, dispatch, txType, api) {
+async function paidMint(caller_account, fee, mint_amount, dispatch, txType, api) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -324,7 +324,7 @@ async function paidMint(caller_account, fee, dispatch, txType, api) {
   const azero_value = Math.round(fee * 10 ** 12);
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  const txNotSign = contract.tx.paidMint({ gasLimit, value: azero_value });
+  const txNotSign = contract.tx.paidMint({ gasLimit, value: azero_value }, mint_amount);
 
   await txNotSign
     .signAndSend(
@@ -633,6 +633,25 @@ async function approve(
   return unsubscribe;
 }
 
+async function getPublicMaxMintingAmount(caller_account) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  //console.log(contract);
+
+  const { result, output } = await contract.query.getPublicMaxMintingAmount(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+
 const contract_calls = {
   getAdminAddress,
   allowance,
@@ -654,6 +673,7 @@ const contract_calls = {
   updateWhitelistAmount,
   withdrawFee,
   initialize,
+  getPublicMaxMintingAmount
   // isLoaded,
 };
 

@@ -44,6 +44,7 @@ export default function UpdatePhasesModal({
         isPublic: false,
         publicMintingFee: 0,
         publicAmount: 0,
+        publicMaxMintingAmount: 0
       },
     ],
   });
@@ -94,6 +95,9 @@ export default function UpdatePhasesModal({
           isPublic: phaseSchedule.isPublic,
           publicAmount: Number(
             convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
+          ),
+          publicMaxMintingAmount: Number(
+            convertNumberWithoutCommas(phaseSchedule.publicMaxMintingAmount)
           ),
           publicMintingFee: convertStringToPrice(
             phaseSchedule.publicMintingFee
@@ -226,6 +230,7 @@ export const fetchInitialPhasesValue = async () => {
         isPublic: false,
         publicMintingFee: 0,
         publicAmount: 0,
+        publicMaxMintingAmount: 0
       },
     ],
   };
@@ -247,6 +252,7 @@ export const fetchInitialPhasesValue = async () => {
         end: 1660496399999,
         isPublic: false,
         publicAmount: 0,
+        publicMaxMintingAmount: 0,
         publicMintingFee: 0,
       },
       {
@@ -256,6 +262,7 @@ export const fetchInitialPhasesValue = async () => {
         end: 1661014799999,
         isPublic: false,
         publicAmount: 0,
+        publicMaxMintingAmount: 0,
         publicMintingFee: 0,
       },
       {
@@ -265,6 +272,7 @@ export const fetchInitialPhasesValue = async () => {
         end: 1661965199999,
         isPublic: true,
         publicAmount: 3,
+        publicMaxMintingAmount: 0,
         publicMintingFee: 99,
       },
     ],

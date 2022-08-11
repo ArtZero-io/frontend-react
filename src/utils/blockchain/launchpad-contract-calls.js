@@ -259,6 +259,7 @@ async function addNewProject(
       data.is_public_phases,
       data.public_minting_fee_phases,
       data.public_minting_amout_phases,
+      data.public_max_minting_amount_phases,
       data.start_time_phases,
       data.end_time_phases
     )

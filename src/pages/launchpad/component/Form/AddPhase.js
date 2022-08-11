@@ -89,6 +89,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
       isPublic: false,
       publicMintingFee: "",
       publicAmount: "",
+      publicMaxMintingAmount: "",
       new: true,
     });
   };
@@ -103,7 +104,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
       launchpad_psp34_nft_standard_contract
     );
 
-    const { name, id, isPublic, publicMintingFee, publicAmount, start, end } =
+    const { name, id, isPublic, publicMintingFee, publicAmount, publicMaxMintingAmount, start, end } =
       value[index];
 
     console.log("value[index]", value[index]);
@@ -119,6 +120,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
       isPublic,
       publicMintingFee,
       publicAmount,
+      publicMaxMintingAmount,
       start,
       end,
       dispatch,
@@ -138,7 +140,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
       launchpad_psp34_nft_standard_contract
     );
 
-    const { name, isPublic, publicMintingFee, publicAmount, start, end } =
+    const { name, isPublic, publicMintingFee, publicAmount, publicMaxMintingAmount, start, end } =
       value[index];
 
     console.log("value[index]", value[index]);
@@ -153,6 +155,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
       isPublic,
       publicMintingFee,
       publicAmount,
+      publicMaxMintingAmount,
       start,
       end,
       dispatch,
@@ -258,6 +261,17 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                     // inputWidth={"100%"}
                     isDisplay={value[index].isPublic}
                     name={`phases[${index}].publicAmount`}
+                  />
+                  <NumberInput
+                    type="number"
+                    height="50px"
+                    precision={0}
+                    hasStepper={false}
+                    isDisabled={actionType}
+                    label="Public Max Minting Amount"
+                    // inputWidth={"100%"}
+                    isDisplay={value[index].isPublic}
+                    name={`phases[${index}].publicMaxMintingAmount`}
                   />
                 </Stack>
 

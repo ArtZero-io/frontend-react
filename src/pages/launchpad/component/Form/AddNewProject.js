@@ -270,6 +270,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               let is_public_phases = [];
               let public_minting_fee_phases = [];
               let public_minting_amout_phases = [];
+              let public_max_minting_amount_phases = [];
               for (let phase of values.phases) {
                 code_phases.push(phase.name);
                 is_public_phases.push(phase.isPublic);
@@ -281,9 +282,12 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 public_minting_fee_phases.push(public_minting_fee_phase_tmp);
                 let public_minting_amout_phase_tmp =
                   phase.isPublic && phase.publicAmount ? phase.publicAmount : 0;
+                  
+                let public_max_minting_amount_phase_tmp = phase.isPublic && phase.publicMaxMintingAmount ? phase.publicMaxMintingAmount : 0;
                 public_minting_amout_phases.push(
                   public_minting_amout_phase_tmp
                 );
+                public_max_minting_amount_phases.push(public_max_minting_amount_phase_tmp);
                 start_time_phases.push(phase.start);
                 end_time_phases.push(phase.end);
               }
@@ -310,6 +314,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 is_public_phases: is_public_phases,
                 public_minting_fee_phases: public_minting_fee_phases,
                 public_minting_amout_phases: public_minting_amout_phases,
+                public_max_minting_amount_phases: public_max_minting_amount_phases
               };
 
               if (mode === formMode.ADD) {
@@ -843,6 +848,7 @@ export const fetchInitialValuesProject = async ({
         isPublic: false,
         publicMintingFee: 0,
         publicAmount: 0,
+        publicMaxMintingAmount: 0
       },
     ],
     agreeTosCheckbox: false,
@@ -1104,6 +1110,7 @@ const validationSchema = Yup.object().shape({
         isPublic: Yup.boolean(),
         publicMintingFee: "",
         publicAmount: "",
+        publicMaxMintingAmount: ""
       })
     ),
   agreeTosCheckbox: validationAgreeTosCheckbox,

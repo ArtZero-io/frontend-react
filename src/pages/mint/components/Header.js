@@ -58,9 +58,9 @@ function MintHeader({ loading }) {
   const [totalMinted, setTotalMinted] = useState(0);
   const [whitelistAmount, setWhitelistAmount] = useState(1);
   const [isLoadingMintData, setIsLoadingMintData] = useState(false);
-
+  const [publicMintAmount, setPublicMintAmount] = useState(1);
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
-
+  const [publicMaxMintingAmount, setPublicMaxMintingAmount] = useState(1);
   const onWhiteListMint = async () => {
     const { data: balance } = await api.query.system.account(
       currentAccount?.address
@@ -95,8 +95,9 @@ function MintHeader({ loading }) {
     const { data } = await api.query.system.account(currentAccount.address);
 
     const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
-
-    if (balance < fee1 + 0.01) {
+    const mintAmount = fee1 * publicMintAmount;
+    console.log(mintAmount);
+    if (balance < mintAmount + 0.01) {
       toast.error("Not enough balance to mint");
       return;
     }
@@ -107,7 +108,8 @@ function MintHeader({ loading }) {
 
         await artzero_nft_calls.paidMint(
           currentAccount,
-          fee1,
+          mintAmount,
+          publicMintAmount,
           dispatch,
           PUBLIC_MINT,
           api
@@ -167,6 +169,9 @@ function MintHeader({ loading }) {
 
         const mintingFeeData = await getMintingFee(currentAccount);
         setFee1(mintingFeeData);
+
+        const publicMaxMintingAmountTmp = await getPublicMaxMintingAmount(currentAccount);
+        setPublicMaxMintingAmount(publicMaxMintingAmountTmp);
 
         const amount1Data = await getPublicSaleAmount(currentAccount);
 
@@ -510,6 +515,29 @@ function MintHeader({ loading }) {
                   </>
                 ) : null}
               </Box>
+              <NumberInput
+                    bg="black"
+                    min={1}
+                    w="full"
+                    mr={[0, 3]}
+                    h="3.125rem"
+                    mb={["10px", 0]}
+                    isDisabled={actionType || (publicSaleMintedCount >= amount1)}
+                    value={publicMintAmount}
+                    max={publicMaxMintingAmount}
+                    onChange={(valueString) => setPublicMintAmount(valueString)}
+                  >
+                    <NumberInputField
+                      h="3.125rem"
+                      borderRadius={0}
+                      borderWidth={0}
+                      color="#fff"
+                    />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
               <CommonButton
                 {...rest}
                 text="mint now"
@@ -567,5 +595,10 @@ const getPublicSaleAmount = async (currentAccount) => {
 
 const getPublicSaleMintedCount = async (currentAccount) => {
   let res = await artzero_nft_calls.getPublicSaleMintedAmount(currentAccount);
+  return res || -1;
+};
+
+const getPublicMaxMintingAmount = async (currentAccount) => {
+  let res = await artzero_nft_calls.getPublicMaxMintingAmount(currentAccount);
   return res || -1;
 };
