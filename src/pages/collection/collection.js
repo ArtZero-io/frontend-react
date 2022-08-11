@@ -30,6 +30,8 @@ import {
   ACCEPT_BID,
   LIST_TOKEN,
   UNLIST_TOKEN,
+  LOCK,
+  TRANSFER,
 } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
@@ -74,154 +76,168 @@ function CollectionPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagesCount]);
 
-  const fetchCollectionDetail = useCallback(async () => {
-    setLoading(true);
-    const NFTListOptions = {
-      limit: pageSize,
-      offset: offset,
-      sort: -1,
-      collection_address,
-    };
-
-    try {
-      const [collectionDetail] = await APICall.getCollectionByAddress({
+  const fetchCollectionDetail = useCallback(
+    async ({ activeTab }) => {
+      setLoading(true);
+      const NFTListOptions = {
+        limit: pageSize,
+        offset: offset,
+        sort: -1,
         collection_address,
-      });
+      };
 
-      //Get fake public CurrentAccount
-      const publicCurrentAccount = currentAccount
-        ? currentAccount
-        : getPublicCurrentAccount();
-
-      const totalListedData =
-        await marketplace_contract_calls.getListedTokenCountByCollectionAddress(
-          publicCurrentAccount,
-          collection_address
-        );
-
-      collectionDetail.totalListed = totalListedData || 0;
-
-      const [floorPrice] = await clientAPI("post", "/getFloorPrice", {
-        collection_address,
-      });
-
-      collectionDetail.floorPrice = floorPrice?.price || 0;
-
-      let NFTList;
-
-      const collectionsCountTotal = collectionDetail?.nft_count;
-      const collectionsCountListed = collectionDetail?.totalListed;
-      const collectionsCountUnListed =
-        collectionsCountTotal - collectionsCountListed;
-
-      if (activeTab === tabList.ALL) {
-        NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
-
-        setTotalCollectionsCount(collectionsCountTotal || 0);
-      }
-
-      if (activeTab === tabList.LISTED) {
-        NFTList = await clientAPI("post", "/getListedNFTs", NFTListOptions);
-
-        setTotalCollectionsCount(collectionsCountListed || 0);
-      }
-
-      if (activeTab === tabList.UNLISTED) {
-        NFTList = await clientAPI("post", "/getUnlistedNFTs", NFTListOptions);
-
-        setTotalCollectionsCount(collectionsCountUnListed || 0);
-      }
-
-      const volumeData = await marketplace_contract_calls.getVolumeByCollection(
-        publicCurrentAccount,
-        collection_address
-      );
-
-      collectionDetail.volume = volumeData || 0;
-
-      if (collectionDetail?.nft_count === 0) {
-        setLoading(false);
-        // setLoadingTime(null);
-        return setFormattedCollection(collectionDetail);
-      }
-
-      // Collections Type 2 - Simple Mode
-
-      if (Number(collectionDetail.contractType) === 2) {
-        Promise.all(
-          NFTList.map((item) => {
-            const itemData = createObjAttrsNFT(
-              item.attributes,
-              item.attributesValue
-            );
-
-            return { ...item, ...itemData };
-          })
-        ).then((NFTListFormatted) => {
-          collectionDetail.NFTListFormatted = NFTListFormatted;
-
-          setFormattedCollection(collectionDetail);
-          setLoading(false);
-          // setLoadingTime(null);
+      try {
+        const [collectionDetail] = await APICall.getCollectionByAddress({
+          collection_address,
         });
-      }
 
-      // Collections Type 1 - Advanced Mode
-      if (
-        Number(collectionDetail.contractType) === 1 &&
-        !collectionDetail.showOnChainMetadata
-      ) {
-        const nft_contract = new ContractPromise(
-          api,
-          nft721_psp34_standard.CONTRACT_ABI,
-          collectionDetail.nftContractAddress
-        );
+        //Get fake public CurrentAccount
+        const publicCurrentAccount = currentAccount
+          ? currentAccount
+          : getPublicCurrentAccount();
 
-        const gasLimit = -1;
-        const azero_value = 0;
+        const totalListedData =
+          await marketplace_contract_calls.getListedTokenCountByCollectionAddress(
+            publicCurrentAccount,
+            collection_address
+          );
 
-        const { result, output } = await nft_contract.query[
-          "psp34Traits::tokenUri"
-        ](currentAccount?.address, { value: azero_value, gasLimit }, 1);
+        collectionDetail.totalListed = totalListedData || 0;
 
-        if (!result.isOk) {
-          toast.error("There is an error when loading token_uri!");
-          return;
+        const [floorPrice] = await clientAPI("post", "/getFloorPrice", {
+          collection_address,
+        });
+
+        collectionDetail.floorPrice = floorPrice?.price || 0;
+
+        let NFTList;
+
+        const collectionsCountTotal = collectionDetail?.nft_count;
+        const collectionsCountListed = collectionDetail?.totalListed;
+        const collectionsCountUnListed =
+          collectionsCountTotal - collectionsCountListed;
+
+        if (activeTab === tabList.ALL) {
+          NFTList = await clientAPI("post", "/getNFTs", NFTListOptions);
+
+          setTotalCollectionsCount(collectionsCountTotal || 0);
         }
 
-        const token_uri = output.toHuman()?.replace("1.json", "");
+        if (activeTab === tabList.LISTED) {
+          NFTList = await clientAPI("post", "/getListedNFTs", NFTListOptions);
 
-        setTokenUriType1(token_uri);
+          setTotalCollectionsCount(collectionsCountListed || 0);
+        }
 
-        Promise.all(
-          NFTList.map(async (item) => {
-            const res = await getMetaDataType1(item.tokenID, token_uri);
+        if (activeTab === tabList.UNLISTED) {
+          NFTList = await clientAPI("post", "/getUnlistedNFTs", NFTListOptions);
 
-            return { ...item, ...res };
-          })
-        ).then((result) => {
-          collectionDetail.NFTListFormatted = result;
+          setTotalCollectionsCount(collectionsCountUnListed || 0);
+        }
 
-          setFormattedCollection(collectionDetail);
+        const volumeData =
+          await marketplace_contract_calls.getVolumeByCollection(
+            publicCurrentAccount,
+            collection_address
+          );
+
+        collectionDetail.volume = volumeData || 0;
+
+        if (collectionDetail?.nft_count === 0) {
           setLoading(false);
           // setLoadingTime(null);
-        });
+          return setFormattedCollection(collectionDetail);
+        }
+
+        // Collections Type 2 - Simple Mode
+
+        if (Number(collectionDetail.contractType) === 2) {
+          Promise.all(
+            NFTList.map((item) => {
+              const itemData = createObjAttrsNFT(
+                item.attributes,
+                item.attributesValue
+              );
+
+              return { ...item, ...itemData };
+            })
+          ).then((NFTListFormatted) => {
+            collectionDetail.NFTListFormatted = NFTListFormatted;
+
+            setFormattedCollection(collectionDetail);
+            setLoading(false);
+            // setLoadingTime(null);
+          });
+        }
+
+        // Collections Type 1 - Advanced Mode
+        if (
+          Number(collectionDetail.contractType) === 1 &&
+          !collectionDetail.showOnChainMetadata
+        ) {
+          const nft_contract = new ContractPromise(
+            api,
+            nft721_psp34_standard.CONTRACT_ABI,
+            collectionDetail.nftContractAddress
+          );
+
+          const gasLimit = -1;
+          const azero_value = 0;
+
+          const { result, output } = await nft_contract.query[
+            "psp34Traits::tokenUri"
+          ](currentAccount?.address, { value: azero_value, gasLimit }, 1);
+
+          if (!result.isOk) {
+            toast.error("There is an error when loading token_uri!");
+            return;
+          }
+
+          const token_uri = output.toHuman()?.replace("1.json", "");
+
+          setTokenUriType1(token_uri);
+
+          Promise.all(
+            NFTList.map(async (item) => {
+              const res = await getMetaDataType1(item.tokenID, token_uri);
+
+              return { ...item, ...res };
+            })
+          ).then((result) => {
+            collectionDetail.NFTListFormatted = result;
+
+            setFormattedCollection(collectionDetail);
+            setLoading(false);
+            // setLoadingTime(null);
+          });
+        }
+      } catch (error) {
+        console.log("error", error);
+        toast.error("There was an error while fetching the collections.");
       }
-    } catch (error) {
-      console.log("error", error);
-      toast.error("There was an error while fetching the collections.");
-    }
-  }, [activeTab, api, collection_address, currentAccount, offset, pageSize]);
+    },
+    [api, collection_address, currentAccount, offset, pageSize]
+  );
 
   useEffect(() => {
-    fetchCollectionDetail();
-  }, [fetchCollectionDetail]);
+    fetchCollectionDetail({ activeTab });
+  }, [fetchCollectionDetail, activeTab]);
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
-    [BUY, BID, REMOVE_BID, ACCEPT_BID, LIST_TOKEN, UNLIST_TOKEN],
+    [
+      BUY,
+      BID,
+      REMOVE_BID,
+      ACCEPT_BID,
+      LIST_TOKEN,
+      UNLIST_TOKEN,
+      LOCK,
+      TRANSFER,
+    ],
     () => {
       actionType === BID && setActiveTab(tabList.LISTED);
       actionType === REMOVE_BID && setActiveTab(tabList.LISTED);
+      fetchCollectionDetail({ activeTab: tabList.LISTED });
     }
   );
 

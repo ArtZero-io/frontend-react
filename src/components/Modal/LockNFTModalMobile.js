@@ -1,8 +1,6 @@
 import {
   Text,
-  Button,
   Tooltip,
-  HStack,
   Icon,
   Modal,
   ModalFooter,
@@ -12,12 +10,13 @@ import {
   ModalContent,
   ModalCloseButton,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 
 import { useSubstrateState } from "@utils/substrate";
 
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { ContractPromise } from "@polkadot/api-contract";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
@@ -26,23 +25,24 @@ import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
-import { clientAPI } from "@api/client";
+import { APICall } from "@api/client";
 import { setTxStatus } from "@store/actions/txStatus";
-import { START, LOCK } from "@constants";
+import { START, FINALIZED, LOCK } from "@constants";
 import { AiOutlineUnlock } from "react-icons/ai";
+import useTxStatus from "@hooks/useTxStatus";
+import CommonButton from "@components/Button/CommonButton";
 
 function LockNFTModalMobile({
   owner,
   nftContractAddress,
   tokenID,
-  txType = "lock",
-  isDisabled = "false",
+  isDisabled = false,
   showOnChainMetadata,
 }) {
   const { api, currentAccount } = useSubstrateState();
   const dispatch = useDispatch();
   const { onOpen, onClose, isOpen } = useDisclosure();
-  const txStatus = useSelector((state) => state.txStatus);
+  const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
   const lockNFTsHandler = async () => {
     if (owner !== currentAccount?.address) {
@@ -50,7 +50,7 @@ function LockNFTModalMobile({
     }
 
     if (nftContractAddress) {
-      dispatch(setTxStatus({ txType: LOCK, txStatus: START }));
+      dispatch(setTxStatus({ type: LOCK, step: START }));
 
       const contract = new ContractPromise(
         api,
@@ -73,16 +73,14 @@ function LockNFTModalMobile({
               status,
               dispatchError,
               dispatch,
-              txType,
+              txType: LOCK,
               api,
             });
-
-            if (status.isFinalized === true) {
-              await clientAPI("post", "/updateNFT", {
+            if (status.isFinalized) {
+              await APICall.askBeUpdateNftData({
                 collection_address: nftContractAddress,
                 token_id: tokenID,
               });
-              // await delay(300);
             }
           }
         )
@@ -117,8 +115,7 @@ function LockNFTModalMobile({
               h="14px"
               cursor="pointer"
               as={AiOutlineUnlock}
-              // onClick={!isDisabled ? onOpenLockNFT() : () => {}}
-              onClick={() => onOpen()}
+              onClick={!isDisabled ? onOpen : () => {}}
             />
           </span>
         </Tooltip>
@@ -140,6 +137,7 @@ function LockNFTModalMobile({
             borderRadius="0"
             top="0"
             right="0"
+            onClick={rest.step === FINALIZED ? rest.onEndClick : onClose}
           />
 
           <ModalBody>
@@ -148,19 +146,16 @@ function LockNFTModalMobile({
           </ModalBody>
 
           <ModalFooter>
-            <HStack justify="center" align="center">
+            <VStack w="full">
               <Text>Are you sure you want to lock?</Text>
-
-              <Button
-                size="sm"
-                isLoading={txStatus?.lockStatus}
-                loadingText={txStatus?.lockStatus}
-                variant="outline"
+              <CommonButton
+                {...rest}
+                h="30px"
+                text="submit"
                 onClick={lockNFTsHandler}
-              >
-                Lock
-              </Button>
-            </HStack>{" "}
+                isDisabled={actionType && actionType !== LOCK}
+              />
+            </VStack>
           </ModalFooter>
         </ModalContent>
       </Modal>

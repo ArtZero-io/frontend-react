@@ -5,6 +5,7 @@ import {
   GridItem,
   Heading,
   HStack,
+  Icon,
   Image,
   InputRightElement,
   Link,
@@ -23,7 +24,6 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { ImLock, ImUnlocked } from "react-icons/im";
 
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -56,6 +56,7 @@ import useTxStatus from "@hooks/useTxStatus";
 import { buyToken, placeBid, removeBid } from "../../../token";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { getUsernameOnchain } from "@utils/blockchain/profile_calls";
+import { AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -83,6 +84,7 @@ const NFTTabCollectible = (props) => {
   const [saleInfo, setSaleInfo] = useState(null);
 
   const [ownerName, setOwnerName] = useState("");
+  const [ownerAddress, setOwnerAddress] = useState("");
   const [isOwner, setIsOwner] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -127,6 +129,7 @@ const NFTTabCollectible = (props) => {
 
       const name = await getUsernameOnchain({ accountAddress });
 
+      setOwnerAddress(accountAddress);
       setOwnerName(name);
 
       setLoading(false);
@@ -149,7 +152,7 @@ const NFTTabCollectible = (props) => {
         isOwner,
         price,
         nftContractAddress,
-        owner,
+        ownerAddress,
         tokenID,
         dispatch
       );
@@ -166,7 +169,7 @@ const NFTTabCollectible = (props) => {
         api,
         currentAccount,
         nftContractAddress,
-        owner,
+        ownerAddress,
         tokenID,
         dispatch
       );
@@ -178,8 +181,6 @@ const NFTTabCollectible = (props) => {
   };
 
   const handleBidAction = async () => {
-    console.log("price", price);
-    console.log("bidPrice", bidPrice);
     try {
       await placeBid(
         api,
@@ -188,7 +189,7 @@ const NFTTabCollectible = (props) => {
         price,
         bidPrice,
         nftContractAddress,
-        owner,
+        ownerAddress,
         tokenID,
         dispatch
       );
@@ -219,7 +220,7 @@ const NFTTabCollectible = (props) => {
         </Square>
 
         <Stack alignItems="flex-start" w="full">
-          <HStack>
+          <HStack w="full">
             <Link
               as={ReactRouterLink}
               to={`/nft/${nftContractAddress}/${tokenID}`}
@@ -235,19 +236,42 @@ const NFTTabCollectible = (props) => {
             <Spacer />
 
             <HStack
-              pos="absolute"
-              top={{ base: `10px`, xl: `20px` }}
-              right={{ base: `50px`, xl: `20px` }}
+            // pos="absolute"
+            // top={{ base: `10px`, xl: `20px` }}
+            // right={{ base: `50px`, xl: `20px` }}
             >
+              {!is_locked && showOnChainMetadata && isOwner && (
+                <AddNewNFTModal
+                  isDisabled={actionType}
+                  mode={formMode.EDIT}
+                  {...props}
+                />
+              )}
+
+              {!is_locked && isOwner && (
+                <LockNFTModal isDisabled={actionType} {...props} />
+              )}
+
               {!is_locked && showOnChainMetadata && !isOwner && (
                 <Tooltip
                   hasArrow
+                  bg="#333"
+                  color="#fff"
                   label="Unlocked on-chain metadata"
-                  bg="gray.300"
-                  color="black"
                 >
-                  <span>
-                    <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
+                  <span
+                    style={{
+                      padding: "6px",
+                      display: "flex",
+                      alignItems: "center",
+                      border: "2px solid #333333",
+                    }}
+                  >
+                    <Icon
+                      width={{ base: "14px", "2xl": "20px" }}
+                      height={{ base: "14px", "2xl": "20px" }}
+                      as={AiOutlineUnlock}
+                    />
                   </span>
                 </Tooltip>
               )}
@@ -255,12 +279,23 @@ const NFTTabCollectible = (props) => {
               {!is_locked && !showOnChainMetadata && (
                 <Tooltip
                   hasArrow
+                  bg="#333"
+                  color="#fff"
                   label="Off-chain metadata"
-                  bg="gray.300"
-                  color="black"
                 >
-                  <span>
-                    <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
+                  <span
+                    style={{
+                      padding: "6px",
+                      display: "flex",
+                      alignItems: "center",
+                      border: "2px solid #333333",
+                    }}
+                  >
+                    <Icon
+                      width={{ base: "14px", "2xl": "20px" }}
+                      height={{ base: "14px", "2xl": "20px" }}
+                      as={AiOutlineLock}
+                    />
                   </span>
                 </Tooltip>
               )}
@@ -268,22 +303,27 @@ const NFTTabCollectible = (props) => {
               {is_locked && showOnChainMetadata && (
                 <Tooltip
                   hasArrow
+                  bg="#333"
+                  color="#fff"
                   label="Locked on-chain metadata"
-                  bg="gray.300"
-                  color="black"
                 >
-                  <span>
-                    <TagRightIcon ml="6px" as={ImLock} size="22px" />
+                  <span
+                    style={{
+                      padding: "6px",
+                      display: "flex",
+                      alignItems: "center",
+                      border: "2px solid #333333",
+                    }}
+                  >
+                    <Icon
+                      width={{ base: "14px", "2xl": "20px" }}
+                      height={{ base: "14px", "2xl": "20px" }}
+                      as={AiOutlineLock}
+                    />
                   </span>
                 </Tooltip>
               )}
-
-              {!is_locked && isOwner && <LockNFTModal {...props} />}
             </HStack>
-
-            {!is_locked && showOnChainMetadata && isOwner && (
-              <AddNewNFTModal mode={formMode.EDIT} {...props} />
-            )}
           </HStack>
 
           <Stack>

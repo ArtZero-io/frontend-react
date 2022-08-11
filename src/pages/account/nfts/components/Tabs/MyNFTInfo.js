@@ -1,4 +1,4 @@
-import {
+ import {
   Box,
   Flex,
   Grid,
@@ -58,7 +58,7 @@ import {
   fetchMyPMPStakedCount,
   fetchMyTradingFee,
 } from "@pages/account/stakes";
-import { SCROLLBAR } from "../../../../../constants";
+import { SCROLLBAR } from "@constants";
 
 function MyNFTTabInfo(props) {
   const {
@@ -123,12 +123,7 @@ function MyNFTTabInfo(props) {
               setBidPrice(convertStringToPrice(item.bidValue));
             }
           }
-        } else {
-          // console.log(
-          //   "Detail NFTTabCollectible doLoad. => listBidder is: ",
-          //   listBidder
-          // );
-        }
+        }  
       }
     };
     !saleInfo && doLoad();
@@ -167,24 +162,6 @@ function MyNFTTabInfo(props) {
     tokenID,
     dispatch,
   ]);
-
-  // useEffect(() => {
-  //   const checkAllowance = async () => {
-  // const isAllowance = await nft721_psp34_standard_calls.allowance(
-  //   currentAccount,
-  //   currentAccount?.address,
-  //   marketplace_contract.CONTRACT_ADDRESS,
-  //   { u64: tokenID },
-  //   dispatch
-  // );
-  // if (isAllowance) {
-  //   setIsAllowanceMarketplaceContract(true);
-  //   setStepNo(1);
-  // }
-  //   };
-
-  //   checkAllowance();
-  // }, [addNftTnxStatus?.status, currentAccount, dispatch, tokenID]);
 
   const listToken = async () => {
     try {
@@ -362,7 +339,7 @@ function MyNFTTabInfo(props) {
         </Square>
 
         <Stack alignItems="flex-start" w="full">
-          <HStack>
+          <HStack w="full">
             <Heading
               color="#fff"
               size="h4"
@@ -370,18 +347,21 @@ function MyNFTTabInfo(props) {
             >
               {nftName}
             </Heading>
+            
+            <Spacer />
 
             <HStack
-              pos="absolute"
-              top={{
-                base: `20px`,
-                xl: `20px`,
-              }}
-              right={{
-                base: `20px`,
-                xl: `20px`,
-              }}
+            // pos="absolute"
+            // top={{
+            //   base: `20px`,
+            //   xl: `20px`,
+            // }}
+            // right={{
+            //   base: `20px`,
+            //   xl: `20px`,
+            // }}
             >
+              <Spacer />
               {!is_locked &&
                 showOnChainMetadata &&
                 owner !== currentAccount?.address && (
@@ -426,21 +406,23 @@ function MyNFTTabInfo(props) {
               {!is_locked && owner === currentAccount?.address && (
                 <LockNFTModal {...props} isDisabled={addNftTnxStatus} />
               )}
+
+              {!is_locked &&
+                showOnChainMetadata &&
+                owner === currentAccount.address && (
+                  <AddNewNFTModal
+                    mode={formMode.EDIT}
+                    {...props}
+                    collectionOwner={owner}
+                    isDisabled={addNftTnxStatus || txStatus?.lockStatus}
+                  />
+                )}
+
               {owner === currentAccount?.address && (
                 <TransferNFTModal {...props} isDisabled={addNftTnxStatus} />
               )}
             </HStack>
 
-            {!is_locked &&
-              showOnChainMetadata &&
-              owner === currentAccount.address && (
-                <AddNewNFTModal
-                  mode={formMode.EDIT}
-                  {...props}
-                  collectionOwner={owner}
-                  isDisabled={addNftTnxStatus || txStatus?.lockStatus}
-                />
-              )}
           </HStack>
 
           <Stack>

@@ -19,6 +19,7 @@ import { AccountActionTypes } from "@store/types/account.types";
 import EditIcon from "@theme/assets/icon/Edit.js";
 import { formMode } from "@constants";
 import { SCROLLBAR } from "../../../../constants";
+import useTxStatus from "@hooks/useTxStatus";
 
 const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -33,7 +34,8 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
   }, [onClose, addNftTnxStatus?.status]);
 
   const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
-
+  const iconBorderSize = useBreakpointValue({ base: "6px", "2xl": "10px" });
+  const { actionType } = useTxStatus();
   return (
     <>
       {mode === formMode.ADD && (
@@ -53,16 +55,20 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
             label="Edit NFT"
           >
             <span
-              onClick={() => onOpen()}
+              onClick={isDisabled || actionType ? () => {} : onOpen}
               style={{
-                padding: "6px",
+                padding: iconBorderSize,
                 display: "flex",
                 cursor: "pointer",
                 alignItems: "center",
                 border: "2px solid #333333",
               }}
             >
-              <EditIcon width="14px" height="14px" color="currentColor" />
+              <EditIcon
+                width={{ base: "14px", "2xl": "20px" }}
+                height={{ base: "14px", "2xl": "20px" }}
+                color="currentColor"
+              />
             </span>
           </Tooltip>
         </>

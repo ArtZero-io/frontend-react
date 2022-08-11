@@ -8,19 +8,18 @@ import {
   PopoverHeader,
   PopoverBody,
   useDisclosure,
-  Button,
   PopoverFooter,
   Tooltip,
-  TagRightIcon,
   HStack,
+  useBreakpointValue,
+  Icon,
 } from "@chakra-ui/react";
 
 import { useSubstrateState } from "@utils/substrate";
 
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import { ImUnlocked } from "react-icons/im";
 import { ContractPromise } from "@polkadot/api-contract";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import { web3FromSource } from "@utils/wallets/extension-dapp";
@@ -28,34 +27,34 @@ import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
-import { clientAPI } from "@api/client";
+import { APICall } from "@api/client";
 import { setTxStatus } from "@store/actions/txStatus";
-import { START, LOCK } from "@constants";
-import { clearTxStatus } from "../../store/actions/txStatus";
+import { AiOutlineUnlock } from "react-icons/ai";
+import { START, FINALIZED, LOCK, END } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
+import CommonButton from "@components/Button/CommonButton";
+import { useEffect } from "react";
 
 function LockNFTModal({
   owner,
   nftContractAddress,
   tokenID,
-  txType = "lock",
-  isDisabled = "false",
+  isDisabled = false,
   showOnChainMetadata,
 }) {
-  const { api, currentAccount } = useSubstrateState();
   const dispatch = useDispatch();
-  const {
-    onOpen: onOpenLockNFT,
-    onClose: onCloseLockNFT,
-    isOpen: isOpenLockNFT,
-  } = useDisclosure();
-  const txStatus = useSelector((state) => state.txStatus);
+  const { api, currentAccount } = useSubstrateState();
+  const { onOpen, onClose, isOpen } = useDisclosure();
+
+  const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
   const lockNFTsHandler = async () => {
     if (owner !== currentAccount?.address) {
       return toast.error("You are not the owner of this NFT");
     }
+
     if (nftContractAddress) {
-      dispatch(setTxStatus({ txType: LOCK, txStatus: START }));
+      dispatch(setTxStatus({ type: LOCK, step: START }));
 
       const contract = new ContractPromise(
         api,
@@ -78,16 +77,15 @@ function LockNFTModal({
               status,
               dispatchError,
               dispatch,
-              txType,
+              txType: LOCK,
               api,
             });
 
-            if (status.isFinalized === true) {
-              await clientAPI("post", "/updateNFT", {
+            if (status.isFinalized) {
+              await APICall.askBeUpdateNftData({
                 collection_address: nftContractAddress,
                 token_id: tokenID,
               });
-              // await delay(300);
             }
           }
         )
@@ -98,31 +96,45 @@ function LockNFTModal({
     }
   };
 
+  const iconBorderSize = useBreakpointValue({ base: "6px", "2xl": "10px" });
+
+  useEffect(() => {
+    rest.step === END && onClose();
+  }, [onClose, rest.step]);
+
   return (
     <>
       <Popover
-        isOpen={isOpenLockNFT}
-        onOpen={onOpenLockNFT}
-        onClose={onCloseLockNFT}
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
         placement="bottom"
         closeOnBlur={false}
       >
         {showOnChainMetadata && (
           <PopoverTrigger mt="0px">
             <Tooltip
-              top="0px"
               hasArrow
-              label="Unlocked on-chain metadata"
+              top="-10px"
               bg="#333"
               color="#fff"
+              label="Unlocked on-chain metadata"
             >
-              <span>
-                <TagRightIcon
+              <span
+                style={{
+                  padding: iconBorderSize,
+                  display: "flex",
+                  cursor: "pointer",
+                  alignItems: "center",
+                  border: "2px solid #333333",
+                }}
+              >
+                <Icon
+                  width={{ base: "14px", "2xl": "20px" }}
+                  height={{ base: "14px", "2xl": "20px" }}
                   cursor="pointer"
-                  ml="6px"
-                  as={ImUnlocked}
-                  onClick={!isDisabled ? onOpenLockNFT : () => {}}
-                  size="22px"
+                  as={AiOutlineUnlock}
+                  onClick={!actionType ? onOpen : () => {}}
                 />
               </span>
             </Tooltip>
@@ -130,35 +142,34 @@ function LockNFTModal({
         )}
         <PopoverContent bg="#333" borderRadius="0" fontSize="sm">
           <PopoverArrow />
+
           <PopoverCloseButton
-            isDisabled={txStatus?.lockStatus}
-            onClick={() => {
-              onCloseLockNFT();
-              txStatus?.lockStatus === "Finalized" && dispatch(clearTxStatus());
-            }}
+            borderRadius="0"
+            isDisabled={actionType}
+            onClick={rest.step === FINALIZED ? rest.onEndClick : onClose}
           />
+
           <PopoverHeader textAlign="center">
             Lock Metadata Confirmation!
           </PopoverHeader>
+
           <PopoverBody>
             Once locked, the on-chain metadata for this NFT will be locked
             permanently. No one will be able to unlock or edit the metadata.
           </PopoverBody>
+
           <PopoverFooter>
             <HStack justify="center" align="center">
               <Text>Are you sure you want to lock?</Text>
-              {/* <Button variant="solid" onClick={onClose}>
-              Cancel
-            </Button> */}
-              <Button
-                size="sm"
-                isLoading={txStatus?.lockStatus}
-                loadingText={txStatus?.lockStatus}
-                variant="outline"
+
+              <CommonButton
+                {...rest}
+                h="40px"
+                px="8px"
+                text="submit"
                 onClick={lockNFTsHandler}
-              >
-                Lock
-              </Button>
+                isDisabled={actionType && actionType !== LOCK}
+              />
             </HStack>
           </PopoverFooter>
         </PopoverContent>

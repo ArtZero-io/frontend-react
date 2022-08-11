@@ -27,7 +27,7 @@ function useForceUpdate(typeArray, cb) {
       return;
     }
 
-    const diffTime = 9000 - Number(endTimeStamp - timeStamp);
+    const diffTime = 7500 - Number(endTimeStamp - timeStamp);
     const delayTime = diffTime > 500 ? diffTime : 500;
 
     const doDelay = async () => {

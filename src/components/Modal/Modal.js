@@ -17,7 +17,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { onCloseButtonModal } from "@utils";
 import { AccountActionTypes } from "@store/types/account.types";
-import { FINALIZED } from "@constants";
+import { FINALIZED, END } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
 
 export default function ResponsivelySizedModal({
   onClose,
@@ -45,6 +46,11 @@ export default function ResponsivelySizedModal({
     addNftTnxStatus?.status === "End" ||
       (txStatus?.lockStatus === FINALIZED && onClose());
   }, [onClose, addNftTnxStatus?.status, txStatus?.lockStatus]);
+  const { step } = useTxStatus();
+
+  useEffect(() => {
+    step === END && onClose();
+  }, [step, onClose]);
 
   const tabData = [
     {

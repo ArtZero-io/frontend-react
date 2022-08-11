@@ -85,6 +85,7 @@ import {
   fetchMyPMPStakedCount,
   fetchMyTradingFee,
 } from "@pages/account/stakes";
+import TransferNFTModalMobile from "@components/Modal/TransferNFTModalMobile";
 
 function TokenPage() {
   const dispatch = useDispatch();
@@ -496,6 +497,13 @@ function TokenPage() {
                             }
                           />
                         </>
+                      )}
+
+                      {isOwner && (
+                        <TransferNFTModalMobile
+                          {...token}
+                          isDisabled={actionType}
+                        />
                       )}
                     </HStack>
                   </HStack>
