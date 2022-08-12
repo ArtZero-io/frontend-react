@@ -76,8 +76,7 @@ export const SCROLLBAR = {
   },
 };
 
-export const IPFS_BASE_URL = "https://ipfs.infura.io/ipfs";
-export const IPFS_CLIENT_URL = "https://ipfs.infura.io:5001/api/v0";
+export const IPFS_BASE_URL = "https://artzeronft.infura-ipfs.io/ipfs";
 
 export const SUPPORTED_WALLET_LIST = [
   {
