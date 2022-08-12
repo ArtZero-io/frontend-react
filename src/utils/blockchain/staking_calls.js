@@ -1,15 +1,9 @@
-/* eslint-disable no-unused-vars */
-import { ContractPromise } from "@polkadot/api-contract";
-import toast from "react-hot-toast";
 import BN from "bn.js";
+import toast from "react-hot-toast";
+import { ContractPromise } from "@polkadot/api-contract";
 import { web3FromSource } from "../wallets/extension-dapp";
-import {
-  isValidAddressPolkadotAddress,
-  handleContractCall,
-  delay,
-} from "@utils";
+import { isValidAddressPolkadotAddress } from "@utils";
 import artzero_nft from "@utils/blockchain/artzero-nft";
-import { clientAPI } from "@api/client";
 import {
   txErrorHandler,
   txResponseErrorHandler,
@@ -203,7 +197,7 @@ async function getTotalCountOfStakeholders(caller_account) {
   return null;
 }
 
-async function getStakedAccountsAccountByIndex(caller_account,index) {
+async function getStakedAccountsAccountByIndex(caller_account, index) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -212,21 +206,22 @@ async function getStakedAccountsAccountByIndex(caller_account,index) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getStakedAccountsAccountByIndex(
-    address,
-    {
-      value: azero_value,
-      gasLimit,
-    },
-    index
-  );
+  const { result, output } =
+    await contract.query.getStakedAccountsAccountByIndex(
+      address,
+      {
+        value: azero_value,
+        gasLimit,
+      },
+      index
+    );
   if (result.isOk) {
     return output.toHuman();
   }
   return null;
 }
 
-async function isClaimed(caller_account,account) {
+async function isClaimed(caller_account, account) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -258,13 +253,10 @@ async function getIsLocked(caller_account) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getIsLocked(
-    address,
-    {
-      value: azero_value,
-      gasLimit,
-    }
-  );
+  const { result, output } = await contract.query.getIsLocked(address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return output.toHuman();
   }
@@ -280,13 +272,10 @@ async function getRewardStarted(caller_account) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getRewardStarted(
-    address,
-    {
-      value: azero_value,
-      gasLimit,
-    }
-  );
+  const { result, output } = await contract.query.getRewardStarted(address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return output.toHuman();
   }
@@ -302,13 +291,10 @@ async function getClaimableReward(caller_account) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getClaimableReward(
-    address,
-    {
-      value: azero_value,
-      gasLimit,
-    }
-  );
+  const { result, output } = await contract.query.getClaimableReward(address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().replace(/\,/g, "");
@@ -326,13 +312,10 @@ async function getRewardPool(caller_account) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getRewardPool(
-    address,
-    {
-      value: azero_value,
-      gasLimit,
-    }
-  );
+  const { result, output } = await contract.query.getRewardPool(address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().replace(/\,/g, "");
@@ -370,45 +353,42 @@ async function claimReward(caller_account) {
   const injector = await web3FromSource(caller_account?.meta?.source);
 
   await contract.tx
-      .claimReward({ gasLimit, value })
-      .signAndSend(
-        address,
-        { signer: injector.signer },
-        async ({ status, dispatchError }) => {
-          if (dispatchError) {
-            if (dispatchError.isModule) {
-              const decoded = contract.registry.findMetaError(
-                dispatchError.asModule
-              );
-              const { docs, name, section } = decoded;
-
-              console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
-            } else {
-              console.log(
-                "dispatchError claimReward",
-                dispatchError.toString()
-              );
-            }
-          }
-
-          if (status) {
-            const statusText = Object.keys(status.toHuman())[0];
-
-            toast.success(
-              `claim Reward ${
-                statusText === "0" ? "start" : statusText.toLowerCase()
-              }.`
+    .claimReward({ gasLimit, value })
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            const decoded = contract.registry.findMetaError(
+              dispatchError.asModule
             );
+            const { docs, name, section } = decoded;
+
+            console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
+          } else {
+            console.log("dispatchError claimReward", dispatchError.toString());
           }
         }
-      )
-      .then((unsub) => (unsubscribe = unsub))
-      .catch((e) => console.log("e", e));
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+
+          toast.success(
+            `claim Reward ${
+              statusText === "0" ? "start" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
 
   return unsubscribe;
 }
 
-async function setClaimable(caller_account,account){
+async function setClaimable(caller_account, account) {
   let unsubscribe;
 
   const address = caller_account?.address;
@@ -418,44 +398,40 @@ async function setClaimable(caller_account,account){
   const injector = await web3FromSource(caller_account?.meta?.source);
 
   await contract.tx
-      .setClaimable({ gasLimit, value },account)
-      .signAndSend(
-        address,
-        { signer: injector.signer },
-        async ({ status, dispatchError }) => {
-          if (dispatchError) {
-            if (dispatchError.isModule) {
-              const decoded = contract.registry.findMetaError(
-                dispatchError.asModule
-              );
-              const { docs, name, section } = decoded;
-
-              console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
-            } else {
-              console.log(
-                "dispatchError claimReward",
-                dispatchError.toString()
-              );
-            }
-          }
-
-          if (status) {
-            const statusText = Object.keys(status.toHuman())[0];
-
-            toast.success(
-              `claim Reward ${
-                statusText === "0" ? "start" : statusText.toLowerCase()
-              }.`
+    .setClaimable({ gasLimit, value }, account)
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            const decoded = contract.registry.findMetaError(
+              dispatchError.asModule
             );
+            const { docs, name, section } = decoded;
+
+            console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
+          } else {
+            console.log("dispatchError claimReward", dispatchError.toString());
           }
         }
-      )
-      .then((unsub) => (unsubscribe = unsub))
-      .catch((e) => console.log("e", e));
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+
+          toast.success(
+            `claim Reward ${
+              statusText === "0" ? "start" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
 
   return unsubscribe;
 }
-
 
 async function addReward(caller_account, amount) {
   let unsubscribe;
@@ -467,44 +443,41 @@ async function addReward(caller_account, amount) {
   const injector = await web3FromSource(caller_account?.meta?.source);
 
   await contract.tx
-      .addReward({ gasLimit, value })
-      .signAndSend(
-        address,
-        { signer: injector.signer },
-        async ({ status, dispatchError }) => {
-          if (dispatchError) {
-            if (dispatchError.isModule) {
-              const decoded = contract.registry.findMetaError(
-                dispatchError.asModule
-              );
-              const { docs, name, section } = decoded;
-
-              console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
-            } else {
-              console.log(
-                "dispatchError claimReward",
-                dispatchError.toString()
-              );
-            }
-          }
-
-          if (status) {
-            const statusText = Object.keys(status.toHuman())[0];
-
-            toast.success(
-              `add Reward ${
-                statusText === "0" ? "start" : statusText.toLowerCase()
-              }.`
+    .addReward({ gasLimit, value })
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            const decoded = contract.registry.findMetaError(
+              dispatchError.asModule
             );
+            const { docs, name, section } = decoded;
+
+            console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
+          } else {
+            console.log("dispatchError claimReward", dispatchError.toString());
           }
         }
-      )
-      .then((unsub) => (unsubscribe = unsub))
-      .catch((e) => console.log("e", e));
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+
+          toast.success(
+            `add Reward ${
+              statusText === "0" ? "start" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
 
   return unsubscribe;
 }
-async function updateIsLocked(caller_account,status) {
+async function updateIsLocked(caller_account, status) {
   let unsubscribe;
 
   const address = caller_account?.address;
@@ -514,40 +487,37 @@ async function updateIsLocked(caller_account,status) {
   const injector = await web3FromSource(caller_account?.meta?.source);
 
   await contract.tx
-      .updateIsLocked({ gasLimit, value }, status)
-      .signAndSend(
-        address,
-        { signer: injector.signer },
-        async ({ status, dispatchError }) => {
-          if (dispatchError) {
-            if (dispatchError.isModule) {
-              const decoded = contract.registry.findMetaError(
-                dispatchError.asModule
-              );
-              const { docs, name, section } = decoded;
-
-              console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
-            } else {
-              console.log(
-                "dispatchError claimReward",
-                dispatchError.toString()
-              );
-            }
-          }
-
-          if (status) {
-            const statusText = Object.keys(status.toHuman())[0];
-
-            toast.success(
-              `add Reward ${
-                statusText === "0" ? "start" : statusText.toLowerCase()
-              }.`
+    .updateIsLocked({ gasLimit, value }, status)
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            const decoded = contract.registry.findMetaError(
+              dispatchError.asModule
             );
+            const { docs, name, section } = decoded;
+
+            console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
+          } else {
+            console.log("dispatchError claimReward", dispatchError.toString());
           }
         }
-      )
-      .then((unsub) => (unsubscribe = unsub))
-      .catch((e) => console.log("e", e));
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+
+          toast.success(
+            `add Reward ${
+              statusText === "0" ? "start" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
 
   return unsubscribe;
 }
@@ -562,40 +532,37 @@ async function startRewardDistribution(caller_account) {
   const injector = await web3FromSource(caller_account?.meta?.source);
 
   await contract.tx
-      .startRewardDistribution({ gasLimit, value })
-      .signAndSend(
-        address,
-        { signer: injector.signer },
-        async ({ status, dispatchError }) => {
-          if (dispatchError) {
-            if (dispatchError.isModule) {
-              const decoded = contract.registry.findMetaError(
-                dispatchError.asModule
-              );
-              const { docs, name, section } = decoded;
-
-              console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
-            } else {
-              console.log(
-                "dispatchError claimReward",
-                dispatchError.toString()
-              );
-            }
-          }
-
-          if (status) {
-            const statusText = Object.keys(status.toHuman())[0];
-
-            toast.success(
-              `start Reward Distribution ${
-                statusText === "0" ? "start" : statusText.toLowerCase()
-              }.`
+    .startRewardDistribution({ gasLimit, value })
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            const decoded = contract.registry.findMetaError(
+              dispatchError.asModule
             );
+            const { docs, name, section } = decoded;
+
+            console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
+          } else {
+            console.log("dispatchError claimReward", dispatchError.toString());
           }
         }
-      )
-      .then((unsub) => (unsubscribe = unsub))
-      .catch((e) => console.log("e", e));
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+
+          toast.success(
+            `start Reward Distribution ${
+              statusText === "0" ? "start" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
 
   return unsubscribe;
 }
@@ -609,40 +576,37 @@ async function stopRewardDistribution(caller_account) {
   const injector = await web3FromSource(caller_account?.meta?.source);
 
   await contract.tx
-      .stopRewardDistribution({ gasLimit, value })
-      .signAndSend(
-        address,
-        { signer: injector.signer },
-        async ({ status, dispatchError }) => {
-          if (dispatchError) {
-            if (dispatchError.isModule) {
-              const decoded = contract.registry.findMetaError(
-                dispatchError.asModule
-              );
-              const { docs, name, section } = decoded;
-
-              console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
-            } else {
-              console.log(
-                "dispatchError claimReward",
-                dispatchError.toString()
-              );
-            }
-          }
-
-          if (status) {
-            const statusText = Object.keys(status.toHuman())[0];
-
-            toast.success(
-              `stop Reward Distribution ${
-                statusText === "0" ? "start" : statusText.toLowerCase()
-              }.`
+    .stopRewardDistribution({ gasLimit, value })
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            const decoded = contract.registry.findMetaError(
+              dispatchError.asModule
             );
+            const { docs, name, section } = decoded;
+
+            console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
+          } else {
+            console.log("dispatchError claimReward", dispatchError.toString());
           }
         }
-      )
-      .then((unsub) => (unsubscribe = unsub))
-      .catch((e) => console.log("e", e));
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+
+          toast.success(
+            `stop Reward Distribution ${
+              statusText === "0" ? "start" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
 
   return unsubscribe;
 }
@@ -675,7 +639,7 @@ async function stake(caller_account, token_ids, dispatch, txType, api) {
           caller_account,
         });
 
-        if (status.isFinalized === true) {
+        if (status.isFinalized) {
           for (var i = 0; i < token_ids.length; i++) {
             await APICall.askBeUpdateNftData({
               collection_address: artzero_nft.CONTRACT_ADDRESS,
@@ -717,20 +681,13 @@ async function unstake(caller_account, token_ids, dispatch, txType, api) {
           caller_account,
         });
 
-        if (status.isFinalized === true) {
+        if (status.isFinalized) {
           for (var i = 0; i < token_ids.length; i++) {
-            await clientAPI("post", "/updateNFT", {
+            await APICall.askBeUpdateNftData({
               collection_address: artzero_nft.CONTRACT_ADDRESS,
               token_id: token_ids[i],
             });
-            // await delay(300);
           }
-          // const statusText = Object.keys(status.toHuman())[0];
-          // toast.success(
-          //   `Unstake Artzero NFTs ${
-          //     statusText === "0" ? "started" : statusText.toLowerCase()
-          //   }.`
-          // );
         }
       }
     )
@@ -739,6 +696,7 @@ async function unstake(caller_account, token_ids, dispatch, txType, api) {
 
   return unsubscribe;
 }
+
 async function requestUnstake(
   caller_account,
   token_ids,
@@ -772,22 +730,13 @@ async function requestUnstake(
           caller_account,
         });
 
-        if (status) {
-          // handleContractCall(status, dispatchError, dispatch, contract);
-
+        if (status?.isFinalized) {
           for (var i = 0; i < token_ids.length; i++) {
-            await clientAPI("post", "/updateNFT", {
+            await APICall.askBeUpdateNftData({
               collection_address: artzero_nft.CONTRACT_ADDRESS,
               token_id: token_ids[i],
             });
-            // await delay(300);
           }
-          // const statusText = Object.keys(status.toHuman())[0];
-          // toast.success(
-          //   `Request Unstake Artzero NFTs ${
-          //     statusText === "0" ? "started" : statusText.toLowerCase()
-          //   }.`
-          // );
         }
       }
     )
@@ -828,22 +777,14 @@ async function cancelRequestUnstake(
           api,
           caller_account,
         });
-        if (status.isFinalized === true) {
-          // handleContractCall(status, dispatchError, dispatch, contract);
 
+        if (status.isFinalized) {
           for (var i = 0; i < token_ids.length; i++) {
-            await clientAPI("post", "/updateNFT", {
+            await APICall.askBeUpdateNftData({
               collection_address: artzero_nft.CONTRACT_ADDRESS,
               token_id: token_ids[i],
             });
-            // await delay(300);
           }
-          // const statusText = Object.keys(status.toHuman())[0];
-          // toast.success(
-          //   `Cancel Request Unstake Artzero NFTs ${
-          //     statusText === "0" ? "started" : statusText.toLowerCase()
-          //   }.`
-          // );
         }
       }
     )

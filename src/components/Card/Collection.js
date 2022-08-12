@@ -173,6 +173,7 @@ export const CollectionCard = ({
           </Text>
 
           <Flex
+            mt="24px !important"
             w={
               variant === "my-collection" || variant === "my-projects"
                 ? "full"

@@ -124,7 +124,6 @@ function LockNFTModal({
                 style={{
                   padding: iconBorderSize,
                   display: "flex",
-                  cursor: "pointer",
                   alignItems: "center",
                   border: "2px solid #333333",
                 }}
@@ -132,7 +131,6 @@ function LockNFTModal({
                 <Icon
                   width={{ base: "14px", "2xl": "20px" }}
                   height={{ base: "14px", "2xl": "20px" }}
-                  cursor="pointer"
                   as={AiOutlineUnlock}
                   onClick={!actionType ? onOpen : () => {}}
                 />

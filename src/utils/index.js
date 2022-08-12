@@ -1,7 +1,6 @@
 import { decodeAddress, encodeAddress } from "@polkadot/keyring";
 import { hexToU8a, isHex } from "@polkadot/util";
 import { AccountActionTypes } from "../store/types/account.types";
-// import BN from "bn.js";
 import Keyring from "@polkadot/keyring";
 import { IPFS_BASE_URL } from "@constants/index";
 import numeral from "numeral";
@@ -284,6 +283,7 @@ export function handleContractCallAnimation(status, dispatchError, dispatch) {
     }
   }
 }
+
 export function handleContractCallAddNftAnimation(
   status,
   dispatchError,
@@ -306,7 +306,6 @@ export function handleContractCallAddNftAnimation(
       });
     } else {
       const finalizedTimeStamp = Date.now();
-      // https://test.azero.dev/#/explorer/query/0x82d154d0ecb07080e42d50ba916060baacf0925553db3e48e643eb3575c68238
 
       if (statusToHuman[0][0] === "Finalized") {
         console.log("Tx finalized at ", `${url}${statusToHuman[0][1]}`);
@@ -323,6 +322,7 @@ export function handleContractCallAddNftAnimation(
     }
   }
 }
+
 export function onCloseButtonModal({ status, dispatch, type }) {
   const endTimeStamp = Date.now();
 
@@ -352,7 +352,6 @@ export const formatNumDynamicDecimal = (num = 0, dec = 6) => {
 };
 
 export const isPhaseTimeOverlap = (phaseArr) => {
-
   phaseArr.sort((a, b) => a.start - b.start);
 
   for (let i = 1; i < phaseArr?.length; i++) {

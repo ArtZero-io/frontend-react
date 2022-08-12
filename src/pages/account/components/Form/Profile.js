@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 import { useRef, useState } from "react";
 import { Formik, Form } from "formik";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { VStack, Stack } from "@chakra-ui/react";
 
 import { setMultipleAttributes } from "@actions/account";
@@ -11,22 +11,25 @@ import ImageUpload from "@components/ImageUpload/Avatar";
 import SimpleModeTextarea from "@components/TextArea/TextArea";
 import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
-import { AccountActionTypes } from "@store/types/account.types";
-import StatusButton from "@components/Button/StatusButton";
+
+import { UPDATE_PROFILE, START } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
+import CommonButton from "@components/Button/CommonButton";
+import { setTxStatus } from "@store/actions/txStatus";
 
 const ProfileForm = ({ profile }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState(null);
-  const [isUploadAvatarIPFSUrl, setIsUploadAvatarIPFSUrl] = useState(false);
-  const { currentAccount } = useSubstrateState();
+  const [, setIsUploadAvatarIPFSUrl] = useState(false);
+  const { currentAccount, api } = useSubstrateState();
 
   const dispatch = useDispatch();
-  const { addCollectionTnxStatus } = useSelector(
-    (s) => s.account.accountLoaders
-  );
 
   const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
 
+  // eslint-disable-next-line no-unused-vars
   const noImagesChange = currentAvatarIPFSUrl.current === avatarIPFSUrl;
+
+  const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   return (
     <>
@@ -72,9 +75,9 @@ const ProfileForm = ({ profile }) => {
             .max(50, "Must be 50 characters or less"),
         })}
         onSubmit={async (values, { setSubmitting }) => {
-          if (!isUploadAvatarIPFSUrl) {
-            return toast.error("Please upload new avatar.");
-          }
+          // if (!avatarIPFSUrl && !isUploadAvatarIPFSUrl) {
+          //   return toast.error("Please upload new avatar.");
+          // }
 
           avatarIPFSUrl && (values.avatar = avatarIPFSUrl);
 
@@ -89,13 +92,18 @@ const ProfileForm = ({ profile }) => {
 
           if (!a.length || !v.length) return toast.error("Please check again.");
 
-          dispatch({
-            type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-            payload: {
-              status: "Start",
-            },
-          });
-          dispatch(setMultipleAttributes(currentAccount, a, v));
+          dispatch(setTxStatus({ type: UPDATE_PROFILE, step: START }));
+
+          dispatch(
+            setMultipleAttributes(
+              currentAccount,
+              a,
+              v,
+              dispatch,
+              UPDATE_PROFILE,
+              api
+            )
+          );
         }}
       >
         {({ values, dirty, isValid }) => (
@@ -105,14 +113,12 @@ const ProfileForm = ({ profile }) => {
               justify="space-between"
               direction={["column", "row"]}
             >
-              <VStack
-                // minW={96}
-                px={3}
-              >
+              <VStack px={3}>
                 <ImageUpload
                   profile={profile}
+                  isDisabled={actionType}
+                  imageIPFSUrl={avatarIPFSUrl}
                   setImageIPFSUrl={setAvatarIPFSUrl}
-                  isDisabled={addCollectionTnxStatus}
                   limitedSize={{ width: "500", height: "500" }}
                   setIsUploadAvatarIPFSUrl={setIsUploadAvatarIPFSUrl}
                 />
@@ -121,7 +127,7 @@ const ProfileForm = ({ profile }) => {
               <VStack flexGrow="1" ml={3}>
                 <Stack
                   w="full"
-                  align="center"
+                  align={["center", "start"]}
                   justify="space-between"
                   direction={["column", "row"]}
                 >
@@ -131,7 +137,7 @@ const ProfileForm = ({ profile }) => {
                     label="User Name"
                     width={["250px", "xs"]}
                     placeholder="User Name"
-                    isDisabled={addCollectionTnxStatus}
+                    isDisabled={actionType}
                   />
                   <SimpleModeTextarea
                     rows={2}
@@ -140,7 +146,7 @@ const ProfileForm = ({ profile }) => {
                     type="text"
                     placeholder="Bio"
                     width={["250px", "xs"]}
-                    isDisabled={addCollectionTnxStatus}
+                    isDisabled={actionType}
                   />
                 </Stack>
 
@@ -156,7 +162,7 @@ const ProfileForm = ({ profile }) => {
                     label="Twitter URL"
                     width={["250px", "xs"]}
                     placeholder="Twitter URL"
-                    isDisabled={addCollectionTnxStatus}
+                    isDisabled={actionType}
                   />
                   <SimpleModeInput
                     type="text"
@@ -164,7 +170,7 @@ const ProfileForm = ({ profile }) => {
                     label="Facebook URL"
                     width={["250px", "xs"]}
                     placeholder="Facebook URL"
-                    isDisabled={addCollectionTnxStatus}
+                    isDisabled={actionType}
                   />
                 </Stack>
 
@@ -180,7 +186,7 @@ const ProfileForm = ({ profile }) => {
                     label="Telegram URL"
                     width={["250px", "xs"]}
                     placeholder="Telegram URL"
-                    isDisabled={addCollectionTnxStatus}
+                    isDisabled={actionType}
                   />
                   <SimpleModeInput
                     type="text"
@@ -188,17 +194,24 @@ const ProfileForm = ({ profile }) => {
                     label="Instagram URL"
                     width={["250px", "xs"]}
                     placeholder="Instagram URL"
-                    isDisabled={addCollectionTnxStatus}
+                    isDisabled={actionType}
                   />
                 </Stack>
-
-                <StatusButton
+                <CommonButton
+                  w="full"
+                  my="24px"
+                  {...rest}
+                  type="submit"
+                  text="update profile"
+                  // isDisabled={!(dirty && isValid) && noImagesChange}
+                />
+                {/* <StatusButton
                   text="profile"
                   type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
                   isLoading={addCollectionTnxStatus}
-                  disabled={!(dirty && isValid) && noImagesChange}
+                  // disabled={!(dirty && isValid)}
                   loadingText={`${addCollectionTnxStatus?.status}`}
-                />
+                /> */}
               </VStack>
             </Stack>
           </Form>

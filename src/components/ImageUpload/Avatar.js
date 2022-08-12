@@ -4,13 +4,18 @@ import {
   Box,
   Button,
   Center,
+  HStack,
   Image,
   Spacer,
   Square,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
   Text,
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
+import ActiveIcon from "@theme/assets/icon/Active.js";
 
 import { Buffer } from "buffer";
 import IdenticonAvatar from "@components/IdenticonAvatar/IdenticonAvatar/";
@@ -213,23 +218,26 @@ export default function ImageUploadAvatar({
         </VStack>
         <Spacer />
 
-        {/* <HStack justifyContent="center">
-          {imgURL ? (
-            <Tag variant="active">
-              <TagLeftIcon as={ActiveIcon} />
-              <TagLabel>Ready !</TagLabel>
-            </Tag>
-          ) : (
-            <Spinner
-              mx="14px"
-              p={"8px"}
-              speed="0.5s"
-              thickness="2px"
-              color="#7ae7ff"
-              emptyColor="#333"
-            />
-          )}
-        </HStack> */}
+        <HStack justifyContent="center">
+          {
+            imgURL ? (
+              <Tag variant="active">
+                <TagLeftIcon as={ActiveIcon} />
+                <TagLabel>Ready !</TagLabel>
+              </Tag>
+            ) : null
+            // <ClipLoader color="#7ae7ff" size={14} loading={imgURL} />
+            // <Spinner
+            //   loading={false}
+            //   mx="14px"
+            //   p={"8px"}
+            //   speed="0.5s"
+            //   thickness="2px"
+            //   color="#7ae7ff"
+            //   emptyColor="#333"
+            // />
+          }
+        </HStack>
       </Center>
       <Text ml={2} fontSize="14px" color="brand.grayLight">
         Recommended file size is {limitedSize.width}x{limitedSize.height} px

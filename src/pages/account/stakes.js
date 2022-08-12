@@ -148,8 +148,8 @@ const MyStakesPage = () => {
     <CommonContainer>
       <Flex
         w="full"
-        alignItems="start"
-        pb={{ base: "12px", xl: "48px" }}
+        alignItems="center"
+        mb={["20px", "48px"]}
         direction={{ base: "column", xl: "row" }}
       >
         <Heading fontSize={["3xl-mid", "5xl", "5xl"]} minW="100px">
@@ -159,8 +159,6 @@ const MyStakesPage = () => {
         <Spacer />
 
         <HStack
-          pb="8px"
-          mt="20px"
           sx={SCROLLBAR}
           overflowX="scroll"
           maxW={{ base: "320px", md: "600px" }}

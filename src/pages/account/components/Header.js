@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Center,
@@ -9,11 +8,10 @@ import {
   VStack,
   useDisclosure,
   IconButton,
-  Link,
   Skeleton,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { FaInstagram, FaTwitter, FaTelegram, FaFacebook } from "react-icons/fa";
+
 import EditIcon from "@theme/assets/icon/Edit.js";
 
 import { useCallback, useEffect, useState } from "react";
@@ -27,6 +25,8 @@ import ProfileModal from "./Modal/Profile";
 import toast from "react-hot-toast";
 import { truncateStr } from "@utils";
 import SocialCard from "@components/Card/Social";
+// import { UPDATE_PROFILE } from "@constants";
+// import useForceUpdate from "@hooks/useForceUpdate";
 
 function ProfileHeader() {
   const dispatch = useDispatch();

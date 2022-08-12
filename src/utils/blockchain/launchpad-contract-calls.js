@@ -1,5 +1,5 @@
-import toast from "react-hot-toast";
 import BN from "bn.js";
+import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import {
   handleContractCallAnimation,
@@ -175,7 +175,6 @@ async function getProjectCount(caller_account) {
   if (!contract || !caller_account) {
     return null;
   }
-  console.log("xzczxc");
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
@@ -277,27 +276,29 @@ async function addNewProject(
         });
 
         if (status.isInBlock) {
-          console.log("Included at block hash", status.asInBlock.toHex());
-          console.log("Events:");
-
           events.forEach(({ event: { data, method, section }, phase }) => {
             if (section == "contracts" && method == "ContractEmitted") {
               const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
 
               const contract_address = accId.toString();
+
               if (contract_address == launchpad_manager.CONTRACT_ADDRESS) {
                 const abi_launchpad_contract = new Abi(
                   launchpad_manager.CONTRACT_ABI
                 );
+
                 const decodedEvent = abi_launchpad_contract.decodeEvent(bytes);
+
                 let event_name = decodedEvent.event.identifier;
-                console.log(event_name);
+
                 if (event_name == "AddNewProjectEvent") {
                   const eventValues = [];
+
                   for (let i = 0; i < decodedEvent.args.length; i++) {
                     const value = decodedEvent.args[i];
                     eventValues.push(value.toString());
                   }
+
                   const nft_address = eventValues[1];
 
                   createNewCollection(nft_address);
@@ -314,7 +315,7 @@ async function addNewProject(
   return unsubscribe;
 }
 
-async function editProject(caller_account, data, dispatch) {
+async function editProject(caller_account, data, dispatch, txType, api) {
   let unsubscribe;
   const address = caller_account?.address;
   const gasLimit = -1;
@@ -333,31 +334,19 @@ async function editProject(caller_account, data, dispatch) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (status.isFinalized === true) {
-          toast.success(`Success`);
-        }
-
-        if (dispatchError) {
-          console.log(dispatchError.toString());
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
       }
     )
-    .then((unsub) => {
-      unsubscribe = unsub;
-    })
-    .catch((e) => {
-      dispatch({
-        type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-      });
-      const mess = `Tnx is ${e.message}`;
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
 
-      toast.error(mess);
-    });
   return unsubscribe;
 }
 

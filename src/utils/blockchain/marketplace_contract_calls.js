@@ -1,23 +1,14 @@
-/* eslint-disable no-unused-vars */
 import BN from "bn.js";
-import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
-import {
-  isValidAddressPolkadotAddress,
-  handleContractCallAddNftAnimation,
-} from "@utils";
+import { isValidAddressPolkadotAddress } from "@utils";
 import { TypeRegistry, U32 } from "@polkadot/types";
 import { ContractPromise } from "@polkadot/api-contract";
-import { clientAPI } from "@api/client";
-import { AccountActionTypes } from "@store/types/account.types";
 
-import { APICall } from "../../api/client";
-// import { createNumberBN } from "../../pages/account/stakes";
-import { BigInt } from "@polkadot/x-bigint";
+import { APICall } from "@api/client";
 import {
   txErrorHandler,
   txResponseErrorHandler,
-} from "../../store/actions/txStatus";
+} from "@store/actions/txStatus";
 
 let contract;
 
@@ -404,17 +395,6 @@ async function list(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-          });
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
-
         txResponseErrorHandler({
           status,
           dispatchError,
@@ -423,22 +403,12 @@ async function list(
           api,
           caller_account,
         });
-        handleContractCallAddNftAnimation(status, dispatchError, dispatch);
-        if (status) {
-          if (status?.isFinalized) {
-            await APICall.askBeUpdateNftData({
-              collection_address: nft_contract_address,
-              token_id: token_id.u64,
-            });
-          }
 
-          // const statusText = Object.keys(status.toHuman())[0];
-          // console.log('first', first)
-          // toast.success(
-          //   `List NFT ${
-          //     statusText === "0" ? "started" : statusText.toLowerCase()
-          //   }.`
-          // );
+        if (status?.isFinalized) {
+          await APICall.askBeUpdateNftData({
+            collection_address: nft_contract_address,
+            token_id: token_id.u64,
+          });
         }
       }
     )
@@ -477,18 +447,6 @@ async function unlist(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-          });
-
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
-
         txResponseErrorHandler({
           status,
           dispatchError,
@@ -498,31 +456,21 @@ async function unlist(
           caller_account,
         });
 
-        if (status) {
-          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
+        if (status?.isFinalized) {
+          await APICall.askBeUpdateNftData({
+            collection_address: nft_contract_address,
+            token_id: token_id.u64,
+          });
 
-          if (status?.isFinalized) {
-            await APICall.askBeUpdateNftData({
-              collection_address: nft_contract_address,
-              token_id: token_id.u64,
-            });
+          await APICall.askBeUpdateBidsData({
+            collection_address: nft_contract_address,
+            seller: seller,
+            token_id: token_id.u64,
+          });
 
-            await APICall.askBeUpdateBidsData({
-              collection_address: nft_contract_address,
-              seller: seller,
-              token_id: token_id.u64,
-            });
-
-            await APICall.askBeUpdateCollectionData({
-              collection_address: nft_contract_address,
-            });
-          }
-          // const statusText = Object.keys(status.toHuman())[0];
-          // toast.success(
-          //   `Unlist NFT ${
-          //     statusText === "0" ? "started" : statusText.toLowerCase()
-          //   }.`
-          // );
+          await APICall.askBeUpdateCollectionData({
+            collection_address: nft_contract_address,
+          });
         }
       }
     )
@@ -575,7 +523,6 @@ async function bid(
           caller_account,
         });
 
-        handleContractCallAddNftAnimation(status, dispatchError, dispatch);
         if (status?.isFinalized) {
           await APICall.askBeUpdateBidsData({
             collection_address: nft_contract_address,
@@ -635,7 +582,6 @@ async function removeBid(
           caller_account,
         });
 
-        handleContractCallAddNftAnimation(status, dispatchError, dispatch);
         if (status?.isFinalized) {
           await APICall.askBeUpdateBidsData({
             collection_address: nft_contract_address,
@@ -697,15 +643,6 @@ async function buy(
           caller_account,
         });
 
-        // if (dispatchError) {
-        //   if (dispatchError.isModule) {
-        //     toast.error(`There is some error with your request`);
-        //   } else {
-        //     console.log("dispatchError ", dispatchError.toString());
-        //   }
-        // }
-        handleContractCallAddNftAnimation(status, dispatchError, dispatch);
-
         if (status?.isFinalized) {
           await APICall.askBeUpdateNftData({
             collection_address: nft_contract_address,
@@ -721,13 +658,6 @@ async function buy(
             seller: seller,
             token_id: token_id.u64,
           });
-
-          // const statusText = Object.keys(status.toHuman())[0];
-          // toast.success(
-          //   `Buy NFT ${
-          //     statusText === "0" ? "started" : statusText.toLowerCase()
-          //   }.`
-          // );
         }
       }
     )
@@ -773,14 +703,6 @@ async function acceptBid(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
-
         txResponseErrorHandler({
           status,
           dispatchError,
@@ -790,31 +712,21 @@ async function acceptBid(
           caller_account,
         });
 
-        if (status) {
-          handleContractCallAddNftAnimation(status, dispatchError, dispatch);
+        if (status?.isFinalized) {
+          await APICall.askBeUpdateNftData({
+            collection_address: nft_contract_address,
+            token_id: token_id.u64,
+          });
 
-          if (status?.isFinalized) {
-            await APICall.askBeUpdateNftData({
-              collection_address: nft_contract_address,
-              token_id: token_id.u64,
-            });
+          await APICall.askBeUpdateCollectionData({
+            collection_address: nft_contract_address,
+          });
 
-            await APICall.askBeUpdateCollectionData({
-              collection_address: nft_contract_address,
-            });
-
-            await APICall.askBeUpdateBidsData({
-              collection_address: nft_contract_address,
-              seller: seller,
-              token_id: token_id.u64,
-            });
-          }
-          // const statusText = Object.keys(status.toHuman())[0];
-          // toast.success(
-          //   `Accept Bid NFT ${
-          //     statusText === "0" ? "started" : statusText.toLowerCase()
-          //   }.`
-          // );
+          await APICall.askBeUpdateBidsData({
+            collection_address: nft_contract_address,
+            seller: seller,
+            token_id: token_id.u64,
+          });
         }
       }
     )

@@ -38,8 +38,8 @@ import { formMode, CREATE_NFT, EDIT_NFT, START } from "@constants";
 
 import { setTxStatus } from "@store/actions/txStatus";
 import { clearTxStatus } from "@store/actions/txStatus";
+
 const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
-  console.log("AddNewNFTForm rest", rest);
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const { currentAccount, api } = useSubstrateState();
   const [initialValues, setInitialValues] = useState(undefined);
@@ -89,12 +89,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
       setInitialValues(newInitialValues);
     }
   }, [mode, rest.attrsList, rest.avatar, rest.description, rest.nftName]);
-  const {
-    actionType,
-    // eslint-disable-next-line no-unused-vars
-    tokenIDArray,
-    // ...rest
-  } = useTxStatus();
+  const { actionType, tokenIDArray, ...restOfTxStatus } = useTxStatus();
 
   return (
     <div>
@@ -489,22 +484,11 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 <CommonButton
                   w="full"
                   my="24px"
-                  {...rest}
+                  {...restOfTxStatus}
                   type="submit"
-                  text={`${
-                    mode === formMode.ADD ? "create" : "update"
-                  } nft`}
+                  text={`${mode === formMode.ADD ? "create" : "update"} nft`}
                   isDisabled={!(dirty && isValid) && noImagesChange}
                 />
-                {/* 
-                <StatusButton
-                  text="NFT"
-                  type={AccountActionTypes. }
-                  // disabled={!(dirty && isValid)}
-                  disabled={!(dirty && isValid) && noImagesChange}
-                  isLoading={addNftTnxStatus}
-                  loadingText={`${addNftTnxStatus?.status}`}
-                /> */}
               </Form>
             </div>
           )}

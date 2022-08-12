@@ -32,9 +32,12 @@ import {
   UNLIST_TOKEN,
   LOCK,
   TRANSFER,
+  CREATE_NFT,
+  EDIT_NFT,
 } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
+
 const NUMBER_PER_PAGE = 10;
 
 function CollectionPage() {
@@ -233,11 +236,21 @@ function CollectionPage() {
       UNLIST_TOKEN,
       LOCK,
       TRANSFER,
+      CREATE_NFT,
+      EDIT_NFT,
     ],
     () => {
-      actionType === BID && setActiveTab(tabList.LISTED);
-      actionType === REMOVE_BID && setActiveTab(tabList.LISTED);
-      fetchCollectionDetail({ activeTab: tabList.LISTED });
+      if ([BID, REMOVE_BID].includes(actionType)) {
+        setActiveTab(tabList.LISTED);
+        fetchCollectionDetail({ activeTab: tabList.LISTED });
+      }
+
+      if ([CREATE_NFT, EDIT_NFT, LOCK, TRANSFER].includes(actionType)) {
+        setActiveTab(tabList.UNLISTED);
+        fetchCollectionDetail({ activeTab: tabList.UNLISTED });
+      }
+
+      fetchCollectionDetail({ activeTab: tabList.ALL });
     }
   );
 

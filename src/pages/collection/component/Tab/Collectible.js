@@ -200,6 +200,8 @@ const NFTTabCollectible = (props) => {
     }
   };
 
+  const iconBorderSize = useBreakpointValue({ base: "6px", "2xl": "10px" });
+
   return (
     <>
       <Stack
@@ -235,11 +237,7 @@ const NFTTabCollectible = (props) => {
 
             <Spacer />
 
-            <HStack
-            // pos="absolute"
-            // top={{ base: `10px`, xl: `20px` }}
-            // right={{ base: `50px`, xl: `20px` }}
-            >
+            <HStack>
               {!is_locked && showOnChainMetadata && isOwner && (
                 <AddNewNFTModal
                   {...props}
@@ -254,6 +252,7 @@ const NFTTabCollectible = (props) => {
 
               {!is_locked && showOnChainMetadata && !isOwner && (
                 <Tooltip
+                  cursor="pointer"
                   hasArrow
                   bg="#333"
                   color="#fff"
@@ -261,7 +260,7 @@ const NFTTabCollectible = (props) => {
                 >
                   <span
                     style={{
-                      padding: "6px",
+                      padding: iconBorderSize,
                       display: "flex",
                       alignItems: "center",
                       border: "2px solid #333333",
@@ -285,7 +284,7 @@ const NFTTabCollectible = (props) => {
                 >
                   <span
                     style={{
-                      padding: "6px",
+                      padding: iconBorderSize,
                       display: "flex",
                       alignItems: "center",
                       border: "2px solid #333333",
@@ -309,7 +308,7 @@ const NFTTabCollectible = (props) => {
                 >
                   <span
                     style={{
-                      padding: "6px",
+                      padding: iconBorderSize,
                       display: "flex",
                       alignItems: "center",
                       border: "2px solid #333333",

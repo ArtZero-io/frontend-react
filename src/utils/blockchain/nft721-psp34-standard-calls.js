@@ -1,10 +1,9 @@
+import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
-import BN from "bn.js";
 import { TypeRegistry, U64 } from "@polkadot/types";
 import { clientAPI } from "@api/client";
 
-import { AccountActionTypes } from "@store/types/account.types";
 import { APICall } from "@api/client";
 import { ContractPromise } from "@polkadot/api-contract";
 
@@ -200,14 +199,7 @@ async function mintWithAttributes(
               token_id: token_id,
             });
           }
-          // if (status) {
-          // handleContractCallAddNftAnimation(status, dispatchError, dispatch);
-
-          // await clientAPI("post", "/updateNFT", {
-          //   collection_address: nft_address,
-          //   token_id: token_id,
-          // });
-          // }
+          
         }
       )
       .then((unsub) => (unsubscribe = unsub))
@@ -336,17 +328,6 @@ async function approve(
       address,
       { signer: injector.signer },
       ({ status, dispatchError }) => {
-        if (dispatchError) {
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-          });
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
-
         txResponseErrorHandler({
           status,
           dispatchError,
@@ -356,10 +337,6 @@ async function approve(
           caller_account,
         });
 
-        // if (status) {
-        // handleContractCallAddNftAnimation(status, dispatchError, dispatch);
-
-        // const statusText = Object.keys(status.toHuman())[0];
         if (status.isFinalized) {
           // set status for next step
           dispatch(
@@ -368,16 +345,7 @@ async function approve(
               step: START,
             })
           );
-          // dispatch({
-          //   type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-          // });
-          //   toast.success(
-          //     `Approve ${
-          //       statusText === "0" ? "started" : statusText.toLowerCase()
-          //     }.`
-          //   );
         }
-        // }
       }
     )
     .then((unsub) => (unsubscribe = unsub))
@@ -431,21 +399,11 @@ async function setMultipleAttributesNFT(
           caller_account,
         });
 
-        if (status) {
-          // handleContractCallAddNftAnimation(status, dispatchError, dispatch);
-
-          if (status.isFinalized) {
-            // const response = await APICall.askBeUpdateNftData({
-            //   collection_address,
-            //   token_id: tokenID,
-            // });
-            await APICall.askBeUpdateNftData({
-              collection_address,
-              token_id: tokenID,
-            });
-
-            // if (response !== "OK") return toast.error(response);
-          }
+        if (status.isFinalized) {
+          await APICall.askBeUpdateNftData({
+            collection_address,
+            token_id: tokenID,
+          });
         }
       }
     )

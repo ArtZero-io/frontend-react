@@ -9,12 +9,9 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AccountActionTypes } from "@store/types/account.types";
 import ProfileForm from "../Form/Profile";
-import { delay } from "@utils";
-import { onCloseButtonModal } from "@utils";
-import { SCROLLBAR } from "../../../../constants";
+import { SCROLLBAR, FINALIZED, END } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
 
 export default function ProfileModal({
   profile,
@@ -22,37 +19,20 @@ export default function ProfileModal({
   onClose,
   forceUpdate,
 }) {
-  const dispatch = useDispatch();
-  const { addCollectionTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
-  );
+  const { step, onEndClick } = useTxStatus();
 
   useEffect(() => {
-    function onCloseHandler() {
-      if (addCollectionTnxStatus?.status === "End") {
-        // dispatch({
-        //   type: AccountActionTypes.SET_TNX_STATUS,
-        //   payload: null,
-        // });
-
-        delay(300).then(() => {
-          forceUpdate();
-          onClose();
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-          });
-        });
-      }
+    if (step === END) {
+      forceUpdate();
+      onClose();
     }
-
-    onCloseHandler();
-  }, [addCollectionTnxStatus, dispatch, forceUpdate, onClose]);
+  }, [step, onClose, forceUpdate]);
 
   const modalSize = useBreakpointValue({
     base: `xs`,
     xl: `6xl`,
   });
-  
+
   const headingDisplay = useBreakpointValue({
     base: `flex`,
     xl: `none`,
@@ -89,13 +69,7 @@ export default function ProfileModal({
           position="absolute"
           top={["0", "-8", "-8"]}
           right={["0", "-8", "-8"]}
-          onClick={() => {
-            onCloseButtonModal({
-              status: addCollectionTnxStatus?.status,
-              dispatch,
-              type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-            });
-          }}
+          onClick={() => step === FINALIZED && onEndClick()}
         />
 
         <ModalHeader>

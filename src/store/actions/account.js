@@ -48,8 +48,15 @@ export function setProfileAttribute(data) {
   };
 }
 
-export function setMultipleAttributes(currentAccount, attributes, values) {
-  return async function (dispatch) {
+export function setMultipleAttributes(
+  currentAccount,
+  attributes,
+  values,
+  dispatch,
+  txType,
+  api
+) {
+  return async function () {
     const loadingName = "setProfileAttribute";
 
     dispatch({
@@ -62,7 +69,9 @@ export function setMultipleAttributes(currentAccount, attributes, values) {
         currentAccount,
         attributes,
         values,
-        dispatch
+        dispatch,
+        txType,
+        api
       );
 
       dispatch({

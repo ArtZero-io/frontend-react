@@ -47,7 +47,6 @@ const MyProjectsPage = () => {
         <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>my projects</Heading>
 
         <Spacer mt={{ base: "20px", xl: "0px" }} />
-
       </Flex>
 
       {loading ? (

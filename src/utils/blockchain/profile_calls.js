@@ -1,8 +1,11 @@
 import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
 import { web3FromSource } from "../wallets/extension-dapp";
-import { AccountActionTypes } from "@store/types/account.types";
-import { getPublicCurrentAccount, handleContractCallAnimation, truncateStr } from "..";
+import { getPublicCurrentAccount, truncateStr } from "..";
+import {
+  txErrorHandler,
+  txResponseErrorHandler,
+} from "@store/actions/txStatus";
 
 // let account;
 let contract;
@@ -117,79 +120,41 @@ export async function setSingleAttributeProfileOnChain(currentAccount, data) {
 }
 
 export async function setMultipleAttributesProfileOnChain(
-  currentAccount,
+  caller_account,
   attributes,
   values,
-  dispatch
+  dispatch,
+  txType,
+  api
 ) {
   let unsubscribe;
 
-  const address = currentAccount?.address;
+  const address = caller_account?.address;
   const gasLimit = -1;
   const value = 0;
 
-  const injector = await web3FromSource(currentAccount?.meta?.source);
+  const injector = await web3FromSource(caller_account?.meta?.source);
 
-  currentAccount &&
+  caller_account &&
     contract.tx
       .setMultipleAttributes({ gasLimit, value }, attributes, values)
       .signAndSend(
         address,
         { signer: injector.signer },
         async ({ status, dispatchError }) => {
-          if (dispatchError) {
-            if (dispatchError.isModule) {
-              const decoded = contract.registry.findMetaError(
-                dispatchError.asModule
-              );
-              const { docs, name, section } = decoded;
-
-              console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
-            } else {
-              console.log(dispatchError.toString());
-            }
-          }
-
-          if (status) {
-            handleContractCallAnimation(status, dispatchError, dispatch);
-
-            // const statusToHuman = Object.entries(status.toHuman());
-
-            // if (Object.keys(status.toHuman())[0] === "0") {
-            //   dispatch({
-            //     type: AccountActionTypes.SET_TNX_STATUS,
-            //     payload: { status: "Ready" },
-            //   });
-            // } else {
-            //   dispatch({
-            //     type: AccountActionTypes.SET_TNX_STATUS,
-            //     payload: {
-            //       status: statusToHuman[0][0],
-            //       value: truncateStr(statusToHuman[0][1], 6),
-            //     },
-            //   });
-            // }
-
-            // const statusText = Object.keys(status.toHuman())[0];
-            // toast.success(
-            //   `Profile update ${
-            //     statusText === "0" ? "start" : statusText.toLowerCase()
-            //   }.`
-            // );
-          }
+          txResponseErrorHandler({
+            status,
+            dispatchError,
+            dispatch,
+            txType,
+            api,
+            caller_account,
+          });
         }
       )
-      .then((unsub) => {
-        return (unsubscribe = unsub);
-      })
-      .catch((e) => {
-        dispatch({
-          type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-        });
-        const mess = `Tnx is ${e.message}`;
+      .then((unsub) => (unsubscribe = unsub))
+      .catch((error) => txErrorHandler({ error, dispatch }));
 
-        toast.error(mess);
-      });
   return unsubscribe;
 }
 

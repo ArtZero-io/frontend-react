@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Flex,
@@ -100,10 +99,10 @@ function MyNFTTabInfo(props) {
   const [ownerName, setOwnerName] = useState("");
   const [isOwner, setIsOwner] = useState(false);
   const [ownerAddress, setOwnerAddress] = useState("");
-   const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
 
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
- 
+
   const doLoad = useCallback(async () => {
     setLoading(true);
 
@@ -286,6 +285,8 @@ function MyNFTTabInfo(props) {
     fetchTradeFee();
   }, [currentAccount]);
 
+  const iconBorderSize = useBreakpointValue({ base: "6px", "2xl": "10px" });
+
   return (
     <>
       <HStack spacing={{ base: "30px", "2xl": "40px" }} alignItems="stretch">
@@ -336,7 +337,7 @@ function MyNFTTabInfo(props) {
                   >
                     <span
                       style={{
-                        padding: "6px",
+                        padding: iconBorderSize,
                         display: "flex",
                         alignItems: "center",
                         border: "2px solid #333333",
@@ -360,7 +361,7 @@ function MyNFTTabInfo(props) {
                 >
                   <span
                     style={{
-                      padding: "6px",
+                      padding: iconBorderSize,
                       display: "flex",
                       alignItems: "center",
                       border: "2px solid #333333",
@@ -384,7 +385,7 @@ function MyNFTTabInfo(props) {
                 >
                   <span
                     style={{
-                      padding: "6px",
+                      padding: iconBorderSize,
                       display: "flex",
                       alignItems: "center",
                       border: "2px solid #333333",
@@ -680,6 +681,7 @@ function MyNFTTabInfo(props) {
                   <CommonButton
                     mx="0"
                     {...rest}
+                    minW="150px"
                     text="cancel sale"
                     onClick={handleUnlistTokenAction}
                     isDisabled={actionType && actionType !== UNLIST_TOKEN}
@@ -699,7 +701,6 @@ function MyNFTTabInfo(props) {
                   <CommonButton
                     mx="0"
                     px="2px"
-                    h="40px"
                     {...rest}
                     text="remove bid"
                     onClick={handleRemoveBidAction}

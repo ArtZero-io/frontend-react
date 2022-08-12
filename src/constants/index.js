@@ -52,6 +52,9 @@ export const UPDATE_PHASE = "updatePhase";
 export const ADD_PHASE = "addPhase";
 export const DELETE_PHASE = "deletePhase";
 
+// PROFILE ACTIONS
+export const UPDATE_PROFILE = "updateProfile";
+
 // OTHERS
 export const NUMBER_PER_PAGE = 6;
 

@@ -109,8 +109,8 @@ function MyCollectionsPage() {
     <CommonContainer>
       <Flex
         w="full"
-        alignItems="start"
-        pb={["20px", "20px", "48px"]}
+        alignItems="center"
+        mb={["20px", "48px"]}
         direction={{ base: "column", xl: "row" }}
       >
         <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>my collections</Heading>

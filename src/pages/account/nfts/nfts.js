@@ -26,30 +26,26 @@ import {
   SCROLLBAR,
   LOCK,
   TRANSFER,
+  ACCEPT_BID,
 } from "@constants";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
-  const [owner, setOwner] = useState(null);
-
-  const [myCollections, setMyCollections] = useState(null);
-
-  const [filterSelected, setFilterSelected] = useState(0);
-
-  const [loading, setLoading] = useState(null);
-
-  // eslint-disable-next-line no-unused-vars
+  const { actionType } = useTxStatus();
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
-    [REMOVE_BID, UNLIST_TOKEN, LIST_TOKEN, LOCK, TRANSFER],
+    [REMOVE_BID, ACCEPT_BID, UNLIST_TOKEN, LIST_TOKEN, LOCK, TRANSFER],
     () => handleForceUpdate()
   );
-  const { actionType } = useTxStatus();
+
+  const [owner, setOwner] = useState(null);
+  const [loading, setLoading] = useState(null);
+  const [filterSelected, setFilterSelected] = useState(0);
+  const [myCollections, setMyCollections] = useState(null);
 
   const handleForceUpdate = async () => {
-    // 1/ List xong thì về My listed - (Page My NFT) PUSH FOR SALE => (Page My NFT) Tab My Listing?
-    // 2/ Unlist xong thì về Unlisted -  (Page My NFT) REMOVE FROM SALE => (Page My NFT) Tab Collected?
-    actionType === LIST_TOKEN && setFilterSelected(1);
-    actionType === UNLIST_TOKEN && setFilterSelected(0);
+    if (actionType === LIST_TOKEN) return setFilterSelected(1);
+    if (actionType === UNLIST_TOKEN) return setFilterSelected(0);
+    setFilterSelected(0);
   };
 
   function onClickHandler(v) {
@@ -61,127 +57,142 @@ const MyNFTsPage = () => {
 
   useEffect(() => {
     const fetchMyCollections = async () => {
-      const allCollectionsOwned = await clientAPI("post", "/getCollections", {
-        limit: 10000,
-        offset: 0,
-        sort: -1,
-        isActive: true,
-      });
+      try {
+        setLoading(true);
+        const allCollectionsOwned = await clientAPI("post", "/getCollections", {
+          limit: 10000,
+          offset: 0,
+          sort: -1,
+          isActive: true,
+        });
 
-      let data = await Promise.all(
-        allCollectionsOwned?.map(async (collection) => {
-          const options = {
-            collection_address: collection.nftContractAddress,
-            owner: currentAccount?.address,
-            limit: 10000,
-            offset: 0,
-            sort: -1,
-          };
+        let data = await Promise.all(
+          allCollectionsOwned?.map(async (collection) => {
+            const options = {
+              collection_address: collection.nftContractAddress,
+              owner: currentAccount?.address,
+              limit: 10000,
+              offset: 0,
+              sort: -1,
+            };
 
-          let dataList = await clientAPI(
-            "post",
-            "/getNFTsByOwnerAndCollection",
-            options
-          );
+            let dataList = await clientAPI(
+              "post",
+              "/getNFTsByOwnerAndCollection",
+              options
+            );
 
-          if (Number(filterSelected) === 0) {
-            dataList = dataList.filter((item) => item.is_for_sale !== true);
-          }
+            if (Number(filterSelected) === 0) {
+              dataList = dataList.filter((item) => item.is_for_sale !== true);
+            }
 
-          if (Number(filterSelected) === 1) {
-            dataList = dataList.filter((item) => item.is_for_sale === true);
-          }
-          const data = dataList?.map((item) => {
-            return { ...item, stakeStatus: 0 };
-          });
+            if (Number(filterSelected) === 1) {
+              dataList = dataList.filter((item) => item.is_for_sale === true);
+            }
+            const data = dataList?.map((item) => {
+              return { ...item, stakeStatus: 0 };
+            });
 
-          collection.listNFT = data;
+            collection.listNFT = data;
 
-          return collection;
-        })
-      );
+            return collection;
+          })
+        );
 
-      //Dont Display Collection with no NFT
-      data = data.filter((item) => item.listNFT?.length > 0);
+        //Don't Display Collection with no NFT
+        data = data.filter((item) => item.listNFT?.length > 0);
 
-      if (data?.length) {
-        setMyCollections(data);
-        const nft = data[0].listNFT[0];
+        if (data?.length) {
+          setMyCollections(data);
+          const nft = data[0].listNFT[0];
 
-        setOwner(nft.is_for_sale ? nft.nft_owner : nft.owner);
-      } else {
-        setMyCollections(null);
+          setOwner(nft.is_for_sale ? nft.nft_owner : nft.owner);
+        } else {
+          setMyCollections(null);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
       }
     };
 
     const fetchMyBids = async () => {
-      const options = {
-        bidder: currentAccount?.address,
-        limit: 10000,
-        offset: 0,
-        sort: -1,
-      };
-
-      let Bids = await clientAPI("post", "/getBidsByBidderAddress", options);
-
-      Bids.length ? setOwner(Bids[0].bidder) : setOwner(null);
-
-      let length = Bids.length;
-
-      let collections = [];
-      for (var i = 0; i < length; i++) {
-        let bid = Bids[i];
-
-        let collection = await clientAPI("post", "/getCollectionByAddress", {
-          collection_address: bid.nftContractAddress,
-        });
+      try {
+        setLoading(true);
 
         const options = {
-          collection_address: bid.nftContractAddress,
-          token_id: bid.tokenID,
+          bidder: currentAccount?.address,
+          limit: 10000,
+          offset: 0,
+          sort: -1,
         };
 
-        let dataList = await clientAPI("post", "/getNFTByID", options);
-        let data = dataList?.map((item) => {
-          return {
-            ...item,
-            stakeStatus: 0,
-            isBid: {
-              status: true,
-              bidPrice: bid.bid_value,
-            },
+        let Bids = await clientAPI("post", "/getBidsByBidderAddress", options);
+
+        Bids.length ? setOwner(Bids[0].bidder) : setOwner(null);
+
+        let length = Bids.length;
+
+        let collections = [];
+        for (var i = 0; i < length; i++) {
+          let bid = Bids[i];
+
+          let collection = await clientAPI("post", "/getCollectionByAddress", {
+            collection_address: bid.nftContractAddress,
+          });
+
+          const options = {
+            collection_address: bid.nftContractAddress,
+            token_id: bid.tokenID,
           };
-        });
 
-        // filter nft have is_for_sale is false
-        data = data.filter((item) => item.is_for_sale === true);
+          let dataList = await clientAPI("post", "/getNFTByID", options);
+          let data = dataList?.map((item) => {
+            return {
+              ...item,
+              stakeStatus: 0,
+              isBid: {
+                status: true,
+                bidPrice: bid.bid_value,
+              },
+            };
+          });
 
-        collection[0].listNFT = data;
+          // filter nft have is_for_sale is false
+          data = data.filter((item) => item.is_for_sale === true);
 
-        collections.push(collection[0]);
-      }
+          collection[0].listNFT = data;
 
-      collections = collections.filter((item) => item.listNFT?.length > 0);
+          collections.push(collection[0]);
+        }
 
-      if (collections?.length) {
-        setMyCollections(collections);
-      } else {
-        setMyCollections(null);
+        collections = collections.filter((item) => item.listNFT?.length > 0);
+
+        if (collections?.length) {
+          setMyCollections(collections);
+        } else {
+          setMyCollections(null);
+        }
+
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
       }
     };
 
-    if (!myCollections || owner !== currentAccount?.address) {
-      filterSelected !== 2 ? fetchMyCollections() : fetchMyBids();
-    }
-  }, [currentAccount?.address, filterSelected, myCollections, owner]);
+    // if (!myCollections || owner !== currentAccount?.address) {
+    filterSelected !== 2 ? fetchMyCollections() : fetchMyBids();
+    // }
+  }, [currentAccount?.address, filterSelected, owner]);
 
   return (
     <CommonContainer>
       <Flex
         w="full"
-        alignItems="start"
-        justify="space-between"
-        pb={{ base: "12px", xl: "48px" }}
+        alignItems="center"
+        mb={["20px", "48px"]}
         direction={{ base: "column", xl: "row" }}
       >
         <Heading fontSize={["3xl-mid", "5xl", "5xl"]} minW="100px">
@@ -191,8 +202,6 @@ const MyNFTsPage = () => {
         <Spacer />
 
         <HStack
-          pb="8px"
-          mt="20px"
           sx={SCROLLBAR}
           overflowX="scroll"
           maxW={{ base: "320px", md: "500px" }}
@@ -222,7 +231,7 @@ const MyNFTsPage = () => {
         </HStack>
       </Flex>
 
-      {loading ? (
+      {loading || loadingForceUpdate ? (
         <AnimationLoader loadingTime={loadingTime} />
       ) : (
         <>
