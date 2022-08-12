@@ -641,7 +641,7 @@ function MyNFTTabInfo(props) {
                 />
                 {/* <StatusPushForSaleButton
                   isAllowanceMpContract={isAllowanceMarketplaceContract}
-                  type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                  type={AccountActionTypes. }
                   text="push for sale"
                   isLoading={actionType}
                   loadingText={`${actionType?.status}`}

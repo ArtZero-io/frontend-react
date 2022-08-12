@@ -12,30 +12,21 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import AddNewNFTForm from "../Form/AddNewNFT";
-import { onCloseButtonModal } from "@utils";
-import { AccountActionTypes } from "@store/types/account.types";
 import EditIcon from "@theme/assets/icon/Edit.js";
-import { formMode } from "@constants";
-import { SCROLLBAR } from "../../../../constants";
+import { formMode, SCROLLBAR, END, FINALIZED } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 
 const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const dispatch = useDispatch();
-
-  const { addNftTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
-  );
-
-  useEffect(() => {
-    addNftTnxStatus?.status === "End" && onClose();
-  }, [onClose, addNftTnxStatus?.status]);
-
+  const { actionType, step, onEndClick } = useTxStatus();
   const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
   const iconBorderSize = useBreakpointValue({ base: "6px", "2xl": "10px" });
-  const { actionType } = useTxStatus();
+
+  useEffect(() => {
+    step === END && onClose();
+  }, [step, onClose]);
+
   return (
     <>
       {mode === formMode.ADD && (
@@ -102,13 +93,7 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
             position="absolute"
             top={["0", "-8", "-8"]}
             right={["0", "-8", "-8"]}
-            onClick={() =>
-              onCloseButtonModal({
-                status: addNftTnxStatus?.status,
-                dispatch,
-                type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-              })
-            }
+            onClick={() => step === FINALIZED && onEndClick()}
           />
           <ModalHeader>
             <Heading fontSize={["2xl", "3xl", "3xl"]} my={2}>

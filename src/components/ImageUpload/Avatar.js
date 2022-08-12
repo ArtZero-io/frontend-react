@@ -1,32 +1,23 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
-import { create } from "ipfs-http-client";
 import {
   Box,
   Button,
   Center,
-  HStack,
   Image,
   Spacer,
-  Spinner,
   Square,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
   Text,
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
-// import { HiCloudUpload } from "react-icons/hi";
-import ActiveIcon from "@theme/assets/icon/Active.js";
-import { IPFS_CLIENT_URL } from "@constants/index";
+
 import { Buffer } from "buffer";
 import IdenticonAvatar from "@components/IdenticonAvatar/IdenticonAvatar/";
 import { clientAPI } from "@api/client";
 import { getCachedImageShort } from "@utils";
+import { ipfsClient } from "@api/client";
 
-const client = create(IPFS_CLIENT_URL);
 const supportedFormat = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
 
 export default function ImageUploadAvatar({
@@ -84,8 +75,8 @@ export default function ImageUploadAvatar({
 
       const uploadPromise = () =>
         new Promise(function (resolve) {
-          const created = client.add(Buffer(reader.result));
-
+          const created = ipfsClient.add(Buffer(reader.result));
+          console.log("created", created);
           if (created) {
             resolve(created);
           }
