@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Avatar,
   Button,
@@ -6,27 +5,19 @@ import {
   Flex,
   HStack,
   Spacer,
-  Spinner,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import React, { useState, useRef } from "react";
-import ActiveIcon from "@theme/assets/icon/Active.js";
 
-// import { HiCloudUpload } from "react-icons/hi";
-
-import { create } from "ipfs-http-client";
 import { Buffer } from "buffer";
-import { IPFS_CLIENT_URL } from "@constants/index";
 import toast from "react-hot-toast";
 import { clientAPI } from "@api/client";
 import { getCachedImageShort } from "@utils/index";
 import { formMode } from "@constants";
 
-const client = create(IPFS_CLIENT_URL);
+import { ipfsClient } from "@api/client";
+
 const supportedFormat = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
 
 const ImageUploadCollection = ({
@@ -42,6 +33,7 @@ const ImageUploadCollection = ({
   isDisabled = false,
   isRequired = false,
 }) => {
+  // eslint-disable-next-line no-unused-vars
   const [imgURL, setImgURL] = useState("");
 
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
@@ -88,7 +80,7 @@ const ImageUploadCollection = ({
 
       const uploadPromise = () =>
         new Promise(function (resolve) {
-          const created = client.add(Buffer(reader.result));
+          const created = ipfsClient.add(Buffer(reader.result));
 
           if (created) {
             resolve(created);

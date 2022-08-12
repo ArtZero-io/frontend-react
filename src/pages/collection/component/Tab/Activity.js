@@ -1,114 +1,111 @@
-/* eslint-disable no-unreachable */
-import React, { useEffect, useState } from "react";
-import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import { useSubstrateState } from "@utils/substrate";
-import CommonTable from "@components/Table/Table";
-import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { AccountActionTypes } from "@store/types/account.types";
-import { Text } from "@chakra-ui/react";
+// import React, { useEffect, useState } from "react";
+// import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+// import { useSubstrateState } from "@utils/substrate";
+// import CommonTable from "@components/Table/Table";
+// import toast from "react-hot-toast";
+// import { useDispatch } from "react-redux";
+// import { Text } from "@chakra-ui/react";
+// import { acceptBid } from "../../../token";
+// import { clearTxStatus } from "@store/actions/txStatus";
 
-function NFTTabActivity({ nftContractAddress, tokenID }) {
-  const [bidders, setBidders] = useState(null);
-  const { currentAccount } = useSubstrateState();
-  const [saleInfo, setSaleInfo] = useState({});
-  const dispatch = useDispatch();
-  const [idSelected, setIdSelected] = useState(null);
-  const headers = ["address", "time", "price", "action"];
+// function NFTTabActivity({ nftContractAddress, tokenID }) {
+//   const { currentAccount, api } = useSubstrateState();
+//   const dispatch = useDispatch();
 
-  const acceptBid = async (bidId) => {
-    if (currentAccount.address === saleInfo.nftOwner) {
-      setIdSelected(bidId);
+//   const [bidders, setBidders] = useState(null);
+//   const [saleInfo, setSaleInfo] = useState({});
+//   const [isOwner, setIsOwner] = useState(false);
 
-      dispatch({
-        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-        payload: {
-          status: "Start",
-        },
-      });
+//   const headers = ["address", "time", "price", "action"];
 
-      await marketplace_contract_calls.acceptBid(
-        currentAccount,
-        nftContractAddress,
-        saleInfo.nftOwner,
-        { u64: tokenID },
-        bidId,
-        dispatch
-      );
-    } else {
-      dispatch({
-        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-      });
-      setIdSelected(null);
-      toast.error(`You not owner of token`);
-    }
-  };
+//   const handleAcceptBidAction = async (bidId) => {
+//     try {
+//       await acceptBid(
+//         api,
+//         currentAccount,
+//         isOwner,
+//         nftContractAddress,
+//         tokenID,
+//         bidId,
+//         dispatch
+//       );
+//     } catch (error) {
+//       console.error(error);
+//       toast.error(error.message);
+//       dispatch(clearTxStatus());
+//     }
+//   };
 
-  useEffect(() => {
-    const fetchBidder = async () => {
-      const sale_info = await marketplace_contract_calls.getNftSaleInfo(
-        currentAccount,
-        nftContractAddress,
-        { u64: tokenID }
-      );
-      console.log("sale_info", sale_info);
-      setSaleInfo(sale_info);
+//   useEffect(() => {
+//     const fetchBidder = async () => {
+//       const sale_info = await marketplace_contract_calls.getNftSaleInfo(
+//         currentAccount,
+//         nftContractAddress,
+//         { u64: tokenID }
+//       );
+//       setSaleInfo(sale_info);
 
-      if (sale_info) {
-        let listBidder = await marketplace_contract_calls.getAllBids(
-          currentAccount,
-          nftContractAddress,
-          sale_info?.nftOwner,
-          { u64: tokenID }
-        );
+//       if (sale_info) {
+//         const ownerAddress = sale_info?.isForSale
+//           ? sale_info?.nftOwner
+//           : sale_info?.owner;
 
-        // map array index to bidId
-        listBidder = listBidder.map((i, idx) => {
-          return { ...i, bidId: idx };
-        });
+//         if (ownerAddress === currentAccount?.address) {
+//           setIsOwner(true);
+//         }
 
-        //sort highest price first
-        listBidder?.length &&
-          listBidder.sort((a, b) => {
-            return (
-              b.bidValue.replaceAll(",", "") * 1 -
-              a.bidValue.replaceAll(",", "") * 1
-            );
-          });
+//         let listBidder = await marketplace_contract_calls.getAllBids(
+//           currentAccount,
+//           nftContractAddress,
+//           sale_info?.nftOwner,
+//           { u64: tokenID }
+//         );
 
-        listBidder ? setBidders(listBidder) : setBidders([]);
-      }
-    };
+//         // map array index to bidId
+//         listBidder = listBidder.map((i, idx) => {
+//           return { ...i, bidId: idx };
+//         });
 
-    fetchBidder();
-  }, [currentAccount, nftContractAddress, tokenID]);
+//         //sort highest price first
+//         listBidder?.length &&
+//           listBidder.sort((a, b) => {
+//             return (
+//               b.bidValue.replaceAll(",", "") * 1 -
+//               a.bidValue.replaceAll(",", "") * 1
+//             );
+//           });
 
-  if (!currentAccount) {
-    return (
-      <Text textAlign="center" py="2rem">
-        Please connect wallet first!{" "}
-      </Text>
-    );
-  }
+//         listBidder ? setBidders(listBidder) : setBidders([]);
+//       }
+//     };
 
-  return (
-    <>
-      {bidders?.length === 0 ? (
-        <Text textAlign="center" py="2rem">
-          There is no bid yet.
-        </Text>
-      ) : (
-        <CommonTable
-          idSelected={idSelected}
-          tableHeaders={headers}
-          tableData={bidders}
-          saleInfo={saleInfo}
-          onClickHandler={acceptBid}
-          isOwner={currentAccount?.address === saleInfo?.nftOwner}
-        />
-      )}
-    </>
-  );
-}
+//     fetchBidder();
+//   }, [currentAccount, nftContractAddress, tokenID]);
 
-export default NFTTabActivity;
+//   if (!currentAccount) {
+//     return (
+//       <Text textAlign="center" py="2rem">
+//         Please connect wallet first!{" "}
+//       </Text>
+//     );
+//   }
+
+//   return (
+//     <>
+//       {bidders?.length === 0 ? (
+//         <Text textAlign="center" py="2rem">
+//           There is no bid yet.
+//         </Text>
+//       ) : (
+//         <CommonTable
+//           tableHeaders={headers}
+//           tableData={bidders}
+//           onClickHandler={handleAcceptBidAction}
+//           isOwner={currentAccount?.address === saleInfo?.nftOwner}
+//         />
+//       )}
+//     </>
+//   );
+// }
+
+// export default NFTTabActivity;

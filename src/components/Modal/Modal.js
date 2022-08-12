@@ -13,19 +13,14 @@ import {
 import MyNFTTabInfo from "@pages/account/nfts/components/Tabs/MyNFTInfo";
 import MyNFTTabOffers from "@pages/account/nfts/components/Tabs/MyNFTOffers";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
-import { onCloseButtonModal } from "@utils";
-import { AccountActionTypes } from "@store/types/account.types";
-import { FINALIZED } from "@constants";
+import { FINALIZED, END } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
 
 export default function ResponsivelySizedModal({
   onClose,
   isOpen,
-  hasTabs,
-  children,
   filterSelected = 1,
-  showOnChainMetadata,
   ...rest
 }) {
   const tabHeight = useBreakpointValue({
@@ -34,47 +29,34 @@ export default function ResponsivelySizedModal({
     "2xl": `4.5rem`,
   });
 
-  const dispatch = useDispatch();
-
-  const { addNftTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
-  );
-  const txStatus = useSelector((state) => state.txStatus);
+  const { step, onEndClick, actionType } = useTxStatus();
 
   useEffect(() => {
-    addNftTnxStatus?.status === "End" ||
-      (txStatus?.lockStatus === FINALIZED && onClose());
-  }, [onClose, addNftTnxStatus?.status, txStatus?.lockStatus]);
+    step === END && onClose();
+  }, [step, onClose]);
 
   const tabData = [
     {
-      label: "NFT info",
-      content: (
-        <MyNFTTabInfo
-          showOnChainMetadata={showOnChainMetadata}
-          filterSelected={filterSelected}
-          {...rest}
-        />
-      ),
-      isDisabled: false,
+      label: "nft info",
+      content: <MyNFTTabInfo filterSelected={filterSelected} {...rest} />,
+      isDisabled: actionType,
     },
     {
-      label: "Offers",
+      label: "offers",
       content: <MyNFTTabOffers {...rest} />,
-      isDisabled:
-        filterSelected === 0 || addNftTnxStatus?.status ? true : false,
+      isDisabled: filterSelected === 0 || actionType || !rest?.is_for_sale,
     },
   ];
 
   return (
     <Modal
-      closeOnOverlayClick={false}
-      closeOnEsc={false}
-      scrollBehavior="inside"
       isCentered
-      onClose={onClose}
       isOpen={isOpen}
       size={"7xl"}
+      onClose={onClose}
+      closeOnEsc={false}
+      scrollBehavior="inside"
+      closeOnOverlayClick={false}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -82,43 +64,42 @@ export default function ResponsivelySizedModal({
       />
 
       <ModalContent
-        position="relative"
-        bg="brand.grayDark"
-        borderRadius="0"
         p={0}
         h="full"
         w="full"
-        maxH={{ base: "28rem", xl: "30rem", "2xl": "40rem" }}
+        borderRadius="0"
+        position="relative"
+        bg="brand.grayDark"
         maxW={{ base: "58rem", xl: "60rem", "2xl": "78rem" }}
+        maxH={{ base: "28rem", xl: "30rem", "2xl": "40rem" }}
       >
         <ModalCloseButton
-          borderWidth={2}
           borderRadius="0"
           position="absolute"
+          borderWidth={[0, "2px"]}
           top={["0", "-8", "-8"]}
           right={["0", "-8", "-8"]}
-          onClick={() =>
-            onCloseButtonModal({
-              status: addNftTnxStatus?.status,
-              dispatch,
-              type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-            })
-          }
+          onClick={() => step === FINALIZED && onEndClick()}
         />
 
-        <Tabs isLazy align="left" h="full" colorScheme="brand.blue">
+        <Tabs isLazy align="left">
           <TabList bg="#171717">
             {tabData.map((tab, index) => (
               <Tab
-                isDisabled={tab.isDisabled}
                 ml={12}
+                px="0.5px"
                 key={index}
+                color="#fff"
+                _selected={{
+                  color: "brand.blue",
+                  borderBottom: "2px solid #7ae7ff",
+                }}
+                minH={tabHeight}
+                isDisabled={tab.isDisabled}
+                fontFamily="Evogria Italic"
+                py={["10px", "20px", "20px"]}
                 fontSize={["13px", null, "18px"]}
                 lineHeight={["21px", null, "30px"]}
-                fontFamily="Evogria Italic"
-                minH={tabHeight}
-                px="0.5px"
-                py={["10px", "20px", "20px"]}
               >
                 {tab.label}
               </Tab>
@@ -128,10 +109,10 @@ export default function ResponsivelySizedModal({
           <TabPanels style={{ height: `calc(100% - ${tabHeight})` }}>
             {tabData.map((tab, index) => (
               <TabPanel
-                px={{ base: 6, "2xl": 12 }}
-                py={{ base: "22px", "2xl": "44px" }}
                 h="full"
                 key={index}
+                px={{ base: 6, "2xl": 12 }}
+                py={{ base: "22px", "2xl": "44px" }}
               >
                 {tab.content}
               </TabPanel>

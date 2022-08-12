@@ -4,14 +4,17 @@ import {
   ModalContent,
   ModalOverlay,
   useBreakpointValue,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import NFTTabCollectible from "../Tab/Collectible";
-import NFTTabActivity from "../Tab/Activity";
-import { useDispatch, useSelector } from "react-redux";
-import { onCloseButtonModal } from "@utils";
-import { AccountActionTypes } from "@store/types/account.types";
+import useTxStatus from "@hooks/useTxStatus";
+import { FINALIZED, END } from "@constants";
+import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
 
 function NFTDetailModal({ isOpen, onClose, ...rest }) {
   const tabHeight = useBreakpointValue({
@@ -20,41 +23,33 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
     "2xl": `4.5rem`,
   });
 
-  const dispatch = useDispatch();
-
-  const { addNftTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
-  );
+  const { step, onEndClick, actionType } = useTxStatus();
 
   useEffect(() => {
-    addNftTnxStatus?.status === "End" && onClose();
-  }, [onClose, addNftTnxStatus?.status]);
+    step === END && onClose();
+  }, [step, onClose]);
 
   const tabData = [
     {
-      label: "Collectible",
+      label: "collectible",
       content: <NFTTabCollectible {...rest} />,
-      isDisabled: false,
+      isDisabled: actionType,
     },
     {
-      // Before is label: "Activity",
-      label: "Offers",
-      content: <NFTTabActivity {...rest} />,
-      isDisabled: addNftTnxStatus?.status ? true : false,
+      label: "offers",
+      content: <MyNFTOffer {...rest} />,
+      isDisabled: actionType || !rest?.is_for_sale,
     },
   ];
-
-  const modalSize = useBreakpointValue(["xs", "7xl", "7xl"]);
-
   return (
     <Modal
-      closeOnOverlayClick={false}
+      isCentered
+      isOpen={isOpen}
+      size={"7xl"}
+      onClose={onClose}
       closeOnEsc={false}
       scrollBehavior="inside"
-      isCentered
-      onClose={onClose}
-      isOpen={isOpen}
-      size={modalSize}
+      closeOnOverlayClick={false}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -62,40 +57,36 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
       />
 
       <ModalContent
-        position="relative"
-        bg="brand.grayDark"
-        borderRadius="0"
         p={0}
         h="full"
         w="full"
-        maxH={{ base: "calc(100% - 7.5rem)", xl: "30rem", "2xl": "40rem" }}
+        borderRadius="0"
+        position="relative"
+        bg="brand.grayDark"
         maxW={{ base: "20rem", xl: "60rem", "2xl": "78rem" }}
+        maxH={{ base: "calc(100% - 7.5rem)", xl: "30rem", "2xl": "40rem" }}
       >
         <ModalCloseButton
-          w="42px"
-          h="42px"
-          border="none"
-          // borderWidth={2}
           borderRadius="0"
           position="absolute"
+          borderWidth={[0, "2px"]}
           top={["0", "-8", "-8"]}
           right={["0", "-8", "-8"]}
-          onClick={() =>
-            onCloseButtonModal({
-              status: addNftTnxStatus?.status,
-              dispatch,
-              type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-            })
-          }
+          onClick={() => step === FINALIZED && onEndClick()}
         />
 
         <Tabs isLazy align="left" colorScheme="brand.blue">
           <TabList bg="#171717">
             {tabData.map((tab, index) => (
               <Tab
+                ml={12}
                 px="0.5px"
                 key={index}
-                ml={[6, 12, 12]}
+                color="#fff"
+                _selected={{
+                  color: "brand.blue",
+                  borderBottom: "2px solid #7ae7ff",
+                }}
                 minH={tabHeight}
                 isDisabled={tab.isDisabled}
                 fontFamily="Evogria Italic"

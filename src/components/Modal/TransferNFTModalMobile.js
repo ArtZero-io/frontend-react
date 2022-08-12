@@ -1,25 +1,22 @@
 import {
   Text,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverHeader,
-  PopoverBody,
-  useDisclosure,
   Button,
-  PopoverFooter,
-  Tooltip,
-  Input,
+  Modal,
+  ModalFooter,
+  ModalBody,
+  ModalHeader,
+  ModalOverlay,
+  ModalContent,
+  ModalCloseButton,
+  useDisclosure,
   VStack,
+  Input,
 } from "@chakra-ui/react";
 
 import { useSubstrateState } from "@utils/substrate";
 
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
 
 import { ContractPromise } from "@polkadot/api-contract";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
@@ -29,26 +26,27 @@ import {
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import { setTxStatus } from "@store/actions/txStatus";
-import { stringToU8a } from "@polkadot/util";
-import { isValidAddressPolkadotAddress } from "@utils";
-import { APICall } from "@api/client";
-import { START, FINALIZED, TRANSFER, END } from "@constants";
-import useTxStatus from "@hooks/useTxStatus";
-import CommonButton from "@components/Button/CommonButton";
 
-function TransferNFTModal({
+import { isValidAddressPolkadotAddress } from "@utils";
+import { useState } from "react";
+import { stringToU8a } from "@polkadot/util";
+import { APICall } from "@api/client";
+import { START, FINALIZED, TRANSFER } from "@constants";
+import CommonButton from "@components/Button/CommonButton";
+import useTxStatus from "@hooks/useTxStatus";
+
+function TransferNFTModalMobile({
   owner,
   nftContractAddress,
   tokenID,
   isDisabled = false,
   showOnChainMetadata,
 }) {
-  const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
+  const dispatch = useDispatch();
   const { onOpen, onClose, isOpen } = useDisclosure();
-  const { actionType, tokenIDArray, ...rest } = useTxStatus();
-
   const [receiverAddress, setReceiverAddress] = useState("");
+  const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
   const transferNFTsHandler = async () => {
     if (!isValidAddressPolkadotAddress(receiverAddress)) {
@@ -58,7 +56,6 @@ function TransferNFTModal({
     if (owner !== currentAccount?.address) {
       return toast.error("You are not the owner of this NFT");
     }
-
     if (nftContractAddress) {
       dispatch(setTxStatus({ type: TRANSFER, step: START }));
 
@@ -67,17 +64,13 @@ function TransferNFTModal({
         nft721_psp34_standard.CONTRACT_ABI,
         nftContractAddress
       );
-
       let unsubscribe;
 
       const gasLimit = -1;
       const azero_value = 0;
       const injector = await web3FromSource(currentAccount?.meta?.source);
-
       console.log(receiverAddress);
-
       let additionalData = "";
-
       await contract.tx["psp34::transfer"](
         { value: azero_value, gasLimit },
         receiverAddress,
@@ -93,6 +86,7 @@ function TransferNFTModal({
               dispatchError,
               dispatch,
               txType: TRANSFER,
+
               api,
             });
 
@@ -111,66 +105,52 @@ function TransferNFTModal({
     }
   };
 
-  useEffect(() => {
-    rest.step === END && onClose();
-  }, [onClose, rest.step]);
-
   return (
     <>
-      <Popover
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onClose={onClose}
-        placement="bottom"
-        closeOnBlur={false}
+      <Button
+        h="30px"
+        p="4px"
+        fontSize="12px"
+        variant="outline"
+        onClick={!actionType ? onOpen : () => {}}
       >
-        {showOnChainMetadata && (
-          <PopoverTrigger mt="0px">
-            <Tooltip
-              hasArrow
-              bg="#333"
-              top="-10px"
-              color="#fff"
-              label="Transfer NFT"
-            >
-              <Button
-                p="8px"
-                fontSize="12px"
-                variant="outline"
-                h={{ xl: "30px", "2xl": "44px" }}
-                onClick={!actionType ? onOpen : () => {}}
-              >
-                transfer
-              </Button>
-            </Tooltip>
-          </PopoverTrigger>
-        )}
-        <PopoverContent bg="#333" borderRadius="0" fontSize="sm">
-          <PopoverArrow />
+        transfer
+      </Button>
 
-          <PopoverCloseButton
-            isDisabled={actionType}
+      <Modal isCentered onClose={onClose} size="xs" isOpen={isOpen}>
+        <ModalOverlay
+          bg="blackAlpha.300"
+          backdropFilter="blur(10px) hue-rotate(90deg)"
+        />
+
+        <ModalContent borderRadius="0" bg="brand.grayDark">
+          <ModalHeader textAlign="center">Transfer NFT </ModalHeader>
+
+          <ModalCloseButton
+            borderWidth={2}
+            borderRadius="0"
+            top="0"
+            right="0"
             onClick={rest.step === FINALIZED ? rest.onEndClick : onClose}
           />
 
-          <PopoverHeader textAlign="center">Transfer NFT</PopoverHeader>
-
-          <PopoverBody>
+          <ModalBody>
             <VStack w="full">
               <Text>Transfer to address:</Text>
               <Input
-                h="32px"
-                px="4px"
+                bg="black"
                 isDisabled={actionType}
                 placeholder="5ABC..."
                 _placeholder={{ fontSize: "12px" }}
+                h="32px"
+                px="4px"
                 onChange={(val) => setReceiverAddress(val.target.value)}
               />
             </VStack>
-          </PopoverBody>
+          </ModalBody>
 
-          <PopoverFooter>
-            <VStack>
+          <ModalFooter>
+            <VStack w="full">
               <Text>Are you sure you want to transfer NFT?</Text>
 
               <CommonButton
@@ -183,11 +163,11 @@ function TransferNFTModal({
                 }
               />
             </VStack>
-          </PopoverFooter>
-        </PopoverContent>
-      </Popover>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }
 
-export default TransferNFTModal;
+export default TransferNFTModalMobile;

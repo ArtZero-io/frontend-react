@@ -12,13 +12,18 @@ export const FINALIZED = "Finalized";
 export const END = "End";
 
 // MY STAKING ACTIONS
-export const LOCK = "lock";
 export const STAKE = "stake";
 export const UNSTAKE = "unstake";
 export const REQUEST_UNSTAKE = "requestUnstake";
 export const CANCEL_REQUEST_UNSTAKE = "cancelRequestUnstake";
 
 // NFT ACTIONS
+export const EDIT_NFT = "editNFT";
+export const CREATE_NFT = "createNFT";
+
+export const LOCK = "lock";
+export const TRANSFER = "transfer";
+
 export const BUY = "buy";
 export const BID = "bid";
 export const REMOVE_BID = "removeBid";

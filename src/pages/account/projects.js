@@ -48,7 +48,6 @@ const MyProjectsPage = () => {
 
         <Spacer mt={{ base: "20px", xl: "0px" }} />
 
-        {/* <AddNewCollectionModal mode={formMode.ADD} /> */}
       </Flex>
 
       {loading ? (

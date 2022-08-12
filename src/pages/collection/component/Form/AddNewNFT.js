@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 import { Formik, Form } from "formik";
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { useSubstrateState } from "@utils/substrate";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
@@ -31,12 +31,15 @@ import AddNewNFTImageUpload from "@components/ImageUpload/Collection";
 import AddLevelsModal from "../Modal/AddLevels";
 import AddPropertiesModal from "../Modal/AddProperties";
 
-import { AccountActionTypes } from "@store/types/account.types";
-import StatusButton from "@components/Button/StatusButton";
 import { createLevelAttribute } from "@utils";
-import { formMode } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
+import CommonButton from "@components/Button/CommonButton";
+import { formMode, CREATE_NFT, EDIT_NFT, START } from "@constants";
 
+import { setTxStatus } from "@store/actions/txStatus";
+import { clearTxStatus } from "@store/actions/txStatus";
 const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
+  console.log("AddNewNFTForm rest", rest);
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const { currentAccount, api } = useSubstrateState();
   const [initialValues, setInitialValues] = useState(undefined);
@@ -44,7 +47,6 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
   const { collection_address } = useParams();
 
   const dispatch = useDispatch();
-  const { addNftTnxStatus } = useSelector((s) => s.account.accountLoaders);
 
   const [modifierToEdit, setModifierToEdit] = useState(-1);
 
@@ -87,6 +89,12 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
       setInitialValues(newInitialValues);
     }
   }, [mode, rest.attrsList, rest.avatar, rest.description, rest.nftName]);
+  const {
+    actionType,
+    // eslint-disable-next-line no-unused-vars
+    tokenIDArray,
+    // ...rest
+  } = useTxStatus();
 
   return (
     <div>
@@ -254,19 +262,16 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   nft721_psp34_standard_contract
                 );
 
-                dispatch({
-                  type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-                  payload: {
-                    status: "Start",
-                  },
-                });
-
                 if (mode === formMode.ADD) {
+                  dispatch(setTxStatus({ type: CREATE_NFT, step: START }));
+
                   await nft721_psp34_standard_calls.mintWithAttributes(
                     currentAccount,
                     collection_address,
                     attributes,
-                    dispatch
+                    dispatch,
+                    CREATE_NFT,
+                    api
                   );
                 } else {
                   // add deleted properties
@@ -284,20 +289,20 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                       });
                     }
                   }
-
+                  dispatch(setTxStatus({ type: EDIT_NFT, step: START }));
                   // rest.nftContractAddress due to Edit mode on My NFT has no params
                   await nft721_psp34_standard_calls.setMultipleAttributesNFT(
                     currentAccount,
                     collection_address || rest.nftContractAddress,
                     tokenID,
                     attributes,
-                    dispatch
+                    dispatch,
+                    EDIT_NFT,
+                    api
                   );
                 }
               } else {
-                dispatch({
-                  type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-                });
+                dispatch(clearTxStatus());
 
                 return toast.error("You aren't the owner of this collection!");
               }
@@ -309,7 +314,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
               <Form>
                 <HStack>
                   <AddNewNFTInput
-                    isDisabled={addNftTnxStatus}
+                    isDisabled={actionType}
                     isRequired={true}
                     mode={formMode.ADD}
                     label="NFT Name"
@@ -320,7 +325,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 </HStack>
 
                 <AddNewNFTTextArea
-                  isDisabled={addNftTnxStatus}
+                  isDisabled={actionType}
                   isRequired={true}
                   label="Description"
                   name="description"
@@ -329,7 +334,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 />
 
                 <AddNewNFTImageUpload
-                  isDisabled={addNftTnxStatus}
+                  isDisabled={actionType}
                   mode={mode}
                   imageIPFSUrl={avatarIPFSUrl}
                   setImageIPFSUrl={setAvatarIPFSUrl}
@@ -353,7 +358,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     <Button
                       fontSize={["sm", "md", "md"]}
                       px={["12px", "32px", "32px"]}
-                      isDisabled={addNftTnxStatus}
+                      isDisabled={actionType}
                       variant="outline"
                       color="brand.blue"
                       onClick={() => setModifierToEdit("properties")}
@@ -427,7 +432,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     <Button
                       fontSize={["sm", "md", "md"]}
                       px={["12px", "32px", "32px"]}
-                      isDisabled={addNftTnxStatus}
+                      isDisabled={actionType}
                       variant="outline"
                       color="brand.blue"
                       onClick={() => setModifierToEdit("levels")}
@@ -481,14 +486,25 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   />
                 </Box>
 
+                <CommonButton
+                  w="full"
+                  my="24px"
+                  {...rest}
+                  type="submit"
+                  text={`${
+                    mode === formMode.ADD ? "create" : "update"
+                  } nft`}
+                  isDisabled={!(dirty && isValid) && noImagesChange}
+                />
+                {/* 
                 <StatusButton
                   text="NFT"
-                  type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                  type={AccountActionTypes. }
                   // disabled={!(dirty && isValid)}
                   disabled={!(dirty && isValid) && noImagesChange}
                   isLoading={addNftTnxStatus}
                   loadingText={`${addNftTnxStatus?.status}`}
-                />
+                /> */}
               </Form>
             </div>
           )}

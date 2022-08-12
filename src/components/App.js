@@ -26,6 +26,8 @@ import { setLaunchPadContract } from "@utils/blockchain/launchpad-contract-calls
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import "@theme/assets/TimePicker.css";
+import useTxStatus from "@hooks/useTxStatus";
+import { START } from "../constants";
 
 export default function App() {
   const { apiState, apiError } = useSubstrateState();
@@ -124,6 +126,7 @@ const Main = () => {
     (state) => state.account.accountLoaders
   );
   const txStatus = useSelector((state) => state.txStatus);
+  const { step } = useTxStatus();
 
   let id = useRef(null);
 
@@ -137,10 +140,11 @@ const Main = () => {
       txStatus?.cancelRequestUnstakeStatus === "Start" ||
       txStatus?.unstakeStatus === "Start" ||
       txStatus?.lockStatus === "Start" ||
-      txStatus?.step === "Start";
+      txStatus?.step === "Start" ||
+      step === START;
 
     const message = (
-      <Text as='span' fontSize={['sm','md']}>
+      <Text as="span" fontSize={["sm", "md"]}>
         You have a transaction that needs to be signed.
         <br />
         Please <b>Sign</b> or <b>Cancel</b> in the pop-up window.
@@ -162,6 +166,7 @@ const Main = () => {
   }, [
     addCollectionTnxStatus?.status,
     addNftTnxStatus,
+    step,
     tnxStatus?.status,
     txStatus?.cancelRequestUnstakeStatus,
     txStatus?.lockStatus,

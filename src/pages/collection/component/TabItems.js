@@ -16,7 +16,6 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { RiLayoutGridLine } from "react-icons/ri";
 import { BsGrid3X3 } from "react-icons/bs";
-import { MdRefresh } from "react-icons/md";
 
 import AddNewNFTModal from "./Modal/AddNewNFT";
 
@@ -26,10 +25,10 @@ import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import NFTDetailModal from "./Modal/NFTDetail";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import NFTChangeSizeCard from "@components/Card/NFTChangeSize";
-import { formMode } from "@constants";
-import CommonButton from "../../../components/Button/CommonButton";
+import { SCROLLBAR, formMode } from "@constants";
+import CommonButton from "@components/Button/CommonButton";
 import { useHistory } from "react-router-dom";
-import { SCROLLBAR } from "../../../constants";
+import RefreshIcon from "@theme/assets/icon/Refresh.js";
 
 const CollectionItems = ({
   NFTListFormatted,
@@ -38,10 +37,9 @@ const CollectionItems = ({
   loading,
   forceUpdate,
   loadingTime,
-  setIsShowUnlisted,
-  isShowUnlisted,
+
   totalCollectionsCount,
-  offset,
+
   activeTab,
   setActiveTab,
   showOnChainMetadata,
@@ -113,12 +111,12 @@ const CollectionItems = ({
             justifyContent="space-between"
           >
             <IconButton
-              mr={1.5}
+              m={1.5}
               size="icon"
               variant="iconSolid"
               aria-label="refresh"
               onClick={() => forceUpdate()}
-              icon={<MdRefresh fontSize="24px" />}
+              icon={<RefreshIcon />}
               _hover={{ color: "black", bg: "#7ae7ff" }}
             />
             <Spacer />
@@ -168,25 +166,7 @@ const CollectionItems = ({
             )}
 
             <Spacer />
-            {/* <Text color="#888" px={2} display={{ base: "block", xl: "none" }}>
-              {totalCollectionsCount || 0} asd items{" "}
-              {activeTab === tabList.ALL
-                ? "in total"
-                : activeTab === tabList.LISTED
-                ? "listed"
-                : activeTab === tabList.UNLISTED
-                ? "unlisted"
-                : ""}
-            </Text> */}
-            {/* <IconButton
-              display={{ base: "flex", xl: "none" }}
-              aria-label="refresh"
-              icon={<MdRefresh fontSize="24px" />}
-              size="icon"
-              variant="iconSolid"
-              mx={1.5}
-              onClick={() => forceUpdate()}
-            /> */}
+
             <Dropdown
               // width="full"
               mx={1.5}
@@ -205,7 +185,7 @@ const CollectionItems = ({
             bg={bigCard ? "#7ae7ff" : "#222"}
             color={bigCard ? "#000" : "#fff"}
             display={{ base: "none", xl: "flex" }}
-            icon={<RiLayoutGridLine fontSize="24px" />}
+            icon={<RiLayoutGridLine fontSize="32px" />}
             onClick={() => setBigCard(true)}
           />
 
@@ -217,7 +197,7 @@ const CollectionItems = ({
             bg={!bigCard ? "#7ae7ff" : "#222"}
             color={!bigCard ? "#000" : "#fff"}
             display={{ base: "none", xl: "flex" }}
-            icon={<BsGrid3X3 fontSize="24px" />}
+            icon={<BsGrid3X3 fontSize="22px" />}
             onClick={() => setBigCard(false)}
           />
         </Stack>

@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import { usePagination } from "@ajna/pagination";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { ContractPromise } from "@polkadot/api-contract";
 
 import { clientAPI } from "@api/client";
@@ -18,12 +18,23 @@ import { APICall } from "@api/client";
 import useInterval from "@hooks/useInterval";
 import { useSubstrateState } from "@utils/substrate";
 import { AccountActionTypes } from "@store/types/account.types";
-import { createObjAttrsNFT, delay, getPublicCurrentAccount } from "@utils";
+import { createObjAttrsNFT, getPublicCurrentAccount } from "@utils";
 
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import CommonTabs from "../../components/Tabs/CommonTabs";
-
+import CommonTabs from "@components/Tabs/CommonTabs";
+import {
+  BUY,
+  BID,
+  REMOVE_BID,
+  ACCEPT_BID,
+  LIST_TOKEN,
+  UNLIST_TOKEN,
+  LOCK,
+  TRANSFER,
+} from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
+import useForceUpdate from "@hooks/useForceUpdate";
 const NUMBER_PER_PAGE = 10;
 
 function CollectionPage() {
@@ -31,12 +42,11 @@ function CollectionPage() {
   const { currentAccount, api } = useSubstrateState();
 
   const dispatch = useDispatch();
-  const { addNftTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
-  );
+
+  const { actionType } = useTxStatus();
 
   const [loading, setLoading] = useState(null);
-  const [loadingTime, setLoadingTime] = useState(null);
+
   const [tokenUriType1, setTokenUriType1] = useState("");
   const [activeTab, setActiveTab] = useState(tabList.LISTED);
   const [latestBlockNumber, setLatestBlockNumber] = useState(null);
@@ -66,44 +76,8 @@ function CollectionPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagesCount]);
 
-  const forceUpdate = () => {
-    setLoading(false);
-    setLoadingTime(0);
-  };
-
-  useEffect(() => {
-    const forceUpdateAfterCreateNFT = async () => {
-      if (addNftTnxStatus?.status !== "End") {
-        return;
-      }
-
-      const { status, timeStamp, endTimeStamp } = addNftTnxStatus;
-
-      if (status && timeStamp && endTimeStamp) {
-        const diffTime = 9000 - Number(endTimeStamp - timeStamp);
-        const delayTime = diffTime >= 0 ? diffTime : 500;
-
-        setLoading(true);
-
-        setLoadingTime(delayTime / 1000);
-
-        await delay(delayTime).then(() => {
-          dispatch({
-            type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-          });
-          // setFormattedCollection(null);
-          setLoadingTime(null);
-          setLoading(false);
-          setActiveTab(tabList.UNLISTED);
-        });
-      }
-    };
-
-    forceUpdateAfterCreateNFT();
-  }, [addNftTnxStatus, addNftTnxStatus?.status, dispatch, loadingTime]);
-
-  useEffect(() => {
-    const fetchCollectionDetail = async () => {
+  const fetchCollectionDetail = useCallback(
+    async ({ activeTab }) => {
       setLoading(true);
       const NFTListOptions = {
         limit: pageSize,
@@ -171,7 +145,7 @@ function CollectionPage() {
 
         if (collectionDetail?.nft_count === 0) {
           setLoading(false);
-          setLoadingTime(null);
+          // setLoadingTime(null);
           return setFormattedCollection(collectionDetail);
         }
 
@@ -192,7 +166,7 @@ function CollectionPage() {
 
             setFormattedCollection(collectionDetail);
             setLoading(false);
-            setLoadingTime(null);
+            // setLoadingTime(null);
           });
         }
 
@@ -234,25 +208,38 @@ function CollectionPage() {
 
             setFormattedCollection(collectionDetail);
             setLoading(false);
-            setLoadingTime(null);
+            // setLoadingTime(null);
           });
         }
       } catch (error) {
         console.log("error", error);
         toast.error("There was an error while fetching the collections.");
       }
-    };
+    },
+    [api, collection_address, currentAccount, offset, pageSize]
+  );
 
-    !loadingTime && fetchCollectionDetail();
-  }, [
-    api,
-    collection_address,
-    currentAccount,
-    offset,
-    pageSize,
-    loadingTime,
-    activeTab,
-  ]);
+  useEffect(() => {
+    fetchCollectionDetail({ activeTab });
+  }, [fetchCollectionDetail, activeTab]);
+
+  const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
+    [
+      BUY,
+      BID,
+      REMOVE_BID,
+      ACCEPT_BID,
+      LIST_TOKEN,
+      UNLIST_TOKEN,
+      LOCK,
+      TRANSFER,
+    ],
+    () => {
+      actionType === BID && setActiveTab(tabList.LISTED);
+      actionType === REMOVE_BID && setActiveTab(tabList.LISTED);
+      fetchCollectionDetail({ activeTab: tabList.LISTED });
+    }
+  );
 
   const tabsData = [
     {
@@ -262,11 +249,11 @@ function CollectionPage() {
         <TabCollectionItems
           {...formattedCollection}
           offset={offset}
-          loading={loading}
           activeTab={activeTab}
           loadingTime={loadingTime}
-          forceUpdate={forceUpdate}
           setActiveTab={setActiveTab}
+          loading={loading || loadingForceUpdate}
+          forceUpdate={() => fetchCollectionDetail({ activeTab })}
           totalCollectionsCount={totalCollectionsCount}
         />
       ),

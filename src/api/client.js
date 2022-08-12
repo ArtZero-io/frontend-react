@@ -1,8 +1,12 @@
 import axios from "axios";
 import process from "process";
 import { IPFS_BASE_URL } from "@constants/index";
+import { Buffer } from "buffer";
 
+const { create } = require("ipfs-http-client");
 const baseURL = process.env.REACT_APP_API_BASE_URL;
+const projectId = "2DEt23644RzswJNwtdPQNbCVcef";
+const projectKey = "b352ba9d861d026ea80f6083a25b33ed";
 
 export const clientAPI = async (method, url, options) => {
   if (!options) options = {};
@@ -246,3 +250,16 @@ export const APICall = {
     return await client("GET", `/${projectHash}`, {}, IPFS_BASE_URL);
   },
 };
+
+// IPFS API client call
+const authorization =
+  "Basic " + Buffer.from(projectId + ":" + projectKey).toString("base64");
+
+export const ipfsClient = create({
+  host: "ipfs.infura.io",
+  port: 5001,
+  protocol: "https",
+  headers: {
+    authorization,
+  },
+});

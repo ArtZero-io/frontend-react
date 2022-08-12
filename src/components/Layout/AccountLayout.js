@@ -74,6 +74,10 @@ const AccountLayout = ({ children }) => {
                 py={["8px", "20px", "20px"]}
                 fontSize={["md", "lg", "lg"]}
                 fontFamily="Evogria Italic, san serif"
+                _selected={{
+                  color: "#7ae7ff",
+                  borderBottom: "2px #7ae7ff solid",
+                }}
               >
                 {tab.label}
               </Tab>

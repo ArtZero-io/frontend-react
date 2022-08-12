@@ -5,14 +5,14 @@ import ImageUpload from "@components/ImageUpload/Collection";
 import NumberInput from "@components/Input/NumberInput";
 import TextArea from "@components/TextArea/TextArea";
 import { formMode } from "@constants";
-import { IPFS_CLIENT_URL } from "@constants/index";
+
 import { formatBalance } from "@polkadot/util";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 import { useSubstrateState } from "@utils/substrate";
 import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
 
 import { Form, Formik } from "formik";
-import { create } from "ipfs-http-client";
+
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -44,7 +44,7 @@ import {
 import * as ROUTES from "@constants/routes";
 import { getPublicCurrentAccount } from "@utils";
 
-const client = create(IPFS_CLIENT_URL);
+import { ipfsClient } from "@api/client";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
@@ -261,8 +261,13 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 roadmaps: values.roadmap,
               };
 
-              const project_info_ipfs = await client.add(
+              const project_info_ipfs = await ipfsClient.add(
                 JSON.stringify(project_info)
+              );
+
+              console.log(
+                "ADD project_info_ipfs NEED CHECK",
+                project_info_ipfs
               );
               let code_phases = [];
               let start_time_phases = [];
@@ -418,10 +423,13 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     roadmaps: values.roadmap,
                   };
 
-                  const project_info_ipfs = await client.add(
+                  const project_info_ipfs = await ipfsClient.add(
                     JSON.stringify(project_info)
                   );
-
+                  console.log(
+                    "EDIT project_info_ipfs NEED CHECK",
+                    project_info_ipfs
+                  );
                   const launchpad_psp34_nft_standard_contract =
                     new ContractPromise(
                       api,

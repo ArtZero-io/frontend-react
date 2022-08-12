@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Flex,
@@ -20,14 +21,14 @@ import {
   NumberInputField,
   InputRightElement,
   useBreakpointValue,
+  Icon,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { ImLock, ImUnlocked } from "react-icons/im";
 
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link as ReactRouterLink } from "react-router-dom";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 
 import profile_calls from "@utils/blockchain/profile_calls";
 import staking_calls from "@utils/blockchain/staking_calls";
@@ -35,10 +36,11 @@ import marketplace_contract from "@utils/blockchain/marketplace";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
+import marketplace from "@utils/blockchain/marketplace";
 
 import { useSubstrateState } from "@utils/substrate";
 import { ContractPromise } from "@polkadot/api-contract";
-import { getCachedImageShort, truncateStr, delay } from "@utils";
+import { getCachedImageShort, truncateStr } from "@utils";
 import {
   convertStringToPrice,
   createLevelAttribute,
@@ -46,19 +48,23 @@ import {
 } from "@utils";
 
 import { formMode } from "@constants";
-import { AccountActionTypes } from "@store/types/account.types";
 
 import LockNFTModal from "@components/Modal/LockNFTModal";
 import TransferNFTModal from "@components/Modal/TransferNFTModal";
-import StatusBuyButton from "@components/Button/StatusBuyButton";
-import StatusPushForSaleButton from "@components/Button/StatusPushForSaleButton";
 
 import AddNewNFTModal from "@pages/collection/component/Modal/AddNewNFT";
 import {
   fetchMyPMPStakedCount,
   fetchMyTradingFee,
 } from "@pages/account/stakes";
-import { SCROLLBAR } from "../../../../../constants";
+import { SCROLLBAR } from "@constants";
+import { AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
+import useTxStatus from "@hooks/useTxStatus";
+import CommonButton from "@components/Button/CommonButton";
+import { REMOVE_BID, UNLIST_TOKEN, LIST_TOKEN } from "@constants";
+import { clearTxStatus } from "@store/actions/txStatus";
+import { getUsernameOnchain } from "@utils/blockchain/profile_calls";
+import { listToken, unlistToken, removeBid } from "@pages/token";
 
 function MyNFTTabInfo(props) {
   const {
@@ -83,22 +89,25 @@ function MyNFTTabInfo(props) {
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
     useState(false);
 
-  const [stepNo, setStepNo] = useState(0);
   const dispatch = useDispatch();
-  const { addNftTnxStatus } = useSelector((s) => s.account.accountLoaders);
-  const txStatus = useSelector((state) => state.txStatus);
 
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
 
-  const [action, setAction] = useState("");
   const [saleInfo, setSaleInfo] = useState(null);
   const [isBided, setIsBided] = useState(false);
   const [bidPrice, setBidPrice] = useState(0);
-  const [ownerName, setOwnerName] = useState("");
   const [myTradingFee, setMyTradingFee] = useState(null);
+  const [ownerName, setOwnerName] = useState("");
+  const [isOwner, setIsOwner] = useState(false);
+  const [ownerAddress, setOwnerAddress] = useState("");
+   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const doLoad = async () => {
+  const { actionType, tokenIDArray, ...rest } = useTxStatus();
+ 
+  const doLoad = useCallback(async () => {
+    setLoading(true);
+
+    try {
       // remove publicCurrentAccount due to private route
       const sale_info = await marketplace_contract_calls.getNftSaleInfo(
         currentAccount,
@@ -108,6 +117,8 @@ function MyNFTTabInfo(props) {
 
       setSaleInfo(sale_info);
 
+      let accountAddress = owner;
+
       if (sale_info) {
         const listBidder = await marketplace_contract_calls.getAllBids(
           currentAccount,
@@ -116,6 +127,8 @@ function MyNFTTabInfo(props) {
           { u64: tokenID }
         );
 
+        accountAddress = is_for_sale ? sale_info?.nftOwner : owner;
+
         if (listBidder) {
           for (const item of listBidder) {
             if (item.bidder === currentAccount?.address) {
@@ -123,16 +136,30 @@ function MyNFTTabInfo(props) {
               setBidPrice(convertStringToPrice(item.bidValue));
             }
           }
-        } else {
-          // console.log(
-          //   "Detail NFTTabCollectible doLoad. => listBidder is: ",
-          //   listBidder
-          // );
         }
       }
-    };
-    !saleInfo && doLoad();
-  }, [currentAccount, nftContractAddress, saleInfo, tokenID]);
+
+      if (accountAddress === currentAccount?.address) {
+        setIsOwner(true);
+      }
+
+      const name = await getUsernameOnchain({ accountAddress });
+
+      setOwnerAddress(accountAddress);
+      setOwnerName(name);
+
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      toast.error("There is some error when fetching sale info!");
+
+      console.log("error", error);
+    }
+  }, [currentAccount, is_for_sale, nftContractAddress, owner, tokenID]);
+
+  useEffect(() => {
+    doLoad();
+  }, [doLoad]);
 
   useEffect(() => {
     const checkAllowMarketplaceContract = async () => {
@@ -168,146 +195,59 @@ function MyNFTTabInfo(props) {
     dispatch,
   ]);
 
-  // useEffect(() => {
-  //   const checkAllowance = async () => {
-  // const isAllowance = await nft721_psp34_standard_calls.allowance(
-  //   currentAccount,
-  //   currentAccount?.address,
-  //   marketplace_contract.CONTRACT_ADDRESS,
-  //   { u64: tokenID },
-  //   dispatch
-  // );
-  // if (isAllowance) {
-  //   setIsAllowanceMarketplaceContract(true);
-  //   setStepNo(1);
-  // }
-  //   };
-
-  //   checkAllowance();
-  // }, [addNftTnxStatus?.status, currentAccount, dispatch, tokenID]);
-
-  const listToken = async () => {
+  const handleListTokenAction = async () => {
     try {
-      if (owner === currentAccount?.address) {
-        dispatch({
-          type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-          payload: {
-            status: "Start",
-          },
-        });
-
-        const nft721_psp34_standard_contract = new ContractPromise(
-          api,
-          nft721_psp34_standard.CONTRACT_ABI,
-          nftContractAddress
-        );
-
-        nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-
-        const isAllowance = await nft721_psp34_standard_calls.allowance(
-          currentAccount,
-          currentAccount?.address,
-          marketplace_contract.CONTRACT_ADDRESS,
-          { u64: tokenID },
-          dispatch
-        );
-
-        let res;
-        if (!isAllowance) {
-          toast.success("Step 1: Approving NFT transfer...");
-
-          res = await nft721_psp34_standard_calls.approve(
-            currentAccount,
-            marketplace_contract.CONTRACT_ADDRESS,
-            { u64: tokenID },
-            true,
-            dispatch
-          );
-        }
-        if (res || isAllowance) {
-          toast.success(
-            res
-              ? "Step 2: Listing on marketplace..."
-              : "Listing on marketplace..."
-          );
-
-          await delay(2000).then(async () => {
-            await marketplace_contract_calls.list(
-              currentAccount,
-              nftContractAddress,
-              { u64: tokenID },
-              askPrice,
-              dispatch
-            );
-          });
-        }
-      } else {
-        dispatch({
-          type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-        });
-
-        toast.error(`This token is not yours!`);
-      }
+      await listToken(
+        api,
+        currentAccount,
+        isOwner,
+        askPrice,
+        nftContractAddress,
+        nft721_psp34_standard.CONTRACT_ABI,
+        nft721_psp34_standard_calls,
+        marketplace.CONTRACT_ADDRESS,
+        tokenID,
+        dispatch
+      );
     } catch (error) {
-      dispatch({
-        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-      });
-      console.log(error);
+      console.error(error);
       toast.error(error.message);
+      dispatch(clearTxStatus());
     }
   };
 
-  const unlistToken = async () => {
+  const handleUnlistTokenAction = async () => {
     try {
-      dispatch({
-        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-        payload: {
-          status: "Start",
-        },
-      });
-
-      await marketplace_contract_calls.unlist(
+      await unlistToken(
+        api,
         currentAccount,
+        isOwner,
         nftContractAddress,
-        currentAccount.address,
-        { u64: tokenID },
+        tokenID,
         dispatch
       );
+      setAskPrice(1);
     } catch (error) {
-      dispatch({
-        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-      });
-
-      toast.error(`Error `, error);
+      console.error(error);
+      toast.error(error.message);
+      dispatch(clearTxStatus());
     }
   };
 
-  const removeBid = async () => {
+  const handleRemoveBidAction = async () => {
     try {
-      setAction("remove bid");
-
-      dispatch({
-        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-        payload: {
-          status: "Start",
-        },
-      });
-
-      await marketplace_contract_calls.removeBid(
+      await removeBid(
+        api,
         currentAccount,
         nftContractAddress,
-        saleInfo.nftOwner,
-        { u64: tokenID },
+        ownerAddress,
+        tokenID,
         dispatch
       );
-      // setIsBided(false);
-      // setBidPrice(0);
     } catch (error) {
-      dispatch({
-        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-      });
-      setAction("");
-      toast.error(error);
+      console.error(error);
+      toast.error(error.message);
+      dispatch(clearTxStatus());
     }
   };
 
@@ -362,7 +302,7 @@ function MyNFTTabInfo(props) {
         </Square>
 
         <Stack alignItems="flex-start" w="full">
-          <HStack>
+          <HStack w="full">
             <Heading
               color="#fff"
               size="h4"
@@ -371,28 +311,42 @@ function MyNFTTabInfo(props) {
               {nftName}
             </Heading>
 
+            <Spacer />
+
             <HStack
-              pos="absolute"
-              top={{
-                base: `20px`,
-                xl: `20px`,
-              }}
-              right={{
-                base: `20px`,
-                xl: `20px`,
-              }}
+            // pos="absolute"
+            // top={{
+            //   base: `20px`,
+            //   xl: `20px`,
+            // }}
+            // right={{
+            //   base: `20px`,
+            //   xl: `20px`,
+            // }}
             >
+              <Spacer />
               {!is_locked &&
                 showOnChainMetadata &&
                 owner !== currentAccount?.address && (
                   <Tooltip
                     hasArrow
+                    bg="#333"
+                    color="#fff"
                     label="Unlocked on-chain metadata"
-                    bg="gray.300"
-                    color="black"
                   >
-                    <span>
-                      <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
+                    <span
+                      style={{
+                        padding: "6px",
+                        display: "flex",
+                        alignItems: "center",
+                        border: "2px solid #333333",
+                      }}
+                    >
+                      <Icon
+                        width={{ base: "14px", "2xl": "20px" }}
+                        height={{ base: "14px", "2xl": "20px" }}
+                        as={AiOutlineUnlock}
+                      />
                     </span>
                   </Tooltip>
                 )}
@@ -400,12 +354,23 @@ function MyNFTTabInfo(props) {
               {!is_locked && !showOnChainMetadata && (
                 <Tooltip
                   hasArrow
+                  bg="#333"
+                  color="#fff"
                   label="Off-chain metadata"
-                  bg="gray.300"
-                  color="black"
                 >
-                  <span>
-                    <TagRightIcon ml="6px" as={ImUnlocked} size="22px" />
+                  <span
+                    style={{
+                      padding: "6px",
+                      display: "flex",
+                      alignItems: "center",
+                      border: "2px solid #333333",
+                    }}
+                  >
+                    <Icon
+                      width={{ base: "14px", "2xl": "20px" }}
+                      height={{ base: "14px", "2xl": "20px" }}
+                      as={AiOutlineUnlock}
+                    />
                   </span>
                 </Tooltip>
               )}
@@ -413,34 +378,46 @@ function MyNFTTabInfo(props) {
               {is_locked && showOnChainMetadata && (
                 <Tooltip
                   hasArrow
+                  bg="#333"
+                  color="#fff"
                   label="Locked on-chain metadata"
-                  bg="gray.300"
-                  color="black"
                 >
-                  <span>
-                    <TagRightIcon ml="6px" as={ImLock} size="22px" />
+                  <span
+                    style={{
+                      padding: "6px",
+                      display: "flex",
+                      alignItems: "center",
+                      border: "2px solid #333333",
+                    }}
+                  >
+                    <Icon
+                      width={{ base: "14px", "2xl": "20px" }}
+                      height={{ base: "14px", "2xl": "20px" }}
+                      as={AiOutlineLock}
+                    />
                   </span>
                 </Tooltip>
               )}
 
               {!is_locked && owner === currentAccount?.address && (
-                <LockNFTModal {...props} isDisabled={addNftTnxStatus} />
+                <LockNFTModal {...props} isDisabled={actionType} />
               )}
+
+              {!is_locked &&
+                showOnChainMetadata &&
+                owner === currentAccount.address && (
+                  <AddNewNFTModal
+                    {...props}
+                    mode={formMode.EDIT}
+                    collectionOwner={owner}
+                    isDisabled={actionType}
+                  />
+                )}
+
               {owner === currentAccount?.address && (
-                <TransferNFTModal {...props} isDisabled={addNftTnxStatus} />
+                <TransferNFTModal {...props} isDisabled={actionType} />
               )}
             </HStack>
-
-            {!is_locked &&
-              showOnChainMetadata &&
-              owner === currentAccount.address && (
-                <AddNewNFTModal
-                  mode={formMode.EDIT}
-                  {...props}
-                  collectionOwner={owner}
-                  isDisabled={addNftTnxStatus || txStatus?.lockStatus}
-                />
-              )}
           </HStack>
 
           <Stack>
@@ -635,7 +612,7 @@ function MyNFTTabInfo(props) {
                 <Spacer />
                 <NumberInput
                   // maxW={32}
-                  isDisabled={addNftTnxStatus?.status || txStatus?.lockStatus}
+                  isDisabled={actionType}
                   bg="black"
                   max={999000000}
                   min={1}
@@ -655,18 +632,24 @@ function MyNFTTabInfo(props) {
                     <AzeroIcon />
                   </InputRightElement>
                 </NumberInput>
-
-                <StatusPushForSaleButton
-                  isAllowanceMpContract={isAllowanceMarketplaceContract}
-                  type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                <CommonButton
+                  mx="0"
+                  {...rest}
                   text="push for sale"
-                  isLoading={addNftTnxStatus}
-                  loadingText={`${addNftTnxStatus?.status}`}
+                  onClick={handleListTokenAction}
+                  isDisabled={actionType && actionType !== LIST_TOKEN}
+                />
+                {/* <StatusPushForSaleButton
+                  isAllowanceMpContract={isAllowanceMarketplaceContract}
+                  type={AccountActionTypes. }
+                  text="push for sale"
+                  isLoading={actionType}
+                  loadingText={`${actionType?.status}`}
                   stepNo={stepNo}
                   setStepNo={setStepNo}
                   listToken={listToken}
-                  isDisabled={txStatus?.lockStatus || addNftTnxStatus}
-                />
+                  isDisabled={txStatus?.lockStatus || actionType}
+                /> */}
               </Flex>
             )}
 
@@ -693,12 +676,13 @@ function MyNFTTabInfo(props) {
                     </Text>
                     <AzeroIcon />
                   </Flex>
-                  <StatusPushForSaleButton
-                    type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
-                    text="remove from sale"
-                    isLoading={addNftTnxStatus}
-                    loadingText={`${addNftTnxStatus?.status}`}
-                    unlistToken={unlistToken}
+
+                  <CommonButton
+                    mx="0"
+                    {...rest}
+                    text="cancel sale"
+                    onClick={handleUnlistTokenAction}
+                    isDisabled={actionType && actionType !== UNLIST_TOKEN}
                   />
                 </Flex>
               )}
@@ -711,13 +695,15 @@ function MyNFTTabInfo(props) {
                   alignItems="center"
                   justifyContent="start"
                 >
-                  <StatusBuyButton
-                    isDo={action === "remove bid"}
-                    type={AccountActionTypes.SET_ADD_NFT_TNX_STATUS}
+                  {" "}
+                  <CommonButton
+                    mx="0"
+                    px="2px"
+                    h="40px"
+                    {...rest}
                     text="remove bid"
-                    isLoading={addNftTnxStatus}
-                    loadingText={`${addNftTnxStatus?.status}`}
-                    onClick={removeBid}
+                    onClick={handleRemoveBidAction}
+                    isDisabled={actionType && actionType !== REMOVE_BID}
                   />
                   <Flex textAlign="right" color="brand.grayLight">
                     <Text ml={4} mr={1} my="auto">

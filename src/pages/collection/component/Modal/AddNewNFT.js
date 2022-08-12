@@ -12,27 +12,20 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import AddNewNFTForm from "../Form/AddNewNFT";
-import { onCloseButtonModal } from "@utils";
-import { AccountActionTypes } from "@store/types/account.types";
 import EditIcon from "@theme/assets/icon/Edit.js";
-import { formMode } from "@constants";
-import { SCROLLBAR } from "../../../../constants";
+import { formMode, SCROLLBAR, END, FINALIZED } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
 
 const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const dispatch = useDispatch();
-
-  const { addNftTnxStatus } = useSelector(
-    (state) => state.account.accountLoaders
-  );
+  const { actionType, step, onEndClick } = useTxStatus();
+  const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
+  const iconBorderSize = useBreakpointValue({ base: "6px", "2xl": "10px" });
 
   useEffect(() => {
-    addNftTnxStatus?.status === "End" && onClose();
-  }, [onClose, addNftTnxStatus?.status]);
-
-  const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
+    step === END && onClose();
+  }, [step, onClose]);
 
   return (
     <>
@@ -53,16 +46,20 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
             label="Edit NFT"
           >
             <span
-              onClick={() => onOpen()}
+              onClick={isDisabled || actionType ? () => {} : onOpen}
               style={{
-                padding: "6px",
+                padding: iconBorderSize,
                 display: "flex",
                 cursor: "pointer",
                 alignItems: "center",
                 border: "2px solid #333333",
               }}
             >
-              <EditIcon width="14px" height="14px" color="currentColor" />
+              <EditIcon
+                width={{ base: "14px", "2xl": "20px" }}
+                height={{ base: "14px", "2xl": "20px" }}
+                color="currentColor"
+              />
             </span>
           </Tooltip>
         </>
@@ -96,13 +93,7 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
             position="absolute"
             top={["0", "-8", "-8"]}
             right={["0", "-8", "-8"]}
-            onClick={() =>
-              onCloseButtonModal({
-                status: addNftTnxStatus?.status,
-                dispatch,
-                type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-              })
-            }
+            onClick={() => step === FINALIZED && onEndClick()}
           />
           <ModalHeader>
             <Heading fontSize={["2xl", "3xl", "3xl"]} my={2}>

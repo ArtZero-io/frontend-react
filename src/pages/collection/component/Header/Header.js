@@ -100,7 +100,7 @@ function CollectionHeader({
                     justifyContent="space-between"
                     minH={{ base: "3.5rem", "2xl": "7.125rem" }}
                   >
-                    <Heading
+                    <Heading px='4px'
                       color="#fff"
                       noOfLines={[2, 2]}
                       fontSize={["32px", "48px", "48px"]}

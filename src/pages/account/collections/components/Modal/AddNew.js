@@ -1,8 +1,7 @@
 import {
   Button,
   Heading,
-  // IconButton,
-  Modal,
+   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -18,8 +17,7 @@ import SimpleMode from "./SimpleMode";
 
 import AddCollectionIcon from "@theme/assets/icon/AddCollection";
 import { useEffect } from "react";
-// import { EditIcon } from "@chakra-ui/icons";
-import { formMode, END } from "@constants";
+ import { formMode, END } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 
 function AddNewCollection({ mode = formMode.ADD, id }) {

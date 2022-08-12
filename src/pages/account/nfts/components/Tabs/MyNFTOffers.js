@@ -4,41 +4,36 @@ import { useSubstrateState } from "@utils/substrate";
 import CommonTable from "@components/Table/Table";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import { AccountActionTypes } from "@store/types/account.types";
+import { Text } from "@chakra-ui/react";
 
-function MyNFTTabOffers({ nftContractAddress, tokenID }) {
-  const [bidders, setBidders] = useState([]);
-  const { currentAccount } = useSubstrateState();
-  const headers = ["Address", "Time", "Price", "Action"];
-  const [saleInfo, setSaleInfo] = useState({});
+import { clearTxStatus } from "@store/actions/txStatus";
+import { acceptBid } from "@pages/token";
+
+function MyNFTOffer({ nftContractAddress, tokenID }) {
+  const { currentAccount, api } = useSubstrateState();
   const dispatch = useDispatch();
-  const [idSelected, setIdSelected] = useState(null);
 
-  const acceptBid = async (bidId) => {
-    if (currentAccount.address === saleInfo.nftOwner) {
-      setIdSelected(bidId);
+  const [bidders, setBidders] = useState(null);
+  const [saleInfo, setSaleInfo] = useState({});
+  const [isOwner, setIsOwner] = useState(false);
 
-      dispatch({
-        type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-        payload: {
-          status: "Start",
-        },
-      });
+  const headers = ["address", "time", "price", "action"];
 
-      await marketplace_contract_calls.acceptBid(
+  const handleAcceptBidAction = async (bidId) => {
+    try {
+      await acceptBid(
+        api,
         currentAccount,
+        isOwner,
         nftContractAddress,
-        saleInfo.nftOwner,
-        { u64: tokenID },
+        tokenID,
         bidId,
         dispatch
       );
-    } else {
-      dispatch({
-        type: AccountActionTypes.CLEAR_ADD_NFT_TNX_STATUS,
-      });
-      setIdSelected(null);
-      toast.error(`You not owner of token`);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      dispatch(clearTxStatus());
     }
   };
 
@@ -49,34 +44,69 @@ function MyNFTTabOffers({ nftContractAddress, tokenID }) {
         nftContractAddress,
         { u64: tokenID }
       );
-
       setSaleInfo(sale_info);
 
       if (sale_info) {
-        const listBidder = await marketplace_contract_calls.getAllBids(
+        const ownerAddress = sale_info?.isForSale
+          ? sale_info?.nftOwner
+          : sale_info?.owner;
+
+        if (ownerAddress === currentAccount?.address) {
+          setIsOwner(true);
+        }
+
+        let listBidder = await marketplace_contract_calls.getAllBids(
           currentAccount,
           nftContractAddress,
           sale_info?.nftOwner,
           { u64: tokenID }
         );
 
-        setBidders(listBidder);
+        // map array index to bidId
+        listBidder = listBidder.map((i, idx) => {
+          return { ...i, bidId: idx };
+        });
+
+        //sort highest price first
+        listBidder?.length &&
+          listBidder.sort((a, b) => {
+            return (
+              b.bidValue.replaceAll(",", "") * 1 -
+              a.bidValue.replaceAll(",", "") * 1
+            );
+          });
+
+        listBidder ? setBidders(listBidder) : setBidders([]);
       }
     };
 
     fetchBidder();
   }, [currentAccount, nftContractAddress, tokenID]);
 
+  if (!currentAccount) {
+    return (
+      <Text textAlign="center" py="2rem">
+        Please connect wallet first!{" "}
+      </Text>
+    );
+  }
+
   return (
-    <CommonTable
-      idSelected={idSelected}
-      tableHeaders={headers}
-      tableData={bidders}
-      saleInfo={saleInfo}
-      onClickHandler={acceptBid}
-      isOwner={currentAccount?.address === saleInfo?.nftOwner}
-    />
+    <>
+      {bidders?.length === 0 ? (
+        <Text textAlign="center" py="2rem">
+          There is no bid yet.
+        </Text>
+      ) : (
+        <CommonTable
+          tableHeaders={headers}
+          tableData={bidders}
+          onClickHandler={handleAcceptBidAction}
+          isOwner={currentAccount?.address === saleInfo?.nftOwner}
+        />
+      )}
+    </>
   );
 }
 
-export default MyNFTTabOffers;
+export default MyNFTOffer;
