@@ -264,7 +264,7 @@ async function getPhaseAccountLinkByPhaseId(caller_account, phaseId, index) {
 }
 
 async function getProjectInfoByHash(ipfsHash) {
-  const ipfsUrl = `https://ipfs.infura.io/ipfs/${ipfsHash}`;
+  const ipfsUrl = `https://artzeronft.infura-ipfs.io/ipfs/${ipfsHash}`;
   const projecInfoRes = await clientAPI("get", ipfsUrl, {});
   return projecInfoRes;
 }

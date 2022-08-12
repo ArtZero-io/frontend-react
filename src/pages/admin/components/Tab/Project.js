@@ -82,7 +82,8 @@ import {
           launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
           const projectInfoHash = await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
           console.log(projectInfoHash);
-          const projectInfo = await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(projectInfoHash);;
+          console.log('xxx');
+          const projectInfo = await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(projectInfoHash);
           console.log('projectInfo', projectInfo);
           const currentTime = Date.now();
           let projectTypeLabel = 'live';
