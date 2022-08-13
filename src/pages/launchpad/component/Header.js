@@ -6,9 +6,9 @@ import {
   Flex,
   Heading,
   HStack,
+  IconButton,
   Image,
   Skeleton,
-  Spacer,
   Stack,
   Text,
   useDisclosure,
@@ -27,7 +27,7 @@ import { useSubstrateState } from "@utils/substrate";
 import UpdateURIModal from "./Modal/UpdateURIModal";
 import UpdatePhasesModal from "./Modal/UpdatePhasesModal";
 import { getUsernameOnchain } from "@utils/blockchain/profile_calls";
-import { MdOutlineArrowBackIos } from "react-icons/md";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 
 function LaunchpadDetailHeader({
   project,
@@ -35,7 +35,6 @@ function LaunchpadDetailHeader({
   collection_address,
   loading,
 }) {
-  {console.log("LaunchpadDetailHeader::project", project)}
   const [livePhase, setLivePhase] = useState({});
   const { phases, projectOwner } = project;
   const [countDownTimer, setCountDownTimer] = useState({});
@@ -129,40 +128,39 @@ function LaunchpadDetailHeader({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                {" "}
-                <HStack
-                  ml="-70px"
-                  h="full"
-                  px="4px"
-                  py="10px"
-                  display="flex"
-                  cursor="pointer"
-                  maxW="max-content"
-                  alignItems="center"
-                  onClick={() => history.goBack()}
-                  _hover={{ bg: "#7ae7ff", color: "black" }}
-                >
-                  <MdOutlineArrowBackIos />
-                  <Text fontFamily="Evogria, sans-serif" size="h6" pl="8px">
-                    GO BACK{" "}
-                  </Text>
-                  <Spacer />
-                </HStack>
                 <VStack
+                  pt="30px"
                   textAlign="center"
                   justifyContent="space-between"
                   minH={{ base: "3.5rem", "2xl": "7.125rem" }}
                 >
-                  {" "}
-                  <Heading
-                    color="#fff"
-                    fontSize={["32px", "48px", "48px"]}
-                    lineHeight={["38px", "60px", "60px"]}
-                    minH={{ base: "2.5rem", "2xl": "3.75rem" }}
-                    pt="30px"
-                  >
-                    {project.name}{" "}
-                  </Heading>
+                  <HStack w="full" pos="relative">
+                    <Heading
+                      w="full"
+                      color="#fff"
+                      fontSize={["32px", "48px", "48px"]}
+                      lineHeight={["38px", "60px", "60px"]}
+                    >
+                      {project.name}{" "}
+                    </Heading>
+
+                    <IconButton
+                      pos="absolute"
+                      left="0"
+                      top="5px"
+                      onClick={() => history.goBack()}
+                      variant="iconOutline"
+                      width={["40px", "50px"]}
+                      height={["40px", "50px"]}
+                      icon={<ArrowBackIcon fontSize="2xl" />}
+                      _hover={{
+                        bg: "brand.blue",
+                        color: "black",
+                        borderWidth: "0",
+                      }}
+                    />
+                  </HStack>
+
                   <Heading py="15px" fontSize={["sm", "md", "md"]}>
                     Project creator:{" "}
                     <Text as="span" color="#7ae7ff">
@@ -204,15 +202,16 @@ function LaunchpadDetailHeader({
                       )}{" "}
                   </Stack>
                   <Flex
+                    pb="40px"
                     alignItems="start"
                     color="#fff"
                     w="full"
                     justifyContent="space-between"
                     maxW="730px"
                     fontSize={["15px", "18px", "18px"]}
-                    minH={{ base: "120px", "2xl": "120px" }}
+                    // minH={{ base: "120px", "2xl": "120px" }}
                   >
-                    <Text>{project.description}</Text>
+                    <Text noOfLines={[3, 3]}>{project.description}</Text>
                   </Flex>
                   <Flex
                     color="#888"
@@ -278,7 +277,7 @@ function LaunchpadDetailHeader({
                 flexWrap={["wrap", "noWrap", "noWrap"]}
                 color="brand.blue"
                 maxW="680px"
-                maxH={["260px", "260px", "260px"]}
+                maxH="110px"
                 h={["full", "full", "full"]}
                 borderWidth={2}
                 borderColor="brand.blue"
@@ -390,7 +389,13 @@ function LaunchpadDetailHeader({
       )}
 
       {!loading && (
-        <VStack>
+        <VStack
+          pt="15px"
+          top="0"
+          right="100px"
+          w={["full", "auto"]}
+          position={{ base: "unset", xl: "absolute" }}
+        >
           <SocialCard
             profile={[
               { website: "https://twitter.com/ArtZero_io" },
@@ -403,13 +408,13 @@ function LaunchpadDetailHeader({
 
       <UpdateURIModal
         isOpen={isOpenURI}
-        collection_address={collection_address}
         onClose={onCloseURI}
+        collection_address={collection_address}
       />
       <UpdatePhasesModal
         isOpen={isOpenPhase}
-        collection_address={collection_address}
         onClose={onClosePhase}
+        collection_address={collection_address}
       />
     </Box>
   );

@@ -339,7 +339,15 @@ async function editProjectInformation(
   return unsubscribe;
 }
 
-async function publicMint(caller_account, phaseId, mintingFee, mintAmount) {
+async function publicMint(
+  caller_account,
+  phaseId,
+  mintingFee,
+  mintAmount,
+  dispatch,
+  txType,
+  api
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -359,30 +367,31 @@ async function publicMint(caller_account, phaseId, mintingFee, mintAmount) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Add Whitelist ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
-async function whitelistMint(caller_account, phaseId, amount, minting_fee) {
+async function whitelistMint(
+  caller_account,
+  phaseId,
+  amount,
+  minting_fee,
+  dispatch,
+  txType,
+  api
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -391,38 +400,36 @@ async function whitelistMint(caller_account, phaseId, amount, minting_fee) {
 
   const address = caller_account?.address;
   const gasLimit = -1;
+
   console.log("whitelistMint::minting_fee", minting_fee);
+
   const azero_value = new BN(minting_fee / 10 ** 6)
     .mul(new BN(10 ** 6))
     .toString();
+
   const injector = await web3FromSource(caller_account?.meta?.source);
+
   console.log("whitelistMint::azero_value", azero_value);
+
   contract.tx
     .whitelistMint({ gasLimit, value: azero_value }, phaseId, amount)
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Add Whitelist ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
@@ -791,7 +798,7 @@ const launchpad_psp34_nft_standard_calls = {
   updateWhitelist,
   addNewPhase,
   updateSchedulePhase,
-  getAdminAddress
+  getAdminAddress,
 };
 
 export default launchpad_psp34_nft_standard_calls;
