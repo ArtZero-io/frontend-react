@@ -235,7 +235,7 @@ const LaunchpadDetailPage = () => {
               "projectDetail diff",
               fetchEndBeforeLoopNo2 - fetchStart
             );
-
+              console.log('totalTokenSupply', totalTokenSupply);
             for (let tokenID = 1; tokenID <= totalTokenSupply; tokenID++) {
               let owner = await launchpad_psp34_nft_standard_calls.ownerOf(
                 currentAccount,
@@ -257,6 +257,7 @@ const LaunchpadDetailPage = () => {
               "projectDetail diff",
               fetchEndAfterLoopNo2 - fetchStart
             );
+            console.log('myNFTsTmp', myNFTsTmp);
             setMyNFTs(myNFTsTmp);
 
             console.log("After Set My NFTS");
@@ -652,7 +653,6 @@ const LaunchpadDetailPage = () => {
               templateColumns={`repeat(auto-fill, minmax(min(100%, 250px), 1fr))`}
               gap="30px"
             >
-              {console.log("myNFTs", myNFTs)}
               {myNFTs && myNFTs.length
                 ? myNFTs.map((item, idx) => (
                     <GridItem>

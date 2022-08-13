@@ -25,6 +25,7 @@ import * as ROUTES from "@constants/routes";
 import { useHistory } from "react-router-dom";
 import { useSubstrateState } from "@utils/substrate";
 import UpdateURIModal from "./Modal/UpdateURIModal";
+import UpdateAdminAddressModal from "./Modal/UpdateAdminAddressModal";
 import UpdatePhasesModal from "./Modal/UpdatePhasesModal";
 import { getUsernameOnchain } from "@utils/blockchain/profile_calls";
 import { MdOutlineArrowBackIos } from "react-icons/md";
@@ -37,7 +38,7 @@ function LaunchpadDetailHeader({
 }) {
   {console.log("LaunchpadDetailHeader::project", project)}
   const [livePhase, setLivePhase] = useState({});
-  const { phases, projectOwner } = project;
+  const { phases, projectOwner, projectAdminAddress } = project;
   const [countDownTimer, setCountDownTimer] = useState({});
   const [ownerName, setOwnerName] = useState(null);
 
@@ -54,6 +55,13 @@ function LaunchpadDetailHeader({
     onOpen: onOpenPhase,
     onClose: onClosePhase,
   } = useDisclosure();
+
+  const {
+    isOpen: isOpenUpdateAdminAddressModal,
+    onOpen: onOpenUpdateAdminAddressModal,
+    onClose: onCloseUpdateAdminAddressModal,
+  } = useDisclosure();
+  
 
   useEffect(() => {
     if (phases?.length > 0) {
@@ -170,9 +178,30 @@ function LaunchpadDetailHeader({
                     </Text>
                   </Heading>
                   <Stack alignItems="center" direction="row">
+                  {currentAccount &&
+                      currentAccount.address &&
+                      projectOwner === currentAccount.address &&
+                      <>
+                      <Button
+                      px="16px"
+                      variant="outline"
+                      onClick={() => onOpenURI()}
+                    >
+                      update base uri
+                    </Button>
+                    <Button
+                    px="16px"
+                    variant="outline"
+                    onClick={() => onOpenUpdateAdminAddressModal()}
+                  >
+                    update admin address
+                  </Button>
+                  </>
+                  }
+                 
                     {currentAccount &&
                       currentAccount.address &&
-                      projectOwner === currentAccount.address && (
+                      projectAdminAddress === currentAccount.address && (
                         <>
                           <Button
                             px="16px"
@@ -185,13 +214,6 @@ function LaunchpadDetailHeader({
                             }
                           >
                             edit project information
-                          </Button>
-                          <Button
-                            px="16px"
-                            variant="outline"
-                            onClick={() => onOpenURI()}
-                          >
-                            update base uri
                           </Button>
                           <Button
                             px="16px"
@@ -405,6 +427,11 @@ function LaunchpadDetailHeader({
         isOpen={isOpenURI}
         collection_address={collection_address}
         onClose={onCloseURI}
+      />
+      <UpdateAdminAddressModal
+        isOpen={isOpenUpdateAdminAddressModal}
+        collection_address={collection_address}
+        onClose={onCloseUpdateAdminAddressModal}
       />
       <UpdatePhasesModal
         isOpen={isOpenPhase}

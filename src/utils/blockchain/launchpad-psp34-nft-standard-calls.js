@@ -339,6 +339,48 @@ async function editProjectInformation(
   return unsubscribe;
 }
 
+async function mint(caller_account, phaseId, mintAmount) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+  contract.tx
+    .mint({ gasLimit, value: azero_value }, phaseId, mintAmount)
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            toast.error(`There is some error with your request`);
+          } else {
+            console.log("dispatchError", dispatchError.toString());
+          }
+        }
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+          toast.success(
+            `Add Whitelist ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
+  return unsubscribe;
+}
+
+
 async function publicMint(caller_account, phaseId, mintingFee, mintAmount) {
   if (!contract || !caller_account) {
     return null;
@@ -442,6 +484,43 @@ async function getProjectInfo(caller_account) {
     return output.toHuman();
   }
   return null;
+}
+
+
+async function updateAdminAddress(caller_account, adminAddress, dispatch, txType, api) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+  console.log(contract);
+  contract.tx.updateAdminAddress(
+    { gasLimit, value: azero_value },
+    adminAddress
+  )
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
+  return unsubscribe;
 }
 
 async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
@@ -791,7 +870,9 @@ const launchpad_psp34_nft_standard_calls = {
   updateWhitelist,
   addNewPhase,
   updateSchedulePhase,
-  getAdminAddress
+  getAdminAddress,
+  updateAdminAddress,
+  mint
 };
 
 export default launchpad_psp34_nft_standard_calls;

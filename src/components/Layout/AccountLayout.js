@@ -41,6 +41,11 @@ const AccountLayout = ({ children }) => {
       isDisabled: false,
       route: ROUTES.ACCOUNT_WHITELIST_PROJECTS,
     },
+    {
+      label: "Minting Manager",
+      isDisabled: false,
+      route: ROUTES.ACCOUNT_MINTING_PROJECTS,
+    },
   ];
 
   const handleTabsChange = (index) => {

@@ -10,7 +10,7 @@ export const ACCOUNT_MY_STAKES = "/account/stakes";
 export const ACCOUNT_ADMIN = "/admin";
 export const ACCOUNT_MY_PROJECTS = "/account/projects";
 export const ACCOUNT_WHITELIST_PROJECTS = "/account/projects/whitelist";
-
+export const ACCOUNT_MINTING_PROJECTS = "/account/projects/minting";
 // COLLECTION
 
 export const DETAIL_COLLECTION = "/collection/:collection_address";

@@ -23,6 +23,7 @@ import LaunchpadDetailPage from "../pages/launchpad/detail";
 import AddProject from "../pages/launchpad/add-project";
 import MyProjectsPage from "@pages/account/projects";
 import MyWhiteListProjectPage from "@pages/account/projects/whitelist";
+import MyMintingProjectPage from "@pages/account/projects/minting";
 import NftDetailPage from "../pages/token/";
 // import NotFound from "./NotFound/NotFound";
 // import MintLayout from "./Layout/MintLayout";
@@ -56,6 +57,11 @@ const Router = () => {
               exact
               path={ROUTES.ACCOUNT_WHITELIST_PROJECTS}
               component={MyWhiteListProjectPage}
+            />
+            <Route
+              exact
+              path={ROUTES.ACCOUNT_MINTING_PROJECTS}
+              component={MyMintingProjectPage}
             />
           </AccountLayout>
         )}
