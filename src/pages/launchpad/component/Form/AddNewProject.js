@@ -325,7 +325,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               if (mode === formMode.ADD) {
                 const createNewCollection = async (nft_address) => {
                   setNewNFTAddress(nft_address);
-                  console.log("createNewCollection nft_address", nft_address);
+                  console.log("ADD createNewCollection nft_address", nft_address);
                   // Lay gia tri nft_address tu launchpad_contract_calls roi tao collection
                   const collectionData = {
                     nftContractAddress: nft_address,

@@ -16,7 +16,7 @@ import {
   NumberInputField,
   NumberInputStepper,
   NumberIncrementStepper,
-  NumberDecrementStepper
+  NumberDecrementStepper,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
@@ -31,12 +31,18 @@ import { useSubstrateState } from "@utils/substrate";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
-import { timestampWithoutCommas, convertNumberWithoutCommas, convertStringToPrice } from "@utils";
+import {
+  timestampWithoutCommas,
+  convertNumberWithoutCommas,
+  convertStringToPrice,
+} from "@utils";
 import { Interweave } from "interweave";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import BN from "bn.js";
 import toast from "react-hot-toast";
 // import ModalLoader from "@components/Loader/ModalLoader";
+// eslint-disable-next-line no-unused-vars
+import { getPublicCurrentAccount } from "@utils";
 
 const LaunchpadDetailPage = () => {
   const [formattedCollection, setFormattedCollection] = useState({});
@@ -137,15 +143,34 @@ const LaunchpadDetailPage = () => {
                 i
               );
             let maxMinting = 0;
-            if (Number(convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)) > 0 && phaseSchedule.publicMaxMintingAmount) {
-              let remainAmount = Number(convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)) - Number(convertNumberWithoutCommas(phaseSchedule.claimedAmount));
-              if (Number(convertNumberWithoutCommas(phaseSchedule.publicMaxMintingAmount)) > remainAmount) {
+            if (
+              Number(
+                convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
+              ) > 0 &&
+              phaseSchedule.publicMaxMintingAmount
+            ) {
+              let remainAmount =
+                Number(
+                  convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
+                ) -
+                Number(convertNumberWithoutCommas(phaseSchedule.claimedAmount));
+              if (
+                Number(
+                  convertNumberWithoutCommas(
+                    phaseSchedule.publicMaxMintingAmount
+                  )
+                ) > remainAmount
+              ) {
                 maxMinting = remainAmount;
               } else {
-                maxMinting = Number(convertNumberWithoutCommas(phaseSchedule.publicMaxMintingAmount));
+                maxMinting = Number(
+                  convertNumberWithoutCommas(
+                    phaseSchedule.publicMaxMintingAmount
+                  )
+                );
               }
             }
-            console.log('phaseSchedule::148', phaseSchedule);
+            console.log("phaseSchedule::148", phaseSchedule);
             const phaseInfo = {
               id: i,
               code: phaseCode,
@@ -155,10 +180,14 @@ const LaunchpadDetailPage = () => {
               totalWhiteList: totalWhiteListPhase ? totalWhiteListPhase : 0,
               publicPhase: phaseSchedule.isPublic,
               whitelist: whiteListData,
-              publicMintingAmount: Number(convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)),
+              publicMintingAmount: Number(
+                convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
+              ),
               publicMaxMintingAmount: maxMinting,
               publicMintingFee: phaseSchedule.publicMintingFee,
-              claimedAmount: Number(convertNumberWithoutCommas(phaseSchedule.claimedAmount))
+              claimedAmount: Number(
+                convertNumberWithoutCommas(phaseSchedule.claimedAmount)
+              ),
             };
 
             phasesTmp.push(phaseInfo);
@@ -192,7 +221,10 @@ const LaunchpadDetailPage = () => {
             fetchEndAfterLoopNo1
           );
           console.log("projectDetail diff", fetchEndAfterLoopNo1 - fetchStart);
-          const projectAdminAddress = await launchpad_psp34_nft_standard_calls.getAdminAddress(currentAccount);
+          const projectAdminAddress =
+            await launchpad_psp34_nft_standard_calls.getAdminAddress(
+              currentAccount
+            );
           console.log(projectAdminAddress);
           const projectDetail = {
             name: projectInfo.name,
@@ -206,7 +238,6 @@ const LaunchpadDetailPage = () => {
             projectAdminAddress: projectAdminAddress,
             ...project,
             ...projectInfo,
-
           };
 
           setFormattedCollection(projectDetail);
@@ -300,6 +331,7 @@ const LaunchpadDetailPage = () => {
   };
 
   const onWhiteListMint = async () => {
+    console.log("onWhiteListMint...");
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
       api,
       launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -321,8 +353,9 @@ const LaunchpadDetailPage = () => {
   const onPublicMint = async () => {
     const { data } = await api.query.system.account(currentAccount.address);
     const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
-    const mintingFee = mintingAmount * convertStringToPrice(currentPhase.publicMintingFee);
-    
+    const mintingFee =
+      mintingAmount * convertStringToPrice(currentPhase.publicMintingFee);
+
     if (balance < mintingFee + 0.01) {
       toast.error("Not enough balance to mint");
       return;
@@ -370,36 +403,58 @@ const LaunchpadDetailPage = () => {
             my="30px"
           >
             <Flex w="full" mb="15px">
-              <Heading size="h6">Public Sale In Progress</Heading>
-
+              <Heading size="h6">
+                {!currentPhase?.code ? (
+                  <>upcoming</>
+                ) : (
+                  <>
+                    <Text as="span" color="#7ae7ff">
+                      {currentPhase?.code}
+                    </Text>{" "}
+                    in progress
+                  </>
+                )}
+              </Heading>
+              {console.log("totalWhitelistAmount", totalWhitelistAmount)}{" "}
+              {console.log(
+                "totalWhitelistAmount != 0",
+                parseInt(totalWhitelistAmount) === 0
+              )}{" "}
               <Spacer />
-              {!currentPhase.publicPhase && totalWhitelistAmount != 0 ? (
+              {/*
+               Not in Public phase
+              */}
+              {!currentPhase.publicPhase && (
                 <Text color="#888">
-                  {Math.round(totalClaimedAmount / totalWhitelistAmount)}% (
-                  {totalClaimedAmount}/{totalWhitelistAmount})
-                </Text>
-              ) : (
-                <Text color="#888">
-                  0% ({totalClaimedAmount}/{totalWhitelistAmount})
+                  {parseInt(totalWhitelistAmount) === 0
+                    ? 0
+                    : Math.round(
+                        (totalClaimedAmount * 100) / totalWhitelistAmount
+                      )}
+                  % ({totalClaimedAmount}/{totalWhitelistAmount})
                 </Text>
               )}
-              {currentPhase.publicPhase ? (
+              {console.log("currentPhase", currentPhase)}{" "}
+              {/*
+               Public phase
+              */}
+              {currentPhase.publicPhase && (
                 <Text color="#888">
-                  {" "}
-                  {Math.round(
-                    totalClaimedAmount / currentPhase.publicMintingAmount
-                  )}
+                  {parseInt(currentPhase.publicMintingAmount) === 0
+                    ? 0
+                    : Math.round(
+                        (totalClaimedAmount * 100) /
+                          currentPhase.publicMintingAmount
+                      )}
                   % ({totalClaimedAmount}/{currentPhase.publicMintingAmount})
-                </Text>
-              ) : (
-                <Text color="#888">
-                  0% ({totalClaimedAmount}/{currentPhase.publicMintingAmount})
                 </Text>
               )}
             </Flex>
             {!currentPhase.publicPhase && totalWhitelistAmount != 0 ? (
               <Progress
-                value={Math.round(totalClaimedAmount / totalWhitelistAmount)}
+                value={Math.round(
+                  (totalClaimedAmount * 100) / totalWhitelistAmount
+                )}
                 mb="20px"
                 h="8px"
               />
@@ -410,7 +465,7 @@ const LaunchpadDetailPage = () => {
             {currentPhase.publicPhase ? (
               <Progress
                 value={Math.round(
-                  totalClaimedAmount / currentPhase.publicMintingAmount
+                  (totalClaimedAmount * 100) / currentPhase.publicMintingAmount
                 )}
                 mb="20px"
                 h="8px"
@@ -427,6 +482,7 @@ const LaunchpadDetailPage = () => {
               ""
             )}
             {console.log("currentPhase", currentPhase)}
+            {console.log("currentWhitelist", currentWhitelist)}
             {currentAccount &&
               !currentPhase.publicPhase &&
               currentWhitelist.whitelistAmount && (
@@ -436,38 +492,40 @@ const LaunchpadDetailPage = () => {
                   </Button>
                 </Flex>
               )}
-            {currentAccount && currentPhase.publicPhase && currentPhase.claimedAmount <= currentPhase.publicMintingAmount && (
-              
-              <Flex w="full" justifyContent="center">
-                {console.log(currentPhase)}
-                <NumberInput
-                  bg="black"
-                  min={1}
-                  w="full"
-                  mr={[0, 3]}
-                  h="3.125rem"
-                  mb={["10px", 0]}
-                  // isDisabled={actionType || (publicSaleMintedCount >= amount1)}
-                  value={mintingAmount}
-                  max={currentPhase.publicMaxMintingAmount}
-                  onChange={(valueString) => setMintingAmount(valueString)}
-                >
-                  <NumberInputField
+            {currentAccount &&
+              currentPhase.publicPhase &&
+              currentPhase.claimedAmount <=
+                currentPhase.publicMintingAmount && (
+                <Flex w="full" justifyContent="center">
+                  {console.log(currentPhase)}
+                  <NumberInput
+                    bg="black"
+                    min={1}
+                    w="full"
+                    mr={[0, 3]}
                     h="3.125rem"
-                    borderRadius={0}
-                    borderWidth={0}
-                    color="#fff"
-                  />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-                <Button onClick={() => onPublicMint()} variant="outline">
-                  Public Mint
-                </Button>
-              </Flex>
-            )}
+                    mb={["10px", 0]}
+                    // isDisabled={actionType || (publicSaleMintedCount >= amount1)}
+                    value={mintingAmount}
+                    max={currentPhase.publicMaxMintingAmount}
+                    onChange={(valueString) => setMintingAmount(valueString)}
+                  >
+                    <NumberInputField
+                      h="3.125rem"
+                      borderRadius={0}
+                      borderWidth={0}
+                      color="#fff"
+                    />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+                  <Button onClick={() => onPublicMint()} variant="outline">
+                    Public Mint
+                  </Button>
+                </Flex>
+              )}
           </Box>
 
           <Box
@@ -491,6 +549,7 @@ const LaunchpadDetailPage = () => {
                       <WrapItem>
                         <Tag w="full">{item.code}</Tag>
                       </WrapItem>
+                      {console.log("item", item)}{" "}
                       {item.publicPhase && (
                         <>
                           <Flex
@@ -504,7 +563,7 @@ const LaunchpadDetailPage = () => {
                             <Text mr="30px">
                               Total:{" "}
                               <Text as="span" color="#fff">
-                                {console.log('total public amount:', item)}
+                                {console.log("total public amount:", item)}
                                 {item.publicMintingAmount}
                               </Text>
                             </Text>
@@ -512,6 +571,10 @@ const LaunchpadDetailPage = () => {
                               Minted:{" "}
                               <Text as="span" color="#fff">
                                 {publicMintedCount}
+                              </Text>{" "}
+                              token{" "}
+                              <Text as="span" color="#fff">
+                                {publicMintedCount > 1 ? "s" : ""}
                               </Text>
                             </Text>
                             <Text>
@@ -524,7 +587,6 @@ const LaunchpadDetailPage = () => {
                           </Flex>
                         </>
                       )}
-
                       {item.publicPhase == 0 && (
                         <>
                           <Flex
@@ -547,8 +609,8 @@ const LaunchpadDetailPage = () => {
                                 <Text as="span" color="#fff">
                                   {Number(item.whitelist.whitelistAmount) -
                                     Number(item.whitelist.claimedAmount)}{" "}
-                                  Tokens
                                 </Text>
+                                token{" "}
                               </Text>
                             )}
                             {item.whitelist && item.whitelist.mintingFee && (
