@@ -60,7 +60,7 @@ const LaunchpadDetailPage = () => {
   const [myNFTs, setMyNFTs] = useState([]);
   const [publicMintedCount, setPublicMintedCount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [mintingAmount, setMintingAmount] = useState(0);
+  const [mintingAmount, setMintingAmount] = useState(1);
 
   const dispatch = useDispatch();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
@@ -264,8 +264,6 @@ const LaunchpadDetailPage = () => {
           tokenUriFull = tokenUriFull.replace("1.json", "");
           console.log("xxx tokenUriFull", tokenUriFull);
 
-          // eslint-disable-next-line no-debugger
-          debugger;
           const fetchEndBeforeLoopNo2 = Date.now();
           console.log(
             "projectDetail fetchEndBeforeLoopNo2 ",
@@ -382,12 +380,16 @@ const LaunchpadDetailPage = () => {
     launchpad_psp34_nft_standard_calls.setContract(
       launchpad_psp34_nft_standard_contract
     );
+    dispatch(setTxStatus({ type: PUBLIC_MINT, step: START }));
 
     await launchpad_psp34_nft_standard_calls.publicMint(
       currentAccount,
       currentPhase.id,
       mintingFee,
-      mintingAmount
+      mintingAmount,
+      dispatch,
+      PUBLIC_MINT,
+      api
     );
   };
 
@@ -504,6 +506,12 @@ const LaunchpadDetailPage = () => {
                   />
                 </Flex>
               )}
+
+            {console.log("zzz currentPhase", currentPhase)}
+            {console.log(
+              "zzz currentPhase.publicPhase",
+              currentPhase.publicPhase
+            )}
             {currentAccount &&
               currentPhase.publicPhase &&
               currentPhase.claimedAmount <=
@@ -517,7 +525,11 @@ const LaunchpadDetailPage = () => {
                     mr={[0, 3]}
                     h="3.125rem"
                     mb={["10px", 0]}
-                    // isDisabled={actionType || (publicSaleMintedCount >= amount1)}
+                    isDisabled={
+                      actionType ||
+                      currentPhase?.claimedAmount >=
+                        currentPhase?.publicMintingAmount
+                    }
                     value={mintingAmount}
                     max={currentPhase.publicMaxMintingAmount}
                     onChange={(valueString) => setMintingAmount(valueString)}
@@ -533,15 +545,16 @@ const LaunchpadDetailPage = () => {
                       <NumberDecrementStepper />
                     </NumberInputStepper>
                   </NumberInput>
-                  {/* <Button onClick={() => onPublicMint()} variant="outline">
-                    Public Mint
-                  </Button> */}
 
                   <CommonButton
                     {...rest}
                     variant="outline"
-                    text="whitelist mint now"
+                    text="public mint"
                     onClick={onPublicMint}
+                    isDisabled={
+                      currentPhase?.claimedAmount >=
+                      currentPhase?.publicMintingAmount
+                    }
                   />
                 </Flex>
               )}
