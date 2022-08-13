@@ -35,6 +35,7 @@ function LaunchpadDetailHeader({
   collection_address,
   loading,
 }) {
+  {console.log("LaunchpadDetailHeader::project", project)}
   const [livePhase, setLivePhase] = useState({});
   const { phases, projectOwner } = project;
   const [countDownTimer, setCountDownTimer] = useState({});

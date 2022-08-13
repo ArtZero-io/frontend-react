@@ -339,7 +339,7 @@ async function editProjectInformation(
   return unsubscribe;
 }
 
-async function publicMint(caller_account, phaseId, mintingFee) {
+async function publicMint(caller_account, phaseId, mintingFee, mintAmount) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -354,7 +354,7 @@ async function publicMint(caller_account, phaseId, mintingFee) {
     .toString();
   const injector = await web3FromSource(caller_account?.meta?.source);
   contract.tx
-    .publicMint({ gasLimit, value: azero_value }, phaseId)
+    .publicMint({ gasLimit, value: azero_value }, phaseId, mintAmount)
     .signAndSend(
       address,
       { signer: injector.signer },

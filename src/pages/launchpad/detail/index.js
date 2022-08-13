@@ -12,6 +12,11 @@ import {
   Text,
   Wrap,
   WrapItem,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
@@ -26,9 +31,11 @@ import { useSubstrateState } from "@utils/substrate";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
-import { timestampWithoutCommas, convertStringToPrice } from "@utils";
+import { timestampWithoutCommas, convertNumberWithoutCommas, convertStringToPrice } from "@utils";
 import { Interweave } from "interweave";
 import AnimationLoader from "@components/Loader/AnimationLoader";
+import BN from "bn.js";
+import toast from "react-hot-toast";
 // import ModalLoader from "@components/Loader/ModalLoader";
 
 const LaunchpadDetailPage = () => {
@@ -43,6 +50,7 @@ const LaunchpadDetailPage = () => {
   const [myNFTs, setMyNFTs] = useState([]);
   const [publicMintedCount, setPublicMintedCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [mintingAmount, setMintingAmount] = useState(0);
 
   // eslint-disable-next-line no-unused-vars
   const [publicMintingPhaseId, setPublicMintingPhaseId] = useState(0);
@@ -104,13 +112,11 @@ const LaunchpadDetailPage = () => {
             await launchpad_psp34_nft_standard_calls.getCurrentPhase(
               currentAccount
             );
-          console.log("currentPhaseIdTmp", currentPhaseIdTmp);
           const fetchEndBeforeLoopNo1 = Date.now();
           console.log(
             "projectDetail fetchEndBeforeLoopNo1 ",
             fetchEndBeforeLoopNo1
           );
-          console.log("projectDetail diff", fetchEndBeforeLoopNo1 - fetchStart);
 
           for (let i = 1; i <= totalPhase; i++) {
             const whiteListData =
@@ -124,13 +130,22 @@ const LaunchpadDetailPage = () => {
                 currentAccount,
                 i
               );
-            console.log("phaseSchedule", phaseSchedule);
             const phaseCode = phaseSchedule.title;
             const totalWhiteListPhase =
               await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(
                 currentAccount,
                 i
               );
+            let maxMinting = 0;
+            if (Number(convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)) > 0 && phaseSchedule.publicMaxMintingAmount) {
+              let remainAmount = Number(convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)) - Number(convertNumberWithoutCommas(phaseSchedule.claimedAmount));
+              if (Number(convertNumberWithoutCommas(phaseSchedule.publicMaxMintingAmount)) > remainAmount) {
+                maxMinting = remainAmount;
+              } else {
+                maxMinting = Number(phaseSchedule.claimedAmount(phaseSchedule.publicMaxMintingAmount));
+              }
+            }
+            console.log('phaseSchedule::148', phaseSchedule);
             const phaseInfo = {
               id: i,
               code: phaseCode,
@@ -140,8 +155,10 @@ const LaunchpadDetailPage = () => {
               totalWhiteList: totalWhiteListPhase ? totalWhiteListPhase : 0,
               publicPhase: phaseSchedule.isPublic,
               whitelist: whiteListData,
-              publicMintingAmount: phaseSchedule.publicMintingAmount,
+              publicMintingAmount: Number(convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)),
+              publicMaxMintingAmount: maxMinting,
               publicMintingFee: phaseSchedule.publicMintingFee,
+              claimedAmount: Number(convertNumberWithoutCommas(phaseSchedule.claimedAmount))
             };
 
             phasesTmp.push(phaseInfo);
@@ -299,6 +316,14 @@ const LaunchpadDetailPage = () => {
   };
 
   const onPublicMint = async () => {
+    const { data } = await api.query.system.account(currentAccount.address);
+    const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+    const mintingFee = mintingAmount * convertStringToPrice(currentPhase.publicMintingFee);
+    
+    if (balance < mintingFee + 0.01) {
+      toast.error("Not enough balance to mint");
+      return;
+    }
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
       api,
       launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -308,11 +333,12 @@ const LaunchpadDetailPage = () => {
     launchpad_psp34_nft_standard_calls.setContract(
       launchpad_psp34_nft_standard_contract
     );
-    const mintingFee = convertStringToPrice(currentPhase.publicMintingFee);
+
     await launchpad_psp34_nft_standard_calls.publicMint(
       currentAccount,
       currentPhase.id,
-      mintingFee
+      mintingFee,
+      mintingAmount
     );
   };
 
@@ -407,8 +433,33 @@ const LaunchpadDetailPage = () => {
                   </Button>
                 </Flex>
               )}
-            {currentAccount && currentPhase.publicPhase && (
+            {currentAccount && currentPhase.publicPhase && currentPhase.claimedAmount <= currentPhase.publicMintingAmount && (
+              
               <Flex w="full" justifyContent="center">
+                {console.log(currentPhase)}
+                <NumberInput
+                  bg="black"
+                  min={1}
+                  w="full"
+                  mr={[0, 3]}
+                  h="3.125rem"
+                  mb={["10px", 0]}
+                  // isDisabled={actionType || (publicSaleMintedCount >= amount1)}
+                  value={mintingAmount}
+                  max={currentPhase.publicMaxMintingAmount}
+                  onChange={(valueString) => setMintingAmount(valueString)}
+                >
+                  <NumberInputField
+                    h="3.125rem"
+                    borderRadius={0}
+                    borderWidth={0}
+                    color="#fff"
+                  />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
                 <Button onClick={() => onPublicMint()} variant="outline">
                   Public Mint
                 </Button>
@@ -450,6 +501,7 @@ const LaunchpadDetailPage = () => {
                             <Text mr="30px">
                               Total:{" "}
                               <Text as="span" color="#fff">
+                                {console.log('total public amount:', item)}
                                 {item.publicMintingAmount}
                               </Text>
                             </Text>
