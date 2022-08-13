@@ -8,6 +8,7 @@ import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls
 import { ContractPromise } from "@polkadot/api-contract";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { getPublicCurrentAccount } from "@utils";
 
 export const LaunchpadPage = () => {
   const { api, currentAccount } = useSubstrateState();
@@ -22,7 +23,7 @@ export const LaunchpadPage = () => {
       try {
         setLoading(true);
         const projectCount = await launchpad_contract_calls.getProjectCount(
-          currentAccount
+          currentAccount || getPublicCurrentAccount()
         );
         let liveProjectsArr = [];
         let upcomingProjectsArr = [];
@@ -30,12 +31,12 @@ export const LaunchpadPage = () => {
 
         for (let i = 1; i <= projectCount; i++) {
           const nftAddress = await launchpad_contract_calls.getProjectById(
-            currentAccount,
+            currentAccount || getPublicCurrentAccount(),
             i
           );
 
           const project = await launchpad_contract_calls.getProjectByNftAddress(
-            currentAccount,
+            currentAccount || getPublicCurrentAccount(),
             nftAddress
           );
 
@@ -52,7 +53,7 @@ export const LaunchpadPage = () => {
           );
           const projectInfoHash =
             await launchpad_psp34_nft_standard_calls.getProjectInfo(
-              currentAccount
+              currentAccount || getPublicCurrentAccount()
             );
           console.log(projectInfoHash);
           console.log("xxzxc");

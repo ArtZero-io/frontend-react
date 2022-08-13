@@ -1,4 +1,11 @@
-import { Heading, Stack, Text, HStack, VStack } from "@chakra-ui/react";
+import {
+  Heading,
+  Stack,
+  Text,
+  HStack,
+  VStack,
+  IconButton,
+} from "@chakra-ui/react";
 import BN from "bn.js";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import ImageUpload from "@components/ImageUpload/Collection";
@@ -45,6 +52,7 @@ import * as ROUTES from "@constants/routes";
 import { getPublicCurrentAccount } from "@utils";
 
 import { ipfsClient } from "@api/client";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
@@ -179,10 +187,40 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   return (
     <>
       {initialValues && (
-        <Stack pb="120px">
-          <Heading size={"h3"} pb="30px" textAlign="center">
-            {`${mode === "ADD" ? "create new" : "edit"} project`}
-          </Heading>
+        <Stack pt="100px">
+          <HStack
+            pb="100px"
+            w="full"
+            pos="relative"
+            maxW="940px"
+            mx="auto"
+            textAlign="center"
+          >
+            <Heading
+              w="full"
+              color="#fff"
+              fontSize={["32px", "48px", "48px"]}
+              lineHeight={["38px", "60px", "60px"]}
+            >
+              {`${mode === "ADD" ? "create new" : "edit"} project`}
+            </Heading>
+
+            <IconButton
+              pos="absolute"
+              left="0"
+              top="5px"
+              onClick={() => history.goBack()}
+              variant="iconOutline"
+              width={["40px", "50px"]}
+              height={["40px", "50px"]}
+              icon={<ArrowBackIcon fontSize="2xl" />}
+              _hover={{
+                bg: "brand.blue",
+                color: "black",
+                borderWidth: "0",
+              }}
+            />
+          </HStack>
 
           <Formik
             initialValues={initialValues}
@@ -287,12 +325,17 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 public_minting_fee_phases.push(public_minting_fee_phase_tmp);
                 let public_minting_amout_phase_tmp =
                   phase.isPublic && phase.publicAmount ? phase.publicAmount : 0;
-                  
-                let public_max_minting_amount_phase_tmp = phase.isPublic && phase.publicMaxMintingAmount ? phase.publicMaxMintingAmount : 0;
+
+                let public_max_minting_amount_phase_tmp =
+                  phase.isPublic && phase.publicMaxMintingAmount
+                    ? phase.publicMaxMintingAmount
+                    : 0;
                 public_minting_amout_phases.push(
                   public_minting_amout_phase_tmp
                 );
-                public_max_minting_amount_phases.push(public_max_minting_amount_phase_tmp);
+                public_max_minting_amount_phases.push(
+                  public_max_minting_amount_phase_tmp
+                );
                 start_time_phases.push(phase.start);
                 end_time_phases.push(phase.end);
               }
@@ -319,13 +362,17 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 is_public_phases: is_public_phases,
                 public_minting_fee_phases: public_minting_fee_phases,
                 public_minting_amout_phases: public_minting_amout_phases,
-                public_max_minting_amount_phases: public_max_minting_amount_phases
+                public_max_minting_amount_phases:
+                  public_max_minting_amount_phases,
               };
 
               if (mode === formMode.ADD) {
                 const createNewCollection = async (nft_address) => {
                   setNewNFTAddress(nft_address);
-                  console.log("createNewCollection nft_address", nft_address);
+                  console.log(
+                    "ADD createNewCollection nft_address",
+                    nft_address
+                  );
                   // Lay gia tri nft_address tu launchpad_contract_calls roi tao collection
                   const collectionData = {
                     nftContractAddress: nft_address,
@@ -856,7 +903,7 @@ export const fetchInitialValuesProject = async ({
         isPublic: false,
         publicMintingFee: 0,
         publicAmount: 0,
-        publicMaxMintingAmount: 0
+        publicMaxMintingAmount: 0,
       },
     ],
     agreeTosCheckbox: false,
@@ -1118,7 +1165,7 @@ const validationSchema = Yup.object().shape({
         isPublic: Yup.boolean(),
         publicMintingFee: "",
         publicAmount: "",
-        publicMaxMintingAmount: ""
+        publicMaxMintingAmount: "",
       })
     ),
   agreeTosCheckbox: validationAgreeTosCheckbox,

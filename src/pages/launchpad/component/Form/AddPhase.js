@@ -104,8 +104,16 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
       launchpad_psp34_nft_standard_contract
     );
 
-    const { name, id, isPublic, publicMintingFee, publicAmount, publicMaxMintingAmount, start, end } =
-      value[index];
+    const {
+      name,
+      id,
+      isPublic,
+      publicMintingFee,
+      publicAmount,
+      publicMaxMintingAmount,
+      start,
+      end,
+    } = value[index];
 
     console.log("value[index]", value[index]);
 
@@ -140,8 +148,15 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
       launchpad_psp34_nft_standard_contract
     );
 
-    const { name, isPublic, publicMintingFee, publicAmount, publicMaxMintingAmount, start, end } =
-      value[index];
+    const {
+      name,
+      isPublic,
+      publicMintingFee,
+      publicAmount,
+      publicMaxMintingAmount,
+      start,
+      end,
+    } = value[index];
 
     console.log("value[index]", value[index]);
 
@@ -378,6 +393,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                 onClick={() => handleAddPhase(arrayHelpers)}
                 text={`${mode === formMode.ADD ? "add more" : "add new phase"}`}
                 // isDisabled={!(dirty && isValid) && noImagesChange}
+                isDisabled={isDisabled || actionType}
               />
             </Stack>
           </Stack>

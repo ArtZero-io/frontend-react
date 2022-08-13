@@ -235,7 +235,7 @@ const LaunchpadDetailPage = () => {
               "projectDetail diff",
               fetchEndBeforeLoopNo2 - fetchStart
             );
-              console.log('totalTokenSupply', totalTokenSupply);
+              
             for (let tokenID = 1; tokenID <= totalTokenSupply; tokenID++) {
               let owner = await launchpad_psp34_nft_standard_calls.ownerOf(
                 currentAccount,
