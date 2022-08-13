@@ -142,7 +142,7 @@ const LaunchpadDetailPage = () => {
               if (Number(convertNumberWithoutCommas(phaseSchedule.publicMaxMintingAmount)) > remainAmount) {
                 maxMinting = remainAmount;
               } else {
-                maxMinting = Number(phaseSchedule.claimedAmount(phaseSchedule.publicMaxMintingAmount));
+                maxMinting = Number(convertNumberWithoutCommas(phaseSchedule.publicMaxMintingAmount));
               }
             }
             console.log('phaseSchedule::148', phaseSchedule);
