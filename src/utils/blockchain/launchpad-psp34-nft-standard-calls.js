@@ -380,8 +380,15 @@ async function mint(caller_account, phaseId, mintAmount) {
   return unsubscribe;
 }
 
-
-async function publicMint(caller_account, phaseId, mintingFee, mintAmount) {
+async function publicMint(
+  caller_account,
+  phaseId,
+  mintingFee,
+  mintAmount,
+  dispatch,
+  txType,
+  api
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -401,30 +408,31 @@ async function publicMint(caller_account, phaseId, mintingFee, mintAmount) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Add Whitelist ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
-async function whitelistMint(caller_account, phaseId, amount, minting_fee) {
+async function whitelistMint(
+  caller_account,
+  phaseId,
+  amount,
+  minting_fee,
+  dispatch,
+  txType,
+  api
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -445,26 +453,19 @@ async function whitelistMint(caller_account, phaseId, amount, minting_fee) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Add Whitelist ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
@@ -486,8 +487,13 @@ async function getProjectInfo(caller_account) {
   return null;
 }
 
-
-async function updateAdminAddress(caller_account, adminAddress, dispatch, txType, api) {
+async function updateAdminAddress(
+  caller_account,
+  adminAddress,
+  dispatch,
+  txType,
+  api
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -499,10 +505,8 @@ async function updateAdminAddress(caller_account, adminAddress, dispatch, txType
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
   console.log(contract);
-  contract.tx.updateAdminAddress(
-    { gasLimit, value: azero_value },
-    adminAddress
-  )
+  contract.tx
+    .updateAdminAddress({ gasLimit, value: azero_value }, adminAddress)
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -872,7 +876,7 @@ const launchpad_psp34_nft_standard_calls = {
   updateSchedulePhase,
   getAdminAddress,
   updateAdminAddress,
-  mint
+  mint,
 };
 
 export default launchpad_psp34_nft_standard_calls;
