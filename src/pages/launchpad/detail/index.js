@@ -192,7 +192,8 @@ const LaunchpadDetailPage = () => {
             fetchEndAfterLoopNo1
           );
           console.log("projectDetail diff", fetchEndAfterLoopNo1 - fetchStart);
-
+          const projectAdminAddress = await launchpad_psp34_nft_standard_calls.getAdminAddress(currentAccount);
+          console.log(projectAdminAddress);
           const projectDetail = {
             name: projectInfo.name,
             description: projectInfo.description,
@@ -202,8 +203,10 @@ const LaunchpadDetailPage = () => {
             roadmaps: projectInfo.roadmaps,
             team_members: projectInfo.team_members,
             phases: phasesTmp,
+            projectAdminAddress: projectAdminAddress,
             ...project,
             ...projectInfo,
+
           };
 
           setFormattedCollection(projectDetail);

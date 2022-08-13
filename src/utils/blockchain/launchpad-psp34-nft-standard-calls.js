@@ -750,6 +750,24 @@ export const getProjectListDetails = async ({ currentAccount, api }) => {
   return ret;
 };
 
+async function getAdminAddress(caller_account) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const { result, output } = await contract.query.getAdminAddress(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
 const launchpad_psp34_nft_standard_calls = {
   getTotalSupply,
   getLastPhaseId,
@@ -773,6 +791,7 @@ const launchpad_psp34_nft_standard_calls = {
   updateWhitelist,
   addNewPhase,
   updateSchedulePhase,
+  getAdminAddress
 };
 
 export default launchpad_psp34_nft_standard_calls;
