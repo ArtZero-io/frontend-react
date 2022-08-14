@@ -288,14 +288,6 @@ function GridNftA({
     }
 
     if (action === REQUEST_UNSTAKE) {
-      // dispatch(
-      //   setTxStatus({
-      //     txType: REQUEST_UNSTAKE,
-      //     txStatus: START,
-      //     tokenID: tokenIDArray,
-      //   })
-      // );
-
       dispatch(
         setTxStatus({ type: REQUEST_UNSTAKE, step: START, tokenIDArray })
       );
@@ -314,9 +306,6 @@ function GridNftA({
     }
 
     if (action === UNSTAKE) {
-      // dispatch(
-      //   setTxStatus({ txType: UNSTAKE, txStatus: START, tokenID: tokenIDArray })
-      // );
       dispatch(setTxStatus({ type: UNSTAKE, step: START, tokenIDArray }));
 
       toast.success("Unstaking NFT...");
@@ -331,14 +320,6 @@ function GridNftA({
     }
 
     if (action === CANCEL_REQUEST_UNSTAKE) {
-      // dispatch(
-      //   setTxStatus({
-      //     txType: CANCEL_REQUEST_UNSTAKE,
-      //     txStatus: START,
-      //     tokenID: tokenIDArray,
-      //   })
-      // );
-
       dispatch(
         setTxStatus({ type: CANCEL_REQUEST_UNSTAKE, step: START, tokenIDArray })
       );
@@ -451,26 +432,6 @@ function GridNftA({
               )
             }
           />
-          {/* <Button
-            isDisabled={
-              txStatus?.stakeStatus ||
-              txStatus?.unstakeStatus ||
-              txStatus?.cancelRequestUnstakeStatus ||
-              txStatus?.requestUnstakeStatus
-            }
-            
-            onClick={() =>
-              handleStakeAction(
-                multiStakeData?.action,
-                multiStakeData?.list,
-                dispatch,
-                api,
-                currentAccount
-              )
-            }
-          >
-            {}
-          </Button> */}
         </motion.div>
       ) : null}
 

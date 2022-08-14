@@ -44,7 +44,7 @@ export default function UpdatePhasesModal({
         isPublic: false,
         publicMintingFee: 0,
         publicAmount: 0,
-        publicMaxMintingAmount: 0
+        publicMaxMintingAmount: 0,
       },
     ],
   });
@@ -68,23 +68,20 @@ export default function UpdatePhasesModal({
 
       const totalPhase =
         await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
-      console.log("UpdatePhasesModal::totalPhase", totalPhase);
+      // console.log("UpdatePhasesModal::totalPhase", totalPhase);
 
       let phasesTmp = [];
-      console.log("xxx phasesTmp", phasesTmp);
+      // console.log("xxx phasesTmp", phasesTmp);
 
       for (let i = 1; i <= totalPhase; i++) {
-        console.log('xxx i', i)
+        // console.log('xxx i', i)
         let phaseSchedule =
           await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
             currentAccount,
             i
           );
 
-          console.log("xxx phaseSchedule", phaseSchedule);
-
-
-
+        // console.log("xxx phaseSchedule", phaseSchedule);
 
         let phaseInfo = {
           id: i,
@@ -110,13 +107,13 @@ export default function UpdatePhasesModal({
       initialValuesData.phases = phasesTmp;
 
       // console.log("UpdatePhasesModal::phasesTmp", phasesTmp);
-      console.log("xxxinitialValuesData", initialValuesData);
-      console.log("xxxcurrentPhaseId", currentPhaseId);
+      // console.log("xxxinitialValuesData", initialValuesData);
+      // console.log("xxxcurrentPhaseId", currentPhaseId);
       setInitialValues(initialValuesData);
       setCurrentPhaseId(currentPhaseId);
 
-      console.log("initialValuesData", phasesTmp);
-      console.log("currentPhaseId", currentPhaseId);
+      // console.log("initialValuesData", phasesTmp);
+      // console.log("currentPhaseId", currentPhaseId);
     };
 
     fetchData();
@@ -230,7 +227,7 @@ export const fetchInitialPhasesValue = async () => {
         isPublic: false,
         publicMintingFee: 0,
         publicAmount: 0,
-        publicMaxMintingAmount: 0
+        publicMaxMintingAmount: 0,
       },
     ],
   };

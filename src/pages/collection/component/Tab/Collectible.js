@@ -55,8 +55,8 @@ import { BUY, BID, REMOVE_BID } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import { buyToken, placeBid, removeBid } from "../../../token";
 import { clearTxStatus } from "@store/actions/txStatus";
-import { getUsernameOnchain } from "@utils/blockchain/profile_calls";
 import { AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
+import { truncateStr } from "@utils";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -127,7 +127,7 @@ const NFTTabCollectible = (props) => {
         setIsOwner(true);
       }
 
-      const name = await getUsernameOnchain({ accountAddress });
+      const name = truncateStr(accountAddress);
 
       setOwnerAddress(accountAddress);
       setOwnerName(name);

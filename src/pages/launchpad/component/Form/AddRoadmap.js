@@ -24,7 +24,7 @@ function AddRoadmap({ name, mode, isDisabled }) {
       name="roadmap"
       render={(arrayHelpers) => {
         const roadmapErrors = arrayHelpers?.form?.errors?.roadmap;
-        console.log(arrayHelpers);
+        // console.log(arrayHelpers);
         return (
           <Stack>
             {value?.map((_, index) => (

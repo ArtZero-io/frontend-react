@@ -74,7 +74,6 @@ import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 import { ContractPromise } from "@polkadot/api-contract";
 import { delay } from "@utils";
-import { getUsernameOnchain } from "@utils/blockchain/profile_calls";
 import { AiOutlineUnlock, AiOutlineLock } from "react-icons/ai";
 
 import LockNFTModalMobile from "@components/Modal/LockNFTModalMobile";
@@ -86,6 +85,7 @@ import {
   fetchMyTradingFee,
 } from "@pages/account/stakes";
 import TransferNFTModalMobile from "@components/Modal/TransferNFTModalMobile";
+import { truncateStr } from "@utils";
 
 function TokenPage() {
   const dispatch = useDispatch();
@@ -147,9 +147,7 @@ function TokenPage() {
           : tokenDetails?.owner;
 
         // get username onchain if any
-        const name = await getUsernameOnchain({
-          accountAddress: ownerAddress,
-        });
+        const name = truncateStr(ownerAddress);
         setOwnerName(name);
 
         if (ownerAddress === currentAccount?.address) {

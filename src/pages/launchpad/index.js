@@ -55,8 +55,8 @@ export const LaunchpadPage = () => {
             await launchpad_psp34_nft_standard_calls.getProjectInfo(
               currentAccount || getPublicCurrentAccount()
             );
-          console.log(projectInfoHash);
-          console.log("xxzxc");
+          // console.log(projectInfoHash);
+          // console.log("xxzxc");
           const projectInfo =
             await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
               projectInfoHash

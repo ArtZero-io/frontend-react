@@ -25,25 +25,24 @@ function CommonButton(props) {
   const dispatch = useDispatch();
 
   const handleOnClick = async () => {
-    if (!step) {
-      onClick();
-      return;
+    if (type === "submit") {
+      if (step !== FINALIZED) return;
+
+      if (onRedirect) {
+        onRedirect();
+        return dispatch(clearTxStatus());
+      }
+
+      return onEndClick();
     }
 
-    if (step !== FINALIZED) {
-      onClick();
-      return;
-    }
+    // type !== 'submit'
+    if (!step) return onClick();
 
-    if (step === END) {
-      return;
-    }
+    if (step !== FINALIZED) return onClick();
 
-    if (onRedirect) {
-      onRedirect();
-      dispatch(clearTxStatus());
-      return;
-    }
+    if (step === END) return;
+
     onEndClick();
   };
 

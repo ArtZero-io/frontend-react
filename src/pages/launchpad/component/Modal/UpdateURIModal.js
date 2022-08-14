@@ -33,9 +33,9 @@ export default function UpdateURIModal({
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
-    console.log("rest.step", rest.step);
+    // console.log("rest.step", rest.step);
     if (rest.step === END) {
-      console.log("rest.step IN", rest.step);
+      // console.log("rest.step IN", rest.step);
       dispatch(clearTxStatus());
       onClose();
     }

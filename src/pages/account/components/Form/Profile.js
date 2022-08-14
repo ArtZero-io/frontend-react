@@ -205,13 +205,7 @@ const ProfileForm = ({ profile }) => {
                   text="update profile"
                   // isDisabled={!(dirty && isValid) && noImagesChange}
                 />
-                {/* <StatusButton
-                  text="profile"
-                  type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
-                  isLoading={addCollectionTnxStatus}
-                  // disabled={!(dirty && isValid)}
-                  loadingText={`${addCollectionTnxStatus?.status}`}
-                /> */}
+                
               </VStack>
             </Stack>
           </Form>

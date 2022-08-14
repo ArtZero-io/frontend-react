@@ -18,6 +18,7 @@ export default function AddCollectionNumberInput({
   inputWidth,
   isDisabled,
   step = 0.5,
+  min = 0.5,
   precision = 2,
   height = "50px",
   isDisplay = true,
@@ -36,7 +37,7 @@ export default function AddCollectionNumberInput({
 
             <NumberInput
               {...field}
-              min={0}
+              min={min}
               id={name}
               bg="black"
               max={max}

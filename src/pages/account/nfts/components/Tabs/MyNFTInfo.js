@@ -62,8 +62,7 @@ import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { REMOVE_BID, UNLIST_TOKEN, LIST_TOKEN } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
-import { getUsernameOnchain } from "@utils/blockchain/profile_calls";
-import { listToken, unlistToken, removeBid } from "@pages/token";
+ import { listToken, unlistToken, removeBid } from "@pages/token";
 
 function MyNFTTabInfo(props) {
   const {
@@ -142,7 +141,7 @@ function MyNFTTabInfo(props) {
         setIsOwner(true);
       }
 
-      const name = await getUsernameOnchain({ accountAddress });
+      const name = truncateStr(accountAddress);
 
       setOwnerAddress(accountAddress);
       setOwnerName(name);
@@ -640,17 +639,6 @@ function MyNFTTabInfo(props) {
                   onClick={handleListTokenAction}
                   isDisabled={actionType && actionType !== LIST_TOKEN}
                 />
-                {/* <StatusPushForSaleButton
-                  isAllowanceMpContract={isAllowanceMarketplaceContract}
-                  type={AccountActionTypes. }
-                  text="push for sale"
-                  isLoading={actionType}
-                  loadingText={`${actionType?.status}`}
-                  stepNo={stepNo}
-                  setStepNo={setStepNo}
-                  listToken={listToken}
-                  isDisabled={txStatus?.lockStatus || actionType}
-                /> */}
               </Flex>
             )}
 

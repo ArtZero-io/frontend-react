@@ -290,9 +290,9 @@ async function getWhitelistByAccountId(
     accountAddress,
     phaseId
   );
-  console.log(accountAddress, phaseId);
-  console.log("getWhitelistByAccountId", accountAddress);
-  console.log("getWhitelistByAccountId::index", phaseId);
+  // console.log(accountAddress, phaseId);
+  // console.log("getWhitelistByAccountId", accountAddress);
+  // console.log("getWhitelistByAccountId::index", phaseId);
   if (result.isOk) {
     return output.toHuman();
   }

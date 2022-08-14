@@ -184,7 +184,7 @@ async function getProjectCount(caller_account) {
     value: azero_value,
     gasLimit,
   });
-  console.log(output);
+  // console.log(output);
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }

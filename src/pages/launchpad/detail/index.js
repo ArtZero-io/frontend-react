@@ -114,6 +114,7 @@ const LaunchpadDetailPage = () => {
           await launchpad_psp34_nft_standard_calls.getPublicMintedCount(
             currentAccount
           );
+        // console.log("zzz publicMintedCountTmp", publicMintedCountTmp);
         setPublicMintedCount(publicMintedCountTmp);
 
         const totalSupply =
@@ -129,6 +130,7 @@ const LaunchpadDetailPage = () => {
           await launchpad_psp34_nft_standard_calls.getCurrentPhase(
             currentAccount
           );
+        // console.log("zzz currentPhaseIdTmp", currentPhaseIdTmp);
         const fetchEndBeforeLoopNo1 = Date.now();
         console.log(
           "projectDetail fetchEndBeforeLoopNo1 ",
@@ -142,11 +144,15 @@ const LaunchpadDetailPage = () => {
               i,
               currentAccount.address
             );
+
+          // console.log("zzz whiteListData i", i, whiteListData);
           const phaseSchedule =
             await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
               currentAccount,
               i
             );
+          // console.log("zzz phaseSchedule i", i, phaseSchedule);
+
           const phaseCode = phaseSchedule.title;
           const totalWhiteListPhase =
             await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(
@@ -177,7 +183,7 @@ const LaunchpadDetailPage = () => {
               );
             }
           }
-          console.log("phaseSchedule::148", phaseSchedule);
+          // console.log("phaseSchedule::148", phaseSchedule);
           const phaseInfo = {
             id: i,
             code: phaseCode,
@@ -198,7 +204,7 @@ const LaunchpadDetailPage = () => {
           };
 
           phasesTmp.push(phaseInfo);
-          console.log("phasesTmp", phasesTmp);
+          // console.log("phasesTmp", phasesTmp);
 
           if (i == currentPhaseIdTmp) {
             console.log("LaunchpadDetailPage::phaseSchedule", phaseSchedule);
@@ -212,10 +218,10 @@ const LaunchpadDetailPage = () => {
                 i,
                 currentAccount?.address
               );
-            console.log(
-              "LaunchpadDetailPage::currentWhitelistTmp",
-              currentWhitelistTmp
-            );
+            // console.log(
+            //   "LaunchpadDetailPage::currentWhitelistTmp",
+            //   currentWhitelistTmp
+            // );
             if (currentWhitelistTmp) {
               setCurrentWhitelist(currentWhitelistTmp);
             }

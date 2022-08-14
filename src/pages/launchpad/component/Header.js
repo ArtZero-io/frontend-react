@@ -27,8 +27,8 @@ import { useSubstrateState } from "@utils/substrate";
 import UpdateURIModal from "./Modal/UpdateURIModal";
 import UpdateAdminAddressModal from "./Modal/UpdateAdminAddressModal";
 import UpdatePhasesModal from "./Modal/UpdatePhasesModal";
-import { getUsernameOnchain } from "@utils/blockchain/profile_calls";
 import { ArrowBackIcon } from "@chakra-ui/icons";
+import { truncateStr } from "@utils";
 
 function LaunchpadDetailHeader({
   project,
@@ -60,7 +60,6 @@ function LaunchpadDetailHeader({
     onOpen: onOpenUpdateAdminAddressModal,
     onClose: onCloseUpdateAdminAddressModal,
   } = useDisclosure();
-  
 
   useEffect(() => {
     if (phases?.length > 0) {
@@ -88,10 +87,7 @@ function LaunchpadDetailHeader({
 
   useEffect(() => {
     const fetchOwnerName = async () => {
-      const name = await getUsernameOnchain({
-        accountAddress: projectOwner,
-      });
-
+      const name = truncateStr(projectOwner);
       setOwnerName(name);
     };
 
@@ -176,27 +172,26 @@ function LaunchpadDetailHeader({
                     </Text>
                   </Heading>
                   <Stack alignItems="center" direction="row">
-                  {currentAccount &&
+                    {currentAccount &&
                       currentAccount.address &&
-                      projectOwner === currentAccount.address &&
-                      <>
-                      <Button
-                      px="16px"
-                      variant="outline"
-                      onClick={() => onOpenURI()}
-                    >
-                      update base uri
-                    </Button>
-                    <Button
-                    px="16px"
-                    variant="outline"
-                    onClick={() => onOpenUpdateAdminAddressModal()}
-                  >
-                    update admin address
-                  </Button>
-                  </>
-                  }
-                 
+                      projectOwner === currentAccount.address && (
+                        <>
+                          <Button
+                            px="16px"
+                            variant="outline"
+                            onClick={() => onOpenURI()}
+                          >
+                            update base uri
+                          </Button>
+                          <Button
+                            px="16px"
+                            variant="outline"
+                            onClick={() => onOpenUpdateAdminAddressModal()}
+                          >
+                            update admin address
+                          </Button>
+                        </>
+                      )}
                     {currentAccount &&
                       currentAccount.address &&
                       projectAdminAddress === currentAccount.address && (

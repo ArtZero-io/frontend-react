@@ -34,7 +34,6 @@ import { ContractPromise } from "@polkadot/api-contract";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import AdvancedModeSwitch from "@components/Switch/Switch";
-import AddCollectionNumberInput from "@components/Input/NumberInput";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import CommonStack from "./CommonStack";
 import emailjs from "@emailjs/browser";
@@ -81,7 +80,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     currentHeaderIPFSUrl.current === headerIPFSUrl;
 
   const location = useLocation();
-  console.log("nftContractAddress add new", nftContractAddress);
+  // console.log("nftContractAddress add new", nftContractAddress);
   mode = location.state?.formMode;
 
   if (mode === "EDIT") {
@@ -226,9 +225,25 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
+              console.log("create proj ...");
+
               // check wallet connect?
               if (!currentAccount) {
                 return toast.error("Please connect wallet first!");
+              }
+
+              // check Total Mint Amount của Phase vs total Supply (FE)
+              const totalSupply = parseInt(values.totalSupply);
+              const phases = values.phases;
+
+              const allPhasesMintAmount = phases.reduce((acc, cur) => {
+                return cur?.isPublic ? acc + parseInt(cur?.publicAmount) : acc;
+              }, 0);
+
+              if (totalSupply < allPhasesMintAmount) {
+                return toast.error(
+                  "Total mint of phases must less than Total supply!"
+                );
               }
 
               // check all image uploaded?
@@ -303,10 +318,10 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 JSON.stringify(project_info)
               );
 
-              console.log(
-                "ADD project_info_ipfs NEED CHECK",
-                project_info_ipfs
-              );
+              // console.log(
+              //   "ADD project_info_ipfs NEED CHECK",
+              //   project_info_ipfs
+              // );
               let code_phases = [];
               let start_time_phases = [];
               let end_time_phases = [];
@@ -439,7 +454,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     );
                 };
 
-                console.log("addNewProject data", data);
+                // console.log("addNewProject data", data);
 
                 dispatch(setTxStatus({ type: CREATE_PROJECT, step: START }));
 
@@ -577,7 +592,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           </Text>
                           <DateTimeRangePicker
                             disableClock
-                            disabled={actionType}
+                            disabled={!!actionType}
                             onChange={(e) =>
                               handleOnchangeSchedule(e, setFieldValue)
                             }
@@ -662,7 +677,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       </Stack>
                     )}
 
-                    <AddCollectionNumberInput
+                    <NumberInput
                       isDisabled={!isSetRoyal || actionType}
                       isDisplay={isSetRoyal}
                       max={maxRoyalFeeRate}
@@ -895,6 +910,8 @@ export const fetchInitialValuesProject = async ({
     nftName: "",
     nftSymbol: "",
     totalSupply: 0,
+    royalFee: 0.5,
+
     phases: [
       {
         name: "",

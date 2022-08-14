@@ -13,7 +13,7 @@ import React from "react";
 import { getCachedImageShort } from "@utils/index";
 
 export const TeamCard = ({ team_member }) => {
-  console.log("team_member", team_member);
+  // console.log("team_member", team_member);
   return (
     <Flex
       direction="column"

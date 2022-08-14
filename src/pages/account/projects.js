@@ -20,7 +20,7 @@ const MyProjectsPage = () => {
           currentAccount,
           api,
         });
-        console.log("projectListDetails", projectListDetails);
+        // console.log("projectListDetails", projectListDetails);
         const myProjectListDetails = projectListDetails.filter(
           (i) => i.projectOwner === currentAccount?.address
         );
@@ -35,7 +35,7 @@ const MyProjectsPage = () => {
 
     fetchMyProjectListDetails();
   }, [api, currentAccount]);
-  console.log("projects", projects);
+  // console.log("projects", projects);
   return (
     <CommonContainer>
       <Flex

@@ -272,18 +272,19 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                     precision={0}
                     hasStepper={false}
                     isDisabled={actionType}
-                    label="Public amount"
+                    label="Total Mint Amount"
                     // inputWidth={"100%"}
                     isDisplay={value[index].isPublic}
                     name={`phases[${index}].publicAmount`}
                   />
                   <NumberInput
+                    max={50}
                     type="number"
                     height="50px"
                     precision={0}
                     hasStepper={false}
                     isDisabled={actionType}
-                    label="Public Max Minting Amount"
+                    label="Max per mint"
                     // inputWidth={"100%"}
                     isDisplay={value[index].isPublic}
                     name={`phases[${index}].publicMaxMintingAmount`}
