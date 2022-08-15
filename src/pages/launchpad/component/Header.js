@@ -10,6 +10,9 @@ import {
   Image,
   Skeleton,
   Stack,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
   Text,
   useDisclosure,
   VStack,
@@ -29,6 +32,7 @@ import UpdateAdminAddressModal from "./Modal/UpdateAdminAddressModal";
 import UpdatePhasesModal from "./Modal/UpdatePhasesModal";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { truncateStr } from "@utils";
+import InActiveIcon from "@theme/assets/icon/InActive.js";
 
 function LaunchpadDetailHeader({
   project,
@@ -145,8 +149,15 @@ function LaunchpadDetailHeader({
                       fontSize={["32px", "48px", "48px"]}
                       lineHeight={["38px", "60px", "60px"]}
                     >
-                      {project.name}{" "}
+                      {project.name}
                     </Heading>
+
+                    {!project?.isActive && (
+                      <Tag variant="inActive" fontSize={["14px", "16px"]}>
+                        <TagLeftIcon as={InActiveIcon} />
+                        <TagLabel textTransform="capitalize">Inactive</TagLabel>
+                      </Tag>
+                    )}
 
                     <IconButton
                       pos="absolute"

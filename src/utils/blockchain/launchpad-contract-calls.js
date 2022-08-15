@@ -438,3 +438,23 @@ const launchpad_contract_calls = {
 };
 
 export default launchpad_contract_calls;
+
+export const getProjectMintFeeRate = async function (caller_account, api) {
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  setLaunchPadContract(api, launchpad_manager);
+  const { result, output } = await contract.query[
+    "crossArtZeroLaunchPadPSP34::getProjectMintFeeRate"
+  ](address, {
+    value: azero_value,
+    gasLimit,
+  });
+
+  if (result.isOk) {
+    const ret = output.toHuman();
+    return ret;
+  }
+  return null;
+};

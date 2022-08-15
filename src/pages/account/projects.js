@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Flex, Heading, Spacer, Stack, Text } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
-import { getProjectListDetails } from "../../utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { getProjectListDetails } from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import CommonContainer from "@components/Container/CommonContainer";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import GridA from "@components/Grid/GridA";

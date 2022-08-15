@@ -55,7 +55,7 @@ export const Card = ({ variant, project }) => {
   return (
     <Stack>
       <Flex
-        m="15px"
+        m={{ base: "10px", "2xl": "15px" }}
         h="full"
         w="full"
         shadow="lg"

@@ -52,14 +52,28 @@ import { getPublicCurrentAccount } from "@utils";
 
 import { ipfsClient } from "@api/client";
 import { ArrowBackIcon } from "@chakra-ui/icons";
+import { getProjectMintFeeRate } from "@utils/blockchain/launchpad-contract-calls";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { currentAccount, api } = useSubstrateState();
 
+  const [projectMintFeeRate, setProjectMintFeeRate] = useState(null);
+
+  useEffect(() => {
+    const fetchProjectMintFee = async () => {
+      const fee = await getProjectMintFeeRate(currentAccount, api);
+      setProjectMintFeeRate(fee / 100);
+    };
+
+    fetchProjectMintFee();
+  }, [api, currentAccount]);
+
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
+  const [headerSquareIPFSUrl, setHeaderSquareIPFSUrl] = useState("");
+
   const [initialValues, setInitialValues] = useState(null);
   const [userBalance, setUserBalance] = useState(null);
   const [isSetRoyal, setIsSetRoyal] = useState(false);
@@ -259,6 +273,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
               values.avatarIPFSUrl = avatarIPFSUrl;
               values.headerIPFSUrl = headerIPFSUrl;
+              values.headerSquareIPFSUrl = headerSquareIPFSUrl;
 
               // check prj time-frame is picked?
               const prjStartTime = values?.startTime;
@@ -309,6 +324,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 nft_name: values.nftName.trim(),
                 nft_symbol: values.nftSymbol.trim(),
                 header: values.headerIPFSUrl,
+                headerSquare: values.headerSquareIPFSUrl,
                 avatar: values.avatarIPFSUrl,
                 team_members: values.members,
                 roadmaps: values.roadmap,
@@ -367,7 +383,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 collectionDescription: values.description.trim(),
                 avatarIPFSUrl: values.avatarIPFSUrl,
                 headerIPFSUrl: values.headerIPFSUrl,
-                headerSquareIPFSUrl: values.avatarIPFSUrl,
+                headerSquareIPFSUrl: values.headerSquareIPFSUrl,
                 website: values.website.trim(),
                 twitter: values.twitter.trim(),
                 discord: values.discord.trim(),
@@ -407,7 +423,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       values.description,
                       values.avatarIPFSUrl,
                       values.headerIPFSUrl,
-                      values.avatarIPFSUrl,
+                      values.headerSquareIPFSUrl,
                       values.website,
                       values.twitter,
                       values.discord,
@@ -480,6 +496,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     nft_name: values.nftName.trim(),
                     nft_symbol: values.nftSymbol.trim(),
                     header: values.headerIPFSUrl,
+                    headerSquare: values.headerSquareIPFSUrl,
                     avatar: values.avatarIPFSUrl,
                     team_members: values.members,
                     roadmaps: values.roadmap,
@@ -488,10 +505,11 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   const project_info_ipfs = await ipfsClient.add(
                     JSON.stringify(project_info)
                   );
-                  console.log(
-                    "EDIT project_info_ipfs NEED CHECK",
-                    project_info_ipfs
-                  );
+                  // console.log(
+                  //   "EDIT project_info_ipfs NEED CHECK",
+                  //   project_info_ipfs.path,
+                  //   project_info
+                  // );
                   const launchpad_psp34_nft_standard_contract =
                     new ContractPromise(
                       api,
@@ -552,16 +570,39 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       alignItems="start"
                       justifyContent="end"
                     >
-                      {/* <Heading size="h5">project header image</Heading> */}
-                      {/* <Text pt={{ base: "10px", xl: "30px" }}> */}
-                      <Text>Choose header image</Text>
+                      <Text>Choose header square image</Text>
 
+                      <ImageUpload
+                        mode={mode}
+                        isBanner={true}
+                        id="header_square"
+                        isDisabled={actionType}
+                        imageIPFSUrl={headerSquareIPFSUrl}
+                        setImageIPFSUrl={setHeaderSquareIPFSUrl}
+                        limitedSize={{ width: "500", height: "500" }}
+                      />
+                    </Stack>
+                  </Stack>
+
+                  <Stack
+                    pb="30px"
+                    alignItems="start"
+                    justifyContent="space-between"
+                    direction={["column", "row"]}
+                  >
+                    <Stack
+                      w={{ base: "full", xl: "50%" }}
+                      direction="column"
+                      alignItems="start"
+                      justifyContent="end"
+                    >
+                      <Text>Choose header image</Text>
                       <ImageUpload
                         id="header"
                         mode={mode}
                         isBanner={true}
-                        imageIPFSUrl={headerIPFSUrl}
                         isDisabled={actionType}
+                        imageIPFSUrl={headerIPFSUrl}
                         setImageIPFSUrl={setHeaderIPFSUrl}
                         limitedSize={{ width: "1920", height: "600" }}
                       />
@@ -711,57 +752,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       isDisabled={actionType}
                     />
                   </Stack>
-
-                  {/* <Stack
-                    py="20px"
-                    alignItems="start"
-                    justifyContent="space-between"
-                    direction={["column", "row"]}
-                  >
-                    <Stack
-                      w={{ base: "full", xl: "50%" }}
-                      direction="column"
-                      alignItems="start"
-                      justifyContent="end"
-                    >
-                      <Heading size="h5">project avatar image</Heading>{" "}
-                      <Text pt={{ base: "10px", xl: "30px" }}>
-                        Choose avatar image
-                      </Text>
-                      <ImageUpload
-                        isDisabled={actionType}
-                        id="avatar"
-                        mode={mode}
-                        isBanner={false}
-                        imageIPFSUrl={avatarIPFSUrl}
-                        setImageIPFSUrl={setAvatarIPFSUrl}
-                        limitedSize={{ width: "500", height: "500" }}
-                      />
-                    </Stack>
-
-                    <Stack
-                      pt={{ base: "30px", xl: "0px" }}
-                      w={{ base: "full", xl: "50%" }}
-                      direction="column"
-                      alignItems="start"
-                      justifyContent="end"
-                    >
-                      <Heading size="h5">project header image</Heading>
-                      <Text pt={{ base: "10px", xl: "30px" }}>
-                        Choose header image
-                      </Text>
-
-                      <ImageUpload
-                        id="header"
-                        mode={mode}
-                        isBanner={true}
-                        imageIPFSUrl={headerIPFSUrl}
-                        isDisabled={actionType}
-                        setImageIPFSUrl={setHeaderIPFSUrl}
-                        limitedSize={{ width: "1920", height: "600" }}
-                      />
-                    </Stack>
-                  </Stack> */}
                 </CommonStack>
 
                 <CommonStack stackTitle="2. nft info">
@@ -830,6 +820,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           name="agreeFeeCheckbox"
                           content={`Create new project you will pay ${addProjectTotalFee} $AZERO in fee to
                           ArtZero.io. This fee is non-refundable.`}
+                        />
+                      </HStack>
+                      <HStack w="full" px="15px">
+                        <CommonCheckbox
+                          justifyContent="center"
+                          isDisabled={actionType}
+                          name="agreeProjectMintFeeCheckbox"
+                          content={`I agree to pay ${projectMintFeeRate}% of mint price per succeed mint to ArtZero.io.`}
                         />
                       </HStack>
                       <HStack justifyContent="center" w="full" px="15px">
@@ -924,6 +922,7 @@ export const fetchInitialValuesProject = async ({
       },
     ],
     agreeTosCheckbox: false,
+    agreeProjectMintFeeCheckbox: false,
     agreeFeeCheckbox: false,
   };
 
@@ -976,7 +975,7 @@ export const fetchInitialValuesProject = async ({
       team_members,
       roadmaps,
     } = projectInfo;
-
+    // console.log("projectInfo", projectInfo);
     initialValues.isEditMode = true;
     initialValues.nftName = nft_name;
     initialValues.nftSymbol = nft_symbol;
@@ -1003,6 +1002,7 @@ export const fetchInitialValuesProject = async ({
       initialValues,
       avatarIPFSUrl: avatar,
       headerIPFSUrl: header,
+      headerSquareIPFSUrl: header,
     };
   } catch (error) {
     console.log(error);
@@ -1066,6 +1066,13 @@ const validationAgreeTosCheckbox = Yup.boolean().when("isEditMode", {
   then: Yup.boolean()
     .required("The terms and conditions must be accepted.")
     .oneOf([true], "The TOCs must be accepted."),
+});
+
+const validationAgreeProjectMintFeeCheckbox = Yup.boolean().when("isEditMode", {
+  is: false,
+  then: Yup.boolean()
+    .required("This terms must be accepted.")
+    .oneOf([true], "This terms must be accepted."),
 });
 
 const validationAgreeFeeCheckbox = Yup.boolean().when("isEditMode", {
@@ -1186,5 +1193,6 @@ const validationSchema = Yup.object().shape({
       })
     ),
   agreeTosCheckbox: validationAgreeTosCheckbox,
+  agreeProjectMintFeeCheckbox: validationAgreeProjectMintFeeCheckbox,
   agreeFeeCheckbox: validationAgreeFeeCheckbox,
 });

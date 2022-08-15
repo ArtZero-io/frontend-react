@@ -107,7 +107,8 @@ const LaunchpadDetailPage = () => {
       );
       console.log("LaunchpadDetailPage::project", project);
 
-      if (project && project.isActive) {
+      // if (project && project.isActive) {
+      if (project) {
         const launchpad_psp34_nft_standard_contract = new ContractPromise(
           api,
           launchpad_psp34_nft_standard.CONTRACT_ABI,
