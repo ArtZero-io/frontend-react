@@ -48,6 +48,7 @@ export const ENDED = "ended";
 export const EDIT_PROJECT = "editProject";
 export const CREATE_PROJECT = "createProject";
 export const UPDATE_BASE_URI = "updateBaseUri";
+export const UPDATE_ADMIN_ADDRESS = "updateAdminAddress";
 export const UPDATE_PHASE = "updatePhase";
 export const ADD_PHASE = "addPhase";
 export const DELETE_PHASE = "deletePhase";

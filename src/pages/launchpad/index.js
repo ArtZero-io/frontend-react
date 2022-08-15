@@ -76,7 +76,6 @@ export const LaunchpadPage = () => {
             ...project,
             ...projectInfo,
           };
-
           if (
             timestampWithoutCommas(project.startTime) < currentTime &&
             currentTime < timestampWithoutCommas(project.endTime) &&
@@ -108,7 +107,7 @@ export const LaunchpadPage = () => {
     };
 
     fetchData();
-  }, [currentAccount]);
+  }, [api, currentAccount]);
 
   return (
     <Layout>
@@ -123,7 +122,6 @@ export const LaunchpadPage = () => {
           </Text>
         </VStack>
       </Box>
-
       <GroupCard variant="live" projectsList={liveProjects} loading={loading} />
 
       <GroupCard

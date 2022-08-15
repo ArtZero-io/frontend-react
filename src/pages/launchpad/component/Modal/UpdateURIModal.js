@@ -1,6 +1,5 @@
 import {
   Heading,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -8,6 +7,7 @@ import {
   ModalHeader,
   ModalOverlay,
   VStack,
+  Input,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -28,14 +28,12 @@ export default function UpdateURIModal({
 }) {
   const dispatch = useDispatch();
 
-  const [newURI, setNewURI] = useState("Your new URI here");
+  const [newURI, setNewURI] = useState("");
   const { currentAccount, api } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
-    // console.log("rest.step", rest.step);
     if (rest.step === END) {
-      // console.log("rest.step IN", rest.step);
       dispatch(clearTxStatus());
       onClose();
     }
@@ -94,7 +92,7 @@ export default function UpdateURIModal({
         />
         <ModalHeader textAlign="center">
           <Heading size="h4" my={2}>
-            edit base URI
+            update base URI
           </Heading>
         </ModalHeader>
 
@@ -103,16 +101,17 @@ export default function UpdateURIModal({
             <Input
               bg="black"
               mb="15px"
+              px={2}
               isDisabled={actionType}
               value={newURI}
-              border="1px  solid #555"
+              placeholder="Your new URI here"
               onChange={({ target }) => setNewURI(target.value)}
             />
             <CommonButton
               {...rest}
               w="full"
               onClick={updateBaseUri}
-              text="update base URI"
+              text="submit"
             />
           </VStack>
         </ModalBody>

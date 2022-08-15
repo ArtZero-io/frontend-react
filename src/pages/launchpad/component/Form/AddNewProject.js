@@ -1102,7 +1102,7 @@ const validationSchema = Yup.object().shape({
                 })
                 .required("This field is required")
                 .min(3, "Must be longer than 3 characters")
-                .max(30, "Must be at most 30 characters"),
+                .max(100, "Must be at most 100 characters"),
               otherwise: Yup.string().notRequired(),
             }),
           content: Yup.string()

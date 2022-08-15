@@ -61,7 +61,7 @@ function CommonButton(props) {
       spinner={<ClipLoader color="#7ae7ff" size={14} loading />}
       variant={variant || step === FINALIZED ? "outline" : "solid"}
     >
-      {!isDisabled && step === FINALIZED ? "all done!" : text}
+      {!isDisabled && step === FINALIZED ? "refresh !" : text}
     </Button>
   );
 }

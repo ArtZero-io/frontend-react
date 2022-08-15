@@ -215,7 +215,8 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                         </Text>
                       </Text>
                       <DateTimeRangePicker
-                        disabled={actionType}
+                        disableClock
+                        disabled={!!actionType}
                         onChange={(e) => handlePhaseTime(e, index)}
                         value={
                           !value[index].start
@@ -394,7 +395,9 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                 onClick={() => handleAddPhase(arrayHelpers)}
                 text={`${mode === formMode.ADD ? "add more" : "add new phase"}`}
                 // isDisabled={!(dirty && isValid) && noImagesChange}
-                isDisabled={isDisabled || actionType}
+                isDisabled={
+                  mode === formMode.ADD ? isDisabled || actionType : false
+                }
               />
             </Stack>
           </Stack>

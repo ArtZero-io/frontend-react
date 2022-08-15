@@ -8,8 +8,8 @@ const stepInText = {
   Ready: "ready",
   Broadcast: "broadcast",
   InBlock: "in block",
-  Finalized: "all done!",
-  End: "all done!",
+  Finalized: "refresh !",
+  End: "refresh !",
 };
 
 function useTxStatus() {

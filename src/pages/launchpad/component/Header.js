@@ -150,7 +150,7 @@ function LaunchpadDetailHeader({
 
                     <IconButton
                       pos="absolute"
-                      left="0"
+                      left="-135px"
                       top="5px"
                       onClick={() => history.goBack()}
                       variant="iconOutline"
@@ -206,7 +206,7 @@ function LaunchpadDetailHeader({
                               })
                             }
                           >
-                            edit project information
+                            update project info
                           </Button>
                           <Button
                             px="16px"

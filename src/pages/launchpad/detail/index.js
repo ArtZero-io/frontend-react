@@ -45,7 +45,16 @@ import CommonButton from "@components/Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 import { setTxStatus } from "@store/actions/txStatus";
-import { WHITELIST_MINT, PUBLIC_MINT, START } from "@constants";
+import {
+  WHITELIST_MINT,
+  PUBLIC_MINT,
+  UPDATE_BASE_URI,
+  UPDATE_PHASE,
+  ADD_PHASE,
+  DELETE_PHASE,
+  START,
+  UPDATE_ADMIN_ADDRESS,
+} from "@constants";
 import { useDispatch } from "react-redux";
 
 const LaunchpadDetailPage = () => {
@@ -58,6 +67,7 @@ const LaunchpadDetailPage = () => {
   const [currentPhaseId, setCurrentPhaseId] = useState(0);
   const [currentWhitelist, setCurrentWhitelist] = useState({});
   const [myNFTs, setMyNFTs] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [publicMintedCount, setPublicMintedCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [mintingAmount, setMintingAmount] = useState(1);
@@ -75,7 +85,15 @@ const LaunchpadDetailPage = () => {
   }, []);
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
-    [PUBLIC_MINT, WHITELIST_MINT],
+    [
+      PUBLIC_MINT,
+      WHITELIST_MINT,
+      UPDATE_BASE_URI,
+      UPDATE_PHASE,
+      ADD_PHASE,
+      DELETE_PHASE,
+      UPDATE_ADMIN_ADDRESS,
+    ],
     () => fetchData()
   );
 
@@ -101,6 +119,7 @@ const LaunchpadDetailPage = () => {
         launchpad_psp34_nft_standard_calls.setContract(
           launchpad_psp34_nft_standard_contract
         );
+
         const projectInfoHash =
           await launchpad_psp34_nft_standard_calls.getProjectInfo(
             currentAccount
@@ -228,17 +247,17 @@ const LaunchpadDetailPage = () => {
           }
         }
 
-        const fetchEndAfterLoopNo1 = Date.now();
-        console.log(
-          "projectDetail fetchEndAfterLoopNo1 ",
-          fetchEndAfterLoopNo1
-        );
-        console.log("projectDetail diff", fetchEndAfterLoopNo1 - fetchStart);
+        // const fetchEndAfterLoopNo1 = Date.now();
+        // console.log(
+        //   "projectDetail fetchEndAfterLoopNo1 ",
+        //   fetchEndAfterLoopNo1
+        // );
+        // console.log("projectDetail diff", fetchEndAfterLoopNo1 - fetchStart);
         const projectAdminAddress =
           await launchpad_psp34_nft_standard_calls.getAdminAddress(
             currentAccount
           );
-        console.log(projectAdminAddress);
+        // console.log(projectAdminAddress);
         const projectDetail = {
           name: projectInfo.name,
           description: projectInfo.description,
@@ -260,46 +279,89 @@ const LaunchpadDetailPage = () => {
           await launchpad_psp34_nft_standard_calls.getLastTokenId(
             currentAccount
           );
-        console.log("totalTokenSupply", totalTokenSupply);
+        // console.log("totalTokenSupply", totalTokenSupply);
         if (totalTokenSupply > 0) {
           let myNFTsTmp = [];
-          let tokenUriFull = await launchpad_psp34_nft_standard_calls.tokenUri(
-            currentAccount,
-            1
-          );
-          tokenUriFull = tokenUriFull.replace("1.json", "");
-          console.log("xxx tokenUriFull", tokenUriFull);
 
-          const fetchEndBeforeLoopNo2 = Date.now();
-          console.log(
-            "projectDetail fetchEndBeforeLoopNo2 ",
-            fetchEndBeforeLoopNo2
-          );
-          console.log("projectDetail diff", fetchEndBeforeLoopNo2 - fetchStart);
+          try {
+            let tokenUriFull =
+              await launchpad_psp34_nft_standard_calls.tokenUri(
+                currentAccount,
+                1
+              );
+            tokenUriFull = tokenUriFull.replace("1.json", "");
+            // console.log("xxx tokenUriFull", tokenUriFull);
 
-          for (let tokenID = 1; tokenID <= totalTokenSupply; tokenID++) {
-            let owner = await launchpad_psp34_nft_standard_calls.ownerOf(
-              currentAccount,
-              { u64: tokenID }
-            );
-            console.log("tokenUriFull", tokenUriFull);
-            if (owner == currentAccount.address) {
-              let metaData = await getMetaDataType1(tokenID, tokenUriFull);
-              console.log("xxx metaData", metaData);
-              myNFTsTmp.push(metaData);
+            // const fetchEndBeforeLoopNo2 = Date.now();
+            // console.log(
+            //   "projectDetail fetchEndBeforeLoopNo2 ",
+            //   fetchEndBeforeLoopNo2
+            // );
+            // console.log(
+            //   "projectDetail diff",
+            //   fetchEndBeforeLoopNo2 - fetchStart
+            // );
+
+            for (let tokenID = 1; tokenID <= totalTokenSupply; tokenID++) {
+              let owner = await launchpad_psp34_nft_standard_calls.ownerOf(
+                currentAccount,
+                { u64: tokenID }
+              );
+              // console.log("tokenUriFull", tokenUriFull);
+              if (owner == currentAccount.address) {
+                let metaData = await getMetaDataType1(tokenID, tokenUriFull);
+                // console.log("xxx metaData", metaData);
+                myNFTsTmp.push(metaData);
+              }
             }
+
+            // console.log("xxx myNFTsTmp", myNFTsTmp);
+            // const fetchEndAfterLoopNo2 = Date.now();
+            // console.log(
+            //   "projectDetail fetchEndAfterLoopNo2 ",
+            //   fetchEndAfterLoopNo2
+            // );
+            // console.log(
+            //   "projectDetail diff",
+            //   fetchEndAfterLoopNo2 - fetchStart
+            // );
+            setMyNFTs(myNFTsTmp);
+            console.log("myNFTsTmp", myNFTsTmp);
+            console.log("LaunchpadDetailPage After Set My NFTS");
+          } catch (error) {
+            // case: error: no uri found for token id 1
+            const unrevealedData = {};
+
+            console.log(" LaunchpadDetailPage errorerror", error);
+            console.log(
+              " LaunchpadDetailPage totalTokenSupply ",
+              totalTokenSupply
+            );
+
+            for (let tokenID = 1; tokenID <= totalTokenSupply; tokenID++) {
+              let owner = await launchpad_psp34_nft_standard_calls.ownerOf(
+                currentAccount,
+                { u64: tokenID }
+              );
+              console.log("LaunchpadDetailPage owner", owner);
+              if (owner === currentAccount.address) {
+                myNFTsTmp.push({ tokenID });
+                console.log("LaunchpadDetailPage myNFTsTmp", myNFTsTmp);
+              }
+            }
+            console.log("xxx unrevealedData", unrevealedData);
+            console.log("xxx myNFTsTmp", myNFTsTmp);
+            myNFTsTmp = myNFTsTmp.map(({ tokenID }) => {
+              return {
+                nftName: `${formattedCollection.nft_name} #${tokenID}`,
+                avatar: "QmZH9BjYVCQ9RjRC2TP3jUZGAYfoHkkrararPQfpe5hY57",
+              };
+            });
+
+            setMyNFTs(myNFTsTmp);
+            console.log("myNFTsTmp", myNFTsTmp);
+            console.log("After Set My NFTS");
           }
-
-          console.log("xxx myNFTsTmp", myNFTsTmp);
-          const fetchEndAfterLoopNo2 = Date.now();
-          console.log(
-            "projectDetail fetchEndAfterLoopNo2 ",
-            fetchEndAfterLoopNo2
-          );
-          console.log("projectDetail diff", fetchEndAfterLoopNo2 - fetchStart);
-          setMyNFTs(myNFTsTmp);
-
-          console.log("After Set My NFTS");
         }
       }
 
@@ -313,7 +375,7 @@ const LaunchpadDetailPage = () => {
 
       console.log(error);
     }
-  }, [api, collection_address, currentAccount]);
+  }, [api, collection_address, currentAccount, formattedCollection.nft_name]);
 
   useEffect(() => {
     fetchData();
@@ -527,7 +589,7 @@ const LaunchpadDetailPage = () => {
                   <NumberInput
                     bg="black"
                     min={1}
-                    w="full"
+                    w="150px"
                     mr={[0, 3]}
                     h="3.125rem"
                     mb={["10px", 0]}
@@ -748,13 +810,17 @@ const LaunchpadDetailPage = () => {
               templateColumns={`repeat(auto-fill, minmax(min(100%, 250px), 1fr))`}
               gap="30px"
             >
-              {myNFTs && myNFTs.length
-                ? myNFTs.map((item, idx) => (
-                    <GridItem>
-                      <MyLaunchPadNFTCard key={idx} {...item} />
-                    </GridItem>
-                  ))
-                : ""}
+              {myNFTs?.length === 0 ? (
+                <Text fontSize="lg" color="#888">
+                  No NFT found
+                </Text>
+              ) : (
+                myNFTs.map((item, idx) => (
+                  <GridItem>
+                    <MyLaunchPadNFTCard key={idx} {...item} />
+                  </GridItem>
+                ))
+              )}
             </Grid>
           </Box>
         </>

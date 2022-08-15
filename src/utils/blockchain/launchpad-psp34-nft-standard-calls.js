@@ -633,6 +633,7 @@ async function addNewPhase(
   isPublic,
   publicMintingFee,
   publicMintingAmount,
+  publicMaxMintingAmount,
   startTime,
   endTime,
   dispatch,
@@ -662,6 +663,7 @@ async function addNewPhase(
     isPublic,
     publicMintingFee,
     publicMintingAmount,
+    publicMaxMintingAmount,
     startTime,
     endTime
   );
@@ -694,6 +696,7 @@ async function updateSchedulePhase(
   isPublic,
   publicMintingFee,
   publicMintingAmount,
+  publicMaxMintingAmount,
   startTime,
   endTime,
   dispatch,
@@ -724,6 +727,7 @@ async function updateSchedulePhase(
     isPublic,
     publicMintingFee,
     publicMintingAmount,
+    publicMaxMintingAmount,
     startTime,
     endTime
   );

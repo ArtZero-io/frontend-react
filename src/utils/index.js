@@ -16,7 +16,10 @@ export function getCachedImage(imageHash, size, url) {
 export function getCachedImageShort(imageHash = "", size = 100) {
   const fallbackURL = `${IPFS_BASE_URL}/${imageHash.replace("ipfs://", "")}`;
 
-  return `${baseURL}/getImage?input=${imageHash}&size=${size}&url=${fallbackURL}`;
+  const ret = `${baseURL}/getImage?input=${imageHash}&size=${size}&url=${fallbackURL}`;
+
+  // console.log("ret", ret);
+  return ret;
 }
 
 export function shortenNumber(number) {

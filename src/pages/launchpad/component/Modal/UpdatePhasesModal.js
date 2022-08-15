@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Heading,
   Modal,
@@ -7,14 +6,12 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 import { Form, Formik } from "formik";
 import CommonStack from "../Form/CommonStack";
 import AddPhase from "../Form/AddPhase";
-import StatusButton from "@components/Button/StatusButton";
 import * as Yup from "yup";
 import { SCROLLBAR } from "@constants";
 import { useSubstrateState } from "@utils/substrate";
@@ -26,6 +23,10 @@ import {
   convertStringToPrice,
   convertNumberWithoutCommas,
 } from "@utils";
+import useTxStatus from "@hooks/useTxStatus";
+import { FINALIZED, END } from "@constants";
+import { useDispatch } from "react-redux";
+import { clearTxStatus } from "@store/actions/txStatus";
 
 export default function UpdatePhasesModal({
   isOpen,
@@ -34,6 +35,7 @@ export default function UpdatePhasesModal({
   collection_address,
 }) {
   const { currentAccount, api } = useSubstrateState();
+  const dispatch = useDispatch();
 
   const [initialValues, setInitialValues] = useState({
     phases: [
@@ -50,6 +52,7 @@ export default function UpdatePhasesModal({
   });
 
   const [currentPhaseId, setCurrentPhaseId] = useState(null);
+  const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -119,6 +122,13 @@ export default function UpdatePhasesModal({
     fetchData();
   }, [api, currentAccount, collection_address, currentPhaseId]);
 
+  useEffect(() => {
+    if (rest.step === END) {
+      dispatch(clearTxStatus());
+      onClose();
+    }
+  }, [dispatch, onClose, rest.step]);
+
   return (
     <Modal
       scrollBehavior="inside"
@@ -147,11 +157,11 @@ export default function UpdatePhasesModal({
           right="-8"
           borderWidth={2}
           borderRadius="0"
-          onClick={() => {}}
+          onClick={() => rest?.step === FINALIZED && rest?.onEndClick()}
         />
         <ModalHeader textAlign="center">
           <Heading size="h4" my={2}>
-            edit phases
+            update phases
           </Heading>
         </ModalHeader>
 
