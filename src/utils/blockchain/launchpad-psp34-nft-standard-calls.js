@@ -703,6 +703,14 @@ async function updateSchedulePhase(
   txType,
   api
 ) {
+  console.log({phaseId,
+    phaseCode,
+    isPublic,
+    publicMintingFee,
+    publicMintingAmount,
+    publicMaxMintingAmount,
+    startTime,
+    endTime});
   if (!contract || !caller_account) {
     return null;
   }

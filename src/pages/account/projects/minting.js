@@ -187,8 +187,10 @@ import {
                       h="full"
                     >
                       <Box h="full">
-                        <Heading size="h4">Minting Manager</Heading>
-  
+                        <Heading size="h4">Owner Mint</Heading>
+                        <Text py={2}>
+                          If you are an owner project, you can mint the remain NFTs of public phases. This action is free 
+                        </Text>
                         <Box h="full">
                           {" "}
                           <Box mt={7}>

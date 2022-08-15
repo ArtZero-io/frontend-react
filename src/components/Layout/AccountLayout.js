@@ -168,7 +168,7 @@ const tabsListFull = [
     route: ROUTES.ACCOUNT_WHITELIST_PROJECTS,
   },
   {
-    label: "Minting Manager",
+    label: "Owner Mint",
     isDisabled: false,
     route: ROUTES.ACCOUNT_MINTING_PROJECTS,
   },

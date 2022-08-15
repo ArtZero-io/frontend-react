@@ -25,7 +25,7 @@ import {
   import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
   import { useSelector } from "react-redux";
   import { useEffect, useState } from "react";
-  import { delay } from "@utils";
+  import { delay, convertStringToDateTime } from "@utils";
   import toast from "react-hot-toast";
   import { ContractPromise } from "@polkadot/api-contract";
   import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
@@ -48,6 +48,7 @@ import {
     const [projectPhases, setProjecPhases] = useState([]);
     const [phaseCodeSelected, updatePhaseCodeSelected] = useState(0);
     const [myProjects, setMyProjects] = useState([]);
+    const [currentPhase, setCurrentPhase] = useState({});
 
     const onRefreshAZNFT = async () => {
       await onGetOwner();
@@ -171,6 +172,9 @@ import {
             projectAddress
         );
         launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
+        const phaseInfo = await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(currentAccount, phaseId);
+        console.log('phase info', phaseInfo);
+        setCurrentPhase(phaseInfo);
         const totalPhaseAccountLink = await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(currentAccount, phaseId);
         let whiteListDataTableTmp = [];
 
@@ -407,6 +411,24 @@ import {
                           Initialize
                         </Button>*/}
                         <Heading size="h4">Whitelist Management</Heading>
+                        {currentPhase && currentPhase.title && <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                        >
+                          <Text py={2}>
+                              Total amount: {currentPhase.whitelistAmount}
+                          </Text>
+                          <Text py={2}>
+                              Minted Amount: {currentPhase.claimedAmount}
+                          </Text>
+                          <Text py={2}>
+                              Start Time: {convertStringToDateTime(currentPhase.startTime)}
+                          </Text>
+                          <Text py={2}>
+                              End Time: {convertStringToDateTime(currentPhase.endTime)}
+                          </Text>
+                        </motion.div>}
                         <Box mt={7}>
                           <TableContainer
                               fontSize="lg"

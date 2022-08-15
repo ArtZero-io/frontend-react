@@ -62,14 +62,14 @@ const LaunchpadDetailPage = () => {
   const { collection_address } = useParams();
   const { api, currentAccount } = useSubstrateState();
   const [phases, setPhases] = useState([]);
-  const [totalWhitelistAmount, setTotalWhitelistAmount] = useState(0);
+  const [totalPhaseAmount, setTotalPhaseAmount] = useState(0);
   const [totalClaimedAmount, setTotalClaimedAmount] = useState(0);
   const [currentPhaseId, setCurrentPhaseId] = useState(0);
   const [currentWhitelist, setCurrentWhitelist] = useState({});
   const [myNFTs, setMyNFTs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mintingAmount, setMintingAmount] = useState(1);
-
+  
   const dispatch = useDispatch();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
@@ -201,7 +201,7 @@ const LaunchpadDetailPage = () => {
             startTime: timestampWithoutCommas(phaseSchedule.startTime),
             endTime: timestampWithoutCommas(phaseSchedule.endTime),
             isLive: i == currentPhaseIdTmp ? 1 : 0,
-            totalWhiteList: totalWhiteListPhase ? totalWhiteListPhase : 0,
+            totalWhiteList: totalWhiteListPhase ? Number(convertNumberWithoutCommas(totalWhiteListPhase)) : 0,
             publicPhase: phaseSchedule.isPublic,
             whitelist: whiteListData,
             publicMintingAmount: Number(
@@ -219,8 +219,13 @@ const LaunchpadDetailPage = () => {
 
           if (i == currentPhaseIdTmp) {
             console.log("LaunchpadDetailPage::phaseSchedule", phaseSchedule);
-            setTotalWhitelistAmount(parseInt(phaseSchedule.whitelistAmount));
-            setTotalClaimedAmount(parseInt(phaseSchedule.claimedAmount));
+            if (phaseSchedule.publicPhase == true) {
+              setTotalPhaseAmount(Number(convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)));
+            } else {
+              setTotalPhaseAmount(Number(convertNumberWithoutCommas(phaseSchedule.whitelistAmount)));
+            }
+            
+            setTotalClaimedAmount(Number(convertNumberWithoutCommas(phaseSchedule.claimedAmount)));
             setCurrentPhaseId(currentPhaseIdTmp);
             setCurrentPhase(phaseInfo);
             const currentWhitelistTmp =
@@ -491,52 +496,24 @@ const LaunchpadDetailPage = () => {
                 )}
               </Heading>
               <Spacer />
-              {!currentPhase.publicPhase && totalWhitelistAmount != 0 ? (
-                <Text color="#888">
-                  {Math.round(totalClaimedAmount / totalWhitelistAmount)}% (
-                  {totalClaimedAmount}/{totalWhitelistAmount})
-                </Text>
-              ) : (
-                <Text color="#888">
-                  0% ({totalClaimedAmount}/{totalWhitelistAmount})
-                </Text>
-              )}
-              {currentPhase.publicPhase ? (
-                <Text color="#888">
-                  {" "}
-                  {Math.round(
-                    totalClaimedAmount / currentPhase.publicMintingAmount
-                  )}
-                  % ({totalClaimedAmount}/{currentPhase.publicMintingAmount})
-                </Text>
-              ) : (
-                <Text color="#888">
-                  0% ({totalClaimedAmount}/{currentPhase.publicMintingAmount})
-                </Text>
-              )}
+              
+              {totalPhaseAmount > 0 ? (<Text color="#888">
+                {Math.round(totalClaimedAmount * 100/ totalPhaseAmount)}% (
+                {totalClaimedAmount}/{totalPhaseAmount})
+              </Text>) : ""}
+              
+
+             
             </Flex>
-            {!currentPhase.publicPhase && totalWhitelistAmount != 0 ? (
+            {totalPhaseAmount > 0 ? (
               <Progress
-                value={Math.round(totalClaimedAmount / totalWhitelistAmount)}
+                value={Math.round(totalClaimedAmount * 100 / totalPhaseAmount)}
                 mb="20px"
                 h="8px"
               />
             ) : (
               ""
             )}
-
-            {currentPhase.publicPhase ? (
-              <Progress
-                value={Math.round(
-                  totalClaimedAmount / currentPhase.publicMintingAmount
-                )}
-                mb="20px"
-                h="8px"
-              />
-            ) : (
-              ""
-            )}
-
             {!currentAccount ? (
               <Flex w="full" justifyContent="center">
                 <Button variant="outline">connect your wallet</Button>

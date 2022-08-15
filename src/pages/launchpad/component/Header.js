@@ -181,6 +181,14 @@ function LaunchpadDetailHeader({
                     <Text as="span" color="#7ae7ff">
                       {ownerName}
                     </Text>
+                    {(currentAccount &&
+                      currentAccount.address && project.projectOwner == currentAccount.address) && <>
+                      <br/>
+                      Project Admin:{" "}
+                    <Text as="span" color="#7ae7ff">
+                      {truncateStr(project.projectAdminAddress)}
+                    </Text>
+                    </>}
                   </Heading>
                   <Stack alignItems="center" direction="row">
                     {currentAccount &&
