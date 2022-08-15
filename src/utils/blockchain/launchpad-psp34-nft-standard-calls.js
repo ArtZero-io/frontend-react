@@ -803,36 +803,21 @@ export const getProjectListDetails = async ({ currentAccount, api }) => {
 
     const projectHash = await getProjectInfo(currentAccount);
 
-    const { avatar, header, ...rest } = await APICall.getProjectInfoByHash({
-      projectHash,
-    });
+    const { avatar, headerSquare, ...rest } =
+      await APICall.getProjectInfoByHash({
+        projectHash,
+      });
 
-    const proj = {
+      const proj = {
       ...rest,
       ...project,
-      nftContractAddress: nftAddress,
-      squareImage: avatar,
       avatarImage: avatar,
+      squareImage: headerSquare,
+      nftContractAddress: nftAddress,
       endTime: parseInt(project?.endTime?.replaceAll(",", "")),
       startTime: parseInt(project?.startTime?.replaceAll(",", "")),
     };
     ret.push(proj);
-
-    // const currentTime = Date.now();
-    // if (
-    //   timestampWithoutCommas(project.startTime) < currentTime &&
-    //   currentTime < timestampWithoutCommas(project.endTime) &&
-    //   parseInt(project.projectType) === 1
-    // ) {
-    //   liveProjectsArr.push(projectTmp);
-    // } else if (
-    //   currentTime < timestampWithoutCommas(project.startTime) &&
-    //   parseInt(project.projectType) === 1
-    // ) {
-    //   upcomingProjectsArr.push(projectTmp);
-    // } else {
-    //   endedProjectsArr.push(projectTmp);
-    // }
   }
   return ret;
 };
