@@ -67,8 +67,6 @@ const LaunchpadDetailPage = () => {
   const [currentPhaseId, setCurrentPhaseId] = useState(0);
   const [currentWhitelist, setCurrentWhitelist] = useState({});
   const [myNFTs, setMyNFTs] = useState([]);
-  // eslint-disable-next-line no-unused-vars
-  const [publicMintedCount, setPublicMintedCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [mintingAmount, setMintingAmount] = useState(1);
 
@@ -128,13 +126,6 @@ const LaunchpadDetailPage = () => {
           await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
             projectInfoHash
           );
-
-        let publicMintedCountTmp =
-          await launchpad_psp34_nft_standard_calls.getPublicMintedCount(
-            currentAccount
-          );
-        // console.log("zzz publicMintedCountTmp", publicMintedCountTmp);
-        setPublicMintedCount(publicMintedCountTmp);
 
         const totalSupply =
           await launchpad_psp34_nft_standard_calls.getTotalSupply(
@@ -669,7 +660,7 @@ const LaunchpadDetailPage = () => {
                             <Text mr="30px">
                               Minted:{" "}
                               <Text as="span" color="#fff">
-                                {publicMintedCount}
+                                {item.claimedAmount}
                               </Text>
                             </Text>
                             <Text>
