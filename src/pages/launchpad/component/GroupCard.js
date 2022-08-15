@@ -77,10 +77,7 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
               direction={["column", "row"]}
             >
               {projectsList
-                .slice(
-                  0,
-                  NO_OF_PROJ_TO_DISPLAY * noOfLoad + NO_OF_PROJ_TO_DISPLAY
-                )
+                .slice(0, NO_OF_PROJ_TO_DISPLAY * (noOfLoad + 1))
                 .map((p, idx) => (
                   <Card key={idx} project={p} variant={variant} />
                 ))}
@@ -103,6 +100,9 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
               direction={{ base: "column", xl: "row" }}
             >
               <Button
+                isDisabled={
+                  projectsList.length <= NO_OF_PROJ_TO_DISPLAY * (noOfLoad + 1)
+                }
                 variant="outline"
                 onClick={() => setNoOfLoad((noOfLoad) => noOfLoad + 1)}
               >
