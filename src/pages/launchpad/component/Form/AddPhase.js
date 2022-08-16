@@ -261,6 +261,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                     type="number"
                     // isRequired={true}
                     height="50px"
+                    min="0"
                     hasStepper={false}
                     isDisabled={actionType}
                     label="Public minting fee"

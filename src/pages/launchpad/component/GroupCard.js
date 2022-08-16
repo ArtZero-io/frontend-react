@@ -29,7 +29,7 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
   return (
     <Box
       w="full"
-      mx="auto"
+      mx={["24px", "auto"]}
       mb="30px"
       py="60px"
       bg="#171717"
