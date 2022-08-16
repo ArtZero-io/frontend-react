@@ -130,6 +130,7 @@ import {
                     onChange={(valueString) =>
                         setWithdrawBalance(valueString)
                     }
+                    max={contractBalance}
                     value={withdrawBalance}
                     mr={3}
                     h="3.125rem"
