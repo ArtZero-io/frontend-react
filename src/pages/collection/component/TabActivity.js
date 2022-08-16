@@ -1,13 +1,20 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import EventTable from "@components/Table/EventTable";
 import { useSelector } from "react-redux";
-import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+import {
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  useMediaQuery,
+} from "@chakra-ui/react";
 
-import { getPublicCurrentAccount, truncateStr } from "@utils";
-import profile_calls from "@utils/blockchain/profile_calls";
-import { APICall, clientAPI } from "../../../api/client";
+import { truncateStr } from "@utils";
+import { APICall, clientAPI } from "@api/client";
 import AnimationLoader from "@components/Loader/AnimationLoader";
-import { SCROLLBAR } from "../../../constants";
+import { SCROLLBAR } from "@constants";
+import DropdownMobile from "@components/Dropdown/DropdownMobile";
 
 function TabActivity({
   tokenUriType1,
@@ -19,23 +26,10 @@ function TabActivity({
 
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(null);
-  // eslint-disable-next-line no-unused-vars
-  const [collectionOwnerName, setCollectionOwnerName] = useState(null);
   const [collectionEventsFull, setCollectionEventsFull] = useState(null);
 
   const latestBlockNumberRef = useRef(latestBlockNumber);
   const shouldUpdate = latestBlockNumber !== latestBlockNumberRef.current;
-
-  const getUsername = useCallback(async ({ accountAddress }) => {
-    const {
-      data: { username },
-    } = await profile_calls.getProfileOnChain({
-      callerAccount: getPublicCurrentAccount(),
-      accountAddress,
-    });
-
-    return username || truncateStr(accountAddress);
-  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -45,18 +39,6 @@ function TabActivity({
         platformEvents?.events &&
           (await Promise.all(
             platformEvents?.events?.map(async (event) => {
-              const buyerName = await getUsername({
-                accountAddress: event.buyer,
-              });
-
-              const sellerName = await getUsername({
-                accountAddress: event.seller,
-              });
-
-              const traderName = await getUsername({
-                accountAddress: event.trader,
-              });
-
               const [{ name, contractType }] =
                 await APICall.getCollectionByAddress({
                   collection_address: event.nftContractAddress,
@@ -64,9 +46,9 @@ function TabActivity({
 
               event = {
                 ...event,
-                buyerName,
-                sellerName,
-                traderName,
+                buyerName: truncateStr(event.buyer),
+                sellerName: truncateStr(event.seller),
+                traderName: truncateStr(event.trader),
                 collectionName: name,
               };
 
@@ -112,20 +94,6 @@ function TabActivity({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shouldUpdate]);
 
-  useEffect(() => {
-    const collectionOwnerName = async () => {
-      const name = await getUsername({
-        accountAddress: collectionOwner,
-      });
-
-      return name;
-    };
-
-    collectionOwnerName().then((name) => {
-      setCollectionOwnerName(name);
-    });
-  }, [collectionOwner, getUsername]);
-
   const tabData = [
     {
       label: "PURCHASE",
@@ -133,7 +101,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="PURCHASE"
-          collectionOwnerName={collectionOwnerName}
+          collectionOwnerName={truncateStr(collectionOwner)}
           tableHeaders={headers.purchase}
           tableData={collectionEventsFull?.filter((i) => i.type === "PURCHASE")}
         />
@@ -145,7 +113,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="LIST"
-          collectionOwnerName={collectionOwnerName}
+          collectionOwnerName={truncateStr(collectionOwner)}
           tableHeaders={headers.list}
           tableData={collectionEventsFull?.filter((i) => i.type === "LIST")}
         />
@@ -157,7 +125,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="UNLIST"
-          collectionOwnerName={collectionOwnerName}
+          collectionOwnerName={truncateStr(collectionOwner)}
           tableHeaders={headers.unlist}
           tableData={collectionEventsFull?.filter((i) => i.type === "UNLIST")}
         />
@@ -169,7 +137,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="BID ACCEPT"
-          collectionOwnerName={collectionOwnerName}
+          collectionOwnerName={truncateStr(collectionOwner)}
           tableHeaders={headers.bidAccepted}
           tableData={collectionEventsFull?.filter(
             (i) => i.type === "BID ACCEPTED"
@@ -179,40 +147,58 @@ function TabActivity({
     },
   ];
 
+  const [tabIndex, setTabIndex] = React.useState(0);
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+
   return (
     <>
       <Tabs
+        px="12px"
+        index={tabIndex}
+        onChange={(i) => setTabIndex(i)}
         isLazy
         align="center"
         colorScheme="brand.blue"
-        // orientation={["horizontal", "vertical", "vertical"]}
-        // orientation={{ base: "horizontal", xl: "vertical" }}
       >
-        <TabList
-          pt="11px"
-          pr="5px"
-          pb="8px"
-          sx={SCROLLBAR}
-          overflowX="scroll"
-          borderColor="#171717"
-          justifyContent="start"
-          // maxW={{ base: "320px", xl: "600px" }}
-        >
-          {tabData.map((tab, index) => (
-            <Tab
-              minW="50px"
-              key={index}
-              alignItems="center"
-              justifyContent="center"
-              py={{ base: "4px", xl: "12px" }}
-              fontSize={{ base: "md", xl: "lg" }}
-              fontFamily="Evogria Italic, san serif"
-              _selected={{ bg: "#7ae7ff", color: "#000" }}
-            >
-              {tab.label}
-            </Tab>
-          ))}
-        </TabList>
+        {!isBigScreen ? (
+          <DropdownMobile
+            my="20px"
+            border="1px solid #343333"
+            fontSize="15px"
+            fontFamily="Evogria, san serif"
+            options={options}
+            selectedItem={tabIndex}
+            setSelectedItem={(i) => setTabIndex(i)}
+          />
+        ) : (
+          <TabList
+            pt="11px"
+            pr="5px"
+            pb="8px"
+            sx={SCROLLBAR}
+            overflowX="scroll"
+            borderColor="#171717"
+            justifyContent="center"
+          >
+            {tabData.map((tab, index) => (
+              <Tab
+                color="#888"
+                border="1px solid #343333"
+                minW="180px"
+                key={index}
+                alignItems="center"
+                justifyContent="center"
+                py={{ base: "4px", xl: "12px" }}
+                fontSize={{ base: "sm", xl: "15px" }}
+                fontFamily="Evogria , san serif"
+                _selected={{ border: "2px solid #7ae7ff", color: "#7ae7ff" }}
+              >
+                {tab.label}
+              </Tab>
+            ))}
+          </TabList>
+        )}
+
         {!platformEvents?.events ? (
           <AnimationLoader loadingTime={5} />
         ) : (
@@ -230,6 +216,8 @@ function TabActivity({
 }
 
 export default TabActivity;
+
+const options = ["purchase", "list", "unlist", "bid accepted"];
 
 const headers = {
   purchase: {

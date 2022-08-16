@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Table,
   TableContainer,
@@ -10,17 +9,11 @@ import {
   Tag,
   TagLabel,
   TagRightIcon,
-  Flex,
-  Skeleton,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { convertStringToPrice, convertStringToDateTime } from "@utils";
-import { motion } from "framer-motion";
-import { useSelector } from "react-redux";
 import { truncateStr } from "@utils";
-import StatusBuyButton from "../Button/StatusBuyButton";
-import { AccountActionTypes } from "@store/types/account.types";
-import { SCROLLBAR, ACCEPT_BID } from "@constants";
+import { SCROLLBAR } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 
@@ -44,11 +37,6 @@ function CommonTable({
       fontSize={["md", "lg", "lg"]}
       maxH={{ base: "20rem", "2xl": "30rem" }}
     >
-      {/* <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      > */}
       {tableData?.length ? (
         <>
           <Table variant="striped" size="md" colorScheme="blackAlpha">
@@ -128,7 +116,6 @@ function CommonTable({
           </Table>
         </>
       ) : null}
-      {/* </motion.div> */}
     </TableContainer>
   );
 }
