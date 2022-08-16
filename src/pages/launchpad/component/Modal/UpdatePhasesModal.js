@@ -7,7 +7,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { Form, Formik } from "formik";
 import CommonStack from "../Form/CommonStack";
@@ -53,81 +53,82 @@ export default function UpdatePhasesModal({
 
   const [currentPhaseId, setCurrentPhaseId] = useState(null);
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
+  console.log("UpdatePhasesModal...");
+
+  const fetchData = useCallback(async () => {
+    let initialValuesData = {};
+
+    console.log(collection_address);
+    const launchpad_psp34_nft_standard_contract = new ContractPromise(
+      api,
+      launchpad_psp34_nft_standard.CONTRACT_ABI,
+      collection_address
+    );
+
+    launchpad_psp34_nft_standard_calls.setContract(
+      launchpad_psp34_nft_standard_contract
+    );
+
+    const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(
+      currentAccount
+    );
+    // console.log("UpdatePhasesModal::totalPhase", totalPhase);
+
+    let phasesTmp = [];
+    // console.log("xxx phasesTmp", phasesTmp);
+
+    for (let i = 1; i <= totalPhase; i++) {
+      // console.log('xxx i', i)
+      let phaseSchedule =
+        await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
+          currentAccount,
+          i
+        );
+
+      // console.log("xxx phaseSchedule", phaseSchedule);
+
+      let phaseInfo = {
+        id: i,
+        canEdit: false,
+        name: phaseSchedule.title,
+        start: Number(timestampWithoutCommas(phaseSchedule.startTime)),
+        end: Number(timestampWithoutCommas(phaseSchedule.endTime)),
+        isPublic: phaseSchedule.isPublic,
+        publicAmount: Number(
+          convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
+        ),
+        publicMaxMintingAmount: Number(
+          convertNumberWithoutCommas(phaseSchedule.publicMaxMintingAmount)
+        ),
+        publicMintingFee: convertStringToPrice(phaseSchedule.publicMintingFee),
+      };
+      console.log("phaseInfo", phaseInfo);
+      phasesTmp.push(phaseInfo);
+    }
+
+    initialValuesData.phases = phasesTmp;
+
+    // console.log("xxxUpdatePhasesModal::phasesTmp", phasesTmp);
+    // console.log("xxxinitialValuesData", initialValuesData);
+    // console.log("xxxcurrentPhaseId", currentPhaseId);
+    setInitialValues(initialValuesData);
+    setCurrentPhaseId(currentPhaseId);
+
+    // console.log("initialValuesData", phasesTmp);
+    // console.log("currentPhaseId", currentPhaseId);
+  }, [api, collection_address, currentAccount, currentPhaseId]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      let initialValuesData = {};
-
-      console.log(collection_address);
-      const launchpad_psp34_nft_standard_contract = new ContractPromise(
-        api,
-        launchpad_psp34_nft_standard.CONTRACT_ABI,
-        collection_address
-      );
-
-      launchpad_psp34_nft_standard_calls.setContract(
-        launchpad_psp34_nft_standard_contract
-      );
-
-      const totalPhase =
-        await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
-      // console.log("UpdatePhasesModal::totalPhase", totalPhase);
-
-      let phasesTmp = [];
-      // console.log("xxx phasesTmp", phasesTmp);
-
-      for (let i = 1; i <= totalPhase; i++) {
-        // console.log('xxx i', i)
-        let phaseSchedule =
-          await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-            currentAccount,
-            i
-          );
-
-        // console.log("xxx phaseSchedule", phaseSchedule);
-
-        let phaseInfo = {
-          id: i,
-          canEdit: false,
-          name: phaseSchedule.title,
-          start: Number(timestampWithoutCommas(phaseSchedule.startTime)),
-          end: Number(timestampWithoutCommas(phaseSchedule.endTime)),
-          isPublic: phaseSchedule.isPublic,
-          publicAmount: Number(
-            convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
-          ),
-          publicMaxMintingAmount: Number(
-            convertNumberWithoutCommas(phaseSchedule.publicMaxMintingAmount)
-          ),
-          publicMintingFee: convertStringToPrice(
-            phaseSchedule.publicMintingFee
-          ),
-        };
-        console.log("phaseInfo", phaseInfo);
-        phasesTmp.push(phaseInfo);
-      }
-
-      initialValuesData.phases = phasesTmp;
-
-      // console.log("UpdatePhasesModal::phasesTmp", phasesTmp);
-      // console.log("xxxinitialValuesData", initialValuesData);
-      // console.log("xxxcurrentPhaseId", currentPhaseId);
-      setInitialValues(initialValuesData);
-      setCurrentPhaseId(currentPhaseId);
-
-      // console.log("initialValuesData", phasesTmp);
-      // console.log("currentPhaseId", currentPhaseId);
-    };
-
     fetchData();
-  }, [api, currentAccount, collection_address, currentPhaseId]);
+  }, [api, currentAccount, collection_address, currentPhaseId, fetchData]);
 
   useEffect(() => {
     if (rest.step === END) {
+      fetchData();
       dispatch(clearTxStatus());
       onClose();
     }
-  }, [dispatch, onClose, rest.step]);
+  }, [dispatch, fetchData, onClose, rest.step]);
 
   return (
     <Modal
