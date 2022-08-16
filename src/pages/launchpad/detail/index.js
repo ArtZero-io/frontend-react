@@ -219,7 +219,7 @@ const LaunchpadDetailPage = () => {
 
           if (i == currentPhaseIdTmp) {
             console.log("LaunchpadDetailPage::phaseSchedule", phaseSchedule);
-            if (phaseSchedule.publicPhase == true) {
+            if (phaseSchedule.isPublic == true) {
               setTotalPhaseAmount(Number(convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)));
             } else {
               setTotalPhaseAmount(Number(convertNumberWithoutCommas(phaseSchedule.whitelistAmount)));
