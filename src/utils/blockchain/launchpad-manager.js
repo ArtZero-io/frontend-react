@@ -1,8 +1,8 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5DYTT1EYAcCxVHiyXWSxgtvbE8Z3T7ut8Ejk8nKj6ZfYPwrG",
+  CONTRACT_ADDRESS: "5HBFiD8b6LdpTLUzsrsrnLj5iNL357w7RBN13nzemRNZeGoL",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x0da2f1783191f8ad7fef4630eceaf0fa28cafbff10ce9a053dba55ed9820d4e9",
+      "hash": "0x8e6be975ea7b768336ed10a616bb68112877541a43a0eec1eb59475c5fd7ece9",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -706,23 +706,6 @@ const launchpad_manager = {
             "selector": "0x908e3150"
           },
           {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
             "args": [
               {
                 "label": "new_owner",
@@ -789,19 +772,19 @@ const launchpad_manager = {
           {
             "args": [],
             "docs": [
-              " Get public max minting amount"
+              " Returns the address of the current owner."
             ],
-            "label": "CrossArtZeroLaunchPadPSP34::get_public_max_minting_amount",
+            "label": "Ownable::owner",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "crossartzerolaunchpadpsp34_external",
-                "GetPublicMaxMintingAmountOutput"
+                "ownable_external",
+                "OwnerOutput"
               ],
-              "type": 5
+              "type": 0
             },
-            "selector": "0x529efd6b"
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [],
@@ -819,6 +802,23 @@ const launchpad_manager = {
               "type": 14
             },
             "selector": "0x4832ed9e"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Get public max minting amount"
+            ],
+            "label": "CrossArtZeroLaunchPadPSP34::get_public_max_minting_amount",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerolaunchpadpsp34_external",
+                "GetPublicMaxMintingAmountOutput"
+              ],
+              "type": 5
+            },
+            "selector": "0x529efd6b"
           }
         ]
       },

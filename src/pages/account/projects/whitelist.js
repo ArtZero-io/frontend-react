@@ -60,29 +60,34 @@ import {
     }, [currentAccount]);
   
     const onGetOwner = async (e) => {
-      const ownerAddress = currentAccount?.address;
-      let projectAddresses = await launchpad_contract_calls.getProjectsByOwner(currentAccount, ownerAddress);
+      const adminAddress = currentAccount?.address;
+      let projectCount = await launchpad_contract_calls.getProjectCount(currentAccount);
       let projectsTmp = [];
-      for (const projectAddress of projectAddresses) {
-        const project = await launchpad_contract_calls.getProjectByNftAddress(currentAccount, projectAddress);
-        if (!project.isActive) {
-          continue;
+      if (projectCount > 0) {
+        for (let i = 1; i <= projectCount; i++) {
+          const projectAddress = await launchpad_contract_calls.getProjectById(currentAccount, i);
+            const launchpad_psp34_nft_standard_contract = new ContractPromise(
+              api,
+              launchpad_psp34_nft_standard.CONTRACT_ABI,
+              projectAddress
+          );
+          launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
+          const contractAdminAddressawait = await launchpad_psp34_nft_standard_calls.getAdminAddress(currentAccount);
+          console.log(contractAdminAddressawait, adminAddress);
+          if (contractAdminAddressawait == adminAddress) {
+            const projectInfoHash = await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
+            const projectInfo = await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(projectInfoHash);
+            const projectTmp = {
+              name: projectInfo.name,
+              nftContractAddress: projectAddress,
+            };
+            projectsTmp.push(projectTmp);
+          }
+          
         }
-        const launchpad_psp34_nft_standard_contract = new ContractPromise(
-            api,
-            launchpad_psp34_nft_standard.CONTRACT_ABI,
-            projectAddress
-        );
-        launchpad_psp34_nft_standard_calls.setContract(launchpad_psp34_nft_standard_contract);
-        const projectInfoHash = await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
-        const projectInfo = await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(projectInfoHash);
-        const projectTmp = {
-          name: projectInfo.name,
-          nftContractAddress: projectAddress,
-        };
-        projectsTmp.push(projectTmp);
       }
       setMyProjects(projectsTmp);
+      
     };
 
     const onAddWhitelist = async () => {

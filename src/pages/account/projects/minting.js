@@ -62,9 +62,7 @@ import {
       let projectsTmp = [];
       for (const projectAddress of projectAddresses) {
         const project = await launchpad_contract_calls.getProjectByNftAddress(currentAccount, projectAddress);
-        if (!project.isActive) {
-          continue;
-        }
+
         const launchpad_psp34_nft_standard_contract = new ContractPromise(
             api,
             launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -77,6 +75,7 @@ import {
           name: projectInfo.name,
           nftContractAddress: projectAddress,
         };
+        
         projectsTmp.push(projectTmp);
       }
       setMyProjects(projectsTmp);
