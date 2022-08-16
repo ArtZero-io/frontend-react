@@ -703,14 +703,6 @@ async function updateSchedulePhase(
   txType,
   api
 ) {
-  console.log({phaseId,
-    phaseCode,
-    isPublic,
-    publicMintingFee,
-    publicMintingAmount,
-    publicMaxMintingAmount,
-    startTime,
-    endTime});
   if (!contract || !caller_account) {
     return null;
   }
@@ -848,6 +840,46 @@ async function getAdminAddress(caller_account) {
   return null;
 }
 
+async function withdrawFee(caller_account, amount, dispatch, txType, api) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  if (parseInt(amount) <= 0) {
+    toast.error(`invalid inputs`);
+    return;
+  }
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+
+  contract.tx
+    .withdrawFee(
+      { gasLimit, value: azero_value },
+      new BN(parseFloat(amount) * 10 ** 6).mul(new BN(10 ** 6)).toString()
+    )
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((e) => console.log("e", e));
+  return unsubscribe;
+}
+
 const launchpad_psp34_nft_standard_calls = {
   getTotalSupply,
   getLastPhaseId,
@@ -874,6 +906,7 @@ const launchpad_psp34_nft_standard_calls = {
   getAdminAddress,
   updateAdminAddress,
   mint,
+  withdrawFee
 };
 
 export default launchpad_psp34_nft_standard_calls;
