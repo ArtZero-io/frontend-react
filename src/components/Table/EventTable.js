@@ -10,12 +10,14 @@ import {
   Image,
   Square,
   Heading,
+  HStack,
+  Text,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
 import { getCachedImageShort, formatNumDynamicDecimal } from "@utils";
 import { memo } from "react";
-import { SCROLLBAR } from "../../constants";
+import { SCROLLBAR } from "@constants";
 
 function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
   return (
@@ -58,24 +60,26 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
                     >
                       collection creator
                     </Th>
-                    {Object.values(tableHeaders)?.map((item, idx) => (
-                      <Th
-                        position="sticky"
-                        top={0}
-                        zIndex={1}
-                        textAlign="center"
-                        key={idx}
-                        fontFamily="Evogria"
-                        color="#888"
-                        bg="#171717"
-                        fontSize="15px"
-                        fontWeight="400"
-                        dropShadow="lg"
-                        py={{ base: "1rem", "2xl": "1.75rem" }}
-                      >
-                        {item}
-                      </Th>
-                    ))}
+                    {Object.values(tableHeaders)?.map((item, idx) =>
+                      item === "image" ? null : (
+                        <Th
+                          position="sticky"
+                          top={0}
+                          zIndex={1}
+                          textAlign="center"
+                          key={idx}
+                          fontFamily="Evogria"
+                          color="#888"
+                          bg="#171717"
+                          fontSize="15px"
+                          fontWeight="400"
+                          dropShadow="lg"
+                          py={{ base: "1rem", "2xl": "1.75rem" }}
+                        >
+                          {item}
+                        </Th>
+                      )
+                    )}
                     {/* <Th
                       position="sticky"
                       top={0}
@@ -101,48 +105,57 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
                         hidden={type === "UNLIST" || type === "LIST"}
                         py={{ base: "1rem", "2xl": "1.75rem" }}
                         textAlign="center"
-                        color="#fff"
+                        color="#7ae7ff"
                       >
                         {collectionOwnerName}
                       </Td>
-                      {Object.keys(tableHeaders)?.map((i, idx) => (
-                        <Td
-                          isNumeric={i === "price" ? true : false}
-                          key={idx}
-                          py={{ base: "1rem", "2xl": "1.75rem" }}
-                          textAlign="center"
-                          // color="#fff"
-                          color={
-                            i === "nftContractAddress" ||
-                            i === "seller" ||
-                            i === "trader" ||
-                            i === "buyer"
-                              ? "#7ae7ff"
-                              : "#fff"
-                          }
-                        >
-                          {i === "price" ||
-                          i === "platformFee" ||
-                          i === "royalFee" ? (
-                            <>
-                              {formatNumDynamicDecimal(item[i])}
-                              <TagRightIcon as={AzeroIcon} w="16px" />
-                            </>
-                          ) : i === "avatar" ? (
-                            <>
-                              <Square size="64px" mx="auto">
-                                <Image
-                                  width="full"
-                                  height="full"
-                                  src={item[i] && getCachedImageShort(item[i])}
-                                />
-                              </Square>
-                            </>
-                          ) : (
-                            item[i]
-                          )}
-                        </Td>
-                      ))}
+                      {Object.keys(tableHeaders)?.map((i, idx) =>
+                        i === "avatar" ? null : (
+                          <Td
+                            key={idx}
+                            textAlign="center"
+                            minW={["auto", "250px"]}
+                            isNumeric={i === "price" ? true : false}
+                            py={{ base: "1rem", "2xl": "1.75rem" }}
+                          >
+                            {i === "price" ||
+                            i === "platformFee" ||
+                            i === "royalFee" ? (
+                              <>
+                                {formatNumDynamicDecimal(item[i])}
+                                <TagRightIcon as={AzeroIcon} w="16px" />
+                              </>
+                            ) : i === "nftName" ? (
+                              <HStack justifyContent="center">
+                                <Square mr="20px" size="50px">
+                                  <Image
+                                    width="full"
+                                    height="full"
+                                    src={
+                                      item["avatar"] &&
+                                      getCachedImageShort(item["avatar"])
+                                    }
+                                  />
+                                </Square>
+                                <Text>{item.nftName}</Text>
+                              </HStack>
+                            ) : (
+                              <Text
+                                color={
+                                  [
+                                    "nftContractAddress",
+                                    "sellerName",
+                                    "traderName",
+                                    "buyerName",
+                                  ].includes(i) && "#7ae7ff"
+                                }
+                              >
+                                {item[i]}
+                              </Text>
+                            )}
+                          </Td>
+                        )
+                      )}
                       {/* <Td
                         key={idx}
                         py={{ base: "1rem", "2xl": "1.75rem" }}

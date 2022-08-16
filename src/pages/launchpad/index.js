@@ -19,6 +19,8 @@ export const LaunchpadPage = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    let isUnmounted = false;
+
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -95,18 +97,22 @@ export const LaunchpadPage = () => {
         // const live = projects.filter((p) => p.status === "live");
         // const upcoming = projects.filter((p) => p.status === "upcoming");
         // const ended = projects.filter((p) => p.status === "ended");
-
+       
+        if (isUnmounted) return;
         setLiveProjects(liveProjectsArr);
         setUpcomingProjects(upcomingProjectsArr);
         setEndedProjects(endedProjectsArr);
         setLoading(false);
       } catch (error) {
+        if (isUnmounted) return;
+
         console.log(error);
         setLoading(false);
       }
     };
 
     fetchData();
+    return () => (isUnmounted = true);
   }, [api, currentAccount]);
 
   return (
