@@ -30,6 +30,7 @@ import { useSubstrateState } from "@utils/substrate";
 import UpdateURIModal from "./Modal/UpdateURIModal";
 import UpdateAdminAddressModal from "./Modal/UpdateAdminAddressModal";
 import UpdatePhasesModal from "./Modal/UpdatePhasesModal";
+import UpdateWithdrawModal from "./Modal/UpdateWithdrawModal";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { truncateStr } from "@utils";
 import InActiveIcon from "@theme/assets/icon/InActive.js";
@@ -63,6 +64,12 @@ function LaunchpadDetailHeader({
     isOpen: isOpenUpdateAdminAddressModal,
     onOpen: onOpenUpdateAdminAddressModal,
     onClose: onCloseUpdateAdminAddressModal,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenWithdrawModal,
+    onOpen: onOpenWithdrawModal,
+    onClose: onCloseWithdrawModal,
   } = useDisclosure();
 
   useEffect(() => {
@@ -208,6 +215,13 @@ function LaunchpadDetailHeader({
                             onClick={() => onOpenUpdateAdminAddressModal()}
                           >
                             update admin address
+                          </Button>
+                          <Button
+                            px="16px"
+                            variant="outline"
+                            onClick={() => onOpenWithdrawModal()}
+                          >
+                            Withdraw balance
                           </Button>
                         </>
                       )}
@@ -451,6 +465,11 @@ function LaunchpadDetailHeader({
         isOpen={isOpenUpdateAdminAddressModal}
         collection_address={collection_address}
         onClose={onCloseUpdateAdminAddressModal}
+      />
+      <UpdateWithdrawModal
+        isOpen={isOpenWithdrawModal}
+        collection_address={collection_address}
+        onClose={onCloseWithdrawModal}
       />
       <UpdatePhasesModal
         isOpen={isOpenPhase}
