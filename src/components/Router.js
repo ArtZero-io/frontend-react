@@ -1,9 +1,8 @@
-/* eslint-disable no-unused-vars */
 import { Switch, Route } from "react-router-dom";
 import * as ROUTES from "@constants/routes";
 
 import HomePage from "@pages/home";
-import MintPage from "@pages/mint";
+// import MintPage from "@pages/mint";
 // import AdminPage from "@pages/admin";
 
 import CollectionsPage from "@pages/collections/collections";
@@ -77,7 +76,7 @@ const Router = () => {
       />
 
       <Route exact path={ROUTES.STATS} component={StatsPage} />
-      <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} />
+      {/* <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} /> */}
       <Route exact path={ROUTES.NFT_DETAIL} component={NftDetailPage} />
       <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
       <Route exact path={ROUTES.DETAIL_COLLECTION} component={CollectionPage} />

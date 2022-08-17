@@ -657,8 +657,6 @@ const LaunchpadDetailPage = () => {
                             </Text>
                             <Spacer />
                             <Text color="brand.blue">
-                              {" "}
-                              {console.log("xxxitem", item)}
                               Start - End time:{" "}
                               <Text as="span" color="#fff">
                                 {new Date(
@@ -711,6 +709,21 @@ const LaunchpadDetailPage = () => {
                                 </Text>
                               </Text>
                             )}
+                            <Spacer />
+                            <Text color="brand.blue">
+                              {" "}
+                              {console.log("xxxitem", item)}
+                              Start - End time:{" "}
+                              <Text as="span" color="#fff">
+                                {new Date(
+                                  Number(item?.startTime)
+                                ).toLocaleString()}{" "}
+                                -{" "}
+                                {new Date(
+                                  Number(item?.endTime)
+                                ).toLocaleString()}{" "}
+                              </Text>
+                            </Text>
                           </Flex>
                         </>
                       )}

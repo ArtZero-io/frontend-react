@@ -3,7 +3,7 @@ import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import Layout from "@components/Layout/Layout";
 
 import AdminHeader from "@pages/admin/components/Header";
-import ContractTab from "@pages/admin/components/Tab/Contract";
+// import ContractTab from "@pages/admin/components/Tab/Contract";
 import CollectionTab from "@pages/admin/components/Tab/Collection";
 import CheckCollection from "@pages/admin/components/Tab/CheckCollection";
 import RewardDistribution from "@pages/admin/components/Tab/RewardDistribution";
@@ -11,10 +11,10 @@ import ProjectTab from "@pages/admin/components/Tab/Project";
 
 const AdminLayout = () => {
   const tabData = [
-    {
-      label: "AZ NFT Contract",
-      content: <ContractTab />,
-    },
+    // {
+    //   label: "AZ NFT Contract",
+    //   content: <ContractTab />,
+    // },
     {
       label: "Collection Management",
       content: <CollectionTab />,
