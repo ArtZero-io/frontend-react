@@ -1,8 +1,8 @@
 const staking = {
-  CONTRACT_ADDRESS: "5CtswbWCSpb3Qh2vz7Y3oEMpiHqNi8JidMLVaVAt7sz3ex3d",
+  CONTRACT_ADDRESS: "5D6JbH7Rs7VoNiqkFkSBuGWeHVdhDxjr2WYoqnkduDGCEnD9",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x0181febd4e00ac38a98e750b6be9baadaf643f45deca9581df4c828bc2dc2cff",
+      "hash": "0xc020dd75fc0467e9aa946931ec630bcb0c4fe521244189d6bba8767141616ad0",
       "language": "ink! 3.3.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -959,33 +959,6 @@ const staking = {
             "selector": "0xd34ab274"
           },
           {
-            "args": [],
-            "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 17
-            },
-            "selector": "0x5e228753"
-          },
-          {
             "args": [
               {
                 "label": "new_owner",
@@ -1025,6 +998,33 @@ const staking = {
           {
             "args": [],
             "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 17
+            },
+            "selector": "0x5e228753"
+          },
+          {
+            "args": [],
+            "docs": [
               " Returns the address of the current owner."
             ],
             "label": "Ownable::owner",
@@ -1038,34 +1038,6 @@ const staking = {
               "type": 0
             },
             "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [
-              {
-                "label": "account",
-                "type": {
-                  "displayName": [
-                    "crossartzerostaking_external",
-                    "GetTotalStakedByAccountInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Get User NFT staked in the contract"
-            ],
-            "label": "CrossArtZeroStaking::get_total_staked_by_account",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerostaking_external",
-                "GetTotalStakedByAccountOutput"
-              ],
-              "type": 6
-            },
-            "selector": "0x487f1cac"
           },
           {
             "args": [
@@ -1094,6 +1066,34 @@ const staking = {
               "type": 6
             },
             "selector": "0x3d9ff06d"
+          },
+          {
+            "args": [
+              {
+                "label": "account",
+                "type": {
+                  "displayName": [
+                    "crossartzerostaking_external",
+                    "GetTotalStakedByAccountInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Get User NFT staked in the contract"
+            ],
+            "label": "CrossArtZeroStaking::get_total_staked_by_account",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerostaking_external",
+                "GetTotalStakedByAccountOutput"
+              ],
+              "type": 6
+            },
+            "selector": "0x487f1cac"
           }
         ]
       },
