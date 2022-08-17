@@ -1,5 +1,5 @@
 const staking = {
-  CONTRACT_ADDRESS: "5D6JbH7Rs7VoNiqkFkSBuGWeHVdhDxjr2WYoqnkduDGCEnD9",
+  CONTRACT_ADDRESS: "5FmTW2PbLH6ffRtozDd27XDkh6qdHJBWuHk1Ez8NPKEQgPpw",
   CONTRACT_ABI: {
     "source": {
       "hash": "0xc020dd75fc0467e9aa946931ec630bcb0c4fe521244189d6bba8767141616ad0",
