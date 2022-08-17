@@ -34,6 +34,7 @@ import UpdateWithdrawModal from "./Modal/UpdateWithdrawModal";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { truncateStr } from "@utils";
 import InActiveIcon from "@theme/assets/icon/InActive.js";
+import numeral from "numeral";
 
 function LaunchpadDetailHeader({
   project,
@@ -87,6 +88,7 @@ function LaunchpadDetailHeader({
       const minutes = Math.floor((total / 1000 / 60) % 60);
       const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
       const days = Math.floor(total / (1000 * 60 * 60 * 24));
+
       setCountDownTimer({
         days: days,
         hours: hours,
@@ -144,7 +146,7 @@ function LaunchpadDetailHeader({
                 exit={{ opacity: 0 }}
               >
                 <VStack
-                  pt="30px"
+                  pt="26px"
                   textAlign="center"
                   justifyContent="space-between"
                   minH={{ base: "3.5rem", "2xl": "7.125rem" }}
@@ -165,108 +167,37 @@ function LaunchpadDetailHeader({
                         <TagLabel textTransform="capitalize">Inactive</TagLabel>
                       </Tag>
                     )}
-
-                    <IconButton
-                      pos="absolute"
-                      left="-135px"
-                      top="5px"
-                      onClick={() => history.goBack()}
-                      variant="iconOutline"
-                      width={["40px", "50px"]}
-                      height={["40px", "50px"]}
-                      icon={<ArrowBackIcon fontSize="2xl" />}
-                      _hover={{
-                        bg: "brand.blue",
-                        color: "black",
-                        borderWidth: "0",
-                      }}
-                    />
                   </HStack>
 
-                  <Heading py="15px" fontSize={["sm", "md", "md"]}>
-                    Project creator:{" "}
-                    <Text as="span" color="#7ae7ff">
-                      {ownerName}
-                    </Text>
+                  <VStack
+                    w="full"
+                    borderBottom="1px #282828 solid"
+                    pt="12px"
+                    pb="30px"
+                  >
+                    <Heading fontSize={["sm", "md", "md"]}>
+                      Project creator:{" "}
+                      <Text as="span" color="#7ae7ff">
+                        {ownerName}
+                      </Text>
+                    </Heading>
+
                     {currentAccount &&
                       currentAccount.address &&
-                      project.projectOwner == currentAccount.address && (
-                        <>
-                          <br />
+                      project.projectOwner === currentAccount.address && (
+                        <Heading fontSize={["sm", "md", "md"]}>
+                          {" "}
                           Project Admin:{" "}
                           <Text as="span" color="#7ae7ff">
                             {truncateStr(project.projectAdminAddress)}
                           </Text>
-                        </>
+                        </Heading>
                       )}
-                  </Heading>
-                  <Stack alignItems="center" direction="row">
-                    {currentAccount &&
-                      currentAccount.address &&
-                      projectOwner === currentAccount.address && (
-                        <>
-                          <Button
-                            px="16px"
-                            variant="outline"
-                            onClick={() => onOpenURI()}
-                          >
-                            update base uri
-                          </Button>
-                          <Button
-                            px="16px"
-                            variant="outline"
-                            onClick={() => onOpenUpdateAdminAddressModal()}
-                          >
-                            update admin address
-                          </Button>
-                          <Button
-                            px="16px"
-                            variant="outline"
-                            onClick={() => onOpenWithdrawModal()}
-                          >
-                            Withdraw balance
-                          </Button>
-                        </>
-                      )}
-                    {currentAccount &&
-                      currentAccount.address &&
-                      projectAdminAddress === currentAccount.address && (
-                        <>
-                          <Button
-                            px="16px"
-                            variant="outline"
-                            onClick={() =>
-                              history.push({
-                                state: { formMode: "EDIT", collection_address },
-                                pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
-                              })
-                            }
-                          >
-                            update project info
-                          </Button>
-                          <Button
-                            px="16px"
-                            variant="outline"
-                            onClick={() => onOpenPhase()}
-                          >
-                            update phases
-                          </Button>
-                        </>
-                      )}{" "}
-                  </Stack>
-                  <Flex
-                    w="full"
-                    pb="40px"
-                    maxW="730px"
-                    color="#fff"
-                    alignItems="start"
-                    justifyContent="center"
-                    fontSize={["15px", "18px", "18px"]}
-                  >
-                    <Text noOfLines={[3, 3]}>{project.description}</Text>
-                  </Flex>
+                  </VStack>
 
                   <Flex
+                    pt="22px"
+                    pb="30px"
                     color="#888"
                     w="full"
                     justifyContent="center"
@@ -337,8 +268,8 @@ function LaunchpadDetailHeader({
                 h={["full", "full", "full"]}
                 borderWidth={2}
                 borderColor="brand.blue"
-                px={{ base: 1, xl: 12, "2xl": 16 }}
-                py={{ base: "0.5rem", "2xl": "40px" }}
+                px={["4px", "30px"]}
+                py={{ base: "0.5rem", xl: "40px" }}
                 justifyContent="space-between"
                 my="30px"
               >
@@ -350,13 +281,13 @@ function LaunchpadDetailHeader({
                       exit={{ opacity: 0 }}
                     >
                       <Text
-                        fontFamily="DS-Digital"
-                        fontSize={{ base: "32px", "2xl": "48px" }}
                         lineHeight="none"
+                        fontFamily="DS-Digital"
+                        fontSize={["40px", "48px"]}
                       >
-                        {countDownTimer.days}{" "}
+                        {numeral(countDownTimer.days).format("00,0")}
                       </Text>
-                      <Text fontSize={["13px", "16px", "16px"]}>Days</Text>
+                      <Text fontSize={["14px", "16px"]}> Days</Text>
                     </motion.div>
                   </>
                 </VStack>
@@ -376,13 +307,13 @@ function LaunchpadDetailHeader({
                       exit={{ opacity: 0 }}
                     >
                       <Text
-                        fontFamily="DS-Digital"
-                        fontSize={{ base: "32px", "2xl": "48px" }}
                         lineHeight="none"
+                        fontFamily="DS-Digital"
+                        fontSize={["40px", "48px"]}
                       >
-                        {countDownTimer.hours}{" "}
+                        {numeral(countDownTimer.hours).format("00,0")}
                       </Text>
-                      <Text fontSize={["13px", "16px", "16px"]}>Hours</Text>
+                      <Text fontSize={["14px", "16px"]}>Hours</Text>
                     </motion.div>
                   </>
                 </VStack>
@@ -393,6 +324,7 @@ function LaunchpadDetailHeader({
                   bg="#232323"
                   display={{ base: "none", xl: "inline" }}
                 />
+
                 <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
                   <>
                     <motion.div
@@ -401,13 +333,13 @@ function LaunchpadDetailHeader({
                       exit={{ opacity: 0 }}
                     >
                       <Text
-                        fontFamily="DS-Digital"
-                        fontSize={{ base: "32px", "2xl": "48px" }}
                         lineHeight="none"
+                        fontFamily="DS-Digital"
+                        fontSize={["40px", "48px"]}
                       >
-                        {countDownTimer.minutes}{" "}
+                        {numeral(countDownTimer.minutes).format("00,0")}
                       </Text>
-                      <Text fontSize={["13px", "16px", "16px"]}>Mins</Text>
+                      <Text fontSize={["14px", "16px"]}> Mins</Text>
                     </motion.div>
                   </>
                 </VStack>
@@ -418,6 +350,7 @@ function LaunchpadDetailHeader({
                   bg="#232323"
                   display={{ base: "none", xl: "inline" }}
                 />
+
                 <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
                   <>
                     <motion.div
@@ -426,22 +359,113 @@ function LaunchpadDetailHeader({
                       exit={{ opacity: 0 }}
                     >
                       <Text
-                        fontFamily="DS-Digital"
-                        fontSize={{ base: "32px", "2xl": "48px" }}
                         lineHeight="none"
+                        fontFamily="DS-Digital"
+                        fontSize={["40px", "48px"]}
                       >
-                        {countDownTimer.seconds}{" "}
+                        {numeral(countDownTimer.seconds).format("00,0")}
                       </Text>
-                      <Text fontSize={["13px", "16px", "16px"]}>Seconds</Text>
+                      <Text fontSize={["14px", "16px"]}> Seconds</Text>
                     </motion.div>
                   </>
                 </VStack>
               </HStack>
-            ) : (
-              ""
-            )}
+            ) : null}
+
+            <Flex
+              w="full"
+              pt="22px"
+              pb="30px"
+              maxW="730px"
+              color="#fff"
+              alignItems="start"
+              justifyContent="center"
+              textAlign="center"
+              fontSize={["15px", "18px", "18px"]}
+            >
+              <Text noOfLines={[3, 3]}>{project.description}</Text>
+            </Flex>
+
+            <Stack alignItems="center" direction="row" py="30px">
+              {currentAccount &&
+                currentAccount.address &&
+                projectOwner === currentAccount.address && (
+                  <>
+                    <Button
+                      px="16px"
+                      variant="outline"
+                      onClick={() => onOpenURI()}
+                    >
+                      update base uri
+                    </Button>
+                    <Button
+                      px="16px"
+                      variant="outline"
+                      onClick={() => onOpenUpdateAdminAddressModal()}
+                    >
+                      update admin address
+                    </Button>
+                    <Button
+                      px="16px"
+                      variant="outline"
+                      onClick={() => onOpenWithdrawModal()}
+                    >
+                      withdraw balance
+                    </Button>
+                  </>
+                )}
+              {currentAccount &&
+                currentAccount.address &&
+                projectAdminAddress === currentAccount.address && (
+                  <>
+                    <Button
+                      px="16px"
+                      variant="outline"
+                      onClick={() =>
+                        history.push({
+                          state: { formMode: "EDIT", collection_address },
+                          pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
+                        })
+                      }
+                    >
+                      update project info
+                    </Button>
+                    <Button
+                      px="16px"
+                      variant="outline"
+                      onClick={() => onOpenPhase()}
+                    >
+                      update phases
+                    </Button>
+                  </>
+                )}{" "}
+            </Stack>
           </VStack>
         </Box>
+      )}
+      {!loading && (
+        <HStack
+          pt="27px"
+          top="0"
+          left="100px"
+          w={["full", "auto"]}
+          position={{ base: "unset", xl: "absolute" }}
+        >
+          <IconButton
+            mr="8px"
+            onClick={() => history.goBack()}
+            variant="iconOutline"
+            width={["40px", "50px"]}
+            height={["40px", "50px"]}
+            icon={<ArrowBackIcon fontSize="2xl" />}
+            _hover={{
+              bg: "brand.blue",
+              color: "black",
+              borderWidth: "0",
+            }}
+          />
+          <Text>Go back</Text>
+        </HStack>
       )}
 
       {!loading && (
