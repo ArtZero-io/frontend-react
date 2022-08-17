@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Center,
   Divider,
   Flex,
@@ -35,6 +34,11 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import { truncateStr } from "@utils";
 import InActiveIcon from "@theme/assets/icon/InActive.js";
 import numeral from "numeral";
+import BaseURIIcon from "@theme/assets/icon/BaseURI";
+import AdminAddressIcon from "@theme/assets/icon/AdminAddress";
+import PhasesIcon from "@theme/assets/icon/Phases";
+import ProjectInfoIcon from "@theme/assets/icon/ProjectInfo";
+import toast from "react-hot-toast";
 
 function LaunchpadDetailHeader({
   project,
@@ -170,12 +174,13 @@ function LaunchpadDetailHeader({
                   </HStack>
 
                   <VStack
+                    minW="870px"
                     w="full"
                     borderBottom="1px #282828 solid"
                     pt="12px"
                     pb="30px"
                   >
-                    <Heading fontSize={["sm", "md", "md"]}>
+                    <Heading fontSize={["sm", "md", "md"]} mb="8px">
                       Project creator:{" "}
                       <Text as="span" color="#7ae7ff">
                         {ownerName}
@@ -189,7 +194,7 @@ function LaunchpadDetailHeader({
                           {" "}
                           Project Admin:{" "}
                           <Text as="span" color="#7ae7ff">
-                            {truncateStr(project.projectAdminAddress)}
+                            {truncateStr(projectAdminAddress)}
                           </Text>
                         </Heading>
                       )}
@@ -198,15 +203,15 @@ function LaunchpadDetailHeader({
                   <Flex
                     pt="22px"
                     pb="30px"
-                    color="#888"
                     w="full"
-                    justifyContent="center"
-                    textAlign="center"
+                    color="#888"
                     minW="500px"
+                    textAlign="center"
+                    justifyContent="center"
                     fontSize={["15px", "18px", "18px"]}
                     minH={{ base: "1rem", "2xl": "3.375rem" }}
                   >
-                    <Text mx="30px">
+                    <Text mx="42px">
                       Supply:{" "}
                       <Text as="span" color="#fff">
                         {project.totalSupply}
@@ -217,7 +222,7 @@ function LaunchpadDetailHeader({
                     !livePhase.publicPhase &&
                     currentWhitelist.mintingFee ? (
                       <>
-                        <Text mx="30px">
+                        <Text mx="42px">
                           Price:{" "}
                           <Text as="span" color="#fff">
                             {convertStringToPrice(currentWhitelist.mintingFee)}{" "}
@@ -231,7 +236,7 @@ function LaunchpadDetailHeader({
 
                     {livePhase && livePhase.publicPhase ? (
                       <>
-                        <Text mx="30px">
+                        <Text mx="42px">
                           Price:{" "}
                           <Text as="span" color="#fff">
                             {convertStringToPrice(livePhase.publicMintingFee)}{" "}
@@ -261,17 +266,17 @@ function LaunchpadDetailHeader({
 
             {livePhase && livePhase ? (
               <HStack
-                flexWrap={["wrap", "noWrap", "noWrap"]}
-                color="brand.blue"
+                my="30px"
                 maxW="680px"
                 maxH="110px"
-                h={["full", "full", "full"]}
                 borderWidth={2}
-                borderColor="brand.blue"
+                color="brand.blue"
                 px={["4px", "30px"]}
-                py={{ base: "0.5rem", xl: "40px" }}
+                borderColor="brand.blue"
                 justifyContent="space-between"
-                my="30px"
+                h={["full", "full", "full"]}
+                py={{ base: "0.5rem", xl: "40px" }}
+                flexWrap={["wrap", "noWrap", "noWrap"]}
               >
                 <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
                   <>
@@ -386,60 +391,162 @@ function LaunchpadDetailHeader({
               <Text noOfLines={[3, 3]}>{project.description}</Text>
             </Flex>
 
-            <Stack alignItems="center" direction="row" py="30px">
-              {currentAccount &&
-                currentAccount.address &&
-                projectOwner === currentAccount.address && (
-                  <>
-                    <Button
-                      px="16px"
-                      variant="outline"
-                      onClick={() => onOpenURI()}
-                    >
-                      update base uri
-                    </Button>
-                    <Button
-                      px="16px"
-                      variant="outline"
-                      onClick={() => onOpenUpdateAdminAddressModal()}
-                    >
-                      update admin address
-                    </Button>
-                    <Button
-                      px="16px"
-                      variant="outline"
-                      onClick={() => onOpenWithdrawModal()}
-                    >
-                      withdraw balance
-                    </Button>
-                  </>
-                )}
-              {currentAccount &&
-                currentAccount.address &&
-                projectAdminAddress === currentAccount.address && (
-                  <>
-                    <Button
-                      px="16px"
-                      variant="outline"
-                      onClick={() =>
-                        history.push({
-                          state: { formMode: "EDIT", collection_address },
-                          pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
-                        })
-                      }
-                    >
-                      update project info
-                    </Button>
-                    <Button
-                      px="16px"
-                      variant="outline"
-                      onClick={() => onOpenPhase()}
-                    >
-                      update phases
-                    </Button>
-                  </>
-                )}{" "}
-            </Stack>
+            {projectOwner === currentAccount.address ? (
+              <Stack alignItems="center" direction="row" py="30px">
+                <HStack cursor="pointer" onClick={() => onOpenURI()}>
+                  <BaseURIIcon
+                    color={
+                      projectAdminAddress === currentAccount?.address
+                        ? "#fff"
+                        : "#888"
+                    }
+                  />
+
+                  <Heading
+                    fontSize="sm"
+                    color={
+                      projectAdminAddress === currentAccount?.address
+                        ? "brand.blue"
+                        : "#888"
+                    }
+                    textDecoration="underline"
+                    fontFamily="Evogria, sans-serif"
+                  >
+                    update base uri
+                  </Heading>
+                </HStack>
+
+                <Divider
+                  width="2px"
+                  height="30px"
+                  bg="#232323"
+                  display={["none", "inline"]}
+                />
+
+                <HStack
+                  cursor="pointer"
+                  onClick={() =>
+                    projectAdminAddress === currentAccount?.address
+                      ? onOpenUpdateAdminAddressModal()
+                      : toast.error(
+                          "You must be the project admin to update admin address!"
+                        )
+                  }
+                >
+                  <AdminAddressIcon
+                    color={
+                      projectAdminAddress === currentAccount?.address
+                        ? "#fff"
+                        : "#888"
+                    }
+                  />
+
+                  <Heading
+                    fontSize="sm"
+                    color="brand.blue"
+                    textDecoration="underline"
+                    fontFamily="Evogria, sans-serif"
+                  >
+                    update admin address
+                  </Heading>
+                </HStack>
+
+                <Divider
+                  width="2px"
+                  height="30px"
+                  bg="#232323"
+                  display={["none", "inline"]}
+                />
+
+                <HStack
+                  cursor="pointer"
+                  onClick={() =>
+                    projectAdminAddress === currentAccount?.address
+                      ? onOpenWithdrawModal()
+                      : toast.error(
+                          "You must be the project admin to withdraw balance!"
+                        )
+                  }
+                >
+                  <ProjectInfoIcon
+                    color={
+                      projectAdminAddress === currentAccount?.address
+                        ? "#fff"
+                        : "#888"
+                    }
+                  />
+
+                  <Heading
+                    fontSize="sm"
+                    color="brand.blue"
+                    textDecoration="underline"
+                    fontFamily="Evogria, sans-serif"
+                  >
+                    withdraw balance
+                  </Heading>
+                </HStack>
+                
+                <Divider
+                  width="2px"
+                  height="30px"
+                  bg="#232323"
+                  display={["none", "inline"]}
+                />
+
+                <HStack
+                  cursor="pointer"
+                  onClick={() =>
+                    history.push({
+                      state: { formMode: "EDIT", collection_address },
+                      pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
+                    })
+                  }
+                >
+                  <ProjectInfoIcon
+                    color={
+                      projectAdminAddress === currentAccount?.address
+                        ? "#fff"
+                        : "#888"
+                    }
+                  />
+
+                  <Heading
+                    fontSize="sm"
+                    color="brand.blue"
+                    textDecoration="underline"
+                    fontFamily="Evogria, sans-serif"
+                  >
+                    update project info
+                  </Heading>
+                </HStack>
+
+                <Divider
+                  width="2px"
+                  height="30px"
+                  bg="#232323"
+                  display={["none", "inline"]}
+                />
+
+                <HStack cursor="pointer" onClick={() => onOpenPhase()}>
+                  <PhasesIcon
+                    color={
+                      projectAdminAddress === currentAccount?.address
+                        ? "#fff"
+                        : "#888"
+                    }
+                  />
+
+                  <Heading
+                    fontSize="sm"
+                    color="brand.blue"
+                    textDecoration="underline"
+                    fontFamily="Evogria, sans-serif"
+                  >
+                    update phases
+                  </Heading>
+                </HStack>
+              </Stack>
+            ) : null}
           </VStack>
         </Box>
       )}
@@ -464,7 +571,7 @@ function LaunchpadDetailHeader({
               borderWidth: "0",
             }}
           />
-          <Text>Go back</Text>
+          <Text fontSize="lg">Go back</Text>
         </HStack>
       )}
 

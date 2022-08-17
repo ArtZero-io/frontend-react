@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Divider,
   Flex,
   Grid,
@@ -17,6 +16,10 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  Square,
+  HStack,
+  Image,
+  Stack,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
@@ -25,9 +28,9 @@ import LaunchpadDetailHeader from "../component/Header";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { TeamCard } from "../component/TeamCard";
 import { clientAPI } from "@api/client";
-import MyLaunchPadNFTCard from "./components/MyNFTCard";
 import { useParams } from "react-router-dom";
 import { useSubstrateState } from "@utils/substrate";
+import { getCachedImageShort } from "@utils";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
@@ -98,7 +101,10 @@ const LaunchpadDetailPage = () => {
       DELETE_PHASE,
       UPDATE_ADMIN_ADDRESS,
     ],
-    () => fetchData()
+    () => {
+      fetchData();
+      fetchNFTs();
+    }
   );
 
   const fetchData = useCallback(async () => {
@@ -368,93 +374,80 @@ const LaunchpadDetailPage = () => {
 
   const [balanceOfPsp34NFT, setBalanceOfPsp34NFT] = useState(0);
 
-  const {
-    pagesCount,
-    currentPage,
-    setCurrentPage,
-    isDisabled,
-    offset,
-    pageSize,
-  } = usePagination({
-    total: balanceOfPsp34NFT,
-    initialState: {
-      currentPage: 1,
-      isDisabled: false,
-      pageSize: NUMBER_PER_PAGE,
-    },
-  });
+  const { pagesCount, currentPage, setCurrentPage, isDisabled, pageSize } =
+    usePagination({
+      total: balanceOfPsp34NFT,
+      initialState: {
+        currentPage: 1,
+        isDisabled: false,
+        pageSize: NUMBER_PER_PAGE,
+      },
+    });
+
+  const fetchNFTs = useCallback(async () => {
+    let ret = [];
+
+    const totalNFTCount = await getAccountBalanceOfPsp34NFT({
+      currentAccount,
+    });
+
+    setBalanceOfPsp34NFT(totalNFTCount || 0);
+
+    if (!totalNFTCount) return ret;
+
+    try {
+      let tokenUri = await launchpad_psp34_nft_standard_calls.tokenUri(
+        currentAccount,
+        1
+      );
+      const baseUri = tokenUri.replace("1.json", "");
+
+      // if (isUnmount) return;
+
+      ret = await Promise.all(
+        [...Array(totalNFTCount)].map(async (_, index) => {
+          const idOfNFT = await getIdOfPsp34NFT({
+            currentAccount,
+            tokenID: index,
+          });
+
+          const metaData = await getMetaDataType1(idOfNFT, baseUri);
+
+          return { ...metaData };
+        })
+      );
+
+      setMyNFTs(ret);
+    } catch (error) {
+      // if (isUnmount) return;
+
+      console.log("error", error);
+
+      ret = await Promise.all(
+        [...Array(totalNFTCount)].map(async (_, index) => {
+          const idOfNFT = await getIdOfPsp34NFT({
+            currentAccount,
+            tokenID: index,
+          });
+
+          return {
+            nftName: `${formattedCollection.nft_name} #${idOfNFT}`,
+            avatar: "QmZH9BjYVCQ9RjRC2TP3jUZGAYfoHkkrararPQfpe5hY57",
+          };
+        })
+      );
+
+      console.log("Promise ret error", ret);
+      setMyNFTs(ret);
+    }
+  }, [currentAccount, formattedCollection.nft_name]);
 
   useEffect(() => {
-    let isUnmount = false;
-
-    const fetchNFTs = async () => {
-      let ret = [];
-
-      const totalNFTCount = await getAccountBalanceOfPsp34NFT({
-        currentAccount,
-      });
-
-      setBalanceOfPsp34NFT(totalNFTCount || 0);
-
-      if (!totalNFTCount) return ret;
-
-      try {
-        let tokenUri = await launchpad_psp34_nft_standard_calls.tokenUri(
-          currentAccount,
-          1
-        );
-        const baseUri = tokenUri.replace("1.json", "");
-
-        if (isUnmount) return;
-
-        ret = await Promise.all(
-          [...Array(totalNFTCount)].map(async (_, index) => {
-            const idOfNFT = await getIdOfPsp34NFT({
-              currentAccount,
-              tokenID: index,
-            });
-
-            const metaData = await getMetaDataType1(idOfNFT, baseUri);
-
-            return { ...metaData };
-          })
-        );
-
-        setMyNFTs(ret);
-      } catch (error) {
-        if (isUnmount) return;
-
-        console.log("error", error);
-
-        ret = await Promise.all(
-          [...Array(totalNFTCount)].map(async (_, index) => {
-            const idOfNFT = await getIdOfPsp34NFT({
-              currentAccount,
-              tokenID: index,
-            });
-
-            return {
-              nftName: `${formattedCollection.nft_name} #${idOfNFT}`,
-              avatar: "QmZH9BjYVCQ9RjRC2TP3jUZGAYfoHkkrararPQfpe5hY57",
-            };
-          })
-        );
-
-        console.log("Promise ret error", ret);
-        setMyNFTs(ret);
-      }
-    };
+    // let isUnmount = false;
 
     fetchNFTs();
-    return () => (isUnmount = true);
-  }, [
-    currentAccount,
-    currentPage,
-    formattedCollection.nft_name,
-    offset,
-    pageSize,
-    pagesCount,
-  ]);
+    // return () => (isUnmount = true);
+  }, [fetchNFTs]);
 
   const pageNFT = useMemo(
     () => myNFTs.slice((currentPage - 1) * pageSize, currentPage * pageSize),
@@ -519,22 +512,73 @@ const LaunchpadDetailPage = () => {
             ) : (
               ""
             )}
+
+            {/* //BUTTON */}
+            {/* No wallet connect */}
             {!currentAccount ? (
               <Flex w="full" justifyContent="center">
-                <Button variant="outline">connect your wallet</Button>
+                <Text fontSize="lg" color="#888">
+                  Connect your wallet to mint
+                </Text>
               </Flex>
-            ) : (
-              ""
-            )}
-            {console.log("currentPhase", currentPhase)}
-            {currentAccount &&
-              !currentPhase.publicPhase &&
-              currentWhitelist.whitelistAmount && (
-                <Flex w="full" justifyContent="center">
-                  {/* <Button onClick={() => onWhiteListMint()} variant="outline">
-                    mint
-                  </Button> */}
+            ) : null}
 
+            {/* //Public phases*/}
+            {currentAccount && currentPhase?.publicPhase && (
+              <Flex w="full" justifyContent="center">
+                {currentPhase?.publicMintingAmount ? (
+                  <>
+                    <NumberInput
+                      bg="black"
+                      min={1}
+                      w="150px"
+                      mr={[0, 3]}
+                      h="3.125rem"
+                      mb={["10px", 0]}
+                      isDisabled={
+                        actionType ||
+                        currentPhase?.claimedAmount >=
+                          currentPhase?.publicMintingAmount
+                      }
+                      value={mintingAmount}
+                      max={currentPhase.publicMaxMintingAmount}
+                      onChange={(valueString) => setMintingAmount(valueString)}
+                    >
+                      <NumberInputField
+                        h="3.125rem"
+                        borderRadius={0}
+                        borderWidth={0}
+                        color="#fff"
+                      />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+
+                    <CommonButton
+                      {...rest}
+                      variant="outline"
+                      text="public mint"
+                      onClick={onPublicMint}
+                      isDisabled={
+                        currentPhase?.claimedAmount >=
+                        currentPhase?.publicMintingAmount
+                      }
+                    />
+                  </>
+                ) : (
+                  <Text fontSize="lg" color="#888">
+                    You are not is public mint list!
+                  </Text>
+                )}
+              </Flex>
+            )}
+
+            {/* //WhiteList phases*/}
+            {currentAccount && !currentPhase?.publicPhase && (
+              <Flex w="full" justifyContent="center">
+                {currentPhase?.whitelist?.whitelistAmount ? (
                   <CommonButton
                     {...rest}
                     isDisabled={
@@ -546,60 +590,15 @@ const LaunchpadDetailPage = () => {
                     text="whitelist mint"
                     onClick={onWhiteListMint}
                   />
-                </Flex>
-              )}
-
-            {console.log("zzz currentPhase", currentPhase)}
-            {console.log(
-              "zzz currentPhase.publicPhase",
-              currentPhase.publicPhase
+                ) : (
+                  <Text fontSize="lg" color="#888">
+                    You are not is whitelist mint list!
+                  </Text>
+                )}
+              </Flex>
             )}
-            {currentAccount &&
-              currentPhase.publicPhase &&
-              currentPhase.claimedAmount <=
-                currentPhase.publicMintingAmount && (
-                <Flex w="full" justifyContent="center">
-                  {console.log(currentPhase)}
-                  <NumberInput
-                    bg="black"
-                    min={1}
-                    w="150px"
-                    mr={[0, 3]}
-                    h="3.125rem"
-                    mb={["10px", 0]}
-                    isDisabled={
-                      actionType ||
-                      currentPhase?.claimedAmount >=
-                        currentPhase?.publicMintingAmount
-                    }
-                    value={mintingAmount}
-                    max={currentPhase.publicMaxMintingAmount}
-                    onChange={(valueString) => setMintingAmount(valueString)}
-                  >
-                    <NumberInputField
-                      h="3.125rem"
-                      borderRadius={0}
-                      borderWidth={0}
-                      color="#fff"
-                    />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
 
-                  <CommonButton
-                    {...rest}
-                    variant="outline"
-                    text="public mint"
-                    onClick={onPublicMint}
-                    isDisabled={
-                      currentPhase?.claimedAmount >=
-                      currentPhase?.publicMintingAmount
-                    }
-                  />
-                </Flex>
-              )}
+            {console.log("currentPhase", currentPhase)}
           </Box>
 
           <Box
@@ -644,7 +643,10 @@ const LaunchpadDetailPage = () => {
                             <Text mr="30px">
                               Minted:{" "}
                               <Text as="span" color="#fff">
-                                {item.claimedAmount}
+                                {item.claimedAmount}{" "}
+                                <Text as="span">
+                                  token{item.claimedAmount > 1 ? "s" : ""}
+                                </Text>
                               </Text>
                             </Text>
 
@@ -657,12 +659,14 @@ const LaunchpadDetailPage = () => {
                             </Text>
                             <Spacer />
                             <Text color="brand.blue">
-                              Start - End time:{" "}
+                              Start:{" "}
                               <Text as="span" color="#fff">
                                 {new Date(
                                   Number(item?.startTime)
                                 ).toLocaleString()}{" "}
-                                -{" "}
+                              </Text>
+                              - End:{" "}
+                              <Text as="span" color="#fff">
                                 {new Date(
                                   Number(item?.endTime)
                                 ).toLocaleString()}{" "}
@@ -672,7 +676,7 @@ const LaunchpadDetailPage = () => {
                         </>
                       )}
 
-                      {item.publicPhase == 0 && (
+                      {!item.publicPhase && (
                         <>
                           <Flex
                             color="#888"
@@ -694,7 +698,7 @@ const LaunchpadDetailPage = () => {
                                 <Text as="span" color="#fff">
                                   {Number(item.whitelist.whitelistAmount) -
                                     Number(item.whitelist.claimedAmount)}{" "}
-                                  Tokens
+                                  tokens
                                 </Text>
                               </Text>
                             )}
@@ -711,14 +715,14 @@ const LaunchpadDetailPage = () => {
                             )}
                             <Spacer />
                             <Text color="brand.blue">
-                              {" "}
-                              {console.log("xxxitem", item)}
-                              Start - End time:{" "}
+                              Start:{" "}
                               <Text as="span" color="#fff">
                                 {new Date(
                                   Number(item?.startTime)
                                 ).toLocaleString()}{" "}
-                                -{" "}
+                              </Text>
+                              - End:{" "}
+                              <Text as="span" color="#fff">
                                 {new Date(
                                   Number(item?.endTime)
                                 ).toLocaleString()}{" "}
@@ -817,25 +821,52 @@ const LaunchpadDetailPage = () => {
               </Text>
             ) : (
               <>
-                <Grid
-                  templateColumns={`repeat(auto-fill, minmax(min(100%, 250px), 1fr))`}
-                  gap="30px"
+                <HStack
+                  py="15px"
+                  alignItems="center"
+                  borderBottom="1px solid #303030"
                 >
-                  {pageNFT.map((item, idx) => (
-                    <GridItem>
-                      <MyLaunchPadNFTCard key={idx} {...item} />
-                    </GridItem>
-                  ))}
-                </Grid>
-                <PaginationMP
-                  bg="#333"
-                  maxW="230px"
-                  hasGotoPage={false}
-                  pagesCount={pagesCount}
-                  isDisabled={isDisabled}
-                  currentPage={currentPage}
-                  setCurrentPage={setCurrentPage}
-                />
+                  <Text color="#888" fontSize="15px" minW="160px">
+                    #
+                  </Text>
+                  <HStack justifyContent="center">
+                    <Heading color="#888" fontSize="15px">
+                      NFT Name
+                    </Heading>
+                  </HStack>
+                </HStack>
+                {pageNFT.map((item, idx) => (
+                  <HStack
+                    py="15px"
+                    alignItems="center"
+                    borderBottom="1px solid #303030"
+                  >
+                    <Text fontSize="lg" minW="160px">
+                      # {idx + 1}
+                    </Text>
+                    <HStack justifyContent="center">
+                      <Square mr="32px" size="50px">
+                        <Image
+                          width="full"
+                          height="full"
+                          src={getCachedImageShort(item["avatar"])}
+                        />
+                      </Square>
+                      <Heading size="h6">{item.nftName}</Heading>
+                    </HStack>
+                  </HStack>
+                ))}
+                <Stack w="full" py="30px">
+                  <PaginationMP
+                    bg="#333"
+                    maxW="230px"
+                    hasGotoPage={false}
+                    pagesCount={pagesCount}
+                    isDisabled={isDisabled}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                  />
+                </Stack>
               </>
             )}
           </Box>
