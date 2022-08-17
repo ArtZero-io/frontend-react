@@ -20,6 +20,9 @@ import {
   HStack,
   Image,
   Stack,
+  VStack,
+  Link,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
@@ -453,6 +456,9 @@ const LaunchpadDetailPage = () => {
     () => myNFTs.slice((currentPage - 1) * pageSize, currentPage * pageSize),
     [currentPage, myNFTs, pageSize]
   );
+
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+
   return (
     <Layout
       backdrop={formattedCollection?.headerImage}
@@ -467,18 +473,17 @@ const LaunchpadDetailPage = () => {
       {loading || loadingForceUpdate ? (
         <AnimationLoader loadingTime={loadingTime || 3.5} />
       ) : (
-        <>
+        <VStack w="full" px={["24px", "0px"]} spacing={["24px", "30px"]}>
           <Box
             w="full"
-            maxW="870px"
             mx="auto"
             bg="#222"
-            px="30px"
-            py="26px"
-            my="30px"
+            maxW="870px"
+            px={["15px", "30px"]}
+            py={["17px", "26px"]}
           >
             <Flex w="full" mb="15px">
-              <Heading size="h6">
+              <Heading fontSize={["16px", "18px"]}>
                 {!currentPhase?.code ? (
                   `upcoming`
                 ) : (
@@ -569,7 +574,7 @@ const LaunchpadDetailPage = () => {
                   </>
                 ) : (
                   <Text fontSize="lg" color="#888">
-                    You are not is public mint list!
+                    You are not in public mint list!
                   </Text>
                 )}
               </Flex>
@@ -580,6 +585,8 @@ const LaunchpadDetailPage = () => {
               <Flex w="full" justifyContent="center">
                 {currentPhase?.whitelist?.whitelistAmount ? (
                   <CommonButton
+                    w={["full", "auto"]}
+                    mx="0"
                     {...rest}
                     isDisabled={
                       currentWhitelist?.whitelistAmount -
@@ -592,7 +599,7 @@ const LaunchpadDetailPage = () => {
                   />
                 ) : (
                   <Text fontSize="lg" color="#888">
-                    You are not is whitelist mint list!
+                    You are not in whitelist mint list!
                   </Text>
                 )}
               </Flex>
@@ -603,15 +610,14 @@ const LaunchpadDetailPage = () => {
 
           <Box
             w="full"
-            maxW="870px"
             mx="auto"
             bg="#222"
-            px="30px"
-            py="26px"
-            mb="30px"
+            maxW="870px"
+            px={["15px", "30px"]}
+            py={["17px", "26px"]}
           >
-            <Flex w="full" mb="15px">
-              <Heading fontSize={["2xl", "3xl", "3xl"]}>Phases</Heading>
+            <Flex w="full" mb={["20px", "30px"]}>
+              <Heading fontSize={["24px", "32px"]}>phases</Heading>
               <Spacer />
             </Flex>
             {console.log("phases", phases)}
@@ -622,17 +628,23 @@ const LaunchpadDetailPage = () => {
                       <WrapItem>
                         <Tag w="full">{item.code}</Tag>
                       </WrapItem>
+
                       {item.publicPhase && (
-                        <>
-                          <Flex
-                            color="#888"
+                        <Stack
+                          px="2px"
+                          w="full"
+                          direction={["column", "row"]}
+                          fontSize={["15px", "18px", "18px"]}
+                        >
+                          <Stack
                             w="full"
-                            minW="500px"
-                            alignContent="center"
-                            fontSize={["15px", "18px", "18px"]}
+                            color="#888"
+                            spacing="30px"
+                            direction={["row"]}
+                            alignContent="space-between"
                             minH={{ base: "1rem", "2xl": "3.375rem" }}
                           >
-                            <Text mr="30px">
+                            <Text>
                               Total:{" "}
                               <Text as="span" color="#fff">
                                 {console.log("total public amount:", item)}
@@ -640,7 +652,7 @@ const LaunchpadDetailPage = () => {
                               </Text>
                             </Text>
 
-                            <Text mr="30px">
+                            <Text>
                               Minted:{" "}
                               <Text as="span" color="#fff">
                                 {item.claimedAmount}{" "}
@@ -654,10 +666,20 @@ const LaunchpadDetailPage = () => {
                               Price:{" "}
                               <Text as="span" color="#fff">
                                 {convertStringToPrice(item.publicMintingFee)}{" "}
-                                <AzeroIcon mb="5px" />
+                                <AzeroIcon
+                                  mb="5px"
+                                  w={["14px", "16px"]}
+                                  h={["14px", "16px"]}
+                                />
                               </Text>
                             </Text>
-                            <Spacer />
+                          </Stack>
+
+                          <Stack
+                            w="full"
+                            minW="fit-content"
+                            direction={["column", "row"]}
+                          >
                             <Text color="brand.blue">
                               Start:{" "}
                               <Text as="span" color="#fff">
@@ -665,35 +687,45 @@ const LaunchpadDetailPage = () => {
                                   Number(item?.startTime)
                                 ).toLocaleString()}{" "}
                               </Text>
-                              - End:{" "}
+                            </Text>
+                            <Text as="span" display={["none", "flex"]}>
+                              -
+                            </Text>
+                            <Text color="brand.blue">
+                              End:{" "}
                               <Text as="span" color="#fff">
                                 {new Date(
                                   Number(item?.endTime)
                                 ).toLocaleString()}{" "}
                               </Text>
                             </Text>
-                          </Flex>
-                        </>
+                          </Stack>
+                        </Stack>
                       )}
 
                       {!item.publicPhase && (
-                        <>
-                          <Flex
-                            color="#888"
+                        <Stack
+                          px="2px"
+                          w="full"
+                          direction={["column", "row"]}
+                          fontSize={["15px", "18px", "18px"]}
+                        >
+                          <Stack
                             w="full"
-                            minW="500px"
-                            alignContent="center"
-                            fontSize={["15px", "18px", "18px"]}
+                            color="#888"
+                            spacing="30px"
+                            direction={["row"]}
+                            alignContent="space-between"
                             minH={{ base: "1rem", "2xl": "3.375rem" }}
                           >
-                            <Text mr="30px">
+                            <Text>
                               Whitelist:{" "}
                               <Text as="span" color="#fff">
                                 {item.totalWhiteList}
                               </Text>
                             </Text>
                             {item.whitelist && item.whitelist.whitelistAmount && (
-                              <Text mr="30px">
+                              <Text>
                                 Max:{" "}
                                 <Text as="span" color="#fff">
                                   {Number(item.whitelist.whitelistAmount) -
@@ -709,11 +741,21 @@ const LaunchpadDetailPage = () => {
                                   {convertStringToPrice(
                                     item.whitelist.mintingFee
                                   )}{" "}
-                                  <AzeroIcon mb="5px" />
+                                  <AzeroIcon
+                                    mb="5px"
+                                    w={["14px", "16px"]}
+                                    h={["14px", "16px"]}
+                                  />
                                 </Text>
                               </Text>
                             )}
-                            <Spacer />
+                          </Stack>
+
+                          <Stack
+                            w="full"
+                            minW="fit-content"
+                            direction={["column", "row"]}
+                          >
                             <Text color="brand.blue">
                               Start:{" "}
                               <Text as="span" color="#fff">
@@ -721,18 +763,25 @@ const LaunchpadDetailPage = () => {
                                   Number(item?.startTime)
                                 ).toLocaleString()}{" "}
                               </Text>
-                              - End:{" "}
+                            </Text>
+
+                            <Text as="span" display={["none", "flex"]}>
+                              -
+                            </Text>
+
+                            <Text color="brand.blue">
+                              End:{" "}
                               <Text as="span" color="#fff">
                                 {new Date(
                                   Number(item?.endTime)
                                 ).toLocaleString()}{" "}
                               </Text>
                             </Text>
-                          </Flex>
-                        </>
+                          </Stack>
+                        </Stack>
                       )}
                     </Wrap>
-                    <Divider />
+                    <Divider mt={["20px", "30px"]} />
                   </>
                 ))
               : ""}
@@ -743,19 +792,18 @@ const LaunchpadDetailPage = () => {
             maxW="870px"
             mx="auto"
             bg="#222"
-            px="30px"
-            py="26px"
-            mb="30px"
+            px={["15px", "30px"]}
+            py={["17px", "26px"]}
           >
             <Flex w="full" mb="30px">
-              <Heading fontSize={["2xl", "3xl", "3xl"]}>roadmap</Heading>
+              <Heading fontSize={["24px", "32px"]}>roadmap</Heading>
               <Spacer />
             </Flex>
             {formattedCollection.roadmaps && formattedCollection.roadmaps.length
               ? formattedCollection.roadmaps.map((item, index) => (
                   <>
                     <Flex w="full" my="20px">
-                      <Heading fontSize="lg">
+                      <Heading fontSize={["md", "lg"]}>
                         <Text as="span" color="#7ae7ff">
                           {item.type}
                         </Text>
@@ -763,7 +811,12 @@ const LaunchpadDetailPage = () => {
                       <Spacer />
                     </Flex>
 
-                    <Box fontSize="lg" color="#888" px="20px" mb="30px">
+                    <Box
+                      fontSize={["md", "lg"]}
+                      color="#888"
+                      px="20px"
+                      mb="30px"
+                    >
                       <Interweave content={item.content} />
                     </Box>
 
@@ -778,27 +831,65 @@ const LaunchpadDetailPage = () => {
             maxW="870px"
             mx="auto"
             bg="#222"
-            px="30px"
-            py="26px"
-            mb="30px"
+            px={["15px", "30px"]}
+            py={["17px", "26px"]}
           >
             <Flex w="full" mb="30px">
-              <Heading fontSize={["2xl", "3xl", "3xl"]}>Team</Heading>
+              <Heading fontSize={["24px", "32px"]}>Team</Heading>
               <Spacer />
             </Flex>
-            <Grid
-              templateColumns={`repeat(auto-fill, minmax(min(100%, 250px), 1fr))`}
-              gap="30px"
-            >
-              {formattedCollection.team_members &&
-              formattedCollection.team_members.length
-                ? formattedCollection.team_members.map((item) => (
-                    <GridItem>
-                      <TeamCard team_member={item} />
-                    </GridItem>
-                  ))
-                : ""}
-            </Grid>
+
+            {isBigScreen ? (
+              <Grid
+                templateColumns={`repeat(auto-fill, minmax(min(100%, 250px), 1fr))`}
+                gap="30px"
+              >
+                {formattedCollection.team_members &&
+                formattedCollection.team_members.length
+                  ? formattedCollection.team_members.map((item) => (
+                      <GridItem>
+                        <TeamCard team_member={item} />
+                      </GridItem>
+                    ))
+                  : ""}
+              </Grid>
+            ) : (
+              <>
+                {formattedCollection?.team_members?.map((item, idx) => (
+                  <HStack
+                    py="15px"
+                    alignItems="center"
+                    borderBottom="1px solid #303030"
+                  >
+                    <HStack justifyContent="center">
+                      <Square mr={["12px", "32px"]} size="70px">
+                        <Image
+                          width="full"
+                          height="full"
+                          src={getCachedImageShort(item["avatar"])}
+                        />
+                      </Square>
+
+                      <Stack maxH="70px" spacing="2px">
+                        <Heading fontSize={["md"]}>{item.name}</Heading>
+                        <Text color="#888" fontSize={["sm"]}>
+                          {item.title}
+                        </Text>
+                        <Link
+                          fontSize={["sm"]}
+                          isExternal
+                          color="brand.blue"
+                          textTransform="capitalize"
+                          href={item?.socialLink}
+                        >
+                          Social link
+                        </Link>{" "}
+                      </Stack>
+                    </HStack>
+                  </HStack>
+                ))}
+              </>
+            )}
           </Box>
 
           <Box
@@ -806,12 +897,11 @@ const LaunchpadDetailPage = () => {
             maxW="870px"
             mx="auto"
             bg="#222"
-            px="30px"
-            py="26px"
-            mb="30px"
+            px={["15px", "30px"]}
+            py={["17px", "26px"]}
           >
             <Flex w="full" mb="30px">
-              <Heading size="h4">My NFTs</Heading>
+              <Heading fontSize={["24px", "32px"]}>My NFTs</Heading>
               <Spacer />
             </Flex>
 
@@ -826,7 +916,11 @@ const LaunchpadDetailPage = () => {
                   alignItems="center"
                   borderBottom="1px solid #303030"
                 >
-                  <Text color="#888" fontSize="15px" minW="160px">
+                  <Text
+                    color="#888"
+                    fontSize={["md", "lg"]}
+                    minW={["60px", "160px"]}
+                  >
                     #
                   </Text>
                   <HStack justifyContent="center">
@@ -841,18 +935,18 @@ const LaunchpadDetailPage = () => {
                     alignItems="center"
                     borderBottom="1px solid #303030"
                   >
-                    <Text fontSize="lg" minW="160px">
+                    <Text fontSize={["md", "lg"]} minW={["60px", "160px"]}>
                       # {idx + 1}
                     </Text>
                     <HStack justifyContent="center">
-                      <Square mr="32px" size="50px">
+                      <Square mr={["12px", "32px"]} size="50px">
                         <Image
                           width="full"
                           height="full"
                           src={getCachedImageShort(item["avatar"])}
                         />
                       </Square>
-                      <Heading size="h6">{item.nftName}</Heading>
+                      <Heading fontSize={["md", "lg"]}>{item.nftName}</Heading>
                     </HStack>
                   </HStack>
                 ))}
@@ -870,7 +964,7 @@ const LaunchpadDetailPage = () => {
               </>
             )}
           </Box>
-        </>
+        </VStack>
       )}
     </Layout>
   );
