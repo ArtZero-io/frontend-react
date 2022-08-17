@@ -18,7 +18,7 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
 } from "@chakra-ui/react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 import Layout from "@components/Layout/Layout";
 import LaunchpadDetailHeader from "../component/Header";
@@ -56,6 +56,15 @@ import {
   UPDATE_ADMIN_ADDRESS,
 } from "@constants";
 import { useDispatch } from "react-redux";
+import {
+  getAccountBalanceOfPsp34NFT,
+  getIdOfPsp34NFT,
+} from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { usePagination } from "@ajna/pagination";
+import PaginationMP from "@components/Pagination/Pagination";
+// import { convertTimeStamp } from "../../../utils";
+
+const NUMBER_PER_PAGE = 6;
 
 const LaunchpadDetailPage = () => {
   const [formattedCollection, setFormattedCollection] = useState({});
@@ -69,12 +78,9 @@ const LaunchpadDetailPage = () => {
   const [myNFTs, setMyNFTs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mintingAmount, setMintingAmount] = useState(1);
-  
+
   const dispatch = useDispatch();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
-
-  // eslint-disable-next-line no-unused-vars
-  const [publicMintingPhaseId, setPublicMintingPhaseId] = useState(0);
 
   const [currentPhase, setCurrentPhase] = useState({});
 
@@ -201,7 +207,9 @@ const LaunchpadDetailPage = () => {
             startTime: timestampWithoutCommas(phaseSchedule.startTime),
             endTime: timestampWithoutCommas(phaseSchedule.endTime),
             isLive: i == currentPhaseIdTmp ? 1 : 0,
-            totalWhiteList: totalWhiteListPhase ? Number(convertNumberWithoutCommas(totalWhiteListPhase)) : 0,
+            totalWhiteList: totalWhiteListPhase
+              ? Number(convertNumberWithoutCommas(totalWhiteListPhase))
+              : 0,
             publicPhase: phaseSchedule.isPublic,
             whitelist: whiteListData,
             publicMintingAmount: Number(
@@ -220,12 +228,22 @@ const LaunchpadDetailPage = () => {
           if (i == currentPhaseIdTmp) {
             console.log("LaunchpadDetailPage::phaseSchedule", phaseSchedule);
             if (phaseSchedule.isPublic == true) {
-              setTotalPhaseAmount(Number(convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)));
+              setTotalPhaseAmount(
+                Number(
+                  convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
+                )
+              );
             } else {
-              setTotalPhaseAmount(Number(convertNumberWithoutCommas(phaseSchedule.whitelistAmount)));
+              setTotalPhaseAmount(
+                Number(
+                  convertNumberWithoutCommas(phaseSchedule.whitelistAmount)
+                )
+              );
             }
-            
-            setTotalClaimedAmount(Number(convertNumberWithoutCommas(phaseSchedule.claimedAmount)));
+
+            setTotalClaimedAmount(
+              Number(convertNumberWithoutCommas(phaseSchedule.claimedAmount))
+            );
             setCurrentPhaseId(currentPhaseIdTmp);
             setCurrentPhase(phaseInfo);
             const currentWhitelistTmp =
@@ -271,95 +289,6 @@ const LaunchpadDetailPage = () => {
 
         setFormattedCollection(projectDetail);
         setPhases(phasesTmp);
-
-        let totalTokenSupply =
-          await launchpad_psp34_nft_standard_calls.getLastTokenId(
-            currentAccount
-          );
-        // console.log("totalTokenSupply", totalTokenSupply);
-        if (totalTokenSupply > 0) {
-          let myNFTsTmp = [];
-
-          try {
-            let tokenUriFull =
-              await launchpad_psp34_nft_standard_calls.tokenUri(
-                currentAccount,
-                1
-              );
-            tokenUriFull = tokenUriFull.replace("1.json", "");
-            // console.log("xxx tokenUriFull", tokenUriFull);
-
-            // const fetchEndBeforeLoopNo2 = Date.now();
-            // console.log(
-            //   "projectDetail fetchEndBeforeLoopNo2 ",
-            //   fetchEndBeforeLoopNo2
-            // );
-            // console.log(
-            //   "projectDetail diff",
-            //   fetchEndBeforeLoopNo2 - fetchStart
-            // );
-
-            for (let tokenID = 1; tokenID <= totalTokenSupply; tokenID++) {
-              let owner = await launchpad_psp34_nft_standard_calls.ownerOf(
-                currentAccount,
-                { u64: tokenID }
-              );
-              // console.log("tokenUriFull", tokenUriFull);
-              if (owner == currentAccount.address) {
-                let metaData = await getMetaDataType1(tokenID, tokenUriFull);
-                // console.log("xxx metaData", metaData);
-                myNFTsTmp.push(metaData);
-              }
-            }
-
-            // console.log("xxx myNFTsTmp", myNFTsTmp);
-            // const fetchEndAfterLoopNo2 = Date.now();
-            // console.log(
-            //   "projectDetail fetchEndAfterLoopNo2 ",
-            //   fetchEndAfterLoopNo2
-            // );
-            // console.log(
-            //   "projectDetail diff",
-            //   fetchEndAfterLoopNo2 - fetchStart
-            // );
-            setMyNFTs(myNFTsTmp);
-            console.log("myNFTsTmp", myNFTsTmp);
-            console.log("LaunchpadDetailPage After Set My NFTS");
-          } catch (error) {
-            // case: error: no uri found for token id 1
-            const unrevealedData = {};
-
-            console.log(" LaunchpadDetailPage errorerror", error);
-            console.log(
-              " LaunchpadDetailPage totalTokenSupply ",
-              totalTokenSupply
-            );
-
-            for (let tokenID = 1; tokenID <= totalTokenSupply; tokenID++) {
-              let owner = await launchpad_psp34_nft_standard_calls.ownerOf(
-                currentAccount,
-                { u64: tokenID }
-              );
-              console.log("LaunchpadDetailPage owner", owner);
-              if (owner === currentAccount.address) {
-                myNFTsTmp.push({ tokenID });
-                console.log("LaunchpadDetailPage myNFTsTmp", myNFTsTmp);
-              }
-            }
-            console.log("xxx unrevealedData", unrevealedData);
-            console.log("xxx myNFTsTmp", myNFTsTmp);
-            myNFTsTmp = myNFTsTmp.map(({ tokenID }) => {
-              return {
-                nftName: `${formattedCollection.nft_name} #${tokenID}`,
-                avatar: "QmZH9BjYVCQ9RjRC2TP3jUZGAYfoHkkrararPQfpe5hY57",
-              };
-            });
-
-            setMyNFTs(myNFTsTmp);
-            console.log("myNFTsTmp", myNFTsTmp);
-            console.log("After Set My NFTS");
-          }
-        }
       }
 
       setLoading(false);
@@ -372,32 +301,11 @@ const LaunchpadDetailPage = () => {
 
       console.log(error);
     }
-  }, [api, collection_address, currentAccount, formattedCollection.nft_name]);
+  }, [api, collection_address, currentAccount]);
 
   useEffect(() => {
     fetchData();
   }, [api, collection_address, currentAccount, fetchData]);
-
-  const getMetaDataType1 = async (tokenID, token_uri) => {
-    const metadata = await clientAPI(
-      "get",
-      "/getJSON?input=" + token_uri + tokenID.toString() + ".json",
-      {}
-    );
-
-    if (metadata) {
-      const attrsList = metadata?.attributes?.map((item) => {
-        return { [item.trait_type]: item.value };
-      });
-
-      return {
-        ...metadata,
-        attrsList,
-        avatar: metadata.image,
-        nftName: metadata.name,
-      };
-    }
-  };
 
   const onWhiteListMint = async () => {
     // TODOs: add check balance
@@ -458,6 +366,100 @@ const LaunchpadDetailPage = () => {
     );
   };
 
+  const [balanceOfPsp34NFT, setBalanceOfPsp34NFT] = useState(0);
+
+  const {
+    pagesCount,
+    currentPage,
+    setCurrentPage,
+    isDisabled,
+    offset,
+    pageSize,
+  } = usePagination({
+    total: balanceOfPsp34NFT,
+    initialState: {
+      currentPage: 1,
+      isDisabled: false,
+      pageSize: NUMBER_PER_PAGE,
+    },
+  });
+
+  useEffect(() => {
+    let isUnmount = false;
+
+    const fetchNFTs = async () => {
+      let ret = [];
+
+      const totalNFTCount = await getAccountBalanceOfPsp34NFT({
+        currentAccount,
+      });
+
+      setBalanceOfPsp34NFT(totalNFTCount || 0);
+
+      if (!totalNFTCount) return ret;
+
+      try {
+        let tokenUri = await launchpad_psp34_nft_standard_calls.tokenUri(
+          currentAccount,
+          1
+        );
+        const baseUri = tokenUri.replace("1.json", "");
+
+        if (isUnmount) return;
+
+        ret = await Promise.all(
+          [...Array(totalNFTCount)].map(async (_, index) => {
+            const idOfNFT = await getIdOfPsp34NFT({
+              currentAccount,
+              tokenID: index,
+            });
+
+            const metaData = await getMetaDataType1(idOfNFT, baseUri);
+
+            return { ...metaData };
+          })
+        );
+
+        setMyNFTs(ret);
+      } catch (error) {
+        if (isUnmount) return;
+
+        console.log("error", error);
+
+        ret = await Promise.all(
+          [...Array(totalNFTCount)].map(async (_, index) => {
+            const idOfNFT = await getIdOfPsp34NFT({
+              currentAccount,
+              tokenID: index,
+            });
+
+            return {
+              nftName: `${formattedCollection.nft_name} #${idOfNFT}`,
+              avatar: "QmZH9BjYVCQ9RjRC2TP3jUZGAYfoHkkrararPQfpe5hY57",
+            };
+          })
+        );
+
+        console.log("Promise ret error", ret);
+        setMyNFTs(ret);
+      }
+    };
+
+    fetchNFTs();
+    return () => (isUnmount = true);
+  }, [
+    currentAccount,
+    currentPage,
+    formattedCollection.nft_name,
+    offset,
+    pageSize,
+    pagesCount,
+  ]);
+
+  const pageNFT = useMemo(
+    () => myNFTs.slice((currentPage - 1) * pageSize, currentPage * pageSize),
+    [currentPage, myNFTs, pageSize]
+  );
   return (
     <Layout
       backdrop={formattedCollection?.headerImage}
@@ -496,18 +498,21 @@ const LaunchpadDetailPage = () => {
                 )}
               </Heading>
               <Spacer />
-              
-              {totalPhaseAmount > 0 ? (<Text color="#888">
-                {Math.round(totalClaimedAmount * 100/ totalPhaseAmount)}% (
-                {totalClaimedAmount}/{totalPhaseAmount})
-              </Text>) : ""}
-              
 
-             
+              {totalPhaseAmount > 0 ? (
+                <Text color="#888">
+                  {Math.round((totalClaimedAmount * 100) / totalPhaseAmount)}% (
+                  {totalClaimedAmount}/{totalPhaseAmount})
+                </Text>
+              ) : (
+                ""
+              )}
             </Flex>
             {totalPhaseAmount > 0 ? (
               <Progress
-                value={Math.round(totalClaimedAmount * 100 / totalPhaseAmount)}
+                value={Math.round(
+                  (totalClaimedAmount * 100) / totalPhaseAmount
+                )}
                 mb="20px"
                 h="8px"
               />
@@ -635,17 +640,34 @@ const LaunchpadDetailPage = () => {
                                 {item.publicMintingAmount}
                               </Text>
                             </Text>
+
                             <Text mr="30px">
                               Minted:{" "}
                               <Text as="span" color="#fff">
                                 {item.claimedAmount}
                               </Text>
                             </Text>
+
                             <Text>
                               Price:{" "}
                               <Text as="span" color="#fff">
                                 {convertStringToPrice(item.publicMintingFee)}{" "}
                                 <AzeroIcon mb="5px" />
+                              </Text>
+                            </Text>
+                            <Spacer />
+                            <Text color="brand.blue">
+                              {" "}
+                              {console.log("xxxitem", item)}
+                              Start - End time:{" "}
+                              <Text as="span" color="#fff">
+                                {new Date(
+                                  Number(item?.startTime)
+                                ).toLocaleString()}{" "}
+                                -{" "}
+                                {new Date(
+                                  Number(item?.endTime)
+                                ).toLocaleString()}{" "}
                               </Text>
                             </Text>
                           </Flex>
@@ -775,22 +797,34 @@ const LaunchpadDetailPage = () => {
               <Heading size="h4">My NFTs</Heading>
               <Spacer />
             </Flex>
-            <Grid
-              templateColumns={`repeat(auto-fill, minmax(min(100%, 250px), 1fr))`}
-              gap="30px"
-            >
-              {myNFTs?.length === 0 ? (
-                <Text fontSize="lg" color="#888">
-                  No NFT found
-                </Text>
-              ) : (
-                myNFTs.map((item, idx) => (
-                  <GridItem>
-                    <MyLaunchPadNFTCard key={idx} {...item} />
-                  </GridItem>
-                ))
-              )}
-            </Grid>
+
+            {myNFTs?.length === 0 ? (
+              <Text fontSize="lg" color="#888">
+                No NFT found
+              </Text>
+            ) : (
+              <>
+                <Grid
+                  templateColumns={`repeat(auto-fill, minmax(min(100%, 250px), 1fr))`}
+                  gap="30px"
+                >
+                  {pageNFT.map((item, idx) => (
+                    <GridItem>
+                      <MyLaunchPadNFTCard key={idx} {...item} />
+                    </GridItem>
+                  ))}
+                </Grid>
+                <PaginationMP
+                  bg="#333"
+                  maxW="230px"
+                  hasGotoPage={false}
+                  pagesCount={pagesCount}
+                  isDisabled={isDisabled}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                />
+              </>
+            )}
           </Box>
         </>
       )}
@@ -799,3 +833,24 @@ const LaunchpadDetailPage = () => {
 };
 
 export default LaunchpadDetailPage;
+
+const getMetaDataType1 = async (tokenID, token_uri) => {
+  const metadata = await clientAPI(
+    "get",
+    "/getJSON?input=" + token_uri + tokenID.toString() + ".json",
+    {}
+  );
+
+  if (metadata) {
+    const attrsList = metadata?.attributes?.map((item) => {
+      return { [item.trait_type]: item.value };
+    });
+
+    return {
+      ...metadata,
+      attrsList,
+      avatar: metadata.image,
+      nftName: metadata.name,
+    };
+  }
+};

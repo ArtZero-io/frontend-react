@@ -19,6 +19,9 @@ const PaginationMP = ({
   currentPage,
   pagesCount,
   setCurrentPage,
+  bg = "#222",
+  maxW = "25rem",
+  hasGotoPage = true,
 }) => {
   const handlePageChange = (nextPage) => {
     setCurrentPage(nextPage);
@@ -43,7 +46,7 @@ const PaginationMP = ({
 
   return (
     <Stack
-      maxW="25rem"
+      maxW={maxW}
       textAlign="left"
       align={{ base: "start", xl: "space-between" }}
     >
@@ -64,6 +67,7 @@ const PaginationMP = ({
           justify="space-between"
         >
           <IconButton
+            bg={bg}
             mr={2}
             size="icon"
             color="#fff"
@@ -73,7 +77,7 @@ const PaginationMP = ({
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(1)}
             _disabled={{
-              bg: "#222",
+              bg: bg,
               color: "#555",
               cursor: "not-allowed",
               _hover: {
@@ -86,7 +90,7 @@ const PaginationMP = ({
             className="previous-btn"
             p={0}
             mr={2}
-            bg="#222"
+            bg={bg}
             _hover={{
               bg: "brand.blue",
             }}
@@ -109,7 +113,7 @@ const PaginationMP = ({
             className="next-btn"
             p={0}
             mr={2}
-            bg="#222"
+            bg={bg}
             _hover={{
               bg: "brand.blue",
               color: "black",
@@ -130,6 +134,7 @@ const PaginationMP = ({
           </PaginationNext>
 
           <IconButton
+            bg={bg}
             color="#fff"
             mr={2}
             size="icon"
@@ -139,7 +144,7 @@ const PaginationMP = ({
             onClick={() => setCurrentPage(pagesCount)}
             disabled={currentPage >= pagesCount}
             _disabled={{
-              bg: "#222",
+              bg: bg,
               color: "#555",
               cursor: "not-allowed",
               _hover: {
@@ -147,13 +152,15 @@ const PaginationMP = ({
               },
             }}
           />
-          <Input
-            fontSize="lg"
-            pl="17px"
-            placeholder="Go to page"
-            onKeyPress={onEnterHandler}
-            display={{ base: "none", md: "block" }}
-          />
+          {hasGotoPage && (
+            <Input
+              fontSize="lg"
+              pl="17px"
+              placeholder="Go to page"
+              onKeyPress={onEnterHandler}
+              display={{ base: "none", md: "block" }}
+            />
+          )}
         </PaginationContainer>
       </Pagination>
     </Stack>

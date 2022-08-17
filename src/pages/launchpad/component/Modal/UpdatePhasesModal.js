@@ -28,7 +28,7 @@ import { FINALIZED, END } from "@constants";
 import { useDispatch } from "react-redux";
 import { clearTxStatus } from "@store/actions/txStatus";
 
-export default function UpdatePhasesModal({
+const UpdatePhasesModal = React.memo(function ({
   isOpen,
   onClose,
   mode,
@@ -226,8 +226,8 @@ export default function UpdatePhasesModal({
       </ModalContent>
     </Modal>
   );
-}
-
+});
+export default UpdatePhasesModal;
 export const fetchInitialPhasesValue = async () => {
   let initialValuesData = {
     phases: [
