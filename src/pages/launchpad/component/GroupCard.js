@@ -29,19 +29,18 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
   return (
     <Box
       w="full"
-      mx={["24px", "auto"]}
-      mb="30px"
-      py="60px"
+      mx="auto"
       bg="#171717"
       maxW="1426px"
       alignItems="center"
+      py={["24px", "60px"]}
       px={{ base: "15px", "2xl": "77px" }}
     >
       <Flex
         px="15px"
         w="full"
         mx="auto"
-        mb="40px"
+        mb={["10px", "40px"]}
         maxW="1426px"
         alignItems="center"
         direction={{ base: "column", xl: "row" }}
@@ -53,6 +52,7 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
         <Spacer />
         {currentAccount && variant === "live" && (
           <Button
+            my="20px"
             variant="solid"
             onClick={() =>
               history.push({
@@ -71,11 +71,7 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
       ) : (
         <Stack>
           {projectsList.length ? (
-            <Flex
-              flexWrap="wrap"
-              justifyContent="center"
-              direction={["column", "row"]}
-            >
+            <Flex flexWrap="wrap" justifyContent="center">
               {projectsList
                 .slice(0, NO_OF_PROJ_TO_DISPLAY * (noOfLoad + 1))
                 .map((p, idx) => (
@@ -84,7 +80,13 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
             </Flex>
           ) : (
             <HStack justify="start" w="full">
-              <Text fontSize="lg" px="15px" color="#888">
+              <Text
+                w="full"
+                fontSize="lg"
+                px="15px"
+                color="#888"
+                textAlign={["center", "start"]}
+              >
                 No project found
               </Text>
             </HStack>

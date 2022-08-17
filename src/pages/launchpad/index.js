@@ -97,7 +97,7 @@ export const LaunchpadPage = () => {
         // const live = projects.filter((p) => p.status === "live");
         // const upcoming = projects.filter((p) => p.status === "upcoming");
         // const ended = projects.filter((p) => p.status === "ended");
-       
+
         if (isUnmounted) return;
         setLiveProjects(liveProjectsArr);
         setUpcomingProjects(upcomingProjectsArr);
@@ -122,25 +122,36 @@ export const LaunchpadPage = () => {
           <Heading fontSize={["3xl-mid", "5xl", "5xl"]} mb="10px">
             launchpad
           </Heading>
-          <Text maxW="360px" fontSize="lg" mx="auto">
+          <Text maxW="360px" fontSize="lg" mx="auto" px={["15px", "5px"]}>
             The premier destination to launch your NFT Collection on Aleph Zero
             Network.
           </Text>
         </VStack>
       </Box>
-      <GroupCard variant="live" projectsList={liveProjects} loading={loading} />
+      <VStack
+        w="full"
+        mb="40px"
+        px={["24px", "0px"]}
+        spacing={["15px", "30px"]}
+      >
+        <GroupCard
+          variant="live"
+          projectsList={liveProjects}
+          loading={loading}
+        />
 
-      <GroupCard
-        variant="upcoming"
-        projectsList={upcomingProjects}
-        loading={loading}
-      />
+        <GroupCard
+          variant="upcoming"
+          projectsList={upcomingProjects}
+          loading={loading}
+        />
 
-      <GroupCard
-        variant="ended"
-        projectsList={endedProjects}
-        loading={loading}
-      />
+        <GroupCard
+          variant="ended"
+          projectsList={endedProjects}
+          loading={loading}
+        />
+      </VStack>
     </Layout>
   );
 };
