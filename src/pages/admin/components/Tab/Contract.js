@@ -34,7 +34,6 @@ function ContractTab() {
 
   const [art0_NFT_owner, setArt0NFTOwner] = useState("");
   const [azAdmin, setAZAdmin] = useState("");
-  const [mintMode, setMintMode] = useState(0);
   const [whitelistAmount, setWhitelistAmount] = useState(1);
   const [whitelistAddress, setWhitelistAddress] = useState("");
   const [whitelistCount, setWhitelistCount] = useState(0);
@@ -45,8 +44,6 @@ function ContractTab() {
   const onRefreshAZNFT = async () => {
     await getAZNFTContractBalance();
     await onGetOwner();
-
-    await onGetMintMode();
 
     await onGetAdmin();
 
@@ -107,12 +104,7 @@ function ContractTab() {
     if (res) setAZAdmin(res);
     else setAZAdmin("");
   };
-  const onGetMintMode = async (e) => {
-    let res = await artzero_nft_calls.getMintMode(currentAccount);
 
-    if (res) setMintMode(res);
-    else setMintMode(0);
-  };
   // const onInitialize = async() =>{
   //   if (art0_NFT_owner !== activeAddress) {
   //     toast.error(`You are not owner of this contract`);
@@ -209,15 +201,6 @@ function ContractTab() {
                   </Text>
                   <Text color="#fff" ml={2}>
                     {azNFTContractBalance} ZERO
-                  </Text>
-                </Flex>
-
-                <Flex alignItems="start" pr={20}>
-                  <Text ml={1} color="brand.grayLight">
-                    Mint Mode:{" "}
-                  </Text>
-                  <Text color="#fff" ml={2}>
-                    {mintMode}
                   </Text>
                 </Flex>
               </Stack>

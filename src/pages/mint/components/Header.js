@@ -38,7 +38,7 @@ import { getPublicCurrentAccount } from "@utils";
 import CommonButton from "@components/Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
 
-import { PUBLIC_MINT, WHITELIST_MINT, START } from "@constants";
+import { WHITELIST_MINT, START } from "@constants";
 import { setTxStatus, clearTxStatus } from "@store/actions/txStatus";
 
 const MAX_MINT_COUNT = 200;
@@ -51,8 +51,7 @@ function MintHeader({ loading }) {
   const [balanceStake, setBalanceStake] = useState(0);
   const [balancePending, setBalancePending] = useState(0);
   const [whitelist, setWhitelist] = useState(null);
-  const [mintMode, setMintMode] = useState(-1);
-  const [fee1, setFee1] = useState(-1);
+  const [setFee1] = useState(-1);
   const [amount1, setAmount1] = useState(-1);
   const [publicSaleMintedCount, setPublicSaleMintedCount] = useState(0);
   const [totalMinted, setTotalMinted] = useState(0);
@@ -86,39 +85,7 @@ function MintHeader({ loading }) {
       );
     } catch (error) {
       dispatch(clearTxStatus());
-
       toast.error(error);
-    }
-  };
-
-  const onPaidMint = async () => {
-    const { data } = await api.query.system.account(currentAccount.address);
-
-    const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
-    const mintAmount = fee1 * publicMintAmount;
-    console.log(mintAmount);
-    if (balance < mintAmount + 0.01) {
-      toast.error("Not enough balance to mint");
-      return;
-    }
-
-    if (Number(mintMode) === 1) {
-      try {
-        dispatch(setTxStatus({ type: PUBLIC_MINT, step: START }));
-
-        await artzero_nft_calls.paidMint(
-          currentAccount,
-          mintAmount,
-          publicMintAmount,
-          dispatch,
-          PUBLIC_MINT,
-          api
-        );
-      } catch (error) {
-        dispatch(clearTxStatus());
-
-        toast.error(error);
-      }
     }
   };
 
@@ -163,9 +130,6 @@ function MintHeader({ loading }) {
           }
         };
         await getBalance(currentAccount);
-
-        const mintModeData = await getMintMode(currentAccount);
-        setMintMode(mintModeData);
 
         const mintingFeeData = await getMintingFee(currentAccount);
         setFee1(mintingFeeData);
@@ -453,67 +417,6 @@ function MintHeader({ loading }) {
                 <Heading textTransform="uppercase" size="h6">
                   Public Minting
                 </Heading>
-                {Number(mintMode) <= 0 ? (
-                  <Flex
-                    alignItems="center"
-                    fontSize={{ base: "16px", xl: "18px" }}
-                  >
-                    <Text>Status:</Text>
-                    <Tag variant="inActive">
-                      <TagLeftIcon as={InActiveIcon} />
-                      <TagLabel>Disabled</TagLabel>
-                    </Tag>
-                  </Flex>
-                ) : (
-                  <Flex
-                    alignItems="center"
-                    fontSize={{ base: "16px", xl: "18px" }}
-                  >
-                    <Text>Status:</Text>
-                    <Tag variant="active">
-                      <TagLeftIcon as={ActiveIcon} />
-                      <TagLabel>Enabled</TagLabel>
-                    </Tag>
-                  </Flex>
-                )}
-                {Number(mintMode) === 1 ? (
-                  <>
-                    <Skeleton isLoaded={!isLoadingMintData}>
-                      <Text
-                        alignItems="center"
-                        mt={3}
-                        fontSize={{ base: "16px", xl: "18px" }}
-                      >
-                        Minting fee:{" "}
-                        <span style={{ color: "#fff" }}>
-                          {fee1 >= 0 ? fee1 : 0}
-                        </span>{" "}
-                        <AzeroIcon mb={1.5} />
-                      </Text>
-                    </Skeleton>
-
-                    <Skeleton isLoaded={!isLoadingMintData}>
-                      <Text mt={3} fontSize={{ base: "16px", xl: "18px" }}>
-                        Minted / Max Mint:{" "}
-                        <span style={{ color: "#fff" }}>
-                          {publicSaleMintedCount} / {amount1} NFTs
-                        </span>
-                      </Text>
-                    </Skeleton>
-                  </>
-                ) : null}
-
-                {Number(mintMode) === 2 ? (
-                  <>
-                    <Text
-                      alignItems="center"
-                      mt={3}
-                      fontSize={{ base: "16px", xl: "18px" }}
-                    >
-                      Only Whitelist Mint Allowed
-                    </Text>
-                  </>
-                ) : null}
               </Box>
               <NumberInput
                     bg="black"
@@ -538,18 +441,7 @@ function MintHeader({ loading }) {
                       <NumberDecrementStepper />
                     </NumberInputStepper>
                   </NumberInput>
-              <CommonButton
-                {...rest}
-                text="mint now"
-                onClick={onPaidMint}
-                isDisabled={
-                  (actionType && actionType !== PUBLIC_MINT) ||
-                  Number(mintMode) === 2 ||
-                  Number(mintMode) <= 0 ||
-                  totalMinted >= MAX_MINT_COUNT ||
-                  publicSaleMintedCount >= amount1
-                }
-              />
+
             </Flex>
           </Box>
         </Grid>
@@ -577,11 +469,6 @@ const getWhiteList = async (currentAccount) => {
   return res;
 };
 
-const getMintMode = async (currentAccount) => {
-  let res = await artzero_nft_calls.getMintMode(currentAccount);
-
-  return Number(res) || -1;
-};
 const getMintingFee = async (currentAccount) => {
   let res = await artzero_nft_calls.getMintingFee(currentAccount);
   return res || -1;

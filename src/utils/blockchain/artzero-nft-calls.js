@@ -168,26 +168,6 @@ async function getWhitelist(caller_account, account) {
   return null;
 }
 
-async function getMintMode(caller_account) {
-  if (!contract || !caller_account) {
-    return null;
-  }
-  const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  //console.log(contract);
-
-  const { result, output } = await contract.query.getMintMode(address, {
-    value: azero_value,
-    gasLimit,
-  });
-
-  if (result.isOk) {
-    return output.toHuman();
-  }
-  return null;
-}
-
 async function getMintingFee(caller_account) {
   if (!contract || !caller_account) {
     return null;
@@ -659,7 +639,6 @@ const contract_calls = {
   getWhitelistAccount,
   getWhitelistCount,
   getWhitelist,
-  getMintMode,
   getMintingFee,
   getPublicSaleAmount,
   getPublicSaleMintedAmount,
