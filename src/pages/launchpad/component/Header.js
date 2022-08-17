@@ -188,14 +188,17 @@ function LaunchpadDetailHeader({
                     <Text as="span" color="#7ae7ff">
                       {ownerName}
                     </Text>
-                    {(currentAccount &&
-                      currentAccount.address && project.projectOwner == currentAccount.address) && <>
-                      <br/>
-                      Project Admin:{" "}
-                    <Text as="span" color="#7ae7ff">
-                      {truncateStr(project.projectAdminAddress)}
-                    </Text>
-                    </>}
+                    {currentAccount &&
+                      currentAccount.address &&
+                      project.projectOwner == currentAccount.address && (
+                        <>
+                          <br />
+                          Project Admin:{" "}
+                          <Text as="span" color="#7ae7ff">
+                            {truncateStr(project.projectAdminAddress)}
+                          </Text>
+                        </>
+                      )}
                   </Heading>
                   <Stack alignItems="center" direction="row">
                     {currentAccount &&
@@ -252,36 +255,38 @@ function LaunchpadDetailHeader({
                       )}{" "}
                   </Stack>
                   <Flex
-                    pb="40px"
-                    alignItems="start"
-                    color="#fff"
                     w="full"
-                    justifyContent="space-between"
+                    pb="40px"
                     maxW="730px"
+                    color="#fff"
+                    alignItems="start"
+                    justifyContent="center"
                     fontSize={["15px", "18px", "18px"]}
-                    // minH={{ base: "120px", "2xl": "120px" }}
                   >
                     <Text noOfLines={[3, 3]}>{project.description}</Text>
                   </Flex>
+
                   <Flex
                     color="#888"
                     w="full"
-                    justifyContent="space-between"
+                    justifyContent="center"
+                    textAlign="center"
                     minW="500px"
                     fontSize={["15px", "18px", "18px"]}
                     minH={{ base: "1rem", "2xl": "3.375rem" }}
                   >
-                    <Text>
+                    <Text mx="30px">
                       Supply:{" "}
                       <Text as="span" color="#fff">
                         {project.totalSupply}
                       </Text>
                     </Text>
+
                     {livePhase &&
                     !livePhase.publicPhase &&
                     currentWhitelist.mintingFee ? (
                       <>
-                        <Text>
+                        <Text mx="30px">
                           Price:{" "}
                           <Text as="span" color="#fff">
                             {convertStringToPrice(currentWhitelist.mintingFee)}{" "}
@@ -292,9 +297,10 @@ function LaunchpadDetailHeader({
                     ) : (
                       ""
                     )}
+
                     {livePhase && livePhase.publicPhase ? (
                       <>
-                        <Text>
+                        <Text mx="30px">
                           Price:{" "}
                           <Text as="span" color="#fff">
                             {convertStringToPrice(livePhase.publicMintingFee)}{" "}
@@ -307,7 +313,7 @@ function LaunchpadDetailHeader({
                     )}
                     {livePhase ? (
                       <>
-                        <Text>
+                        <Text mx="30px">
                           Mint Phase:{" "}
                           <Text as="span" color="#fff">
                             {livePhase.code}

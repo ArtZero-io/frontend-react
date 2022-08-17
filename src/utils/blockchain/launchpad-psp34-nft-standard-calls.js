@@ -808,7 +808,7 @@ export const getProjectListDetails = async ({ currentAccount, api }) => {
         projectHash,
       });
 
-      const proj = {
+    const proj = {
       ...rest,
       ...project,
       avatarImage: avatar,
@@ -906,7 +906,63 @@ const launchpad_psp34_nft_standard_calls = {
   getAdminAddress,
   updateAdminAddress,
   mint,
-  withdrawFee
+  withdrawFee,
 };
 
 export default launchpad_psp34_nft_standard_calls;
+
+export const getAccountBalanceOfPsp34NFT = async ({
+  currentAccount,
+  targetAddress,
+}) => {
+  if (!contract || !currentAccount) {
+    return null;
+  }
+
+  const value = 0;
+  const gasLimit = -1;
+
+  const { result, output } = await contract.query["psp34::balanceOf"](
+    currentAccount?.address,
+    { value, gasLimit },
+    targetAddress || currentAccount?.address
+  );
+
+  let ret = null;
+
+  if (result.isOk) {
+    ret = new BN(output, 10, "le").toNumber();
+  }
+
+  return ret;
+};
+
+export const getIdOfPsp34NFT = async ({
+  currentAccount,
+  ownerAddress,
+  tokenID,
+}) => {
+  if (!contract || !currentAccount) {
+    return null;
+  }
+
+  const value = 0;
+  const gasLimit = -1;
+
+  const { result, output } = await contract.query[
+    "psp34Enumerable::ownersTokenByIndex"
+  ](
+    currentAccount?.address,
+    { value, gasLimit },
+    ownerAddress || currentAccount?.address,
+    tokenID
+  );
+
+  let ret = null;
+
+  if (result.isOk) {
+    ret = output.toHuman().Ok.U64;
+  }
+
+  return ret;
+};
