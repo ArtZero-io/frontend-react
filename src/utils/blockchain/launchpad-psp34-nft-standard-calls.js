@@ -539,7 +539,7 @@ async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
   console.log(contract);
-  contract.tx["launchPadPsp34NftStandardTraits::setBaseUri"](
+  contract.tx["psp34Traits::setBaseUri"](
     { gasLimit, value: azero_value },
     uri
   )
@@ -612,7 +612,7 @@ async function tokenUri(caller_account, tokenId) {
   const azero_value = 0;
 
   const { result, output } = await contract.query[
-    "launchPadPsp34NftStandardTraits::tokenUri"
+    "psp34Traits::tokenUri"
   ](
     address,
     {
