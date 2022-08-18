@@ -32,6 +32,7 @@ export const ACCEPT_BID = "acceptBid";
 export const LIST_TOKEN = "listToken";
 export const UNLIST_TOKEN = "unlistToken";
 
+export const OWNER_MINT = "ownerMint";
 export const PUBLIC_MINT = "publicMint";
 export const WHITELIST_MINT = "whitelistMint";
 
@@ -52,6 +53,9 @@ export const UPDATE_ADMIN_ADDRESS = "updateAdminAddress";
 export const UPDATE_PHASE = "updatePhase";
 export const ADD_PHASE = "addPhase";
 export const DELETE_PHASE = "deletePhase";
+
+export const UPDATE_WHITELIST = "updateWhitelist";
+export const ADD_WHITELIST = "addWhitelist";
 
 // PROFILE ACTIONS
 export const UPDATE_PROFILE = "updateProfile";

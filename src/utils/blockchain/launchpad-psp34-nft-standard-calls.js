@@ -339,7 +339,14 @@ async function editProjectInformation(
   return unsubscribe;
 }
 
-async function mint(caller_account, phaseId, mintAmount) {
+async function mint(
+  caller_account,
+  phaseId,
+  mintAmount,
+  dispatch,
+  txType,
+  api
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -351,32 +358,31 @@ async function mint(caller_account, phaseId, mintAmount) {
 
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
-  contract.tx
-    .mint({ gasLimit, value: azero_value }, phaseId, mintAmount)
+
+  const txNotSign = contract.tx.mint(
+    { gasLimit, value: azero_value },
+    phaseId,
+    mintAmount
+  );
+
+  await txNotSign
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Add Whitelist ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
@@ -539,10 +545,7 @@ async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
   console.log(contract);
-  contract.tx["psp34Traits::setBaseUri"](
-    { gasLimit, value: azero_value },
-    uri
-  )
+  contract.tx["psp34Traits::setBaseUri"]({ gasLimit, value: azero_value }, uri)
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -611,9 +614,7 @@ async function tokenUri(caller_account, tokenId) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query[
-    "psp34Traits::tokenUri"
-  ](
+  const { result, output } = await contract.query["psp34Traits::tokenUri"](
     address,
     {
       value: azero_value,
