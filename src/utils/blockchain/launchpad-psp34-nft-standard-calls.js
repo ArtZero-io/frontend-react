@@ -67,7 +67,71 @@ async function updateWhitelist(
   account,
   phaseId,
   amount,
-  price
+  price,
+  dispatch,
+  txType,
+  api
+) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+  console.log(parseInt(amount) <= 0);
+  console.log(account);
+  console.log(!isValidAddressPolkadotAddress(account));
+
+  if (parseInt(amount) <= 0 || !isValidAddressPolkadotAddress(account)) {
+    toast.error(`invalid inputs`);
+    return;
+  }
+
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const injector = await web3FromSource(caller_account?.meta?.source);
+  const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
+
+  console.log(contract);
+  const txNotSign = contract.tx.updateWhitelist(
+    { gasLimit, value: azero_value },
+    account,
+    phaseId,
+    amount,
+    minting_fee
+  );
+
+  await txNotSign
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
+  return unsubscribe;
+}
+
+async function addWhitelist(
+  caller_account,
+  account,
+  phaseId,
+  amount,
+  price,
+  dispatch,
+  txType,
+  api
 ) {
   if (!contract || !caller_account) {
     return null;
@@ -79,100 +143,43 @@ async function updateWhitelist(
     toast.error(`invalid inputs`);
     return;
   }
+
   let unsubscribe;
 
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
+
   const injector = await web3FromSource(caller_account?.meta?.source);
   const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
+
   console.log(contract);
-  contract.tx
-    .updateWhitelist(
-      { gasLimit, value: azero_value },
-      account,
-      phaseId,
-      amount,
-      minting_fee
-    )
+  const txNotSign = contract.tx.addWhitelist(
+    { gasLimit, value: azero_value },
+    account,
+    phaseId,
+    amount,
+    minting_fee
+  );
+
+  await txNotSign
     .signAndSend(
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Update Whitelist ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
-  return unsubscribe;
-}
+    .catch((error) => txErrorHandler({ error, dispatch }));
 
-async function addWhitelist(caller_account, account, phaseId, amount, price) {
-  if (!contract || !caller_account) {
-    return null;
-  }
-  console.log(parseInt(amount) <= 0);
-  console.log(account);
-  console.log(!isValidAddressPolkadotAddress(account));
-  if (parseInt(amount) <= 0 || !isValidAddressPolkadotAddress(account)) {
-    toast.error(`invalid inputs`);
-    return;
-  }
-  let unsubscribe;
-
-  const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source);
-  const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
-  console.log(contract);
-  contract.tx
-    .addWhitelist(
-      { gasLimit, value: azero_value },
-      account,
-      phaseId,
-      amount,
-      minting_fee
-    )
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Add Whitelist ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-        }
-      }
-    )
-    .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
   return unsubscribe;
 }
 

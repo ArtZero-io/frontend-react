@@ -31,13 +31,14 @@ import useForceUpdate from "@hooks/useForceUpdate";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 
 function MyMintingProjectPage() {
-  const { api, currentAccount } = useSubstrateState();
   const dispatch = useDispatch();
+  const { api, currentAccount } = useSubstrateState();
+
+  const [myProjectsList, setMyProjectsList] = useState([]);
+  const [phasesList, setPhasesList] = useState(null);
 
   const [currentPhase, setCurrentPhase] = useState(null);
   const [mintAmount, setMintAmount] = useState(1);
-  const [myProjectsList, setMyProjectsList] = useState([]);
-  const [phasesList, setPhasesList] = useState(null);
 
   const [selectedProjectAddress, setSelectedProjectAddress] = useState(null);
   const [selectedPhaseCode, setSelectedPhaseCode] = useState(0);
@@ -86,9 +87,9 @@ function MyMintingProjectPage() {
   }, [fetchMyProjectList]);
 
   const onOwnerMint = async () => {
-    if (selectedProjectAddress == "") {
-      setPhasesList([]);
-      toast.error(`Please pick your project address!`);
+    if (!selectedProjectAddress) {
+      setPhasesList(null);
+      toast.error(`Please pick your project!`);
       return;
     }
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
@@ -96,6 +97,7 @@ function MyMintingProjectPage() {
       launchpad_psp34_nft_standard.CONTRACT_ABI,
       selectedProjectAddress
     );
+
     launchpad_psp34_nft_standard_calls.setContract(
       launchpad_psp34_nft_standard_contract
     );
@@ -143,7 +145,9 @@ function MyMintingProjectPage() {
           currentAccount,
           i
         );
+
       const phaseCode = phaseSchedule.title;
+
       if (phaseSchedule.isPublic) {
         const phaseInfo = {
           id: i,
@@ -304,7 +308,6 @@ function MyMintingProjectPage() {
                       <NumberInput
                         isDisabled={actionType || maxMint <= 0}
                         bg="black"
-                        defaultValue={1}
                         min={1}
                         onChange={(valueString) => setMintAmount(valueString)}
                         value={mintAmount}

@@ -184,8 +184,8 @@ function LaunchpadDetailHeader({
                   <Heading
                     w="full"
                     color="#fff"
-                    fontSize={["32px", "48px", "48px"]}
-                    lineHeight={["38px", "60px", "60px"]}
+                    fontSize={["32px", "48px"]}
+                    lineHeight={["38px", "60px"]}
                   >
                     {name}
                   </Heading>
@@ -200,7 +200,7 @@ function LaunchpadDetailHeader({
                   pb={["0px", "30px"]}
                 >
                   <Skeleton isLoaded={!loading} h={["38px", "55px"]}>
-                    <Heading fontSize={["sm", "md", "md"]} mb={["0px", "8px"]}>
+                    <Heading fontSize={["sm", "md"]} mb={["0px", "8px"]}>
                       project creator:{" "}
                       <Text as="span" color="#7ae7ff">
                         {truncateStr(projectOwner)}{" "}
@@ -209,7 +209,7 @@ function LaunchpadDetailHeader({
 
                     {(projectAdminAddress === currentAccount?.address ||
                       projectOwner === currentAccount?.address) && (
-                      <Heading fontSize={["sm", "md", "md"]}>
+                      <Heading fontSize={["sm", "md"]}>
                         project admin:{" "}
                         <Text as="span" color="#7ae7ff">
                           {truncateStr(projectAdminAddress)}

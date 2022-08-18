@@ -115,14 +115,14 @@ const LaunchpadDetailPage = () => {
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      const fetchStart = Date.now();
+      // const fetchStart = Date.now();
 
-      console.log("projectDetail fetchStart", fetchStart);
+      // console.log("projectDetail fetchStart", fetchStart);
       const project = await launchpad_contract_calls.getProjectByNftAddress(
         currentAccount,
         collection_address
       );
-      console.log("LaunchpadDetailPage::project", project);
+      // console.log("LaunchpadDetailPage::project", project);
 
       // if (project && project.isActive) {
       if (project) {
@@ -159,11 +159,11 @@ const LaunchpadDetailPage = () => {
             currentAccount
           );
         // console.log("zzz currentPhaseIdTmp", currentPhaseIdTmp);
-        const fetchEndBeforeLoopNo1 = Date.now();
-        console.log(
-          "projectDetail fetchEndBeforeLoopNo1 ",
-          fetchEndBeforeLoopNo1
-        );
+        // const fetchEndBeforeLoopNo1 = Date.now();
+        // console.log(
+        //   "projectDetail fetchEndBeforeLoopNo1 ",
+        //   fetchEndBeforeLoopNo1
+        // );
 
         for (let i = 1; i <= totalPhase; i++) {
           const whiteListData =
@@ -217,7 +217,7 @@ const LaunchpadDetailPage = () => {
             code: phaseCode,
             startTime: timestampWithoutCommas(phaseSchedule.startTime),
             endTime: timestampWithoutCommas(phaseSchedule.endTime),
-            isLive: i == currentPhaseIdTmp ? 1 : 0,
+            isLive: i === 1 * currentPhaseIdTmp ? 1 : 0,
             totalWhiteList: totalWhiteListPhase
               ? Number(convertNumberWithoutCommas(totalWhiteListPhase))
               : 0,
@@ -234,11 +234,10 @@ const LaunchpadDetailPage = () => {
           };
 
           phasesTmp.push(phaseInfo);
-          // console.log("phasesTmp", phasesTmp);
 
-          if (i == currentPhaseIdTmp) {
-            console.log("LaunchpadDetailPage::phaseSchedule", phaseSchedule);
-            if (phaseSchedule.isPublic == true) {
+          if (i === 1 * currentPhaseIdTmp) {
+            // console.log("LaunchpadDetailPage::phaseSchedule", phaseSchedule);
+            if (phaseSchedule.isPublic === true) {
               setTotalPhaseAmount(
                 Number(
                   convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
@@ -304,9 +303,9 @@ const LaunchpadDetailPage = () => {
 
       setLoading(false);
 
-      const fetchEnd = Date.now();
-      console.log("projectDetail fetchEnd ", fetchEnd);
-      console.log("projectDetail diff", fetchEnd - fetchStart);
+      // const fetchEnd = Date.now();
+      // console.log("projectDetail fetchEnd ", fetchEnd);
+      // console.log("projectDetail diff", fetchEnd - fetchStart);
     } catch (error) {
       setLoading(false);
 
@@ -437,12 +436,12 @@ const LaunchpadDetailPage = () => {
 
           return {
             nftName: `${formattedCollection.nft_name} #${idOfNFT}`,
-            avatar: "QmZH9BjYVCQ9RjRC2TP3jUZGAYfoHkkrararPQfpe5hY57",
+            avatar: "Qmc1az4MVBL9MhfLLv3b1Hf9RCs9AoqXR2AZuUZb2XBhpJ",
           };
         })
       );
 
-      console.log("Promise ret error", ret);
+      // console.log("Promise ret error", ret);
       setMyNFTs(ret);
     }
   }, [currentAccount, formattedCollection.nft_name]);
@@ -485,7 +484,7 @@ const LaunchpadDetailPage = () => {
           py={["17px", "26px"]}
         >
           <Skeleton display="flex" isLoaded={!loading} w="full" mb="15px">
-            {console.log("loading", loading)}
+            {/* {console.log("loading", loading)} */}
             <Skeleton isLoaded={!loading}>
               <Heading fontSize={["16px", "18px"]}>
                 {!currentPhase?.code ? (
@@ -613,7 +612,7 @@ const LaunchpadDetailPage = () => {
             </Flex>
           )}
 
-          {console.log("currentPhase", currentPhase)}
+          {/* {console.log("currentPhase", currentPhase)} */}
         </Box>
 
         <Box
@@ -628,7 +627,7 @@ const LaunchpadDetailPage = () => {
             <Heading fontSize={["24px", "32px"]}>phases</Heading>
             <Spacer />
           </Flex>
-          {console.log("phases", phases)}
+          {/* {console.log("phases", phases)} */}
           {phases && phases.length
             ? phases.map((item, index) => (
                 <FadeIn>
@@ -655,7 +654,6 @@ const LaunchpadDetailPage = () => {
                           <Text>
                             Total:{" "}
                             <Text as="span" color="#fff">
-                              {console.log("total public amount:", item)}
                               {item.publicMintingAmount}
                             </Text>
                           </Text>

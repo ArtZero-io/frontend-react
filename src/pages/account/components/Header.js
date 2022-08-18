@@ -25,8 +25,8 @@ import ProfileModal from "./Modal/Profile";
 import toast from "react-hot-toast";
 import { truncateStr } from "@utils";
 import SocialCard from "@components/Card/Social";
-// import { UPDATE_PROFILE } from "@constants";
-// import useForceUpdate from "@hooks/useForceUpdate";
+import { UPDATE_PROFILE } from "@constants";
+import useForceUpdate from "@hooks/useForceUpdate";
 
 function ProfileHeader() {
   const dispatch = useDispatch();
@@ -65,6 +65,28 @@ function ProfileHeader() {
       fetchProfile();
     }
   }, [currentAccount, dispatch, profile]);
+
+  // eslint-disable-next-line no-unused-vars
+  const { loading: loadingForceUpdate } = useForceUpdate(
+    [UPDATE_PROFILE],
+    () => async () => {
+      const res = await dispatch(getProfile(currentAccount));
+      if (res.status === "OK") {
+        if (!res.data.username) {
+          res.data.username = truncateStr(currentAccount?.address);
+        }
+
+        setProfile((prev) => {
+          return {
+            ...res.data,
+            address: currentAccount?.address,
+          };
+        });
+      } else {
+        toast.error(res.message);
+      }
+    }
+  );
 
   return (
     <Box
