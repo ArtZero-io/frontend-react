@@ -571,8 +571,10 @@ const LaunchpadDetailPage = () => {
                     text="public mint"
                     onClick={onPublicMint}
                     isDisabled={
+                      loading ||
+                      loadingForceUpdate ||
                       currentPhase?.claimedAmount >=
-                      currentPhase?.publicMintingAmount
+                        currentPhase?.publicMintingAmount
                     }
                   />
                 </>
@@ -593,9 +595,11 @@ const LaunchpadDetailPage = () => {
                   mx="0"
                   {...rest}
                   isDisabled={
+                    loading ||
+                    loadingForceUpdate ||
                     currentWhitelist?.whitelistAmount -
                       currentWhitelist?.claimedAmount ===
-                    0
+                      0
                   }
                   variant="outline"
                   text="whitelist mint"
