@@ -93,6 +93,18 @@ function LaunchpadDetailHeader({
   useInterval(() => {
     if (livePhase && livePhase.endTime) {
       const total = livePhase.endTime - Date.now();
+
+      if (total <= 0) {
+        setCountDownTimer({
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+        });
+
+        return;
+      }
+
       const seconds = Math.floor((total / 1000) % 60);
       const minutes = Math.floor((total / 1000 / 60) % 60);
       const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
