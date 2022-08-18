@@ -53,7 +53,11 @@ function LaunchpadDetailHeader({
     projectAdminAddress,
     isActive,
     avatarImage,
+    discord,
+    twitter,
+    website,
   } = project;
+
   const [countDownTimer, setCountDownTimer] = useState({});
 
   const history = useHistory();
@@ -119,10 +123,12 @@ function LaunchpadDetailHeader({
     }
   }, 1000);
 
+  const [isSeeMore, setIsSeeMore] = useState(false);
+  
   return (
     <Box as="section" position="relative" w="full" mt={["30px", "320px"]}>
       <Box mx="auto" w="full" maxW="870px">
-        <VStack px="35px">
+        <VStack px="35px" pb="30px">
           <Center
             p="-px"
             position="relative"
@@ -438,8 +444,8 @@ function LaunchpadDetailHeader({
               </VStack>
             </Skeleton>
           ) : null}
-
           <Flex
+            position="relative"
             w="full"
             pt="22px"
             px="15px"
@@ -450,8 +456,39 @@ function LaunchpadDetailHeader({
             pb={["0px", "30px"]}
             justifyContent="center"
             fontSize={["15px", "18px", "18px"]}
+            overflow="hidden"
+            maxHeight={!isSeeMore ? "130px" : "340px"}
+            transition="all 0.5s cubic-bezier(0.19, 1, 0.22, 1) 0.1s"
+            _after={{
+              content: '""',
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              width: "full",
+              height: description?.length > 300 ? "50px" : "0px",
+              backgroundImage:
+                "linear-gradient(0deg, #000000 3.25%, #000000 26%, rgba(0, 0, 0, 0) 100%);)",
+            }}
           >
-            <Text noOfLines={[3, 3]}>{description}</Text>
+            <Text
+            // noOfLines={[3, 3]}
+            >
+              {description}
+            </Text>{" "}
+            <Box
+              display={description?.length > 300 ? "flex" : "none"}
+              cursor="pointer"
+              bg="#7ae7ff"
+              position="absolute"
+              bottom="2"
+              zIndex="100"
+              p="2px 10px"
+              onClick={() => setIsSeeMore(!isSeeMore)}
+            >
+              <Text fontFamily="Evogria" fontSize="13px" color="#000">
+                {isSeeMore ? "see less" : "see more"}
+              </Text>
+            </Box>
           </Flex>
 
           {projectOwner === currentAccount?.address ||
@@ -689,13 +726,7 @@ function LaunchpadDetailHeader({
         w={["full", "auto"]}
         position={{ base: "unset", xl: "absolute" }}
       >
-        <SocialCard
-          profile={[
-            { website: "https://twitter.com/ArtZero_io" },
-            { twitter: "https://twitter.com/ArtZero_io" },
-            { discord: "https://discord.gg/wzkZ2JTvN4" },
-          ]}
-        />
+        <SocialCard profile={[{ website }, { twitter }, { discord }]} />
       </VStack>
 
       <UpdateURIModal

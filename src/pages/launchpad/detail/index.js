@@ -21,9 +21,9 @@ import {
   Image,
   Stack,
   VStack,
-  Link,
   useMediaQuery,
   Skeleton,
+  Button,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
@@ -872,15 +872,24 @@ const LaunchpadDetailPage = () => {
                       <Text color="#888" fontSize={["sm"]}>
                         {item.title}
                       </Text>
-                      <Link
-                        fontSize={["sm"]}
-                        isExternal
+                      <Button
+                        px="0"
+                        mx="0"
+                        variant=""
+                        h="30px"
+                        w="60px"
+                        fontSize="14px"
+                        fontFamily="Oswald"
+                        isDisabled={!item?.socialLink}
+                        _focus={{ borderColor: "transparent" }}
                         color="brand.blue"
                         textTransform="capitalize"
-                        href={item?.socialLink}
+                        onClick={() => {
+                          window.location.href = `${item?.socialLink}`;
+                        }}
                       >
                         Social link
-                      </Link>{" "}
+                      </Button>
                     </Stack>
                   </HStack>
                 </HStack>

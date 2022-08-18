@@ -1,9 +1,9 @@
 import {
   Box,
+  Button,
   Flex,
   Heading,
   Image,
-  Link,
   Skeleton,
   Square,
   Stack,
@@ -13,7 +13,6 @@ import React from "react";
 import { getCachedImageShort } from "@utils/index";
 
 export const TeamCard = ({ team_member }) => {
-  // console.log("team_member", team_member);
   return (
     <Flex
       direction="column"
@@ -49,14 +48,21 @@ export const TeamCard = ({ team_member }) => {
         </Text>
 
         <Stack>
-          <Link
-            isExternal
+          <Button
+            variant=""
+            h="30px"
+            fontSize="14px"
+            fontFamily="Oswald"
+            isDisabled={!team_member?.socialLink}
+            _focus={{ borderColor: "transparent" }}
             color="brand.blue"
             textTransform="capitalize"
-            href={team_member?.socialLink}
+            onClick={() => {
+              window.location.href = `${team_member?.socialLink}`;
+            }}
           >
             Social link
-          </Link>
+          </Button>
         </Stack>
       </Box>
     </Flex>
