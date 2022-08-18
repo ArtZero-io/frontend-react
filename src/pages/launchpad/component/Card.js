@@ -9,7 +9,6 @@ import {
   Progress,
   Skeleton,
   Square,
-  Stack,
   Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
@@ -19,6 +18,7 @@ import { secondsToTime } from "@utils/index";
 import * as ROUTES from "@constants/routes";
 import useInterval from "use-interval";
 import { getCachedImageShort } from "@utils/index";
+import FadeIn from "react-fade-in";
 
 export const Card = ({ variant, project }) => {
   const history = useHistory();
@@ -53,7 +53,7 @@ export const Card = ({ variant, project }) => {
   }, 1000);
 
   return (
-    <Stack>
+    <FadeIn>
       <Flex
         m={{ base: "10px", "2xl": "15px" }}
         h="full"
@@ -220,6 +220,6 @@ export const Card = ({ variant, project }) => {
           )}
         </Box>
       </Flex>
-    </Stack>
+    </FadeIn>
   );
 };

@@ -23,6 +23,7 @@ import {
   VStack,
   Link,
   useMediaQuery,
+  Skeleton,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
@@ -43,7 +44,7 @@ import {
   convertStringToPrice,
 } from "@utils";
 import { Interweave } from "interweave";
-import AnimationLoader from "@components/Loader/AnimationLoader";
+// import AnimationLoader from "@components/Loader/AnimationLoader";
 import BN from "bn.js";
 import toast from "react-hot-toast";
 // import ModalLoader from "@components/Loader/ModalLoader";
@@ -68,7 +69,7 @@ import {
 } from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { usePagination } from "@ajna/pagination";
 import PaginationMP from "@components/Pagination/Pagination";
-// import { convertTimeStamp } from "../../../utils";
+import FadeIn from "react-fade-in";
 
 const NUMBER_PER_PAGE = 6;
 
@@ -94,6 +95,7 @@ const LaunchpadDetailPage = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  // eslint-disable-next-line no-unused-vars
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
     [
       PUBLIC_MINT,
@@ -470,19 +472,21 @@ const LaunchpadDetailPage = () => {
         project={formattedCollection}
         currentWhitelist={currentWhitelist}
       />
-      {loading || loadingForceUpdate ? (
+      {/* {loading && loadingForceUpdate ? (
         <AnimationLoader loadingTime={loadingTime || 3.5} />
-      ) : (
-        <VStack w="full" px={["24px", "0px"]} spacing={["24px", "30px"]}>
-          <Box
-            w="full"
-            mx="auto"
-            bg="#222"
-            maxW="870px"
-            px={["15px", "30px"]}
-            py={["17px", "26px"]}
-          >
-            <Flex w="full" mb="15px">
+      ) : ( */}
+      <VStack w="full" px={["24px", "0px"]} spacing={["24px", "30px"]}>
+        <Box
+          w="full"
+          mx="auto"
+          bg="#222"
+          maxW="870px"
+          px={["15px", "30px"]}
+          py={["17px", "26px"]}
+        >
+          <Skeleton display="flex" isLoaded={!loading} w="full" mb="15px">
+            {console.log("loading", loading)}
+            <Skeleton isLoaded={!loading}>
               <Heading fontSize={["16px", "18px"]}>
                 {!currentPhase?.code ? (
                   `upcoming`
@@ -495,177 +499,250 @@ const LaunchpadDetailPage = () => {
                   </>
                 )}
               </Heading>
-              <Spacer />
+            </Skeleton>
 
-              {totalPhaseAmount > 0 ? (
-                <Text color="#888">
-                  {Math.round((totalClaimedAmount * 100) / totalPhaseAmount)}% (
-                  {totalClaimedAmount}/{totalPhaseAmount})
-                </Text>
-              ) : (
-                ""
-              )}
-            </Flex>
+            <Spacer />
+
             {totalPhaseAmount > 0 ? (
-              <Progress
-                value={Math.round(
-                  (totalClaimedAmount * 100) / totalPhaseAmount
-                )}
-                mb="20px"
-                h="8px"
-              />
+              <Text color="#888">
+                {Math.round((totalClaimedAmount * 100) / totalPhaseAmount)}% (
+                {totalClaimedAmount}/{totalPhaseAmount})
+              </Text>
             ) : (
               ""
             )}
+          </Skeleton>
+          {totalPhaseAmount > 0 ? (
+            <Progress
+              value={Math.round((totalClaimedAmount * 100) / totalPhaseAmount)}
+              mb="20px"
+              h="8px"
+            />
+          ) : (
+            ""
+          )}
 
-            {/* //BUTTON */}
-            {/* No wallet connect */}
-            {!currentAccount ? (
-              <Flex w="full" justifyContent="center">
-                <Text fontSize="lg" color="#888">
-                  Connect your wallet to mint
-                </Text>
-              </Flex>
-            ) : null}
-
-            {/* //Public phases*/}
-            {currentAccount && currentPhase?.publicPhase && (
-              <Flex w="full" justifyContent="center">
-                {currentPhase?.publicMintingAmount ? (
-                  <>
-                    <NumberInput
-                      bg="black"
-                      min={1}
-                      w="150px"
-                      mr={[0, 3]}
-                      h="3.125rem"
-                      mb={["10px", 0]}
-                      isDisabled={
-                        actionType ||
-                        currentPhase?.claimedAmount >=
-                          currentPhase?.publicMintingAmount
-                      }
-                      value={mintingAmount}
-                      max={currentPhase.publicMaxMintingAmount}
-                      onChange={(valueString) => setMintingAmount(valueString)}
-                    >
-                      <NumberInputField
-                        h="3.125rem"
-                        borderRadius={0}
-                        borderWidth={0}
-                        color="#fff"
-                      />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-
-                    <CommonButton
-                      {...rest}
-                      variant="outline"
-                      text="public mint"
-                      onClick={onPublicMint}
-                      isDisabled={
-                        currentPhase?.claimedAmount >=
-                        currentPhase?.publicMintingAmount
-                      }
-                    />
-                  </>
-                ) : (
-                  <Text fontSize="lg" color="#888">
-                    You are not in public mint list!
-                  </Text>
-                )}
-              </Flex>
-            )}
-
-            {/* //WhiteList phases*/}
-            {currentAccount && !currentPhase?.publicPhase && (
-              <Flex w="full" justifyContent="center">
-                {currentPhase?.whitelist?.whitelistAmount ? (
-                  <CommonButton
-                    w={["full", "auto"]}
-                    mx="0"
-                    {...rest}
-                    isDisabled={
-                      currentWhitelist?.whitelistAmount -
-                        currentWhitelist?.claimedAmount ===
-                      0
-                    }
-                    variant="outline"
-                    text="whitelist mint"
-                    onClick={onWhiteListMint}
-                  />
-                ) : (
-                  <Text fontSize="lg" color="#888">
-                    You are not in whitelist mint list!
-                  </Text>
-                )}
-              </Flex>
-            )}
-
-            {console.log("currentPhase", currentPhase)}
-          </Box>
-
-          <Box
-            w="full"
-            mx="auto"
-            bg="#222"
-            maxW="870px"
-            px={["15px", "30px"]}
-            py={["17px", "26px"]}
-          >
-            <Flex w="full" mb={["20px", "30px"]}>
-              <Heading fontSize={["24px", "32px"]}>phases</Heading>
-              <Spacer />
+          {/* //BUTTON */}
+          {/* No wallet connect */}
+          {!currentAccount ? (
+            <Flex w="full" justifyContent="center">
+              <Text fontSize="lg" color="#888">
+                Connect your wallet to mint
+              </Text>
             </Flex>
-            {console.log("phases", phases)}
-            {phases && phases.length
-              ? phases.map((item, index) => (
-                  <>
-                    <Wrap key={index} flexWrap={true} w="full" my="15px">
-                      <WrapItem>
-                        <Tag w="full">{item.code}</Tag>
-                      </WrapItem>
+          ) : null}
 
-                      {item.publicPhase && (
+          {/* //Public phases*/}
+          {currentAccount && currentPhase?.publicPhase && (
+            <Flex w="full" justifyContent="center">
+              {currentPhase?.publicMintingAmount ? (
+                <>
+                  <NumberInput
+                    bg="black"
+                    min={1}
+                    w="150px"
+                    mr={[0, 3]}
+                    h="3.125rem"
+                    mb={["10px", 0]}
+                    isDisabled={
+                      actionType ||
+                      currentPhase?.claimedAmount >=
+                        currentPhase?.publicMintingAmount
+                    }
+                    value={mintingAmount}
+                    max={currentPhase.publicMaxMintingAmount}
+                    onChange={(valueString) => setMintingAmount(valueString)}
+                  >
+                    <NumberInputField
+                      h="3.125rem"
+                      borderRadius={0}
+                      borderWidth={0}
+                      color="#fff"
+                    />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+
+                  <CommonButton
+                    {...rest}
+                    variant="outline"
+                    text="public mint"
+                    onClick={onPublicMint}
+                    isDisabled={
+                      currentPhase?.claimedAmount >=
+                      currentPhase?.publicMintingAmount
+                    }
+                  />
+                </>
+              ) : (
+                <Text fontSize="lg" color="#888">
+                  You are not in public mint list!
+                </Text>
+              )}
+            </Flex>
+          )}
+
+          {/* //WhiteList phases*/}
+          {currentAccount && !currentPhase?.publicPhase && (
+            <Flex w="full" justifyContent="center">
+              {currentPhase?.whitelist?.whitelistAmount ? (
+                <CommonButton
+                  w={["full", "auto"]}
+                  mx="0"
+                  {...rest}
+                  isDisabled={
+                    currentWhitelist?.whitelistAmount -
+                      currentWhitelist?.claimedAmount ===
+                    0
+                  }
+                  variant="outline"
+                  text="whitelist mint"
+                  onClick={onWhiteListMint}
+                />
+              ) : (
+                <Text fontSize="lg" color="#888">
+                  You are not in whitelist mint list!
+                </Text>
+              )}
+            </Flex>
+          )}
+
+          {console.log("currentPhase", currentPhase)}
+        </Box>
+
+        <Box
+          w="full"
+          mx="auto"
+          bg="#222"
+          maxW="870px"
+          px={["15px", "30px"]}
+          py={["17px", "26px"]}
+        >
+          <Flex w="full" mb={["20px", "30px"]}>
+            <Heading fontSize={["24px", "32px"]}>phases</Heading>
+            <Spacer />
+          </Flex>
+          {console.log("phases", phases)}
+          {phases && phases.length
+            ? phases.map((item, index) => (
+                <FadeIn>
+                  <Wrap key={index} flexWrap={true} w="full" my="15px">
+                    <WrapItem>
+                      <Tag w="full">{item.code}</Tag>
+                    </WrapItem>
+
+                    {item.publicPhase && (
+                      <Stack
+                        px="2px"
+                        w="full"
+                        direction={["column", "row"]}
+                        fontSize={["15px", "18px", "18px"]}
+                      >
                         <Stack
-                          px="2px"
                           w="full"
-                          direction={["column", "row"]}
-                          fontSize={["15px", "18px", "18px"]}
+                          color="#888"
+                          spacing="30px"
+                          direction={["row"]}
+                          alignContent="space-between"
+                          minH={{ base: "1rem", "2xl": "3.375rem" }}
                         >
-                          <Stack
-                            w="full"
-                            color="#888"
-                            spacing="30px"
-                            direction={["row"]}
-                            alignContent="space-between"
-                            minH={{ base: "1rem", "2xl": "3.375rem" }}
-                          >
-                            <Text>
-                              Total:{" "}
-                              <Text as="span" color="#fff">
-                                {console.log("total public amount:", item)}
-                                {item.publicMintingAmount}
+                          <Text>
+                            Total:{" "}
+                            <Text as="span" color="#fff">
+                              {console.log("total public amount:", item)}
+                              {item.publicMintingAmount}
+                            </Text>
+                          </Text>
+
+                          <Text>
+                            Minted:{" "}
+                            <Text as="span" color="#fff">
+                              {item.claimedAmount}{" "}
+                              <Text as="span">
+                                token{item.claimedAmount > 1 ? "s" : ""}
                               </Text>
                             </Text>
+                          </Text>
 
+                          <Text>
+                            Price:{" "}
+                            <Text as="span" color="#fff">
+                              {convertStringToPrice(item.publicMintingFee)}{" "}
+                              <AzeroIcon
+                                mb="5px"
+                                w={["14px", "16px"]}
+                                h={["14px", "16px"]}
+                              />
+                            </Text>
+                          </Text>
+                        </Stack>
+
+                        <Stack
+                          w="full"
+                          minW="fit-content"
+                          direction={["column", "row"]}
+                        >
+                          <Text color="brand.blue">
+                            Start:{" "}
+                            <Text as="span" color="#fff">
+                              {new Date(
+                                Number(item?.startTime)
+                              ).toLocaleString()}{" "}
+                            </Text>
+                          </Text>
+                          <Text as="span" display={["none", "flex"]}>
+                            -
+                          </Text>
+                          <Text color="brand.blue">
+                            End:{" "}
+                            <Text as="span" color="#fff">
+                              {new Date(Number(item?.endTime)).toLocaleString()}{" "}
+                            </Text>
+                          </Text>
+                        </Stack>
+                      </Stack>
+                    )}
+
+                    {!item.publicPhase && (
+                      <Stack
+                        px="2px"
+                        w="full"
+                        direction={["column", "row"]}
+                        fontSize={["15px", "18px", "18px"]}
+                      >
+                        <Stack
+                          w="full"
+                          color="#888"
+                          spacing="30px"
+                          direction={["row"]}
+                          alignContent="space-between"
+                          minH={{ base: "1rem", "2xl": "3.375rem" }}
+                        >
+                          <Text>
+                            Whitelist:{" "}
+                            <Text as="span" color="#fff">
+                              {item.totalWhiteList}
+                            </Text>
+                          </Text>
+                          {item.whitelist && item.whitelist.whitelistAmount && (
                             <Text>
-                              Minted:{" "}
+                              Max:{" "}
                               <Text as="span" color="#fff">
-                                {item.claimedAmount}{" "}
-                                <Text as="span">
-                                  token{item.claimedAmount > 1 ? "s" : ""}
-                                </Text>
+                                {Number(item.whitelist.whitelistAmount) -
+                                  Number(item.whitelist.claimedAmount)}{" "}
+                                tokens
                               </Text>
                             </Text>
-
+                          )}
+                          {item.whitelist && item.whitelist.mintingFee && (
                             <Text>
                               Price:{" "}
                               <Text as="span" color="#fff">
-                                {convertStringToPrice(item.publicMintingFee)}{" "}
+                                {convertStringToPrice(
+                                  item.whitelist.mintingFee
+                                )}{" "}
                                 <AzeroIcon
                                   mb="5px"
                                   w={["14px", "16px"]}
@@ -673,299 +750,217 @@ const LaunchpadDetailPage = () => {
                                 />
                               </Text>
                             </Text>
-                          </Stack>
-
-                          <Stack
-                            w="full"
-                            minW="fit-content"
-                            direction={["column", "row"]}
-                          >
-                            <Text color="brand.blue">
-                              Start:{" "}
-                              <Text as="span" color="#fff">
-                                {new Date(
-                                  Number(item?.startTime)
-                                ).toLocaleString()}{" "}
-                              </Text>
-                            </Text>
-                            <Text as="span" display={["none", "flex"]}>
-                              -
-                            </Text>
-                            <Text color="brand.blue">
-                              End:{" "}
-                              <Text as="span" color="#fff">
-                                {new Date(
-                                  Number(item?.endTime)
-                                ).toLocaleString()}{" "}
-                              </Text>
-                            </Text>
-                          </Stack>
+                          )}
                         </Stack>
-                      )}
 
-                      {!item.publicPhase && (
                         <Stack
-                          px="2px"
                           w="full"
+                          minW="fit-content"
                           direction={["column", "row"]}
-                          fontSize={["15px", "18px", "18px"]}
                         >
-                          <Stack
-                            w="full"
-                            color="#888"
-                            spacing="30px"
-                            direction={["row"]}
-                            alignContent="space-between"
-                            minH={{ base: "1rem", "2xl": "3.375rem" }}
-                          >
-                            <Text>
-                              Whitelist:{" "}
-                              <Text as="span" color="#fff">
-                                {item.totalWhiteList}
-                              </Text>
+                          <Text color="brand.blue">
+                            Start:{" "}
+                            <Text as="span" color="#fff">
+                              {new Date(
+                                Number(item?.startTime)
+                              ).toLocaleString()}{" "}
                             </Text>
-                            {item.whitelist && item.whitelist.whitelistAmount && (
-                              <Text>
-                                Max:{" "}
-                                <Text as="span" color="#fff">
-                                  {Number(item.whitelist.whitelistAmount) -
-                                    Number(item.whitelist.claimedAmount)}{" "}
-                                  tokens
-                                </Text>
-                              </Text>
-                            )}
-                            {item.whitelist && item.whitelist.mintingFee && (
-                              <Text>
-                                Price:{" "}
-                                <Text as="span" color="#fff">
-                                  {convertStringToPrice(
-                                    item.whitelist.mintingFee
-                                  )}{" "}
-                                  <AzeroIcon
-                                    mb="5px"
-                                    w={["14px", "16px"]}
-                                    h={["14px", "16px"]}
-                                  />
-                                </Text>
-                              </Text>
-                            )}
-                          </Stack>
+                          </Text>
 
-                          <Stack
-                            w="full"
-                            minW="fit-content"
-                            direction={["column", "row"]}
-                          >
-                            <Text color="brand.blue">
-                              Start:{" "}
-                              <Text as="span" color="#fff">
-                                {new Date(
-                                  Number(item?.startTime)
-                                ).toLocaleString()}{" "}
-                              </Text>
-                            </Text>
+                          <Text as="span" display={["none", "flex"]}>
+                            -
+                          </Text>
 
-                            <Text as="span" display={["none", "flex"]}>
-                              -
+                          <Text color="brand.blue">
+                            End:{" "}
+                            <Text as="span" color="#fff">
+                              {new Date(Number(item?.endTime)).toLocaleString()}{" "}
                             </Text>
-
-                            <Text color="brand.blue">
-                              End:{" "}
-                              <Text as="span" color="#fff">
-                                {new Date(
-                                  Number(item?.endTime)
-                                ).toLocaleString()}{" "}
-                              </Text>
-                            </Text>
-                          </Stack>
+                          </Text>
                         </Stack>
-                      )}
-                    </Wrap>
-                    <Divider mt={["20px", "30px"]} />
-                  </>
-                ))
-              : ""}
-          </Box>
-
-          <Box
-            w="full"
-            maxW="870px"
-            mx="auto"
-            bg="#222"
-            px={["15px", "30px"]}
-            py={["17px", "26px"]}
-          >
-            <Flex w="full" mb="30px">
-              <Heading fontSize={["24px", "32px"]}>roadmap</Heading>
-              <Spacer />
-            </Flex>
-            {formattedCollection.roadmaps && formattedCollection.roadmaps.length
-              ? formattedCollection.roadmaps.map((item, index) => (
-                  <>
-                    <Flex w="full" my="20px">
-                      <Heading fontSize={["md", "lg"]}>
-                        <Text as="span" color="#7ae7ff">
-                          {item.type}
-                        </Text>
-                      </Heading>
-                      <Spacer />
-                    </Flex>
-
-                    <Box
-                      fontSize={["md", "lg"]}
-                      color="#888"
-                      px="20px"
-                      mb="30px"
-                    >
-                      <Interweave content={item.content} />
-                    </Box>
-
-                    <Divider />
-                  </>
-                ))
-              : ""}
-          </Box>
-
-          <Box
-            w="full"
-            maxW="870px"
-            mx="auto"
-            bg="#222"
-            px={["15px", "30px"]}
-            py={["17px", "26px"]}
-          >
-            <Flex w="full" mb="30px">
-              <Heading fontSize={["24px", "32px"]}>Team</Heading>
-              <Spacer />
-            </Flex>
-
-            {isBigScreen ? (
-              <Grid
-                templateColumns={`repeat(auto-fill, minmax(min(100%, 250px), 1fr))`}
-                gap="30px"
-              >
-                {formattedCollection.team_members &&
-                formattedCollection.team_members.length
-                  ? formattedCollection.team_members.map((item) => (
-                      <GridItem>
-                        <TeamCard team_member={item} />
-                      </GridItem>
-                    ))
-                  : ""}
-              </Grid>
-            ) : (
-              <>
-                {formattedCollection?.team_members?.map((item, idx) => (
-                  <HStack
-                    py="15px"
-                    alignItems="center"
-                    borderBottom="1px solid #303030"
-                  >
-                    <HStack justifyContent="center">
-                      <Square mr={["12px", "32px"]} size="70px">
-                        <Image
-                          width="full"
-                          height="full"
-                          src={getCachedImageShort(item["avatar"])}
-                        />
-                      </Square>
-
-                      <Stack maxH="70px" spacing="2px">
-                        <Heading fontSize={["md"]}>{item.name}</Heading>
-                        <Text color="#888" fontSize={["sm"]}>
-                          {item.title}
-                        </Text>
-                        <Link
-                          fontSize={["sm"]}
-                          isExternal
-                          color="brand.blue"
-                          textTransform="capitalize"
-                          href={item?.socialLink}
-                        >
-                          Social link
-                        </Link>{" "}
                       </Stack>
-                    </HStack>
-                  </HStack>
-                ))}
-              </>
-            )}
-          </Box>
+                    )}
+                  </Wrap>
+                  <Divider mt={["20px", "30px"]} />
+                </FadeIn>
+              ))
+            : ""}
+        </Box>
 
-          <Box
-            w="full"
-            maxW="870px"
-            mx="auto"
-            bg="#222"
-            px={["15px", "30px"]}
-            py={["17px", "26px"]}
-          >
-            <Flex w="full" mb="30px">
-              <Heading fontSize={["24px", "32px"]}>My NFTs</Heading>
-              <Spacer />
-            </Flex>
+        <Box
+          w="full"
+          maxW="870px"
+          mx="auto"
+          bg="#222"
+          px={["15px", "30px"]}
+          py={["17px", "26px"]}
+        >
+          <Flex w="full" mb="30px">
+            <Heading fontSize={["24px", "32px"]}>roadmap</Heading>
+            <Spacer />
+          </Flex>
+          {formattedCollection.roadmaps && formattedCollection.roadmaps.length
+            ? formattedCollection.roadmaps.map((item, index) => (
+                <>
+                  <Flex w="full" my="20px">
+                    <Heading fontSize={["md", "lg"]}>
+                      <Text as="span" color="#7ae7ff">
+                        {item.type}
+                      </Text>
+                    </Heading>
+                    <Spacer />
+                  </Flex>
 
-            {myNFTs?.length === 0 ? (
-              <Text fontSize="lg" color="#888">
-                No NFT found
-              </Text>
-            ) : (
-              <>
+                  <Box fontSize={["md", "lg"]} color="#888" px="20px" mb="30px">
+                    <Interweave content={item.content} />
+                  </Box>
+
+                  <Divider />
+                </>
+              ))
+            : ""}
+        </Box>
+
+        <Box
+          w="full"
+          maxW="870px"
+          mx="auto"
+          bg="#222"
+          px={["15px", "30px"]}
+          py={["17px", "26px"]}
+        >
+          <Flex w="full" mb="30px">
+            <Heading fontSize={["24px", "32px"]}>Team</Heading>
+            <Spacer />
+          </Flex>
+
+          {isBigScreen ? (
+            <Grid
+              templateColumns={`repeat(auto-fill, minmax(min(100%, 250px), 1fr))`}
+              gap="30px"
+            >
+              {formattedCollection.team_members &&
+              formattedCollection.team_members.length
+                ? formattedCollection.team_members.map((item) => (
+                    <GridItem>
+                      <TeamCard team_member={item} />
+                    </GridItem>
+                  ))
+                : ""}
+            </Grid>
+          ) : (
+            <>
+              {formattedCollection?.team_members?.map((item, idx) => (
                 <HStack
                   py="15px"
                   alignItems="center"
                   borderBottom="1px solid #303030"
                 >
-                  <Text
-                    color="#888"
-                    fontSize={["md", "lg"]}
-                    minW={["60px", "160px"]}
-                  >
-                    #
-                  </Text>
                   <HStack justifyContent="center">
-                    <Heading color="#888" fontSize="15px">
-                      NFT Name
-                    </Heading>
+                    <Square mr={["12px", "32px"]} size="70px">
+                      <Image
+                        width="full"
+                        height="full"
+                        src={getCachedImageShort(item["avatar"])}
+                      />
+                    </Square>
+
+                    <Stack maxH="70px" spacing="2px">
+                      <Heading fontSize={["md"]}>{item.name}</Heading>
+                      <Text color="#888" fontSize={["sm"]}>
+                        {item.title}
+                      </Text>
+                      <Link
+                        fontSize={["sm"]}
+                        isExternal
+                        color="brand.blue"
+                        textTransform="capitalize"
+                        href={item?.socialLink}
+                      >
+                        Social link
+                      </Link>{" "}
+                    </Stack>
                   </HStack>
                 </HStack>
-                {pageNFT.map((item, idx) => (
-                  <HStack
-                    py="15px"
-                    alignItems="center"
-                    borderBottom="1px solid #303030"
-                  >
-                    <Text fontSize={["md", "lg"]} minW={["60px", "160px"]}>
-                      # {idx + 1}
-                    </Text>
-                    <HStack justifyContent="center">
-                      <Square mr={["12px", "32px"]} size="50px">
-                        <Image
-                          width="full"
-                          height="full"
-                          src={getCachedImageShort(item["avatar"])}
-                        />
-                      </Square>
-                      <Heading fontSize={["md", "lg"]}>{item.nftName}</Heading>
-                    </HStack>
+              ))}
+            </>
+          )}
+        </Box>
+
+        <Box
+          w="full"
+          maxW="870px"
+          mx="auto"
+          bg="#222"
+          px={["15px", "30px"]}
+          py={["17px", "26px"]}
+        >
+          <Flex w="full" mb="30px">
+            <Heading fontSize={["24px", "32px"]}>My NFTs</Heading>
+            <Spacer />
+          </Flex>
+
+          {myNFTs?.length === 0 ? (
+            <Text fontSize="lg" color="#888">
+              No NFT found
+            </Text>
+          ) : (
+            <>
+              <HStack
+                py="15px"
+                alignItems="center"
+                borderBottom="1px solid #303030"
+              >
+                <Text
+                  color="#888"
+                  fontSize={["md", "lg"]}
+                  minW={["60px", "160px"]}
+                >
+                  #
+                </Text>
+                <HStack justifyContent="center">
+                  <Heading color="#888" fontSize="15px">
+                    NFT Name
+                  </Heading>
+                </HStack>
+              </HStack>
+              {pageNFT.map((item, idx) => (
+                <HStack
+                  py="15px"
+                  alignItems="center"
+                  borderBottom="1px solid #303030"
+                >
+                  <Text fontSize={["md", "lg"]} minW={["60px", "160px"]}>
+                    # {idx + 1}
+                  </Text>
+                  <HStack justifyContent="center">
+                    <Square mr={["12px", "32px"]} size="50px">
+                      <Image
+                        width="full"
+                        height="full"
+                        src={getCachedImageShort(item["avatar"])}
+                      />
+                    </Square>
+                    <Heading fontSize={["md", "lg"]}>{item.nftName}</Heading>
                   </HStack>
-                ))}
-                <Stack w="full" py="30px">
-                  <PaginationMP
-                    bg="#333"
-                    maxW="230px"
-                    hasGotoPage={false}
-                    pagesCount={pagesCount}
-                    isDisabled={isDisabled}
-                    currentPage={currentPage}
-                    setCurrentPage={setCurrentPage}
-                  />
-                </Stack>
-              </>
-            )}
-          </Box>
-        </VStack>
-      )}
+                </HStack>
+              ))}
+              <Stack w="full" py="30px">
+                <PaginationMP
+                  bg="#333"
+                  maxW="230px"
+                  hasGotoPage={false}
+                  pagesCount={pagesCount}
+                  isDisabled={isDisabled}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                />
+              </Stack>
+            </>
+          )}
+        </Box>
+      </VStack>
+      {/* )} */}
     </Layout>
   );
 };

@@ -1,4 +1,12 @@
-import { Box, Container, Fade, Flex, Image, Skeleton } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Fade,
+  Flex,
+  Image,
+  Skeleton,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import Navbar from "../Navbar/Nav";
 import bgHeroFull from "@theme/assets/bg-hero-full.png";
 import React, { useCallback } from "react";
@@ -16,6 +24,8 @@ const Layout = ({ backdrop, children, variant = null }) => {
   const particlesInit = useCallback(async (main) => {
     await loadFull(main);
   }, []);
+
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   return (
     <Container
@@ -91,7 +101,21 @@ const Layout = ({ backdrop, children, variant = null }) => {
               "linear-gradient(0deg, #000000 3.25%, #000000 18.26%, rgba(0, 0, 0, 0) 100%);)",
           }}
         >
-          <Box position="relative" w="full" h="full" overflow="hidden">
+          <Box
+            position="relative"
+            w="full"
+            h="full"
+            overflow="hidden"
+            _after={{
+              left: 0,
+              bottom: 0,
+              width: "full",
+              height: "full",
+              content: '""',
+              position: "absolute",
+              backgroundColor: isBigScreen ? "#0000" : "#0000009c",
+            }}
+          >
             <Image
               src={backdrop && getCachedImageShort(backdrop, 1920)}
               alt="bg-heroFull"

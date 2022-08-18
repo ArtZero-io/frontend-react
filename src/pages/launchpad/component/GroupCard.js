@@ -7,15 +7,17 @@ import {
   HStack,
   Stack,
   Text,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { Card } from "./Card";
 
 import { useHistory } from "react-router-dom";
-import AnimationLoader from "@components/Loader/AnimationLoader";
+// import AnimationLoader from "@components/Loader/AnimationLoader";
 
 import * as ROUTES from "@constants/routes";
 import { useSubstrateState } from "@utils/substrate";
+import CardContentLoader from "./CardContentLoader";
 
 const NO_OF_PROJ_TO_DISPLAY = 4;
 
@@ -25,6 +27,7 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
   const history = useHistory();
 
   const [noOfLoad, setNoOfLoad] = useState(0);
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   return (
     <Box
@@ -67,7 +70,12 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
       </Flex>
 
       {loading ? (
-        <AnimationLoader />
+        <Flex flexWrap="wrap" justifyContent="center">
+          <CardContentLoader />
+          {isBigScreen ? <CardContentLoader /> : null}
+          {isBigScreen ? <CardContentLoader /> : null}
+          {isBigScreen ? <CardContentLoader /> : null}
+        </Flex>
       ) : (
         <Stack>
           {projectsList.length ? (

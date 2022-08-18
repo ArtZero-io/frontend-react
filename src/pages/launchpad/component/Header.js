@@ -109,80 +109,85 @@ function LaunchpadDetailHeader({
 
   return (
     <Box as="section" position="relative" w="full" mt={["30px", "320px"]}>
-      {!loading && (
-        <Box mx="auto" w="full" maxW="870px">
-          <VStack px="35px">
-            <Center
-              position="relative"
-              p="-px"
+      <Box mx="auto" w="full" maxW="870px">
+        <VStack px="35px">
+          <Center
+            p="-px"
+            position="relative"
+            rounded="full"
+            border="4px solid"
+            borderColor="white"
+            h={["68px", "120px", "120px"]}
+            w={["68px", "120px", "120px"]}
+            filter="drop-shadow(0px 4px 4px #00320025)"
+            bg="#333"
+          >
+            <Image
+              alt={"name"}
+              w="full"
+              h="full"
               rounded="full"
-              border="4px solid"
-              borderColor="white"
-              h={["68px", "120px", "120px"]}
-              w={["68px", "120px", "120px"]}
+              objectFit="cover"
+              src={getCachedImageShort(avatarImage, 500)}
+              fallback={
+                <Skeleton
+                  w={["68px", "120px", "120px"]}
+                  h={["60px", "112px", "112px"]}
+                  borderRadius="full"
+                />
+              }
+            />
+
+            <Circle
+              bottom="-5px"
+              right="-5px"
+              position="absolute"
+              width={["20px", "32px"]}
+              height={["20px", "32px"]}
+              border="black solid"
+              borderWidth={["3px", "4px"]}
               filter="drop-shadow(0px 4px 4px #00320025)"
-              bg="#333"
+              bg={isActive ? "#34B979" : "#666"}
+            />
+          </Center>
+
+          <HStack w="full" justifyContent="space-around">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
             >
-              <Image
-                alt={"name"}
-                w="full"
-                h="full"
-                rounded="full"
-                objectFit="cover"
-                src={getCachedImageShort(avatarImage, 500)}
-                fallback={
-                  <Skeleton
-                    w={["68px", "120px", "120px"]}
-                    h={["60px", "112px", "112px"]}
-                    borderRadius="full"
-                  />
-                }
-              />
-
-              <Circle
-                bottom="-5px"
-                right="-5px"
-                position="absolute"
-                width={["20px", "32px"]}
-                height={["20px", "32px"]}
-                border="black solid"
-                borderWidth={["3px", "4px"]}
-                filter="drop-shadow(0px 4px 4px #00320025)"
-                bg={isActive ? "#34B979" : "#666"}
-              />
-            </Center>
-
-            <HStack w="full" justifyContent="space-around">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+              <VStack
+                pt={["6px", "26px"]}
+                textAlign="center"
+                justifyContent="space-between"
+                minH={{ base: "3.5rem", "2xl": "7.125rem" }}
               >
-                <VStack
-                  pt={["6px", "26px"]}
-                  textAlign="center"
-                  justifyContent="space-between"
-                  minH={{ base: "3.5rem", "2xl": "7.125rem" }}
+                <Skeleton
+                  w="full"
+                  minH="fit-content"
+                  isLoaded={!loading}
+                  // h={["48px", "60px", "60px"]}
                 >
-                  <HStack w="full" pos="relative">
-                    <Heading
-                      w="full"
-                      color="#fff"
-                      fontSize={["32px", "48px", "48px"]}
-                      lineHeight={["38px", "60px", "60px"]}
-                    >
-                      {name}
-                    </Heading>
-                  </HStack>
-
-                  <VStack
-                    minW={["auto", "870px"]}
+                  <Heading
                     w="full"
-                    borderBottom="#282828 solid"
-                    borderBottomWidth={["0px", "1px"]}
-                    pt="12px"
-                    pb={["0px", "30px"]}
+                    color="#fff"
+                    fontSize={["32px", "48px", "48px"]}
+                    lineHeight={["38px", "60px", "60px"]}
                   >
+                    {name}
+                  </Heading>
+                </Skeleton>
+
+                <VStack
+                  minW={["auto", "870px"]}
+                  w="full"
+                  borderBottom="#282828 solid"
+                  borderBottomWidth={["0px", "1px"]}
+                  pt="12px"
+                  pb={["0px", "30px"]}
+                >
+                  <Skeleton isLoaded={!loading} h={["38px", "55px"]}>
                     <Heading fontSize={["sm", "md", "md"]} mb={["0px", "8px"]}>
                       project creator:{" "}
                       <Text as="span" color="#7ae7ff">
@@ -199,470 +204,487 @@ function LaunchpadDetailHeader({
                         </Text>
                       </Heading>
                     )}
-                  </VStack>
+                  </Skeleton>
+                </VStack>
 
-                  <Flex
-                    pt={["16px", "22px"]}
-                    pb={["16px", "30px"]}
-                    w="full"
-                    color="#888"
-                    // minW="500px"
-                    textAlign="center"
-                    justifyContent="center"
-                    fontSize={["16px", "18px"]}
-                    minH={{ base: "1rem", "2xl": "3.375rem" }}
-                  >
-                    <Text mx={["10px", "42px"]}>
-                      Supply:{" "}
-                      <Text as="span" color="#fff">
-                        {totalSupply}
-                      </Text>
+                <Skeleton
+                  display="flex"
+                  isLoaded={!loading}
+                  pt={["16px", "22px"]}
+                  pb={["16px", "30px"]}
+                  w="full"
+                  color="#888"
+                  textAlign="center"
+                  justifyContent="center"
+                  fontSize={["16px", "18px"]}
+                  minH={{ base: "1rem", "2xl": "3.375rem" }}
+                  maxH={["56px", "80px"]}
+                >
+                  <Text mx={["5px", "42px"]}>
+                    Supply:{" "}
+                    <Text as="span" color="#fff">
+                      {totalSupply}
                     </Text>
+                  </Text>
 
-                    {livePhase &&
-                    !livePhase.publicPhase &&
-                    currentWhitelist.mintingFee ? (
-                      <>
-                        <Text mx={["10px", "42px"]}>
-                          Price:{" "}
-                          <Text as="span" color="#fff">
-                            {convertStringToPrice(currentWhitelist.mintingFee)}{" "}
-                            <AzeroIcon
-                              mb="5px"
-                              w={["14px", "16px"]}
-                              h={["14px", "16px"]}
-                            />
-                          </Text>
+                  {livePhase &&
+                  !livePhase.publicPhase &&
+                  currentWhitelist.mintingFee ? (
+                    <>
+                      <Text mx={["5px", "42px"]}>
+                        Price:{" "}
+                        <Text as="span" color="#fff">
+                          {convertStringToPrice(currentWhitelist.mintingFee)}{" "}
+                          <AzeroIcon
+                            mb="5px"
+                            w={["14px", "16px"]}
+                            h={["14px", "16px"]}
+                          />
                         </Text>
-                      </>
-                    ) : (
-                      ""
-                    )}
+                      </Text>
+                    </>
+                  ) : (
+                    ""
+                  )}
 
-                    {livePhase && livePhase.publicPhase ? (
-                      <>
-                        <Text mx={["10px", "42px"]}>
-                          Price:{" "}
-                          <Text as="span" color="#fff">
-                            {convertStringToPrice(livePhase.publicMintingFee)}{" "}
-                            <AzeroIcon mb="5px" />
-                          </Text>
+                  {livePhase && livePhase.publicPhase ? (
+                    <>
+                      <Text mx={["5px", "42px"]}>
+                        Price:{" "}
+                        <Text as="span" color="#fff">
+                          {convertStringToPrice(livePhase.publicMintingFee)}{" "}
+                          <AzeroIcon mb="5px" />
                         </Text>
-                      </>
-                    ) : (
-                      ""
-                    )}
-                    {livePhase ? (
-                      <>
-                        <Text mx={["10px", "42px"]}>
-                          Mint Phase:{" "}
-                          <Text as="span" color="#fff">
-                            {livePhase.code}
-                          </Text>
+                      </Text>
+                    </>
+                  ) : (
+                    ""
+                  )}
+
+                  {livePhase ? (
+                    <>
+                      <Text mx={["5px", "42px"]}>
+                        Mint Phase:{" "}
+                        <Text as="span" color="#fff">
+                          {livePhase.code}
                         </Text>
-                      </>
-                    ) : (
-                      ""
-                    )}
-                  </Flex>
-                </VStack>
-              </motion.div>
-            </HStack>
-
-            {livePhase && livePhase ? (
-              <HStack
-                my="30px"
-                maxW="680px"
-                overflow="hidden"
-                borderWidth={2}
-                color="brand.blue"
-                px={["0px", "30px"]}
-                maxH={["200px", "110px"]}
-                borderColor="brand.blue"
-                justifyContent="center"
-                h={["200px", "full", "full"]}
-                py={{ base: "0.5rem", xl: "40px" }}
-                flexWrap={["wrap", "noWrap", "noWrap"]}
-              >
-                <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <Text
-                        lineHeight="none"
-                        fontFamily="DS-Digital"
-                        fontSize={["40px", "48px"]}
-                      >
-                        {numeral(countDownTimer.days).format("00,0")}
                       </Text>
-                      <Text fontSize={["14px", "16px"]}> Days</Text>
-                    </motion.div>
-                  </>
-                </VStack>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </Skeleton>
+              </VStack>
+            </motion.div>
+          </HStack>
 
-                <Divider
-                  transform="rotate(90deg)"
-                  width="300px"
-                  bg="#232323"
-                  display={{ base: "none", xl: "inline" }}
-                />
-
-                <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <Text
-                        lineHeight="none"
-                        fontFamily="DS-Digital"
-                        fontSize={["40px", "48px"]}
-                      >
-                        {numeral(countDownTimer.hours).format("00,0")}
-                      </Text>
-                      <Text fontSize={["14px", "16px"]}>Hours</Text>
-                    </motion.div>
-                  </>
-                </VStack>
-
-                {/* // mobile + line */}
-                <Divider
-                  bg="#555"
-                  pos="absolute"
-                  width="2px"
-                  height="268px"
-                  display={["inline", "none"]}
-                  transform="rotate(90deg) translateY(4px)"
-                />
-                <Divider
-                  pos="absolute"
-                  bg="#555"
-                  width="2px"
-                  height="195px"
-                  display={["inline", "none"]}
-                />
-                {/* // End mobile + line */}
-
-                <Divider
-                  transform="rotate(90deg)"
-                  width="300px"
-                  bg="#232323"
-                  display={{ base: "none", xl: "inline" }}
-                />
-
-                <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <Text
-                        lineHeight="none"
-                        fontFamily="DS-Digital"
-                        fontSize={["40px", "48px"]}
-                      >
-                        {numeral(countDownTimer.minutes).format("00,0")}
-                      </Text>
-                      <Text fontSize={["14px", "16px"]}> Mins</Text>
-                    </motion.div>
-                  </>
-                </VStack>
-
-                <Divider
-                  transform="rotate(90deg)"
-                  width="300px"
-                  bg="#232323"
-                  display={{ base: "none", xl: "inline" }}
-                />
-
-                <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <Text
-                        lineHeight="none"
-                        fontFamily="DS-Digital"
-                        fontSize={["40px", "48px"]}
-                      >
-                        {numeral(countDownTimer.seconds).format("00,0")}
-                      </Text>
-                      <Text fontSize={["14px", "16px"]}> Seconds</Text>
-                    </motion.div>
-                  </>
-                </VStack>
-              </HStack>
-            ) : null}
-
-            <Flex
+          {livePhase ? (
+            <Skeleton
+              position="relative"
               w="full"
-              pt="22px"
-              px="15px"
-              maxW="730px"
-              color="#fff"
-              textAlign="center"
-              alignItems="start"
-              pb={["0px", "30px"]}
+              display="flex"
+              alignItems="center"
+              isLoaded={!loading}
+              my="30px"
+              maxW="680px"
+              // overflow="auto"
+              borderWidth={2}
+              color="brand.blue"
+              px={["0px", "30px"]}
+              maxH={["200px", "110px"]}
+              borderColor="brand.blue"
               justifyContent="center"
-              fontSize={["15px", "18px", "18px"]}
+              h={["200px", "full", "full"]}
+              py={{ base: "0.5rem", xl: "40px" }}
+              flexWrap={["wrap", "noWrap", "noWrap"]}
             >
-              <Text noOfLines={[3, 3]}>{description}</Text>
-            </Flex>
-
-            {projectOwner === currentAccount?.address ||
-            projectAdminAddress === currentAccount?.address ? (
-              <Stack
-                py="30px"
-                spacing={["20px", "10px"]}
-                minW={["fit-content", "870px"]}
-                justifyContent="space-between"
-                alignItems="center"
-                direction={["column", "row"]}
+              <Box
+                bg="#7ae7ff"
+                position="absolute"
+                top="-16px"
+                zIndex="100"
+                p="2px 20px"
               >
-                <HStack
-                  minW="fit-content"
-                  cursor="pointer"
-                  onClick={() =>
-                    projectOwner === currentAccount?.address
-                      ? onOpenURI()
-                      : toast.error(
-                          "You must be the project owner to update base uri!"
-                        )
-                  }
-                >
-                  <BaseURIIcon
-                    color={
-                      projectOwner === currentAccount?.address ? "#fff" : "#888"
-                    }
-                  />
+                <Text fontFamily="Evogria" fontSize="16px" color="#000">
+                  phase end in
+                </Text>
+              </Box>
 
-                  <Heading
-                    fontSize={["md", "sm"]}
-                    color={
-                      projectOwner === currentAccount?.address
-                        ? "brand.blue"
-                        : "#888"
-                    }
-                    textDecoration="underline"
-                    fontFamily="Evogria, sans-serif"
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
+                <>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                   >
-                    update base uri
-                  </Heading>
-                </HStack>
+                    <Text
+                      lineHeight="none"
+                      fontFamily="DS-Digital"
+                      fontSize={["40px", "48px"]}
+                    >
+                      {numeral(countDownTimer.days).format("00,0")}
+                    </Text>
+                    <Text fontSize={["14px", "16px"]}> Days</Text>
+                  </motion.div>
+                </>
+              </VStack>
 
-                <Divider
-                  width="2px"
-                  height="30px"
-                  bg="#232323"
-                  display={["none", "inline"]}
+              <Divider
+                transform="rotate(90deg)"
+                width="300px"
+                bg="#232323"
+                display={{ base: "none", xl: "inline" }}
+              />
+
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
+                <>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Text
+                      lineHeight="none"
+                      fontFamily="DS-Digital"
+                      fontSize={["40px", "48px"]}
+                    >
+                      {numeral(countDownTimer.hours).format("00,0")}
+                    </Text>
+                    <Text fontSize={["14px", "16px"]}>Hours</Text>
+                  </motion.div>
+                </>
+              </VStack>
+
+              {/* // mobile + line */}
+              <Divider
+                bg="#555"
+                pos="absolute"
+                width="2px"
+                height="268px"
+                display={["inline", "none"]}
+                transform="rotate(90deg) translateY(4px)"
+              />
+              <Divider
+                pos="absolute"
+                bg="#555"
+                width="2px"
+                height="195px"
+                display={["inline", "none"]}
+              />
+              {/* // End mobile + line */}
+
+              <Divider
+                transform="rotate(90deg)"
+                width="300px"
+                bg="#232323"
+                display={{ base: "none", xl: "inline" }}
+              />
+
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
+                <>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Text
+                      lineHeight="none"
+                      fontFamily="DS-Digital"
+                      fontSize={["40px", "48px"]}
+                    >
+                      {numeral(countDownTimer.minutes).format("00,0")}
+                    </Text>
+                    <Text fontSize={["14px", "16px"]}> Mins</Text>
+                  </motion.div>
+                </>
+              </VStack>
+
+              <Divider
+                transform="rotate(90deg)"
+                width="300px"
+                bg="#232323"
+                display={{ base: "none", xl: "inline" }}
+              />
+
+              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
+                <>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Text
+                      lineHeight="none"
+                      fontFamily="DS-Digital"
+                      fontSize={["40px", "48px"]}
+                    >
+                      {numeral(countDownTimer.seconds).format("00,0")}
+                    </Text>
+                    <Text fontSize={["14px", "16px"]}> Seconds</Text>
+                  </motion.div>
+                </>
+              </VStack>
+            </Skeleton>
+          ) : null}
+
+          <Flex
+            w="full"
+            pt="22px"
+            px="15px"
+            maxW="730px"
+            color="#fff"
+            textAlign="center"
+            alignItems="start"
+            pb={["0px", "30px"]}
+            justifyContent="center"
+            fontSize={["15px", "18px", "18px"]}
+          >
+            <Text noOfLines={[3, 3]}>{description}</Text>
+          </Flex>
+
+          {projectOwner === currentAccount?.address ||
+          projectAdminAddress === currentAccount?.address ? (
+            <Stack
+              py="30px"
+              spacing={["20px", "10px"]}
+              minW={["fit-content", "870px"]}
+              justifyContent="space-between"
+              alignItems="center"
+              direction={["column", "row"]}
+            >
+              <HStack
+                minW="fit-content"
+                cursor="pointer"
+                onClick={() =>
+                  projectOwner === currentAccount?.address
+                    ? onOpenURI()
+                    : toast.error(
+                        "You must be the project owner to update base uri!"
+                      )
+                }
+              >
+                <BaseURIIcon
+                  color={
+                    projectOwner === currentAccount?.address ? "#fff" : "#888"
+                  }
                 />
 
-                <HStack
-                  minW="fit-content"
-                  cursor="pointer"
-                  onClick={() =>
+                <Heading
+                  fontSize={["md", "sm"]}
+                  color={
                     projectOwner === currentAccount?.address
-                      ? onOpenUpdateAdminAddressModal()
-                      : toast.error(
-                          "You must be the project owner to update admin address!"
-                        )
+                      ? "brand.blue"
+                      : "#888"
                   }
+                  textDecoration="underline"
+                  fontFamily="Evogria, sans-serif"
                 >
-                  <AdminAddressIcon
-                    color={
-                      projectOwner === currentAccount?.address ? "#fff" : "#888"
-                    }
-                  />
+                  update base uri
+                </Heading>
+              </HStack>
 
-                  <Heading
-                    fontSize={["md", "sm"]}
-                    color={
-                      projectOwner === currentAccount?.address
-                        ? "brand.blue"
-                        : "#888"
-                    }
-                    textDecoration="underline"
-                    fontFamily="Evogria, sans-serif"
-                  >
-                    update admin address
-                  </Heading>
-                </HStack>
+              <Divider
+                width="2px"
+                height="30px"
+                bg="#232323"
+                display={["none", "inline"]}
+              />
 
-                <Divider
-                  width="2px"
-                  height="30px"
-                  bg="#232323"
-                  display={["none", "inline"]}
+              <HStack
+                minW="fit-content"
+                cursor="pointer"
+                onClick={() =>
+                  projectOwner === currentAccount?.address
+                    ? onOpenUpdateAdminAddressModal()
+                    : toast.error(
+                        "You must be the project owner to update admin address!"
+                      )
+                }
+              >
+                <AdminAddressIcon
+                  color={
+                    projectOwner === currentAccount?.address ? "#fff" : "#888"
+                  }
                 />
 
-                <HStack
-                  minW="fit-content"
-                  cursor="pointer"
-                  onClick={() =>
+                <Heading
+                  fontSize={["md", "sm"]}
+                  color={
                     projectOwner === currentAccount?.address
-                      ? onOpenWithdrawModal()
-                      : toast.error(
-                          "You must be the project owner to withdraw balance!"
-                        )
+                      ? "brand.blue"
+                      : "#888"
                   }
+                  textDecoration="underline"
+                  fontFamily="Evogria, sans-serif"
                 >
-                  <ProjectInfoIcon
-                    color={
-                      projectOwner === currentAccount?.address ? "#fff" : "#888"
-                    }
-                  />
+                  update admin address
+                </Heading>
+              </HStack>
 
-                  <Heading
-                    fontSize={["md", "sm"]}
-                    color={
-                      projectOwner === currentAccount?.address
-                        ? "brand.blue"
-                        : "#888"
-                    }
-                    textDecoration="underline"
-                    fontFamily="Evogria, sans-serif"
-                  >
-                    withdraw balance
-                  </Heading>
-                </HStack>
+              <Divider
+                width="2px"
+                height="30px"
+                bg="#232323"
+                display={["none", "inline"]}
+              />
 
-                <Divider
-                  width="2px"
-                  height="30px"
-                  bg="#232323"
-                  display={["none", "inline"]}
+              <HStack
+                minW="fit-content"
+                cursor="pointer"
+                onClick={() =>
+                  projectOwner === currentAccount?.address
+                    ? onOpenWithdrawModal()
+                    : toast.error(
+                        "You must be the project owner to withdraw balance!"
+                      )
+                }
+              >
+                <ProjectInfoIcon
+                  color={
+                    projectOwner === currentAccount?.address ? "#fff" : "#888"
+                  }
                 />
 
-                <HStack
-                  minW="fit-content"
-                  cursor="pointer"
-                  onClick={() =>
+                <Heading
+                  fontSize={["md", "sm"]}
+                  color={
+                    projectOwner === currentAccount?.address
+                      ? "brand.blue"
+                      : "#888"
+                  }
+                  textDecoration="underline"
+                  fontFamily="Evogria, sans-serif"
+                >
+                  withdraw balance
+                </Heading>
+              </HStack>
+
+              <Divider
+                width="2px"
+                height="30px"
+                bg="#232323"
+                display={["none", "inline"]}
+              />
+
+              <HStack
+                minW="fit-content"
+                cursor="pointer"
+                onClick={() =>
+                  projectAdminAddress === currentAccount?.address
+                    ? history.push({
+                        state: { formMode: "EDIT", collection_address },
+                        pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
+                      })
+                    : toast.error(
+                        "You must be the project admin to update project info!"
+                      )
+                }
+              >
+                <ProjectInfoIcon
+                  color={
                     projectAdminAddress === currentAccount?.address
-                      ? history.push({
-                          state: { formMode: "EDIT", collection_address },
-                          pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
-                        })
-                      : toast.error(
-                          "You must be the project admin to update project info!"
-                        )
+                      ? "#fff"
+                      : "#888"
                   }
-                >
-                  <ProjectInfoIcon
-                    color={
-                      projectAdminAddress === currentAccount?.address
-                        ? "#fff"
-                        : "#888"
-                    }
-                  />
-
-                  <Heading
-                    fontSize={["md", "sm"]}
-                    color={
-                      projectAdminAddress === currentAccount?.address
-                        ? "#7ae7ff"
-                        : "#888"
-                    }
-                    textDecoration="underline"
-                    fontFamily="Evogria, sans-serif"
-                  >
-                    update project info
-                  </Heading>
-                </HStack>
-
-                <Divider
-                  width="2px"
-                  height="30px"
-                  bg="#232323"
-                  display={["none", "inline"]}
                 />
 
-                <HStack
-                  minW="fit-content"
-                  cursor="pointer"
-                  onClick={() =>
+                <Heading
+                  fontSize={["md", "sm"]}
+                  color={
                     projectAdminAddress === currentAccount?.address
-                      ? onOpenPhase()
-                      : toast.error(
-                          "You must be the project admin to update phases!"
-                        )
+                      ? "#7ae7ff"
+                      : "#888"
                   }
+                  textDecoration="underline"
+                  fontFamily="Evogria, sans-serif"
                 >
-                  <PhasesIcon
-                    color={
-                      projectAdminAddress === currentAccount?.address
-                        ? "#fff"
-                        : "#888"
-                    }
-                  />
+                  update project info
+                </Heading>
+              </HStack>
 
-                  <Heading
-                    fontSize={["md", "sm"]}
-                    color={
-                      projectAdminAddress === currentAccount?.address
-                        ? "#7ae7ff"
-                        : "#888"
-                    }
-                    textDecoration="underline"
-                    fontFamily="Evogria, sans-serif"
-                  >
-                    update phases
-                  </Heading>
-                </HStack>
-              </Stack>
-            ) : null}
-          </VStack>
-        </Box>
-      )}
-      {!loading && (
-        <HStack
-          pt="27px"
-          top="0"
-          left="100px"
-          w={["full", "auto"]}
-          display={["none", "flex"]}
-          position={{ base: "unset", xl: "absolute" }}
-        >
-          <IconButton
-            mr="8px"
-            onClick={() => history.goBack()}
-            variant="iconOutline"
-            width={["40px", "50px"]}
-            height={["40px", "50px"]}
-            icon={<ArrowBackIcon fontSize="2xl" />}
-            _hover={{
-              bg: "brand.blue",
-              color: "black",
-              borderWidth: "0",
-            }}
-          />
-          <Text fontSize="lg">Go back</Text>
-        </HStack>
-      )}
+              <Divider
+                width="2px"
+                height="30px"
+                bg="#232323"
+                display={["none", "inline"]}
+              />
 
-      {!loading && (
-        <VStack
-          pt="15px"
-          top="0"
-          right="100px"
-          w={["full", "auto"]}
-          position={{ base: "unset", xl: "absolute" }}
-        >
-          <SocialCard
-            profile={[
-              { website: "https://twitter.com/ArtZero_io" },
-              { twitter: "https://twitter.com/ArtZero_io" },
-              { discord: "https://discord.gg/wzkZ2JTvN4" },
-            ]}
-          />
+              <HStack
+                minW="fit-content"
+                cursor="pointer"
+                onClick={() =>
+                  projectAdminAddress === currentAccount?.address
+                    ? onOpenPhase()
+                    : toast.error(
+                        "You must be the project admin to update phases!"
+                      )
+                }
+              >
+                <PhasesIcon
+                  color={
+                    projectAdminAddress === currentAccount?.address
+                      ? "#fff"
+                      : "#888"
+                  }
+                />
+
+                <Heading
+                  fontSize={["md", "sm"]}
+                  color={
+                    projectAdminAddress === currentAccount?.address
+                      ? "#7ae7ff"
+                      : "#888"
+                  }
+                  textDecoration="underline"
+                  fontFamily="Evogria, sans-serif"
+                >
+                  update phases
+                </Heading>
+              </HStack>
+            </Stack>
+          ) : null}
         </VStack>
-      )}
+      </Box>
+
+      <HStack
+        pt="27px"
+        top="0"
+        left="100px"
+        w={["full", "auto"]}
+        display={["none", "flex"]}
+        position={{ base: "unset", xl: "absolute" }}
+      >
+        <IconButton
+          mr="8px"
+          onClick={() => history.goBack()}
+          variant="iconOutline"
+          width={["40px", "50px"]}
+          height={["40px", "50px"]}
+          icon={<ArrowBackIcon fontSize="2xl" />}
+          _hover={{
+            bg: "brand.blue",
+            color: "black",
+            borderWidth: "0",
+          }}
+        />
+        <Text fontSize="lg">Go back</Text>
+      </HStack>
+
+      <VStack
+        pt="15px"
+        top="0"
+        right="100px"
+        w={["full", "auto"]}
+        position={{ base: "unset", xl: "absolute" }}
+      >
+        <SocialCard
+          profile={[
+            { website: "https://twitter.com/ArtZero_io" },
+            { twitter: "https://twitter.com/ArtZero_io" },
+            { discord: "https://discord.gg/wzkZ2JTvN4" },
+          ]}
+        />
+      </VStack>
 
       <UpdateURIModal
         isOpen={isOpenURI}
