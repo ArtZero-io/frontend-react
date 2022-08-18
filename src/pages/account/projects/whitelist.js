@@ -163,7 +163,7 @@ function MyWhiteListProjectPage() {
       .includes(whitelistAddress);
 
     if (isAlreadyAdded) {
-      return toast.error(`This address is already added to Whitelist!`);
+      return toast.error(`This address was already added to whitelist!`);
     }
 
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
@@ -211,12 +211,12 @@ function MyWhiteListProjectPage() {
       return toast.error(`This address is not in Whitelist!`);
     }
 
-    const isAlreadyClaimed = whiteListDataTable
+    const claimedAmount = whiteListDataTable
       .find((i) => i.address === whitelistAddress)
       ?.claimedAmount.replaceAll(",", "");
 
-    if (parseInt(isAlreadyClaimed) > 0) {
-      return toast.error(`You can not update the address claimed!`);
+    if (parseInt(claimedAmount) >= whitelistAmount) {
+      return toast.error(`New amount must greater than claimed amount!`);
     }
 
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
@@ -289,7 +289,7 @@ function MyWhiteListProjectPage() {
       }
     }
 
-    console.log("phasesListAll", phasesListAll);
+    // console.log("phasesListAll", phasesListAll);
     setPhasesListAll(phasesListAll);
     setPhasesListWhitelist(phasesTmp);
     setSelectedProjectAddress(address);
