@@ -3,11 +3,10 @@ import { web3FromSource } from "../wallets/extension-dapp";
 import BN from "bn.js";
 import { clientAPI } from "@api/client";
 import { APICall } from "../../api/client";
-import { isValidAddressPolkadotAddress } from "@utils";
+import { isValidAddressPolkadotAddress, convertStringToPrice } from "@utils";
 import launchpad_contract_calls from "./launchpad-contract-calls";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
-
-import { ContractPromise } from "@polkadot/api-contract";
+import { ContractPromise, Abi } from "@polkadot/api-contract";
 import {
   txErrorHandler,
   txResponseErrorHandler,
@@ -175,6 +174,7 @@ async function addWhitelist(
           api,
           caller_account,
         });
+        
       }
     )
     .then((unsub) => (unsubscribe = unsub))
@@ -420,7 +420,7 @@ async function publicMint(
     .signAndSend(
       address,
       { signer: injector.signer },
-      async ({ status, dispatchError }) => {
+      async ({ status, events, dispatchError }) => {
         txResponseErrorHandler({
           status,
           dispatchError,
@@ -429,6 +429,43 @@ async function publicMint(
           api,
           caller_account,
         });
+        if (status.isInBlock) {
+          console.log(events);
+          events.forEach( async ({ event: { data, method, section } }) => {
+            console.log(data, method, section);
+            if (section == "contracts" && method == "ContractEmitted") {
+              const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
+              const contract_address = accId.toString();
+              console.log(contract_address);
+              const abi_launchpad_standard_contract = new Abi(
+                launchpad_psp34_nft_standard.CONTRACT_ABI
+              );
+              
+              const decodedEvent = abi_launchpad_standard_contract.decodeEvent(bytes);
+
+              let event_name = decodedEvent.event.identifier;
+              
+              if (event_name == "MintingEvent") {
+                const eventValues = [];
+                for (let i = 0; i < decodedEvent.args.length; i++) {
+                  const value = decodedEvent.args[i];
+                  console.log(value);
+                  eventValues.push(value.toString());
+                }
+                await APICall.newMintingEvent({
+                  project: contract_address,
+                  minter: eventValues[0],
+                  phase_id: eventValues[1],
+                  mint_amount: Number(eventValues[2]),
+                  price: convertStringToPrice(eventValues[3]),
+                  project_mint_fee: convertStringToPrice(eventValues[4])
+                });
+                
+              }
+            }
+            
+          });
+        }
       }
     )
     .then((unsub) => (unsubscribe = unsub))
@@ -465,7 +502,7 @@ async function whitelistMint(
     .signAndSend(
       address,
       { signer: injector.signer },
-      async ({ status, dispatchError }) => {
+      async ({ status, events, dispatchError }) => {
         txResponseErrorHandler({
           status,
           dispatchError,
@@ -474,6 +511,43 @@ async function whitelistMint(
           api,
           caller_account,
         });
+        if (status.isInBlock) {
+          console.log(events);
+          
+          events.forEach(async ({ event: { data, method, section } }) => {
+            console.log(data, method, section);
+            if (section == "contracts" && method == "ContractEmitted") {
+              const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
+              const contract_address = accId.toString();
+              console.log(contract_address);
+              const abi_launchpad_standard_contract = new Abi(
+                launchpad_psp34_nft_standard.CONTRACT_ABI
+              );
+              
+              const decodedEvent = abi_launchpad_standard_contract.decodeEvent(bytes);
+
+              let event_name = decodedEvent.event.identifier;
+              
+              if (event_name == "MintingEvent") {
+                const eventValues = [];
+                for (let i = 0; i < decodedEvent.args.length; i++) {
+                  const value = decodedEvent.args[i];
+                  console.log(value);
+                  eventValues.push(value.toString());
+                }
+                await APICall.newMintingEvent({
+                  project: contract_address,
+                  minter: eventValues[0],
+                  phase_id: eventValues[1],
+                  mint_amount: Number(eventValues[2]),
+                  price: convertStringToPrice(eventValues[3]),
+                  project_mint_fee: convertStringToPrice(eventValues[4])
+                });
+              }
+            }
+            
+          });
+        }
       }
     )
     .then((unsub) => (unsubscribe = unsub))
