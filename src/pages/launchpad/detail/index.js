@@ -85,6 +85,7 @@ const LaunchpadDetailPage = () => {
   const [myNFTs, setMyNFTs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mintingAmount, setMintingAmount] = useState(1);
+  const [whitelistMintingAmount, setWhitelistMintingAmount] = useState(1);
 
   const dispatch = useDispatch();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
@@ -318,7 +319,13 @@ const LaunchpadDetailPage = () => {
   }, [api, collection_address, currentAccount, fetchData]);
 
   const onWhiteListMint = async () => {
-    // TODOs: add check balance
+    const { data } = await api.query.system.account(currentAccount.address);
+    const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+
+    if (balance < 0.5) {
+      toast.error("Low balance to mint");
+      return;
+    }
 
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
       api,
@@ -336,7 +343,7 @@ const LaunchpadDetailPage = () => {
     await launchpad_psp34_nft_standard_calls.whitelistMint(
       currentAccount,
       currentPhaseId,
-      1,
+      whitelistMintingAmount,
       mintingFee,
       dispatch,
       WHITELIST_MINT,
@@ -533,7 +540,7 @@ const LaunchpadDetailPage = () => {
 
           {/* //Public phases*/}
           {currentAccount && currentPhase?.publicPhase && (
-            <Flex w="full" justifyContent="center">
+            <Flex w="full" justifyContent="start">
               {currentPhase?.publicMintingAmount ? (
                 <>
                   <NumberInput
@@ -549,7 +556,10 @@ const LaunchpadDetailPage = () => {
                         currentPhase?.publicMintingAmount
                     }
                     value={mintingAmount}
-                    max={currentPhase.publicMaxMintingAmount}
+                    max={
+                      currentPhase.publicMaxMintingAmount -
+                      currentPhase.claimedAmount
+                    }
                     onChange={(valueString) => setMintingAmount(valueString)}
                   >
                     <NumberInputField
@@ -587,23 +597,59 @@ const LaunchpadDetailPage = () => {
 
           {/* //WhiteList phases*/}
           {currentAccount && !currentPhase?.publicPhase && (
-            <Flex w="full" justifyContent="center">
+            <Flex w="full" justifyContent="start">
               {currentPhase?.whitelist?.whitelistAmount ? (
-                <CommonButton
-                  w={["full", "auto"]}
-                  mx="0"
-                  {...rest}
-                  isDisabled={
-                    loading ||
-                    loadingForceUpdate ||
-                    currentWhitelist?.whitelistAmount -
-                      currentWhitelist?.claimedAmount ===
-                      0
-                  }
-                  variant="outline"
-                  text="whitelist mint"
-                  onClick={onWhiteListMint}
-                />
+                <>
+                  {" "}
+                  <NumberInput
+                    bg="black"
+                    min={1}
+                    w="150px"
+                    mr={[0, 3]}
+                    h="3.125rem"
+                    mb={["10px", 0]}
+                    isDisabled={
+                      actionType ||
+                      currentPhase?.whitelist?.claimedAmount >=
+                        currentPhase?.whitelist?.whitelistAmount
+                    }
+                    value={whitelistMintingAmount}
+                    max={
+                      currentPhase?.whitelist?.whitelistAmount -
+                      currentPhase?.whitelist?.claimedAmount
+                    }
+                    onChange={(valueString) =>
+                      setWhitelistMintingAmount(valueString)
+                    }
+                  >
+                    {console.log("currentPhase", currentPhase)}
+                    <NumberInputField
+                      h="3.125rem"
+                      borderRadius={0}
+                      borderWidth={0}
+                      color="#fff"
+                    />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper />
+                      <NumberDecrementStepper />
+                    </NumberInputStepper>
+                  </NumberInput>
+                  <CommonButton
+                    w={["full", "auto"]}
+                    mx="0"
+                    {...rest}
+                    isDisabled={
+                      loading ||
+                      loadingForceUpdate ||
+                      currentWhitelist?.whitelistAmount -
+                        currentWhitelist?.claimedAmount ===
+                        0
+                    }
+                    variant="outline"
+                    text="whitelist mint"
+                    onClick={onWhiteListMint}
+                  />
+                </>
               ) : (
                 <Text fontSize="lg" color="#888">
                   You are not in whitelist mint list!
