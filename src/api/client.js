@@ -231,11 +231,35 @@ export const APICall = {
     return result;
   },
 
+  newMintingEvent: async ({
+    project,
+    mint_amount,
+    minter,
+    phase_id,
+    price,
+    project_mint_fee
+  }) => {
+    let result = await client("POST", "/newMintingEvent", {
+      project,
+      mint_amount,
+      minter,
+      phase_id,
+      price,
+      project_mint_fee
+    });
+
+    return result;
+  },
+
   // NFT API Calls
   getNFTsByOwner: async ({ owner }) => {
     return await client("POST", "/getNFTsByOwner", {
       owner,
     });
+  },
+
+  getTotalLaunchVolume: async () => {
+    return await client("GET", "/getTotalVolume", {});
   },
 
   getNFTByID: async ({ collection_address, token_id }) => {
