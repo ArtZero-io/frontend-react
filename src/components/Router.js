@@ -20,7 +20,7 @@ import AccountLayout from "./Layout/AccountLayout";
 import AdminLayout from "./Layout/AdminLayout";
 import LaunchpadDetailPage from "../pages/launchpad/detail";
 import AddProject from "../pages/launchpad/add-project";
-import MyProjectsPage from "@pages/account/projects";
+import MyProjectsPage from "@pages/account/projects/projects";
 import MyWhiteListProjectPage from "@pages/account/projects/whitelist";
 import MyMintingProjectPage from "@pages/account/projects/minting";
 import NftDetailPage from "../pages/token/";

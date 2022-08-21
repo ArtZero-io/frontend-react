@@ -213,8 +213,8 @@ const myAccountList = [
   { label: "My NFTs", href: ROUTES.ACCOUNT_MY_NFTS },
   { label: "My Stakes", href: ROUTES.ACCOUNT_MY_STAKES },
   { label: "My Projects", href: ROUTES.ACCOUNT_MY_PROJECTS },
-  { label: "WhiteList Manager", href: ROUTES.ACCOUNT_WHITELIST_PROJECTS },
-  { label: "Owner Mint", href: ROUTES.ACCOUNT_MINTING_PROJECTS },
+  // { label: "WhiteList Manager", href: ROUTES.ACCOUNT_WHITELIST_PROJECTS },
+  // { label: "Owner Mint", href: ROUTES.ACCOUNT_MINTING_PROJECTS },
 ];
 
 const MyAccountDropdown = () => {

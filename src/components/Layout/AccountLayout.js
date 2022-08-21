@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { Box, Skeleton, Tab, TabList, TabPanels, Tabs } from "@chakra-ui/react";
@@ -16,37 +17,37 @@ const AccountLayout = ({ children }) => {
   const [tabsData, setTabsData] = useState(tabsList);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchMyProjectListDetails = async () => {
-      try {
-        setLoading(true);
+  // useEffect(() => {
+  //   const fetchMyProjectListDetails = async () => {
+  //     try {
+  //       setLoading(true);
 
-        const projectListDetails = await getProjectListDetails({
-          currentAccount,
-          api,
-        });
-        // console.log("projectListDetails", projectListDetails);
-        const myProjectListDetails = projectListDetails.filter(
-          (i) => i.projectOwner === currentAccount?.address
-        );
-        if (myProjectListDetails?.length >= 1) {
-          setTabsData((prev) => {
-            return tabsListFull;
-          });
-        } else {
-          setTabsData((prev) => {
-            return tabsList;
-          });
-        }
-        setLoading(false);
-      } catch (error) {
-        setLoading(false);
-        console.log(error);
-      }
-    };
+  //       const projectListDetails = await getProjectListDetails({
+  //         currentAccount,
+  //         api,
+  //       });
+  //       // console.log("projectListDetails", projectListDetails);
+  //       const myProjectListDetails = projectListDetails.filter(
+  //         (i) => i.projectOwner === currentAccount?.address
+  //       );
+  //       if (myProjectListDetails?.length >= 1) {
+  //         setTabsData((prev) => {
+  //           return tabsListFull;
+  //         });
+  //       } else {
+  //         setTabsData((prev) => {
+  //           return tabsList;
+  //         });
+  //       }
+  //       setLoading(false);
+  //     } catch (error) {
+  //       setLoading(false);
+  //       console.log(error);
+  //     }
+  //   };
 
-    fetchMyProjectListDetails();
-  }, [api, currentAccount]);
+  //   fetchMyProjectListDetails();
+  // }, [api, currentAccount]);
 
   const handleTabsChange = (index) => {
     history.push(tabsData[index].route);
@@ -136,6 +137,7 @@ const tabsList = [
   },
 ];
 
+// eslint-disable-next-line no-unused-vars
 const tabsListFull = [
   {
     label: "General",

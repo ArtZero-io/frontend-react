@@ -1,6 +1,5 @@
 import {
   Box,
-  Flex,
   Text,
   NumberInput,
   NumberInputField,
@@ -17,6 +16,7 @@ import {
   Thead,
   Tr,
   HStack,
+  Stack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useSubstrateState } from "@utils/substrate";
@@ -390,334 +390,331 @@ function MyWhiteListProjectPage() {
   );
 
   return (
-    <Box
-      mx="auto"
-      px={{ base: "6", "2xl": "8" }}
-      py={{ base: "8", "2xl": "4" }}
-    >
-      <Box maxW="6xl-mid" fontSize="lg">
-        <Flex
-          direction={{ base: "column", xl: "row" }}
-          align="start"
+    <Stack>
+      <Stack pb="30px" borderBottom="1px #333 solid" textAlign="left">
+        <Heading fontSize="32px" pb="20px" textAlign="center">
+          add whitelist
+        </Heading>
+        <Stack>
+          <Text py={2}>Choose Project</Text>
+          <Box>
+            <Select
+              isDisabled={actionType}
+              h="50px"
+              borderRadius="0"
+              fontSize="15px"
+              border="1px solid #343333"
+              color="#7ae7ff"
+              textTransform="capitalize"
+              fontFamily="Oswald, san serif"
+              onChange={({ target }) =>
+                onChangeSelectedProjectAddress(target.value)
+              }
+            >
+              <option className="my-option" value={0}>
+                Click to pick project
+              </option>
+              {myProjectsList?.length
+                ? myProjectsList.map((item, index) => (
+                    <option value={item.nftContractAddress} key={index}>
+                      {item.name}
+                    </option>
+                  ))
+                : ""}
+            </Select>
+          </Box>
+        </Stack>
+        <Stack>
+          <Text py={2}>Choose Phase</Text>
+          <Box>
+            <Select
+              isDisabled={actionType}
+              h="50px"
+              borderRadius="0"
+              fontSize="15px"
+              color="#7ae7ff"
+              value={selectedPhaseCode}
+              fontFamily="Oswald, san serif"
+              textTransform="capitalize"
+              border="1px solid #343333"
+              onChange={({ target }) => onChangeSelectedPhaseCode(target.value)}
+            >
+              <option className="my-option" value={0}>
+                Click to pick phase
+              </option>
+              {phasesListWhitelist?.length
+                ? phasesListWhitelist.map((item, index) => (
+                    <option value={item.id} key={index}>
+                      {item.code}
+                    </option>
+                  ))
+                : ""}
+            </Select>
+          </Box>
+        </Stack>
+        <Stack>
+          <Text py={2}>Whitelist Address</Text>
+          <Box>
+            <Input
+              isDisabled={actionType || maxSlot <= 0}
+              bg="black"
+              h="3.125rem"
+              w="full"
+              mx={0}
+              px={2}
+              borderRadius={0}
+              borderWidth={0}
+              color="#fff"
+              placeholder="Enter address"
+              value={whitelistAddress}
+              onChange={(event) =>
+                setWhitelistAddress(event.target.value.toString())
+              }
+            />
+          </Box>
+        </Stack>
+        <Stack>
+          <Text py={2}>Price</Text>
+          <NumberInput
+            bg="black"
+            onChange={(valueString) => setWhiteListPrice(valueString)}
+            value={whiteListPrice}
+            mr={3}
+            h="3.125rem"
+            w="full"
+            px={0}
+            min={1}
+            isDisabled={actionType || maxSlot <= 0}
+          >
+            <NumberInputField
+              h="3.125rem"
+              borderRadius={0}
+              borderWidth={0}
+              color="#fff"
+            />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </Stack>
+        <Stack pb="30px">
+          <Text py={2}>Add number</Text>
+
+          <Box>
+            <NumberInput
+              isDisabled={actionType || maxSlot <= 0}
+              bg="black"
+              min={1}
+              onChange={(valueString) => setWhitelistAmount(valueString)}
+              value={whitelistAmount}
+              mr={3}
+              h="3.125rem"
+              w="full"
+              px={0}
+              max={maxSlot}
+            >
+              <NumberInputField
+                h="3.125rem"
+                borderRadius={0}
+                borderWidth={0}
+                color="#fff"
+              />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </Box>
+        </Stack>
+        <HStack
+          spacing="30px"
+          // direction={{ base: "column", xl: "row" }}
           justify="space-between"
-          w="full"
-          py={12}
-          textAlign="left"
+          alignItems="center"
         >
-          <Box
-            minH="800px"
-            mx={2}
-            fontSize="lg"
-            bg="brand.grayDark"
-            padding={12}
-            maxW="xl"
-            w="100%"
+          <CommonButton
+            mx="0"
+            {...rest}
+            w="full"
+            variant="outline"
+            text="add new"
+            onClick={() => onAddWhitelist()}
+            isDisabled={
+              maxSlot <= 0 ||
+              loadingForceUpdate ||
+              (actionType && actionType !== ADD_WHITELIST)
+            }
+          />
+
+          <CommonButton
+            mx="0"
+            {...rest}
+            w="full"
+            text="update"
+            variant="outline"
+            onClick={() => onUpdateWhitelist()}
+            isDisabled={
+              maxSlot <= 0 ||
+              loadingForceUpdate ||
+              (actionType && actionType !== UPDATE_WHITELIST)
+            }
+          />
+        </HStack>
+      </Stack>
+
+      <Stack py="30px">
+        <Heading fontSize="32px" pb="20px" textAlign="center">
+          Whitelist Management
+        </Heading>
+        {currentPhase && currentPhase.title && (
+          <>
+            <Stack
+              px="2px"
+              w="full"
+              py="20px"
+              borderTop="1px #303030 solid"
+              borderBottom="1px #303030 solid"
+              direction={["column", "row"]}
+              fontSize={["15px", "16px"]}
+            >
+              <Stack
+                w="full"
+                color="#888"
+                spacing="30px"
+                direction={["row"]}
+                alignContent="space-between"
+                minH={{ base: "1rem", "2xl": "3.375rem" }}
+              >
+                <Text>
+                  Total amount:{" "}
+                  <Text as="span" color="#fff">
+                    {currentPhase.whitelistAmount}{" "}
+                    <Text as="span">
+                      token{currentPhase.whitelistAmount > 1 ? "s" : ""}
+                    </Text>
+                  </Text>
+                </Text>
+
+                <Text>
+                  Minted Amount:{" "}
+                  <Text as="span" color="#fff">
+                    {currentPhase.claimedAmount}{" "}
+                    <Text as="span">
+                      token{currentPhase.claimedAmount > 1 ? "s" : ""}
+                    </Text>
+                  </Text>
+                </Text>
+              </Stack>
+
+              <Stack w="full" minW="fit-content" direction={["column", "row"]}>
+                <Text color="#fff">
+                  Start:{" "}
+                  <Text as="span" color="#7ae7ff">
+                    {convertStringToDateTime(currentPhase.startTime)}
+                  </Text>
+                </Text>
+                <Text as="span" display={["none", "flex"]}>
+                  -
+                </Text>
+                <Text color="#fff">
+                  End:{" "}
+                  <Text as="span" color="#7ae7ff">
+                    {convertStringToDateTime(currentPhase.endTime)}
+                  </Text>
+                </Text>
+              </Stack>
+            </Stack>
+          </>
+        )}
+        {loadingForceUpdate || loading ? (
+          <AnimationLoader />
+        ) : (
+          <motion.div
+            style={{ marginTop: "20px" }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            <Flex direction="column" justifyContent="space-between" h="full">
-              <Box h="full">
-                <Heading size="h4">Add Whitelist</Heading>
+            <TableContainer
+              fontSize="lg"
+              w={{ base: "1100px", xl: "1560px" }}
+              maxH={{ base: "390px", xl: "400px" }}
+              overflowY="scroll"
+              sx={{
+                "&::-webkit-scrollbar": {
+                  width: "4px",
+                  height: "4px",
+                  borderRadius: "0px",
+                  backgroundColor: `transparent`,
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: `#7ae7ff`,
+                },
+                "&::-webkit-scrollbar-thumb:hover": {
+                  backgroundColor: `#7ae7ff`,
+                },
+                "&::-webkit-scrollbar-track": {
+                  backgroundColor: `transparent`,
+                },
+              }}
+            >
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                {whiteListDataTable?.length ? (
+                  <Table variant="striped" colorScheme="blackAlpha">
+                    <Thead>
+                      <Tr>
+                        {Object.values(tableHeaders)?.map((item, idx) => (
+                          <Th
+                            top={0}
+                            zIndex={1}
+                            textAlign="center"
+                            key={idx}
+                            fontFamily="Evogria"
+                            color="#888"
+                            // bg="#171717"
+                            fontSize="15px"
+                            fontWeight="400"
+                            dropShadow="lg"
+                          >
+                            {item}
+                          </Th>
+                        ))}
+                      </Tr>
+                    </Thead>
 
-                <Box h="full">
-                  {" "}
-                  <Box mt={7}>
-                    <Text py={2}>Choose project</Text>
-                    <Box>
-                      <Select
-                        isDisabled={actionType}
-                        h="50px"
-                        borderRadius="0"
-                        fontSize="15px"
-                        border="1px solid #343333"
-                        fontFamily="Evogria, san serif"
-                        onChange={({ target }) =>
-                          onChangeSelectedProjectAddress(target.value)
-                        }
-                      >
-                        <option className="my-option" value={0}>
-                          click to pick project
-                        </option>
-                        {myProjectsList?.length
-                          ? myProjectsList.map((item, index) => (
-                              <option
-                                value={item.nftContractAddress}
-                                key={index}
-                              >
-                                {item.name}
-                              </option>
-                            ))
-                          : ""}
-                      </Select>
-                    </Box>
-                  </Box>
-                  <Box mt={7}>
-                    <Text py={2}>Choose phase</Text>
-                    <Box>
-                      <Select
-                        isDisabled={actionType}
-                        h="50px"
-                        borderRadius="0"
-                        fontSize="15px"
-                        border="1px solid #343333"
-                        fontFamily="Evogria, san serif"
-                        onChange={({ target }) =>
-                          onChangeSelectedPhaseCode(target.value)
-                        }
-                      >
-                        {" "}
-                        <option className="my-option" value={0}>
-                          click to pick phase
-                        </option>
-                        {phasesListWhitelist?.length
-                          ? phasesListWhitelist.map((item, index) => (
-                              <option value={item.id} key={index}>
-                                {item.code}
-                              </option>
-                            ))
-                          : ""}
-                      </Select>
-                    </Box>
-                  </Box>
-                  <Box mt={7}>
-                    <Text py={2}>Whitelist Address</Text>
-                    <Box>
-                      <Input
-                        isDisabled={actionType || maxSlot <= 0}
-                        bg="black"
-                        h="3.125rem"
-                        w="full"
-                        mx={0}
-                        px={2}
-                        borderRadius={0}
-                        borderWidth={0}
-                        color="#fff"
-                        placeholder="Enter address"
-                        value={whitelistAddress}
-                        onChange={(event) =>
-                          setWhitelistAddress(event.target.value.toString())
-                        }
-                      />
-                    </Box>
-                  </Box>
-                  <Box>
-                    <Text py={2}>Price</Text>
-                    <NumberInput
-                      bg="black"
-                      onChange={(valueString) => setWhiteListPrice(valueString)}
-                      value={whiteListPrice}
-                      mr={3}
-                      h="3.125rem"
-                      w="full"
-                      px={0}
-                      min={1}
-                      isDisabled={actionType || maxSlot <= 0}
-                    >
-                      <NumberInputField
-                        h="3.125rem"
-                        borderRadius={0}
-                        borderWidth={0}
-                        color="#fff"
-                      />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                  </Box>
-                  <Box mt={7}>
-                    <Text py={2}>Add number</Text>
-
-                    <Box>
-                      <NumberInput
-                        isDisabled={actionType || maxSlot <= 0}
-                        bg="black"
-                        min={1}
-                        onChange={(valueString) =>
-                          setWhitelistAmount(valueString)
-                        }
-                        value={whitelistAmount}
-                        mr={3}
-                        h="3.125rem"
-                        w="full"
-                        px={0}
-                        max={maxSlot}
-                      >
-                        <NumberInputField
-                          h="3.125rem"
-                          borderRadius={0}
-                          borderWidth={0}
-                          color="#fff"
-                        />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                      <HStack
-                        spacing="15px"
-                        // direction={{ base: "column", xl: "row" }}
-                        justify="space-between"
-                        alignItems="center"
-                        my="15px"
-                      >
-                        <CommonButton
-                          mx="0"
-                          {...rest}
-                          w="full"
-                          text="add new"
-                          onClick={() => onAddWhitelist()}
-                          isDisabled={
-                            maxSlot <= 0 ||
-                            loadingForceUpdate ||
-                            (actionType && actionType !== ADD_WHITELIST)
-                          }
-                        />
-
-                        <CommonButton
-                          mx="0"
-                          {...rest}
-                          w="full"
-                          text="update"
-                          onClick={() => onUpdateWhitelist()}
-                          isDisabled={
-                            maxSlot <= 0 ||
-                            loadingForceUpdate ||
-                            (actionType && actionType !== UPDATE_WHITELIST)
-                          }
-                        />
-                      </HStack>
-                    </Box>
-                  </Box>
-                </Box>
-              </Box>
-            </Flex>
-          </Box>
-          <Box
-            minH="800px"
-            mx={2}
-            fontSize="lg"
-            bg="brand.grayDark"
-            padding={12}
-            maxW="xl"
-            w="100%"
-          >
-            <Flex direction="column" justifyContent="space-between" h="full">
-              <Box h="full">
-                <Heading size="h4">Whitelist Management</Heading>
-                {currentPhase && currentPhase.title && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <Text py={2}>
-                      Total amount: {currentPhase.whitelistAmount}
-                    </Text>
-                    <Text py={2}>
-                      Minted Amount: {currentPhase.claimedAmount}
-                    </Text>
-                    <Text py={2}>
-                      Start Time:{" "}
-                      {convertStringToDateTime(currentPhase.startTime)}
-                    </Text>
-                    <Text py={2}>
-                      End Time: {convertStringToDateTime(currentPhase.endTime)}
-                    </Text>
-                  </motion.div>
-                )}
-                {loadingForceUpdate || loading ? (
-                  <AnimationLoader />
+                    <Tbody>
+                      {whiteListDataTable?.map((item, idx) => (
+                        <Tr key={idx} color="#fff">
+                          <Td textAlign="center" color="#fff">
+                            {truncateStr(item.address, 6)}
+                          </Td>
+                          <Td textAlign="center" color="#fff">
+                            {item.whitelistAmount}
+                          </Td>
+                          <Td textAlign="center" color="#fff">
+                            {item.claimedAmount}
+                          </Td>
+                          <Td textAlign="center" color="#fff">
+                            {item.mintingFee} <AzeroIcon mb={1.5} />
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
                 ) : (
-                  <motion.div
-                    style={{ marginTop: "20px" }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <TableContainer
-                      fontSize="lg"
-                      w={{ base: "1100px", xl: "1560px" }}
-                      maxH={{ base: "390px", xl: "400px" }}
-                      overflowY="scroll"
-                      sx={{
-                        "&::-webkit-scrollbar": {
-                          width: "4px",
-                          height: "4px",
-                          borderRadius: "0px",
-                          backgroundColor: `transparent`,
-                        },
-                        "&::-webkit-scrollbar-thumb": {
-                          backgroundColor: `#7ae7ff`,
-                        },
-                        "&::-webkit-scrollbar-thumb:hover": {
-                          backgroundColor: `#7ae7ff`,
-                        },
-                        "&::-webkit-scrollbar-track": {
-                          backgroundColor: `transparent`,
-                        },
-                      }}
-                    >
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                      >
-                        {whiteListDataTable?.length ? (
-                          <Table variant="striped" colorScheme="blackAlpha">
-                            <Thead>
-                              <Tr>
-                                {Object.values(tableHeaders)?.map(
-                                  (item, idx) => (
-                                    <Th
-                                      top={0}
-                                      zIndex={1}
-                                      textAlign="center"
-                                      key={idx}
-                                      fontFamily="Evogria"
-                                      color="#888"
-                                      bg="#171717"
-                                      fontSize="15px"
-                                      fontWeight="400"
-                                      dropShadow="lg"
-                                    >
-                                      {item}
-                                    </Th>
-                                  )
-                                )}
-                              </Tr>
-                            </Thead>
-
-                            <Tbody>
-                              {whiteListDataTable?.map((item, idx) => (
-                                <Tr key={idx} color="#fff">
-                                  <Td textAlign="center" color="#fff">
-                                    {truncateStr(item.address, 6)}
-                                  </Td>
-                                  <Td textAlign="center" color="#fff">
-                                    {item.whitelistAmount}
-                                  </Td>
-                                  <Td textAlign="center" color="#fff">
-                                    {item.claimedAmount}
-                                  </Td>
-                                  <Td textAlign="center" color="#fff">
-                                    {item.mintingFee} <AzeroIcon mb={1.5} />
-                                  </Td>
-                                </Tr>
-                              ))}
-                            </Tbody>
-                          </Table>
-                        ) : (
-                          <Text py={2}>No info found!</Text>
-                        )}
-                      </motion.div>
-                    </TableContainer>
-                  </motion.div>
+                  <Text py={2}>No info found!</Text>
                 )}
-              </Box>
-            </Flex>
-          </Box>
-        </Flex>
-      </Box>
-    </Box>
+              </motion.div>
+            </TableContainer>
+          </motion.div>
+        )}
+      </Stack>
+    </Stack>
   );
 }
 
