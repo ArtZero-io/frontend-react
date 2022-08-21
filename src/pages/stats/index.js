@@ -104,7 +104,7 @@ function StatsPage() {
             unit: "azero",
           },
           {
-            title: "Total Marketplace Volume",
+            title: "Total Marketplace Vol",
             value: totalVolume.toFixed(2),
             unit: "azero",
           },
