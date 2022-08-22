@@ -68,9 +68,6 @@ function StatsPage() {
       const totalVolume = await marketplace_contract_calls.getTotalVolume(
         currentAccount || getPublicCurrentAccount()
       );
-      
-      const totalLaunchPadVolumeTmp = await APICall.getTotalLaunchVolume();
-      let totalLaunchPadVolume = (totalLaunchPadVolumeTmp && totalLaunchPadVolumeTmp.length > 0) ? totalLaunchPadVolumeTmp[0].projectMintFeeTotal : 0;
 
       const totalProfit =
         currentProfit + launchpadBalance?.balance + collectionBalance?.balance;
@@ -106,11 +103,6 @@ function StatsPage() {
           {
             title: "Total Marketplace Vol",
             value: totalVolume.toFixed(2),
-            unit: "azero",
-          },
-          {
-            title: "Total LaunchPad Volume",
-            value: totalLaunchPadVolume.toFixed(2),
             unit: "azero",
           },
           {
