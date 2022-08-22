@@ -540,7 +540,12 @@ const LaunchpadDetailPage = () => {
 
           {/* //Public phases*/}
           {currentAccount && currentPhase?.publicPhase && (
-            <Flex w="full" justifyContent="start">
+            <HStack
+              w="full"
+              justifyContent="start"
+              alignItems="center"
+              spacing="20px"
+            >
               {currentPhase?.publicMintingAmount ? (
                 <>
                   <NumberInput
@@ -549,7 +554,7 @@ const LaunchpadDetailPage = () => {
                     w="150px"
                     mr={[0, 3]}
                     h="3.125rem"
-                    mb={["10px", 0]}
+                    // mb={["10px", 0]}
                     isDisabled={
                       actionType ||
                       currentPhase?.claimedAmount >=
@@ -575,6 +580,7 @@ const LaunchpadDetailPage = () => {
                   </NumberInput>
 
                   <CommonButton
+                    w={["full", "auto"]}
                     {...rest}
                     variant="outline"
                     text="public mint"
@@ -592,12 +598,17 @@ const LaunchpadDetailPage = () => {
                   You are not in public mint list!
                 </Text>
               )}
-            </Flex>
+            </HStack>
           )}
 
           {/* //WhiteList phases*/}
           {currentAccount && !currentPhase?.publicPhase && (
-            <Flex w="full" justifyContent="start">
+            <HStack
+              w="full"
+              justifyContent="start"
+              alignItems="center"
+              spacing="20px"
+            >
               {currentPhase?.whitelist?.whitelistAmount ? (
                 <>
                   {" "}
@@ -607,7 +618,7 @@ const LaunchpadDetailPage = () => {
                     w="150px"
                     mr={[0, 3]}
                     h="3.125rem"
-                    mb={["10px", 0]}
+                    // mb={["10px", 0]}
                     isDisabled={
                       actionType ||
                       currentPhase?.whitelist?.claimedAmount >=
@@ -655,7 +666,7 @@ const LaunchpadDetailPage = () => {
                   You are not in whitelist mint list!
                 </Text>
               )}
-            </Flex>
+            </HStack>
           )}
 
           {/* {console.log("currentPhase", currentPhase)} */}
@@ -988,7 +999,7 @@ const LaunchpadDetailPage = () => {
                   borderBottom="1px solid #303030"
                 >
                   <Text fontSize={["md", "lg"]} minW={["60px", "160px"]}>
-                    # {idx + 1}
+                    # {(currentPage - 1) * pageSize + idx + 1}
                   </Text>
                   <HStack justifyContent="center">
                     <Square mr={["12px", "32px"]} size="50px">

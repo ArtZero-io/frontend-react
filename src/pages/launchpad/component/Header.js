@@ -124,7 +124,7 @@ function LaunchpadDetailHeader({
   }, 1000);
 
   const [isSeeMore, setIsSeeMore] = useState(false);
-  
+
   return (
     <Box as="section" position="relative" w="full" mt={["30px", "320px"]}>
       <Box mx="auto" w="full" maxW="870px">
@@ -202,7 +202,7 @@ function LaunchpadDetailHeader({
                   w="full"
                   borderBottom="#282828 solid"
                   borderBottomWidth={["0px", "1px"]}
-                  pt="12px"
+                  pt={["12px", "12px"]}
                   pb={["0px", "30px"]}
                 >
                   <Skeleton isLoaded={!loading} h={["38px", "55px"]}>
@@ -228,7 +228,7 @@ function LaunchpadDetailHeader({
                 <Skeleton
                   display="flex"
                   isLoaded={!loading}
-                  pt={["16px", "22px"]}
+                  pt={["2px", "22px"]}
                   pb={["16px", "30px"]}
                   w="full"
                   color="#888"
@@ -300,150 +300,170 @@ function LaunchpadDetailHeader({
             <Skeleton
               position="relative"
               w="full"
-              display="flex"
-              alignItems="center"
+              // display="flex"
+              // alignItems="center"
+              // justifyContent="center"
               isLoaded={!loading}
               my="30px"
               maxW="680px"
-              // overflow="auto"
+              // overflow="hidden"
               borderWidth={2}
               color="brand.blue"
-              px={["0px", "30px"]}
-              maxH={["200px", "110px"]}
+              // px={["0px", "30px"]}
+              // maxH={["200px", "110px"]}
               borderColor="brand.blue"
-              justifyContent="center"
               h={["200px", "full", "full"]}
-              py={{ base: "0.5rem", xl: "40px" }}
-              flexWrap={["wrap", "noWrap", "noWrap"]}
+              // py={{ base: "0rem", xl: "40px" }}
+              // flexWrap={["wrap", "noWrap", "noWrap"]}
             >
               <Box
-                bg="#7ae7ff"
+                w="full"
                 position="absolute"
-                top="-16px"
+                top="-12px"
                 zIndex="100"
                 p="2px 20px"
+                textAlign="center"
               >
-                <Text fontFamily="Evogria" fontSize="16px" color="#000">
+                <Text
+                  mx="auto"
+                  maxW="120px"
+                  bg="#7ae7ff"
+                  fontFamily="Evogria"
+                  fontSize="16px"
+                  color="#000"
+                >
                   phase end in
                 </Text>
               </Box>
-
-              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                <>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <Text
-                      lineHeight="none"
-                      fontFamily="DS-Digital"
-                      fontSize={["40px", "48px"]}
+              <Flex
+                maxH={["200px", "110px"]}
+                h={["200px", "full", "full"]}
+                py={{ base: "0px", xl: "20px" }}
+                position="relative"
+                alignItems="center"
+                justifyContent="center"
+                overflow="hidden"
+                flexWrap={["wrap", "noWrap", "noWrap"]}
+                w="full"
+              >
+                <VStack textAlign="center" px={['2px','12px']} w={["45%", "full", "full"]}>
+                  <>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
                     >
-                      {numeral(countDownTimer.days).format("00,0")}
-                    </Text>
-                    <Text fontSize={["14px", "16px"]}> Days</Text>
-                  </motion.div>
-                </>
-              </VStack>
+                      <Text
+                        lineHeight="none"
+                        fontFamily="DS-Digital"
+                        fontSize={["40px", "48px"]}
+                      >
+                        {numeral(countDownTimer.days).format("00,0")}
+                      </Text>
+                      <Text fontSize={["14px", "16px"]}> Days</Text>
+                    </motion.div>
+                  </>
+                </VStack>
 
-              <Divider
-                transform="rotate(90deg)"
-                width="300px"
-                bg="#232323"
-                display={{ base: "none", xl: "inline" }}
-              />
+                <Divider
+                  transform="rotate(90deg)"
+                  width="300px"
+                  bg="#232323"
+                  display={{ base: "none", xl: "inline" }}
+                />
 
-              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                <>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <Text
-                      lineHeight="none"
-                      fontFamily="DS-Digital"
-                      fontSize={["40px", "48px"]}
+                <VStack textAlign="center" px={['2px','12px']} w={["45%", "full", "full"]}>
+                  <>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
                     >
-                      {numeral(countDownTimer.hours).format("00,0")}
-                    </Text>
-                    <Text fontSize={["14px", "16px"]}>Hours</Text>
-                  </motion.div>
-                </>
-              </VStack>
+                      <Text
+                        lineHeight="none"
+                        fontFamily="DS-Digital"
+                        fontSize={["40px", "48px"]}
+                      >
+                        {numeral(countDownTimer.hours).format("00,0")}
+                      </Text>
+                      <Text fontSize={["14px", "16px"]}>Hours</Text>
+                    </motion.div>
+                  </>
+                </VStack>
 
-              {/* // mobile + line */}
-              <Divider
-                bg="#555"
-                pos="absolute"
-                width="2px"
-                height="268px"
-                display={["inline", "none"]}
-                transform="rotate(90deg) translateY(4px)"
-              />
-              <Divider
-                pos="absolute"
-                bg="#555"
-                width="2px"
-                height="195px"
-                display={["inline", "none"]}
-              />
-              {/* // End mobile + line */}
+                {/* // mobile + line */}
+                <Divider
+                  bg="#555"
+                  pos="absolute"
+                  width="2px"
+                  height="340px"
+                  display={["inline", "none"]}
+                  transform="rotate(90deg) translateY(0px)"
+                />
+                <Divider
+                  pos="absolute"
+                  bg="#555"
+                  width="2px"
+                  height="195px"
+                  display={["inline", "none"]}
+                />
+                {/* // End mobile + line */}
 
-              <Divider
-                transform="rotate(90deg)"
-                width="300px"
-                bg="#232323"
-                display={{ base: "none", xl: "inline" }}
-              />
+                <Divider
+                  transform="rotate(90deg)"
+                  width="300px"
+                  bg="#232323"
+                  display={{ base: "none", xl: "inline" }}
+                />
 
-              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                <>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <Text
-                      lineHeight="none"
-                      fontFamily="DS-Digital"
-                      fontSize={["40px", "48px"]}
+                <VStack textAlign="center" px={['2px','12px']} w={["45%", "full", "full"]}>
+                  <>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
                     >
-                      {numeral(countDownTimer.minutes).format("00,0")}
-                    </Text>
-                    <Text fontSize={["14px", "16px"]}> Mins</Text>
-                  </motion.div>
-                </>
-              </VStack>
+                      <Text
+                        lineHeight="none"
+                        fontFamily="DS-Digital"
+                        fontSize={["40px", "48px"]}
+                      >
+                        {numeral(countDownTimer.minutes).format("00,0")}
+                      </Text>
+                      <Text fontSize={["14px", "16px"]}> Mins</Text>
+                    </motion.div>
+                  </>
+                </VStack>
 
-              <Divider
-                transform="rotate(90deg)"
-                width="300px"
-                bg="#232323"
-                display={{ base: "none", xl: "inline" }}
-              />
+                <Divider
+                  transform="rotate(90deg)"
+                  width="300px"
+                  bg="#232323"
+                  display={{ base: "none", xl: "inline" }}
+                />
 
-              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                <>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <Text
-                      lineHeight="none"
-                      fontFamily="DS-Digital"
-                      fontSize={["40px", "48px"]}
+                <VStack textAlign="center" px={['2px','12px']} w={["45%", "full", "full"]}>
+                  <>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
                     >
-                      {numeral(countDownTimer.seconds).format("00,0")}
-                    </Text>
-                    <Text fontSize={["14px", "16px"]}> Seconds</Text>
-                  </motion.div>
-                </>
-              </VStack>
+                      <Text
+                        lineHeight="none"
+                        fontFamily="DS-Digital"
+                        fontSize={["40px", "48px"]}
+                      >
+                        {numeral(countDownTimer.seconds).format("00,0")}
+                      </Text>
+                      <Text fontSize={["14px", "16px"]}> Seconds</Text>
+                    </motion.div>
+                  </>
+                </VStack>
+              </Flex>
             </Skeleton>
           ) : null}
+
           <Flex
             position="relative"
             w="full"
@@ -480,7 +500,7 @@ function LaunchpadDetailHeader({
               cursor="pointer"
               bg="#7ae7ff"
               position="absolute"
-              bottom="2"
+              bottom="-0"
               zIndex="100"
               p="2px 10px"
               onClick={() => setIsSeeMore(!isSeeMore)}
