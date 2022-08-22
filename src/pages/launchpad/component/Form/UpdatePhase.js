@@ -549,10 +549,10 @@ const canEditPhase = (startTime) => {
 
 export const isPhaseEnd = (endTime = "") => {
   endTime = parseInt(endTime.replaceAll(",", ""));
-  console.log("endTime", endTime);
+
   const now = new Date();
 
-  if (endTime >= now) return true;
+  if (endTime <= now) return true;
 
   return false;
 };

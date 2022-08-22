@@ -480,7 +480,7 @@ const LaunchpadDetailPage = () => {
         <AnimationLoader loadingTime={loadingTime || 3.5} />
       ) : ( */}
       <VStack w="full" px={["24px", "0px"]} spacing={["24px", "30px"]}>
-        {console.log("formattedProject", formattedProject.endTime)}{" "}
+
         {isPhaseEnd(formattedProject?.endTime) ? (
           <Box
             w="full"
