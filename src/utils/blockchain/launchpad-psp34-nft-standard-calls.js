@@ -919,6 +919,7 @@ const launchpad_psp34_nft_standard_calls = {
 
 export default launchpad_psp34_nft_standard_calls;
 
+// jjj
 export const getAccountBalanceOfPsp34NFT = async ({
   currentAccount,
   targetAddress,
@@ -973,4 +974,75 @@ export const getIdOfPsp34NFT = async ({
   }
 
   return ret;
+};
+
+export const getCurrentPhaseByProjectAddress = async ({
+  currentAccount,
+  nftContractAddress,
+  api,
+}) => {
+  if (!nftContractAddress || !currentAccount) {
+    console.log("invalid inputs nftContractAddress || currentAccount");
+    return null;
+  }
+
+  const contract = new ContractPromise(
+    api,
+    launchpad_psp34_nft_standard.CONTRACT_ABI,
+    nftContractAddress
+  );
+
+  const address = currentAccount?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const { result, output } = await contract.query.getCurrentPhase(address, {
+    value: azero_value,
+    gasLimit,
+  });
+
+  if (result.isOk) {
+    console.log(" output.toHuman()", output.toHuman());
+    return output.toHuman();
+  }
+  return null;
+};
+
+export const getCurrentPhaseStatusOfProject = async ({
+  currentAccount,
+  nftContractAddress,
+  api,
+}) => {
+  if (!nftContractAddress || !currentAccount) {
+    console.log("invalid inputs nftContractAddress || currentAccount");
+    return null;
+  }
+
+  const contract = new ContractPromise(
+    api,
+    launchpad_psp34_nft_standard.CONTRACT_ABI,
+    nftContractAddress
+  );
+
+  const phaseId = await getCurrentPhaseByProjectAddress({
+    currentAccount,
+    nftContractAddress,
+    api,
+  });
+
+  const address = currentAccount?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const { result, output } = await contract.query.getPhaseScheduleById(
+    address,
+    { value: azero_value, gasLimit },
+    phaseId
+  );
+
+  if (result.isOk) {
+    console.log("output.toHuman", output.toHuman());
+    return output.toHuman();
+  }
+  return null;
 };

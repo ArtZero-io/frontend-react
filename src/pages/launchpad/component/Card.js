@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -20,30 +19,23 @@ import * as ROUTES from "@constants/routes";
 import useInterval from "use-interval";
 import { getCachedImageShort } from "@utils/index";
 import FadeIn from "react-fade-in";
-import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 import { useSubstrateState } from "@utils/substrate";
-import { ContractPromise } from "@polkadot/api-contract";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
-import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
-import { timestampWithoutCommas, convertNumberWithoutCommas } from "@utils";
+import { getCurrentPhaseStatusOfProject } from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 
 export const Card = ({ variant, project }) => {
   const history = useHistory();
   const [countdown, setCountdown] = useState(null);
   const { api, currentAccount } = useSubstrateState();
-  const [totalPhaseAmount, setTotalPhaseAmount] = useState(0);
 
   const [progressPercent, setProgressPercent] = useState(0);
 
   const {
     // status,
     avatarImage,
-
     name,
     nftContractAddress,
     startTime,
   } = project;
-  console.log("Card project", project);
 
   useInterval(() => {
     if (variant !== "upcoming") {
@@ -66,64 +58,21 @@ export const Card = ({ variant, project }) => {
 
   const fetchData = useCallback(async () => {
     try {
-      const project = await launchpad_contract_calls.getProjectByNftAddress(
+      const currPhaseStatus = await getCurrentPhaseStatusOfProject({
         currentAccount,
-        nftContractAddress
-      );
-      console.log("xxxzzz fetchData project", project);
-      if (project) {
-        const launchpad_psp34_nft_standard_contract = new ContractPromise(
-          api,
-          launchpad_psp34_nft_standard.CONTRACT_ABI,
-          nftContractAddress
-        );
-        console.log("xxxzzz nftContractAddress", nftContractAddress);
-        launchpad_psp34_nft_standard_calls.setContract(
-          launchpad_psp34_nft_standard_contract
-        );
+        nftContractAddress,
+        api,
+      });
 
-        const totalPhase =
-          await launchpad_psp34_nft_standard_calls.getLastPhaseId(
-            currentAccount
-          );
-        console.log("xxxzzz totalPhase", totalPhase);
-        let phasesTmp = [];
-        const currentPhaseIdTmp =
-          await launchpad_psp34_nft_standard_calls.getCurrentPhase(
-            currentAccount
-          );
-        console.log("xxxzzz currentPhaseIdTmp", currentPhaseIdTmp);
-
-        const { claimedAmount, whitelistAmount } =
-          await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-            currentAccount,
-            currentPhaseIdTmp
-          );
-        setProgressPercent(
-          (claimedAmount.replaceAll(",", "") /
-            whitelistAmount.replaceAll(",", "")) *
-            100
-        );
-        console.log("xxxzzzz claimedAmount", claimedAmount);
-        console.log("xxxzzzz whitelistAmount", whitelistAmount);
-
-        // const projectDetail = {
-        //   name: projectInfo.name,
-        //   description: projectInfo.description,
-        //   avatarImage: projectInfo.avatar,
-        //   headerImage: projectInfo.header,
-        //   totalSupply: totalSupply,
-        //   roadmaps: projectInfo.roadmaps,
-        //   team_members: projectInfo.team_members,
-        //   phases: phasesTmp,
-        //   projectAdminAddress: projectAdminAddress,
-        //   ...project,
-        //   ...projectInfo,
-        // };
-
-        // setFormattedCollection(projectDetail);
-        // setPhases(phasesTmp);
+      if (!currPhaseStatus) {
+        return setProgressPercent(0);
       }
+
+      setProgressPercent(
+        (currPhaseStatus?.claimedAmount?.replaceAll(",", "") /
+          currPhaseStatus?.whitelistAmount?.replaceAll(",", "")) *
+          100
+      );
     } catch (error) {
       // setLoading(false);
 
