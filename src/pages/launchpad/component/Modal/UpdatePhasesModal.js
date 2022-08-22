@@ -11,7 +11,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { Form, Formik } from "formik";
 import CommonStack from "../Form/CommonStack";
-import AddPhase from "../Form/AddPhase";
+import UpdatePhase from "../Form/UpdatePhase";
 import * as Yup from "yup";
 import { SCROLLBAR } from "@constants";
 import { useSubstrateState } from "@utils/substrate";
@@ -202,7 +202,7 @@ const UpdatePhasesModal = React.memo(function ({
               {({ values, dirty, isValid, setFieldValue }) => (
                 <Form>
                   <CommonStack>
-                    <AddPhase
+                    <UpdatePhase
                       startTime={startTime}
                       endTime={endTime}
                       name="phases"

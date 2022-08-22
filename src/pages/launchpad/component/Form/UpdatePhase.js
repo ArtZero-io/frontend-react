@@ -22,7 +22,7 @@ import NumberInput from "@components/Input/NumberInput";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import CommonButton from "@components/Button/CommonButton";
 
-function AddPhase({
+function UpdatePhase({
   name,
   mode,
   isDisabled,
@@ -63,7 +63,7 @@ function AddPhase({
         const startTime = idx !== index ? item?.start : e[0].getTime();
         const endTime = idx !== index ? item?.end : e[1].getTime();
 
-        return { ...item, start: startTime, end: endTime, new: true };
+        return { ...item, start: startTime, end: endTime };
       });
 
       helpers.setValue(valueAddHash);
@@ -103,9 +103,6 @@ function AddPhase({
   };
 
   const onUpdatePhase = async (index) => {
-    console.log("onUpdatePhase startTime", startTime);
-    console.log("onUpdatePhase endTime", endTime);
-    console.log("onUpdatePhase value", value);
     const isOverlap = isPhaseTimeOverlap(value);
 
     if (isOverlap) {
@@ -113,26 +110,28 @@ function AddPhase({
     }
     //TODOs: check with proj phase time
 
-    // const phasesArray = [...value];
-    // if (phasesArray?.length) {
-    //   const startFirstPhase = phasesArray[0]?.start;
-    //   const endLastPhase = [...phasesArray].pop().end;
-    //   const prjStartTime = parseInt(startTime.replaceAll(",", ""));
-    //   const prjEndTime = parseInt(endTime.replaceAll(",", ""));
+    const phasesArray = [...value];
 
-    //   if (
-    //     !(
-    //       prjStartTime <= startFirstPhase &&
-    //       startFirstPhase <= endLastPhase &&
-    //       endLastPhase <= prjEndTime
-    //     )
-    //   ) {
-    //     toast.error(
-    //       "Sub phase time is not valid or overlap project phase time."
-    //     );
-    //     return;
-    //   }
-    // }
+    const prjStartTime = parseInt(startTime.replaceAll(",", ""));
+    const prjEndTime = parseInt(endTime.replaceAll(",", ""));
+
+    if (phasesArray?.length) {
+      const startFirstPhase = phasesArray[0]?.start;
+      const endLastPhase = [...phasesArray].pop().end;
+
+      if (
+        !(
+          prjStartTime <= startFirstPhase &&
+          startFirstPhase <= endLastPhase &&
+          endLastPhase <= prjEndTime
+        )
+      ) {
+        toast.error(
+          "Sub phase time is not valid or overlap project phase time."
+        );
+        return;
+      }
+    }
 
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
       api,
@@ -181,6 +180,29 @@ function AddPhase({
 
     if (isOverlap) {
       return toast.error("Sub phase time is not valid or overlap.");
+    }
+
+    const phasesArray = [...value];
+
+    const prjStartTime = parseInt(startTime.replaceAll(",", ""));
+    const prjEndTime = parseInt(endTime.replaceAll(",", ""));
+
+    if (phasesArray?.length) {
+      const startFirstPhase = phasesArray[0]?.start;
+      const endLastPhase = [...phasesArray].pop().end;
+
+      if (
+        !(
+          prjStartTime <= startFirstPhase &&
+          startFirstPhase <= endLastPhase &&
+          endLastPhase <= prjEndTime
+        )
+      ) {
+        toast.error(
+          "Sub phase time is not valid or overlap project phase time."
+        );
+        return;
+      }
     }
 
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
@@ -247,7 +269,12 @@ function AddPhase({
                       isRequired={true}
                       label="Phase name"
                       placeholder="Phase name here"
-                      isDisabled={actionType}
+                      isDisabled={
+                        actionType
+                        // ||
+                        // (mode === formMode.EDIT &&
+                        //   !canEditPhase(value[index].start))
+                      }
                     />{" "}
                   </Stack>
 
@@ -261,7 +288,12 @@ function AddPhase({
                       </Text>
                       <DateTimeRangePicker
                         disableClock
-                        disabled={!!actionType}
+                        disabled={
+                          !!actionType
+                          // ||
+                          // (mode === formMode.EDIT &&
+                          //   !canEditPhase(value[index].start))
+                        }
                         onChange={(e) => handlePhaseTime(e, index)}
                         value={
                           !value[index].start
@@ -293,7 +325,12 @@ function AddPhase({
                     <AdvancedModeSwitch
                       hasTooltipPublicMint={true}
                       label="Set public mint"
-                      isDisabled={actionType}
+                      isDisabled={
+                        actionType
+                        // ||
+                        // (mode === formMode.EDIT &&
+                        //   !canEditPhase(value[index].start))
+                      }
                       isChecked={value[index].isPublic}
                       name={`phases[${index}].isPublic`}
                       onChange={() => {
@@ -308,7 +345,12 @@ function AddPhase({
                     height="50px"
                     min="0"
                     hasStepper={false}
-                    isDisabled={actionType}
+                    isDisabled={
+                      actionType
+                      // ||
+                      // (mode === formMode.EDIT &&
+                      //   !canEditPhase(value[index].start))
+                    }
                     label="Public minting fee"
                     isDisplay={value[index].isPublic}
                     name={`phases[${index}].publicMintingFee`}
@@ -318,7 +360,12 @@ function AddPhase({
                     height="50px"
                     precision={0}
                     hasStepper={false}
-                    isDisabled={actionType}
+                    isDisabled={
+                      actionType
+                      //  ||
+                      // (mode === formMode.EDIT &&
+                      //   !canEditPhase(value[index].start))
+                    }
                     label="Total Mint Amount"
                     // inputWidth={"100%"}
                     isDisplay={value[index].isPublic}
@@ -330,7 +377,12 @@ function AddPhase({
                     height="50px"
                     precision={0}
                     hasStepper={false}
-                    isDisabled={actionType}
+                    isDisabled={
+                      actionType
+                      //  ||
+                      // (mode === formMode.EDIT &&
+                      //   !canEditPhase(value[index].start))
+                    }
                     label="Max per mint"
                     // inputWidth={"100%"}
                     isDisplay={value[index].isPublic}
@@ -339,7 +391,27 @@ function AddPhase({
                 </Stack>
 
                 <HStack justifyContent="end" w="full">
-                  {mode === formMode.ADD ? (
+                  {/* phase can not edit */}
+                  {/* {!canEditPhase(value[index].start) ? (
+                    <Heading
+                      // _hover={{
+                      //   color:
+                      //     !(index === 0 && value.length === 1) && "#7ae7ff",
+                      // }}
+                      fontSize="sm"
+                      // color="#555"
+                      fontStyle="unset"
+                      // cursor="pointer"
+                      fontFamily="Evogria"
+                      // textDecoration="underline"
+                      // onClick={() => onUpdatePhase(index)}
+                      // isDisabled={index === 0 && value.length === 1}
+                    >
+                      phase can not edit
+                    </Heading>
+                  ) : null} */}
+
+                  {/* {mode === formMode.ADD ? (
                     <Heading
                       _hover={{
                         color:
@@ -359,28 +431,32 @@ function AddPhase({
                     >
                       delete
                     </Heading>
-                  ) : null}
+                  ) : null} */}
 
-                  {!value[index].new &&
-                  mode === formMode.EDIT &&
-                  canEditPhase(value[index].start) ? (
-                    <Heading
-                      _hover={{
-                        color:
-                          !(index === 0 && value.length === 1) && "#7ae7ff",
-                      }}
-                      fontSize="sm"
-                      color="#555"
-                      fontStyle="unset"
-                      cursor="pointer"
-                      fontFamily="Evogria"
-                      textDecoration="underline"
-                      onClick={() => onUpdatePhase(index)}
-                      isDisabled={index === 0 && value.length === 1}
-                    >
-                      update
-                    </Heading>
-                  ) : null}
+                  {
+                    // !value[index].new &&
+
+                    !value[index].new &&
+                    mode === formMode.EDIT &&
+                    canEditPhase(value[index].start) ? (
+                      <Heading
+                        _hover={{
+                          color:
+                            !(index === 0 && value.length === 1) && "#7ae7ff",
+                        }}
+                        fontSize="sm"
+                        color="#555"
+                        fontStyle="unset"
+                        cursor="pointer"
+                        fontFamily="Evogria"
+                        textDecoration="underline"
+                        onClick={() => onUpdatePhase(index)}
+                        isDisabled={index === 0 && value.length === 1}
+                      >
+                        update
+                      </Heading>
+                    ) : null
+                  }
 
                   {value[index].new && mode === formMode.EDIT && (
                     <>
@@ -453,7 +529,7 @@ function AddPhase({
   );
 }
 
-export default AddPhase;
+export default UpdatePhase;
 
 // Logic add phase + update phase:
 // - Không update được những phase đã end hoặc đang chạy (Những phase không thẻ update sẽ không hiện button update)
@@ -465,7 +541,9 @@ export default AddPhase;
 
 const canEditPhase = (startTime) => {
   const now = new Date();
-
+  console.log("startTime", new Date(startTime));
+  console.log("now", new Date(now));
+  console.log("startTime - now true", startTime - now);
   if (startTime > now) return true;
 
   return false;
