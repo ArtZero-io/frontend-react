@@ -70,11 +70,12 @@ import {
 import { usePagination } from "@ajna/pagination";
 import PaginationMP from "@components/Pagination/Pagination";
 import FadeIn from "react-fade-in";
+import { isPhaseEnd } from "../component/Form/UpdatePhase";
 
 const NUMBER_PER_PAGE = 6;
 
 const LaunchpadDetailPage = () => {
-  const [formattedCollection, setFormattedCollection] = useState({});
+  const [formattedProject, setFormattedProject] = useState({});
   const { collection_address } = useParams();
   const { api, currentAccount } = useSubstrateState();
   const [phases, setPhases] = useState([]);
@@ -298,7 +299,7 @@ const LaunchpadDetailPage = () => {
           ...projectInfo,
         };
 
-        setFormattedCollection(projectDetail);
+        setFormattedProject(projectDetail);
         setPhases(phasesTmp);
       }
 
@@ -442,7 +443,7 @@ const LaunchpadDetailPage = () => {
           });
 
           return {
-            nftName: `${formattedCollection.nft_name} #${idOfNFT}`,
+            nftName: `${formattedProject.nft_name} #${idOfNFT}`,
             avatar: "Qmc1az4MVBL9MhfLLv3b1Hf9RCs9AoqXR2AZuUZb2XBhpJ",
           };
         })
@@ -451,7 +452,7 @@ const LaunchpadDetailPage = () => {
       // console.log("Promise ret error", ret);
       setMyNFTs(ret);
     }
-  }, [currentAccount, formattedCollection.nft_name]);
+  }, [currentAccount, formattedProject.nft_name]);
 
   useEffect(() => {
     // let isUnmount = false;
@@ -468,210 +469,222 @@ const LaunchpadDetailPage = () => {
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   return (
-    <Layout
-      backdrop={formattedCollection?.headerImage}
-      variant="launchpad-detail"
-    >
+    <Layout backdrop={formattedProject?.headerImage} variant="launchpad-detail">
       <LaunchpadDetailHeader
         loading={loading || loadingForceUpdate}
         collection_address={collection_address}
-        project={formattedCollection}
+        project={formattedProject}
         currentWhitelist={currentWhitelist}
       />
       {/* {loading && loadingForceUpdate ? (
         <AnimationLoader loadingTime={loadingTime || 3.5} />
       ) : ( */}
       <VStack w="full" px={["24px", "0px"]} spacing={["24px", "30px"]}>
-        <Box
-          w="full"
-          mx="auto"
-          bg="#222"
-          maxW="870px"
-          px={["15px", "30px"]}
-          py={["17px", "26px"]}
-        >
-          <Skeleton display="flex" isLoaded={!loading} w="full" mb="15px">
-            {/* {console.log("loading", loading)} */}
-            <Skeleton isLoaded={!loading}>
-              <Heading fontSize={["16px", "18px"]}>
-                {!currentPhase?.code ? (
-                  `upcoming`
-                ) : (
-                  <>
-                    <Text as="span" color="#7ae7ff">
-                      {currentPhase?.code}
-                    </Text>{" "}
-                    in progress
-                  </>
-                )}
-              </Heading>
+        {console.log("formattedProject", formattedProject.endTime)}{" "}
+        {isPhaseEnd(formattedProject?.endTime) ? (
+          <Box
+            w="full"
+            mx="auto"
+            bg="#222"
+            maxW="870px"
+            px={["15px", "30px"]}
+            py={["17px", "26px"]}
+          >
+            <Heading fontSize={["16px", "18px"]}>project ended</Heading>
+          </Box>
+        ) : (
+          <Box
+            w="full"
+            mx="auto"
+            bg="#222"
+            maxW="870px"
+            px={["15px", "30px"]}
+            py={["17px", "26px"]}
+          >
+            <Skeleton display="flex" isLoaded={!loading} w="full" mb="15px">
+              {/* {console.log("loading", loading)} */}
+              <Skeleton isLoaded={!loading}>
+                <Heading fontSize={["16px", "18px"]}>
+                  {!currentPhase?.code ? (
+                    `upcoming`
+                  ) : (
+                    <>
+                      <Text as="span" color="#7ae7ff">
+                        {currentPhase?.code}
+                      </Text>{" "}
+                      in progress
+                    </>
+                  )}
+                </Heading>
+              </Skeleton>
+
+              <Spacer />
+
+              {totalPhaseAmount > 0 ? (
+                <Text color="#888">
+                  {Math.round((totalClaimedAmount * 100) / totalPhaseAmount)}% (
+                  {totalClaimedAmount}/{totalPhaseAmount})
+                </Text>
+              ) : (
+                ""
+              )}
             </Skeleton>
-
-            <Spacer />
-
             {totalPhaseAmount > 0 ? (
-              <Text color="#888">
-                {Math.round((totalClaimedAmount * 100) / totalPhaseAmount)}% (
-                {totalClaimedAmount}/{totalPhaseAmount})
-              </Text>
+              <Progress
+                value={Math.round(
+                  (totalClaimedAmount * 100) / totalPhaseAmount
+                )}
+                mb="20px"
+                h="8px"
+              />
             ) : (
               ""
             )}
-          </Skeleton>
-          {totalPhaseAmount > 0 ? (
-            <Progress
-              value={Math.round((totalClaimedAmount * 100) / totalPhaseAmount)}
-              mb="20px"
-              h="8px"
-            />
-          ) : (
-            ""
-          )}
 
-          {/* //BUTTON */}
-          {/* No wallet connect */}
-          {!currentAccount ? (
-            <Flex w="full" justifyContent="center">
-              <Text fontSize="lg" color="#888">
-                Connect your wallet to mint
-              </Text>
-            </Flex>
-          ) : null}
-
-          {/* //Public phases*/}
-          {currentAccount && currentPhase?.publicPhase && (
-            <HStack
-              w="full"
-              justifyContent="start"
-              alignItems="center"
-              spacing="20px"
-            >
-              {currentPhase?.publicMintingAmount ? (
-                <>
-                  <NumberInput
-                    bg="black"
-                    min={1}
-                    w="150px"
-                    mr={[0, 3]}
-                    h="3.125rem"
-                    // mb={["10px", 0]}
-                    isDisabled={
-                      actionType ||
-                      currentPhase?.claimedAmount >=
-                        currentPhase?.publicMintingAmount
-                    }
-                    value={mintingAmount}
-                    max={
-                      currentPhase.publicMaxMintingAmount -
-                      currentPhase.claimedAmount
-                    }
-                    onChange={(valueString) => setMintingAmount(valueString)}
-                  >
-                    <NumberInputField
-                      h="3.125rem"
-                      borderRadius={0}
-                      borderWidth={0}
-                      color="#fff"
-                    />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-
-                  <CommonButton
-                    w={["full", "auto"]}
-                    {...rest}
-                    variant="outline"
-                    text="public mint"
-                    onClick={onPublicMint}
-                    isDisabled={
-                      loading ||
-                      loadingForceUpdate ||
-                      currentPhase?.claimedAmount >=
-                        currentPhase?.publicMintingAmount
-                    }
-                  />
-                </>
-              ) : (
+            {/* //BUTTON */}
+            {/* No wallet connect */}
+            {!currentAccount ? (
+              <Flex w="full" justifyContent="center">
                 <Text fontSize="lg" color="#888">
-                  You are not in public mint list!
+                  Connect your wallet to mint
                 </Text>
-              )}
-            </HStack>
-          )}
+              </Flex>
+            ) : null}
 
-          {/* //WhiteList phases*/}
-          {currentAccount && !currentPhase?.publicPhase && (
-            <HStack
-              w="full"
-              justifyContent="start"
-              alignItems="center"
-              spacing="20px"
-            >
-              {currentPhase?.whitelist?.whitelistAmount ? (
-                <>
-                  {" "}
-                  <NumberInput
-                    bg="black"
-                    min={1}
-                    w="150px"
-                    mr={[0, 3]}
-                    h="3.125rem"
-                    // mb={["10px", 0]}
-                    isDisabled={
-                      actionType ||
-                      currentPhase?.whitelist?.claimedAmount >=
-                        currentPhase?.whitelist?.whitelistAmount
-                    }
-                    value={whitelistMintingAmount}
-                    max={
-                      currentPhase?.whitelist?.whitelistAmount -
-                      currentPhase?.whitelist?.claimedAmount
-                    }
-                    onChange={(valueString) =>
-                      setWhitelistMintingAmount(valueString)
-                    }
-                  >
-                    {console.log("currentPhase", currentPhase)}
-                    <NumberInputField
+            {/* //Public phases*/}
+            {currentAccount && currentPhase?.publicPhase && (
+              <HStack
+                w="full"
+                justifyContent="start"
+                alignItems="center"
+                spacing="20px"
+              >
+                {currentPhase?.publicMintingAmount ? (
+                  <>
+                    <NumberInput
+                      bg="black"
+                      min={1}
+                      w="150px"
+                      mr={[0, 3]}
                       h="3.125rem"
-                      borderRadius={0}
-                      borderWidth={0}
-                      color="#fff"
+                      // mb={["10px", 0]}
+                      isDisabled={
+                        actionType ||
+                        currentPhase?.claimedAmount >=
+                          currentPhase?.publicMintingAmount
+                      }
+                      value={mintingAmount}
+                      max={
+                        currentPhase.publicMaxMintingAmount -
+                        currentPhase.claimedAmount
+                      }
+                      onChange={(valueString) => setMintingAmount(valueString)}
+                    >
+                      <NumberInputField
+                        h="3.125rem"
+                        borderRadius={0}
+                        borderWidth={0}
+                        color="#fff"
+                      />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+
+                    <CommonButton
+                      w={["full", "auto"]}
+                      {...rest}
+                      variant="outline"
+                      text="public mint"
+                      onClick={onPublicMint}
+                      isDisabled={
+                        loading ||
+                        loadingForceUpdate ||
+                        currentPhase?.claimedAmount >=
+                          currentPhase?.publicMintingAmount
+                      }
                     />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                  <CommonButton
-                    w={["full", "auto"]}
-                    mx="0"
-                    {...rest}
-                    isDisabled={
-                      loading ||
-                      loadingForceUpdate ||
-                      currentWhitelist?.whitelistAmount -
-                        currentWhitelist?.claimedAmount ===
-                        0
-                    }
-                    variant="outline"
-                    text="whitelist mint"
-                    onClick={onWhiteListMint}
-                  />
-                </>
-              ) : (
-                <Text fontSize="lg" color="#888">
-                  You are not in whitelist mint list!
-                </Text>
-              )}
-            </HStack>
-          )}
+                  </>
+                ) : (
+                  <Text fontSize="lg" color="#888">
+                    You are not in public mint list!
+                  </Text>
+                )}
+              </HStack>
+            )}
 
-          {/* {console.log("currentPhase", currentPhase)} */}
-        </Box>
+            {/* //WhiteList phases*/}
+            {currentAccount && !currentPhase?.publicPhase && (
+              <HStack
+                w="full"
+                justifyContent="start"
+                alignItems="center"
+                spacing="20px"
+              >
+                {currentPhase?.whitelist?.whitelistAmount ? (
+                  <>
+                    {" "}
+                    <NumberInput
+                      bg="black"
+                      min={1}
+                      w="150px"
+                      mr={[0, 3]}
+                      h="3.125rem"
+                      // mb={["10px", 0]}
+                      isDisabled={
+                        actionType ||
+                        currentPhase?.whitelist?.claimedAmount >=
+                          currentPhase?.whitelist?.whitelistAmount
+                      }
+                      value={whitelistMintingAmount}
+                      max={
+                        currentPhase?.whitelist?.whitelistAmount -
+                        currentPhase?.whitelist?.claimedAmount
+                      }
+                      onChange={(valueString) =>
+                        setWhitelistMintingAmount(valueString)
+                      }
+                    >
+                      {console.log("currentPhase", currentPhase)}
+                      <NumberInputField
+                        h="3.125rem"
+                        borderRadius={0}
+                        borderWidth={0}
+                        color="#fff"
+                      />
+                      <NumberInputStepper>
+                        <NumberIncrementStepper />
+                        <NumberDecrementStepper />
+                      </NumberInputStepper>
+                    </NumberInput>
+                    <CommonButton
+                      w={["full", "auto"]}
+                      mx="0"
+                      {...rest}
+                      isDisabled={
+                        loading ||
+                        loadingForceUpdate ||
+                        currentWhitelist?.whitelistAmount -
+                          currentWhitelist?.claimedAmount ===
+                          0
+                      }
+                      variant="outline"
+                      text="whitelist mint"
+                      onClick={onWhiteListMint}
+                    />
+                  </>
+                ) : (
+                  <Text fontSize="lg" color="#888">
+                    You are not in whitelist mint list!
+                  </Text>
+                )}
+              </HStack>
+            )}
 
+            {/* {console.log("currentPhase", currentPhase)} */}
+          </Box>
+        )}
         <Box
           w="full"
           mx="auto"
@@ -845,7 +858,6 @@ const LaunchpadDetailPage = () => {
               ))
             : ""}
         </Box>
-
         <Box
           w="full"
           maxW="870px"
@@ -858,8 +870,8 @@ const LaunchpadDetailPage = () => {
             <Heading fontSize={["24px", "32px"]}>roadmap</Heading>
             <Spacer />
           </Flex>
-          {formattedCollection.roadmaps && formattedCollection.roadmaps.length
-            ? formattedCollection.roadmaps.map((item, index) => (
+          {formattedProject.roadmaps && formattedProject.roadmaps.length
+            ? formattedProject.roadmaps.map((item, index) => (
                 <>
                   <Flex w="full" my="20px">
                     <Heading fontSize={["md", "lg"]}>
@@ -879,7 +891,6 @@ const LaunchpadDetailPage = () => {
               ))
             : ""}
         </Box>
-
         <Box
           w="full"
           maxW="870px"
@@ -898,9 +909,9 @@ const LaunchpadDetailPage = () => {
               templateColumns={`repeat(auto-fill, minmax(min(100%, 250px), 1fr))`}
               gap="30px"
             >
-              {formattedCollection.team_members &&
-              formattedCollection.team_members.length
-                ? formattedCollection.team_members.map((item) => (
+              {formattedProject.team_members &&
+              formattedProject.team_members.length
+                ? formattedProject.team_members.map((item) => (
                     <GridItem>
                       <TeamCard team_member={item} />
                     </GridItem>
@@ -909,7 +920,7 @@ const LaunchpadDetailPage = () => {
             </Grid>
           ) : (
             <>
-              {formattedCollection?.team_members?.map((item, idx) => (
+              {formattedProject?.team_members?.map((item, idx) => (
                 <HStack
                   py="15px"
                   alignItems="center"
@@ -954,7 +965,6 @@ const LaunchpadDetailPage = () => {
             </>
           )}
         </Box>
-
         <Box
           w="full"
           maxW="870px"
@@ -1034,6 +1044,16 @@ const LaunchpadDetailPage = () => {
 };
 
 export default LaunchpadDetailPage;
+
+// const isPhaseEnd = (endTime) => {
+//   console.log("endTime", endTime);
+//   endTime = parseInt(endTime.replaceAll(",", ""));
+//   const now = new Date();
+
+//   if (endTime >= now) return true;
+
+//   return false;
+// };
 
 const getMetaDataType1 = async (tokenID, token_uri) => {
   const metadata = await clientAPI(

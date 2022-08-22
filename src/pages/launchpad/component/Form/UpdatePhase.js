@@ -270,7 +270,7 @@ function UpdatePhase({
                       label="Phase name"
                       placeholder="Phase name here"
                       isDisabled={
-                        actionType
+                        actionType || isPhaseEnd(endTime)
                         // ||
                         // (mode === formMode.EDIT &&
                         //   !canEditPhase(value[index].start))
@@ -289,7 +289,7 @@ function UpdatePhase({
                       <DateTimeRangePicker
                         disableClock
                         disabled={
-                          !!actionType
+                          !!actionType || isPhaseEnd(endTime)
                           // ||
                           // (mode === formMode.EDIT &&
                           //   !canEditPhase(value[index].start))
@@ -326,7 +326,7 @@ function UpdatePhase({
                       hasTooltipPublicMint={true}
                       label="Set public mint"
                       isDisabled={
-                        actionType
+                        actionType || isPhaseEnd(endTime)
                         // ||
                         // (mode === formMode.EDIT &&
                         //   !canEditPhase(value[index].start))
@@ -346,7 +346,7 @@ function UpdatePhase({
                     min="0"
                     hasStepper={false}
                     isDisabled={
-                      actionType
+                      actionType || isPhaseEnd(endTime)
                       // ||
                       // (mode === formMode.EDIT &&
                       //   !canEditPhase(value[index].start))
@@ -361,7 +361,7 @@ function UpdatePhase({
                     precision={0}
                     hasStepper={false}
                     isDisabled={
-                      actionType
+                      actionType || isPhaseEnd(endTime)
                       //  ||
                       // (mode === formMode.EDIT &&
                       //   !canEditPhase(value[index].start))
@@ -378,7 +378,7 @@ function UpdatePhase({
                     precision={0}
                     hasStepper={false}
                     isDisabled={
-                      actionType
+                      actionType || isPhaseEnd(endTime)
                       //  ||
                       // (mode === formMode.EDIT &&
                       //   !canEditPhase(value[index].start))
@@ -517,9 +517,7 @@ function UpdatePhase({
                 onClick={() => handleAddPhase(arrayHelpers)}
                 text={`${mode === formMode.ADD ? "add more" : "add new phase"}`}
                 // isDisabled={!(dirty && isValid) && noImagesChange}
-                isDisabled={
-                  mode === formMode.ADD ? isDisabled || actionType : false
-                }
+                isDisabled={isPhaseEnd(endTime) || actionType}
               />
             </Stack>
           </Stack>
@@ -545,6 +543,16 @@ const canEditPhase = (startTime) => {
   console.log("now", new Date(now));
   console.log("startTime - now true", startTime - now);
   if (startTime > now) return true;
+
+  return false;
+};
+
+export const isPhaseEnd = (endTime = "") => {
+  endTime = parseInt(endTime.replaceAll(",", ""));
+  console.log("endTime", endTime);
+  const now = new Date();
+
+  if (endTime >= now) return true;
 
   return false;
 };
