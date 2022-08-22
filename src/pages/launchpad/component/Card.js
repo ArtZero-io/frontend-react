@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -11,7 +12,7 @@ import {
   Square,
   Text,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useHistory } from "react-router-dom";
 import { secondsToTime } from "@utils/index";
@@ -19,20 +20,31 @@ import * as ROUTES from "@constants/routes";
 import useInterval from "use-interval";
 import { getCachedImageShort } from "@utils/index";
 import FadeIn from "react-fade-in";
+import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
+import { useSubstrateState } from "@utils/substrate";
+import { ContractPromise } from "@polkadot/api-contract";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { timestampWithoutCommas, convertNumberWithoutCommas } from "@utils";
 
 export const Card = ({ variant, project }) => {
   const history = useHistory();
   const [countdown, setCountdown] = useState(null);
+  const { api, currentAccount } = useSubstrateState();
+  const [totalPhaseAmount, setTotalPhaseAmount] = useState(0);
+
+  const [progressPercent, setProgressPercent] = useState(0);
 
   const {
     // status,
     avatarImage,
-    progressPercent,
+
     name,
     nftContractAddress,
     startTime,
   } = project;
-  console.log(project);
+  console.log("Card project", project);
+
   useInterval(() => {
     if (variant !== "upcoming") {
       return;
@@ -51,6 +63,77 @@ export const Card = ({ variant, project }) => {
 
     timeLeftString && setCountdown(timeLeftString);
   }, 1000);
+
+  const fetchData = useCallback(async () => {
+    try {
+      const project = await launchpad_contract_calls.getProjectByNftAddress(
+        currentAccount,
+        nftContractAddress
+      );
+      console.log("xxxzzz fetchData project", project);
+      if (project) {
+        const launchpad_psp34_nft_standard_contract = new ContractPromise(
+          api,
+          launchpad_psp34_nft_standard.CONTRACT_ABI,
+          nftContractAddress
+        );
+        console.log("xxxzzz nftContractAddress", nftContractAddress);
+        launchpad_psp34_nft_standard_calls.setContract(
+          launchpad_psp34_nft_standard_contract
+        );
+
+        const totalPhase =
+          await launchpad_psp34_nft_standard_calls.getLastPhaseId(
+            currentAccount
+          );
+        console.log("xxxzzz totalPhase", totalPhase);
+        let phasesTmp = [];
+        const currentPhaseIdTmp =
+          await launchpad_psp34_nft_standard_calls.getCurrentPhase(
+            currentAccount
+          );
+        console.log("xxxzzz currentPhaseIdTmp", currentPhaseIdTmp);
+
+        const { claimedAmount, whitelistAmount } =
+          await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
+            currentAccount,
+            currentPhaseIdTmp
+          );
+        setProgressPercent(
+          (claimedAmount.replaceAll(",", "") /
+            whitelistAmount.replaceAll(",", "")) *
+            100
+        );
+        console.log("xxxzzzz claimedAmount", claimedAmount);
+        console.log("xxxzzzz whitelistAmount", whitelistAmount);
+
+        // const projectDetail = {
+        //   name: projectInfo.name,
+        //   description: projectInfo.description,
+        //   avatarImage: projectInfo.avatar,
+        //   headerImage: projectInfo.header,
+        //   totalSupply: totalSupply,
+        //   roadmaps: projectInfo.roadmaps,
+        //   team_members: projectInfo.team_members,
+        //   phases: phasesTmp,
+        //   projectAdminAddress: projectAdminAddress,
+        //   ...project,
+        //   ...projectInfo,
+        // };
+
+        // setFormattedCollection(projectDetail);
+        // setPhases(phasesTmp);
+      }
+    } catch (error) {
+      // setLoading(false);
+
+      console.log(error);
+    }
+  }, [api, currentAccount, nftContractAddress]);
+
+  useEffect(() => {
+    fetchData();
+  }, [api, currentAccount, fetchData]);
 
   return (
     <FadeIn>
@@ -155,12 +238,7 @@ export const Card = ({ variant, project }) => {
 
         <Box w="full" px="16px" py="20px">
           {variant === "live" && (
-            <Progress
-              w="258px"
-              h="8px"
-              value={progressPercent / 100}
-              mb="12px"
-            />
+            <Progress w="258px" h="8px" value={progressPercent} mb="12px" />
           )}
 
           <Heading
