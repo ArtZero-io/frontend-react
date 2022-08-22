@@ -53,6 +53,7 @@ import { getPublicCurrentAccount } from "@utils";
 import { ipfsClient } from "@api/client";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { getProjectMintFeeRate } from "@utils/blockchain/launchpad-contract-calls";
+import { isPhaseTimeOverlap } from "@utils";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
@@ -283,9 +284,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               }
 
               // check all phase time-frame is picked?
-              const phasesArray = values?.members?.phases;
+              const phasesArray = values?.phases;
 
-              const startPhasesAr = phasesArray?.members?.map((i) => i.start);
+              const startPhasesAr = phasesArray?.map((i) => i.start);
 
               const isPhaseTimePicked = startPhasesAr?.every((e) => e);
 
@@ -294,6 +295,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               }
 
               // check time is overlap?
+              const allPhaseTime = [...values.phases];
+
+              const isOverlap = isPhaseTimeOverlap(allPhaseTime);
+
+              if (isOverlap) {
+                return toast.error("Sub phase time is not valid or overlap.");
+              }
+
               if (phasesArray?.length) {
                 const startFirstPhase = phasesArray[0]?.start;
                 const endLastPhase = [...phasesArray].pop().end;
@@ -305,7 +314,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     endLastPhase <= prjEndTime
                   )
                 ) {
-                  toast.error("Phase time is not valid.");
+                  toast.error(
+                    "Sub phase time is not valid or overlap project phase time."
+                  );
                   return;
                 }
               }

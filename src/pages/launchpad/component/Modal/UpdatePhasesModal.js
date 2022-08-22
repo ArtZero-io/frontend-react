@@ -33,6 +33,8 @@ const UpdatePhasesModal = React.memo(function ({
   onClose,
   mode,
   collection_address,
+  startTime,
+  endTime,
 }) {
   const { currentAccount, api } = useSubstrateState();
   const dispatch = useDispatch();
@@ -201,6 +203,8 @@ const UpdatePhasesModal = React.memo(function ({
                 <Form>
                   <CommonStack>
                     <AddPhase
+                      startTime={startTime}
+                      endTime={endTime}
                       name="phases"
                       mode="EDIT"
                       collection_address={collection_address}

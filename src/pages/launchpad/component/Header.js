@@ -764,7 +764,7 @@ function LaunchpadDetailHeader({
         collection_address={collection_address}
         onClose={onCloseWithdrawModal}
       />
-      <UpdatePhasesModal
+      <UpdatePhasesModal {...project}
         isOpen={isOpenPhase}
         onClose={onClosePhase}
         collection_address={collection_address}

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -21,7 +22,14 @@ import NumberInput from "@components/Input/NumberInput";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import CommonButton from "@components/Button/CommonButton";
 
-function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
+function AddPhase({
+  name,
+  mode,
+  isDisabled,
+  collection_address = "",
+  startTime,
+  endTime,
+}) {
   const [{ value }, , helpers] = useField(name);
   const [isPublic, setIsPublic] = useState(false);
   const { currentAccount, api } = useSubstrateState();
@@ -31,21 +39,21 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
 
   const handlePhaseTime = (e, index) => {
     if (e) {
-      if (value.length >= 1) {
-        const end = e[1].getTime();
-        const start = e[0].getTime();
+      // if (value.length >= 1) {
+      //   const end = e[1].getTime();
+      //   const start = e[0].getTime();
 
-        const newValue = [...value];
-        console.log("newValue", newValue);
-        newValue.push({ start, end });
-        console.log("newValue11", newValue);
+      //   const newValue = [...value];
+      //   console.log("newValue", newValue);
+      //   newValue.push({ start, end });
+      //   console.log("newValue11", newValue);
 
-        const isOverlap = isPhaseTimeOverlap(newValue);
+      //   const isOverlap = isPhaseTimeOverlap(newValue);
 
-        if (isOverlap) {
-          return toast.error("Phase time is not valid or overlap.");
-        }
-      }
+      //   if (isOverlap) {
+      //     return toast.error("Phase time is not valid or overlap.");
+      //   }
+      // }
 
       const valueAddHash = value.map((item, idx) => {
         if (!e) {
@@ -55,7 +63,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
         const startTime = idx !== index ? item?.start : e[0].getTime();
         const endTime = idx !== index ? item?.end : e[1].getTime();
 
-        return { ...item, start: startTime, end: endTime };
+        return { ...item, start: startTime, end: endTime, new: true };
       });
 
       helpers.setValue(valueAddHash);
@@ -95,6 +103,37 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
   };
 
   const onUpdatePhase = async (index) => {
+    console.log("onUpdatePhase startTime", startTime);
+    console.log("onUpdatePhase endTime", endTime);
+    console.log("onUpdatePhase value", value);
+    const isOverlap = isPhaseTimeOverlap(value);
+
+    if (isOverlap) {
+      return toast.error("Sub phase time is not valid or overlap.");
+    }
+    //TODOs: check with proj phase time
+
+    // const phasesArray = [...value];
+    // if (phasesArray?.length) {
+    //   const startFirstPhase = phasesArray[0]?.start;
+    //   const endLastPhase = [...phasesArray].pop().end;
+    //   const prjStartTime = parseInt(startTime.replaceAll(",", ""));
+    //   const prjEndTime = parseInt(endTime.replaceAll(",", ""));
+
+    //   if (
+    //     !(
+    //       prjStartTime <= startFirstPhase &&
+    //       startFirstPhase <= endLastPhase &&
+    //       endLastPhase <= prjEndTime
+    //     )
+    //   ) {
+    //     toast.error(
+    //       "Sub phase time is not valid or overlap project phase time."
+    //     );
+    //     return;
+    //   }
+    // }
+
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
       api,
       launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -138,6 +177,12 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
   };
 
   const onAddNewPhase = async (index) => {
+    const isOverlap = isPhaseTimeOverlap(value);
+
+    if (isOverlap) {
+      return toast.error("Sub phase time is not valid or overlap.");
+    }
+
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
       api,
       launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -186,7 +231,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
         const phasesErrors = arrayHelpers?.form?.errors?.members;
         return (
           <Stack>
-            {value?.map((_, index) => (
+            {value?.map((phaseItem, index) => (
               <Stack
                 key={index}
                 p={["10px", "30px"]}
@@ -202,7 +247,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                       isRequired={true}
                       label="Phase name"
                       placeholder="Phase name here"
-                      isDisabled={actionType}
+                      isDisabled={actionType || !phaseItem.canEdit}
                     />{" "}
                   </Stack>
 
@@ -216,7 +261,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                       </Text>
                       <DateTimeRangePicker
                         disableClock
-                        disabled={!!actionType}
+                        disabled={!!actionType || !phaseItem.canEdit}
                         onChange={(e) => handlePhaseTime(e, index)}
                         value={
                           !value[index].start
@@ -248,7 +293,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                     <AdvancedModeSwitch
                       hasTooltipPublicMint={true}
                       label="Set public mint"
-                      isDisabled={actionType}
+                      isDisabled={actionType || !phaseItem.canEdit}
                       isChecked={value[index].isPublic}
                       name={`phases[${index}].isPublic`}
                       onChange={() => {
@@ -263,7 +308,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                     height="50px"
                     min="0"
                     hasStepper={false}
-                    isDisabled={actionType}
+                    isDisabled={actionType || !phaseItem.canEdit}
                     label="Public minting fee"
                     isDisplay={value[index].isPublic}
                     name={`phases[${index}].publicMintingFee`}
@@ -273,7 +318,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                     height="50px"
                     precision={0}
                     hasStepper={false}
-                    isDisabled={actionType}
+                    isDisabled={actionType || !phaseItem.canEdit}
                     label="Total Mint Amount"
                     // inputWidth={"100%"}
                     isDisplay={value[index].isPublic}
@@ -285,7 +330,7 @@ function AddPhase({ name, mode, isDisabled, collection_address = "" }) {
                     height="50px"
                     precision={0}
                     hasStepper={false}
-                    isDisabled={actionType}
+                    isDisabled={actionType || !phaseItem.canEdit}
                     label="Max per mint"
                     // inputWidth={"100%"}
                     isDisplay={value[index].isPublic}
