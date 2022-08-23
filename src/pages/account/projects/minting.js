@@ -211,9 +211,10 @@ function MyMintingProjectPage() {
 
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
-  const { loading: loadingForceUpdate } = useForceUpdate([OWNER_MINT], () =>
-    fetchPhaseInfo()
-  );
+  const { loading: loadingForceUpdate } = useForceUpdate([OWNER_MINT], () => {
+    setMintAmount(1);
+    fetchPhaseInfo();
+  });
 
   return (
     <Stack>

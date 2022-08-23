@@ -386,7 +386,12 @@ function MyWhiteListProjectPage() {
 
   const { loading: loadingForceUpdate } = useForceUpdate(
     [UPDATE_WHITELIST, ADD_WHITELIST],
-    () => fetchPhaseInfo()
+    () => {
+      setWhiteListPrice(0);
+      setWhitelistAddress("");
+      setWhitelistAmount(1);
+      fetchPhaseInfo();
+    }
   );
 
   return (
