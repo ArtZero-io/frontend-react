@@ -71,6 +71,7 @@ import { usePagination } from "@ajna/pagination";
 import PaginationMP from "@components/Pagination/Pagination";
 import FadeIn from "react-fade-in";
 import { isPhaseEnd } from "../component/Form/UpdatePhase";
+import { getPublicCurrentAccount } from "@utils";
 
 const NUMBER_PER_PAGE = 6;
 
@@ -121,10 +122,9 @@ const LaunchpadDetailPage = () => {
 
       // console.log("projectDetail fetchStart", fetchStart);
       const project = await launchpad_contract_calls.getProjectByNftAddress(
-        currentAccount,
+        currentAccount || getPublicCurrentAccount(),
         collection_address
       );
-      // console.log("LaunchpadDetailPage::project", project);
 
       // if (project && project.isActive) {
       if (project) {
@@ -140,8 +140,9 @@ const LaunchpadDetailPage = () => {
 
         const projectInfoHash =
           await launchpad_psp34_nft_standard_calls.getProjectInfo(
-            currentAccount
+            currentAccount || getPublicCurrentAccount()
           );
+
         const projectInfo =
           await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
             projectInfoHash
@@ -149,127 +150,139 @@ const LaunchpadDetailPage = () => {
 
         const totalSupply =
           await launchpad_psp34_nft_standard_calls.getTotalSupply(
-            currentAccount
+            currentAccount || getPublicCurrentAccount()
           );
+
         const totalPhase =
           await launchpad_psp34_nft_standard_calls.getLastPhaseId(
-            currentAccount
+            currentAccount || getPublicCurrentAccount()
           );
+
         let phasesTmp = [];
         const currentPhaseIdTmp =
           await launchpad_psp34_nft_standard_calls.getCurrentPhase(
-            currentAccount
+            currentAccount || getPublicCurrentAccount()
           );
+
         // console.log("zzz currentPhaseIdTmp", currentPhaseIdTmp);
         // const fetchEndBeforeLoopNo1 = Date.now();
         // console.log(
         //   "projectDetail fetchEndBeforeLoopNo1 ",
         //   fetchEndBeforeLoopNo1
         // );
-
-        for (let i = 1; i <= totalPhase; i++) {
-          const whiteListData =
-            await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
-              currentAccount,
-              i,
-              currentAccount.address
-            );
-
-          // console.log("zzz whiteListData i", i, whiteListData);
-          const phaseSchedule =
-            await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-              currentAccount,
-              i
-            );
-          // console.log("zzz phaseSchedule i", i, phaseSchedule);
-
-          const phaseCode = phaseSchedule.title;
-          const totalWhiteListPhase =
-            await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(
-              currentAccount,
-              i
-            );
-          let maxMinting = 0;
-          if (
-            Number(
-              convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
-            ) > 0 &&
-            phaseSchedule.publicMaxMintingAmount
-          ) {
-            let remainAmount =
-              Number(
-                convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
-              ) -
-              Number(convertNumberWithoutCommas(phaseSchedule.claimedAmount));
-            if (
-              Number(
-                convertNumberWithoutCommas(phaseSchedule.publicMaxMintingAmount)
-              ) > remainAmount
-            ) {
-              maxMinting = remainAmount;
-            } else {
-              maxMinting = Number(
-                convertNumberWithoutCommas(phaseSchedule.publicMaxMintingAmount)
-              );
-            }
-          }
-          // console.log("phaseSchedule::148", phaseSchedule);
-          const phaseInfo = {
-            id: i,
-            code: phaseCode,
-            startTime: timestampWithoutCommas(phaseSchedule.startTime),
-            endTime: timestampWithoutCommas(phaseSchedule.endTime),
-            isLive: i === 1 * currentPhaseIdTmp ? 1 : 0,
-            totalWhiteList: totalWhiteListPhase
-              ? Number(convertNumberWithoutCommas(totalWhiteListPhase))
-              : 0,
-            publicPhase: phaseSchedule.isPublic,
-            whitelist: whiteListData,
-            publicMintingAmount: Number(
-              convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
-            ),
-            publicMaxMintingAmount: maxMinting,
-            publicMintingFee: phaseSchedule.publicMintingFee,
-            claimedAmount: Number(
-              convertNumberWithoutCommas(phaseSchedule.claimedAmount)
-            ),
-          };
-
-          phasesTmp.push(phaseInfo);
-
-          if (i === 1 * currentPhaseIdTmp) {
-            // console.log("LaunchpadDetailPage::phaseSchedule", phaseSchedule);
-            if (phaseSchedule.isPublic === true) {
-              setTotalPhaseAmount(
-                Number(
-                  convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
-                )
-              );
-            } else {
-              setTotalPhaseAmount(
-                Number(
-                  convertNumberWithoutCommas(phaseSchedule.whitelistAmount)
-                )
-              );
-            }
-
-            setTotalClaimedAmount(
-              Number(convertNumberWithoutCommas(phaseSchedule.claimedAmount))
-            );
-            setCurrentPhaseId(currentPhaseIdTmp);
-            setCurrentPhase(phaseInfo);
-            const currentWhitelistTmp =
+        if (currentAccount?.address) {
+          for (let i = 1; i <= totalPhase; i++) {
+            const whiteListData =
               await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
                 currentAccount,
                 i,
                 currentAccount?.address
               );
-            // console.log(
-            //   "LaunchpadDetailPage::currentWhitelistTmp",
-            //   currentWhitelistTmp
-            // );
-            if (currentWhitelistTmp) {
-              setCurrentWhitelist(currentWhitelistTmp);
+
+            // console.log("zzz whiteListData i", i, whiteListData);
+            const phaseSchedule =
+              await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
+                currentAccount,
+                i
+              );
+            // console.log("zzz phaseSchedule i", i, phaseSchedule);
+
+            const phaseCode = phaseSchedule?.title;
+            const totalWhiteListPhase =
+              await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(
+                currentAccount,
+                i
+              );
+            let maxMinting = 0;
+            if (
+              Number(
+                convertNumberWithoutCommas(phaseSchedule?.publicMintingAmount)
+              ) > 0 &&
+              phaseSchedule?.publicMaxMintingAmount
+            ) {
+              let remainAmount =
+                Number(
+                  convertNumberWithoutCommas(phaseSchedule?.publicMintingAmount)
+                ) -
+                Number(
+                  convertNumberWithoutCommas(phaseSchedule?.claimedAmount)
+                );
+              if (
+                Number(
+                  convertNumberWithoutCommas(
+                    phaseSchedule?.publicMaxMintingAmount
+                  )
+                ) > remainAmount
+              ) {
+                maxMinting = remainAmount;
+              } else {
+                maxMinting = Number(
+                  convertNumberWithoutCommas(
+                    phaseSchedule?.publicMaxMintingAmount
+                  )
+                );
+              }
+            }
+            // console.log("phaseSchedule::148", phaseSchedule);
+            const phaseInfo = {
+              id: i,
+              code: phaseCode,
+              startTime: timestampWithoutCommas(phaseSchedule.startTime),
+              endTime: timestampWithoutCommas(phaseSchedule.endTime),
+              isLive: i === 1 * currentPhaseIdTmp ? 1 : 0,
+              totalWhiteList: totalWhiteListPhase
+                ? Number(convertNumberWithoutCommas(totalWhiteListPhase))
+                : 0,
+              publicPhase: phaseSchedule.isPublic,
+              whitelist: whiteListData,
+              publicMintingAmount: Number(
+                convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
+              ),
+              publicMaxMintingAmount: maxMinting,
+              publicMintingFee: phaseSchedule.publicMintingFee,
+              claimedAmount: Number(
+                convertNumberWithoutCommas(phaseSchedule.claimedAmount)
+              ),
+            };
+
+            phasesTmp.push(phaseInfo);
+
+            if (i === 1 * currentPhaseIdTmp) {
+              // console.log("LaunchpadDetailPage::phaseSchedule", phaseSchedule);
+              if (phaseSchedule.isPublic === true) {
+                setTotalPhaseAmount(
+                  Number(
+                    convertNumberWithoutCommas(
+                      phaseSchedule.publicMintingAmount
+                    )
+                  )
+                );
+              } else {
+                setTotalPhaseAmount(
+                  Number(
+                    convertNumberWithoutCommas(phaseSchedule.whitelistAmount)
+                  )
+                );
+              }
+
+              setTotalClaimedAmount(
+                Number(convertNumberWithoutCommas(phaseSchedule.claimedAmount))
+              );
+              setCurrentPhaseId(currentPhaseIdTmp);
+              setCurrentPhase(phaseInfo);
+              const currentWhitelistTmp =
+                await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
+                  currentAccount,
+                  i,
+                  currentAccount?.address
+                );
+              // console.log(
+              //   "LaunchpadDetailPage::currentWhitelistTmp",
+              //   currentWhitelistTmp
+              // );
+              if (currentWhitelistTmp) {
+                setCurrentWhitelist(currentWhitelistTmp);
+              }
             }
           }
         }
@@ -284,7 +297,7 @@ const LaunchpadDetailPage = () => {
           await launchpad_psp34_nft_standard_calls.getAdminAddress(
             currentAccount
           );
-        // console.log(projectAdminAddress);
+
         const projectDetail = {
           name: projectInfo.name,
           description: projectInfo.description,
@@ -480,7 +493,6 @@ const LaunchpadDetailPage = () => {
         <AnimationLoader loadingTime={loadingTime || 3.5} />
       ) : ( */}
       <VStack w="full" px={["24px", "0px"]} spacing={["24px", "30px"]}>
-
         {isPhaseEnd(formattedProject?.endTime) ? (
           <Box
             w="full"
@@ -685,136 +697,84 @@ const LaunchpadDetailPage = () => {
             {/* {console.log("currentPhase", currentPhase)} */}
           </Box>
         )}
-        <Box
-          w="full"
-          mx="auto"
-          bg="#222"
-          maxW="870px"
-          px={["15px", "30px"]}
-          py={["17px", "26px"]}
-        >
-          <Flex w="full" mb={["20px", "30px"]}>
-            <Heading fontSize={["24px", "32px"]}>phases</Heading>
-            <Spacer />
-          </Flex>
-          {/* {console.log("phases", phases)} */}
-          {phases && phases.length
-            ? phases.map((item, index) => (
-                <FadeIn>
-                  <Wrap key={index} flexWrap={true} w="full" my="15px">
-                    <WrapItem>
-                      <Tag w="full">{item.code}</Tag>
-                    </WrapItem>
 
-                    {item.publicPhase && (
-                      <Stack
-                        px="2px"
-                        w="full"
-                        direction={["column", "row"]}
-                        fontSize={["15px", "18px", "18px"]}
-                      >
+        {!currentAccount ? (
+          <Box
+            w="full"
+            mx="auto"
+            bg="#222"
+            maxW="870px"
+            px={["15px", "30px"]}
+            py={["17px", "26px"]}
+          >
+            <Flex w="full" mb={["20px", "30px"]}>
+              <Heading fontSize={["24px", "32px"]}>phases</Heading>
+              <Spacer />
+            </Flex>
+            <Flex w="full" justifyContent="center">
+              <Text fontSize="lg" color="#888">
+                Please connect your wallet!
+              </Text>
+            </Flex>
+          </Box>
+        ) : (
+          <Box
+            w="full"
+            mx="auto"
+            bg="#222"
+            maxW="870px"
+            px={["15px", "30px"]}
+            py={["17px", "26px"]}
+          >
+            <Flex w="full" mb={["20px", "30px"]}>
+              <Heading fontSize={["24px", "32px"]}>phases</Heading>
+              <Spacer />
+            </Flex>
+            {/* {console.log("phases", phases)} */}
+            {phases?.length
+              ? phases.map((item, index) => (
+                  <FadeIn>
+                    <Wrap key={index} flexWrap={true} w="full" my="15px">
+                      <WrapItem>
+                        <Tag w="full">{item.code}</Tag>
+                      </WrapItem>
+
+                      {item.publicPhase && (
                         <Stack
+                          px="2px"
                           w="full"
-                          color="#888"
-                          spacing="30px"
-                          direction={["row"]}
-                          alignContent="space-between"
-                          minH={{ base: "1rem", "2xl": "3.375rem" }}
-                        >
-                          <Text>
-                            Total:{" "}
-                            <Text as="span" color="#fff">
-                              {item.publicMintingAmount}
-                            </Text>
-                          </Text>
-
-                          <Text>
-                            Minted:{" "}
-                            <Text as="span" color="#fff">
-                              {item.claimedAmount}{" "}
-                              <Text as="span">
-                                token{item.claimedAmount > 1 ? "s" : ""}
-                              </Text>
-                            </Text>
-                          </Text>
-
-                          <Text>
-                            Price:{" "}
-                            <Text as="span" color="#fff">
-                              {convertStringToPrice(item.publicMintingFee)}{" "}
-                              <AzeroIcon
-                                mb="5px"
-                                w={["14px", "16px"]}
-                                h={["14px", "16px"]}
-                              />
-                            </Text>
-                          </Text>
-                        </Stack>
-
-                        <Stack
-                          w="full"
-                          minW="fit-content"
                           direction={["column", "row"]}
+                          fontSize={["15px", "18px", "18px"]}
                         >
-                          <Text color="brand.blue">
-                            Start:{" "}
-                            <Text as="span" color="#fff">
-                              {new Date(
-                                Number(item?.startTime)
-                              ).toLocaleString()}{" "}
-                            </Text>
-                          </Text>
-                          <Text as="span" display={["none", "flex"]}>
-                            -
-                          </Text>
-                          <Text color="brand.blue">
-                            End:{" "}
-                            <Text as="span" color="#fff">
-                              {new Date(Number(item?.endTime)).toLocaleString()}{" "}
-                            </Text>
-                          </Text>
-                        </Stack>
-                      </Stack>
-                    )}
-
-                    {!item.publicPhase && (
-                      <Stack
-                        px="2px"
-                        w="full"
-                        direction={["column", "row"]}
-                        fontSize={["15px", "18px", "18px"]}
-                      >
-                        <Stack
-                          w="full"
-                          color="#888"
-                          spacing="30px"
-                          direction={["row"]}
-                          alignContent="space-between"
-                          minH={{ base: "1rem", "2xl": "3.375rem" }}
-                        >
-                          <Text>
-                            Whitelist:{" "}
-                            <Text as="span" color="#fff">
-                              {item.totalWhiteList}
-                            </Text>
-                          </Text>
-                          {item.whitelist && item.whitelist.whitelistAmount && (
+                          <Stack
+                            w="full"
+                            color="#888"
+                            spacing="30px"
+                            direction={["row"]}
+                            alignContent="space-between"
+                            minH={{ base: "1rem", "2xl": "3.375rem" }}
+                          >
                             <Text>
-                              Max:{" "}
+                              Total:{" "}
                               <Text as="span" color="#fff">
-                                {Number(item.whitelist.whitelistAmount) -
-                                  Number(item.whitelist.claimedAmount)}{" "}
-                                tokens
+                                {item.publicMintingAmount}
                               </Text>
                             </Text>
-                          )}
-                          {item.whitelist && item.whitelist.mintingFee && (
+
+                            <Text>
+                              Minted:{" "}
+                              <Text as="span" color="#fff">
+                                {item.claimedAmount}{" "}
+                                <Text as="span">
+                                  token{item.claimedAmount > 1 ? "s" : ""}
+                                </Text>
+                              </Text>
+                            </Text>
+
                             <Text>
                               Price:{" "}
                               <Text as="span" color="#fff">
-                                {convertStringToPrice(
-                                  item.whitelist.mintingFee
-                                )}{" "}
+                                {convertStringToPrice(item.publicMintingFee)}{" "}
                                 <AzeroIcon
                                   mb="5px"
                                   w={["14px", "16px"]}
@@ -822,42 +782,121 @@ const LaunchpadDetailPage = () => {
                                 />
                               </Text>
                             </Text>
-                          )}
-                        </Stack>
+                          </Stack>
 
+                          <Stack
+                            w="full"
+                            minW="fit-content"
+                            direction={["column", "row"]}
+                          >
+                            <Text color="brand.blue">
+                              Start:{" "}
+                              <Text as="span" color="#fff">
+                                {new Date(
+                                  Number(item?.startTime)
+                                ).toLocaleString()}{" "}
+                              </Text>
+                            </Text>
+                            <Text as="span" display={["none", "flex"]}>
+                              -
+                            </Text>
+                            <Text color="brand.blue">
+                              End:{" "}
+                              <Text as="span" color="#fff">
+                                {new Date(
+                                  Number(item?.endTime)
+                                ).toLocaleString()}{" "}
+                              </Text>
+                            </Text>
+                          </Stack>
+                        </Stack>
+                      )}
+
+                      {!item.publicPhase && (
                         <Stack
+                          px="2px"
                           w="full"
-                          minW="fit-content"
                           direction={["column", "row"]}
+                          fontSize={["15px", "18px", "18px"]}
                         >
-                          <Text color="brand.blue">
-                            Start:{" "}
-                            <Text as="span" color="#fff">
-                              {new Date(
-                                Number(item?.startTime)
-                              ).toLocaleString()}{" "}
+                          <Stack
+                            w="full"
+                            color="#888"
+                            spacing="30px"
+                            direction={["row"]}
+                            alignContent="space-between"
+                            minH={{ base: "1rem", "2xl": "3.375rem" }}
+                          >
+                            <Text>
+                              Whitelist:{" "}
+                              <Text as="span" color="#fff">
+                                {item.totalWhiteList}
+                              </Text>
                             </Text>
-                          </Text>
+                            {item.whitelist && item.whitelist.whitelistAmount && (
+                              <Text>
+                                Max:{" "}
+                                <Text as="span" color="#fff">
+                                  {Number(item.whitelist.whitelistAmount) -
+                                    Number(item.whitelist.claimedAmount)}{" "}
+                                  tokens
+                                </Text>
+                              </Text>
+                            )}
+                            {item.whitelist && item.whitelist.mintingFee && (
+                              <Text>
+                                Price:{" "}
+                                <Text as="span" color="#fff">
+                                  {convertStringToPrice(
+                                    item.whitelist.mintingFee
+                                  )}{" "}
+                                  <AzeroIcon
+                                    mb="5px"
+                                    w={["14px", "16px"]}
+                                    h={["14px", "16px"]}
+                                  />
+                                </Text>
+                              </Text>
+                            )}
+                          </Stack>
 
-                          <Text as="span" display={["none", "flex"]}>
-                            -
-                          </Text>
-
-                          <Text color="brand.blue">
-                            End:{" "}
-                            <Text as="span" color="#fff">
-                              {new Date(Number(item?.endTime)).toLocaleString()}{" "}
+                          <Stack
+                            w="full"
+                            minW="fit-content"
+                            direction={["column", "row"]}
+                          >
+                            <Text color="brand.blue">
+                              Start:{" "}
+                              <Text as="span" color="#fff">
+                                {new Date(
+                                  Number(item?.startTime)
+                                ).toLocaleString()}{" "}
+                              </Text>
                             </Text>
-                          </Text>
+
+                            <Text as="span" display={["none", "flex"]}>
+                              -
+                            </Text>
+
+                            <Text color="brand.blue">
+                              End:{" "}
+                              <Text as="span" color="#fff">
+                                {new Date(
+                                  Number(item?.endTime)
+                                ).toLocaleString()}{" "}
+                              </Text>
+                            </Text>
+                          </Stack>
                         </Stack>
-                      </Stack>
-                    )}
-                  </Wrap>
-                  <Divider mt={["20px", "30px"]} />
-                </FadeIn>
-              ))
-            : ""}
-        </Box>
+                      )}
+                    </Wrap>
+                    <Divider mt={["20px", "30px"]} />
+                  </FadeIn>
+                ))
+              : ""}
+          </Box>
+        )}
+
         <Box
           w="full"
           maxW="870px"

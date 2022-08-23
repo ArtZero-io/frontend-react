@@ -21,6 +21,7 @@ import { getCachedImageShort } from "@utils/index";
 import FadeIn from "react-fade-in";
 import { useSubstrateState } from "@utils/substrate";
 import { getCurrentPhaseStatusOfProject } from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { getPublicCurrentAccount } from "@utils";
 
 export const Card = ({ variant, project }) => {
   const history = useHistory();
@@ -59,7 +60,7 @@ export const Card = ({ variant, project }) => {
   const fetchData = useCallback(async () => {
     try {
       const currPhaseStatus = await getCurrentPhaseStatusOfProject({
-        currentAccount,
+        currentAccount: currentAccount || getPublicCurrentAccount(),
         nftContractAddress,
         api,
       });
@@ -67,7 +68,6 @@ export const Card = ({ variant, project }) => {
       if (!currPhaseStatus) {
         return setProgressPercent(0);
       }
-
       setProgressPercent(
         (currPhaseStatus?.claimedAmount?.replaceAll(",", "") /
           currPhaseStatus?.whitelistAmount?.replaceAll(",", "")) *

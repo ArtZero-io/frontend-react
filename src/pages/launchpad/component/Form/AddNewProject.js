@@ -96,7 +96,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
   const location = useLocation();
   // console.log("nftContractAddress add new", nftContractAddress);
-  mode = location.state?.formMode;
+  mode = location.state?.formMode || formMode.ADD;
 
   if (mode === "EDIT") {
     nftContractAddress = location.state?.collection_address;
@@ -953,12 +953,14 @@ export const fetchInitialValuesProject = async ({
       launchpad_psp34_nft_standard.CONTRACT_ABI,
       collection_address
     );
+
     launchpad_psp34_nft_standard_calls.setContract(
       launchpad_psp34_nft_standard_contract
     );
 
     const projectInfoHash =
       await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
+
     const projectInfo =
       await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
         projectInfoHash

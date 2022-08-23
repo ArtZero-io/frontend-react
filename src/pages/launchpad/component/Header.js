@@ -36,6 +36,8 @@ import AdminAddressIcon from "@theme/assets/icon/AdminAddress";
 import PhasesIcon from "@theme/assets/icon/Phases";
 import ProjectInfoIcon from "@theme/assets/icon/ProjectInfo";
 import toast from "react-hot-toast";
+import { getCurrentPhaseStatusOfProject } from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { getPublicCurrentAccount } from "@utils";
 
 function LaunchpadDetailHeader({
   project,
@@ -43,7 +45,9 @@ function LaunchpadDetailHeader({
   collection_address,
   loading,
 }) {
-  const [livePhase, setLivePhase] = useState({});
+  // const { collection_address } = useParams();
+
+  const [livePhase, setLivePhase] = useState(null);
   const {
     name,
     totalSupply,
@@ -61,13 +65,14 @@ function LaunchpadDetailHeader({
   const [countDownTimer, setCountDownTimer] = useState({});
 
   const history = useHistory();
-  const { currentAccount } = useSubstrateState();
+  const { api, currentAccount } = useSubstrateState();
 
   const {
     isOpen: isOpenURI,
     onOpen: onOpenURI,
     onClose: onCloseURI,
   } = useDisclosure();
+
   const {
     isOpen: isOpenPhase,
     onOpen: onOpenPhase,
@@ -87,16 +92,37 @@ function LaunchpadDetailHeader({
   } = useDisclosure();
 
   useEffect(() => {
-    if (phases?.length > 0) {
-      const data = phases.find((p) => p.isLive === 1);
-      console.log("data", data);
-      setLivePhase(data);
-    }
-  }, [phases]);
+    const getLivePhase = async () => {
+      if (currentAccount) {
+        if (phases?.length > 0) {
+          const data = phases.find((p) => p.isLive === 1);
+          console.log("getLivePhase data", data);
+          setLivePhase(data);
+        }
+      } else {
+        const currPhaseStatus = await getCurrentPhaseStatusOfProject({
+          currentAccount: getPublicCurrentAccount(),
+          nftContractAddress: collection_address,
+          api,
+        });
+
+        const data = {
+          ...currPhaseStatus,
+          startTime: currPhaseStatus?.startTime?.replaceAll(",", ""),
+          endTime: currPhaseStatus?.endTime?.replaceAll(",", ""),
+          code: currPhaseStatus?.title,
+        };
+
+        currPhaseStatus && setLivePhase(data);
+      }
+    };
+
+    getLivePhase();
+  }, [api, collection_address, currentAccount, phases]);
 
   useInterval(() => {
-    if (livePhase && livePhase.endTime) {
-      const total = livePhase.endTime - Date.now();
+    if (livePhase && livePhase?.endTime) {
+      const total = livePhase?.endTime - Date.now();
 
       if (total <= 0) {
         setCountDownTimer({
@@ -205,7 +231,10 @@ function LaunchpadDetailHeader({
                   pt={["12px", "12px"]}
                   pb={["0px", "30px"]}
                 >
-                  <Skeleton isLoaded={!loading} h={["38px", "55px"]}>
+                  <Skeleton
+                    isLoaded={!loading}
+                    // h={["38px", "55px"]}
+                  >
                     <Heading fontSize={["sm", "md"]} mb={["0px", "8px"]}>
                       project creator:{" "}
                       <Text as="span" color="#7ae7ff">
@@ -246,7 +275,7 @@ function LaunchpadDetailHeader({
                   </Text>
 
                   {livePhase &&
-                  !livePhase.publicPhase &&
+                  !livePhase?.publicPhase &&
                   currentWhitelist.mintingFee ? (
                     <>
                       <Text mx={["5px", "42px"]}>
@@ -265,12 +294,12 @@ function LaunchpadDetailHeader({
                     ""
                   )}
 
-                  {livePhase && livePhase.publicPhase ? (
+                  {livePhase && livePhase?.publicPhase ? (
                     <>
                       <Text mx={["5px", "42px"]}>
                         Price:{" "}
                         <Text as="span" color="#fff">
-                          {convertStringToPrice(livePhase.publicMintingFee)}{" "}
+                          {convertStringToPrice(livePhase?.publicMintingFee)}{" "}
                           <AzeroIcon mb="5px" />
                         </Text>
                       </Text>
@@ -279,12 +308,12 @@ function LaunchpadDetailHeader({
                     ""
                   )}
 
-                  {livePhase ? (
+                  {livePhase?.code ? (
                     <>
                       <Text mx={["5px", "42px"]}>
                         Mint Phase:{" "}
                         <Text as="span" color="#fff">
-                          {livePhase.code}
+                          {livePhase?.code}
                         </Text>
                       </Text>
                     </>
@@ -300,21 +329,13 @@ function LaunchpadDetailHeader({
             <Skeleton
               position="relative"
               w="full"
-              // display="flex"
-              // alignItems="center"
-              // justifyContent="center"
               isLoaded={!loading}
               my="30px"
               maxW="680px"
-              // overflow="hidden"
               borderWidth={2}
               color="brand.blue"
-              // px={["0px", "30px"]}
-              // maxH={["200px", "110px"]}
               borderColor="brand.blue"
               h={["200px", "full", "full"]}
-              // py={{ base: "0rem", xl: "40px" }}
-              // flexWrap={["wrap", "noWrap", "noWrap"]}
             >
               <Box
                 w="full"
@@ -346,7 +367,11 @@ function LaunchpadDetailHeader({
                 flexWrap={["wrap", "noWrap", "noWrap"]}
                 w="full"
               >
-                <VStack textAlign="center" px={['2px','12px']} w={["45%", "full", "full"]}>
+                <VStack
+                  textAlign="center"
+                  px={["2px", "12px"]}
+                  w={["45%", "full", "full"]}
+                >
                   <>
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -358,7 +383,7 @@ function LaunchpadDetailHeader({
                         fontFamily="DS-Digital"
                         fontSize={["40px", "48px"]}
                       >
-                        {numeral(countDownTimer.days).format("00,0")}
+                        {numeral(countDownTimer?.days).format("00,0")}
                       </Text>
                       <Text fontSize={["14px", "16px"]}> Days</Text>
                     </motion.div>
@@ -372,7 +397,11 @@ function LaunchpadDetailHeader({
                   display={{ base: "none", xl: "inline" }}
                 />
 
-                <VStack textAlign="center" px={['2px','12px']} w={["45%", "full", "full"]}>
+                <VStack
+                  textAlign="center"
+                  px={["2px", "12px"]}
+                  w={["45%", "full", "full"]}
+                >
                   <>
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -384,7 +413,7 @@ function LaunchpadDetailHeader({
                         fontFamily="DS-Digital"
                         fontSize={["40px", "48px"]}
                       >
-                        {numeral(countDownTimer.hours).format("00,0")}
+                        {numeral(countDownTimer?.hours).format("00,0")}
                       </Text>
                       <Text fontSize={["14px", "16px"]}>Hours</Text>
                     </motion.div>
@@ -416,7 +445,11 @@ function LaunchpadDetailHeader({
                   display={{ base: "none", xl: "inline" }}
                 />
 
-                <VStack textAlign="center" px={['2px','12px']} w={["45%", "full", "full"]}>
+                <VStack
+                  textAlign="center"
+                  px={["2px", "12px"]}
+                  w={["45%", "full", "full"]}
+                >
                   <>
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -428,7 +461,7 @@ function LaunchpadDetailHeader({
                         fontFamily="DS-Digital"
                         fontSize={["40px", "48px"]}
                       >
-                        {numeral(countDownTimer.minutes).format("00,0")}
+                        {numeral(countDownTimer?.minutes).format("00,0")}
                       </Text>
                       <Text fontSize={["14px", "16px"]}> Mins</Text>
                     </motion.div>
@@ -442,7 +475,11 @@ function LaunchpadDetailHeader({
                   display={{ base: "none", xl: "inline" }}
                 />
 
-                <VStack textAlign="center" px={['2px','12px']} w={["45%", "full", "full"]}>
+                <VStack
+                  textAlign="center"
+                  px={["2px", "12px"]}
+                  w={["45%", "full", "full"]}
+                >
                   <>
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -454,7 +491,7 @@ function LaunchpadDetailHeader({
                         fontFamily="DS-Digital"
                         fontSize={["40px", "48px"]}
                       >
-                        {numeral(countDownTimer.seconds).format("00,0")}
+                        {numeral(countDownTimer?.seconds).format("00,0")}
                       </Text>
                       <Text fontSize={["14px", "16px"]}> Seconds</Text>
                     </motion.div>
@@ -764,7 +801,8 @@ function LaunchpadDetailHeader({
         collection_address={collection_address}
         onClose={onCloseWithdrawModal}
       />
-      <UpdatePhasesModal {...project}
+      <UpdatePhasesModal
+        {...project}
         isOpen={isOpenPhase}
         onClose={onClosePhase}
         collection_address={collection_address}
