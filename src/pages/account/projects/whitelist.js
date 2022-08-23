@@ -53,7 +53,7 @@ function MyWhiteListProjectPage() {
   const [currentPhase, setCurrentPhase] = useState({});
 
   const [whitelistAddress, setWhitelistAddress] = useState("");
-  const [whiteListPrice, setWhiteListPrice] = useState(1);
+  const [whiteListPrice, setWhiteListPrice] = useState(0);
   const [whitelistAmount, setWhitelistAmount] = useState(1);
   const [whiteListDataTable, setWhiteListDataTable] = useState([]);
 
@@ -483,7 +483,7 @@ function MyWhiteListProjectPage() {
             h="3.125rem"
             w="full"
             px={0}
-            min={1}
+            min={0}
             isDisabled={actionType || maxSlot <= 0}
           >
             <NumberInputField

@@ -41,7 +41,7 @@ function StatsHeader({ platformStatistics, isLoading }) {
             // maxW="960px"
             templateColumns={{
               base: "repeat(auto-fill, minmax(min(100%, 150px), 1fr))",
-              xl: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))",
+              xl: "repeat(auto-fill, minmax(min(100%, 250px), 1fr))",
             }}
           >
             {platformStatistics?.map((item, idx) => (
