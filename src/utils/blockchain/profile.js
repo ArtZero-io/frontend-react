@@ -1,9 +1,9 @@
 const profile = {
-  CONTRACT_ADDRESS: "5FcxApkPqTq3NKjcN9FuNqZvVuKJqrpahNHvTWJwsusJEL3m",
+  CONTRACT_ADDRESS: "5E2zk4B1p4ohQmwG3uFw16yoZbYWE3ZRnb6XgPLNvi5zhG7U",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xc2b0257c8470112abcdafc29e5fa9dafaff4281e5df9667692b1dcd4710418ad",
-      "language": "ink! 3.3.0",
+      "hash": "0x78ea710ed189e29ae3f2ca46672a7ede3fe14692882602191a48425888fe4253",
+      "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
@@ -59,7 +59,7 @@ const profile = {
               }
             ],
             "docs": [
-              " Set multiple profile attribute, username, description, title, profile_image, twitter, facebook, telegram, instagram"
+              " Set multiple profile attributes"
             ],
             "label": "set_multiple_attributes",
             "mutates": true,
@@ -104,6 +104,23 @@ const profile = {
               "type": 8
             },
             "selector": "0x8d76b3fe"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [
@@ -168,23 +185,6 @@ const profile = {
               "type": 12
             },
             "selector": "0x5e228753"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
           }
         ]
       },
