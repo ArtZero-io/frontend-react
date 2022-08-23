@@ -55,6 +55,20 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import { getProjectMintFeeRate } from "@utils/blockchain/launchpad-contract-calls";
 import { isPhaseTimeOverlap } from "@utils";
 
+import {
+  validationCollectionName,
+  validationDescription,
+  validationDiscord,
+  validationNftName,
+  validationNftSymbol,
+  validationTwitter,
+  validationWebsite,
+  validationAgreeTosCheckbox,
+  validationAgreeProjectMintFeeCheckbox,
+  validationAgreeFeeCheckbox,
+  validationEmail,
+} from "@constants/yup";
+
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -793,6 +807,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         inputWidth={{ base: "full", xl: "260px" }}
                         label="Total Supply"
                         isDisabled={actionType}
+                        min={1}
                       />
                     )}
                   </Stack>
@@ -1025,79 +1040,9 @@ export const fetchInitialValuesProject = async ({
   }
 };
 
-const validationName = Yup.string()
-  .trim()
-  .min(3, "Must be longer than 3 characters")
-  .max(30, "Must be at most 30 characters")
-  .required("This field is required");
-
-const validationWebsite = Yup.string()
-  .trim()
-  .url("URL must start with http:// or https://")
-  .max(50, "Must be at most 50 characters");
-
-const validationTwitter = Yup.string()
-  .trim()
-  .url("URL must start with http:// or https://")
-  .matches(/\btwitter.com\b/, "URL must be twitter.com")
-  .max(50, "Must be at most 50 characters");
-
-const validationDiscord = Yup.string()
-  .trim()
-  .url("URL must start with http:// or https://")
-  .matches(/\bdiscord.(com|gg)\b/, "URL must be discord.com or discord.gg")
-  .max(50, "Must be at most 50 characters");
-
-const validationDescription = Yup.string()
-  .trim()
-  .min(3, "Must be longer than 3 characters")
-  .max(1000, "Must be at most 1000 characters")
-  .required("This field is required");
-
-const validationNftName = Yup.string()
-  .trim()
-  .when("isEditMode", {
-    is: false,
-    then: Yup.string()
-      .min(3, "Must be longer than 3 characters")
-      .max(30, "Must be at most 30 characters")
-      .required("This field is required"),
-  });
-
-const validationNftSymbol = Yup.string()
-  .trim()
-  .when("isEditMode", {
-    is: false,
-    then: Yup.string()
-      .min(3, "Must be longer than 3 characters")
-      .max(8, "Must be at most 8 characters")
-      .required("This field is required"),
-  });
-
-const validationAgreeTosCheckbox = Yup.boolean().when("isEditMode", {
-  is: false,
-  then: Yup.boolean()
-    .required("The terms and conditions must be accepted.")
-    .oneOf([true], "The TOCs must be accepted."),
-});
-
-const validationAgreeProjectMintFeeCheckbox = Yup.boolean().when("isEditMode", {
-  is: false,
-  then: Yup.boolean()
-    .required("This terms must be accepted.")
-    .oneOf([true], "This terms must be accepted."),
-});
-
-const validationAgreeFeeCheckbox = Yup.boolean().when("isEditMode", {
-  is: false,
-  then: Yup.boolean()
-    .required("This terms must be accepted.")
-    .oneOf([true], "This terms must be accepted."),
-});
-
 const validationSchema = Yup.object().shape({
   isEditMode: Yup.boolean(),
-  name: validationName,
+  name: validationCollectionName,
   website: validationWebsite,
   twitter: validationTwitter,
   discord: validationDiscord,
@@ -1121,7 +1066,7 @@ const validationSchema = Yup.object().shape({
                   return !(isDup && isDup.trim() === value.trim());
                 })
                 .required("This field is required")
-                .min(3, "Must be longer than 3 characters")
+                .min(2, "Must be longer than 2 characters")
                 .max(100, "Must be at most 100 characters"),
               otherwise: Yup.string().notRequired(),
             }),
@@ -1131,8 +1076,8 @@ const validationSchema = Yup.object().shape({
               is: (val) => val,
               then: Yup.string()
                 .required("This field is required")
-                .min(3, "Must be longer than 3 characters")
-                .max(1000, "Must be at most 1000 characters"),
+                .min(2, "Must be longer than 2 characters")
+                .max(5000, "Must be at most 5000 characters"),
               otherwise: Yup.string().notRequired(),
             }),
         },
@@ -1140,7 +1085,7 @@ const validationSchema = Yup.object().shape({
       )
     ),
   members: Yup.array()
-    .min(1, "Members must have at least 1 items")
+    .min(1, "Members must have at least 1 team member")
     .of(
       Yup.object().shape(
         {
@@ -1162,8 +1107,8 @@ const validationSchema = Yup.object().shape({
                   }
                 )
                 .required("This field is required")
-                .min(3, "Must be longer than 3 characters")
-                .max(30, "Must be at most 30 characters"),
+                .min(2, "Must be longer than 2 characters")
+                .max(100, "Must be at most 100 characters"),
               otherwise: Yup.string().notRequired(),
             }),
           title: Yup.string()
@@ -1172,8 +1117,8 @@ const validationSchema = Yup.object().shape({
               is: (val) => val,
               then: Yup.string()
                 .required("This field is required")
-                .min(3, "Must be longer than 3 characters")
-                .max(30, "Must be at most 30 characters"),
+                .min(2, "Must be longer than 2 characters")
+                .max(100, "Must be at most 100 characters"),
               otherwise: Yup.string().notRequired(),
             }),
           socialLink: validationWebsite,
@@ -1190,7 +1135,7 @@ const validationSchema = Yup.object().shape({
         name: Yup.string()
           .required("This field is required")
           .min(2, "Must be longer than 2 characters")
-          .max(30, "Must be at most 30 characters")
+          .max(100, "Must be at most 100 characters")
           .test("Test name", "Duplicated phase name!", (value, schema) => {
             const array = schema?.from[1].value?.phases;
             const keyArray = array.map((p) => p.name?.trim());
@@ -1205,6 +1150,7 @@ const validationSchema = Yup.object().shape({
         publicMaxMintingAmount: "",
       })
     ),
+  email_owner: validationEmail,
   agreeTosCheckbox: validationAgreeTosCheckbox,
   agreeProjectMintFeeCheckbox: validationAgreeProjectMintFeeCheckbox,
   agreeFeeCheckbox: validationAgreeFeeCheckbox,

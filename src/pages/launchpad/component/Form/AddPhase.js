@@ -95,9 +95,9 @@ function AddPhase({
       start: "",
       end: "",
       isPublic: false,
-      publicMintingFee: "",
-      publicAmount: "",
-      publicMaxMintingAmount: "",
+      publicMintingFee: 0,
+      publicAmount: 1,
+      publicMaxMintingAmount: 1,
       new: true,
     });
   };
@@ -317,6 +317,7 @@ function AddPhase({
                     type="number"
                     height="50px"
                     precision={0}
+                    min={1}
                     hasStepper={false}
                     isDisabled={actionType}
                     label="Total Mint Amount"
@@ -332,7 +333,7 @@ function AddPhase({
                     hasStepper={false}
                     isDisabled={actionType}
                     label="Max per mint"
-                    // inputWidth={"100%"}
+                    min={1}
                     isDisplay={value[index].isPublic}
                     name={`phases[${index}].publicMaxMintingAmount`}
                   />
