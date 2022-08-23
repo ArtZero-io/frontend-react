@@ -312,6 +312,15 @@ const LaunchpadDetailPage = () => {
           ...projectInfo,
         };
 
+        console.log("LaunchpadDetailPage projectDetail", projectDetail);
+        console.log(
+          "LaunchpadDetailPage projectDetail.startTime",
+          new Date(parseInt(projectDetail.startTime.replaceAll(",", "")))
+        );
+        console.log(
+          "LaunchpadDetailPage projectDetail.endTime",
+          new Date(parseInt(projectDetail.endTime.replaceAll(",", "")))
+        );
         setFormattedProject(projectDetail);
         setPhases(phasesTmp);
       }
@@ -733,8 +742,8 @@ const LaunchpadDetailPage = () => {
             {/* {console.log("phases", phases)} */}
             {phases?.length
               ? phases.map((item, index) => (
-                  <FadeIn>
-                    <Wrap key={index} flexWrap={true} w="full" my="15px">
+                  <FadeIn key={index} >
+                    <Wrap flexWrap={true} w="full" my="15px">
                       <WrapItem>
                         <Tag w="full">{item.code}</Tag>
                       </WrapItem>

@@ -8,6 +8,7 @@ import { useState } from "react";
 
 function AddMember({ name, mode, isDisabled }) {
   const [{ value }, , helpers] = useField(name);
+  // eslint-disable-next-line no-unused-vars
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState(null);
   // const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
 
@@ -99,7 +100,7 @@ function AddMember({ name, mode, isDisabled }) {
                     isBanner={false}
                     isRequired={true}
                     id={`memberAvatar${index}`}
-                    imageIPFSUrl={avatarIPFSUrl || value[index].avatar}
+                    imageIPFSUrl={value[index].avatar}
                     setImageIPFSUrl={handleAvatarUrl}
                     limitedSize={{ width: "500", height: "500" }}
                   />

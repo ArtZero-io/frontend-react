@@ -290,48 +290,50 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               values.headerIPFSUrl = headerIPFSUrl;
               values.headerSquareIPFSUrl = headerSquareIPFSUrl;
 
-              // check prj time-frame is picked?
-              const prjStartTime = values?.startTime;
-              const prjEndTime = values?.endTime;
-              if (!values.isEditMode && (!prjStartTime || !prjStartTime)) {
-                return toast.error("Please pick time frame for project!");
-              }
+              if (!values.isEditMode) {
+                // check prj time-frame is picked?
+                const prjStartTime = values?.startTime;
+                const prjEndTime = values?.endTime;
+                if (!values.isEditMode && (!prjStartTime || !prjStartTime)) {
+                  return toast.error("Please pick time frame for project!");
+                }
+                
+                // check all phase time-frame is picked?
+                const phasesArray = values?.phases;
 
-              // check all phase time-frame is picked?
-              const phasesArray = values?.phases;
+                const startPhasesAr = phasesArray?.map((i) => i.start);
 
-              const startPhasesAr = phasesArray?.map((i) => i.start);
+                const isPhaseTimePicked = startPhasesAr?.every((e) => e);
 
-              const isPhaseTimePicked = startPhasesAr?.every((e) => e);
+                if (phasesArray && !isPhaseTimePicked) {
+                  return toast.error("Please pick time frame for all phases!");
+                }
 
-              if (phasesArray && !isPhaseTimePicked) {
-                return toast.error("Please pick time frame for all phases!");
-              }
+                // check time is overlap?
+                const allPhaseTime = [...values.phases];
 
-              // check time is overlap?
-              const allPhaseTime = [...values.phases];
+                const isOverlap = isPhaseTimeOverlap(allPhaseTime);
 
-              const isOverlap = isPhaseTimeOverlap(allPhaseTime);
+                if (isOverlap) {
+                  return toast.error("Sub phase time is not valid or overlap.");
+                }
 
-              if (isOverlap) {
-                return toast.error("Sub phase time is not valid or overlap.");
-              }
+                if (phasesArray?.length) {
+                  const startFirstPhase = phasesArray[0]?.start;
+                  const endLastPhase = [...phasesArray].pop().end;
 
-              if (phasesArray?.length) {
-                const startFirstPhase = phasesArray[0]?.start;
-                const endLastPhase = [...phasesArray].pop().end;
-
-                if (
-                  !(
-                    prjStartTime <= startFirstPhase &&
-                    startFirstPhase <= endLastPhase &&
-                    endLastPhase <= prjEndTime
-                  )
-                ) {
-                  toast.error(
-                    "Sub phase time is not valid or overlap project phase time."
-                  );
-                  return;
+                  if (
+                    !(
+                      prjStartTime <= startFirstPhase &&
+                      startFirstPhase <= endLastPhase &&
+                      endLastPhase <= prjEndTime
+                    )
+                  ) {
+                    toast.error(
+                      "Sub phase time is not valid or overlap project phase time."
+                    );
+                    return;
+                  }
                 }
               }
 
@@ -511,7 +513,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 );
               } else {
                 if (mode === formMode.EDIT) {
-                  console.log(values);
+                  console.log("EDIT values", values);
                   const project_info = {
                     name: values.name.trim(),
                     description: values.description.trim(),
@@ -561,6 +563,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
           >
             {({ values, dirty, isValid, setFieldValue }) => (
               <Form>
+                {/* {console.log('Form values',values)} */}
                 <CommonStack stackTitle="1. project info">
                   <Stack
                     pb="30px"

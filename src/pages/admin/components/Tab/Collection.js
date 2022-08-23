@@ -191,7 +191,7 @@ function CollectionAdmin() {
                   fontWeight="normal"
                   py={7}
                 >
-                  Index
+                  idx
                 </Th>
                 <Th
                   fontFamily="Evogria"
@@ -239,6 +239,14 @@ function CollectionAdmin() {
                   fontWeight="normal"
                   py={7}
                 >
+                  NFT count
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
                   Royal Fee
                 </Th>
                 <Th
@@ -267,6 +275,7 @@ function CollectionAdmin() {
               ) : (
                 collections.map((collection, index) => (
                   <Tr key={index}>
+                    {console.log("collection", collection)}
                     <Td py={7}>{collection.index}</Td>
                     <Td py={7}>
                       {truncateStr(collection.nftContractAddress, 5)}
@@ -279,7 +288,10 @@ function CollectionAdmin() {
                     <Td py={7}>
                       {collection.isActive ? "Active" : "Inactive"}{" "}
                     </Td>
-                    <Td py={7}>
+                    <Td py={7} isNumeric>
+                      {collection.nft_count} item
+                    </Td>
+                    <Td py={7} isNumeric>
                       {collection.isCollectRoyalFee
                         ? collection.royalFee / 100 + "%"
                         : "N/A"}{" "}
