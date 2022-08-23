@@ -1,8 +1,8 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5DABaBNe2j5ZViADmQHXwgu5HvDGFApRGyvb1UHPXBpJvXWq",
+  CONTRACT_ADDRESS: "5E3SiZ3apzqgirNrX8xBv754gL9Aj5n4VvCav26SjMkH4qxX",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x341efe8208643c86d2d9cd844f05d49961486fe9a7e7905c37d79d5edcb1bd96",
+      "hash": "0xfc242a004792d623a294fe0781ff69f78ed3acc890e4e7580f00af51f1c588c9",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -1024,43 +1024,6 @@ const collection_manager = {
             "selector": "0x389a10e6"
           },
           {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Transfers ownership of the contract to a `new_owner`.",
-              " Can only be called by the current owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner.",
-              "",
-              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
-            ],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 18
-            },
-            "selector": "0x11f43efd"
-          },
-          {
             "args": [],
             "docs": [
               " Returns the address of the current owner."
@@ -1107,6 +1070,43 @@ const collection_manager = {
           {
             "args": [
               {
+                "label": "new_owner",
+                "type": {
+                  "displayName": [
+                    "ownable_external",
+                    "TransferOwnershipInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Transfers ownership of the contract to a `new_owner`.",
+              " Can only be called by the current owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner.",
+              "",
+              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
+            ],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "TransferOwnershipOutput"
+              ],
+              "type": 18
+            },
+            "selector": "0x11f43efd"
+          },
+          {
+            "args": [
+              {
                 "label": "nft_contract_address",
                 "type": {
                   "displayName": [
@@ -1131,6 +1131,34 @@ const collection_manager = {
               "type": 10
             },
             "selector": "0xfa0f936e"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "IsActiveInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Check if the Collection is active not"
+            ],
+            "label": "CrossArtZeroCollection::is_active",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "IsActiveOutput"
+              ],
+              "type": 9
+            },
+            "selector": "0x74687faf"
           },
           {
             "args": [
@@ -1187,34 +1215,6 @@ const collection_manager = {
               "type": 26
             },
             "selector": "0xb1f1e401"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
-                    "IsActiveInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Check if the Collection is active not"
-            ],
-            "label": "CrossArtZeroCollection::is_active",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "IsActiveOutput"
-              ],
-              "type": 9
-            },
-            "selector": "0x74687faf"
           }
         ]
       },
