@@ -37,16 +37,16 @@ const CollectionItems = ({
   loading,
   forceUpdate,
   loadingTime,
-
   totalCollectionsCount,
-
   activeTab,
   setActiveTab,
   showOnChainMetadata,
+  bigCard,
+  setBigCard,
 }) => {
   const { currentAccount } = useSubstrateState();
 
-  const [bigCard, setBigCard] = useState(true);
+  // const [bigCard, setBigCard] = useState(true);
   const [selectedItem, setSelectedItem] = useState(0);
 
   const options = [
