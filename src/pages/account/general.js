@@ -26,6 +26,7 @@ import {
   Th,
   Center,
   Td,
+  Skeleton,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 
@@ -46,10 +47,19 @@ import BN from "bn.js";
 import { motion, AnimatePresence } from "framer-motion";
 import { truncateStr } from "@utils";
 import CommonContainer from "../../components/Container/CommonContainer";
+import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
+import launchpad_manager from "@utils/blockchain/launchpad-manager";
+import collection_manager from "@utils/blockchain/collection-manager";
+import useTxStatus from "@hooks/useTxStatus";
+import CommonButton from "@components/Button/CommonButton";
+import { useDispatch } from "react-redux";
+import { START, CLAIM_REWARDS } from "@constants";
+import { setTxStatus } from "@store/actions/txStatus";
+import useForceUpdate from "@hooks/useForceUpdate";
 
 function GeneralPage() {
   const history = useHistory();
-  const { currentAccount } = useSubstrateState();
+  const { api, currentAccount } = useSubstrateState();
   const { hasCopied, onCopy } = useClipboard(currentAccount.address);
 
   const [nftList, setNftList] = useState(null);
@@ -61,6 +71,15 @@ function GeneralPage() {
   const [rewardHistory, setRewardHistory] = useState([]);
   const [rewardStarted, setIsRewardStarted] = useState(false);
   const [claimed, setClaimed] = useState(false);
+  const [estimatedEarningBaseRewardPool, setEstimatedEarningBaseRewardPool] =
+    useState(0);
+
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const { loading: loadingForceUpdate } = useForceUpdate([CLAIM_REWARDS], () =>
+    getRewardHistory()
+  );
 
   useEffect(() => {
     checkRewardStatus();
@@ -80,19 +99,44 @@ function GeneralPage() {
           currentAccount
         );
         //setPlatformTotalStaked(platformTotalStaked);
-
+        console.log("zxc platformTotalStaked", platformTotalStaked);
         const totalStakedPromise = await staking_calls.getTotalStakedByAccount(
           currentAccount,
           currentAccount?.address
         );
+        console.log("zxc totalStakedPromise", totalStakedPromise);
 
-        const currentProfit = await marketplace_contract_calls.getCurrentProfit(
-          currentAccount
-        );
+        const marketplaceProfit =
+          await marketplace_contract_calls.getCurrentProfit(currentAccount);
+
+        console.log("zxc marketplaceProfit", marketplaceProfit);
+
+        const launchpadBalance = await fetchUserBalance({
+          currentAccount,
+          api,
+          address: launchpad_manager?.CONTRACT_ADDRESS,
+        });
+        const collectionBalance = await fetchUserBalance({
+          currentAccount,
+          api,
+          address: collection_manager?.CONTRACT_ADDRESS,
+        });
+        const totalProfit =
+          marketplaceProfit +
+          launchpadBalance?.balance +
+          collectionBalance?.balance;
+
         const estimatedEarning = platformTotalStaked
-          ? (currentProfit * 0.3 * totalStakedPromise) / platformTotalStaked
+          ? (totalProfit * 0.3 * totalStakedPromise) / platformTotalStaked
           : 0;
         setEstimatedEarning(estimatedEarning);
+        let rewardPoolData = await staking_calls.getRewardPool(currentAccount);
+
+        const estimatedEarningBaseRewardPoolData = rewardPoolData
+          ? (rewardPoolData * totalStakedPromise) / platformTotalStaked
+          : 0;
+
+        setEstimatedEarningBaseRewardPool(estimatedEarningBaseRewardPoolData);
 
         Promise.all([nftListPromise, totalStakedPromise]).then(
           ([nftList, totalStaked]) => {
@@ -163,30 +207,55 @@ function GeneralPage() {
     getTradeFee();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAccount]);
+
   const checkRewardStatus = async () => {
     let is_reward_started = await staking_calls.getRewardStarted(
       currentAccount
     );
+
+    console.log("zxc is_reward_started", is_reward_started);
     setIsRewardStarted(is_reward_started);
     let is_claimed = await staking_calls.isClaimed(
       currentAccount,
       currentAccount.address
     );
+    console.log("zxc is_claimed", is_claimed);
     setClaimed(is_claimed);
   };
+
   const getRewardHistory = async () => {
-    const rewards = await clientAPI("post", "/getClaimRewardHistory", {
-      staker_address: currentAccount.address,
-    });
-    console.log(rewards);
-    setRewardHistory([]);
+    try {
+      setLoading(true);
+      const rewards = await clientAPI("post", "/getClaimRewardHistory", {
+        staker_address: currentAccount.address,
+      });
+
+      console.log("rewards", rewards);
+
+      rewards ? setRewardHistory(rewards) : setRewardHistory([]);
+
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+
+      console.log("error", error);
+    }
   };
+
   const claimReward = async () => {
-    await staking_calls.claimReward(currentAccount);
+    dispatch(setTxStatus({ type: CLAIM_REWARDS, step: START }));
+
+    await staking_calls.claimReward(
+      currentAccount,
+      dispatch,
+      CLAIM_REWARDS,
+      api
+    );
     await checkRewardStatus();
   };
 
   const [isLargerThan480] = useMediaQuery("(min-width: 480px)");
+  const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   return (
     <CommonContainer>
@@ -415,7 +484,9 @@ function GeneralPage() {
             >
               Your Estimated Earning:{" "}
               <Text as="span" color="#7AE7FF" mr="30px">
-                {parseFloat(estimatedEarning).toFixed(3) || 0}{" "}
+                {!rewardStarted
+                  ? parseFloat(estimatedEarning).toFixed(3)
+                  : estimatedEarningBaseRewardPool}{" "}
                 <AzeroIcon
                   mb="2px"
                   w={["14px", "16px", "16px"]}
@@ -426,7 +497,7 @@ function GeneralPage() {
             <Text fontSize={{ base: "16px", xl: "lg" }}>
               Next Payout:{" "}
               <Text as="span" color="#7AE7FF" mr="30px">
-                Aug 01, 2022
+                Sep 01, 2022
               </Text>
             </Text>
           </Stack>
@@ -458,14 +529,14 @@ function GeneralPage() {
                 </TagLabel>
               </Tag>
             </Box>
+            {console.log("claimed", claimed)}
             {rewardStarted && !claimed ? (
-              <Button
-                w={{ base: "full", xl: "auto" }}
-                variant="solid"
+              <CommonButton
+                {...rest}
+                text={claimed ? "rewards is claimed" : "claim rewards"}
+                isDisabled={!estimatedEarningBaseRewardPool || claimed}
                 onClick={() => claimReward()}
-              >
-                Claim Rewards
-              </Button>
+              />
             ) : null}
 
             <Button
@@ -513,69 +584,76 @@ function GeneralPage() {
               },
             }}
           >
-            <Table variant="striped" colorScheme="blackAlpha" overflow="auto">
-              <Thead>
-                <Tr>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    BlockNumber
-                  </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    Staker
-                  </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                    isNumeric
-                  >
-                    Staked Amount
-                  </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                    isNumeric
-                  >
-                    Reward Amount
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {rewardHistory.length === 0 ? (
-                  <Tr color="#fff">
-                    <Center py={7}>No record found</Center>
+            <Skeleton w="full" isLoaded={!loading}>
+              <Table variant="striped" colorScheme="blackAlpha" overflow="auto">
+                <Thead>
+                  <Tr>
+                    <Th
+                      textAlign="center"
+                      fontFamily="Evogria"
+                      fontSize="sm"
+                      fontWeight="normal"
+                      py={7}
+                    >
+                      BlockNumber
+                    </Th>
+                    <Th
+                      textAlign="center"
+                      fontFamily="Evogria"
+                      fontSize="sm"
+                      fontWeight="normal"
+                      py={7}
+                    >
+                      Staker
+                    </Th>
+                    <Th
+                      textAlign="center"
+                      fontFamily="Evogria"
+                      fontSize="sm"
+                      fontWeight="normal"
+                      py={7}
+                    >
+                      Staked Amount
+                    </Th>
+                    <Th
+                      textAlign="center"
+                      fontFamily="Evogria"
+                      fontSize="sm"
+                      fontWeight="normal"
+                      py={7}
+                    >
+                      Reward Amount
+                    </Th>
                   </Tr>
-                ) : (
-                  rewardHistory.map((reward, index) => (
-                    <Tr key={index} color="#fff">
-                      <Td py={7}>{truncateStr(reward.address, 5)}</Td>
-                      <Td py={7} isNumeric>
-                        {reward.blockNumber}
-                      </Td>
-                      <Td py={7}>{reward.staker}</Td>
-                      <Td py={7} isNumeric>
-                        {reward.stakedAmount}
-                      </Td>
-                      <Td py={7} isNumeric>
-                        {reward.rewardAmount}
-                      </Td>
+                </Thead>
+                <Tbody>
+                  {console.log("rewardHistory.length", rewardHistory.length)}
+                  {rewardHistory.length === 0 ? (
+                    <Tr color="#fff">
+                      <Center py={7}>No record found</Center>
                     </Tr>
-                  ))
-                )}
-              </Tbody>
-            </Table>
+                  ) : (
+                    rewardHistory.map((reward, index) => (
+                      <Tr key={index} color="#fff">
+                        {/* <Td py={7}>{truncateStr(reward.address, 5)}</Td> */}
+                        <Td textAlign="center" py={7}>
+                          {reward.blockNumber}
+                        </Td>
+                        <Td textAlign="center" py={7}>
+                          {reward.staker}
+                        </Td>
+                        <Td textAlign="center" py={7}>
+                          {reward.stakedAmount}
+                        </Td>
+                        <Td textAlign="center" py={7}>
+                          {reward.rewardAmount}
+                        </Td>
+                      </Tr>
+                    ))
+                  )}
+                </Tbody>
+              </Table>
+            </Skeleton>
           </TableContainer>
         </Box>
       </Stack>

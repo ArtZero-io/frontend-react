@@ -16,7 +16,8 @@ import { delay, truncateStr } from "@utils";
 import toast from "react-hot-toast";
 import BN from "bn.js";
 import { clientAPI } from "@api/client";
-import { SCROLLBAR } from "../../../../constants";
+import { SCROLLBAR } from "@constants";
+import AddressCopier from "@components/AddressCopier/AddressCopier";
 
 let collection_count = 0;
 
@@ -278,7 +279,7 @@ function CollectionAdmin() {
                     {console.log("collection", collection)}
                     <Td py={7}>{collection.index}</Td>
                     <Td py={7}>
-                      {truncateStr(collection.nftContractAddress, 5)}
+                      <AddressCopier address={collection.nftContractAddress} />
                     </Td>
                     <Td py={7}>{collection.name}</Td>
                     <Td py={7}>{truncateStr(collection.collectionOwner, 5)}</Td>

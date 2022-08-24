@@ -343,7 +343,7 @@ async function getAdminAddress(caller_account) {
   return null;
 }
 
-async function claimReward(caller_account) {
+async function claimReward(caller_account, dispatch, txType, api) {
   let unsubscribe;
 
   const address = caller_account?.address;
@@ -358,32 +358,18 @@ async function claimReward(caller_account) {
       address,
       { signer: injector.signer },
       async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            const decoded = contract.registry.findMetaError(
-              dispatchError.asModule
-            );
-            const { docs, name, section } = decoded;
-
-            console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
-          } else {
-            console.log("dispatchError claimReward", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-
-          toast.success(
-            `claim Reward ${
-              statusText === "0" ? "start" : statusText.toLowerCase()
-            }.`
-          );
-        }
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
       }
     )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
 
   return unsubscribe;
 }
@@ -398,7 +384,7 @@ async function setClaimable(caller_account, account) {
   const injector = await web3FromSource(caller_account?.meta?.source);
 
   await contract.tx
-    .setClaimable({ gasLimit, value }, account)
+    .setClaimedStatus({ gasLimit, value }, account)
     .signAndSend(
       address,
       { signer: injector.signer },

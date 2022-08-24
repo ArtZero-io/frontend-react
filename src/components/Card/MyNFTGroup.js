@@ -46,6 +46,7 @@ function MyNFTGroupCard({
   filterSelected,
   nftContractAddress,
   hasBottomBorder = false,
+  isStakingContractLocked,
   ...rest
 }) {
   const { currentAccount, api } = useSubstrateState();
@@ -185,6 +186,7 @@ function MyNFTGroupCard({
       ) : (
         <Box borderBottomWidth={hasBottomBorder ? "1px" : "0px"}>
           <GridNftA
+            isStakingContractLocked={isStakingContractLocked}
             listNFTFormatted={listNFTFormatted}
             onClickHandler={onClickHandler}
           />
@@ -199,6 +201,7 @@ export default MyNFTGroupCard;
 function GridNftA({
   listNFTFormatted,
   onClickHandler,
+  isStakingContractLocked,
   variant = "my-collection",
 }) {
   const originOffset = useRef({ top: 0, left: 0 });
@@ -222,6 +225,11 @@ function GridNftA({
   // const multiStakeDataRef = useRef(multiStakeData);
 
   async function handleStakeAction(action, tokenIDArray) {
+    if (isStakingContractLocked) {
+      console.log("isStakingContractLocked", isStakingContractLocked);
+      return toast.error("Staking contract is locked!");
+    }
+
     if (action === STAKE) {
       dispatch(setTxStatus({ type: STAKE, step: START, tokenIDArray }));
 

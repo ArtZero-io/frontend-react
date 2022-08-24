@@ -29,22 +29,26 @@ function RewardDistribution() {
   const { currentAccount } = useSubstrateState();
   const { activeAddress } = useSelector((s) => s.account);
 
-  const [addAmount,setAddAmount] = useState(0);
-  const [rewardPool,setRewardPool] = useState(0);
-  const [claimableReward,setClaimableReward] = useState(0);
-  const [totalStaked,setTotalStaked] = useState(0);
-  const [isLocked,setIsLocked] = useState(false);
-  const [rewardStarted,setIsRewardStarted] = useState(false);
-  const [adminAddress,setAdminAddress] = useState("");
-  const [stakersCount,setStakerCount] = useState(0);
-  const [stakers,setStakers] = useState([]);
+  const [addAmount, setAddAmount] = useState(0);
+  const [rewardPool, setRewardPool] = useState(0);
+  const [claimableReward, setClaimableReward] = useState(0);
+  const [totalStaked, setTotalStaked] = useState(0);
+  const [isLocked, setIsLocked] = useState(false);
+  const [rewardStarted, setIsRewardStarted] = useState(false);
+  const [adminAddress, setAdminAddress] = useState("");
+  const [stakersCount, setStakerCount] = useState(0);
+  const [stakers, setStakers] = useState([]);
 
   const onRefresh = async () => {
     let reward_pool = await staking_calls.getRewardPool(currentAccount);
-    let claimable_reward = await staking_calls.getClaimableReward(currentAccount);
+    let claimable_reward = await staking_calls.getClaimableReward(
+      currentAccount
+    );
     let total_staked = await staking_calls.getTotalStaked(currentAccount);
     let is_locked = await staking_calls.getIsLocked(currentAccount);
-    let is_reward_started = await staking_calls.getRewardStarted(currentAccount);
+    let is_reward_started = await staking_calls.getRewardStarted(
+      currentAccount
+    );
     let admin_address = await staking_calls.getAdminAddress(currentAccount);
 
     // console.log(reward_pool,claimable_reward);
@@ -53,57 +57,63 @@ function RewardDistribution() {
     setTotalStaked(total_staked);
     setIsLocked(is_locked);
     setAdminAddress(admin_address);
-    setIsRewardStarted(is_reward_started)
+    setIsRewardStarted(is_reward_started);
   };
   const getStakers = async () => {
-    let staker_count = await staking_calls.getTotalCountOfStakeholders(currentAccount);
+    let staker_count = await staking_calls.getTotalCountOfStakeholders(
+      currentAccount
+    );
     setStakerCount(staker_count);
     let stakers = [];
-    for (var i=0;i<staker_count;i++){
-      let staker = await staking_calls.getStakedAccountsAccountByIndex(currentAccount,i+1);
-      console.log(staker)
+    for (var i = 0; i < staker_count; i++) {
+      let staker = await staking_calls.getStakedAccountsAccountByIndex(
+        currentAccount,
+        i + 1
+      );
+      console.log(staker);
       let staker_info = {
-        address:staker,
-        amount:await staking_calls.getTotalStakedByAccount(currentAccount,staker),
-        isClaimed:await staking_calls.isClaimed(currentAccount,staker)
-      }
+        address: staker,
+        amount: await staking_calls.getTotalStakedByAccount(
+          currentAccount,
+          staker
+        ),
+        isClaimed: await staking_calls.isClaimed(currentAccount, staker),
+      };
       stakers.push(staker_info);
     }
     setStakers(stakers);
-  }
+  };
   const onAddReward = async () => {
-    await staking_calls.addReward(currentAccount,addAmount);
+    await staking_calls.addReward(currentAccount, addAmount);
     await delay(3000);
     await onRefresh();
   };
 
   const setStakingStatus = async (status) => {
-    if (activeAddress != adminAddress){
-      toast.error('Only Admin allowed');
+    if (activeAddress != adminAddress) {
+      return toast.error("Only Admin allowed");
     }
-    await staking_calls.updateIsLocked(currentAccount,status);
+    await staking_calls.updateIsLocked(currentAccount, status);
     await delay(3000);
     await onRefresh();
   };
   const setRewardDistribution = async (status) => {
-    if (activeAddress != adminAddress){
-      toast.error('Only Admin allowed');
+    if (activeAddress != adminAddress) {
+      return toast.error("Only Admin allowed");
     }
-    if (status)
-      await staking_calls.startRewardDistribution(currentAccount);
-    else
-      await staking_calls.stopRewardDistribution(currentAccount);
+    if (status) await staking_calls.startRewardDistribution(currentAccount);
+    else await staking_calls.stopRewardDistribution(currentAccount);
     await delay(3000);
     await onRefresh();
   };
-  const enableClaim = async (staker) =>{
-    if (activeAddress != adminAddress){
-      toast.error('Only Admin allowed');
+  const enableClaim = async (staker) => {
+    if (activeAddress != adminAddress) {
+      return toast.error("Only Admin allowed");
     }
-    await staking_calls.setClaimable(currentAccount,staker);
+    console.log("staker", staker);
+    await staking_calls.setClaimable(currentAccount, staker);
     getStakers();
-  }
-
+  };
 
   useEffect(async () => {
     onRefresh();
@@ -153,16 +163,16 @@ function RewardDistribution() {
                   <Text ml={1} color="brand.grayLight">
                     Step 3:
                   </Text>
-                  <Text  color="#7ae7ff" ml={2}>
+                  <Text color="#7ae7ff" ml={2}>
                     Set all stakers Claimable
                   </Text>
                 </Flex>
 
                 <Flex alignItems="start" pr={20}>
                   <Text ml={1} color="brand.grayLight">
-                     Step 4:
+                    Step 4:
                   </Text>
-                  <Text  color="#7ae7ff" ml={2}>
+                  <Text color="#7ae7ff" ml={2}>
                     Enable Reward Distribution
                   </Text>
                 </Flex>
@@ -203,8 +213,8 @@ function RewardDistribution() {
                   <Text ml={1} color="brand.grayLight">
                     Admin
                   </Text>
-                  <Text  color="#7ae7ff" ml={2}>
-                    {truncateStr(adminAddress,5)}
+                  <Text color="#7ae7ff" ml={2}>
+                    {truncateStr(adminAddress, 5)}
                   </Text>
                 </Flex>
                 <Flex
@@ -225,7 +235,7 @@ function RewardDistribution() {
                     Claimable Rewards
                   </Text>
                   <Text color="#7ae7ff" ml={2}>
-                  {claimableReward}
+                    {claimableReward}
                   </Text>
                 </Flex>
 
@@ -233,7 +243,7 @@ function RewardDistribution() {
                   <Text ml={1} color="brand.grayLight">
                     Total NFT Staked
                   </Text>
-                  <Text  color="#7ae7ff" ml={2}>
+                  <Text color="#7ae7ff" ml={2}>
                     {totalStaked}
                   </Text>
                 </Flex>
@@ -243,13 +253,11 @@ function RewardDistribution() {
                 pb={5}
                 borderBottomWidth={1}
               >
-
-
                 <Flex alignItems="start" pr={20}>
                   <Text ml={1} color="brand.grayLight">
                     Staking Contract Status
                   </Text>
-                  <Text  color="#7ae7ff" ml={2}>
+                  <Text color="#7ae7ff" ml={2}>
                     {isLocked ? "Locked" : "Unlocked"}
                   </Text>
                 </Flex>
@@ -258,12 +266,10 @@ function RewardDistribution() {
                   <Text ml={1} color="brand.grayLight">
                     Reward Distribution
                   </Text>
-                  <Text  color="#7ae7ff" ml={2}>
+                  <Text color="#7ae7ff" ml={2}>
                     {rewardStarted ? "Started" : "Not Started"}
                   </Text>
                 </Flex>
-
-
               </Stack>
               <Flex
                 direction={{ base: "column", xl: "row" }}
@@ -349,11 +355,11 @@ function RewardDistribution() {
                             alignItems="center"
                           >
                             <Text color={"#fff"} py={2}>
-                             To do Step 3, admin need to run the script on the server to set all stakers is_claimed to FALSE
+                              To do Step 3, admin need to run the script on the
+                              server to set all stakers is_claimed to FALSE
                             </Text>
                           </Flex>
                         </Box>
-
                       </Box>
                     </Box>
                   </Flex>
@@ -419,14 +425,11 @@ function RewardDistribution() {
                           >
                             Add
                           </Button>
-
                         </Box>
                       </Box>
                     </Box>
                   </Flex>
                 </Box>
-
-
               </Flex>
             </Box>
 
@@ -507,6 +510,7 @@ function RewardDistribution() {
                       </Th>
                     </Tr>
                   </Thead>
+                  {console.log("stakers", stakers)}
                   <Tbody>
                     {stakers.length == 0 ? (
                       <Tr color="#fff">
@@ -515,12 +519,16 @@ function RewardDistribution() {
                     ) : (
                       stakers.map((staker, index) => (
                         <Tr key={index} color="#fff">
-                          <Td py={7}>{staker.address/*truncateStr(staker.address, 5)*/}</Td>
+                          <Td py={7}>
+                            {staker.address /*truncateStr(staker.address, 5)*/}
+                          </Td>
                           <Td py={7} isNumeric>
                             {staker.amount}
                           </Td>
                           <Td py={7} isNumeric>
-                            {staker.isClaimed ? "Claimed" : "Not Claimed or Not Set"}
+                            {staker.isClaimed
+                              ? "Claimed"
+                              : "Not Claimed or Not Set"}
                           </Td>
                           <Td py={7} isNumeric>
                             <Button

@@ -59,6 +59,8 @@ export const ADD_WHITELIST = "addWhitelist";
 
 // PROFILE ACTIONS
 export const UPDATE_PROFILE = "updateProfile";
+export const CLAIM_REWARDS = "claimRewards";
+
 
 // OTHERS
 export const NUMBER_PER_PAGE = 6;

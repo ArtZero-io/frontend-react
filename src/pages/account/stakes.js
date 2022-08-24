@@ -43,6 +43,7 @@ const MyStakesPage = () => {
   const [activeTab, setActiveTab] = useState(tabList.NOT_STAKED);
   const [PMPCollectionDetail, setPMPCollectionDetail] = useState(null);
   const [platformTradingFee, setPlatformTradingFee] = useState(0);
+  const [isStakingContractLocked, setIsStakingContractLocked] = useState(false);
 
   const { actionType } = useTxStatus();
 
@@ -50,6 +51,9 @@ const MyStakesPage = () => {
     setLoading(true);
 
     try {
+      const isLocked = await staking_calls.getIsLocked(currentAccount);
+      setIsStakingContractLocked(isLocked);
+
       const stakedCount = await fetchMyPMPStakedCount(
         currentAccount,
         staking_calls
@@ -250,6 +254,7 @@ const MyStakesPage = () => {
               <MyNFTGroupCard
                 {...PMPCollectionDetail}
                 hasBottomBorder={false}
+                isStakingContractLocked={isStakingContractLocked}
               />
             }
           </motion.div>
