@@ -38,7 +38,7 @@ function CollectionHeader({
 }) {
   return (
     <Box
-      maxH={{ sm: "753px", xl: "25rem", "2xl": "34rem" }}
+      maxH={{ sm: "753px", xl: "30rem", "2xl": "34rem" }}
       minH={{ sm: "625px", xl: "22rem", "2xl": "34rem" }}
       as="section"
       position="relative"
@@ -100,7 +100,8 @@ function CollectionHeader({
                     justifyContent="space-between"
                     minH={{ base: "3.5rem", "2xl": "7.125rem" }}
                   >
-                    <Heading px='4px'
+                    <Heading
+                      px="4px"
                       color="#fff"
                       noOfLines={[2, 2]}
                       fontSize={["32px", "48px", "48px"]}
