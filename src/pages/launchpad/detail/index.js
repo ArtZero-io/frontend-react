@@ -595,10 +595,7 @@ const LaunchpadDetailPage = () => {
                           currentPhase?.publicMintingAmount
                       }
                       value={mintingAmount}
-                      max={
-                        currentPhase.publicMaxMintingAmount -
-                        currentPhase.claimedAmount
-                      }
+                      max={currentPhase?.publicMaxMintingAmount}
                       onChange={(valueString) => setMintingAmount(valueString)}
                     >
                       <NumberInputField
@@ -742,7 +739,7 @@ const LaunchpadDetailPage = () => {
             {/* {console.log("phases", phases)} */}
             {phases?.length
               ? phases.map((item, index) => (
-                  <FadeIn key={index} >
+                  <FadeIn key={index}>
                     <Wrap flexWrap={true} w="full" my="15px">
                       <WrapItem>
                         <Tag w="full">{item.code}</Tag>
