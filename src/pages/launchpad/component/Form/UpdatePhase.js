@@ -55,6 +55,10 @@ function UpdatePhase({
       //   }
       // }
 
+      if (!canEditPhase(e[0].getTime())) {
+        return toast.error("New phase time can not in the past.");
+      }
+
       const valueAddHash = value.map((item, idx) => {
         if (!e) {
           return { ...item, start: null, end: null };
@@ -270,10 +274,9 @@ function UpdatePhase({
                       label="Phase name"
                       placeholder="Phase name here"
                       isDisabled={
-                        actionType || isPhaseEnd(endTime)
-                        // ||
-                        // (mode === formMode.EDIT &&
-                        //   !canEditPhase(value[index].start))
+                        actionType ||
+                        isPhaseEnd(endTime) ||
+                        !canEditPhase(value[index].start)
                       }
                     />{" "}
                   </Stack>
@@ -289,10 +292,9 @@ function UpdatePhase({
                       <DateTimeRangePicker
                         disableClock
                         disabled={
-                          !!actionType || isPhaseEnd(endTime)
-                          // ||
-                          // (mode === formMode.EDIT &&
-                          //   !canEditPhase(value[index].start))
+                          !!actionType ||
+                          isPhaseEnd(endTime) ||
+                          !canEditPhase(value[index].start)
                         }
                         onChange={(e) => handlePhaseTime(e, index)}
                         value={
@@ -326,10 +328,9 @@ function UpdatePhase({
                       hasTooltipPublicMint={true}
                       label="Set public mint"
                       isDisabled={
-                        actionType || isPhaseEnd(endTime)
-                        // ||
-                        // (mode === formMode.EDIT &&
-                        //   !canEditPhase(value[index].start))
+                        actionType ||
+                        isPhaseEnd(endTime) ||
+                        !canEditPhase(value[index].start)
                       }
                       isChecked={value[index].isPublic}
                       name={`phases[${index}].isPublic`}
