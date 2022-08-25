@@ -35,7 +35,7 @@ const AdminLayout = () => {
 
   return (
     <Layout>
-      <Box as="section" maxW="container.3xl" position="relative">
+      <Box as="section" mx="auto" maxW="container.3xl" position="relative">
         <AdminHeader />
 
         <Tabs isLazy align="center" colorScheme="brand.blue">
