@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "@components/Layout/Layout";
 import StatsHeader from "./component/Header/StatsHeader";
 import TopCollectionsTab from "./Tab/TopCollectionsTab";
-// import PayoutHistoryTab from "./Tab/PayoutHistoryTab";
+import PayoutHistoryTab from "./Tab/PayoutHistoryTab";
 import { useSubstrateState } from "@utils/substrate";
 
 import { APICall } from "@api/client";
@@ -44,6 +44,15 @@ function StatsPage() {
       //   );
 
       // TODO: get total Payouts
+      const data = await APICall.getAllRewardPayout({
+        limit: 1000,
+        offset: 0,
+        sort: -1,
+      });
+
+      const totalPayouts = data.reduce((acc, curr) => {
+        return acc + curr.rewardAmount;
+      }, 0);
 
       const currentProfit = await marketplace_contract_calls.getCurrentProfit(
         currentAccount || getPublicCurrentAccount()
@@ -97,7 +106,7 @@ function StatsPage() {
         platformStatistics: [
           {
             title: "Total Payout",
-            value: 0,
+            value: totalPayouts.toFixed(2),
             unit: "azero",
           },
           {

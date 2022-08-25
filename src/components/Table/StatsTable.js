@@ -14,6 +14,7 @@ import {
   Flex,
   Text,
   Box,
+  HStack,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
@@ -129,9 +130,23 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
             )}
           </>
         );
+      case "stakedAmount":
+        return (
+          <Text textAlign="center">
+            {formatNumDynamicDecimal(itemObj[headerValue])} token
+            {1 * itemObj[headerValue] > 1 ? "s" : ""}{" "}
+          </Text>
+        );
+      case "rewardAmount":
+        return (
+          <HStack justifyContent="end">
+            <Text>{formatNumDynamicDecimal(itemObj[headerValue])} </Text>
+            <TagRightIcon as={AzeroIcon} width="14px" height="14px" />
+          </HStack>
+        );
 
       default:
-        return <>{itemObj[headerValue]}</>;
+        return <Text textAlign="center">{itemObj[headerValue]}</Text>;
     }
   };
 

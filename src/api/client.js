@@ -237,7 +237,7 @@ export const APICall = {
     minter,
     phase_id,
     price,
-    project_mint_fee
+    project_mint_fee,
   }) => {
     let result = await client("POST", "/newMintingEvent", {
       project,
@@ -245,7 +245,7 @@ export const APICall = {
       minter,
       phase_id,
       price,
-      project_mint_fee
+      project_mint_fee,
     });
 
     return result;
@@ -272,6 +272,33 @@ export const APICall = {
   // Project API Calls
   getProjectInfoByHash: async ({ projectHash }) => {
     return await client("GET", `/${projectHash}`, {}, IPFS_BASE_URL);
+  },
+
+  // Rewards API Calls
+  getAllRewardPayout: async ({ limit = 1000, offset = 0, sort = -1 }) => {
+    const ret = await client("POST", "/getAddRewardHistory", {
+      limit,
+      offset,
+      sort,
+    });
+
+    return ret;
+  },
+
+  getAllRewardClaimed: async ({
+    staker_address = "",
+    limit = 1000,
+    offset = 0,
+    sort = -1,
+  }) => {
+    const option = { limit, offset, sort };
+
+    if (staker_address) {
+      option.staker_address = staker_address;
+    }
+    const ret = await client("POST", "/getClaimRewardHistory", option);
+
+    return ret;
   },
 };
 
