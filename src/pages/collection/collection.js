@@ -38,7 +38,7 @@ import {
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 
-const NUMBER_PER_PAGE = 8;
+const NUMBER_PER_PAGE = 12;
 function CollectionPage() {
   const { collection_address } = useParams();
   const { currentAccount, api } = useSubstrateState();
@@ -75,7 +75,7 @@ function CollectionPage() {
   });
 
   useEffect(() => {
-    bigCard ? setPageSize(8) : setPageSize(10);
+    bigCard ? setPageSize(12) : setPageSize(15);
   }, [bigCard, setPageSize]);
 
   useEffect(() => {
@@ -249,13 +249,16 @@ function CollectionPage() {
       if ([BID, REMOVE_BID].includes(actionType)) {
         setActiveTab(tabList.LISTED);
         fetchCollectionDetail({ activeTab: tabList.LISTED });
+        return;
       }
 
       if ([CREATE_NFT, EDIT_NFT, LOCK, TRANSFER].includes(actionType)) {
         setActiveTab(tabList.UNLISTED);
         fetchCollectionDetail({ activeTab: tabList.UNLISTED });
+        return;
       }
 
+      setActiveTab(tabList.ALL);
       fetchCollectionDetail({ activeTab: tabList.ALL });
     }
   );
