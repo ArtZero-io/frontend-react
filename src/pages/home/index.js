@@ -724,19 +724,17 @@ export default HomePage;
 const availableFeaturesText = [
   "support erc721 (psp34) standard nft",
   "support subwallet, talisman wallet and polkadot js",
-  "on-chain profile",
-  "explore nft collections",
+  "explore nft collections, search for nfts and collections",
   "create collections in simple mode and advanced mode",
-  "create, edit, lock,  burn nft",
+  "on-chain profile, create, edit, lock,  burn nft",
   "list, unlist, buy, bid nfts, mint artzero PMP nfts on testnet",
   "stake, unstake artzero PMP nfts for trade discount and profit share",
   "step-by-step tutorials",
-  "search for nfts and collections",
+  "launch pad for nft projects",
+  "marketplace stats and revenue distribution page",
 ];
 
 const upComingFeaturesText = [
   "support erc1155 (psp1155) standard",
-  "launch pad for nft projects",
   "mobile support: subwallet and nova wallet",
-  "MARKETPLACE STATS & REVENUE DISTRIBUTION PAGE",
 ];
