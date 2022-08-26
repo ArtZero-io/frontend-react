@@ -99,9 +99,9 @@ function UpdatePhase({
       start: "",
       end: "",
       isPublic: false,
-      publicMintingFee: "",
-      publicAmount: "",
-      publicMaxMintingAmount: "",
+      publicMintingFee: 0,
+      publicAmount: 1,
+      publicMaxMintingAmount: 1,
       new: true,
     });
   };
@@ -276,7 +276,7 @@ function UpdatePhase({
                       isDisabled={
                         actionType ||
                         isPhaseEnd(endTime) ||
-                        !canEditPhase(value[index].start)
+                        (!canEditPhase(value[index].start) && !value[index].new)
                       }
                     />{" "}
                   </Stack>
@@ -294,7 +294,8 @@ function UpdatePhase({
                         disabled={
                           !!actionType ||
                           isPhaseEnd(endTime) ||
-                          !canEditPhase(value[index].start)
+                          (!canEditPhase(value[index].start) &&
+                            !value[index].new)
                         }
                         onChange={(e) => handlePhaseTime(e, index)}
                         value={
@@ -330,7 +331,7 @@ function UpdatePhase({
                       isDisabled={
                         actionType ||
                         isPhaseEnd(endTime) ||
-                        !canEditPhase(value[index].start)
+                        (!canEditPhase(value[index].start) && !value[index].new)
                       }
                       isChecked={value[index].isPublic}
                       name={`phases[${index}].isPublic`}
