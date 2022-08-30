@@ -176,10 +176,14 @@ export const Card = ({ variant, project }) => {
 
         <Square h="288px" w="288px">
           <Image
+            onClick={() =>
+              history.push(`${ROUTES.LAUNCHPAD_BASE}/${nftContractAddress}`)
+            }
             alt={"nftName"}
             w="full"
             h="full"
             objectFit="cover"
+            cursor="pointer"
             src={getCachedImageShort(avatarImage, 500)}
             fallback={<Skeleton w="288px" h="288px" />}
           />
