@@ -8,11 +8,11 @@ import {
   PopoverHeader,
   PopoverBody,
   useDisclosure,
-  Button,
   PopoverFooter,
   Tooltip,
   Input,
   VStack,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 
 import { useSubstrateState } from "@utils/substrate";
@@ -35,6 +35,7 @@ import { APICall } from "@api/client";
 import { START, FINALIZED, TRANSFER, END } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
+import TransferIcon from "../../theme/assets/icon/Transfer";
 
 function TransferNFTModal({
   owner,
@@ -49,6 +50,7 @@ function TransferNFTModal({
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
   const [receiverAddress, setReceiverAddress] = useState("");
+  const iconWidth = useBreakpointValue(["40px", "50px"]);
 
   const transferNFTsHandler = async () => {
     if (!isValidAddressPolkadotAddress(receiverAddress)) {
@@ -133,15 +135,22 @@ function TransferNFTModal({
               color="#fff"
               label="Transfer NFT"
             >
-              <Button
-                p="8px"
-                fontSize="12px"
-                variant="outline"
-                h={{ xl: "30px", "2xl": "44px" }}
+              <span
                 onClick={!actionType ? onOpen : () => {}}
+                style={{
+                  width: iconWidth,
+                  height: iconWidth,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "2px solid #333333",
+                }}
               >
-                transfer
-              </Button>
+                <TransferIcon
+                  width={["20px", "25px"]}
+                  height={["20px", "25px"]}
+                />
+              </span>
             </Tooltip>
           </PopoverTrigger>
         )}

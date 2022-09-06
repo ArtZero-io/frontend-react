@@ -162,13 +162,16 @@ function TabActivity({
       >
         {!isBigScreen ? (
           <DropdownMobile
+            minW="325px"
             my="20px"
             border="1px solid #343333"
             fontSize="15px"
             fontFamily="Evogria, san serif"
-            options={options}
-            selectedItem={tabIndex}
-            setSelectedItem={(i) => setTabIndex(i)}
+            options={dropDownMobileOptions}
+            selectedItem={Object.keys(dropDownMobileOptions)[tabIndex]}
+            setSelectedItem={(i) =>
+              setTabIndex(Object.keys(dropDownMobileOptions).indexOf(i))
+            }
           />
         ) : (
           <TabList
@@ -185,6 +188,7 @@ function TabActivity({
                 color="#888"
                 border="1px solid #343333"
                 minW="180px"
+                minH="50px"
                 key={index}
                 alignItems="center"
                 justifyContent="center"
@@ -217,7 +221,12 @@ function TabActivity({
 
 export default TabActivity;
 
-const options = ["purchase", "list", "unlist", "bid accepted"];
+const dropDownMobileOptions = {
+  PURCHASE: "purchase",
+  LIST: "list",
+  UNLIST: "unlist",
+  BID_ACCEPTED: "bid accepted",
+};
 
 const headers = {
   purchase: {

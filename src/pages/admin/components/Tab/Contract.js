@@ -438,7 +438,7 @@ function ContractTab() {
                         fontSize="sm"
                         fontWeight="normal"
                         py={7}
-                        isNumeric
+                        // isNumeric
                       >
                         Claimed
                       </Th>
@@ -453,10 +453,16 @@ function ContractTab() {
                       whitelist.map((wl, index) => (
                         <Tr key={index} color="#fff">
                           <Td py={7}>{truncateStr(wl.account, 5)}</Td>
-                          <Td py={7} isNumeric>
+                          <Td
+                            py={7}
+                            // isNumeric
+                          >
                             {wl.whitelistAmount}
                           </Td>
-                          <Td py={7} isNumeric>
+                          <Td
+                            py={7}
+                            //  isNumeric
+                          >
                             {wl.claimedAmount}
                           </Td>
                         </Tr>

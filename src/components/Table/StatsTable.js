@@ -132,7 +132,7 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
         );
       case "stakedAmount":
         return (
-          <Text textAlign="center">
+          <Text textAlign="left">
             {formatNumDynamicDecimal(itemObj[headerValue])} token
             {1 * itemObj[headerValue] > 1 ? "s" : ""}{" "}
           </Text>
@@ -146,7 +146,7 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
         );
 
       default:
-        return <Text textAlign="center">{itemObj[headerValue]}</Text>;
+        return <Text textAlign="left">{itemObj[headerValue]}</Text>;
     }
   };
 
@@ -179,7 +179,7 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
                           position="sticky"
                           top={0}
                           zIndex={1}
-                          textAlign="center"
+                          textAlign="left"
                           key={idx}
                           fontFamily="Evogria"
                           color="#888"
@@ -200,10 +200,10 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
                       <Tr key={index} color="#fff">
                         {Object.keys(tableHeaders)?.map((i, idx) => (
                           <Td
-                            isNumeric={i !== "order" ? true : false}
+                            // isNumeric={i !== "order" ? true : false}
                             key={idx}
                             py={{ base: "1rem", "2xl": "1.75rem" }}
-                            textAlign="center"
+                            textAlign="left"
                           >
                             {formatDataCell(item, i)}
                           </Td>

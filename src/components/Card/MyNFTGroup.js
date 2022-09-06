@@ -409,10 +409,11 @@ function GridNftA({
       {multiStakeData?.action !== null ? (
         <motion.div
           style={{
+            width: "100%",
             position: "fixed",
             bottom: "30px",
             right: "15px",
-            zIndex: "98",
+            zIndex: "10",
           }}
           animate={{
             y: [0, 1.5, 0],

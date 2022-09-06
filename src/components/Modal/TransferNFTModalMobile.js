@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Text,
   Button,
@@ -11,6 +12,8 @@ import {
   useDisclosure,
   VStack,
   Input,
+  useBreakpointValue,
+  Tooltip,
 } from "@chakra-ui/react";
 
 import { useSubstrateState } from "@utils/substrate";
@@ -34,6 +37,8 @@ import { APICall } from "@api/client";
 import { START, FINALIZED, TRANSFER } from "@constants";
 import CommonButton from "@components/Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
+import TransferIcon from "../../theme/assets/icon/Transfer";
+import UnlockIcon from "../../theme/assets/icon/Unlock";
 
 function TransferNFTModalMobile({
   owner,
@@ -47,6 +52,8 @@ function TransferNFTModalMobile({
   const { onOpen, onClose, isOpen } = useDisclosure();
   const [receiverAddress, setReceiverAddress] = useState("");
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
+
+  const iconWidth = useBreakpointValue(["40px", "50px"]);
 
   const transferNFTsHandler = async () => {
     if (!isValidAddressPolkadotAddress(receiverAddress)) {
@@ -107,7 +114,7 @@ function TransferNFTModalMobile({
 
   return (
     <>
-      <Button
+      {/* <Button
         h="30px"
         p="4px"
         fontSize="12px"
@@ -115,7 +122,28 @@ function TransferNFTModalMobile({
         onClick={!actionType ? onOpen : () => {}}
       >
         transfer
-      </Button>
+      </Button> */}
+      <Tooltip
+        hasArrow
+        bg="#333"
+        color="#fff"
+        borderRadius="0"
+        label="Transfer NFT"
+      >
+        <span
+          onClick={!actionType ? onOpen : () => {}}
+          style={{
+            width: iconWidth,
+            height: iconWidth,
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            border: "2px solid #333333",
+          }}
+        >
+          <TransferIcon width={["20px", "25px"]} height={["20px", "25px"]} />
+        </span>
+      </Tooltip>
 
       <Modal isCentered onClose={onClose} size="xs" isOpen={isOpen}>
         <ModalOverlay

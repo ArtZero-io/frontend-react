@@ -289,10 +289,16 @@ function CollectionAdmin() {
                     <Td py={7}>
                       {collection.isActive ? "Active" : "Inactive"}{" "}
                     </Td>
-                    <Td py={7} isNumeric>
+                    <Td
+                      py={7}
+                      // isNumeric
+                    >
                       {collection.nft_count} item
                     </Td>
-                    <Td py={7} isNumeric>
+                    <Td
+                      py={7}
+                      //  isNumeric
+                    >
                       {collection.isCollectRoyalFee
                         ? collection.royalFee / 100 + "%"
                         : "N/A"}{" "}

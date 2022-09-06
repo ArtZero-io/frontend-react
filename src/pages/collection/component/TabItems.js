@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Flex,
@@ -10,25 +11,34 @@ import {
   useBreakpointValue,
   useMediaQuery,
   HStack,
+  SimpleGrid,
+  AspectRatio,
+  Button,
+  Image,
+  Link,
+  Skeleton,
+  useColorModeValue,
 } from "@chakra-ui/react";
-
-import React, { useEffect, useRef, useState } from "react";
-
-import { RiLayoutGridLine } from "react-icons/ri";
 import { BsGrid3X3 } from "react-icons/bs";
+import RefreshIcon from "@theme/assets/icon/Refresh.js";
+import BigGridIcon from "@theme/assets/icon/BigGrid";
+
+import { useHistory } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useAnimation } from "framer-motion";
 
 import AddNewNFTModal from "./Modal/AddNewNFT";
+import NFTDetailModal from "./Modal/NFTDetail";
+
+import { formMode } from "@constants";
+import { getCachedImageShort } from "@utils/index";
+import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 
 import Dropdown from "@components/Dropdown/Dropdown";
-import { useSubstrateState } from "@utils/substrate/SubstrateContext";
-import { AnimatePresence, motion, useAnimation } from "framer-motion";
-import NFTDetailModal from "./Modal/NFTDetail";
-import AnimationLoader from "@components/Loader/AnimationLoader";
-import NFTChangeSizeCard from "@components/Card/NFTChangeSize";
-import { SCROLLBAR, formMode } from "@constants";
 import CommonButton from "@components/Button/CommonButton";
-import { useHistory } from "react-router-dom";
-import RefreshIcon from "@theme/assets/icon/Refresh.js";
+import NFTChangeSizeCard from "@components/Card/NFTChangeSize";
+import AnimationLoader from "@components/Loader/AnimationLoader";
+import DropdownMobile from "@components/Dropdown/DropdownMobile";
 
 const CollectionItems = ({
   NFTListFormatted,
@@ -46,7 +56,8 @@ const CollectionItems = ({
 }) => {
   const { currentAccount } = useSubstrateState();
 
-  // const [bigCard, setBigCard] = useState(true);
+  // eslint-disable-next-line no-unused-vars
+  const [bigCardNew, setBigCardNew] = useState(true);
   const [selectedItem, setSelectedItem] = useState(0);
 
   const options = [
@@ -100,18 +111,16 @@ const CollectionItems = ({
   const realGridHeight =
     Math.ceil(unListNFT?.length / gridCol) * (nftCardHeight + gap);
 
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+
   return (
     <>
-      <Box w="full" mx="auto" px="0" textAlign="left">
+      <Box w="full" mx="auto" textAlign="left" px={["12px", 0]}>
         <Stack direction={{ base: "column", md: "row" }} w="full">
-          <HStack
-            pb="8px"
-            sx={SCROLLBAR}
-            overflowX="scroll"
-            justifyContent="space-between"
-          >
+          <HStack pb={[0, "8px"]} justifyContent="space-between">
             <IconButton
-              m={1.5}
+              // m={1.5}
+              mr="2px"
               size="icon"
               variant="iconSolid"
               aria-label="refresh"
@@ -119,57 +128,41 @@ const CollectionItems = ({
               icon={<RefreshIcon />}
               _hover={{ color: "black", bg: "#7ae7ff" }}
             />
-            <Spacer />
 
-            {Object.keys(tabList).map((item) => (
-              <CommonButton
-                key={item}
-                text={item}
-                variant="outline"
-                isActive={item === activeTab}
-                onClick={() => setActiveTab(item)}
-                _active={{ bg: "brand.blue", color: "black" }}
+            <Spacer display={["none", "flex"]} />
+
+            {!isBigScreen ? (
+              <DropdownMobile
+                minW="256px"
+                width="full"
+                my="20px"
+                border="1px solid #343333"
+                fontSize="15px"
+                fontFamily="Evogria, san serif"
+                options={tabList}
+                selectedItem={activeTab}
+                setSelectedItem={(i) => setActiveTab(i)}
               />
-            ))}
-          </HStack>
-          {/* 
-          <Input
-            ml={1.5}
-            mr={3}
-            placeholder="Search items, collections, and accounts"
-          /> 
-          */}
-          <Spacer />
-
-          <Flex justifyContent="space-between" align="center" pr="2">
-            {unListNFT && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <Text
-                  px={2}
-                  display={{ base: "block", md: "none" }}
-                  color="#888"
-                >
-                  {totalCollectionsCount || 0} items{" "}
-                  {activeTab === tabList.ALL
-                    ? "in total"
-                    : activeTab === tabList.LISTED
-                    ? "listed"
-                    : activeTab === tabList.UNLISTED
-                    ? "unlisted"
-                    : ""}
-                </Text>
-              </motion.div>
+            ) : (
+              Object.keys(tabList).map((item) => (
+                <CommonButton
+                  key={item}
+                  text={item}
+                  variant="outline"
+                  isActive={item === activeTab}
+                  onClick={() => setActiveTab(item)}
+                  _active={{ bg: "brand.blue", color: "black" }}
+                />
+              ))
             )}
+          </HStack>
 
-            <Spacer />
+          <Spacer display={["none", "flex"]} />
 
+          <Flex justifyContent="space-between" align="center" pr={[0, "8px"]}>
             <Dropdown
-              // width="full"
-              mx={1.5}
+              width="full"
+              minW={["330px","250px"]}
               options={options}
               selectedItem={selectedItem}
               setSelectedItem={setSelectedItem}
@@ -185,8 +178,9 @@ const CollectionItems = ({
             bg={bigCard ? "#7ae7ff" : "#222"}
             color={bigCard ? "#000" : "#fff"}
             display={{ base: "none", xl: "flex" }}
-            icon={<RiLayoutGridLine fontSize="32px" />}
+            icon={<BigGridIcon />}
             onClick={() => setBigCard(true)}
+            // onClick={() => setBigCardNew(true)}
           />
 
           <IconButton
@@ -197,8 +191,9 @@ const CollectionItems = ({
             bg={!bigCard ? "#7ae7ff" : "#222"}
             color={!bigCard ? "#000" : "#fff"}
             display={{ base: "none", xl: "flex" }}
-            icon={<BsGrid3X3 fontSize="22px" />}
+            icon={<BsGrid3X3 fontSize="20px" />}
             onClick={() => setBigCard(false)}
+            // onClick={() => setBigCardNew(false)}
           />
         </Stack>
 
@@ -216,8 +211,13 @@ const CollectionItems = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <Text px={2} display={{ base: "none", md: "block" }} color="#888">
-                {totalCollectionsCount || 0} items{" "}
+              <Text
+                px={2}
+                // display={{ base: "none", md: "block" }}
+                color="#888"
+              >
+                {totalCollectionsCount || 0} item
+                {totalCollectionsCount > 1 ? "s " : " "}
                 {activeTab === tabList.ALL
                   ? "in total"
                   : activeTab === tabList.LISTED
@@ -243,7 +243,7 @@ const CollectionItems = ({
       <Box
         w="100%"
         mx="auto"
-        px="0"
+        px={["12px", "0"]}
         textAlign="left"
         h={realGridHeight || 600}
         ref={elementRef}
@@ -263,6 +263,14 @@ const CollectionItems = ({
             showOnChainMetadata={showOnChainMetadata}
           />
         )}
+      </Box>
+
+      <Box hidden maxW="1722px" mx="auto">
+        <CommonGrid bigCardNew={bigCardNew}>
+          {unListNFT.map((token) => (
+            <CommonCard key={token.id} token={token} />
+          ))}
+        </CommonGrid>
       </Box>
     </>
   );
@@ -428,8 +436,87 @@ function GridItemA({
     </AnimatePresence>
   );
 }
+
 export const tabList = {
-  ALL: "ALL",
-  LISTED: "LISTED",
-  UNLISTED: "UNLISTED",
+  ALL: "show all",
+  LISTED: "show listed",
+  UNLISTED: "show unlisted",
+};
+
+export const CommonGrid = (props) => {
+  const columns = props.bigCardNew
+    ? { base: 2, md: 3, xl: 4 }
+    : { base: 2, md: 3, xl: 6 };
+
+  return (
+    <SimpleGrid
+      columns={columns}
+      columnGap={["15px", "30px"]}
+      rowGap={["15px", "30px"]}
+      {...props}
+    />
+  );
+};
+
+export const CommonCard = (props) => {
+  const { nftName, avatar, rootProps } = props;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <Stack
+        bg="#222"
+        spacing={useBreakpointValue({
+          base: "4",
+          md: "5",
+        })}
+        {...rootProps}
+      >
+        <Box position="relative">
+          <AspectRatio ratio={1 / 1}>
+            <Image
+              src={getCachedImageShort(avatar, 500)}
+              alt={nftName}
+              draggable="false"
+              fallback={<Skeleton />}
+              borderRadius={0}
+            />
+          </AspectRatio>
+        </Box>
+        <Stack>
+          <Stack spacing="1">
+            <Text
+              fontWeight="medium"
+              color={useColorModeValue("gray.700", "gray.400")}
+            >
+              {nftName}
+            </Text>
+          </Stack>
+          <HStack>
+            <Text
+              fontSize="sm"
+              color={useColorModeValue("gray.600", "gray.400")}
+            >
+              123 abc abc
+            </Text>
+          </HStack>
+        </Stack>
+        <Stack align="center">
+          <Button colorScheme="blue" width="full">
+            bbb bbb
+          </Button>
+          <Link
+            textDecoration="underline"
+            fontWeight="medium"
+            color={useColorModeValue("gray.600", "gray.400")}
+          >
+            ccc ccc
+          </Link>
+        </Stack>
+      </Stack>
+    </motion.div>
+  );
 };

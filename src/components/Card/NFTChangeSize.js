@@ -80,7 +80,7 @@ export default function NFTChangeSizeCard({
           {is_for_sale ? (
             <>
               <Flex w="full">
-                <Tag h={10}>
+                <Tag minH={["30px", "40px"]}>
                   <TagLabel fontSize={["14px", "16px", "16px"]}>
                     {formatNumDynamicDecimal(price / 10 ** 12)}
                   </TagLabel>
@@ -126,7 +126,7 @@ export default function NFTChangeSizeCard({
               </Flex>
             </>
           ) : (
-            <Tag h={10}>
+            <Tag minH={["30px", "40px"]}>
               <TagLabel fontSize={["14px", "16px", "16px"]}>
                 Not for sale
               </TagLabel>

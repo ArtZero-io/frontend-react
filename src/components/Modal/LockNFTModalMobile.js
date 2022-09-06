@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Text,
   Tooltip,
@@ -11,6 +12,7 @@ import {
   ModalCloseButton,
   useDisclosure,
   VStack,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 
 import { useSubstrateState } from "@utils/substrate";
@@ -31,6 +33,7 @@ import { START, FINALIZED, LOCK } from "@constants";
 import { AiOutlineUnlock } from "react-icons/ai";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
+import UnlockIcon from "../../theme/assets/icon/Unlock";
 
 function LockNFTModalMobile({
   owner,
@@ -91,32 +94,30 @@ function LockNFTModalMobile({
     }
   };
 
+  const iconWidth = useBreakpointValue(["40px", "50px"]);
+
   return (
     <>
       {showOnChainMetadata && (
         <Tooltip
           hasArrow
-          mx="8px"
           bg="#333"
           color="#fff"
           borderRadius="0"
           label="Unlocked on-chain metadata"
         >
           <span
+            onClick={!isDisabled ? onOpen : () => {}}
             style={{
-              padding: "6px",
-              display: "flex",
+              width: iconWidth,
+              height: iconWidth,
+              display: "inline-flex",
               alignItems: "center",
+              justifyContent: "center",
               border: "2px solid #333333",
             }}
           >
-            <Icon
-              w="14px"
-              h="14px"
-              cursor="pointer"
-              as={AiOutlineUnlock}
-              onClick={!isDisabled ? onOpen : () => {}}
-            />
+            <UnlockIcon width={["20px", "25px"]} height={["20px", "25px"]} />
           </span>
         </Tooltip>
       )}

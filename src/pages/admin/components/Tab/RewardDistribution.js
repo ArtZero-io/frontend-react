@@ -495,7 +495,7 @@ function RewardDistribution() {
                         fontSize="sm"
                         fontWeight="normal"
                         py={7}
-                        isNumeric
+                        // isNumeric
                       >
                         Claimed
                       </Th>
@@ -504,7 +504,7 @@ function RewardDistribution() {
                         fontSize="sm"
                         fontWeight="normal"
                         py={7}
-                        isNumeric
+                        // isNumeric
                       >
                         Action
                       </Th>
@@ -522,15 +522,26 @@ function RewardDistribution() {
                           <Td py={7}>
                             {staker.address /*truncateStr(staker.address, 5)*/}
                           </Td>
-                          <Td py={7} isNumeric>
+                          <Td
+                            py={7}
+                            // isNumeric
+                          >
                             {staker.amount}
                           </Td>
-                          <Td py={7} isNumeric>
+                          <Td
+                            py={7}
+                            // isNumeric
+                          >
+                            {" "}
                             {staker.isClaimed
                               ? "Claimed"
                               : "Not Claimed or Not Set"}
                           </Td>
-                          <Td py={7} isNumeric>
+                          <Td
+                            py={7}
+                            // isNumeric
+                          >
+                            {" "}
                             <Button
                               mt={7}
                               variant="solid"

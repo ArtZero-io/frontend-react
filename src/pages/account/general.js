@@ -44,7 +44,7 @@ import toast from "react-hot-toast";
 import staking_calls from "@utils/blockchain/staking_calls";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 import BN from "bn.js";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { truncateStr } from "@utils";
 import CommonContainer from "../../components/Container/CommonContainer";
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
@@ -283,7 +283,7 @@ function GeneralPage() {
       ) : ( */}
       <>
         <VStack as="section" w="full">
-          <Box w="full" textAlign="left" mb={6}>
+          <Box w="full" textAlign="left" mb={[0, "24px"]}>
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -302,10 +302,10 @@ function GeneralPage() {
                   mr={3}
                   h={9}
                 >
-                  <Text fontFamily="Oswald">
+                  <Text fontFamily="Oswald" fontSize={["14px", "16px"]}>
                     {isLargerThan480
                       ? currentAccount?.address
-                      : truncateStr(currentAccount?.address, 6)}
+                      : truncateStr(currentAccount?.address, 16)}
                   </Text>
                   <Input
                     display="none"
@@ -322,7 +322,7 @@ function GeneralPage() {
                   />
                 </Button>
                 {hasCopied ? (
-                  <Tag variant="outline">
+                  <Tag variant="outline" fontSize={["14px", "16px"]}>
                     <TagLabel>Copied</TagLabel>
                   </Tag>
                 ) : (
@@ -336,7 +336,7 @@ function GeneralPage() {
           <Grid
             w="full"
             minH={"7rem"}
-            gap={{ base: "15px", md: "30px" }}
+            gap={{ base: "10px", md: "30px" }}
             templateColumns={{
               base: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))",
               lg: "repeat(auto-fill, minmax(min(100%, 290px), 1fr))",
@@ -355,7 +355,7 @@ function GeneralPage() {
                       px={4}
                       py={3}
                     >
-                      <AnimatePresence>
+                      <>
                         <motion.div
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
@@ -364,39 +364,29 @@ function GeneralPage() {
                           <Flex w="full">
                             <Box>
                               <Text
+                                display={["none", "block"]}
                                 fontSize={{ base: "md", md: "lg" }}
                                 color="#888"
                               >
                                 {item.name}
                               </Text>
-                              {/* <Flex alignItems="center">
-                                <Tag bg="transparent" pl={0}>
-                                  <TagLabel
-                                    bg="transparent"
-                                    fontSize="5xl"
-                                    fontFamily="DS-Digital"
-                                  >
-                                    {item.value}
-                                  </TagLabel>
-                                  {item.name === "Amount Trades" && (
-                                    <TagRightIcon
-                                      fontSize="2xl"
-                                      as={AzeroIcon}
-                                    />
-                                  )}
-                                </Tag>
-                              </Flex> */}
                             </Box>
                             <Spacer />
                           </Flex>
-                          <Flex w="full" textAlign="left">
+                          <Flex w="full" textAlign="left" alignItems="center">
+                            <Text
+                              display={["block", "none"]}
+                              fontSize="lg"
+                              color="#888"
+                            >
+                              {item.name}
+                            </Text>
                             <Spacer />
                             <Flex alignItems="center">
                               <Tag bg="transparent" pl={0}>
                                 <TagLabel
                                   bg="transparent"
-                                  fontSize={["4xl", "5xl", "5xl"]}
-                                  fontFamily="DS-Digital"
+                                  fontSize={["24px", "40px"]}
                                 >
                                   {item.value}
                                 </TagLabel>
@@ -407,7 +397,7 @@ function GeneralPage() {
                             </Flex>
                           </Flex>
                         </motion.div>
-                      </AnimatePresence>
+                      </>
                     </Box>
                   </GridItem>
                 );
@@ -417,17 +407,20 @@ function GeneralPage() {
 
         <Stack
           h="full"
-          my={10}
+          my="18px"
           bg="black"
           pos="relative"
           maxW="container.xl"
-          p={{ base: "35px", "2xl": "7" }}
+          p={{ base: "20px", md: "30px" }}
           direction={{ base: "column", xl: "row" }}
         >
           <Square
             mx="auto"
             bg="#222"
-            size={{ base: "240px", xl: "18rem", "2xl": "20rem" }}
+            w="full"
+            h="full"
+            maxW="300px"
+            maxH="300px"
           >
             <Image
               w="full"
@@ -436,19 +429,26 @@ function GeneralPage() {
             />
           </Square>
 
+          <Stack display={["flex", "none"]}>
+            <Tag variant="outline" my="10px">
+              <TagLabel>Trade Fee: {tradeFee && `${tradeFee}%`}</TagLabel>
+            </Tag>
+          </Stack>
+
           <VStack
-            pr={2}
             w="full"
+            pr={[0, "8px"]}
             textAlign="left"
             h={{ xl: "288px" }}
             pl={{ base: "0", xl: "40px" }}
+            spacing="010px"
           >
-            <Flex w="full">
+            <Flex w="full" mb="8px">
               <Box
                 w="full"
+                lineHeight={["30px", "48px"]}
                 fontFamily="Evogria Italic"
                 fontSize={{ base: "24px", xl: "3xl-mid" }}
-                color="#FFF"
               >
                 <span>stake your </span>
                 <span style={{ color: "#7AE7FF" }}>
@@ -460,16 +460,18 @@ function GeneralPage() {
                 <span> and earn </span>
                 <span style={{ color: "#7AE7FF" }}>AZERO</span>
               </Box>
+
               <Spacer />
+
               <Box
                 h={32}
                 w={28}
                 variant="outline"
-                display={{ base: "none", xl: "flex" }}
+                display={{ base: "none", md: "flex" }}
               >
-                <Tag variant="outline" h={6} w={"128px"} mt={3}>
+                <Tag variant="outline" h={6} minW={"128px"} mt={3}>
                   {
-                    <TagLabel fontSize="14px">
+                    <TagLabel fontSize="16px">
                       Trade Fee: {tradeFee && `${tradeFee}%`}
                     </TagLabel>
                   }
@@ -477,101 +479,73 @@ function GeneralPage() {
               </Box>
             </Flex>
 
-            <Flex w="full">
-              <Text
-                mt={0}
-                mb={1}
-                color="#fff"
-                fontSize={{ base: "16px", xl: "lg" }}
-              >
-                Your Total Stake:{" "}
-                <span style={{ color: "#7AE7FF" }}>
-                  {totalStaked || 0} NFT{totalStaked > 1 ? "s" : ""}
-                </span>
-              </Text>
-              <Text mx="30px" fontSize={{ base: "16px", xl: "lg" }}>
-                Reward Distribution Status:{" "}
-                <Text as="span" color="#7AE7FF" mr="30px">
-                  {rewardStarted ? "Active" : "Inactive"}
+            <Stack direction={["column", "row"]} w="full" spacing="8px">
+              <Stack minW="280px">
+                <Text color="#fff" fontSize={{ base: "16px", xl: "lg" }}>
+                  Your Total Stake:{" "}
+                  <span style={{ color: "#7AE7FF" }}>
+                    {totalStaked || 0} NFT{totalStaked > 1 ? "s" : ""}
+                  </span>
                 </Text>
-              </Text>
-            </Flex>
+              </Stack>
+              <Stack>
+                <Text fontSize={{ base: "16px", xl: "lg" }}>
+                  Reward Distribution Status:{" "}
+                  <Text as="span" color="#7AE7FF" mr="30px">
+                    {rewardStarted ? "Active" : "Inactive"}
+                  </Text>
+                </Text>
+              </Stack>
+            </Stack>
+
             <Stack
-              direction={{ base: "column", xl: "row" }}
               w="full"
-              align="flex-start"
+              spacing="8px"
+              // align="flex-start"
+              direction={{ base: "column", xl: "row" }}
             >
-              <Skeleton maxW="300px" isLoaded={!loading}>
-                <Text
-                  mt={0}
-                  mb={1}
-                  color="#fff"
-                  fontSize={{ base: "16px", xl: "lg" }}
-                >
+              <Skeleton minW="280px" isLoaded={!loading}>
+                <Text color="#fff" fontSize={{ base: "16px", xl: "lg" }}>
                   Your Estimated Earning:{" "}
                   <Text as="span" color="#7AE7FF" mr="30px">
                     {rewardStarted && claimed
                       ? 0
                       : !rewardStarted
                       ? parseFloat(estimatedEarning).toFixed(3)
-                      : estimatedEarningBaseRewardPool}{" "}
+                      : parseFloat(estimatedEarningBaseRewardPool).toFixed(
+                          3
+                        )}{" "}
                     <AzeroIcon
                       mb="2px"
-                      w={["14px", "16px", "16px"]}
-                      h={["14px", "16px", "16px"]}
+                      w={["14px", "16px"]}
+                      h={["14px", "16px"]}
                     />
                   </Text>
                 </Text>
               </Skeleton>
-              <Text fontSize={{ base: "16px", xl: "lg" }}>
-                Next Payout:{" "}
-                <Text as="span" color="#7AE7FF" mr="30px">
-                  Sep 01, 2022
+
+              <Stack>
+                <Text fontSize={{ base: "16px", xl: "lg" }}>
+                  Next Payout:{" "}
+                  <Text as="span" color="#7AE7FF" mr="30px">
+                    Sep 01, 2022
+                  </Text>
                 </Text>
-              </Text>
+              </Stack>
             </Stack>
 
             <Skeleton
+              display="flex"
               isLoaded={!loading}
-              pt="20px"
-              // align="center"
+              pt="10px"
               w="full"
-              alignItems="center"
-              justifyContent="flex-start"
-              direction={{ base: "column", xl: "row" }}
+              alignItems={["start", "center"]}
+              // justifyContent="flex-start"
+              flexDirection={{ base: "column", md: "row" }}
+              // flexDirection="column"
             >
-              <Box
-                pb="20px"
-                w={"full"}
-                variant="outline"
-                display={{ base: "flex", xl: "none" }}
-              >
-                <Tag
-                  h={6}
-                  // w={"full"}
-                  mt={3}
-                  mx="auto"
-                  textAlign="center"
-                  variant="outline"
-                >
-                  <TagLabel textAlign="center">
-                    Your Current Trade Fee: {tradeFee && `${tradeFee}%`}
-                  </TagLabel>
-                </Tag>
-              </Box>
-              {console.log("rewardStarted", rewardStarted)}
-              {console.log("claimed", claimed)}
-              {rewardStarted && !claimed ? (
-                <CommonButton
-                  {...rest}
-                  text={claimed ? "rewards is claimed" : "claim rewards"}
-                  isDisabled={claimed || !estimatedEarningBaseRewardPool}
-                  onClick={() => claimReward()}
-                />
-              ) : null}
-
               <Button
-                ml="20px"
+                mt={["20px", "0"]}
                 w={{ base: "full", xl: "auto" }}
                 variant="solid"
                 onClick={() => history.push(ROUTES.ACCOUNT_MY_STAKES)}
@@ -579,20 +553,34 @@ function GeneralPage() {
                 stake now
               </Button>
 
+              {rewardStarted && !claimed ? (
+                <CommonButton
+                  {...rest}
+                  minW="160px"
+                  maxW={["auto", "220px"]}
+                  w="full"
+                  mx={["0", "30px"]}
+                  text={claimed ? "rewards is claimed" : "claim rewards"}
+                  isDisabled={claimed || !estimatedEarningBaseRewardPool}
+                  onClick={() => claimReward()}
+                />
+              ) : null}
+
               <FeeInfoModal />
             </Skeleton>
           </VStack>
         </Stack>
 
         <Stack>
-          <Box maxW="6xl-mid" fontSize="lg">
+          <Box maxW="6xl-mid" mt="30px">
             <HStack pb={5} borderBottomWidth={1}>
               <Flex alignItems="start" pr={20}>
-                <Text ml={1} color="brand.grayLight">
+                <Heading fontSize={"18px"} ml={1}>
                   Recent Reward History
-                </Text>
+                </Heading>
               </Flex>
             </HStack>
+
             <TableContainer
               maxW="6xl-mid"
               fontSize="lg"
@@ -625,7 +613,7 @@ function GeneralPage() {
                   <Thead>
                     <Tr>
                       <Th
-                        textAlign="center"
+                        textAlign="left"
                         fontFamily="Evogria"
                         fontSize="sm"
                         fontWeight="normal"
@@ -634,7 +622,7 @@ function GeneralPage() {
                         BlockNumber
                       </Th>
                       <Th
-                        textAlign="center"
+                        textAlign="left"
                         fontFamily="Evogria"
                         fontSize="sm"
                         fontWeight="normal"
@@ -643,7 +631,7 @@ function GeneralPage() {
                         Staker
                       </Th>
                       <Th
-                        textAlign="center"
+                        textAlign="left"
                         fontFamily="Evogria"
                         fontSize="sm"
                         fontWeight="normal"
@@ -652,7 +640,7 @@ function GeneralPage() {
                         Staked Amount
                       </Th>
                       <Th
-                        textAlign="center"
+                        textAlign="left"
                         fontFamily="Evogria"
                         fontSize="sm"
                         fontWeight="normal"
@@ -671,17 +659,23 @@ function GeneralPage() {
                       rewardHistory.map((reward, index) => (
                         <Tr key={index} color="#fff">
                           {/* <Td py={7}>{truncateStr(reward.address, 5)}</Td> */}
-                          <Td textAlign="center" py={7}>
+                          <Td textAlign="left" py={7}>
                             {reward.blockNumber}
                           </Td>
-                          <Td textAlign="center" py={7}>
+                          <Td textAlign="left" py={7}>
                             {reward.staker}
                           </Td>
-                          <Td textAlign="center" py={7}>
-                            {reward.stakedAmount}
+                          <Td textAlign="left" py={7}>
+                            {reward.stakedAmount} token
+                            {reward.stakedAmount > 1 ? "s" : ""}
                           </Td>
-                          <Td textAlign="center" py={7}>
-                            {reward.rewardAmount}
+                          <Td textAlign="left" py={7}>
+                            {reward.rewardAmount.toFixed(3)}{" "}
+                            <AzeroIcon
+                              mb="4px"
+                              w={["14px", "16px"]}
+                              h={["14px", "16px"]}
+                            />
                           </Td>
                         </Tr>
                       ))

@@ -275,14 +275,14 @@ const MyAccountDropdown = () => {
           {myAccountList.map((item, idx) => (
             <MenuItem
               to="#"
-              py="12px"
-              px="15px"
+              py={["4px", "12px"]}
+              px={["4px", "15px"]}
               key={idx}
               _hover={{ bg: "black" }}
               as={ReactRouterLink}
               fontFamily="Evogria, sans-serif"
               onClick={() => history.push(item.href)}
-              fontSize={{ base: "24px", md: "15px" }}
+              fontSize={{ base: "18px", md: "15px" }}
             >
               {item.label}
             </MenuItem>

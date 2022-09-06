@@ -276,7 +276,7 @@ function MyNFTCard({
                   <Text ml={1} color="brand.grayLight">
                     {is_for_sale && "For Sale At"}
                   </Text>
-                  <Tag>
+                  <Tag minH={["30px", "40px"]}>
                     <TagLabel>
                       {formatNumDynamicDecimal(price / 10 ** 12)}
                     </TagLabel>

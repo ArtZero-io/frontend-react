@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -13,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
-import { Formik, Form } from "formik";
+import { Formik, Form, ErrorMessage } from "formik";
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -60,7 +61,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
       NFTName: "",
       description: "",
       properties: [{ type: "", name: "" }],
-      levels: [{ name: "", level: "", levelMax: "" }],
+      levels: [{ name: "", level: 3, levelMax: 5 }],
     };
 
     if (mode === formMode.EDIT) {
@@ -208,98 +209,101 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
               .min(0)
               .max(10),
           })}
-          onSubmit={async (values, { setSubmitting }) => {
+          onSubmit={async (values) => {
             !avatarIPFSUrl && toast.error("Upload images first");
 
             if (avatarIPFSUrl) {
               values.avatarIPFSUrl = avatarIPFSUrl;
 
-              if (collectionOwner === currentAccount?.address) {
-                let attributes = [
-                  {
-                    name: "nft_name",
-                    value: values.NFTName,
-                  },
-                  {
-                    name: "description",
-                    value: values.description,
-                  },
-                  {
-                    name: "avatar",
-                    value: values.avatarIPFSUrl,
-                  },
-                ];
-
-                if (values?.properties[0]?.name) {
-                  for (const property of values.properties) {
-                    attributes.push({
-                      name: property.type,
-                      value: property.name,
-                    });
-                  }
-                }
-
-                if (values?.levels[0]?.name) {
-                  for (const level of values.levels) {
-                    attributes.push({
-                      name: level.name,
-                      value: level.level + "|" + level.levelMax,
-                    });
-                  }
-                }
-
-                const nft721_psp34_standard_contract = new ContractPromise(
-                  api,
-                  nft721_psp34_standard.CONTRACT_ABI,
-                  collection_address || rest.nftContractAddress
-                );
-                nft721_psp34_standard_calls.setContract(
-                  nft721_psp34_standard_contract
-                );
-
-                if (mode === formMode.ADD) {
-                  dispatch(setTxStatus({ type: CREATE_NFT, step: START }));
-
-                  await nft721_psp34_standard_calls.mintWithAttributes(
-                    currentAccount,
-                    collection_address,
-                    attributes,
-                    dispatch,
-                    CREATE_NFT,
-                    api
-                  );
-                } else {
-                  // add deleted properties
-                  const oldAttrsKeysList = rest.attrsList.map(
-                    (item) => Object.keys(item)[0]
-                  );
-
-                  const newAttrsKeysList = attributes.map((item) => item.name);
-
-                  for (let oldAttr of oldAttrsKeysList) {
-                    if (newAttrsKeysList.indexOf(oldAttr) === -1) {
-                      attributes.push({
-                        name: oldAttr,
-                        value: "",
-                      });
-                    }
-                  }
-                  dispatch(setTxStatus({ type: EDIT_NFT, step: START }));
-                  // rest.nftContractAddress due to Edit mode on My NFT has no params
-                  await nft721_psp34_standard_calls.setMultipleAttributesNFT(
-                    currentAccount,
-                    collection_address || rest.nftContractAddress,
-                    tokenID,
-                    attributes,
-                    dispatch,
-                    EDIT_NFT,
-                    api
-                  );
-                }
-              } else {
-                dispatch(clearTxStatus());
-
+              console.log("collectionOwner", collectionOwner);
+              console.log("currentAccount?.address", currentAccount?.address);
+              if (
+                mode === formMode.ADD &&
+                collectionOwner !== currentAccount?.address
+              ) {
                 return toast.error("You aren't the owner of this collection!");
+              }
+
+              let attributes = [
+                {
+                  name: "nft_name",
+                  value: values.NFTName,
+                },
+                {
+                  name: "description",
+                  value: values.description,
+                },
+                {
+                  name: "avatar",
+                  value: values.avatarIPFSUrl,
+                },
+              ];
+
+              if (values?.properties[0]?.name) {
+                for (const property of values.properties) {
+                  attributes.push({
+                    name: property.type,
+                    value: property.name,
+                  });
+                }
+              }
+
+              if (values?.levels[0]?.name) {
+                for (const level of values.levels) {
+                  attributes.push({
+                    name: level.name,
+                    value: level.level + "|" + level.levelMax,
+                  });
+                }
+              }
+
+              const nft721_psp34_standard_contract = new ContractPromise(
+                api,
+                nft721_psp34_standard.CONTRACT_ABI,
+                collection_address || rest.nftContractAddress
+              );
+              nft721_psp34_standard_calls.setContract(
+                nft721_psp34_standard_contract
+              );
+
+              if (mode === formMode.ADD) {
+                dispatch(setTxStatus({ type: CREATE_NFT, step: START }));
+
+                await nft721_psp34_standard_calls.mintWithAttributes(
+                  currentAccount,
+                  collection_address,
+                  attributes,
+                  dispatch,
+                  CREATE_NFT,
+                  api
+                );
+              } else {
+                // add deleted properties
+                const oldAttrsKeysList = rest.attrsList.map(
+                  (item) => Object.keys(item)[0]
+                );
+
+                const newAttrsKeysList = attributes.map((item) => item.name);
+
+                for (let oldAttr of oldAttrsKeysList) {
+                  if (newAttrsKeysList.indexOf(oldAttr) === -1) {
+                    attributes.push({
+                      name: oldAttr,
+                      value: "",
+                    });
+                  }
+                }
+                dispatch(setTxStatus({ type: EDIT_NFT, step: START }));
+                // rest.nftContractAddress due to Edit mode on My NFT has no params
+                await nft721_psp34_standard_calls.setMultipleAttributesNFT(
+                  currentAccount,
+                  collection_address || rest.nftContractAddress,
+                  tokenID,
+                  attributes,
+                  dispatch,
+                  EDIT_NFT,
+                  api
+                );
               }
             }
           }}
@@ -480,6 +484,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     isOpen={modifierToEdit === "levels"}
                   />
                 </Box>
+                {/* <ErrorMessage component="div" name="levels" /> */}
 
                 <CommonButton
                   w="full"

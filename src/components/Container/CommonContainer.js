@@ -8,8 +8,8 @@ function CommonContainer({ children, ...rest }) {
         {...rest}
         mx="auto"
         maxW="1242px"
-        px={{ base: "24px", "2xl": "16px" }}
-        py={{ base: "48px", xl: "48px", "2xl": "80px" }}
+        px={{ base: "24px", md: "16px" }}
+        py={{ base: "35px", md: "80px" }}
       >
         {children}
       </Box>

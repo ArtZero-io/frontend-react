@@ -49,7 +49,7 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
                       position="sticky"
                       top={0}
                       zIndex={1}
-                      textAlign="center"
+                      textAlign="left"
                       fontFamily="Evogria"
                       color="#888"
                       bg="#171717"
@@ -66,7 +66,7 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
                           position="sticky"
                           top={0}
                           zIndex={1}
-                          textAlign="center"
+                          textAlign="left"
                           key={idx}
                           fontFamily="Evogria"
                           color="#888"
@@ -104,7 +104,7 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
                       <Td
                         hidden={type === "UNLIST" || type === "LIST"}
                         py={{ base: "1rem", "2xl": "1.75rem" }}
-                        textAlign="center"
+                        textAlign="left"
                         color="#7ae7ff"
                       >
                         {collectionOwnerName}
@@ -113,9 +113,9 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
                         i === "avatar" ? null : (
                           <Td
                             key={idx}
-                            textAlign="center"
+                            textAlign="left"
                             minW={["auto", "250px"]}
-                            isNumeric={i === "price" ? true : false}
+                            // isNumeric={i === "price" ? true : false}
                             py={{ base: "1rem", "2xl": "1.75rem" }}
                           >
                             {i === "price" ||

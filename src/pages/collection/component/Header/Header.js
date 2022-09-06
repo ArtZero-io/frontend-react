@@ -1,13 +1,14 @@
-/* eslint-disable no-unused-vars */
 import {
   Avatar,
   Box,
   Center,
+  Container,
   Divider,
   Flex,
   Heading,
   HStack,
   Image,
+  SimpleGrid,
   Skeleton,
   Text,
   VStack,
@@ -17,9 +18,9 @@ import AzeroIcon from "@theme/assets/icon/Azero.png";
 import SocialCard from "@components/Card/Social";
 
 import { shortenNumber } from "@utils";
-import { AnimatePresence, motion } from "framer-motion";
 import { getCachedImageShort } from "@utils/index";
 import { memo } from "react";
+import { useState } from "react";
 
 const overlay =
   "linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)";
@@ -35,29 +36,30 @@ function CollectionHeader({
   floorPrice,
   totalListed,
   nft_count,
+  royalFee,
 }) {
+  const [isSeeMore, setIsSeeMore] = useState(false);
+
   return (
     <Box
-      maxH={{ sm: "753px", xl: "30rem", "2xl": "34rem" }}
-      minH={{ sm: "625px", xl: "22rem", "2xl": "34rem" }}
+      w="full"
+      bg={overlay}
       as="section"
       position="relative"
-      w="full"
-      h="625px"
-      bg={overlay}
+      minH={{ sm: "625px", md: "34rem" }}
     >
       <Box
         h="full"
         mx="auto"
-        pb={{ base: "4", "2xl": "18" }}
-        px={{ base: "32px", xl: "6", "2xl": "8" }}
-        pt={{ base: "56px", xl: "12", "2xl": "3.75rem" }}
+        px={{ base: "32px", md: "8" }}
+        pb={{ base: "36px", md: "90px" }}
+        pt={{ base: "56px", md: "120px" }}
       >
         <VStack h="full">
           <Center
             rounded="full"
-            w={["68px", "120px", "120px"]}
-            h={["68px", "120px", "120px"]}
+            w={["68px", "128px"]}
+            h={["68px", "128px"]}
             mt={-8}
             p="-px"
             border="4px solid"
@@ -74,8 +76,8 @@ function CollectionHeader({
               src={avatarImage && getCachedImageShort(avatarImage, 500)}
               fallback={
                 <Skeleton
-                  w={["74px", "120px", "120px"]}
-                  h={["60px", "112px", "112px"]}
+                  w={["74px", "128px"]}
+                  h={["60px", "120px"]}
                   borderRadius="full"
                 />
               }
@@ -84,326 +86,200 @@ function CollectionHeader({
 
           <HStack
             w="full"
-            justifyContent="space-around"
-            pt={{ base: "4px", xl: "0.5rem", "2xl": "2.25rem" }}
-            pb={{ base: "34px", xl: "0.5rem", "2xl": "2.25rem" }}
+            pt={["4px", "28px"]}
+            pb={["8px", "14px"]}
+            justifyContent="center"
           >
-            {
-              <AnimatePresence>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
+            <Skeleton w="full" maxW="680px" isLoaded={name?.length}>
+              <VStack
+                textAlign="center"
+                justifyContent="space-between"
+                minH={"60px"}
+              >
+                <Heading
+                  px="4px"
+                  color="#fff"
+                  noOfLines={[2, 2]}
+                  fontSize={["32px", "48px"]}
+                  lineHeight={["46px", "60px"]}
                 >
-                  <VStack
-                    textAlign="center"
-                    justifyContent="space-between"
-                    minH={{ base: "3.5rem", "2xl": "7.125rem" }}
-                  >
-                    <Heading
-                      px="4px"
-                      color="#fff"
-                      noOfLines={[2, 2]}
-                      fontSize={["32px", "48px", "48px"]}
-                      lineHeight={["46px", "60px", "60px"]}
-                      minH={{ base: "2.5rem", "2xl": "3.75rem" }}
-                    >
-                      {name}
-                    </Heading>
-                    <Text
-                      px="30px"
-                      w="full"
-                      maxW="576px"
-                      color="#fff"
-                      noOfLines={[3, 3]}
-                      fontSize={["15px", "18px", "18px"]}
-                      minH={{ base: "1rem", "2xl": "3.375rem" }}
-                      lineHeight={{ base: "24px", xl: "28px" }}
-                    >
-                      {description}
-                    </Text>
-                  </VStack>
-                </motion.div>
-              </AnimatePresence>
-            }
+                  {name}
+                </Heading>
+              </VStack>
+            </Skeleton>
           </HStack>
 
-          <HStack
-            bg="black"
-            mb="60px"
-            borderWidth={2}
-            overflow="hidden"
-            color="brand.blue"
-            borderColor="brand.blue"
-            h={["full", "full", "full"]}
-            justifyContent="space-between"
-            maxW={["280px", "680px", "680px"]}
-            maxH={["200px", "110px", "110px"]}
-            flexWrap={["wrap", "noWrap", "noWrap"]}
-            px={{ base: "0px", xl: 12, "2xl": 16 }}
-            py={{ base: "0.5rem", "2xl": "1.125rem" }}
+          <Skeleton
+            display="flex"
+            justifyContent="center"
+            w="full"
+            maxW="680px"
+            isLoaded={name?.length}
           >
-            {nft_count ? (
-              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                <AnimatePresence>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <Text
-                      fontFamily="DS-Digital"
-                      fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
-                      lineHeight="none"
-                    >
-                      {nft_count || 0}
-                    </Text>
-                    <Text fontSize={["14px", "16px", "16px"]}>Items</Text>
-                  </motion.div>
-                </AnimatePresence>
-              </VStack>
-            ) : (
-              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                <AnimatePresence>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <Text
-                      fontFamily="DS-Digital"
-                      fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
-                      lineHeight="none"
-                    >
-                      0
-                    </Text>
-                    <Text fontSize={["14px", "16px", "16px"]}>Items</Text>
-                  </motion.div>
-                </AnimatePresence>
-              </VStack>
-            )}
+            <Flex
+              paddingBottom="24px"
+              w="full"
+              maxW="576px"
+              textAlign="center"
+              position="relative"
+              minH={["48px", "54px"]}
+              justifyContent="center"
+              fontSize={["16px", "18px"]}
+            >
+              <Text noOfLines={[isSeeMore ? 999 : 2]}>{description}</Text>
 
-            <Divider
-              transform="rotate(90deg)"
-              width="300px"
-              bg="#232323"
-              display={{ base: "none", xl: "inline" }}
-            />
+              <Flex
+                w="full"
+                bottom="0"
+                right="0"
+                minW="75px"
+                px="2px"
+                cursor="pointer"
+                color="#7ae7ff"
+                zIndex="docked"
+                position="absolute"
+                justifyContent="center"
+                onClick={() => setIsSeeMore(!isSeeMore)}
+                display={description?.length > 160 ? "flex" : "none"}
+              >
+                {isSeeMore ? "See less" : "Show more"}
+              </Flex>
+            </Flex>
+          </Skeleton>
 
-            {totalListed ? (
-              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                <AnimatePresence>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <Text
-                      fontFamily="DS-Digital"
-                      fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
-                      lineHeight="none"
-                    >
-                      {totalListed || 0}
-                    </Text>
-                    <Text fontSize={["14px", "16px", "16px"]}>Listed</Text>
-                  </motion.div>
-                </AnimatePresence>
-              </VStack>
-            ) : (
-              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                <AnimatePresence>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <Text
-                      fontFamily="DS-Digital"
-                      fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
-                      lineHeight="none"
-                    >
-                      0
-                    </Text>
-                    <Text fontSize={["14px", "16px", "16px"]}>Listed</Text>
-                  </motion.div>
-                </AnimatePresence>
-              </VStack>
-            )}
-
-            <Divider
-              width="300px"
-              bg="#232323"
-              transform="rotate(90deg)"
-              display={{ base: "none", xl: "inline" }}
-            />
-
-            {/* // mobile + line */}
-            <Divider
-              width="300px"
-              borderWidth="1px"
-              borderColor="#232323"
-              style={{ margin: 0 }}
-              display={{ base: "inline", md: "none" }}
-              transform="rotate(180deg) translateY(-10px) translateX(0px)"
-            />
-            <Divider
-              width="267px"
-              borderWidth="1px"
-              borderColor="#232323"
-              transform="rotate(90deg) translateY(5px)"
-              display={{ base: "inline", md: "none" }}
-            />
-            {/* // End mobile + line */}
-
-            {floorPrice ? (
-              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                <AnimatePresence>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    style={{ minWidth: "65px" }}
-                  >
-                    <Flex alignItems="center" justifyContent="center">
-                      <Text
-                        fontFamily="DS-Digital"
-                        fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
-                        lineHeight="none"
-                      >
-                        {shortenNumber(floorPrice / 10 ** 12) || 0}
-                      </Text>
-                      <Avatar
-                        src={AzeroIcon}
-                        h="19px"
-                        w="19px"
-                        ml={3}
-                        name="AzeroLogo"
-                        bg="transparent"
-                      />
-                    </Flex>
-                    <Text fontSize={["14px", "16px", "16px"]}>Floor price</Text>
-                  </motion.div>
-                </AnimatePresence>
-              </VStack>
-            ) : (
-              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                <AnimatePresence>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    style={{ minWidth: "65px" }}
-                  >
-                    <Flex alignItems="center" justifyContent="center">
-                      <Text
-                        fontFamily="DS-Digital"
-                        fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
-                        lineHeight="none"
-                      >
-                        0
-                      </Text>
-                      <Avatar
-                        src={AzeroIcon}
-                        h="19px"
-                        w="19px"
-                        ml={3}
-                        name="AzeroLogo"
-                        bg="transparent"
-                      />
-                    </Flex>
-                    <Text fontSize={["14px", "16px", "16px"]}>Floor price</Text>
-                  </motion.div>
-                </AnimatePresence>
-              </VStack>
-            )}
-
-            <Divider
-              transform="rotate(90deg)"
-              width="300px"
-              bg="#232323"
-              display={{ base: "none", xl: "inline" }}
-            />
-
-            {volume ? (
-              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                <AnimatePresence>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    style={{ minWidth: "65px" }}
-                  >
-                    <Flex alignItems="center" justifyContent="center">
-                      <Text
-                        fontFamily="DS-Digital"
-                        fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
-                        lineHeight="none"
-                      >
-                        {shortenNumber(volume) || 0}
-                      </Text>
-                      <Avatar
-                        src={AzeroIcon}
-                        h="19px"
-                        w="19px"
-                        ml={3}
-                        name="AzeroLogo"
-                        bg="transparent"
-                      />
-                    </Flex>
-                    <Text as="span" mt={0} fontSize={["13px", "16px", "16px"]}>
-                      Vol traded
-                      {/* <Text display={{ base: "none", xl: "inline" }}>
-                        traded
-                      </Text> */}
-                    </Text>{" "}
-                  </motion.div>
-                </AnimatePresence>
-              </VStack>
-            ) : (
-              <VStack textAlign="center" px={3} w={["45%", "full", "full"]}>
-                <AnimatePresence>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    style={{ minWidth: "65px" }}
-                  >
-                    <Flex alignItems="center" justifyContent="center">
-                      <Text
-                        fontFamily="DS-Digital"
-                        fontSize={{ base: "40px", xl: "32px", "2xl": "48px" }}
-                        lineHeight="none"
-                      >
-                        0
-                      </Text>
-                      <Avatar
-                        src={AzeroIcon}
-                        h={"19px"}
-                        w={"19px"}
-                        ml={3}
-                        name="AzeroLogo"
-                        bg="transparent"
-                      />
-                    </Flex>
-                    <Text as="span" mt={0} fontSize={["13px", "16px", "16px"]}>
-                      Vol traded
-                      {/* <Text display={{ base: "none", xl: "inline" }}>
-                        Volume{" "}
-                      </Text> */}
-                    </Text>
-                  </motion.div>
-                </AnimatePresence>
-              </VStack>
-            )}
+          <HStack>
+            <Flex
+              mt="16px"
+              mb="32px"
+              p="6px 20px"
+              bg="black"
+              alignItems="center"
+              border="1px solid white"
+            >
+              <Text>Royal fee: {royalFee / 100}%</Text>
+            </Flex>
           </HStack>
+
+          <Container
+            mt="32px"
+            px="0"
+            w="full"
+            my="auto"
+            bg="black"
+            color="#7ae7ff"
+            border="2px solid #7ae7ff"
+            maxW={["280px", "680px"]}
+          >
+            <SimpleGrid columns={{ base: 2, md: 4 }}>
+              <Flex
+                minH={["100px", "110px"]}
+                justify="center"
+                position="relative"
+                direction="column"
+                alignItems="center"
+              >
+                <Text fontSize={["34px", "40px"]}>{nft_count || 0}</Text>
+                <Text fontSize={["14px", "16px"]}>Items</Text>
+                <Divider
+                  w="0"
+                  h={["100px", "50px"]}
+                  right="0"
+                  bg="#232323"
+                  position="absolute"
+                  orientation="vertical"
+                />
+              </Flex>
+
+              <Flex
+                minH={["100px", "110px"]}
+                justify="center"
+                position="relative"
+                direction="column"
+                alignItems="center"
+              >
+                <Text fontSize={["34px", "40px"]}>{totalListed || 0}</Text>
+                <Text fontSize={["14px", "16px"]}>Items</Text>
+                <Divider
+                  w="0"
+                  h="50px"
+                  right="0"
+                  bg="#232323"
+                  position="absolute"
+                  orientation="vertical"
+                  display={["none", "flex"]}
+                />
+              </Flex>
+
+              <Flex
+                minH={["100px", "110px"]}
+                justify="center"
+                position="relative"
+                direction="column"
+                alignItems="center"
+              >
+                <Divider
+                  w="276px"
+                  h="1px"
+                  top="0"
+                  left="0"
+                  bg="#232323"
+                  position="absolute"
+                  display={["flex", "none"]}
+                />
+                <Flex alignItems="center" justifyContent="center">
+                  <Text fontSize={["34px", "40px"]}>
+                    {shortenNumber(floorPrice / 10 ** 12) || 0}
+                  </Text>
+                  <Avatar
+                    src={AzeroIcon}
+                    h="19px"
+                    w="19px"
+                    ml={3}
+                    name="AzeroLogo"
+                    bg="transparent"
+                  />
+                </Flex>
+                <Text fontSize={["14px", "16px"]}>Floor price</Text>
+                <Divider
+                  w="0"
+                  h={["100px", "50px"]}
+                  right="0"
+                  bg="#232323"
+                  position="absolute"
+                  orientation="vertical"
+                />
+              </Flex>
+
+              <Flex
+                minH={["100px", "110px"]}
+                justify="center"
+                direction="column"
+                alignItems="center"
+              >
+                <Flex alignItems="center" justifyContent="center">
+                  <Text fontSize={["34px", "40px"]}>
+                    {shortenNumber(volume) || 0}
+                  </Text>
+                  <Avatar
+                    src={AzeroIcon}
+                    h="19px"
+                    w="19px"
+                    ml={3}
+                    name="AzeroLogo"
+                    bg="transparent"
+                  />
+                </Flex>
+                <Text fontSize={["14px", "16px"]}>Volume traded</Text>
+              </Flex>
+            </SimpleGrid>
+          </Container>
 
           <SocialCard
-            justifyContent="center"
-            profile={[{ website }, { twitter }, { discord }]}
-            pos={{ base: "", xl: "absolute" }}
-            right={"6.3125rem"}
-            // bottom={{ base: "1.375rem", "2xl": "2.375rem" }}
             bottom="0"
+            right="100px"
+            justifyContent="center"
+            pos={{ base: "", xl: "absolute" }}
+            profile={[{ website }, { twitter }, { discord }]}
           />
         </VStack>
       </Box>

@@ -51,7 +51,6 @@ function GridA({
         gridAutoRows: "31.25rem",
         gridAutoFlow: "dense",
         justifyItems: "center",
-        minWidth: variant === "my-projects" ? "1210px" : "auto",
       }}
     >
       {collections?.map((c, i) => (
