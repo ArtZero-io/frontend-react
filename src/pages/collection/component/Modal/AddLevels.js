@@ -157,7 +157,7 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
                         arrayHelpers.form?.errors?.levels)
                     }
                     onClick={() =>
-                      arrayHelpers.push({ name: "", level: "", levelMax: "" })
+                      arrayHelpers.push({ name: "", level: 3, levelMax: 5 })
                     }
                   >
                     Add more

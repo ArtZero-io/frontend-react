@@ -21,8 +21,8 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { actionType, step, onEndClick } = useTxStatus();
   const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
-  const iconBorderSize = useBreakpointValue({ base: "6px", "2xl": "10px" });
 
+  const iconWidth = useBreakpointValue(["40px", "50px"]);
   useEffect(() => {
     step === END && onClose();
   }, [step, onClose]);
@@ -39,7 +39,6 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
         <>
           <Tooltip
             hasArrow
-            mx="8px"
             bg="#333"
             color="#fff"
             borderRadius="0"
@@ -48,16 +47,17 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
             <span
               onClick={isDisabled || actionType ? () => {} : onOpen}
               style={{
-                padding: iconBorderSize,
-                display: "flex",
-                cursor: "pointer",
+                width: iconWidth,
+                height: iconWidth,
+                display: "inline-flex",
                 alignItems: "center",
+                justifyContent: "center",
                 border: "2px solid #333333",
               }}
             >
               <EditIcon
-                width={{ base: "14px", "2xl": "20px" }}
-                height={{ base: "14px", "2xl": "20px" }}
+                width={{ base: "20px" }}
+                height={{ base: "20px" }}
                 color="currentColor"
               />
             </span>

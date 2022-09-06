@@ -5,7 +5,6 @@ import {
   GridItem,
   Heading,
   HStack,
-  Icon,
   Image,
   InputRightElement,
   Link,
@@ -55,8 +54,9 @@ import { BUY, BID, REMOVE_BID } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import { buyToken, placeBid, removeBid } from "../../../token";
 import { clearTxStatus } from "@store/actions/txStatus";
-import { AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
 import { truncateStr } from "@utils";
+import UnlockIcon from "../../../../theme/assets/icon/Unlock";
+import LockIcon from "../../../../theme/assets/icon/Lock";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -200,7 +200,7 @@ const NFTTabCollectible = (props) => {
     }
   };
 
-  const iconBorderSize = useBreakpointValue({ base: "6px", "2xl": "10px" });
+  const iconWidth = useBreakpointValue(["40px", "50px"]);
 
   return (
     <>
@@ -227,10 +227,7 @@ const NFTTabCollectible = (props) => {
               as={ReactRouterLink}
               to={`/nft/${nftContractAddress}/${tokenID}`}
             >
-              <Heading
-                fontSize={{ base: "xl", xl: "2xl", "2xl": "3xl-mid" }}
-                color="#fff"
-              >
+              <Heading color="#fff" size="h4" fontSize="32px">
                 {nftName}
               </Heading>
             </Link>
@@ -242,12 +239,15 @@ const NFTTabCollectible = (props) => {
                 <AddNewNFTModal
                   {...props}
                   mode={formMode.EDIT}
-                  isDisabled={actionType}
+                  isDisabled={is_for_sale || actionType}
                 />
               )}
 
               {!is_locked && isOwner && (
-                <LockNFTModal isDisabled={actionType} {...props} />
+                <LockNFTModal
+                  {...props}
+                  isDisabled={is_for_sale || actionType}
+                />
               )}
 
               {!is_locked && showOnChainMetadata && !isOwner && (
@@ -256,20 +256,22 @@ const NFTTabCollectible = (props) => {
                   hasArrow
                   bg="#333"
                   color="#fff"
+                  borderRadius="0"
                   label="Unlocked on-chain metadata"
                 >
                   <span
                     style={{
-                      padding: iconBorderSize,
-                      display: "flex",
+                      width: iconWidth,
+                      height: iconWidth,
+                      display: "inline-flex",
                       alignItems: "center",
+                      justifyContent: "center",
                       border: "2px solid #333333",
                     }}
                   >
-                    <Icon
-                      width={{ base: "14px", "2xl": "20px" }}
-                      height={{ base: "14px", "2xl": "20px" }}
-                      as={AiOutlineUnlock}
+                    <UnlockIcon
+                      width={["20px", "25px"]}
+                      height={["20px", "25px"]}
                     />
                   </span>
                 </Tooltip>
@@ -280,20 +282,22 @@ const NFTTabCollectible = (props) => {
                   hasArrow
                   bg="#333"
                   color="#fff"
+                  borderRadius="0"
                   label="Off-chain metadata"
                 >
                   <span
                     style={{
-                      padding: iconBorderSize,
-                      display: "flex",
+                      width: iconWidth,
+                      height: iconWidth,
+                      display: "inline-flex",
                       alignItems: "center",
+                      justifyContent: "center",
                       border: "2px solid #333333",
                     }}
                   >
-                    <Icon
-                      width={{ base: "14px", "2xl": "20px" }}
-                      height={{ base: "14px", "2xl": "20px" }}
-                      as={AiOutlineUnlock}
+                    <UnlockIcon
+                      width={["20px", "25px"]}
+                      height={["20px", "25px"]}
                     />
                   </span>
                 </Tooltip>
@@ -304,20 +308,22 @@ const NFTTabCollectible = (props) => {
                   hasArrow
                   bg="#333"
                   color="#fff"
+                  borderRadius="0"
                   label="Locked on-chain metadata"
                 >
                   <span
                     style={{
-                      padding: iconBorderSize,
-                      display: "flex",
+                      width: iconWidth,
+                      height: iconWidth,
+                      display: "inline-flex",
                       alignItems: "center",
+                      justifyContent: "center",
                       border: "2px solid #333333",
                     }}
                   >
-                    <Icon
-                      width={{ base: "14px", "2xl": "20px" }}
-                      height={{ base: "14px", "2xl": "20px" }}
-                      as={AiOutlineLock}
+                    <LockIcon
+                      width={["20px", "25px"]}
+                      height={["20px", "25px"]}
                     />
                   </span>
                 </Tooltip>
@@ -326,16 +332,15 @@ const NFTTabCollectible = (props) => {
           </HStack>
 
           <Stack>
-            <Heading
+            <Text
               isTruncated
-              maxW={{ base: "260px", xl: "500px", "2xl": "610px" }}
-              pt={{ base: "2px", "2xl": "12px" }}
-              fontSize={["xs", "md", "md"]}
+              fontSize="lg"
               color="brand.grayLight"
               lineHeight="1.35"
+              maxW={{ base: "500px", "2xl": "610px" }}
             >
               {description}
-            </Heading>
+            </Text>
           </Stack>
 
           <Stack w="full">
@@ -343,8 +348,7 @@ const NFTTabCollectible = (props) => {
               <Text
                 color="#fff"
                 maxW="max-content"
-                pt={{ base: "2px", "2xl": "12px" }}
-                fontSize={{ base: "14px", "2xl": "16px" }}
+                // pt={{ base: "2px", "2xl": "12px" }}
               >
                 Owned by{" "}
                 <Link
@@ -585,41 +589,24 @@ const NFTTabCollectible = (props) => {
                               <GridItem w="100%" h="100%" key={idx}>
                                 <Box
                                   w="full"
+                                  px="10px"
+                                  py="12px"
                                   textAlign="left"
                                   alignItems="end"
                                   bg="brand.semiBlack"
-                                  px={{ base: "0.5rem", "2xl": "1rem" }}
-                                  py={3}
                                 >
-                                  <Flex w="full">
+                                  <Flex w="full" pb="15px">
                                     <Box color="brand.grayLight" w="full">
-                                      <Text>{Object.keys(item)[0]}</Text>
-                                      <Heading
-                                        textAlign="right"
-                                        size="h6"
-                                        mt={1}
-                                        // minH="2.5rem"
-                                        isTruncated
-                                        maxW={"10rem"}
-                                        fontSize={{
-                                          base: "0.875rem",
-                                          "2xl": "1rem",
-                                        }}
-                                      ></Heading>
+                                      <Text isTruncated>
+                                        {Object.keys(item)[0]}
+                                      </Text>
                                     </Box>
                                     <Spacer />
                                   </Flex>
+
                                   <Flex w="full" color="#7AE7FF">
                                     <Spacer />
-                                    <Text
-                                      isTruncated
-                                      pr={1}
-                                      fontStyle="italic"
-                                      fontSize={{
-                                        base: "0.875rem",
-                                        "2xl": "1rem",
-                                      }}
-                                    >
+                                    <Text fontStyle="italic" isTruncated pr={1}>
                                       {Object.values(item)[0]}
                                     </Text>
                                   </Flex>
@@ -636,29 +623,25 @@ const NFTTabCollectible = (props) => {
                           )
                           .map((item, idx) => {
                             return (
-                              <React.Fragment key={idx}>
+                              <GridItem w="100%" h="100%" key={idx}>
                                 <Box
                                   w="full"
+                                  px="10px"
+                                  py="12px"
                                   textAlign="left"
                                   alignItems="end"
                                   bg="brand.semiBlack"
-                                  px={{ base: "0.5rem", "2xl": "1rem" }}
-                                  py={2}
-                                  // my={2}
-                                  minW="30%"
-                                  maxH={"4.625rem"}
                                 >
-                                  <Flex w="full" pb="15px" pt="5px">
-                                    <Heading
-                                      color="#fff"
-                                      fontSize={{
-                                        base: "1rem",
-                                        "2xl": "1.125rem",
-                                      }}
-                                    >
-                                      {Object.keys(item)[0]}
-                                    </Heading>
+                                  <Flex w="full" pb="7px">
+                                    <Box color="brand.grayLight" w="full">
+                                      <Text isTruncated>
+                                        {Object.keys(item)[0]}
+                                      </Text>
+                                    </Box>
+                                    <Spacer />
+                                  </Flex>
 
+                                  <Flex w="full">
                                     <Spacer />
                                     <Text color="#fff">
                                       {
@@ -690,7 +673,7 @@ const NFTTabCollectible = (props) => {
                                     height="6px"
                                   />
                                 </Box>
-                              </React.Fragment>
+                              </GridItem>
                             );
                           })
                       : null}

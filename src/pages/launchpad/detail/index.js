@@ -10,7 +10,6 @@ import {
   Tag,
   Text,
   Wrap,
-  WrapItem,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
@@ -741,9 +740,12 @@ const LaunchpadDetailPage = () => {
               ? phases.map((item, index) => (
                   <FadeIn key={index}>
                     <Wrap flexWrap={true} w="full" my="15px">
-                      <WrapItem>
+                      <HStack>
+                        <Text border="1px solid #7ae7ff" px="4px">
+                          {item.publicPhase ? "public" : "whitelist"}
+                        </Text>
                         <Tag w="full">{item.code}</Tag>
-                      </WrapItem>
+                      </HStack>
 
                       {item.publicPhase && (
                         <Stack
