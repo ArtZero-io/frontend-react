@@ -162,7 +162,7 @@ const CollectionItems = ({
           <Flex justifyContent="space-between" align="center" pr={[0, "8px"]}>
             <Dropdown
               width="full"
-              minW={["330px","250px"]}
+              minW={["330px", "250px"]}
               options={options}
               selectedItem={selectedItem}
               setSelectedItem={setSelectedItem}
@@ -268,7 +268,7 @@ const CollectionItems = ({
       <Box hidden maxW="1722px" mx="auto">
         <CommonGrid bigCardNew={bigCardNew}>
           {unListNFT.map((token) => (
-            <CommonCard key={token.id} token={token} />
+            <CommonCard key={token.id} {...token} />
           ))}
         </CommonGrid>
       </Box>
@@ -460,7 +460,6 @@ export const CommonGrid = (props) => {
 
 export const CommonCard = (props) => {
   const { nftName, avatar, rootProps } = props;
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
