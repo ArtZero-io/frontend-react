@@ -9,6 +9,7 @@ import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
+import toast from "react-hot-toast";
 
 let contract;
 
@@ -760,3 +761,62 @@ const marketplace_contract_calls = {
 };
 
 export default marketplace_contract_calls;
+
+export const withdrawMarketplaceContract = async (
+  caller_account,
+  amount,
+  dispatch,
+  txType,
+  api,
+  receiver_address
+) => {
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  if (parseInt(amount) <= 0) {
+    toast.error(`Amount can not be less than 0!`);
+    return;
+  }
+
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+
+  const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
+    .mul(new BN(10 ** 6))
+    .toString();
+
+  // withdrawFee for emergency withdraw only
+  // withdrawProfit for normal use case
+  // address set fixed due to withdraw to admin address only
+
+  const txNotSign = contract.tx.withdrawProfit(
+    { gasLimit, value: azero_value },
+    amountFormatted,
+    receiver_address || address
+  );
+
+  await txNotSign
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
+  return unsubscribe;
+};

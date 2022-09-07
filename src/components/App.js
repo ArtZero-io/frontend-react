@@ -145,9 +145,9 @@ const Main = () => {
 
     const message = (
       <Text as="span" fontSize={["sm", "md"]}>
-        You have a transaction that needs to be signed.
+        You have a transaction that needs to be approved.
         <br />
-        Please <b>Sign</b> or <b>Cancel</b> in the pop-up window.
+        Please <b>Approve</b> or <b>Cancel</b> in the pop-up window.
       </Text>
     );
 
@@ -186,7 +186,7 @@ const Main = () => {
             toastOptions={{
               style: {
                 borderRadius: 0,
-                padding: "16px",
+                padding: "8px",
                 color: "#000",
                 background: "#7AE7FF",
               },
