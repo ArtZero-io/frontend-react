@@ -304,7 +304,7 @@ async function addNewProject(
                   }
 
                   const nft_address = eventValues[1];
-
+                  console.log(nft_address);
                   createNewCollection(nft_address);
                 }
               }

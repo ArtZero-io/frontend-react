@@ -36,7 +36,7 @@ export default function SimpleModeSwitch({
             hasArrow
             bg="#333"
             color="#fff"
-            label="When Public Mint is selected, anyone can mint the NFTs. When Public Mint is NOT selected, only whitelisted addresses can mint the NFTs."
+            label="When Allow public mint is selected, anyone can mint the NFTs."
           >
             <InfoIcon p="2px" fontSize="20px" />
           </Tooltip>

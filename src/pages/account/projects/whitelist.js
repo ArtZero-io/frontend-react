@@ -278,15 +278,13 @@ function MyWhiteListProjectPage() {
       const phaseCode = phaseSchedule.title;
 
       // console.log("zzzphaseSchedule", phaseSchedule);
-
-      if (!phaseSchedule.isPublic) {
-        const phaseInfo = {
-          id: i,
-          code: phaseCode,
-          ...phaseSchedule,
-        };
-        phasesTmp.push(phaseInfo);
-      }
+      const phaseInfo = {
+        id: i,
+        code: phaseCode,
+        ...phaseSchedule,
+      };
+      phasesTmp.push(phaseInfo);
+      
     }
 
     // console.log("phasesListAll", phasesListAll);
@@ -334,15 +332,15 @@ function MyWhiteListProjectPage() {
           selectedPhaseCode
         );
       let whiteListDataTableTmp = [];
-
-      for (let i = 1; i <= totalPhaseAccountLink; i++) {
+      console.log('totalPhaseAccountLink', totalPhaseAccountLink);
+      for (let i = 0; i < totalPhaseAccountLink; i++) {
         const whitelistPhaseAccountAddress =
-          await launchpad_psp34_nft_standard_calls.getPhaseAccountLinkByPhaseId(
+          await launchpad_psp34_nft_standard_calls.getPhaseAccountLink(
             currentAccount,
             selectedPhaseCode,
             i
           );
-
+        console.log('whitelistPhaseAccountAddress', whitelistPhaseAccountAddress);
         // eslint-disable-next-line no-unused-vars
         const phaseSchedule =
           await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(

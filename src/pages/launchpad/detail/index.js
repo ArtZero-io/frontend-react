@@ -573,7 +573,7 @@ const LaunchpadDetailPage = () => {
             ) : null}
 
             {/* //Public phases*/}
-            {currentAccount && currentPhase?.publicPhase && (
+            {currentAccount && currentPhase?.publicPhase && !currentPhase?.whitelist?.whitelistAmount && (
               <HStack
                 w="full"
                 justifyContent="start"
@@ -633,7 +633,7 @@ const LaunchpadDetailPage = () => {
             )}
 
             {/* //WhiteList phases*/}
-            {currentAccount && !currentPhase?.publicPhase && (
+            {currentAccount && currentPhase?.whitelist?.whitelistAmount && (
               <HStack
                 w="full"
                 justifyContent="start"
@@ -817,8 +817,8 @@ const LaunchpadDetailPage = () => {
                           </Stack>
                         </Stack>
                       )}
-
-                      {!item.publicPhase && (
+                      {console.log('Whitelist::item', item)}
+                      {item.whitelist && (
                         <Stack
                           px="2px"
                           w="full"
