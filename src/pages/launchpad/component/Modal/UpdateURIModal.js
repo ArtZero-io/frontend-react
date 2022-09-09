@@ -8,7 +8,7 @@ import {
   ModalOverlay,
   VStack,
   Input,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -42,7 +42,7 @@ export default function UpdateURIModal({
   }, [dispatch, onClose, rest.step]);
 
   const updateBaseUri = async () => {
-    if( newURI.toString().substr(-1) != "/" ) {
+    if (newURI.toString().substr(-1) != "/") {
       toast.error("Base Uri must be end with /");
       return;
     }
@@ -74,7 +74,7 @@ export default function UpdateURIModal({
       onClose={onClose}
       isCentered
       isOpen={isOpen}
-      size="xl"
+      size={["xs", "xl"]}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -89,11 +89,11 @@ export default function UpdateURIModal({
         borderRadius="0"
       >
         <ModalCloseButton
-          position="absolute"
-          top="-8"
-          right="-8"
           borderWidth={2}
           borderRadius="0"
+          position="absolute"
+          top={["0", "-8", "-8"]}
+          right={["0", "-8", "-8"]}
           onClick={() => rest?.step === FINALIZED && rest?.onEndClick()}
         />
         <ModalHeader textAlign="center">
@@ -101,16 +101,15 @@ export default function UpdateURIModal({
             update base URI
           </Heading>
           <Text ml={1} fontSize="sm">
-            You must to update base uri before minting the nfts because if u don't have any base uri, the nft won't show in My NFT section
+            You must to update base uri before minting the nfts because if u
+            don't have any base uri, the nft won't show in My NFT section
           </Text>
           <Text ml={1} fontSize="sm">
             Example: /ipfs/QmRKH5MUw52KRvzxBQJr9QHd2EqshyTYscLGXowP7RiXja/
           </Text>
-          
         </ModalHeader>
 
-        <ModalBody shadow="lg">
-          
+        <ModalBody>
           <VStack>
             <Input
               bg="black"

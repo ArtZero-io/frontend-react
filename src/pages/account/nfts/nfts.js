@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Flex,
   Heading,
@@ -6,6 +5,7 @@ import {
   IconButton,
   Text,
   HStack,
+  useMediaQuery,
 } from "@chakra-ui/react";
 
 import React, { useEffect, useState } from "react";
@@ -18,12 +18,12 @@ import CommonButton from "@components/Button/CommonButton";
 import CommonContainer from "@components/Container/CommonContainer";
 import useForceUpdate from "@hooks/useForceUpdate";
 import useTxStatus from "@hooks/useTxStatus";
+import DropdownMobile from "@components/Dropdown/DropdownMobile";
 
 import {
   REMOVE_BID,
   UNLIST_TOKEN,
   LIST_TOKEN,
-  SCROLLBAR,
   LOCK,
   TRANSFER,
   ACCEPT_BID,
@@ -39,18 +39,22 @@ const MyNFTsPage = () => {
 
   const [owner, setOwner] = useState(null);
   const [loading, setLoading] = useState(null);
-  const [filterSelected, setFilterSelected] = useState(0);
+  const [filterSelected, setFilterSelected] = useState(tabList.COLLECTED);
   const [myCollections, setMyCollections] = useState(null);
 
   const handleForceUpdate = async () => {
-    if (actionType === LIST_TOKEN) return setFilterSelected(1);
-    if (actionType === UNLIST_TOKEN) return setFilterSelected(0);
-    setFilterSelected(0);
+    if (actionType === LIST_TOKEN) return setFilterSelected('LISTING');
+
+    if (actionType === UNLIST_TOKEN) {
+      return setFilterSelected('COLLECTED');
+    }
+
+    setFilterSelected('COLLECTED');
   };
 
   function onClickHandler(v) {
     if (filterSelected !== v) {
-      setFilterSelected(v);
+      setFilterSelected(Object.keys(tabList)[v]);
       setMyCollections(null);
     }
   }
@@ -81,12 +85,15 @@ const MyNFTsPage = () => {
               "/getNFTsByOwnerAndCollection",
               options
             );
-
-            if (Number(filterSelected) === 0) {
+              console.log('filterSelected', filterSelected)
+              console.log('tabList.COLLECTED', tabList.COLLECTED)
+              console.log('tabList.LISTING', tabList.LISTING)
+              console.log('tabList.BIDS', tabList.BIDS)
+            if (filterSelected === 'COLLECTED') {
               dataList = dataList.filter((item) => item.is_for_sale !== true);
             }
 
-            if (Number(filterSelected) === 1) {
+            if (filterSelected ==='LISTING') {
               dataList = dataList.filter((item) => item.is_for_sale === true);
             }
             const data = dataList?.map((item) => {
@@ -183,9 +190,11 @@ const MyNFTsPage = () => {
     };
 
     // if (!myCollections || owner !== currentAccount?.address) {
-    filterSelected !== 2 ? fetchMyCollections() : fetchMyBids();
+    filterSelected !== 'BIDS' ? fetchMyCollections() : fetchMyBids();
     // }
   }, [currentAccount?.address, filterSelected, owner]);
+
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   return (
     <CommonContainer>
@@ -195,41 +204,69 @@ const MyNFTsPage = () => {
         mb={["20px", "48px"]}
         direction={{ base: "column", xl: "row" }}
       >
-        <Heading fontSize={["3xl-mid", "5xl", "5xl"]} minW="100px">
+        <Heading fontSize={["3xl-mid", "5xl"]} minW="100px">
           my nfts
         </Heading>
 
         <Spacer />
 
-        <HStack
-          sx={SCROLLBAR}
-          overflowX="scroll"
-          maxW={{ base: "320px", md: "500px" }}
-        >
-          {[
-            { id: "collected", text: "collected" },
-            { id: "listed", text: "my listing" },
-            { id: "bid", text: "my bids" },
-          ].map((i, idx) => (
-            <CommonButton
-              {...i}
-              key={i.id}
-              variant="outline"
-              isActive={filterSelected === idx}
-              onClick={() => onClickHandler(idx)}
-            />
-          ))}
+        {isBigScreen && (
+          <HStack maxW={{ base: "320px", md: "500px" }}>
+            {[
+              { id: "COLLECTED", text: "my collected" },
+              { id: "LISTING", text: "my listing" },
+              { id: "BIDS", text: "my bids" },
+            ].map((i, idx) => (
+              <CommonButton
+                {...i}
+                key={i.id}
+                variant="outline"
+                isActive={filterSelected === i.id}
+                onClick={() => onClickHandler(idx)}
+              />
+            ))}
 
+            <IconButton
+              mx={1}
+              size="icon"
+              variant="iconSolid"
+              aria-label="refresh"
+              icon={<RefreshIcon />}
+              onClick={() => setMyCollections(null)}
+            />
+          </HStack>
+        )}
+      </Flex>
+
+      {!isBigScreen && (
+        <HStack w="full" pb={[0, "8px"]} justifyContent="space-between">
           <IconButton
-            mx={1}
+            mr="2px"
             size="icon"
             variant="iconSolid"
             aria-label="refresh"
-            icon={<RefreshIcon />}
             onClick={() => setMyCollections(null)}
+            icon={<RefreshIcon />}
+            _hover={{ color: "black", bg: "#7ae7ff" }}
           />
+          <Spacer display={["none", "flex"]} />
+          (
+          <DropdownMobile
+            minW="256px"
+            width="full"
+            my="20px"
+            border="1px solid #343333"
+            fontSize="15px"
+            fontFamily="Evogria, san serif"
+            options={tabList}
+            selectedItem={filterSelected}
+            setSelectedItem={(i) => {
+              setFilterSelected(i);
+            }}
+          />
+          )
         </HStack>
-      </Flex>
+      )}
 
       {loading || loadingForceUpdate ? (
         <AnimationLoader loadingTime={loadingTime} />
@@ -267,3 +304,9 @@ const MyNFTsPage = () => {
 };
 
 export default MyNFTsPage;
+
+export const tabList = {
+  COLLECTED: "COLLECTED",
+  LISTING: "MY LISTING",
+  BIDS: "MY BIDS",
+};

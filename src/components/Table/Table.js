@@ -51,7 +51,7 @@ function CommonTable({
                     fontSize="sm"
                     position="sticky"
                     fontWeight="normal"
-                    textAlign="center"
+                    textAlign="left"
                     fontFamily="Evogria"
                     py={{ base: "1rem", "2xl": "1.75rem" }}
                     display={item === "action" && !isOwner && "none"}
@@ -69,19 +69,22 @@ function CommonTable({
                     <Td
                       color="#7ae7ff"
                       py={{ base: "1rem", "2xl": "1.75rem" }}
-                      textAlign="center"
+                      textAlign="left"
                     >
                       {truncateStr(item.bidder, 6)}
                     </Td>
 
                     <Td
                       py={{ base: "1rem", "2xl": "1.75rem" }}
-                      textAlign="center"
+                      textAlign="left"
                     >
                       {convertStringToDateTime(item.bidDate)}
                     </Td>
 
-                    <Td py={{ base: "1rem", "2xl": "1.75rem" }} isNumeric>
+                    <Td
+                      py={{ base: "1rem", "2xl": "1.75rem" }}
+                      // isNumeric
+                    >
                       <Tag pr={0} bg="transparent">
                         <TagLabel bg="transparent">
                           {convertStringToPrice(item.bidValue)}
@@ -92,7 +95,7 @@ function CommonTable({
                     {isOwner ? (
                       <Td
                         py={{ base: "1rem", "2xl": "1.75rem" }}
-                        textAlign="center"
+                        textAlign="left"
                       >
                         <CommonButton
                           mx="0"

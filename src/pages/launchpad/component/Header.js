@@ -11,6 +11,7 @@ import {
   Skeleton,
   Stack,
   Text,
+  useBreakpointValue,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
@@ -45,8 +46,6 @@ function LaunchpadDetailHeader({
   collection_address,
   loading,
 }) {
-  // const { collection_address } = useParams();
-
   const [livePhase, setLivePhase] = useState(null);
   const {
     name,
@@ -150,6 +149,7 @@ function LaunchpadDetailHeader({
   }, 1000);
 
   const [isSeeMore, setIsSeeMore] = useState(false);
+  const descLength = useBreakpointValue([115, 175]);
 
   return (
     <Box as="section" position="relative" w="full" mt={["30px", "320px"]}>
@@ -203,6 +203,7 @@ function LaunchpadDetailHeader({
             >
               <VStack
                 pt={["6px", "26px"]}
+                pb={["26px", "0px"]}
                 textAlign="center"
                 justifyContent="space-between"
                 minH={{ base: "3.5rem", "2xl": "7.125rem" }}
@@ -229,13 +230,10 @@ function LaunchpadDetailHeader({
                   borderBottom="#282828 solid"
                   borderBottomWidth={["0px", "1px"]}
                   pt={["12px", "12px"]}
-                  pb={["0px", "30px"]}
+                  pb={["20px", "30px"]}
                 >
-                  <Skeleton
-                    isLoaded={!loading}
-                    // h={["38px", "55px"]}
-                  >
-                    <Heading fontSize={["sm", "md"]} mb={["0px", "8px"]}>
+                  <Skeleton isLoaded={!loading}>
+                    <Heading fontSize={["sm", "md"]} mb={["6px", "8px"]}>
                       project creator:{" "}
                       <Text as="span" color="#7ae7ff">
                         {truncateStr(projectOwner)}{" "}
@@ -258,18 +256,18 @@ function LaunchpadDetailHeader({
                   display="flex"
                   isLoaded={!loading}
                   pt={["2px", "22px"]}
-                  pb={["16px", "30px"]}
+                  pb={["30px", "30px"]}
                   w="full"
                   color="#888"
                   textAlign="center"
-                  justifyContent="center"
+                  justifyContent="space-between"
                   fontSize={["16px", "18px"]}
                   minH={{ base: "1rem", "2xl": "3.375rem" }}
                   maxH={["56px", "80px"]}
                 >
                   <Text mx={["5px", "42px"]}>
                     Supply:{" "}
-                    <Text as="span" color="#fff">
+                    <Text display={["block", "inline"]} color="#fff">
                       {totalSupply}
                     </Text>
                   </Text>
@@ -280,12 +278,12 @@ function LaunchpadDetailHeader({
                     <>
                       <Text mx={["5px", "42px"]}>
                         Price:{" "}
-                        <Text as="span" color="#fff">
+                        <Text display={["block", "inline"]} color="#fff">
                           {convertStringToPrice(currentWhitelist.mintingFee)}{" "}
                           <AzeroIcon
-                            mb="5px"
-                            w={["14px", "16px"]}
-                            h={["14px", "16px"]}
+                            mb={["2px", "5px"]}
+                            width={["14px", "16px"]}
+                            height={["14px", "16px"]}
                           />
                         </Text>
                       </Text>
@@ -298,9 +296,13 @@ function LaunchpadDetailHeader({
                     <>
                       <Text mx={["5px", "42px"]}>
                         Price:{" "}
-                        <Text as="span" color="#fff">
+                        <Text display={["block", "inline"]} color="#fff">
                           {convertStringToPrice(livePhase?.publicMintingFee)}{" "}
-                          <AzeroIcon mb="5px" />
+                          <AzeroIcon
+                            mb={["2px", "5px"]}
+                            width={["14px", "16px"]}
+                            height={["14px", "16px"]}
+                          />
                         </Text>
                       </Text>
                     </>
@@ -312,7 +314,7 @@ function LaunchpadDetailHeader({
                     <>
                       <Text mx={["5px", "42px"]}>
                         Mint Phase:{" "}
-                        <Text as="span" color="#fff">
+                        <Text display={["block", "inline"]} color="#fff">
                           {livePhase?.code}
                         </Text>
                       </Text>
@@ -335,14 +337,15 @@ function LaunchpadDetailHeader({
               borderWidth={2}
               color="brand.blue"
               borderColor="brand.blue"
-              h={["200px", "full", "full"]}
+              h={["210px", "full", "full"]}
             >
               <Box
+                h="32px"
                 w="full"
                 position="absolute"
-                top="-12px"
+                top="-16px"
                 zIndex="100"
-                p="2px 20px"
+                p="6px 20px"
                 textAlign="center"
               >
                 <Text
@@ -356,6 +359,7 @@ function LaunchpadDetailHeader({
                   phase end in
                 </Text>
               </Box>
+
               <Flex
                 maxH={["200px", "110px"]}
                 h={["200px", "full", "full"]}
@@ -501,52 +505,45 @@ function LaunchpadDetailHeader({
             </Skeleton>
           ) : null}
 
-          <Flex
-            position="relative"
-            w="full"
+          <Skeleton
             pt="22px"
-            px="15px"
-            maxW="730px"
-            color="#fff"
-            textAlign="center"
-            alignItems="start"
-            pb={["0px", "30px"]}
+            display="flex"
             justifyContent="center"
-            fontSize={["15px", "18px", "18px"]}
-            overflow="hidden"
-            maxHeight={!isSeeMore ? "130px" : "340px"}
-            transition="all 0.5s cubic-bezier(0.19, 1, 0.22, 1) 0.1s"
-            _after={{
-              content: '""',
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              width: "full",
-              height: description?.length > 300 ? "50px" : "0px",
-              backgroundImage:
-                "linear-gradient(0deg, #000000 3.25%, #000000 26%, rgba(0, 0, 0, 0) 100%);)",
-            }}
+            w="full"
+            maxW="680px"
+            isLoaded={name?.length}
           >
-            <Text
-            // noOfLines={[3, 3]}
+            <Flex
+              paddingBottom="24px"
+              w="full"
+              maxW="576px"
+              textAlign="center"
+              position="relative"
+              minH={["48px", "54px"]}
+              justifyContent="center"
+              fontSize={["16px", "18px"]}
             >
-              {description}
-            </Text>{" "}
-            <Box
-              display={description?.length > 300 ? "flex" : "none"}
-              cursor="pointer"
-              bg="#7ae7ff"
-              position="absolute"
-              bottom="-0"
-              zIndex="100"
-              p="2px 10px"
-              onClick={() => setIsSeeMore(!isSeeMore)}
-            >
-              <Text fontFamily="Evogria" fontSize="13px" color="#000">
-                {isSeeMore ? "see less" : "see more"}
-              </Text>
-            </Box>
-          </Flex>
+              <Text noOfLines={[isSeeMore ? 999 : 2]}>{description}</Text>
+
+              <Flex
+                w="full"
+                bottom="0"
+                right="0"
+                minW="75px"
+                px="2px"
+                cursor="pointer"
+                color="#7ae7ff"
+                zIndex="docked"
+                position="absolute"
+                justifyContent="center"
+                textDecoration="underline"
+                onClick={() => setIsSeeMore(!isSeeMore)}
+                display={description?.length > descLength ? "flex" : "none"}
+              >
+                {isSeeMore ? "See less" : "Show more"}
+              </Flex>
+            </Flex>
+          </Skeleton>
 
           {projectOwner === currentAccount?.address ||
           projectAdminAddress === currentAccount?.address ? (

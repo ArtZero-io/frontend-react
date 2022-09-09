@@ -1,18 +1,9 @@
-import {
-  Box,
-  Flex,
-  Grid,
-  GridItem,
-  Heading,
-  Skeleton,
-  Spacer,
-  TagRightIcon,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Flex, Grid, GridItem, Heading, Text } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { formatNumDynamicDecimal } from "@utils";
+import StatsCardContentLoader from "../StatsCardContentLoader";
 
-function StatsHeader({ platformStatistics, isLoading }) {
+function StatsHeader({ platformStatistics, isLoading = true }) {
   return (
     <Box as="section" position="relative" w="full">
       <Box
@@ -30,64 +21,70 @@ function StatsHeader({ platformStatistics, isLoading }) {
           </Text>
         </Box>
 
-        <Skeleton isLoaded={!isLoading} maxW="1200px" mx="auto">
-          <Grid
-            mx="auto"
-            px="16px"
-            w="full"
-            gap={["15px", "30px", "30px"]}
-            maxW="1200px"
-            minH={"120px"}
-            // maxW="960px"
-            templateColumns={{
-              base: "repeat(auto-fill, minmax(min(100%, 150px), 1fr))",
-              xl: "repeat(auto-fill, minmax(min(100%, 250px), 1fr))",
-            }}
-          >
-            {platformStatistics?.map((item, idx) => (
-              <GridItem key={idx} w="full" h="full">
-                <Box
-                  minH="115px"
-                  textAlign="left"
-                  bg="brand.grayDark"
-                  px="20px"
-                  py="14px"
-                  fontSize="lg"
-                >
-                  <Flex w="full" mb="16px">
-                    <Text color="brand.grayLight" fontSize={["md", "lg", "lg"]}>
-                      {item.title}
-                    </Text>
-                  </Flex>
-
-                  <Flex h="full" w="full" textAlign="left" alignItems="end">
-                    <Text
-                      lineHeight="42px"
-                      bg="transparent"
-                      fontSize={["3xl-mid", "5xl", "5xl"]}
-                      fontFamily="DS-Digital"
-                    >
-                      {formatNumDynamicDecimal(item.value)}
-                    </Text>
-
-                    {item.unit === "azero" ? (
-                      <TagRightIcon
-                        mb={["12px", "8px", "8px"]}
-                        fontSize={["18px", "23px", "23px"]}
-                        as={AzeroIcon}
-                      />
-                    ) : (
-                      <>
-                        <Spacer />
-                        <Text color="brand.blue">{item.unit}</Text>
-                      </>
-                    )}
-                  </Flex>
-                </Box>
+        <Grid
+          mx="auto"
+          px="16px"
+          w="full"
+          gap={["15px", "30px"]}
+          maxW="1200px"
+          minH={"120px"}
+          templateColumns={{
+            base: "repeat(auto-fill, minmax(min(100%, 250px), 1fr))",
+          }}
+        >
+          {!platformStatistics &&
+            [1, 2, 3, 4].map((_, idx) => (
+              <GridItem
+                m="0"
+                bg="brand.grayDark"
+                key={idx}
+                w="full"
+                h={["96px", "131px"]}
+              >
+                <StatsCardContentLoader />
               </GridItem>
             ))}
-          </Grid>
-        </Skeleton>
+
+          {platformStatistics?.map((item, idx) => (
+            <GridItem key={idx} w="full" h="full">
+              <Box
+                minH={["auto", "115px"]}
+                textAlign="left"
+                bg="brand.grayDark"
+                px="20px"
+                py="14px"
+                fontSize="lg"
+              >
+                <Flex w="full" mb={["8px", "16px"]}>
+                  <Text color="brand.grayLight" fontSize={["md", "lg", "lg"]}>
+                    {item.title}
+                  </Text>
+                </Flex>
+
+                <Flex
+                  h="full"
+                  w="full"
+                  alignItems="center"
+                  justifyContent="end"
+                >
+                  <Text bg="transparent" fontSize={["24px", "40px"]}>
+                    {formatNumDynamicDecimal(item.value)}
+                  </Text>
+
+                  {item.unit === "azero" ? (
+                    <AzeroIcon ml="6px" w="20px" />
+                  ) : (
+                    <>
+                      <Text ml="6px" color="brand.blue">
+                        {item.unit}
+                      </Text>
+                    </>
+                  )}
+                </Flex>
+              </Box>
+            </GridItem>
+          ))}
+        </Grid>
       </Box>
     </Box>
   );

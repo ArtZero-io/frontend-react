@@ -114,7 +114,7 @@ function AdvancedModeModal({ mode = "add", id, nftContractAddress }) {
             </Heading>
           </ModalHeader>
 
-          <ModalBody shadow="lg" overflowY="auto" sx={SCROLLBAR}>
+          <ModalBody overflowY="auto" sx={SCROLLBAR}>
             <AdvancedModeForm
               id={id}
               mode={mode}

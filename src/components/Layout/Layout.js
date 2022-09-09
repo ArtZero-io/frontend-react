@@ -16,7 +16,8 @@ import { getCachedImageShort } from "@utils/index";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 
-const linerGradient = "linear-gradient(180deg, #000000 1.5rem, #00000000 8rem)";
+const linerGradient =
+  "linear-gradient(0deg, #000000 30%, rgba(0, 0, 0, 43%) 95% , rgba(0, 0, 0, 0) 100%)";
 const linerGradientLaunchpad =
   "linear-gradient(180deg, #000000 20px, #000000 30px, rgba(0, 0, 0, 0) 320px)";
 
@@ -45,6 +46,16 @@ const Layout = ({ backdrop, children, variant = null }) => {
           ? linerGradientLaunchpad
           : ""
       }
+      _before={{
+        content: '""',
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "full",
+        height: "400px",
+        backgroundImage:
+          "linear-gradient(180deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 56.2%);",
+      }}
     >
       {variant === "marketplace" && (
         <Particles

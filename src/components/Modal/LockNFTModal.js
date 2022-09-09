@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Text,
   Popover,
@@ -34,6 +35,7 @@ import { START, FINALIZED, LOCK, END } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { useEffect } from "react";
+import UnlockIcon from "../../theme/assets/icon/Unlock";
 
 function LockNFTModal({
   owner,
@@ -49,6 +51,7 @@ function LockNFTModal({
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
   const lockNFTsHandler = async () => {
+    console.log("owner", owner);
     if (owner !== currentAccount?.address) {
       return toast.error("You are not the owner of this NFT");
     }
@@ -102,6 +105,8 @@ function LockNFTModal({
     rest.step === END && onClose();
   }, [onClose, rest.step]);
 
+  const iconWidth = useBreakpointValue(["40px", "50px"]);
+
   return (
     <>
       <Popover
@@ -121,18 +126,23 @@ function LockNFTModal({
               label="Unlocked on-chain metadata"
             >
               <span
+                onClick={
+                  isDisabled || actionType
+                    ? () => toast.error("This item is currently for sale!")
+                    : onOpen
+                }
                 style={{
-                  padding: iconBorderSize,
-                  display: "flex",
+                  width: iconWidth,
+                  height: iconWidth,
+                  display: "inline-flex",
                   alignItems: "center",
+                  justifyContent: "center",
                   border: "2px solid #333333",
                 }}
               >
-                <Icon
-                  width={{ base: "14px", "2xl": "20px" }}
-                  height={{ base: "14px", "2xl": "20px" }}
-                  as={AiOutlineUnlock}
-                  onClick={!actionType ? onOpen : () => {}}
+                <UnlockIcon
+                  width={["20px", "25px"]}
+                  height={["20px", "25px"]}
                 />
               </span>
             </Tooltip>

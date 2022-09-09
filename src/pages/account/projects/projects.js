@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Heading, Spacer, Stack, Text } from "@chakra-ui/react";
+import { Heading, Spacer, Stack, Text, useMediaQuery } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
 import { getProjectListDetails } from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import CommonContainer from "@components/Container/CommonContainer";
@@ -43,33 +43,49 @@ const MyProjectsPage = () => {
     return () => (isUnmounted = true);
   }, [api, currentAccount]);
   // console.log("projects", projects);
+
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+
   return (
     <CommonContainer>
       <Stack
         w="full"
-        alignItems="start"
+        // alignItems="start"
         pb={["20px", "20px", "48px"]}
         direction={{ base: "column", xl: "row" }}
       >
         <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>my projects</Heading>
 
-        <Spacer mt={{ base: "20px", xl: "0px" }} />
-        <OwnerMintModal isDisabled={projects?.length === 0} />
-        <WhitelistManagerModal isDisabled={projects?.length === 0} />
+        {isBigScreen && (
+          <>
+            <Spacer mt={{ base: "20px", xl: "0px" }} />
+
+            <OwnerMintModal isDisabled={projects?.length === 0} />
+            <WhitelistManagerModal isDisabled={projects?.length === 0} />
+          </>
+        )}
       </Stack>
+
+      {!isBigScreen && (
+        <Stack spacing="20px" alignItems="center" mb="20px">
+          <OwnerMintModal isDisabled={projects?.length === 0} />
+          <WhitelistManagerModal isDisabled={projects?.length === 0} />
+        </Stack>
+      )}
 
       {loading ? (
         <AnimationLoader />
       ) : (
-        <Stack>
+        <>
           <Text textAlign="left" color="brand.grayLight">
-            There are {projects?.length || 0} projects
+            There are {projects?.length || 0} project
+            {projects?.length > 1 ? "s" : ""}
           </Text>
 
           {projects?.length ? (
             <GridA collections={projects} variant="my-projects" />
           ) : null}
-        </Stack>
+        </>
       )}
     </CommonContainer>
   );

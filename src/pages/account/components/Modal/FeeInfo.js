@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   Heading,
   Text,
@@ -23,18 +22,24 @@ const FeeInfoModal = () => {
     base: `xs`,
     xl: `3xl`,
   });
-  
+
   return (
     <>
-      <Button
+      <Box
+        maxW="200px"
+        fontFamily="Evogria"
+        textDecor="underline"
         variant="filled"
+        fontSize={["15px"]}
         bg="transparent"
         color="#fff"
-        ml={3}
+        cursor="pointer"
+        my="20px"
+        mx={[0, "30px"]}
         onClick={() => onOpen()}
       >
         more information
-      </Button>
+      </Box>
 
       <Modal isCentered isOpen={isOpen} onClose={onClose} size={modalSize}>
         <ModalOverlay

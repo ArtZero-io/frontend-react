@@ -1,7 +1,17 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import { Box, Skeleton, Tab, TabList, TabPanels, Tabs } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  HStack,
+  Skeleton,
+  Tab,
+  TabList,
+  TabPanels,
+  Tabs,
+  useMediaQuery,
+} from "@chakra-ui/react";
 
 import * as ROUTES from "@constants/routes";
 import Layout from "@components/Layout/Layout";
@@ -9,6 +19,7 @@ import ProfileHeader from "@pages/account/components/Header";
 import { getProjectListDetails } from "../../utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { useSubstrateState } from "@utils/substrate";
 // import AnimationLoader from "@components/Loader/AnimationLoader";
+import { SCROLLBAR } from "@constants";
 
 const AccountLayout = ({ children }) => {
   const history = useHistory();
@@ -57,6 +68,8 @@ const AccountLayout = ({ children }) => {
     window.scrollTo(0, 0);
   }, []);
 
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+
   return (
     <Layout>
       <Box as="section" position="relative" bg="#000" mx="auto">
@@ -70,16 +83,41 @@ const AccountLayout = ({ children }) => {
           onChange={handleTabsChange}
           index={tabsData.map((i) => i.route).indexOf(pathname)}
         >
-          <Skeleton isLoaded={!loading}>
-            <TabList>
-              {tabsData.map((tab) => (
+          <TabList>
+            {!isBigScreen ? (
+              <HStack
+                //  sx={SCROLLBAR}
+                overflowY="hidden"
+                overflowX="scroll"
+              >
+                {tabsData.map((tab) => (
+                  <Tab
+                    minW={["120px", "auto"]}
+                    px="0.5px"
+                    color="#fff"
+                    key={tab.label}
+                    isDisabled={tab.isDisabled}
+                    py={["8px", "20px"]}
+                    fontSize={["md", "lg", "lg"]}
+                    fontFamily="Evogria Italic, san serif"
+                    _selected={{
+                      color: "#7ae7ff",
+                      borderBottom: "2px #7ae7ff solid",
+                    }}
+                  >
+                    {tab.label}
+                  </Tab>
+                ))}
+              </HStack>
+            ) : (
+              tabsData.map((tab) => (
                 <Tab
-                  mx={4}
+                  mx="25px"
                   px="0.5px"
                   color="#fff"
                   key={tab.label}
                   isDisabled={tab.isDisabled}
-                  py={["8px", "20px", "20px"]}
+                  py={["8px", "20px"]}
                   fontSize={["md", "lg", "lg"]}
                   fontFamily="Evogria Italic, san serif"
                   _selected={{
@@ -89,9 +127,9 @@ const AccountLayout = ({ children }) => {
                 >
                   {tab.label}
                 </Tab>
-              ))}
-            </TabList>
-          </Skeleton>
+              ))
+            )}
+          </TabList>
 
           <TabPanels
             p={0}

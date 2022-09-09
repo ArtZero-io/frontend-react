@@ -1,29 +1,36 @@
-import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   Flex,
   Heading,
+  HStack,
   IconButton,
   Modal,
+  ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Square,
+  Stack,
   Text,
   useBreakpointValue,
+  useMediaQuery,
 } from "@chakra-ui/react";
-import { FieldArray, useField } from "formik";
-import toast from "react-hot-toast";
+import { ErrorMessage, FieldArray, useField } from "formik";
 import AddLevelsInput from "@components/Input/Input";
-import { formMode } from "@constants";
+import { formMode, SCROLLBAR } from "@constants";
+import DeleteIcon from "@theme/assets/icon/Delete";
+import NumberInput from "@components/Input/NumberInput";
 
 function AddLevelsModal({ name, isOpen, onClose, mode }) {
   const [{ value }] = useField(name);
 
   const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
 
-  const modalSize = useBreakpointValue(["xs", "2xl", "2xl"]);
+  const modalSize = useBreakpointValue(["xs", "5xl"]);
+
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   return (
     <Modal
@@ -32,6 +39,7 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
       isOpen={isOpen}
       size={modalSize}
       minH="40rem"
+      scrollBehavior="inside"
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -39,22 +47,16 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
       />
 
       <ModalContent
+        maxWidth={["340px", "940px"]}
         position="relative"
-        px={["4px", "24px", "24px"]}
+        px={["0px", "26px"]}
+        pt={["6px", "32px"]}
+        pb={["16px", "42px"]}
         minH={{ xl: "md" }}
         borderRadius="0"
         textAlign="center"
         bg="brand.grayDark"
       >
-        <ModalHeader>
-          <Heading fontSize={["2xl", "3xl", "3xl"]} my={2}>
-            {mode === formMode.ADD ? "Add levels" : "Edit levels    "}
-          </Heading>
-          <Text fontSize={"sm"}>
-            {/* Textural trails that show up as restangles */}
-          </Text>
-        </ModalHeader>
-
         <ModalCloseButton
           borderWidth={2}
           borderRadius="0"
@@ -62,131 +64,157 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
           top={["0", "-8", "-8"]}
           right={["0", "-8", "-8"]}
         />
-        <Flex>
-          <Box mb={4} flexGrow={[4, 10, 10]} textAlign="left" pl={3}>
-            <Text fontSize={["md", "lg", "lg"]} color="#fff">
-              Name
-            </Text>
-          </Box>
-          <Box mb={4} flexGrow={1} textAlign="left" pl={3} w={16}>
-            <Text fontSize={["md", "lg", "lg"]} color="#fff">
-              Level
-            </Text>
-          </Box>
-          <Box mb={4} flexGrow={2} textAlign="left" pl={3} minW={16} w={20}>
-            <Text fontSize={["md", "lg", "lg"]} color="#fff">
-              Level Max
-            </Text>
-          </Box>
-        </Flex>
 
-        <FieldArray
-          name="levels"
-          render={(arrayHelpers) => {
-            return (
-              <div>
-                {value?.map((levels, index) => (
-                  <div key={index}>
-                    <Flex alignItems="start" mb={4}>
-                      <AddLevelsInput
-                        isRequired={true}
-                        flexGrow={10}
-                        mx={5}
-                        width="full"
-                        height={16}
-                        autoComplete="off"
-                        name={`levels[${index}].name`}
-                        type="text"
-                        placeholder="Your level"
-                      />
-                      <AddLevelsInput
-                        isRequired={true}
-                        textAlign="center"
-                        flexGrow={0}
-                        mx={5}
-                        height={16}
-                        width={28}
-                        autoComplete="off"
-                        name={`levels.${index}.level`}
-                        type="number"
-                        placeholder="1"
-                      />
-                      <Flex h={"12"} py={"auto"} alignItems="center">
-                        <Text fontSize={["md", "xl", "xl"]} mx={1}>
-                          of
-                        </Text>
-                      </Flex>
-                      <AddLevelsInput
-                        isRequired={true}
-                        textAlign="center"
-                        flexGrow={1}
-                        mx={5}
-                        height={16}
-                        width={36}
-                        autoComplete="off"
-                        name={`levels.${index}.levelMax`}
-                        type="number"
-                        placeholder="5"
-                      />
+        <ModalHeader>
+          <Heading fontSize={["2xl", "3xl-mid"]} my={2}>
+            {mode === formMode.ADD ? "Add levels" : "Edit levels"}
+          </Heading>
+          <Text fontSize={"sm"}>
+            {/* Textural trails that show up as restangles */}
+          </Text>
+        </ModalHeader>
 
-                      <IconButton
-                        aria-label="Delete"
-                        icon={<DeleteIcon fontSize="24px" />}
-                        size="icon"
-                        variant="iconOutline"
-                        isDisabled={index === 0 && value.length === 1}
-                        onClick={() => arrayHelpers.remove(index)}
-                      />
-                    </Flex>
-                  </div>
-                ))}
-                <Flex pb={6}>
-                  {/* TODO:
-                  Temp add mode === formMode.ADD for edit mode
-                  consider to make a separate form for edit NFT
-                   */}
+        <ModalBody overflowY="auto" sx={SCROLLBAR}>
+          {isBigScreen && (
+            <Flex>
+              <Box maxW="500px" minW="500px" mb={4} textAlign="left" ml={1}>
+                <Text fontSize={["md", "lg", "lg"]} color="#fff">
+                  Name
+                </Text>
+              </Box>
+              <Box mb={4} textAlign="left" ml={2}>
+                <Text fontSize={["md", "lg", "lg"]} color="#fff">
+                  Level
+                </Text>
+              </Box>
+            </Flex>
+          )}
+
+          <FieldArray
+            name="levels"
+            render={(arrayHelpers) => {
+              return (
+                <div>
+                  {value?.map((levels, index) => {
+                    return (
+                      <Stack
+                        key={index}
+                        mb={4}
+                        spacing="0px"
+                        alignItems="flex-start"
+                        direction={["column", "row"]}
+                      >
+                        <HStack width="full">
+                          <AddLevelsInput
+                            // isRequired={true}
+                            width="full"
+                            height={["90px", "64px"]}
+                            mx="0"
+                            // autoComplete="off"
+                            name={`levels[${index}].name`}
+                            type="text"
+                            placeholder="Speed"
+                            label={isBigScreen ? "" : "Name"}
+                          />
+                        </HStack>
+
+                        <HStack
+                          spacing="0px"
+                          alignItems="end"
+                          pl={["0px", "10px"]}
+                          height={["90px", "50px"]}
+                        >
+                          <NumberInput
+                            h={"50px"}
+                            min={0}
+                            step={1}
+                            type="number"
+                            precision={0}
+                            max={levels.levelMax}
+                            inputWidth={["full", "110px"]}
+                            name={`levels.${index}.level`}
+                            label={isBigScreen ? "" : "Level"}
+                          />
+
+                          <Square
+                            mx={0}
+                            h="50px"
+                            w="50px"
+                            color="#888"
+                            bg="#171717"
+                            alignItems="center"
+                          >
+                            <Text fontSize={["md", "lg"]}>Of</Text>
+                          </Square>
+
+                          <NumberInput
+                            mr="10px"
+                            fontSize="lg"
+                            h={"50px"}
+                            step={1}
+                            max={10}
+                            type="number"
+                            precision={0}
+                            min={levels.level}
+                            inputWidth={["full", "110px"]}
+                            name={`levels.${index}.levelMax`}
+                          />
+
+                          <Box pl="10px">
+                            <IconButton
+                              size="icon"
+                              bg="transparent"
+                              aria-label="Delete"
+                              icon={<DeleteIcon />}
+                              variant="iconOutline"
+                              isDisabled={index === 0 && value.length === 1}
+                              onClick={() => arrayHelpers.remove(index)}
+                            />
+                          </Box>
+                        </HStack>
+                      </Stack>
+                    );
+                  })}
+
+                  <Flex pb="40px">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      fontSize={["sm", "15px"]}
+                      px={["12px", "32px"]}
+                      isDisabled={
+                        mode === formMode.ADD &&
+                        (hasEmptyLevel ||
+                          !arrayHelpers?.form?.dirty ||
+                          arrayHelpers.form?.errors?.levels)
+                      }
+                      onClick={() =>
+                        arrayHelpers.push({ name: "", level: 3, levelMax: 5 })
+                      }
+                    >
+                      Add more
+                    </Button>
+                  </Flex>
+
+                  {typeof arrayHelpers.form?.errors?.levels === "string" && (
+                    <HStack color="#ff8c8c" py="10px">
+                      <ErrorMessage name="levels" />
+                    </HStack>
+                  )}
+
                   <Button
+                    w="full"
+                    variant="solid"
                     type="button"
-                    variant="outline"
-                    fontSize={["sm", "md", "md"]}
-                    px={["12px", "32px", "32px"]}
-                    isDisabled={
-                      mode === formMode.ADD &&
-                      (hasEmptyLevel ||
-                        !arrayHelpers?.form?.dirty ||
-                        arrayHelpers.form?.errors?.levels)
-                    }
-                    onClick={() =>
-                      arrayHelpers.push({ name: "", level: "", levelMax: "" })
-                    }
+                    onClick={() => onClose()}
                   >
-                    Add more
+                    Save now
                   </Button>
-                </Flex>
-                <Button
-                  disabled={
-                    !(arrayHelpers?.form?.dirty && arrayHelpers?.form?.isValid)
-                  }
-                  mb={6}
-                  w="full"
-                  variant="solid"
-                  type="button"
-                  onClick={() => {
-                    if (
-                      !arrayHelpers?.form?.dirty ||
-                      arrayHelpers.form?.errors?.levels
-                    ) {
-                      return toast.error(arrayHelpers.form?.errors?.levels);
-                    }
-                    onClose();
-                  }}
-                >
-                  Save now
-                </Button>
-              </div>
-            );
-          }}
-        />
+                </div>
+              );
+            }}
+          />
+        </ModalBody>
       </ModalContent>
     </Modal>
   );

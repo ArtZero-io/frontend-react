@@ -8,19 +8,27 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 
-function Dropdown({ options, selectedItem, setSelectedItem, width }) {
+function Dropdown({
+  options,
+  selectedItem,
+  setSelectedItem,
+  width,
+  minW,
+  ...rest
+}) {
   const onClickHandler = (item) => setSelectedItem(item);
 
   return (
     <Box color="brand.blue" height="100%" w={width}>
-      <Menu w="full" autoSelect={false} placement="bottom-end">
+      <Menu autoSelect={false} placement="bottom-end">
         <MenuButton
           px={4}
           ring={0}
           w="full"
           as={Button}
           color="#fff"
-          minW="195px"
+          // minW="195px"
+          minW={minW}
           textAlign="left"
           variant="outline"
           bg="brand.grayDark"
@@ -34,7 +42,13 @@ function Dropdown({ options, selectedItem, setSelectedItem, width }) {
         >
           {options[selectedItem]}
         </MenuButton>
-        <MenuList minW="195px" w="full" bg="brand.grayDark" borderRadius="0">
+
+        <MenuList
+          // minW="325px"
+          bg="brand.grayDark"
+          borderRadius="0"
+          minW={minW}
+        >
           {options?.map((_, idx) => {
             return (
               <MenuItem

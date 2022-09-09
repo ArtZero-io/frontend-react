@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Text,
   Button,
@@ -11,6 +12,8 @@ import {
   useDisclosure,
   VStack,
   Input,
+  useBreakpointValue,
+  Tooltip,
 } from "@chakra-ui/react";
 
 import { useSubstrateState } from "@utils/substrate";
@@ -34,6 +37,8 @@ import { APICall } from "@api/client";
 import { START, FINALIZED, TRANSFER } from "@constants";
 import CommonButton from "@components/Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
+import TransferIcon from "../../theme/assets/icon/Transfer";
+import UnlockIcon from "../../theme/assets/icon/Unlock";
 
 function TransferNFTModalMobile({
   owner,
@@ -48,6 +53,8 @@ function TransferNFTModalMobile({
   const [receiverAddress, setReceiverAddress] = useState("");
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
+  const iconWidth = useBreakpointValue(["40px", "50px"]);
+
   const transferNFTsHandler = async () => {
     if (!isValidAddressPolkadotAddress(receiverAddress)) {
       return toast.error(`Invalid address! Please check again!`);
@@ -56,6 +63,7 @@ function TransferNFTModalMobile({
     if (owner !== currentAccount?.address) {
       return toast.error("You are not the owner of this NFT");
     }
+
     if (nftContractAddress) {
       dispatch(setTxStatus({ type: TRANSFER, step: START }));
 
@@ -107,15 +115,31 @@ function TransferNFTModalMobile({
 
   return (
     <>
-      <Button
-        h="30px"
-        p="4px"
-        fontSize="12px"
-        variant="outline"
-        onClick={!actionType ? onOpen : () => {}}
+      <Tooltip
+        hasArrow
+        bg="#333"
+        color="#fff"
+        borderRadius="0"
+        label="Transfer NFT"
       >
-        transfer
-      </Button>
+        <span
+          onClick={
+            isDisabled || actionType
+              ? () => toast.error("This item is currently for sale!")
+              : onOpen
+          }
+          style={{
+            width: iconWidth,
+            height: iconWidth,
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            border: "2px solid #333333",
+          }}
+        >
+          <TransferIcon width={["20px", "25px"]} height={["20px", "25px"]} />
+        </span>
+      </Tooltip>
 
       <Modal isCentered onClose={onClose} size="xs" isOpen={isOpen}>
         <ModalOverlay

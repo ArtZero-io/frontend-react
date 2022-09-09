@@ -1,5 +1,4 @@
 import {
-  Box,
   Flex,
   Grid,
   GridItem,
@@ -12,7 +11,6 @@ import {
   HStack,
   Square,
   Stack,
-  Progress,
   Skeleton,
   TagLabel,
   TagRightIcon,
@@ -20,14 +18,13 @@ import {
   NumberInputField,
   InputRightElement,
   useBreakpointValue,
-  Icon,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { Link as ReactRouterLink } from "react-router-dom";
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import profile_calls from "@utils/blockchain/profile_calls";
 import staking_calls from "@utils/blockchain/staking_calls";
@@ -40,11 +37,7 @@ import marketplace from "@utils/blockchain/marketplace";
 import { useSubstrateState } from "@utils/substrate";
 import { ContractPromise } from "@polkadot/api-contract";
 import { getCachedImageShort, truncateStr } from "@utils";
-import {
-  convertStringToPrice,
-  createLevelAttribute,
-  formatNumDynamicDecimal,
-} from "@utils";
+import { convertStringToPrice, formatNumDynamicDecimal } from "@utils";
 
 import { formMode } from "@constants";
 
@@ -57,12 +50,15 @@ import {
   fetchMyTradingFee,
 } from "@pages/account/stakes";
 import { SCROLLBAR } from "@constants";
-import { AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { REMOVE_BID, UNLIST_TOKEN, LIST_TOKEN } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
- import { listToken, unlistToken, removeBid } from "@pages/token";
+import { listToken, unlistToken, removeBid } from "@pages/token";
+import UnlockIcon from "@theme/assets/icon/Unlock";
+import LockIcon from "@theme/assets/icon/Lock";
+import PropCard from "@components/Card/PropCard";
+import LevelCard from "@components/Card/LevelCard";
 
 function MyNFTTabInfo(props) {
   const {
@@ -284,7 +280,7 @@ function MyNFTTabInfo(props) {
     fetchTradeFee();
   }, [currentAccount]);
 
-  const iconBorderSize = useBreakpointValue({ base: "6px", "2xl": "10px" });
+  const iconWidth = useBreakpointValue(["40px", "50px"]);
 
   return (
     <>
@@ -303,27 +299,13 @@ function MyNFTTabInfo(props) {
 
         <Stack alignItems="flex-start" w="full">
           <HStack w="full">
-            <Heading
-              color="#fff"
-              size="h4"
-              fontSize={{ base: "1rem", "2xl": "2rem" }}
-            >
+            <Heading color="#fff" size="h4" fontSize="32px">
               {nftName}
             </Heading>
 
             <Spacer />
 
-            <HStack
-            // pos="absolute"
-            // top={{
-            //   base: `20px`,
-            //   xl: `20px`,
-            // }}
-            // right={{
-            //   base: `20px`,
-            //   xl: `20px`,
-            // }}
-            >
+            <HStack>
               <Spacer />
               {!is_locked &&
                 showOnChainMetadata &&
@@ -332,20 +314,22 @@ function MyNFTTabInfo(props) {
                     hasArrow
                     bg="#333"
                     color="#fff"
+                    borderRadius="0"
                     label="Unlocked on-chain metadata"
                   >
                     <span
                       style={{
-                        padding: iconBorderSize,
-                        display: "flex",
+                        width: iconWidth,
+                        height: iconWidth,
+                        display: "inline-flex",
                         alignItems: "center",
+                        justifyContent: "center",
                         border: "2px solid #333333",
                       }}
                     >
-                      <Icon
-                        width={{ base: "14px", "2xl": "20px" }}
-                        height={{ base: "14px", "2xl": "20px" }}
-                        as={AiOutlineUnlock}
+                      <UnlockIcon
+                        width={["20px", "25px"]}
+                        height={["20px", "25px"]}
                       />
                     </span>
                   </Tooltip>
@@ -356,20 +340,22 @@ function MyNFTTabInfo(props) {
                   hasArrow
                   bg="#333"
                   color="#fff"
+                  borderRadius="0"
                   label="Off-chain metadata"
                 >
                   <span
                     style={{
-                      padding: iconBorderSize,
-                      display: "flex",
+                      width: iconWidth,
+                      height: iconWidth,
+                      display: "inline-flex",
                       alignItems: "center",
+                      justifyContent: "center",
                       border: "2px solid #333333",
                     }}
                   >
-                    <Icon
-                      width={{ base: "14px", "2xl": "20px" }}
-                      height={{ base: "14px", "2xl": "20px" }}
-                      as={AiOutlineUnlock}
+                    <UnlockIcon
+                      width={["20px", "25px"]}
+                      height={["20px", "25px"]}
                     />
                   </span>
                 </Tooltip>
@@ -380,27 +366,32 @@ function MyNFTTabInfo(props) {
                   hasArrow
                   bg="#333"
                   color="#fff"
+                  borderRadius="0"
                   label="Locked on-chain metadata"
                 >
                   <span
                     style={{
-                      padding: iconBorderSize,
-                      display: "flex",
+                      width: iconWidth,
+                      height: iconWidth,
+                      display: "inline-flex",
                       alignItems: "center",
+                      justifyContent: "center",
                       border: "2px solid #333333",
                     }}
                   >
-                    <Icon
-                      width={{ base: "14px", "2xl": "20px" }}
-                      height={{ base: "14px", "2xl": "20px" }}
-                      as={AiOutlineLock}
+                    <LockIcon
+                      width={["20px", "25px"]}
+                      height={["20px", "25px"]}
                     />
                   </span>
                 </Tooltip>
               )}
 
               {!is_locked && owner === currentAccount?.address && (
-                <LockNFTModal {...props} isDisabled={actionType} />
+                <LockNFTModal
+                  {...props}
+                  isDisabled={is_for_sale || actionType}
+                />
               )}
 
               {!is_locked &&
@@ -410,38 +401,34 @@ function MyNFTTabInfo(props) {
                     {...props}
                     mode={formMode.EDIT}
                     collectionOwner={owner}
-                    isDisabled={actionType}
+                    isDisabled={is_for_sale || actionType}
                   />
                 )}
 
               {owner === currentAccount?.address && (
-                <TransferNFTModal {...props} isDisabled={actionType} />
+                <TransferNFTModal
+                  {...props}
+                  isDisabled={is_for_sale || actionType}
+                />
               )}
             </HStack>
           </HStack>
 
           <Stack>
-            <Heading
+            <Text
               isTruncated
-              maxW={{ base: "500px", "2xl": "610px" }}
-              size="h6"
-              pt={{ base: "6px", "2xl": "12px" }}
-              fontSize={{ base: "0.8rem", "2xl": "1rem" }}
+              fontSize="lg"
               color="brand.grayLight"
               lineHeight="1.35"
+              maxW={{ base: "500px", "2xl": "610px" }}
             >
               {description}
-            </Heading>
+            </Text>
           </Stack>
 
           <Stack>
             <Skeleton as="span" isLoaded={ownerName} minW="150px">
-              <Text
-                color="#fff"
-                maxW="max-content"
-                pt={{ base: "6px", "2xl": "12px" }}
-                fontSize={{ base: "14px", "2xl": "16px" }}
-              >
+              <Text color="#fff" maxW="max-content">
                 Owned by{" "}
                 <Link
                   as={ReactRouterLink}
@@ -474,7 +461,6 @@ function MyNFTTabInfo(props) {
                   w="full"
                   pr={"22px"}
                   id="grid-attrs"
-                  boxShadow="lg"
                   overflowY="auto"
                   maxH={{ base: "170px", "2xl": "245px" }}
                   sx={SCROLLBAR}
@@ -486,47 +472,11 @@ function MyNFTTabInfo(props) {
                         .filter(
                           (i) => !JSON.stringify(Object.values(i)).includes("|")
                         )
-                        .map((item, idx) => {
-                          return (
-                            <Fragment key={idx}>
-                              <GridItem w="100%" h="100%">
-                                <Box
-                                  w="full"
-                                  textAlign="left"
-                                  alignItems="end"
-                                  bg="brand.semiBlack"
-                                  px={{ base: "0.5rem", "2xl": "1rem" }}
-                                  py={3}
-                                >
-                                  <Flex w="full">
-                                    <Box color="brand.grayLight" w="full">
-                                      <Text>{Object.keys(item)[0]}</Text>
-                                      <Heading
-                                        textAlign="right"
-                                        size="h6"
-                                        mt={1}
-                                        // minH='2.5rem'
-                                        isTruncated
-                                        maxW={"10rem"}
-                                        fontSize={{
-                                          base: "0.875rem",
-                                          "2xl": "1rem",
-                                        }}
-                                      ></Heading>
-                                    </Box>
-                                    <Spacer />
-                                  </Flex>
-                                  <Flex w="full" color="#7AE7FF">
-                                    <Spacer />
-                                    <Text fontStyle="italic" isTruncated pr={1}>
-                                      {Object.values(item)[0]}
-                                    </Text>
-                                  </Flex>
-                                </Box>
-                              </GridItem>
-                            </Fragment>
-                          );
-                        })
+                        .map((item, idx) => (
+                          <GridItem key={idx} w="100%" h="100%">
+                            <PropCard item={item} />
+                          </GridItem>
+                        ))
                     : ""}
 
                   {attrsList?.length
@@ -534,67 +484,11 @@ function MyNFTTabInfo(props) {
                         .filter((i) =>
                           JSON.stringify(Object.values(i)).includes("|")
                         )
-                        .map((item, idx) => {
-                          return (
-                            <React.Fragment key={idx}>
-                              <Box
-                                w="full"
-                                textAlign="left"
-                                alignItems="end"
-                                bg="brand.semiBlack"
-                                px={{ base: "0.5rem", "2xl": "1rem" }}
-                                py={2}
-                                // my={2}
-                                minW="30%"
-                                maxH={"4.625rem"}
-                              >
-                                <Flex w="full" my={2}>
-                                  <Heading
-                                    size="h6"
-                                    mt={1}
-                                    color="#fff"
-                                    fontSize={{
-                                      base: "1rem",
-                                      "2xl": "1.125rem",
-                                    }}
-                                  >
-                                    {Object.keys(item)[0]}
-                                  </Heading>
-
-                                  <Spacer />
-                                  <Text color="#fff">
-                                    {
-                                      createLevelAttribute(
-                                        Object.values(item)[0]
-                                      ).level
-                                    }{" "}
-                                    of{" "}
-                                    {
-                                      createLevelAttribute(
-                                        Object.values(item)[0]
-                                      ).levelMax
-                                    }
-                                  </Text>
-                                </Flex>
-
-                                <Progress
-                                  colorScheme="telegram"
-                                  size="sm"
-                                  value={Number(
-                                    (createLevelAttribute(
-                                      Object.values(item)[0]
-                                    ).level *
-                                      100) /
-                                      createLevelAttribute(
-                                        Object.values(item)[0]
-                                      ).levelMax
-                                  )}
-                                  height="6px"
-                                />
-                              </Box>
-                            </React.Fragment>
-                          );
-                        })
+                        .map((item, idx) => (
+                          <GridItem w="100%" h="100%" key={idx}>
+                            <LevelCard item={item} />
+                          </GridItem>
+                        ))
                     : null}
                 </Grid>
               </>
@@ -642,7 +536,7 @@ function MyNFTTabInfo(props) {
               </Flex>
             )}
 
-            {filterSelected !== 2 &&
+            {filterSelected !== "BIDS" &&
               owner === marketplace_contract.CONTRACT_ADDRESS &&
               is_for_sale && (
                 <Flex
@@ -709,7 +603,7 @@ function MyNFTTabInfo(props) {
           </Stack>
         </Stack>
       </HStack>
-      {filterSelected === 0 ? (
+      {filterSelected === "COLLECTED" ? (
         <HStack
           justify="space-between"
           color="brand.blue"
@@ -738,7 +632,7 @@ function MyNFTTabInfo(props) {
         </HStack>
       ) : null}
 
-      {filterSelected === 1 ? (
+      {filterSelected === "LISTING" ? (
         <HStack
           justify="space-between"
           color="brand.blue"

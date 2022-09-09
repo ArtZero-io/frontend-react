@@ -136,7 +136,7 @@ function WalletNotConnected(props) {
                   {!wallet.installed && (
                     <Link
                       href={wallet[`installUrl${browserName}`]}
-                      isexternal="true"
+                      isExternal="true"
                       fontSize="14px"
                       color="#fff"
                       pr="2px"

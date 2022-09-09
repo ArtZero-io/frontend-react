@@ -20,7 +20,7 @@ import useTxStatus from "@hooks/useTxStatus";
 export default function ResponsivelySizedModal({
   onClose,
   isOpen,
-  filterSelected = 1,
+  filterSelected = 'LISTING',
   ...rest
 }) {
   const tabHeight = useBreakpointValue({
@@ -44,7 +44,7 @@ export default function ResponsivelySizedModal({
     {
       label: "offers",
       content: <MyNFTTabOffers {...rest} />,
-      isDisabled: filterSelected === 0 || actionType || !rest?.is_for_sale,
+      isDisabled: filterSelected === 'COLLECTED' || actionType || !rest?.is_for_sale,
     },
   ];
 

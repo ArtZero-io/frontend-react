@@ -28,7 +28,7 @@ export function shortenNumber(number) {
 function nFormatter(num, digits) {
   var si = [
     { value: 1, symbol: "" },
-    { value: 1e3, symbol: "k" },
+    { value: 1e3, symbol: "K" },
     { value: 1e6, symbol: "M" },
     { value: 1e9, symbol: "G" },
     { value: 1e12, symbol: "T" },
@@ -232,6 +232,8 @@ export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
 };
 
 export const createLevelAttribute = (levelString) => {
+  if (!levelString) return { level: "", levelMax: "" };
+
   const location = Number(levelString.indexOf("|"));
   const level = levelString.slice(0, location);
   const levelMax = levelString.slice(location + 1, levelString.length);
@@ -363,3 +365,13 @@ export const isPhaseTimeOverlap = (phaseArr) => {
 
   return false;
 };
+
+export default function isNotEmptyStr(data) {
+  if (!data) return false;
+
+  if (typeof data === "string") {
+    return data.trim().length > 0;
+  }
+
+  return false;
+}

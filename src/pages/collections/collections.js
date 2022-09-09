@@ -236,6 +236,7 @@ const CollectionsPage = () => {
                     />
                     <Spacer my={{ base: "3", "2xl": "auto" }} />
                     <Dropdown
+                      minW="195px"
                       options={options}
                       selectedItem={selectedItem}
                       setSelectedItem={setSelectedItem}

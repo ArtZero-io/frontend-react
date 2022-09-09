@@ -140,7 +140,7 @@ const UpdatePhasesModal = React.memo(function ({
       onClose={onClose}
       isCentered
       isOpen={isOpen}
-      size={"6xl"}
+      size={["xs", "6xl"]}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -155,11 +155,11 @@ const UpdatePhasesModal = React.memo(function ({
         borderRadius="0"
       >
         <ModalCloseButton
-          position="absolute"
-          top="-8"
-          right="-8"
           borderWidth={2}
           borderRadius="0"
+          position="absolute"
+          top={["0", "-8", "-8"]}
+          right={["0", "-8", "-8"]}
           onClick={() => rest?.step === FINALIZED && rest?.onEndClick()}
         />
         <ModalHeader textAlign="center">
@@ -168,7 +168,7 @@ const UpdatePhasesModal = React.memo(function ({
           </Heading>
         </ModalHeader>
 
-        <ModalBody shadow="lg" overflowY="auto" sx={SCROLLBAR}>
+        <ModalBody overflowY="auto" sx={SCROLLBAR}>
           {initialValues && (
             <Formik
               initialValues={initialValues}

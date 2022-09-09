@@ -8,8 +8,17 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 
-function DropdownMobile({ options, selectedItem, setSelectedItem, ...rest }) {
+function DropdownMobile({
+  options,
+  selectedItem,
+  setSelectedItem,
+  minW,
+  ...rest
+}) {
   const onClickHandler = (item) => setSelectedItem(item);
+
+  console.log("options", options);
+  console.log("selectedItem", selectedItem);
 
   return (
     <Box color="brand.blue" height="100%" {...rest}>
@@ -28,17 +37,22 @@ function DropdownMobile({ options, selectedItem, setSelectedItem, ...rest }) {
           {options[selectedItem]}
         </MenuButton>
 
-        <MenuList zIndex={10} bg="brand.grayDark" borderRadius="0" minW="325px">
-          {options?.map((_, idx) => {
+        <MenuList
+          zIndex="dropdown"
+          bg="brand.grayDark"
+          borderRadius="0"
+          minW={minW}
+        >
+          {Object.entries(options)?.map(([k, v]) => {
             return (
               <MenuItem
-                key={idx}
+                key={k}
                 color="#fff"
-                onClick={() => onClickHandler(idx)}
-                display={idx === selectedItem ? "none" : ""}
+                onClick={() => onClickHandler(k)}
+                display={k === selectedItem ? "none" : ""}
                 _hover={{ bg: "brand.grayLight", color: "white" }}
               >
-                {options[idx]}
+                {v}
               </MenuItem>
             );
           })}

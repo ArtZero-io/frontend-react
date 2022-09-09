@@ -7,6 +7,7 @@ import {
   Text,
   HStack,
   Stack,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
 
@@ -34,13 +35,14 @@ import CommonButton from "@components/Button/CommonButton";
 import { SCROLLBAR } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
+import DropdownMobile from "@components/Dropdown/DropdownMobile";
 
 const MyStakesPage = () => {
   const { currentAccount, api } = useSubstrateState();
 
   const [loading, setLoading] = useState(false);
   const [statsInfo, setStatsInfo] = useState(null);
-  const [activeTab, setActiveTab] = useState(tabList.NOT_STAKED);
+  const [activeTab, setActiveTab] = useState("NOT_STAKED");
   const [PMPCollectionDetail, setPMPCollectionDetail] = useState(null);
   const [platformTradingFee, setPlatformTradingFee] = useState(0);
   const [isStakingContractLocked, setIsStakingContractLocked] = useState(false);
@@ -94,8 +96,10 @@ const MyStakesPage = () => {
       const PMPCollectionDetail = await getPMPCollectionDetail();
 
       PMPCollectionDetail.listNFT = [];
+      console.log("xx activeTab", activeTab);
+      console.log("xx PENDING_UNSTAKE", PENDING_UNSTAKE);
 
-      if (activeTab === tabList.NOT_STAKED) {
+      if (activeTab === "NOT_STAKED") {
         const myUnstakePMP = await getMyUnstakePMP({
           owner: currentAccount.address,
           collection_address: artzero_nft.CONTRACT_ADDRESS,
@@ -103,17 +107,18 @@ const MyStakesPage = () => {
         PMPCollectionDetail.listNFT = myUnstakePMP;
       }
 
-      if (activeTab === tabList.PENDING_UNSTAKE) {
+      if (activeTab === 'PENDING_UNSTAKE') {
         const myPendingPMP = await getMyPendingPMP({
           api,
           pendingCount: pendingCount,
           currentAccount,
         });
+        console.log("xx myPendingPMP", myPendingPMP);
 
         PMPCollectionDetail.listNFT = myPendingPMP;
       }
 
-      if (activeTab === tabList.STAKED) {
+      if (activeTab === 'STAKED') {
         const myStakedPMP = await getMyStakedPMP({
           api,
           stakedCount: stakedCount,
@@ -137,16 +142,18 @@ const MyStakesPage = () => {
   );
 
   const handleForceUpdate = async () => {
-    actionType === STAKE && setActiveTab(tabList.STAKED);
-    actionType === REQUEST_UNSTAKE && setActiveTab(tabList.PENDING_UNSTAKE);
-    actionType === CANCEL_REQUEST_UNSTAKE && setActiveTab(tabList.STAKED);
-    actionType === UNSTAKE && setActiveTab(tabList.NOT_STAKED);
+    actionType === STAKE && setActiveTab(STAKED);
+    actionType === REQUEST_UNSTAKE && setActiveTab(PENDING_UNSTAKE);
+    actionType === CANCEL_REQUEST_UNSTAKE && setActiveTab(STAKED);
+    actionType === UNSTAKE && setActiveTab(NOT_STAKED);
   };
 
   useEffect(() => {
     fetchCollectionDetail();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, currentAccount]);
+
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   return (
     <CommonContainer>
@@ -156,39 +163,77 @@ const MyStakesPage = () => {
         mb={["20px", "48px"]}
         direction={{ base: "column", xl: "row" }}
       >
-        <Heading fontSize={["3xl-mid", "5xl", "5xl"]} minW="100px">
+        <Heading fontSize={["3xl-mid", "5xl"]} minW="100px">
           my stakes
         </Heading>
 
         <Spacer />
 
-        <HStack
-          sx={SCROLLBAR}
-          overflowX="scroll"
-          maxW={{ base: "320px", md: "600px" }}
-        >
-          {Object.keys(tabList).map((item) => (
-            <CommonButton
-              // minW="140"
-              key={item}
-              variant="outline"
-              text={item.replace("_", " ")}
-              isActive={item === activeTab}
-              onClick={() => setActiveTab(item)}
-            />
-          ))}
+        {isBigScreen && (
+          <HStack
+            sx={SCROLLBAR}
+            overflowX="scroll"
+            maxW={{ base: "320px", md: "600px" }}
+          >
+            {Object.keys(tabList).map((item) => (
+              <CommonButton
+                // minW="140"
+                key={item}
+                variant="outline"
+                text={item.replace("_", " ")}
+                isActive={item === activeTab}
+                onClick={() => setActiveTab(item)}
+              />
+            ))}
 
+            <IconButton
+              mx={1}
+              size="icon"
+              variant="iconSolid"
+              aria-label="refresh"
+              icon={<RefreshIcon />}
+              onClick={() => fetchCollectionDetail()}
+            />
+          </HStack>
+        )}
+      </Flex>
+
+      {!isBigScreen && (
+        <HStack
+          mb="20px"
+          w="full"
+          pb={[0, "8px"]}
+          justifyContent="space-between"
+        >
           <IconButton
-            mx={1}
+            mr="2px"
             size="icon"
             variant="iconSolid"
             aria-label="refresh"
-            icon={<RefreshIcon />}
             onClick={() => fetchCollectionDetail()}
+            icon={<RefreshIcon />}
+            _hover={{ color: "black", bg: "#7ae7ff" }}
           />
+          <Spacer display={["none", "flex"]} />
+          (
+          <DropdownMobile
+            minW="256px"
+            width="full"
+            my="20px"
+            border="1px solid #343333"
+            fontSize="15px"
+            fontFamily="Evogria, san serif"
+            options={tabList}
+            selectedItem={activeTab}
+            setSelectedItem={(i) => {
+              console.log("i", i);
+              console.log("filterSelected", activeTab);
+              setActiveTab(i);
+            }}
+          />
+          )
         </HStack>
-      </Flex>
-
+      )}
       <Text textAlign="left" color="#fff">
         Praying Mantis Predators NFT Stats:
       </Text>
@@ -485,8 +530,27 @@ export const getPMPCollectionDetail = async () => {
   return ret;
 };
 
+const NOT_STAKED = "NOT STAKED";
+const PENDING_UNSTAKE = "PENDING UNSTAKE";
+const STAKED = "STAKED";
+
 export const tabList = {
-  NOT_STAKED: "NOT_STAKED",
-  PENDING_UNSTAKE: "PENDING_UNSTAKE",
-  STAKED: "STAKED",
+  NOT_STAKED,
+  PENDING_UNSTAKE,
+  STAKED,
 };
+
+// export const tabList = [
+//   {
+//     id: "NOT_STAKED",
+//     title: "not staked",
+//   },
+//   {
+//     id: "PENDING_UNSTAKE",
+//     title: "pending unstake",
+//   },
+//   {
+//     id: "STAKED",
+//     title: "staked",
+//   },
+// ];

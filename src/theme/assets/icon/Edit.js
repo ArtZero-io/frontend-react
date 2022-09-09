@@ -1,7 +1,10 @@
 import { Icon } from "@chakra-ui/react";
 
-export default function EditIcon({ color = "#7ae7ff",width="28px"
-,height="28px"  }) {
+export default function EditIcon({
+  color = "#7ae7ff",
+  width = "28px",
+  height = "28px",
+}) {
   return (
     <Icon
       className="edit-icon"
