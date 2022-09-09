@@ -186,7 +186,7 @@ const Main = () => {
             toastOptions={{
               style: {
                 borderRadius: 0,
-                padding: "10px",
+                padding: "8px",
                 color: "#000",
                 background: "#7AE7FF",
               },

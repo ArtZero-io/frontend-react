@@ -61,6 +61,10 @@ export const ADD_WHITELIST = "addWhitelist";
 export const UPDATE_PROFILE = "updateProfile";
 export const CLAIM_REWARDS = "claimRewards";
 
+// ADMIN ACTIONS
+export const WITHDRAW_COLLECTION = "withdrawCollection";
+export const WITHDRAW_LAUNCHPAD = "withdrawLaunchpad";
+export const WITHDRAW_MARKETPLACE = "withdrawMarketplace";
 
 // OTHERS
 export const NUMBER_PER_PAGE = 6;

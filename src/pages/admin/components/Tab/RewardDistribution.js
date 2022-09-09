@@ -18,15 +18,37 @@ import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
 import Loader from "@components/Loader/CommonLoader";
 import staking_calls from "@utils/blockchain/staking_calls";
-// import staking from "@utils/blockchain/staking";
-import { useSelector } from "react-redux";
+
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { delay, truncateStr } from "@utils";
 import toast from "react-hot-toast";
-// import BN from "bn.js";
+import { fetchUserBalance } from "../../../launchpad/component/Form/AddNewProject";
+
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+import launchpad_manager from "@utils/blockchain/launchpad-manager";
+import collection_manager from "@utils/blockchain/collection-manager";
+import { useMemo } from "react";
+import { formatNumDynamicDecimal } from "../../../../utils";
+import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+import CommonButton from "@components/Button/CommonButton";
+import useTxStatus from "@hooks/useTxStatus";
+import { setTxStatus } from "@store/actions/txStatus";
+import {
+  WITHDRAW_COLLECTION,
+  WITHDRAW_LAUNCHPAD,
+  WITHDRAW_MARKETPLACE,
+  START,
+} from "@constants";
+import { withdrawCollectionContract } from "../../../../utils/blockchain/collection-manager-calls";
+import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
+import { withdrawLaunchpadContract } from "../../../../utils/blockchain/launchpad-contract-calls";
+import { withdrawMarketplaceContract } from "../../../../utils/blockchain/marketplace_contract_calls";
+import { useCallback } from "react";
+import useForceUpdate from "@hooks/useForceUpdate";
 
 function RewardDistribution() {
-  const { currentAccount } = useSubstrateState();
+  const { api, currentAccount } = useSubstrateState();
   const { activeAddress } = useSelector((s) => s.account);
 
   const [addAmount, setAddAmount] = useState(0);
@@ -59,6 +81,7 @@ function RewardDistribution() {
     setAdminAddress(admin_address);
     setIsRewardStarted(is_reward_started);
   };
+
   const getStakers = async () => {
     let staker_count = await staking_calls.getTotalCountOfStakeholders(
       currentAccount
@@ -70,7 +93,7 @@ function RewardDistribution() {
         currentAccount,
         i + 1
       );
-      console.log(staker);
+      // console.log(staker);
       let staker_info = {
         address: staker,
         amount: await staking_calls.getTotalStakedByAccount(
@@ -83,6 +106,7 @@ function RewardDistribution() {
     }
     setStakers(stakers);
   };
+
   const onAddReward = async () => {
     await staking_calls.addReward(currentAccount, addAmount);
     await delay(3000);
@@ -97,6 +121,7 @@ function RewardDistribution() {
     await delay(3000);
     await onRefresh();
   };
+
   const setRewardDistribution = async (status) => {
     if (activeAddress != adminAddress) {
       return toast.error("Only Admin allowed");
@@ -106,6 +131,7 @@ function RewardDistribution() {
     await delay(3000);
     await onRefresh();
   };
+
   const enableClaim = async (staker) => {
     if (activeAddress != adminAddress) {
       return toast.error("Only Admin allowed");
@@ -120,6 +146,154 @@ function RewardDistribution() {
     getStakers();
   }, [currentAccount]);
 
+  const dispatch = useDispatch();
+  const [contractBalance, setContractBalance] = useState({});
+  const { tokenIDArray, actionType, ...rest } = useTxStatus();
+
+  // eslint-disable-next-line no-unused-vars
+  const { loading: loadingForceUpdate } = useForceUpdate(
+    [WITHDRAW_COLLECTION, WITHDRAW_LAUNCHPAD, WITHDRAW_MARKETPLACE],
+    () => fetchContractBalance()
+  );
+
+  const fetchContractBalance = useCallback(async () => {
+    try {
+      const marketBalance = await marketplace_contract_calls.getCurrentProfit(
+        currentAccount
+      );
+
+      const { balance: collectionBalance } = await fetchUserBalance({
+        currentAccount,
+        api,
+        address: collection_manager?.CONTRACT_ADDRESS,
+      });
+
+      const { balance: launchpadBalance } = await fetchUserBalance({
+        currentAccount,
+        api,
+        address: launchpad_manager?.CONTRACT_ADDRESS,
+      });
+
+      setContractBalance({
+        marketplace: marketBalance,
+        collection: collectionBalance,
+        launchpad: launchpadBalance,
+      });
+    } catch (error) {
+      console.log("x_x fetchContractBalance error", error);
+    }
+  }, [api, currentAccount]);
+
+  useEffect(() => {
+    fetchContractBalance();
+  }, [fetchContractBalance]);
+
+  const formatContractBalance = useMemo(() => {
+    const balance = Object.entries(contractBalance)?.map(([k, v]) => {
+      return {
+        name: k.toUpperCase(),
+        balance: v,
+        percent: "30%",
+        net: v * 0.3,
+      };
+    });
+
+    const total = {
+      name: "TOTAL",
+      balance: balance.reduce((a, b) => a + b.balance, 0),
+      percent: "",
+      net: balance.reduce((a, b) => a + b.net, 0),
+    };
+
+    return [...balance, total];
+  }, [contractBalance]);
+
+  const handleWithdrawBalance = async (item) => {
+    try {
+      // claim marketplace contract
+      if (item.name === "MARKETPLACE") {
+        const marketplaceAdminAddress = await marketplace_contract_calls.owner(
+          currentAccount
+        );
+
+        console.log("marketplaceAdminAddress", marketplaceAdminAddress);
+        if (currentAccount.address !== marketplaceAdminAddress) {
+          return toast.error(
+            `Only admin (${truncateStr(marketplaceAdminAddress)}) is allowed!`
+          );
+        }
+        dispatch(setTxStatus({ type: WITHDRAW_MARKETPLACE, step: START }));
+
+        toast.success(
+          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} AZERO!`
+        );
+
+        await withdrawMarketplaceContract(
+          currentAccount,
+          item.balance,
+          dispatch,
+          WITHDRAW_MARKETPLACE,
+          api
+        );
+      }
+
+      // claim collection contract
+      if (item.name === "COLLECTION") {
+        const collectionAdminAddress =
+          await collection_manager_calls.getAdminAddress(currentAccount);
+
+        if (currentAccount.address !== collectionAdminAddress) {
+          return toast.error(
+            `Only admin (${truncateStr(collectionAdminAddress)}) is allowed!`
+          );
+        }
+
+        dispatch(setTxStatus({ type: WITHDRAW_COLLECTION, step: START }));
+
+        toast.success(
+          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} AZERO!`
+        );
+
+        await withdrawCollectionContract(
+          currentAccount,
+          item.balance,
+          dispatch,
+          WITHDRAW_COLLECTION,
+          api
+        );
+      }
+
+      // claim launchpad contract
+      if (item.name === "LAUNCHPAD") {
+        const launchpadAdminAddress =
+          await launchpad_contract_calls.getAdminAddress(currentAccount);
+
+        console.log("launchpadAdminAddress", launchpadAdminAddress);
+        if (currentAccount.address !== launchpadAdminAddress) {
+          return toast.error(
+            `Only admin (${truncateStr(launchpadAdminAddress)}) is allowed!`
+          );
+        }
+
+        dispatch(setTxStatus({ type: WITHDRAW_LAUNCHPAD, step: START }));
+
+        toast.success(
+          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} AZERO!`
+        );
+
+        await withdrawLaunchpadContract(
+          currentAccount,
+          item.balance,
+          dispatch,
+          WITHDRAW_LAUNCHPAD,
+          api
+        );
+      }
+    } catch (error) {
+      console.log("x_x handleWithdrawBalance error", error);
+    }
+  };
+
   return (
     <>
       {!currentAccount?.address ? (
@@ -131,6 +305,54 @@ function RewardDistribution() {
             px={{ base: "6", "2xl": "8" }}
             py={{ base: "8", "2xl": "4" }}
           >
+            <Box maxW="6xl-mid" fontSize="lg" pb="30px">
+              <Heading textAlign="left" size="h5">
+                contracts balance
+              </Heading>
+              <TableContainer>
+                <Table variant="striped" colorScheme="blackAlpha">
+                  <Thead fontFamily="Evogria" fontSize="sm">
+                    <Tr>
+                      <Th>Contract Name</Th>
+                      <Th>Balance</Th>
+                      <Th>Percent</Th>
+                      <Th>Net Profit</Th>
+                      <Th>Claim</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {formatContractBalance.map((item) => (
+                      <Tr>
+                        <Td>{item.name.toLocaleUpperCase()}</Td>
+                        <Td>
+                          {formatNumDynamicDecimal(item.balance, 2)} AZERO
+                        </Td>
+                        <Td>{item.percent}</Td>
+                        <Td>{formatNumDynamicDecimal(item.net, 2)} AZERO</Td>
+
+                        <Td>
+                          {console.log("actionType", actionType?.toUpperCase())}
+                          {console.log("item.name", item.name)}
+                          {item.name !== "TOTAL" && (
+                            <CommonButton
+                              h="40px"
+                              {...rest}
+                              text="claim balance"
+                              isDisabled={
+                                actionType &&
+                                !actionType?.toUpperCase().includes(item.name)
+                              }
+                              onClick={() => handleWithdrawBalance(item)}
+                            />
+                          )}
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            </Box>
+
             <Box maxW="6xl-mid" fontSize="lg">
               <Stack
                 direction={{ base: "column", xl: "row" }}

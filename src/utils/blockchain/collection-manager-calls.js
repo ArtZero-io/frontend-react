@@ -237,11 +237,16 @@ async function getAdminAddress(caller_account) {
   const gasLimit = -1;
   const azero_value = 0;
   //console.log(contract);
+  console.log('CCC contract', contract)
+  console.log('CCC caller_account', caller_account)
 
   const { result, output } = await contract.query.getAdminAddress(address, {
     value: azero_value,
     gasLimit,
   });
+
+  console.log('CCC output.toHuman()', output.toHuman())
+
   if (result.isOk) {
     return output.toHuman();
   }
@@ -539,3 +544,56 @@ const collection_manager_calls = {
 };
 
 export default collection_manager_calls;
+
+export const withdrawCollectionContract = async (
+  caller_account,
+  amount,
+  dispatch,
+  txType,
+  api
+) => {
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  if (parseInt(amount) <= 0) {
+    toast.error(`Amount can not be less than 0!`);
+    return;
+  }
+
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+
+  const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
+    .mul(new BN(10 ** 6))
+    .toString();
+
+  const txNotSign = contract.tx.withdrawFee(
+    { gasLimit, value: azero_value },
+    amountFormatted
+  );
+
+  await txNotSign
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
+  return unsubscribe;
+};
