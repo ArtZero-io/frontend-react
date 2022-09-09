@@ -43,13 +43,13 @@ const MyNFTsPage = () => {
   const [myCollections, setMyCollections] = useState(null);
 
   const handleForceUpdate = async () => {
-    if (actionType === LIST_TOKEN) return setFilterSelected(tabList.LISTING);
+    if (actionType === LIST_TOKEN) return setFilterSelected('LISTING');
 
     if (actionType === UNLIST_TOKEN) {
-      return setFilterSelected(tabList.COLLECTED);
+      return setFilterSelected('COLLECTED');
     }
 
-    setFilterSelected(tabList.COLLECTED);
+    setFilterSelected('COLLECTED');
   };
 
   function onClickHandler(v) {

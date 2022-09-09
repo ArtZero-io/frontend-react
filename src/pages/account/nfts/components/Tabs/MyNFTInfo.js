@@ -1,5 +1,4 @@
 import {
-  Box,
   Flex,
   Grid,
   GridItem,
@@ -12,7 +11,6 @@ import {
   HStack,
   Square,
   Stack,
-  Progress,
   Skeleton,
   TagLabel,
   TagRightIcon,
@@ -26,7 +24,7 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { Link as ReactRouterLink } from "react-router-dom";
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import profile_calls from "@utils/blockchain/profile_calls";
 import staking_calls from "@utils/blockchain/staking_calls";
@@ -39,11 +37,7 @@ import marketplace from "@utils/blockchain/marketplace";
 import { useSubstrateState } from "@utils/substrate";
 import { ContractPromise } from "@polkadot/api-contract";
 import { getCachedImageShort, truncateStr } from "@utils";
-import {
-  convertStringToPrice,
-  createLevelAttribute,
-  formatNumDynamicDecimal,
-} from "@utils";
+import { convertStringToPrice, formatNumDynamicDecimal } from "@utils";
 
 import { formMode } from "@constants";
 
@@ -61,8 +55,10 @@ import CommonButton from "@components/Button/CommonButton";
 import { REMOVE_BID, UNLIST_TOKEN, LIST_TOKEN } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { listToken, unlistToken, removeBid } from "@pages/token";
-import UnlockIcon from "../../../../../theme/assets/icon/Unlock";
-import LockIcon from "../../../../../theme/assets/icon/Lock";
+import UnlockIcon from "@theme/assets/icon/Unlock";
+import LockIcon from "@theme/assets/icon/Lock";
+import PropCard from "@components/Card/PropCard";
+import LevelCard from "@components/Card/LevelCard";
 
 function MyNFTTabInfo(props) {
   const {
@@ -392,7 +388,10 @@ function MyNFTTabInfo(props) {
               )}
 
               {!is_locked && owner === currentAccount?.address && (
-                <LockNFTModal {...props} isDisabled={actionType} />
+                <LockNFTModal
+                  {...props}
+                  isDisabled={is_for_sale || actionType}
+                />
               )}
 
               {!is_locked &&
@@ -402,12 +401,15 @@ function MyNFTTabInfo(props) {
                     {...props}
                     mode={formMode.EDIT}
                     collectionOwner={owner}
-                    isDisabled={actionType}
+                    isDisabled={is_for_sale || actionType}
                   />
                 )}
 
               {owner === currentAccount?.address && (
-                <TransferNFTModal {...props} isDisabled={actionType} />
+                <TransferNFTModal
+                  {...props}
+                  isDisabled={is_for_sale || actionType}
+                />
               )}
             </HStack>
           </HStack>
@@ -426,11 +428,7 @@ function MyNFTTabInfo(props) {
 
           <Stack>
             <Skeleton as="span" isLoaded={ownerName} minW="150px">
-              <Text
-                color="#fff"
-                maxW="max-content"
-                // pt={{ base: "6px", "2xl": "12px" }}
-              >
+              <Text color="#fff" maxW="max-content">
                 Owned by{" "}
                 <Link
                   as={ReactRouterLink}
@@ -463,7 +461,6 @@ function MyNFTTabInfo(props) {
                   w="full"
                   pr={"22px"}
                   id="grid-attrs"
-                  boxShadow="lg"
                   overflowY="auto"
                   maxH={{ base: "170px", "2xl": "245px" }}
                   sx={SCROLLBAR}
@@ -477,30 +474,7 @@ function MyNFTTabInfo(props) {
                         )
                         .map((item, idx) => (
                           <GridItem key={idx} w="100%" h="100%">
-                            <Box
-                              w="full"
-                              px="10px"
-                              py="12px"
-                              textAlign="left"
-                              alignItems="end"
-                              bg="brand.semiBlack"
-                            >
-                              <Flex w="full" pb="15px">
-                                <Box color="brand.grayLight" w="full">
-                                  <Text isTruncated>
-                                    {Object.keys(item)[0]}
-                                  </Text>
-                                </Box>
-                                <Spacer />
-                              </Flex>
-
-                              <Flex w="full" color="#7AE7FF">
-                                <Spacer />
-                                <Text fontStyle="italic" isTruncated pr={1}>
-                                  {Object.values(item)[0]}
-                                </Text>
-                              </Flex>
-                            </Box>
+                            <PropCard item={item} />
                           </GridItem>
                         ))
                     : ""}
@@ -512,51 +486,7 @@ function MyNFTTabInfo(props) {
                         )
                         .map((item, idx) => (
                           <GridItem w="100%" h="100%" key={idx}>
-                            <Box
-                              w="full"
-                              px="10px"
-                              py="12px"
-                              textAlign="left"
-                              alignItems="end"
-                              bg="brand.semiBlack"
-                            >
-                              <Flex w="full" pb="7px">
-                                <Box color="brand.grayLight" w="full">
-                                  <Text isTruncated>
-                                    {Object.keys(item)[0]}
-                                  </Text>
-                                </Box>
-                                <Spacer />
-                              </Flex>
-
-                              <Flex w="full">
-                                <Spacer />
-                                <Text color="#fff">
-                                  {
-                                    createLevelAttribute(Object.values(item)[0])
-                                      .level
-                                  }{" "}
-                                  of{" "}
-                                  {
-                                    createLevelAttribute(Object.values(item)[0])
-                                      .levelMax
-                                  }
-                                </Text>
-                              </Flex>
-
-                              <Progress
-                                colorScheme="telegram"
-                                size="sm"
-                                value={Number(
-                                  (createLevelAttribute(Object.values(item)[0])
-                                    .level *
-                                    100) /
-                                    createLevelAttribute(Object.values(item)[0])
-                                      .levelMax
-                                )}
-                                height="6px"
-                              />
-                            </Box>
+                            <LevelCard item={item} />
                           </GridItem>
                         ))
                     : null}

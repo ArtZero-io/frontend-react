@@ -10,7 +10,6 @@ import {
   Link,
   NumberInput,
   NumberInputField,
-  Progress,
   Skeleton,
   Spacer,
   Square,
@@ -34,7 +33,6 @@ import { motion } from "framer-motion";
 import {
   getCachedImageShort,
   convertStringToPrice,
-  createLevelAttribute,
   getPublicCurrentAccount,
   formatNumDynamicDecimal,
 } from "@utils";
@@ -55,8 +53,10 @@ import useTxStatus from "@hooks/useTxStatus";
 import { buyToken, placeBid, removeBid } from "../../../token";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { truncateStr } from "@utils";
-import UnlockIcon from "../../../../theme/assets/icon/Unlock";
-import LockIcon from "../../../../theme/assets/icon/Lock";
+import UnlockIcon from "@theme/assets/icon/Unlock";
+import LockIcon from "@theme/assets/icon/Lock";
+import PropCard from "@components/Card/PropCard";
+import LevelCard from "@components/Card/LevelCard";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -570,7 +570,6 @@ const NFTTabCollectible = (props) => {
                         : "305px",
                     }}
                     id="grid-attrs"
-                    boxShadow="lg"
                     w="full"
                     templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
                     gap={{ base: "0.5rem", xl: "1rem", "2xl": "1.25rem" }}
@@ -587,30 +586,7 @@ const NFTTabCollectible = (props) => {
                           .map((item, idx) => {
                             return (
                               <GridItem w="100%" h="100%" key={idx}>
-                                <Box
-                                  w="full"
-                                  px="10px"
-                                  py="12px"
-                                  textAlign="left"
-                                  alignItems="end"
-                                  bg="brand.semiBlack"
-                                >
-                                  <Flex w="full" pb="15px">
-                                    <Box color="brand.grayLight" w="full">
-                                      <Text isTruncated>
-                                        {Object.keys(item)[0]}
-                                      </Text>
-                                    </Box>
-                                    <Spacer />
-                                  </Flex>
-
-                                  <Flex w="full" color="#7AE7FF">
-                                    <Spacer />
-                                    <Text fontStyle="italic" isTruncated pr={1}>
-                                      {Object.values(item)[0]}
-                                    </Text>
-                                  </Flex>
-                                </Box>{" "}
+                                <PropCard item={item} />
                               </GridItem>
                             );
                           })
@@ -624,55 +600,7 @@ const NFTTabCollectible = (props) => {
                           .map((item, idx) => {
                             return (
                               <GridItem w="100%" h="100%" key={idx}>
-                                <Box
-                                  w="full"
-                                  px="10px"
-                                  py="12px"
-                                  textAlign="left"
-                                  alignItems="end"
-                                  bg="brand.semiBlack"
-                                >
-                                  <Flex w="full" pb="7px">
-                                    <Box color="brand.grayLight" w="full">
-                                      <Text isTruncated>
-                                        {Object.keys(item)[0]}
-                                      </Text>
-                                    </Box>
-                                    <Spacer />
-                                  </Flex>
-
-                                  <Flex w="full">
-                                    <Spacer />
-                                    <Text color="#fff">
-                                      {
-                                        createLevelAttribute(
-                                          Object.values(item)[0]
-                                        ).level
-                                      }{" "}
-                                      of{" "}
-                                      {
-                                        createLevelAttribute(
-                                          Object.values(item)[0]
-                                        ).levelMax
-                                      }
-                                    </Text>
-                                  </Flex>
-
-                                  <Progress
-                                    colorScheme="telegram"
-                                    size="sm"
-                                    value={Number(
-                                      (createLevelAttribute(
-                                        Object.values(item)[0]
-                                      ).level *
-                                        100) /
-                                        createLevelAttribute(
-                                          Object.values(item)[0]
-                                        ).levelMax
-                                    )}
-                                    height="6px"
-                                  />
-                                </Box>
+                                <LevelCard item={item} />
                               </GridItem>
                             );
                           })

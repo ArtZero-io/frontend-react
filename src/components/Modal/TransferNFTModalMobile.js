@@ -63,6 +63,7 @@ function TransferNFTModalMobile({
     if (owner !== currentAccount?.address) {
       return toast.error("You are not the owner of this NFT");
     }
+
     if (nftContractAddress) {
       dispatch(setTxStatus({ type: TRANSFER, step: START }));
 
@@ -114,15 +115,6 @@ function TransferNFTModalMobile({
 
   return (
     <>
-      {/* <Button
-        h="30px"
-        p="4px"
-        fontSize="12px"
-        variant="outline"
-        onClick={!actionType ? onOpen : () => {}}
-      >
-        transfer
-      </Button> */}
       <Tooltip
         hasArrow
         bg="#333"
@@ -131,7 +123,11 @@ function TransferNFTModalMobile({
         label="Transfer NFT"
       >
         <span
-          onClick={!actionType ? onOpen : () => {}}
+          onClick={
+            isDisabled || actionType
+              ? () => toast.error("This item is currently for sale!")
+              : onOpen
+          }
           style={{
             width: iconWidth,
             height: iconWidth,

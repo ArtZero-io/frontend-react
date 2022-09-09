@@ -93,7 +93,7 @@ export default function UpdateWithdrawModal({
       onClose={onClose}
       isCentered
       isOpen={isOpen}
-      size="xl"
+      size={["xs", "xl"]}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -108,11 +108,11 @@ export default function UpdateWithdrawModal({
         borderRadius="0"
       >
         <ModalCloseButton
-          position="absolute"
-          top="-8"
-          right="-8"
           borderWidth={2}
           borderRadius="0"
+          position="absolute"
+          top={["0", "-8", "-8"]}
+          right={["0", "-8", "-8"]}
           onClick={() => rest?.step === FINALIZED && rest?.onEndClick()}
         />
         <ModalHeader textAlign="center">
@@ -124,7 +124,7 @@ export default function UpdateWithdrawModal({
           </Text>
         </ModalHeader>
 
-        <ModalBody shadow="lg">
+        <ModalBody>
           <VStack>
             <NumberInput
               bg="black"

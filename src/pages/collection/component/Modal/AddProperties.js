@@ -1,29 +1,33 @@
-import { DeleteIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
   Flex,
   Heading,
+  HStack,
   IconButton,
   Modal,
+  ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
   Text,
   useBreakpointValue,
+  useMediaQuery,
 } from "@chakra-ui/react";
-import { FieldArray, useField } from "formik";
-import toast from "react-hot-toast";
+import { ErrorMessage, FieldArray, useField } from "formik";
 import AddPropertiesInput from "@components/Input/Input";
-import { formMode } from "@constants";
+import { formMode, SCROLLBAR } from "@constants";
+import DeleteIcon from "@theme/assets/icon/Delete";
 
 function AddPropertiesModal({ name, isOpen, onClose, mode }) {
   const [{ value }] = useField(name);
 
   const hasEmptyProp = value.some((p) => p.type?.trim() === "");
 
-  const modalSize = useBreakpointValue(["xs", "2xl", "2xl"]);
+  const modalSize = useBreakpointValue(["xs", "5xl"]);
+
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   return (
     <Modal
@@ -32,6 +36,7 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
       isOpen={isOpen}
       size={modalSize}
       minH="40rem"
+      scrollBehavior="inside"
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -40,12 +45,23 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
 
       <ModalContent
         position="relative"
-        px={["4px", "24px", "24px"]}
+        px={["4px", "26px"]}
+        pt={["4px", "32px"]}
+        pb={["4px", "42px"]}
         minH={{ xl: "md" }}
         borderRadius="0"
         textAlign="center"
         bg="brand.grayDark"
+        maxWidth={["340px", "940px"]}
       >
+        <ModalCloseButton
+          borderWidth={2}
+          borderRadius="0"
+          position="absolute"
+          top={["0", "-8", "-8"]}
+          right={["0", "-8", "-8"]}
+        />
+
         <ModalHeader>
           <Heading fontSize={["2xl", "3xl", "3xl"]} my={2}>
             {mode === formMode.ADD ? "Add properties" : "Edit properties"}
@@ -55,109 +71,109 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
           </Text>
         </ModalHeader>
 
-        <ModalCloseButton
-          borderWidth={2}
-          borderRadius="0"
-          position="absolute"
-          top={["0", "-8", "-8"]}
-          right={["0", "-8", "-8"]}
-        />
-        <Flex>
-          <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
-            <Text fontSize={["md", "lg", "lg"]} color="#fff">
-              Type
-            </Text>
-          </Box>
-          <Box mb={4} flexGrow={1} textAlign="left" pl={3}>
-            <Text fontSize={["md", "lg", "lg"]} color="#fff">
-              Name
-            </Text>
-          </Box>
-          <Box w={14} />
-        </Flex>
+        <ModalBody overflowY="auto" sx={SCROLLBAR}>
+          {isBigScreen && (
+            <Flex>
+              <Box mb={4} flexGrow={1} textAlign="left">
+                <Text ml={1} fontSize={["md", "lg", "lg"]} color="#fff">
+                  Type
+                </Text>
+              </Box>
+              <Box mb={4} flexGrow={1} textAlign="left">
+                <Text ml={2} fontSize={["md", "lg", "lg"]} color="#fff">
+                  Name
+                </Text>
+              </Box>
+              <Box w={14} />
+            </Flex>
+          )}
 
-        <FieldArray
-          name="properties"
-          render={(arrayHelpers) => {
-            console.log("arrayHelpers", arrayHelpers);
-            return (
-              <div>
-                {value?.map((properties, index) => (
-                  <div key={index}>
-                    <Flex alignItems="start" mb={4}>
-                      <AddPropertiesInput
-                        mx={5}
-                        height={16}
-                        autoComplete="off"
-                        name={`properties[${index}].type`}
-                        type="text"
-                        placeholder="Your type here"
-                      />
-                      <AddPropertiesInput
-                        mx={5}
-                        height={16}
-                        autoComplete="off"
-                        name={`properties.${index}.name`}
-                        type="text"
-                        placeholder="Your name here"
-                      />
+          <FieldArray
+            name="properties"
+            render={(arrayHelpers) => {
+              console.log("arrayHelpers", arrayHelpers);
+              return (
+                <div>
+                  {value?.map((properties, index) => (
+                    <div key={index}>
+                      <Flex
+                        mb={4}
+                        alignItems="start"
+                        direction={["column", "row"]}
+                      >
+                        <AddPropertiesInput
+                          mx={0}
+                          px={0}
+                          type="text"
+                          // autoComplete="off"
+                          height={["108px", "64px"]}
+                          placeholder="Your type here"
+                          name={`properties[${index}].type`}
+                          label={isBigScreen ? "" : "Type"}
+                        />
 
-                      <IconButton
-                        aria-label="Delete"
-                        icon={<DeleteIcon fontSize="24px" />}
-                        size="icon"
-                        variant="iconOutline"
-                        isDisabled={index === 0 && value.length === 1}
-                        onClick={() => arrayHelpers.remove(index)}
-                      />
-                    </Flex>
-                  </div>
-                ))}
-                <Flex pb={6}>
-                  {/* TODO:
-                  Temp add mode === formMode.ADD for edit mode
-                  consider to make a separate form for edit NFT
-                   */}
+                        <AddPropertiesInput
+                          mx={0}
+                          type="text"
+                          autoComplete="off"
+                          height={["108px", "64px"]}
+                          placeholder="Your name here"
+                          label={isBigScreen ? "" : "Name"}
+                          name={`properties.${index}.name`}
+                        />
+
+                        <IconButton
+                          mx={1}
+                          size="icon"
+                          bg="transparent"
+                          aria-label="Delete"
+                          icon={<DeleteIcon />}
+                          variant="iconOutline"
+                          isDisabled={index === 0 && value.length === 1}
+                          onClick={() => arrayHelpers.remove(index)}
+                        />
+                      </Flex>
+                    </div>
+                  ))}
+
+                  <Flex pb="40px">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      fontSize={["sm", "15px"]}
+                      px={["12px", "32px", "32px"]}
+                      isDisabled={
+                        mode === formMode.ADD &&
+                        (hasEmptyProp ||
+                          !arrayHelpers?.form?.dirty ||
+                          arrayHelpers.form?.errors?.properties)
+                      }
+                      onClick={() => arrayHelpers.push({ type: "", name: "" })}
+                    >
+                      Add more
+                    </Button>
+                  </Flex>
+
+                  {typeof arrayHelpers.form?.errors?.properties ===
+                    "string" && (
+                    <HStack color="#ff8c8c" py="10px">
+                      <ErrorMessage name="properties" />
+                    </HStack>
+                  )}
+
                   <Button
+                    w="full"
+                    variant="solid"
                     type="button"
-                    variant="outline"
-                    fontSize={["sm", "md", "md"]}
-                    px={["12px", "32px", "32px"]}
-                    isDisabled={
-                      mode === formMode.ADD &&
-                      (hasEmptyProp ||
-                        !arrayHelpers?.form?.dirty ||
-                        arrayHelpers.form?.errors?.properties)
-                    }
-                    onClick={() => arrayHelpers.push({ type: "", name: "" })}
+                    onClick={() => onClose()}
                   >
-                    Add more
+                    Save now
                   </Button>
-                </Flex>
-                <Button
-                  disabled={
-                    !(arrayHelpers?.form?.dirty && arrayHelpers?.form?.isValid)
-                  }
-                  mb={6}
-                  w="full"
-                  variant="solid"
-                  type="button"
-                  onClick={() => {
-                    if (
-                      !arrayHelpers?.form?.dirty ||
-                      arrayHelpers.form?.errors?.properties
-                    ) {
-                      return toast.error(arrayHelpers.form?.errors?.properties);
-                    }
-                    onClose();
-                  }}
-                >
-                  Save now
-                </Button>
-              </div>
-            );
-          }}
-        />
+                </div>
+              );
+            }}
+          />
+        </ModalBody>
       </ModalContent>
     </Modal>
   );

@@ -126,7 +126,11 @@ function LockNFTModal({
               label="Unlocked on-chain metadata"
             >
               <span
-                onClick={isDisabled || actionType ? () => {} : onOpen}
+                onClick={
+                  isDisabled || actionType
+                    ? () => toast.error("This item is currently for sale!")
+                    : onOpen
+                }
                 style={{
                   width: iconWidth,
                   height: iconWidth,

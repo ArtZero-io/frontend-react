@@ -236,7 +236,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             <IconButton
               pos="absolute"
               left="0"
-              top="5px"
+              top={["0px", "5px"]}
               onClick={() => history.goBack()}
               variant="iconOutline"
               width={["40px", "50px"]}
@@ -297,7 +297,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 if (!values.isEditMode && (!prjStartTime || !prjStartTime)) {
                   return toast.error("Please pick time frame for project!");
                 }
-                
+
                 // check all phase time-frame is picked?
                 const phasesArray = values?.phases;
 

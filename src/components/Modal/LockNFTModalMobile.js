@@ -107,7 +107,11 @@ function LockNFTModalMobile({
           label="Unlocked on-chain metadata"
         >
           <span
-            onClick={!isDisabled ? onOpen : () => {}}
+            onClick={
+              !isDisabled
+                ? onOpen
+                : () => toast.error("This item is currently for sale!")
+            }
             style={{
               width: iconWidth,
               height: iconWidth,

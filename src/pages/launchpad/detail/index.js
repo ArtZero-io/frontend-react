@@ -541,7 +541,7 @@ const LaunchpadDetailPage = () => {
               <Spacer />
 
               {totalPhaseAmount > 0 ? (
-                <Text color="#888">
+                <Text color="#888" fontSize={["sm", "md"]}>
                   {Math.round((totalClaimedAmount * 100) / totalPhaseAmount)}% (
                   {totalClaimedAmount}/{totalPhaseAmount})
                 </Text>

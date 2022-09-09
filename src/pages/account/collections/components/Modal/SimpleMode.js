@@ -114,7 +114,7 @@ function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
             </Heading>
           </ModalHeader>
 
-          <ModalBody shadow="lg" overflowY="auto" sx={SCROLLBAR}>
+          <ModalBody overflowY="auto" sx={SCROLLBAR}>
             <SimpleModeForm
               id={id}
               mode={mode}

@@ -49,7 +49,7 @@ function AddNewCollection({ mode = formMode.ADD, id }) {
           position="relative"
           bg="brand.grayDark"
           px={["4px", "24px", "24px"]}
-          py={["4px", "32px", "32px"]}
+          py="32px"
         >
           <ModalCloseButton
             borderWidth={2}
@@ -58,6 +58,7 @@ function AddNewCollection({ mode = formMode.ADD, id }) {
             top={["0", "-8", "-8"]}
             right={["0", "-8", "-8"]}
           />
+
           <ModalHeader textAlign="center">
             <AddCollectionIcon
               width={["36px", "48px"]}

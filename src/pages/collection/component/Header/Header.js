@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Center,
   Container,
@@ -11,10 +10,11 @@ import {
   SimpleGrid,
   Skeleton,
   Text,
+  useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
+import AzeroIcon from "@theme/assets/icon/Azero.js";
 
-import AzeroIcon from "@theme/assets/icon/Azero.png";
 import SocialCard from "@components/Card/Social";
 
 import { shortenNumber } from "@utils";
@@ -39,6 +39,7 @@ function CollectionHeader({
   royalFee,
 }) {
   const [isSeeMore, setIsSeeMore] = useState(false);
+  const descLength = useBreakpointValue([115, 175]);
 
   return (
     <Box
@@ -139,8 +140,9 @@ function CollectionHeader({
                 zIndex="docked"
                 position="absolute"
                 justifyContent="center"
+                textDecoration="underline"
                 onClick={() => setIsSeeMore(!isSeeMore)}
-                display={description?.length > 160 ? "flex" : "none"}
+                display={description?.length > descLength ? "flex" : "none"}
               >
                 {isSeeMore ? "See less" : "Show more"}
               </Flex>
@@ -230,14 +232,8 @@ function CollectionHeader({
                   <Text fontSize={["34px", "40px"]}>
                     {shortenNumber(floorPrice / 10 ** 12) || 0}
                   </Text>
-                  <Avatar
-                    src={AzeroIcon}
-                    h="19px"
-                    w="19px"
-                    ml={3}
-                    name="AzeroLogo"
-                    bg="transparent"
-                  />
+
+                  <AzeroIcon ml="6px" w="20px" />
                 </Flex>
                 <Text fontSize={["14px", "16px"]}>Floor price</Text>
                 <Divider
@@ -260,14 +256,7 @@ function CollectionHeader({
                   <Text fontSize={["34px", "40px"]}>
                     {shortenNumber(volume) || 0}
                   </Text>
-                  <Avatar
-                    src={AzeroIcon}
-                    h="19px"
-                    w="19px"
-                    ml={3}
-                    name="AzeroLogo"
-                    bg="transparent"
-                  />
+                  <AzeroIcon ml="6px" w="20px" />
                 </Flex>
                 <Text fontSize={["14px", "16px"]}>Volume traded</Text>
               </Flex>

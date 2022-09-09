@@ -19,14 +19,12 @@ function TopCollectionsTab({ topCollections, azeroPrice }) {
   return (
     <>
       <Box as="section" maxW="container.3xl">
-        <Box mx="auto" py={["4", "12", "20"]}>
+        <Box mx="auto" py={["30px", "12", "20"]}>
           <Stack
-            direction={{ base: "column", xl: "row" }}
             w="full"
-            alignItems="center"
             mb="30px"
-            // h="400px"
-            // bg="green"
+            alignItems="center"
+            direction={{ base: "column", xl: "row" }}
           >
             <Heading
               mb="10px"
@@ -36,14 +34,10 @@ function TopCollectionsTab({ topCollections, azeroPrice }) {
               Top Collections
             </Heading>
 
-            <Spacer
-            //  display={["none", "flex", "flex"]}
-            />
+            <Spacer />
 
             <HStack w="full">
-              <Spacer
-              //  display={["none", "flex", "flex"]}
-              />
+              <Spacer />
               <Text color="brand.grayLight" pr={["5px", "25px", "25px"]}>
                 Switch currency
               </Text>
@@ -65,7 +59,6 @@ function TopCollectionsTab({ topCollections, azeroPrice }) {
                 }}
                 bg={!useAzeroUnit ? "transparent" : "brand.blue"}
                 color={useAzeroUnit ? "brand.grayLight" : "black"}
-                // display={{ base: "none", xl: "flex" }}
                 icon={
                   <AzeroIcon
                     fill={!useAzeroUnit ? "#888" : "#000"}
@@ -93,7 +86,6 @@ function TopCollectionsTab({ topCollections, azeroPrice }) {
                 }}
                 bg={!useAzeroUnit ? "brand.blue" : "transparent"}
                 color={!useAzeroUnit ? "black" : "brand.grayLight"}
-                // display={{ base: "none", xl: "flex" }}
                 icon={<FaDollarSign fontSize="20px" />}
                 onClick={() => setUseAzeroUnit(false)}
               />

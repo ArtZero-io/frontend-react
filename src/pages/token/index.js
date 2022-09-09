@@ -1,17 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  Box,
   Breadcrumb,
   BreadcrumbItem,
-  Flex,
   Grid,
   GridItem,
   Heading,
   HStack,
   Image,
-  Progress,
   Skeleton,
-  Spacer,
   Square,
   Stack,
   Tag,
@@ -42,7 +38,6 @@ import { useSubstrateState } from "@utils/substrate";
 import {
   getCachedImageShort,
   formatNumDynamicDecimal,
-  createLevelAttribute,
   getPublicCurrentAccount,
 } from "@utils";
 import { getNFTDetails } from "@utils/blockchain/nft721-psp34-standard-calls";
@@ -84,8 +79,10 @@ import {
 } from "@pages/account/stakes";
 import TransferNFTModalMobile from "@components/Modal/TransferNFTModalMobile";
 import { truncateStr } from "@utils";
-import UnlockIcon from "../../theme/assets/icon/Unlock";
-import LockIcon from "../../theme/assets/icon/Lock";
+import UnlockIcon from "@theme/assets/icon/Unlock";
+import LockIcon from "@theme/assets/icon/Lock";
+import PropCard from "@components/Card/PropCard";
+import LevelCard from "@components/Card/LevelCard";
 
 function TokenPage() {
   const dispatch = useDispatch();
@@ -106,7 +103,7 @@ function TokenPage() {
   const [loading, setLoading] = useState(false);
   const [isAlreadyBid, setIsAlreadyBid] = useState(false);
 
-  const { actionType, ...rest } = useTxStatus();
+  const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
     [BUY, BID, REMOVE_BID, ACCEPT_BID, LIST_TOKEN, UNLIST_TOKEN],
@@ -411,7 +408,13 @@ function TokenPage() {
               <HStack spacing="10px" justify="start">
                 {!token?.is_locked &&
                   collection?.showOnChainMetadata &&
-                  isOwner && <AddNewNFTModal mode={formMode.EDIT} {...token} />}
+                  isOwner && (
+                    <AddNewNFTModal
+                      mode={formMode.EDIT}
+                      isDisabled={token?.is_for_sale || actionType}
+                      {...token}
+                    />
+                  )}
 
                 {!token?.is_locked &&
                   collection?.showOnChainMetadata &&
@@ -500,7 +503,7 @@ function TokenPage() {
                         token?.is_for_sale ? token?.nft_owner : token?.owner
                       }
                       txType="lock"
-                      isDisabled={actionType}
+                      isDisabled={token?.is_for_sale || actionType}
                       tokenID={token?.tokenID}
                       nftContractAddress={token?.nftContractAddress}
                       showOnChainMetadata={collection?.showOnChainMetadata}
@@ -509,7 +512,10 @@ function TokenPage() {
                 )}
 
                 {isOwner && (
-                  <TransferNFTModalMobile {...token} isDisabled={actionType} />
+                  <TransferNFTModalMobile
+                    {...token}
+                    isDisabled={token?.is_for_sale || actionType}
+                  />
                 )}
               </HStack>
 
@@ -557,88 +563,94 @@ function TokenPage() {
 
                   {/* 2 Not for sale & owner  */}
                   {!token?.is_for_sale && isOwner && (
-                    <Stack p="20px" border="1px solid #333">
-                      <Stack>
-                        <HStack spacing="20px" mb="12px">
-                          <NumberInput
-                            w="50%"
-                            minW={"85px"}
-                            isDisabled={actionType}
-                            bg="black"
-                            max={999000000}
-                            min={1}
-                            precision={6}
-                            onChange={(v) => setAskPrice(v)}
-                            value={askPrice}
-                            h="40px"
-                          >
-                            <NumberInputField
-                              textAlign="end"
+                    <>
+                      <Stack p="20px" border="1px solid #333">
+                        <Stack>
+                          <HStack spacing="20px" mb="12px">
+                            <NumberInput
+                              w="50%"
+                              minW={"85px"}
+                              isDisabled={actionType}
+                              bg="black"
+                              max={999000000}
+                              min={1}
+                              precision={6}
+                              onChange={(v) => setAskPrice(v)}
+                              value={askPrice}
                               h="40px"
-                              borderRadius={0}
-                              borderWidth={0}
-                              color="#fff"
-                            />
-                            <InputRightElement
-                              bg="transparent"
-                              h={"40px"}
-                              w={8}
                             >
-                              <AzeroIcon w="14px" h="14px" />
-                            </InputRightElement>
-                          </NumberInput>
+                              <NumberInputField
+                                textAlign="end"
+                                h="40px"
+                                borderRadius={0}
+                                borderWidth={0}
+                                color="#fff"
+                              />
+                              <InputRightElement
+                                bg="transparent"
+                                h={"40px"}
+                                w={8}
+                              >
+                                <AzeroIcon w="14px" h="14px" />
+                              </InputRightElement>
+                            </NumberInput>
 
-                          <CommonButton
-                            w="50%"
-                            h="40px"
-                            {...rest}
-                            text="push for sale"
-                            onClick={handleListTokenAction}
-                            isDisabled={actionType && actionType !== LIST_TOKEN}
-                          />
-                        </HStack>
-
-                        <Stack w="full">
-                          <FeeCalculatedBar feeCalculated={feeCalculated} />
+                            <CommonButton
+                              w="50%"
+                              h="40px"
+                              {...rest}
+                              text="push for sale"
+                              onClick={handleListTokenAction}
+                              isDisabled={
+                                actionType && actionType !== LIST_TOKEN
+                              }
+                            />
+                          </HStack>
                         </Stack>
-                      </Stack>{" "}
-                    </Stack>
+                      </Stack>
+
+                      <Stack w="full">
+                        <FeeCalculatedBar feeCalculated={feeCalculated} />
+                      </Stack>
+                    </>
                   )}
 
                   {/* 3 For sale & owner  */}
                   {token?.is_for_sale && isOwner && (
-                    <Stack p="20px" border="1px solid #333">
-                      <Stack>
-                        <HStack spacing="20px" mb="12px">
-                          <CommonButton
-                            w="50%"
-                            h="40px"
-                            {...rest}
-                            text="cancel sale"
-                            onClick={handleUnlistTokenAction}
-                            isDisabled={
-                              actionType && actionType !== UNLIST_TOKEN
-                            }
-                          />{" "}
-                          <VStack w="50%" alignItems="end">
-                            <Text color="#888">Current price</Text>
+                    <>
+                      <Stack p="20px" border="1px solid #333">
+                        <Stack>
+                          <HStack spacing="20px" mb="12px">
+                            <CommonButton
+                              w="50%"
+                              h="40px"
+                              {...rest}
+                              text="cancel sale"
+                              onClick={handleUnlistTokenAction}
+                              isDisabled={
+                                actionType && actionType !== UNLIST_TOKEN
+                              }
+                            />{" "}
+                            <VStack w="50%" alignItems="end">
+                              <Text color="#888">Current price</Text>
 
-                            <Tag minH="20px" pr={0} bg="transparent">
-                              <TagLabel bg="transparent">
-                                {formatNumDynamicDecimal(
-                                  token?.price / 10 ** 12
-                                )}
-                              </TagLabel>
-                              <TagRightIcon as={AzeroIcon} w="14px" />
-                            </Tag>
-                          </VStack>
-                        </HStack>
-
-                        <Stack w="full">
-                          <FeeCalculatedBar feeCalculated={feeCalculated} />
+                              <Tag minH="20px" pr={0} bg="transparent">
+                                <TagLabel bg="transparent">
+                                  {formatNumDynamicDecimal(
+                                    token?.price / 10 ** 12
+                                  )}
+                                </TagLabel>
+                                <TagRightIcon as={AzeroIcon} w="14px" />
+                              </Tag>
+                            </VStack>
+                          </HStack>
                         </Stack>
-                      </Stack>{" "}
-                    </Stack>
+                      </Stack>
+
+                      <Stack w="full">
+                        <FeeCalculatedBar feeCalculated={feeCalculated} />
+                      </Stack>
+                    </>
                   )}
 
                   {/* 4 For sale & NOT owner  */}
@@ -759,28 +771,7 @@ function TokenPage() {
                           .map((item, idx) => {
                             return (
                               <GridItem w="100%" h="100%" key={idx}>
-                                <Box
-                                  w="full"
-                                  px="10px"
-                                  py="12px"
-                                  textAlign="left"
-                                  alignItems="end"
-                                  bg="brand.semiBlack"
-                                >
-                                  <Flex w="full" pb="15px">
-                                    <Box color="brand.grayLight" w="full">
-                                      <Text>{Object.keys(item)[0]}</Text>
-                                    </Box>
-                                    <Spacer />
-                                  </Flex>
-
-                                  <Flex w="full" color="#7AE7FF">
-                                    <Spacer />
-                                    <Text isTruncated pr={1} fontStyle="italic">
-                                      {Object.values(item)[0]}
-                                    </Text>
-                                  </Flex>
-                                </Box>{" "}
+                                <PropCard item={item} />
                               </GridItem>
                             );
                           })}
@@ -792,53 +783,7 @@ function TokenPage() {
                           .map((item, idx) => {
                             return (
                               <GridItem w="100%" h="100%" key={idx}>
-                                <Box
-                                  w="full"
-                                  px="10px"
-                                  py="12px"
-                                  textAlign="left"
-                                  alignItems="end"
-                                  bg="brand.semiBlack"
-                                >
-                                  <Flex w="full" pb="7px">
-                                    <Box color="brand.grayLight" w="full">
-                                      <Text> {Object.keys(item)[0]}</Text>
-                                    </Box>
-                                    <Spacer />
-                                  </Flex>
-
-                                  <Flex w="full">
-                                    <Spacer />
-                                    <Text color="#fff">
-                                      {
-                                        createLevelAttribute(
-                                          Object.values(item)[0]
-                                        ).level
-                                      }{" "}
-                                      of{" "}
-                                      {
-                                        createLevelAttribute(
-                                          Object.values(item)[0]
-                                        ).levelMax
-                                      }
-                                    </Text>
-                                  </Flex>
-
-                                  <Progress
-                                    colorScheme="telegram"
-                                    size="sm"
-                                    value={Number(
-                                      (createLevelAttribute(
-                                        Object.values(item)[0]
-                                      ).level *
-                                        100) /
-                                        createLevelAttribute(
-                                          Object.values(item)[0]
-                                        ).levelMax
-                                    )}
-                                    height="6px"
-                                  />
-                                </Box>
+                                <LevelCard item={item} />
                               </GridItem>
                             );
                           })}
@@ -1262,10 +1207,12 @@ const FeeCalculatedBar = ({ feeCalculated }) => {
           </Text>{" "}
           ({feeCalculated.royalFeePercent}%)
         </Text>
+
         <Text color="#fff">
           {feeCalculated.royalFeeAmount} <AzeroIcon w="12px" mb="2px" />
         </Text>
       </VStack>
+
       <VStack alignItems="start">
         <Text fontSize={{ base: "13px", md: "16px" }}>
           <Text as="span" color="brand.grayLight">
@@ -1277,6 +1224,7 @@ const FeeCalculatedBar = ({ feeCalculated }) => {
           {feeCalculated.tradeFeeAmount} <AzeroIcon w="12px" mb="2px" />
         </Text>
       </VStack>
+
       <VStack alignItems="start">
         <Text fontSize={{ base: "13px", md: "16px" }} color="brand.grayLight">
           You will receive:

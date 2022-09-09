@@ -38,7 +38,7 @@ import {
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 
-const NUMBER_PER_PAGE = 12;
+const NUMBER_PER_PAGE = 24;
 
 function CollectionPage() {
   const { collection_address } = useParams();
@@ -56,7 +56,7 @@ function CollectionPage() {
   const [formattedCollection, setFormattedCollection] = useState(null);
   const [totalCollectionsCount, setTotalCollectionsCount] = useState(0);
 
-  const [bigCard, setBigCard] = useState(true);
+  // const [bigCard, setBigCard] = useState(false);
 
   const {
     pagesCount,
@@ -65,7 +65,7 @@ function CollectionPage() {
     isDisabled,
     offset,
     pageSize,
-    setPageSize,
+    // setPageSize,
   } = usePagination({
     total: totalCollectionsCount,
     initialState: {
@@ -75,9 +75,9 @@ function CollectionPage() {
     },
   });
 
-  useEffect(() => {
-    bigCard ? setPageSize(12) : setPageSize(15);
-  }, [bigCard, setPageSize]);
+  // useEffect(() => {
+  //    bigCard ? setPageSize(12) : setPageSize(15);
+  // }, [bigCard, setPageSize]);
 
   useEffect(() => {
     if (currentPage > pagesCount) {
@@ -278,8 +278,8 @@ function CollectionPage() {
           loading={loading || loadingForceUpdate}
           forceUpdate={() => fetchCollectionDetail({ activeTab })}
           totalCollectionsCount={totalCollectionsCount}
-          bigCard={bigCard}
-          setBigCard={setBigCard}
+          // bigCard={bigCard}
+          // setBigCard={setBigCard}
         />
       ),
     },

@@ -39,6 +39,9 @@ import { formMode, CREATE_NFT, EDIT_NFT, START } from "@constants";
 
 import { setTxStatus } from "@store/actions/txStatus";
 import { clearTxStatus } from "@store/actions/txStatus";
+import PropCard from "@components/Card/PropCard";
+import isNotEmptyStr from "@utils";
+import LevelCard from "@components/Card/LevelCard";
 
 const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -155,7 +158,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 )
               )
               .min(0)
-              .max(10),
+              .max(10, "Property must have less than or equal to 10 items!"),
             levels: Yup.array(
               Yup.object().shape(
                 {
@@ -207,7 +210,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
               )
             )
               .min(0)
-              .max(10),
+              .max(10, "Level must have less than or equal to 10 items!"),
           })}
           onSubmit={async (values) => {
             !avatarIPFSUrl && toast.error("Upload images first");
@@ -308,194 +311,169 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
             }
           }}
         >
-          {({ values, dirty, isValid }) => (
-            <div>
-              <Form>
-                <HStack>
-                  <AddNewNFTInput
-                    isDisabled={actionType}
-                    isRequired={true}
-                    mode={formMode.ADD}
-                    label="NFT Name"
-                    name="NFTName"
-                    type="NFTName"
-                    placeholder="NFT Name"
-                  />
-                </HStack>
-
-                <AddNewNFTTextArea
+          {({ values, dirty, isValid, errors }) => (
+            <Form>
+              <HStack>
+                <AddNewNFTInput
                   isDisabled={actionType}
                   isRequired={true}
-                  label="Description"
-                  name="description"
-                  type="text"
-                  placeholder="Description"
+                  mode={formMode.ADD}
+                  label="NFT Name"
+                  name="NFTName"
+                  type="NFTName"
+                  placeholder="NFT Name"
                 />
+              </HStack>
 
-                <AddNewNFTImageUpload
-                  isDisabled={actionType}
+              <AddNewNFTTextArea
+                isDisabled={actionType}
+                isRequired={true}
+                label="Description"
+                name="description"
+                type="text"
+                placeholder="Description"
+              />
+
+              <AddNewNFTImageUpload
+                isDisabled={actionType}
+                mode={mode}
+                imageIPFSUrl={avatarIPFSUrl}
+                setImageIPFSUrl={setAvatarIPFSUrl}
+                title="NFT Image"
+                limitedSize={{ width: "1000", height: "1000" }}
+                isBanner={false}
+              />
+
+              {/* Add Props  */}
+              <Box py={6} borderBottomWidth={1}>
+                <Flex w="full" pb={3}>
+                  <VStack alignItems="start">
+                    <Heading fontSize={["lg", "xl", "xl"]}>properties</Heading>
+                    <Text fontSize={"lg"}>
+                      {/* Textural trails that show up as restangles */}
+                    </Text>
+                  </VStack>
+                  <Spacer />
+                  <Button
+                    fontSize={["sm", "md", "md"]}
+                    px={["12px", "32px", "32px"]}
+                    isDisabled={actionType}
+                    variant="outline"
+                    color="brand.blue"
+                    onClick={() => setModifierToEdit("properties")}
+                  >
+                    Add properties
+                  </Button>
+                </Flex>
+
+                {values?.properties[0]?.type ? (
+                  <Grid
+                    w="full"
+                    templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
+                    gap={6}
+                    overflowY="auto"
+                  >
+                    {values?.properties
+                      .filter(
+                        (i) => isNotEmptyStr(i.type) && isNotEmptyStr(i.name)
+                      )
+                      .map(({ type, name }, idx) => {
+                        const item = { [type]: name };
+
+                        return (
+                          <GridItem key={idx} w="100%" h="100%">
+                            <PropCard item={item} />
+                          </GridItem>
+                        );
+                      })}
+                  </Grid>
+                ) : null}
+
+                <AddPropertiesModal
                   mode={mode}
-                  imageIPFSUrl={avatarIPFSUrl}
-                  setImageIPFSUrl={setAvatarIPFSUrl}
-                  title="NFT Image"
-                  limitedSize={{ width: "1000", height: "1000" }}
-                  isBanner={false}
+                  name="properties"
+                  onClose={() => setModifierToEdit(null)}
+                  isOpen={modifierToEdit === "properties"}
                 />
+              </Box>
+              {/* End Add Props  */}
 
-                {/* Add Props  */}
-                <Box py={6} borderBottomWidth={1}>
-                  <Flex w="full" pb={3}>
-                    <VStack alignItems="start">
-                      <Heading fontSize={["lg", "xl", "xl"]}>
-                        properties
-                      </Heading>
-                      <Text fontSize={"lg"}>
-                        {/* Textural trails that show up as restangles */}
-                      </Text>
-                    </VStack>
-                    <Spacer />
-                    <Button
-                      fontSize={["sm", "md", "md"]}
-                      px={["12px", "32px", "32px"]}
-                      isDisabled={actionType}
-                      variant="outline"
-                      color="brand.blue"
-                      onClick={() => setModifierToEdit("properties")}
-                    >
-                      Add properties
-                    </Button>
-                  </Flex>
+              <Box py={6} borderBottomWidth={1}>
+                <Flex w="full" pb={3}>
+                  <VStack alignItems="start">
+                    <Heading fontSize={["lg", "xl", "xl"]}>Levels</Heading>
+                    <Text fontSize={"lg"}>
+                      {/* Textural trails that show up as restangles */}
+                    </Text>
+                  </VStack>
+                  <Spacer />
+                  <Button
+                    fontSize={["sm", "md", "md"]}
+                    px={["12px", "32px", "32px"]}
+                    isDisabled={actionType}
+                    variant="outline"
+                    color="brand.blue"
+                    onClick={() => setModifierToEdit("levels")}
+                  >
+                    Add levels
+                  </Button>
+                </Flex>
 
-                  {values?.properties[0]?.type ? (
-                    <Grid
-                      w="full"
-                      templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
-                      gap={6}
-                      overflowY="auto"
-                    >
-                      {values?.properties
-                        .filter((i) => i.name.replaceAll(" ", "") !== "")
-                        .map((item, idx) => {
-                          return (
-                            <React.Fragment key={idx}>
-                              <GridItem w="100%" h="100%">
-                                <Box
-                                  w="full"
-                                  textAlign="left"
-                                  alignItems="end"
-                                  bg="brand.semiBlack"
-                                  px={4}
-                                  py={3}
-                                >
-                                  <Flex w="full">
-                                    <Box color="brand.grayLight" w="full">
-                                      <Text>{item.type}</Text>
-                                      <Heading
-                                        pr={"2.5px"}
-                                        size="h6"
-                                        mt={1}
-                                        noOfLines={[1, 2]}
-                                        textAlign="right"
-                                      >
-                                        {item.name}
-                                      </Heading>
-                                    </Box>
-                                    <Spacer />
-                                  </Flex>
-                                </Box>
-                              </GridItem>
-                            </React.Fragment>
-                          );
-                        })}
-                    </Grid>
-                  ) : null}
+                {values?.levels[0]?.name ? (
+                  <Grid
+                    w="full"
+                    templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
+                    gap={6}
+                    overflowY="auto"
+                  >
+                    {values?.levels
+                      ?.filter(
+                        (i) =>
+                          isNotEmptyStr(i.name) &&
+                          isNotEmptyStr(i.level?.toString()) &&
+                          isNotEmptyStr(i.levelMax?.toString())
+                      )
+                      .map(({ name, level, levelMax }, idx) => {
+                        const item = { [name]: `${level}|${levelMax}` };
 
-                  <AddPropertiesModal
-                    mode={mode}
-                    name="properties"
-                    onClose={() => setModifierToEdit(null)}
-                    isOpen={modifierToEdit === "properties"}
-                  />
-                </Box>
-                {/* End Add Props  */}
+                        return (
+                          <GridItem w="100%" h="100%" key={idx}>
+                            <LevelCard item={item} />
+                          </GridItem>
+                        );
+                      })}
+                  </Grid>
+                ) : null}
 
-                <Box py={6} borderBottomWidth={1}>
-                  <Flex w="full" pb={3}>
-                    <VStack alignItems="start">
-                      <Heading fontSize={["lg", "xl", "xl"]}>Levels</Heading>
-                      <Text fontSize={"lg"}>
-                        {/* Textural trails that show up as restangles */}
-                      </Text>
-                    </VStack>
-                    <Spacer />
-                    <Button
-                      fontSize={["sm", "md", "md"]}
-                      px={["12px", "32px", "32px"]}
-                      isDisabled={actionType}
-                      variant="outline"
-                      color="brand.blue"
-                      onClick={() => setModifierToEdit("levels")}
-                    >
-                      Add levels
-                    </Button>
-                  </Flex>
-
-                  {values?.levels[0]?.name
-                    ? values?.levels
-                        ?.filter((i) => i.name.replaceAll(" ", "") !== "")
-                        .map((item, idx) => {
-                          return (
-                            <React.Fragment key={idx}>
-                              <Box
-                                w="full"
-                                textAlign="left"
-                                alignItems="end"
-                                bg="brand.semiBlack"
-                                p={5}
-                                mb={3}
-                              >
-                                <Flex w="full" mb={3}>
-                                  <Heading size="h6" mt={1} color="#fff">
-                                    {item.name}
-                                  </Heading>
-                                  <Spacer />
-                                  <Text color="#fff">
-                                    {item.level} of {item.levelMax}
-                                  </Text>
-                                </Flex>
-                                <Progress
-                                  colorScheme="telegram"
-                                  size="sm"
-                                  value={Number(
-                                    (item.level * 100) / item.levelMax
-                                  )}
-                                  height="6px"
-                                />
-                              </Box>
-                            </React.Fragment>
-                          );
-                        })
-                    : null}
-
-                  <AddLevelsModal
-                    mode={mode}
-                    name="levels"
-                    onClose={() => setModifierToEdit(null)}
-                    isOpen={modifierToEdit === "levels"}
-                  />
-                </Box>
-                {/* <ErrorMessage component="div" name="levels" /> */}
-
-                <CommonButton
-                  w="full"
-                  my="24px"
-                  {...restOfTxStatus}
-                  type="submit"
-                  text={`${mode === formMode.ADD ? "create" : "update"} nft`}
-                  isDisabled={!(dirty && isValid) && noImagesChange}
+                <AddLevelsModal
+                  mode={mode}
+                  name="levels"
+                  onClose={() => setModifierToEdit(null)}
+                  isOpen={modifierToEdit === "levels"}
                 />
-              </Form>
-            </div>
+              </Box>
+
+              {errors?.properties && (
+                <HStack color="#ff8c8c" py="4px">
+                  <Text> Please re-check errors in Props Section!</Text>
+                </HStack>
+              )}
+
+              {errors?.levels && (
+                <HStack color="#ff8c8c" py="4px">
+                  <Text> Please re-check errors in Levels Section!</Text>
+                </HStack>
+              )}
+
+              <CommonButton
+                w="full"
+                my="24px"
+                {...restOfTxStatus}
+                type="submit"
+                text={`${mode === formMode.ADD ? "create" : "update"} nft`}
+                isDisabled={!(dirty && isValid) && noImagesChange}
+              />
+            </Form>
           )}
         </Formik>
       )}

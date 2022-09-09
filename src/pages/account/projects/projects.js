@@ -78,7 +78,8 @@ const MyProjectsPage = () => {
       ) : (
         <>
           <Text textAlign="left" color="brand.grayLight">
-            There are {projects?.length || 0} projects
+            There are {projects?.length || 0} project
+            {projects?.length > 1 ? "s" : ""}
           </Text>
 
           {projects?.length ? (

@@ -86,8 +86,10 @@ const AccountLayout = ({ children }) => {
           <TabList>
             {!isBigScreen ? (
               <HStack
-              //  sx={SCROLLBAR}
-               overflowY="hidden" overflowX="scroll">
+                //  sx={SCROLLBAR}
+                overflowY="hidden"
+                overflowX="scroll"
+              >
                 {tabsData.map((tab) => (
                   <Tab
                     minW={["120px", "auto"]}
@@ -110,8 +112,6 @@ const AccountLayout = ({ children }) => {
             ) : (
               tabsData.map((tab) => (
                 <Tab
-                  // minW={["120px", "auto"]}
-                  bg="green"
                   mx="25px"
                   px="0.5px"
                   color="#fff"

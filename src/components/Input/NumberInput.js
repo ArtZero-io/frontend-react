@@ -10,6 +10,7 @@ import {
   NumberInputStepper,
 } from "@chakra-ui/react";
 import { Field } from "formik";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
 export default function AddCollectionNumberInput({
   max,
@@ -31,9 +32,15 @@ export default function AddCollectionNumberInput({
       <Field name={name}>
         {({ field, form }) => (
           <FormControl id={name} isRequired={isRequired}>
-            <FormLabel fontSize={["md", "lg", "lg"]} ml={[0, 1]} htmlFor={name}>
-              {label}
-            </FormLabel>
+            {label && (
+              <FormLabel
+                fontSize={["md", "lg", "lg"]}
+                ml={[0, 1]}
+                htmlFor={name}
+              >
+                {label}
+              </FormLabel>
+            )}
 
             <NumberInput
               {...field}
@@ -47,12 +54,24 @@ export default function AddCollectionNumberInput({
               isDisabled={isDisabled}
               onChange={(val) => form.setFieldValue(field.name, val)}
             >
-              <NumberInputField borderWidth="0px" borderRadius="0" h={height} />
+              <NumberInputField
+                fontSize={["md", "lg"]}
+                focusBorder="0"
+                borderWidth="0px"
+                borderRadius="0"
+                h={height}
+              />
 
               {hasStepper && (
                 <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
+                  <NumberIncrementStepper
+                    border="none"
+                    children={<ChevronUpIcon w={5} h={5} />}
+                  />
+                  <NumberDecrementStepper
+                    border="none"
+                    children={<ChevronDownIcon w={5} h={5} />}
+                  />
                 </NumberInputStepper>
               )}
             </NumberInput>

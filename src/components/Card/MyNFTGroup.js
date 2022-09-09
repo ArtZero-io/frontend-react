@@ -155,7 +155,7 @@ function MyNFTGroupCard({
             border="2px solid white"
             src={getCachedImageShort(avatarImage, 100)}
           />
-          <VStack align="start" ml={3} justifyContent="center">
+          <VStack w="full" align="start" ml={3} justifyContent="center">
             <Heading
               size="h6"
               cursor="pointer"
@@ -165,7 +165,8 @@ function MyNFTGroupCard({
               {name}
             </Heading>
             <Text textAlign="left" color="brand.grayLight" size="2xs">
-              {listNFTFormatted?.length} items
+              {listNFTFormatted?.length} item
+              {listNFTFormatted?.length > 1 ? "s" : ""}
             </Text>
           </VStack>
         </Flex>

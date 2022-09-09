@@ -136,7 +136,11 @@ function TransferNFTModal({
               label="Transfer NFT"
             >
               <span
-                onClick={!actionType ? onOpen : () => {}}
+                onClick={
+                  isDisabled || actionType
+                    ? () => toast.error("This item is currently for sale!")
+                    : onOpen
+                }
                 style={{
                   width: iconWidth,
                   height: iconWidth,

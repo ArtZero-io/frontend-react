@@ -232,6 +232,8 @@ export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
 };
 
 export const createLevelAttribute = (levelString) => {
+  if (!levelString) return { level: "", levelMax: "" };
+
   const location = Number(levelString.indexOf("|"));
   const level = levelString.slice(0, location);
   const levelMax = levelString.slice(location + 1, levelString.length);
@@ -363,3 +365,13 @@ export const isPhaseTimeOverlap = (phaseArr) => {
 
   return false;
 };
+
+export default function isNotEmptyStr(data) {
+  if (!data) return false;
+
+  if (typeof data === "string") {
+    return data.trim().length > 0;
+  }
+
+  return false;
+}

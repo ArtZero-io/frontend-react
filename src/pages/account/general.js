@@ -333,76 +333,81 @@ function GeneralPage() {
             </motion.div>
           </Box>
 
-          <Grid
-            w="full"
-            minH={"7rem"}
-            gap={{ base: "10px", md: "30px" }}
-            templateColumns={{
-              base: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))",
-              lg: "repeat(auto-fill, minmax(min(100%, 290px), 1fr))",
-              xl: "repeat(auto-fill, minmax(min(100%, 320px), 1fr))",
-            }}
-          >
-            {dashboardInfo
-              ?.filter((item) => !Object.keys(item).includes("address"))
-              .map((item, idx) => {
-                return (
-                  <GridItem key={idx} w="100%" h="100%">
-                    <Box
-                      w="full"
-                      textAlign="left"
-                      bg="brand.grayDark"
-                      px={4}
-                      py={3}
-                    >
-                      <>
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                        >
-                          <Flex w="full">
-                            <Box>
+          <div style={{ display: "grid", width: "100%" }}>
+            <Grid
+              w="full"
+              minH={"7rem"}
+              gap={{ base: "10px", md: "30px" }}
+              templateColumns={{
+                base: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))",
+                lg: "repeat(auto-fill, minmax(min(100%, 290px), 1fr))",
+                xl: "repeat(auto-fill, minmax(min(100%, 320px), 1fr))",
+              }}
+            >
+              {dashboardInfo
+                ?.filter((item) => !Object.keys(item).includes("address"))
+                .map((item, idx) => {
+                  return (
+                    <GridItem key={idx} w="100%" h="100%">
+                      <Box
+                        w="full"
+                        textAlign="left"
+                        bg="brand.grayDark"
+                        px={4}
+                        py={3}
+                      >
+                        <>
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                          >
+                            <Flex w="full">
+                              <Box>
+                                <Text
+                                  display={["none", "block"]}
+                                  fontSize={{ base: "md", md: "lg" }}
+                                  color="#888"
+                                >
+                                  {item.name}
+                                </Text>
+                              </Box>
+                              <Spacer />
+                            </Flex>
+                            <Flex w="full" textAlign="left" alignItems="center">
                               <Text
-                                display={["none", "block"]}
-                                fontSize={{ base: "md", md: "lg" }}
+                                display={["block", "none"]}
+                                fontSize="lg"
                                 color="#888"
                               >
                                 {item.name}
                               </Text>
-                            </Box>
-                            <Spacer />
-                          </Flex>
-                          <Flex w="full" textAlign="left" alignItems="center">
-                            <Text
-                              display={["block", "none"]}
-                              fontSize="lg"
-                              color="#888"
-                            >
-                              {item.name}
-                            </Text>
-                            <Spacer />
-                            <Flex alignItems="center">
-                              <Tag bg="transparent" pl={0}>
-                                <TagLabel
-                                  bg="transparent"
-                                  fontSize={["24px", "40px"]}
-                                >
-                                  {item.value}
-                                </TagLabel>
-                                {item.name === "Amount Trades" && (
-                                  <TagRightIcon fontSize="2xl" as={AzeroIcon} />
-                                )}
-                              </Tag>
+                              <Spacer />
+                              <Flex alignItems="center">
+                                <Tag bg="transparent" pl={0}>
+                                  <TagLabel
+                                    bg="transparent"
+                                    fontSize={["24px", "40px"]}
+                                  >
+                                    {item.value}
+                                  </TagLabel>
+                                  {item.name === "Amount Trades" && (
+                                    <TagRightIcon
+                                      fontSize="2xl"
+                                      as={AzeroIcon}
+                                    />
+                                  )}
+                                </Tag>
+                              </Flex>
                             </Flex>
-                          </Flex>
-                        </motion.div>
-                      </>
-                    </Box>
-                  </GridItem>
-                );
-              })}
-          </Grid>
+                          </motion.div>
+                        </>
+                      </Box>
+                    </GridItem>
+                  );
+                })}
+            </Grid>
+          </div>
         </VStack>
 
         <Stack
@@ -429,11 +434,11 @@ function GeneralPage() {
             />
           </Square>
 
-          <Stack display={["flex", "none"]}>
+          <Flex w="full" display={["flex", "none"]} justifyContent="start">
             <Tag variant="outline" my="10px">
               <TagLabel>Trade Fee: {tradeFee && `${tradeFee}%`}</TagLabel>
             </Tag>
-          </Stack>
+          </Flex>
 
           <VStack
             w="full"

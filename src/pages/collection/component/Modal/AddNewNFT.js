@@ -16,13 +16,15 @@ import AddNewNFTForm from "../Form/AddNewNFT";
 import EditIcon from "@theme/assets/icon/Edit.js";
 import { formMode, SCROLLBAR, END, FINALIZED } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
+import toast from "react-hot-toast";
 
 const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { actionType, step, onEndClick } = useTxStatus();
-  const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
 
+  const modalSize = useBreakpointValue(["xs", "4xl"]);
   const iconWidth = useBreakpointValue(["40px", "50px"]);
+
   useEffect(() => {
     step === END && onClose();
   }, [step, onClose]);
@@ -45,7 +47,11 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
             label="Edit NFT"
           >
             <span
-              onClick={isDisabled || actionType ? () => {} : onOpen}
+              onClick={
+                isDisabled || actionType
+                  ? () => toast.error("This item is currently for sale!")
+                  : onOpen
+              }
               style={{
                 width: iconWidth,
                 height: iconWidth,
@@ -79,6 +85,7 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
           backdropFilter="blur(10px) hue-rotate(90deg)"
         />
         <ModalContent
+          maxWidth={["340px", "940px"]}
           borderRadius="0"
           textAlign="center"
           minH={{ xl: "md" }}
@@ -101,7 +108,7 @@ const AddNewNFTModal = ({ mode = formMode.ADD, isDisabled, ...rest }) => {
             </Heading>
           </ModalHeader>
 
-          <ModalBody shadow="lg" overflowY="auto" sx={SCROLLBAR}>
+          <ModalBody overflowY="auto" sx={SCROLLBAR}>
             <AddNewNFTForm mode={mode} {...rest} />
           </ModalBody>
         </ModalContent>
