@@ -648,7 +648,7 @@ function TokenPage() {
                 w="full"
                 spacing="20px"
                 px={["0px", "30px"]}
-                minW={["auto", "520px"]}
+                minW={["auto", "650px"]}
               >
                 <Stack spacing="5px" w="full">
                   <Heading fontSize={["xl", "3xl"]} isTruncated>
