@@ -370,8 +370,8 @@ const NFTTabCollectible = (props) => {
                     alignItems: "center",
                   }}
                 >
-                  {/* is_for_sale true  no sale*/}
-                  {!is_for_sale && !isOwner ? (
+                  {/* is_for_sale true no sale always show no matter is owner or nor*/}
+                  {!is_for_sale ? (
                     <Flex
                       w="full"
                       border="1px solid #343333"
