@@ -284,8 +284,8 @@ function MyNFTTabInfo(props) {
 
   return (
     <>
-      <HStack spacing={{ base: "30px", "2xl": "40px" }} alignItems="stretch">
-        <Square size={{ base: "340px", "2xl": "460px" }}>
+      <HStack spacing="45px" alignItems="stretch">
+        <Square size="484px">
           <Image
             w="full"
             h="full"
@@ -293,7 +293,7 @@ function MyNFTTabInfo(props) {
             alt="nft-img"
             objectFit="cover"
             src={avatar && getCachedImageShort(avatar, 500)}
-            fallback={<Skeleton minW={{ base: "360px", "2xl": "480px" }} />}
+            fallback={<Skeleton minW="484px" />}
           />
         </Square>
 
@@ -436,6 +436,7 @@ function MyNFTTabInfo(props) {
                   to="#"
                   color="#7AE7FF"
                   textTransform="capitalize"
+                  textDecoration="underline"
                 >
                   {ownerName}
                 </Link>
@@ -460,11 +461,11 @@ function MyNFTTabInfo(props) {
                   mb={2}
                   w="full"
                   pr={"22px"}
+                  gap="30px"
+                  sx={SCROLLBAR}
                   id="grid-attrs"
                   overflowY="auto"
-                  maxH={{ base: "170px", "2xl": "245px" }}
-                  sx={SCROLLBAR}
-                  gap={{ base: "0.5rem", xl: "1rem", "2xl": "1.25rem" }}
+                  maxH="232px"
                   templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
                 >
                   {attrsList?.length
@@ -495,7 +496,7 @@ function MyNFTTabInfo(props) {
             )}
           </Stack>
 
-          <Stack w="full" textAlign="right">
+          <Stack pb="10px" w="full" textAlign="right">
             {!is_for_sale && (
               <Flex
                 w="full"
@@ -601,64 +602,79 @@ function MyNFTTabInfo(props) {
               </>
             )}
           </Stack>
+
+          {filterSelected === "COLLECTED" ? (
+            <HStack
+              w="full"
+              pt="10px"
+              justify="space-between"
+              borderTop="1px solid #282828"
+            >
+              <Text>
+                <Text as="span" color="brand.grayLight">
+                  Royal fee:
+                </Text>{" "}
+                {formatNumDynamicDecimal((askPrice * royalFee) / 10000)}{" "}
+                <AzeroIcon w="15px" mb="2px" /> ({(royalFee / 100).toFixed(2)}%)
+              </Text>
+              <Text>
+                <Text as="span" color="brand.grayLight">
+                  Trade fee:
+                </Text>{" "}
+                {formatNumDynamicDecimal((askPrice * myTradingFee) / 100)}{" "}
+                <AzeroIcon w="15px" mb="2px" /> ({myTradingFee}%)
+              </Text>
+              <Text>
+                <Text as="span" color="brand.grayLight">
+                  You will receive:{" "}
+                </Text>
+                {formatNumDynamicDecimal(
+                  askPrice -
+                    (askPrice * myTradingFee) / 100 -
+                    (askPrice * royalFee) / 10000
+                )}{" "}
+                <AzeroIcon w="15px" mb="2px" />
+              </Text>
+            </HStack>
+          ) : null}
+
+          {filterSelected === "LISTING" ? (
+            <HStack
+              w="full"
+              pt="10px"
+              justify="space-between"
+              borderTop="1px solid #282828"
+            >
+              <Text>
+                <Text as="span" color="brand.grayLight">
+                  Royal fee:
+                </Text>{" "}
+                {formatNumDynamicDecimal((price / 10 ** 16) * royalFee)}{" "}
+                <AzeroIcon w="15px" mb="2px" /> ({(royalFee / 100).toFixed(2)}%)
+              </Text>
+              <Text>
+                <Text as="span" color="brand.grayLight">
+                  Trade fee:
+                </Text>{" "}
+                {formatNumDynamicDecimal((price / 10 ** 14) * myTradingFee)}{" "}
+                <AzeroIcon w="15px" mb="2px" /> ({myTradingFee}%)
+              </Text>
+              <Text>
+                <Text as="span" color="brand.grayLight">
+                  You will receive:{" "}
+                </Text>{" "}
+                {formatNumDynamicDecimal(
+                  price *
+                    (1 / 10 ** 12 -
+                      myTradingFee / 10 ** 14 -
+                      royalFee / 10 ** 16)
+                )}{" "}
+                <AzeroIcon w="15px" mb="2px" />
+              </Text>
+            </HStack>
+          ) : null}
         </Stack>
       </HStack>
-      {filterSelected === "COLLECTED" ? (
-        <HStack
-          justify="space-between"
-          color="brand.blue"
-          fontSize={{ base: "14px", "2xl": "15px" }}
-          w="full"
-          py={{ base: "10px", "2xl": "20px" }}
-        >
-          <Text>
-            Royal fee: {formatNumDynamicDecimal((askPrice * royalFee) / 10000)}{" "}
-            <AzeroIcon w="12px" mb="2px" /> ({(royalFee / 100).toFixed(2)} %)
-          </Text>
-          <Text>
-            Trade fee:{" "}
-            {formatNumDynamicDecimal((askPrice * myTradingFee) / 100)}{" "}
-            <AzeroIcon w="12px" mb="2px" /> ({myTradingFee} %)
-          </Text>
-          <Text>
-            You will receive:{" "}
-            {formatNumDynamicDecimal(
-              askPrice -
-                (askPrice * myTradingFee) / 100 -
-                (askPrice * royalFee) / 10000
-            )}{" "}
-            <AzeroIcon w="12px" mb="2px" />
-          </Text>
-        </HStack>
-      ) : null}
-
-      {filterSelected === "LISTING" ? (
-        <HStack
-          justify="space-between"
-          color="brand.blue"
-          fontSize={{ base: "14px", "2xl": "15px" }}
-          w="full"
-          py={{ base: "10px", "2xl": "20px" }}
-        >
-          <Text>
-            Royal fee: {formatNumDynamicDecimal((price / 10 ** 16) * royalFee)}{" "}
-            <AzeroIcon w="12px" mb="2px" /> ({(royalFee / 100).toFixed(2)} %)
-          </Text>
-          <Text>
-            Trade fee:{" "}
-            {formatNumDynamicDecimal((price / 10 ** 14) * myTradingFee)}{" "}
-            <AzeroIcon w="12px" mb="2px" /> ({myTradingFee} %)
-          </Text>
-          <Text>
-            You will receive:{" "}
-            {formatNumDynamicDecimal(
-              price *
-                (1 / 10 ** 12 - myTradingFee / 10 ** 14 - royalFee / 10 ** 16)
-            )}{" "}
-            <AzeroIcon w="12px" mb="2px" />
-          </Text>
-        </HStack>
-      ) : null}
     </>
   );
 }

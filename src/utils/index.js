@@ -375,3 +375,7 @@ export default function isNotEmptyStr(data) {
 
   return false;
 }
+
+export function isEmptyObj(value) {
+  return Object.keys(value).length === 0 && value.constructor === Object;
+}

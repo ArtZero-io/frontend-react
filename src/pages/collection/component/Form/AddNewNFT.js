@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Button,
@@ -7,14 +6,13 @@ import {
   GridItem,
   Heading,
   HStack,
-  Progress,
   Spacer,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
-import { Formik, Form, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -38,7 +36,6 @@ import CommonButton from "@components/Button/CommonButton";
 import { formMode, CREATE_NFT, EDIT_NFT, START } from "@constants";
 
 import { setTxStatus } from "@store/actions/txStatus";
-import { clearTxStatus } from "@store/actions/txStatus";
 import PropCard from "@components/Card/PropCard";
 import isNotEmptyStr from "@utils";
 import LevelCard from "@components/Card/LevelCard";
@@ -64,7 +61,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
       NFTName: "",
       description: "",
       properties: [{ type: "", name: "" }],
-      levels: [{ name: "", level: 3, levelMax: 5 }],
+      levels: [{ name: "", level: "", levelMax: "" }],
     };
 
     if (mode === formMode.EDIT) {
@@ -193,7 +190,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     is: (val) => val,
                     then: Yup.number()
                       .required("Must have min value.")
-                      .min(1, "Must be bigger than 0")
+                      .min(0, "Must be bigger than 0")
                       .max(Yup.ref("levelMax"), "Must smaller than max"),
                     otherwise: Yup.number().notRequired(),
                   }),
@@ -324,7 +321,6 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   placeholder="NFT Name"
                 />
               </HStack>
-
               <AddNewNFTTextArea
                 isDisabled={actionType}
                 isRequired={true}
@@ -333,7 +329,6 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 type="text"
                 placeholder="Description"
               />
-
               <AddNewNFTImageUpload
                 isDisabled={actionType}
                 mode={mode}
@@ -343,7 +338,6 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 limitedSize={{ width: "1000", height: "1000" }}
                 isBanner={false}
               />
-
               {/* Add Props  */}
               <Box py={6} borderBottomWidth={1}>
                 <Flex w="full" pb={3}>
@@ -397,7 +391,6 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 />
               </Box>
               {/* End Add Props  */}
-
               <Box py={6} borderBottomWidth={1}>
                 <Flex w="full" pb={3}>
                   <VStack alignItems="start">
@@ -452,13 +445,11 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   isOpen={modifierToEdit === "levels"}
                 />
               </Box>
-
               {errors?.properties && (
                 <HStack color="#ff8c8c" py="4px">
                   <Text> Please re-check errors in Props Section!</Text>
                 </HStack>
               )}
-
               {errors?.levels && (
                 <HStack color="#ff8c8c" py="4px">
                   <Text> Please re-check errors in Levels Section!</Text>
@@ -471,7 +462,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 {...restOfTxStatus}
                 type="submit"
                 text={`${mode === formMode.ADD ? "create" : "update"} nft`}
-                isDisabled={!(dirty && isValid) && noImagesChange}
+                isDisabled={!(isValid && (!noImagesChange || dirty))}
               />
             </Form>
           )}

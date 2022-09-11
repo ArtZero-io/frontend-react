@@ -32,6 +32,7 @@ import {
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
   const { actionType } = useTxStatus();
+
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
     [REMOVE_BID, ACCEPT_BID, UNLIST_TOKEN, LIST_TOKEN, LOCK, TRANSFER],
     () => handleForceUpdate()
@@ -39,17 +40,17 @@ const MyNFTsPage = () => {
 
   const [owner, setOwner] = useState(null);
   const [loading, setLoading] = useState(null);
-  const [filterSelected, setFilterSelected] = useState(tabList.COLLECTED);
+  const [filterSelected, setFilterSelected] = useState("COLLECTED");
   const [myCollections, setMyCollections] = useState(null);
 
   const handleForceUpdate = async () => {
-    if (actionType === LIST_TOKEN) return setFilterSelected('LISTING');
+    if (actionType === LIST_TOKEN) return setFilterSelected("LISTING");
 
     if (actionType === UNLIST_TOKEN) {
-      return setFilterSelected('COLLECTED');
+      return setFilterSelected("COLLECTED");
     }
 
-    setFilterSelected('COLLECTED');
+    setFilterSelected("COLLECTED");
   };
 
   function onClickHandler(v) {
@@ -85,17 +86,15 @@ const MyNFTsPage = () => {
               "/getNFTsByOwnerAndCollection",
               options
             );
-              console.log('filterSelected', filterSelected)
-              console.log('tabList.COLLECTED', tabList.COLLECTED)
-              console.log('tabList.LISTING', tabList.LISTING)
-              console.log('tabList.BIDS', tabList.BIDS)
-            if (filterSelected === 'COLLECTED') {
+
+            if (filterSelected === "COLLECTED") {
               dataList = dataList.filter((item) => item.is_for_sale !== true);
             }
 
-            if (filterSelected ==='LISTING') {
+            if (filterSelected === "LISTING") {
               dataList = dataList.filter((item) => item.is_for_sale === true);
             }
+
             const data = dataList?.map((item) => {
               return { ...item, stakeStatus: 0 };
             });
@@ -190,7 +189,7 @@ const MyNFTsPage = () => {
     };
 
     // if (!myCollections || owner !== currentAccount?.address) {
-    filterSelected !== 'BIDS' ? fetchMyCollections() : fetchMyBids();
+    filterSelected !== "BIDS" ? fetchMyCollections() : fetchMyBids();
     // }
   }, [currentAccount?.address, filterSelected, owner]);
 
@@ -249,8 +248,9 @@ const MyNFTsPage = () => {
             icon={<RefreshIcon />}
             _hover={{ color: "black", bg: "#7ae7ff" }}
           />
+
           <Spacer display={["none", "flex"]} />
-          (
+
           <DropdownMobile
             minW="256px"
             width="full"
@@ -264,7 +264,6 @@ const MyNFTsPage = () => {
               setFilterSelected(i);
             }}
           />
-          )
         </HStack>
       )}
 

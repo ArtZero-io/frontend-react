@@ -20,7 +20,7 @@ import useTxStatus from "@hooks/useTxStatus";
 export default function ResponsivelySizedModal({
   onClose,
   isOpen,
-  filterSelected = 'LISTING',
+  filterSelected = "LISTING",
   ...rest
 }) {
   const tabHeight = useBreakpointValue({
@@ -44,7 +44,8 @@ export default function ResponsivelySizedModal({
     {
       label: "offers",
       content: <MyNFTTabOffers {...rest} />,
-      isDisabled: filterSelected === 'COLLECTED' || actionType || !rest?.is_for_sale,
+      isDisabled:
+        filterSelected === "COLLECTED" || actionType || !rest?.is_for_sale,
     },
   ];
 
@@ -52,7 +53,6 @@ export default function ResponsivelySizedModal({
     <Modal
       isCentered
       isOpen={isOpen}
-      size={"7xl"}
       onClose={onClose}
       closeOnEsc={false}
       scrollBehavior="inside"
@@ -65,13 +65,12 @@ export default function ResponsivelySizedModal({
 
       <ModalContent
         p={0}
-        h="full"
         w="full"
+        maxW="78rem"
+        minH="655px"
         borderRadius="0"
         position="relative"
         bg="brand.grayDark"
-        maxW={{ base: "58rem", xl: "60rem", "2xl": "78rem" }}
-        maxH={{ base: "28rem", xl: "30rem", "2xl": "40rem" }}
       >
         <ModalCloseButton
           borderRadius="0"
@@ -108,12 +107,7 @@ export default function ResponsivelySizedModal({
 
           <TabPanels style={{ height: `calc(100% - ${tabHeight})` }}>
             {tabData.map((tab, index) => (
-              <TabPanel
-                h="full"
-                key={index}
-                px={{ base: 6, "2xl": 12 }}
-                py={{ base: "22px", "2xl": "44px" }}
-              >
+              <TabPanel h="584px" key={index} p="50px">
                 {tab.content}
               </TabPanel>
             ))}
