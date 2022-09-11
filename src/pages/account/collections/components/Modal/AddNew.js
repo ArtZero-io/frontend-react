@@ -1,7 +1,7 @@
 import {
   Button,
   Heading,
-   Modal,
+  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -17,10 +17,10 @@ import SimpleMode from "./SimpleMode";
 
 import AddCollectionIcon from "@theme/assets/icon/AddCollection";
 import { useEffect } from "react";
- import { formMode, END } from "@constants";
+import { formMode, END } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 
-function AddNewCollection({ mode = formMode.ADD, id }) {
+function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { step } = useTxStatus();
@@ -33,10 +33,41 @@ function AddNewCollection({ mode = formMode.ADD, id }) {
 
   return (
     <>
-      {mode === formMode.ADD && (
+      {variant !== "navbar" && mode === formMode.ADD && (
         <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
           create Collection
         </Button>
+      )}
+
+      {variant === "navbar" && mode === formMode.ADD && (
+        <Heading
+          p={0}
+          ring={0}
+          h="41px"
+          py="10px"
+          as={Button}
+          display="flex"
+          bg="transparent"
+          textAlign="left"
+          borderBottom="2px"
+          fontFamily="Evogria"
+          borderColor="transparent"
+          transition="all 0.2s"
+          justifyContent="center"
+          fontSize={{ base: "24px", md: "15px" }}
+          _hover={{
+            borderColor: "brand.blue",
+            color: "brand.blue",
+            bg: "transparent",
+          }}
+          _focus={{
+            bg: "transparent",
+          }}
+          color="#fff"
+          onClick={() => onOpen()}
+        >
+          create
+        </Heading>
       )}
 
       <Modal isCentered size={modalSize} isOpen={isOpen} onClose={onClose}>

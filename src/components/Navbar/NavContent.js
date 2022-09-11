@@ -28,6 +28,9 @@ import { useLocation } from "react-router-dom";
 import { ArtZeroLogo } from "@theme/assets/logo/ArtZeroLogo";
 import SocialCard from "../Card/Social";
 import SearchDrawer from "../SearchBox/SearchDrawer";
+import AddNewCollectionModal from "@pages/account/collections/components/Modal/AddNew";
+
+import { formMode } from "@constants";
 
 const links = [
   // { label: "Home", href: ROUTES.HOME },
@@ -192,7 +195,11 @@ const DesktopNavContent = (props) => {
           <NavLink.Desktop label="Admin" to={ROUTES.ACCOUNT_ADMIN} />
         )} */}
         {<NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />}
+
         {currentAccount?.address && <MyAccountDropdown />}
+        {currentAccount?.address && (
+          <AddNewCollectionModal mode={formMode.ADD} variant="navbar" />
+        )}
       </HStack>
 
       <SearchDrawer display={{ base: "none", md: "flex" }} />
