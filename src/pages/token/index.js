@@ -368,8 +368,8 @@ function TokenPage() {
               p="18px"
               bg="black"
               w="full"
-              px={["20px", "85px"]}
-              maxW={["full", "1200px"]}
+              px={["20px", "8px"]}
+              maxW={["full", "1160px"]}
             >
               <Breadcrumb w="full">
                 <BreadcrumbItem isCurrentPage>
@@ -393,19 +393,144 @@ function TokenPage() {
               maxW={["full", "1200px"]}
               spacing="25px"
             >
-              <Square maxH={["375px"]} maxW={["375px"]} overflow="hidden">
-                <Image
-                  w="full"
-                  h="full"
-                  alt="nft-img"
-                  boxShadow="lg"
-                  objectFit="cover"
-                  fallback={<Skeleton />}
-                  src={getCachedImageShort(token?.avatar, 500)}
-                />
-              </Square>
+              <Stack minW={["auto", "484px"]}>
+                <Square
+                  maxH={["375px", "484px"]}
+                  maxW={["375px", "484px"]}
+                  overflow="hidden"
+                >
+                  <Image
+                    w="full"
+                    h="full"
+                    alt="nft-img"
+                    boxShadow="lg"
+                    objectFit="cover"
+                    fallback={<Skeleton />}
+                    src={getCachedImageShort(token?.avatar, 500)}
+                  />
+                </Square>
 
-              <HStack spacing="10px" justify="start">
+                <HStack
+                  py="20px"
+                  spacing="10px"
+                  justify="start"
+                  display={["none", "flex"]}
+                >
+                  {!token?.is_locked &&
+                    collection?.showOnChainMetadata &&
+                    isOwner && (
+                      <AddNewNFTModal
+                        mode={formMode.EDIT}
+                        isDisabled={token?.is_for_sale || actionType}
+                        {...token}
+                      />
+                    )}
+
+                  {!token?.is_locked &&
+                    collection?.showOnChainMetadata &&
+                    !isOwner && (
+                      <Tooltip
+                        hasArrow
+                        bg="#333"
+                        color="#fff"
+                        borderRadius="0"
+                        label="Unlocked on-chain metadata"
+                      >
+                        <span
+                          style={{
+                            width: iconWidth,
+                            height: iconWidth,
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            border: "2px solid #333333",
+                          }}
+                        >
+                          <UnlockIcon
+                            width={["20px", "25px"]}
+                            height={["20px", "25px"]}
+                          />
+                        </span>
+                      </Tooltip>
+                    )}
+
+                  {!token?.is_locked && !collection?.showOnChainMetadata && (
+                    <Tooltip
+                      hasArrow
+                      bg="#333"
+                      color="#fff"
+                      borderRadius="0"
+                      label="Off-chain metadata"
+                    >
+                      <span
+                        style={{
+                          width: iconWidth,
+                          height: iconWidth,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          border: "2px solid #333333",
+                        }}
+                      >
+                        <UnlockIcon
+                          width={["20px", "25px"]}
+                          height={["20px", "25px"]}
+                        />
+                      </span>
+                    </Tooltip>
+                  )}
+
+                  {token?.is_locked && collection?.showOnChainMetadata && (
+                    <Tooltip
+                      hasArrow
+                      bg="#333"
+                      color="#fff"
+                      borderRadius="0"
+                      label="Locked on-chain metadata"
+                    >
+                      <span
+                        style={{
+                          width: iconWidth,
+                          height: iconWidth,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          border: "2px solid #333333",
+                        }}
+                      >
+                        <LockIcon
+                          width={["20px", "25px"]}
+                          height={["20px", "25px"]}
+                        />
+                      </span>
+                    </Tooltip>
+                  )}
+
+                  {!token?.is_locked && isOwner && (
+                    <>
+                      <LockNFTModalMobile
+                        owner={
+                          token?.is_for_sale ? token?.nft_owner : token?.owner
+                        }
+                        txType="lock"
+                        isDisabled={token?.is_for_sale || actionType}
+                        tokenID={token?.tokenID}
+                        nftContractAddress={token?.nftContractAddress}
+                        showOnChainMetadata={collection?.showOnChainMetadata}
+                      />
+                    </>
+                  )}
+
+                  {isOwner && (
+                    <TransferNFTModalMobile
+                      {...token}
+                      isDisabled={token?.is_for_sale || actionType}
+                    />
+                  )}
+                </HStack>
+              </Stack>
+
+              <HStack display={["flex", "none"]} spacing="10px" justify="start">
                 {!token?.is_locked &&
                   collection?.showOnChainMetadata &&
                   isOwner && (
