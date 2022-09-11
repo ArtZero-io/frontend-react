@@ -1,11 +1,10 @@
-/* eslint-disable no-unused-vars */
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 import Layout from "@components/Layout/Layout";
 import StatsHeader from "./component/Header/StatsHeader";
 import TopCollectionsTab from "./Tab/TopCollectionsTab";
-import PayoutHistoryTab from "./Tab/PayoutHistoryTab";
+// import PayoutHistoryTab from "./Tab/PayoutHistoryTab";
 import { useSubstrateState } from "@utils/substrate";
 
 import { APICall } from "@api/client";
@@ -13,7 +12,6 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 import staking_calls from "@utils/blockchain/staking_calls";
 import useInterval from "use-interval";
 import { getPublicCurrentAccount } from "@utils";
-import { formatNumDynamicDecimal, shortenNumber } from "../../utils";
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import collection_manager from "@utils/blockchain/collection-manager";
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
@@ -59,20 +57,21 @@ function StatsPage() {
       );
 
       const launchpadBalance = await fetchUserBalance({
-        currentAccount,
+        currentAccount: currentAccount || getPublicCurrentAccount(),
         api,
         address: launchpad_manager?.CONTRACT_ADDRESS,
       });
+
       const collectionBalance = await fetchUserBalance({
-        currentAccount,
+        currentAccount: currentAccount || getPublicCurrentAccount(),
         api,
         address: collection_manager?.CONTRACT_ADDRESS,
       });
 
-      console.log("PF profit before %---------------");
-      console.log("PF currentProfitMP", currentProfit);
-      console.log("PF collectionBal", collectionBalance?.balance);
-      console.log("PF launchpadBal", launchpadBalance?.balance);
+      // console.log("PF profit before %---------------");
+      // console.log("PF currentProfitMP", currentProfit);
+      // console.log("PF collectionBal", collectionBalance?.balance);
+      // console.log("PF launchpadBal", launchpadBalance?.balance);
 
       const totalVolume = await marketplace_contract_calls.getTotalVolume(
         currentAccount || getPublicCurrentAccount()
@@ -80,9 +79,9 @@ function StatsPage() {
 
       const totalProfit =
         currentProfit + launchpadBalance?.balance + collectionBalance?.balance;
-      console.log("PF totalProfit", totalProfit);
-      console.log("PF totalProfit 30%", totalProfit * 0.3);
-      console.log("PF profit End %---------------");
+      // console.log("PF totalProfit", totalProfit);
+      // console.log("PF totalProfit 30%", totalProfit * 0.3);
+      // console.log("PF profit End %---------------");
 
       const dataList = await APICall.getCollectionByVolume({ limit: 5 });
 

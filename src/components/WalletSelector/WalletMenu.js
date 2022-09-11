@@ -1,11 +1,20 @@
-import { Tag, TagLabel, TagRightIcon } from "@chakra-ui/react";
+import {
+  Flex,
+  IconButton,
+  Tag,
+  TagLabel,
+  TagRightIcon,
+  useClipboard,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import BN from "bn.js";
 import { shortenNumber } from "@utils";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
+import toast from "react-hot-toast";
+import { CopyIcon } from "@chakra-ui/icons";
 
 function WalletMenu() {
   const { api, currentAccount } = useSubstrateState();
@@ -47,19 +56,37 @@ function WalletMenu() {
     return () => unsubscribe && unsubscribe();
   }, [activeAddress, api, currentAccount]);
 
+  const { hasCopied, onCopy } = useClipboard(currentAccount?.address);
+
+  useEffect(() => {
+    hasCopied && toast.success("Copied to clipboard!");
+  }, [hasCopied]);
+
   return currentAccount ? (
-    <AnimatePresence>
+    <>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        <Tag variant="grayBg" size="2xl" minW={24} justifyContent="end">
-          <TagLabel>{accountBalance}</TagLabel>
-          <TagRightIcon as={AzeroIcon} />
-        </Tag>
+        <Flex alignItems="center">
+          <IconButton
+            mr={2}
+            size="icon"
+            color="#fff"
+            variant="iconOutline"
+            aria-label="copy"
+            icon={<CopyIcon w="18px" h="18px" />}
+            onClick={onCopy}
+          />
+
+          <Tag variant="grayBg" size="2xl" minW={24} justifyContent="end">
+            <TagLabel>{accountBalance}</TagLabel>
+            <TagRightIcon as={AzeroIcon} />
+          </Tag>
+        </Flex>
       </motion.div>
-    </AnimatePresence>
+    </>
   ) : null;
 }
 
