@@ -455,7 +455,7 @@ async function whitelistMint(
   const address = caller_account?.address;
   const gasLimit = -1;
 
-  const azero_value = new BN(minting_fee / 10 ** 6)
+  const azero_value = new BN((minting_fee * amount) / 10 ** 6)
     .mul(new BN(10 ** 6))
     .toString();
   const injector = await web3FromSource(caller_account?.meta?.source);
