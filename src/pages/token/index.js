@@ -546,6 +546,7 @@ function TokenPage() {
                       to="#"
                       color="brand.blue"
                       textTransform="none"
+                      textDecoration="underline"
                       as={ReactRouterLink}
                     >
                       {ownerName}

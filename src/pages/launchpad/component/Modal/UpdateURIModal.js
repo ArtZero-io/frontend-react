@@ -82,11 +82,13 @@ export default function UpdateURIModal({
       />
 
       <ModalContent
-        position="relative"
-        mx={{ "2xl": 72 }}
-        bg="brand.grayDark"
-        p={12}
+        pt="20px"
+        pb="30px"
+        px={[0, "30px"]}
         borderRadius="0"
+        position="relative"
+        bg="brand.grayDark"
+        maxW={["340px", "600px"]}
       >
         <ModalCloseButton
           borderWidth={2}

@@ -45,7 +45,6 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
     <Modal
       isCentered
       isOpen={isOpen}
-      size={"7xl"}
       onClose={onClose}
       closeOnEsc={false}
       scrollBehavior="inside"
@@ -58,13 +57,12 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
 
       <ModalContent
         p={0}
-        h="full"
         w="full"
+        maxW="78rem"
+        minH="655px"
         borderRadius="0"
         position="relative"
         bg="brand.grayDark"
-        maxW={{ base: "20rem", xl: "60rem", "2xl": "78rem" }}
-        maxH={{ base: "calc(100% - 7.5rem)", xl: "30rem", "2xl": "40rem" }}
       >
         <ModalCloseButton
           borderRadius="0"
@@ -101,12 +99,7 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
 
           <TabPanels style={{ height: `calc(100% - ${tabHeight})` }}>
             {tabData.map((tab, index) => (
-              <TabPanel
-                h="full"
-                key={index}
-                px={{ base: 6, "2xl": 12 }}
-                py={{ base: "22px", "2xl": "44px" }}
-              >
+              <TabPanel h="584px" key={index} p="50px">
                 {tab.content}
               </TabPanel>
             ))}

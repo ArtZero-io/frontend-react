@@ -204,12 +204,8 @@ const NFTTabCollectible = (props) => {
 
   return (
     <>
-      <Stack
-        alignItems="stretch"
-        direction={{ base: "column", xl: "row" }}
-        spacing={{ base: "15px", xl: "25px", "2xl": "40px" }}
-      >
-        <Square size={{ base: "272px", xl: "360px", "2xl": "480px" }}>
+      <Stack alignItems="stretch" direction="row" spacing="45px">
+        <Square size="484px">
           <Image
             w="full"
             h="full"
@@ -217,7 +213,7 @@ const NFTTabCollectible = (props) => {
             alt="nft-img"
             objectFit="cover"
             src={avatar && getCachedImageShort(avatar, 500)}
-            fallback={<Skeleton minW={{ base: "360px", "2xl": "480px" }} />}
+            fallback={<Skeleton minW="484px" />}
           />
         </Square>
 
@@ -345,11 +341,7 @@ const NFTTabCollectible = (props) => {
 
           <Stack w="full">
             <Skeleton isLoaded={!loading}>
-              <Text
-                color="#fff"
-                maxW="max-content"
-                // pt={{ base: "2px", "2xl": "12px" }}
-              >
+              <Text color="#fff" maxW="max-content">
                 Owned by{" "}
                 <Link
                   as={ReactRouterLink}
@@ -357,6 +349,7 @@ const NFTTabCollectible = (props) => {
                   to="#"
                   color="#7AE7FF"
                   textTransform="capitalize"
+                  textDecoration="underline"
                 >
                   {ownerName}
                 </Link>
@@ -364,250 +357,247 @@ const NFTTabCollectible = (props) => {
             </Skeleton>
           </Stack>
 
-          <Skeleton isLoaded={!loading} w="full">
-            <Stack w="full">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                {/* is_for_sale true  no sale*/}
-                {!is_for_sale && !isOwner ? (
-                  <Flex alignItems="center" py="8px">
-                    <Heading size="h6">Not for sale</Heading>
-                  </Flex>
-                ) : null}
-
-                <Stack
-                  display={
-                    saleInfo && is_for_sale && !isOwner ? "flex" : "none"
-                  }
-                  direction={{ base: "column", xl: "row" }}
-                  w="full"
-                  h="92px"
-                  py={2}
-                  my={{ base: "8px", xl: "2px", "2xl": "22px" }}
-                  pr={{ base: "0", "2xl": "28px" }}
+          <Skeleton h="full" w="full" isLoaded={!loading}>
+            <Stack mt="20px" spacing="30px">
+              <Stack w="full">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
                 >
-                  {is_for_sale && saleInfo && !isOwner && (
-                    <>
-                      <Flex
-                        w="full"
-                        mr="22px"
-                        display="flex"
-                        borderWidth={2}
-                        alignItems="center"
-                        borderColor="#343333"
-                        px={["8px", "16px"]}
-                        minH={["4.15rem", "4.75rem", "4.75rem"]}
-                      >
-                        <CommonButton
-                          mx="0"
-                          px="2px"
-                          h="40px"
-                          {...rest}
-                          text="buy now"
-                          onClick={handleBuyAction}
-                          isDisabled={actionType && actionType !== BUY}
-                        />
+                  {/* is_for_sale true  no sale*/}
+                  {!is_for_sale && !isOwner ? (
+                    <Flex
+                      w="full"
+                      border="1px solid #343333"
+                      minH="80px"
+                      alignItems="center"
+                      px="20px"
+                    >
+                      <Heading size="h6">Not for sale</Heading>
+                    </Flex>
+                  ) : null}
 
-                        <Spacer />
+                  <Stack
+                    display={
+                      saleInfo && is_for_sale && !isOwner ? "flex" : "none"
+                    }
+                    direction={{ base: "column", xl: "row" }}
+                    w="full"
+                    pr={{ base: "0", "2xl": "28px" }}
+                  >
+                    {is_for_sale && saleInfo && !isOwner && (
+                      <>
+                        <Flex
+                          w="full"
+                          mr="22px"
+                          display="flex"
+                          borderWidth={2}
+                          alignItems="center"
+                          borderColor="#343333"
+                          px={["8px", "16px"]}
+                          minH="80px"
+                        >
+                          <CommonButton
+                            mx="0"
+                            px="2px"
+                            h="40px"
+                            {...rest}
+                            text="buy now"
+                            onClick={handleBuyAction}
+                            isDisabled={actionType && actionType !== BUY}
+                          />
 
-                        <Flex w="full">
                           <Spacer />
 
                           <Flex w="full">
                             <Spacer />
-                            <Box
-                              h="52px"
-                              textAlign="right"
-                              color="brand.grayLight"
-                            >
-                              <Text>Current price</Text>
-                              <Tag h={4} pr={0} bg="transparent" maxW="95px">
-                                <TagLabel bg="transparent">
-                                  <Tooltip
-                                    bg="#171717"
-                                    color="#fff"
-                                    border="1px solid #7ae7ff"
-                                    borderRadius="0"
-                                    label={formatNumDynamicDecimal(
-                                      price / 10 ** 12
-                                    )}
-                                    aria-label="A tooltip"
-                                  >
-                                    {formatNumDynamicDecimal(price / 10 ** 12)}
-                                  </Tooltip>
-                                </TagLabel>
-                                <TagRightIcon as={AzeroIcon} />
-                              </Tag>
-                            </Box>
-                          </Flex>
-                        </Flex>
-                      </Flex>
 
-                      {!doOffer && is_for_sale && (
-                        <Flex
-                          py={1}
-                          w="full"
-                          mr="30px"
-                          display="flex"
-                          borderWidth={2}
-                          px={["8px", "16px"]}
-                          alignItems="center"
-                          borderColor="#333"
-                          minH={["4.15rem", "4.75rem", "4.75rem"]}
-                        >
-                          {!isBided && (
-                            <>
-                              <CommonButton
-                                mx="0"
-                                px="2px"
-                                h="40px"
-                                {...rest}
-                                text="place bid"
-                                onClick={handleBidAction}
-                                isDisabled={actionType && actionType !== BID}
-                              />
-
-                              <NumberInput
-                                min={1}
-                                ml={3}
-                                h="50px"
-                                bg="black"
-                                precision={6}
-                                minW={"85px"}
-                                max={999000000}
-                                value={bidPrice}
-                                isDisabled={actionType}
-                                onChange={(v) => setBidPrice(v)}
-                              >
-                                <NumberInputField
-                                  h="50px"
-                                  borderRadius={0}
-                                  borderWidth={0}
-                                  color="#fff"
-                                />
-                                <InputRightElement
-                                  bg="transparent"
-                                  h={"50px"}
-                                  w={8}
-                                >
-                                  <AzeroIcon />
-                                </InputRightElement>
-                              </NumberInput>
-                            </>
-                          )}
-
-                          {isBided && (
-                            <>
-                              <CommonButton
-                                mx="0"
-                                px="2px"
-                                h="40px"
-                                {...rest}
-                                text="remove bid"
-                                onClick={handleRemoveBidAction}
-                                isDisabled={
-                                  actionType && actionType !== REMOVE_BID
-                                }
-                              />
-
+                            <Flex w="full">
                               <Spacer />
                               <Box
                                 h="52px"
                                 textAlign="right"
                                 color="brand.grayLight"
                               >
-                                <Text>Your offer</Text>
-                                <Tag h={4} pr={0} bg="transparent">
+                                <Text>Current price</Text>
+                                <Tag h={4} pr={0} bg="transparent" maxW="135px">
                                   <TagLabel bg="transparent">
-                                    {bidPrice}
+                                    <Tooltip
+                                      bg="#171717"
+                                      color="#fff"
+                                      border="1px solid #7ae7ff"
+                                      borderRadius="0"
+                                      label={formatNumDynamicDecimal(
+                                        price / 10 ** 12
+                                      )}
+                                      aria-label="A tooltip"
+                                    >
+                                      {formatNumDynamicDecimal(
+                                        price / 10 ** 12
+                                      )}
+                                    </Tooltip>
                                   </TagLabel>
                                   <TagRightIcon as={AzeroIcon} />
                                 </Tag>
                               </Box>
-                            </>
-                          )}
+                            </Flex>
+                          </Flex>
                         </Flex>
-                      )}
-                    </>
-                  )}
-                </Stack>
-              </motion.div>
-            </Stack>
 
-            <Stack display={["none", "flex", "flex"]} w="full" flexGrow="1">
-              {attrsList?.length === 0 ? (
-                <Stack>
-                  <Text
-                    mt={{ base: "6px", "2xl": "12px" }}
-                    display={{ base: "none", xl: "block" }}
-                    fontSize={{ base: "14px", "2xl": "16px" }}
-                  >
-                    This NFT has no props/ levels.
-                  </Text>
-                </Stack>
-              ) : (
-                <>
-                  <Grid
-                    maxH={{
-                      base: isOwner
-                        ? "255px"
-                        : is_for_sale && saleInfo
-                        ? "160px"
-                        : "225px",
+                        {!doOffer && is_for_sale && (
+                          <Flex
+                            py={1}
+                            w="full"
+                            mr="30px"
+                            display="flex"
+                            borderWidth={2}
+                            px={["8px", "16px"]}
+                            alignItems="center"
+                            borderColor="#333"
+                            minH={["4.15rem", "4.75rem", "4.75rem"]}
+                          >
+                            {!isBided && (
+                              <>
+                                <CommonButton
+                                  mx="0"
+                                  px="2px"
+                                  h="40px"
+                                  {...rest}
+                                  text="place bid"
+                                  onClick={handleBidAction}
+                                  isDisabled={actionType && actionType !== BID}
+                                />
 
-                      "2xl": isOwner
-                        ? "335px"
-                        : is_for_sale && saleInfo
-                        ? "200px"
-                        : "305px",
-                    }}
-                    id="grid-attrs"
-                    w="full"
-                    templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
-                    gap={{ base: "0.5rem", xl: "1rem", "2xl": "1.25rem" }}
-                    pr="22px"
-                    overflowY="auto"
-                    sx={SCROLLBAR}
-                  >
-                    {attrsList?.length
-                      ? attrsList
-                          .filter(
-                            (i) =>
-                              !JSON.stringify(Object.values(i)).includes("|")
-                          )
-                          .map((item, idx) => {
-                            return (
-                              <GridItem w="100%" h="100%" key={idx}>
-                                <PropCard item={item} />
-                              </GridItem>
-                            );
-                          })
-                      : ""}
+                                <NumberInput
+                                  min={1}
+                                  ml={3}
+                                  h="50px"
+                                  bg="black"
+                                  precision={6}
+                                  minW={"85px"}
+                                  max={999000000}
+                                  value={bidPrice}
+                                  isDisabled={actionType}
+                                  onChange={(v) => setBidPrice(v)}
+                                >
+                                  <NumberInputField
+                                    h="50px"
+                                    borderRadius={0}
+                                    borderWidth={0}
+                                    color="#fff"
+                                  />
+                                  <InputRightElement
+                                    bg="transparent"
+                                    h={"50px"}
+                                    w={8}
+                                  >
+                                    <AzeroIcon />
+                                  </InputRightElement>
+                                </NumberInput>
+                              </>
+                            )}
 
-                    {attrsList?.length
-                      ? attrsList
-                          .filter((i) =>
-                            JSON.stringify(Object.values(i)).includes("|")
-                          )
-                          .map((item, idx) => {
-                            return (
-                              <GridItem w="100%" h="100%" key={idx}>
-                                <LevelCard item={item} />
-                              </GridItem>
-                            );
-                          })
-                      : null}
-                  </Grid>
-                </>
-              )}
+                            {isBided && (
+                              <>
+                                <CommonButton
+                                  mx="0"
+                                  px="2px"
+                                  h="40px"
+                                  {...rest}
+                                  text="remove bid"
+                                  onClick={handleRemoveBidAction}
+                                  isDisabled={
+                                    actionType && actionType !== REMOVE_BID
+                                  }
+                                />
+
+                                <Spacer />
+                                <Box
+                                  h="52px"
+                                  textAlign="right"
+                                  color="brand.grayLight"
+                                >
+                                  <Text>Your offer</Text>
+                                  <Tag h={4} pr={0} bg="transparent">
+                                    <TagLabel bg="transparent">
+                                      {bidPrice}
+                                    </TagLabel>
+                                    <TagRightIcon as={AzeroIcon} />
+                                  </Tag>
+                                </Box>
+                              </>
+                            )}
+                          </Flex>
+                        )}
+                      </>
+                    )}
+                  </Stack>
+                </motion.div>
+              </Stack>
+
+              <Stack display={["none", "flex", "flex"]} w="full" flexGrow="1">
+                {attrsList?.length === 0 ? (
+                  <Stack>
+                    <Text
+                      mt={{ base: "6px", "2xl": "12px" }}
+                      display={{ base: "none", xl: "block" }}
+                      fontSize={{ base: "14px", "2xl": "16px" }}
+                    >
+                      This NFT has no props/ levels.
+                    </Text>
+                  </Stack>
+                ) : (
+                  <>
+                    <Grid
+                      maxH="232px"
+                      id="grid-attrs"
+                      w="full"
+                      gap="30px"
+                      pr="22px"
+                      overflowY="auto"
+                      sx={SCROLLBAR}
+                      templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
+                    >
+                      {attrsList?.length
+                        ? attrsList
+                            .filter(
+                              (i) =>
+                                !JSON.stringify(Object.values(i)).includes("|")
+                            )
+                            .map((item, idx) => {
+                              return (
+                                <>
+                                  <GridItem w="100%" h="100%" key={idx}>
+                                    <PropCard item={item} />
+                                  </GridItem>
+                                </>
+                              );
+                            })
+                        : ""}
+
+                      {attrsList?.length
+                        ? attrsList
+                            .filter((i) =>
+                              JSON.stringify(Object.values(i)).includes("|")
+                            )
+                            .map((item, idx) => {
+                              return (
+                                <GridItem w="100%" h="100%" key={idx}>
+                                  <LevelCard item={item} />
+                                </GridItem>
+                              );
+                            })
+                        : null}
+                    </Grid>
+                  </>
+                )}
+              </Stack>
             </Stack>
           </Skeleton>
         </Stack>
