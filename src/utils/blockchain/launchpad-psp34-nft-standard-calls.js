@@ -246,7 +246,7 @@ async function getPhaseAccountLastIndex(caller_account, phaseId) {
   return null;
 }
 
-async function getPhaseAccountLinkByPhaseId(caller_account, phaseId, index) {
+async function getPhaseAccountLink(caller_account, phaseId, index) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
     return null;
@@ -254,8 +254,8 @@ async function getPhaseAccountLinkByPhaseId(caller_account, phaseId, index) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-
-  const { result, output } = await contract.query.getPhaseAccountLinkByPhaseId(
+  console.log('getPhaseAccountLink', phaseId, index)
+  const { result, output } = await contract.query.getPhaseAccountLink(
     address,
     {
       value: azero_value,
@@ -898,7 +898,7 @@ const launchpad_psp34_nft_standard_calls = {
   getWhitelistByAccountId,
   whitelistMint,
   getPhaseAccountLastIndex,
-  getPhaseAccountLinkByPhaseId,
+  getPhaseAccountLink,
   getProjectInfoByHash,
   getProjectInfo,
   editProjectInformation,
