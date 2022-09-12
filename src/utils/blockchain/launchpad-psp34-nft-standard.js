@@ -1,7 +1,7 @@
 const launchpad_psp34_nft_standard = {
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xdda946b6a49f21397414f00f6be489e606b429fca44ffa280f5fb7953e8cceb4",
+      "hash": "0x7d0c1ece15d01cab83ce2495f725f8f29fd31a5fe5ad3535775fe77a9f538980",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.63.0-nightly"
     },
@@ -1090,6 +1090,43 @@ const launchpad_psp34_nft_standard = {
             "selector": "0xb079adab"
           },
           {
+            "args": [
+              {
+                "label": "new_owner",
+                "type": {
+                  "displayName": [
+                    "ownable_external",
+                    "TransferOwnershipInput1"
+                  ],
+                  "type": 8
+                }
+              }
+            ],
+            "docs": [
+              " Transfers ownership of the contract to a `new_owner`.",
+              " Can only be called by the current owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner.",
+              "",
+              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
+            ],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "TransferOwnershipOutput"
+              ],
+              "type": 48
+            },
+            "selector": "0x11f43efd"
+          },
+          {
             "args": [],
             "docs": [
               " Returns the address of the current owner."
@@ -1136,58 +1173,108 @@ const launchpad_psp34_nft_standard = {
           {
             "args": [
               {
-                "label": "new_owner",
+                "label": "owner",
                 "type": {
                   "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
+                    "psp34_external",
+                    "AllowanceInput1"
                   ],
                   "type": 8
+                }
+              },
+              {
+                "label": "operator",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput2"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput3"
+                  ],
+                  "type": 14
                 }
               }
             ],
             "docs": [
-              " Transfers ownership of the contract to a `new_owner`.",
-              " Can only be called by the current owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner.",
-              "",
-              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
+              " Returns `true` if the operator is approved by the owner to withdraw `id` token.",
+              " If `id` is `None`, returns `true` if the operator is approved to withdraw all owner's tokens."
             ],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 48
-            },
-            "selector": "0x11f43efd"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Returns the collection `Id` of the NFT token.",
-              "",
-              " This can represents the relationship between tokens/contracts/pallets."
-            ],
-            "label": "PSP34::collection_id",
+            "label": "PSP34::allowance",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34_external",
-                "CollectionIdOutput"
+                "AllowanceOutput"
               ],
-              "type": 1
+              "type": 34
             },
-            "selector": "0xffa27a5f"
+            "selector": "0x4790f55a"
+          },
+          {
+            "args": [
+              {
+                "label": "operator",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput1"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput2"
+                  ],
+                  "type": 14
+                }
+              },
+              {
+                "label": "approved",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput3"
+                  ],
+                  "type": 34
+                }
+              }
+            ],
+            "docs": [
+              " Approves `operator` to withdraw the `id` token from the caller's account.",
+              " If `id` is `None` approves or disapproves the operator for all tokens of the caller.",
+              "",
+              " On success a `Approval` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Returns `SelfApprove` error if it is self approve.",
+              "",
+              " Returns `NotApproved` error if caller is not owner of `id`."
+            ],
+            "label": "PSP34::approve",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "ApproveOutput"
+              ],
+              "type": 50
+            },
+            "selector": "0x1932a8b0"
           },
           {
             "args": [
@@ -1323,110 +1410,23 @@ const launchpad_psp34_nft_standard = {
             "selector": "0x1168624d"
           },
           {
-            "args": [
-              {
-                "label": "owner",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput1"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "operator",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput2"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput3"
-                  ],
-                  "type": 14
-                }
-              }
-            ],
+            "args": [],
             "docs": [
-              " Returns `true` if the operator is approved by the owner to withdraw `id` token.",
-              " If `id` is `None`, returns `true` if the operator is approved to withdraw all owner's tokens."
+              " Returns the collection `Id` of the NFT token.",
+              "",
+              " This can represents the relationship between tokens/contracts/pallets."
             ],
-            "label": "PSP34::allowance",
+            "label": "PSP34::collection_id",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34_external",
-                "AllowanceOutput"
+                "CollectionIdOutput"
               ],
-              "type": 34
+              "type": 1
             },
-            "selector": "0x4790f55a"
-          },
-          {
-            "args": [
-              {
-                "label": "operator",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput1"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput2"
-                  ],
-                  "type": 14
-                }
-              },
-              {
-                "label": "approved",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput3"
-                  ],
-                  "type": 34
-                }
-              }
-            ],
-            "docs": [
-              " Approves `operator` to withdraw the `id` token from the caller's account.",
-              " If `id` is `None` approves or disapproves the operator for all tokens of the caller.",
-              "",
-              " On success a `Approval` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Returns `SelfApprove` error if it is self approve.",
-              "",
-              " Returns `NotApproved` error if caller is not owner of `id`."
-            ],
-            "label": "PSP34::approve",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "ApproveOutput"
-              ],
-              "type": 50
-            },
-            "selector": "0x1932a8b0"
+            "selector": "0xffa27a5f"
           },
           {
             "args": [
@@ -1539,30 +1539,30 @@ const launchpad_psp34_nft_standard = {
           {
             "args": [
               {
-                "label": "token_id",
+                "label": "uri",
                 "type": {
                   "displayName": [
                     "psp34traits_external",
-                    "TokenUriInput1"
+                    "SetBaseUriInput1"
                   ],
-                  "type": 5
+                  "type": 38
                 }
               }
             ],
             "docs": [
-              " Get URI from token ID"
+              " Change baseURI"
             ],
-            "label": "Psp34Traits::token_uri",
-            "mutates": false,
+            "label": "Psp34Traits::set_base_uri",
+            "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34traits_external",
-                "TokenUriOutput"
+                "SetBaseUriOutput"
               ],
-              "type": 38
+              "type": 43
             },
-            "selector": "0x249dfd4f"
+            "selector": "0x4de6850b"
           },
           {
             "args": [
@@ -1698,30 +1698,30 @@ const launchpad_psp34_nft_standard = {
           {
             "args": [
               {
-                "label": "uri",
+                "label": "token_id",
                 "type": {
                   "displayName": [
                     "psp34traits_external",
-                    "SetBaseUriInput1"
+                    "TokenUriInput1"
                   ],
-                  "type": 38
+                  "type": 5
                 }
               }
             ],
             "docs": [
-              " Change baseURI"
+              " Get URI from token ID"
             ],
-            "label": "Psp34Traits::set_base_uri",
-            "mutates": true,
+            "label": "Psp34Traits::token_uri",
+            "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34traits_external",
-                "SetBaseUriOutput"
+                "TokenUriOutput"
               ],
-              "type": 43
+              "type": 38
             },
-            "selector": "0x4de6850b"
+            "selector": "0x249dfd4f"
           }
         ]
       },
