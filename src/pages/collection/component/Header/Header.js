@@ -200,7 +200,7 @@ function CollectionHeader({
                 alignItems="center"
               >
                 <Text fontSize={["34px", "40px"]}>{totalListed || 0}</Text>
-                <Text fontSize={["14px", "16px"]}>Items</Text>
+                <Text fontSize={["14px", "16px"]}>Listed</Text>
                 <Divider
                   w="0"
                   h="50px"
