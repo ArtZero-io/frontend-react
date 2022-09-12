@@ -1,10 +1,10 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5CiMZCT4APnW1w5HVqAa4AbJGHU3afjDaEhhfNwCJBzQQY61",
+  CONTRACT_ADDRESS: "5Go6HPGUcgpKHwZXVcDDeoJ1inbNxXSuKdzhhDJauaUHBxVq",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xcd70fd768ec25fc7e191016c42aa0b01ee7379846c4f867e1217e7fa30841bb5",
+      "hash": "0x3d78dba0e916069f5ef324a4d296d79a0be029e5218cc4cb546fac3d5975a2ea",
       "language": "ink! 3.3.1",
-      "compiler": "rustc 1.61.0-nightly"
+      "compiler": "rustc 1.63.0-nightly"
     },
     "contract": {
       "name": "artzero_launchpad_psp34",
@@ -708,6 +708,23 @@ const launchpad_manager = {
           {
             "args": [],
             "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
+          },
+          {
+            "args": [],
+            "docs": [
               " Leaves the contract without owner. It will not be possible to call",
               " owner's functions anymore. Can only be called by the current owner.",
               "",
@@ -772,23 +789,6 @@ const launchpad_manager = {
           {
             "args": [],
             "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [],
-            "docs": [
               " Get project mint fee"
             ],
             "label": "CrossArtZeroLaunchPadPSP34::get_project_mint_fee_rate",
@@ -832,7 +832,7 @@ const launchpad_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x238cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                          "key": "0xb36ee29c00000000000000000000000000000000000000000000000000000000",
                           "ty": 0
                         }
                       },
@@ -841,14 +841,14 @@ const launchpad_manager = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0x248cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                          "dispatchKey": "0xb46ee29c00000000000000000000000000000000000000000000000000000000",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0x258cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                                      "key": "0xb56ee29c00000000000000000000000000000000000000000000000000000000",
                                       "ty": 3
                                     }
                                   },
@@ -876,7 +876,7 @@ const launchpad_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xacf97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "key": "0x4d6080a000000000000000000000000000000000000000000000000000000000",
                           "ty": 0
                         }
                       },
@@ -885,7 +885,7 @@ const launchpad_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xadf97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "key": "0x4e6080a000000000000000000000000000000000000000000000000000000000",
                           "ty": 4
                         }
                       },
@@ -894,7 +894,7 @@ const launchpad_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xaef97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "key": "0x4f6080a000000000000000000000000000000000000000000000000000000000",
                           "ty": 5
                         }
                       },
@@ -903,7 +903,7 @@ const launchpad_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xaff97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "key": "0x506080a000000000000000000000000000000000000000000000000000000000",
                           "ty": 6
                         }
                       },
@@ -912,7 +912,7 @@ const launchpad_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xb0f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "key": "0x516080a000000000000000000000000000000000000000000000000000000000",
                           "ty": 10
                         }
                       },
@@ -921,7 +921,7 @@ const launchpad_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xb1f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "key": "0x526080a000000000000000000000000000000000000000000000000000000000",
                           "ty": 11
                         }
                       },
@@ -930,7 +930,7 @@ const launchpad_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xb2f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "key": "0x536080a000000000000000000000000000000000000000000000000000000000",
                           "ty": 5
                         }
                       },
@@ -939,7 +939,7 @@ const launchpad_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xb3f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "key": "0x546080a000000000000000000000000000000000000000000000000000000000",
                           "ty": 2
                         }
                       },
@@ -948,7 +948,7 @@ const launchpad_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xb4f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "key": "0x556080a000000000000000000000000000000000000000000000000000000000",
                           "ty": 13
                         }
                       },
@@ -957,7 +957,7 @@ const launchpad_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xb5f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "key": "0x566080a000000000000000000000000000000000000000000000000000000000",
                           "ty": 14
                         }
                       },
@@ -966,7 +966,7 @@ const launchpad_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xb6f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "key": "0x576080a000000000000000000000000000000000000000000000000000000000",
                           "ty": 5
                         }
                       },
@@ -975,14 +975,14 @@ const launchpad_manager = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0xb7f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                          "dispatchKey": "0x586080a000000000000000000000000000000000000000000000000000000000",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0xb8f97c5846f77897cc0a655c55fe13e9f964ae7e5542443310e52971caec7700",
+                                      "key": "0x596080a000000000000000000000000000000000000000000000000000000000",
                                       "ty": 3
                                     }
                                   },

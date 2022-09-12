@@ -1,14 +1,14 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5Dy7kjw3XUqpZyXVasWBddL6jpq6sgZCwMHLvfy42Q8qMQXg",
+  CONTRACT_ADDRESS: "5DeTsjiUsy7nNiZU7tqrm2N5pxivdKGWHPxxkJs58TzpYjqL",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xfc242a004792d623a294fe0781ff69f78ed3acc890e4e7580f00af51f1c588c9",
+      "hash": "0x29e9d3d74451d008a7f9ff464c6e8d648d2c498255b8f46c0d5a6a2290d76923",
       "language": "ink! 3.3.1",
-      "compiler": "rustc 1.61.0-nightly"
+      "compiler": "rustc 1.63.0-nightly"
     },
     "contract": {
       "name": "artzero_collection_manager",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "authors": [
         "ArtZero <admin@artzero.io>"
       ]
@@ -1041,33 +1041,6 @@ const collection_manager = {
             "selector": "0x4fa43c8c"
           },
           {
-            "args": [],
-            "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 18
-            },
-            "selector": "0x5e228753"
-          },
-          {
             "args": [
               {
                 "label": "new_owner",
@@ -1105,6 +1078,61 @@ const collection_manager = {
             "selector": "0x11f43efd"
           },
           {
+            "args": [],
+            "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 18
+            },
+            "selector": "0x5e228753"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "GetCollectionOwnerInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Get Collection Owner by Collection Address (NFT address)"
+            ],
+            "label": "CrossArtZeroCollection::get_collection_owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "GetCollectionOwnerOutput"
+              ],
+              "type": 26
+            },
+            "selector": "0xb1f1e401"
+          },
+          {
             "args": [
               {
                 "label": "nft_contract_address",
@@ -1131,34 +1159,6 @@ const collection_manager = {
               "type": 10
             },
             "selector": "0xfa0f936e"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
-                    "IsActiveInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Check if the Collection is active not"
-            ],
-            "label": "CrossArtZeroCollection::is_active",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "IsActiveOutput"
-              ],
-              "type": 9
-            },
-            "selector": "0x74687faf"
           },
           {
             "args": [
@@ -1195,26 +1195,26 @@ const collection_manager = {
                 "type": {
                   "displayName": [
                     "crossartzerocollection_external",
-                    "GetCollectionOwnerInput1"
+                    "IsActiveInput1"
                   ],
                   "type": 0
                 }
               }
             ],
             "docs": [
-              " Get Collection Owner by Collection Address (NFT address)"
+              " Check if the Collection is active not"
             ],
-            "label": "CrossArtZeroCollection::get_collection_owner",
+            "label": "CrossArtZeroCollection::is_active",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "crossartzerocollection_external",
-                "GetCollectionOwnerOutput"
+                "IsActiveOutput"
               ],
-              "type": 26
+              "type": 9
             },
-            "selector": "0xb1f1e401"
+            "selector": "0x74687faf"
           }
         ]
       },
@@ -1228,7 +1228,7 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x238cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                          "key": "0xb36ee29c00000000000000000000000000000000000000000000000000000000",
                           "ty": 0
                         }
                       },
@@ -1237,14 +1237,14 @@ const collection_manager = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0x248cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                          "dispatchKey": "0xb46ee29c00000000000000000000000000000000000000000000000000000000",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0x258cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                                      "key": "0xb56ee29c00000000000000000000000000000000000000000000000000000000",
                                       "ty": 3
                                     }
                                   },
@@ -1272,7 +1272,7 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xe4f43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "key": "0xc495634e00000000000000000000000000000000000000000000000000000000",
                           "ty": 4
                         }
                       },
@@ -1281,7 +1281,7 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xe5f43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "key": "0xc595634e00000000000000000000000000000000000000000000000000000000",
                           "ty": 0
                         }
                       },
@@ -1290,7 +1290,7 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xe6f43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "key": "0xc695634e00000000000000000000000000000000000000000000000000000000",
                           "ty": 5
                         }
                       },
@@ -1299,7 +1299,7 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xe7f43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "key": "0xc795634e00000000000000000000000000000000000000000000000000000000",
                           "ty": 6
                         }
                       },
@@ -1308,7 +1308,7 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xe8f43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "key": "0xc895634e00000000000000000000000000000000000000000000000000000000",
                           "ty": 6
                         }
                       },
@@ -1317,7 +1317,7 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xe9f43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "key": "0xc995634e00000000000000000000000000000000000000000000000000000000",
                           "ty": 7
                         }
                       },
@@ -1326,7 +1326,7 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xeaf43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "key": "0xca95634e00000000000000000000000000000000000000000000000000000000",
                           "ty": 12
                         }
                       },
@@ -1335,7 +1335,7 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xebf43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "key": "0xcb95634e00000000000000000000000000000000000000000000000000000000",
                           "ty": 13
                         }
                       },
@@ -1344,7 +1344,7 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xecf43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "key": "0xcc95634e00000000000000000000000000000000000000000000000000000000",
                           "ty": 10
                         }
                       },
@@ -1353,7 +1353,7 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xedf43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "key": "0xcd95634e00000000000000000000000000000000000000000000000000000000",
                           "ty": 5
                         }
                       },
@@ -1362,7 +1362,7 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xeef43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "key": "0xce95634e00000000000000000000000000000000000000000000000000000000",
                           "ty": 15
                         }
                       },
@@ -1371,14 +1371,14 @@ const collection_manager = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0xeff43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                          "dispatchKey": "0xcf95634e00000000000000000000000000000000000000000000000000000000",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0xf0f43c61536d00aba8cfb7914a55f8ac5607e9dfbd181cbe997471ef6085e10d",
+                                      "key": "0xd095634e00000000000000000000000000000000000000000000000000000000",
                                       "ty": 3
                                     }
                                   },
