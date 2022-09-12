@@ -1,14 +1,14 @@
 const marketplace = {
-  CONTRACT_ADDRESS: "5C8xoEUyK2CcuAU3DZryMdejcTAtBFrBZzx4wtqrkH9os796",
+  CONTRACT_ADDRESS: "5C584tEhDeGsmxoirsC5v2x5fbnoSkPB5raQSTyiJCy3Y2PF",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x9a0b60053b96d9dd31ce241e98e1014586d8e87c7e6cf899a43593011026ad2b",
+      "hash": "0xe9e8db976db7a4b16532adc3ca09e2111ebdacd82569616d267414c7b05f7758",
       "language": "ink! 3.3.1",
-      "compiler": "rustc 1.61.0-nightly"
+      "compiler": "rustc 1.63.0-nightly"
     },
     "contract": {
       "name": "artzero_marketplace_psp34",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "authors": [
         "ArtZero <admin@artzero.io>"
       ]
@@ -1280,6 +1280,33 @@ const marketplace = {
             "selector": "0x8bb87aca"
           },
           {
+            "args": [],
+            "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 29
+            },
+            "selector": "0x5e228753"
+          },
+          {
             "args": [
               {
                 "label": "new_owner",
@@ -1332,33 +1359,6 @@ const marketplace = {
               "type": 0
             },
             "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 29
-            },
-            "selector": "0x5e228753"
           }
         ]
       },
@@ -1372,7 +1372,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x238cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                          "key": "0xb36ee29c00000000000000000000000000000000000000000000000000000000",
                           "ty": 0
                         }
                       },
@@ -1381,14 +1381,14 @@ const marketplace = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0x248cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                          "dispatchKey": "0xb46ee29c00000000000000000000000000000000000000000000000000000000",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0x258cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                                      "key": "0xb56ee29c00000000000000000000000000000000000000000000000000000000",
                                       "ty": 3
                                     }
                                   },
@@ -1416,7 +1416,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x1d42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "key": "0x4fa3889500000000000000000000000000000000000000000000000000000000",
                           "ty": 0
                         }
                       },
@@ -1425,7 +1425,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x1e42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "key": "0x50a3889500000000000000000000000000000000000000000000000000000000",
                           "ty": 0
                         }
                       },
@@ -1434,7 +1434,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x1f42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "key": "0x51a3889500000000000000000000000000000000000000000000000000000000",
                           "ty": 4
                         }
                       },
@@ -1443,7 +1443,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x2042c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "key": "0x52a3889500000000000000000000000000000000000000000000000000000000",
                           "ty": 5
                         }
                       },
@@ -1456,7 +1456,7 @@ const marketplace = {
                             {
                               "layout": {
                                 "cell": {
-                                  "key": "0x2142c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                                  "key": "0x53a3889500000000000000000000000000000000000000000000000000000000",
                                   "ty": 15
                                 }
                               },
@@ -1465,7 +1465,7 @@ const marketplace = {
                             {
                               "layout": {
                                 "cell": {
-                                  "key": "0x2242c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                                  "key": "0x54a3889500000000000000000000000000000000000000000000000000000000",
                                   "ty": 18
                                 }
                               },
@@ -1479,7 +1479,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x2342c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "key": "0x55a3889500000000000000000000000000000000000000000000000000000000",
                           "ty": 20
                         }
                       },
@@ -1488,7 +1488,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x2442c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "key": "0x56a3889500000000000000000000000000000000000000000000000000000000",
                           "ty": 22
                         }
                       },
@@ -1497,7 +1497,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x2542c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "key": "0x57a3889500000000000000000000000000000000000000000000000000000000",
                           "ty": 26
                         }
                       },
@@ -1506,7 +1506,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x2642c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "key": "0x58a3889500000000000000000000000000000000000000000000000000000000",
                           "ty": 10
                         }
                       },
@@ -1515,7 +1515,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x2742c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "key": "0x59a3889500000000000000000000000000000000000000000000000000000000",
                           "ty": 27
                         }
                       },
@@ -1524,7 +1524,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x2842c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "key": "0x5aa3889500000000000000000000000000000000000000000000000000000000",
                           "ty": 27
                         }
                       },
@@ -1533,7 +1533,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x2942c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "key": "0x5ba3889500000000000000000000000000000000000000000000000000000000",
                           "ty": 10
                         }
                       },
@@ -1542,7 +1542,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x2a42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "key": "0x5ca3889500000000000000000000000000000000000000000000000000000000",
                           "ty": 10
                         }
                       },
@@ -1551,7 +1551,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x2b42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "key": "0x5da3889500000000000000000000000000000000000000000000000000000000",
                           "ty": 11
                         }
                       },
@@ -1560,7 +1560,7 @@ const marketplace = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x2c42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "key": "0x5ea3889500000000000000000000000000000000000000000000000000000000",
                           "ty": 28
                         }
                       },
@@ -1569,14 +1569,14 @@ const marketplace = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0x2d42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                          "dispatchKey": "0x5fa3889500000000000000000000000000000000000000000000000000000000",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0x2e42c2be22944abf741ff8dd2c09787e6012eee4cce61e776b22c5e4b3b16244",
+                                      "key": "0x60a3889500000000000000000000000000000000000000000000000000000000",
                                       "ty": 3
                                     }
                                   },

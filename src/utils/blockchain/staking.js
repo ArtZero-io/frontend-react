@@ -1,14 +1,14 @@
 const staking = {
-  CONTRACT_ADDRESS: "5Gh6JkVixyzpU5Ne6THQKyMZwwugoAwnzmwNyDqqJD6SzaoB",
+  CONTRACT_ADDRESS: "5F3TiCn1Sjyix6iPvLB1oieLscCaHthJNghUR4XLTSEud6t4",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x0e7ff4fb9b7c1ef631975277c64095571e2437562c6035d803ab4c7862a320c4",
-      "language": "ink! 3.3.0",
-      "compiler": "rustc 1.61.0-nightly"
+      "hash": "0xd7bafbfcaa1e50addd0b4095fc23dce05064748d8e6df5d2e9fc7072f73f317d",
+      "language": "ink! 3.3.1",
+      "compiler": "rustc 1.63.0-nightly"
     },
     "contract": {
       "name": "artzero_staking_nft",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "authors": [
         "ArtZero <admin@artzero.io>"
       ]
@@ -51,7 +51,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 6
+                  "type": 9
                 }
               }
             ],
@@ -73,7 +73,7 @@ const staking = {
                   "displayName": [
                     "Option"
                   ],
-                  "type": 11
+                  "type": 23
                 }
               },
               {
@@ -84,7 +84,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 6
+                  "type": 9
                 }
               }
             ],
@@ -101,7 +101,7 @@ const staking = {
                   "displayName": [
                     "Option"
                   ],
-                  "type": 11
+                  "type": 23
                 }
               },
               {
@@ -112,7 +112,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 6
+                  "type": 9
                 }
               }
             ],
@@ -129,7 +129,7 @@ const staking = {
                   "displayName": [
                     "Option"
                   ],
-                  "type": 11
+                  "type": 23
                 }
               },
               {
@@ -140,7 +140,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 6
+                  "type": 9
                 }
               }
             ],
@@ -157,7 +157,7 @@ const staking = {
                   "displayName": [
                     "Option"
                   ],
-                  "type": 11
+                  "type": 23
                 }
               },
               {
@@ -168,7 +168,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 6
+                  "type": 9
                 }
               }
             ],
@@ -185,7 +185,7 @@ const staking = {
                   "displayName": [
                     "Option"
                   ],
-                  "type": 11
+                  "type": 23
                 }
               },
               {
@@ -196,7 +196,7 @@ const staking = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 15
+                  "type": 14
                 }
               },
               {
@@ -207,7 +207,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 6
+                  "type": 9
                 }
               }
             ],
@@ -224,7 +224,7 @@ const staking = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 15
+                  "type": 14
                 }
               },
               {
@@ -235,7 +235,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 6
+                  "type": 9
                 }
               }
             ],
@@ -261,7 +261,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 6
+                  "type": 9
                 }
               },
               {
@@ -282,7 +282,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 17
+              "type": 16
             },
             "selector": "0xf2f6dba3"
           },
@@ -308,7 +308,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0x1bb3d394"
           },
@@ -320,7 +320,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 6
+                  "type": 9
                 }
               }
             ],
@@ -334,7 +334,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0x675e7b6f"
           },
@@ -360,7 +360,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0xb470cada"
           },
@@ -386,7 +386,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0x04230988"
           },
@@ -400,7 +400,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0x95f19c6c"
           },
@@ -414,7 +414,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0xcdcd1ca5"
           },
@@ -430,7 +430,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0x1b146ead"
           },
@@ -456,7 +456,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0xa625d829"
           },
@@ -472,7 +472,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0x9a8353a7"
           },
@@ -486,7 +486,7 @@ const staking = {
               "displayName": [
                 "Balance"
               ],
-              "type": 15
+              "type": 14
             },
             "selector": "0x443c6a4a"
           },
@@ -500,7 +500,7 @@ const staking = {
               "displayName": [
                 "Balance"
               ],
-              "type": 15
+              "type": 14
             },
             "selector": "0x411901a1"
           },
@@ -607,7 +607,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 6
+                  "type": 9
                 }
               }
             ],
@@ -621,7 +621,7 @@ const staking = {
               "displayName": [
                 "u64"
               ],
-              "type": 6
+              "type": 9
             },
             "selector": "0x5d08378a"
           },
@@ -642,7 +642,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 6
+                  "type": 9
                 }
               }
             ],
@@ -654,9 +654,9 @@ const staking = {
             "payable": false,
             "returnType": {
               "displayName": [
-                "u64"
+                "Option"
               ],
-              "type": 6
+              "type": 21
             },
             "selector": "0xd5ee8ef6"
           },
@@ -680,9 +680,9 @@ const staking = {
             "payable": false,
             "returnType": {
               "displayName": [
-                "u64"
+                "Option"
               ],
-              "type": 6
+              "type": 22
             },
             "selector": "0xdeaeabe3"
           },
@@ -694,7 +694,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 6
+                  "type": 9
                 }
               }
             ],
@@ -708,9 +708,25 @@ const staking = {
               "displayName": [
                 "Option"
               ],
-              "type": 11
+              "type": 23
             },
             "selector": "0x9698ca4b"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Get staked accounts last index"
+            ],
+            "label": "get_staked_accounts_last_index",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 9
+            },
+            "selector": "0xf7c0188d"
           },
           {
             "args": [
@@ -729,7 +745,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 6
+                  "type": 9
                 }
               }
             ],
@@ -741,9 +757,9 @@ const staking = {
             "payable": false,
             "returnType": {
               "displayName": [
-                "u64"
+                "Option"
               ],
-              "type": 6
+              "type": 21
             },
             "selector": "0xf154c3c5"
           },
@@ -759,13 +775,15 @@ const staking = {
               "displayName": [
                 "u64"
               ],
-              "type": 6
+              "type": 9
             },
             "selector": "0x02c779a5"
           },
           {
             "args": [],
-            "docs": [],
+            "docs": [
+              " Get limit unstake time"
+            ],
             "label": "get_limit_unstake_time",
             "mutates": false,
             "payable": false,
@@ -773,25 +791,9 @@ const staking = {
               "displayName": [
                 "u64"
               ],
-              "type": 6
+              "type": 9
             },
             "selector": "0x50d71ce0"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Get staked accounts last index"
-            ],
-            "label": "get_staked_accounts_last_index",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "u64"
-              ],
-              "type": 6
-            },
-            "selector": "0xf7c0188d"
           },
           {
             "args": [
@@ -801,7 +803,7 @@ const staking = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 22
+                  "type": 24
                 }
               }
             ],
@@ -815,7 +817,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0x5adb38de"
           },
@@ -827,7 +829,7 @@ const staking = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 22
+                  "type": 24
                 }
               }
             ],
@@ -841,7 +843,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0xfd83c46b"
           },
@@ -853,7 +855,7 @@ const staking = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 22
+                  "type": 24
                 }
               }
             ],
@@ -867,7 +869,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0xc5bd017e"
           },
@@ -879,7 +881,7 @@ const staking = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 22
+                  "type": 24
                 }
               }
             ],
@@ -893,7 +895,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0x82364901"
           },
@@ -905,7 +907,7 @@ const staking = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 15
+                  "type": 14
                 }
               }
             ],
@@ -919,7 +921,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0x07fdb555"
           },
@@ -931,7 +933,7 @@ const staking = {
                   "displayName": [
                     "Id"
                   ],
-                  "type": 23
+                  "type": 25
                 }
               },
               {
@@ -954,36 +956,9 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 19
+              "type": 18
             },
             "selector": "0xd34ab274"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 17
-            },
-            "selector": "0x5e228753"
           },
           {
             "args": [
@@ -1018,7 +993,7 @@ const staking = {
                 "ownable_external",
                 "TransferOwnershipOutput"
               ],
-              "type": 17
+              "type": 16
             },
             "selector": "0x11f43efd"
           },
@@ -1040,32 +1015,31 @@ const staking = {
             "selector": "0x4fa43c8c"
           },
           {
-            "args": [
-              {
-                "label": "account",
-                "type": {
-                  "displayName": [
-                    "crossartzerostaking_external",
-                    "GetTotalStakedByAccountInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
+            "args": [],
             "docs": [
-              " Get User NFT staked in the contract"
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
             ],
-            "label": "CrossArtZeroStaking::get_total_staked_by_account",
-            "mutates": false,
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
-                "crossartzerostaking_external",
-                "GetTotalStakedByAccountOutput"
+                "ownable_external",
+                "RenounceOwnershipOutput"
               ],
-              "type": 6
+              "type": 16
             },
-            "selector": "0x487f1cac"
+            "selector": "0x5e228753"
           },
           {
             "args": [
@@ -1091,9 +1065,37 @@ const staking = {
                 "crossartzerostaking_external",
                 "GetTotalPendingUnstakedByAccountOutput"
               ],
-              "type": 6
+              "type": 9
             },
             "selector": "0x3d9ff06d"
+          },
+          {
+            "args": [
+              {
+                "label": "account",
+                "type": {
+                  "displayName": [
+                    "crossartzerostaking_external",
+                    "GetTotalStakedByAccountInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Get User NFT staked in the contract"
+            ],
+            "label": "CrossArtZeroStaking::get_total_staked_by_account",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerostaking_external",
+                "GetTotalStakedByAccountOutput"
+              ],
+              "type": 9
+            },
+            "selector": "0x487f1cac"
           }
         ]
       },
@@ -1107,7 +1109,7 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x238cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                          "key": "0xb36ee29c00000000000000000000000000000000000000000000000000000000",
                           "ty": 0
                         }
                       },
@@ -1116,14 +1118,14 @@ const staking = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0x248cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                          "dispatchKey": "0xb46ee29c00000000000000000000000000000000000000000000000000000000",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0x258cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                                      "key": "0xb56ee29c00000000000000000000000000000000000000000000000000000000",
                                       "ty": 3
                                     }
                                   },
@@ -1151,7 +1153,7 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x75a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                          "key": "0x971e61b600000000000000000000000000000000000000000000000000000000",
                           "ty": 4
                         }
                       },
@@ -1160,7 +1162,7 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x76a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                          "key": "0x981e61b600000000000000000000000000000000000000000000000000000000",
                           "ty": 0
                         }
                       },
@@ -1168,27 +1170,9 @@ const staking = {
                     },
                     {
                       "layout": {
-                        "struct": {
-                          "fields": [
-                            {
-                              "layout": {
-                                "cell": {
-                                  "key": "0x77a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
-                                  "ty": 5
-                                }
-                              },
-                              "name": "account_to_index"
-                            },
-                            {
-                              "layout": {
-                                "cell": {
-                                  "key": "0x78a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
-                                  "ty": 8
-                                }
-                              },
-                              "name": "index_to_account"
-                            }
-                          ]
+                        "cell": {
+                          "key": "0x991e61b600000000000000000000000000000000000000000000000000000000",
+                          "ty": 5
                         }
                       },
                       "name": "staked_accounts"
@@ -1196,35 +1180,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x79a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
-                          "ty": 6
-                        }
-                      },
-                      "name": "staked_accounts_last_index"
-                    },
-                    {
-                      "layout": {
-                        "struct": {
-                          "fields": [
-                            {
-                              "layout": {
-                                "cell": {
-                                  "key": "0x7aa8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
-                                  "ty": 9
-                                }
-                              },
-                              "name": "id_to_index"
-                            },
-                            {
-                              "layout": {
-                                "cell": {
-                                  "key": "0x7ba8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
-                                  "ty": 9
-                                }
-                              },
-                              "name": "index_to_id"
-                            }
-                          ]
+                          "key": "0x9a1e61b600000000000000000000000000000000000000000000000000000000",
+                          "ty": 8
                         }
                       },
                       "name": "staking_list"
@@ -1232,16 +1189,16 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x7ca8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
-                          "ty": 12
+                          "key": "0x9b1e61b600000000000000000000000000000000000000000000000000000000",
+                          "ty": 8
                         }
                       },
-                      "name": "staking_list_last_index"
+                      "name": "pending_unstaking_list"
                     },
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x7da8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                          "key": "0x9c1e61b600000000000000000000000000000000000000000000000000000000",
                           "ty": 0
                         }
                       },
@@ -1250,8 +1207,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x7ea8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
-                          "ty": 6
+                          "key": "0x9d1e61b600000000000000000000000000000000000000000000000000000000",
+                          "ty": 9
                         }
                       },
                       "name": "total_staked"
@@ -1259,8 +1216,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x7fa8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
-                          "ty": 6
+                          "key": "0x9e1e61b600000000000000000000000000000000000000000000000000000000",
+                          "ty": 9
                         }
                       },
                       "name": "limit_unstake_time"
@@ -1268,53 +1225,17 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x80a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
-                          "ty": 13
-                        }
-                      },
-                      "name": "pending_unstaking_list"
-                    },
-                    {
-                      "layout": {
-                        "struct": {
-                          "fields": [
-                            {
-                              "layout": {
-                                "cell": {
-                                  "key": "0x81a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
-                                  "ty": 9
-                                }
-                              },
-                              "name": "id_to_index"
-                            },
-                            {
-                              "layout": {
-                                "cell": {
-                                  "key": "0x82a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
-                                  "ty": 9
-                                }
-                              },
-                              "name": "index_to_id"
-                            }
-                          ]
-                        }
-                      },
-                      "name": "pending_unstaking_list_token_index"
-                    },
-                    {
-                      "layout": {
-                        "cell": {
-                          "key": "0x83a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                          "key": "0x9f1e61b600000000000000000000000000000000000000000000000000000000",
                           "ty": 12
                         }
                       },
-                      "name": "pending_unstaking_list_token_last_index"
+                      "name": "request_unstaking_time"
                     },
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x84a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
-                          "ty": 15
+                          "key": "0xa01e61b600000000000000000000000000000000000000000000000000000000",
+                          "ty": 14
                         }
                       },
                       "name": "reward_pool"
@@ -1322,8 +1243,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x85a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
-                          "ty": 15
+                          "key": "0xa11e61b600000000000000000000000000000000000000000000000000000000",
+                          "ty": 14
                         }
                       },
                       "name": "claimable_reward"
@@ -1331,7 +1252,7 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x86a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                          "key": "0xa21e61b600000000000000000000000000000000000000000000000000000000",
                           "ty": 4
                         }
                       },
@@ -1340,8 +1261,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x87a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
-                          "ty": 16
+                          "key": "0xa31e61b600000000000000000000000000000000000000000000000000000000",
+                          "ty": 15
                         }
                       },
                       "name": "is_claimed"
@@ -1349,14 +1270,14 @@ const staking = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0x88a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                          "dispatchKey": "0xa41e61b600000000000000000000000000000000000000000000000000000000",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0x89a8af34f792d9122e22d4ecbeb5d9eecdad8988d17cc21e7f01474d6d3300b2",
+                                      "key": "0xa51e61b600000000000000000000000000000000000000000000000000000000",
                                       "ty": 3
                                     }
                                   },
@@ -1443,9 +1364,58 @@ const staking = {
               "composite": {
                 "fields": [
                   {
-                    "name": "offset_key",
-                    "type": 7,
-                    "typeName": "Key"
+                    "type": 6
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "K",
+                "type": 2
+              },
+              {
+                "name": "V",
+                "type": 0
+              }
+            ],
+            "path": [
+              "openbrush_lang",
+              "storage",
+              "multi_mapping",
+              "MultiMapping"
+            ]
+          }
+        },
+        {
+          "id": 6,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 7
+              }
+            }
+          }
+        },
+        {
+          "id": 7,
+          "type": {
+            "def": {
+              "tuple": [
+                2,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "id": 8,
+          "type": {
+            "def": {
+              "composite": {
+                "fields": [
+                  {
+                    "type": 10
                   }
                 ]
               }
@@ -1457,7 +1427,68 @@ const staking = {
               },
               {
                 "name": "V",
-                "type": 6
+                "type": 9
+              }
+            ],
+            "path": [
+              "openbrush_lang",
+              "storage",
+              "multi_mapping",
+              "MultiMapping"
+            ]
+          }
+        },
+        {
+          "id": 9,
+          "type": {
+            "def": {
+              "primitive": "u64"
+            }
+          }
+        },
+        {
+          "id": 10,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 11
+              }
+            }
+          }
+        },
+        {
+          "id": 11,
+          "type": {
+            "def": {
+              "tuple": [
+                0,
+                9
+              ]
+            }
+          }
+        },
+        {
+          "id": 12,
+          "type": {
+            "def": {
+              "composite": {
+                "fields": [
+                  {
+                    "name": "offset_key",
+                    "type": 13,
+                    "typeName": "Key"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "K",
+                "type": 11
+              },
+              {
+                "name": "V",
+                "type": 9
               }
             ],
             "path": [
@@ -1469,15 +1500,7 @@ const staking = {
           }
         },
         {
-          "id": 6,
-          "type": {
-            "def": {
-              "primitive": "u64"
-            }
-          }
-        },
-        {
-          "id": 7,
+          "id": 13,
           "type": {
             "def": {
               "composite": {
@@ -1496,190 +1519,7 @@ const staking = {
           }
         },
         {
-          "id": 8,
-          "type": {
-            "def": {
-              "composite": {
-                "fields": [
-                  {
-                    "name": "offset_key",
-                    "type": 7,
-                    "typeName": "Key"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "K",
-                "type": 6
-              },
-              {
-                "name": "V",
-                "type": 0
-              }
-            ],
-            "path": [
-              "ink_storage",
-              "lazy",
-              "mapping",
-              "Mapping"
-            ]
-          }
-        },
-        {
-          "id": 9,
-          "type": {
-            "def": {
-              "composite": {
-                "fields": [
-                  {
-                    "name": "offset_key",
-                    "type": 7,
-                    "typeName": "Key"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "K",
-                "type": 10
-              },
-              {
-                "name": "V",
-                "type": 6
-              }
-            ],
-            "path": [
-              "ink_storage",
-              "lazy",
-              "mapping",
-              "Mapping"
-            ]
-          }
-        },
-        {
-          "id": 10,
-          "type": {
-            "def": {
-              "tuple": [
-                11,
-                6
-              ]
-            }
-          }
-        },
-        {
-          "id": 11,
-          "type": {
-            "def": {
-              "variant": {
-                "variants": [
-                  {
-                    "index": 0,
-                    "name": "None"
-                  },
-                  {
-                    "fields": [
-                      {
-                        "type": 0
-                      }
-                    ],
-                    "index": 1,
-                    "name": "Some"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "T",
-                "type": 0
-              }
-            ],
-            "path": [
-              "Option"
-            ]
-          }
-        },
-        {
-          "id": 12,
-          "type": {
-            "def": {
-              "composite": {
-                "fields": [
-                  {
-                    "name": "offset_key",
-                    "type": 7,
-                    "typeName": "Key"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "K",
-                "type": 11
-              },
-              {
-                "name": "V",
-                "type": 6
-              }
-            ],
-            "path": [
-              "ink_storage",
-              "lazy",
-              "mapping",
-              "Mapping"
-            ]
-          }
-        },
-        {
-          "id": 13,
-          "type": {
-            "def": {
-              "composite": {
-                "fields": [
-                  {
-                    "name": "offset_key",
-                    "type": 7,
-                    "typeName": "Key"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "K",
-                "type": 14
-              },
-              {
-                "name": "V",
-                "type": 6
-              }
-            ],
-            "path": [
-              "ink_storage",
-              "lazy",
-              "mapping",
-              "Mapping"
-            ]
-          }
-        },
-        {
           "id": 14,
-          "type": {
-            "def": {
-              "tuple": [
-                0,
-                6
-              ]
-            }
-          }
-        },
-        {
-          "id": 15,
           "type": {
             "def": {
               "primitive": "u128"
@@ -1687,14 +1527,14 @@ const staking = {
           }
         },
         {
-          "id": 16,
+          "id": 15,
           "type": {
             "def": {
               "composite": {
                 "fields": [
                   {
                     "name": "offset_key",
-                    "type": 7,
+                    "type": 13,
                     "typeName": "Key"
                   }
                 ]
@@ -1719,7 +1559,7 @@ const staking = {
           }
         },
         {
-          "id": 17,
+          "id": 16,
           "type": {
             "def": {
               "variant": {
@@ -1736,7 +1576,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 18
+                        "type": 17
                       }
                     ],
                     "index": 1,
@@ -1752,7 +1592,7 @@ const staking = {
               },
               {
                 "name": "E",
-                "type": 18
+                "type": 17
               }
             ],
             "path": [
@@ -1761,7 +1601,7 @@ const staking = {
           }
         },
         {
-          "id": 18,
+          "id": 17,
           "type": {
             "def": {
               "variant": {
@@ -1787,7 +1627,7 @@ const staking = {
           }
         },
         {
-          "id": 19,
+          "id": 18,
           "type": {
             "def": {
               "variant": {
@@ -1804,7 +1644,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 20
+                        "type": 19
                       }
                     ],
                     "index": 1,
@@ -1820,7 +1660,7 @@ const staking = {
               },
               {
                 "name": "E",
-                "type": 20
+                "type": 19
               }
             ],
             "path": [
@@ -1829,7 +1669,7 @@ const staking = {
           }
         },
         {
-          "id": 20,
+          "id": 19,
           "type": {
             "def": {
               "variant": {
@@ -1837,7 +1677,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 21,
+                        "type": 20,
                         "typeName": "String"
                       }
                     ],
@@ -1875,7 +1715,7 @@ const staking = {
           }
         },
         {
-          "id": 21,
+          "id": 20,
           "type": {
             "def": {
               "primitive": "str"
@@ -1883,17 +1723,116 @@ const staking = {
           }
         },
         {
+          "id": 21,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "index": 0,
+                    "name": "None"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 9
+                      }
+                    ],
+                    "index": 1,
+                    "name": "Some"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "T",
+                "type": 9
+              }
+            ],
+            "path": [
+              "Option"
+            ]
+          }
+        },
+        {
           "id": 22,
           "type": {
             "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "index": 0,
+                    "name": "None"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 14
+                      }
+                    ],
+                    "index": 1,
+                    "name": "Some"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "T",
+                "type": 14
+              }
+            ],
+            "path": [
+              "Option"
+            ]
+          }
+        },
+        {
+          "id": 23,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "index": 0,
+                    "name": "None"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 0
+                      }
+                    ],
+                    "index": 1,
+                    "name": "Some"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "T",
+                "type": 0
+              }
+            ],
+            "path": [
+              "Option"
+            ]
+          }
+        },
+        {
+          "id": 24,
+          "type": {
+            "def": {
               "sequence": {
-                "type": 6
+                "type": 9
               }
             }
           }
         },
         {
-          "id": 23,
+          "id": 25,
           "type": {
             "def": {
               "variant": {
@@ -1911,7 +1850,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 24,
+                        "type": 26,
                         "typeName": "u16"
                       }
                     ],
@@ -1921,7 +1860,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 25,
+                        "type": 27,
                         "typeName": "u32"
                       }
                     ],
@@ -1931,7 +1870,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 6,
+                        "type": 9,
                         "typeName": "u64"
                       }
                     ],
@@ -1941,7 +1880,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 15,
+                        "type": 14,
                         "typeName": "u128"
                       }
                     ],
@@ -1951,7 +1890,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 26,
+                        "type": 28,
                         "typeName": "Vec<u8>"
                       }
                     ],
@@ -1970,7 +1909,7 @@ const staking = {
           }
         },
         {
-          "id": 24,
+          "id": 26,
           "type": {
             "def": {
               "primitive": "u16"
@@ -1978,7 +1917,7 @@ const staking = {
           }
         },
         {
-          "id": 25,
+          "id": 27,
           "type": {
             "def": {
               "primitive": "u32"
@@ -1986,7 +1925,7 @@ const staking = {
           }
         },
         {
-          "id": 26,
+          "id": 28,
           "type": {
             "def": {
               "sequence": {
