@@ -175,7 +175,7 @@ const LaunchpadDetailPage = () => {
               await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
                 currentAccount,
                 i,
-                '5GFEpayckPEzHpj8Rg1K3Fteb6ZpCgrn6huF2buvK4dT4Hdt'
+                currentAccount?.address
               );
 
             // console.log("zzz whiteListData i", i, whiteListData);
@@ -273,7 +273,7 @@ const LaunchpadDetailPage = () => {
                 await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
                   currentAccount,
                   i,
-                  '5GFEpayckPEzHpj8Rg1K3Fteb6ZpCgrn6huF2buvK4dT4Hdt'
+                  currentAccount?.address
                 );
               // console.log(
               //   "LaunchpadDetailPage::currentWhitelistTmp",
@@ -641,6 +641,7 @@ const LaunchpadDetailPage = () => {
               >
                 {currentPhase?.whitelist?.whitelistAmount ? (
                   <>
+                    {" "}
                     <NumberInput
                       bg="black"
                       min={1}
