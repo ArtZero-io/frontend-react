@@ -83,6 +83,7 @@ import UnlockIcon from "@theme/assets/icon/Unlock";
 import LockIcon from "@theme/assets/icon/Lock";
 import PropCard from "@components/Card/PropCard";
 import LevelCard from "@components/Card/LevelCard";
+import { Helmet } from "react-helmet";
 
 function TokenPage() {
   const dispatch = useDispatch();
@@ -354,6 +355,25 @@ function TokenPage() {
 
   return (
     <NftLayout>
+      <Helmet>
+        <title>{token?.nftName}</title>
+
+        {/* <!-- Google / Search Engine Tags --> */}
+        <meta itemprop="image" content={getCachedImageShort(token?.avatar)} />
+
+        {/* <!-- Facebook Meta Tags --> */}
+        <meta
+          property="og:image"
+          content={getCachedImageShort(token?.avatar)}
+        />
+
+        {/* <!-- Twitter Meta Tags --> */}
+        <meta
+          name="twitter:image"
+          content={getCachedImageShort(token?.avatar)}
+        />
+      </Helmet>
+
       <VStack w="full" minH="calc(100vh - 80px)" bg="brand.grayDark">
         {loading || loadingForceUpdate ? (
           <ModalLoader loadingTime={loadingTime || 1} />

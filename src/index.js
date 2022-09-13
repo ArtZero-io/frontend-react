@@ -7,12 +7,14 @@ import { store } from "@store/store";
 import { SubstrateContextProvider } from "@utils/substrate";
 
 import App from "@components/App";
+import HeadHelmet from "@components/Helmet/Helmet";
 
 ReactDOM.render(
   <>
     <SubstrateContextProvider>
       <Provider store={store}>
         <HashRouter basename={"/"}>
+          <HeadHelmet />
           <App />
         </HashRouter>
       </Provider>
