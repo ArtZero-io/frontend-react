@@ -292,7 +292,7 @@ function AddPhase({
                   >
                     <AdvancedModeSwitch
                       hasTooltipPublicMint={true}
-                      label="Set public mint"
+                      label="Allow public mint"
                       isDisabled={actionType}
                       isChecked={value[index].isPublic}
                       name={`phases[${index}].isPublic`}
