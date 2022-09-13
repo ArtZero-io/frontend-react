@@ -376,7 +376,7 @@ function MyMintingProjectPage() {
                         <Text as="span" color="#fff">
                           {currentPhase.claimedAmount}{" "}
                           <Text as="span">
-                            token
+                            NFT
                             {currentPhase.claimedAmount > 1 ? "s" : ""}
                           </Text>
                         </Text>
@@ -615,7 +615,7 @@ function MyMintingProjectPage() {
                                         <Text as="span" color="#fff">
                                           {currentPhase.claimedAmount}{" "}
                                           <Text as="span">
-                                            token
+                                            NFT
                                             {currentPhase.claimedAmount > 1
                                               ? "s"
                                               : ""}

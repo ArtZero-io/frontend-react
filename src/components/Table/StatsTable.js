@@ -133,7 +133,7 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
       case "stakedAmount":
         return (
           <Text textAlign="left">
-            {formatNumDynamicDecimal(itemObj[headerValue])} token
+            {formatNumDynamicDecimal(itemObj[headerValue])} NFT
             {1 * itemObj[headerValue] > 1 ? "s" : ""}{" "}
           </Text>
         );

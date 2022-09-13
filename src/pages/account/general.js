@@ -671,7 +671,7 @@ function GeneralPage() {
                             {reward.staker}
                           </Td>
                           <Td textAlign="left" py={7}>
-                            {reward.stakedAmount} token
+                            {reward.stakedAmount} NFT
                             {reward.stakedAmount > 1 ? "s" : ""}
                           </Td>
                           <Td textAlign="left" py={7}>
