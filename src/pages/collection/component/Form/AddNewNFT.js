@@ -39,6 +39,7 @@ import { setTxStatus } from "@store/actions/txStatus";
 import PropCard from "@components/Card/PropCard";
 import isNotEmptyStr from "@utils";
 import LevelCard from "@components/Card/LevelCard";
+import { clearTxStatus } from "@store/actions/txStatus";
 
 const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -262,21 +263,30 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 nft721_psp34_standard.CONTRACT_ABI,
                 collection_address || rest.nftContractAddress
               );
+
               nft721_psp34_standard_calls.setContract(
                 nft721_psp34_standard_contract
               );
 
               if (mode === formMode.ADD) {
-                dispatch(setTxStatus({ type: CREATE_NFT, step: START }));
+                try {
+                  dispatch(setTxStatus({ type: CREATE_NFT, step: START }));
 
-                await nft721_psp34_standard_calls.mintWithAttributes(
-                  currentAccount,
-                  collection_address,
-                  attributes,
-                  dispatch,
-                  CREATE_NFT,
-                  api
-                );
+                  await nft721_psp34_standard_calls.mintWithAttributes(
+                    currentAccount,
+                    collection_address,
+                    attributes,
+                    dispatch,
+                    CREATE_NFT,
+                    api
+                  );
+                } catch (error) {
+                  console.log("X_x err.message", error.message);
+                  toast.error(
+                    `Err! Please contact support with the info below👇\n\n${error.message}.`
+                  );
+                  dispatch(clearTxStatus());
+                }
               } else {
                 // add deleted properties
                 const oldAttrsKeysList = rest.attrsList.map(
@@ -293,17 +303,26 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     });
                   }
                 }
-                dispatch(setTxStatus({ type: EDIT_NFT, step: START }));
-                // rest.nftContractAddress due to Edit mode on My NFT has no params
-                await nft721_psp34_standard_calls.setMultipleAttributesNFT(
-                  currentAccount,
-                  collection_address || rest.nftContractAddress,
-                  tokenID,
-                  attributes,
-                  dispatch,
-                  EDIT_NFT,
-                  api
-                );
+
+                try {
+                  dispatch(setTxStatus({ type: EDIT_NFT, step: START }));
+                  // rest.nftContractAddress due to Edit mode on My NFT has no params
+                  await nft721_psp34_standard_calls.setMultipleAttributesNFT(
+                    currentAccount,
+                    collection_address || rest.nftContractAddress,
+                    tokenID,
+                    attributes,
+                    dispatch,
+                    EDIT_NFT,
+                    api
+                  );
+                } catch (error) {
+                  console.log("X_x err.message", error.message);
+                  toast.error(
+                    `Err! Please contact support with the info below👇\n\n${error.message}.`
+                  );
+                  dispatch(clearTxStatus());
+                }
               }
             }
           }}
