@@ -154,57 +154,49 @@ async function mintWithAttributes(
     return null;
   }
   let unsubscribe;
-
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
-
   let resStatus = false;
-  let attribute_label = [];
-  let attribute_value = [];
 
+  let metadata = [];
   for (const attribute of attributes) {
-    if (attribute_label.includes(attribute.name.trim()) === false) {
-      attribute_label.push(attribute.name.trim());
-      attribute_value.push(attribute.value);
-    }
+    metadata.push([attribute.name.trim(), attribute.value.trim()]);
   }
+  console.log('mintWithAttributes::metadata', metadata);
+  contract.tx
+    .mintWithAttributes(
+      { gasLimit, value: azero_value },
+      metadata
+    )
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
 
-  if (attribute_label.length === attribute_value.length) {
-    contract.tx
-      .mintWithAttributes(
-        { gasLimit, value: azero_value },
-        attribute_label,
-        attribute_value
-      )
-      .signAndSend(
-        address,
-        { signer: injector.signer },
-        async ({ status, dispatchError }) => {
-          txResponseErrorHandler({
-            status,
-            dispatchError,
-            dispatch,
-            txType,
-            api,
-            caller_account,
+        if (status?.isFinalized) {
+          const token_id = await getTotalSupply(address);
+
+          await APICall.askBeUpdateNftData({
+            collection_address: nft_address,
+            token_id: token_id,
           });
-
-          if (status?.isFinalized) {
-            const token_id = await getTotalSupply(address);
-
-            await APICall.askBeUpdateNftData({
-              collection_address: nft_address,
-              token_id: token_id,
-            });
-          }
-          
         }
-      )
-      .then((unsub) => (unsubscribe = unsub))
-      .catch((error) => txErrorHandler({ error, dispatch }));
-  }
+        
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
 
   return resStatus && unsubscribe;
 }
@@ -363,15 +355,12 @@ async function setMultipleAttributesNFT(
   txType,
   api
 ) {
-  let attribute_label = [];
-  let attribute_value = [];
-
+  let metadata = [];
   for (const attribute of attributes) {
-    if (attribute_label.includes(attribute.name.trim()) === false) {
-      attribute_label.push(attribute.name.trim());
-      attribute_value.push(attribute.value);
-    }
+    metadata.push([attribute.name.trim(), attribute.value.trim()]);
   }
+  console.log('mintWithAttributes::metadata', metadata);
+
   let unsubscribe;
 
   const address = caller_account?.address;
@@ -383,8 +372,7 @@ async function setMultipleAttributesNFT(
   await contract.tx["psp34Traits::setMultipleAttributes"](
     { value, gasLimit },
     { u64: tokenID },
-    attribute_label,
-    attribute_value
+    metadata
   )
     .signAndSend(
       address,
