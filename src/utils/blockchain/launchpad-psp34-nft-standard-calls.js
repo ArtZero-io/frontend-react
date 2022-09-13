@@ -78,9 +78,10 @@ async function updateWhitelist(
   console.log(account);
   console.log(!isValidAddressPolkadotAddress(account));
 
-  if (parseInt(amount) <= 0 || !isValidAddressPolkadotAddress(account)) {
-    toast.error(`invalid inputs`);
-    return;
+  if (parseInt(amount) < 0 || !isValidAddressPolkadotAddress(account)) {
+    throw Error("Error: invalid inputs");
+    // toast.error(`invalid inputs`);
+    // return;
   }
 
   let unsubscribe;
@@ -174,7 +175,6 @@ async function addWhitelist(
           api,
           caller_account,
         });
-        
       }
     )
     .then((unsub) => (unsubscribe = unsub))

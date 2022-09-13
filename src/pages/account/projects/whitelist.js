@@ -39,6 +39,7 @@ import { setTxStatus } from "@store/actions/txStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { isValidAddressPolkadotAddress } from "@utils";
+import { clearTxStatus } from "@store/actions/txStatus";
 
 const tableHeaders = ["Address", "Amount", "Claimed", "Price"];
 
@@ -215,7 +216,7 @@ function MyWhiteListProjectPage() {
       .find((i) => i.address === whitelistAddress)
       ?.claimedAmount.replaceAll(",", "");
 
-    if (parseInt(claimedAmount) >= whitelistAmount) {
+    if (parseInt(claimedAmount) > whitelistAmount) {
       return toast.error(`New amount must greater than claimed amount!`);
     }
 
@@ -228,18 +229,26 @@ function MyWhiteListProjectPage() {
     launchpad_psp34_nft_standard_calls.setContract(
       launchpad_psp34_nft_standard_contract
     );
-    dispatch(setTxStatus({ type: UPDATE_WHITELIST, step: START }));
 
-    await launchpad_psp34_nft_standard_calls.updateWhitelist(
-      currentAccount,
-      whitelistAddress,
-      selectedPhaseCode,
-      whitelistAmount,
-      whiteListPrice,
-      dispatch,
-      UPDATE_WHITELIST,
-      api
-    );
+    try {
+      dispatch(setTxStatus({ type: UPDATE_WHITELIST, step: START }));
+
+      await launchpad_psp34_nft_standard_calls.updateWhitelist(
+        currentAccount,
+        whitelistAddress,
+        selectedPhaseCode,
+        whitelistAmount,
+        whiteListPrice,
+        dispatch,
+        UPDATE_WHITELIST,
+        api
+      );
+    } catch (error) {
+      console.log("X_x error.message", error.message);
+      console.log("X_x error.message", error.message);
+      toast.error(error.message);
+      dispatch(clearTxStatus());
+    }
   };
 
   const onChangeSelectedProjectAddress = async (address) => {
@@ -461,7 +470,7 @@ function MyWhiteListProjectPage() {
           <Text py={2}>Whitelist Address</Text>
           <Box>
             <Input
-              isDisabled={actionType || maxSlot <= 0}
+              isDisabled={actionType}
               bg="black"
               h="3.125rem"
               w="full"
@@ -489,7 +498,7 @@ function MyWhiteListProjectPage() {
             w="full"
             px={0}
             min={0}
-            isDisabled={actionType || maxSlot <= 0}
+            isDisabled={actionType}
           >
             <NumberInputField
               h="3.125rem"
@@ -508,16 +517,16 @@ function MyWhiteListProjectPage() {
 
           <Box>
             <NumberInput
-              isDisabled={actionType || maxSlot <= 0}
+              isDisabled={actionType}
               bg="black"
-              min={1}
+              min={0}
               onChange={(valueString) => setWhitelistAmount(valueString)}
               value={whitelistAmount}
               mr={3}
               h="3.125rem"
               w="full"
               px={0}
-              max={maxSlot}
+              // max={maxSlot}
             >
               <NumberInputField
                 h="3.125rem"
@@ -560,7 +569,6 @@ function MyWhiteListProjectPage() {
             variant="outline"
             onClick={() => onUpdateWhitelist()}
             isDisabled={
-              maxSlot <= 0 ||
               loadingForceUpdate ||
               (actionType && actionType !== UPDATE_WHITELIST)
             }
