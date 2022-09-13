@@ -1,36 +1,28 @@
-/* eslint-disable no-unused-vars */
 import {
   Button,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalHeader,
   ModalOverlay,
   useDisclosure,
-  // IconButton,
-  // Tooltip,
   useBreakpointValue,
+  ModalHeader,
 } from "@chakra-ui/react";
-// import { QuestionIcon } from "@chakra-ui/icons";
-// import EditIcon from "@theme/assets/icon/Edit.js";
 
-// eslint-disable-next-line no-unused-vars
-import { useEffect } from "react";
 import useTxStatus from "@hooks/useTxStatus";
-// import SimpleModeForm from "../Form/SimpleMode";
-import { formMode, SCROLLBAR, END, FINALIZED } from "@constants";
+import { formMode, SCROLLBAR, FINALIZED } from "@constants";
 import MyWhiteListProjectPage from "../whitelist";
 
 function WhitelistManagerModal({
   mode = formMode.ADD,
-  isDisabled,
+  isDisabled = false,
   id,
   nftContractAddress,
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { step, onEndClick } = useTxStatus();
-  const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
+  const modalSize = useBreakpointValue(["xs", "6xl"]);
 
   // useEffect(() => {
   //   step === END && onClose();
@@ -39,12 +31,6 @@ function WhitelistManagerModal({
   return (
     <>
       {mode === formMode.ADD && (
-        // <Tooltip
-        //   hasArrow
-        //   bg="#333"
-        //   color="#fff"
-        //   label="Simple Mode is designed for non-tech people. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
-        // >
         <Button
           isDisabled={isDisabled}
           variant="outline"
@@ -53,35 +39,7 @@ function WhitelistManagerModal({
         >
           whitelist manager
         </Button>
-        // </Tooltip>
       )}
-
-      {/* {mode === formMode.EDIT && (
-        <>
-          <IconButton
-            h="40px"
-            top="2px"
-            bg="black"
-            right="2px"
-            minW="40px"
-            size="icon"
-            zIndex={"1"}
-            pos="absolute"
-            borderWidth={0}
-            color="#7ae7ff"
-            aria-label="edit"
-            variant="iconSolid"
-            onClick={() => onOpen()}
-            _hover={{
-              color: "#000",
-              bg: "#7ae7ff",
-            }}
-            icon={
-              <EditIcon p="0" width="17px" height="17px" color="currentColor" />
-            }
-          />
-        </>
-      )} */}
 
       <Modal
         isCentered
@@ -112,33 +70,9 @@ function WhitelistManagerModal({
             right={["0", "-8", "-8"]}
             onClick={() => step === FINALIZED && onEndClick()}
           />
-          <ModalHeader>
-            {/* <Heading fontSize={["2xl", "3xl", "3xl"]} m={2}>
-              {" "}
-              add whitelist */}
-            {/* {mode === formMode.ADD ? "Simple Mode" : "Edit Collection"}{" "} */}
-            {/* <Tooltip
-                bg="#333"
-                color="#fff"
-                fontSize="md"
-                label="Simple Mode is designed for non-tech people. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
-              >
-                <QuestionIcon fontSize="md" />
-              </Tooltip> */}
-            {/* </Heading> */}
-          </ModalHeader>
+          <ModalHeader></ModalHeader>
 
-          <ModalBody
-            // shadow="lg"
-            overflowY="auto"
-            sx={SCROLLBAR}
-          >
-            {/* <SimpleModeForm
-              id={id}
-              mode={mode}
-              maxH="60rem"
-              nftContractAddress={nftContractAddress}
-            /> */}
+          <ModalBody overflowY="auto" sx={SCROLLBAR}>
             <MyWhiteListProjectPage />
           </ModalBody>
         </ModalContent>

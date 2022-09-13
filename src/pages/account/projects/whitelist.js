@@ -39,6 +39,7 @@ import { setTxStatus } from "@store/actions/txStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { isValidAddressPolkadotAddress } from "@utils";
+import { SCROLLBAR } from "@constants";
 
 const tableHeaders = ["Address", "Amount", "Claimed", "Price"];
 
@@ -279,13 +280,12 @@ function MyWhiteListProjectPage() {
 
       // console.log("zzzphaseSchedule", phaseSchedule);
 
-        const phaseInfo = {
-          id: i,
-          code: phaseCode,
-          ...phaseSchedule,
-        };
-        phasesTmp.push(phaseInfo);
-      
+      const phaseInfo = {
+        id: i,
+        code: phaseCode,
+        ...phaseSchedule,
+      };
+      phasesTmp.push(phaseInfo);
     }
 
     // console.log("phasesListAll", phasesListAll);
@@ -333,7 +333,7 @@ function MyWhiteListProjectPage() {
           selectedPhaseCode
         );
       let whiteListDataTableTmp = [];
-      console.log('totalPhaseAccountLink', totalPhaseAccountLink);
+      console.log("totalPhaseAccountLink", totalPhaseAccountLink);
       for (let i = 0; i < totalPhaseAccountLink; i++) {
         const whitelistPhaseAccountAddress =
           await launchpad_psp34_nft_standard_calls.getPhaseAccountLink(
@@ -341,7 +341,10 @@ function MyWhiteListProjectPage() {
             selectedPhaseCode,
             i
           );
-          console.log('whitelistPhaseAccountAddress', whitelistPhaseAccountAddress);
+        console.log(
+          "whitelistPhaseAccountAddress",
+          whitelistPhaseAccountAddress
+        );
         // eslint-disable-next-line no-unused-vars
         const phaseSchedule =
           await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
@@ -394,8 +397,18 @@ function MyWhiteListProjectPage() {
   );
 
   return (
-    <Stack>
-      <Stack pb="30px" borderBottom="1px #333 solid" textAlign="left">
+    <Stack
+      w="full"
+      spacing="30px"
+      alignItems="start"
+      direction={["column", "row"]}
+    >
+      <Stack
+        pb="30px"
+        //  borderBottom="1px #333 solid"
+        textAlign="left"
+        w={["full", "30%"]}
+      >
         <Heading fontSize="32px" pb="20px" textAlign="center">
           add whitelist
         </Heading>
@@ -567,13 +580,15 @@ function MyWhiteListProjectPage() {
         </HStack>
       </Stack>
 
-      <Stack py="30px">
+      <Stack w={["full", "70%"]} pb="30px">
         <Heading fontSize="32px" pb="20px" textAlign="center">
           Whitelist Management
         </Heading>
+
         {currentPhase && currentPhase.title && (
           <>
             <Stack
+              textAlign="left"
               px="2px"
               w="full"
               py="20px"
@@ -585,9 +600,10 @@ function MyWhiteListProjectPage() {
               <Stack
                 w="full"
                 color="#888"
-                spacing="30px"
-                direction={["row"]}
+                spacing={["6px", "30px"]}
+                direction={["column", "row"]}
                 alignContent="space-between"
+                justifyContent="flex-start"
                 minH={{ base: "1rem", "2xl": "3.375rem" }}
               >
                 <Text>
@@ -631,6 +647,7 @@ function MyWhiteListProjectPage() {
             </Stack>
           </>
         )}
+
         {loadingForceUpdate || loading ? (
           <AnimationLoader />
         ) : (
@@ -642,26 +659,11 @@ function MyWhiteListProjectPage() {
           >
             <TableContainer
               fontSize="lg"
-              w={{ base: "1100px", xl: "1560px" }}
+              w="full"
+              // w={{ base: "full", xl: "1560px" }}
               maxH={{ base: "390px", xl: "400px" }}
               overflowY="scroll"
-              sx={{
-                "&::-webkit-scrollbar": {
-                  width: "4px",
-                  height: "4px",
-                  borderRadius: "0px",
-                  backgroundColor: `transparent`,
-                },
-                "&::-webkit-scrollbar-thumb": {
-                  backgroundColor: `#7ae7ff`,
-                },
-                "&::-webkit-scrollbar-thumb:hover": {
-                  backgroundColor: `#7ae7ff`,
-                },
-                "&::-webkit-scrollbar-track": {
-                  backgroundColor: `transparent`,
-                },
-              }}
+              sx={SCROLLBAR}
             >
               <motion.div
                 initial={{ opacity: 0 }}

@@ -61,7 +61,7 @@ const MyProjectsPage = () => {
             <Spacer mt={{ base: "20px", xl: "0px" }} />
 
             <OwnerMintModal isDisabled={projects?.length === 0} />
-            <WhitelistManagerModal isDisabled={projects?.length === 0} />
+            <WhitelistManagerModal />
           </>
         )}
       </Stack>
