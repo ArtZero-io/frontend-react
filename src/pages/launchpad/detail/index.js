@@ -651,8 +651,8 @@ const LaunchpadDetailPage = () => {
                       // mb={["10px", 0]}
                       isDisabled={
                         actionType ||
-                        currentPhase?.whitelist?.claimedAmount >=
-                          currentPhase?.whitelist?.whitelistAmount
+                        Number(currentPhase?.whitelist?.claimedAmount) >=
+                          Number(currentPhase?.whitelist?.whitelistAmount)
                       }
                       value={whitelistMintingAmount}
                       max={
