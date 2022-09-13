@@ -774,7 +774,7 @@ const LaunchpadDetailPage = () => {
                               <Text as="span" color="#fff">
                                 {item.claimedAmount}{" "}
                                 <Text as="span">
-                                  token{item.claimedAmount > 1 ? "s" : ""}
+                                  NFT{item.claimedAmount > 1 ? "s" : ""}
                                 </Text>
                               </Text>
                             </Text>
@@ -847,7 +847,7 @@ const LaunchpadDetailPage = () => {
                                 <Text as="span" color="#fff">
                                   {Number(item.whitelist.whitelistAmount) -
                                     Number(item.whitelist.claimedAmount)}{" "}
-                                  tokens
+                                  NFTs
                                 </Text>
                               </Text>
                             )}

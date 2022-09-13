@@ -596,7 +596,7 @@ function MyWhiteListProjectPage() {
                   <Text as="span" color="#fff">
                     {currentPhase.whitelistAmount}{" "}
                     <Text as="span">
-                      token{currentPhase.whitelistAmount > 1 ? "s" : ""}
+                      NFT{currentPhase.whitelistAmount > 1 ? "s" : ""}
                     </Text>
                   </Text>
                 </Text>
@@ -606,7 +606,7 @@ function MyWhiteListProjectPage() {
                   <Text as="span" color="#fff">
                     {currentPhase.claimedAmount}{" "}
                     <Text as="span">
-                      token{currentPhase.claimedAmount > 1 ? "s" : ""}
+                      NFT{currentPhase.claimedAmount > 1 ? "s" : ""}
                     </Text>
                   </Text>
                 </Text>
