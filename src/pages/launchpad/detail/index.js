@@ -1031,34 +1031,33 @@ const LaunchpadDetailPage = () => {
             </Text>
           ) : (
             <>
+              <Text fontSize="lg" color="#888">
+                You minted {myNFTs?.length} NFTs.
+              </Text>
+
               <HStack
                 py="15px"
                 alignItems="center"
                 borderBottom="1px solid #303030"
               >
-                <Text
-                  color="#888"
-                  fontSize={["md", "lg"]}
-                  minW={["60px", "160px"]}
-                >
-                  #
-                </Text>
-                <HStack justifyContent="center">
-                  <Heading color="#888" fontSize="15px">
-                    NFT Name
-                  </Heading>
-                </HStack>
+                <Heading color="#888" fontSize="15px" minW={["100px", "200px"]}>
+                  NFT Image
+                </Heading>
+                <Heading color="#888" fontSize="15px">
+                  NFT Name
+                </Heading>
               </HStack>
+
               {pageNFT.map((item, idx) => (
                 <HStack
                   py="15px"
                   alignItems="center"
                   borderBottom="1px solid #303030"
                 >
-                  <Text fontSize={["md", "lg"]} minW={["60px", "160px"]}>
-                    # {(currentPage - 1) * pageSize + idx + 1}
-                  </Text>
                   <HStack justifyContent="center">
+                    <Heading fontSize={["md", "lg"]} minW={["100px", "200px"]}>
+                      {item.nftName}asd
+                    </Heading>
                     <Square mr={["12px", "32px"]} size="50px">
                       <Image
                         width="full"
@@ -1066,7 +1065,6 @@ const LaunchpadDetailPage = () => {
                         src={getCachedImageShort(item["avatar"])}
                       />
                     </Square>
-                    <Heading fontSize={["md", "lg"]}>{item.nftName}</Heading>
                   </HStack>
                 </HStack>
               ))}

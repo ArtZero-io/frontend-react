@@ -107,7 +107,7 @@ const MyStakesPage = () => {
         PMPCollectionDetail.listNFT = myUnstakePMP;
       }
 
-      if (activeTab === 'PENDING_UNSTAKE') {
+      if (activeTab === "PENDING_UNSTAKE") {
         const myPendingPMP = await getMyPendingPMP({
           api,
           pendingCount: pendingCount,
@@ -118,7 +118,7 @@ const MyStakesPage = () => {
         PMPCollectionDetail.listNFT = myPendingPMP;
       }
 
-      if (activeTab === 'STAKED') {
+      if (activeTab === "STAKED") {
         const myStakedPMP = await getMyStakedPMP({
           api,
           stakedCount: stakedCount,
@@ -464,7 +464,6 @@ export const getMyPendingPMP = async ({
       });
 
       const tokenMeta = await getMetaDataType1(token_id, token_uri);
-
       return { ...token_info, ...tokenMeta, stakeStatus: 3 };
     })
   );
@@ -491,6 +490,9 @@ export const getMyStakedPMP = async ({ stakedCount, currentAccount }) => {
         token_id,
       });
       const tokenMeta = await getMetaDataType1(token_id, token_uri);
+
+      console.log("tokenMeta", tokenMeta);
+
       return { ...token_info, ...tokenMeta, stakeStatus: 2 };
     })
   );
