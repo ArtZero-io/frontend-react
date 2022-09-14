@@ -1,10 +1,10 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5Go6HPGUcgpKHwZXVcDDeoJ1inbNxXSuKdzhhDJauaUHBxVq",
+  CONTRACT_ADDRESS: "5HXTCXZqAUUrC37Rr2LcajrGnEHbPCVJyKDB73hz8jkUbvAz",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x3d78dba0e916069f5ef324a4d296d79a0be029e5218cc4cb546fac3d5975a2ea",
+      "hash": "0xf183dd227f5f68187d17fff9c32c813a3ac72432bcf394ac74c0595c70f70207",
       "language": "ink! 3.3.1",
-      "compiler": "rustc 1.63.0-nightly"
+      "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
       "name": "artzero_launchpad_psp34",
@@ -708,23 +708,6 @@ const launchpad_manager = {
           {
             "args": [],
             "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [],
-            "docs": [
               " Leaves the contract without owner. It will not be possible to call",
               " owner's functions anymore. Can only be called by the current owner.",
               "",
@@ -748,6 +731,23 @@ const launchpad_manager = {
               "type": 15
             },
             "selector": "0x5e228753"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [

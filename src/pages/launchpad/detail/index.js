@@ -177,14 +177,11 @@ const LaunchpadDetailPage = () => {
                 i,
                 currentAccount?.address
               );
-
-            // console.log("zzz whiteListData i", i, whiteListData);
             const phaseSchedule =
               await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
                 currentAccount,
                 i
               );
-            // console.log("zzz phaseSchedule i", i, phaseSchedule);
 
             const phaseCode = phaseSchedule?.title;
             const totalWhiteListPhase =
@@ -243,8 +240,10 @@ const LaunchpadDetailPage = () => {
                 convertNumberWithoutCommas(phaseSchedule.claimedAmount)
               ),
             };
-
-            phasesTmp.push(phaseInfo);
+            if (phaseSchedule.isActive) {
+              phasesTmp.push(phaseInfo);
+            }
+            
 
             if (i === 1 * currentPhaseIdTmp) {
               // console.log("LaunchpadDetailPage::phaseSchedule", phaseSchedule);

@@ -250,6 +250,33 @@ function UpdatePhase({
     );
   };
 
+  const onDeletePhase = async (index) => {
+    const {
+      id,
+    } = value[index];
+    const launchpad_psp34_nft_standard_contract = new ContractPromise(
+      api,
+      launchpad_psp34_nft_standard.CONTRACT_ABI,
+      collection_address
+    );
+    launchpad_psp34_nft_standard_calls.setContract(
+      launchpad_psp34_nft_standard_contract
+    );
+
+
+    dispatch(
+      setTxStatus({ type: UPDATE_PHASE, step: START, tokenIDArray: [index] })
+    );
+
+    await launchpad_psp34_nft_standard_calls.deactivePhase(
+      currentAccount,
+      id,
+      dispatch,
+      UPDATE_PHASE,
+      api
+    );
+  }
+
   return (
     <FieldArray
       name="phases"
@@ -456,6 +483,31 @@ function UpdatePhase({
                         isDisabled={index === 0 && value.length === 1}
                       >
                         update
+                      </Heading>
+                    ) : null
+                  }
+
+                  {
+                    // !value[index].new &&
+
+                    !value[index].new &&
+                    mode === formMode.EDIT &&
+                    canEditPhase(value[index].start) ? (
+                      <Heading
+                        _hover={{
+                          color:
+                            !(index === 0 && value.length === 1) && "#7ae7ff",
+                        }}
+                        fontSize="sm"
+                        color="#555"
+                        fontStyle="unset"
+                        cursor="pointer"
+                        fontFamily="Evogria"
+                        textDecoration="underline"
+                        onClick={() => onDeletePhase(index)}
+                        isDisabled={index === 0 && value.length === 1}
+                      >
+                        Delete
                       </Heading>
                     ) : null
                   }

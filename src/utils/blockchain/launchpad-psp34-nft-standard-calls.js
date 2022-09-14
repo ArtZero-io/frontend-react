@@ -78,7 +78,7 @@ async function updateWhitelist(
   console.log(account);
   console.log(!isValidAddressPolkadotAddress(account));
 
-  if (parseInt(amount) <= 0 || !isValidAddressPolkadotAddress(account)) {
+  if (parseInt(amount) < 0 || !isValidAddressPolkadotAddress(account)) {
     toast.error(`invalid inputs`);
     return;
   }
@@ -761,6 +761,50 @@ async function updateSchedulePhase(
   return unsubscribe;
 }
 
+async function deactivePhase(
+  caller_account,
+  phaseId,
+  dispatch,
+  txType,
+  api
+) {
+  if (!contract || !caller_account) {
+    return null;
+  }
+
+  let unsubscribe;
+
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const injector = await web3FromSource(caller_account?.meta?.source);
+
+  const txNotSign = contract.tx.deactivePhase(
+    { gasLimit, value: azero_value },
+    phaseId
+  );
+
+  await txNotSign
+    .signAndSend(
+      address,
+      { signer: injector.signer },
+      async ({ status, dispatchError }) => {
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
+        });
+      }
+    )
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
+  return unsubscribe;
+}
+
 async function getPublicMintedCount(caller_account) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
@@ -915,6 +959,7 @@ const launchpad_psp34_nft_standard_calls = {
   updateAdminAddress,
   mint,
   withdrawFee,
+  deactivePhase
 };
 
 export default launchpad_psp34_nft_standard_calls;

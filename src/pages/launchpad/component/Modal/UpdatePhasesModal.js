@@ -88,24 +88,27 @@ const UpdatePhasesModal = React.memo(function ({
         );
 
       // console.log("xxx phaseSchedule", phaseSchedule);
-
-      let phaseInfo = {
-        id: i,
-        canEdit: false,
-        name: phaseSchedule.title,
-        start: Number(timestampWithoutCommas(phaseSchedule.startTime)),
-        end: Number(timestampWithoutCommas(phaseSchedule.endTime)),
-        isPublic: phaseSchedule.isPublic,
-        publicAmount: Number(
-          convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
-        ),
-        publicMaxMintingAmount: Number(
-          convertNumberWithoutCommas(phaseSchedule.publicMaxMintingAmount)
-        ),
-        publicMintingFee: convertStringToPrice(phaseSchedule.publicMintingFee),
-      };
-      console.log("phaseInfo", phaseInfo);
-      phasesTmp.push(phaseInfo);
+      if (phaseSchedule.isActive) {
+        let phaseInfo = {
+          id: i,
+          canEdit: false,
+          name: phaseSchedule.title,
+          start: Number(timestampWithoutCommas(phaseSchedule.startTime)),
+          end: Number(timestampWithoutCommas(phaseSchedule.endTime)),
+          isPublic: phaseSchedule.isPublic,
+          publicAmount: Number(
+            convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
+          ),
+          publicMaxMintingAmount: Number(
+            convertNumberWithoutCommas(phaseSchedule.publicMaxMintingAmount)
+          ),
+          publicMintingFee: convertStringToPrice(phaseSchedule.publicMintingFee),
+        };
+        console.log("phaseInfo", phaseInfo);
+      
+        phasesTmp.push(phaseInfo);
+      }
+      
     }
 
     initialValuesData.phases = phasesTmp;

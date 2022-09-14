@@ -216,7 +216,7 @@ function MyWhiteListProjectPage() {
       .find((i) => i.address === whitelistAddress)
       ?.claimedAmount.replaceAll(",", "");
 
-    if (parseInt(claimedAmount) >= whitelistAmount) {
+    if (parseInt(claimedAmount) > whitelistAmount) {
       return toast.error(`New amount must greater than claimed amount!`);
     }
 
@@ -273,19 +273,17 @@ function MyWhiteListProjectPage() {
           currentAccount,
           i
         );
-
-      phasesListAll.push({ ...phaseSchedule });
-
-      const phaseCode = phaseSchedule.title;
-
-      // console.log("zzzphaseSchedule", phaseSchedule);
-
-      const phaseInfo = {
-        id: i,
-        code: phaseCode,
-        ...phaseSchedule,
-      };
-      phasesTmp.push(phaseInfo);
+      if (phaseSchedule.isActive) {
+        phasesListAll.push({ ...phaseSchedule });
+        const phaseCode = phaseSchedule.title;
+        // console.log("zzzphaseSchedule", phaseSchedule);
+        const phaseInfo = {
+          id: i,
+          code: phaseCode,
+          ...phaseSchedule,
+        };
+        phasesTmp.push(phaseInfo);
+      }
     }
 
     // console.log("phasesListAll", phasesListAll);
@@ -325,7 +323,9 @@ function MyWhiteListProjectPage() {
           selectedPhaseCode
         );
       // console.log("phase info", phaseInfo);
-      setCurrentPhase(phaseInfo);
+      if (phaseInfo.isActive) {
+        setCurrentPhase(phaseInfo);
+      }
 
       const totalPhaseAccountLink =
         await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(
@@ -346,11 +346,11 @@ function MyWhiteListProjectPage() {
           whitelistPhaseAccountAddress
         );
         // eslint-disable-next-line no-unused-vars
-        const phaseSchedule =
-          await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-            currentAccount,
-            selectedPhaseCode
-          );
+        // const phaseSchedule =
+        //   await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
+        //     currentAccount,
+        //     selectedPhaseCode
+        //   );
         // const phaseCode = phaseSchedule.title;
         const whiteListData =
           await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
@@ -522,7 +522,7 @@ function MyWhiteListProjectPage() {
             <NumberInput
               isDisabled={actionType || maxSlot <= 0}
               bg="black"
-              min={1}
+              min={0}
               onChange={(valueString) => setWhitelistAmount(valueString)}
               value={whitelistAmount}
               mr={3}

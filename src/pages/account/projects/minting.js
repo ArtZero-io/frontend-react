@@ -151,7 +151,7 @@ function MyMintingProjectPage() {
 
       const phaseCode = phaseSchedule.title;
 
-      if (phaseSchedule.isPublic) {
+      if (phaseSchedule.isPublic && phaseSchedule.isActive) {
         const phaseInfo = {
           id: i,
           code: phaseCode,
@@ -190,17 +190,19 @@ function MyMintingProjectPage() {
           currentAccount,
           selectedPhaseCode
         );
+      if (phaseInfo.isActive) {
+        const { claimedAmount, publicMintingAmount } = phaseInfo;
 
-      const { claimedAmount, publicMintingAmount } = phaseInfo;
-
-      setCurrentPhase(phaseInfo);
-
-      setMaxMint(
-        parseInt(
-          publicMintingAmount.replaceAll(",", "") -
-            parseInt(claimedAmount.replaceAll(",", ""))
-        )
-      );
+        setCurrentPhase(phaseInfo);
+  
+        setMaxMint(
+          parseInt(
+            publicMintingAmount.replaceAll(",", "") -
+              parseInt(claimedAmount.replaceAll(",", ""))
+          )
+        );
+      }
+     
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, currentAccount, selectedPhaseCode]);
