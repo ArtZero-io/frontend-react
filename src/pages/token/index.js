@@ -352,6 +352,7 @@ function TokenPage() {
   ]);
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
+  const imageUrl = token?.avatar?.replace("ipfs://", "https://ipfs.io/ipfs/");
 
   return (
     <NftLayout>
@@ -359,19 +360,20 @@ function TokenPage() {
         <title>{token?.nftName}</title>
 
         {/* <!-- Google / Search Engine Tags --> */}
-        <meta itemprop="image" content={getCachedImageShort(token?.avatar)} />
+
+        <meta itemprop="image" content={imageUrl} />
 
         {/* <!-- Facebook Meta Tags --> */}
-        <meta
-          property="og:image"
-          content={getCachedImageShort(token?.avatar)}
-        />
+
+        <meta property="og:image" content={imageUrl} />
+
+        <meta property="og:url" content={window.location.href} />
 
         {/* <!-- Twitter Meta Tags --> */}
-        <meta
-          name="twitter:image"
-          content={getCachedImageShort(token?.avatar)}
-        />
+
+        <meta name="twitter:image" content={imageUrl} />
+
+        <meta property="twitter:url" content={window.location.href} />
       </Helmet>
 
       <VStack w="full" minH="calc(100vh - 80px)" bg="brand.grayDark">

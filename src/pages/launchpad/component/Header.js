@@ -344,7 +344,7 @@ function LaunchpadDetailHeader({
                 w="full"
                 position="absolute"
                 top="-16px"
-                zIndex="100"
+                zIndex="docked"
                 p="6px 20px"
                 textAlign="center"
               >

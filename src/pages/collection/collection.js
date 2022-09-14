@@ -357,6 +357,10 @@ function CollectionPage() {
   useInterval(() => initEvents(), 10000);
 
   const [tabIndex, setTabIndex] = React.useState(0);
+  const imageUrl = formattedCollection?.avatarImage?.replace(
+    "ipfs://",
+    "https://ipfs.io/ipfs/"
+  );
 
   return (
     <Layout
@@ -365,24 +369,14 @@ function CollectionPage() {
     >
       <Helmet>
         <title>{formattedCollection?.name}</title>
-
         {/* <!-- Google / Search Engine Tags --> */}
-        <meta
-          itemprop="image"
-          content={getCachedImageShort(formattedCollection?.avatarImage)}
-        />
-
+        <meta itemprop="image" content={imageUrl} />
         {/* <!-- Facebook Meta Tags --> */}
-        <meta
-          property="og:image"
-          content={getCachedImageShort(formattedCollection?.avatarImage)}
-        />
-
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:url" content={window.location.href} />
         {/* <!-- Twitter Meta Tags --> */}
-        <meta
-          name="twitter:image"
-          content={getCachedImageShort(formattedCollection?.avatarImage)}
-        />
+        <meta name="twitter:image" content={imageUrl} />{" "}
+        <meta property="twitter:url" content={window.location.href} />
       </Helmet>
 
       <>
