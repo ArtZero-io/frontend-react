@@ -192,7 +192,7 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
                         arrayHelpers.push({ name: "", level: 3, levelMax: 5 })
                       }
                     >
-                      Add more
+                      Add Level
                     </Button>
                   </Flex>
 

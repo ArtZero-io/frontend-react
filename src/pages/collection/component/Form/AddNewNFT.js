@@ -57,6 +57,8 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
   const noImagesChange =
     avatarIPFSUrl && currentAvatarIPFSUrl.current === avatarIPFSUrl;
 
+  console.log("rest", rest);
+
   useEffect(() => {
     let newInitialValues = {
       NFTName: "",
@@ -75,6 +77,10 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
           return { type: Object.keys(item)[0], name: Object.values(item)[0] };
         });
 
+      if (newInitialValues.properties?.length === 0) {
+        newInitialValues.properties = [{ type: "", name: "" }];
+      }
+
       newInitialValues.levels = rest?.attrsList
         ?.filter((item) => JSON.stringify(Object.values(item)).includes("|"))
         .map((item) => {
@@ -84,6 +90,11 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
 
           return result;
         });
+
+      if (newInitialValues.levels?.length === 0) {
+        newInitialValues.levels = [{ name: "", level: "", levelMax: "" }];
+      }
+
       setAvatarIPFSUrl(rest.avatar);
       currentAvatarIPFSUrl.current = rest.avatar;
       setInitialValues(newInitialValues);
@@ -91,6 +102,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
       setInitialValues(newInitialValues);
     }
   }, [mode, rest.attrsList, rest.avatar, rest.description, rest.nftName]);
+
   const { actionType, tokenIDArray, ...restOfTxStatus } = useTxStatus();
 
   return (
@@ -375,7 +387,9 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     color="brand.blue"
                     onClick={() => setModifierToEdit("properties")}
                   >
-                    Add properties
+                    {mode === formMode.ADD
+                      ? "Add properties"
+                      : "Edit properties"}
                   </Button>
                 </Flex>
 
@@ -427,7 +441,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     color="brand.blue"
                     onClick={() => setModifierToEdit("levels")}
                   >
-                    Add levels
+                    {mode === formMode.ADD ? "Add levels" : "Edit levels"}
                   </Button>
                 </Flex>
 

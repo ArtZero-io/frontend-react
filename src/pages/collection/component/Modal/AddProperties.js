@@ -178,7 +178,7 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
                       }
                       onClick={() => arrayHelpers.push({ type: "", name: "" })}
                     >
-                      Add more
+                      Add Property
                     </Button>
                   </Flex>
 
