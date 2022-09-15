@@ -12,7 +12,13 @@ import { ContractPromise } from "@polkadot/api-contract";
 
 import { isPhaseTimeOverlap } from "@utils";
 import { useSubstrateState } from "@utils/substrate";
-import { formMode, UPDATE_PHASE, ADD_PHASE, START } from "@constants";
+import {
+  formMode,
+  UPDATE_PHASE,
+  ADD_PHASE,
+  DELETE_PHASE,
+  START,
+} from "@constants";
 
 import useTxStatus from "@hooks/useTxStatus";
 import { setTxStatus } from "@store/actions/txStatus";
@@ -158,25 +164,28 @@ function UpdatePhase({
     } = value[index];
 
     console.log("value[index]", value[index]);
+    try {
+      dispatch(
+        setTxStatus({ type: UPDATE_PHASE, step: START, tokenIDArray: [index] })
+      );
 
-    dispatch(
-      setTxStatus({ type: UPDATE_PHASE, step: START, tokenIDArray: [index] })
-    );
-
-    await launchpad_psp34_nft_standard_calls.updateSchedulePhase(
-      currentAccount,
-      id,
-      name,
-      isPublic,
-      publicMintingFee,
-      publicAmount,
-      publicMaxMintingAmount,
-      start,
-      end,
-      dispatch,
-      UPDATE_PHASE,
-      api
-    );
+      await launchpad_psp34_nft_standard_calls.updateSchedulePhase(
+        currentAccount,
+        id,
+        name,
+        isPublic,
+        publicMintingFee,
+        publicAmount,
+        publicMaxMintingAmount,
+        start,
+        end,
+        dispatch,
+        UPDATE_PHASE,
+        api
+      );
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   const onAddNewPhase = async (index) => {
@@ -251,9 +260,7 @@ function UpdatePhase({
   };
 
   const onDeletePhase = async (index) => {
-    const {
-      id,
-    } = value[index];
+    const { id } = value[index];
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
       api,
       launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -263,19 +270,18 @@ function UpdatePhase({
       launchpad_psp34_nft_standard_contract
     );
 
-
     dispatch(
-      setTxStatus({ type: UPDATE_PHASE, step: START, tokenIDArray: [index] })
+      setTxStatus({ type: DELETE_PHASE, step: START, tokenIDArray: [index] })
     );
 
     await launchpad_psp34_nft_standard_calls.deactivePhase(
       currentAccount,
       id,
       dispatch,
-      UPDATE_PHASE,
+      DELETE_PHASE,
       api
     );
-  }
+  };
 
   return (
     <FieldArray
@@ -571,7 +577,7 @@ function UpdatePhase({
                 onClick={() => handleAddPhase(arrayHelpers)}
                 text={`${mode === formMode.ADD ? "add more" : "add new phase"}`}
                 // isDisabled={!(dirty && isValid) && noImagesChange}
-                isDisabled={isPhaseEnd(endTime) || actionType}
+                isDisabled={isPhaseEnd(endTime)}
               />
             </Stack>
           </Stack>
@@ -593,9 +599,9 @@ export default UpdatePhase;
 
 const canEditPhase = (startTime) => {
   const now = new Date();
-  console.log("startTime", new Date(startTime));
-  console.log("now", new Date(now));
-  console.log("startTime - now true", startTime - now);
+  // console.log("startTime", new Date(startTime));
+  // console.log("now", new Date(now));
+  // console.log("startTime - now true", startTime - now);
   if (startTime > now) return true;
 
   return false;

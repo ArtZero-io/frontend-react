@@ -124,6 +124,16 @@ const LaunchpadDetailPage = () => {
         currentAccount || getPublicCurrentAccount(),
         collection_address
       );
+        console.log('project', project)
+
+      //   {
+      //     "isActive": false,
+      //     "projectType": "1",
+      //     "projectOwner": "5C8DzedQ9N7zmukvTKeFnciutbhfk1gU3tBctwwbitu9ot4A",
+      //     "totalSupply": "9,999",
+      //     "startTime": "1,661,965,200,000",
+      //     "endTime": "1,664,557,199,999"
+      // }
 
       // if (project && project.isActive) {
       if (project) {

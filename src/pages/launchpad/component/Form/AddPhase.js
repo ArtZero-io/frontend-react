@@ -54,7 +54,6 @@ function AddPhase({
       //     return toast.error("Phase time is not valid or overlap.");
       //   }
       // }
-
       const valueAddHash = value.map((item, idx) => {
         if (!e) {
           return { ...item, start: null, end: null };
@@ -71,6 +70,11 @@ function AddPhase({
   };
 
   const handleAddPhase = (arrayHelpers) => {
+    if (!value[value.length - 1].start || !value[value.length - 1].end) {
+      toast.error("Please check Start - End time phase.");
+      return;
+    }
+
     const allPhases = [...value];
     allPhases.sort((a, b) => a.start - b.start);
 

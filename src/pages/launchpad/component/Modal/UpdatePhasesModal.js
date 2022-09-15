@@ -55,7 +55,7 @@ const UpdatePhasesModal = React.memo(function ({
 
   const [currentPhaseId, setCurrentPhaseId] = useState(null);
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
-  console.log("UpdatePhasesModal...");
+  // console.log("UpdatePhasesModal...");
 
   const fetchData = useCallback(async () => {
     let initialValuesData = {};

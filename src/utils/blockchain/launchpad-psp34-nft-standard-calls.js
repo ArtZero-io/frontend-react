@@ -174,7 +174,6 @@ async function addWhitelist(
           api,
           caller_account,
         });
-        
       }
     )
     .then((unsub) => (unsubscribe = unsub))
@@ -254,7 +253,7 @@ async function getPhaseAccountLink(caller_account, phaseId, index) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  console.log('getPhaseAccountLink', phaseId, index)
+  console.log("getPhaseAccountLink", phaseId, index);
   const { result, output } = await contract.query.getPhaseAccountLink(
     address,
     {
@@ -711,8 +710,12 @@ async function updateSchedulePhase(
   txType,
   api
 ) {
-  if (!contract || !caller_account) {
-    return null;
+  if (!contract) {
+    throw new Error("invalid contract");
+  }
+  
+  if (!caller_account) {
+    throw new Error("invalid account");
   }
 
   let unsubscribe;
@@ -761,13 +764,7 @@ async function updateSchedulePhase(
   return unsubscribe;
 }
 
-async function deactivePhase(
-  caller_account,
-  phaseId,
-  dispatch,
-  txType,
-  api
-) {
+async function deactivePhase(caller_account, phaseId, dispatch, txType, api) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -959,7 +956,7 @@ const launchpad_psp34_nft_standard_calls = {
   updateAdminAddress,
   mint,
   withdrawFee,
-  deactivePhase
+  deactivePhase,
 };
 
 export default launchpad_psp34_nft_standard_calls;
