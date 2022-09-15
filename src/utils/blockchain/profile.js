@@ -1,14 +1,14 @@
 const profile = {
-  CONTRACT_ADDRESS: "5E2zk4B1p4ohQmwG3uFw16yoZbYWE3ZRnb6XgPLNvi5zhG7U",
+  CONTRACT_ADDRESS: "5CCL6cQK6PNfW12n5edkyN3RkMmpQ7EQoWBKtyRTtZinNtWp",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x78ea710ed189e29ae3f2ca46672a7ede3fe14692882602191a48425888fe4253",
+      "hash": "0x4c58ada7f10f297657723545030e61f1f54acc9da67187dd240ee1b87fafda6b",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
       "name": "artzero_profile_manager",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "authors": [
         "ArtZero <admin@artzero.io>"
       ]
@@ -198,7 +198,7 @@ const profile = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x238cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                          "key": "0xb36ee29c00000000000000000000000000000000000000000000000000000000",
                           "ty": 0
                         }
                       },
@@ -207,14 +207,14 @@ const profile = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0x248cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                          "dispatchKey": "0xb46ee29c00000000000000000000000000000000000000000000000000000000",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0x258cb4a8e1768578ab199af6c3822baceafe928fad843580aa9862286e062059",
+                                      "key": "0xb56ee29c00000000000000000000000000000000000000000000000000000000",
                                       "ty": 3
                                     }
                                   },
@@ -242,7 +242,7 @@ const profile = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xd6f6a66103e52d940145ccd243a105f3980c9a81611e500edaca89c0d6edaa71",
+                          "key": "0xaaf2397500000000000000000000000000000000000000000000000000000000",
                           "ty": 4
                         }
                       },

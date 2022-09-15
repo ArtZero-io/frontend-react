@@ -1,10 +1,10 @@
 const artzero_nft = {
-  CONTRACT_ADDRESS: "5FSRWvbsnaNeAyNsU1jz3DaMniEfRbWNCUvjWn2JwAPbR85p",
+  CONTRACT_ADDRESS: "5DACSjUWch5Q3GpYMP2CE5fUKw9bBrcPgkhgCSLchKU9Bicw",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x7d0c1ece15d01cab83ce2495f725f8f29fd31a5fe5ad3535775fe77a9f538980",
+      "hash": "0x02a3829d1bfaa95ce26a76967e4840d726c158385da2d3c22e69a8b76c8d2751",
       "language": "ink! 3.3.1",
-      "compiler": "rustc 1.63.0-nightly"
+      "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
       "name": "launchpad_psp34_nft_standard",
@@ -522,6 +522,32 @@ const artzero_nft = {
                   ],
                   "type": 2
                 }
+              }
+            ],
+            "docs": [
+              " Deactive Phase"
+            ],
+            "label": "deactive_phase",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Result"
+              ],
+              "type": 43
+            },
+            "selector": "0xc8066cce"
+          },
+          {
+            "args": [
+              {
+                "label": "phase_id",
+                "type": {
+                  "displayName": [
+                    "u8"
+                  ],
+                  "type": 2
+                }
               },
               {
                 "label": "phase_code",
@@ -967,6 +993,22 @@ const artzero_nft = {
           {
             "args": [],
             "docs": [
+              "Get active phase count"
+            ],
+            "label": "get_active_phase_count",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "u8"
+              ],
+              "type": 2
+            },
+            "selector": "0x8f485a88"
+          },
+          {
+            "args": [],
+            "docs": [
               "Get Token Count"
             ],
             "label": "get_last_token_id",
@@ -1091,6 +1133,50 @@ const artzero_nft = {
             "selector": "0xb079adab"
           },
           {
+            "args": [],
+            "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 48
+            },
+            "selector": "0x5e228753"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 8
+            },
+            "selector": "0x4fa43c8c"
+          },
+          {
             "args": [
               {
                 "label": "new_owner",
@@ -1126,50 +1212,6 @@ const artzero_nft = {
               "type": 48
             },
             "selector": "0x11f43efd"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 8
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 48
-            },
-            "selector": "0x5e228753"
           },
           {
             "args": [
@@ -1310,6 +1352,34 @@ const artzero_nft = {
           {
             "args": [
               {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "OwnerOfInput1"
+                  ],
+                  "type": 1
+                }
+              }
+            ],
+            "docs": [
+              " Returns the owner of the token if any."
+            ],
+            "label": "PSP34::owner_of",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "OwnerOfOutput"
+              ],
+              "type": 19
+            },
+            "selector": "0x1168624d"
+          },
+          {
+            "args": [
+              {
                 "label": "to",
                 "type": {
                   "displayName": [
@@ -1383,34 +1453,6 @@ const artzero_nft = {
             "selector": "0x628413fe"
           },
           {
-            "args": [
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "OwnerOfInput1"
-                  ],
-                  "type": 1
-                }
-              }
-            ],
-            "docs": [
-              " Returns the owner of the token if any."
-            ],
-            "label": "PSP34::owner_of",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "OwnerOfOutput"
-              ],
-              "type": 19
-            },
-            "selector": "0x1168624d"
-          },
-          {
             "args": [],
             "docs": [
               " Returns the collection `Id` of the NFT token.",
@@ -1472,6 +1514,35 @@ const artzero_nft = {
           {
             "args": [
               {
+                "label": "index",
+                "type": {
+                  "displayName": [
+                    "psp34enumerable_external",
+                    "TokenByIndexInput1"
+                  ],
+                  "type": 6
+                }
+              }
+            ],
+            "docs": [
+              " Returns a token `Id` at a given `index` of all the tokens stored by the contract.",
+              " Use along with `total_supply` to enumerate all tokens."
+            ],
+            "label": "PSP34Enumerable::token_by_index",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34enumerable_external",
+                "TokenByIndexOutput"
+              ],
+              "type": 53
+            },
+            "selector": "0xcd0340d0"
+          },
+          {
+            "args": [
+              {
                 "label": "owner",
                 "type": {
                   "displayName": [
@@ -1514,111 +1585,27 @@ const artzero_nft = {
                 "label": "index",
                 "type": {
                   "displayName": [
-                    "psp34enumerable_external",
-                    "TokenByIndexInput1"
+                    "psp34traits_external",
+                    "GetAttributeNameInput1"
                   ],
-                  "type": 6
+                  "type": 4
                 }
               }
             ],
             "docs": [
-              " Returns a token `Id` at a given `index` of all the tokens stored by the contract.",
-              " Use along with `total_supply` to enumerate all tokens."
+              "Get Attribute Name"
             ],
-            "label": "PSP34Enumerable::token_by_index",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34enumerable_external",
-                "TokenByIndexOutput"
-              ],
-              "type": 53
-            },
-            "selector": "0xcd0340d0"
-          },
-          {
-            "args": [
-              {
-                "label": "uri",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "SetBaseUriInput1"
-                  ],
-                  "type": 38
-                }
-              }
-            ],
-            "docs": [
-              " Change baseURI"
-            ],
-            "label": "Psp34Traits::set_base_uri",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "SetBaseUriOutput"
-              ],
-              "type": 43
-            },
-            "selector": "0x4de6850b"
-          },
-          {
-            "args": [
-              {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "GetAttributesInput1"
-                  ],
-                  "type": 1
-                }
-              },
-              {
-                "label": "attributes",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "GetAttributesInput2"
-                  ],
-                  "type": 39
-                }
-              }
-            ],
-            "docs": [
-              " Get multiple  attributes"
-            ],
-            "label": "Psp34Traits::get_attributes",
+            "label": "Psp34Traits::get_attribute_name",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34traits_external",
-                "GetAttributesOutput"
+                "GetAttributeNameOutput"
               ],
-              "type": 39
+              "type": 38
             },
-            "selector": "0x18209102"
-          },
-          {
-            "args": [],
-            "docs": [
-              "Get Attribute Count"
-            ],
-            "label": "Psp34Traits::get_attribute_count",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "GetAttributeCountOutput"
-              ],
-              "type": 4
-            },
-            "selector": "0x61c50d69"
+            "selector": "0xfcfe34de"
           },
           {
             "args": [
@@ -1671,34 +1658,6 @@ const artzero_nft = {
           {
             "args": [
               {
-                "label": "index",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "GetAttributeNameInput1"
-                  ],
-                  "type": 4
-                }
-              }
-            ],
-            "docs": [
-              "Get Attribute Name"
-            ],
-            "label": "Psp34Traits::get_attribute_name",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "GetAttributeNameOutput"
-              ],
-              "type": 38
-            },
-            "selector": "0xfcfe34de"
-          },
-          {
-            "args": [
-              {
                 "label": "token_id",
                 "type": {
                   "displayName": [
@@ -1723,6 +1682,106 @@ const artzero_nft = {
               "type": 38
             },
             "selector": "0x249dfd4f"
+          },
+          {
+            "args": [
+              {
+                "label": "uri",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "SetBaseUriInput1"
+                  ],
+                  "type": 38
+                }
+              }
+            ],
+            "docs": [
+              " Change baseURI"
+            ],
+            "label": "Psp34Traits::set_base_uri",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "SetBaseUriOutput"
+              ],
+              "type": 43
+            },
+            "selector": "0x4de6850b"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Get owner address"
+            ],
+            "label": "Psp34Traits::get_owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "GetOwnerOutput"
+              ],
+              "type": 8
+            },
+            "selector": "0x8e1d8d71"
+          },
+          {
+            "args": [],
+            "docs": [
+              "Get Attribute Count"
+            ],
+            "label": "Psp34Traits::get_attribute_count",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "GetAttributeCountOutput"
+              ],
+              "type": 4
+            },
+            "selector": "0x61c50d69"
+          },
+          {
+            "args": [
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "GetAttributesInput1"
+                  ],
+                  "type": 1
+                }
+              },
+              {
+                "label": "attributes",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "GetAttributesInput2"
+                  ],
+                  "type": 39
+                }
+              }
+            ],
+            "docs": [
+              " Get multiple  attributes"
+            ],
+            "label": "Psp34Traits::get_attributes",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "GetAttributesOutput"
+              ],
+              "type": 39
+            },
+            "selector": "0x18209102"
           }
         ]
       },
@@ -2066,6 +2125,15 @@ const artzero_nft = {
                 }
               },
               "name": "total_public_minting_amount"
+            },
+            {
+              "layout": {
+                "cell": {
+                  "key": "0x1100000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 2
+                }
+              },
+              "name": "active_phase_count"
             }
           ]
         }
@@ -2726,6 +2794,11 @@ const artzero_nft = {
               "composite": {
                 "fields": [
                   {
+                    "name": "is_active",
+                    "type": 34,
+                    "typeName": "bool"
+                  },
+                  {
                     "name": "title",
                     "type": 7,
                     "typeName": "Vec<u8>"
@@ -2947,99 +3020,27 @@ const artzero_nft = {
                   },
                   {
                     "index": 1,
-                    "name": "NotApproved"
-                  },
-                  {
-                    "index": 2,
-                    "name": "TokenExists"
-                  },
-                  {
-                    "index": 3,
-                    "name": "TokenNotFound"
-                  },
-                  {
-                    "index": 4,
-                    "name": "CannotInsert"
-                  },
-                  {
-                    "index": 5,
-                    "name": "CannotFetchValue"
-                  },
-                  {
-                    "index": 6,
-                    "name": "NotAllowed"
-                  },
-                  {
-                    "index": 7,
                     "name": "InvalidInput"
                   },
                   {
-                    "index": 8,
-                    "name": "OnlyAdmin"
-                  },
-                  {
-                    "index": 9,
+                    "index": 2,
                     "name": "ClaimedAll"
                   },
                   {
-                    "index": 10,
+                    "index": 3,
                     "name": "TokenLimitReached"
                   },
                   {
-                    "index": 11,
-                    "name": "TokenLimitReachedMode1"
-                  },
-                  {
-                    "index": 12,
-                    "name": "InvalidFee"
-                  },
-                  {
-                    "index": 13,
-                    "name": "NotMintTime"
-                  },
-                  {
-                    "index": 14,
-                    "name": "NotEnoughBalance"
-                  },
-                  {
-                    "index": 15,
-                    "name": "InvalidMintAmount"
-                  },
-                  {
-                    "index": 16,
+                    "index": 4,
                     "name": "PhaseNotExist"
                   },
                   {
-                    "index": 17,
+                    "index": 5,
                     "name": "PhaseExpired"
                   },
                   {
-                    "index": 18,
-                    "name": "PhaseNotPublicSale"
-                  },
-                  {
-                    "index": 19,
-                    "name": "PhaseCodeNotExist"
-                  },
-                  {
-                    "index": 20,
-                    "name": "PhaseExisted"
-                  },
-                  {
-                    "index": 21,
-                    "name": "PhaseLimitReached"
-                  },
-                  {
-                    "index": 22,
+                    "index": 6,
                     "name": "WhitelistNotExist"
-                  },
-                  {
-                    "index": 23,
-                    "name": "PhasePublicSale"
-                  },
-                  {
-                    "index": 24,
-                    "name": "PhaseWhiteList"
                   }
                 ]
               }

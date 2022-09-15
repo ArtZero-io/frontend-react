@@ -1,8 +1,8 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5HXTCXZqAUUrC37Rr2LcajrGnEHbPCVJyKDB73hz8jkUbvAz",
+  CONTRACT_ADDRESS: "5FSK66FinskoEiJSQ8yuysVTPdQSQM9igXwciYK64Smr4Nw8",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xf183dd227f5f68187d17fff9c32c813a3ac72432bcf394ac74c0595c70f70207",
+      "hash": "0x5d02387f87f9dea5fb65a955579838942940bbb740fe3c27da0f109f74815a79",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -708,33 +708,6 @@ const launchpad_manager = {
           {
             "args": [],
             "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 15
-            },
-            "selector": "0x5e228753"
-          },
-          {
-            "args": [],
-            "docs": [
               " Returns the address of the current owner."
             ],
             "label": "Ownable::owner",
@@ -789,19 +762,29 @@ const launchpad_manager = {
           {
             "args": [],
             "docs": [
-              " Get project mint fee"
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
             ],
-            "label": "CrossArtZeroLaunchPadPSP34::get_project_mint_fee_rate",
-            "mutates": false,
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
-                "crossartzerolaunchpadpsp34_external",
-                "GetProjectMintFeeRateOutput"
+                "ownable_external",
+                "RenounceOwnershipOutput"
               ],
-              "type": 14
+              "type": 15
             },
-            "selector": "0x4832ed9e"
+            "selector": "0x5e228753"
           },
           {
             "args": [],
@@ -819,6 +802,23 @@ const launchpad_manager = {
               "type": 5
             },
             "selector": "0x529efd6b"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Get project mint fee"
+            ],
+            "label": "CrossArtZeroLaunchPadPSP34::get_project_mint_fee_rate",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerolaunchpadpsp34_external",
+                "GetProjectMintFeeRateOutput"
+              ],
+              "type": 14
+            },
+            "selector": "0x4832ed9e"
           }
         ]
       },
