@@ -22,15 +22,45 @@ import AddLevelsInput from "@components/Input/Input";
 import { formMode, SCROLLBAR } from "@constants";
 import DeleteIcon from "@theme/assets/icon/Delete";
 import NumberInput from "@components/Input/NumberInput";
+import { useRef } from "react";
 
 function AddLevelsModal({ name, isOpen, onClose, mode }) {
-  const [{ value }] = useField(name);
+  const [field, , helpers] = useField(name);
+
+  const { value } = field;
+  const { setValue } = helpers;
+
+  const valueRef = useRef(value);
 
   const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
 
   const modalSize = useBreakpointValue(["xs", "5xl"]);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+
+  const onCloseModalHandler = () => {
+    setValue(valueRef.current);
+
+    onClose();
+  };
+
+  const onSaveModalHandler = () => {
+    let filterValue = value.filter(
+      (p) =>
+        p.name?.trim() !== "" &&
+        p.level?.trim() !== "" &&
+        p.levelMax?.trim() !== ""
+    );
+
+    if (filterValue.length === 0) {
+      filterValue = [{ levelMax: "", level: "", name: "" }];
+    }
+
+    valueRef.current = filterValue;
+    setValue(filterValue);
+
+    onClose();
+  };
 
   return (
     <Modal
@@ -40,6 +70,7 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
       size={modalSize}
       minH="40rem"
       scrollBehavior="inside"
+      closeOnOverlayClick={false}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -63,6 +94,7 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
           position="absolute"
           top={["0", "-8", "-8"]}
           right={["0", "-8", "-8"]}
+          onClick={onCloseModalHandler}
         />
 
         <ModalHeader>
@@ -189,7 +221,7 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
                           arrayHelpers.form?.errors?.levels)
                       }
                       onClick={() =>
-                        arrayHelpers.push({ name: "", level: 3, levelMax: 5 })
+                        arrayHelpers.push({ name: "", level: "", levelMax: "" })
                       }
                     >
                       Add Level
@@ -206,7 +238,7 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
                     w="full"
                     variant="solid"
                     type="button"
-                    onClick={() => onClose()}
+                    onClick={onSaveModalHandler}
                   >
                     Save now
                   </Button>
