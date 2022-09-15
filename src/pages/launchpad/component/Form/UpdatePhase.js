@@ -81,6 +81,11 @@ function UpdatePhase({
   };
 
   const handleAddPhase = (arrayHelpers) => {
+    if (!value[value.length - 1].start || !value[value.length - 1].end) {
+      toast.error("Please check Start - End time phase.");
+      return;
+    }
+
     const allPhases = [...value];
     allPhases.sort((a, b) => a.start - b.start);
 
