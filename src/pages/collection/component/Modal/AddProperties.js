@@ -19,15 +19,41 @@ import { ErrorMessage, FieldArray, useField } from "formik";
 import AddPropertiesInput from "@components/Input/Input";
 import { formMode, SCROLLBAR } from "@constants";
 import DeleteIcon from "@theme/assets/icon/Delete";
+import { useRef } from "react";
 
 function AddPropertiesModal({ name, isOpen, onClose, mode }) {
-  const [{ value }] = useField(name);
+  const [field, , helpers] = useField(name);
 
+  const { value } = field;
+  const { setValue } = helpers;
+
+  const valueRef = useRef(value);
   const hasEmptyProp = value.some((p) => p.type?.trim() === "");
 
   const modalSize = useBreakpointValue(["xs", "5xl"]);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+
+  const onCloseModalHandler = () => {
+    setValue(valueRef.current);
+
+    onClose();
+  };
+
+  const onSaveModalHandler = () => {
+    let filterValue = value.filter(
+      (p) => p.type?.trim() !== "" && p.name?.trim() !== ""
+    );
+
+    if (filterValue.length === 0) {
+      filterValue = [{ type: "", name: "" }];
+    }
+
+    valueRef.current = filterValue;
+    setValue(filterValue);
+
+    onClose();
+  };
 
   return (
     <Modal
@@ -37,6 +63,7 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
       size={modalSize}
       minH="40rem"
       scrollBehavior="inside"
+      closeOnOverlayClick={false}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -60,6 +87,7 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
           position="absolute"
           top={["0", "-8", "-8"]}
           right={["0", "-8", "-8"]}
+          onClick={onCloseModalHandler}
         />
 
         <ModalHeader>
@@ -165,7 +193,7 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
                     w="full"
                     variant="solid"
                     type="button"
-                    onClick={() => onClose()}
+                    onClick={onSaveModalHandler}
                   >
                     Save now
                   </Button>
