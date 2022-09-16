@@ -724,7 +724,14 @@ async function updateSchedulePhase(
   const gasLimit = -1;
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
-
+  console.log(phaseId,
+    phaseCode,
+    isPublic,
+    publicMintingFee,
+    publicMintingAmount,
+    publicMaxMintingAmount,
+    startTime,
+    endTime);
   publicMintingFee = new BN(publicMintingFee * 10 ** 6)
     .mul(new BN(10 ** 6))
     .toString();
