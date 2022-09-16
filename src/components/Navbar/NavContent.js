@@ -11,6 +11,7 @@ import {
   Button,
   Flex,
   Text,
+  Show,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { HiOutlineMenu, HiX } from "react-icons/hi";
@@ -31,11 +32,10 @@ import SearchDrawer from "../SearchBox/SearchDrawer";
 import AddNewCollectionModal from "@pages/account/collections/components/Modal/AddNew";
 
 import { formMode } from "@constants";
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
 const links = [
-  // { label: "Home", href: ROUTES.HOME },
   { label: "Marketplace", href: ROUTES.MARKETPLACE },
-  // { label: "TGE", href: ROUTES.MINTING_EVENT },
   { label: "Launchpad", href: ROUTES.LAUNCHPAD_BASE },
   { label: "Stats", href: ROUTES.STATS },
 ];
@@ -234,6 +234,7 @@ const MyAccountDropdown = () => {
     setPath(location.pathname);
   }, [location.pathname]);
 
+  const [myAccOpen, setMyAccOpen] = useState(false);
   return (
     <Box px={{ base: "23px", lg: "0" }} py={{ base: "0px", lg: "0" }}>
       <Menu
@@ -243,44 +244,95 @@ const MyAccountDropdown = () => {
         borderBottom="0"
         // borderColor={path.includes("/account/") ? "brand.blue" : "transparent"}
       >
-        <MenuButton
-          p={0}
-          ring={0}
-          h="41px"
-          py="10px"
-          as={Button}
-          display="flex"
-          bg="transparent"
-          textAlign="left"
-          borderBottom="2px"
-          transition="all 0.2s"
-          justifyContent="center"
-          fontSize={{ base: "24px", md: "15px" }}
-          _hover={{
-            borderColor: "brand.blue",
-            color: "brand.blue",
-          }}
-          _focus={{
-            bg: "transparent",
-          }}
-          borderColor={
-            path.includes("/account/") ? "brand.blue" : "transparent"
-          }
-          color={path.includes("/account/") ? "brand.blue" : "#fff"}
-        >
-          my account
-        </MenuButton>
+        {/* Desktop button here */}
+        <Show above="sm">
+          <MenuButton
+            p={0}
+            ring={0}
+            h="41px"
+            py="10px"
+            as={Button}
+            display="flex"
+            bg="transparent"
+            textAlign="left"
+            borderBottom="2px"
+            transition="all 0.2s"
+            justifyContent="center"
+            fontSize={{ base: "24px", md: "15px" }}
+            _hover={{
+              borderColor: "brand.blue",
+              color: "brand.blue",
+            }}
+            _focus={{
+              bg: "transparent",
+            }}
+            borderColor={
+              path.includes("/account/") ? "brand.blue" : "transparent"
+            }
+            color={path.includes("/account/") ? "brand.blue" : "#fff"}
+          >
+            my account
+          </MenuButton>{" "}
+        </Show>
+
+        {/* Phone button here */}
+        <Show below="sm">
+          <MenuButton
+            w={["full", "auto"]}
+            p={0}
+            ring={0}
+            h="41px"
+            py="10px"
+            onClick={() => setMyAccOpen(!myAccOpen)}
+            rightIcon={
+              !myAccOpen ? (
+                <ChevronDownIcon fontSize="2xl" />
+              ) : (
+                <ChevronUpIcon fontSize="2xl" />
+              )
+            }
+            as={Button}
+            display="flex"
+            bg="transparent"
+            textAlign="left"
+            border="none"
+            transition="all 0.2s"
+            justifyContent="center"
+            fontSize={{ base: "24px", md: "15px" }}
+            _hover={{
+              borderBottomColor: "brand.blue",
+              color: "brand.blue",
+              borderBottomWidth: "2px",
+            }}
+            _focus={{
+              bg: "transparent",
+            }}
+            _active={{
+              bg: "transparent",
+              borderBottom: "none",
+            }}
+            borderColor={
+              path.includes("/account/") ? "brand.blue" : "transparent"
+            }
+            color={path.includes("/account/") ? "brand.blue" : "#fff"}
+          >
+            my account
+          </MenuButton>
+        </Show>
+
         <MenuList
-          p="15px"
+          px={["0", "15px"]}
+          py={["0", "15px"]}
           minW="250px"
-          borderWidth={2}
+          borderWidth={["0px", "2px"]}
           borderRadius="0"
-          bg="brand.grayDark"
+          bg={["black", "brand.grayDark"]}
           borderColor="brand.blue"
           // ml={{ base: "20px", lg: "auto" }}
         >
           {myAccountList.map((item, idx) => (
             <MenuItem
+              ml={["20px", "auto"]}
               to="#"
               py={["4px", "12px"]}
               px={["4px", "15px"]}

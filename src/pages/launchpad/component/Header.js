@@ -267,7 +267,7 @@ function LaunchpadDetailHeader({
                   minH={{ base: "1rem", "2xl": "3.375rem" }}
                   maxH={["56px", "80px"]}
                 >
-                  <Text mx={["5px", "42px"]}>
+                  <Text mx={["25px", "42px"]}>
                     Supply:{" "}
                     <Text display={["block", "inline"]} color="#fff">
                       {totalSupply}
@@ -278,7 +278,7 @@ function LaunchpadDetailHeader({
                   !livePhase?.publicPhase &&
                   currentWhitelist.mintingFee ? (
                     <>
-                      <Text mx={["5px", "42px"]}>
+                      <Text mx={["25px", "42px"]}>
                         Price:{" "}
                         <Text display={["block", "inline"]} color="#fff">
                           {convertStringToPrice(currentWhitelist.mintingFee)}{" "}
@@ -296,7 +296,7 @@ function LaunchpadDetailHeader({
 
                   {livePhase && livePhase?.publicPhase ? (
                     <>
-                      <Text mx={["5px", "42px"]}>
+                      <Text mx={["25px", "42px"]}>
                         Price:{" "}
                         <Text display={["block", "inline"]} color="#fff">
                           {convertStringToPrice(livePhase?.publicMintingFee)}{" "}
@@ -346,7 +346,7 @@ function LaunchpadDetailHeader({
                 w="full"
                 position="absolute"
                 top="-16px"
-                zIndex="100"
+                zIndex='docked'
                 p="6px 20px"
                 textAlign="center"
               >

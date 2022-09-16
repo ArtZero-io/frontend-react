@@ -71,6 +71,7 @@ function WalletMenu() {
       >
         <Flex alignItems="center">
           <IconButton
+            display={["none", "flex"]}
             mr={2}
             size="icon"
             color="#fff"
