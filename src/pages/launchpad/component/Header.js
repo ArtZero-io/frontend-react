@@ -104,7 +104,7 @@ function LaunchpadDetailHeader({
           nftContractAddress: collection_address,
           api,
         });
-
+        console.log("LaunchpadDetailHeader currPhaseStatus", currPhaseStatus);
         const data = {
           ...currPhaseStatus,
           startTime: currPhaseStatus?.startTime?.replaceAll(",", ""),
@@ -120,6 +120,7 @@ function LaunchpadDetailHeader({
   }, [api, collection_address, currentAccount, phases]);
 
   useInterval(() => {
+    console.log("LaunchpadDetailHeader project", project);
     if (livePhase && livePhase?.endTime) {
       const total = livePhase?.endTime - Date.now();
 
@@ -260,7 +261,8 @@ function LaunchpadDetailHeader({
                   w="full"
                   color="#888"
                   textAlign="center"
-                  justifyContent="space-between"
+                  // justifyContent={["space-between", "center"]}
+                  justifyContent="center"
                   fontSize={["16px", "18px"]}
                   minH={{ base: "1rem", "2xl": "3.375rem" }}
                   maxH={["56px", "80px"]}

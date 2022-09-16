@@ -124,7 +124,7 @@ const LaunchpadDetailPage = () => {
         currentAccount || getPublicCurrentAccount(),
         collection_address
       );
-        console.log('project', project)
+      console.log("project", project);
 
       //   {
       //     "isActive": false,
@@ -253,7 +253,6 @@ const LaunchpadDetailPage = () => {
             if (phaseSchedule.isActive) {
               phasesTmp.push(phaseInfo);
             }
-            
 
             if (i === 1 * currentPhaseIdTmp) {
               // console.log("LaunchpadDetailPage::phaseSchedule", phaseSchedule);
@@ -350,6 +349,12 @@ const LaunchpadDetailPage = () => {
   }, [api, collection_address, currentAccount, fetchData]);
 
   const onWhiteListMint = async () => {
+    console.log("formattedProject", formattedProject?.isActive);
+
+    if (!formattedProject?.isActive) {
+      return toast.error("Project is not active yet!");
+    }
+
     const { data } = await api.query.system.account(currentAccount.address);
     const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
 
@@ -383,6 +388,11 @@ const LaunchpadDetailPage = () => {
   };
 
   const onPublicMint = async () => {
+    console.log("formattedProject", formattedProject?.isActive);
+    if (!formattedProject?.isActive) {
+      return toast.error("Project is not active yet!");
+    }
+
     const { data } = await api.query.system.account(currentAccount.address);
     const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
     const mintingFee =
@@ -579,66 +589,70 @@ const LaunchpadDetailPage = () => {
                 </Text>
               </Flex>
             ) : null}
-
+            {console.log('currentPhase', currentPhase)}
             {/* //Public phases*/}
-            {currentAccount && currentPhase?.publicPhase && !currentPhase?.whitelist?.whitelistAmount && (
-              <HStack
-                w="full"
-                justifyContent="start"
-                alignItems="center"
-                spacing="20px"
-              >
-                {currentPhase?.publicMintingAmount ? (
-                  <>
-                    <NumberInput
-                      bg="black"
-                      min={1}
-                      w="150px"
-                      mr={[0, 3]}
-                      h="3.125rem"
-                      // mb={["10px", 0]}
-                      isDisabled={
-                        actionType ||
-                        currentPhase?.claimedAmount >=
-                          currentPhase?.publicMintingAmount
-                      }
-                      value={mintingAmount}
-                      max={currentPhase?.publicMaxMintingAmount}
-                      onChange={(valueString) => setMintingAmount(valueString)}
-                    >
-                      <NumberInputField
+            {currentAccount &&
+              currentPhase?.publicPhase &&
+              !currentPhase?.whitelist?.whitelistAmount && (
+                <HStack
+                  w="full"
+                  justifyContent="start"
+                  alignItems="center"
+                  spacing="20px"
+                >
+                  {currentPhase?.publicMintingAmount ? (
+                    <>
+                      <NumberInput
+                        bg="black"
+                        min={1}
+                        w="150px"
+                        mr={[0, 3]}
                         h="3.125rem"
-                        borderRadius={0}
-                        borderWidth={0}
-                        color="#fff"
-                      />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
+                        // mb={["10px", 0]}
+                        isDisabled={
+                          actionType ||
+                          currentPhase?.claimedAmount >=
+                            currentPhase?.publicMintingAmount
+                        }
+                        value={mintingAmount}
+                        max={currentPhase?.publicMaxMintingAmount}
+                        onChange={(valueString) =>
+                          setMintingAmount(valueString)
+                        }
+                      >
+                        <NumberInputField
+                          h="3.125rem"
+                          borderRadius={0}
+                          borderWidth={0}
+                          color="#fff"
+                        />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
 
-                    <CommonButton
-                      w={["full", "auto"]}
-                      {...rest}
-                      variant="outline"
-                      text="public mint"
-                      onClick={onPublicMint}
-                      isDisabled={
-                        loading ||
-                        loadingForceUpdate ||
-                        currentPhase?.claimedAmount >=
-                          currentPhase?.publicMintingAmount
-                      }
-                    />
-                  </>
-                ) : (
-                  <Text fontSize="lg" color="#888">
-                    You are not in public mint list!
-                  </Text>
-                )}
-              </HStack>
-            )}
+                      <CommonButton
+                        w={["full", "auto"]}
+                        {...rest}
+                        variant="outline"
+                        text="public mint"
+                        onClick={onPublicMint}
+                        isDisabled={
+                          loading ||
+                          loadingForceUpdate ||
+                          currentPhase?.claimedAmount >=
+                            currentPhase?.publicMintingAmount
+                        }
+                      />
+                    </>
+                  ) : (
+                    <Text fontSize="lg" color="#888">
+                      You are not in public mint list!
+                    </Text>
+                  )}
+                </HStack>
+              )}
 
             {/* //WhiteList phases*/}
             {currentAccount && currentPhase?.whitelist?.whitelistAmount && (
@@ -748,6 +762,7 @@ const LaunchpadDetailPage = () => {
             {phases?.length
               ? phases.map((item, index) => (
                   <FadeIn key={index}>
+                    {console.log('item', item)}
                     <Wrap flexWrap={true} w="full" my="15px">
                       <HStack>
                         <Text border="1px solid #7ae7ff" px="4px">

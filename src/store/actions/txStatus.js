@@ -51,9 +51,11 @@ export const txResponseErrorHandler = async ({
     if (dispatchError.isModule) {
       const decoded = api.registry.findMetaError(dispatchError.asModule);
       const { docs, name, section } = decoded;
-
-      return toast.error(`${section}.${name}: ${docs.join(" ")}`);
+      console.log("section", `${section}.${name}: ${docs.join(" ")}`);
+      toast.error(`There is some error with your request..`);
+      // return toast.error(`${section}.${name}: ${docs.join(" ")}`);
     } else {
+      // console.log("dispatchError.toString()", dispatchError.toString());
       return toast.error(dispatchError.toString());
     }
   }
