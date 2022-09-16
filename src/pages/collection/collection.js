@@ -37,7 +37,7 @@ import {
 } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
-import { getCachedImageShort } from "@utils/index";
+// import { getCachedImageShort } from "@utils/index";
 import { Helmet } from "react-helmet";
 
 const NUMBER_PER_PAGE = 24;
