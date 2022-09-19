@@ -8,6 +8,7 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Text,
 } from "@chakra-ui/react";
 import { Field } from "formik";
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
@@ -30,7 +31,7 @@ export default function AddCollectionNumberInput({
   return (
     <Box style={{ display: isDisplay ? "block" : "none" }} w="full">
       <Field name={name}>
-        {({ field, form }) => (
+        {({ field, form, meta }) => (
           <FormControl id={name} isRequired={isRequired}>
             {label && (
               <FormLabel
@@ -75,6 +76,12 @@ export default function AddCollectionNumberInput({
                 </NumberInputStepper>
               )}
             </NumberInput>
+
+            {meta.touched && meta.error ? (
+              <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="12px">
+                {meta.error}
+              </Text>
+            ) : null}
           </FormControl>
         )}
       </Field>
