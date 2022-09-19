@@ -9,7 +9,6 @@ import {
   Spacer,
   Tag,
   Text,
-  Wrap,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
@@ -23,6 +22,8 @@ import {
   useMediaQuery,
   Skeleton,
   Button,
+  ListItem,
+  UnorderedList,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
@@ -781,125 +782,153 @@ const LaunchpadDetailPage = () => {
               ? phases.map((item, index) => (
                   <FadeIn key={index}>
                     {console.log("item", item)}
-                    <Wrap flexWrap={true} w="full" my="15px">
+                    <Stack w="full" my="15px">
                       <HStack>
                         <Text border="1px solid #7ae7ff" px="4px">
-                          {item.publicPhase ? "public" : "whitelist"}
+                          {item.publicPhase
+                            ? "Whitelist & Public Mint"
+                            : "Whitelist Mint Only"}
                         </Text>
-                        <Tag w="full">{item.code}</Tag>
+                        <Tag minW="min-content">{item.code}</Tag>
                       </HStack>
 
-                      {item.publicPhase && (
-                        <Stack
-                          px="2px"
-                          w="full"
-                          direction={["column", "row"]}
-                          fontSize={["15px", "18px", "18px"]}
-                        >
-                          <Stack
-                            w="full"
-                            color="#888"
-                            spacing="30px"
-                            direction={["row"]}
-                            alignContent="space-between"
-                            minH={{ base: "1rem", "2xl": "3.375rem" }}
-                          >
-                            <Text>
-                              Total:{" "}
-                              <Text as="span" color="#fff">
-                                {item.publicMintingAmount}
-                              </Text>
-                            </Text>
+                      {/* Whitelist Mint */}
 
-                            <Text>
-                              Minted:{" "}
-                              <Text as="span" color="#fff">
-                                {item.claimedAmount}{" "}
-                                <Text as="span">
-                                  NFT{item.claimedAmount > 1 ? "s" : ""}
-                                </Text>
-                              </Text>
-                            </Text>
-
-                            <Text>
-                              Price:{" "}
-                              <Text as="span" color="#fff">
-                                {convertStringToPrice(item.publicMintingFee)}{" "}
-                                <AzeroIcon
-                                  mb="5px"
-                                  w={["14px", "16px"]}
-                                  h={["14px", "16px"]}
-                                />
-                              </Text>
-                            </Text>
-                          </Stack>
-
-                          <Stack
-                            w="full"
-                            minW="fit-content"
-                            direction={["column", "row"]}
-                          >
-                            <Text color="brand.blue">
-                              Start:{" "}
-                              <Text as="span" color="#fff">
-                                {new Date(
-                                  Number(item?.startTime)
-                                ).toLocaleString()}{" "}
-                              </Text>
-                            </Text>
-                            <Text as="span" display={["none", "flex"]}>
-                              -
-                            </Text>
-                            <Text color="brand.blue">
-                              End:{" "}
-                              <Text as="span" color="#fff">
-                                {new Date(
-                                  Number(item?.endTime)
-                                ).toLocaleString()}{" "}
-                              </Text>
-                            </Text>
-                          </Stack>
-                        </Stack>
+                      {/* Not in whitelist */}
+                      {!item.whitelist && (
+                        <UnorderedList pl="20px">
+                          <ListItem>You are not in whitelist!</ListItem>
+                        </UnorderedList>
                       )}
 
+                      {/* Have whitelist */}
                       {item.whitelist && (
-                        <Stack
-                          px="2px"
-                          w="full"
-                          direction={["column", "row"]}
-                          fontSize={["15px", "18px", "18px"]}
-                        >
+                        <>
+                          <UnorderedList pl="20px">
+                            <ListItem>Your whitelist mint info</ListItem>
+                          </UnorderedList>{" "}
                           <Stack
+                            px="2px"
                             w="full"
-                            color="#888"
-                            spacing="30px"
-                            direction={["row"]}
-                            alignContent="space-between"
-                            minH={{ base: "1rem", "2xl": "3.375rem" }}
+                            direction={["column", "column"]}
+                            fontSize={["15px", "18px", "18px"]}
                           >
-                            <Text>
-                              Whitelist:{" "}
-                              <Text as="span" color="#fff">
-                                {item.totalWhiteList}
-                              </Text>
-                            </Text>
-                            {item.whitelist && item.whitelist.whitelistAmount && (
+                            <Stack
+                              w="full"
+                              color="#888"
+                              spacing="30px"
+                              direction={["row"]}
+                              alignContent="space-between"
+                              minH={{ base: "1rem", "2xl": "3.375rem" }}
+                            >
                               <Text>
-                                Max:{" "}
+                                Whitelist:{" "}
                                 <Text as="span" color="#fff">
-                                  {Number(item.whitelist.whitelistAmount) -
-                                    Number(item.whitelist.claimedAmount)}{" "}
-                                  NFTs
+                                  {item.totalWhiteList}
                                 </Text>
                               </Text>
-                            )}
-                            {item.whitelist && item.whitelist.mintingFee && (
+
+                              {item?.whitelist?.whitelistAmount && (
+                                <Text>
+                                  Minted / Max Mint:{" "}
+                                  <Text as="span" color="#fff">
+                                    {item.whitelist.claimedAmount} /{" "}
+                                    {item.whitelist.whitelistAmount} NFTs
+                                  </Text>
+                                </Text>
+                              )}
+
+                              {item?.whitelist?.mintingFee && (
+                                <Text>
+                                  Price:{" "}
+                                  <Text as="span" color="#fff">
+                                    {convertStringToPrice(
+                                      item.whitelist.mintingFee
+                                    )}{" "}
+                                    <AzeroIcon
+                                      mb="5px"
+                                      w={["14px", "16px"]}
+                                      h={["14px", "16px"]}
+                                    />
+                                  </Text>
+                                </Text>
+                              )}
+                            </Stack>
+
+                            <Stack
+                              w="full"
+                              minW="fit-content"
+                              direction={["column", "row"]}
+                            >
+                              <Text color="brand.blue">
+                                Start:{" "}
+                                <Text as="span" color="#fff">
+                                  {new Date(
+                                    Number(item?.startTime)
+                                  ).toLocaleString()}{" "}
+                                </Text>
+                              </Text>
+
+                              <Text as="span" display={["none", "flex"]}>
+                                -
+                              </Text>
+
+                              <Text color="brand.blue">
+                                End:{" "}
+                                <Text as="span" color="#fff">
+                                  {new Date(
+                                    Number(item?.endTime)
+                                  ).toLocaleString()}{" "}
+                                </Text>
+                              </Text>
+                            </Stack>
+                          </Stack>
+                        </>
+                      )}
+                      {/* END ~ Whitelist Mint */}
+
+                      {/* Public Mint */}
+                      {item.publicPhase && (
+                        <Stack pt="20px">
+                          <UnorderedList>
+                            <ListItem>Your public mint info</ListItem>
+                          </UnorderedList>
+
+                          <Stack
+                            px="2px"
+                            w="full"
+                            direction={["column"]}
+                            fontSize={["15px", "18px", "18px"]}
+                          >
+                            <Stack
+                              w="full"
+                              color="#888"
+                              spacing="30px"
+                              direction={["row"]}
+                              alignContent="space-between"
+                              minH={{ base: "1rem", "2xl": "3.375rem" }}
+                            >
+                              <Text>
+                                Total:{" "}
+                                <Text as="span" color="#fff">
+                                  {item.publicMintingAmount}
+                                </Text>
+                              </Text>
+
+                              <Text>
+                                Minted:{" "}
+                                <Text as="span" color="#fff">
+                                  {item.claimedAmount}{" "}
+                                  <Text as="span">
+                                    NFT{item.claimedAmount > 1 ? "s" : ""}
+                                  </Text>
+                                </Text>
+                              </Text>
+
                               <Text>
                                 Price:{" "}
                                 <Text as="span" color="#fff">
-                                  {convertStringToPrice(
-                                    item.whitelist.mintingFee
-                                  )}{" "}
+                                  {convertStringToPrice(item.publicMintingFee)}{" "}
                                   <AzeroIcon
                                     mb="5px"
                                     w={["14px", "16px"]}
@@ -907,39 +936,38 @@ const LaunchpadDetailPage = () => {
                                   />
                                 </Text>
                               </Text>
-                            )}
-                          </Stack>
+                            </Stack>
 
-                          <Stack
-                            w="full"
-                            minW="fit-content"
-                            direction={["column", "row"]}
-                          >
-                            <Text color="brand.blue">
-                              Start:{" "}
-                              <Text as="span" color="#fff">
-                                {new Date(
-                                  Number(item?.startTime)
-                                ).toLocaleString()}{" "}
+                            <Stack
+                              w="full"
+                              minW="fit-content"
+                              direction={["column", "row"]}
+                            >
+                              <Text color="brand.blue">
+                                Start:{" "}
+                                <Text as="span" color="#fff">
+                                  {new Date(
+                                    Number(item?.startTime)
+                                  ).toLocaleString()}{" "}
+                                </Text>
                               </Text>
-                            </Text>
-
-                            <Text as="span" display={["none", "flex"]}>
-                              -
-                            </Text>
-
-                            <Text color="brand.blue">
-                              End:{" "}
-                              <Text as="span" color="#fff">
-                                {new Date(
-                                  Number(item?.endTime)
-                                ).toLocaleString()}{" "}
+                              <Text as="span" display={["none", "flex"]}>
+                                -
                               </Text>
-                            </Text>
+                              <Text color="brand.blue">
+                                End:{" "}
+                                <Text as="span" color="#fff">
+                                  {new Date(
+                                    Number(item?.endTime)
+                                  ).toLocaleString()}{" "}
+                                </Text>
+                              </Text>
+                            </Stack>
                           </Stack>
                         </Stack>
                       )}
-                    </Wrap>
+                      {/* END Public Mint */}
+                    </Stack>
                     <Divider mt={["20px", "30px"]} />
                   </FadeIn>
                 ))
