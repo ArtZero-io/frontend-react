@@ -99,9 +99,9 @@ function AddPhase({
       start: "",
       end: "",
       isPublic: false,
-      publicMintingFee: 0,
-      publicAmount: 1,
-      publicMaxMintingAmount: 1,
+      publicMintingFee: "",
+      publicAmount: "",
+      publicMaxMintingAmount: "",
       new: true,
     });
   };
@@ -228,6 +228,21 @@ function AddPhase({
     );
   };
 
+  const handleOnChangeSwitch = (index) => {
+    console.log("value[index].isPublic", value[index].isPublic);
+
+    if (value[index].isPublic) {
+      value[index].publicAmount = "";
+      value[index].publicMaxMintingAmount = "";
+      value[index].publicMintingFee = "";
+      value[index].isPublic = false;
+      setIsPublic(!isPublic);
+      return;
+    }
+
+    value[index].isPublic = true;
+    setIsPublic(!isPublic);
+  };
   return (
     <FieldArray
       name="phases"
@@ -285,7 +300,7 @@ function AddPhase({
 
                 <Stack
                   minH="86px"
-                  alignItems={["start", "end"]}
+                  alignItems="start"
                   gap={["10px", "30px"]}
                   direction={["column", "row"]}
                 >
@@ -300,15 +315,12 @@ function AddPhase({
                       isDisabled={actionType}
                       isChecked={value[index].isPublic}
                       name={`phases[${index}].isPublic`}
-                      onChange={() => {
-                        value[index].isPublic = !value[index].isPublic;
-                        setIsPublic(!isPublic);
-                      }}
+                      onChange={() => handleOnChangeSwitch(index)}
                     />
                   </Stack>
                   <NumberInput
                     type="number"
-                    // isRequired={true}
+                    isRequired={value[index].isPublic}
                     height="50px"
                     min="0"
                     hasStepper={false}
@@ -318,6 +330,7 @@ function AddPhase({
                     name={`phases[${index}].publicMintingFee`}
                   />{" "}
                   <NumberInput
+                    isRequired={value[index].isPublic}
                     type="number"
                     height="50px"
                     precision={0}
@@ -330,6 +343,7 @@ function AddPhase({
                     name={`phases[${index}].publicAmount`}
                   />
                   <NumberInput
+                    isRequired={value[index].isPublic}
                     max={50}
                     type="number"
                     height="50px"
@@ -365,67 +379,6 @@ function AddPhase({
                       delete
                     </Heading>
                   ) : null}
-
-                  {!value[index].new &&
-                  mode === formMode.EDIT &&
-                  canEditPhase(value[index].start) ? (
-                    <Heading
-                      _hover={{
-                        color:
-                          !(index === 0 && value.length === 1) && "#7ae7ff",
-                      }}
-                      fontSize="sm"
-                      color="#555"
-                      fontStyle="unset"
-                      cursor="pointer"
-                      fontFamily="Evogria"
-                      textDecoration="underline"
-                      onClick={() => onUpdatePhase(index)}
-                      isDisabled={index === 0 && value.length === 1}
-                    >
-                      update
-                    </Heading>
-                  ) : null}
-
-                  {value[index].new && mode === formMode.EDIT && (
-                    <>
-                      <Heading
-                        _hover={{
-                          color:
-                            !(index === 0 && value.length === 1) && "#7ae7ff",
-                        }}
-                        fontSize="sm"
-                        color="#555"
-                        fontStyle="unset"
-                        cursor="pointer"
-                        fontFamily="Evogria"
-                        textDecoration="underline"
-                        onClick={() => onAddNewPhase(index)}
-                        isDisabled={index === 0 && value.length === 1}
-                      >
-                        add
-                      </Heading>
-                      <Heading
-                        _hover={{
-                          color:
-                            !(index === 0 && value.length === 1) && "#7ae7ff",
-                        }}
-                        fontSize="sm"
-                        color="#555"
-                        fontStyle="unset"
-                        cursor="pointer"
-                        fontFamily="Evogria"
-                        textDecoration="underline"
-                        onClick={() => {
-                          if (index === 0 && value.length === 1) return;
-                          arrayHelpers.remove(index);
-                        }}
-                        isDisabled={index === 0 && value.length === 1}
-                      >
-                        delete
-                      </Heading>
-                    </>
-                  )}
                 </HStack>
               </Stack>
             ))}

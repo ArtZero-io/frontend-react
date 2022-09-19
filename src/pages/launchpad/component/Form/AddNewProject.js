@@ -1159,7 +1159,14 @@ const validationSchema = Yup.object().shape({
         isPublic: Yup.boolean(),
         publicMintingFee: "",
         publicAmount: "",
-        publicMaxMintingAmount: "",
+        publicMaxMintingAmount: Yup.number().when("publicAmount", {
+          is: (val) => val,
+          then: Yup.number()
+            .required("Must have value.")
+            .min(1, "Must be bigger than 1")
+            .max(Yup.ref("publicAmount"), "Must smaller than public amount"),
+          otherwise: Yup.number().notRequired(),
+        }),
       })
     ),
   email_owner: validationEmail,
