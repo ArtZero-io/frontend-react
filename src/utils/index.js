@@ -94,7 +94,7 @@ export function isValidAddressPolkadotAddress(address) {
 
     return true;
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     return false;
   }
 }

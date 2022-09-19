@@ -31,7 +31,7 @@ import LaunchpadDetailHeader from "../component/Header";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { TeamCard } from "../component/TeamCard";
 import { clientAPI } from "@api/client";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useSubstrateState } from "@utils/substrate";
 import { getCachedImageShort } from "@utils";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
@@ -71,6 +71,9 @@ import PaginationMP from "@components/Pagination/Pagination";
 import FadeIn from "react-fade-in";
 import { isPhaseEnd } from "../component/Form/UpdatePhase";
 import { getPublicCurrentAccount } from "@utils";
+import { isValidAddressPolkadotAddress } from "@utils";
+import * as ROUTES from "@constants/routes";
+import { delay } from "@utils";
 
 const NUMBER_PER_PAGE = 6;
 
@@ -92,6 +95,7 @@ const LaunchpadDetailPage = () => {
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   const [currentPhase, setCurrentPhase] = useState({});
+  const history = useHistory();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -118,8 +122,20 @@ const LaunchpadDetailPage = () => {
     try {
       setLoading(true);
       // const fetchStart = Date.now();
-
+      const isValidAddr = isValidAddressPolkadotAddress(collection_address);
       // console.log("projectDetail fetchStart", fetchStart);
+
+      if (!isValidAddr) {
+        console.log("isValidAddr", isValidAddr);
+        toast.error("Collection Address Invalid!");
+
+        await delay(1000).then(async () => {
+          history.push(`${ROUTES.LAUNCHPAD_BASE}`);
+        });
+
+        return;
+      }
+
       const project = await launchpad_contract_calls.getProjectByNftAddress(
         currentAccount || getPublicCurrentAccount(),
         collection_address
@@ -510,12 +526,14 @@ const LaunchpadDetailPage = () => {
 
   return (
     <Layout backdrop={formattedProject?.headerImage} variant="launchpad-detail">
-      <LaunchpadDetailHeader
-        loading={loading || loadingForceUpdate}
-        collection_address={collection_address}
-        project={formattedProject}
-        currentWhitelist={currentWhitelist}
-      />
+      {isValidAddressPolkadotAddress(collection_address) && (
+        <LaunchpadDetailHeader
+          loading={loading || loadingForceUpdate}
+          collection_address={collection_address}
+          project={formattedProject}
+          currentWhitelist={currentWhitelist}
+        />
+      )}
       {/* {loading && loadingForceUpdate ? (
         <AnimationLoader loadingTime={loadingTime || 3.5} />
       ) : ( */}
@@ -589,7 +607,7 @@ const LaunchpadDetailPage = () => {
                 </Text>
               </Flex>
             ) : null}
-            {console.log('currentPhase', currentPhase)}
+            {console.log("currentPhase", currentPhase)}
             {/* //Public phases*/}
             {currentAccount &&
               currentPhase?.publicPhase &&
@@ -762,7 +780,7 @@ const LaunchpadDetailPage = () => {
             {phases?.length
               ? phases.map((item, index) => (
                   <FadeIn key={index}>
-                    {console.log('item', item)}
+                    {console.log("item", item)}
                     <Wrap flexWrap={true} w="full" my="15px">
                       <HStack>
                         <Text border="1px solid #7ae7ff" px="4px">
