@@ -151,13 +151,18 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
   useEffect(() => {
     const prepareData = async () => {
-      const { error, initialValues, avatarIPFSUrl, headerIPFSUrl } =
-        await fetchInitialValuesProject({
-          currentAccount,
-          api,
-          mode,
-          collection_address: nftContractAddress,
-        });
+      const {
+        error,
+        initialValues,
+        avatarIPFSUrl,
+        headerIPFSUrl,
+        headerSquareIPFSUrl,
+      } = await fetchInitialValuesProject({
+        currentAccount,
+        api,
+        mode,
+        collection_address: nftContractAddress,
+      });
       if (maxRoyalFeeRate === 0) {
         const maxRoyalFeeRateData =
           await collection_manager_calls.getMaxRoyalFeeRate(currentAccount);
@@ -176,6 +181,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
         setInitialValues(initialValues);
         setAvatarIPFSUrl(avatarIPFSUrl);
         setHeaderIPFSUrl(headerIPFSUrl);
+        setHeaderSquareIPFSUrl(headerSquareIPFSUrl);
       }
 
       await fetchUserBalance({ currentAccount, api }).then(({ balance }) =>
@@ -1002,11 +1008,14 @@ export const fetchInitialValuesProject = async ({
       nft_name,
       nft_symbol,
       header,
+      headerSquare,
       avatar,
       team_members,
       roadmaps,
     } = projectInfo;
-    // console.log("projectInfo", projectInfo);
+
+    console.log("fetchInitialValuesProject projectInfo", projectInfo);
+
     initialValues.isEditMode = true;
     initialValues.nftName = nft_name;
     initialValues.nftSymbol = nft_symbol;
@@ -1033,7 +1042,7 @@ export const fetchInitialValuesProject = async ({
       initialValues,
       avatarIPFSUrl: avatar,
       headerIPFSUrl: header,
-      headerSquareIPFSUrl: header,
+      headerSquareIPFSUrl: headerSquare,
     };
   } catch (error) {
     console.log(error);
