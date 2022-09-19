@@ -359,7 +359,7 @@ const LaunchpadDetailPage = () => {
 
       console.log(error);
     }
-  }, [api, collection_address, currentAccount]);
+  }, [api, collection_address, currentAccount, history]);
 
   useEffect(() => {
     fetchData();
@@ -797,7 +797,7 @@ const LaunchpadDetailPage = () => {
 
                       {/* Not in whitelist */}
                       {!item.whitelist && (
-                        <UnorderedList pl="20px">
+                        <UnorderedList pl="16px">
                           <ListItem>You are not in whitelist!</ListItem>
                         </UnorderedList>
                       )}
