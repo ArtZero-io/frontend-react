@@ -609,6 +609,7 @@ const LaunchpadDetailPage = () => {
               </Flex>
             ) : null}
             {console.log("currentPhase", currentPhase)}
+
             {/* //Public phases*/}
             {currentAccount &&
               currentPhase?.publicPhase &&
@@ -1111,10 +1112,10 @@ const LaunchpadDetailPage = () => {
                 borderBottom="1px solid #303030"
               >
                 <Heading color="#888" fontSize="15px" minW={["100px", "200px"]}>
-                  NFT Image
+                  NFT Name
                 </Heading>
                 <Heading color="#888" fontSize="15px">
-                  NFT Name
+                  NFT Image
                 </Heading>
               </HStack>
 
@@ -1126,7 +1127,7 @@ const LaunchpadDetailPage = () => {
                 >
                   <HStack justifyContent="center">
                     <Heading fontSize={["md", "lg"]} minW={["100px", "200px"]}>
-                      {item.nftName}asd
+                      {item.nftName}
                     </Heading>
                     <Square mr={["12px", "32px"]} size="50px">
                       <Image
