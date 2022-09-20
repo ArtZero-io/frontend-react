@@ -125,7 +125,7 @@ function LaunchpadDetailHeader({
     // console.log("xxxlivePhase", livePhase);
 
     if (!livePhase) {
-      const phaseId1 = project?.phases.filter((i) => i.id === 1);
+      const phaseId1 = project?.phases?.filter((i) => i.id === 1);
 
       const countDownTimer = phaseId1[0].startTime - Date.now();
 
