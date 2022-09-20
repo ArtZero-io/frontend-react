@@ -186,6 +186,7 @@ const DesktopNavContent = (props) => {
         }}
         spacing={{ xl: "35px", "2xl": "55px" }}
         pl={{ base: "8px", md: "32px", xl: "50px" }}
+        pr="10px"
         {...props}
       >
         {links.map((link, index) => (
