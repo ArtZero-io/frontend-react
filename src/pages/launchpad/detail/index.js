@@ -609,11 +609,12 @@ const LaunchpadDetailPage = () => {
               </Flex>
             ) : null}
             {console.log("currentPhase", currentPhase)}
-
+            
             {/* //Public phases*/}
             {currentAccount &&
               currentPhase?.publicPhase &&
-              !currentPhase?.whitelist?.whitelistAmount && (
+              (!currentPhase?.whitelist?.whitelistAmount || (Number(currentPhase?.whitelist?.claimedAmount) >=
+                          Number(currentPhase?.whitelist?.whitelistAmount)))  && (
                 <HStack
                   w="full"
                   justifyContent="start"
@@ -675,13 +676,15 @@ const LaunchpadDetailPage = () => {
               )}
 
             {/* //WhiteList phases*/}
-            {currentAccount && currentPhase?.whitelist?.whitelistAmount && (
+            {currentAccount && currentPhase?.whitelist?.whitelistAmount && ((Number(currentPhase?.whitelist?.claimedAmount) <
+                          Number(currentPhase?.whitelist?.whitelistAmount))) &&  (
               <HStack
                 w="full"
                 justifyContent="start"
                 alignItems="center"
                 spacing="20px"
               >
+                
                 {currentPhase?.whitelist?.whitelistAmount ? (
                   <>
                     {" "}
@@ -694,8 +697,8 @@ const LaunchpadDetailPage = () => {
                       // mb={["10px", 0]}
                       isDisabled={
                         actionType ||
-                        currentPhase?.whitelist?.claimedAmount >=
-                          currentPhase?.whitelist?.whitelistAmount
+                        Number(currentPhase?.whitelist?.claimedAmount) >=
+                        Number(currentPhase?.whitelist?.whitelistAmount)
                       }
                       value={whitelistMintingAmount}
                       max={
