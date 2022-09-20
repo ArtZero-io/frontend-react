@@ -102,12 +102,14 @@ export default function UpdateURIModal({
           <Heading size="h4" my={2}>
             update base URI
           </Heading>
-          <Text ml={1} fontSize="sm">
-            You must to update base uri before minting the nfts because if u
-            don't have any base uri, the nft won't show in My NFT section
+          <Text ml={1} fontSize="sm" fontWeight="400">
+            You MUST inform ArtZero team and share the files (artworks &
+            metadata) to cache all files before you update base URI. Otherwise,
+            your NFTs won’t reveal or fetch artworks in Launchpad / Collection /
+            My NFTs sections.
           </Text>
-          <Text ml={1} fontSize="sm">
-            Example: /ipfs/QmRKH5MUw52KRvzxBQJr9QHd2EqshyTYscLGXowP7RiXja/
+          <Text ml={1} fontSize="sm" fontWeight="400">
+            Ex: /ipfs/QmRKH5MUw52KRvzxBQJr9QHd2EqshyTYscLGXowP7RiXja/
           </Text>
         </ModalHeader>
 

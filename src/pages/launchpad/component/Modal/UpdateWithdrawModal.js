@@ -121,7 +121,7 @@ export default function UpdateWithdrawModal({
           <Heading size="h4" my={2}>
             Withdraw Balance
           </Heading>
-          <Text ml={1} fontSize="sm">
+          <Text ml={1} fontSize="sm" fontWeight="400">
             Now, you have {contractBalance} ZERO.
           </Text>
         </ModalHeader>
