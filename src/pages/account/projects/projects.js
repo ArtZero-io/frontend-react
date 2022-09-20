@@ -7,11 +7,16 @@ import AnimationLoader from "@components/Loader/AnimationLoader";
 import GridA from "@components/Grid/GridA";
 import WhitelistManagerModal from "./components/WhitelistManagerModal";
 import OwnerMintModal from "./components/OwnerMintModal";
+import { ContractPromise } from "@polkadot/api-contract";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 
 const MyProjectsPage = () => {
   const { api, currentAccount } = useSubstrateState();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const [adminProjQty, setAdminProjQty] = useState(0);
 
   useEffect(() => {
     let isUnmounted = false;
@@ -23,12 +28,39 @@ const MyProjectsPage = () => {
           currentAccount,
           api,
         });
-        // console.log("projectListDetails", projectListDetails);
+        console.log("projectListDetails", projectListDetails);
         const myProjectListDetails = projectListDetails.filter(
           (i) => i.projectOwner === currentAccount?.address
         );
-        if (isUnmounted) return;
 
+        // get projects admin data
+        const adminProjList = await Promise.all(
+          myProjectListDetails.map(async (p) => {
+            const launchpad_psp34_nft_standard_contract = new ContractPromise(
+              api,
+              launchpad_psp34_nft_standard.CONTRACT_ABI,
+              p.nftContractAddress
+            );
+
+            launchpad_psp34_nft_standard_calls.setContract(
+              launchpad_psp34_nft_standard_contract
+            );
+
+            const contractAdminAddress =
+              await launchpad_psp34_nft_standard_calls.getAdminAddress(
+                currentAccount
+              );
+
+            if (contractAdminAddress === currentAccount.address) {
+              return p;
+            }
+          })
+        );
+
+        console.log("adminProjList", adminProjList);
+
+        if (isUnmounted) return;
+        setAdminProjQty(adminProjList.length);
         setProjects(myProjectListDetails);
         setLoading(false);
       } catch (error) {
@@ -61,7 +93,7 @@ const MyProjectsPage = () => {
             <Spacer mt={{ base: "20px", xl: "0px" }} />
 
             <OwnerMintModal isDisabled={projects?.length === 0} />
-            <WhitelistManagerModal />
+            <WhitelistManagerModal isDisabled={adminProjQty === 0} />
           </>
         )}
       </Stack>
