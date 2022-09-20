@@ -122,10 +122,10 @@ const LaunchpadDetailPage = () => {
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      // const fetchStart = Date.now();
-      const isValidAddr = isValidAddressPolkadotAddress(collection_address);
-      // console.log("projectDetail fetchStart", fetchStart);
 
+      const isValidAddr = isValidAddressPolkadotAddress(collection_address);
+
+      
       if (!isValidAddr) {
         console.log("isValidAddr", isValidAddr);
         toast.error("Collection Address Invalid!");
@@ -190,12 +190,6 @@ const LaunchpadDetailPage = () => {
             currentAccount || getPublicCurrentAccount()
           );
 
-        // console.log("zzz currentPhaseIdTmp", currentPhaseIdTmp);
-        // const fetchEndBeforeLoopNo1 = Date.now();
-        // console.log(
-        //   "projectDetail fetchEndBeforeLoopNo1 ",
-        //   fetchEndBeforeLoopNo1
-        // );
         if (currentAccount?.address) {
           for (let i = 1; i <= totalPhase; i++) {
             const whiteListData =
@@ -204,6 +198,7 @@ const LaunchpadDetailPage = () => {
                 i,
                 currentAccount?.address
               );
+
             const phaseSchedule =
               await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
                 currentAccount,
@@ -246,7 +241,7 @@ const LaunchpadDetailPage = () => {
                 );
               }
             }
-            // console.log("phaseSchedule::148", phaseSchedule);
+
             const phaseInfo = {
               id: i,
               code: phaseCode,
@@ -272,7 +267,8 @@ const LaunchpadDetailPage = () => {
             }
 
             if (i === 1 * currentPhaseIdTmp) {
-              // console.log("LaunchpadDetailPage::phaseSchedule", phaseSchedule);
+              
+              
               if (phaseSchedule.isPublic === true) {
                 setTotalPhaseAmount(
                   Number(
@@ -300,10 +296,7 @@ const LaunchpadDetailPage = () => {
                   i,
                   currentAccount?.address
                 );
-              // console.log(
-              //   "LaunchpadDetailPage::currentWhitelistTmp",
-              //   currentWhitelistTmp
-              // );
+
               if (currentWhitelistTmp) {
                 setCurrentWhitelist(currentWhitelistTmp);
               }
@@ -311,12 +304,6 @@ const LaunchpadDetailPage = () => {
           }
         }
 
-        // const fetchEndAfterLoopNo1 = Date.now();
-        // console.log(
-        //   "projectDetail fetchEndAfterLoopNo1 ",
-        //   fetchEndAfterLoopNo1
-        // );
-        // console.log("projectDetail diff", fetchEndAfterLoopNo1 - fetchStart);
         const projectAdminAddress =
           await launchpad_psp34_nft_standard_calls.getAdminAddress(
             currentAccount
@@ -350,10 +337,6 @@ const LaunchpadDetailPage = () => {
       }
 
       setLoading(false);
-
-      // const fetchEnd = Date.now();
-      // console.log("projectDetail fetchEnd ", fetchEnd);
-      // console.log("projectDetail diff", fetchEnd - fetchStart);
     } catch (error) {
       setLoading(false);
 
@@ -512,10 +495,7 @@ const LaunchpadDetailPage = () => {
   }, [currentAccount, formattedProject.nft_name]);
 
   useEffect(() => {
-    // let isUnmount = false;
-
     fetchNFTs();
-    // return () => (isUnmount = true);
   }, [fetchNFTs]);
 
   const pageNFT = useMemo(
@@ -608,13 +588,13 @@ const LaunchpadDetailPage = () => {
                 </Text>
               </Flex>
             ) : null}
-            {console.log("currentPhase", currentPhase)}
-            
+
             {/* //Public phases*/}
             {currentAccount &&
               currentPhase?.publicPhase &&
-              (!currentPhase?.whitelist?.whitelistAmount || (Number(currentPhase?.whitelist?.claimedAmount) >=
-                          Number(currentPhase?.whitelist?.whitelistAmount)))  && (
+              (!currentPhase?.whitelist?.whitelistAmount ||
+                Number(currentPhase?.whitelist?.claimedAmount) >=
+                  Number(currentPhase?.whitelist?.whitelistAmount)) && (
                 <HStack
                   w="full"
                   justifyContent="start"
@@ -676,76 +656,75 @@ const LaunchpadDetailPage = () => {
               )}
 
             {/* //WhiteList phases*/}
-            {currentAccount && currentPhase?.whitelist?.whitelistAmount && ((Number(currentPhase?.whitelist?.claimedAmount) <
-                          Number(currentPhase?.whitelist?.whitelistAmount))) &&  (
-              <HStack
-                w="full"
-                justifyContent="start"
-                alignItems="center"
-                spacing="20px"
-              >
-                
-                {currentPhase?.whitelist?.whitelistAmount ? (
-                  <>
-                    {" "}
-                    <NumberInput
-                      bg="black"
-                      min={1}
-                      w="150px"
-                      mr={[0, 3]}
-                      h="3.125rem"
-                      // mb={["10px", 0]}
-                      isDisabled={
-                        actionType ||
-                        Number(currentPhase?.whitelist?.claimedAmount) >=
-                        Number(currentPhase?.whitelist?.whitelistAmount)
-                      }
-                      value={whitelistMintingAmount}
-                      max={
-                        currentPhase?.whitelist?.whitelistAmount -
-                        currentPhase?.whitelist?.claimedAmount
-                      }
-                      onChange={(valueString) =>
-                        setWhitelistMintingAmount(valueString)
-                      }
-                    >
-                      {console.log("currentPhase", currentPhase)}
-                      <NumberInputField
+            {currentAccount &&
+              currentPhase?.whitelist?.whitelistAmount &&
+              Number(currentPhase?.whitelist?.claimedAmount) <
+                Number(currentPhase?.whitelist?.whitelistAmount) && (
+                <HStack
+                  w="full"
+                  justifyContent="start"
+                  alignItems="center"
+                  spacing="20px"
+                >
+                  {currentPhase?.whitelist?.whitelistAmount ? (
+                    <>
+                      {" "}
+                      <NumberInput
+                        bg="black"
+                        min={1}
+                        w="150px"
+                        mr={[0, 3]}
                         h="3.125rem"
-                        borderRadius={0}
-                        borderWidth={0}
-                        color="#fff"
+                        // mb={["10px", 0]}
+                        isDisabled={
+                          actionType ||
+                          Number(currentPhase?.whitelist?.claimedAmount) >=
+                            Number(currentPhase?.whitelist?.whitelistAmount)
+                        }
+                        value={whitelistMintingAmount}
+                        max={
+                          currentPhase?.whitelist?.whitelistAmount -
+                          currentPhase?.whitelist?.claimedAmount
+                        }
+                        onChange={(valueString) =>
+                          setWhitelistMintingAmount(valueString)
+                        }
+                      >
+                        {console.log("currentPhase", currentPhase)}
+                        <NumberInputField
+                          h="3.125rem"
+                          borderRadius={0}
+                          borderWidth={0}
+                          color="#fff"
+                        />
+                        <NumberInputStepper>
+                          <NumberIncrementStepper />
+                          <NumberDecrementStepper />
+                        </NumberInputStepper>
+                      </NumberInput>
+                      <CommonButton
+                        w={["full", "auto"]}
+                        mx="0"
+                        {...rest}
+                        isDisabled={
+                          loading ||
+                          loadingForceUpdate ||
+                          currentWhitelist?.whitelistAmount -
+                            currentWhitelist?.claimedAmount ===
+                            0
+                        }
+                        variant="outline"
+                        text="whitelist mint"
+                        onClick={onWhiteListMint}
                       />
-                      <NumberInputStepper>
-                        <NumberIncrementStepper />
-                        <NumberDecrementStepper />
-                      </NumberInputStepper>
-                    </NumberInput>
-                    <CommonButton
-                      w={["full", "auto"]}
-                      mx="0"
-                      {...rest}
-                      isDisabled={
-                        loading ||
-                        loadingForceUpdate ||
-                        currentWhitelist?.whitelistAmount -
-                          currentWhitelist?.claimedAmount ===
-                          0
-                      }
-                      variant="outline"
-                      text="whitelist mint"
-                      onClick={onWhiteListMint}
-                    />
-                  </>
-                ) : (
-                  <Text fontSize="lg" color="#888">
-                    You are not in whitelist mint list!
-                  </Text>
-                )}
-              </HStack>
-            )}
-
-            {/* {console.log("currentPhase", currentPhase)} */}
+                    </>
+                  ) : (
+                    <Text fontSize="lg" color="#888">
+                      You are not in whitelist mint list!
+                    </Text>
+                  )}
+                </HStack>
+              )}
           </Box>
         )}
 
@@ -823,7 +802,7 @@ const LaunchpadDetailPage = () => {
                               spacing="30px"
                               direction={["row"]}
                               alignContent="space-between"
-                              minH={{ base: "1rem", "2xl": "3.375rem" }}
+                              // minH={{ base: "1rem", "2xl": "3.375rem" }}
                             >
                               <Text>
                                 Whitelist:{" "}
@@ -910,7 +889,7 @@ const LaunchpadDetailPage = () => {
                               spacing="30px"
                               direction={["row"]}
                               alignContent="space-between"
-                              minH={{ base: "1rem", "2xl": "3.375rem" }}
+                              // minH={{ base: "1rem", "2xl": "3.375rem" }}
                             >
                               <Text>
                                 Total:{" "}

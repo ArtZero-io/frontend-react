@@ -194,7 +194,7 @@ function MyMintingProjectPage() {
         const { claimedAmount, publicMintingAmount } = phaseInfo;
 
         setCurrentPhase(phaseInfo);
-  
+
         setMaxMint(
           parseInt(
             publicMintingAmount.replaceAll(",", "") -
@@ -202,7 +202,6 @@ function MyMintingProjectPage() {
           )
         );
       }
-     
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, currentAccount, selectedPhaseCode]);
@@ -345,9 +344,15 @@ function MyMintingProjectPage() {
           <>
             <FadeIn>
               <Wrap flexWrap={true} w="full" my="15px">
-                <WrapItem>
-                  <Tag w="full">{currentPhase.title}</Tag>
-                </WrapItem>
+                <HStack>
+                  <Text border="1px solid #7ae7ff" px="4px">
+                    {currentPhase?.isPublic
+                      ? "Whitelist & Public Mint"
+                      : "Whitelist Mint Only"}
+                  </Text>
+
+                  <Tag minW="min-content">{currentPhase?.title}</Tag>
+                </HStack>
 
                 {currentPhase && (
                   <Stack

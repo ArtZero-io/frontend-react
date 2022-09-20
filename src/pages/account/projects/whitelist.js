@@ -65,6 +65,9 @@ function MyWhiteListProjectPage() {
 
   const [loading, setLoading] = useState(false);
 
+  const [isUpdateMode, setIsUpdateMode] = useState(null);
+  const [whitelistAmountClaimed, setWhitelistAmountClaimed] = useState(0);
+
   useEffect(() => {
     if (!phasesListAll) return setMaxSlot(0);
 
@@ -72,16 +75,17 @@ function MyWhiteListProjectPage() {
       .find((i) => i.nftContractAddress === selectedProjectAddress)
       ?.totalSupply.replaceAll(",", "");
 
-    // console.log("totalSupply", totalSupply);
     const maxSlotCalc = phasesListAll?.reduce((acc, curr) => {
-      const number = curr.isPublic
-        ? curr?.publicMintingAmount?.replaceAll(",", "")
-        : curr?.whitelistAmount?.replaceAll(",", "");
+      let number = parseInt(curr?.whitelistAmount?.replaceAll(",", ""));
+
+      if (curr.isPublic) {
+        number += parseInt(curr?.publicMintingAmount?.replaceAll(",", ""));
+      }
 
       return acc - number;
     }, parseInt(totalSupply));
 
-    setMaxSlot(maxSlotCalc);
+    setMaxSlot(maxSlotCalc < 0 ? 0 : maxSlotCalc);
   }, [myProjectsList, phasesListAll, selectedProjectAddress]);
 
   const fetchMyProjectList = useCallback(async () => {
@@ -244,8 +248,15 @@ function MyWhiteListProjectPage() {
   };
 
   const onChangeSelectedProjectAddress = async (address) => {
-    // console.log(address);
-    if (!address) {
+    setSelectedPhaseCode(0);
+    setWhiteListDataTable([]);
+    setIsUpdateMode(null);
+    setWhiteListDataTable([]);
+    setCurrentPhase({});
+    setWhiteListPrice(0);
+    setWhitelistAmount(1);
+
+    if (!address || address === "0") {
       setPhasesListWhitelist(null);
       setSelectedPhaseCode(0);
       return;
@@ -290,10 +301,19 @@ function MyWhiteListProjectPage() {
     setPhasesListAll(phasesListAll);
     setPhasesListWhitelist(phasesTmp);
     setSelectedProjectAddress(address);
-    setSelectedPhaseCode(0);
+    setWhitelistAddress("");
   };
 
   const onChangeSelectedPhaseCode = async (phaseId) => {
+    if (parseInt(phaseId) === 0) {
+      setWhiteListDataTable([]);
+    }
+
+    setWhitelistAddress("");
+    setIsUpdateMode(null);
+    setCurrentPhase({});
+    setWhiteListPrice(0);
+    setWhitelistAmount(1);
     setSelectedPhaseCode(phaseId);
   };
 
@@ -341,17 +361,7 @@ function MyWhiteListProjectPage() {
             selectedPhaseCode,
             i
           );
-        console.log(
-          "whitelistPhaseAccountAddress",
-          whitelistPhaseAccountAddress
-        );
-        // eslint-disable-next-line no-unused-vars
-        // const phaseSchedule =
-        //   await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-        //     currentAccount,
-        //     selectedPhaseCode
-        //   );
-        // const phaseCode = phaseSchedule.title;
+
         const whiteListData =
           await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
             currentAccount,
@@ -473,7 +483,7 @@ function MyWhiteListProjectPage() {
           <Text py={2}>Whitelist Address</Text>
           <Box>
             <Input
-              isDisabled={actionType || maxSlot <= 0}
+              isDisabled={actionType || parseInt(selectedPhaseCode) === 0}
               bg="black"
               h="3.125rem"
               w="full"
@@ -484,14 +494,40 @@ function MyWhiteListProjectPage() {
               color="#fff"
               placeholder="Enter address"
               value={whitelistAddress}
-              onChange={(event) =>
-                setWhitelistAddress(event.target.value.toString())
-              }
+              onChange={(event) => {
+                if (!event.target.value.toString()) {
+                  setIsUpdateMode(null);
+                } else {
+                  const isAlreadyAdded = whiteListDataTable
+                    .map((i) => i.address)
+                    .includes(event.target.value.toString());
+
+                  if (!isAlreadyAdded) {
+                    setIsUpdateMode("ADD");
+                  } else {
+                    const editAddr = whiteListDataTable.find(
+                      (i) => i.address === event.target.value.toString()
+                    );
+
+                    setWhiteListPrice(editAddr.mintingFee);
+                    setWhitelistAmount(editAddr.whitelistAmount);
+                    setWhitelistAmountClaimed(editAddr.claimedAmount);
+                    setIsUpdateMode("EDIT");
+                  }
+                }
+                setWhitelistAddress(event.target.value.toString());
+              }}
             />
           </Box>
         </Stack>
-        <Stack>
-          <Text py={2}>Price</Text>
+        <Stack hidden={!isUpdateMode}>
+          <Text py={2}>
+            {isUpdateMode === "ADD"
+              ? "Price"
+              : isUpdateMode === "EDIT"
+              ? "New price"
+              : ""}
+          </Text>
           <NumberInput
             bg="black"
             onChange={(valueString) => setWhiteListPrice(valueString)}
@@ -501,7 +537,7 @@ function MyWhiteListProjectPage() {
             w="full"
             px={0}
             min={0}
-            isDisabled={actionType || maxSlot <= 0}
+            isDisabled={actionType}
           >
             <NumberInputField
               h="3.125rem"
@@ -515,21 +551,37 @@ function MyWhiteListProjectPage() {
             </NumberInputStepper>
           </NumberInput>
         </Stack>
-        <Stack pb="30px">
-          <Text py={2}>Add number</Text>
+        <Stack hidden={!isUpdateMode} pb="30px">
+          <Text py={2}>
+            {" "}
+            {isUpdateMode === "ADD"
+              ? "Add number"
+              : isUpdateMode === "EDIT"
+              ? "New amount"
+              : ""}{" "}
+            {isUpdateMode === "EDIT"
+              ? `(Claimed: ${whitelistAmountClaimed} NFT). Min/Max: ${whitelistAmountClaimed}/${
+                  parseInt(maxSlot) + parseInt(whitelistAmount)
+                }`
+              : null}
+          </Text>
 
           <Box>
             <NumberInput
-              isDisabled={actionType || maxSlot <= 0}
+              isDisabled={actionType}
               bg="black"
-              min={0}
+              min={isUpdateMode === "EDIT" ? whitelistAmountClaimed : 0}
               onChange={(valueString) => setWhitelistAmount(valueString)}
               value={whitelistAmount}
               mr={3}
               h="3.125rem"
               w="full"
               px={0}
-              max={maxSlot}
+              max={
+                isUpdateMode === "EDIT"
+                  ? parseInt(maxSlot) + parseInt(whitelistAmount)
+                  : maxSlot
+              }
             >
               <NumberInputField
                 h="3.125rem"
@@ -544,39 +596,59 @@ function MyWhiteListProjectPage() {
             </NumberInput>
           </Box>
         </Stack>
-        <HStack
-          spacing="30px"
-          // direction={{ base: "column", xl: "row" }}
-          justify="space-between"
-          alignItems="center"
-        >
-          <CommonButton
-            mx="0"
-            {...rest}
-            w="full"
-            variant="outline"
-            text="add new"
-            onClick={() => onAddWhitelist()}
-            isDisabled={
-              maxSlot <= 0 ||
-              loadingForceUpdate ||
-              (actionType && actionType !== ADD_WHITELIST)
-            }
-          />
 
-          <CommonButton
-            mx="0"
-            {...rest}
+        <HStack w="full" hidden={!isUpdateMode} justify="start">
+          <Stack
             w="full"
-            text="update"
-            variant="outline"
-            onClick={() => onUpdateWhitelist()}
-            isDisabled={
-              maxSlot <= 0 ||
-              loadingForceUpdate ||
-              (actionType && actionType !== UPDATE_WHITELIST)
-            }
-          />
+            // spacing="30px"
+            // direction={{ base: "column", xl: "row" }}
+            direction="column"
+            justify="space-between"
+            alignItems="center"
+            hidden={isUpdateMode === "ADD"}
+          >
+            <CommonButton
+              mx="0"
+              {...rest}
+              w="full"
+              text="update"
+              variant="outline"
+              onClick={() => onUpdateWhitelist()}
+              isDisabled={
+                loadingForceUpdate ||
+                (actionType && actionType !== UPDATE_WHITELIST)
+              }
+            />
+          </Stack>
+
+          <Stack
+            w="full"
+            // spacing="30px"
+            // direction={{ base: "column", xl: "row" }}
+            direction="column"
+            justify="space-between"
+            alignItems="center"
+            hidden={isUpdateMode === "EDIT"}
+          >
+            {maxSlot <= 0 ? (
+              <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                The remaining slot is 0. You can't add more!{" "}
+              </Text>
+            ) : null}
+            <CommonButton
+              mx="0"
+              {...rest}
+              w="full"
+              variant="outline"
+              text="add new"
+              onClick={() => onAddWhitelist()}
+              isDisabled={
+                maxSlot <= 0 ||
+                loadingForceUpdate ||
+                (actionType && actionType !== ADD_WHITELIST)
+              }
+            />
+          </Stack>
         </HStack>
       </Stack>
 
@@ -617,12 +689,12 @@ function MyWhiteListProjectPage() {
                 </Text>
 
                 <Text>
-                  Minted Amount:{" "}
+                  Total Claimed:{" "}
                   <Text as="span" color="#fff">
-                    {currentPhase.claimedAmount}{" "}
-                    <Text as="span">
-                      NFT{currentPhase.claimedAmount > 1 ? "s" : ""}
-                    </Text>
+                    {whiteListDataTable.reduce((acc, curr) => {
+                      return acc + parseInt(curr.claimedAmount);
+                    }, 0)}
+                    <Text as="span"> NFTs</Text>
                   </Text>
                 </Text>
               </Stack>
