@@ -116,6 +116,8 @@ const LaunchpadDetailPage = () => {
     () => {
       fetchData();
       fetchNFTs();
+      setWhitelistMintingAmount(1);
+      setMintingAmount(1);
     }
   );
 
@@ -125,7 +127,6 @@ const LaunchpadDetailPage = () => {
 
       const isValidAddr = isValidAddressPolkadotAddress(collection_address);
 
-      
       if (!isValidAddr) {
         console.log("isValidAddr", isValidAddr);
         toast.error("Collection Address Invalid!");
@@ -267,8 +268,6 @@ const LaunchpadDetailPage = () => {
             }
 
             if (i === 1 * currentPhaseIdTmp) {
-              
-              
               if (phaseSchedule.isPublic === true) {
                 setTotalPhaseAmount(
                   Number(

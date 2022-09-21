@@ -21,7 +21,7 @@ import {
 import { motion } from "framer-motion";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch } from "react-redux";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { convertStringToDateTime } from "@utils";
 import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
@@ -58,6 +58,9 @@ function MyWhiteListProjectPage() {
   const [whitelistAmount, setWhitelistAmount] = useState(1);
   const [whiteListDataTable, setWhiteListDataTable] = useState([]);
 
+  const whitelistAmountRef = useRef(whitelistAmount);
+
+  console.log("whitelistAmountRef", whitelistAmountRef);
   const [selectedProjectAddress, setSelectedProjectAddress] = useState(null);
   const [selectedPhaseCode, setSelectedPhaseCode] = useState(0);
 
@@ -343,7 +346,7 @@ function MyWhiteListProjectPage() {
           selectedPhaseCode
         );
       // console.log("phase info", phaseInfo);
-      if (phaseInfo.isActive) {
+      if (phaseInfo?.isActive) {
         setCurrentPhase(phaseInfo);
       }
 
@@ -511,6 +514,7 @@ function MyWhiteListProjectPage() {
 
                     setWhiteListPrice(editAddr.mintingFee);
                     setWhitelistAmount(editAddr.whitelistAmount);
+                    whitelistAmountRef.current = editAddr.whitelistAmount;
                     setWhitelistAmountClaimed(editAddr.claimedAmount);
                     setIsUpdateMode("EDIT");
                   }
@@ -561,7 +565,7 @@ function MyWhiteListProjectPage() {
               : ""}{" "}
             {isUpdateMode === "EDIT"
               ? `(Claimed: ${whitelistAmountClaimed} NFT). Min/Max: ${whitelistAmountClaimed}/${
-                  parseInt(maxSlot) + parseInt(whitelistAmount)
+                  parseInt(maxSlot) + parseInt(whitelistAmountRef.current)
                 }`
               : null}
           </Text>
@@ -579,7 +583,7 @@ function MyWhiteListProjectPage() {
               px={0}
               max={
                 isUpdateMode === "EDIT"
-                  ? parseInt(maxSlot) + parseInt(whitelistAmount)
+                  ? parseInt(maxSlot) + parseInt(whitelistAmountRef.current)
                   : maxSlot
               }
             >
