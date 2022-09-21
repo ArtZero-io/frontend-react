@@ -194,6 +194,11 @@ function UpdatePhase({
   };
 
   const onAddNewPhase = async (index) => {
+    if (!value[value.length - 1].start || !value[value.length - 1].end) {
+      toast.error("Please check Start - End time phase.");
+      return;
+    }
+
     const isOverlap = isPhaseTimeOverlap(value);
 
     if (isOverlap) {
@@ -302,7 +307,7 @@ function UpdatePhase({
                 gap={["0px", "0px"]}
                 border="2px solid #333"
               >
-                <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
+                <Stack gap={["10px", "15px"]} direction={["column", "row"]}>
                   <Stack w={["100%", "50%"]}>
                     <Input
                       mx="0"
@@ -354,8 +359,8 @@ function UpdatePhase({
 
                 <Stack
                   minH="86px"
-                  alignItems={["start", "end"]}
-                  gap={["10px", "30px"]}
+                  alignItems={["start", "start"]}
+                  gap={["10px", "15px"]}
                   direction={["column", "row"]}
                 >
                   <Stack
@@ -381,30 +386,29 @@ function UpdatePhase({
                   </Stack>
                   <NumberInput
                     type="number"
-                    // isRequired={true}
+                    isRequired={value[index].isPublic}
                     height="50px"
                     min="0"
                     hasStepper={false}
                     isDisabled={
-                      actionType || isPhaseEnd(endTime)
-                      // ||
-                      // (mode === formMode.EDIT &&
-                      //   !canEditPhase(value[index].start))
+                      actionType ||
+                      isPhaseEnd(endTime) ||
+                      (!value[index].new && !canEditPhase(value[index].start))
                     }
                     label="Public minting fee"
                     isDisplay={value[index].isPublic}
                     name={`phases[${index}].publicMintingFee`}
                   />{" "}
                   <NumberInput
+                    isRequired={value[index].isPublic}
                     type="number"
                     height="50px"
                     precision={0}
                     hasStepper={false}
                     isDisabled={
-                      actionType || isPhaseEnd(endTime)
-                      //  ||
-                      // (mode === formMode.EDIT &&
-                      //   !canEditPhase(value[index].start))
+                      actionType ||
+                      isPhaseEnd(endTime) ||
+                      (!value[index].new && !canEditPhase(value[index].start))
                     }
                     label="Total Mint Amount"
                     // inputWidth={"100%"}
@@ -412,16 +416,16 @@ function UpdatePhase({
                     name={`phases[${index}].publicAmount`}
                   />
                   <NumberInput
+                    isRequired={value[index].isPublic}
                     max={50}
                     type="number"
                     height="50px"
                     precision={0}
                     hasStepper={false}
                     isDisabled={
-                      actionType || isPhaseEnd(endTime)
-                      //  ||
-                      // (mode === formMode.EDIT &&
-                      //   !canEditPhase(value[index].start))
+                      actionType ||
+                      isPhaseEnd(endTime) ||
+                      (!value[index].new && !canEditPhase(value[index].start))
                     }
                     label="Max per mint"
                     // inputWidth={"100%"}
@@ -431,6 +435,11 @@ function UpdatePhase({
                 </Stack>
 
                 <HStack justifyContent="end" w="full">
+                  {!value[index].new && !canEditPhase(value[index].start) && (
+                    <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                      Phase can not edit!
+                    </Text>
+                  )}
                   {/* phase can not edit */}
                   {/* {!canEditPhase(value[index].start) ? (
                     <Heading
