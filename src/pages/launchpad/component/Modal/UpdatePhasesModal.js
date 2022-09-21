@@ -6,6 +6,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Text,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -102,13 +103,14 @@ const UpdatePhasesModal = React.memo(function ({
           publicMaxMintingAmount: Number(
             convertNumberWithoutCommas(phaseSchedule.publicMaxMintingAmount)
           ),
-          publicMintingFee: convertStringToPrice(phaseSchedule.publicMintingFee),
+          publicMintingFee: convertStringToPrice(
+            phaseSchedule.publicMintingFee
+          ),
         };
         console.log("phaseInfo", phaseInfo);
-      
+
         phasesTmp.push(phaseInfo);
       }
-      
     }
 
     initialValuesData.phases = phasesTmp;
@@ -171,6 +173,10 @@ const UpdatePhasesModal = React.memo(function ({
           <Heading size="h4" my={2}>
             update phases
           </Heading>
+          <Text ml={1} fontSize="sm" fontWeight="400">
+            You cannot update phases that have been completed or that are
+            on-going.
+          </Text>
         </ModalHeader>
 
         <ModalBody overflowY="auto" sx={SCROLLBAR}>
@@ -180,13 +186,12 @@ const UpdatePhasesModal = React.memo(function ({
               validationSchema={Yup.object().shape({
                 phases: Yup.array()
                   .min(1, "Phases must have at least 1 items")
-                  .max(3, "Phases must have less than or equal to 3 items")
                   .of(
                     Yup.object().shape({
                       name: Yup.string()
                         .required("This field is required")
-                        .min(1, "Must be longer than 3 characters")
-                        .max(30, "Must be at most 30 characters")
+                        .min(2, "Must be longer than 2 characters")
+                        .max(100, "Must be at most 100 characters")
                         .test(
                           "Test name",
                           "Duplicated phase name!",
@@ -199,6 +204,22 @@ const UpdatePhasesModal = React.memo(function ({
                             return !(isDup && isDup.trim() === value.trim());
                           }
                         ),
+                      publicMintingFee: "",
+                      publicAmount: "",
+                      publicMaxMintingAmount: Yup.number().when(
+                        "publicAmount",
+                        {
+                          is: (val) => val,
+                          then: Yup.number()
+                            .required("Must have value.")
+                            .min(1, "Must be bigger than 1")
+                            .max(
+                              Yup.ref("publicAmount"),
+                              "Must smaller than public amount"
+                            ),
+                          otherwise: Yup.number().notRequired(),
+                        }
+                      ),
                     })
                   ),
               })}
