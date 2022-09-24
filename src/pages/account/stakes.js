@@ -457,7 +457,7 @@ export const getMyPendingPMP = async ({
   ret = await Promise.all(
     [...Array(pendingCount)].map(async (_, index) => {
       const token_id = await getTokenIdOfPendingPMP({ currentAccount, index });
-
+      console.log('getTokenIdOfPendingPMP:token_id', token_id);
       const [token_info] = await APICall.getNFTByID({
         collection_address: PMPContractAddress,
         token_id,
@@ -483,8 +483,10 @@ export const getMyStakedPMP = async ({ stakedCount, currentAccount }) => {
 
   ret = await Promise.all(
     [...Array(stakedCount)].map(async (_, index) => {
+      console.log('getMyStakedPMP::getTokenIdOfStakedPMP:index', index);
+      console.log('getMyStakedPMP::getTokenIdOfStakedPMP:currentAccount', currentAccount);
       const token_id = await getTokenIdOfStakedPMP({ currentAccount, index });
-
+      console.log('getMyStakedPMP::getTokenIdOfStakedPMP:token_id', token_id);
       const [token_info] = await APICall.getNFTByID({
         collection_address: PMPContractAddress,
         token_id,
@@ -512,7 +514,7 @@ export const getTokenIdOfPendingPMP = async ({ currentAccount, index }) => {
   return await staking_calls.getPendingUnstakedId(
     currentAccount,
     currentAccount.address,
-    index + 1
+    index
   );
 };
 
@@ -520,7 +522,7 @@ export const getTokenIdOfStakedPMP = async ({ currentAccount, index }) => {
   return await staking_calls.getStakedId(
     currentAccount,
     currentAccount.address,
-    index + 1
+    index
   );
 };
 
