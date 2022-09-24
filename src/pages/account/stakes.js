@@ -456,6 +456,7 @@ export const getMyPendingPMP = async ({
 
   ret = await Promise.all(
     [...Array(pendingCount)].map(async (_, index) => {
+      console.log('getTokenIdOfPendingPMP:index', index);
       const token_id = await getTokenIdOfPendingPMP({ currentAccount, index });
       console.log('getTokenIdOfPendingPMP:token_id', token_id);
       const [token_info] = await APICall.getNFTByID({

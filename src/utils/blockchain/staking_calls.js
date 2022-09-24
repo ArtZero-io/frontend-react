@@ -107,8 +107,7 @@ async function getPendingUnstakedId(caller_account, account, index) {
   if (
     !contract ||
     !caller_account ||
-    !isValidAddressPolkadotAddress(account) ||
-    !index
+    !isValidAddressPolkadotAddress(account)
   ) {
     console.log("invalid inputs");
     return null;
@@ -125,7 +124,7 @@ async function getPendingUnstakedId(caller_account, account, index) {
     index
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return output.toHuman();
   }
   return null;
 }
