@@ -400,7 +400,7 @@ function GridNftA({
       return i;
     });
 
-    return actionText + " tokens: " + tokenList;
+    return actionText + " PMPs: " + tokenList;
   };
 
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
