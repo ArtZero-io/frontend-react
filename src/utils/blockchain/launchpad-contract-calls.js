@@ -383,7 +383,6 @@ async function getProjectAddingFee(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    console.log(output.toHuman());
     return new BN(output, 10, "le");
   }
   return null;

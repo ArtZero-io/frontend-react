@@ -29,7 +29,7 @@ import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { Select } from "@chakra-ui/react";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
-import { convertStringToPrice, truncateStr } from "@utils";
+import { convertNumberWithoutCommas, convertStringToPrice, truncateStr } from "@utils";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 import useTxStatus from "@hooks/useTxStatus";
@@ -57,7 +57,7 @@ function MyWhiteListProjectPage() {
   const [whiteListPrice, setWhiteListPrice] = useState(0);
   const [whitelistAmount, setWhitelistAmount] = useState(1);
   const [whiteListDataTable, setWhiteListDataTable] = useState([]);
-
+  const [availableToken, setAvailabelToken] = useState(0);
   const whitelistAmountRef = useRef(whitelistAmount);
 
   console.log("whitelistAmountRef", whitelistAmountRef);
@@ -278,7 +278,12 @@ function MyWhiteListProjectPage() {
     const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(
       currentAccount
     );
-    // console.log("zzztotalPhase", totalPhase);
+    
+    const availableTokenAmount = await launchpad_psp34_nft_standard_calls.getAvailableTokenAmount(
+      currentAccount
+    );
+    setAvailabelToken(convertNumberWithoutCommas(availableTokenAmount));
+
     let phasesTmp = [];
     let phasesListAll = [];
     for (let i = 1; i <= totalPhase; i++) {
@@ -688,6 +693,16 @@ function MyWhiteListProjectPage() {
                     {currentPhase.whitelistAmount}{" "}
                     <Text as="span">
                       NFT{currentPhase.whitelistAmount > 1 ? "s" : ""}
+                    </Text>
+                  </Text>
+                </Text>
+
+                <Text>
+                  Available:{" "}
+                  <Text as="span" color="#fff">
+                    {availableToken}{" "}
+                    <Text as="span">
+                      NFTs
                     </Text>
                   </Text>
                 </Text>

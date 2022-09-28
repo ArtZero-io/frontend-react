@@ -896,6 +896,24 @@ async function getAdminAddress(caller_account) {
   return null;
 }
 
+async function getAvailableTokenAmount(caller_account) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const { result, output } = await contract.query.getAvailableTokenAmount(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+}
+
 async function withdrawFee(caller_account, amount, dispatch, txType, api) {
   if (!contract || !caller_account) {
     return null;
@@ -964,6 +982,7 @@ const launchpad_psp34_nft_standard_calls = {
   mint,
   withdrawFee,
   deactivePhase,
+  getAvailableTokenAmount
 };
 
 export default launchpad_psp34_nft_standard_calls;
