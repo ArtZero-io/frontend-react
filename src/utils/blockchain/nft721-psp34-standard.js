@@ -1,7 +1,7 @@
 const nft721_psp34_standard = {
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x4c6474cfa9dfa385c3a3a8e099e859a64bd6ba4571a68d234afb384936c9fcfb",
+      "hash": "0x2b1424f94b56d7ed017908bca32361f93c88bb352037020032593c5af13713fb",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -207,23 +207,6 @@ const nft721_psp34_standard = {
           {
             "args": [],
             "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 8
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [],
-            "docs": [
               " Leaves the contract without owner. It will not be possible to call",
               " owner's functions anymore. Can only be called by the current owner.",
               "",
@@ -247,6 +230,23 @@ const nft721_psp34_standard = {
               "type": 37
             },
             "selector": "0x5e228753"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 8
+            },
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [
@@ -286,40 +286,53 @@ const nft721_psp34_standard = {
             "selector": "0x11f43efd"
           },
           {
-            "args": [],
-            "docs": [
-              " Returns the collection `Id` of the NFT token.",
-              "",
-              " This can represents the relationship between tokens/contracts/pallets."
+            "args": [
+              {
+                "label": "owner",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput1"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "operator",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput2"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput3"
+                  ],
+                  "type": 14
+                }
+              }
             ],
-            "label": "PSP34::collection_id",
+            "docs": [
+              " Returns `true` if the operator is approved by the owner to withdraw `id` token.",
+              " If `id` is `None`, returns `true` if the operator is approved to withdraw all owner's tokens."
+            ],
+            "label": "PSP34::allowance",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34_external",
-                "CollectionIdOutput"
+                "AllowanceOutput"
               ],
-              "type": 1
+              "type": 36
             },
-            "selector": "0xffa27a5f"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Returns current NFT total supply."
-            ],
-            "label": "PSP34::total_supply",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "TotalSupplyOutput"
-              ],
-              "type": 6
-            },
-            "selector": "0x628413fe"
+            "selector": "0x4790f55a"
           },
           {
             "args": [
@@ -381,6 +394,34 @@ const nft721_psp34_standard = {
           {
             "args": [
               {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "OwnerOfInput1"
+                  ],
+                  "type": 1
+                }
+              }
+            ],
+            "docs": [
+              " Returns the owner of the token if any."
+            ],
+            "label": "PSP34::owner_of",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "OwnerOfOutput"
+              ],
+              "type": 19
+            },
+            "selector": "0x1168624d"
+          },
+          {
+            "args": [
+              {
                 "label": "owner",
                 "type": {
                   "displayName": [
@@ -407,6 +448,42 @@ const nft721_psp34_standard = {
               "type": 4
             },
             "selector": "0xcde7e55f"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns current NFT total supply."
+            ],
+            "label": "PSP34::total_supply",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "TotalSupplyOutput"
+              ],
+              "type": 6
+            },
+            "selector": "0x628413fe"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the collection `Id` of the NFT token.",
+              "",
+              " This can represents the relationship between tokens/contracts/pallets."
+            ],
+            "label": "PSP34::collection_id",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "CollectionIdOutput"
+              ],
+              "type": 1
+            },
+            "selector": "0xffa27a5f"
           },
           {
             "args": [
@@ -469,83 +546,6 @@ const nft721_psp34_standard = {
           {
             "args": [
               {
-                "label": "owner",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput1"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "operator",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput2"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput3"
-                  ],
-                  "type": 14
-                }
-              }
-            ],
-            "docs": [
-              " Returns `true` if the operator is approved by the owner to withdraw `id` token.",
-              " If `id` is `None`, returns `true` if the operator is approved to withdraw all owner's tokens."
-            ],
-            "label": "PSP34::allowance",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "AllowanceOutput"
-              ],
-              "type": 36
-            },
-            "selector": "0x4790f55a"
-          },
-          {
-            "args": [
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "OwnerOfInput1"
-                  ],
-                  "type": 1
-                }
-              }
-            ],
-            "docs": [
-              " Returns the owner of the token if any."
-            ],
-            "label": "PSP34::owner_of",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "OwnerOfOutput"
-              ],
-              "type": 19
-            },
-            "selector": "0x1168624d"
-          },
-          {
-            "args": [
-              {
                 "label": "id",
                 "type": {
                   "displayName": [
@@ -582,6 +582,35 @@ const nft721_psp34_standard = {
               "type": 39
             },
             "selector": "0xf19d48d1"
+          },
+          {
+            "args": [
+              {
+                "label": "index",
+                "type": {
+                  "displayName": [
+                    "psp34enumerable_external",
+                    "TokenByIndexInput1"
+                  ],
+                  "type": 6
+                }
+              }
+            ],
+            "docs": [
+              " Returns a token `Id` at a given `index` of all the tokens stored by the contract.",
+              " Use along with `total_supply` to enumerate all tokens."
+            ],
+            "label": "PSP34Enumerable::token_by_index",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34enumerable_external",
+                "TokenByIndexOutput"
+              ],
+              "type": 40
+            },
+            "selector": "0xcd0340d0"
           },
           {
             "args": [
@@ -623,33 +652,21 @@ const nft721_psp34_standard = {
             "selector": "0x3bcfb511"
           },
           {
-            "args": [
-              {
-                "label": "index",
-                "type": {
-                  "displayName": [
-                    "psp34enumerable_external",
-                    "TokenByIndexInput1"
-                  ],
-                  "type": 6
-                }
-              }
-            ],
+            "args": [],
             "docs": [
-              " Returns a token `Id` at a given `index` of all the tokens stored by the contract.",
-              " Use along with `total_supply` to enumerate all tokens."
+              " Get owner address"
             ],
-            "label": "PSP34Enumerable::token_by_index",
+            "label": "Psp34Traits::get_owner",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "psp34enumerable_external",
-                "TokenByIndexOutput"
+                "psp34traits_external",
+                "GetOwnerOutput"
               ],
-              "type": 40
+              "type": 8
             },
-            "selector": "0xcd0340d0"
+            "selector": "0x8e1d8d71"
           },
           {
             "args": [
@@ -678,6 +695,89 @@ const nft721_psp34_standard = {
               "type": 29
             },
             "selector": "0x249dfd4f"
+          },
+          {
+            "args": [
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "SetMultipleAttributesInput1"
+                  ],
+                  "type": 1
+                }
+              },
+              {
+                "label": "metadata",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "SetMultipleAttributesInput2"
+                  ],
+                  "type": 32
+                }
+              }
+            ],
+            "docs": [
+              " Only Owner can set multiple attributes to a token"
+            ],
+            "label": "Psp34Traits::set_multiple_attributes",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "SetMultipleAttributesOutput"
+              ],
+              "type": 30
+            },
+            "selector": "0x5bf8416b"
+          },
+          {
+            "args": [
+              {
+                "label": "index",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "GetAttributeNameInput1"
+                  ],
+                  "type": 4
+                }
+              }
+            ],
+            "docs": [
+              " Get Attribute Name"
+            ],
+            "label": "Psp34Traits::get_attribute_name",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "GetAttributeNameOutput"
+              ],
+              "type": 29
+            },
+            "selector": "0xfcfe34de"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Get Attribute Count"
+            ],
+            "label": "Psp34Traits::get_attribute_count",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "GetAttributeCountOutput"
+              ],
+              "type": 4
+            },
+            "selector": "0x61c50d69"
           },
           {
             "args": [
@@ -744,106 +844,6 @@ const nft721_psp34_standard = {
               "type": 41
             },
             "selector": "0x18209102"
-          },
-          {
-            "args": [
-              {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "SetMultipleAttributesInput1"
-                  ],
-                  "type": 1
-                }
-              },
-              {
-                "label": "metadata",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "SetMultipleAttributesInput2"
-                  ],
-                  "type": 32
-                }
-              }
-            ],
-            "docs": [
-              " Only Owner can set multiple attributes to a token"
-            ],
-            "label": "Psp34Traits::set_multiple_attributes",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "SetMultipleAttributesOutput"
-              ],
-              "type": 30
-            },
-            "selector": "0x5bf8416b"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Get owner address"
-            ],
-            "label": "Psp34Traits::get_owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "GetOwnerOutput"
-              ],
-              "type": 8
-            },
-            "selector": "0x8e1d8d71"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Get Attribute Count"
-            ],
-            "label": "Psp34Traits::get_attribute_count",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "GetAttributeCountOutput"
-              ],
-              "type": 4
-            },
-            "selector": "0x61c50d69"
-          },
-          {
-            "args": [
-              {
-                "label": "index",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "GetAttributeNameInput1"
-                  ],
-                  "type": 4
-                }
-              }
-            ],
-            "docs": [
-              " Get Attribute Name"
-            ],
-            "label": "Psp34Traits::get_attribute_name",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "GetAttributeNameOutput"
-              ],
-              "type": 29
-            },
-            "selector": "0xfcfe34de"
           }
         ]
       },

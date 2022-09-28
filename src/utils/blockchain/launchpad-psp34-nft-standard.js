@@ -1,7 +1,7 @@
 const launchpad_psp34_nft_standard = {
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x141e86024ba01412dfc1c20542bb0f23358a046670b15d4ec595bfd2be0ffd5b",
+      "hash": "0x2b39ef5c1ef0ef3c742b4e19ee7c493fdf4c2dec210e4f7e952716b67e324aa3",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -475,41 +475,6 @@ const launchpad_psp34_nft_standard = {
               "type": 43
             },
             "selector": "0xb470cada"
-          },
-          {
-            "args": [
-              {
-                "label": "phase_id",
-                "type": {
-                  "displayName": [
-                    "u8"
-                  ],
-                  "type": 2
-                }
-              },
-              {
-                "label": "is_public",
-                "type": {
-                  "displayName": [
-                    "bool"
-                  ],
-                  "type": 34
-                }
-              }
-            ],
-            "docs": [
-              " Update public phase"
-            ],
-            "label": "update_public_phase",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "Result"
-              ],
-              "type": 43
-            },
-            "selector": "0xb323e2b7"
           },
           {
             "args": [
@@ -1118,7 +1083,7 @@ const launchpad_psp34_nft_standard = {
           {
             "args": [],
             "docs": [
-              "Get Locked Token Count"
+              "Get Total Supply"
             ],
             "label": "get_total_supply",
             "mutates": false,
@@ -1130,6 +1095,22 @@ const launchpad_psp34_nft_standard = {
               "type": 5
             },
             "selector": "0xb079adab"
+          },
+          {
+            "args": [],
+            "docs": [
+              "Get Available Token Amount"
+            ],
+            "label": "get_available_token_amount",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "u64"
+              ],
+              "type": 5
+            },
+            "selector": "0x95a79e40"
           },
           {
             "args": [],
@@ -1157,6 +1138,23 @@ const launchpad_psp34_nft_standard = {
               "type": 48
             },
             "selector": "0x5e228753"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 8
+            },
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [
@@ -1194,102 +1192,6 @@ const launchpad_psp34_nft_standard = {
               "type": 48
             },
             "selector": "0x11f43efd"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 8
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [
-              {
-                "label": "owner",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "BalanceOfInput1"
-                  ],
-                  "type": 8
-                }
-              }
-            ],
-            "docs": [
-              " Returns the balance of the owner.",
-              "",
-              " This represents the amount of unique tokens the owner has."
-            ],
-            "label": "PSP34::balance_of",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "BalanceOfOutput"
-              ],
-              "type": 4
-            },
-            "selector": "0xcde7e55f"
-          },
-          {
-            "args": [
-              {
-                "label": "owner",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput1"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "operator",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput2"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "AllowanceInput3"
-                  ],
-                  "type": 14
-                }
-              }
-            ],
-            "docs": [
-              " Returns `true` if the operator is approved by the owner to withdraw `id` token.",
-              " If `id` is `None`, returns `true` if the operator is approved to withdraw all owner's tokens."
-            ],
-            "label": "PSP34::allowance",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "AllowanceOutput"
-              ],
-              "type": 34
-            },
-            "selector": "0x4790f55a"
           },
           {
             "args": [
@@ -1424,23 +1326,83 @@ const launchpad_psp34_nft_standard = {
             "selector": "0x628413fe"
           },
           {
-            "args": [],
-            "docs": [
-              " Returns the collection `Id` of the NFT token.",
-              "",
-              " This can represents the relationship between tokens/contracts/pallets."
+            "args": [
+              {
+                "label": "owner",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "BalanceOfInput1"
+                  ],
+                  "type": 8
+                }
+              }
             ],
-            "label": "PSP34::collection_id",
+            "docs": [
+              " Returns the balance of the owner.",
+              "",
+              " This represents the amount of unique tokens the owner has."
+            ],
+            "label": "PSP34::balance_of",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34_external",
-                "CollectionIdOutput"
+                "BalanceOfOutput"
               ],
-              "type": 1
+              "type": 4
             },
-            "selector": "0xffa27a5f"
+            "selector": "0xcde7e55f"
+          },
+          {
+            "args": [
+              {
+                "label": "owner",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput1"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "operator",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput2"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "AllowanceInput3"
+                  ],
+                  "type": 14
+                }
+              }
+            ],
+            "docs": [
+              " Returns `true` if the operator is approved by the owner to withdraw `id` token.",
+              " If `id` is `None`, returns `true` if the operator is approved to withdraw all owner's tokens."
+            ],
+            "label": "PSP34::allowance",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "AllowanceOutput"
+              ],
+              "type": 34
+            },
+            "selector": "0x4790f55a"
           },
           {
             "args": [
@@ -1469,6 +1431,25 @@ const launchpad_psp34_nft_standard = {
               "type": 19
             },
             "selector": "0x1168624d"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the collection `Id` of the NFT token.",
+              "",
+              " This can represents the relationship between tokens/contracts/pallets."
+            ],
+            "label": "PSP34::collection_id",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "CollectionIdOutput"
+              ],
+              "type": 1
+            },
+            "selector": "0xffa27a5f"
           },
           {
             "args": [
@@ -1513,35 +1494,6 @@ const launchpad_psp34_nft_standard = {
           {
             "args": [
               {
-                "label": "index",
-                "type": {
-                  "displayName": [
-                    "psp34enumerable_external",
-                    "TokenByIndexInput1"
-                  ],
-                  "type": 6
-                }
-              }
-            ],
-            "docs": [
-              " Returns a token `Id` at a given `index` of all the tokens stored by the contract.",
-              " Use along with `total_supply` to enumerate all tokens."
-            ],
-            "label": "PSP34Enumerable::token_by_index",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34enumerable_external",
-                "TokenByIndexOutput"
-              ],
-              "type": 53
-            },
-            "selector": "0xcd0340d0"
-          },
-          {
-            "args": [
-              {
                 "label": "owner",
                 "type": {
                   "displayName": [
@@ -1577,6 +1529,35 @@ const launchpad_psp34_nft_standard = {
               "type": 53
             },
             "selector": "0x3bcfb511"
+          },
+          {
+            "args": [
+              {
+                "label": "index",
+                "type": {
+                  "displayName": [
+                    "psp34enumerable_external",
+                    "TokenByIndexInput1"
+                  ],
+                  "type": 6
+                }
+              }
+            ],
+            "docs": [
+              " Returns a token `Id` at a given `index` of all the tokens stored by the contract.",
+              " Use along with `total_supply` to enumerate all tokens."
+            ],
+            "label": "PSP34Enumerable::token_by_index",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34enumerable_external",
+                "TokenByIndexOutput"
+              ],
+              "type": 53
+            },
+            "selector": "0xcd0340d0"
           },
           {
             "args": [
@@ -1626,34 +1607,6 @@ const launchpad_psp34_nft_standard = {
           {
             "args": [
               {
-                "label": "index",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "GetAttributeNameInput1"
-                  ],
-                  "type": 4
-                }
-              }
-            ],
-            "docs": [
-              "Get Attribute Name"
-            ],
-            "label": "Psp34Traits::get_attribute_name",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "GetAttributeNameOutput"
-              ],
-              "type": 38
-            },
-            "selector": "0xfcfe34de"
-          },
-          {
-            "args": [
-              {
                 "label": "token_id",
                 "type": {
                   "displayName": [
@@ -1678,6 +1631,72 @@ const launchpad_psp34_nft_standard = {
               "type": 38
             },
             "selector": "0x249dfd4f"
+          },
+          {
+            "args": [
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "GetAttributesInput1"
+                  ],
+                  "type": 1
+                }
+              },
+              {
+                "label": "attributes",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "GetAttributesInput2"
+                  ],
+                  "type": 39
+                }
+              }
+            ],
+            "docs": [
+              " Get multiple  attributes"
+            ],
+            "label": "Psp34Traits::get_attributes",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "GetAttributesOutput"
+              ],
+              "type": 39
+            },
+            "selector": "0x18209102"
+          },
+          {
+            "args": [
+              {
+                "label": "index",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "GetAttributeNameInput1"
+                  ],
+                  "type": 4
+                }
+              }
+            ],
+            "docs": [
+              "Get Attribute Name"
+            ],
+            "label": "Psp34Traits::get_attribute_name",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "GetAttributeNameOutput"
+              ],
+              "type": 38
+            },
+            "selector": "0xfcfe34de"
           },
           {
             "args": [],
@@ -1743,44 +1762,6 @@ const launchpad_psp34_nft_standard = {
               "type": 43
             },
             "selector": "0x5bf8416b"
-          },
-          {
-            "args": [
-              {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "GetAttributesInput1"
-                  ],
-                  "type": 1
-                }
-              },
-              {
-                "label": "attributes",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "GetAttributesInput2"
-                  ],
-                  "type": 39
-                }
-              }
-            ],
-            "docs": [
-              " Get multiple  attributes"
-            ],
-            "label": "Psp34Traits::get_attributes",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "GetAttributesOutput"
-              ],
-              "type": 39
-            },
-            "selector": "0x18209102"
           }
         ]
       },
@@ -2133,6 +2114,15 @@ const launchpad_psp34_nft_standard = {
                 }
               },
               "name": "active_phase_count"
+            },
+            {
+              "layout": {
+                "cell": {
+                  "key": "0x1200000000000000000000000000000000000000000000000000000000000000",
+                  "ty": 5
+                }
+              },
+              "name": "available_token_amount"
             }
           ]
         }

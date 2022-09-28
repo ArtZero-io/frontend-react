@@ -249,6 +249,20 @@ async function addNewProject(
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
   const value = await getProjectAddingFee(caller_account);
+  
+  console.log(address,
+    data.total_supply,
+    data.start_time,
+    data.end_time,
+    data.project_info,
+    data.code_phases,
+    data.is_public_phases,
+    data.public_minting_fee_phases,
+    data.public_minting_amout_phases,
+    data.public_max_minting_amount_phases,
+    data.start_time_phases,
+    data.end_time_phases);
+    console.log(value);
 
   contract.tx
     .addNewProject(
@@ -369,6 +383,7 @@ async function getProjectAddingFee(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
+    console.log(output.toHuman());
     return new BN(output, 10, "le");
   }
   return null;

@@ -1,8 +1,8 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5FSK66FinskoEiJSQ8yuysVTPdQSQM9igXwciYK64Smr4Nw8",
+  CONTRACT_ADDRESS: "5E7vG8UrBLoQBbbpwms79bMqasDWapSkSojPKu1NVBwcTZ2G",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x5d02387f87f9dea5fb65a955579838942940bbb740fe3c27da0f109f74815a79",
+      "hash": "0x0a8bfcc9d63ade0f8699eeceb51e75cb262192983b5bdf4f6800269fe0f1f519",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -706,23 +706,6 @@ const launchpad_manager = {
             "selector": "0x908e3150"
           },
           {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
             "args": [
               {
                 "label": "new_owner",
@@ -785,6 +768,23 @@ const launchpad_manager = {
               "type": 15
             },
             "selector": "0x5e228753"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [],
@@ -1124,11 +1124,6 @@ const launchpad_manager = {
                     "name": "is_active",
                     "type": 8,
                     "typeName": "bool"
-                  },
-                  {
-                    "name": "project_type",
-                    "type": 2,
-                    "typeName": "u8"
                   },
                   {
                     "name": "project_owner",
