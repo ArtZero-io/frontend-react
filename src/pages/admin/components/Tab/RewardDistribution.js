@@ -87,13 +87,15 @@ function RewardDistribution() {
       currentAccount
     );
     setStakerCount(staker_count);
+
+    // console.log("staker_count", staker_count);
     let stakers = [];
     for (var i = 0; i < staker_count; i++) {
       let staker = await staking_calls.getStakedAccountsAccountByIndex(
         currentAccount,
-        i + 1
+        i
       );
-      // console.log(staker);
+      // console.log("staker", staker);
       let staker_info = {
         address: staker,
         amount: await staking_calls.getTotalStakedByAccount(
@@ -102,6 +104,7 @@ function RewardDistribution() {
         ),
         isClaimed: await staking_calls.isClaimed(currentAccount, staker),
       };
+      // console.log("staker_info", staker_info);
       stakers.push(staker_info);
     }
     setStakers(stakers);
@@ -765,7 +768,6 @@ function RewardDistribution() {
                           >
                             {" "}
                             <Button
-                              mt={7}
                               variant="solid"
                               w="100%"
                               maxW={"3xs"}

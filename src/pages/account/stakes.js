@@ -82,6 +82,9 @@ const MyStakesPage = () => {
         currentAccount,
         marketplace_contract_calls
       );
+
+      // console.log("fee", fee);
+      // console.log("myTradingFee", myTradingFee);
       setPlatformTradingFee(fee);
 
       const stats = {
@@ -96,8 +99,8 @@ const MyStakesPage = () => {
       const PMPCollectionDetail = await getPMPCollectionDetail();
 
       PMPCollectionDetail.listNFT = [];
-      console.log("xx activeTab", activeTab);
-      console.log("xx PENDING_UNSTAKE", PENDING_UNSTAKE);
+      // console.log("xx activeTab", activeTab);
+      // console.log("xx PENDING_UNSTAKE", PENDING_UNSTAKE);
 
       if (activeTab === "NOT_STAKED") {
         const myUnstakePMP = await getMyUnstakePMP({
@@ -113,7 +116,7 @@ const MyStakesPage = () => {
           pendingCount: pendingCount,
           currentAccount,
         });
-        console.log("xx myPendingPMP", myPendingPMP);
+        // console.log("xx myPendingPMP", myPendingPMP);
 
         PMPCollectionDetail.listNFT = myPendingPMP;
       }
@@ -142,10 +145,10 @@ const MyStakesPage = () => {
   );
 
   const handleForceUpdate = async () => {
-    actionType === STAKE && setActiveTab(STAKED);
-    actionType === REQUEST_UNSTAKE && setActiveTab(PENDING_UNSTAKE);
-    actionType === CANCEL_REQUEST_UNSTAKE && setActiveTab(STAKED);
-    actionType === UNSTAKE && setActiveTab(NOT_STAKED);
+    actionType === STAKE && setActiveTab("STAKED");
+    actionType === REQUEST_UNSTAKE && setActiveTab("PENDING_UNSTAKE");
+    actionType === CANCEL_REQUEST_UNSTAKE && setActiveTab("STAKED");
+    actionType === UNSTAKE && setActiveTab("NOT_STAKED");
   };
 
   useEffect(() => {
@@ -357,7 +360,7 @@ export const fetchPlatformStakingDiscountStep = async (
   const response = await marketplace_contract_calls.getStakingDiscountCriteria(
     currentAccount
   );
-  return Array.from(response);
+  return Array.from(response).reverse();
 };
 
 export const fetchPlatformStakingDiscountRate = async (
@@ -372,7 +375,7 @@ export const fetchPlatformStakingDiscountRate = async (
     return rate.div(createNumberBN(100)).toNumber();
   });
 
-  return ret;
+  return ret.reverse();
 };
 
 export const fetchPlatformTradingFee = async (
@@ -456,9 +459,9 @@ export const getMyPendingPMP = async ({
 
   ret = await Promise.all(
     [...Array(pendingCount)].map(async (_, index) => {
-      console.log('getTokenIdOfPendingPMP:index', index);
+      // console.log("getTokenIdOfPendingPMP:index", index);
       const token_id = await getTokenIdOfPendingPMP({ currentAccount, index });
-      console.log('getTokenIdOfPendingPMP:token_id', token_id);
+      // console.log("getTokenIdOfPendingPMP:token_id", token_id);
       const [token_info] = await APICall.getNFTByID({
         collection_address: PMPContractAddress,
         token_id,
@@ -484,17 +487,20 @@ export const getMyStakedPMP = async ({ stakedCount, currentAccount }) => {
 
   ret = await Promise.all(
     [...Array(stakedCount)].map(async (_, index) => {
-      console.log('getMyStakedPMP::getTokenIdOfStakedPMP:index', index);
-      console.log('getMyStakedPMP::getTokenIdOfStakedPMP:currentAccount', currentAccount);
+      // console.log("getMyStakedPMP::getTokenIdOfStakedPMP:index", index);
+      // console.log(
+      //   "getMyStakedPMP::getTokenIdOfStakedPMP:currentAccount",
+      //   currentAccount
+      // );
       const token_id = await getTokenIdOfStakedPMP({ currentAccount, index });
-      console.log('getMyStakedPMP::getTokenIdOfStakedPMP:token_id', token_id);
+      // console.log("getMyStakedPMP::getTokenIdOfStakedPMP:token_id", token_id);
       const [token_info] = await APICall.getNFTByID({
         collection_address: PMPContractAddress,
         token_id,
       });
       const tokenMeta = await getMetaDataType1(token_id, token_uri);
 
-      console.log("tokenMeta", tokenMeta);
+      // console.log("tokenMeta", tokenMeta);
 
       return { ...token_info, ...tokenMeta, stakeStatus: 2 };
     })

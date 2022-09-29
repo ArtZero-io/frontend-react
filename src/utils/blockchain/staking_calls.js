@@ -78,11 +78,7 @@ async function getTotalPendingUnstakedByAccount(caller_account, account) {
   return null;
 }
 async function getStakedId(caller_account, account, index) {
-  if (
-    !contract ||
-    !caller_account ||
-    !isValidAddressPolkadotAddress(account)
-  ) {
+  if (!contract || !caller_account || !isValidAddressPolkadotAddress(account)) {
     console.log("invalid inputs");
     return null;
   }
@@ -90,25 +86,21 @@ async function getStakedId(caller_account, account, index) {
   const gasLimit = -1;
   const azero_value = 0;
   //console.log(contract);
-  console.log(account, index);
+  // console.log(account, index);
   const { result, output } = await contract.query.getStakedId(
     address,
     { value: azero_value, gasLimit },
     account,
     index
   );
-  
+
   if (result.isOk) {
     return output.toHuman();
   }
   return null;
 }
 async function getPendingUnstakedId(caller_account, account, index) {
-  if (
-    !contract ||
-    !caller_account ||
-    !isValidAddressPolkadotAddress(account)
-  ) {
+  if (!contract || !caller_account || !isValidAddressPolkadotAddress(account)) {
     console.log("invalid inputs");
     return null;
   }
