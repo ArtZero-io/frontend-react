@@ -13,6 +13,7 @@ import {
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
+import { APICall } from "../../api/client";
 
 let contract;
 
@@ -160,15 +161,15 @@ async function getAdminAddress(caller_account) {
   const gasLimit = -1;
   const azero_value = 0;
   //console.log(contract);
-  console.log('LP contract', contract)
-  console.log('LP caller_account', caller_account)
+  console.log("LP contract", contract);
+  console.log("LP caller_account", caller_account);
 
   const { result, output } = await contract.query.getAdminAddress(address, {
     value: azero_value,
     gasLimit,
   });
 
-  console.log('LP output.toHuman()', output.toHuman())
+  console.log("LP output.toHuman()", output.toHuman());
   if (result.isOk) {
     return output.toHuman();
   }
@@ -249,8 +250,9 @@ async function addNewProject(
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
   const value = await getProjectAddingFee(caller_account);
-  
-  console.log(address,
+
+  console.log(
+    address,
     data.total_supply,
     data.start_time,
     data.end_time,
@@ -261,8 +263,9 @@ async function addNewProject(
     data.public_minting_amout_phases,
     data.public_max_minting_amount_phases,
     data.start_time_phases,
-    data.end_time_phases);
-    console.log(value);
+    data.end_time_phases
+  );
+  console.log(value);
 
   contract.tx
     .addNewProject(
@@ -318,6 +321,11 @@ async function addNewProject(
                   }
 
                   const nft_address = eventValues[1];
+
+                  (async () =>
+                    await APICall.askBeUpdateProjectData({
+                      project_address: nft_address,
+                    }))();
 
                   createNewCollection(nft_address);
                 }
