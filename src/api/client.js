@@ -100,6 +100,12 @@ export const APICall = {
     });
   },
 
+  askBeUpdateProjectData: async ({ project_address }) => {
+    return await client("POST", "/updateProject", {
+      project_address,
+    });
+  },
+
   // Event API Calls
   getPurchaseEvents: async ({ collection_address }) => {
     let result = await client("POST", "/getPurchaseEvents", {
@@ -272,6 +278,22 @@ export const APICall = {
   // Project API Calls
   getProjectInfoByHash: async ({ projectHash }) => {
     return await client("GET", `/${projectHash}`, {}, IPFS_BASE_URL);
+  },
+
+  getAllProjects: async ({
+    limit = 100,
+    offset = 0,
+    sort = -1,
+    isActive = true,
+  }) => {
+    const ret = await client("POST", "/getProjects", {
+      limit,
+      offset,
+      sort,
+      isActive,
+    });
+
+    return ret;
   },
 
   // Rewards API Calls
