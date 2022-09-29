@@ -561,10 +561,10 @@ function MyWhiteListProjectPage() {
             {isUpdateMode === "ADD"
               ? "Add number"
               : isUpdateMode === "EDIT"
-              ? "New amount"
+              ? "Update amount"
               : ""}{" "}
             {isUpdateMode === "EDIT"
-              ? `(Claimed: ${whitelistAmountClaimed} NFT). Min/Max: ${whitelistAmountClaimed}/${
+              ? `(Claimed: ${whitelistAmountClaimed} NFTs). Min: ${whitelistAmountClaimed} - Max: ${
                   parseInt(maxSlot) + parseInt(whitelistAmountRef.current)
                 }`
               : null}

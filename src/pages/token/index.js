@@ -1064,7 +1064,7 @@ export const placeBid = async (
   }
 
   if (parseFloat(bidPrice) >= askPrice / 10 ** 12) {
-    toast.error(`Bid amount must less than selling price!`);
+    toast.error(`Bid amount must be less than current price!`);
     return;
   }
 

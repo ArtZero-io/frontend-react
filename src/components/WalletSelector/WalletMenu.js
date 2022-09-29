@@ -31,12 +31,12 @@ function WalletMenu() {
           let oneSZERO = new BN(10 ** 12);
           let balSZERO = new BN(balance.data.free, 10, "le");
 
-          console.log(
-            "bal mil-AZERO:",
-            balSZERO.toHuman().slice(0, -16) +
-              "." +
-              balSZERO.toHuman().slice(-15, -8)
-          );
+          // console.log(
+          //   "bal mil-AZERO:",
+          //   balSZERO.toHuman().slice(0, -16) +
+          //     "." +
+          //     balSZERO.toHuman().slice(-15, -8)
+          // );
           if (balSZERO.gt(oneSZERO)) {
             balSZERO = balSZERO.div(new BN(10 ** 12)).toNumber();
           } else {

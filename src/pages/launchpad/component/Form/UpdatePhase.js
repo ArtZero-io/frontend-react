@@ -437,7 +437,7 @@ function UpdatePhase({
                 <HStack justifyContent="end" w="full">
                   {!value[index].new && !canEditPhase(value[index].start) && (
                     <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                      Phase can not edit!
+                      You can not edit this phase!{" "}
                     </Text>
                   )}
                   {/* phase can not edit */}
@@ -455,9 +455,7 @@ function UpdatePhase({
                       // textDecoration="underline"
                       // onClick={() => onUpdatePhase(index)}
                       // isDisabled={index === 0 && value.length === 1}
-                    >
-                      phase can not edit
-                    </Heading>
+                    >You can not edit this phase!</Heading>
                   ) : null} */}
 
                   {/* {mode === formMode.ADD ? (
