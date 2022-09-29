@@ -29,7 +29,11 @@ import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { Select } from "@chakra-ui/react";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
-import { convertNumberWithoutCommas, convertStringToPrice, truncateStr } from "@utils";
+import {
+  convertNumberWithoutCommas,
+  convertStringToPrice,
+  truncateStr,
+} from "@utils";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 import useTxStatus from "@hooks/useTxStatus";
@@ -57,7 +61,7 @@ function MyWhiteListProjectPage() {
   const [whiteListPrice, setWhiteListPrice] = useState(0);
   const [whitelistAmount, setWhitelistAmount] = useState(1);
   const [whiteListDataTable, setWhiteListDataTable] = useState([]);
-  const [availableToken, setAvailabelToken] = useState(0);
+  const [availableToken, setAvailableToken] = useState(0);
   const whitelistAmountRef = useRef(whitelistAmount);
 
   console.log("whitelistAmountRef", whitelistAmountRef);
@@ -278,12 +282,15 @@ function MyWhiteListProjectPage() {
     const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(
       currentAccount
     );
-    
-    const availableTokenAmount = await launchpad_psp34_nft_standard_calls.getAvailableTokenAmount(
-      currentAccount
-    );
-    setAvailabelToken(convertNumberWithoutCommas(availableTokenAmount));
 
+    const availableTokenAmount =
+      await launchpad_psp34_nft_standard_calls.getAvailableTokenAmount(
+        currentAccount
+      );
+    setAvailableToken(convertNumberWithoutCommas(availableTokenAmount));
+
+    console.log("availableTokenAmount", availableTokenAmount);
+    
     let phasesTmp = [];
     let phasesListAll = [];
     for (let i = 1; i <= totalPhase; i++) {
@@ -574,7 +581,6 @@ function MyWhiteListProjectPage() {
                 }`
               : null}
           </Text>
-
           <Box>
             <NumberInput
               isDisabled={actionType}
@@ -604,6 +610,38 @@ function MyWhiteListProjectPage() {
               </NumberInputStepper>
             </NumberInput>
           </Box>
+          {isUpdateMode === "EDIT" ? (
+            <>
+              {parseInt(whitelistAmount) < parseInt(whitelistAmountClaimed) ? (
+                <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                  Update amount must be greater than or equal to{" "}
+                  {whitelistAmountClaimed}
+                </Text>
+              ) : null}{" "}
+
+              {whitelistAmount >
+              parseInt(maxSlot) + parseInt(whitelistAmountRef.current) ? (
+                <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                  Update amount must be less than or equal to{" "}
+                  {parseInt(maxSlot) + parseInt(whitelistAmountRef.current)}
+                </Text>
+              ) : null}{" "}
+            </>
+          ) : (
+            <>
+              {parseInt(whitelistAmount) < 0 ? (
+                <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                  Number must be greater than or equal to zero.
+                </Text>
+              ) : null}{" "}
+              
+              {whitelistAmount > parseInt(maxSlot) ? (
+                <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                  Number must be less than or equal to {parseInt(maxSlot)}
+                </Text>
+              ) : null}{" "}
+            </>
+          )}
         </Stack>
 
         <HStack w="full" hidden={!isUpdateMode} justify="start">
@@ -700,10 +738,7 @@ function MyWhiteListProjectPage() {
                 <Text>
                   Available:{" "}
                   <Text as="span" color="#fff">
-                    {availableToken}{" "}
-                    <Text as="span">
-                      NFTs
-                    </Text>
+                    {availableToken} <Text as="span">NFTs</Text>
                   </Text>
                 </Text>
 

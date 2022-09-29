@@ -33,6 +33,7 @@ import { setTxStatus } from "@store/actions/txStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import FadeIn from "react-fade-in";
+
 function MyMintingProjectPage() {
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
@@ -288,7 +289,6 @@ function MyMintingProjectPage() {
 
         <Stack textAlign="left" pb="30px">
           <Text py={2}>Mint Amount</Text>
-
           <Box>
             <NumberInput
               isDisabled={actionType || maxMint <= 0}
@@ -314,6 +314,21 @@ function MyMintingProjectPage() {
               </NumberInputStepper>
             </NumberInput>
           </Box>
+          <>
+            {parseInt(mintAmount) < 1 ? (
+              <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                Mint Amount must be greater than or equal to 1.
+              </Text>
+            ) : null}
+          </>
+
+          <>
+            {mintAmount > parseInt(maxMint) ? (
+              <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                Mint Amount must be less than or equal to {parseInt(maxMint)}.
+              </Text>
+            ) : null}
+          </>
         </Stack>
         <HStack
           spacing="30px"
