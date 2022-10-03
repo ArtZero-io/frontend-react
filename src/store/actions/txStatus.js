@@ -135,15 +135,15 @@ export const txResponseErrorHandler = async ({
 
       console.log(`^^ Log time\t\t\t\t: ${new Date(Number(now))}`);
       console.log(`^^ ActionType\t\t\t: ${txType}`);
-      const { data: balance } = await api.query.system.account(
-        caller_account?.address
-      );
-      console.log(
-        "^^ Balance START\t\t:",
-        balance.free.toHuman().slice(0, -16) +
-          "." +
-          balance.free.toHuman().slice(-15, -8)
-      );
+      // const { data: balance } = await api.query.system.account(
+      //   caller_account?.address
+      // );
+      // console.log(
+      //   "^^ Balance START\t\t:",
+      //   balance.free.toHuman().slice(0, -16) +
+      //     "." +
+      //     balance.free.toHuman().slice(-15, -8)
+      // );
     } else {
       dispatch(
         setTxStatus({
