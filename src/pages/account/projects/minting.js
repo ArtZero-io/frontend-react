@@ -47,7 +47,7 @@ function MyMintingProjectPage() {
   const [selectedProjectAddress, setSelectedProjectAddress] = useState(null);
   const [selectedPhaseCode, setSelectedPhaseCode] = useState(0);
 
-  const [maxMint, setMaxMint] = useState(0);
+  const [maxMint, setMaxMint] = useState(1);
 
   const fetchMyProjectList = useCallback(async () => {
     let projectAddrList = await launchpad_contract_calls.getProjectsByOwner(
@@ -96,6 +96,12 @@ function MyMintingProjectPage() {
       toast.error(`Please pick your project!`);
       return;
     }
+
+    if (selectedPhaseCode < 1) {
+      toast.error(`Please pick your phase!`);
+      return;
+    }
+
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
       api,
       launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -314,21 +320,31 @@ function MyMintingProjectPage() {
               </NumberInputStepper>
             </NumberInput>
           </Box>
-          <>
-            {parseInt(mintAmount) < 1 ? (
-              <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                Mint Amount must be greater than or equal to 1.
-              </Text>
-            ) : null}
-          </>
 
-          <>
-            {mintAmount > parseInt(maxMint) ? (
-              <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                Mint Amount must be less than or equal to {parseInt(maxMint)}.
-              </Text>
-            ) : null}
-          </>
+          {
+            <>
+              <>
+                {selectedProjectAddress &&
+                selectedPhaseCode > 0 &&
+                parseInt(mintAmount) < 1 ? (
+                  <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                    Mint Amount must be greater than or equal to 1.
+                  </Text>
+                ) : null}
+              </>
+              <>
+                {selectedProjectAddress &&
+                selectedPhaseCode > 0 &&
+                mintAmount > parseInt(maxMint) ? (
+                  <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                    {console.log(mintAmount, "ád", maxMint)}
+                    Mint Amount must be less than or equal to{" "}
+                    {parseInt(maxMint)}.
+                  </Text>
+                ) : null}
+              </>
+            </>
+          }
         </Stack>
         <HStack
           spacing="30px"

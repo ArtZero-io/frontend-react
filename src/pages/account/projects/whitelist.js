@@ -290,7 +290,7 @@ function MyWhiteListProjectPage() {
     setAvailableToken(convertNumberWithoutCommas(availableTokenAmount));
 
     console.log("availableTokenAmount", availableTokenAmount);
-    
+
     let phasesTmp = [];
     let phasesListAll = [];
     for (let i = 1; i <= totalPhase; i++) {
@@ -496,9 +496,15 @@ function MyWhiteListProjectPage() {
         </Stack>
         <Stack>
           <Text py={2}>Whitelist Address</Text>
+
           <Box>
             <Input
-              isDisabled={actionType || parseInt(selectedPhaseCode) === 0}
+              isDisabled={
+                actionType ||
+                parseInt(selectedPhaseCode) === 0 ||
+                parseInt(currentPhase?.endTime?.replaceAll(",", "")) <
+                  Date.now()
+              }
               bg="black"
               h="3.125rem"
               w="full"
@@ -535,6 +541,14 @@ function MyWhiteListProjectPage() {
               }}
             />
           </Box>
+          <>
+            {parseInt(currentPhase?.endTime?.replaceAll(",", "")) <
+            Date.now() ? (
+              <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                This phase is ended!
+              </Text>
+            ) : null}
+          </>
         </Stack>
         <Stack hidden={!isUpdateMode}>
           <Text py={2}>
@@ -618,7 +632,6 @@ function MyWhiteListProjectPage() {
                   {whitelistAmountClaimed}
                 </Text>
               ) : null}{" "}
-
               {whitelistAmount >
               parseInt(maxSlot) + parseInt(whitelistAmountRef.current) ? (
                 <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
@@ -634,7 +647,6 @@ function MyWhiteListProjectPage() {
                   Number must be greater than or equal to zero.
                 </Text>
               ) : null}{" "}
-              
               {whitelistAmount > parseInt(maxSlot) ? (
                 <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
                   Number must be less than or equal to {parseInt(maxSlot)}

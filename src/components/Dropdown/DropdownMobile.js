@@ -17,8 +17,8 @@ function DropdownMobile({
 }) {
   const onClickHandler = (item) => setSelectedItem(item);
 
-  console.log("options", options);
-  console.log("selectedItem", selectedItem);
+  // console.log("options", options);
+  // console.log("selectedItem", selectedItem);
 
   return (
     <Box color="brand.blue" height="100%" {...rest}>

@@ -12,8 +12,9 @@ import {
   Flex,
   Text,
   Show,
+  useDimensions,
 } from "@chakra-ui/react";
-import * as React from "react";
+
 import { HiOutlineMenu, HiX } from "react-icons/hi";
 import { NavLink } from "./NavLink";
 import { NavList } from "./NavList";
@@ -24,7 +25,7 @@ import * as ROUTES from "@constants/routes";
 import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { ArtZeroLogo } from "@theme/assets/logo/ArtZeroLogo";
 import SocialCard from "../Card/Social";
@@ -47,7 +48,10 @@ const MobileNavContent = (props) => {
     : (document.body.style.position = "static");
 
   const { currentAccount } = useSubstrateState();
+  const mobileMenuRef = useRef();
 
+  const dimensions = useDimensions(mobileMenuRef, true);
+  console.log("dimensions", dimensions);
   return (
     <Flex
       w="full"
@@ -141,6 +145,11 @@ const MobileNavContent = (props) => {
 
           {currentAccount?.address && <MyAccountDropdown />}
 
+          {console.log(
+            dimensions?.borderBox?.bottom,
+            "dimensions",
+            dimensions?.borderBox?.width
+          )}
           <Flex
             w="full"
             justifyContent="center"
@@ -159,11 +168,16 @@ const MobileNavContent = (props) => {
                 color="#ababab"
                 width={["260px", "full", "full"]}
               >
-                © Copyright 2022 ArtZero. All Rights Reserved
+                <Text as="span" id="123123123">
+                  ...w{dimensions && dimensions?.borderBox?.width}-b
+                  {dimensions && dimensions?.borderBox?.bottom}
+                </Text>{" "}
+                © Copyright 2022 ArtZero. All Rights Reserved{" "}
               </Text>
             </Center>
           </Flex>
         </Stack>
+        <Box ref={mobileMenuRef}>.</Box>
       </NavList>
     </Flex>
   );
