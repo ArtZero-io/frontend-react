@@ -13,12 +13,20 @@ import {
   Text,
   Show,
   useDimensions,
+  Collapse,
+  IconButton,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerHeader,
+  DrawerCloseButton,
+  DrawerBody,
+  Link,
+  Icon,
+  DrawerFooter,
 } from "@chakra-ui/react";
 
-import { HiOutlineMenu, HiX } from "react-icons/hi";
 import { NavLink } from "./NavLink";
-import { NavList } from "./NavList";
-import { NavListItem } from "./NavListItem";
 import WalletSelector from "../WalletSelector/index";
 import * as ROUTES from "@constants/routes";
 
@@ -33,7 +41,12 @@ import SearchDrawer from "../SearchBox/SearchDrawer";
 import AddNewCollectionModal from "@pages/account/collections/components/Modal/AddNew";
 
 import { formMode } from "@constants";
-import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  CloseIcon,
+  HamburgerIcon,
+} from "@chakra-ui/icons";
 
 const links = [
   { label: "Marketplace", href: ROUTES.MARKETPLACE },
@@ -42,144 +55,98 @@ const links = [
 ];
 
 const MobileNavContent = (props) => {
-  const { isOpen, onToggle } = useDisclosure();
+  const { isOpen, onClose, onToggle } = useDisclosure();
   isOpen
     ? (document.body.style.position = "fixed")
     : (document.body.style.position = "static");
 
-  const { currentAccount } = useSubstrateState();
+  // const { currentAccount } = useSubstrateState();
   const mobileMenuRef = useRef();
 
   const dimensions = useDimensions(mobileMenuRef, true);
   console.log("dimensions", dimensions);
+
+  const docHeight = () => {
+    const doc = document.documentElement;
+    doc.style.setProperty("--doc-height", `${window.innerHeight}px`);
+  };
+
+  window.addEventListener("resize", docHeight);
+
+  docHeight();
+
+  // const [scroll, setScroll] = useState(false);
+
+  // const changeScroll = () => {
+  //   document.body.scrollTop > 60 || document.documentElement.scrollTop > 60
+  //     ? setScroll(true)
+  //     : setScroll(false);
+  // };
+
+  // window.addEventListener("scroll", changeScroll);
+
   return (
-    <Flex
-      w="full"
-      {...props}
-      justifyContent="center"
-      display={{ base: "flex", md: "none" }}
-    >
-      <Center
-        position="absolute"
-        top="13px"
-        left="0"
-        as="button"
-        mx="2"
-        fontSize="2xl"
-        color="white"
-        onClick={onToggle}
+    <>
+      <Box
+        w="full"
+        style={{ marginTop: "0px" }}
+        display={{ base: "block", md: "none" }}
+        zIndex="sticky"
+        // backdropBlur="2px"
+        // position={scroll ? "fixed" : "sticky"}
+        // backdropFilter={scroll ? "auto" : ""}
+        // bg={scroll ? "rgba(0, 0, 0, 0.75)" : "rgba(0, 0, 0, 0)"}
       >
-        {isOpen ? <HiX size="20px" /> : <HiOutlineMenu size="20px" />}
-      </Center>
-
-      <ArtZeroLogo
-        zIndex="99"
-        alt="ArtZeroLogo"
-        height="20px"
-        width="138px"
-        display={{ base: "flex", md: "none" }}
-      />
-
-      <SearchDrawer
-        position="absolute"
-        top="0px"
-        right="0px"
-        as="button"
-        mx="2"
-        fontSize="2xl"
-        color="white"
-        onClick={onToggle}
-        display={{ base: "flex", md: "none" }}
-      />
-
-      <NavList
-        bg="black"
-        pos="absolute"
-        zIndex={"99"}
-        inset="0"
-        top="-15px"
-        left="-10px"
-        animate={isOpen ? "enter" : "exit"}
-        h="100vh"
-        w="100vw"
-      >
-        <Center
-          position="absolute"
-          top="28px"
-          left="10px"
-          as="button"
-          mx="2"
-          fontSize="2xl"
-          color="white"
-          onClick={onToggle}
-          zIndex={"90"}
+        <Flex
+          align={"center"}
+          h={["57.25px", "79px"]}
+          justifyContent="space-between"
         >
-          {isOpen ? <HiX size="20px" /> : <HiOutlineMenu size="20px" />}
-        </Center>
-        <Flex w="full" marginTop="30px" justifyContent="center" bg="black">
-          <ArtZeroLogo
-            zIndex="99"
-            alt="ArtZeroLogo"
-            height="20px"
-            width="138px"
+          <Flex
+            h="31.25px"
+            alignItems="center"
+            display={{ base: "flex", md: "none" }}
+          >
+            <IconButton
+              icon={
+                isOpen ? (
+                  <CloseIcon w={3} h={3} mx="auto" />
+                ) : (
+                  <HamburgerIcon w={5} h={5} />
+                )
+              }
+              h="15px"
+              w="20px"
+              onClick={onToggle}
+              variant={"ghost"}
+              aria-label={"Toggle Navigation"}
+            />
+          </Flex>
+
+          <Flex justify={{ base: "center", md: "start" }}>
+            <ArtZeroLogo
+              height="20px"
+              width="138px"
+              alt="ArtZeroLogo"
+              display={{ base: "flex", md: "none" }}
+            />
+          </Flex>
+
+          <SearchDrawer
+            mx="2"
+            as="button"
+            fontSize="2xl"
+            color="white"
+            onClick={onToggle}
             display={{ base: "flex", md: "none" }}
           />
         </Flex>
-        <Stack
-          h="full"
-          w="full"
-          spacing="0"
-          pt="40px"
-          justify="start"
-          position="relative"
-        >
-          <WalletSelector display={{ base: "flex", md: "none" }} />
 
-          {links.map((link, index) => (
-            <NavListItem key={index}>
-              <NavLink.Mobile label={link.label} to={link.href} />
-            </NavListItem>
-          ))}
-
-          {<NavLink.Mobile label="Docs" to={ROUTES.DOCS} isExternal={true} />}
-
-          {currentAccount?.address && <MyAccountDropdown />}
-
-          {console.log(
-            dimensions?.borderBox?.bottom,
-            "dimensions",
-            dimensions?.borderBox?.width
-          )}
-          <Flex
-            w="full"
-            justifyContent="center"
-            direction="column"
-            pos="absolute"
-            bottom="160px"
-            display={{ base: "flex", md: "none" }}
-          >
-            <Center w="full" textAlign="center">
-              <SocialCard profile={profile} />
-            </Center>
-
-            <Center w="full" textAlign="center">
-              <Text
-                fontSize={["13px", "sm", "sm"]}
-                color="#ababab"
-                width={["260px", "full", "full"]}
-              >
-                <Text as="span" id="123123123">
-                  ...w{dimensions && dimensions?.borderBox?.width}-b
-                  {dimensions && dimensions?.borderBox?.bottom}
-                </Text>{" "}
-                © Copyright 2022 ArtZero. All Rights Reserved{" "}
-              </Text>
-            </Center>
-          </Flex>
-        </Stack>
-        <Box ref={mobileMenuRef}>.</Box>
-      </NavList>
-    </Flex>
+        <Collapse in={isOpen} animateOpacity>
+          <MobileNav isOpen={isOpen} onClose={onClose} />
+        </Collapse>
+      </Box>
+    </>
   );
 };
 
@@ -373,4 +340,308 @@ const profile = [
   { medium: "https://medium.com/@artzero_io" },
   { telegram: "https://t.me/artzero_io" },
   { mail: "mailto:admin@artzero.io" },
+];
+
+const MobileNav = ({ onClose, isOpen }) => {
+  return (
+    <>
+      <Drawer
+        size="full"
+        isOpen={isOpen}
+        placement="left"
+        onClose={onClose}
+        zIndex="popover"
+      >
+        <DrawerOverlay />
+
+        <DrawerContent
+          // minH="100vh"
+          bg="#080E09"
+          h="100 * var(--doc-height)"
+        >
+          <DrawerHeader bg="transparent">
+            <Flex minH="30px" justifyContent="center" alignItems="end">
+              <DrawerCloseButton
+                left="14px"
+                top="22px"
+                borderRadius="0"
+                color="#fff"
+              />
+
+              <ArtZeroLogo
+                alt="ArtZeroLogo"
+                height="20px"
+                width="138px"
+                display={{ base: "flex", md: "none" }}
+              />
+            </Flex>
+          </DrawerHeader>
+
+          <Flex pt="28px" w="full">
+            <WalletSelector display={{ base: "flex", md: "none" }} />
+          </Flex>
+
+          <DrawerBody px="18px">
+            {NAV_ITEMS.map((navItem) => (
+              <MobileNavItem
+                key={navItem.label}
+                onCloseMenu={onClose}
+                {...navItem}
+              />
+            ))}
+          </DrawerBody>
+
+          <DrawerFooter>
+            <Flex
+              w="full"
+              direction="column"
+              justifyContent="center"
+              display={{ base: "flex", md: "none" }}
+            >
+              <Center w="full" textAlign="center">
+                <SocialCard profile={profile} />
+              </Center>
+
+              <Center w="full" textAlign="center">
+                <Text
+                  color="#ababab"
+                  fontSize={["13px", "sm"]}
+                  width={["260px", "full"]}
+                >
+                  © Copyright 2022 ArtZero. All Rights Reserved{" "}
+                </Text>
+              </Center>
+            </Flex>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </>
+  );
+};
+
+const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
+  const history = useHistory();
+  const { isOpen, onToggle } = useDisclosure();
+  const { currentAccount } = useSubstrateState();
+
+  const handleNavigate = (href) => {
+    history.push(href);
+    onCloseMenu();
+  };
+
+  if (isExternal === true)
+    return (
+      <Stack>
+        <Link
+          _hover={{
+            textDecoration: "none",
+            color: "#7ae7ff",
+          }}
+          _focus={{
+            textDecoration: "none",
+            color: "#7ae7ff",
+          }}
+          pb="14px"
+          isExternal
+          href={href}
+          textDecoration="none"
+        >
+          <Text
+            _hover={{
+              textDecoration: "none",
+              color: "#7ae7ff",
+            }}
+            _focus={{
+              textDecoration: "none",
+              color: "#7ae7ff",
+            }}
+            fontSize="32px"
+            lineHeight="shorter"
+            fontFamily="Evogria, sans-serif"
+            color={isOpen ? "#7ae7ff" : "#fff"}
+          >
+            {label}
+          </Text>
+        </Link>
+      </Stack>
+    );
+
+  if (label === "my account") {
+    if (currentAccount?.address) {
+      return (
+        <Stack
+          pb="14px"
+          spacing={4}
+          onClick={children ? onToggle : () => handleNavigate(href)}
+        >
+          <Flex align={"center"} justify={"space-between"}>
+            <Text
+              _hover={{
+                textDecoration: "none",
+                color: "#7ae7ff",
+              }}
+              _active={{
+                textDecoration: "none",
+                color: "#7ae7ff",
+              }}
+              _focus={{
+                textDecoration: "none",
+                color: "#7ae7ff",
+              }}
+              fontSize="32px"
+              lineHeight="shorter"
+              fontFamily="Evogria, sans-serif"
+              color={isOpen ? "#7ae7ff" : "#fff"}
+            >
+              {label}
+            </Text>
+
+            {children && (
+              <Icon
+                w={6}
+                h={6}
+                as={ChevronDownIcon}
+                color={isOpen ? "#7ae7ff" : "#fff"}
+                transition={"all .25s ease-in-out"}
+                transform={isOpen ? "rotate(180deg)" : ""}
+              />
+            )}
+          </Flex>
+
+          <Collapse
+            in={isOpen}
+            animateOpacity
+            style={{ marginTop: "0!important" }}
+          >
+            <Stack
+              align={"start"}
+              fontSize="18px"
+              lineHeight="shorter"
+              fontFamily="Evogria, sans-serif"
+            >
+              {children &&
+                children.map((child) => (
+                  <Text
+                    py={"5px"}
+                    key={child.label}
+                    onClick={() => handleNavigate(child.href)}
+                  >
+                    {child.label}
+                  </Text>
+                ))}
+            </Stack>
+          </Collapse>
+        </Stack>
+      );
+    } else {
+      return null;
+    }
+  }
+
+  return (
+    <Stack
+      pb="14px"
+      spacing={4}
+      onClick={children ? onToggle : () => handleNavigate(href)}
+    >
+      <Flex align={"center"} justify={"space-between"}>
+        <Text
+          _hover={{
+            textDecoration: "none",
+            color: "#7ae7ff",
+          }}
+          _active={{
+            textDecoration: "none",
+            color: "#7ae7ff",
+          }}
+          _focus={{
+            textDecoration: "none",
+            color: "#7ae7ff",
+          }}
+          fontSize="32px"
+          lineHeight="shorter"
+          fontFamily="Evogria, sans-serif"
+          color={isOpen ? "#7ae7ff" : "#fff"}
+        >
+          {label}
+        </Text>
+
+        {children && (
+          <Icon
+            w={6}
+            h={6}
+            as={ChevronDownIcon}
+            color={isOpen ? "#7ae7ff" : "#fff"}
+            transition={"all .25s ease-in-out"}
+            transform={isOpen ? "rotate(180deg)" : ""}
+          />
+        )}
+      </Flex>
+
+      <Collapse in={isOpen} animateOpacity style={{ marginTop: "0!important" }}>
+        <Stack
+          align={"start"}
+          fontSize="18px"
+          lineHeight="shorter"
+          fontFamily="Evogria, sans-serif"
+        >
+          {children &&
+            children.map((child) => (
+              <Text
+                py={"5px"}
+                key={child.label}
+                onClick={() => handleNavigate(child.href)}
+              >
+                {child.label}
+              </Text>
+            ))}
+        </Stack>
+      </Collapse>
+    </Stack>
+  );
+};
+
+const NAV_ITEMS = [
+  {
+    label: "marketplace",
+    href: ROUTES.MARKETPLACE,
+  },
+  {
+    label: "launchpad",
+    href: ROUTES.LAUNCHPAD_BASE,
+  },
+  {
+    label: "stats",
+    href: ROUTES.STATS,
+  },
+  {
+    label: "docs",
+    href: ROUTES.DOCS,
+    isExternal: true,
+  },
+  {
+    label: "my account",
+    children: [
+      {
+        label: "general",
+        href: ROUTES.ACCOUNT,
+      },
+      {
+        label: "my collections",
+        href: ROUTES.ACCOUNT_MY_COLLECTIONS,
+      },
+      {
+        label: "my NFTs",
+        href: ROUTES.ACCOUNT_MY_NFTS,
+      },
+      {
+        label: "my stakes",
+        href: ROUTES.ACCOUNT_MY_STAKES,
+      },
+      {
+        label: "my projects",
+        href: ROUTES.ACCOUNT_MY_PROJECTS,
+      },
+    ],
+  },
 ];
