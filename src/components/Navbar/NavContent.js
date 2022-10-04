@@ -12,7 +12,6 @@ import {
   Flex,
   Text,
   Show,
-  useDimensions,
   Collapse,
   IconButton,
   Drawer,
@@ -33,7 +32,7 @@ import * as ROUTES from "@constants/routes";
 import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { ArtZeroLogo } from "@theme/assets/logo/ArtZeroLogo";
 import SocialCard from "../Card/Social";
@@ -61,13 +60,14 @@ const MobileNavContent = (props) => {
     : (document.body.style.position = "static");
 
   // const { currentAccount } = useSubstrateState();
-  const mobileMenuRef = useRef();
+  // const mobileMenuRef = useRef();
 
-  const dimensions = useDimensions(mobileMenuRef, true);
-  console.log("dimensions", dimensions);
+  // const dimensions = useDimensions(mobileMenuRef, true);
+  // console.log("dimensions", dimensions);
 
   const docHeight = () => {
     const doc = document.documentElement;
+
     doc.style.setProperty("--doc-height", `${window.innerHeight}px`);
   };
 
@@ -357,7 +357,8 @@ const MobileNav = ({ onClose, isOpen }) => {
         <DrawerContent
           // minH="100vh"
           bg="#080E09"
-          h="100 * var(--doc-height)"
+          id="drawer-content"
+          h="var(--doc-height)"
         >
           <DrawerHeader bg="transparent">
             <Flex minH="30px" justifyContent="center" alignItems="end">
@@ -467,7 +468,9 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
     );
 
   if (label === "my account") {
-    if (currentAccount?.address) {
+    if (!currentAccount?.address) {
+      return null;
+    } else {
       return (
         <Stack
           pb="14px"
@@ -533,8 +536,6 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
           </Collapse>
         </Stack>
       );
-    } else {
-      return null;
     }
   }
 

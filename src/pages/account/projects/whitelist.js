@@ -283,14 +283,6 @@ function MyWhiteListProjectPage() {
       currentAccount
     );
 
-    const availableTokenAmount =
-      await launchpad_psp34_nft_standard_calls.getAvailableTokenAmount(
-        currentAccount
-      );
-    setAvailableToken(convertNumberWithoutCommas(availableTokenAmount));
-
-    console.log("availableTokenAmount", availableTokenAmount);
-
     let phasesTmp = [];
     let phasesListAll = [];
     for (let i = 1; i <= totalPhase; i++) {
@@ -341,6 +333,13 @@ function MyWhiteListProjectPage() {
 
     try {
       setLoading(true);
+      const availableTokenAmount =
+        await launchpad_psp34_nft_standard_calls.getAvailableTokenAmount(
+          currentAccount
+        );
+      setAvailableToken(convertNumberWithoutCommas(availableTokenAmount));
+
+      console.log("availableTokenAmount", availableTokenAmount);
 
       const launchpad_psp34_nft_standard_contract = new ContractPromise(
         api,
@@ -738,7 +737,7 @@ function MyWhiteListProjectPage() {
                 minH={{ base: "1rem", "2xl": "3.375rem" }}
               >
                 <Text>
-                  Total amount:{" "}
+                  Total amount: <br />
                   <Text as="span" color="#fff">
                     {currentPhase.whitelistAmount}{" "}
                     <Text as="span">
@@ -748,14 +747,14 @@ function MyWhiteListProjectPage() {
                 </Text>
 
                 <Text>
-                  Available:{" "}
+                  Available: <br />
                   <Text as="span" color="#fff">
                     {availableToken} <Text as="span">NFTs</Text>
                   </Text>
                 </Text>
 
                 <Text>
-                  Total Claimed:{" "}
+                  Total Claimed: <br />
                   <Text as="span" color="#fff">
                     {whiteListDataTable.reduce((acc, curr) => {
                       return acc + parseInt(curr.claimedAmount);

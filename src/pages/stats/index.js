@@ -15,9 +15,9 @@ import { getPublicCurrentAccount } from "@utils";
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import collection_manager from "@utils/blockchain/collection-manager";
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
+import toast from "react-hot-toast";
 
-const url =
-  "https://api.coingecko.com/api/v3/simple/price?ids=aleph-zero&vs_currencies=usd";
+const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
 
 function StatsPage() {
   const { currentAccount, api } = useSubstrateState();
@@ -31,7 +31,14 @@ function StatsPage() {
     try {
       await fetch(url)
         .then((res) => res.json())
-        .then((res) => setAzeroPrice(res["aleph-zero"]?.usd));
+        .then(({ USD }) => {
+          setAzeroPrice(USD.toFixed(4));
+        })
+        .catch((err) => {
+          toast.error("Failed to fetch Azero price. Temp set to 1 USD");
+          setAzeroPrice(1);
+          console.log(err);
+        });
 
       const platformTotalStaked = await staking_calls.getTotalStaked(
         currentAccount || getPublicCurrentAccount()
@@ -130,6 +137,7 @@ function StatsPage() {
       return ret;
     } catch (err) {
       console.log("err", err);
+      toast.error("Failed to fetch stats", err.message);
     }
   };
 
@@ -149,7 +157,7 @@ function StatsPage() {
       setPlatformStatistics(data.platformStatistics);
       setTopCollections(data.topCollections);
     });
-  }, 5000);
+  }, 600000);
 
   const tabData = [
     {
