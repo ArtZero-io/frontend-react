@@ -25,7 +25,7 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
@@ -572,11 +572,11 @@ const NFTTabCollectible = (props) => {
                             )
                             .map((item, idx) => {
                               return (
-                                <>
-                                  <GridItem w="100%" h="100%" key={idx}>
+                                <Fragment key={idx}>
+                                  <GridItem w="100%" h="100%">
                                     <PropCard item={item} />
                                   </GridItem>
-                                </>
+                                </Fragment>
                               );
                             })
                         : ""}

@@ -157,13 +157,7 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
           No event found!
         </Heading>
       ) : (
-        <TableContainer
-          shadow="lg"
-          minH="500px"
-          fontSize="lg"
-          h="full"
-          overflow="auto"
-        >
+        <TableContainer minH="500px" fontSize="lg" h="full" overflow="auto">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

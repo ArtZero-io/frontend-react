@@ -97,7 +97,6 @@ function GeneralPage() {
     );
     // console.log("zxczxczxc is_claimed", is_claimed);
     setClaimed(is_claimed);
-    console.log("first");
   }, [currentAccount]);
 
   const getRewardHistory = useCallback(async () => {

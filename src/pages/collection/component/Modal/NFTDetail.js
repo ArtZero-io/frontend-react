@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import NFTTabCollectible from "../Tab/Collectible";
+import OwnershipHistory from "../Tab/OwnershipHistory";
 import useTxStatus from "@hooks/useTxStatus";
 import { FINALIZED, END } from "@constants";
 import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
@@ -39,6 +40,11 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
       label: "offers",
       content: <MyNFTOffer {...rest} />,
       isDisabled: actionType || !rest?.is_for_sale,
+    },
+    {
+      label: "history",
+      content: <OwnershipHistory {...rest} />,
+      isDisabled: actionType,
     },
   ];
   return (

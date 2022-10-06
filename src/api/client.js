@@ -275,6 +275,14 @@ export const APICall = {
     });
   },
 
+  getOwnershipHistoryOfNFT: async ({ owner, collection_address, token_id }) => {
+    return await client("POST", "/getOwnershipHistory", {
+      owner,
+      collection_address,
+      token_id,
+    });
+  },
+
   // Project API Calls
   getProjectInfoByHash: async ({ projectHash }) => {
     return await client("GET", `/${projectHash}`, {}, IPFS_BASE_URL);
