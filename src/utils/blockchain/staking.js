@@ -1,8 +1,8 @@
 const staking = {
-  CONTRACT_ADDRESS: "5DRrzXFR2hbvaSz9gQr48MvFNupwLvzUVJUqYiSPVAyocCzh",
+  CONTRACT_ADDRESS: "5GK6NJ8dY2kChC6nTNK5iENeAHHwimQrHCA4tx1oXNqFUouJ",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x011aabcbdbc58cce649be111663172958e33fd142a196f156cb39a13e3407651",
+      "hash": "0x18147db9556b922ebb60a3d3f1257a8baebbfc11e640d18d56db0dabc6343070",
       "language": "ink! 3.3.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -963,6 +963,23 @@ const staking = {
           {
             "args": [],
             "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
+          },
+          {
+            "args": [],
+            "docs": [
               " Leaves the contract without owner. It will not be possible to call",
               " owner's functions anymore. Can only be called by the current owner.",
               "",
@@ -986,23 +1003,6 @@ const staking = {
               "type": 16
             },
             "selector": "0x5e228753"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
           },
           {
             "args": [

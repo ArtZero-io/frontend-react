@@ -1,8 +1,8 @@
 const marketplace = {
-  CONTRACT_ADDRESS: "5Hemj4Wwf8oSc9K8upCcjUDJYwCAyNRxUdshz6hMMCjWvoFc",
+  CONTRACT_ADDRESS: "5E7TRYexaHeTzx8fRyYkUmr6SP3ktzvU8YECNQeX8Z8EPmBf",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x84660c737ede1d45762a5d4cbaea520954b531bf8c5180e6117b435783bf6734",
+      "hash": "0xe465fa55cd72bfc7d02bb5df6de0c107e103280c43c98c07a2ead62787310b25",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -1282,6 +1282,23 @@ const marketplace = {
           {
             "args": [],
             "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
+          },
+          {
+            "args": [],
+            "docs": [
               " Leaves the contract without owner. It will not be possible to call",
               " owner's functions anymore. Can only be called by the current owner.",
               "",
@@ -1342,23 +1359,6 @@ const marketplace = {
               "type": 29
             },
             "selector": "0x11f43efd"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
           }
         ]
       },

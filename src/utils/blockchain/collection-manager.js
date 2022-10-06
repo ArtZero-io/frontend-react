@@ -1,8 +1,8 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5FJU5jKbZM6jWdL5PVwwA5tviippoZc2DbrmCKoA9J38sysy",
+  CONTRACT_ADDRESS: "5EF6G8JWP5H4pR6mHH3GvTHZJ5JbRR8eYHuHr1GbxTeFN2bZ",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x06709b0918ea9ef491d37b6878ee2bb62be61ce41e9e9cfa0f188f4f31f41ba9",
+      "hash": "0x8db1ef367d8005dd754bc7c53da9977408fa395520e8e8b72147e56d9fc5d2b5",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -1026,19 +1026,29 @@ const collection_manager = {
           {
             "args": [],
             "docs": [
-              " Returns the address of the current owner."
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
             ],
-            "label": "Ownable::owner",
-            "mutates": false,
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
                 "ownable_external",
-                "OwnerOutput"
+                "RenounceOwnershipOutput"
               ],
-              "type": 0
+              "type": 18
             },
-            "selector": "0x4fa43c8c"
+            "selector": "0x5e228753"
           },
           {
             "args": [
@@ -1080,29 +1090,19 @@ const collection_manager = {
           {
             "args": [],
             "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
+              " Returns the address of the current owner."
             ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
+            "label": "Ownable::owner",
+            "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "ownable_external",
-                "RenounceOwnershipOutput"
+                "OwnerOutput"
               ],
-              "type": 18
+              "type": 0
             },
-            "selector": "0x5e228753"
+            "selector": "0x4fa43c8c"
           },
           {
             "args": [
@@ -1131,6 +1131,34 @@ const collection_manager = {
               "type": 2
             },
             "selector": "0x81fa82e9"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "GetCollectionOwnerInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Get Collection Owner by Collection Address (NFT address)"
+            ],
+            "label": "CrossArtZeroCollection::get_collection_owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "GetCollectionOwnerOutput"
+              ],
+              "type": 26
+            },
+            "selector": "0xb1f1e401"
           },
           {
             "args": [
@@ -1187,34 +1215,6 @@ const collection_manager = {
               "type": 9
             },
             "selector": "0x74687faf"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
-                    "GetCollectionOwnerInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Get Collection Owner by Collection Address (NFT address)"
-            ],
-            "label": "CrossArtZeroCollection::get_collection_owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "GetCollectionOwnerOutput"
-              ],
-              "type": 26
-            },
-            "selector": "0xb1f1e401"
           }
         ]
       },

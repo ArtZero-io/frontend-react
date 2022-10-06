@@ -82,7 +82,7 @@ function TabActivity({
             })
           ).then((arr) => {
             setLoading(false);
-
+            console.log('CollectionEventsFull', arr);
             setCollectionEventsFull(arr);
           }));
       } catch (error) {

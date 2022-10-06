@@ -1,8 +1,8 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5E7vG8UrBLoQBbbpwms79bMqasDWapSkSojPKu1NVBwcTZ2G",
+  CONTRACT_ADDRESS: "5Faq9SsCoKfNJazMgRmszTNvbtfGPoTAVDHUfQZHEFt51VCk",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x0a8bfcc9d63ade0f8699eeceb51e75cb262192983b5bdf4f6800269fe0f1f519",
+      "hash": "0x4e77fcb9f83682a76c3c427064dbe3048ce0d6d20018bc472c5c95222f0a1878",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -789,23 +789,6 @@ const launchpad_manager = {
           {
             "args": [],
             "docs": [
-              " Get public max minting amount"
-            ],
-            "label": "CrossArtZeroLaunchPadPSP34::get_public_max_minting_amount",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerolaunchpadpsp34_external",
-                "GetPublicMaxMintingAmountOutput"
-              ],
-              "type": 5
-            },
-            "selector": "0x529efd6b"
-          },
-          {
-            "args": [],
-            "docs": [
               " Get project mint fee"
             ],
             "label": "CrossArtZeroLaunchPadPSP34::get_project_mint_fee_rate",
@@ -819,6 +802,23 @@ const launchpad_manager = {
               "type": 14
             },
             "selector": "0x4832ed9e"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Get public max minting amount"
+            ],
+            "label": "CrossArtZeroLaunchPadPSP34::get_public_max_minting_amount",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerolaunchpadpsp34_external",
+                "GetPublicMaxMintingAmountOutput"
+              ],
+              "type": 5
+            },
+            "selector": "0x529efd6b"
           }
         ]
       },
