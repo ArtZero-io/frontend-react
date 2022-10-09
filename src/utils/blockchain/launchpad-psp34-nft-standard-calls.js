@@ -11,6 +11,7 @@ import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
+import { BN_MILLION, BN_ONE } from '@polkadot/util';
 
 let contract;
 
@@ -543,12 +544,23 @@ async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
   if (!contract || !caller_account) {
     return null;
   }
+  let estimatedGas = -1;
+  const address = caller_account?.address;
+  const azero_value = 0;
+  // const {weight, pa} = await contract.tx["psp34Traits::setBaseUri"]({value: azero_value}, uri).paymentInfo(address);
+  // const estimatedWeight = new BN(weight).div(BN_MILLION).iadd(BN_ONE);
+  // console.log(estimatedWeight.toNumber());
+  // console.log(estimatedWeight.toString());
 
+  contract.query["psp34Traits::setBaseUri"](address, {gasLimit: -1, storageDepositLimit: null, value: azero_value}, uri).then(({ gasRequired, result }) => {
+    if (result.isOk) {
+      estimatedGas = new BN(gasRequired).div(BN_MILLION).iadd(BN_ONE);
+    }
+  }
+  ).catch((error) => console.log(error));
   let unsubscribe;
 
-  const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
+  const gasLimit = estimatedGas.toNumber();
   const injector = await web3FromSource(caller_account?.meta?.source);
   console.log(contract);
   contract.tx["psp34Traits::setBaseUri"]({ gasLimit, value: azero_value }, uri)
