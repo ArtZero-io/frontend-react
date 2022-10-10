@@ -231,6 +231,27 @@ export const APICall = {
     return result;
   },
 
+  // get NFTs of collection address by traits
+  searchNFTOfCollectionByTraits: async ({
+    traitFilters = {},
+    collectionAddress,
+    limit = 10,
+    offset = 0,
+    sort = -1,
+    isForSale = false,
+  }) => {
+    let result = await client("POST", "/searchNFTOfCollectionByTraits", {
+      traitFilters,
+      collectionAddress,
+      limit,
+      offset,
+      sort,
+      isForSale,
+    });
+
+    return result;
+  },
+
   newMintingEvent: async ({
     project,
     mint_amount,

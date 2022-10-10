@@ -39,6 +39,23 @@ const SearchDrawer = ({ display = true, ...rest }) => {
         response = response.filter((item) => item.nft_count > 0);
       }
       setResultList(response);
+
+      // Test search NFY by traits
+      const traitsFilter = [
+        { $or: [{ "traits.Skin": "Red" }, { "traits.Skin": "Yellow" }] },
+        { $or: [{ "traits.Hands": "Blue" }] },
+      ];
+
+      let resTraits = await APICall.searchNFTOfCollectionByTraits({
+        isForSale: false,
+        sort: -1,
+        offset: 0,
+        limit: 10,
+        traitFilters: JSON.stringify(traitsFilter),
+        collectionAddress: "5EQXQ5E1NfU6Znm3avpZM7mArxZDwQeugJG3pFNADU6Pygfw",
+      });
+
+      console.log("resTraits", resTraits);
     } catch (error) {
       console.log(error);
       setResultList(null);
