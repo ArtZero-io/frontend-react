@@ -551,14 +551,15 @@ async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
   // console.log(estimatedWeight.toString());
 
   contract.query["psp34Traits::setBaseUri"](address, {gasLimit: -1, storageDepositLimit: null, value: azero_value}, uri).then(({ gasRequired, result }) => {
+    console.log('gasRequired', gasRequired);
     if (result.isOk) {
       estimatedGas = new BN(gasRequired).div(BN_MILLION).iadd(BN_ONE);
     }
   }
   ).catch((error) => console.log(error));
   let unsubscribe;
-
-  const gasLimit = estimatedGas.toNumber();
+  
+  const gasLimit = estimatedGas.toString();
   const injector = await web3FromSource(caller_account?.meta?.source);
   console.log(contract);
   contract.tx["psp34Traits::setBaseUri"]({ gasLimit, value: azero_value }, uri)
