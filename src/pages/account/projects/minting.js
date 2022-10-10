@@ -97,11 +97,6 @@ function MyMintingProjectPage() {
       return;
     }
 
-    if (selectedPhaseCode < 1) {
-      toast.error(`Please pick your phase!`);
-      return;
-    }
-
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
       api,
       launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -116,7 +111,6 @@ function MyMintingProjectPage() {
 
     await launchpad_psp34_nft_standard_calls.mint(
       currentAccount,
-      selectedPhaseCode,
       mintAmount,
       dispatch,
       OWNER_MINT,
@@ -148,24 +142,24 @@ function MyMintingProjectPage() {
     );
 
     let phasesTmp = [];
-
+    let maxMintTmp = 0;
     for (let i = 1; i <= totalPhase; i++) {
       const phaseSchedule =
         await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
           currentAccount,
           i
         );
-
-      const phaseCode = phaseSchedule.title;
-
-      if (phaseSchedule.isPublic && phaseSchedule.isActive) {
-        const phaseInfo = {
-          id: i,
-          code: phaseCode,
-        };
-        phasesTmp.push(phaseInfo);
+        console.log(phaseSchedule);
+      if (phaseSchedule.isActive && phaseSchedule.endTime) {
+        maxMintTmp = parseInt(maxMintTmp) + parseInt(phaseSchedule.totalAmount.replaceAll(",", "")) - parseInt(phaseSchedule.claimedAmount.replaceAll(",", ""));
       }
     }
+    const ownerClaimedAmount =
+        await launchpad_psp34_nft_standard_calls.getOwnerClaimedAmount(
+          currentAccount
+        );
+        maxMintTmp -= parseInt(ownerClaimedAmount.replaceAll(",", ""));  
+    setMaxMint(maxMintTmp);
     setPhasesList(phasesTmp);
     setSelectedProjectAddress(address);
     setSelectedPhaseCode(0);
@@ -198,16 +192,7 @@ function MyMintingProjectPage() {
           selectedPhaseCode
         );
       if (phaseInfo.isActive) {
-        const { claimedAmount, publicMintingAmount } = phaseInfo;
-
         setCurrentPhase(phaseInfo);
-
-        setMaxMint(
-          parseInt(
-            publicMintingAmount.replaceAll(",", "") -
-              parseInt(claimedAmount.replaceAll(",", ""))
-          )
-        );
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
