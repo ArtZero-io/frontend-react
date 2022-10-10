@@ -1,7 +1,7 @@
 import { Box, Flex, Progress, Spacer, Text } from "@chakra-ui/react";
 import { createLevelAttribute } from "@utils";
 
-export default function LevelCard({ item }) {
+export default function LevelCard({ item, traitCount, totalNftCount }) {
   const [objItem] = Object.entries(item);
 
   const { level, levelMax } = createLevelAttribute(objItem[1]);
@@ -49,6 +49,14 @@ export default function LevelCard({ item }) {
         colorScheme="telegram"
         value={Number((level * 100) / levelMax)}
       />
+
+      <Flex w="full" fontSize={["sm", "md"]} color="#7AE7FF">
+        <Spacer />
+
+        <Text fontSize={["sm", "sm"]} isTruncated pt="2px">
+          {((100 * traitCount) / totalNftCount).toFixed(0)}% have this trait
+        </Text>
+      </Flex>
     </Box>
   );
 }

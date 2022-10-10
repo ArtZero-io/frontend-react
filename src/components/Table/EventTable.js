@@ -126,7 +126,7 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
                                 <TagRightIcon as={AzeroIcon} w="16px" />
                               </>
                             ) : i === "nftName" ? (
-                              <HStack justifyContent="center">
+                              <HStack justifyContent="start">
                                 <Square mr="20px" size="50px">
                                   <Image
                                     width="full"

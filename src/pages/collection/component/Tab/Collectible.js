@@ -71,6 +71,9 @@ const NFTTabCollectible = (props) => {
     attrsList,
     is_locked,
     showOnChainMetadata,
+    rarityTable,
+    // traits,
+    totalNftCount,
   } = props;
 
   const dispatch = useDispatch();
@@ -574,7 +577,14 @@ const NFTTabCollectible = (props) => {
                               return (
                                 <>
                                   <GridItem w="100%" h="100%" key={idx}>
-                                    <PropCard item={item} />
+                                    <PropCard
+                                      item={item}
+                                      traitCount={getTraitCount(
+                                        rarityTable,
+                                        item
+                                      )}
+                                      totalNftCount={totalNftCount}
+                                    />
                                   </GridItem>
                                 </>
                               );
@@ -589,7 +599,14 @@ const NFTTabCollectible = (props) => {
                             .map((item, idx) => {
                               return (
                                 <GridItem w="100%" h="100%" key={idx}>
-                                  <LevelCard item={item} />
+                                  <LevelCard
+                                    item={item}
+                                    traitCount={getTraitCount(
+                                      rarityTable,
+                                      item
+                                    )}
+                                    totalNftCount={totalNftCount}
+                                  />
                                 </GridItem>
                               );
                             })
@@ -607,3 +624,15 @@ const NFTTabCollectible = (props) => {
 };
 
 export default NFTTabCollectible;
+
+const getTraitCount = (rarityTable, item) => {
+  const [[key, value]] = Object.entries(item);
+
+  if (!rarityTable || !rarityTable[key]) return 0;
+
+  const idx = rarityTable[key].findIndex((i) => i.name === value);
+
+  if (idx === -1) return 0;
+
+  return rarityTable[key][idx].count;
+};
