@@ -8,9 +8,12 @@ import { SubstrateContextProvider } from "@utils/substrate";
 
 import App from "@components/App";
 import HeadHelmet from "@components/Helmet/Helmet";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 ReactDOM.render(
-  <>
+  <QueryClientProvider client={queryClient}>
     <SubstrateContextProvider>
       <Provider store={store}>
         <HashRouter basename={"/"}>
@@ -19,6 +22,6 @@ ReactDOM.render(
         </HashRouter>
       </Provider>
     </SubstrateContextProvider>
-  </>,
+  </QueryClientProvider>,
   document.getElementById("root")
 );

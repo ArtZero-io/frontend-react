@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 
 import { truncateStr } from "@utils";
-import { APICall, clientAPI } from "@api/client";
+import { APICall } from "@api/client";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { SCROLLBAR } from "@constants";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
@@ -39,10 +39,14 @@ function TabActivity({
         platformEvents?.events &&
           (await Promise.all(
             platformEvents?.events?.map(async (event) => {
-              const [{ name, contractType }] =
-                await APICall.getCollectionByAddress({
-                  collection_address: event.nftContractAddress,
-                });
+              const [{ name }] = await APICall.getCollectionByAddress({
+                collection_address: event.nftContractAddress,
+              });
+
+              const [{ nftName, avatar }] = await APICall.getNFTByID({
+                collection_address: event.nftContractAddress,
+                token_id: event.tokenID,
+              });
 
               event = {
                 ...event,
@@ -50,33 +54,9 @@ function TabActivity({
                 sellerName: truncateStr(event.seller),
                 traderName: truncateStr(event.trader),
                 collectionName: name,
+                nftName,
+                avatar,
               };
-
-              if (contractType === 2) {
-                const [{ attributesValue }] = await APICall.getNFTByID({
-                  collection_address: event.nftContractAddress,
-                  token_id: event.tokenID,
-                });
-
-                event = {
-                  ...event,
-                  nftName: attributesValue[0],
-                  avatar: attributesValue[2],
-                };
-              }
-
-              if (contractType === 1) {
-                const { nftName, avatar } = await getMetaDataType1(
-                  event.tokenID,
-                  tokenUriType1
-                );
-
-                event = {
-                  ...event,
-                  nftName,
-                  avatar,
-                };
-              }
 
               return event;
             })
@@ -270,28 +250,4 @@ const headers = {
     buyerName: "buyer",
     blockNumber: "block no#",
   },
-};
-
-const getMetaDataType1 = async (tokenID, token_uri) => {
-  const metadata = await clientAPI(
-    "get",
-    "/getJSON?input=" + token_uri + tokenID.toString() + ".json",
-    {}
-  );
-
-  if (metadata) {
-    const attrsList = metadata?.attributes?.map((item) => {
-      return { [item.trait_type]: item.value };
-    });
-
-    const ret = {
-      // ...metadata,
-      attrsList,
-      avatar: metadata.image,
-      nftName: metadata.name,
-      description: metadata.description,
-    };
-
-    return ret;
-  }
 };

@@ -11,55 +11,36 @@ import {
   useMediaQuery,
   HStack,
   SimpleGrid,
-  // AspectRatio,
-  // Button,
-  // Image,
-  // Link,
-  // Skeleton,
-  // useColorModeValue,
-  // Square,
-  // Heading,
 } from "@chakra-ui/react";
 import { BsGrid3X3 } from "react-icons/bs";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import BigGridIcon from "@theme/assets/icon/BigGrid";
 
 import { useHistory } from "react-router-dom";
-import React, {
-  //  useEffect,
-  useRef,
-  useState,
-} from "react";
-import {
-  motion,
-  // AnimatePresence,
-  //   useAnimation
-} from "framer-motion";
+import React, { useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 import AddNewNFTModal from "./Modal/AddNewNFT";
 import NFTDetailModal from "./Modal/NFTDetail";
 
 import { formMode } from "@constants";
-// import { getCachedImageShort } from "@utils/index";
 import { useSubstrateState } from "@utils/substrate/SubstrateContext";
 
 import Dropdown from "@components/Dropdown/Dropdown";
 import CommonButton from "@components/Button/CommonButton";
-// import NFTChangeSizeCard from "@components/Card/NFTChangeSize";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
 import { CommonCard } from "@components/Card/NFTChangeSize";
-import { Fragment } from "react";
 import LeftPanel from "./LeftPanel";
 
 const CollectionItems = ({
-  NFTListFormatted,
+  result,
   collectionOwner,
   contractType,
   loading,
   forceUpdate,
   loadingTime,
-  totalCollectionsCount,
+  totalCount,
   activeTab,
   setActiveTab,
   showOnChainMetadata,
@@ -67,11 +48,14 @@ const CollectionItems = ({
   setBigCard,
   rarityTable,
   nft_count,
+  traitsQuery,
+  setTraitsQuery,
+  priceQuery,
+  setPriceQuery,
   ...rest
 }) => {
   const { currentAccount } = useSubstrateState();
 
-  // eslint-disable-next-line no-unused-vars
   const [bigCardNew, setBigCardNew] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
 
@@ -82,25 +66,23 @@ const CollectionItems = ({
   ];
   //  0 Low first, 1 High first, 2 Newest
 
-  // TODOs: update after remove un/listed filter
+  const getSortedNFT = () => {
+    if (!result?.totalResults) return [];
 
-  const getUnListedNFT = () => {
-    if (!NFTListFormatted) return [];
-
-    let result = NFTListFormatted;
+    let ret = result?.NFTList;
 
     if (selectedItem === 0) {
-      result = result.sort((a, b) => a.price - b.price);
+      ret = ret.sort((a, b) => a.price - b.price);
     }
 
     if (selectedItem === 1) {
-      result = result.sort((a, b) => b.price - a.price);
+      ret = ret.sort((a, b) => b.price - a.price);
     }
 
-    return result;
+    return ret;
   };
 
-  const unListNFT = getUnListedNFT();
+  const sortedNFT = getSortedNFT();
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
@@ -119,19 +101,24 @@ const CollectionItems = ({
   const nftCardWidthNew =
     (newGridWrapperWidth - stackSpacing * (columns - 1)) / columns;
   // NEW FIXED GRID LAYOUT END
-  console.log("unListNFT", unListNFT);
 
-  
   return (
     <Flex>
-      <LeftPanel totalNftCount={nft_count} rarityTable={rarityTable} />
+      <LeftPanel
+        activeTab={activeTab}
+        priceQuery={priceQuery}
+        setPriceQuery={setPriceQuery}
+        traitsQuery={traitsQuery}
+        setTraitsQuery={setTraitsQuery}
+        totalNftCount={nft_count}
+        rarityTable={rarityTable}
+      />
 
-      <Stack border="1px dotted yellow" flexGrow={1}>
+      <Stack flexGrow={1}>
         <Box w="full" mx="auto" textAlign="left" px={["12px", 0]}>
           <Stack direction={{ base: "column", md: "row" }} w="full">
             <HStack pb={[0, "8px"]} justifyContent="space-between">
               <IconButton
-                // m={1.5}
                 mr="2px"
                 size="icon"
                 variant="iconSolid"
@@ -216,20 +203,20 @@ const CollectionItems = ({
             minH={{ base: 14, "2xl": 24 }}
             w="full"
           >
-            {unListNFT && (
+            {sortedNFT && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
                 <Text px={2} color="#888">
-                  {totalCollectionsCount || 0} item
-                  {totalCollectionsCount > 1 ? "s " : " "}
-                  {activeTab === tabList.ALL
+                  {totalCount || 0} item
+                  {totalCount > 1 ? "s " : " "}
+                  {activeTab === "ALL"
                     ? "in total"
-                    : activeTab === tabList.LISTED
+                    : activeTab === "LISTED"
                     ? "listed"
-                    : activeTab === tabList.UNLISTED
+                    : activeTab === "UNLISTED"
                     ? "unlisted"
                     : ""}
                 </Text>
@@ -261,7 +248,7 @@ const CollectionItems = ({
               columns={columns}
               gap={stackSpacing}
               cardWidth={nftCardWidthNew}
-              dataList={unListNFT}
+              dataList={sortedNFT}
               collectionOwner={collectionOwner}
               showOnChainMetadata={showOnChainMetadata}
               rarityTable={rarityTable}

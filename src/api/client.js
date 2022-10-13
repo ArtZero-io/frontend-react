@@ -235,10 +235,9 @@ export const APICall = {
   searchNFTOfCollectionByTraits: async ({
     traitFilters = {},
     collectionAddress,
-    limit = 10,
+    limit = 12,
     offset = 0,
     sort = -1,
-    isForSale = false,
   }) => {
     let result = await client("POST", "/searchNFTOfCollectionByTraits", {
       traitFilters,
@@ -246,7 +245,6 @@ export const APICall = {
       limit,
       offset,
       sort,
-      isForSale,
     });
 
     return result;
