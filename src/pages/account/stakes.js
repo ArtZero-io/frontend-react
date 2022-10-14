@@ -408,18 +408,17 @@ export const fetchMyTradingFee = async (
     currentAccount,
     marketplace_contract_calls
   );
-    console.log('stepArr', stepArr);
-    console.log('rateArr', rateArr);
-    console.log('platformTradingFee', platformTradingFee);
-    console.log('PMPStaked', PMPStaked);
+  console.log("stepArr", stepArr);
+  console.log("rateArr", rateArr);
+  console.log("platformTradingFee", platformTradingFee);
+  console.log("PMPStaked", PMPStaked);
   ret = platformTradingFee;
 
   for (var i = 0; i < stepArr.length; i++) {
     if (PMPStaked >= stepArr[i]) {
-      
       ret = platformTradingFee * (1 - rateArr[i] / 100);
-      console.log('rateArr[i]', rateArr[i]);
-      console.log('ret:i', ret);
+      console.log("rateArr[i]", rateArr[i]);
+      console.log("ret:i", ret);
       break;
     }
   }

@@ -80,8 +80,9 @@ async function updateWhitelist(
   console.log(!isValidAddressPolkadotAddress(account));
 
   if (parseInt(amount) < 0 || !isValidAddressPolkadotAddress(account)) {
-    toast.error(`invalid inputs`);
-    return;
+    throw Error("Error: invalid inputs");
+    // toast.error(`invalid inputs`);
+    // return;
   }
 
   let unsubscribe;

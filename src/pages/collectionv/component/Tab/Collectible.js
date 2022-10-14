@@ -25,7 +25,7 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
@@ -68,11 +68,10 @@ const NFTTabCollectible = (props) => {
     avatar,
     tokenID,
     price,
-    attrsList,
     is_locked,
     showOnChainMetadata,
     rarityTable,
-    // traits,
+    traits = {},
     totalNftCount,
   } = props;
 
@@ -142,6 +141,12 @@ const NFTTabCollectible = (props) => {
       console.log("error", error);
     }
   }, [currentAccount, is_for_sale, nftContractAddress, owner, tokenID]);
+
+  const attrsList = Object.entries(traits).map(([k, v]) => {
+    return { [k]: v };
+  });
+
+  console.log("attrsList", attrsList);
 
   useEffect(() => {
     fetchSaleInfo();
@@ -545,6 +550,7 @@ const NFTTabCollectible = (props) => {
               </Stack>
 
               <Stack display={["none", "flex", "flex"]} w="full" flexGrow="1">
+                {console.log("traits", traits)}{" "}
                 {attrsList?.length === 0 ? (
                   <Stack>
                     <Text

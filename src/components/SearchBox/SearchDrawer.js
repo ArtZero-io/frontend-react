@@ -39,6 +39,7 @@ const SearchDrawer = ({ display = true, ...rest }) => {
         response = response.filter((item) => item.nft_count > 0);
       }
       setResultList(response);
+
     } catch (error) {
       console.log(error);
       setResultList(null);

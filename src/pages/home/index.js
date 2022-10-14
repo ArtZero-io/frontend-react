@@ -390,7 +390,7 @@ function HomePage() {
                 >
                   polkadot js
                 </Link>{" "}
-                and{" "}
+                {/* and{" "}
                 <Link
                   color="#7ae7ff"
                   textDecoration="underline"
@@ -398,7 +398,7 @@ function HomePage() {
                   target="_blank"
                 >
                   talisman
-                </Link>
+                </Link> */}
                 . please make sure you installed at least one of these wallets
                 and created an account.
               </Text>

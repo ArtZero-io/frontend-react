@@ -37,6 +37,8 @@ import {
 } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
+// import { getCachedImageShort } from "@utils/index";
+import { Helmet } from "react-helmet";
 
 const NUMBER_PER_PAGE = 24;
 
@@ -355,42 +357,53 @@ function CollectionPage() {
   useInterval(() => initEvents(), 10000);
 
   const [tabIndex, setTabIndex] = React.useState(0);
+  const imageUrl = formattedCollection?.avatarImage?.replace(
+    "ipfs://",
+    "https://ipfs.io/ipfs/"
+  );
 
   return (
     <Layout
       backdrop={formattedCollection?.headerImage}
       variant="collection-detail"
     >
-      {
-        <>
-          <CollectionHeader {...formattedCollection} />
+      <Helmet>
+        <title>{formattedCollection?.name}</title>
+        {/* <!-- Google / Search Engine Tags --> */}
+        <meta itemprop="image" content={imageUrl} />
+        {/* <!-- Facebook Meta Tags --> */}
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:url" content={window.location.href} />
+        {/* <!-- Twitter Meta Tags --> */}
+        <meta name="twitter:image" content={imageUrl} />{" "}
+        <meta property="twitter:url" content={window.location.href} />
+      </Helmet>
 
-          <CommonTabs
-            tabsData={tabsData}
-            onChange={(idx) => setTabIndex(idx)}
+      <>
+        <CollectionHeader {...formattedCollection} />
+
+        <CommonTabs tabsData={tabsData} onChange={(idx) => setTabIndex(idx)} />
+
+        <Flex
+          hidden={pagesCount === 0 ? true : false}
+          w="full"
+          bg="brand.semiBlack"
+          pt={{ base: "14px", xl: "40px" }}
+          pb={{ base: "50px", xl: "100px" }}
+          px={{ base: "12px", "2xl": "100px" }}
+          display={tabIndex === 1 ? "none" : "flex"}
+          // alignItems={{ base: "start", xl: "end" }}
+          // direction={{ base: "column", xl: "row" }}
+        >
+          <PaginationMP
+            pagesCount={pagesCount}
+            isDisabled={isDisabled}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
           />
-
-          <Flex
-            hidden={pagesCount === 0 ? true : false}
-            w="full"
-            bg="brand.semiBlack"
-            pt={{ base: "14px", xl: "40px" }}
-            pb={{ base: "50px", xl: "100px" }}
-            px={{ base: "12px", "2xl": "100px" }}
-            display={tabIndex === 1 ? "none" : "flex"}
-            // alignItems={{ base: "start", xl: "end" }}
-            // direction={{ base: "column", xl: "row" }}
-          >
-            <PaginationMP
-              pagesCount={pagesCount}
-              isDisabled={isDisabled}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-            />
-            <Spacer my={{ base: "3", "2xl": "auto" }} />
-          </Flex>
-        </>
-      }
+          <Spacer my={{ base: "3", "2xl": "auto" }} />
+        </Flex>
+      </>
     </Layout>
   );
 }

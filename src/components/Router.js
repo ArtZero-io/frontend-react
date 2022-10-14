@@ -8,13 +8,14 @@ import HomePage from "@pages/home";
 import CollectionsPage from "@pages/collections/collections";
 import { LaunchpadPage } from "@pages/launchpad";
 import CollectionPage from "@pages/collection/collection";
+import CollectionPage2 from "@pages/collectionv";
 
 import MyCollectionsPage from "@pages/account/collections/collections";
 import GeneralPage from "@pages/account/general";
 import MyNFTsPage from "@pages/account/nfts/nfts";
 import MyStakesPage from "@pages/account/stakes";
 import StatsPage from "@pages/stats";
-
+ 
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import AccountLayout from "./Layout/AccountLayout";
 import AdminLayout from "./Layout/AdminLayout";
@@ -76,9 +77,9 @@ const Router = () => {
       />
 
       <Route exact path={ROUTES.STATS} component={StatsPage} />
-      {/* <Route exact path={ROUTES.MINTING_EVENT} component={MintPage} /> */}
       <Route exact path={ROUTES.NFT_DETAIL} component={NftDetailPage} />
       <Route exact path={ROUTES.MARKETPLACE} component={CollectionsPage} />
+      <Route exact path={ROUTES.DETAIL_COLLECTIONV2} component={CollectionPage2} />
       <Route exact path={ROUTES.DETAIL_COLLECTION} component={CollectionPage} />
       <Route exact path={ROUTES.LAUNCHPAD_ADD_PROJECT} component={AddProject} />
       <Route

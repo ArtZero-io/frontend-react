@@ -13,7 +13,7 @@ import {
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
-import { APICall } from "../../api/client";
+import { APICall } from "@api/client";
 
 let contract;
 
@@ -327,6 +327,7 @@ async function addNewProject(
                       project_address: nft_address,
                     }))();
 
+                  console.lof("nft_address,", nft_address);
                   createNewCollection(nft_address);
                 }
               }

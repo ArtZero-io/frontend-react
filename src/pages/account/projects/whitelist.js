@@ -44,6 +44,7 @@ import useForceUpdate from "@hooks/useForceUpdate";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { isValidAddressPolkadotAddress } from "@utils";
 import { SCROLLBAR } from "@constants";
+import { clearTxStatus } from "@store/actions/txStatus";
 
 const tableHeaders = ["Address", "Amount", "Claimed", "Price"];
 
@@ -240,18 +241,26 @@ function MyWhiteListProjectPage() {
     launchpad_psp34_nft_standard_calls.setContract(
       launchpad_psp34_nft_standard_contract
     );
-    dispatch(setTxStatus({ type: UPDATE_WHITELIST, step: START }));
 
-    await launchpad_psp34_nft_standard_calls.updateWhitelist(
-      currentAccount,
-      whitelistAddress,
-      selectedPhaseCode,
-      whitelistAmount,
-      whiteListPrice,
-      dispatch,
-      UPDATE_WHITELIST,
-      api
-    );
+    try {
+      dispatch(setTxStatus({ type: UPDATE_WHITELIST, step: START }));
+
+      await launchpad_psp34_nft_standard_calls.updateWhitelist(
+        currentAccount,
+        whitelistAddress,
+        selectedPhaseCode,
+        whitelistAmount,
+        whiteListPrice,
+        dispatch,
+        UPDATE_WHITELIST,
+        api
+      );
+    } catch (error) {
+      console.log("X_x error.message", error.message);
+      console.log("X_x error.message", error.message);
+      toast.error(error.message);
+      dispatch(clearTxStatus());
+    }
   };
 
   const onChangeSelectedProjectAddress = async (address) => {

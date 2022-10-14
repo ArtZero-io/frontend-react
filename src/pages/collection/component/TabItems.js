@@ -64,6 +64,9 @@ const CollectionItems = ({
   showOnChainMetadata,
   bigCard,
   setBigCard,
+  rarityTable,
+  nft_count,
+  ...rest
 }) => {
   const { currentAccount } = useSubstrateState();
 
@@ -298,6 +301,8 @@ const CollectionItems = ({
             dataList={unListNFT}
             collectionOwner={collectionOwner}
             showOnChainMetadata={showOnChainMetadata}
+            rarityTable={rarityTable}
+            totalNftCount={nft_count}
           />
         )}
 
@@ -488,6 +493,8 @@ const CollectionGridNew = ({
   dataList,
   collectionOwner,
   showOnChainMetadata,
+  rarityTable,
+  totalNftCount,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedNft, setSelectedNft] = useState(null);
@@ -509,6 +516,8 @@ const CollectionGridNew = ({
       {isBigScreen && (
         <NFTDetailModal
           {...selectedNft}
+          rarityTable={rarityTable}
+          totalNftCount={totalNftCount}
           isOpen={isOpen}
           onClose={onClose}
           collectionOwner={collectionOwner}

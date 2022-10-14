@@ -150,6 +150,7 @@ export const CommonCard = (props) => {
     cardWidth,
   } = props;
 
+  
   return (
     <motion.div
       whileHover={{
