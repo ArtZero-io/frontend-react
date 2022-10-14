@@ -45,7 +45,7 @@ function LeftPanel({
     defaultIsOpen: false,
   });
 
-  const [draftPriceQuery, setDraftPriceQuery] = useState({});
+  const [draftPriceQuery, setDraftPriceQuery] = useState({ max: "", min: "" });
 
   useEffect(() => {
     if (
