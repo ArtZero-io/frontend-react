@@ -67,7 +67,7 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
             {mode === formMode.ADD ? "Add properties" : "Edit properties"}
           </Heading>
           <Text fontSize={"sm"}>
-            {/* Textural trails that show up as restangles */}
+            Textural trails that show up as rectangles
           </Text>
         </ModalHeader>
 

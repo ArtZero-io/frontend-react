@@ -190,7 +190,7 @@ const UpdatePhasesModal = React.memo(function ({
                     Yup.object().shape({
                       name: Yup.string()
                         .required("This field is required")
-                        .min(2, "Must be longer than 2 characters")
+                        .min(2, "Must be at least 2 characters")
                         .max(100, "Must be at most 100 characters")
                         .test(
                           "Test name",

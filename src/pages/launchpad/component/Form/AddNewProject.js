@@ -1078,7 +1078,7 @@ const validationSchema = Yup.object().shape({
                   return !(isDup && isDup.trim() === value.trim());
                 })
                 .required("This field is required")
-                .min(2, "Must be longer than 2 characters")
+                .min(2, "Must be at least 2 characters")
                 .max(100, "Must be at most 100 characters"),
               otherwise: Yup.string().notRequired(),
             }),
@@ -1088,7 +1088,7 @@ const validationSchema = Yup.object().shape({
               is: (val) => val,
               then: Yup.string()
                 .required("This field is required")
-                .min(2, "Must be longer than 2 characters")
+                .min(2, "Must be at least 2 characters")
                 .max(5000, "Must be at most 5000 characters"),
               otherwise: Yup.string().notRequired(),
             }),
@@ -1119,7 +1119,7 @@ const validationSchema = Yup.object().shape({
                   }
                 )
                 .required("This field is required")
-                .min(2, "Must be longer than 2 characters")
+                .min(2, "Must be at least 2 characters")
                 .max(100, "Must be at most 100 characters"),
               otherwise: Yup.string().notRequired(),
             }),
@@ -1129,7 +1129,7 @@ const validationSchema = Yup.object().shape({
               is: (val) => val,
               then: Yup.string()
                 .required("This field is required")
-                .min(2, "Must be longer than 2 characters")
+                .min(2, "Must be at least 2 characters")
                 .max(100, "Must be at most 100 characters"),
               otherwise: Yup.string().notRequired(),
             }),
@@ -1146,7 +1146,7 @@ const validationSchema = Yup.object().shape({
       Yup.object().shape({
         name: Yup.string()
           .required("This field is required")
-          .min(2, "Must be longer than 2 characters")
+          .min(2, "Must be at least 2 characters")
           .max(100, "Must be at most 100 characters")
           .test("Test name", "Duplicated phase name!", (value, schema) => {
             const array = schema?.from[1].value?.phases;

@@ -153,12 +153,12 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
 
             collectionName: Yup.string()
               .trim()
-              .min(3, "Must be longer than 3 characters")
+              .min(3, "Must be at least 3 characters")
               .max(30, "Must be at most 30 characters")
               .required("This field is required"),
             collectionDescription: Yup.string()
               .trim()
-              .min(3, "Must be longer than 3 characters")
+              .min(3, "Must be at least 3 characters")
               .max(150, "Must be at most 150 characters")
               .required("This field is required"),
             collectRoyalFee: Yup.boolean(),
@@ -185,7 +185,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               .when("isEditMode", {
                 is: false,
                 then: Yup.string()
-                  .min(3, "Must be longer than 3 characters")
+                  .min(3, "Must be at least 3 characters")
                   .max(25, "Must be at most 25 characters")
                   .required("This field is required"),
               }),
@@ -194,7 +194,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               .when("isEditMode", {
                 is: false,
                 then: Yup.string()
-                  .min(3, "Must be longer than 3 characters")
+                  .min(3, "Must be at least 3 characters")
                   .max(8, "Must be at most 8 characters")
                   .required("This field is required"),
               }),

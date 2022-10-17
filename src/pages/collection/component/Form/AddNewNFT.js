@@ -113,12 +113,12 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
           validationSchema={Yup.object({
             NFTName: Yup.string()
               .trim()
-              .min(3, "Must be longer than 3 characters")
+              .min(3, "Must be at least 3 characters")
               .max(30, "Must be at most 30 characters")
               .required("This field is required"),
             description: Yup.string()
               .trim()
-              .min(3, "Must be longer than 3 characters")
+              .min(3, "Must be at least 3 characters")
               .max(150, "Must be 150 characters or less")
               .required("This field is required"),
             properties: Yup.array()
@@ -149,7 +149,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                             }
                           )
                           .required("Must have type value.")
-                          .min(3, "Must be longer than 3 characters")
+                          .min(3, "Must be at least 3 characters")
                           .max(30, "Must be at most 30 characters"),
                         otherwise: Yup.string().notRequired(),
                       }),
@@ -159,7 +159,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                         is: (val) => val,
                         then: Yup.string()
                           .required("Must have name value.")
-                          .min(3, "Must be longer than 3 characters")
+                          .min(3, "Must be at least 3 characters")
                           .max(30, "Must be at most 30 characters"),
                         otherwise: Yup.string().notRequired(),
                       }),
@@ -195,7 +195,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                           }
                         )
                         .required("Must have level name.")
-                        .min(3, "Must be longer than 3 characters")
+                        .min(3, "Must be at least 3 characters")
                         .max(30, "Must be at most 30 characters"),
                       otherwise: Yup.string().notRequired(),
                     }),
@@ -375,7 +375,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   <VStack alignItems="start">
                     <Heading fontSize={["lg", "xl", "xl"]}>properties</Heading>
                     <Text fontSize={"lg"}>
-                      {/* Textural trails that show up as restangles */}
+                      Textural trails that show up as rectangles
                     </Text>
                   </VStack>
                   <Spacer />
@@ -429,7 +429,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                   <VStack alignItems="start">
                     <Heading fontSize={["lg", "xl", "xl"]}>Levels</Heading>
                     <Text fontSize={"lg"}>
-                      {/* Textural trails that show up as restangles */}
+                      Numerical traits that show as a progress bar
                     </Text>
                   </VStack>
                   <Spacer />

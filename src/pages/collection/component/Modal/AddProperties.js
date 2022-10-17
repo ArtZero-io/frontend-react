@@ -95,7 +95,8 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
             {mode === formMode.ADD ? "Add properties" : "Edit properties"}
           </Heading>
           <Text fontSize={"sm"}>
-            {/* Textural trails that show up as restangles */}
+            Properties show up underneath your item, are clickable, and can be
+            filtered in your collection's sidebar.{" "}
           </Text>
         </ModalHeader>
 

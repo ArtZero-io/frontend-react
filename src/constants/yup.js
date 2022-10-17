@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 export const validationCollectionName = Yup.string()
   .trim()
-  .min(2, "Must be longer than 2 characters")
+  .min(2, "Must be at least 2 characters")
   .max(100, "Must be at most 100 characters")
   .required("This field is required");
 
@@ -25,7 +25,7 @@ export const validationDiscord = Yup.string()
 
 export const validationDescription = Yup.string()
   .trim()
-  .min(2, "Must be longer than 2 characters")
+  .min(2, "Must be at least 2 characters")
   .max(5000, "Must be at most 5000 characters")
   .required("This field is required");
 
@@ -34,7 +34,7 @@ export const validationNftName = Yup.string()
   .when("isEditMode", {
     is: false,
     then: Yup.string()
-      .min(2, "Must be longer than 2 characters")
+      .min(2, "Must be at least 2 characters")
       .max(100, "Must be at most 100 characters")
       .required("This field is required"),
   });
@@ -44,7 +44,7 @@ export const validationNftSymbol = Yup.string()
   .when("isEditMode", {
     is: false,
     then: Yup.string()
-      .min(2, "Must be longer than 2 characters")
+      .min(2, "Must be at least 2 characters")
       .max(30, "Must be at most 30 characters")
       .required("This field is required"),
   });

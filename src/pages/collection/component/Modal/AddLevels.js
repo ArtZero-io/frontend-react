@@ -102,7 +102,8 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
             {mode === formMode.ADD ? "Add levels" : "Edit levels"}
           </Heading>
           <Text fontSize={"sm"}>
-            {/* Textural trails that show up as restangles */}
+            Levels show up underneath your item, are clickable, and can be
+            filtered in your collection's sidebar.{" "}
           </Text>
         </ModalHeader>
 

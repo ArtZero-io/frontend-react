@@ -170,17 +170,17 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
 
             nftContractAddress: Yup.string()
               .trim()
-              .min(3, "Must be longer than 3 characters")
+              .min(3, "Must be at least 3 characters")
               .max(48, "Must be at most 48 characters")
               .required("This field is required"),
             collectionName: Yup.string()
               .trim()
-              .min(3, "Must be longer than 3 characters")
+              .min(3, "Must be at least 3 characters")
               .max(30, "Must be at most 30 characters")
               .required("This field is required"),
             collectionDescription: Yup.string()
               .trim()
-              .min(3, "Must be longer than 3 characters")
+              .min(3, "Must be at least 3 characters")
               .max(150, "Must be at most 150 characters")
               .required("This field is required"),
             collectRoyalFee: Yup.boolean(),

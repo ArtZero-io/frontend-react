@@ -70,7 +70,7 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
             {mode === formMode.ADD ? "Add levels" : "Edit levels"}
           </Heading>
           <Text fontSize={"sm"}>
-            {/* Textural trails that show up as restangles */}
+            Numerical traits that show as a progress bar
           </Text>
         </ModalHeader>
 
