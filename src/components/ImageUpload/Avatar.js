@@ -114,40 +114,6 @@ export default function ImageUploadAvatar({
     }
   };
 
-  // const onUploadHandler = async (e) => {
-  //   try {
-  //     if (newAvatarData) {
-  //       const uploadPromise = () =>
-  //         new Promise(function (resolve) {
-  //           const created = client.add(newAvatarData);
-
-  //           if (created) {
-  //             resolve(created);
-  //           }
-  //         });
-
-  //       toast.promise(
-  //         uploadPromise().then(async (created) => {
-  //           setImageIPFSUrl(created?.path);
-  //           setImgURL(created?.path);
-  //           await clientAPI("post", "/cacheImage", {
-  //             input: created?.path,
-  //             is1024: true,
-  //           });
-  //         }),
-  //         {
-  //           loading: "Uploading...",
-  //           success: `Upload Avatar successful!`,
-  //           error: "Could not upload Avatar.",
-  //         }
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.log(error.message);
-  //     toast.error(error.message);
-  //   }
-  // };
-
   useEffect(() => {
     if (imgURL && imagePreviewUrl) {
       setIsUploadAvatarIPFSUrl(true);

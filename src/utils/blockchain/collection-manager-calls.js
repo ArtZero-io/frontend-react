@@ -8,6 +8,7 @@ import {
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import { APICall } from "@api/client";
+import { clientAPI } from "@api/client";
 
 let contract;
 
@@ -75,7 +76,6 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
   const gasLimit = -1;
   const injector = await web3FromSource(caller_account?.meta?.source);
   const azero_value = await getSimpleModeAddingFee(caller_account);
-
   // caller_account, data, dispatch.AccountActionTypes
   console.log("caller_account", caller_account);
   console.log("data", data);
@@ -108,6 +108,48 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
           await APICall.askBeUpdateCollectionData({
             collection_address: data.nftContractAddress,
           });
+          
+          if (data.attributes?.length) {
+            let cacheImages = [];
+            for (let i = 0; i < data.attributes.length; i++) {
+              if (data.attributes[i] == "avatar_image") {
+                cacheImages.push({
+                  input: data.attributeVals[i],
+                  is1920: false,
+                  imageType: "collection",
+                  metadata: {
+                    "collectionAddress": data.nftContractAddress,
+                    "type": "avatar_image"
+                  }
+                });
+              }
+              if (data.attributes[i] == "header_image") {
+                cacheImages.push({
+                  input: data.attributeVals[i],
+                  is1920: false,
+                  imageType: "collection",
+                  metadata: {
+                    "collectionAddress": data.nftContractAddress,
+                    "type": "header_image"
+                  }
+                });
+              }
+              if (data.attributes[i] == "header_square_image") {
+                cacheImages.push({
+                  input: data.attributeVals[i],
+                  is1920: true,
+                  imageType: "collection",
+                  metadata: {
+                    "collectionAddress": data.nftContractAddress,
+                    "type": "header_square_image"
+                  }
+                });
+              }
+            }
+            if (cacheImages.length) {
+              await clientAPI("post", "/cacheImages", JSON.stringify(cacheImages));              
+            }
+          }
         }
       }
     )

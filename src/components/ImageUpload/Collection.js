@@ -12,7 +12,7 @@ import React, { useState, useRef } from "react";
 
 import { Buffer } from "buffer";
 import toast from "react-hot-toast";
-import { clientAPI } from "@api/client";
+// import { clientAPI } from "@api/client";
 import { getCachedImageShort } from "@utils/index";
 import { formMode } from "@constants";
 
@@ -92,10 +92,10 @@ const ImageUploadCollection = ({
           setImageIPFSUrl(created?.path, index);
           setImgURL(created?.path);
 
-          clientAPI("post", "/cacheImage", {
-            input: created?.path,
-            is1920: isBanner,
-          });
+          // clientAPI("post", "/cacheImage", {
+          //   input: created?.path,
+          //   is1920: isBanner,
+          // });
         }),
         {
           loading: "Uploading...",
