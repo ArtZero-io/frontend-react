@@ -206,12 +206,12 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
             }),
           })}
           onSubmit={async (values, { setSubmitting }) => {
-            if (
-              !values.isEditMode &&
-              (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl)
-            ) {
-              return toast.error("Upload avatar or header too");
-            }
+            // if (
+            //   !values.isEditMode &&
+            //   (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl)
+            // ) {
+            //   return toast.error("Upload avatar or header too");
+            // }
 
             // if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
             values.avatarIPFSUrl = avatarIPFSUrl;

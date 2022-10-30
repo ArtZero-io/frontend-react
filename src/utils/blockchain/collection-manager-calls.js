@@ -2,13 +2,14 @@ import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import { isValidAddressPolkadotAddress } from "@utils";
-import { ContractPromise } from "@polkadot/api-contract";
+import { ContractPromise, Abi } from "@polkadot/api-contract";
 import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import { APICall } from "@api/client";
 import { clientAPI } from "@api/client";
+import collection_manager from "@utils/blockchain/collection-manager";
 
 let contract;
 
@@ -46,7 +47,7 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
     .signAndSend(
       address,
       { signer: injector.signer },
-      async ({ status, dispatchError }) => {
+      async ({ status, events, dispatchError }) => {
         txResponseErrorHandler({
           status,
           dispatchError,
@@ -57,9 +58,31 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
         });
 
         if (status?.isFinalized) {
-          await APICall.askBeUpdateCollectionData({
-            collection_address: data.nftContractAddress,
+          events.forEach(async ({ event: { data, method, section }, phase }) => {
+            if (section == "contracts" && method == "ContractEmitted") {
+              const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
+              const contract_address = accId.toString();
+              if (contract_address == collection_manager.CONTRACT_ADDRESS){
+                const abi_collection_contract = new Abi(
+                  collection_manager.CONTRACT_ABI
+                );
+                const decodedEvent = abi_collection_contract.decodeEvent(bytes);
+                let event_name = decodedEvent.event.identifier;
+                const eventValues = [];
+
+                for (let i = 0; i < decodedEvent.args.length; i++) {
+                  const value = decodedEvent.args[i];
+                  eventValues.push(value.toString());
+                }
+                if (event_name == 'AddNewCollectionEvent'){
+                  await APICall.askBeUpdateCollectionData({
+                    collection_address: eventValues[1],
+                  });
+                }
+              }
+            }
           });
+          
         }
       }
     )
@@ -80,7 +103,7 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
   console.log("caller_account", caller_account);
   console.log("data", data);
   console.log("azero_value", azero_value);
-
+  let transactionData = data;
   contract.tx
     .autoNewCollection(
       { gasLimit, value: azero_value },
@@ -95,7 +118,7 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
     .signAndSend(
       address,
       { signer: injector.signer },
-      async ({ status, dispatchError }) => {
+      async ({ status, events, dispatchError }) => {
         txResponseErrorHandler({
           status,
           dispatchError,
@@ -105,51 +128,76 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
           caller_account,
         });
         if (status?.isFinalized) {
-          await APICall.askBeUpdateCollectionData({
-            collection_address: data.nftContractAddress,
+          events.forEach(async ({ event: { data, method, section }, phase }) => {
+            if (section == "contracts" && method == "ContractEmitted") {
+              const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
+              const contract_address = accId.toString();
+              if (contract_address == collection_manager.CONTRACT_ADDRESS){
+                const abi_collection_contract = new Abi(
+                  collection_manager.CONTRACT_ABI
+                );
+                const decodedEvent = abi_collection_contract.decodeEvent(bytes);
+                let event_name = decodedEvent.event.identifier;
+                const eventValues = [];
+
+                for (let i = 0; i < decodedEvent.args.length; i++) {
+                  const value = decodedEvent.args[i];
+                  eventValues.push(value.toString());
+                }
+                if (event_name == 'AddNewCollectionEvent'){
+                  await APICall.askBeUpdateCollectionData({
+                    collection_address: eventValues[1],
+                  });
+                  if (transactionData.attributes?.length) {
+                    let cacheImages = [];
+                    console.log('attributes', transactionData.attributes);
+                    console.log('attributes.length', transactionData.attributes.length);
+                    for (let i = 0; i < transactionData.attributes.length; i++) {
+                      console.log(transactionData.attributes[i]);
+                      if (transactionData.attributes[i] == "avatar_image") {
+                        cacheImages.push({
+                          input: transactionData.attributeVals[i],
+                          is1920: false,
+                          imageType: "collection",
+                          metadata: {
+                            "collectionAddress": eventValues[1],
+                            "type": "avatar_image"
+                          }
+                        });
+                      }
+                      if (transactionData.attributes[i] == "header_image") {
+                        cacheImages.push({
+                          input: transactionData.attributeVals[i],
+                          is1920: false,
+                          imageType: "collection",
+                          metadata: {
+                            "collectionAddress": eventValues[1],
+                            "type": "header_image"
+                          }
+                        });
+                      }
+                      if (transactionData.attributes[i] == "header_square_image") {
+                        cacheImages.push({
+                          input: transactionData.attributeVals[i],
+                          is1920: true,
+                          imageType: "collection",
+                          metadata: {
+                            "collectionAddress": eventValues[1],
+                            "type": "header_square_image"
+                          }
+                        });
+                      }
+                    }
+                    console.log('cacheImages', cacheImages);
+                    if (cacheImages.length) {
+                      console.log('cacheImages::POST_API');
+                      await clientAPI("post", "/cacheImages", {images: JSON.stringify(cacheImages)});              
+                    }
+                  }
+                }
+              }
+            }
           });
-          
-          if (data.attributes?.length) {
-            let cacheImages = [];
-            for (let i = 0; i < data.attributes.length; i++) {
-              if (data.attributes[i] == "avatar_image") {
-                cacheImages.push({
-                  input: data.attributeVals[i],
-                  is1920: false,
-                  imageType: "collection",
-                  metadata: {
-                    "collectionAddress": data.nftContractAddress,
-                    "type": "avatar_image"
-                  }
-                });
-              }
-              if (data.attributes[i] == "header_image") {
-                cacheImages.push({
-                  input: data.attributeVals[i],
-                  is1920: false,
-                  imageType: "collection",
-                  metadata: {
-                    "collectionAddress": data.nftContractAddress,
-                    "type": "header_image"
-                  }
-                });
-              }
-              if (data.attributes[i] == "header_square_image") {
-                cacheImages.push({
-                  input: data.attributeVals[i],
-                  is1920: true,
-                  imageType: "collection",
-                  metadata: {
-                    "collectionAddress": data.nftContractAddress,
-                    "type": "header_square_image"
-                  }
-                });
-              }
-            }
-            if (cacheImages.length) {
-              await clientAPI("post", "/cacheImages", JSON.stringify(cacheImages));              
-            }
-          }
         }
       }
     )
