@@ -72,7 +72,7 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
     )
     .signAndSend(
       address,
-      { signer: injector.signer },
+      { signer },
       async ({ status, events, dispatchError }) => {
         txResponseErrorHandler({
           status,
@@ -84,31 +84,33 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
         });
 
         if (status?.isFinalized) {
-          events.forEach(async ({ event: { data, method, section }, phase }) => {
-            if (section == "contracts" && method == "ContractEmitted") {
-              const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
-              const contract_address = accId.toString();
-              if (contract_address == collection_manager.CONTRACT_ADDRESS){
-                const abi_collection_contract = new Abi(
-                  collection_manager.CONTRACT_ABI
-                );
-                const decodedEvent = abi_collection_contract.decodeEvent(bytes);
-                let event_name = decodedEvent.event.identifier;
-                const eventValues = [];
+          events.forEach(
+            async ({ event: { data, method, section }, phase }) => {
+              if (section === "contracts" && method === "ContractEmitted") {
+                const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
+                const contract_address = accId.toString();
+                if (contract_address === collection_manager.CONTRACT_ADDRESS) {
+                  const abi_collection_contract = new Abi(
+                    collection_manager.CONTRACT_ABI
+                  );
+                  const decodedEvent =
+                    abi_collection_contract.decodeEvent(bytes);
+                  let event_name = decodedEvent.event.identifier;
+                  const eventValues = [];
 
-                for (let i = 0; i < decodedEvent.args.length; i++) {
-                  const value = decodedEvent.args[i];
-                  eventValues.push(value.toString());
-                }
-                if (event_name == 'AddNewCollectionEvent'){
-                  await APICall.askBeUpdateCollectionData({
-                    collection_address: eventValues[1],
-                  });
+                  for (let i = 0; i < decodedEvent.args.length; i++) {
+                    const value = decodedEvent.args[i];
+                    eventValues.push(value.toString());
+                  }
+                  if (event_name === "AddNewCollectionEvent") {
+                    await APICall.askBeUpdateCollectionData({
+                      collection_address: eventValues[1],
+                    });
+                  }
                 }
               }
             }
-          });
-          
+          );
         }
       }
     )
@@ -126,16 +128,12 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
 
   let unsubscribe;
   let gasLimit = -1;
+  let transactionData = data;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
-  const injector = await web3FromSource(caller_account?.meta?.source);
-  const azero_value = await getSimpleModeAddingFee(caller_account);
-  // caller_account, data, dispatch.AccountActionTypes
-  console.log("caller_account", caller_account);
-  console.log("data", data);
-  console.log("azero_value", azero_value);
-  let transactionData = data;
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+  const value = await getSimpleModeAddingFee(caller_account);
+
   contract.tx
     .autoNewCollection(
       { gasLimit, value },
@@ -149,7 +147,7 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
     )
     .signAndSend(
       address,
-      { signer: injector.signer },
+      { signer },
       async ({ status, events, dispatchError }) => {
         txResponseErrorHandler({
           status,
@@ -160,76 +158,91 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
           caller_account,
         });
         if (status?.isFinalized) {
-          events.forEach(async ({ event: { data, method, section }, phase }) => {
-            if (section == "contracts" && method == "ContractEmitted") {
-              const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
-              const contract_address = accId.toString();
-              if (contract_address == collection_manager.CONTRACT_ADDRESS){
-                const abi_collection_contract = new Abi(
-                  collection_manager.CONTRACT_ABI
-                );
-                const decodedEvent = abi_collection_contract.decodeEvent(bytes);
-                let event_name = decodedEvent.event.identifier;
-                const eventValues = [];
+          events.forEach(
+            async ({ event: { data, method, section }, phase }) => {
+              if (section === "contracts" && method === "ContractEmitted") {
+                const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
+                const contract_address = accId.toString();
+                if (contract_address === collection_manager.CONTRACT_ADDRESS) {
+                  const abi_collection_contract = new Abi(
+                    collection_manager.CONTRACT_ABI
+                  );
+                  const decodedEvent =
+                    abi_collection_contract.decodeEvent(bytes);
+                  let event_name = decodedEvent.event.identifier;
+                  const eventValues = [];
 
-                for (let i = 0; i < decodedEvent.args.length; i++) {
-                  const value = decodedEvent.args[i];
-                  eventValues.push(value.toString());
-                }
-                if (event_name == 'AddNewCollectionEvent'){
-                  await APICall.askBeUpdateCollectionData({
-                    collection_address: eventValues[1],
-                  });
-                  if (transactionData.attributes?.length) {
-                    let cacheImages = [];
-                    console.log('attributes', transactionData.attributes);
-                    console.log('attributes.length', transactionData.attributes.length);
-                    for (let i = 0; i < transactionData.attributes.length; i++) {
-                      console.log(transactionData.attributes[i]);
-                      if (transactionData.attributes[i] == "avatar_image") {
-                        cacheImages.push({
-                          input: transactionData.attributeVals[i],
-                          is1920: false,
-                          imageType: "collection",
-                          metadata: {
-                            "collectionAddress": eventValues[1],
-                            "type": "avatar_image"
-                          }
+                  for (let i = 0; i < decodedEvent.args.length; i++) {
+                    const value = decodedEvent.args[i];
+                    eventValues.push(value.toString());
+                  }
+                  if (event_name === "AddNewCollectionEvent") {
+                    await APICall.askBeUpdateCollectionData({
+                      collection_address: eventValues[1],
+                    });
+                    if (transactionData.attributes?.length) {
+                      let cacheImages = [];
+                      console.log("attributes", transactionData.attributes);
+                      console.log(
+                        "attributes.length",
+                        transactionData.attributes.length
+                      );
+                      for (
+                        let i = 0;
+                        i < transactionData.attributes.length;
+                        i++
+                      ) {
+                        console.log(transactionData.attributes[i]);
+                        if (transactionData.attributes[i] === "avatar_image") {
+                          cacheImages.push({
+                            input: transactionData.attributeVals[i],
+                            is1920: false,
+                            imageType: "collection",
+                            metadata: {
+                              collectionAddress: eventValues[1],
+                              type: "avatar_image",
+                            },
+                          });
+                        }
+                        if (transactionData.attributes[i] === "header_image") {
+                          cacheImages.push({
+                            input: transactionData.attributeVals[i],
+                            is1920: false,
+                            imageType: "collection",
+                            metadata: {
+                              collectionAddress: eventValues[1],
+                              type: "header_image",
+                            },
+                          });
+                        }
+                        if (
+                          transactionData.attributes[i] ===
+                          "header_square_image"
+                        ) {
+                          cacheImages.push({
+                            input: transactionData.attributeVals[i],
+                            is1920: true,
+                            imageType: "collection",
+                            metadata: {
+                              collectionAddress: eventValues[1],
+                              type: "header_square_image",
+                            },
+                          });
+                        }
+                      }
+                      console.log("cacheImages", cacheImages);
+                      if (cacheImages.length) {
+                        console.log("cacheImages::POST_API");
+                        await clientAPI("post", "/cacheImages", {
+                          images: JSON.stringify(cacheImages),
                         });
                       }
-                      if (transactionData.attributes[i] == "header_image") {
-                        cacheImages.push({
-                          input: transactionData.attributeVals[i],
-                          is1920: false,
-                          imageType: "collection",
-                          metadata: {
-                            "collectionAddress": eventValues[1],
-                            "type": "header_image"
-                          }
-                        });
-                      }
-                      if (transactionData.attributes[i] == "header_square_image") {
-                        cacheImages.push({
-                          input: transactionData.attributeVals[i],
-                          is1920: true,
-                          imageType: "collection",
-                          metadata: {
-                            "collectionAddress": eventValues[1],
-                            "type": "header_square_image"
-                          }
-                        });
-                      }
-                    }
-                    console.log('cacheImages', cacheImages);
-                    if (cacheImages.length) {
-                      console.log('cacheImages::POST_API');
-                      await clientAPI("post", "/cacheImages", {images: JSON.stringify(cacheImages)});              
                     }
                   }
                 }
               }
             }
-          });
+          );
         }
       }
     )
