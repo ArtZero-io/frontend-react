@@ -12,10 +12,12 @@ import React, { useState, useRef } from "react";
 
 import { Buffer } from "buffer";
 import toast from "react-hot-toast";
+// import { clientAPI } from "@api/client";
+// import { getCachedImageShort } from "@utils/index";
 import { formMode } from "@constants";
 
 import { ipfsClient } from "@api/client";
-import { APICall } from "../../api/client";
+// import { APICall } from "../../api/client";
 import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 
 const supportedFormat = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
@@ -92,10 +94,10 @@ const ImageUploadCollection = ({
           setImageIPFSUrl(created?.path, index);
           setImgURL(created?.path);
 
-          await APICall.askBeCacheImage({
-            input: created?.path,
-            is1920: isBanner,
-          });
+          // clientAPI("post", "/cacheImage", {
+          //   input: created?.path,
+          //   is1920: isBanner,
+          // });
         }),
         {
           loading: "Uploading...",
