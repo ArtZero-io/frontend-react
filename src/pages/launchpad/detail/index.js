@@ -14,9 +14,7 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
-  Square,
   HStack,
-  Image,
   Stack,
   VStack,
   useMediaQuery,
@@ -31,10 +29,8 @@ import Layout from "@components/Layout/Layout";
 import LaunchpadDetailHeader from "../component/Header";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { TeamCard } from "../component/TeamCard";
-import { clientAPI } from "@api/client";
 import { useHistory, useParams } from "react-router-dom";
 import { useSubstrateState } from "@utils/substrate";
-import { getCachedImageShort } from "@utils";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
@@ -44,10 +40,8 @@ import {
   convertStringToPrice,
 } from "@utils";
 import { Interweave } from "interweave";
-// import AnimationLoader from "@components/Loader/AnimationLoader";
 import BN from "bn.js";
 import toast from "react-hot-toast";
-// import ModalLoader from "@components/Loader/ModalLoader";
 import CommonButton from "@components/Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
@@ -75,6 +69,9 @@ import { getPublicCurrentAccount } from "@utils";
 import { isValidAddressPolkadotAddress } from "@utils";
 import * as ROUTES from "@constants/routes";
 import { delay } from "@utils";
+import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
+import { APICall } from "@api/client";
+import { getMetaDataOffChain } from "@utils";
 
 const NUMBER_PER_PAGE = 6;
 
@@ -122,6 +119,7 @@ const LaunchpadDetailPage = () => {
   );
 
   const fetchData = useCallback(async () => {
+    console.log("1 fetchData", new Date());
     try {
       setLoading(true);
 
@@ -142,7 +140,7 @@ const LaunchpadDetailPage = () => {
         currentAccount || getPublicCurrentAccount(),
         collection_address
       );
-      console.log("project", project);
+      // console.log("project", project);
 
       //   {
       //     "isActive": false,
@@ -170,10 +168,9 @@ const LaunchpadDetailPage = () => {
             currentAccount || getPublicCurrentAccount()
           );
 
-        const projectInfo =
-          await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
-            projectInfoHash
-          );
+        const projectInfo = await APICall.getProjectInfoByHash({
+          projectHash: projectInfoHash,
+        });
 
         const totalSupply =
           await launchpad_psp34_nft_standard_calls.getTotalSupply(
@@ -322,15 +319,6 @@ const LaunchpadDetailPage = () => {
           ...projectInfo,
         };
 
-        console.log("LaunchpadDetailPage projectDetail", projectDetail);
-        console.log(
-          "LaunchpadDetailPage projectDetail.startTime",
-          new Date(parseInt(projectDetail.startTime.replaceAll(",", "")))
-        );
-        console.log(
-          "LaunchpadDetailPage projectDetail.endTime",
-          new Date(parseInt(projectDetail.endTime.replaceAll(",", "")))
-        );
         setFormattedProject(projectDetail);
         setPhases(phasesTmp);
       }
@@ -338,9 +326,10 @@ const LaunchpadDetailPage = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-
+      toast.error(error.message);
       console.log(error);
     }
+    console.log("2 fetchData", new Date());
   }, [api, collection_address, currentAccount, history]);
 
   useEffect(() => {
@@ -462,7 +451,7 @@ const LaunchpadDetailPage = () => {
             tokenID: index,
           });
 
-          const metaData = await getMetaDataType1(idOfNFT, baseUri);
+          const metaData = await getMetaDataOffChain(idOfNFT, baseUri);
 
           return { ...metaData };
         })
@@ -514,9 +503,7 @@ const LaunchpadDetailPage = () => {
           currentWhitelist={currentWhitelist}
         />
       )}
-      {/* {loading && loadingForceUpdate ? (
-        <AnimationLoader loadingTime={loadingTime || 3.5} />
-      ) : ( */}
+
       <VStack w="full" px={["24px", "0px"]} spacing={["24px", "30px"]}>
         {isPhaseEnd(formattedProject?.endTime) ? (
           <Box
@@ -761,10 +748,9 @@ const LaunchpadDetailPage = () => {
             </Flex>
             {/* {console.log("phases", phases)} */}
             {phases?.length
-              ? phases.map((item, index) => (
-                  <FadeIn key={index}>
-                    {console.log("item", item)}
-                    <Stack w="full" my="15px">
+              ? phases.map((item) => (
+                  <FadeIn>
+                    <Stack key={item?.code} w="full" my="15px">
                       <HStack>
                         <Text border="1px solid #7ae7ff" px="4px">
                           {item.publicPhase
@@ -1026,13 +1012,13 @@ const LaunchpadDetailPage = () => {
                   borderBottom="1px solid #303030"
                 >
                   <HStack justifyContent="center">
-                    <Square mr={["12px", "32px"]} size="70px">
-                      <Image
-                        width="full"
-                        height="full"
-                        src={getCachedImageShort(item["avatar"])}
-                      />
-                    </Square>
+                    <ImageCloudFlare
+                      mr={["12px", "32px"]}
+                      size="100"
+                      w="70px"
+                      h="70px"
+                      src={item["avatar"]}
+                    />
 
                     <Stack maxH="70px" spacing="2px">
                       <Heading fontSize={["md"]}>{item.name}</Heading>
@@ -1092,7 +1078,7 @@ const LaunchpadDetailPage = () => {
                 alignItems="center"
                 borderBottom="1px solid #303030"
               >
-                <Heading color="#888" fontSize="15px" minW={["100px", "200px"]}>
+                <Heading color="#888" fontSize="15px" minW={["100px", "240px"]}>
                   NFT Name
                 </Heading>
                 <Heading color="#888" fontSize="15px">
@@ -1102,21 +1088,23 @@ const LaunchpadDetailPage = () => {
 
               {pageNFT.map((item, idx) => (
                 <HStack
+                  key={idx}
                   py="15px"
                   alignItems="center"
                   borderBottom="1px solid #303030"
                 >
                   <HStack justifyContent="center">
-                    <Heading fontSize={["md", "lg"]} minW={["100px", "200px"]}>
+                    <Heading fontSize={["md", "lg"]} minW={["100px", "240px"]}>
                       {item.nftName}
                     </Heading>
-                    <Square mr={["12px", "32px"]} size="50px">
-                      <Image
-                        width="full"
-                        height="full"
-                        src={getCachedImageShort(item["avatar"])}
-                      />
-                    </Square>
+
+                    <ImageCloudFlare
+                      mr={["12px", "32px"]}
+                      size="100"
+                      w="50px"
+                      h="50px"
+                      src={item["avatar"]}
+                    />
                   </HStack>
                 </HStack>
               ))}
@@ -1141,34 +1129,3 @@ const LaunchpadDetailPage = () => {
 };
 
 export default LaunchpadDetailPage;
-
-// const isPhaseEnd = (endTime) => {
-//   console.log("endTime", endTime);
-//   endTime = parseInt(endTime.replaceAll(",", ""));
-//   const now = new Date();
-
-//   if (endTime >= now) return true;
-
-//   return false;
-// };
-
-const getMetaDataType1 = async (tokenID, token_uri) => {
-  const metadata = await clientAPI(
-    "get",
-    "/getJSON?input=" + token_uri + tokenID.toString() + ".json",
-    {}
-  );
-
-  if (metadata) {
-    const attrsList = metadata?.attributes?.map((item) => {
-      return { [item.trait_type]: item.value };
-    });
-
-    return {
-      ...metadata,
-      attrsList,
-      avatar: metadata.image,
-      nftName: metadata.name,
-    };
-  }
-};

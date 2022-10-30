@@ -7,17 +7,16 @@ import {
   Thead,
   Tr,
   TagRightIcon,
-  Image,
-  Square,
   Heading,
   HStack,
   Text,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
-import { getCachedImageShort, formatNumDynamicDecimal } from "@utils";
+import { formatNumDynamicDecimal } from "@utils";
 import { memo } from "react";
 import { SCROLLBAR } from "@constants";
+import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 
 function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
   return (
@@ -127,16 +126,15 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
                               </>
                             ) : i === "nftName" ? (
                               <HStack justifyContent="start">
-                                <Square mr="20px" size="50px">
-                                  <Image
-                                    width="full"
-                                    height="full"
-                                    src={
-                                      item["avatar"] &&
-                                      getCachedImageShort(item["avatar"])
-                                    }
-                                  />
-                                </Square>
+                                <ImageCloudFlare
+                                  w="50px"
+                                  h="50px"
+                                  size="100"
+                                  mr="20px"
+                                  src={item["avatar"]}
+                                />
+                                {/* <Square>
+                                </Square> */}
                                 <Text>{item.nftName}</Text>
                               </HStack>
                             ) : (

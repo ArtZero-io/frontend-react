@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-vars */
 import {
   Text,
-  Button,
   Modal,
   ModalFooter,
   ModalBody,
@@ -30,7 +28,7 @@ import {
 } from "@store/actions/txStatus";
 import { setTxStatus } from "@store/actions/txStatus";
 
-import { isValidAddressPolkadotAddress } from "@utils";
+import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
 import { useState } from "react";
 import { stringToU8a } from "@polkadot/util";
 import { APICall } from "@api/client";
@@ -38,7 +36,6 @@ import { START, FINALIZED, TRANSFER } from "@constants";
 import CommonButton from "@components/Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
 import TransferIcon from "../../theme/assets/icon/Transfer";
-import UnlockIcon from "../../theme/assets/icon/Unlock";
 
 function TransferNFTModalMobile({
   owner,
@@ -73,21 +70,35 @@ function TransferNFTModalMobile({
         nftContractAddress
       );
       let unsubscribe;
+      let gasLimit = -1;
 
-      const gasLimit = -1;
-      const azero_value = 0;
-      const injector = await web3FromSource(currentAccount?.meta?.source);
-      console.log(receiverAddress);
+      const address = currentAccount?.address;
+      const { signer } = await web3FromSource(currentAccount?.meta?.source);
+      const value = 0;
+
       let additionalData = "";
+
+      gasLimit = await getEstimatedGas(
+        address,
+        contract,
+        value,
+        "psp34::transfer",
+        receiverAddress,
+        { u64: tokenID },
+        stringToU8a(additionalData)
+      );
+
+      console.log("ret ret uri xxx", gasLimit);
+
       await contract.tx["psp34::transfer"](
-        { value: azero_value, gasLimit },
+        { value, gasLimit },
         receiverAddress,
         { u64: tokenID },
         stringToU8a(additionalData)
       )
         .signAndSend(
           currentAccount?.address,
-          { signer: injector.signer },
+          { signer },
           async ({ status, dispatchError }) => {
             txResponseErrorHandler({
               status,

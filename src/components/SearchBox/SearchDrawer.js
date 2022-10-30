@@ -7,7 +7,6 @@ import {
   DrawerContent,
   DrawerOverlay,
   Flex,
-  Image,
   Input,
   InputGroup,
   InputRightElement,
@@ -20,8 +19,9 @@ import { FiSearch } from "react-icons/fi";
 import { APICall } from "@api/client";
 import debounce from "lodash.debounce";
 import { useHistory } from "react-router-dom";
-import { getCachedImageShort } from "@utils/index";
+
 import { motion } from "framer-motion";
+import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 
 const SearchDrawer = ({ display = true, ...rest }) => {
   const history = useHistory();
@@ -33,13 +33,12 @@ const SearchDrawer = ({ display = true, ...rest }) => {
 
   const getSearchResult = async (keywords) => {
     try {
-      let response = await APICall.getSearchResult({ keywords });
+      let { ret: response } = await APICall.getSearchResult({ keywords });
 
       if (response.length > 0) {
         response = response.filter((item) => item.nft_count > 0);
       }
       setResultList(response);
-
     } catch (error) {
       console.log(error);
       setResultList(null);
@@ -165,12 +164,14 @@ const SearchDrawer = ({ display = true, ...rest }) => {
                           );
                         }}
                       >
-                        <Image
+                        <ImageCloudFlare
+                          size="100"
                           w="28px"
                           h="28px"
                           mr="10px"
-                          src={getCachedImageShort(item.squareImage, 100)}
+                          src={item.squareImage}
                         />
+
                         <Text
                           color="#888"
                           _hover={{

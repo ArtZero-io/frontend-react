@@ -6,7 +6,6 @@ import {
   Flex,
   Heading,
   HStack,
-  Image,
   SimpleGrid,
   Skeleton,
   Text,
@@ -18,9 +17,9 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 import SocialCard from "@components/Card/Social";
 
 import { shortenNumber } from "@utils";
-import { getCachedImageShort } from "@utils/index";
 import { memo } from "react";
 import { useState } from "react";
+import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 
 const overlay =
   "linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)";
@@ -68,20 +67,12 @@ function CollectionHeader({
             filter="drop-shadow(0px 4px 4px #00320025)"
             bg="#333"
           >
-            <Image
-              alt={name}
-              w="full"
-              h="full"
-              rounded="full"
-              objectFit="cover"
-              src={avatarImage && getCachedImageShort(avatarImage, 500)}
-              fallback={
-                <Skeleton
-                  w={["74px", "128px"]}
-                  h={["60px", "120px"]}
-                  borderRadius="full"
-                />
-              }
+            <ImageCloudFlare
+              size="500"
+              borderRadius="full"
+              h={["68px", "120px", "120px"]}
+              w={["68px", "120px", "120px"]}
+              src={avatarImage}
             />
           </Center>
 

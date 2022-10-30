@@ -3,12 +3,10 @@ import {
   Center,
   Heading,
   HStack,
-  Image,
   Text,
   VStack,
   useDisclosure,
   IconButton,
-  Skeleton,
   useBreakpointValue,
 } from "@chakra-ui/react";
 
@@ -20,13 +18,13 @@ import { useDispatch } from "react-redux";
 import { getProfile } from "@actions/account";
 import IdenticonAvatar from "@components/IdenticonAvatar/IdenticonAvatar";
 import { useSubstrateState } from "@utils/substrate";
-import { getCachedImageShort } from "@utils";
 import ProfileModal from "./Modal/Profile";
 import toast from "react-hot-toast";
 import { truncateStr } from "@utils";
 import SocialCard from "@components/Card/Social";
 import { UPDATE_PROFILE } from "@constants";
 import useForceUpdate from "@hooks/useForceUpdate";
+import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
 
 function ProfileHeader() {
   const dispatch = useDispatch();
@@ -110,20 +108,12 @@ function ProfileHeader() {
           h={["68px", "128px", "128px"]}
         >
           {profile?.avatar && (
-            <Image
-              alt={profile.avatar}
-              w="full"
-              h="full"
-              rounded="full"
-              objectFit="cover"
-              src={getCachedImageShort(profile?.avatar, 500)}
-              fallback={
-                <Skeleton
-                  w={["74px", "120px", "120px"]}
-                  h={["60px", "118px", "118px"]}
-                  rounded="full"
-                />
-              }
+            <ImageCloudFlare
+              size="500"
+              borderRadius="full"
+              h={["68px", "120px", "120px"]}
+              w={["68px", "120px", "120px"]}
+              src={profile?.avatar}
             />
           )}
           {!profile?.avatar && <IdenticonAvatar size={avatarProfileSize} />}

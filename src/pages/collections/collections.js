@@ -10,9 +10,9 @@ import Dropdown from "@components/Dropdown/Dropdown";
 import PaginationMP from "@components/Pagination/Pagination";
 
 import { NUMBER_PER_PAGE } from "@constants/index";
-import { clientAPI } from "@api/client";
 import GridA from "../../components/Grid/GridA";
 import { useHistory } from "react-router-dom";
+import { APICall } from "../../api/client";
 
 const CollectionsPage = () => {
   const [collections, setCollections] = useState([]);
@@ -52,24 +52,21 @@ const CollectionsPage = () => {
       };
 
       try {
-        const totalCollections = await clientAPI("get", "/getCollectionCount");
+        const { ret: totalCollections } = await APICall.getCollectionCount();
+
         setTotalCollectionsCount(totalCollections);
 
         if (selectedItem === 0) {
-          const collectionsList = await clientAPI(
-            "post",
-            "/getCollections",
+          const { ret: collectionsList } = await APICall.getAllCollections(
             options
           );
+
           setCollections(collectionsList);
         }
 
         if (selectedItem === 1) {
-          const totalCollectionsFilterByVolume = await clientAPI(
-            "post",
-            "/getCollectionsByVolume",
-            options
-          );
+          const { ret: totalCollectionsFilterByVolume } =
+            await APICall.getCollectionsByVolume(options);
 
           setCollections(totalCollectionsFilterByVolume);
         }
@@ -82,18 +79,17 @@ const CollectionsPage = () => {
 
     const fetchFeaturedCollections = async () => {
       try {
-        const featuredCollectionsAddressList = await clientAPI(
-          "get",
-          "/getFeaturedCollections"
-        );
+        const { ret: featCollectionsAddrList } =
+          await APICall.getFeaturedCollections();
 
         Promise.all(
-          featuredCollectionsAddressList.map(async (collection_address) => {
-            const [collectionByAddress] = await clientAPI(
-              "post",
-              "/getCollectionByAddress",
-              { collection_address }
-            );
+          featCollectionsAddrList.map(async (collection_address) => {
+            const {
+              ret: [collectionByAddress],
+            } = await APICall.getCollectionByAddress({
+              collection_address,
+            });
+
             return collectionByAddress;
           })
         ).then((resultsArr) => {

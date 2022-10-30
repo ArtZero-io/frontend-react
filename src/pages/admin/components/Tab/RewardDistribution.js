@@ -29,7 +29,7 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import collection_manager from "@utils/blockchain/collection-manager";
 import { useMemo } from "react";
-import { formatNumDynamicDecimal } from "../../../../utils";
+import { formatNumDynamicDecimal } from "@utils";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import CommonButton from "@components/Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
@@ -40,10 +40,10 @@ import {
   WITHDRAW_MARKETPLACE,
   START,
 } from "@constants";
-import { withdrawCollectionContract } from "../../../../utils/blockchain/collection-manager-calls";
+import { withdrawCollectionContract } from "@utils/blockchain/collection-manager-calls";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
-import { withdrawLaunchpadContract } from "../../../../utils/blockchain/launchpad-contract-calls";
-import { withdrawMarketplaceContract } from "../../../../utils/blockchain/marketplace_contract_calls";
+import { withdrawLaunchpadContract } from "@utils/blockchain/launchpad-contract-calls";
+import { withdrawMarketplaceContract } from "@utils/blockchain/marketplace_contract_calls";
 import { useCallback } from "react";
 import useForceUpdate from "@hooks/useForceUpdate";
 
@@ -117,7 +117,7 @@ function RewardDistribution() {
   };
 
   const setStakingStatus = async (status) => {
-    if (activeAddress != adminAddress) {
+    if (activeAddress !== adminAddress) {
       return toast.error("Only Admin allowed");
     }
     await staking_calls.updateIsLocked(currentAccount, status);
@@ -126,7 +126,7 @@ function RewardDistribution() {
   };
 
   const setRewardDistribution = async (status) => {
-    if (activeAddress != adminAddress) {
+    if (activeAddress !== adminAddress) {
       return toast.error("Only Admin allowed");
     }
     if (status) await staking_calls.startRewardDistribution(currentAccount);
@@ -136,7 +136,7 @@ function RewardDistribution() {
   };
 
   const enableClaim = async (staker) => {
-    if (activeAddress != adminAddress) {
+    if (activeAddress !== adminAddress) {
       return toast.error("Only Admin allowed");
     }
     console.log("staker", staker);
@@ -737,7 +737,7 @@ function RewardDistribution() {
                   </Thead>
                   {console.log("stakers", stakers)}
                   <Tbody>
-                    {stakers.length == 0 ? (
+                    {stakers.length === 0 ? (
                       <Tr color="#fff">
                         <Center py={7}>Loading Data...</Center>
                       </Tr>

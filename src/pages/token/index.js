@@ -6,9 +6,6 @@ import {
   GridItem,
   Heading,
   HStack,
-  Image,
-  Skeleton,
-  Square,
   Stack,
   Tag,
   TagLabel,
@@ -36,9 +33,9 @@ import { APICall } from "@api/client";
 import { useSubstrateState } from "@utils/substrate";
 
 import {
-  getCachedImageShort,
   formatNumDynamicDecimal,
   getPublicCurrentAccount,
+  getTraitCount,
 } from "@utils";
 import { getNFTDetails } from "@utils/blockchain/nft721-psp34-standard-calls";
 import marketplace from "@utils/blockchain/marketplace";
@@ -84,6 +81,7 @@ import LockIcon from "@theme/assets/icon/Lock";
 import PropCard from "@components/Card/PropCard";
 import LevelCard from "@components/Card/LevelCard";
 import { Helmet } from "react-helmet";
+import ImageCloudFlare from "../../components/ImageWrapper/ImageCloudFlare";
 
 function TokenPage() {
   const dispatch = useDispatch();
@@ -129,7 +127,9 @@ function TokenPage() {
           setMyTradingFee(myTradingFeeData);
         }
 
-        const [collectionDetails] = await APICall.getCollectionByAddress({
+        const {
+          ret: [collectionDetails],
+        } = await APICall.getCollectionByAddress({
           collection_address,
         });
         const tokenDetails = await getNFTDetails(
@@ -416,21 +416,12 @@ function TokenPage() {
               spacing="25px"
             >
               <Stack minW={["auto", "484px"]}>
-                <Square
+                <ImageCloudFlare
                   maxH={["375px", "484px"]}
                   maxW={["375px", "484px"]}
-                  overflow="hidden"
-                >
-                  <Image
-                    w="full"
-                    h="full"
-                    alt="nft-img"
-                    boxShadow="lg"
-                    objectFit="cover"
-                    fallback={<Skeleton />}
-                    src={getCachedImageShort(token?.avatar, 500)}
-                  />
-                </Square>
+                  size={500}
+                  src={token?.avatar}
+                />
 
                 <HStack
                   py="20px"
@@ -444,6 +435,7 @@ function TokenPage() {
                       <AddNewNFTModal
                         mode={formMode.EDIT}
                         isDisabled={token?.is_for_sale || actionType}
+                        totalNftCount={collection?.nft_count}
                         {...token}
                       />
                     )}
@@ -559,6 +551,7 @@ function TokenPage() {
                     <AddNewNFTModal
                       mode={formMode.EDIT}
                       isDisabled={token?.is_for_sale || actionType}
+                      totalNftCount={collection?.nft_count}
                       {...token}
                     />
                   )}
@@ -919,7 +912,14 @@ function TokenPage() {
                           .map((item, idx) => {
                             return (
                               <GridItem w="100%" h="100%" key={idx}>
-                                <PropCard item={item} />
+                                <PropCard
+                                  item={item}
+                                  traitCount={getTraitCount(
+                                    collection?.rarityTable,
+                                    item
+                                  )}
+                                  totalNftCount={collection?.nft_count}
+                                />
                               </GridItem>
                             );
                           })}
@@ -931,7 +931,14 @@ function TokenPage() {
                           .map((item, idx) => {
                             return (
                               <GridItem w="100%" h="100%" key={idx}>
-                                <LevelCard item={item} />
+                                <LevelCard
+                                  item={item}
+                                  traitCount={getTraitCount(
+                                    collection?.rarityTable,
+                                    item
+                                  )}
+                                  totalNftCount={collection?.nft_count}
+                                />
                               </GridItem>
                             );
                           })}

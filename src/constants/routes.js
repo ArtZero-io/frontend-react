@@ -13,9 +13,6 @@ export const ACCOUNT_WHITELIST_PROJECTS = "/account/projects/whitelist";
 export const ACCOUNT_MINTING_PROJECTS = "/account/projects/minting";
 // COLLECTION
 
-export const DETAIL_COLLECTIONV2 = "/collectionv2/:collection_address";
-export const DETAIL_COLLECTION_BASEV2 = "/collectionv2";
-
 export const DETAIL_COLLECTION = "/collection/:collection_address";
 export const DETAIL_COLLECTION_BASE = "/collection";
 export const LAUNCHPAD_BASE = "/launchpad";

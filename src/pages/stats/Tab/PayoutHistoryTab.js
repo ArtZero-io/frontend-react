@@ -13,13 +13,13 @@ function PayoutHistoryTab() {
 
   useEffect(() => {
     const fetchData = async () => {
-      let data = await APICall.getAllRewardClaimed({
+      let { ret: data } = await APICall.getAllRewardClaimed({
         // staker_address: "5C8DzedQ9N7zmukvTKeFnciutbhfk1gU3tBctwwbitu9ot4A",
         limit: 1000,
         offset: 0,
         sort: -1,
       });
-
+      console.log("fetchData data", data);
       data = data.map((item, idx) => {
         return { ...item, order: idx + 1 };
       });

@@ -1,10 +1,9 @@
 import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
-import { isValidAddressPolkadotAddress } from "@utils";
+import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
 import {
-  clearTxStatus,
   txErrorHandler,
   txResponseErrorHandler,
 } from "../../store/actions/txStatus";
@@ -259,41 +258,53 @@ async function whitelistMint(
   api
 ) {
   if (!contract || !caller_account) {
+    toast.error(`Contract or caller not valid!`);
     return null;
   }
+
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+  const value = 0;
 
-  const txNotSign = contract.tx.whitelistMint(
-    { gasLimit, value: azero_value },
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "whitelistMint",
     mint_amount
   );
 
+  console.log("ret ret uri xxx", gasLimit);
+
+  const txNotSign = contract.tx.whitelistMint({ gasLimit, value }, mint_amount);
+
   await txNotSign
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-        });
-      }
-    )
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+      });
+    })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 
   return unsubscribe;
 }
 
-async function paidMint(caller_account, fee, mint_amount, dispatch, txType, api) {
+async function paidMint(
+  caller_account,
+  fee,
+  mint_amount,
+  dispatch,
+  txType,
+  api
+) {
   if (!contract || !caller_account) {
     return null;
   }
@@ -304,7 +315,10 @@ async function paidMint(caller_account, fee, mint_amount, dispatch, txType, api)
   const azero_value = Math.round(fee * 10 ** 12);
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  const txNotSign = contract.tx.paidMint({ gasLimit, value: azero_value }, mint_amount);
+  const txNotSign = contract.tx.paidMint(
+    { gasLimit, value: azero_value },
+    mint_amount
+  );
 
   await txNotSign
     .signAndSend(
@@ -562,54 +576,58 @@ async function approve(
   dispatch
 ) {
   if (!contract || !caller_account) {
+    toast.error(`Contract or caller not valid!`);
     return null;
   }
+
   let unsubscribe;
+  let gasLimit = -1;
+
   const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+  const value = 0;
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "psp34::approve",
+    operator_address,
+    token_id,
+    is_approve
+  );
+
+  console.log("ret ret uri xxx", gasLimit);
 
   await contract.tx["psp34::approve"](
-    { gasLimit, value: azero_value },
+    { gasLimit, value },
     operator_address,
     token_id,
     is_approve
   )
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      ({ dispatchError, status }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-          if (status.isFinalized) {
-            toast.success(
-              `Approve ${
-                statusText === "0" ? "started" : statusText.toLowerCase()
-              }.`
-            );
-          }
+    .signAndSend(address, { signer }, ({ dispatchError, status }) => {
+      if (dispatchError) {
+        if (dispatchError.isModule) {
+          toast.error(`There is some error with your request`);
+        } else {
+          console.log("dispatchError ", dispatchError.toString());
         }
       }
-    )
-    .then((unsub) => {
-      unsubscribe = unsub;
+
+      if (status) {
+        const statusText = Object.keys(status.toHuman())[0];
+        if (status.isFinalized) {
+          toast.success(
+            `Approve ${
+              statusText === "0" ? "started" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      }
     })
-    .catch((e) => {
-      dispatch(clearTxStatus());
-      const mess = `Tnx is ${e.message}`;
-      // console.log("e.message", e.message);
-      toast.error(mess);
-      return;
-    });
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
@@ -622,10 +640,13 @@ async function getPublicMaxMintingAmount(caller_account) {
   const azero_value = 0;
   //console.log(contract);
 
-  const { result, output } = await contract.query.getPublicMaxMintingAmount(address, {
-    value: azero_value,
-    gasLimit,
-  });
+  const { result, output } = await contract.query.getPublicMaxMintingAmount(
+    address,
+    {
+      value: azero_value,
+      gasLimit,
+    }
+  );
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
@@ -652,7 +673,7 @@ const contract_calls = {
   updateWhitelistAmount,
   withdrawFee,
   initialize,
-  getPublicMaxMintingAmount
+  getPublicMaxMintingAmount,
   // isLoaded,
 };
 

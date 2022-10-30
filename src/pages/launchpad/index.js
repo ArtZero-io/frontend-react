@@ -3,12 +3,7 @@ import Layout from "@components/Layout/Layout";
 import { GroupCard } from "./component/GroupCard";
 import React, { useEffect, useState } from "react";
 import { useSubstrateState } from "@utils/substrate";
-// import { timestampWithoutCommas } from "@utils";
-// import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
-// import { ContractPromise } from "@polkadot/api-contract";
-// import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
-// import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
-// import { getPublicCurrentAccount } from "@utils";
+ 
 import { APICall } from "../../api/client";
 
 export const LaunchpadPage = () => {
@@ -25,7 +20,7 @@ export const LaunchpadPage = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const projList = await APICall.getAllProjects({});
+        const { ret: projList } = await APICall.getAllProjects({});
 
         const activeProjList = projList.filter(
           ({ isActive }) => isActive === true

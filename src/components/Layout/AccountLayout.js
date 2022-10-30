@@ -1,11 +1,8 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import {
   Box,
-  Heading,
   HStack,
-  Skeleton,
   Tab,
   TabList,
   TabPanels,
@@ -16,49 +13,14 @@ import {
 import * as ROUTES from "@constants/routes";
 import Layout from "@components/Layout/Layout";
 import ProfileHeader from "@pages/account/components/Header";
-import { getProjectListDetails } from "../../utils/blockchain/launchpad-psp34-nft-standard-calls";
-import { useSubstrateState } from "@utils/substrate";
-// import AnimationLoader from "@components/Loader/AnimationLoader";
-import { SCROLLBAR } from "@constants";
 
 const AccountLayout = ({ children }) => {
   const history = useHistory();
   const { pathname } = useLocation();
-  const { api, currentAccount } = useSubstrateState();
+
+  // TODO refactor tab nav
+  // eslint-disable-next-line no-unused-vars
   const [tabsData, setTabsData] = useState(tabsList);
-  const [loading, setLoading] = useState(false);
-
-  // useEffect(() => {
-  //   const fetchMyProjectListDetails = async () => {
-  //     try {
-  //       setLoading(true);
-
-  //       const projectListDetails = await getProjectListDetails({
-  //         currentAccount,
-  //         api,
-  //       });
-  //       // console.log("projectListDetails", projectListDetails);
-  //       const myProjectListDetails = projectListDetails.filter(
-  //         (i) => i.projectOwner === currentAccount?.address
-  //       );
-  //       if (myProjectListDetails?.length >= 1) {
-  //         setTabsData((prev) => {
-  //           return tabsListFull;
-  //         });
-  //       } else {
-  //         setTabsData((prev) => {
-  //           return tabsList;
-  //         });
-  //       }
-  //       setLoading(false);
-  //     } catch (error) {
-  //       setLoading(false);
-  //       console.log(error);
-  //     }
-  //   };
-
-  //   fetchMyProjectListDetails();
-  // }, [api, currentAccount]);
 
   const handleTabsChange = (index) => {
     history.push(tabsData[index].route);
@@ -172,44 +134,5 @@ const tabsList = [
     label: "My Projects",
     isDisabled: false,
     route: ROUTES.ACCOUNT_MY_PROJECTS,
-  },
-];
-
-// eslint-disable-next-line no-unused-vars
-const tabsListFull = [
-  {
-    label: "General",
-    isDisabled: false,
-    route: ROUTES.ACCOUNT,
-  },
-  {
-    label: "My Collections",
-    isDisabled: false,
-    route: ROUTES.ACCOUNT_MY_COLLECTIONS,
-  },
-  {
-    label: "My NFTS",
-    isDisabled: false,
-    route: ROUTES.ACCOUNT_MY_NFTS,
-  },
-  {
-    label: "My Stakes",
-    isDisabled: false,
-    route: ROUTES.ACCOUNT_MY_STAKES,
-  },
-  {
-    label: "My Projects",
-    isDisabled: false,
-    route: ROUTES.ACCOUNT_MY_PROJECTS,
-  },
-  {
-    label: "WhiteList Manager",
-    isDisabled: false,
-    route: ROUTES.ACCOUNT_WHITELIST_PROJECTS,
-  },
-  {
-    label: "Owner Mint",
-    isDisabled: false,
-    route: ROUTES.ACCOUNT_MINTING_PROJECTS,
   },
 ];

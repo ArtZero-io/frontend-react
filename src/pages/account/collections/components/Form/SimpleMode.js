@@ -14,7 +14,6 @@ import { useSubstrateState } from "@utils/substrate";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 
 import AddCollectionNumberInput from "@components/Input/NumberInput";
-import { clientAPI } from "@api/client";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import {
   formMode,
@@ -25,6 +24,8 @@ import {
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { setTxStatus } from "@store/actions/txStatus";
+import { APICall } from "../../../../../api/client";
+import { clearTxStatus } from "@store/actions/txStatus";
 
 const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -101,10 +102,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
     };
     const fetchCollectionsByID = async () => {
       try {
-        const dataList = await clientAPI("post", "/getCollectionByID", {
-          id,
-        });
-
+        const { ret: dataList } = await APICall.getCollectionByID({ id });
+        console.log("dataList", dataList);
         newInitialValues = {
           isEditMode: true,
           nftName: "",
@@ -253,35 +252,42 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   : 0,
               };
 
-              if (mode === formMode.ADD) {
-                dispatch(setTxStatus({ type: CREATE_COLLECTION, step: START }));
+              try {
+                if (mode === formMode.ADD) {
+                  dispatch(
+                    setTxStatus({ type: CREATE_COLLECTION, step: START })
+                  );
 
-                await collection_manager_calls.autoNewCollection(
-                  currentAccount,
-                  data,
-                  dispatch,
-                  CREATE_COLLECTION,
-                  api
-                );
-              }
+                  await collection_manager_calls.autoNewCollection(
+                    currentAccount,
+                    data,
+                    dispatch,
+                    CREATE_COLLECTION,
+                    api
+                  );
+                }
 
-              if (mode === formMode.EDIT) {
-                dispatch(setTxStatus({ type: EDIT_COLLECTION, step: START }));
+                if (mode === formMode.EDIT) {
+                  dispatch(setTxStatus({ type: EDIT_COLLECTION, step: START }));
 
-                await collection_manager_calls.setMultipleAttributes(
-                  currentAccount,
-                  nftContractAddress,
-                  data.attributes,
-                  data.attributeVals,
-                  dispatch,
-                  EDIT_COLLECTION,
-                  api
-                );
+                  await collection_manager_calls.setMultipleAttributes(
+                    currentAccount,
+                    nftContractAddress,
+                    data.attributes,
+                    data.attributeVals,
+                    dispatch,
+                    EDIT_COLLECTION,
+                    api
+                  );
+                }
+              } catch (error) {
+                toast.error(error.message);
+                dispatch(clearTxStatus());
               }
             }
           }}
         >
-          {({ values, dirty, isValid, submitForm, handleSubmitForm }) => (
+          {({ values, dirty, isValid }) => (
             <Form>
               <Stack
                 gap={["10px", "30px"]}

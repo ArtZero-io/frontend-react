@@ -32,11 +32,9 @@ import { useHistory } from "react-router-dom";
 
 import * as ROUTES from "@constants/routes";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-// import ImageAccountBanner from "@theme/assets/image-account-banner.png";
 
 import FeeInfoModal from "./components/Modal/FeeInfo";
 
-import { clientAPI } from "@api/client";
 import { useCallback, useEffect, useState } from "react";
 import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
@@ -56,8 +54,8 @@ import { useDispatch } from "react-redux";
 import { START, CLAIM_REWARDS } from "@constants";
 import { setTxStatus } from "@store/actions/txStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
-// eslint-disable-next-line no-unused-vars
-import AnimationLoader from "@components/Loader/AnimationLoader";
+
+import { APICall } from "@api/client";
 
 function GeneralPage() {
   const history = useHistory();
@@ -100,13 +98,12 @@ function GeneralPage() {
   }, [currentAccount]);
 
   const getRewardHistory = useCallback(async () => {
-    const rewards = await clientAPI("post", "/getClaimRewardHistory", {
+    let { ret: rewards } = await APICall.getAllRewardClaimed({
       staker_address: currentAccount.address,
     });
-
     // console.log("rewards", rewards);
 
-    rewards ? setRewardHistory(rewards) : setRewardHistory([]);
+    rewards?.length ? setRewardHistory(rewards) : setRewardHistory([]);
   }, [currentAccount]);
 
   const fetchAllNfts = useCallback(async () => {
@@ -115,14 +112,12 @@ function GeneralPage() {
     };
 
     try {
-      const nftListPromise = await clientAPI(
-        "post",
-        "/getNFTsByOwner",
-        options
-      );
+      const { ret: nftListPromise } = await APICall.getNFTsByOwner(options);
+
       const platformTotalStaked = await staking_calls.getTotalStaked(
         currentAccount
       );
+
       //setPlatformTotalStaked(platformTotalStaked);
       // console.log("zxc platformTotalStaked", platformTotalStaked);
       const totalStakedPromise = await staking_calls.getTotalStakedByAccount(
@@ -246,7 +241,6 @@ function GeneralPage() {
     const fetch = async () => {
       try {
         setLoading(true);
-        // console.log("setLoading(true..................");
         await checkRewardStatus();
         await getRewardHistory();
 
@@ -261,9 +255,7 @@ function GeneralPage() {
         await getTradeFee();
         setLoading(false);
 
-        // console.log("setLoading(false..................");
       } catch (error) {
-        // console.log("setLoading(false..................");
         setLoading(false);
 
         console.log(error);
@@ -273,7 +265,6 @@ function GeneralPage() {
     fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, checkRewardStatus, currentAccount, getRewardHistory]);
-  // console.log("loadingloadingloadingloadingloading", loading);
   return (
     <CommonContainer>
       {/* {loading ? (

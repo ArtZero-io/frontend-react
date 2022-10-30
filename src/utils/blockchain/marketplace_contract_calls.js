@@ -1,6 +1,6 @@
 import BN from "bn.js";
 import { web3FromSource } from "../wallets/extension-dapp";
-import { isValidAddressPolkadotAddress } from "@utils";
+import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
 import { TypeRegistry, U32 } from "@polkadot/types";
 import { ContractPromise } from "@polkadot/api-contract";
 
@@ -373,46 +373,50 @@ async function list(
     !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
   ) {
-    console.log("invalid inputs");
-    return null;
+    throw Error(`Contract or caller not valid!`);
   }
+
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
+  const value = 0;
 
   const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
 
-  contract.tx
-    .list(
-      { gasLimit, value: azero_value },
-      nft_contract_address,
-      token_id,
-      sale_price
-    )
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-          caller_account,
-        });
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "list",
+    nft_contract_address,
+    token_id,
+    sale_price
+  );
 
-        if (status?.isFinalized) {
-          await APICall.askBeUpdateNftData({
-            collection_address: nft_contract_address,
-            token_id: token_id.u64,
-          });
-        }
+  console.log("ret ret uri xxx", gasLimit);
+
+  contract.tx
+    .list({ gasLimit, value }, nft_contract_address, token_id, sale_price)
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+
+      if (status?.isFinalized) {
+        await APICall.askBeUpdateNftData({
+          collection_address: nft_contract_address,
+          token_id: token_id.u64,
+        });
       }
-    )
+    })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 
@@ -433,48 +437,57 @@ async function unlist(
     !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
   ) {
-    console.log("invalid inputs");
-    return null;
+    throw Error(`Contract or caller not valid!`);
   }
+
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
+  const value = 0;
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "unlist",
+    nft_contract_address,
+    token_id
+  );
+
+  console.log("ret ret uri xxx", gasLimit);
+
   contract.tx
-    .unlist({ gasLimit, value: azero_value }, nft_contract_address, token_id)
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-          caller_account,
+    .unlist({ gasLimit, value }, nft_contract_address, token_id)
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+
+      if (status?.isFinalized) {
+        await APICall.askBeUpdateNftData({
+          collection_address: nft_contract_address,
+          token_id: token_id.u64,
         });
 
-        if (status?.isFinalized) {
-          await APICall.askBeUpdateNftData({
-            collection_address: nft_contract_address,
-            token_id: token_id.u64,
-          });
+        await APICall.askBeUpdateBidsData({
+          collection_address: nft_contract_address,
+          seller: seller,
+          token_id: token_id.u64,
+        });
 
-          await APICall.askBeUpdateBidsData({
-            collection_address: nft_contract_address,
-            seller: seller,
-            token_id: token_id.u64,
-          });
-
-          await APICall.askBeUpdateCollectionData({
-            collection_address: nft_contract_address,
-          });
-        }
+        await APICall.askBeUpdateCollectionData({
+          collection_address: nft_contract_address,
+        });
       }
-    )
+    })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 
@@ -496,48 +509,53 @@ async function bid(
     !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
   ) {
-    console.log("invalid inputs");
-    return null;
+    throw Error(`Contract or caller not valid!`);
   }
+
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const injector = await web3FromSource(caller_account?.meta?.source);
-  const azero_value = new BN(bid_amount * 10 ** 6)
-    .mul(new BN(10 ** 6))
-    .toString();
+  const value = new BN(bid_amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "bid",
+    nft_contract_address,
+    token_id
+  );
+
+  console.log("ret ret uri xxx", gasLimit);
 
   contract.tx
-    .bid({ gasLimit, value: azero_value }, nft_contract_address, token_id)
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-          caller_account,
+    .bid({ gasLimit, value }, nft_contract_address, token_id)
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+
+      if (status?.isFinalized) {
+        await APICall.askBeUpdateBidsData({
+          collection_address: nft_contract_address,
+          seller: seller,
+          token_id: token_id.u64,
         });
 
-        if (status?.isFinalized) {
-          await APICall.askBeUpdateBidsData({
-            collection_address: nft_contract_address,
-            seller: seller,
-            token_id: token_id.u64,
-          });
-
-          await APICall.askBeUpdateNftData({
-            collection_address: nft_contract_address,
-            token_id: token_id.u64,
-          });
-        }
+        await APICall.askBeUpdateNftData({
+          collection_address: nft_contract_address,
+          token_id: token_id.u64,
+        });
       }
-    )
+    })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 
@@ -558,45 +576,53 @@ async function removeBid(
     !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
   ) {
-    console.log("invalid inputs");
-    return null;
+    throw Error(`Contract or caller not valid!`);
   }
+
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
+  const value = 0;
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "removeBid",
+    nft_contract_address,
+    token_id
+  );
+
+  console.log("ret ret uri xxx", gasLimit);
 
   contract.tx
-    .removeBid({ gasLimit, value: azero_value }, nft_contract_address, token_id)
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-          caller_account,
+    .removeBid({ gasLimit, value }, nft_contract_address, token_id)
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+
+      if (status?.isFinalized) {
+        await APICall.askBeUpdateBidsData({
+          collection_address: nft_contract_address,
+          seller: seller,
+          token_id: token_id.u64,
         });
 
-        if (status?.isFinalized) {
-          await APICall.askBeUpdateBidsData({
-            collection_address: nft_contract_address,
-            seller: seller,
-            token_id: token_id.u64,
-          });
-
-          await APICall.askBeUpdateNftData({
-            collection_address: nft_contract_address,
-            token_id: token_id.u64,
-          });
-        }
+        await APICall.askBeUpdateNftData({
+          collection_address: nft_contract_address,
+          token_id: token_id.u64,
+        });
       }
-    )
+    })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 
@@ -618,50 +644,57 @@ async function buy(
     !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
   ) {
-    console.log("invalid inputs");
-    return null;
+    throw Error(`Contract or caller not valid!`);
   }
+
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const azero_value = new BN(price / 10 ** 6).mul(new BN(10 ** 6)).toString();
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  const value = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "buy",
+    nft_contract_address,
+    token_id
+  );
+
+  console.log("ret ret uri xxx", gasLimit);
 
   contract.tx
-    .buy({ gasLimit, value: azero_value }, nft_contract_address, token_id)
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-          caller_account,
+    .buy({ gasLimit, value }, nft_contract_address, token_id)
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+
+      if (status?.isFinalized) {
+        await APICall.askBeUpdateNftData({
+          collection_address: nft_contract_address,
+          token_id: token_id.u64,
         });
 
-        if (status?.isFinalized) {
-          await APICall.askBeUpdateNftData({
-            collection_address: nft_contract_address,
-            token_id: token_id.u64,
-          });
+        await APICall.askBeUpdateCollectionData({
+          collection_address: nft_contract_address,
+        });
 
-          await APICall.askBeUpdateCollectionData({
-            collection_address: nft_contract_address,
-          });
-
-          await APICall.askBeUpdateBidsData({
-            collection_address: nft_contract_address,
-            seller: seller,
-            token_id: token_id.u64,
-          });
-        }
+        await APICall.askBeUpdateBidsData({
+          collection_address: nft_contract_address,
+          seller: seller,
+          token_id: token_id.u64,
+        });
       }
-    )
+    })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 
@@ -683,54 +716,60 @@ async function acceptBid(
     !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
   ) {
-    console.log("invalid inputs");
-    return null;
+    throw Error(`Contract or caller not valid!`);
   }
+
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
+  const value = 0;
+
   const bid_id = new U32(new TypeRegistry(), bidIndex);
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "acceptBid",
+    nft_contract_address,
+    token_id,
+    bid_id
+  );
+
+  console.log("ret ret uri xxx", gasLimit);
+
   contract.tx
-    .acceptBid(
-      { gasLimit, value: azero_value },
-      nft_contract_address,
-      token_id,
-      bid_id
-    )
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-          caller_account,
+    .acceptBid({ gasLimit, value }, nft_contract_address, token_id, bid_id)
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+
+      if (status?.isFinalized) {
+        await APICall.askBeUpdateNftData({
+          collection_address: nft_contract_address,
+          token_id: token_id.u64,
         });
 
-        if (status?.isFinalized) {
-          await APICall.askBeUpdateNftData({
-            collection_address: nft_contract_address,
-            token_id: token_id.u64,
-          });
+        await APICall.askBeUpdateCollectionData({
+          collection_address: nft_contract_address,
+        });
 
-          await APICall.askBeUpdateCollectionData({
-            collection_address: nft_contract_address,
-          });
-
-          await APICall.askBeUpdateBidsData({
-            collection_address: nft_contract_address,
-            seller: seller,
-            token_id: token_id.u64,
-          });
-        }
+        await APICall.askBeUpdateBidsData({
+          collection_address: nft_contract_address,
+          seller: seller,
+          token_id: token_id.u64,
+        });
       }
-    )
+    })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 
@@ -771,6 +810,7 @@ export const withdrawMarketplaceContract = async (
   receiver_address
 ) => {
   if (!contract || !caller_account) {
+    toast.error(`Contract or caller not valid!`);
     return null;
   }
 
@@ -778,43 +818,49 @@ export const withdrawMarketplaceContract = async (
     toast.error(`Amount can not be less than 0!`);
     return;
   }
-
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+  const value = 0;
 
   const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
     .mul(new BN(10 ** 6))
     .toString();
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "withdrawProfit",
+    amountFormatted,
+    receiver_address || address
+  );
+
+  console.log("ret ret xxx", gasLimit);
 
   // withdrawFee for emergency withdraw only
   // withdrawProfit for normal use case
   // address set fixed due to withdraw to admin address only
 
   const txNotSign = contract.tx.withdrawProfit(
-    { gasLimit, value: azero_value },
+    { gasLimit, value },
     amountFormatted,
     receiver_address || address
   );
 
   await txNotSign
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-          caller_account,
-        });
-      }
-    )
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+    })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 

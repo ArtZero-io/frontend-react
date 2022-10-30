@@ -5,10 +5,7 @@ import {
   Flex,
   Heading,
   HStack,
-  Image,
   Progress,
-  Skeleton,
-  Square,
   Text,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
@@ -17,11 +14,11 @@ import { useHistory } from "react-router-dom";
 import { secondsToTime } from "@utils/index";
 import * as ROUTES from "@constants/routes";
 import useInterval from "use-interval";
-import { getCachedImageShort } from "@utils/index";
 import FadeIn from "react-fade-in";
 import { useSubstrateState } from "@utils/substrate";
 import { getCurrentPhaseStatusOfProject } from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { getPublicCurrentAccount } from "@utils";
+import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
 
 export const Card = ({ variant, project }) => {
   const history = useHistory();
@@ -174,20 +171,15 @@ export const Card = ({ variant, project }) => {
           </Flex>
         )}
 
-        <Square h="288px" w="288px">
-          <Image
-            onClick={() =>
-              history.push(`${ROUTES.LAUNCHPAD_BASE}/${nftContractAddress}`)
-            }
-            alt={"nftName"}
-            w="full"
-            h="full"
-            objectFit="cover"
-            cursor="pointer"
-            src={getCachedImageShort(avatarImage, 500)}
-            fallback={<Skeleton w="288px" h="288px" />}
-          />
-        </Square>
+        <ImageCloudFlare
+          cursor="pointer"
+          onClick={() =>
+            history.push(`${ROUTES.LAUNCHPAD_BASE}/${nftContractAddress}`)
+          }
+          w="288px"
+          h="288px"
+          src={avatarImage}
+        />
 
         <Box w="full" px="16px" py="20px">
           {variant === "live" && (

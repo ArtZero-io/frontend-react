@@ -12,9 +12,10 @@ import bgHeroFull from "@theme/assets/bg-hero-full.png";
 import React, { useCallback } from "react";
 
 import { Footer } from "../Footer/Footer";
-import { getCachedImageShort } from "@utils/index";
+import { getCloudFlareImage } from "@utils/index";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
+import { useState, useEffect } from "react";
 
 const linerGradient =
   "linear-gradient(0deg, #000000 30%, rgba(0, 0, 0, 43%) 95% , rgba(0, 0, 0, 0) 100%)";
@@ -27,6 +28,15 @@ const Layout = ({ backdrop, children, variant = null }) => {
   }, []);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+
+  const [projImage, setProjImage] = useState("");
+
+  useEffect(() => {
+    backdrop &&
+      getCloudFlareImage(backdrop, 1920).then((res) => {
+        setProjImage(res);
+      });
+  }, [backdrop]);
 
   return (
     <Container
@@ -79,7 +89,7 @@ const Layout = ({ backdrop, children, variant = null }) => {
         >
           <Box position="relative" w="full" h="full" overflow="hidden">
             <Image
-              src={backdrop && getCachedImageShort(backdrop, 1920)}
+              src={projImage}
               alt="bg-heroFull"
               w="full"
               h="full"
@@ -128,7 +138,7 @@ const Layout = ({ backdrop, children, variant = null }) => {
             }}
           >
             <Image
-              src={backdrop && getCachedImageShort(backdrop, 1920)}
+              src={projImage}
               alt="bg-heroFull"
               w="full"
               h="full"

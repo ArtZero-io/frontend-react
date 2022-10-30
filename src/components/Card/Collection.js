@@ -3,8 +3,6 @@ import {
   Center,
   Flex,
   Heading,
-  Image,
-  Skeleton,
   Spacer,
   Tag,
   TagLabel,
@@ -18,9 +16,9 @@ import InActiveIcon from "@theme/assets/icon/InActive.js";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
 
-import { getCachedImageShort } from "@utils/index";
 import { useEffect, useRef } from "react";
 import { delay } from "@utils";
+import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 
 export const CollectionCard = ({
   squareImage,
@@ -117,13 +115,11 @@ export const CollectionCard = ({
             },
           }}
         >
-          <Image
+          <ImageCloudFlare
+            h={"260px"}
+            w={"full"}
+            src={squareImage}
             alt={`header-img-${name}`}
-            w="full"
-            h={"16.25rem"}
-            objectFit="cover"
-            src={getCachedImageShort(squareImage, 500)}
-            fallback={<Skeleton w="full" h="full" maxH={"16.25rem"} />}
           />
         </Box>
 
@@ -139,14 +135,14 @@ export const CollectionCard = ({
           bg="#d8d8d8"
           boxShadow="0px 30px 20px rgba(0, 0, 0, 0.25)"
         >
-          <Image
-            alt={`avatar-img-${name}`}
-            w="full"
-            h="full"
-            rounded="full"
-            objectFit="cover"
-            src={getCachedImageShort(avatarImage, 100)}
-            fallback={<Skeleton w={16} h={"60px"} rounded="full" />}
+          <ImageCloudFlare
+            size="500"
+            h={"60px"}
+            w={"60px"}
+            bg="#d8d8d8"
+            src={avatarImage}
+            borderRadius="full"
+            alt={`header-img-${name}`}
           />
         </Center>
 

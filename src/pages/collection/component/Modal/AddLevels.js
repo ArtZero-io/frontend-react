@@ -32,7 +32,7 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
 
   const valueRef = useRef(value);
 
-  const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
+  const hasEmptyLevel = value?.some((p) => p.name?.trim() === "");
 
   const modalSize = useBreakpointValue(["xs", "5xl"]);
 

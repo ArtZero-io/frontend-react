@@ -5,14 +5,12 @@ import {
   GridItem,
   Heading,
   HStack,
-  Image,
   InputRightElement,
   Link,
   NumberInput,
   NumberInputField,
   Skeleton,
   Spacer,
-  Square,
   Stack,
   Tag,
   TagLabel,
@@ -25,16 +23,16 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 import { Link as ReactRouterLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 
 import {
-  getCachedImageShort,
   convertStringToPrice,
   getPublicCurrentAccount,
   formatNumDynamicDecimal,
+  getTraitCount,
 } from "@utils";
 
 import { useSubstrateState } from "@utils/substrate";
@@ -57,6 +55,8 @@ import UnlockIcon from "@theme/assets/icon/Unlock";
 import LockIcon from "@theme/assets/icon/Lock";
 import PropCard from "@components/Card/PropCard";
 import LevelCard from "@components/Card/LevelCard";
+import { Fragment } from "react";
+import ImageCloudFlare from "../../../../components/ImageWrapper/ImageCloudFlare";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -68,11 +68,10 @@ const NFTTabCollectible = (props) => {
     avatar,
     tokenID,
     price,
-    attrsList,
     is_locked,
     showOnChainMetadata,
     rarityTable,
-    // traits,
+    traits = {},
     totalNftCount,
   } = props;
 
@@ -143,6 +142,12 @@ const NFTTabCollectible = (props) => {
     }
   }, [currentAccount, is_for_sale, nftContractAddress, owner, tokenID]);
 
+  const attrsList = Object.entries(traits).map(([k, v]) => {
+    return { [k]: v };
+  });
+
+  // console.log("attrsList", attrsList);
+
   useEffect(() => {
     fetchSaleInfo();
   }, [fetchSaleInfo]);
@@ -208,17 +213,7 @@ const NFTTabCollectible = (props) => {
   return (
     <>
       <Stack alignItems="stretch" direction="row" spacing="45px">
-        <Square size="484px">
-          <Image
-            w="full"
-            h="full"
-            boxShadow="lg"
-            alt="nft-img"
-            objectFit="cover"
-            src={avatar && getCachedImageShort(avatar, 500)}
-            fallback={<Skeleton minW="484px" />}
-          />
-        </Square>
+        <ImageCloudFlare w="484px" h="484px" src={avatar} />
 
         <Stack alignItems="flex-start" w="full">
           <HStack w="full">
@@ -374,6 +369,7 @@ const NFTTabCollectible = (props) => {
                   }}
                 >
                   {/* is_for_sale true no sale always show no matter is owner or nor*/}
+                  {/* {console.log("is_for_sale", is_for_sale)} */}
                   {!is_for_sale ? (
                     <Flex
                       w="full"
@@ -545,6 +541,7 @@ const NFTTabCollectible = (props) => {
               </Stack>
 
               <Stack display={["none", "flex", "flex"]} w="full" flexGrow="1">
+                {/* {console.log("traits", traits)}{" "} */}
                 {attrsList?.length === 0 ? (
                   <Stack>
                     <Text
@@ -575,8 +572,8 @@ const NFTTabCollectible = (props) => {
                             )
                             .map((item, idx) => {
                               return (
-                                <>
-                                  <GridItem w="100%" h="100%" key={idx}>
+                                <Fragment key={idx}>
+                                  <GridItem w="100%" h="100%">
                                     <PropCard
                                       item={item}
                                       traitCount={getTraitCount(
@@ -586,7 +583,7 @@ const NFTTabCollectible = (props) => {
                                       totalNftCount={totalNftCount}
                                     />
                                   </GridItem>
-                                </>
+                                </Fragment>
                               );
                             })
                         : ""}
@@ -624,15 +621,3 @@ const NFTTabCollectible = (props) => {
 };
 
 export default NFTTabCollectible;
-
-const getTraitCount = (rarityTable, item) => {
-  const [[key, value]] = Object.entries(item);
-
-  if (!rarityTable || !rarityTable[key]) return 0;
-
-  const idx = rarityTable[key].findIndex((i) => i.name === value);
-
-  if (idx === -1) return 0;
-
-  return rarityTable[key][idx].count;
-};

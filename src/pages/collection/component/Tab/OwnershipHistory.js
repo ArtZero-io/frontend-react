@@ -29,12 +29,12 @@ function OwnershipHistory({
   useEffect(() => {
     const fetchData = async () => {
       const ownerAddress = is_for_sale ? nft_owner : owner;
-
-      const historyListData = await APICall.getOwnershipHistoryOfNFT({
+      const { ret: historyListData } = await APICall.getOwnershipHistoryOfNFT({
         token_id: tokenID,
         owner: ownerAddress,
         collection_address: nftContractAddress,
       });
+      // console.log("historyListData", historyListData);
 
       setHistoryList(historyListData);
     };

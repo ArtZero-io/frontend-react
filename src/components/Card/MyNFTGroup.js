@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Flex,
   Heading,
@@ -13,8 +12,6 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import MyNFTCard from "./MyNFT";
 import { createObjAttrsNFT } from "@utils/index";
 import ResponsivelySizedModal from "@components/Modal/Modal";
-import { getCachedImageShort } from "@utils";
-import { clientAPI } from "@api/client";
 import { useSubstrateState } from "@utils/substrate";
 import { motion, useAnimation } from "framer-motion";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
@@ -36,6 +33,8 @@ import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import { delay } from "@utils";
 import CommonButton from "../Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
+import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
+import { getMetaDataOffChain } from "../../utils";
 
 function MyNFTGroupCard({
   name,
@@ -114,7 +113,7 @@ function MyNFTGroupCard({
 
           Promise.all(
             listNFT.map(async (item) => {
-              const res = await getMetaDataType1(item.tokenID, tokenUri);
+              const res = await getMetaDataOffChain(item.tokenID, tokenUri);
 
               return { ...item, ...res };
             })
@@ -150,10 +149,13 @@ function MyNFTGroupCard({
         exit={{ opacity: 0 }}
       >
         <Flex w="full">
-          <Avatar
-            size={"lg"}
+          <ImageCloudFlare
+            w="64px"
+            h="64px"
+            size={100}
+            src={avatarImage}
+            borderRadius="full"
             border="2px solid white"
-            src={getCachedImageShort(avatarImage, 100)}
           />
           <VStack w="full" align="start" ml={3} justifyContent="center">
             <Heading
@@ -546,24 +548,3 @@ function GridItemA({
     </motion.div>
   );
 }
-
-const getMetaDataType1 = async (tokenID, token_uri) => {
-  const metadata = await clientAPI(
-    "get",
-    "/getJSON?input=" + token_uri + tokenID.toString() + ".json",
-    {}
-  );
-
-  if (metadata) {
-    const attrsList = metadata?.attributes?.map((item) => {
-      return { [item.trait_type]: item.value };
-    });
-
-    return {
-      ...metadata,
-      attrsList,
-      avatar: metadata.image,
-      nftName: metadata.name,
-    };
-  }
-};

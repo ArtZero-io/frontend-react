@@ -28,7 +28,7 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
   const { setValue } = helpers;
 
   const valueRef = useRef(value);
-  const hasEmptyProp = value.some((p) => p.type?.trim() === "");
+  const hasEmptyProp = value?.some((p) => p.type?.trim() === "");
 
   const modalSize = useBreakpointValue(["xs", "5xl"]);
 
@@ -120,7 +120,7 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
           <FieldArray
             name="properties"
             render={(arrayHelpers) => {
-              console.log("arrayHelpers", arrayHelpers);
+              // console.log("arrayHelpers", arrayHelpers);
               return (
                 <div>
                   {value?.map((properties, index) => (

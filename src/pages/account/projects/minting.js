@@ -33,6 +33,7 @@ import { setTxStatus } from "@store/actions/txStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import FadeIn from "react-fade-in";
+import { APICall } from "../../../api/client";
 
 function MyMintingProjectPage() {
   const dispatch = useDispatch();
@@ -65,15 +66,20 @@ function MyMintingProjectPage() {
         launchpad_psp34_nft_standard.CONTRACT_ABI,
         projectAddr
       );
+
       launchpad_psp34_nft_standard_calls.setContract(
         launchpad_psp34_nft_standard_contract
       );
+
       const projectInfoHash =
         await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
-      const projectInfo =
-        await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
-          projectInfoHash
-        );
+
+      const projectInfo = await APICall.getProjectInfoByHash({
+        projectHash: projectInfoHash,
+      });
+
+      console.log("projectInfo", projectInfo);
+
       const projectTmp = {
         name: projectInfo.name,
         nftContractAddress: projectAddr,
@@ -149,16 +155,22 @@ function MyMintingProjectPage() {
           currentAccount,
           i
         );
-        console.log(phaseSchedule);
+
+      console.log("phaseSchedule", phaseSchedule);
+
       if (phaseSchedule.isActive && phaseSchedule.endTime) {
-        maxMintTmp = parseInt(maxMintTmp) + parseInt(phaseSchedule.totalAmount.replaceAll(",", "")) - parseInt(phaseSchedule.claimedAmount.replaceAll(",", ""));
+        maxMintTmp =
+          parseInt(maxMintTmp) +
+          parseInt(phaseSchedule.totalAmount.replaceAll(",", "")) -
+          parseInt(phaseSchedule.claimedAmount.replaceAll(",", ""));
       }
     }
     const ownerClaimedAmount =
-        await launchpad_psp34_nft_standard_calls.getOwnerClaimedAmount(
-          currentAccount
-        );
-        maxMintTmp -= parseInt(ownerClaimedAmount.replaceAll(",", ""));  
+      await launchpad_psp34_nft_standard_calls.getOwnerClaimedAmount(
+        currentAccount
+      );
+
+    maxMintTmp -= parseInt(ownerClaimedAmount.replaceAll(",", ""));
     setMaxMint(maxMintTmp);
     setPhasesList(phasesTmp);
     setSelectedProjectAddress(address);

@@ -57,7 +57,7 @@ export default function AddCollectionNumberInput({
             >
               <NumberInputField
                 fontSize={["md", "lg"]}
-                focusBorder="0"
+                focusborder="0"
                 borderWidth="0px"
                 borderRadius="0"
                 h={height}

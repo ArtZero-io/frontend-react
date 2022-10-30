@@ -2,11 +2,11 @@ import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import {
+  getEstimatedGas,
   handleContractCallAnimation,
   isValidAddressPolkadotAddress,
 } from "@utils";
 import { ContractPromise, Abi } from "@polkadot/api-contract";
-import { clientAPI } from "@api/client";
 import { AccountActionTypes } from "@store/types/account.types";
 import {
   txErrorHandler,
@@ -68,6 +68,7 @@ async function getProjectsByOwner(caller_account, ownerAddress) {
   return null;
 }
 
+// No use ?
 async function setMultipleAttributes(
   account,
   collection_address,
@@ -106,8 +107,8 @@ async function setMultipleAttributes(
           if (status) {
             handleContractCallAnimation(status, dispatchError, dispatch);
 
-            if (status.isFinalized === true) {
-              await clientAPI("post", "/updateCollection", {
+            if (status?.isFinalized) {
+              await APICall.askBeUpdateCollectionData({
                 collection_address: collection_address,
               });
             }
@@ -244,14 +245,23 @@ async function addNewProject(
   api,
   createNewCollection
 ) {
+  if (!contract || !caller_account) {
+    throw Error(`Contract or caller not valid!`);
+  }
+
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = await getProjectAddingFee(caller_account);
 
-  console.log(
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "addNewProject",
     address,
     data.total_supply,
     data.start_time,
@@ -265,11 +275,12 @@ async function addNewProject(
     data.start_time_phases,
     data.end_time_phases
   );
-  console.log(value);
+
+  console.log("ret ret uri xxx", gasLimit);
 
   contract.tx
     .addNewProject(
-      { gasLimit, value: value },
+      { gasLimit, value },
       address,
       data.total_supply,
       data.start_time,
@@ -285,7 +296,7 @@ async function addNewProject(
     )
     .signAndSend(
       address,
-      { signer: injector.signer },
+      { signer },
       async ({ status, events, dispatchError }) => {
         txResponseErrorHandler({
           status,
@@ -298,12 +309,12 @@ async function addNewProject(
 
         if (status.isInBlock) {
           events.forEach(({ event: { data, method, section }, phase }) => {
-            if (section == "contracts" && method == "ContractEmitted") {
+            if (section === "contracts" && method === "ContractEmitted") {
               const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
 
               const contract_address = accId.toString();
 
-              if (contract_address == launchpad_manager.CONTRACT_ADDRESS) {
+              if (contract_address === launchpad_manager.CONTRACT_ADDRESS) {
                 const abi_launchpad_contract = new Abi(
                   launchpad_manager.CONTRACT_ABI
                 );
@@ -312,7 +323,7 @@ async function addNewProject(
 
                 let event_name = decodedEvent.event.identifier;
 
-                if (event_name == "AddNewProjectEvent") {
+                if (event_name === "AddNewProjectEvent") {
                   const eventValues = [];
 
                   for (let i = 0; i < decodedEvent.args.length; i++) {
@@ -327,7 +338,7 @@ async function addNewProject(
                       project_address: nft_address,
                     }))();
 
-                  console.lof("nft_address,", nft_address);
+                  console.lof("addNewProject nft_address,", nft_address);
                   createNewCollection(nft_address);
                 }
               }
@@ -342,35 +353,51 @@ async function addNewProject(
   return unsubscribe;
 }
 
+// No use ?
 async function editProject(caller_account, data, dispatch, txType, api) {
+  if (!contract || !caller_account) {
+    throw Error(`Contract or caller not valid!`);
+  }
+
   let unsubscribe;
+  let gasLimit = -1;
+
   const address = caller_account?.address;
-  const gasLimit = -1;
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "editProject",
+    data.contract_address,
+    data.start_time,
+    data.end_time,
+    data.project_info
+  );
+
+  console.log("ret ret uri xxx", gasLimit);
 
   contract.tx
     .editProject(
-      { gasLimit, value: value },
+      { gasLimit, value },
       data.contract_address,
       data.start_time,
       data.end_time,
       data.project_info
     )
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-          caller_account,
-        });
-      }
-    )
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+    })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 
@@ -400,51 +427,61 @@ async function getProjectAddingFee(caller_account) {
 async function updateIsActiveProject(
   caller_account,
   isActive,
-  collection_address
+  collection_address,
+  dispatch,
+  txType,
+  api
 ) {
   if (
     !contract ||
     !caller_account ||
     !isValidAddressPolkadotAddress(collection_address)
   ) {
-    return null;
+    throw Error(`Contract or caller not valid!`);
   }
+
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source);
-  contract.tx
-    .updateIsActiveProject(
-      { gasLimit, value: azero_value },
-      isActive,
-      collection_address
-    )
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            toast.error(`There is some error with your request`);
-          } else {
-            console.log("dispatchError ", dispatchError.toString());
-          }
-        }
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-        if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
-          toast.success(
-            `Update Collection Status ${
-              statusText === "0" ? "started" : statusText.toLowerCase()
-            }.`
-          );
-        }
+  const value = 0;
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "updateIsActiveProject",
+    isActive,
+    collection_address
+  );
+
+  console.log("ret ret uri xxx", gasLimit);
+
+  contract.tx
+    .updateIsActiveProject({ gasLimit, value }, isActive, collection_address)
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+
+      if (status.isFinalized) {
+        const ret = await APICall.askBeUpdateProjectData({
+          project_address: collection_address,
+        });
+
+        console.log("ret", ret);
       }
-    )
+    })
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
 
@@ -494,6 +531,7 @@ export const withdrawLaunchpadContract = async (
   api
 ) => {
   if (!contract || !caller_account) {
+    toast.error(`Contract or caller not valid!`);
     return null;
   }
 
@@ -503,36 +541,42 @@ export const withdrawLaunchpadContract = async (
   }
 
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+  const value = 0;
 
   const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
     .mul(new BN(10 ** 6))
     .toString();
 
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "withdrawFee",
+    amountFormatted
+  );
+
+  console.log("ret ret xxx", gasLimit);
+
   const txNotSign = contract.tx.withdrawFee(
-    { gasLimit, value: azero_value },
+    { gasLimit, value },
     amountFormatted
   );
 
   await txNotSign
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-          caller_account,
-        });
-      }
-    )
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+    })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 

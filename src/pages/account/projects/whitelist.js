@@ -45,6 +45,7 @@ import AnimationLoader from "@components/Loader/AnimationLoader";
 import { isValidAddressPolkadotAddress } from "@utils";
 import { SCROLLBAR } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
+import { APICall } from "../../../api/client";
 
 const tableHeaders = ["Address", "Amount", "Claimed", "Price"];
 
@@ -137,11 +138,10 @@ function MyWhiteListProjectPage() {
               currentAccount
             );
 
-          const projectInfo =
-            await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
-              projectInfoHash
-            );
-
+          const projectInfo = await APICall.getProjectInfoByHash({
+            projectHash: projectInfoHash,
+          });
+          console.log("projectInfo", projectInfo);
           const projectTmp = {
             name: projectInfo.name,
             nftContractAddress: projectAddr,

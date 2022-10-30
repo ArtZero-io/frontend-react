@@ -8,8 +8,6 @@ import {
   Tr,
   TagRightIcon,
   Skeleton,
-  Image,
-  Square,
   Heading,
   Flex,
   Text,
@@ -18,10 +16,10 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
-import { getCachedImageShort } from "@utils/index";
 import { memo } from "react";
 import { formatNumDynamicDecimal } from "@utils";
 import { useHistory } from "react-router-dom";
+import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 
 function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
   const history = useHistory();
@@ -73,13 +71,13 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
       case "name":
         return (
           <Flex alignItems="center">
-            <Square size="50px" mr="20px" shadow="lg">
-              <Image
-                width="full"
-                height="full"
-                src={getCachedImageShort(itemObj.avatarImage)}
-              />
-            </Square>
+            <ImageCloudFlare
+              h="50px"
+              w="50px"
+              mr="20px"
+              size="100"
+              src={itemObj?.avatarImage}
+            />
 
             <Flex direction="column" alignItems="flex-start">
               <Heading

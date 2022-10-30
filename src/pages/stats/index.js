@@ -49,7 +49,7 @@ function StatsPage() {
       //   );
 
       // TODO: get total Payouts
-      const data = await APICall.getAllRewardPayout({
+      const { ret: data } = await APICall.getAllRewardPayout({
         limit: 1000,
         offset: 0,
         sort: -1,
@@ -90,11 +90,15 @@ function StatsPage() {
       // console.log("PF totalProfit 30%", totalProfit * 0.3);
       // console.log("PF profit End %---------------");
 
-      const dataList = await APICall.getCollectionByVolume({ limit: 5 });
+      const { ret: dataList } = await APICall.getCollectionsByVolume({
+        limit: 5,
+      });
 
       const dataListWithFP = await Promise.all(
         dataList.map(async (item, index) => {
-          const [data] = await APICall.getCollectionFloorPrice({
+          const {
+            ret: [data],
+          } = await APICall.getCollectionFloorPrice({
             collection_address: item.nftContractAddress,
           });
 
@@ -145,8 +149,8 @@ function StatsPage() {
     if (!platformStatistics || !topCollections) {
       setIsLoading(true);
       prepareStats().then((data) => {
-        setPlatformStatistics(data.platformStatistics);
-        setTopCollections(data.topCollections);
+        setPlatformStatistics(data?.platformStatistics);
+        setTopCollections(data?.topCollections);
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

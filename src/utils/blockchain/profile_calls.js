@@ -1,7 +1,7 @@
 import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
 import { web3FromSource } from "../wallets/extension-dapp";
-import { getPublicCurrentAccount, truncateStr } from "..";
+import { getPublicCurrentAccount, truncateStr, getEstimatedGas } from "..";
 import {
   txErrorHandler,
   txResponseErrorHandler,
@@ -67,52 +67,59 @@ export async function getProfileOnChain({ callerAccount, accountAddress }) {
 
 export async function setSingleAttributeProfileOnChain(currentAccount, data) {
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = currentAccount?.address;
-  const gasLimit = -1;
+  const { signer } = await web3FromSource(currentAccount?.meta?.source);
+
   const value = 0;
 
-  const injector = await web3FromSource(currentAccount?.meta?.source);
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "setProfileAttribute",
+    data?.attribute,
+    data?.value
+  );
+
+  console.log("ret ret uri xxx", gasLimit);
 
   currentAccount &&
     contract.tx
       .setProfileAttribute({ gasLimit, value }, data?.attribute, data?.value)
-      .signAndSend(
-        address,
-        { signer: injector.signer },
-        async ({ status, dispatchError }) => {
-          if (dispatchError) {
-            if (dispatchError.isModule) {
-              const decoded = contract.registry.findMetaError(
-                dispatchError.asModule
-              );
-              const { docs, name, section } = decoded;
-
-              console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
-            } else {
-              console.log(
-                "dispatchError setProfileAttribute",
-                dispatchError.toString()
-              );
-            }
-          }
-
-          if (status) {
-            const statusText = Object.keys(status.toHuman())[0];
-
-            console.log(
-              `Profile update ${
-                statusText === "0" ? "start" : statusText.toLowerCase()
-              }.`
+      .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+        if (dispatchError) {
+          if (dispatchError.isModule) {
+            const decoded = contract.registry.findMetaError(
+              dispatchError.asModule
             );
-            toast.success(
-              `Profile update ${
-                statusText === "0" ? "start" : statusText.toLowerCase()
-              }.`
+            const { docs, name, section } = decoded;
+
+            console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
+          } else {
+            console.log(
+              "dispatchError setProfileAttribute",
+              dispatchError.toString()
             );
           }
         }
-      )
+
+        if (status) {
+          const statusText = Object.keys(status.toHuman())[0];
+
+          console.log(
+            `Profile update ${
+              statusText === "0" ? "start" : statusText.toLowerCase()
+            }.`
+          );
+          toast.success(
+            `Profile update ${
+              statusText === "0" ? "start" : statusText.toLowerCase()
+            }.`
+          );
+        }
+      })
       .then((unsub) => (unsubscribe = unsub))
       .catch((e) => console.log("e", e));
 
@@ -127,33 +134,43 @@ export async function setMultipleAttributesProfileOnChain(
   txType,
   api
 ) {
+  if (!contract || !caller_account) {
+    throw Error(`Contract or caller not valid!`);
+  }
+
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
   const value = 0;
 
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "setMultipleAttributes",
+    attributes,
+    values
+  );
 
-  caller_account &&
-    contract.tx
-      .setMultipleAttributes({ gasLimit, value }, attributes, values)
-      .signAndSend(
-        address,
-        { signer: injector.signer },
-        async ({ status, dispatchError }) => {
-          txResponseErrorHandler({
-            status,
-            dispatchError,
-            dispatch,
-            txType,
-            api,
-            caller_account,
-          });
-        }
-      )
-      .then((unsub) => (unsubscribe = unsub))
-      .catch((error) => txErrorHandler({ error, dispatch }));
+  console.log("ret ret uri xxx", gasLimit);
+
+  contract.tx
+    .setMultipleAttributes({ gasLimit, value }, attributes, values)
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+    })
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
 
   return unsubscribe;
 }

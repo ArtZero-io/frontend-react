@@ -108,7 +108,7 @@ export const txResponseErrorHandler = async ({
       console.log(`^^==================Log end==================`);
 
       toast.error(`There is some error with your request..`);
-      // console.log("section", `${section}.${name}: ${docs.join(" ")}`);
+      console.log("section", `${section}.${name}: ${docs.join(" ")}`);
       // return toast.error(`${section}.${name}: ${docs.join(" ")}`);
     } else {
       // console.log("dispatchError.toString()", dispatchError.toString());

@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
 import { delay } from "@utils";
+import { APICall } from "../../../../api/client";
 
 function CheckCollection() {
   const [collectionAddress, setCollectionAddress] = useState("");
@@ -87,11 +88,10 @@ function CheckCollection() {
     let image_count = 0;
 
     for (var tokenID = 1; tokenID <= total_supply; tokenID++) {
-      const metadata = await clientAPI(
-        "get",
-        "/getJSON?input=" + base_uri + tokenID.toString() + ".json",
-        {}
-      );
+      const metadata = await APICall.getNftJson({
+        tokenID,
+        token_uri: base_uri,
+      });
 
       if (metadata.name) {
         let image = await clientAPI(

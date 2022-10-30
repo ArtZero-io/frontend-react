@@ -7,7 +7,6 @@ import {
   Heading,
   HStack,
   IconButton,
-  Image,
   Skeleton,
   Stack,
   Text,
@@ -20,7 +19,6 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { convertStringToPrice } from "@utils";
 import useInterval from "use-interval";
-import { getCachedImageShort } from "@utils/index";
 import SocialCard from "@components/Card/Social";
 import * as ROUTES from "@constants/routes";
 import { useHistory } from "react-router-dom";
@@ -39,6 +37,7 @@ import ProjectInfoIcon from "@theme/assets/icon/ProjectInfo";
 import toast from "react-hot-toast";
 import { getCurrentPhaseStatusOfProject } from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { getPublicCurrentAccount } from "@utils";
+import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
 
 function LaunchpadDetailHeader({
   project,
@@ -95,7 +94,7 @@ function LaunchpadDetailHeader({
       if (currentAccount) {
         if (phases?.length > 0) {
           const data = phases.find((p) => p.isLive === 1);
-          console.log("getLivePhase data", data);
+          // console.log("getLivePhase data", data);
           setLivePhase(data);
         }
       } else {
@@ -104,7 +103,7 @@ function LaunchpadDetailHeader({
           nftContractAddress: collection_address,
           api,
         });
-        console.log("LaunchpadDetailHeader currPhaseStatus", currPhaseStatus);
+        // console.log("LaunchpadDetailHeader currPhaseStatus", currPhaseStatus);
         const data = {
           ...currPhaseStatus,
           startTime: currPhaseStatus?.startTime?.replaceAll(",", ""),
@@ -127,30 +126,32 @@ function LaunchpadDetailHeader({
     if (!livePhase) {
       const phaseId1 = project?.phases?.filter((i) => i.id === 1);
 
-      const countDownTimer = phaseId1[0].startTime - Date.now();
+      if (phaseId1?.length) {
+        const countDownTimer = phaseId1[0].startTime - Date.now();
 
-      if (countDownTimer <= 0) {
+        if (countDownTimer <= 0) {
+          setCountDownTimer({
+            days: 0,
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+          });
+
+          return;
+        }
+
+        const seconds = Math.floor((countDownTimer / 1000) % 60);
+        const minutes = Math.floor((countDownTimer / 1000 / 60) % 60);
+        const hours = Math.floor((countDownTimer / (1000 * 60 * 60)) % 24);
+        const days = Math.floor(countDownTimer / (1000 * 60 * 60 * 24));
+
         setCountDownTimer({
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
+          days: days,
+          hours: hours,
+          minutes: minutes,
+          seconds: seconds,
         });
-
-        return;
       }
-
-      const seconds = Math.floor((countDownTimer / 1000) % 60);
-      const minutes = Math.floor((countDownTimer / 1000 / 60) % 60);
-      const hours = Math.floor((countDownTimer / (1000 * 60 * 60)) % 24);
-      const days = Math.floor(countDownTimer / (1000 * 60 * 60 * 24));
-
-      setCountDownTimer({
-        days: days,
-        hours: hours,
-        minutes: minutes,
-        seconds: seconds,
-      });
     }
 
     if (livePhase && livePhase?.endTime) {
@@ -199,20 +200,13 @@ function LaunchpadDetailHeader({
             filter="drop-shadow(0px 4px 4px #00320025)"
             bg="#333"
           >
-            <Image
-              alt={"name"}
-              w="full"
-              h="full"
-              rounded="full"
-              objectFit="cover"
-              src={getCachedImageShort(avatarImage, 500)}
-              fallback={
-                <Skeleton
-                  w={["68px", "120px", "120px"]}
-                  h={["60px", "112px", "112px"]}
-                  borderRadius="full"
-                />
-              }
+            <ImageCloudFlare
+              size="500"
+              border="4px solid white"
+              borderRadius="full"
+              h={["68px", "120px", "120px"]}
+              w={["68px", "120px", "120px"]}
+              src={avatarImage}
             />
 
             <Circle
@@ -301,7 +295,7 @@ function LaunchpadDetailHeader({
                 >
                   <Text mx={["25px", "42px"]}>
                     Supply:{" "}
-                    <Text display={["block", "inline"]} color="#fff">
+                    <Text as="span" display={["block", "inline"]} color="#fff">
                       {totalSupply}
                     </Text>
                   </Text>
@@ -995,27 +989,34 @@ function LaunchpadDetailHeader({
         <SocialCard profile={[{ website }, { twitter }, { discord }]} />
       </VStack>
 
-      <UpdateURIModal
-        isOpen={isOpenURI}
-        onClose={onCloseURI}
-        collection_address={collection_address}
-      />
-      <UpdateAdminAddressModal
-        isOpen={isOpenUpdateAdminAddressModal}
-        collection_address={collection_address}
-        onClose={onCloseUpdateAdminAddressModal}
-      />
-      <UpdateWithdrawModal
-        isOpen={isOpenWithdrawModal}
-        collection_address={collection_address}
-        onClose={onCloseWithdrawModal}
-      />
-      <UpdatePhasesModal
-        {...project}
-        isOpen={isOpenPhase}
-        onClose={onClosePhase}
-        collection_address={collection_address}
-      />
+      {projectOwner === currentAccount?.address && (
+        <>
+          <UpdateURIModal
+            isOpen={isOpenURI}
+            onClose={onCloseURI}
+            collection_address={collection_address}
+          />
+          <UpdateAdminAddressModal
+            isOpen={isOpenUpdateAdminAddressModal}
+            collection_address={collection_address}
+            onClose={onCloseUpdateAdminAddressModal}
+          />
+          <UpdateWithdrawModal
+            isOpen={isOpenWithdrawModal}
+            collection_address={collection_address}
+            onClose={onCloseWithdrawModal}
+          />
+        </>
+      )}
+
+      {projectAdminAddress === currentAccount?.address && (
+        <UpdatePhasesModal
+          {...project}
+          isOpen={isOpenPhase}
+          onClose={onClosePhase}
+          collection_address={collection_address}
+        />
+      )}
     </Box>
   );
 }

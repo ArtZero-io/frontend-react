@@ -1,8 +1,6 @@
-/* eslint-disable no-unused-vars */
 import {
   Text,
   Tooltip,
-  Icon,
   Modal,
   ModalFooter,
   ModalBody,
@@ -30,10 +28,10 @@ import {
 import { APICall } from "@api/client";
 import { setTxStatus } from "@store/actions/txStatus";
 import { START, FINALIZED, LOCK } from "@constants";
-import { AiOutlineUnlock } from "react-icons/ai";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import UnlockIcon from "../../theme/assets/icon/Unlock";
+import { getEstimatedGas } from "@utils/";
 
 function LockNFTModalMobile({
   owner,
@@ -60,17 +58,25 @@ function LockNFTModalMobile({
         nft721_psp34_standard.CONTRACT_ABI,
         nftContractAddress
       );
-      let unsubscribe;
 
-      const gasLimit = -1;
-      const azero_value = 0;
-      const injector = await web3FromSource(currentAccount?.meta?.source);
+      let unsubscribe;
+      let gasLimit = -1;
+
+      const address = currentAccount?.address;
+      const { signer } = await web3FromSource(currentAccount?.meta?.source);
+      const value = 0;
+
+      gasLimit = await getEstimatedGas(address, contract, value, "lock", {
+        u64: tokenID,
+      });
+
+      console.log("ret ret uri xxx", gasLimit);
 
       await contract.tx
-        .lock({ value: azero_value, gasLimit }, { u64: tokenID })
+        .lock({ value, gasLimit }, { u64: tokenID })
         .signAndSend(
           currentAccount?.address,
-          { signer: injector.signer },
+          { signer },
           async ({ status, dispatchError }) => {
             txResponseErrorHandler({
               status,

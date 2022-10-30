@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Flex,
@@ -9,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useCallback, useEffect, useState } from "react";
 import { delay, truncateStr } from "@utils";
 import toast from "react-hot-toast";
@@ -20,9 +19,11 @@ import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { Link, Link as ReactRouterLink } from "react-router-dom";
 import * as ROUTES from "@constants/routes";
+import { APICall } from "../../../../api/client";
 
 function ProjectAdmin() {
-  const { activeAddress } = useSelector((s) => s.account);
+  const dispatch = useDispatch();
+
   const { api, currentAccount } = useSubstrateState();
 
   const [collectionCount, setCollectionCount] = useState(0);
@@ -91,24 +92,23 @@ function ProjectAdmin() {
         await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
       // console.log(projectInfoHash);
       // console.log('xxx');
-      const projectInfo =
-        await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
-          projectInfoHash
-        );
+      const projectInfo = await APICall.getProjectInfoByHash({
+        projectHash: projectInfoHash,
+      });
       // console.log('projectInfo', projectInfo);
       const currentTime = Date.now();
       let projectTypeLabel = "live";
       if (
         timestampWithoutCommas(project.startTime) < currentTime &&
         currentTime < timestampWithoutCommas(project.endTime) &&
-        project.projectType == 1
+        project.projectType === 1
       ) {
         projectTypeLabel = "live";
       } else if (
         currentTime < timestampWithoutCommas(project.startTime) &&
-        project.projectType == 1
+        project.projectType === 1
       ) {
-        projectTypeLabel = "Comming";
+        projectTypeLabel = "Coming";
       } else {
         projectTypeLabel = "Ended";
       }
@@ -127,15 +127,14 @@ function ProjectAdmin() {
     setCollections(tmpProjects);
   };
   const onSetStatusCollection = async (collection_contract, isActive) => {
-    console.log(collection_contract);
-    if (collectionContractAdmin !== activeAddress) {
-      toast.error(`You are not admin of this contract`);
-      return;
-    }
+    toast.success(`Setting status...`);
     await launchpad_contract_calls.updateIsActiveProject(
       currentAccount,
       isActive,
-      collection_contract
+      collection_contract,
+      dispatch,
+      "editProject",
+      api
     );
     await delay(10000);
     await onGetCollectionCount();

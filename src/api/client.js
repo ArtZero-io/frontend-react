@@ -64,21 +64,38 @@ const client = async (
     data: urlencodedOptions,
   });
 
-  const { status, ret, message } = data;
-
-  if (status === "OK") {
-    return ret;
-  }
-
-  if (status === "FAILED") {
-    return message;
+  if (data?.status === "FAILED") {
+    console.log("FAILED @ xx>>", url, data?.message);
   }
 
   return data;
 };
 
 export const APICall = {
+  // get list of Bidder by Address
+  getBidsByBidderAddress: async ({
+    bidder,
+    limit = 10000,
+    offset = 0,
+    sort = -1,
+  }) => {
+    return await client("POST", "/getBidsByBidderAddress", {
+      bidder,
+      limit,
+      offset,
+      sort,
+    });
+  },
+
   // Ask BE Update API Calls
+  askBeCacheImage: async ({ input, is1024 = false, is1920 = false }) => {
+    return await client("POST", "/cacheImage", {
+      input,
+      is1024,
+      is1920,
+    });
+  },
+
   askBeUpdateBidsData: async ({ collection_address, seller, token_id }) => {
     return await client("POST", "/updateBids", {
       collection_address,
@@ -101,14 +118,18 @@ export const APICall = {
   },
 
   askBeUpdateProjectData: async ({ project_address }) => {
-    return await client("POST", "/updateProject", {
+    const ret = await client("POST", "/updateProject", {
       project_address,
     });
+
+    console.log("askBeUpdateProjectData ret", ret);
+
+    return ret;
   },
 
   // Event API Calls
   getPurchaseEvents: async ({ collection_address }) => {
-    let result = await client("POST", "/getPurchaseEvents", {
+    let { ret: result } = await client("POST", "/getPurchaseEvents", {
       limit: 10,
       offset: 0,
       sort: -1,
@@ -123,7 +144,7 @@ export const APICall = {
   },
 
   getBidWinEvents: async ({ collection_address }) => {
-    let result = await client("POST", "/getBidWinEvents", {
+    let { ret: result } = await client("POST", "/getBidWinEvents", {
       limit: 10,
       offset: 0,
       sort: -1,
@@ -138,7 +159,7 @@ export const APICall = {
   },
 
   getUnlistEvents: async ({ collection_address }) => {
-    let result = await client("POST", "/getUnlistEvents", {
+    let { ret: result } = await client("POST", "/getUnlistEvents", {
       limit: 10,
       offset: 0,
       sort: -1,
@@ -153,7 +174,7 @@ export const APICall = {
   },
 
   getNewListEvents: async ({ collection_address }) => {
-    let result = await client("POST", "/getNewListEvents", {
+    let { ret: result } = await client("POST", "/getNewListEvents", {
       limit: 10,
       offset: 0,
       sort: -1,
@@ -168,13 +189,43 @@ export const APICall = {
   },
 
   // Collection API Calls
+
+  getAllCollections: async ({
+    limit = 6,
+    offset = 0,
+    sort = -1,
+    isActive = true,
+    ignoreNoNFT = true,
+  }) => {
+    const ret = await client("POST", "/getCollections", {
+      limit,
+      offset,
+      sort,
+      isActive,
+    });
+
+    return ret;
+  },
+
+  getFeaturedCollections: async () => {
+    return await client("GET", "/getFeaturedCollections", {});
+  },
+
+  getCollectionCount: async () => {
+    return await client("GET", "/getCollectionCount", {});
+  },
+
   getCollectionByAddress: async ({ collection_address }) => {
     return await client("POST", "/getCollectionByAddress", {
       collection_address,
     });
   },
 
-  getCollectionByVolume: async ({
+  getCollectionByID: async ({ id }) => {
+    return await client("POST", "/getCollectionByID", { id });
+  },
+
+  getCollectionsByVolume: async ({
     limit = 5,
     offset = 0,
     sort = -1,
@@ -277,9 +328,31 @@ export const APICall = {
   },
 
   // NFT API Calls
+  getNftJson: async ({ tokenID = 1, token_uri }) => {
+    const url = `/getJSON?input=${token_uri}${tokenID.toString()}.json`;
+
+    return await client("GET", url, {});
+  },
+
   getNFTsByOwner: async ({ owner }) => {
     return await client("POST", "/getNFTsByOwner", {
       owner,
+    });
+  },
+
+  getNFTsByOwnerAndCollection: async ({
+    collection_address,
+    owner,
+    limit = 10000,
+    offset = 0,
+    sort = -1,
+  }) => {
+    return await client("POST", "/getNFTsByOwnerAndCollection", {
+      collection_address,
+      owner,
+      limit,
+      offset,
+      sort,
     });
   },
 

@@ -30,7 +30,7 @@ import AddNewNFTImageUpload from "@components/ImageUpload/Collection";
 import AddLevelsModal from "../Modal/AddLevels";
 import AddPropertiesModal from "../Modal/AddProperties";
 
-import { createLevelAttribute } from "@utils";
+import { createLevelAttribute, getTraitCount } from "@utils";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { formMode, CREATE_NFT, EDIT_NFT, START } from "@constants";
@@ -39,9 +39,16 @@ import { setTxStatus } from "@store/actions/txStatus";
 import PropCard from "@components/Card/PropCard";
 import isNotEmptyStr from "@utils";
 import LevelCard from "@components/Card/LevelCard";
-import { clearTxStatus } from "@store/actions/txStatus";
 
-const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
+const AddNewNFTForm = ({
+  mode = "add",
+  collectionOwner,
+  tokenID,
+  traits,
+  rarityTable,
+  totalNftCount,
+  ...rest
+}) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
   const { currentAccount, api } = useSubstrateState();
   const [initialValues, setInitialValues] = useState(undefined);
@@ -57,8 +64,6 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
   const noImagesChange =
     avatarIPFSUrl && currentAvatarIPFSUrl.current === avatarIPFSUrl;
 
-  console.log("rest", rest);
-
   useEffect(() => {
     let newInitialValues = {
       NFTName: "",
@@ -71,37 +76,31 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
       newInitialValues.NFTName = rest.nftName;
       newInitialValues.description = rest.description;
 
-      newInitialValues.properties = rest.attrsList
-        ?.filter((item) => !JSON.stringify(Object.values(item)).includes("|"))
-        .map((item) => {
-          return { type: Object.keys(item)[0], name: Object.values(item)[0] };
+      // console.log("restrest", rest);
+
+      newInitialValues.properties = Object.entries(traits)
+        ?.filter(([_, name]) => !name.includes("|"))
+        .map(([type, name]) => {
+          return { type, name };
         });
 
-      if (newInitialValues.properties?.length === 0) {
-        newInitialValues.properties = [{ type: "", name: "" }];
-      }
+      newInitialValues.levels = Object.entries(traits)
+        ?.filter(([_, value]) => value.includes("|"))
+        .map(([name, value]) => {
+          let result = createLevelAttribute(value);
+          console.log("result", result);
 
-      newInitialValues.levels = rest?.attrsList
-        ?.filter((item) => JSON.stringify(Object.values(item)).includes("|"))
-        .map((item) => {
-          const result = createLevelAttribute(Object.values(item)[0]);
-
-          result.name = Object.keys(item)[0];
+          result.name = name;
 
           return result;
         });
-
-      if (newInitialValues.levels?.length === 0) {
-        newInitialValues.levels = [{ name: "", level: "", levelMax: "" }];
-      }
-
       setAvatarIPFSUrl(rest.avatar);
       currentAvatarIPFSUrl.current = rest.avatar;
       setInitialValues(newInitialValues);
     } else {
       setInitialValues(newInitialValues);
     }
-  }, [mode, rest.attrsList, rest.avatar, rest.description, rest.nftName]);
+  }, [mode, rest.avatar, rest.description, rest.nftName, traits]);
 
   const { actionType, tokenIDArray, ...restOfTxStatus } = useTxStatus();
 
@@ -275,30 +274,21 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 nft721_psp34_standard.CONTRACT_ABI,
                 collection_address || rest.nftContractAddress
               );
-
               nft721_psp34_standard_calls.setContract(
                 nft721_psp34_standard_contract
               );
 
               if (mode === formMode.ADD) {
-                try {
-                  dispatch(setTxStatus({ type: CREATE_NFT, step: START }));
+                dispatch(setTxStatus({ type: CREATE_NFT, step: START }));
 
-                  await nft721_psp34_standard_calls.mintWithAttributes(
-                    currentAccount,
-                    collection_address,
-                    attributes,
-                    dispatch,
-                    CREATE_NFT,
-                    api
-                  );
-                } catch (error) {
-                  console.log("X_x err.message", error.message);
-                  toast.error(
-                    `Err! Please contact support with the info below👇\n\n${error.message}.`
-                  );
-                  dispatch(clearTxStatus());
-                }
+                await nft721_psp34_standard_calls.mintWithAttributes(
+                  currentAccount,
+                  collection_address,
+                  attributes,
+                  dispatch,
+                  CREATE_NFT,
+                  api
+                );
               } else {
                 // add deleted properties
                 const oldAttrsKeysList = rest.attrsList.map(
@@ -315,26 +305,17 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     });
                   }
                 }
-
-                try {
-                  dispatch(setTxStatus({ type: EDIT_NFT, step: START }));
-                  // rest.nftContractAddress due to Edit mode on My NFT has no params
-                  await nft721_psp34_standard_calls.setMultipleAttributesNFT(
-                    currentAccount,
-                    collection_address || rest.nftContractAddress,
-                    tokenID,
-                    attributes,
-                    dispatch,
-                    EDIT_NFT,
-                    api
-                  );
-                } catch (error) {
-                  console.log("X_x err.message", error.message);
-                  toast.error(
-                    `Err! Please contact support with the info below👇\n\n${error.message}.`
-                  );
-                  dispatch(clearTxStatus());
-                }
+                dispatch(setTxStatus({ type: EDIT_NFT, step: START }));
+                // rest.nftContractAddress due to Edit mode on My NFT has no params
+                await nft721_psp34_standard_calls.setMultipleAttributesNFT(
+                  currentAccount,
+                  collection_address || rest.nftContractAddress,
+                  tokenID,
+                  attributes,
+                  dispatch,
+                  EDIT_NFT,
+                  api
+                );
               }
             }
           }}
@@ -374,7 +355,7 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                 <Flex w="full" pb={3}>
                   <VStack alignItems="start">
                     <Heading fontSize={["lg", "xl", "xl"]}>properties</Heading>
-                    <Text fontSize={"lg"}>
+                    <Text fontSize={"lg"} fontWeight="medium">
                       Textural trails that show up as rectangles
                     </Text>
                   </VStack>
@@ -387,13 +368,11 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     color="brand.blue"
                     onClick={() => setModifierToEdit("properties")}
                   >
-                    {mode === formMode.ADD
-                      ? "Add properties"
-                      : "Edit properties"}
+                    Add properties
                   </Button>
                 </Flex>
 
-                {values?.properties[0]?.type ? (
+                {values?.properties?.length && values?.properties[0]?.type ? (
                   <Grid
                     w="full"
                     templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
@@ -406,10 +385,16 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                       )
                       .map(({ type, name }, idx) => {
                         const item = { [type]: name };
-
+                        
                         return (
                           <GridItem key={idx} w="100%" h="100%">
-                            <PropCard item={item} />
+                            <PropCard
+                              item={item}
+                              traitCount={getTraitCount(rarityTable, item)}
+                              totalNftCount={
+                                totalNftCount || rest?.totalNftCount
+                              }
+                            />
                           </GridItem>
                         );
                       })}
@@ -441,11 +426,11 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
                     color="brand.blue"
                     onClick={() => setModifierToEdit("levels")}
                   >
-                    {mode === formMode.ADD ? "Add levels" : "Edit levels"}
+                    Add levels
                   </Button>
                 </Flex>
 
-                {values?.levels[0]?.name ? (
+                {values?.levels?.length && values?.levels[0]?.name ? (
                   <Grid
                     w="full"
                     templateColumns="repeat(auto-fill, minmax(min(100%, 11rem), 1fr))"
@@ -464,7 +449,11 @@ const AddNewNFTForm = ({ mode = "add", collectionOwner, tokenID, ...rest }) => {
 
                         return (
                           <GridItem w="100%" h="100%" key={idx}>
-                            <LevelCard item={item} />
+                            <LevelCard
+                              item={item}
+                              traitCount={getTraitCount(rarityTable, item)}
+                              totalNftCount={totalNftCount}
+                            />
                           </GridItem>
                         );
                       })}

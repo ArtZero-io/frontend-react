@@ -4,7 +4,6 @@ import { useHistory, useLocation, useParams } from "react-router-dom";
 import { usePagination } from "@ajna/pagination";
 import { useDispatch } from "react-redux";
 
-import { clientAPI } from "@api/client";
 import Layout from "@components/Layout/Layout";
 import PaginationMP from "@components/Pagination/Pagination";
 
@@ -41,7 +40,7 @@ import { useQuery } from "react-query";
 
 const NUMBER_PER_PAGE = 12;
 
-function CollectionPage2() {
+function CollectionPage() {
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -128,7 +127,7 @@ function CollectionPage2() {
       };
     }
 
-    const ret = await APICall.searchNFTOfCollectionByTraits({
+    const { ret } = await APICall.searchNFTOfCollectionByTraits({
       sort: -1,
       offset: offset,
       limit: pageSize,
@@ -136,7 +135,7 @@ function CollectionPage2() {
       collectionAddress: collection_address,
     });
 
-    console.log("xx>> ret", ret);
+    // console.log("xx>> ret", ret);
 
     const totalListedCount =
       await marketplace_contract_calls.getListedTokenCountByCollectionAddress(
@@ -146,7 +145,9 @@ function CollectionPage2() {
 
     ret.totalListed = totalListedCount || 0;
 
-    const [floorPrice] = await clientAPI("post", "/getFloorPrice", {
+    const {
+      ret: [floorPrice],
+    } = await APICall.getCollectionFloorPrice({
       collection_address,
     });
 
@@ -195,7 +196,7 @@ function CollectionPage2() {
     const query = qs.stringify(cleanQuery);
 
     history.push(
-      `${ROUTES.DETAIL_COLLECTION_BASEV2}/${collection_address}?${query}`
+      `${ROUTES.DETAIL_COLLECTION_BASE}/${collection_address}?${query}`
     );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -364,7 +365,7 @@ function CollectionPage2() {
   );
 }
 
-export default CollectionPage2;
+export default CollectionPage;
 
 export const tabList = {
   ALL: "ALL",

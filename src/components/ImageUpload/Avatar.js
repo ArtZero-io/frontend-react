@@ -19,9 +19,9 @@ import ActiveIcon from "@theme/assets/icon/Active.js";
 
 import { Buffer } from "buffer";
 import IdenticonAvatar from "@components/IdenticonAvatar/IdenticonAvatar/";
-import { clientAPI } from "@api/client";
-import { getCachedImageShort } from "@utils";
 import { ipfsClient } from "@api/client";
+import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
+import { APICall } from "../../api/client";
 
 const supportedFormat = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
 
@@ -92,7 +92,7 @@ export default function ImageUploadAvatar({
           setImageIPFSUrl(created?.path);
           setImgURL(created?.path);
 
-          await clientAPI("post", "/cacheImage", {
+          await APICall.askBeCacheImage({
             input: created?.path,
             is1024: true,
           });
@@ -113,40 +113,6 @@ export default function ImageUploadAvatar({
       setImagePreviewUrl(src);
     }
   };
-
-  // const onUploadHandler = async (e) => {
-  //   try {
-  //     if (newAvatarData) {
-  //       const uploadPromise = () =>
-  //         new Promise(function (resolve) {
-  //           const created = client.add(newAvatarData);
-
-  //           if (created) {
-  //             resolve(created);
-  //           }
-  //         });
-
-  //       toast.promise(
-  //         uploadPromise().then(async (created) => {
-  //           setImageIPFSUrl(created?.path);
-  //           setImgURL(created?.path);
-  //           await clientAPI("post", "/cacheImage", {
-  //             input: created?.path,
-  //             is1024: true,
-  //           });
-  //         }),
-  //         {
-  //           loading: "Uploading...",
-  //           success: `Upload Avatar successful!`,
-  //           error: "Could not upload Avatar.",
-  //         }
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.log(error.message);
-  //     toast.error(error.message);
-  //   }
-  // };
 
   useEffect(() => {
     if (imgURL && imagePreviewUrl) {
@@ -175,7 +141,7 @@ export default function ImageUploadAvatar({
 
         {!imagePreviewUrl && profile?.avatar && (
           <Square size={["260px", "360px"]}>
-            <Image
+            {/* <Image
               h="full"
               w="full"
               alt="avatar"
@@ -183,6 +149,12 @@ export default function ImageUploadAvatar({
               objectFit="cover"
               objectPosition="center"
               src={getCachedImageShort(profile?.avatar, 500)}
+            />{" "} */}
+            <ImageCloudFlare
+              size={500}
+              w={["260px", "360px"]}
+              h={["260px", "360px"]}
+              src={profile?.avatar}
             />
           </Square>
         )}

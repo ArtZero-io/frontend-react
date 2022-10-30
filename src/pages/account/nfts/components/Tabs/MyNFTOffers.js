@@ -63,7 +63,7 @@ function MyNFTOffer({ nftContractAddress, tokenID }) {
         );
 
         // map array index to bidId
-        listBidder = listBidder.map((i, idx) => {
+        listBidder = listBidder?.map((i, idx) => {
           return { ...i, bidId: idx };
         });
 

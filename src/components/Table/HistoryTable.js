@@ -98,7 +98,7 @@ function HistoryTable({ tableHeaders, tableData }) {
                     <Tr key={idx} color="#fff">
                       {tableHeaders.map((item) => (
                         <Td
-                          key={idx}
+                          key={item.name}
                           textAlign="left"
                           // minW={["auto", "250px"]}
                           py={{ base: "1rem", "2xl": "1.75rem" }}

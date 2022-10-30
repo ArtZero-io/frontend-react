@@ -5,7 +5,6 @@ import {
   Heading,
   Spacer,
   Text,
-  Image,
   Link,
   Tooltip,
   HStack,
@@ -36,7 +35,7 @@ import marketplace from "@utils/blockchain/marketplace";
 
 import { useSubstrateState } from "@utils/substrate";
 import { ContractPromise } from "@polkadot/api-contract";
-import { getCachedImageShort, truncateStr } from "@utils";
+import { truncateStr, getTraitCount } from "@utils";
 import { convertStringToPrice, formatNumDynamicDecimal } from "@utils";
 
 import { formMode } from "@constants";
@@ -59,6 +58,7 @@ import UnlockIcon from "@theme/assets/icon/Unlock";
 import LockIcon from "@theme/assets/icon/Lock";
 import PropCard from "@components/Card/PropCard";
 import LevelCard from "@components/Card/LevelCard";
+import ImageCloudFlare from "../../../../../components/ImageWrapper/ImageCloudFlare";
 
 function MyNFTTabInfo(props) {
   const {
@@ -76,6 +76,9 @@ function MyNFTTabInfo(props) {
     is_locked,
     showOnChainMetadata,
     royalFee,
+    nft_count,
+    rarityTable,
+    // traits = {},
   } = props;
 
   const { api, currentAccount } = useSubstrateState();
@@ -286,7 +289,8 @@ function MyNFTTabInfo(props) {
     <>
       <HStack spacing="45px" alignItems="stretch">
         <Square size="484px">
-          <Image
+          <ImageCloudFlare src={avatar} size={500} />
+          {/* <Image
             w="full"
             h="full"
             boxShadow="lg"
@@ -294,7 +298,7 @@ function MyNFTTabInfo(props) {
             objectFit="cover"
             src={avatar && getCachedImageShort(avatar, 500)}
             fallback={<Skeleton minW="484px" />}
-          />
+          /> */}
         </Square>
 
         <Stack alignItems="flex-start" w="full">
@@ -475,7 +479,11 @@ function MyNFTTabInfo(props) {
                         )
                         .map((item, idx) => (
                           <GridItem key={idx} w="100%" h="100%">
-                            <PropCard item={item} />
+                            <PropCard
+                              item={item}
+                              traitCount={getTraitCount(rarityTable, item)}
+                              totalNftCount={nft_count}
+                            />
                           </GridItem>
                         ))
                     : ""}
@@ -487,7 +495,11 @@ function MyNFTTabInfo(props) {
                         )
                         .map((item, idx) => (
                           <GridItem w="100%" h="100%" key={idx}>
-                            <LevelCard item={item} />
+                            <LevelCard
+                              item={item}
+                              traitCount={getTraitCount(rarityTable, item)}
+                              totalNftCount={nft_count}
+                            />
                           </GridItem>
                         ))
                     : null}

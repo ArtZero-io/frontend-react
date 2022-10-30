@@ -28,6 +28,7 @@ import {
   TRANSFER,
   ACCEPT_BID,
 } from "@constants";
+import { APICall } from "../../../api/client";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
@@ -70,7 +71,7 @@ const MyNFTsPage = () => {
           sort: -1,
           isActive: true,
         });
-
+        // console.log("allCollectionsOwned", allCollectionsOwned);
         let data = await Promise.all(
           allCollectionsOwned?.map(async (collection) => {
             const options = {
@@ -81,9 +82,7 @@ const MyNFTsPage = () => {
               sort: -1,
             };
 
-            let dataList = await clientAPI(
-              "post",
-              "/getNFTsByOwnerAndCollection",
+            let { ret: dataList } = await APICall.getNFTsByOwnerAndCollection(
               options
             );
 
@@ -134,7 +133,7 @@ const MyNFTsPage = () => {
           sort: -1,
         };
 
-        let Bids = await clientAPI("post", "/getBidsByBidderAddress", options);
+        let { ret: Bids } = await APICall.getBidsByBidderAddress(options);
 
         Bids.length ? setOwner(Bids[0].bidder) : setOwner(null);
 
@@ -144,7 +143,7 @@ const MyNFTsPage = () => {
         for (var i = 0; i < length; i++) {
           let bid = Bids[i];
 
-          let collection = await clientAPI("post", "/getCollectionByAddress", {
+          let { ret: collection } = await APICall.getCollectionByAddress({
             collection_address: bid.nftContractAddress,
           });
 
@@ -153,7 +152,8 @@ const MyNFTsPage = () => {
             token_id: bid.tokenID,
           };
 
-          let dataList = await clientAPI("post", "/getNFTByID", options);
+          let { ret: dataList } = await APICall.getNFTByID(options);
+
           let data = dataList?.map((item) => {
             return {
               ...item,

@@ -18,7 +18,7 @@ import {
 import React, { useEffect, useState } from "react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import {
-  getCachedImageShort,
+  getCloudFlareImage,
   secondsToTime,
   formatNumDynamicDecimal,
 } from "@utils";
@@ -148,6 +148,15 @@ function MyNFTCard({
     if (stakeStatus === 3) getRequestTime();
   }, [currentAccount, stakeStatus, tokenID]);
 
+  const [projImage, setProjImage] = useState("");
+
+  useEffect(() => {
+    avatar &&
+      getCloudFlareImage(avatar, 500).then((res) => {
+        setProjImage(res);
+      });
+  }, [avatar]);
+
   return (
     <motion.div
       className="my-nft-card"
@@ -208,7 +217,7 @@ function MyNFTCard({
             w="full"
             h="full"
             objectFit="cover"
-            src={getCachedImageShort(avatar, 500)}
+            src={projImage}
             fallback={<Skeleton w={imgCardSize} h={imgCardSize} />}
           />
         </Square>

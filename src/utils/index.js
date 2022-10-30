@@ -4,6 +4,9 @@ import { AccountActionTypes } from "../store/types/account.types";
 import Keyring from "@polkadot/keyring";
 import { IPFS_BASE_URL } from "@constants/index";
 import numeral from "numeral";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { APICall } from "../api/client";
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 export function getCachedImage(imageHash, size, url) {
@@ -22,9 +25,47 @@ export function getCachedImageShort(imageHash = "", size = 100) {
   return ret;
 }
 
+// new func to getImage source from CloudFlare
+export async function getCloudFlareImage(imageHash = "", size = 500) {
+  const fallbackURL = `${IPFS_BASE_URL}/${imageHash.replace("ipfs://", "")}`;
+
+  const ret = `${baseURL}/getImage?input=${imageHash}&size=${size}&url=${fallbackURL}`;
+
+  let result;
+
+  try {
+    const response = await axios.get(ret);
+
+    result = response?.data || fallbackURL;
+  } catch (error) {
+    console.error("getCloudFlareImage error", error.message);
+    result = fallbackURL;
+  }
+
+  return result;
+}
+
+export async function getMetaDataOffChain(tokenID, token_uri) {
+  const metadata = await APICall.getNftJson({ tokenID, token_uri });
+
+  if (metadata) {
+    const attrsList = metadata?.attributes?.map((item) => {
+      return { [item.trait_type]: item.value };
+    });
+
+    return {
+      ...metadata,
+      attrsList,
+      avatar: metadata.image,
+      nftName: metadata.name,
+    };
+  }
+}
+
 export function shortenNumber(number) {
   return nFormatter(number, 1);
 }
+
 function nFormatter(num, digits) {
   var si = [
     { value: 1, symbol: "" },
@@ -378,4 +419,64 @@ export default function isNotEmptyStr(data) {
 
 export function isEmptyObj(value) {
   return Object.keys(value).length === 0 && value.constructor === Object;
+}
+
+export function getTraitCount(rarityTable, item) {
+  const [[key, value]] = Object.entries(item);
+
+  if (!rarityTable || !rarityTable[key]) return 0;
+
+  const idx = rarityTable[key].findIndex((i) => i.name === value);
+
+  if (idx === -1) return 0;
+
+  return rarityTable[key][idx].count;
+}
+
+export async function getEstimatedGas(
+  address,
+  contract,
+  value,
+  queryName,
+  ...args
+) {
+  const fetchGas = async () => {
+    let ret = -1;
+
+    try {
+      const { gasRequired, result } = await contract.query[queryName](
+        address,
+        { gasLimit: -1, storageDepositLimit: null, value },
+        ...args
+      );
+
+      if (result.isOk) {
+        ret = gasRequired.toString();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    return ret;
+  };
+
+  let result;
+
+  await toast.promise(
+    fetchGas().then((data) => (result = data)),
+    {
+      loading: "Fetching gas...",
+      success: (data) =>
+        `Estimated gas is ${formatNumDynamicDecimal(data / 10 ** 12)} AZERO`,
+      error: "Could not fetching gas!",
+    },
+    {
+      success: {
+        duration: 5000,
+        icon: "🔥",
+      },
+    }
+  );
+
+  return result;
 }

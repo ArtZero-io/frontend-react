@@ -42,7 +42,7 @@ export default function UpdateURIModal({
   }, [dispatch, onClose, rest.step]);
 
   const updateBaseUri = async () => {
-    if (newURI.toString().substr(-1) != "/") {
+    if (newURI.toString().substr(-1) !== "/") {
       toast.error("Base Uri must be end with /");
       return;
     }

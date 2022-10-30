@@ -611,9 +611,7 @@ export default UpdatePhase;
 
 const canEditPhase = (startTime) => {
   const now = new Date();
-  // console.log("startTime", new Date(startTime));
-  // console.log("now", new Date(now));
-  // console.log("startTime - now true", startTime - now);
+
   if (startTime > now) return true;
 
   return false;
@@ -622,7 +620,7 @@ const canEditPhase = (startTime) => {
 export const isPhaseEnd = (endTime = "") => {
   endTime = parseInt(endTime.replaceAll(",", ""));
 
-  const now = new Date();
+  const now = Date.now();
 
   if (endTime <= now) return true;
 

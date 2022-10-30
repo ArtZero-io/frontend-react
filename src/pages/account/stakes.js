@@ -18,10 +18,9 @@ import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_c
 
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import BN from "bn.js";
-import { clientAPI, APICall } from "@api/client";
+import { APICall } from "@api/client";
 import MyNFTGroupCard from "@components/Card/MyNFTGroup";
 
-import { getMetaDataType1 } from "../collection/collection";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { motion } from "framer-motion";
 import {
@@ -83,8 +82,6 @@ const MyStakesPage = () => {
         marketplace_contract_calls
       );
 
-      // console.log("fee", fee);
-      // console.log("myTradingFee", myTradingFee);
       setPlatformTradingFee(fee);
 
       const stats = {
@@ -408,17 +405,12 @@ export const fetchMyTradingFee = async (
     currentAccount,
     marketplace_contract_calls
   );
-  console.log("stepArr", stepArr);
-  console.log("rateArr", rateArr);
-  console.log("platformTradingFee", platformTradingFee);
-  console.log("PMPStaked", PMPStaked);
+
   ret = platformTradingFee;
 
   for (var i = 0; i < stepArr.length; i++) {
     if (PMPStaked >= stepArr[i]) {
       ret = platformTradingFee * (1 - rateArr[i] / 100);
-      console.log("rateArr[i]", rateArr[i]);
-      console.log("ret:i", ret);
       break;
     }
   }
@@ -429,7 +421,7 @@ export const fetchMyTradingFee = async (
 export const getMyUnstakePMP = async ({ owner, collection_address }) => {
   let ret = [];
 
-  const dataList = await clientAPI("post", "/getNFTsByOwnerAndCollection", {
+  const { ret: dataList } = await APICall.getNFTsByOwnerAndCollection({
     collection_address,
     owner,
     limit: 10000,
@@ -456,24 +448,19 @@ export const getMyPendingPMP = async ({
   if (pendingCount === 0) return ret;
 
   const PMPContractAddress = artzero_nft.CONTRACT_ADDRESS;
-  const token_uri = await getTokenURI({
-    api,
-    nftContractAddress: PMPContractAddress,
-    currentAccount,
-  });
 
   ret = await Promise.all(
     [...Array(pendingCount)].map(async (_, index) => {
-      // console.log("getTokenIdOfPendingPMP:index", index);
       const token_id = await getTokenIdOfPendingPMP({ currentAccount, index });
-      // console.log("getTokenIdOfPendingPMP:token_id", token_id);
-      const [token_info] = await APICall.getNFTByID({
+
+      const {
+        ret: [token_info],
+      } = await APICall.getNFTByID({
         collection_address: PMPContractAddress,
         token_id,
       });
 
-      const tokenMeta = await getMetaDataType1(token_id, token_uri);
-      return { ...token_info, ...tokenMeta, stakeStatus: 3 };
+      return { ...token_info, stakeStatus: 3 };
     })
   );
 
@@ -486,28 +473,19 @@ export const getMyStakedPMP = async ({ stakedCount, currentAccount }) => {
   if (stakedCount === 0) return ret;
 
   const PMPContractAddress = artzero_nft.CONTRACT_ADDRESS;
-  const token_uri = await getTokenURI({
-    currentAccount,
-  });
 
   ret = await Promise.all(
     [...Array(stakedCount)].map(async (_, index) => {
-      // console.log("getMyStakedPMP::getTokenIdOfStakedPMP:index", index);
-      // console.log(
-      //   "getMyStakedPMP::getTokenIdOfStakedPMP:currentAccount",
-      //   currentAccount
-      // );
       const token_id = await getTokenIdOfStakedPMP({ currentAccount, index });
-      // console.log("getMyStakedPMP::getTokenIdOfStakedPMP:token_id", token_id);
-      const [token_info] = await APICall.getNFTByID({
+
+      const {
+        ret: [token_info],
+      } = await APICall.getNFTByID({
         collection_address: PMPContractAddress,
         token_id,
       });
-      const tokenMeta = await getMetaDataType1(token_id, token_uri);
 
-      // console.log("tokenMeta", tokenMeta);
-
-      return { ...token_info, ...tokenMeta, stakeStatus: 2 };
+      return { ...token_info, stakeStatus: 2 };
     })
   );
   return ret;
@@ -539,11 +517,13 @@ export const getTokenIdOfStakedPMP = async ({ currentAccount, index }) => {
 };
 
 export const getPMPCollectionDetail = async () => {
-  const [ret] = await APICall.getCollectionByAddress({
+  const {
+    ret: [data],
+  } = await APICall.getCollectionByAddress({
     collection_address: artzero_nft.CONTRACT_ADDRESS,
   });
 
-  return ret;
+  return data;
 };
 
 const NOT_STAKED = "NOT STAKED";
@@ -555,18 +535,3 @@ export const tabList = {
   PENDING_UNSTAKE,
   STAKED,
 };
-
-// export const tabList = [
-//   {
-//     id: "NOT_STAKED",
-//     title: "not staked",
-//   },
-//   {
-//     id: "PENDING_UNSTAKE",
-//     title: "pending unstake",
-//   },
-//   {
-//     id: "STAKED",
-//     title: "staked",
-//   },
-// ];

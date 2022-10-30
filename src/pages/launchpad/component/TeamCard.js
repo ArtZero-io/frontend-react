@@ -1,16 +1,6 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Image,
-  Skeleton,
-  Square,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import React from "react";
-import { getCachedImageShort } from "@utils/index";
+import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
 
 export const TeamCard = ({ team_member }) => {
   return (
@@ -25,16 +15,8 @@ export const TeamCard = ({ team_member }) => {
       minH="320px"
       mb="30px"
     >
-      <Square h="250px" w="250px">
-        <Image
-          alt={"nftName"}
-          w="full"
-          h="full"
-          objectFit="cover"
-          src={getCachedImageShort(team_member?.avatar, 500)}
-          fallback={<Skeleton w="250px" h="250px" />}
-        />
-      </Square>
+      <ImageCloudFlare h="250px" w="250px" src={team_member?.avatar} />
+
       <Box w="full" px="16px" pt="20px">
         <Heading
           fontSize={["15px", "16px", "17px"]}

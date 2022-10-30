@@ -15,7 +15,6 @@ import AdvancedModeSwitch from "@components/Switch/Switch";
 import AdvancedModeTextArea from "@components/TextArea/TextArea";
 
 import AddCollectionNumberInput from "@components/Input/NumberInput";
-import { clientAPI } from "@api/client";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
 import {
   formMode,
@@ -26,6 +25,7 @@ import {
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { setTxStatus } from "@store/actions/txStatus";
+import { APICall } from "../../../../../api/client";
 
 const AdvancedModeForm = ({ mode = "add", id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -104,9 +104,9 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
 
     const fetchCollectionsByID = async () => {
       try {
-        const [dataList] = await clientAPI("post", "/getCollectionByID", {
-          id,
-        });
+        const {
+          ret: [dataList],
+        } = await APICall.getCollectionByID({ id });
 
         const {
           nftContractAddress,
@@ -263,7 +263,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
 
               if (mode === formMode.ADD) {
                 dispatch(setTxStatus({ type: CREATE_COLLECTION, step: START }));
-
+                console.log("ADD data", data);
                 await collection_manager_calls.addNewCollection(
                   currentAccount,
                   data,

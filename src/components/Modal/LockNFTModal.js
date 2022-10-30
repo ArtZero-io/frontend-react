@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Text,
   Popover,
@@ -13,7 +12,6 @@ import {
   Tooltip,
   HStack,
   useBreakpointValue,
-  Icon,
 } from "@chakra-ui/react";
 
 import { useSubstrateState } from "@utils/substrate";
@@ -30,12 +28,12 @@ import {
 } from "@store/actions/txStatus";
 import { APICall } from "@api/client";
 import { setTxStatus } from "@store/actions/txStatus";
-import { AiOutlineUnlock } from "react-icons/ai";
 import { START, FINALIZED, LOCK, END } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { useEffect } from "react";
 import UnlockIcon from "../../theme/assets/icon/Unlock";
+import { getEstimatedGas } from "@utils/";
 
 function LockNFTModal({
   owner,
@@ -51,7 +49,6 @@ function LockNFTModal({
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
   const lockNFTsHandler = async () => {
-    console.log("owner", owner);
     if (owner !== currentAccount?.address) {
       return toast.error("You are not the owner of this NFT");
     }
@@ -64,17 +61,25 @@ function LockNFTModal({
         nft721_psp34_standard.CONTRACT_ABI,
         nftContractAddress
       );
-      let unsubscribe;
 
-      const gasLimit = -1;
-      const azero_value = 0;
-      const injector = await web3FromSource(currentAccount?.meta?.source);
+      let unsubscribe;
+      let gasLimit = -1;
+
+      const address = currentAccount?.address;
+      const { signer } = await web3FromSource(currentAccount?.meta?.source);
+      const value = 0;
+
+      gasLimit = await getEstimatedGas(address, contract, value, "lock", {
+        u64: tokenID,
+      });
+
+      console.log("ret ret uri xxx", gasLimit);
 
       await contract.tx
-        .lock({ value: azero_value, gasLimit }, { u64: tokenID })
+        .lock({ value, gasLimit }, { u64: tokenID })
         .signAndSend(
           currentAccount?.address,
-          { signer: injector.signer },
+          { signer },
           async ({ status, dispatchError }) => {
             txResponseErrorHandler({
               status,
@@ -98,8 +103,6 @@ function LockNFTModal({
       return unsubscribe;
     }
   };
-
-  const iconBorderSize = useBreakpointValue({ base: "6px", "2xl": "10px" });
 
   useEffect(() => {
     rest.step === END && onClose();

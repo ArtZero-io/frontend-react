@@ -16,6 +16,7 @@ import { truncateStr } from "@utils";
 import { SCROLLBAR } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
+import { Fragment } from "react";
 
 function CommonTable({
   tableHeaders,
@@ -64,8 +65,8 @@ function CommonTable({
 
             <Tbody>
               {tableData?.map((item, idx) => (
-                <>
-                  <Tr key={idx} color="#fff">
+                <Fragment key={idx}>
+                  <Tr color="#fff">
                     <Td
                       color="#7ae7ff"
                       py={{ base: "1rem", "2xl": "1.75rem" }}
@@ -113,7 +114,7 @@ function CommonTable({
                       ""
                     )}
                   </Tr>
-                </>
+                </Fragment>
               ))}
             </Tbody>
           </Table>

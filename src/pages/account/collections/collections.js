@@ -59,7 +59,7 @@ function MyCollectionsPage() {
     };
 
     try {
-      const totalCollectionsCountData =
+      const { ret: totalCollectionsCountData } =
         await APICall.getCollectionsCountByOwner({
           owner: currentAccount?.address,
           noNFT: true,
@@ -67,7 +67,7 @@ function MyCollectionsPage() {
 
       setTotalCollectionsCount(totalCollectionsCountData);
 
-      const dataList = await APICall.getCollectionsByOwner(options);
+      const { ret: dataList } = await APICall.getCollectionsByOwner(options);
 
       let listCollection = [];
       let ownerAddress;

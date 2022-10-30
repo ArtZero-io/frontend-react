@@ -15,9 +15,9 @@ import { useCallback, useEffect, useState } from "react";
 import { delay, truncateStr } from "@utils";
 import toast from "react-hot-toast";
 import BN from "bn.js";
-import { clientAPI } from "@api/client";
 import { SCROLLBAR } from "@constants";
 import AddressCopier from "@components/AddressCopier/AddressCopier";
+import { APICall } from "../../../../api/client";
 
 let collection_count = 0;
 
@@ -83,11 +83,10 @@ function CollectionAdmin() {
       ignoreNoNFT: true,
     };
 
-    let collections_actives = await clientAPI(
-      "post",
-      "/getCollections",
+    let { ret: collections_actives } = await APICall.getAllCollections(
       options_active
     );
+
     // console.log('collections_actives',collections_actives);
 
     const options_inactive = {
@@ -98,11 +97,10 @@ function CollectionAdmin() {
       ignoreNoNFT: true,
     };
 
-    const collections_inactive = await clientAPI(
-      "post",
-      "/getCollections",
+    const { ret: collections_inactive } = await APICall.getAllCollections(
       options_inactive
     );
+
     // console.log('collections_inactive',collections_inactive);
     let collections = collections_actives.concat(collections_inactive);
     // console.log('collections',collections);

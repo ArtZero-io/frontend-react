@@ -12,11 +12,11 @@ import React, { useState, useRef } from "react";
 
 import { Buffer } from "buffer";
 import toast from "react-hot-toast";
-import { clientAPI } from "@api/client";
-import { getCachedImageShort } from "@utils/index";
 import { formMode } from "@constants";
 
 import { ipfsClient } from "@api/client";
+import { APICall } from "../../api/client";
+import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 
 const supportedFormat = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
 
@@ -88,11 +88,11 @@ const ImageUploadCollection = ({
         });
 
       toast.promise(
-        uploadPromise().then((created) => {
+        uploadPromise().then(async (created) => {
           setImageIPFSUrl(created?.path, index);
           setImgURL(created?.path);
 
-          clientAPI("post", "/cacheImage", {
+          await APICall.askBeCacheImage({
             input: created?.path,
             is1920: isBanner,
           });
@@ -164,11 +164,14 @@ const ImageUploadCollection = ({
         </HStack>
 
         {mode === formMode.EDIT && !imagePreviewUrl && (
-          <Avatar
-            minH={minH}
-            minW={16}
-            ml={2}
-            src={getCachedImageShort(imageIPFSUrl, 100)}
+          <ImageCloudFlare
+            w="64px"
+            h="64px"
+            size={100}
+            ml="10px"
+            src={imageIPFSUrl}
+            borderRadius="full"
+            border="2px solid white"
           />
         )}
 
@@ -180,22 +183,6 @@ const ImageUploadCollection = ({
               mx={4}
               src={imagePreviewUrl}
             />
-
-            {/* {imgURL ? (
-              <Tag variant="active" minW={[4, 16, 16]} color="brand.blue">
-                <TagLeftIcon as={ActiveIcon} />
-                <TagLabel>Ready !</TagLabel>
-              </Tag>
-            ) : (
-              <Spinner
-                mx="14px"
-                p={"8px"}
-                speed="0.5s"
-                thickness="2px"
-                color="#7ae7ff"
-                emptyColor="#333"
-              />
-            )} */}
           </HStack>
         )}
         <Spacer />

@@ -8,7 +8,7 @@ import { APICall } from "@api/client";
 import { ContractPromise } from "@polkadot/api-contract";
 
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import { createObjAttrsNFT } from "..";
+import { createObjAttrsNFT, getEstimatedGas } from "..";
 import {
   setTxStatus,
   txErrorHandler,
@@ -68,19 +68,26 @@ async function tokenUri(caller_account, token_id) {
 
 async function mint(caller_account) {
   if (!contract || !caller_account) {
-    return null;
+    throw Error(`Contract or caller not valid!`);
   }
+
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
+  const value = 0;
+
+  gasLimit = await getEstimatedGas(address, contract, value, "mint");
+
+  console.log("ret ret uri xxx", gasLimit);
+
   contract.tx
-    .mint({ gasLimit, value: azero_value })
+    .mint({ gasLimit, value })
     .signAndSend(
       address,
-      { signer: injector.signer },
+      { signer },
       async ({ status, dispatchError, output }) => {
         if (dispatchError) {
           if (dispatchError.isModule) {
@@ -151,54 +158,59 @@ async function mintWithAttributes(
   api
 ) {
   if (!contract || !caller_account) {
-    return null;
+    throw Error(`Contract or caller not valid!`);
   }
+
   let unsubscribe;
-  const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source);
-  let resStatus = false;
+  let gasLimit = -1;
 
   let metadata = [];
   for (const attribute of attributes) {
     metadata.push([attribute.name.trim(), attribute.value.trim()]);
   }
-  console.log('mintWithAttributes::metadata', metadata);
+
+  const address = caller_account?.address;
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
+  const value = 0;
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "mintWithAttributes",
+    metadata
+  );
+
+  console.log("ret ret uri xxx", gasLimit);
+
   contract.tx
-    .mintWithAttributes(
-      { gasLimit, value: azero_value },
-      metadata
-    )
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-          caller_account,
+    .mintWithAttributes({ gasLimit, value }, metadata)
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+
+      if (status?.isFinalized) {
+        const token_id = await getTotalSupply(address);
+
+        console.log("nft721-psp34-standard-calls mintWithAttributes", token_id);
+
+        await APICall.askBeUpdateNftData({
+          collection_address: nft_address,
+          token_id: token_id,
         });
-
-        if (status?.isFinalized) {
-          const token_id = await getTotalSupply(address);
-
-          await APICall.askBeUpdateNftData({
-            collection_address: nft_address,
-            token_id: token_id,
-          });
-        }
-        
       }
-    )
+    })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 
-
-  return resStatus && unsubscribe;
+  return unsubscribe;
 }
 
 async function getAttribute(caller_account, tokenId, attribute) {
@@ -301,45 +313,55 @@ async function approve(
   api
 ) {
   if (!contract || !caller_account) {
+    toast.error(`Contract or caller not valid!`);
     return null;
   }
+
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+  const value = 0;
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "psp34::approve",
+    operator_address,
+    token_id,
+    is_approve
+  );
+
+  console.log("ret ret uri xxx", gasLimit);
 
   await contract.tx["psp34::approve"](
-    { gasLimit, value: azero_value },
+    { gasLimit, value },
     operator_address,
     token_id,
     is_approve
   )
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-          caller_account,
-        });
+    .signAndSend(address, { signer }, ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
 
-        if (status.isFinalized) {
-          // set status for next step
-          dispatch(
-            setTxStatus({
-              type: txType,
-              step: START,
-            })
-          );
-        }
+      if (status.isFinalized) {
+        // set status for next step
+        dispatch(
+          setTxStatus({
+            type: txType,
+            step: START,
+          })
+        );
       }
-    )
+    })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 
@@ -355,46 +377,56 @@ async function setMultipleAttributesNFT(
   txType,
   api
 ) {
+  if (!contract || !caller_account) {
+    toast.error(`Contract or caller not valid!`);
+    return null;
+  }
   let metadata = [];
   for (const attribute of attributes) {
     metadata.push([attribute.name.trim(), attribute.value.trim()]);
   }
-  console.log('mintWithAttributes::metadata', metadata);
+  console.log("mintWithAttributes::metadata", metadata);
 
   let unsubscribe;
+  let gasLimit = -1;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
-  const injector = await web3FromSource(caller_account?.meta?.source);
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "psp34Traits::setMultipleAttributes",
+    { u64: tokenID },
+    metadata
+  );
+
+  console.log("ret ret uri xxx", gasLimit);
 
   await contract.tx["psp34Traits::setMultipleAttributes"](
     { value, gasLimit },
     { u64: tokenID },
     metadata
   )
-    .signAndSend(
-      address,
-      { signer: injector.signer },
-      async ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-          caller_account,
-        });
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
 
-        if (status.isFinalized) {
-          await APICall.askBeUpdateNftData({
-            collection_address,
-            token_id: tokenID,
-          });
-        }
+      if (status.isFinalized) {
+        await APICall.askBeUpdateNftData({
+          collection_address,
+          token_id: tokenID,
+        });
       }
-    )
+    })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 
@@ -497,7 +529,9 @@ export const getNFTDetails = async function (
   token_id,
   contractType
 ) {
-  let [tokenDetails] = await APICall.getNFTByID({
+  let {
+    ret: [tokenDetails],
+  } = await APICall.getNFTByID({
     collection_address,
     token_id,
   });
