@@ -6,6 +6,7 @@ import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
+import { clientAPI } from "@api/client";
 
 // let account;
 let contract;
@@ -154,9 +155,6 @@ export async function setMultipleAttributesProfileOnChain(
     attributes,
     values
   );
-
-  console.log("ret ret uri xxx", gasLimit);
-
   contract.tx
     .setMultipleAttributes({ gasLimit, value }, attributes, values)
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
@@ -168,6 +166,35 @@ export async function setMultipleAttributesProfileOnChain(
         api,
         caller_account,
       });
+      if (status?.isFinalized) {
+        if (attributes?.length) {
+          let cacheImages = [];
+          for (
+            let i = 0;
+            i < attributes.length;
+            i++
+          ) {
+            console.log(attributes[i]);
+            if (attributes[i] === "avatar") {
+              cacheImages.push({
+                input: values[i],
+                imageType: "profile",
+                metadata: {
+                  walletAddress: address,
+                  type: "avatar",
+                },
+              });
+            }
+          }
+          console.log("cacheImages", cacheImages);
+          if (cacheImages.length) {
+            console.log("cacheImages::POST_API");
+            await clientAPI("post", "/cacheImages", {
+              images: JSON.stringify(cacheImages),
+            });
+          }
+        }
+      }
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
