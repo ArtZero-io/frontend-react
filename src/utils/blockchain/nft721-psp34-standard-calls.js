@@ -205,6 +205,37 @@ async function mintWithAttributes(
           collection_address: nft_address,
           token_id: token_id,
         });
+        if (attributes?.length) {
+          let cacheImages = [];
+          console.log("attributes", attributes);
+          
+          for (
+            let i = 0;
+            i < attributes.length;
+            i++
+          ) {
+            console.log(attributes[i]);
+            if (attributes[i].name === "avatar") {
+              cacheImages.push({
+                input: attributes[i].value,
+                is1920: false,
+                imageType: "nft",
+                metadata: {
+                  collectionAddress: nft_address,
+                  tokenId: token_id,
+                  type: "avatar",
+                },
+              });
+            }
+          }
+          console.log("cacheImages", cacheImages);
+          if (cacheImages.length) {
+            
+            await clientAPI("post", "/cacheImages", {
+              images: JSON.stringify(cacheImages),
+            });
+          }
+        }
       }
     })
     .then((unsub) => (unsubscribe = unsub))
