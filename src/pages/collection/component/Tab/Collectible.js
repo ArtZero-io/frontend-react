@@ -56,7 +56,8 @@ import LockIcon from "@theme/assets/icon/Lock";
 import PropCard from "@components/Card/PropCard";
 import LevelCard from "@components/Card/LevelCard";
 import { Fragment } from "react";
-import ImageCloudFlare from "../../../../components/ImageWrapper/ImageCloudFlare";
+import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
+import SocialShare from "@components/SocialShare/SocialShare";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -210,6 +211,11 @@ const NFTTabCollectible = (props) => {
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
 
+  const path = `${window.location.href.replace(
+    "#/collection/",
+    "#/nft/"
+  )}/${tokenID}`;
+
   return (
     <>
       <Stack alignItems="stretch" direction="row" spacing="45px">
@@ -322,6 +328,7 @@ const NFTTabCollectible = (props) => {
                   </span>
                 </Tooltip>
               )}
+              <SocialShare title={nftName} shareUrl={path} />
             </HStack>
           </HStack>
 
