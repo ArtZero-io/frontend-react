@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Heading,
   Stack,
@@ -5,10 +6,13 @@ import {
   HStack,
   VStack,
   IconButton,
+  Tooltip,
+  Flex,
+  Button,
 } from "@chakra-ui/react";
 import BN from "bn.js";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
-import ImageUpload from "@components/ImageUpload/Collection";
+// import ImageUpload from "@components/ImageUpload/Collection";
 import NumberInput from "@components/Input/NumberInput";
 import TextArea from "@components/TextArea/TextArea";
 import { formMode } from "@constants";
@@ -68,6 +72,8 @@ import {
   validationAgreeFeeCheckbox,
   validationEmail,
 } from "@constants/yup";
+import { APICall } from "@api/client";
+import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
@@ -123,18 +129,18 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
       return;
     }
 
-    if (e[1].getTime() < Date.now()) {
+    if (e[1]?.getTime() < Date.now()) {
       toast.error("Project end time must be greater than current time!");
       return;
     }
 
-    if (e[0].getTime() > e[1].getTime()) {
+    if (e[0]?.getTime() > e[1]?.getTime()) {
       toast.error("Project end time must be greater than start time!");
       return;
     }
 
-    setFieldValue("startTime", e[0].getTime());
-    setFieldValue("endTime", e[1].getTime());
+    setFieldValue("startTime", e[0]?.getTime());
+    setFieldValue("endTime", e[1]?.getTime());
   };
 
   const handleOnRedirect = () => {
@@ -583,62 +589,90 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       alignItems="start"
                       justifyContent="end"
                     >
-                      {/* <Heading size="h5">project avatar image</Heading>{" "} */}
-                      {/* <Text pt={{ base: "10px", xl: "30px" }}> */}
                       <Text>Choose avatar image</Text>
-                      <ImageUpload
+                      <Text
+                        ml={2}
+                        fontSize={["xs", "sm"]}
+                        color="brand.grayLight"
+                      >
+                        This image will also be used for navigation. <br />
+                        <br />
+                        Recommended file size is 500 x 500 px
+                      </Text>
+                      <ImageUploadThumbnail
+                        isRounded={true}
+                        width="260px"
+                        height="260px"
                         isDisabled={actionType}
                         id="avatar"
                         mode={mode}
                         isBanner={false}
                         imageIPFSUrl={avatarIPFSUrl}
                         setImageIPFSUrl={setAvatarIPFSUrl}
-                        limitedSize={{ width: "500", height: "500" }}
                       />
                     </Stack>
 
                     <Stack
-                      pt={{ base: "30px", xl: "0px" }}
-                      w={{ base: "full", xl: "50%" }}
+                      pt={{ base: "30px", md: "0px" }}
+                      w={{ base: "full", md: "50%" }}
                       direction="column"
                       alignItems="start"
-                      justifyContent="end"
+                      justifyContent="start"
                     >
-                      <Text>Choose header square image</Text>
-
-                      <ImageUpload
-                        mode={mode}
-                        isBanner={true}
-                        id="header_square"
+                      <Text>Choose featured image</Text>
+                      <Text
+                        ml={2}
+                        fontSize={["xs", "sm"]}
+                        color="brand.grayLight"
+                      >
+                        This image will be used for featuring your collection on
+                        the homepage, category pages, or other promotional areas
+                        of ArtZero. <br />
+                        Recommended file size is 400 x 260 px
+                      </Text>
+                      <ImageUploadThumbnail
+                        width="400px"
+                        height="260px"
                         isDisabled={actionType}
+                        id="header_square"
+                        mode={mode}
                         imageIPFSUrl={headerSquareIPFSUrl}
                         setImageIPFSUrl={setHeaderSquareIPFSUrl}
-                        limitedSize={{ width: "500", height: "500" }}
                       />
                     </Stack>
                   </Stack>
 
-                  <Stack
-                    pb="30px"
-                    alignItems="start"
-                    justifyContent="space-between"
-                    direction={["column", "row"]}
-                  >
+                  <Stack pb="30px">
                     <Stack
-                      w={{ base: "full", xl: "50%" }}
+                      w="full"
                       direction="column"
                       alignItems="start"
                       justifyContent="end"
                     >
                       <Text>Choose header image</Text>
-                      <ImageUpload
+
+                      <Text
+                        ml={2}
+                        fontSize={["xs", "sm"]}
+                        color="brand.grayLight"
+                      >
+                        This image will appear at the top of your collection
+                        page. Avoid including too much text in this banner
+                        image, as the dimensions change on different devices.
+                        <br />
+                        Recommended file size is 1920 x 600 px
+                      </Text>
+
+                      <ImageUploadThumbnail
+                        bg="green"
+                        width="100%"
+                        height="260px"
+                        isDisabled={actionType}
                         id="header"
                         mode={mode}
                         isBanner={true}
-                        isDisabled={actionType}
                         imageIPFSUrl={headerIPFSUrl}
                         setImageIPFSUrl={setHeaderIPFSUrl}
-                        limitedSize={{ width: "1920", height: "600" }}
                       />
                     </Stack>
                   </Stack>
@@ -659,12 +693,22 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     <Stack w="full">
                       {mode === formMode.ADD && (
                         <Stack pb="30px">
-                          <Text fontSize="lg" ml={1}>
-                            Start time - End time{" "}
-                            <Text as="span" fontSize="lg" color="#fc8181">
-                              *
+                          <Tooltip
+                            placeContent="start"
+                            hasArrow
+                            bg="#333"
+                            color="#fff"
+                            borderRadius="0"
+                            label="Start time & end time of whole project - Lorem ad aute qui fugiat."
+                          >
+                            <Text w="fit-content" fontSize="lg" ml={1}>
+                              Start time - End time{" "}
+                              <Text as="span" fontSize="lg" color="#fc8181">
+                                *
+                              </Text>
                             </Text>
-                          </Text>
+                          </Tooltip>
+
                           <DateTimeRangePicker
                             disableClock
                             disabled={!!actionType}
@@ -734,40 +778,75 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     direction={["column", "row"]}
                   >
                     {mode === formMode.ADD && (
-                      <Stack
-                        bg=""
-                        minW={"238px"}
-                        alignItems="end"
-                        direction={{ base: "column", "2xl": "row" }}
+                      <Tooltip
+                        placeContent="start"
+                        hasArrow
+                        bg="#333"
+                        color="#fff"
+                        borderRadius="0"
+                        label="Collect Royal Fee - Lorem ad aute qui fugiat Lorem ad aute qui fugiat."
                       >
-                        <AdvancedModeSwitch
-                          name="collectRoyalFee"
-                          label="Collect Royal Fee"
-                          isDisabled={actionType}
-                          onChange={() => {
-                            values.collectRoyalFee = !values.collectRoyalFee;
-                            setIsSetRoyal(!isSetRoyal);
-                          }}
-                        />
-                      </Stack>
+                        <Stack
+                          minW={"238px"}
+                          alignItems="end"
+                          direction={{ base: "column", "2xl": "row" }}
+                        >
+                          <AdvancedModeSwitch
+                            name="collectRoyalFee"
+                            label="Collect Royal Fee"
+                            isDisabled={actionType}
+                            onChange={() => {
+                              values.collectRoyalFee = !values.collectRoyalFee;
+                              setIsSetRoyal(!isSetRoyal);
+                            }}
+                          />
+                        </Stack>
+                      </Tooltip>
                     )}
 
-                    <NumberInput
-                      isDisabled={!isSetRoyal || actionType}
-                      isDisplay={isSetRoyal}
-                      max={maxRoyalFeeRate}
-                      label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
-                      name="royalFee"
-                      type="number"
-                      placeholder="Royal Fee"
-                      inputWidth={"8rem"}
-                    />
+                    <Flex display={!isSetRoyal ? "none" : "flex"}>
+                      <NumberInput
+                        isDisabled={!isSetRoyal || actionType}
+                        // isDisplay={isSetRoyal}
+                        max={maxRoyalFeeRate}
+                        label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
+                        name="royalFee"
+                        type="number"
+                        placeholder="Royal Fee"
+                        inputWidth={"8rem"}
+                      />
+                      <Text
+                        ml={2}
+                        fontSize={["xs", "sm"]}
+                        color="brand.grayLight"
+                      >
+                        (*) Exercitation velit nisi esse ad incididunt cillum do
+                        consequat aliquip aliquip. Nostrud culpa voluptate velit
+                        voluptate Amet consectetur occaecat veniam in officia
+                        cupidatat ea cupidatat ipsum anim ex eu anim pidatat ea
+                        cupidatat ipsum anim ex eu anim.
+                      </Text>
+                    </Flex>
                   </Stack>
 
                   <Stack my="30px">
-                    <Heading size="h5" mb="30px">
-                      project roadmap
-                    </Heading>
+                    <Stack w="full" mb="30px">
+                      <Heading size="h5">project roadmap</Heading>
+
+                      <Text
+                        ml={2}
+                        fontSize={["xs", "sm"]}
+                        color="brand.grayLight"
+                      >
+                        Exercitation velit nisi esse ad incididunt cillum do
+                        consequat aliquip aliquip. Nostrud culpa voluptate velit
+                        voluptate sit veniam duis veniam. Sint ea in eiusmod
+                        proident sit et in et elit laborum officia commodo
+                        cupidatat cillum. Amet consectetur occaecat veniam in
+                        officia cupidatat ea cupidatat ipsum anim ex eu anim.
+                      </Text>
+                    </Stack>
+
                     <AddRoadmap
                       name="roadmap"
                       mode={mode}
@@ -776,9 +855,22 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   </Stack>
 
                   <Stack my="30px">
-                    <Heading size="h5" mb="30px">
-                      project team member
-                    </Heading>
+                    <Stack w="full" mb="30px">
+                      <Heading size="h5">project team member</Heading>
+
+                      <Text
+                        ml={2}
+                        fontSize={["xs", "sm"]}
+                        color="brand.grayLight"
+                      >
+                        Exercitation velit nisi esse ad incididunt cillum do
+                        consequat aliquip aliquip. Nostrud culpa voluptate velit
+                        voluptate sit veniam duis veniam. Sint ea in eiusmod
+                        proident sit et in et elit laborum officia commodo
+                        cupidatat cillum. Amet consectetur occaecat veniam in
+                        officia cupidatat ea cupidatat ipsum anim ex eu anim.
+                      </Text>
+                    </Stack>
 
                     <AddMember
                       name="members"
@@ -824,6 +916,16 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                 {mode === formMode.ADD && (
                   <CommonStack stackTitle="3. phases info">
+                    <Stack w="full" mb="30px">
+                      <Text fontSize={["xs", "sm"]} color="brand.grayLight">
+                        Exercitation velit nisi esse ad incididunt cillum do
+                        consequat aliquip aliquip. Nostrud culpa voluptate velit
+                        voluptate sit veniam duis veniam. Sint ea in eiusmod
+                        proident sit et in et elit laborum officia commodo
+                        cupidatat cillum. Amet consectetur occaecat veniam in
+                        officia cupidatat ea cupidatat ipsum anim ex eu anim.
+                      </Text>
+                    </Stack>
                     <AddPhase
                       name="phases"
                       mode={mode}
@@ -848,29 +950,96 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 <VStack maxW="900px" mx="auto">
                   {mode === formMode.ADD && (
                     <>
-                      <HStack w="full" px="15px">
-                        <CommonCheckbox
-                          justifyContent="center"
-                          isDisabled={actionType}
-                          name="agreeFeeCheckbox"
-                          content={`Create new project you will pay ${addProjectTotalFee} $AZERO in fee to
-                          ArtZero.io. This fee is non-refundable.`}
-                        />
+                      {/*addProjectTotalFee*/}
+                      <HStack
+                        w="full"
+                        px="15px"
+                        alignItems="center"
+                        justifyContent="start"
+                      >
+                        <Stack>
+                          <CommonCheckbox
+                            justifyContent="center"
+                            isDisabled={actionType}
+                            name="agreeFeeCheckbox"
+                            content={``}
+                          />
+                        </Stack>
+                        <HStack
+                          alignItems="center"
+                          justifyContent="start"
+                          w="full"
+                        >
+                          <Text color="#888">{`Create new project you will pay  `}</Text>
+                          <Text color="#fff" as="span">
+                            {`${addProjectTotalFee} $AZERO`}{" "}
+                          </Text>
+                          <Text color="#888">{` in fee to ArtZero.io. This fee is non-refundable.`}</Text>
+                        </HStack>
                       </HStack>
-                      <HStack w="full" px="15px">
-                        <CommonCheckbox
-                          justifyContent="center"
-                          isDisabled={actionType}
-                          name="agreeProjectMintFeeCheckbox"
-                          content={`I agree to pay ${projectMintFeeRate}% of mint price per succeed mint to ArtZero.io.`}
-                        />
+
+                      {/*agreeProjectMintFeeCheckbox*/}
+                      <HStack
+                        w="full"
+                        px="15px"
+                        alignItems="center"
+                        justifyContent="start"
+                      >
+                        <Stack>
+                          <CommonCheckbox
+                            justifyContent="center"
+                            isDisabled={actionType}
+                            name="agreeProjectMintFeeCheckbox"
+                            content={``}
+                          />
+                        </Stack>
+                        <HStack
+                          alignItems="center"
+                          justifyContent="start"
+                          w="full"
+                        >
+                          <Text color="#888">{`I agree to pay `}</Text>
+                          <Text color="#fff" as="span">
+                            {`${projectMintFeeRate}%`}{" "}
+                          </Text>
+                          <Text color="#888">{`of mint price per succeed mint to ArtZero.io.`}</Text>
+                        </HStack>
                       </HStack>
-                      <HStack justifyContent="center" w="full" px="15px">
-                        <CommonCheckbox
-                          isDisabled={actionType}
-                          name="agreeTosCheckbox"
-                          content="I agree to ArtZero's Terms of Service."
-                        />
+
+                      {/*Terms of Service*/}
+                      <HStack
+                        w="full"
+                        px="15px"
+                        alignItems="center"
+                        justifyContent="start"
+                      >
+                        <Stack>
+                          <CommonCheckbox
+                            isDisabled={actionType}
+                            name="agreeTosCheckbox"
+                            content=""
+                          />
+                        </Stack>
+                        <HStack
+                          alignItems="center"
+                          justifyContent="start"
+                          w="full"
+                        >
+                          <Text color="#888">I agree to ArtZero's</Text>
+                          <Text
+                            color="#fff"
+                            variant=""
+                            p="0"
+                            _hover={{
+                              textDecoration: "underline",
+                              color: "#7ae7ff",
+                            }}
+                            cursor={"pointer"}
+                            onClick={() => history.push(ROUTES.LEGAL)}
+                          >
+                            Terms of Service
+                          </Text>
+                        </HStack>
                       </HStack>
                     </>
                   )}
@@ -985,11 +1154,9 @@ export const fetchInitialValuesProject = async ({
     const projectInfoHash =
       await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
 
-    const projectInfo =
-      await launchpad_psp34_nft_standard_calls.getProjectInfoByHash(
-        projectInfoHash
-      );
-
+    const projectInfo = await APICall.getProjectInfoByHash({
+      projectHash: projectInfoHash,
+    });
     // Update initialValues
     const {
       // isActive,

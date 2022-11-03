@@ -3,8 +3,9 @@ import { FieldArray, useField } from "formik";
 import toast from "react-hot-toast";
 import Input from "@components/Input/Input";
 import { formMode } from "@constants";
-import ImageUpload from "@components/ImageUpload/Collection";
+// import ImageUpload from "@components/ImageUpload/Collection";
 import { useState } from "react";
+import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 
 function AddMember({ name, mode, isDisabled }) {
   const [{ value }, , helpers] = useField(name);
@@ -48,51 +49,22 @@ function AddMember({ name, mode, isDisabled }) {
         return (
           <Stack>
             {value?.map((_, index) => (
-              <Stack
+              <HStack
+                w="full"
                 key={index}
                 p={["10px", "30px"]}
-                gap={["0px", "0px"]}
                 border="2px solid #333"
               >
-                <Stack direction={["column", "row"]} gap={["0px", "30px"]}>
-                  <Input
-                    isDisabled={isDisabled}
-                    mx="0"
-                    type="text"
-                    width="100%"
-                    isRequired={true}
-                    autoComplete="off"
-                    name={`members[${index}].name`}
-                    label={"Name"}
-                    placeholder="Your name here"
-                  />
-                  <Input
-                    isDisabled={isDisabled}
-                    mx="0"
-                    type="text"
-                    width="100%"
-                    isRequired={true}
-                    autoComplete="off"
-                    name={`members[${index}].title`}
-                    label={"Title"}
-                    placeholder="Your title here"
-                  />
-                </Stack>
-
-                <Stack direction={["column", "row"]} gap={["0px", "0px"]}>
-                  <Input
-                    isDisabled={isDisabled}
-                    mx="0"
-                    width="100%"
-                    type="text"
-                    autoComplete="off"
-                    name={`members[${index}].socialLink`}
-                    label={"Social link"}
-                    placeholder="Your link here"
-                  />
-                </Stack>
-                <Stack direction={["column", "row"]} gap="30px">
-                  <ImageUpload
+                <Stack direction={["column"]} gap="2px">
+                  <Text>Choose avatar image</Text>
+                  <Text ml={2} fontSize={["xs", "sm"]} color="brand.grayLight">
+                    Adipisicing adipisicing ut laboris cupidatat proident
+                    cupidatat in. <br />
+                    Recommended file size is 500 x 500 px
+                  </Text>
+                  <ImageUploadThumbnail
+                    width="200px"
+                    height="200px"
                     title={"Member Avatar"}
                     isDisabled={isDisabled}
                     index={index}
@@ -102,30 +74,72 @@ function AddMember({ name, mode, isDisabled }) {
                     id={`memberAvatar${index}`}
                     imageIPFSUrl={value[index].avatar}
                     setImageIPFSUrl={handleAvatarUrl}
-                    limitedSize={{ width: "500", height: "500" }}
+                    // limitedSize={{ width: "500", height: "500" }}
                   />
                 </Stack>
-                <HStack justifyContent="end" w="full">
-                  <Heading
-                    _hover={{
-                      color: !(index === 0 && value.length === 1) && "#7ae7ff",
-                    }}
-                    fontSize="sm"
-                    color="#555"
-                    fontStyle="unset"
-                    cursor="pointer"
-                    fontFamily="Evogria"
-                    textDecoration="underline"
-                    onClick={() => {
-                      if (index === 0 && value.length === 1) return;
-                      arrayHelpers.remove(index);
-                    }}
-                    isDisabled={index === 0 && value.length === 1}
-                  >
-                    delete
-                  </Heading>
-                </HStack>
-              </Stack>
+
+                <Stack w="full" p={["10px", "10px"]} gap={["0px", "0px"]}>
+                  <Stack direction={["column", "row"]} gap={["0px", "30px"]}>
+                    <Input
+                      isDisabled={isDisabled}
+                      mx="0"
+                      type="text"
+                      width="100%"
+                      isRequired={true}
+                      autoComplete="off"
+                      name={`members[${index}].name`}
+                      label={"Name"}
+                      placeholder="Your name here"
+                    />
+                    <Input
+                      isDisabled={isDisabled}
+                      mx="0"
+                      type="text"
+                      width="100%"
+                      isRequired={true}
+                      autoComplete="off"
+                      name={`members[${index}].title`}
+                      label={"Title"}
+                      placeholder="Your title here"
+                    />
+                  </Stack>
+
+                  <Stack direction={["column", "row"]} gap={["0px", "0px"]}>
+                    <Input
+                      isDisabled={isDisabled}
+                      mx="0"
+                      width="100%"
+                      type="text"
+                      autoComplete="off"
+                      name={`members[${index}].socialLink`}
+                      label={"Social link"}
+                      placeholder="Your link here"
+                    />
+                  </Stack>
+
+                  <HStack justifyContent="end" w="full">
+                    <Heading
+                      _hover={{
+                        color:
+                          !(index === 0 && value.length === 1) && "#7ae7ff",
+                      }}
+                      fontSize="sm"
+                      color="#555"
+                      fontStyle="unset"
+                      cursor="pointer"
+                      fontFamily="Evogria"
+                      textDecoration="underline"
+                      onClick={() => {
+                        if (index === 0 && value.length === 1) return;
+                        arrayHelpers.remove(index);
+                      }}
+                      isDisabled={index === 0 && value.length === 1}
+                    >
+                      delete
+                    </Heading>
+                  </HStack>
+                </Stack>
+              </HStack>
             ))}
             <Stack w="full" py="30px">
               <Stack>
