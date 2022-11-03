@@ -13,6 +13,8 @@ import {
   NumberInputField,
   NumberInputStepper,
   Text,
+  HStack,
+  Button,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -27,6 +29,7 @@ import { UPDATE_BASE_URI, START, FINALIZED, END } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
 //   import toast from "react-hot-toast";
 import BN from "bn.js";
+import toast from "react-hot-toast";
 
 export default function UpdateWithdrawModal({
   collection_address,
@@ -75,16 +78,25 @@ export default function UpdateWithdrawModal({
       launchpad_psp34_nft_standard_contract
     );
 
-    dispatch(setTxStatus({ type: UPDATE_BASE_URI, step: START }));
+    try {
+      dispatch(setTxStatus({ type: UPDATE_BASE_URI, step: START }));
 
-    await launchpad_psp34_nft_standard_calls.withdrawFee(
-      currentAccount,
-      withdrawBalance,
-      dispatch,
-      UPDATE_BASE_URI,
-      api
-    );
+      await launchpad_psp34_nft_standard_calls.withdrawFee(
+        currentAccount,
+        withdrawBalance,
+        dispatch,
+        UPDATE_BASE_URI,
+        api
+      );
+    } catch (error) {
+      toast.error(error.message);
+      dispatch(clearTxStatus());
+    }
   };
+
+  function handleAddMax() {
+    setWithdrawBalance(contractBalance);
+  }
 
   return (
     <Modal
@@ -122,40 +134,44 @@ export default function UpdateWithdrawModal({
             Withdraw Balance
           </Heading>
           <Text ml={1} fontSize="sm" fontWeight="400">
-            Now, you have {contractBalance} ZERO.
+            Your balance {contractBalance} ZERO.
           </Text>
         </ModalHeader>
 
         <ModalBody>
           <VStack>
-            <NumberInput
-              bg="black"
-              defaultValue={1}
-              onChange={(valueString) => setWithdrawBalance(valueString)}
-              max={contractBalance}
-              value={withdrawBalance}
-              mb={3}
-              h="3.125rem"
-              w="full"
-              px={0}
-              min={0}
-            >
-              <NumberInputField
+            <HStack mb={3} w="full" alignItems="center">
+              <NumberInput
+                bg="black"
                 h="3.125rem"
-                borderRadius={0}
-                borderWidth={0}
-                color="#fff"
-              />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+                w="full"
+                px={0}
+                min={0}
+                defaultValue={1}
+                max={contractBalance}
+                value={withdrawBalance}
+                onChange={(valueString) => setWithdrawBalance(valueString)}
+              >
+                <NumberInputField
+                  h="3.125rem"
+                  borderRadius={0}
+                  borderWidth={0}
+                  color="#fff"
+                />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+              <Button variant="outline" onClick={() => handleAddMax()}>
+                Max
+              </Button>
+            </HStack>
             <CommonButton
               {...rest}
               w="full"
               onClick={withdrawFee}
-              text="submit"
+              text="withdraw"
             />
           </VStack>
         </ModalBody>

@@ -8,7 +8,6 @@ import {
   Link,
   Tooltip,
   HStack,
-  Square,
   Stack,
   Skeleton,
   TagLabel,
@@ -288,18 +287,7 @@ function MyNFTTabInfo(props) {
   return (
     <>
       <HStack spacing="45px" alignItems="stretch">
-        <Square size="484px">
-          <ImageCloudFlare src={avatar} size={500} />
-          {/* <Image
-            w="full"
-            h="full"
-            boxShadow="lg"
-            alt="nft-img"
-            objectFit="cover"
-            src={avatar && getCachedImageShort(avatar, 500)}
-            fallback={<Skeleton minW="484px" />}
-          /> */}
-        </Square>
+        <ImageCloudFlare w="484px" h="484px" src={avatar} size={500} />
 
         <Stack alignItems="flex-start" w="full">
           <HStack w="full">

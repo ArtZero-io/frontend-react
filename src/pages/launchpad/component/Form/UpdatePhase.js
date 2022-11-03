@@ -618,7 +618,8 @@ const canEditPhase = (startTime) => {
 };
 
 export const isPhaseEnd = (endTime = "") => {
-  endTime = parseInt(endTime.replaceAll(",", ""));
+  console.log('endTime', endTime)
+  endTime = parseInt(JSON.stringify(endTime)?.replaceAll(",", ""));
 
   const now = Date.now();
 
