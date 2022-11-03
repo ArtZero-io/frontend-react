@@ -117,6 +117,35 @@ const LaunchpadDetailPage = () => {
       setMintingAmount(1);
     }
   );
+  const [projectInfo, setProjectInfo] = useState();
+  useEffect(() => {
+    let isUnmounted = false;
+
+    const fetchProjectInfoData = async () => {
+      try {
+        setLoading(true);
+        const { ret: projList } = await APICall.getAllProjects({});
+
+        const data = projList.find(
+          ({ isActive, nftContractAddress }) =>
+            isActive === true && collection_address === nftContractAddress
+        );
+
+        if (isUnmounted) return;
+        console.log("fetchProjectInfoData data", data);
+        setProjectInfo(data);
+        setLoading(false);
+      } catch (error) {
+        if (isUnmounted) return;
+
+        console.log(error);
+        setLoading(false);
+      }
+    };
+
+    fetchProjectInfoData();
+    return () => (isUnmounted = true);
+  }, [api, collection_address, currentAccount]);
 
   const fetchData = useCallback(async () => {
     console.log("1 fetchData", new Date());
@@ -140,7 +169,7 @@ const LaunchpadDetailPage = () => {
         currentAccount || getPublicCurrentAccount(),
         collection_address
       );
-      // console.log("project", project);
+      console.log("project", project);
 
       //   {
       //     "isActive": false,
@@ -181,12 +210,13 @@ const LaunchpadDetailPage = () => {
           await launchpad_psp34_nft_standard_calls.getLastPhaseId(
             currentAccount || getPublicCurrentAccount()
           );
-
+        console.log("xxx totalPhase", totalPhase);
         let phasesTmp = [];
         const currentPhaseIdTmp =
           await launchpad_psp34_nft_standard_calls.getCurrentPhase(
             currentAccount || getPublicCurrentAccount()
           );
+        console.log("xxx currentPhaseIdTmp", currentPhaseIdTmp);
 
         if (currentAccount?.address) {
           for (let i = 1; i <= totalPhase; i++) {
@@ -494,12 +524,12 @@ const LaunchpadDetailPage = () => {
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   return (
-    <Layout backdrop={formattedProject?.headerImage} variant="launchpad-detail">
+    <Layout backdrop={projectInfo?.headerImage} variant="launchpad-detail">
       {isValidAddressPolkadotAddress(collection_address) && (
         <LaunchpadDetailHeader
-          loading={loading || loadingForceUpdate}
+          // loading={loading || loadingForceUpdate}
           collection_address={collection_address}
-          project={formattedProject}
+          project={projectInfo}
           currentWhitelist={currentWhitelist}
         />
       )}

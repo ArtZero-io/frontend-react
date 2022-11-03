@@ -40,7 +40,7 @@ import { getPublicCurrentAccount } from "@utils";
 import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
 
 function LaunchpadDetailHeader({
-  project,
+  project = {},
   currentWhitelist,
   collection_address,
   loading,
@@ -48,18 +48,19 @@ function LaunchpadDetailHeader({
   const [livePhase, setLivePhase] = useState(null);
   const {
     name,
-    totalSupply,
+    nft_count: totalSupply,
     phases,
     description,
-    projectOwner,
-    projectAdminAddress,
+    collectionOwner: projectOwner,
+    collectionAdmin: projectAdminAddress,
     isActive,
     avatarImage,
     discord,
     twitter,
     website,
   } = project;
-
+  console.log("LaunchpadDetailHeader project", project);
+  // const [projectInfo, setProjectInfo] = useState();
   const [countDownTimer, setCountDownTimer] = useState({});
 
   const history = useHistory();
@@ -103,7 +104,7 @@ function LaunchpadDetailHeader({
           nftContractAddress: collection_address,
           api,
         });
-        // console.log("LaunchpadDetailHeader currPhaseStatus", currPhaseStatus);
+         console.log("LaunchpadDetailHeader currPhaseStatus", currPhaseStatus);
         const data = {
           ...currPhaseStatus,
           startTime: currPhaseStatus?.startTime?.replaceAll(",", ""),
