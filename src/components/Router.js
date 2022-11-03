@@ -23,6 +23,7 @@ import MyProjectsPage from "@pages/account/projects/projects";
 import MyWhiteListProjectPage from "@pages/account/projects/whitelist";
 import MyMintingProjectPage from "@pages/account/projects/minting";
 import NftDetailPage from "../pages/token/";
+import LegalPage from "../pages/legal";
 // import NotFound from "./NotFound/NotFound";
 
 const Router = () => {
@@ -85,6 +86,7 @@ const Router = () => {
         component={LaunchpadDetailPage}
       />
       <Route exact path={ROUTES.LAUNCHPAD_BASE} component={LaunchpadPage} />
+      <Route exact path={ROUTES.LEGAL} component={LegalPage} />
       <Route exact path={ROUTES.HOME} component={HomePage} />
     </Switch>
   );

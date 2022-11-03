@@ -1,9 +1,18 @@
 import * as React from "react";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
-import { Box, Flex, Heading, Stack, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Stack,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import SocialCard from "@components/Card/Social";
 import { ArtZeroLogo } from "@theme/assets/logo/ArtZeroLogo";
+import * as ROUTES from "@constants/routes";
 
 const profile = [
   { discord: "https://discord.gg/wzkZ2JTvN4" },
@@ -14,6 +23,7 @@ const profile = [
 ];
 
 export const Footer = () => {
+  const history = useHistory();
   const { pathname } = useLocation();
 
   return (
@@ -99,6 +109,26 @@ export const Footer = () => {
               }}
               align="center"
             >
+              <Button
+                color="#fff"
+                variant=""
+                p="0"
+                h="20px"
+                _hover={{
+                  textDecoration: "underline",
+                  color: "#7ae7ff",
+                }}
+                cursor={"pointer"}
+                onClick={() => history.push(ROUTES.LEGAL)}
+                mr="4"
+                size="h6"
+                fontSize="15px"
+                fontStyle="normal"
+                fontFamily="Evogria, sans-serif"
+              >
+                legal
+              </Button>
+
               <Text
                 mr="4"
                 size="h6"
