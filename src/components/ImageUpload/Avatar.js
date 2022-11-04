@@ -21,7 +21,7 @@ import { Buffer } from "buffer";
 import IdenticonAvatar from "@components/IdenticonAvatar/IdenticonAvatar/";
 import { ipfsClient } from "@api/client";
 import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
-import { APICall } from "../../api/client";
+// import { APICall } from "../../api/client";
 
 const supportedFormat = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
 
@@ -91,11 +91,6 @@ export default function ImageUploadAvatar({
         uploadPromise().then(async (created) => {
           setImageIPFSUrl(created?.path);
           setImgURL(created?.path);
-
-          await APICall.askBeCacheImage({
-            input: created?.path,
-            is1024: true,
-          });
         }),
         {
           loading: "Uploading...",
