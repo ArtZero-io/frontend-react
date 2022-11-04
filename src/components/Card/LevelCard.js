@@ -1,7 +1,12 @@
 import { Box, Flex, Progress, Spacer, Text } from "@chakra-ui/react";
 import { createLevelAttribute } from "@utils";
 
-export default function LevelCard({ item, traitCount, totalNftCount }) {
+export default function LevelCard({
+  item,
+  traitCount,
+  totalNftCount,
+  variant = "",
+}) {
   const [objItem] = Object.entries(item);
 
   const { level, levelMax } = createLevelAttribute(objItem[1]);
@@ -23,40 +28,47 @@ export default function LevelCard({ item, traitCount, totalNftCount }) {
         </Box>
 
         <Spacer />
+        {variant !== "add-nft" && (
+          <Flex w="full" fontSize={["sm", "md"]} color="#fff">
+            <Spacer />
 
-        <Flex
+            <Text fontSize={["sm", "sm"]} isTruncated pt="2px">
+              {((100 * traitCount) / totalNftCount).toFixed(0)}%
+            </Text>
+          </Flex>
+        )}
+        {/* <Flex
           display={["none", "flex"]}
           fontSize={["sm", "lg"]}
           w="full"
           justifyContent="end"
         >
-          <Text color="#fff">{`${level} of ${levelMax}`}</Text>
-        </Flex>
+          <Text color="#fff">asd{`${level} of ${levelMax}`}</Text>
+        </Flex> */}
       </Flex>
-
+      <Flex
+        fontStyle="italic"
+        display={["none", "flex"]}
+        fontSize={["sm", "lg"]}
+        w="full"
+        justifyContent="end"
+      >
+        <Text color="#7AE7FF">{`${level} of ${levelMax}`}</Text>
+      </Flex>
       <Flex
         w="full"
         justifyContent="end"
         fontSize={["sm", "lg"]}
         display={["flex", "none"]}
       >
-        <Text color="#fff">{`${level} of ${levelMax}`}</Text>
+        <Text color="#7AE7FF">{`${level} of ${levelMax}`}</Text>
       </Flex>
-
       <Progress
         size="sm"
         height="6px"
         colorScheme="telegram"
         value={Number((level * 100) / levelMax)}
       />
-
-      <Flex w="full" fontSize={["sm", "md"]} color="#7AE7FF">
-        <Spacer />
-
-        <Text fontSize={["sm", "sm"]} isTruncated pt="2px">
-          {((100 * traitCount) / totalNftCount).toFixed(0)}% have this trait
-        </Text>
-      </Flex>
     </Box>
   );
 }

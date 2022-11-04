@@ -77,23 +77,25 @@ const AddNewNFTForm = ({
       newInitialValues.description = rest.description;
 
       // console.log("restrest", rest);
+      if (traits) {
+        newInitialValues.properties = Object.entries(traits)
+          ?.filter(([_, name]) => !name.includes("|"))
+          .map(([type, name]) => {
+            return { type, name };
+          });
 
-      newInitialValues.properties = Object.entries(traits)
-        ?.filter(([_, name]) => !name.includes("|"))
-        .map(([type, name]) => {
-          return { type, name };
-        });
+        newInitialValues.levels = Object.entries(traits)
+          ?.filter(([_, value]) => value.includes("|"))
+          .map(([name, value]) => {
+            let result = createLevelAttribute(value);
+            console.log("result", result);
 
-      newInitialValues.levels = Object.entries(traits)
-        ?.filter(([_, value]) => value.includes("|"))
-        .map(([name, value]) => {
-          let result = createLevelAttribute(value);
-          console.log("result", result);
+            result.name = name;
 
-          result.name = name;
-
-          return result;
-        });
+            return result;
+          });
+      }
+      
       setAvatarIPFSUrl(rest.avatar);
       currentAvatarIPFSUrl.current = rest.avatar;
       setInitialValues(newInitialValues);
@@ -385,10 +387,11 @@ const AddNewNFTForm = ({
                       )
                       .map(({ type, name }, idx) => {
                         const item = { [type]: name };
-                        
+
                         return (
                           <GridItem key={idx} w="100%" h="100%">
                             <PropCard
+                              variant="add-nft"
                               item={item}
                               traitCount={getTraitCount(rarityTable, item)}
                               totalNftCount={
@@ -450,6 +453,7 @@ const AddNewNFTForm = ({
                         return (
                           <GridItem w="100%" h="100%" key={idx}>
                             <LevelCard
+                              variant="add-nft"
                               item={item}
                               traitCount={getTraitCount(rarityTable, item)}
                               totalNftCount={totalNftCount}
