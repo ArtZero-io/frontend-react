@@ -728,7 +728,7 @@ async function setMultipleAttributes(
                   },
                 });
               }
-              if (transactionData.attributes[i] === "header_image") {
+              if (attributes[i] === "header_image") {
                 cacheImages.push({
                   input: values[i],
                   is1920: false,
@@ -740,7 +740,7 @@ async function setMultipleAttributes(
                 });
               }
               if (
-                transactionData.attributes[i] ===
+                attributes[i] ===
                 "header_square_image"
               ) {
                 cacheImages.push({
