@@ -704,6 +704,64 @@ async function setMultipleAttributes(
           await APICall.askBeUpdateCollectionData({
             collection_address: collection_address,
           });
+          if (attributes?.length) {
+            let cacheImages = [];
+            console.log("attributes", attributes);
+            console.log(
+              "attributes.length",
+              attributes.length
+            );
+            for (
+              let i = 0;
+              i < attributes.length;
+              i++
+            ) {
+          
+              if (attributes[i] === "avatar_image") {
+                cacheImages.push({
+                  input: values[i],
+                  is1920: false,
+                  imageType: "collection",
+                  metadata: {
+                    collectionAddress: collection_address,
+                    type: "avatar_image",
+                  },
+                });
+              }
+              if (transactionData.attributes[i] === "header_image") {
+                cacheImages.push({
+                  input: values[i],
+                  is1920: false,
+                  imageType: "collection",
+                  metadata: {
+                    collectionAddress: collection_address,
+                    type: "header_image",
+                  },
+                });
+              }
+              if (
+                transactionData.attributes[i] ===
+                "header_square_image"
+              ) {
+                cacheImages.push({
+                  input: values[i],
+                  is1920: true,
+                  imageType: "collection",
+                  metadata: {
+                    collectionAddress: collection_address,
+                    type: "header_square_image",
+                  },
+                });
+              }
+            }
+            console.log("cacheImages", cacheImages);
+            if (cacheImages.length) {
+              console.log("cacheImages::POST_API");
+              await clientAPI("post", "/cacheImages", {
+                images: JSON.stringify(cacheImages),
+              });
+            }
+          }
         }
       })
       .then((unsub) => (unsubscribe = unsub))
