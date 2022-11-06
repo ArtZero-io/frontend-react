@@ -16,55 +16,59 @@ import {
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import { convertStringToPrice } from "@utils";
+import { ArrowBackIcon } from "@chakra-ui/icons";
+import PhasesIcon from "@theme/assets/icon/Phases";
+import BaseURIIcon from "@theme/assets/icon/BaseURI";
+import ProjectInfoIcon from "@theme/assets/icon/ProjectInfo";
+import AdminAddressIcon from "@theme/assets/icon/AdminAddress";
+
+import numeral from "numeral";
+import toast from "react-hot-toast";
+import { memo, useState } from "react";
 import useInterval from "use-interval";
-import SocialCard from "@components/Card/Social";
-import * as ROUTES from "@constants/routes";
 import { useHistory } from "react-router-dom";
+
+import { truncateStr } from "@utils";
+import * as ROUTES from "@constants/routes";
 import { useSubstrateState } from "@utils/substrate";
+
 import UpdateURIModal from "./Modal/UpdateURIModal";
-import UpdateAdminAddressModal from "./Modal/UpdateAdminAddressModal";
 import UpdatePhasesModal from "./Modal/UpdatePhasesModal";
 import UpdateWithdrawModal from "./Modal/UpdateWithdrawModal";
-import { ArrowBackIcon } from "@chakra-ui/icons";
-import { truncateStr } from "@utils";
-import numeral from "numeral";
-import BaseURIIcon from "@theme/assets/icon/BaseURI";
-import AdminAddressIcon from "@theme/assets/icon/AdminAddress";
-import PhasesIcon from "@theme/assets/icon/Phases";
-import ProjectInfoIcon from "@theme/assets/icon/ProjectInfo";
-import toast from "react-hot-toast";
-import { getCurrentPhaseStatusOfProject } from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
-import { getPublicCurrentAccount } from "@utils";
-import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
+import UpdateAdminAddressModal from "./Modal/UpdateAdminAddressModal";
+
+import SocialCard from "@components/Card/Social";
+import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 
 function LaunchpadDetailHeader({
-  project = {},
-  currentWhitelist,
-  collection_address,
   loading,
+  userWLInfo,
+  currentPhase,
+  project = {},
+  activePhaseId,
+  phasesInfo = [],
+  isLastPhaseEnded,
+  collection_address,
 }) {
-  const [livePhase, setLivePhase] = useState(null);
   const {
     name,
-    nft_count: totalSupply,
-    phases,
-    description,
-    collectionOwner: projectOwner,
-    collectionAdmin: projectAdminAddress,
-    isActive,
-    avatarImage,
     discord,
     twitter,
     website,
+    isActive,
+    avatarImage,
+    description,
+    nft_count: totalSupply,
+    collectionOwner: projectOwner,
+    collectionAdmin: projectAdminAddress,
   } = project;
-  console.log("LaunchpadDetailHeader project", project);
-  // const [projectInfo, setProjectInfo] = useState();
-  const [countDownTimer, setCountDownTimer] = useState({});
 
   const history = useHistory();
-  const { api, currentAccount } = useSubstrateState();
+  const { currentAccount } = useSubstrateState();
+  const descLength = useBreakpointValue([115, 175]);
+
+  const [isSeeMore, setIsSeeMore] = useState(false);
+  const [countDownTimer, setCountDownTimer] = useState({});
 
   const {
     isOpen: isOpenURI,
@@ -90,101 +94,40 @@ function LaunchpadDetailHeader({
     onClose: onCloseWithdrawModal,
   } = useDisclosure();
 
-  useEffect(() => {
-    const getLivePhase = async () => {
-      if (currentAccount) {
-        if (phases?.length > 0) {
-          const data = phases.find((p) => p.isLive === 1);
-          // console.log("getLivePhase data", data);
-          setLivePhase(data);
-        }
-      } else {
-        const currPhaseStatus = await getCurrentPhaseStatusOfProject({
-          currentAccount: getPublicCurrentAccount(),
-          nftContractAddress: collection_address,
-          api,
-        });
-         console.log("LaunchpadDetailHeader currPhaseStatus", currPhaseStatus);
-        const data = {
-          ...currPhaseStatus,
-          startTime: currPhaseStatus?.startTime?.replaceAll(",", ""),
-          endTime: currPhaseStatus?.endTime?.replaceAll(",", ""),
-          code: currPhaseStatus?.title,
-        };
-
-        currPhaseStatus && setLivePhase(data);
-      }
-    };
-
-    getLivePhase();
-  }, [api, collection_address, currentAccount, phases]);
-
   useInterval(() => {
-    // console.log("xxxLaunchpadDetailHeader project", project);
-
-    // console.log("xxxlivePhase", livePhase);
-
-    if (!livePhase) {
-      const phaseId1 = project?.phases?.filter((i) => i.id === 1);
-
-      if (phaseId1?.length) {
-        const countDownTimer = phaseId1[0].startTime - Date.now();
-
-        if (countDownTimer <= 0) {
-          setCountDownTimer({
-            days: 0,
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-          });
-
-          return;
-        }
-
-        const seconds = Math.floor((countDownTimer / 1000) % 60);
-        const minutes = Math.floor((countDownTimer / 1000 / 60) % 60);
-        const hours = Math.floor((countDownTimer / (1000 * 60 * 60)) % 24);
-        const days = Math.floor(countDownTimer / (1000 * 60 * 60 * 24));
-
-        setCountDownTimer({
-          days: days,
-          hours: hours,
-          minutes: minutes,
-          seconds: seconds,
-        });
-      }
-    }
-
-    if (livePhase && livePhase?.endTime) {
-      const total = livePhase?.endTime - Date.now();
-
-      if (total <= 0) {
-        setCountDownTimer({
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-        });
-
-        return;
-      }
-
-      const seconds = Math.floor((total / 1000) % 60);
-      const minutes = Math.floor((total / 1000 / 60) % 60);
-      const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
-      const days = Math.floor(total / (1000 * 60 * 60 * 24));
-
+    if (isLastPhaseEnded) {
       setCountDownTimer({
-        days: days,
-        hours: hours,
-        minutes: minutes,
-        seconds: seconds,
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
       });
-    }
-  }, 1000);
 
-  const [isSeeMore, setIsSeeMore] = useState(false);
-  const descLength = useBreakpointValue([115, 175]);
+      return;
+    }
+
+    let countDownTimer;
+
+    if (!activePhaseId) {
+      const firstPhase = phasesInfo?.[0];
+
+      countDownTimer = firstPhase?.startTime - Date.now();
+    } else {
+      countDownTimer = currentPhase?.endTime - Date.now();
+    }
+
+    const seconds = Math.floor((countDownTimer / 1000) % 60);
+    const minutes = Math.floor((countDownTimer / 1000 / 60) % 60);
+    const hours = Math.floor((countDownTimer / (1000 * 60 * 60)) % 24);
+    const days = Math.floor(countDownTimer / (1000 * 60 * 60 * 24));
+
+    setCountDownTimer({
+      days: days,
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds,
+    });
+  }, 1000);
 
   return (
     <Box as="section" position="relative" w="full" mt={["30px", "320px"]}>
@@ -236,12 +179,7 @@ function LaunchpadDetailHeader({
                 justifyContent="space-between"
                 minH={{ base: "3.5rem", "2xl": "7.125rem" }}
               >
-                <Skeleton
-                  w="full"
-                  minH="fit-content"
-                  isLoaded={!loading}
-                  // h={["48px", "60px", "60px"]}
-                >
+                <Skeleton w="full" minH="fit-content" isLoaded={!loading}>
                   <Heading
                     w="full"
                     color="#fff"
@@ -288,7 +226,6 @@ function LaunchpadDetailHeader({
                   w="full"
                   color="#888"
                   textAlign="center"
-                  // justifyContent={["space-between", "center"]}
                   justifyContent="center"
                   fontSize={["16px", "18px"]}
                   minH={{ base: "1rem", "2xl": "3.375rem" }}
@@ -301,416 +238,88 @@ function LaunchpadDetailHeader({
                     </Text>
                   </Text>
 
-                  {livePhase &&
-                  !livePhase?.publicPhase &&
-                  currentWhitelist.mintingFee ? (
-                    <>
-                      <Text mx={["25px", "42px"]}>
-                        Price:{" "}
-                        <Text display={["block", "inline"]} color="#fff">
-                          {convertStringToPrice(currentWhitelist.mintingFee)}{" "}
+                  {!currentAccount?.address && (
+                    <Text mx={["25px", "42px"]}>
+                      Price:{" "}
+                      <Text display={["block", "inline"]} color="#fff">
+                        <Skeleton
+                          w="150px"
+                          as="span"
+                          isLoaded={currentPhase?.publicMintingFee}
+                        >
+                          {currentPhase?.publicMintingFee / 10 ** 12}{" "}
                           <AzeroIcon
                             mb={["2px", "5px"]}
                             width={["14px", "16px"]}
                             height={["14px", "16px"]}
                           />
-                        </Text>
+                        </Skeleton>
                       </Text>
-                    </>
-                  ) : (
-                    ""
+                    </Text>
                   )}
 
-                  {livePhase && livePhase?.publicPhase ? (
-                    <>
-                      <Text mx={["25px", "42px"]}>
-                        Price:{" "}
-                        <Text display={["block", "inline"]} color="#fff">
-                          {convertStringToPrice(livePhase?.publicMintingFee)}{" "}
-                          <AzeroIcon
-                            mb={["2px", "5px"]}
-                            width={["14px", "16px"]}
-                            height={["14px", "16px"]}
-                          />
+                  <Skeleton w="150px" as="span" isLoaded={userWLInfo}>
+                    {currentAccount?.address &&
+                      (!userWLInfo[currentPhase?.id - 1] ||
+                        userWLInfo[currentPhase?.id - 1]?.remainAmount <=
+                          0) && (
+                        <Text mx={["25px", "42px"]} w="100px">
+                          Price:{" "}
+                          <Text display={["block", "inline"]} color="#fff">
+                            <Skeleton
+                              w="150px"
+                              as="span"
+                              isLoaded={currentPhase?.publicMintingFee}
+                            >
+                              {currentPhase?.publicMintingFee / 10 ** 12}{" "}
+                              <AzeroIcon
+                                mb={["2px", "5px"]}
+                                width={["14px", "16px"]}
+                                height={["14px", "16px"]}
+                              />
+                            </Skeleton>
+                          </Text>
                         </Text>
-                      </Text>
-                    </>
-                  ) : (
-                    ""
-                  )}
+                      )}
 
-                  {livePhase?.code ? (
-                    <>
-                      <Text mx={["5px", "42px"]}>
-                        Mint Phase:{" "}
-                        <Text display={["block", "inline"]} color="#fff">
-                          {livePhase?.code}
+                    {currentAccount?.address &&
+                      userWLInfo[currentPhase?.id - 1]?.remainAmount > 0 && (
+                        <Text mx={["25px", "42px"]} w="100px">
+                          Price:{" "}
+                          <Text display={["block", "inline"]} color="#fff">
+                            {userWLInfo[currentPhase?.id - 1]?.mintingFee /
+                              10 ** 12}{" "}
+                            <AzeroIcon
+                              mb={["2px", "5px"]}
+                              width={["14px", "16px"]}
+                              height={["14px", "16px"]}
+                            />
+                          </Text>
                         </Text>
-                      </Text>
-                    </>
-                  ) : (
-                    ""
-                  )}
+                      )}
+                  </Skeleton>
+
+                  <Text mx={["5px", "42px"]}>
+                    Phase:{" "}
+                    <Text display={["block", "inline"]} color="#fff">
+                      {currentPhase?.title}
+                    </Text>
+                  </Text>
                 </Skeleton>
               </VStack>
             </motion.div>
           </HStack>
 
-          {livePhase ? (
-            <Skeleton
-              position="relative"
-              w="full"
-              isLoaded={!loading}
-              my="30px"
-              maxW="680px"
-              borderWidth={2}
-              color="brand.blue"
-              borderColor="brand.blue"
-              h={["210px", "full", "full"]}
-            >
-              <Box
-                h="32px"
-                w="full"
-                position="absolute"
-                top="-16px"
-                zIndex="docked"
-                p="6px 20px"
-                textAlign="center"
-              >
-                <Text
-                  mx="auto"
-                  maxW="120px"
-                  bg="#7ae7ff"
-                  fontFamily="Evogria"
-                  fontSize="16px"
-                  color="#000"
-                >
-                  phase end in
-                </Text>
-              </Box>
+          {/* project ended? */}
+          {isLastPhaseEnded && <CountDownTimer status="mint ended" />}
 
-              <Flex
-                maxH={["200px", "110px"]}
-                h={["200px", "full", "full"]}
-                py={{ base: "0px", xl: "20px" }}
-                position="relative"
-                alignItems="center"
-                justifyContent="center"
-                overflow="hidden"
-                flexWrap={["wrap", "noWrap", "noWrap"]}
-                w="full"
-              >
-                <VStack
-                  textAlign="center"
-                  px={["2px", "12px"]}
-                  w={["45%", "full", "full"]}
-                >
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <Text
-                        lineHeight="none"
-                        fontFamily="DS-Digital"
-                        fontSize={["40px", "48px"]}
-                      >
-                        {numeral(countDownTimer?.days).format("00,0")}
-                      </Text>
-                      <Text fontSize={["14px", "16px"]}> Days</Text>
-                    </motion.div>
-                  </>
-                </VStack>
-
-                <Divider
-                  transform="rotate(90deg)"
-                  width="300px"
-                  bg="#232323"
-                  display={{ base: "none", xl: "inline" }}
-                />
-
-                <VStack
-                  textAlign="center"
-                  px={["2px", "12px"]}
-                  w={["45%", "full", "full"]}
-                >
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <Text
-                        lineHeight="none"
-                        fontFamily="DS-Digital"
-                        fontSize={["40px", "48px"]}
-                      >
-                        {numeral(countDownTimer?.hours).format("00,0")}
-                      </Text>
-                      <Text fontSize={["14px", "16px"]}>Hours</Text>
-                    </motion.div>
-                  </>
-                </VStack>
-
-                {/* // mobile + line */}
-                <Divider
-                  bg="#555"
-                  pos="absolute"
-                  width="2px"
-                  height="340px"
-                  display={["inline", "none"]}
-                  transform="rotate(90deg) translateY(0px)"
-                />
-                <Divider
-                  pos="absolute"
-                  bg="#555"
-                  width="2px"
-                  height="195px"
-                  display={["inline", "none"]}
-                />
-                {/* // End mobile + line */}
-
-                <Divider
-                  transform="rotate(90deg)"
-                  width="300px"
-                  bg="#232323"
-                  display={{ base: "none", xl: "inline" }}
-                />
-
-                <VStack
-                  textAlign="center"
-                  px={["2px", "12px"]}
-                  w={["45%", "full", "full"]}
-                >
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <Text
-                        lineHeight="none"
-                        fontFamily="DS-Digital"
-                        fontSize={["40px", "48px"]}
-                      >
-                        {numeral(countDownTimer?.minutes).format("00,0")}
-                      </Text>
-                      <Text fontSize={["14px", "16px"]}> Mins</Text>
-                    </motion.div>
-                  </>
-                </VStack>
-
-                <Divider
-                  transform="rotate(90deg)"
-                  width="300px"
-                  bg="#232323"
-                  display={{ base: "none", xl: "inline" }}
-                />
-
-                <VStack
-                  textAlign="center"
-                  px={["2px", "12px"]}
-                  w={["45%", "full", "full"]}
-                >
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <Text
-                        lineHeight="none"
-                        fontFamily="DS-Digital"
-                        fontSize={["40px", "48px"]}
-                      >
-                        {numeral(countDownTimer?.seconds).format("00,0")}
-                      </Text>
-                      <Text fontSize={["14px", "16px"]}> Seconds</Text>
-                    </motion.div>
-                  </>
-                </VStack>
-              </Flex>
-            </Skeleton>
-          ) : null}
-
-          {!livePhase ? (
-            <Skeleton
-              position="relative"
-              w="full"
-              isLoaded={!loading}
-              my="30px"
-              maxW="680px"
-              borderWidth={2}
-              color="brand.blue"
-              borderColor="brand.blue"
-              h={["210px", "full", "full"]}
-            >
-              <Box
-                h="32px"
-                w="full"
-                position="absolute"
-                top="-16px"
-                zIndex="docked"
-                p="6px 20px"
-                textAlign="center"
-              >
-                <Text
-                  mx="auto"
-                  maxW="120px"
-                  bg="#7ae7ff"
-                  fontFamily="Evogria"
-                  fontSize="16px"
-                  color="#000"
-                >
-                  phase start in
-                </Text>
-              </Box>
-
-              <Flex
-                maxH={["200px", "110px"]}
-                h={["200px", "full", "full"]}
-                py={{ base: "0px", xl: "20px" }}
-                position="relative"
-                alignItems="center"
-                justifyContent="center"
-                overflow="hidden"
-                flexWrap={["wrap", "noWrap", "noWrap"]}
-                w="full"
-              >
-                <VStack
-                  textAlign="center"
-                  px={["2px", "12px"]}
-                  w={["45%", "full", "full"]}
-                >
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <Text
-                        lineHeight="none"
-                        fontFamily="DS-Digital"
-                        fontSize={["40px", "48px"]}
-                      >
-                        {numeral(countDownTimer?.days).format("00,0")}
-                      </Text>
-                      <Text fontSize={["14px", "16px"]}> Days</Text>
-                    </motion.div>
-                  </>
-                </VStack>
-
-                <Divider
-                  transform="rotate(90deg)"
-                  width="300px"
-                  bg="#232323"
-                  display={{ base: "none", xl: "inline" }}
-                />
-
-                <VStack
-                  textAlign="center"
-                  px={["2px", "12px"]}
-                  w={["45%", "full", "full"]}
-                >
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <Text
-                        lineHeight="none"
-                        fontFamily="DS-Digital"
-                        fontSize={["40px", "48px"]}
-                      >
-                        {numeral(countDownTimer?.hours).format("00,0")}
-                      </Text>
-                      <Text fontSize={["14px", "16px"]}>Hours</Text>
-                    </motion.div>
-                  </>
-                </VStack>
-
-                {/* // mobile + line */}
-                <Divider
-                  bg="#555"
-                  pos="absolute"
-                  width="2px"
-                  height="340px"
-                  display={["inline", "none"]}
-                  transform="rotate(90deg) translateY(0px)"
-                />
-                <Divider
-                  pos="absolute"
-                  bg="#555"
-                  width="2px"
-                  height="195px"
-                  display={["inline", "none"]}
-                />
-                {/* // End mobile + line */}
-
-                <Divider
-                  transform="rotate(90deg)"
-                  width="300px"
-                  bg="#232323"
-                  display={{ base: "none", xl: "inline" }}
-                />
-
-                <VStack
-                  textAlign="center"
-                  px={["2px", "12px"]}
-                  w={["45%", "full", "full"]}
-                >
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <Text
-                        lineHeight="none"
-                        fontFamily="DS-Digital"
-                        fontSize={["40px", "48px"]}
-                      >
-                        {numeral(countDownTimer?.minutes).format("00,0")}
-                      </Text>
-                      <Text fontSize={["14px", "16px"]}> Mins</Text>
-                    </motion.div>
-                  </>
-                </VStack>
-
-                <Divider
-                  transform="rotate(90deg)"
-                  width="300px"
-                  bg="#232323"
-                  display={{ base: "none", xl: "inline" }}
-                />
-
-                <VStack
-                  textAlign="center"
-                  px={["2px", "12px"]}
-                  w={["45%", "full", "full"]}
-                >
-                  <>
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                    >
-                      <Text
-                        lineHeight="none"
-                        fontFamily="DS-Digital"
-                        fontSize={["40px", "48px"]}
-                      >
-                        {numeral(countDownTimer?.seconds).format("00,0")}
-                      </Text>
-                      <Text fontSize={["14px", "16px"]}> Seconds</Text>
-                    </motion.div>
-                  </>
-                </VStack>
-              </Flex>
-            </Skeleton>
-          ) : null}
+          {/* project not started? */}
+          {!isLastPhaseEnded && (
+            <CountDownTimer
+              countDownTimer={countDownTimer}
+              status={`phase ${!activePhaseId ? "start" : "end"} in`}
+            />
+          )}
 
           <Skeleton
             pt="22px"
@@ -1023,3 +632,183 @@ function LaunchpadDetailHeader({
 }
 
 export default LaunchpadDetailHeader;
+
+const CountDownTimer = memo(({ countDownTimer, status }) => {
+  return (
+    <Skeleton
+      position="relative"
+      w="full"
+      isLoaded={!false}
+      my="30px"
+      maxW="680px"
+      borderWidth={2}
+      color="brand.blue"
+      borderColor="brand.blue"
+      h={["210px", "full", "full"]}
+    >
+      <Box
+        h="32px"
+        w="full"
+        position="absolute"
+        top="-16px"
+        zIndex="docked"
+        p="6px 20px"
+        textAlign="center"
+      >
+        <Text
+          mx="auto"
+          maxW="120px"
+          bg="#7ae7ff"
+          fontFamily="Evogria"
+          fontSize="16px"
+          color="#000"
+        >
+          {status}
+        </Text>
+      </Box>
+
+      <Flex
+        position="relative"
+        alignItems="center"
+        justifyContent="center"
+        overflow="hidden"
+        maxH={["200px", "110px"]}
+        h={["200px"]}
+        py={{ base: "0px", xl: "20px" }}
+        flexWrap={["wrap", "noWrap", "noWrap"]}
+        w="full"
+      >
+        <VStack
+          textAlign="center"
+          px={["2px", "12px"]}
+          w={["45%", "full", "full"]}
+        >
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <Text
+                lineHeight="none"
+                fontFamily="DS-Digital"
+                fontSize={["40px", "48px"]}
+              >
+                {numeral(countDownTimer?.days).format("00,0")}
+              </Text>
+              <Text fontSize={["14px", "16px"]}> Days</Text>
+            </motion.div>
+          </>
+        </VStack>
+
+        <Divider
+          transform="rotate(90deg)"
+          width="300px"
+          bg="#232323"
+          display={{ base: "none", xl: "inline" }}
+        />
+
+        <VStack
+          textAlign="center"
+          px={["2px", "12px"]}
+          w={["45%", "full", "full"]}
+        >
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <Text
+                lineHeight="none"
+                fontFamily="DS-Digital"
+                fontSize={["40px", "48px"]}
+              >
+                {numeral(countDownTimer?.hours).format("00,0")}
+              </Text>
+              <Text fontSize={["14px", "16px"]}>Hours</Text>
+            </motion.div>
+          </>
+        </VStack>
+
+        {/* // mobile + line */}
+        <Divider
+          bg="#555"
+          pos="absolute"
+          width="2px"
+          height="340px"
+          display={["inline", "none"]}
+          transform="rotate(90deg) translateY(0px)"
+        />
+        <Divider
+          pos="absolute"
+          bg="#555"
+          width="2px"
+          height="195px"
+          display={["inline", "none"]}
+        />
+        {/* // End mobile + line */}
+
+        <Divider
+          transform="rotate(90deg)"
+          width="300px"
+          bg="#232323"
+          display={{ base: "none", xl: "inline" }}
+        />
+
+        <VStack
+          textAlign="center"
+          px={["2px", "12px"]}
+          w={["45%", "full", "full"]}
+        >
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <Text
+                lineHeight="none"
+                fontFamily="DS-Digital"
+                fontSize={["40px", "48px"]}
+              >
+                {numeral(countDownTimer?.minutes).format("00,0")}
+              </Text>
+              <Text fontSize={["14px", "16px"]}> Mins</Text>
+            </motion.div>
+          </>
+        </VStack>
+
+        <Divider
+          transform="rotate(90deg)"
+          width="300px"
+          bg="#232323"
+          display={{ base: "none", xl: "inline" }}
+        />
+
+        <VStack
+          textAlign="center"
+          px={["2px", "12px"]}
+          w={["45%", "full", "full"]}
+        >
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <Text
+                lineHeight="none"
+                fontFamily="DS-Digital"
+                fontSize={["40px", "48px"]}
+              >
+                {numeral(countDownTimer?.seconds).format("00,0")}
+              </Text>
+              <Text fontSize={["14px", "16px"]}> Seconds</Text>
+            </motion.div>
+          </>
+        </VStack>
+      </Flex>
+    </Skeleton>
+  );
+});

@@ -195,13 +195,14 @@ export const APICall = {
     offset = 0,
     sort = -1,
     isActive = true,
-    ignoreNoNFT = true,
+    ignoreNoNFT = false,
   }) => {
     const ret = await client("POST", "/getCollections", {
       limit,
       offset,
       sort,
       isActive,
+      ignoreNoNFT,
     });
 
     return ret;
@@ -368,11 +369,13 @@ export const APICall = {
   },
 
   getOwnershipHistoryOfNFT: async ({ owner, collection_address, token_id }) => {
-    return await client("POST", "/getOwnershipHistory", {
+    const ret = await client("POST", "/getOwnershipHistory", {
       owner,
       collection_address,
       token_id,
     });
+    console.log("getOwnershipHistoryOfNFT ret", ret);
+    return ret;
   },
 
   // Project API Calls

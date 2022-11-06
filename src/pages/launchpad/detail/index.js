@@ -22,9 +22,9 @@ import {
   Button,
   ListItem,
   UnorderedList,
+  Tooltip,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 import Layout from "@components/Layout/Layout";
 import LaunchpadDetailHeader from "../component/Header";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -34,11 +34,7 @@ import { useSubstrateState } from "@utils/substrate";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
-import {
-  timestampWithoutCommas,
-  convertNumberWithoutCommas,
-  convertStringToPrice,
-} from "@utils";
+
 import { Interweave } from "interweave";
 import BN from "bn.js";
 import toast from "react-hot-toast";
@@ -64,36 +60,31 @@ import {
 import { usePagination } from "@ajna/pagination";
 import PaginationMP from "@components/Pagination/Pagination";
 import FadeIn from "react-fade-in";
-import { isPhaseEnd } from "../component/Form/UpdatePhase";
+
 import { getPublicCurrentAccount } from "@utils";
 import { isValidAddressPolkadotAddress } from "@utils";
 import * as ROUTES from "@constants/routes";
 import { delay } from "@utils";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 import { APICall } from "@api/client";
-import { getMetaDataOffChain } from "@utils";
+import { getMetaDataOffChain, strToNumber } from "@utils";
+import { clearTxStatus } from "@store/actions/txStatus";
 
 const NUMBER_PER_PAGE = 6;
 
 const LaunchpadDetailPage = () => {
-  const [formattedProject, setFormattedProject] = useState({});
   const { collection_address } = useParams();
   const { api, currentAccount } = useSubstrateState();
-  const [phases, setPhases] = useState([]);
-  const [totalPhaseAmount, setTotalPhaseAmount] = useState(0);
-  const [totalClaimedAmount, setTotalClaimedAmount] = useState(0);
-  const [currentPhaseId, setCurrentPhaseId] = useState(0);
-  const [currentWhitelist, setCurrentWhitelist] = useState({});
   const [myNFTs, setMyNFTs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [mintingAmount, setMintingAmount] = useState(1);
   const [whitelistMintingAmount, setWhitelistMintingAmount] = useState(1);
 
-  const dispatch = useDispatch();
-  const { tokenIDArray, actionType, ...rest } = useTxStatus();
-
-  const [currentPhase, setCurrentPhase] = useState({});
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+  const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -111,28 +102,59 @@ const LaunchpadDetailPage = () => {
       UPDATE_ADMIN_ADDRESS,
     ],
     () => {
-      fetchData();
+      fetchPublicPhasesInfoData();
+      fetchWhitelistData();
       fetchNFTs();
       setWhitelistMintingAmount(1);
       setMintingAmount(1);
     }
   );
+
   const [projectInfo, setProjectInfo] = useState();
+
   useEffect(() => {
     let isUnmounted = false;
 
     const fetchProjectInfoData = async () => {
       try {
-        setLoading(true);
-        const { ret: projList } = await APICall.getAllProjects({});
+        const isValidAddr = isValidAddressPolkadotAddress(collection_address);
 
-        const data = projList.find(
-          ({ isActive, nftContractAddress }) =>
-            isActive === true && collection_address === nftContractAddress
-        );
+        if (!isValidAddr) {
+          toast.error("Collection address invalid!");
+
+          await delay(500).then(async () => {
+            history.push(`${ROUTES.LAUNCHPAD_BASE}`);
+          });
+
+          return;
+        }
+
+        setLoading(true);
+
+        const { ret: projList1 } = await APICall.getAllProjects({
+          isActive: false,
+        });
+
+        const { ret: projList2 } = await APICall.getAllProjects({
+          isActive: true,
+        });
+
+        const projList = projList1.concat(projList2);
+
+        const data = projList
+          .map((item) => {
+            return {
+              ...item,
+              roadmaps: JSON.parse(item.roadmaps),
+              teamMembers: JSON.parse(item.teamMembers),
+            };
+          })
+          .find(
+            ({ nftContractAddress }) =>
+              collection_address === nftContractAddress
+          );
 
         if (isUnmounted) return;
-        console.log("fetchProjectInfoData data", data);
         setProjectInfo(data);
         setLoading(false);
       } catch (error) {
@@ -145,43 +167,16 @@ const LaunchpadDetailPage = () => {
 
     fetchProjectInfoData();
     return () => (isUnmounted = true);
-  }, [api, collection_address, currentAccount]);
+  }, [api, collection_address, currentAccount, history]);
 
-  const fetchData = useCallback(async () => {
-    console.log("1 fetchData", new Date());
-    try {
-      setLoading(true);
+  const [activePhaseId, setActivePhaseId] = useState(null);
 
-      const isValidAddr = isValidAddressPolkadotAddress(collection_address);
+  useEffect(() => {
+    let isUnmounted = false;
 
-      if (!isValidAddr) {
-        console.log("isValidAddr", isValidAddr);
-        toast.error("Collection Address Invalid!");
-
-        await delay(1000).then(async () => {
-          history.push(`${ROUTES.LAUNCHPAD_BASE}`);
-        });
-
-        return;
-      }
-
-      const project = await launchpad_contract_calls.getProjectByNftAddress(
-        currentAccount || getPublicCurrentAccount(),
-        collection_address
-      );
-      console.log("project", project);
-
-      //   {
-      //     "isActive": false,
-      //     "projectType": "1",
-      //     "projectOwner": "5C8DzedQ9N7zmukvTKeFnciutbhfk1gU3tBctwwbitu9ot4A",
-      //     "totalSupply": "9,999",
-      //     "startTime": "1,661,965,200,000",
-      //     "endTime": "1,664,557,199,999"
-      // }
-
-      // if (project && project.isActive) {
-      if (project) {
+    const fetchCurrentPhaseIdData = async () => {
+      try {
+        setLoading(true);
         const launchpad_psp34_nft_standard_contract = new ContractPromise(
           api,
           launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -191,255 +186,253 @@ const LaunchpadDetailPage = () => {
         launchpad_psp34_nft_standard_calls.setContract(
           launchpad_psp34_nft_standard_contract
         );
+        const id = await launchpad_psp34_nft_standard_calls.getCurrentPhase(
+          getPublicCurrentAccount()
+        );
 
-        const projectInfoHash =
-          await launchpad_psp34_nft_standard_calls.getProjectInfo(
-            currentAccount || getPublicCurrentAccount()
+        if (isUnmounted) return;
+
+        setActivePhaseId(id);
+        setLoading(false);
+      } catch (error) {
+        if (isUnmounted) return;
+
+        console.log(error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchCurrentPhaseIdData();
+    return () => (isUnmounted = true);
+  }, [api, collection_address]);
+
+  const [phasesInfo, setPhasesInfo] = useState([]);
+
+  const fetchPublicPhasesInfoData = useCallback(async (isUnmount) => {
+    const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(
+      getPublicCurrentAccount()
+    );
+
+    const allPhases = await Promise.all(
+      [...new Array(totalPhase)].map(async (_, index) => {
+        const totalCountWLAddress =
+          await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(
+            getPublicCurrentAccount(),
+            index + 1
           );
 
-        const projectInfo = await APICall.getProjectInfoByHash({
-          projectHash: projectInfoHash,
-        });
-
-        const totalSupply =
-          await launchpad_psp34_nft_standard_calls.getTotalSupply(
-            currentAccount || getPublicCurrentAccount()
+        const data =
+          await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
+            getPublicCurrentAccount(),
+            index + 1
           );
 
-        const totalPhase =
-          await launchpad_psp34_nft_standard_calls.getLastPhaseId(
-            currentAccount || getPublicCurrentAccount()
-          );
-        console.log("xxx totalPhase", totalPhase);
-        let phasesTmp = [];
-        const currentPhaseIdTmp =
-          await launchpad_psp34_nft_standard_calls.getCurrentPhase(
-            currentAccount || getPublicCurrentAccount()
-          );
-        console.log("xxx currentPhaseIdTmp", currentPhaseIdTmp);
+        const formattedData = {
+          ...data,
+          id: index + 1,
 
-        if (currentAccount?.address) {
-          for (let i = 1; i <= totalPhase; i++) {
-            const whiteListData =
+          publicMintingFee: strToNumber(data.publicMintingFee),
+          publicMintingAmount: strToNumber(data.publicMintingAmount),
+          publicMaxMintingAmount: strToNumber(data.publicMaxMintingAmount),
+
+          totalCountWLAddress: strToNumber(totalCountWLAddress),
+          whitelistAmount: strToNumber(data.whitelistAmount),
+
+          claimedAmount: strToNumber(data.claimedAmount),
+          totalAmount: strToNumber(data.totalAmount),
+
+          startTime: strToNumber(data.startTime),
+          endTime: strToNumber(data.endTime),
+        };
+
+        return formattedData;
+      })
+    );
+
+    setPhasesInfo(allPhases);
+  }, []);
+
+  useEffect(() => {
+    let isUnmounted = false;
+
+    fetchPublicPhasesInfoData(isUnmounted);
+
+    return () => (isUnmounted = true);
+  }, [fetchPublicPhasesInfoData]);
+
+  const isLastPhaseEnded = useMemo(() => {
+    const lastPhase = [...phasesInfo]?.pop();
+
+    const isEnded = lastPhase?.endTime < Date.now();
+
+    return isEnded;
+  }, [phasesInfo]);
+
+  const [currentPhase, setCurrentPhase] = useState({});
+
+  useEffect(() => {
+    if (isLastPhaseEnded) {
+      const lastPhase = [...phasesInfo]?.pop();
+      return setCurrentPhase(lastPhase);
+    }
+
+    if (!activePhaseId) {
+      const firstPhase = phasesInfo?.[0];
+      return setCurrentPhase(firstPhase);
+    } else {
+      const found = phasesInfo?.find((p) => p.id === parseInt(activePhaseId));
+      setCurrentPhase(found);
+    }
+  }, [activePhaseId, isLastPhaseEnded, phasesInfo]);
+
+  const [userWLInfo, setUserWLInfo] = useState([]);
+  const [loadingUserWLInfo, setLoadingUserWLInfo] = useState(false);
+
+  const fetchWhitelistData = useCallback(
+    async (isUnmounted) => {
+      setLoadingUserWLInfo(true);
+      try {
+        const allPhasesAddWL = await Promise.all(
+          phasesInfo?.map(async (item) => {
+            const data =
               await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
                 currentAccount,
-                i,
+                item.id,
                 currentAccount?.address
               );
 
-            const phaseSchedule =
-              await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-                currentAccount,
-                i
-              );
+            let userWhitelist = null;
 
-            const phaseCode = phaseSchedule?.title;
-            const totalWhiteListPhase =
-              await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(
-                currentAccount,
-                i
-              );
-            let maxMinting = 0;
-            if (
-              Number(
-                convertNumberWithoutCommas(phaseSchedule?.publicMintingAmount)
-              ) > 0 &&
-              phaseSchedule?.publicMaxMintingAmount
-            ) {
-              let remainAmount =
-                Number(
-                  convertNumberWithoutCommas(phaseSchedule?.publicMintingAmount)
-                ) -
-                Number(
-                  convertNumberWithoutCommas(phaseSchedule?.claimedAmount)
-                );
-              if (
-                Number(
-                  convertNumberWithoutCommas(
-                    phaseSchedule?.publicMaxMintingAmount
-                  )
-                ) > remainAmount
-              ) {
-                maxMinting = remainAmount;
-              } else {
-                maxMinting = Number(
-                  convertNumberWithoutCommas(
-                    phaseSchedule?.publicMaxMintingAmount
-                  )
-                );
-              }
+            if (data) {
+              userWhitelist = {
+                ...data,
+                whitelistAmount: strToNumber(data?.whitelistAmount),
+                claimedAmount: strToNumber(data?.claimedAmount),
+                remainAmount: strToNumber(
+                  data?.whitelistAmount - data?.claimedAmount
+                ),
+                mintingFee: strToNumber(data?.mintingFee),
+              };
             }
 
-            const phaseInfo = {
-              id: i,
-              code: phaseCode,
-              startTime: timestampWithoutCommas(phaseSchedule.startTime),
-              endTime: timestampWithoutCommas(phaseSchedule.endTime),
-              isLive: i === 1 * currentPhaseIdTmp ? 1 : 0,
-              totalWhiteList: totalWhiteListPhase
-                ? Number(convertNumberWithoutCommas(totalWhiteListPhase))
-                : 0,
-              publicPhase: phaseSchedule.isPublic,
-              whitelist: whiteListData,
-              publicMintingAmount: Number(
-                convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
-              ),
-              publicMaxMintingAmount: maxMinting,
-              publicMintingFee: phaseSchedule.publicMintingFee,
-              claimedAmount: Number(
-                convertNumberWithoutCommas(phaseSchedule.claimedAmount)
-              ),
-            };
-            if (phaseSchedule.isActive) {
-              phasesTmp.push(phaseInfo);
-            }
+            return userWhitelist;
+          })
+        );
 
-            if (i === 1 * currentPhaseIdTmp) {
-              if (phaseSchedule.isPublic === true) {
-                setTotalPhaseAmount(
-                  Number(
-                    convertNumberWithoutCommas(
-                      phaseSchedule.publicMintingAmount
-                    )
-                  )
-                );
-              } else {
-                setTotalPhaseAmount(
-                  Number(
-                    convertNumberWithoutCommas(phaseSchedule.whitelistAmount)
-                  )
-                );
-              }
+        if (isUnmounted) return;
 
-              setTotalClaimedAmount(
-                Number(convertNumberWithoutCommas(phaseSchedule.claimedAmount))
-              );
-              setCurrentPhaseId(currentPhaseIdTmp);
-              setCurrentPhase(phaseInfo);
-              const currentWhitelistTmp =
-                await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
-                  currentAccount,
-                  i,
-                  currentAccount?.address
-                );
+        setUserWLInfo(allPhasesAddWL);
+        setLoadingUserWLInfo(false);
+      } catch (error) {
+        if (isUnmounted) return;
 
-              if (currentWhitelistTmp) {
-                setCurrentWhitelist(currentWhitelistTmp);
-              }
-            }
-          }
-        }
-
-        const projectAdminAddress =
-          await launchpad_psp34_nft_standard_calls.getAdminAddress(
-            currentAccount
-          );
-
-        const projectDetail = {
-          name: projectInfo.name,
-          description: projectInfo.description,
-          avatarImage: projectInfo.avatar,
-          headerImage: projectInfo.header,
-          totalSupply: totalSupply,
-          roadmaps: projectInfo.roadmaps,
-          team_members: projectInfo.team_members,
-          phases: phasesTmp,
-          projectAdminAddress: projectAdminAddress,
-          ...project,
-          ...projectInfo,
-        };
-
-        setFormattedProject(projectDetail);
-        setPhases(phasesTmp);
+        console.log(error.message);
+        setLoadingUserWLInfo(false);
       }
-
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      toast.error(error.message);
-      console.log(error);
-    }
-    console.log("2 fetchData", new Date());
-  }, [api, collection_address, currentAccount, history]);
+    },
+    [currentAccount, phasesInfo]
+  );
 
   useEffect(() => {
-    fetchData();
-  }, [api, collection_address, currentAccount, fetchData]);
+    let isUnmounted = false;
+
+    currentAccount && activePhaseId && fetchWhitelistData(isUnmounted);
+
+    return () => (isUnmounted = true);
+  }, [activePhaseId, currentAccount, fetchWhitelistData, phasesInfo]);
 
   const onWhiteListMint = async () => {
-    console.log("formattedProject", formattedProject?.isActive);
-
-    if (!formattedProject?.isActive) {
+    if (!projectInfo?.isActive) {
       return toast.error("Project is not active yet!");
     }
 
     const { data } = await api.query.system.account(currentAccount.address);
     const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+    const mintingFee = userWLInfo[activePhaseId - 1]?.mintingFee;
 
     if (balance < 0.5) {
       toast.error("Low balance to mint");
       return;
     }
 
-    const launchpad_psp34_nft_standard_contract = new ContractPromise(
-      api,
-      launchpad_psp34_nft_standard.CONTRACT_ABI,
-      collection_address
-    );
+    if (balance < mintingFee / 10 ** 12 + 0.01) {
+      toast.error("Not enough balance to mint");
+      return;
+    }
 
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
-    const mintingFee = currentWhitelist.mintingFee.replace(/,/g, "");
+    try {
+      const launchpad_psp34_nft_standard_contract = new ContractPromise(
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        collection_address
+      );
 
-    dispatch(setTxStatus({ type: WHITELIST_MINT, step: START }));
+      launchpad_psp34_nft_standard_calls.setContract(
+        launchpad_psp34_nft_standard_contract
+      );
 
-    await launchpad_psp34_nft_standard_calls.whitelistMint(
-      currentAccount,
-      currentPhaseId,
-      whitelistMintingAmount,
-      mintingFee,
-      dispatch,
-      WHITELIST_MINT,
-      api
-    );
+      dispatch(setTxStatus({ type: WHITELIST_MINT, step: START }));
+
+      await launchpad_psp34_nft_standard_calls.whitelistMint(
+        currentAccount,
+        activePhaseId,
+        whitelistMintingAmount,
+        mintingFee,
+        dispatch,
+        WHITELIST_MINT,
+        api
+      );
+    } catch (error) {
+      toast.error(error.message);
+      dispatch(clearTxStatus());
+    }
   };
 
   const onPublicMint = async () => {
-    console.log("formattedProject", formattedProject?.isActive);
-    if (!formattedProject?.isActive) {
+    if (!projectInfo?.isActive) {
       return toast.error("Project is not active yet!");
     }
 
     const { data } = await api.query.system.account(currentAccount.address);
     const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
-    const mintingFee =
-      mintingAmount * convertStringToPrice(currentPhase.publicMintingFee);
+    const mintingFee = mintingAmount * currentPhase.publicMintingFee;
 
-    if (balance < mintingFee + 0.01) {
+    if (balance < 0.5) {
+      toast.error("Low balance to mint");
+      return;
+    }
+
+    if (balance < mintingFee / 10 ** 12 + 0.01) {
       toast.error("Not enough balance to mint");
       return;
     }
-    const launchpad_psp34_nft_standard_contract = new ContractPromise(
-      api,
-      launchpad_psp34_nft_standard.CONTRACT_ABI,
-      collection_address
-    );
 
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
-    dispatch(setTxStatus({ type: PUBLIC_MINT, step: START }));
+    try {
+      const launchpad_psp34_nft_standard_contract = new ContractPromise(
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        collection_address
+      );
 
-    await launchpad_psp34_nft_standard_calls.publicMint(
-      currentAccount,
-      currentPhase.id,
-      mintingFee,
-      mintingAmount,
-      dispatch,
-      PUBLIC_MINT,
-      api
-    );
+      launchpad_psp34_nft_standard_calls.setContract(
+        launchpad_psp34_nft_standard_contract
+      );
+
+      dispatch(setTxStatus({ type: PUBLIC_MINT, step: START }));
+
+      await launchpad_psp34_nft_standard_calls.publicMint(
+        currentAccount,
+        currentPhase.id,
+        mintingFee,
+        mintingAmount,
+        dispatch,
+        PUBLIC_MINT,
+        api
+      );
+    } catch (error) {
+      toast.error(error.message);
+      dispatch(clearTxStatus());
+    }
   };
 
   const [balanceOfPsp34NFT, setBalanceOfPsp34NFT] = useState(0);
@@ -454,66 +447,83 @@ const LaunchpadDetailPage = () => {
       },
     });
 
-  const fetchNFTs = useCallback(async () => {
-    let ret = [];
+  const fetchNFTs = useCallback(
+    async (isUnmount) => {
+      const launchpad_psp34_nft_standard_contract = new ContractPromise(
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        collection_address
+      );
 
-    const totalNFTCount = await getAccountBalanceOfPsp34NFT({
-      currentAccount,
-    });
+      launchpad_psp34_nft_standard_calls.setContract(
+        launchpad_psp34_nft_standard_contract
+      );
 
-    setBalanceOfPsp34NFT(totalNFTCount || 0);
+      let ret = [];
 
-    if (!totalNFTCount) return ret;
-
-    try {
-      let tokenUri = await launchpad_psp34_nft_standard_calls.tokenUri(
+      const totalNFTCount = await getAccountBalanceOfPsp34NFT({
         currentAccount,
-        1
-      );
-      const baseUri = tokenUri.replace("1.json", "");
+      });
+      if (isUnmount) return;
+      setBalanceOfPsp34NFT(totalNFTCount || 0);
 
-      // if (isUnmount) return;
+      if (!totalNFTCount) return ret;
 
-      ret = await Promise.all(
-        [...Array(totalNFTCount)].map(async (_, index) => {
-          const idOfNFT = await getIdOfPsp34NFT({
-            currentAccount,
-            tokenID: index,
-          });
+      try {
+        let tokenUri = await launchpad_psp34_nft_standard_calls.tokenUri(
+          currentAccount,
+          1
+        );
+        const baseUri = tokenUri.replace("1.json", "");
 
-          const metaData = await getMetaDataOffChain(idOfNFT, baseUri);
+        if (isUnmount) return;
 
-          return { ...metaData };
-        })
-      );
+        ret = await Promise.all(
+          [...Array(totalNFTCount)].map(async (_, index) => {
+            const idOfNFT = await getIdOfPsp34NFT({
+              currentAccount,
+              tokenID: index,
+            });
 
-      setMyNFTs(ret);
-    } catch (error) {
-      // if (isUnmount) return;
+            const metaData = await getMetaDataOffChain(idOfNFT, baseUri);
 
-      console.log("error", error);
+            return { ...metaData };
+          })
+        );
 
-      ret = await Promise.all(
-        [...Array(totalNFTCount)].map(async (_, index) => {
-          const idOfNFT = await getIdOfPsp34NFT({
-            currentAccount,
-            tokenID: index,
-          });
+        setMyNFTs(ret);
+      } catch (error) {
+        if (isUnmount) return;
 
-          return {
-            nftName: `${formattedProject.nft_name} #${idOfNFT}`,
-            avatar: "Qmc1az4MVBL9MhfLLv3b1Hf9RCs9AoqXR2AZuUZb2XBhpJ",
-          };
-        })
-      );
+        console.log("error", error);
 
-      // console.log("Promise ret error", ret);
-      setMyNFTs(ret);
-    }
-  }, [currentAccount, formattedProject.nft_name]);
+        ret = await Promise.all(
+          [...Array(totalNFTCount)].map(async (_, index) => {
+            const idOfNFT = await getIdOfPsp34NFT({
+              currentAccount,
+              tokenID: index,
+            });
+            //TODO: add nft_name to API
+            return {
+              nftName: `${projectInfo?.name} #${idOfNFT}`,
+              avatar: "Qmc1az4MVBL9MhfLLv3b1Hf9RCs9AoqXR2AZuUZb2XBhpJ",
+            };
+          })
+        );
+
+        // console.log("Promise ret error", ret);
+        setMyNFTs(ret);
+      }
+    },
+    [api, collection_address, currentAccount, projectInfo?.name]
+  );
 
   useEffect(() => {
-    fetchNFTs();
+    let isUnmounted = false;
+
+    fetchNFTs(isUnmounted);
+
+    return () => (isUnmounted = true);
   }, [fetchNFTs]);
 
   const pageNFT = useMemo(
@@ -521,21 +531,23 @@ const LaunchpadDetailPage = () => {
     [currentPage, myNFTs, pageSize]
   );
 
-  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
-
   return (
     <Layout backdrop={projectInfo?.headerImage} variant="launchpad-detail">
       {isValidAddressPolkadotAddress(collection_address) && (
         <LaunchpadDetailHeader
-          // loading={loading || loadingForceUpdate}
-          collection_address={collection_address}
+          loadingUserWLInfo={loadingUserWLInfo || loadingForceUpdate}
           project={projectInfo}
-          currentWhitelist={currentWhitelist}
+          phasesInfo={phasesInfo}
+          userWLInfo={userWLInfo}
+          currentPhase={currentPhase}
+          activePhaseId={activePhaseId}
+          isLastPhaseEnded={isLastPhaseEnded}
+          collection_address={collection_address}
         />
       )}
 
       <VStack w="full" px={["24px", "0px"]} spacing={["24px", "30px"]}>
-        {isPhaseEnd(formattedProject?.endTime) ? (
+        {isLastPhaseEnded ? (
           <Box
             w="full"
             mx="auto"
@@ -544,7 +556,7 @@ const LaunchpadDetailPage = () => {
             px={["15px", "30px"]}
             py={["17px", "26px"]}
           >
-            <Heading fontSize={["16px", "18px"]}>project ended</Heading>
+            <Heading fontSize={["16px", "18px"]}>Mint ended</Heading>
           </Box>
         ) : (
           <Box
@@ -556,377 +568,281 @@ const LaunchpadDetailPage = () => {
             py={["17px", "26px"]}
           >
             <Skeleton display="flex" isLoaded={!loading} w="full" mb="15px">
-              {/* {console.log("loading", loading)} */}
-              <Skeleton isLoaded={!loading}>
-                <Heading fontSize={["16px", "18px"]}>
-                  {!currentPhase?.code ? (
-                    `upcoming`
-                  ) : (
-                    <>
-                      <Text as="span" color="#7ae7ff">
-                        {currentPhase?.code}
-                      </Text>{" "}
-                      in progress
-                    </>
-                  )}
-                </Heading>
-              </Skeleton>
+              <Heading fontSize={["16px", "18px"]}>
+                {!activePhaseId ? (
+                  `upcoming`
+                ) : (
+                  <>
+                    <Text as="span" color="#7ae7ff">
+                      {currentPhase?.title}
+                    </Text>{" "}
+                    in progress
+                  </>
+                )}
+              </Heading>
 
               <Spacer />
 
-              {totalPhaseAmount > 0 ? (
-                <Text color="#888" fontSize={["sm", "md"]}>
-                  {Math.round((totalClaimedAmount * 100) / totalPhaseAmount)}% (
-                  {totalClaimedAmount}/{totalPhaseAmount})
-                </Text>
-              ) : (
-                ""
+              {activePhaseId && (
+                <Tooltip
+                  hasArrow
+                  bg="#333"
+                  color="#fff"
+                  borderRadius="0"
+                  label="Mint progress of this phase"
+                >
+                  <span>
+                    <Text color="#888" fontSize={["sm", "md"]}>
+                      {Math.round(
+                        (currentPhase?.claimedAmount * 100) /
+                          currentPhase?.totalAmount
+                      )}
+                      % ({currentPhase?.claimedAmount}/
+                      {currentPhase?.totalAmount})
+                    </Text>
+                  </span>
+                </Tooltip>
               )}
             </Skeleton>
-            {totalPhaseAmount > 0 ? (
+
+            {activePhaseId && (
               <Progress
                 value={Math.round(
-                  (totalClaimedAmount * 100) / totalPhaseAmount
+                  (currentPhase?.claimedAmount * 100) /
+                    currentPhase?.totalAmount
                 )}
                 mb="20px"
                 h="8px"
               />
-            ) : (
-              ""
             )}
 
-            {/* //BUTTON */}
-            {/* No wallet connect */}
-            {!currentAccount ? (
-              <Flex w="full" justifyContent="center">
-                <Text fontSize="lg" color="#888">
-                  Connect your wallet to mint
-                </Text>
-              </Flex>
-            ) : null}
+            <Skeleton isLoaded={userWLInfo} h="50px">
+              {!currentAccount ? (
+                <Flex w="full" justifyContent="center">
+                  <Text fontSize="lg" color="#888">
+                    Please connect your wallet to mint !
+                  </Text>
+                </Flex>
+              ) : null}
 
-            {/* //Public phases*/}
-            {currentAccount &&
-              currentPhase?.publicPhase &&
-              (!currentPhase?.whitelist?.whitelistAmount ||
-                Number(currentPhase?.whitelist?.claimedAmount) >=
-                  Number(currentPhase?.whitelist?.whitelistAmount)) && (
-                <HStack
-                  w="full"
-                  justifyContent="start"
-                  alignItems="center"
-                  spacing="20px"
-                >
-                  {currentPhase?.publicMintingAmount ? (
-                    <>
-                      <NumberInput
-                        bg="black"
-                        min={1}
-                        w="150px"
-                        mr={[0, 3]}
-                        h="3.125rem"
-                        // mb={["10px", 0]}
-                        isDisabled={
-                          actionType ||
-                          currentPhase?.claimedAmount >=
-                            currentPhase?.publicMintingAmount
-                        }
-                        value={mintingAmount}
-                        max={currentPhase?.publicMaxMintingAmount}
-                        onChange={(valueString) =>
-                          setMintingAmount(valueString)
-                        }
-                      >
-                        <NumberInputField
+              {/* //Public phases*/}
+              {currentAccount &&
+                currentPhase?.isPublic &&
+                (!userWLInfo[currentPhase?.id - 1] ||
+                  userWLInfo[currentPhase?.id - 1]?.remainAmount <= 0) && (
+                  <HStack
+                    w="full"
+                    justifyContent="start"
+                    alignItems="center"
+                    spacing="20px"
+                  >
+                    {currentPhase?.publicMintingAmount ? (
+                      <>
+                        <NumberInput
+                          bg="black"
+                          min={1}
+                          w="150px"
+                          mr={[0, 3]}
                           h="3.125rem"
-                          borderRadius={0}
-                          borderWidth={0}
-                          color="#fff"
+                          // mb={["10px", 0]}
+                          isDisabled={
+                            actionType ||
+                            currentPhase?.claimedAmount >=
+                              currentPhase?.publicMintingAmount
+                          }
+                          value={mintingAmount}
+                          max={currentPhase?.publicMaxMintingAmount}
+                          onChange={(valueString) =>
+                            setMintingAmount(valueString)
+                          }
+                        >
+                          <NumberInputField
+                            h="3.125rem"
+                            borderRadius={0}
+                            borderWidth={0}
+                            color="#fff"
+                          />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+
+                        <CommonButton
+                          w={["full", "auto"]}
+                          {...rest}
+                          variant="outline"
+                          text="public mint"
+                          onClick={onPublicMint}
+                          isDisabled={
+                            loading ||
+                            loadingForceUpdate ||
+                            currentPhase?.claimedAmount >=
+                              currentPhase?.publicMintingAmount
+                          }
                         />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
+                      </>
+                    ) : (
+                      <Text fontSize="lg" color="#888">
+                        You are not in public mint list!
+                      </Text>
+                    )}
+                  </HStack>
+                )}
 
-                      <CommonButton
-                        w={["full", "auto"]}
-                        {...rest}
-                        variant="outline"
-                        text="public mint"
-                        onClick={onPublicMint}
-                        isDisabled={
-                          loading ||
-                          loadingForceUpdate ||
-                          currentPhase?.claimedAmount >=
-                            currentPhase?.publicMintingAmount
-                        }
-                      />
-                    </>
-                  ) : (
-                    <Text fontSize="lg" color="#888">
-                      You are not in public mint list!
-                    </Text>
-                  )}
-                </HStack>
-              )}
-
-            {/* //WhiteList phases*/}
-            {currentAccount &&
-              currentPhase?.whitelist?.whitelistAmount &&
-              Number(currentPhase?.whitelist?.claimedAmount) <
-                Number(currentPhase?.whitelist?.whitelistAmount) && (
-                <HStack
-                  w="full"
-                  justifyContent="start"
-                  alignItems="center"
-                  spacing="20px"
-                >
-                  {currentPhase?.whitelist?.whitelistAmount ? (
-                    <>
-                      {" "}
-                      <NumberInput
-                        bg="black"
-                        min={1}
-                        w="150px"
-                        mr={[0, 3]}
-                        h="3.125rem"
-                        // mb={["10px", 0]}
-                        isDisabled={
-                          actionType ||
-                          Number(currentPhase?.whitelist?.claimedAmount) >=
-                            Number(currentPhase?.whitelist?.whitelistAmount)
-                        }
-                        value={whitelistMintingAmount}
-                        max={
-                          currentPhase?.whitelist?.whitelistAmount -
-                          currentPhase?.whitelist?.claimedAmount
-                        }
-                        onChange={(valueString) =>
-                          setWhitelistMintingAmount(valueString)
-                        }
-                      >
-                        {console.log("currentPhase", currentPhase)}
-                        <NumberInputField
+              {/* //WhiteList phases*/}
+              {currentAccount &&
+                userWLInfo[currentPhase?.id - 1] &&
+                userWLInfo[currentPhase?.id - 1]?.remainAmount > 0 && (
+                  <HStack
+                    w="full"
+                    justifyContent="start"
+                    alignItems="center"
+                    spacing="20px"
+                  >
+                    {userWLInfo[currentPhase?.id - 1]?.whitelistAmount ? (
+                      <>
+                        {" "}
+                        <NumberInput
+                          bg="black"
+                          min={1}
+                          w="150px"
+                          mr={[0, 3]}
                           h="3.125rem"
-                          borderRadius={0}
-                          borderWidth={0}
-                          color="#fff"
+                          // mb={["10px", 0]}
+                          isDisabled={
+                            actionType ||
+                            userWLInfo[currentPhase?.id - 1]?.remainAmount <= 0
+                          }
+                          value={whitelistMintingAmount}
+                          max={userWLInfo[currentPhase?.id - 1]?.remainAmount}
+                          onChange={(valueString) =>
+                            setWhitelistMintingAmount(valueString)
+                          }
+                        >
+                          <NumberInputField
+                            h="3.125rem"
+                            borderRadius={0}
+                            borderWidth={0}
+                            color="#fff"
+                          />
+                          <NumberInputStepper>
+                            <NumberIncrementStepper />
+                            <NumberDecrementStepper />
+                          </NumberInputStepper>
+                        </NumberInput>
+                        <CommonButton
+                          w={["full", "auto"]}
+                          mx="0"
+                          {...rest}
+                          isDisabled={
+                            loading ||
+                            loadingForceUpdate ||
+                            userWLInfo[currentPhase?.id - 1]?.remainAmount <= 0
+                          }
+                          variant="outline"
+                          text="whitelist mint"
+                          onClick={onWhiteListMint}
                         />
-                        <NumberInputStepper>
-                          <NumberIncrementStepper />
-                          <NumberDecrementStepper />
-                        </NumberInputStepper>
-                      </NumberInput>
-                      <CommonButton
-                        w={["full", "auto"]}
-                        mx="0"
-                        {...rest}
-                        isDisabled={
-                          loading ||
-                          loadingForceUpdate ||
-                          currentWhitelist?.whitelistAmount -
-                            currentWhitelist?.claimedAmount ===
-                            0
-                        }
-                        variant="outline"
-                        text="whitelist mint"
-                        onClick={onWhiteListMint}
-                      />
-                    </>
-                  ) : (
-                    <Text fontSize="lg" color="#888">
-                      You are not in whitelist mint list!
-                    </Text>
-                  )}
-                </HStack>
-              )}
+                      </>
+                    ) : (
+                      <Text fontSize="lg" color="#888">
+                        You are not in whitelist mint list!
+                      </Text>
+                    )}
+                  </HStack>
+                )}
+            </Skeleton>
           </Box>
         )}
 
-        {!currentAccount ? (
-          <Box
-            w="full"
-            mx="auto"
-            bg="#222"
-            maxW="870px"
-            px={["15px", "30px"]}
-            py={["17px", "26px"]}
-          >
-            <Flex w="full" mb={["20px", "30px"]}>
-              <Heading fontSize={["24px", "32px"]}>phases</Heading>
-              <Spacer />
-            </Flex>
-            <Flex w="full" justifyContent="center">
-              <Text fontSize="lg" color="#888">
-                Please connect your wallet!
-              </Text>
-            </Flex>
-          </Box>
-        ) : (
-          <Box
-            w="full"
-            mx="auto"
-            bg="#222"
-            maxW="870px"
-            px={["15px", "30px"]}
-            py={["17px", "26px"]}
-          >
-            <Flex w="full" mb={["20px", "30px"]}>
-              <Heading fontSize={["24px", "32px"]}>phases</Heading>
-              <Spacer />
-            </Flex>
-            {/* {console.log("phases", phases)} */}
-            {phases?.length
-              ? phases.map((item) => (
-                  <FadeIn>
-                    <Stack key={item?.code} w="full" my="15px">
-                      <HStack>
-                        <Text border="1px solid #7ae7ff" px="4px">
-                          {item.publicPhase
-                            ? "Whitelist & Public Mint"
-                            : "Whitelist Mint Only"}
-                        </Text>
-                        <Tag minW="min-content">{item.code}</Tag>
-                      </HStack>
+        {/* New phase section */}
+        <Box
+          w="full"
+          mx="auto"
+          bg="#222"
+          maxW="870px"
+          px={["15px", "30px"]}
+          py={["17px", "26px"]}
+        >
+          <Flex w="full" mb={["20px", "30px"]}>
+            <Heading fontSize={["24px", "32px"]}>phases</Heading>
+            <Spacer />
+          </Flex>
 
-                      {/* Whitelist Mint */}
+          {phasesInfo?.length
+            ? phasesInfo.map((item, index) => (
+                <FadeIn>
+                  <Stack key={index} w="full" my="15px">
+                    <HStack>
+                      <Text border="1px solid #7ae7ff" px="4px">
+                        {item.isPublic ? "WL & Public Mint" : "WL Mint Only"}
+                      </Text>
+                      <Tag minW="min-content">{item?.title}</Tag>
+                    </HStack>
 
-                      {/* Not in whitelist */}
-                      {!item.whitelist && (
-                        <UnorderedList pl="16px">
-                          <ListItem>You are not in whitelist!</ListItem>
-                        </UnorderedList>
-                      )}
+                    {/* Whitelist Mint */}
+                    {!currentAccount && <>Connect to check your whitelist</>}
 
-                      {/* Have whitelist */}
-                      {item.whitelist && (
-                        <>
-                          <UnorderedList pl="20px">
-                            <ListItem>Your whitelist mint info</ListItem>
-                          </UnorderedList>{" "}
+                    {/* Not in whitelist */}
+                    {currentAccount && !userWLInfo[index] && (
+                      <UnorderedList pl="16px">
+                        <ListItem>You are not in whitelist!</ListItem>
+                      </UnorderedList>
+                    )}
+
+                    {/* Have whitelist */}
+                    {currentAccount && userWLInfo[index] && (
+                      <>
+                        <UnorderedList pl="20px">
+                          <ListItem>Your whitelist mint info</ListItem>
+                        </UnorderedList>{" "}
+                        <Stack
+                          px="2px"
+                          w="full"
+                          direction={["column", "column"]}
+                          fontSize={["15px", "18px", "18px"]}
+                        >
                           <Stack
-                            px="2px"
                             w="full"
-                            direction={["column", "column"]}
-                            fontSize={["15px", "18px", "18px"]}
+                            color="#888"
+                            spacing="30px"
+                            direction={["row"]}
+                            alignContent="space-between"
+                            // minH={{ base: "1rem", "2xl": "3.375rem" }}
                           >
-                            <Stack
-                              w="full"
-                              color="#888"
-                              spacing="30px"
-                              direction={["row"]}
-                              alignContent="space-between"
-                              // minH={{ base: "1rem", "2xl": "3.375rem" }}
+                            <Tooltip
+                              hasArrow
+                              bg="#333"
+                              color="#fff"
+                              borderRadius="0"
+                              label="Total whitelist address of this phase"
                             >
-                              <Text>
-                                Whitelist:{" "}
-                                <Text as="span" color="#fff">
-                                  {item.totalWhiteList}
-                                </Text>
-                              </Text>
-
-                              {item?.whitelist?.whitelistAmount && (
+                              <span>
                                 <Text>
-                                  Minted / Max Mint:{" "}
+                                  Whitelist:{" "}
                                   <Text as="span" color="#fff">
-                                    {item.whitelist.claimedAmount} /{" "}
-                                    {item.whitelist.whitelistAmount} NFTs
+                                    {item.totalCountWLAddress}
                                   </Text>
                                 </Text>
-                              )}
+                              </span>
+                            </Tooltip>
 
-                              {item?.whitelist?.mintingFee && (
-                                <Text>
-                                  Price:{" "}
-                                  <Text as="span" color="#fff">
-                                    {convertStringToPrice(
-                                      item.whitelist.mintingFee
-                                    )}{" "}
-                                    <AzeroIcon
-                                      mb="5px"
-                                      w={["14px", "16px"]}
-                                      h={["14px", "16px"]}
-                                    />
-                                  </Text>
-                                </Text>
-                              )}
-                            </Stack>
-
-                            <Stack
-                              w="full"
-                              minW="fit-content"
-                              direction={["column", "row"]}
-                            >
-                              <Text color="brand.blue">
-                                Start:{" "}
-                                <Text as="span" color="#fff">
-                                  {new Date(
-                                    Number(item?.startTime)
-                                  ).toLocaleString()}{" "}
-                                </Text>
-                              </Text>
-
-                              <Text as="span" display={["none", "flex"]}>
-                                -
-                              </Text>
-
-                              <Text color="brand.blue">
-                                End:{" "}
-                                <Text as="span" color="#fff">
-                                  {new Date(
-                                    Number(item?.endTime)
-                                  ).toLocaleString()}{" "}
-                                </Text>
-                              </Text>
-                            </Stack>
-                          </Stack>
-                        </>
-                      )}
-                      {/* END ~ Whitelist Mint */}
-
-                      {/* Public Mint */}
-                      {item.publicPhase && (
-                        <Stack pt="20px">
-                          <UnorderedList>
-                            <ListItem>Your public mint info</ListItem>
-                          </UnorderedList>
-
-                          <Stack
-                            px="2px"
-                            w="full"
-                            direction={["column"]}
-                            fontSize={["15px", "18px", "18px"]}
-                          >
-                            <Stack
-                              w="full"
-                              color="#888"
-                              spacing="30px"
-                              direction={["row"]}
-                              alignContent="space-between"
-                              // minH={{ base: "1rem", "2xl": "3.375rem" }}
-                            >
+                            {userWLInfo[index]?.whitelistAmount && (
                               <Text>
-                                Total:{" "}
+                                Minted / Max Mint:{" "}
                                 <Text as="span" color="#fff">
-                                  {item.publicMintingAmount}
+                                  {userWLInfo[index]?.claimedAmount} /{" "}
+                                  {userWLInfo[index]?.whitelistAmount} NFTs
                                 </Text>
                               </Text>
+                            )}
 
-                              <Text>
-                                Minted:{" "}
-                                <Text as="span" color="#fff">
-                                  {item.claimedAmount}{" "}
-                                  <Text as="span">
-                                    NFT{item.claimedAmount > 1 ? "s" : ""}
-                                  </Text>
-                                </Text>
-                              </Text>
-
+                            {userWLInfo[index]?.mintingFee && (
                               <Text>
                                 Price:{" "}
                                 <Text as="span" color="#fff">
-                                  {convertStringToPrice(item.publicMintingFee)}{" "}
+                                  {userWLInfo[index]?.mintingFee / 10 ** 12}{" "}
                                   <AzeroIcon
                                     mb="5px"
                                     w={["14px", "16px"]}
@@ -934,45 +850,127 @@ const LaunchpadDetailPage = () => {
                                   />
                                 </Text>
                               </Text>
-                            </Stack>
+                            )}
+                          </Stack>
 
-                            <Stack
-                              w="full"
-                              minW="fit-content"
-                              direction={["column", "row"]}
-                            >
-                              <Text color="brand.blue">
-                                Start:{" "}
-                                <Text as="span" color="#fff">
-                                  {new Date(
-                                    Number(item?.startTime)
-                                  ).toLocaleString()}{" "}
-                                </Text>
+                          <Stack
+                            w="full"
+                            minW="fit-content"
+                            direction={["column", "row"]}
+                          >
+                            <Text color="brand.blue">
+                              Start:{" "}
+                              <Text as="span" color="#fff">
+                                {new Date(
+                                  Number(item?.startTime)
+                                ).toLocaleString()}{" "}
                               </Text>
-                              <Text as="span" display={["none", "flex"]}>
-                                -
+                            </Text>
+
+                            <Text as="span" display={["none", "flex"]}>
+                              -
+                            </Text>
+
+                            <Text color="brand.blue">
+                              End:{" "}
+                              <Text as="span" color="#fff">
+                                {new Date(
+                                  Number(item?.endTime)
+                                ).toLocaleString()}{" "}
                               </Text>
-                              <Text color="brand.blue">
-                                End:{" "}
-                                <Text as="span" color="#fff">
-                                  {new Date(
-                                    Number(item?.endTime)
-                                  ).toLocaleString()}{" "}
-                                </Text>
-                              </Text>
-                            </Stack>
+                            </Text>
                           </Stack>
                         </Stack>
-                      )}
-                      {/* END Public Mint */}
-                    </Stack>
-                    <Divider mt={["20px", "30px"]} />
-                  </FadeIn>
-                ))
-              : ""}
-          </Box>
-        )}
+                      </>
+                    )}
+                    {/* END ~ Whitelist Mint */}
 
+                    {/* Public Mint */}
+                    {item.isPublic && (
+                      <Stack pt="20px">
+                        <UnorderedList>
+                          <ListItem>Your public mint info</ListItem>
+                        </UnorderedList>
+
+                        <Stack
+                          px="2px"
+                          w="full"
+                          direction={["column"]}
+                          fontSize={["15px", "18px", "18px"]}
+                        >
+                          <Stack
+                            w="full"
+                            color="#888"
+                            spacing="30px"
+                            direction={["row"]}
+                            alignContent="space-between"
+                            // minH={{ base: "1rem", "2xl": "3.375rem" }}
+                          >
+                            <Text>
+                              Total:{" "}
+                              <Text as="span" color="#fff">
+                                {item.publicMintingAmount}
+                              </Text>
+                            </Text>
+
+                            <Text>
+                              Minted:{" "}
+                              <Text as="span" color="#fff">
+                                {item.claimedAmount}{" "}
+                                <Text as="span">
+                                  NFT{item.claimedAmount > 1 ? "s" : ""}
+                                </Text>
+                              </Text>
+                            </Text>
+
+                            <Text>
+                              Price:{" "}
+                              <Text as="span" color="#fff">
+                                {item.publicMintingFee / 10 ** 12}{" "}
+                                <AzeroIcon
+                                  mb="5px"
+                                  w={["14px", "16px"]}
+                                  h={["14px", "16px"]}
+                                />
+                              </Text>
+                            </Text>
+                          </Stack>
+
+                          <Stack
+                            w="full"
+                            minW="fit-content"
+                            direction={["column", "row"]}
+                          >
+                            <Text color="brand.blue">
+                              Start:{" "}
+                              <Text as="span" color="#fff">
+                                {new Date(
+                                  Number(item?.startTime)
+                                ).toLocaleString()}{" "}
+                              </Text>
+                            </Text>
+                            <Text as="span" display={["none", "flex"]}>
+                              -
+                            </Text>
+                            <Text color="brand.blue">
+                              End:{" "}
+                              <Text as="span" color="#fff">
+                                {new Date(
+                                  Number(item?.endTime)
+                                ).toLocaleString()}{" "}
+                              </Text>
+                            </Text>
+                          </Stack>
+                        </Stack>
+                      </Stack>
+                    )}
+                    {/* END Public Mint */}
+                  </Stack>
+                  <Divider mt={["20px", "30px"]} />
+                </FadeIn>
+              ))
+            : ""}
+        </Box>
         <Box
           w="full"
           maxW="870px"
@@ -985,25 +983,33 @@ const LaunchpadDetailPage = () => {
             <Heading fontSize={["24px", "32px"]}>roadmap</Heading>
             <Spacer />
           </Flex>
-          {formattedProject.roadmaps && formattedProject.roadmaps.length
-            ? formattedProject.roadmaps.map((item, index) => (
-                <>
-                  <Flex w="full" my="20px">
-                    <Heading fontSize={["md", "lg"]}>
-                      <Text as="span" color="#7ae7ff">
-                        {item.type}
-                      </Text>
-                    </Heading>
-                    <Spacer />
-                  </Flex>
 
-                  <Box fontSize={["md", "lg"]} color="#888" px="20px" mb="30px">
-                    <Interweave content={item.content} />
-                  </Box>
+          {projectInfo?.roadmaps?.length
+            ? projectInfo?.roadmaps?.map((item, index) => {
+                return (
+                  <>
+                    <Flex key={index} w="full" my="20px">
+                      <Heading fontSize={["md", "lg"]}>
+                        <Text as="span" color="#7ae7ff">
+                          {item.type}
+                        </Text>
+                      </Heading>
+                      <Spacer />
+                    </Flex>
 
-                  <Divider />
-                </>
-              ))
+                    <Box
+                      fontSize={["md", "lg"]}
+                      color="#888"
+                      px="20px"
+                      mb="30px"
+                    >
+                      <Interweave content={item.content} />
+                    </Box>
+
+                    <Divider />
+                  </>
+                );
+              })
             : ""}
         </Box>
         <Box
@@ -1024,9 +1030,8 @@ const LaunchpadDetailPage = () => {
               templateColumns={`repeat(auto-fill, minmax(min(100%, 250px), 1fr))`}
               gap="30px"
             >
-              {formattedProject.team_members &&
-              formattedProject.team_members.length
-                ? formattedProject.team_members.map((item) => (
+              {projectInfo?.teamMembers?.length
+                ? projectInfo?.teamMembers?.map((item) => (
                     <GridItem>
                       <TeamCard team_member={item} />
                     </GridItem>
@@ -1035,8 +1040,9 @@ const LaunchpadDetailPage = () => {
             </Grid>
           ) : (
             <>
-              {formattedProject?.team_members?.map((item, idx) => (
+              {projectInfo?.teamMembers?.map((item, idx) => (
                 <HStack
+                  key={idx}
                   py="15px"
                   alignItems="center"
                   borderBottom="1px solid #303030"
@@ -1106,6 +1112,7 @@ const LaunchpadDetailPage = () => {
               <HStack
                 py="15px"
                 alignItems="center"
+                justifyContent={["space-between", "start"]}
                 borderBottom="1px solid #303030"
               >
                 <Heading color="#888" fontSize="15px" minW={["100px", "240px"]}>
@@ -1118,24 +1125,23 @@ const LaunchpadDetailPage = () => {
 
               {pageNFT.map((item, idx) => (
                 <HStack
+                  justifyContent={["space-between", "start"]}
                   key={idx}
                   py="15px"
                   alignItems="center"
                   borderBottom="1px solid #303030"
                 >
-                  <HStack justifyContent="center">
-                    <Heading fontSize={["md", "lg"]} minW={["100px", "240px"]}>
-                      {item.nftName}
-                    </Heading>
+                  <Heading fontSize={["md", "lg"]} minW={["100px", "240px"]}>
+                    {item.nftName}
+                  </Heading>
 
-                    <ImageCloudFlare
-                      mr={["12px", "32px"]}
-                      size="100"
-                      w="50px"
-                      h="50px"
-                      src={item["avatar"]}
-                    />
-                  </HStack>
+                  <ImageCloudFlare
+                    mr={["12px", "32px"]}
+                    size="100"
+                    w="50px"
+                    h="50px"
+                    src={item["avatar"]}
+                  />
                 </HStack>
               ))}
               <Stack w="full" py="30px">
@@ -1153,7 +1159,6 @@ const LaunchpadDetailPage = () => {
           )}
         </Box>
       </VStack>
-      {/* )} */}
     </Layout>
   );
 };

@@ -10,7 +10,7 @@ import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
 
-import { isPhaseTimeOverlap } from "@utils";
+import { isPhaseTimeOverlap, strToNumber } from "@utils";
 import { useSubstrateState } from "@utils/substrate";
 import {
   formMode,
@@ -127,8 +127,8 @@ function UpdatePhase({
 
     const phasesArray = [...value];
 
-    const prjStartTime = parseInt(startTime.replaceAll(",", ""));
-    const prjEndTime = parseInt(endTime.replaceAll(",", ""));
+    const prjStartTime = strToNumber(startTime);
+    const prjEndTime = strToNumber(endTime);
 
     if (phasesArray?.length) {
       const startFirstPhase = phasesArray[0]?.start;
@@ -207,8 +207,10 @@ function UpdatePhase({
 
     const phasesArray = [...value];
 
-    const prjStartTime = parseInt(startTime.replaceAll(",", ""));
-    const prjEndTime = parseInt(endTime.replaceAll(",", ""));
+    const prjStartTime = parseInt(
+      JSON.stringify(startTime).replaceAll(",", "")
+    );
+    const prjEndTime = parseInt(JSON.stringify(endTime).replaceAll(",", ""));
 
     if (phasesArray?.length) {
       const startFirstPhase = phasesArray[0]?.start;
@@ -618,7 +620,7 @@ const canEditPhase = (startTime) => {
 };
 
 export const isPhaseEnd = (endTime = "") => {
-  console.log('endTime', endTime)
+  console.log("endTime", endTime);
   endTime = parseInt(JSON.stringify(endTime)?.replaceAll(",", ""));
 
   const now = Date.now();

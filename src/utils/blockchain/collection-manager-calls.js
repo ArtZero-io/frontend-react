@@ -728,31 +728,31 @@ async function setMultipleAttributes(
                   },
                 });
               }
-              if (transactionData.attributes[i] === "header_image") {
-                cacheImages.push({
-                  input: values[i],
-                  is1920: false,
-                  imageType: "collection",
-                  metadata: {
-                    collectionAddress: collection_address,
-                    type: "header_image",
-                  },
-                });
-              }
-              if (
-                transactionData.attributes[i] ===
-                "header_square_image"
-              ) {
-                cacheImages.push({
-                  input: values[i],
-                  is1920: true,
-                  imageType: "collection",
-                  metadata: {
-                    collectionAddress: collection_address,
-                    type: "header_square_image",
-                  },
-                });
-              }
+              // if (transactionData.attributes[i] === "header_image") {
+              //   cacheImages.push({
+              //     input: values[i],
+              //     is1920: false,
+              //     imageType: "collection",
+              //     metadata: {
+              //       collectionAddress: collection_address,
+              //       type: "header_image",
+              //     },
+              //   });
+              // }
+              // if (
+              //   transactionData.attributes[i] ===
+              //   "header_square_image"
+              // ) {
+              //   cacheImages.push({
+              //     input: values[i],
+              //     is1920: true,
+              //     imageType: "collection",
+              //     metadata: {
+              //       collectionAddress: collection_address,
+              //       type: "header_square_image",
+              //     },
+              //   });
+              // }
             }
             console.log("cacheImages", cacheImages);
             if (cacheImages.length) {
