@@ -35,7 +35,7 @@ export async function getCloudFlareImage(imageHash = "", size = 500) {
 
   try {
     const response = await axios.get(ret);
-
+    // console.log("getCloudFlareImage res", response);
     result = response?.data || fallbackURL;
   } catch (error) {
     console.error("getCloudFlareImage error", error.message);
@@ -480,3 +480,10 @@ export async function getEstimatedGas(
 
   return result;
 }
+
+export const strToNumber = (str = "") => {
+  if (typeof str !== "string") return str;
+
+  const number = str.replace(/,/g, "");
+  return parseFloat(number);
+};

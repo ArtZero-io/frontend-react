@@ -15,7 +15,6 @@ import { useSubstrate } from "@utils/substrate/SubstrateContext";
 import { SUPPORTED_WALLET_LIST } from "@constants/index";
 import SubwalletLogo from "@utils/wallets/SubWalletLogo.svg";
 import PolkadotjsLogo from "@utils/wallets/PolkadotjsLogo.svg";
-// import TalismanLogo from "@utils/wallets/TalismanLogo.svg";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { loadAccounts } from "@utils/substrate/SubstrateContext";
 import { motion } from "framer-motion";
@@ -114,12 +113,7 @@ function WalletNotConnected(props) {
                               alt={wallet.extensionName}
                             />
                           )}
-                          {/* {wallet.extensionName === "talisman" && (
-                            <Image
-                              src={TalismanLogo}
-                              alt={wallet.extensionName}
-                            />
-                          )} */}
+
                           {wallet.extensionName === "polkadot-js" && (
                             <Image
                               src={PolkadotjsLogo}

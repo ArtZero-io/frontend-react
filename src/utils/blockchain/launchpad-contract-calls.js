@@ -338,7 +338,10 @@ async function addNewProject(
                       project_address: nft_address,
                     }))();
 
-                  console.lof("addNewProject nft_address,", nft_address);
+                  console.log(
+                    "APICall.askBeUpdateProjectData addNewProject nft_address,",
+                    nft_address
+                  );
                   createNewCollection(nft_address);
                 }
               }

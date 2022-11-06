@@ -9,6 +9,7 @@ import {
   Tooltip,
   Flex,
   Button,
+  Link,
 } from "@chakra-ui/react";
 import BN from "bn.js";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
@@ -970,11 +971,11 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           justifyContent="start"
                           w="full"
                         >
-                          <Text color="#888">{`Create new project you will pay  `}</Text>
+                          <Text color="#888">{`Create new project you will pay`}</Text>
                           <Text color="#fff" as="span">
-                            {`${addProjectTotalFee} $AZERO`}{" "}
+                            {`${addProjectTotalFee} $AZERO`}
                           </Text>
-                          <Text color="#888">{` in fee to ArtZero.io. This fee is non-refundable.`}</Text>
+                          <Text color="#888">{`in fee to ArtZero.io. This fee is non-refundable.`}</Text>
                         </HStack>
                       </HStack>
 
@@ -998,9 +999,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           justifyContent="start"
                           w="full"
                         >
-                          <Text color="#888">{`I agree to pay `}</Text>
+                          <Text color="#888">{`I agree to pay`}</Text>
                           <Text color="#fff" as="span">
-                            {`${projectMintFeeRate}%`}{" "}
+                            {`${projectMintFeeRate}%`}
                           </Text>
                           <Text color="#888">{`of mint price per succeed mint to ArtZero.io.`}</Text>
                         </HStack>
@@ -1026,19 +1027,17 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           w="full"
                         >
                           <Text color="#888">I agree to ArtZero's</Text>
-                          <Text
-                            color="#fff"
-                            variant=""
-                            p="0"
+                          <Link
                             _hover={{
-                              textDecoration: "underline",
                               color: "#7ae7ff",
+                              textDecoration: "underline",
                             }}
-                            cursor={"pointer"}
-                            onClick={() => history.push(ROUTES.LEGAL)}
+                            textTransform="none"
+                            isExternal
+                            href={`${window.location.pathname}#${ROUTES.LEGAL}`}
                           >
                             Terms of Service
-                          </Text>
+                          </Link>
                         </HStack>
                       </HStack>
                     </>

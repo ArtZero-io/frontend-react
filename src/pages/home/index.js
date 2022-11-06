@@ -390,15 +390,6 @@ function HomePage() {
                 >
                   polkadot js
                 </Link>{" "}
-                {/* and{" "}
-                <Link
-                  color="#7ae7ff"
-                  textDecoration="underline"
-                  href="https://chrome.google.com/webstore/detail/talisman-wallet/fijngjgcjhjmmpcmkeiomlglpeiijkld"
-                  target="_blank"
-                >
-                  talisman
-                </Link> */}
                 . please make sure you installed at least one of these wallets
                 and created an account.
               </Text>
@@ -723,7 +714,7 @@ export default HomePage;
 
 const availableFeaturesText = [
   "support erc721 (psp34) standard nft",
-  "support subwallet, talisman wallet and polkadot js",
+  "support subwallet and polkadot js",
   "explore nft collections, search for nfts and collections",
   "create collections in simple mode and advanced mode",
   "on-chain profile, create, edit, lock,  burn nft",

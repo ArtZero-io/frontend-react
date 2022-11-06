@@ -87,7 +87,7 @@ function CollectionAdmin() {
       options_active
     );
 
-    // console.log('collections_actives',collections_actives);
+    console.log("collections_actives", collections_actives);
 
     const options_inactive = {
       limit: collection_count,
@@ -101,7 +101,7 @@ function CollectionAdmin() {
       options_inactive
     );
 
-    // console.log('collections_inactive',collections_inactive);
+    console.log("collections_inactive", collections_inactive);
     let collections = collections_actives.concat(collections_inactive);
     // console.log('collections',collections);
     setCollections(collections);

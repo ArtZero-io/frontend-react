@@ -115,17 +115,4 @@ export const SUPPORTED_WALLET_LIST = [
     installUrlFirefox:
       "https://addons.mozilla.org/en-US/firefox/addon/polkadot-js-extension/",
   },
-  // {
-  //   extensionName: "talisman",
-  //   title: "Talisman",
-  //   logo: "TalismanLogo.svg",
-  //   noExtensionMessage:
-  //     "You can use any Polkadot compatible wallet but we recommend using Talisman",
-  //   installUrlChrome:
-  //     "https://chrome.google.com/webstore/detail/talisman-wallet/fijngjgcjhjmmpcmkeiomlglpeiijkld",
-  //   installUrlEdge:
-  //     "https://chrome.google.com/webstore/detail/talisman-wallet/fijngjgcjhjmmpcmkeiomlglpeiijkld",
-  //   installUrlFirefox:
-  //     "https://addons.mozilla.org/en-US/firefox/addon/talisman-wallet-extension/",
-  // },
 ];

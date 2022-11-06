@@ -67,6 +67,7 @@ function ProjectAdmin() {
     let projectCount = await launchpad_contract_calls.getProjectCount(
       currentAccount
     );
+    console.log('projectCount',projectCount);
     // console.log('collections_inactives',collections_inactives);
     let tmpProjects = [];
     for (let i = 1; i <= projectCount; i++) {
@@ -127,6 +128,10 @@ function ProjectAdmin() {
     setCollections(tmpProjects);
   };
   const onSetStatusCollection = async (collection_contract, isActive) => {
+    if (currentAccount.address !== collectionContractAdmin) {
+      return toast.error("Only admin can set status collection");
+    }
+
     toast.success(`Setting status...`);
     await launchpad_contract_calls.updateIsActiveProject(
       currentAccount,
