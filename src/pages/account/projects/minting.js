@@ -170,6 +170,7 @@ function MyMintingProjectPage() {
         currentAccount
       );
 
+    console.log("ownerClaimedAmount", ownerClaimedAmount);
     maxMintTmp -= parseInt(ownerClaimedAmount.replaceAll(",", ""));
     setMaxMint(maxMintTmp);
     setPhasesList(phasesTmp);
@@ -203,6 +204,8 @@ function MyMintingProjectPage() {
           currentAccount,
           selectedPhaseCode
         );
+
+      console.log("phaseInfo", phaseInfo);
       if (phaseInfo.isActive) {
         setCurrentPhase(phaseInfo);
       }
@@ -261,7 +264,7 @@ function MyMintingProjectPage() {
             </Select>
           </Box>
         </Stack>
-        <Stack textAlign="left">
+        {/* <Stack textAlign="left">
           <Text py={2}>Choose Phase</Text>
           <Box>
             <Select
@@ -288,7 +291,7 @@ function MyMintingProjectPage() {
                 : ""}
             </Select>
           </Box>
-        </Stack>
+        </Stack> */}
 
         <Stack textAlign="left" pb="30px">
           <Text py={2}>Mint Amount</Text>
