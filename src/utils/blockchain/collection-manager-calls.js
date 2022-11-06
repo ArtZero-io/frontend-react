@@ -70,85 +70,71 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
       data.collectionAllowRoyalFee,
       data.collectionRoyalFeeData
     )
-    .signAndSend(
-      address,
-      { signer },
-      async ({ status, dispatchError }) => {
-        txResponseErrorHandler({
-          status,
-          dispatchError,
-          dispatch,
-          txType,
-          api,
-          caller_account,
-        });
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
 
-        if (status?.isFinalized) {
-          let transactionData = data;
-          await APICall.askBeUpdateCollectionData({
-            collection_address: data?.nftContractAddress
-          });
-          if (transactionData.attributes?.length) {
-            let cacheImages = [];
-            console.log("attributes", transactionData.attributes);
-            console.log(
-              "attributes.length",
-              transactionData.attributes.length
-            );
-            for (
-              let i = 0;
-              i < transactionData.attributes.length;
-              i++
-            ) {
-              console.log(transactionData.attributes[i]);
-              if (transactionData.attributes[i] === "avatar_image") {
-                cacheImages.push({
-                  input: transactionData.attributeVals[i],
-                  is1920: false,
-                  imageType: "collection",
-                  metadata: {
-                    collectionAddress: data?.nftContractAddress,
-                    type: "avatar_image",
-                  },
-                });
-              }
-              if (transactionData.attributes[i] === "header_image") {
-                cacheImages.push({
-                  input: transactionData.attributeVals[i],
-                  is1920: false,
-                  imageType: "collection",
-                  metadata: {
-                    collectionAddress: data?.nftContractAddress,
-                    type: "header_image",
-                  },
-                });
-              }
-              if (
-                transactionData.attributes[i] ===
-                "header_square_image"
-              ) {
-                cacheImages.push({
-                  input: transactionData.attributeVals[i],
-                  is1920: true,
-                  imageType: "collection",
-                  metadata: {
-                    collectionAddress: data?.nftContractAddress,
-                    type: "header_square_image",
-                  },
-                });
-              }
+      if (status?.isFinalized) {
+        let transactionData = data;
+        await APICall.askBeUpdateCollectionData({
+          collection_address: data?.nftContractAddress,
+        });
+        if (transactionData.attributes?.length) {
+          let cacheImages = [];
+          console.log("attributes", transactionData.attributes);
+          console.log("attributes.length", transactionData.attributes.length);
+          for (let i = 0; i < transactionData.attributes.length; i++) {
+            console.log(transactionData.attributes[i]);
+            if (transactionData.attributes[i] === "avatar_image") {
+              cacheImages.push({
+                input: transactionData.attributeVals[i],
+                is1920: false,
+                imageType: "collection",
+                metadata: {
+                  collectionAddress: data?.nftContractAddress,
+                  type: "avatar_image",
+                },
+              });
             }
-            console.log("cacheImages", cacheImages);
-            if (cacheImages.length) {
-              console.log("cacheImages::POST_API");
-              await clientAPI("post", "/cacheImages", {
-                images: JSON.stringify(cacheImages),
+            if (transactionData.attributes[i] === "header_image") {
+              cacheImages.push({
+                input: transactionData.attributeVals[i],
+                is1920: false,
+                imageType: "collection",
+                metadata: {
+                  collectionAddress: data?.nftContractAddress,
+                  type: "header_image",
+                },
+              });
+            }
+            if (transactionData.attributes[i] === "header_square_image") {
+              cacheImages.push({
+                input: transactionData.attributeVals[i],
+                is1920: true,
+                imageType: "collection",
+                metadata: {
+                  collectionAddress: data?.nftContractAddress,
+                  type: "header_square_image",
+                },
               });
             }
           }
+          console.log("cacheImages", cacheImages);
+          if (cacheImages.length) {
+            console.log("cacheImages::POST_API");
+            await clientAPI("post", "/cacheImages", {
+              images: JSON.stringify(cacheImages),
+            });
+          }
         }
       }
-    )
+    })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 
@@ -707,16 +693,8 @@ async function setMultipleAttributes(
           if (attributes?.length) {
             let cacheImages = [];
             console.log("attributes", attributes);
-            console.log(
-              "attributes.length",
-              attributes.length
-            );
-            for (
-              let i = 0;
-              i < attributes.length;
-              i++
-            ) {
-          
+            console.log("attributes.length", attributes.length);
+            for (let i = 0; i < attributes.length; i++) {
               if (attributes[i] === "avatar_image") {
                 cacheImages.push({
                   input: values[i],
@@ -728,31 +706,28 @@ async function setMultipleAttributes(
                   },
                 });
               }
-              // if (transactionData.attributes[i] === "header_image") {
-              //   cacheImages.push({
-              //     input: values[i],
-              //     is1920: false,
-              //     imageType: "collection",
-              //     metadata: {
-              //       collectionAddress: collection_address,
-              //       type: "header_image",
-              //     },
-              //   });
-              // }
-              // if (
-              //   transactionData.attributes[i] ===
-              //   "header_square_image"
-              // ) {
-              //   cacheImages.push({
-              //     input: values[i],
-              //     is1920: true,
-              //     imageType: "collection",
-              //     metadata: {
-              //       collectionAddress: collection_address,
-              //       type: "header_square_image",
-              //     },
-              //   });
-              // }
+              if (attributes[i] === "header_image") {
+                cacheImages.push({
+                  input: values[i],
+                  is1920: false,
+                  imageType: "collection",
+                  metadata: {
+                    collectionAddress: collection_address,
+                    type: "header_image",
+                  },
+                });
+              }
+              if (attributes[i] === "header_square_image") {
+                cacheImages.push({
+                  input: values[i],
+                  is1920: true,
+                  imageType: "collection",
+                  metadata: {
+                    collectionAddress: collection_address,
+                    type: "header_square_image",
+                  },
+                });
+              }
             }
             console.log("cacheImages", cacheImages);
             if (cacheImages.length) {

@@ -456,6 +456,38 @@ async function setMultipleAttributesNFT(
           collection_address,
           token_id: tokenID,
         });
+
+        if (attributes?.length) {
+          let cacheImages = [];
+          console.log("attributes", attributes);
+          
+          for (
+            let i = 0;
+            i < attributes.length;
+            i++
+          ) {
+            console.log(attributes[i]);
+            if (attributes[i].name === "avatar") {
+              cacheImages.push({
+                input: attributes[i].value,
+                is1920: false,
+                imageType: "nft",
+                metadata: {
+                  collectionAddress: collection_address,
+                  tokenId: tokenID,
+                  type: "avatar",
+                },
+              });
+            }
+          }
+          console.log("cacheImages", cacheImages);
+          if (cacheImages.length) {
+            
+            await clientAPI("post", "/cacheImages", {
+              images: JSON.stringify(cacheImages),
+            });
+          }
+        }
       }
     })
     .then((unsub) => (unsubscribe = unsub))
