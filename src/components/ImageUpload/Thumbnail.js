@@ -21,7 +21,6 @@ const Thumbnail = ({
   index,
   title,
   isBanner = false,
-  limitedSize,
   imageIPFSUrl,
   width = "152px",
   height = "152px",
@@ -29,6 +28,8 @@ const Thumbnail = ({
   isDisabled = false,
   isRequired = false,
   isRounded = false,
+  limitedSize = { width: "500", height: "500" },
+  isSmallThumbnail = false,
 }) => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const ref = useRef();
@@ -123,7 +124,7 @@ const Thumbnail = ({
         >
           <label style={{ width: "100%" }} htmlFor={`${id}InputTag`}>
             <Flex
-              border="2px dashed #565656"
+              border="1px dashed #565656"
               _hover={{ borderColor: "#7ae7ff" }}
               borderRadius={isRounded && "full"}
               w={width}
@@ -155,18 +156,22 @@ const Thumbnail = ({
               }}
             >
               <Flex
+                pb="20px"
                 h="full"
                 w="full"
                 alignItems="center"
                 flexDirection="column"
-                justifyContent="space-evenly"
+                justifyContent="end"
                 className="thumbnail-children"
                 borderRadius={isRounded && "full"}
                 _hover={{ cursor: "pointer" }}
               >
-                <ThumbnailImage />
+                <ThumbnailImage
+                  width={isSmallThumbnail ? "45px" : "64px"}
+                  height={isSmallThumbnail ? "45px" : "64px"}
+                />
 
-                <Flex alignItems="center">
+                <Flex alignItems="center" pb="10px" mt="40px">
                   <UploadIcon color="" />
 
                   <Text
@@ -179,6 +184,21 @@ const Thumbnail = ({
                     {!imagePreviewUrl ? "select image" : "pick another"}
                   </Text>
                 </Flex>
+                {limitedSize && !isSmallThumbnail && (
+                  <Text
+                    fontSize={["xs", "sm"]}
+                    textAlign="center"
+                    color="brand.grayLight"
+                  >
+                    Recommended file size{" "}
+                    <br
+                      style={{
+                        display: isRounded ? "block" : "none",
+                      }}
+                    />{" "}
+                    is {limitedSize.width} x {limitedSize.height} px
+                  </Text>
+                )}
               </Flex>
 
               <input
@@ -219,9 +239,9 @@ const Thumbnail = ({
         {/* <Spacer /> */}
       </Center>
 
-      {limitedSize ? (
+      {limitedSize && isSmallThumbnail ? (
         <Text ml={2} fontSize={["xs", "sm", "sm"]} color="brand.grayLight">
-          Recommended file size is {limitedSize.width}x{limitedSize.height} px
+          Recommended file size is {limitedSize.width} x {limitedSize.height} px
         </Text>
       ) : null}
     </VStack>

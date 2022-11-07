@@ -29,7 +29,7 @@ function AddRoadmap({ name, mode, isDisabled }) {
           <Stack>
             {value?.map((_, index) => (
               <Stack
-                border="2px solid #333"
+                bg="#222"
                 p={["10px", "30px"]}
                 gap={["0px", "0px"]}
                 key={index}

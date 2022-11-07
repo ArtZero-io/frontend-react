@@ -49,18 +49,12 @@ function AddMember({ name, mode, isDisabled }) {
         return (
           <Stack>
             {value?.map((_, index) => (
-              <HStack
-                w="full"
-                key={index}
-                p={["10px", "30px"]}
-                border="2px solid #333"
-              >
+              <HStack bg="#222" w="full" key={index} p={["10px", "30px"]}>
                 <Stack direction={["column"]} gap="2px">
                   <Text fontSize="lg">Choose avatar image</Text>
-                  <Text ml={2} fontSize={["xs", "sm"]} color="brand.grayLight">
-                    Recommended file size is 500 x 500 px
-                  </Text>
+
                   <ImageUploadThumbnail
+                    isSmallThumbnail={true}
                     width="200px"
                     height="200px"
                     title={"Member Avatar"}
@@ -72,7 +66,7 @@ function AddMember({ name, mode, isDisabled }) {
                     id={`memberAvatar${index}`}
                     imageIPFSUrl={value[index].avatar}
                     setImageIPFSUrl={handleAvatarUrl}
-                    // limitedSize={{ width: "500", height: "500" }}
+                    limitedSize={{ width: "500", height: "500" }}
                   />
                 </Stack>
 

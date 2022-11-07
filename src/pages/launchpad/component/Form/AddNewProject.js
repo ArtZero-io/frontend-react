@@ -1,6 +1,6 @@
-/* eslint-disable no-unused-vars */
 import {
   Heading,
+  Box,
   Stack,
   Text,
   HStack,
@@ -8,7 +8,7 @@ import {
   IconButton,
   Tooltip,
   Flex,
-  Button,
+  Container,
   Link,
 } from "@chakra-ui/react";
 import BN from "bn.js";
@@ -268,560 +268,582 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             />
           </HStack>
 
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={async (values, { setSubmitting }) => {
-              console.log("create proj ...");
+          <Stack bg="#151515">
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={async (values, { setSubmitting }) => {
+                // console.log("create proj ...");
 
-              // check wallet connect?
-              if (!currentAccount) {
-                return toast.error("Please connect wallet first!");
-              }
-
-              // check Total Mint Amount của Phase vs total Supply (FE)
-              const totalSupply = parseInt(values.totalSupply);
-              const phases = values.phases;
-
-              const allPhasesMintAmount = phases.reduce((acc, cur) => {
-                return cur?.isPublic ? acc + parseInt(cur?.publicAmount) : acc;
-              }, 0);
-
-              if (totalSupply < allPhasesMintAmount) {
-                return toast.error(
-                  "Total mint of phases must less than Total supply!"
-                );
-              }
-
-              // check all image uploaded?
-              const memberAvatarAr = values?.members?.map((i) => i.avatar);
-              const isAllMemberAvatarUpload = memberAvatarAr?.every((e) => e);
-
-              if (
-                !values.isEditMode &&
-                (!headerIPFSUrl || !avatarIPFSUrl || !isAllMemberAvatarUpload)
-              ) {
-                return toast.error("Upload avatar or header please!");
-              }
-
-              values.avatarIPFSUrl = avatarIPFSUrl;
-              values.headerIPFSUrl = headerIPFSUrl;
-              values.headerSquareIPFSUrl = headerSquareIPFSUrl;
-
-              if (!values.isEditMode) {
-                // check prj time-frame is picked?
-                const prjStartTime = values?.startTime;
-                const prjEndTime = values?.endTime;
-                if (!values.isEditMode && (!prjStartTime || !prjStartTime)) {
-                  return toast.error("Please pick time frame for project!");
+                // check wallet connect?
+                if (!currentAccount) {
+                  return toast.error("Please connect wallet first!");
                 }
 
-                // check all phase time-frame is picked?
-                const phasesArray = values?.phases;
+                // check Total Mint Amount của Phase vs total Supply (FE)
+                const totalSupply = parseInt(values.totalSupply);
+                const phases = values.phases;
 
-                const startPhasesAr = phasesArray?.map((i) => i.start);
+                const allPhasesMintAmount = phases.reduce((acc, cur) => {
+                  return cur?.isPublic
+                    ? acc + parseInt(cur?.publicAmount)
+                    : acc;
+                }, 0);
 
-                const isPhaseTimePicked = startPhasesAr?.every((e) => e);
-
-                if (phasesArray && !isPhaseTimePicked) {
-                  return toast.error("Please pick time frame for all phases!");
+                if (totalSupply < allPhasesMintAmount) {
+                  return toast.error(
+                    "Total mint of phases must less than Total supply!"
+                  );
                 }
 
-                // check time is overlap?
-                const allPhaseTime = [...values.phases];
+                // check all image uploaded?
+                const memberAvatarAr = values?.members?.map((i) => i.avatar);
+                const isAllMemberAvatarUpload = memberAvatarAr?.every((e) => e);
 
-                const isOverlap = isPhaseTimeOverlap(allPhaseTime);
-
-                if (isOverlap) {
-                  return toast.error("Sub phase time is not valid or overlap.");
+                if (
+                  !values.isEditMode &&
+                  (!headerIPFSUrl || !avatarIPFSUrl || !isAllMemberAvatarUpload)
+                ) {
+                  return toast.error("Upload avatar or header please!");
                 }
 
-                if (phasesArray?.length) {
-                  const startFirstPhase = phasesArray[0]?.start;
-                  const endLastPhase = [...phasesArray].pop().end;
+                values.avatarIPFSUrl = avatarIPFSUrl;
+                values.headerIPFSUrl = headerIPFSUrl;
+                values.headerSquareIPFSUrl = headerSquareIPFSUrl;
 
-                  if (
-                    !(
-                      prjStartTime <= startFirstPhase &&
-                      startFirstPhase <= endLastPhase &&
-                      endLastPhase <= prjEndTime
-                    )
-                  ) {
-                    toast.error(
-                      "Sub phase time is not valid or overlap project phase time."
+                if (!values.isEditMode) {
+                  // check prj time-frame is picked?
+                  const prjStartTime = values?.startTime;
+                  const prjEndTime = values?.endTime;
+                  if (!values.isEditMode && (!prjStartTime || !prjStartTime)) {
+                    return toast.error("Please pick time frame for project!");
+                  }
+
+                  // check all phase time-frame is picked?
+                  const phasesArray = values?.phases;
+
+                  const startPhasesAr = phasesArray?.map((i) => i.start);
+
+                  const isPhaseTimePicked = startPhasesAr?.every((e) => e);
+
+                  if (phasesArray && !isPhaseTimePicked) {
+                    return toast.error(
+                      "Please pick time frame for all phases!"
                     );
-                    return;
+                  }
+
+                  // check time is overlap?
+                  const allPhaseTime = [...values.phases];
+
+                  const isOverlap = isPhaseTimeOverlap(allPhaseTime);
+
+                  if (isOverlap) {
+                    return toast.error(
+                      "Sub phase time is not valid or overlap."
+                    );
+                  }
+
+                  if (phasesArray?.length) {
+                    const startFirstPhase = phasesArray[0]?.start;
+                    const endLastPhase = [...phasesArray].pop().end;
+
+                    if (
+                      !(
+                        prjStartTime <= startFirstPhase &&
+                        startFirstPhase <= endLastPhase &&
+                        endLastPhase <= prjEndTime
+                      )
+                    ) {
+                      toast.error(
+                        "Sub phase time is not valid or overlap project phase time."
+                      );
+                      return;
+                    }
                   }
                 }
-              }
 
-              //check low balance?
-              if (userBalance < 1) {
-                return toast.error(`Your balance too low!`);
-              }
+                //check low balance?
+                if (userBalance < 1) {
+                  return toast.error(`Your balance too low!`);
+                }
 
-              const project_info = {
-                name: values.name.trim(),
-                description: values.description.trim(),
-                website: values.website.trim(),
-                twitter: values.twitter.trim(),
-                discord: values.discord.trim(),
-                nft_name: values.nftName.trim(),
-                nft_symbol: values.nftSymbol.trim(),
-                header: values.headerIPFSUrl,
-                headerSquare: values.headerSquareIPFSUrl,
-                avatar: values.avatarIPFSUrl,
-                team_members: values.members,
-                roadmaps: values.roadmap,
-              };
-
-              const project_info_ipfs = await ipfsClient.add(
-                JSON.stringify(project_info)
-              );
-
-              // console.log(
-              //   "ADD project_info_ipfs NEED CHECK",
-              //   project_info_ipfs
-              // );
-              let code_phases = [];
-              let start_time_phases = [];
-              let end_time_phases = [];
-              let is_public_phases = [];
-              let public_minting_fee_phases = [];
-              let public_minting_amout_phases = [];
-              let public_max_minting_amount_phases = [];
-              for (let phase of values.phases) {
-                code_phases.push(phase.name);
-                is_public_phases.push(phase.isPublic);
-                let public_minting_fee_phase_tmp = phase.isPublic
-                  ? new BN(phase.publicMintingFee * 10 ** 6)
-                      .mul(new BN(10 ** 6))
-                      .toString()
-                  : 0;
-                public_minting_fee_phases.push(public_minting_fee_phase_tmp);
-                let public_minting_amout_phase_tmp =
-                  phase.isPublic && phase.publicAmount ? phase.publicAmount : 0;
-
-                let public_max_minting_amount_phase_tmp =
-                  phase.isPublic && phase.publicMaxMintingAmount
-                    ? phase.publicMaxMintingAmount
-                    : 0;
-                public_minting_amout_phases.push(
-                  public_minting_amout_phase_tmp
-                );
-                public_max_minting_amount_phases.push(
-                  public_max_minting_amount_phase_tmp
-                );
-                start_time_phases.push(phase.start);
-                end_time_phases.push(phase.end);
-              }
-
-              const data = {
-                total_supply: Number(values.totalSupply),
-                start_time: values.startTime,
-                end_time: values.endTime,
-                project_info: project_info_ipfs.path,
-                code_phases: code_phases,
-                start_time_phases: start_time_phases,
-                end_time_phases: end_time_phases,
-                collectionName: values.name.trim(),
-                collectionDescription: values.description.trim(),
-                avatarIPFSUrl: values.avatarIPFSUrl,
-                headerIPFSUrl: values.headerIPFSUrl,
-                headerSquareIPFSUrl: values.headerSquareIPFSUrl,
-                website: values.website.trim(),
-                twitter: values.twitter.trim(),
-                discord: values.discord.trim(),
-                collectRoyalFee: isSetRoyal,
-                royalFee: values.royalFee,
-                collectionAddingFee: addingFee,
-                is_public_phases: is_public_phases,
-                public_minting_fee_phases: public_minting_fee_phases,
-                public_minting_amout_phases: public_minting_amout_phases,
-                public_max_minting_amount_phases:
-                  public_max_minting_amount_phases,
-              };
-
-              if (mode === formMode.ADD) {
-                const createNewCollection = async (nft_address) => {
-                  setNewNFTAddress(nft_address);
-                  console.log(
-                    "ADD createNewCollection nft_address",
-                    nft_address
-                  );
-                  // Lay gia tri nft_address tu launchpad_contract_calls roi tao collection
-                  const collectionData = {
-                    nftContractAddress: nft_address,
-                    attributes: [
-                      "name",
-                      "description",
-                      "avatar_image",
-                      "header_image",
-                      "header_square_image",
-                      "website",
-                      "twitter",
-                      "discord",
-                    ],
-
-                    attributeVals: [
-                      values.name,
-                      values.description,
-                      values.avatarIPFSUrl,
-                      values.headerIPFSUrl,
-                      values.headerSquareIPFSUrl,
-                      values.website,
-                      values.twitter,
-                      values.discord,
-                    ],
-                    collectionAllowRoyalFee: isSetRoyal,
-                    collectionRoyalFeeData: isSetRoyal
-                      ? Math.round(values.royalFee * 100)
-                      : 0,
-                  };
-
-                  dispatch(
-                    setTxStatus({ type: CREATE_COLLECTION, step: START })
-                  );
-
-                  toast.success("Step 2. Creating collection...");
-
-                  await collection_manager_calls.addNewCollection(
-                    currentAccount,
-                    collectionData,
-                    dispatch,
-                    CREATE_COLLECTION,
-                    api
-                  );
-                  var templateParams = {
-                    email_owner: values.email_owner,
-                    nft_address: nft_address,
-                    project_name: values.name,
-                    reply_to: values.email_owner,
-                  };
-                  emailjs
-                    .send(
-                      "service_gz6dl9u",
-                      "template_980idtm",
-                      templateParams,
-                      "q4EO2tL6l8kY1jEZh"
-                    )
-                    .then(
-                      function (response) {
-                        console.log("SUCCESS!", response.status, response.text);
-                      },
-                      function (error) {
-                        console.log("FAILED...", error);
-                      }
-                    );
+                const project_info = {
+                  name: values.name.trim(),
+                  description: values.description.trim(),
+                  website: values.website.trim(),
+                  twitter: values.twitter.trim(),
+                  discord: values.discord.trim(),
+                  nft_name: values.nftName.trim(),
+                  nft_symbol: values.nftSymbol.trim(),
+                  header: values.headerIPFSUrl,
+                  headerSquare: values.headerSquareIPFSUrl,
+                  avatar: values.avatarIPFSUrl,
+                  team_members: values.members,
+                  roadmaps: values.roadmap,
                 };
 
-                // console.log("addNewProject data", data);
-
-                dispatch(setTxStatus({ type: CREATE_PROJECT, step: START }));
-
-                toast.success("Step 1. Creating project...");
-
-                await launchpad_contract_calls.addNewProject(
-                  currentAccount,
-                  data,
-                  dispatch,
-                  CREATE_PROJECT,
-                  api,
-                  createNewCollection
+                const project_info_ipfs = await ipfsClient.add(
+                  JSON.stringify(project_info)
                 );
-              } else {
-                if (mode === formMode.EDIT) {
-                  console.log("EDIT values", values);
-                  const project_info = {
-                    name: values.name.trim(),
-                    description: values.description.trim(),
-                    website: values.website.trim(),
-                    twitter: values.twitter.trim(),
-                    discord: values.discord.trim(),
-                    nft_name: values.nftName.trim(),
-                    nft_symbol: values.nftSymbol.trim(),
-                    header: values.headerIPFSUrl,
-                    headerSquare: values.headerSquareIPFSUrl,
-                    avatar: values.avatarIPFSUrl,
-                    team_members: values.members,
-                    roadmaps: values.roadmap,
-                  };
 
-                  const project_info_ipfs = await ipfsClient.add(
-                    JSON.stringify(project_info)
+                // console.log(
+                //   "ADD project_info_ipfs NEED CHECK",
+                //   project_info_ipfs
+                // );
+                let code_phases = [];
+                let start_time_phases = [];
+                let end_time_phases = [];
+                let is_public_phases = [];
+                let public_minting_fee_phases = [];
+                let public_minting_amout_phases = [];
+                let public_max_minting_amount_phases = [];
+                for (let phase of values.phases) {
+                  code_phases.push(phase.name);
+                  is_public_phases.push(phase.isPublic);
+                  let public_minting_fee_phase_tmp = phase.isPublic
+                    ? new BN(phase.publicMintingFee * 10 ** 6)
+                        .mul(new BN(10 ** 6))
+                        .toString()
+                    : 0;
+                  public_minting_fee_phases.push(public_minting_fee_phase_tmp);
+                  let public_minting_amout_phase_tmp =
+                    phase.isPublic && phase.publicAmount
+                      ? phase.publicAmount
+                      : 0;
+
+                  let public_max_minting_amount_phase_tmp =
+                    phase.isPublic && phase.publicMaxMintingAmount
+                      ? phase.publicMaxMintingAmount
+                      : 0;
+                  public_minting_amout_phases.push(
+                    public_minting_amout_phase_tmp
                   );
-                  // console.log(
-                  //   "EDIT project_info_ipfs NEED CHECK",
-                  //   project_info_ipfs.path,
-                  //   project_info
-                  // );
-                  const launchpad_psp34_nft_standard_contract =
-                    new ContractPromise(
-                      api,
-                      launchpad_psp34_nft_standard.CONTRACT_ABI,
-                      location.state?.collection_address
+                  public_max_minting_amount_phases.push(
+                    public_max_minting_amount_phase_tmp
+                  );
+                  start_time_phases.push(phase.start);
+                  end_time_phases.push(phase.end);
+                }
+
+                const data = {
+                  total_supply: Number(values.totalSupply),
+                  start_time: values.startTime,
+                  end_time: values.endTime,
+                  project_info: project_info_ipfs.path,
+                  code_phases: code_phases,
+                  start_time_phases: start_time_phases,
+                  end_time_phases: end_time_phases,
+                  collectionName: values.name.trim(),
+                  collectionDescription: values.description.trim(),
+                  avatarIPFSUrl: values.avatarIPFSUrl,
+                  headerIPFSUrl: values.headerIPFSUrl,
+                  headerSquareIPFSUrl: values.headerSquareIPFSUrl,
+                  website: values.website.trim(),
+                  twitter: values.twitter.trim(),
+                  discord: values.discord.trim(),
+                  collectRoyalFee: isSetRoyal,
+                  royalFee: values.royalFee,
+                  collectionAddingFee: addingFee,
+                  is_public_phases: is_public_phases,
+                  public_minting_fee_phases: public_minting_fee_phases,
+                  public_minting_amout_phases: public_minting_amout_phases,
+                  public_max_minting_amount_phases:
+                    public_max_minting_amount_phases,
+                };
+
+                if (mode === formMode.ADD) {
+                  const createNewCollection = async (nft_address) => {
+                    setNewNFTAddress(nft_address);
+                    console.log(
+                      "ADD createNewCollection nft_address",
+                      nft_address
+                    );
+                    // Lay gia tri nft_address tu launchpad_contract_calls roi tao collection
+                    const collectionData = {
+                      nftContractAddress: nft_address,
+                      attributes: [
+                        "name",
+                        "description",
+                        "avatar_image",
+                        "header_image",
+                        "header_square_image",
+                        "website",
+                        "twitter",
+                        "discord",
+                      ],
+
+                      attributeVals: [
+                        values.name,
+                        values.description,
+                        values.avatarIPFSUrl,
+                        values.headerIPFSUrl,
+                        values.headerSquareIPFSUrl,
+                        values.website,
+                        values.twitter,
+                        values.discord,
+                      ],
+                      collectionAllowRoyalFee: isSetRoyal,
+                      collectionRoyalFeeData: isSetRoyal
+                        ? Math.round(values.royalFee * 100)
+                        : 0,
+                    };
+
+                    dispatch(
+                      setTxStatus({ type: CREATE_COLLECTION, step: START })
                     );
 
-                  launchpad_psp34_nft_standard_calls.setContract(
-                    launchpad_psp34_nft_standard_contract
-                  );
+                    toast.success("Step 2. Creating collection...");
 
-                  dispatch(setTxStatus({ type: EDIT_PROJECT, step: START }));
+                    await collection_manager_calls.addNewCollection(
+                      currentAccount,
+                      collectionData,
+                      dispatch,
+                      CREATE_COLLECTION,
+                      api
+                    );
+                    var templateParams = {
+                      email_owner: values.email_owner,
+                      nft_address: nft_address,
+                      project_name: values.name,
+                      reply_to: values.email_owner,
+                    };
+                    emailjs
+                      .send(
+                        "service_gz6dl9u",
+                        "template_980idtm",
+                        templateParams,
+                        "q4EO2tL6l8kY1jEZh"
+                      )
+                      .then(
+                        function (response) {
+                          console.log(
+                            "SUCCESS!",
+                            response.status,
+                            response.text
+                          );
+                        },
+                        function (error) {
+                          console.log("FAILED...", error);
+                        }
+                      );
+                  };
 
-                  await launchpad_psp34_nft_standard_calls.editProjectInformation(
+                  // console.log("addNewProject data", data);
+
+                  dispatch(setTxStatus({ type: CREATE_PROJECT, step: START }));
+
+                  toast.success("Step 1. Creating project...");
+
+                  await launchpad_contract_calls.addNewProject(
                     currentAccount,
-                    project_info_ipfs.path,
+                    data,
                     dispatch,
-                    EDIT_PROJECT,
-                    api
+                    CREATE_PROJECT,
+                    api,
+                    createNewCollection
                   );
+                } else {
+                  if (mode === formMode.EDIT) {
+                    console.log("EDIT values", values);
+                    const project_info = {
+                      name: values.name.trim(),
+                      description: values.description.trim(),
+                      website: values.website.trim(),
+                      twitter: values.twitter.trim(),
+                      discord: values.discord.trim(),
+                      nft_name: values.nftName.trim(),
+                      nft_symbol: values.nftSymbol.trim(),
+                      header: values.headerIPFSUrl,
+                      headerSquare: values.headerSquareIPFSUrl,
+                      avatar: values.avatarIPFSUrl,
+                      team_members: values.members,
+                      roadmaps: values.roadmap,
+                    };
+
+                    const project_info_ipfs = await ipfsClient.add(
+                      JSON.stringify(project_info)
+                    );
+                    // console.log(
+                    //   "EDIT project_info_ipfs NEED CHECK",
+                    //   project_info_ipfs.path,
+                    //   project_info
+                    // );
+                    const launchpad_psp34_nft_standard_contract =
+                      new ContractPromise(
+                        api,
+                        launchpad_psp34_nft_standard.CONTRACT_ABI,
+                        location.state?.collection_address
+                      );
+
+                    launchpad_psp34_nft_standard_calls.setContract(
+                      launchpad_psp34_nft_standard_contract
+                    );
+
+                    dispatch(setTxStatus({ type: EDIT_PROJECT, step: START }));
+
+                    await launchpad_psp34_nft_standard_calls.editProjectInformation(
+                      currentAccount,
+                      project_info_ipfs.path,
+                      dispatch,
+                      EDIT_PROJECT,
+                      api
+                    );
+                  }
                 }
-              }
-            }}
-          >
-            {({ values, dirty, isValid, setFieldValue }) => (
-              <Form>
-                {/* {console.log('Form values',values)} */}
-                <CommonStack stackTitle="1. project info">
-                  <Stack
-                    pb="30px"
-                    alignItems="start"
-                    justifyContent="space-between"
-                    direction={["column", "row"]}
-                  >
-                    <Stack
-                      w={{ base: "full", xl: "50%" }}
-                      direction="column"
-                      alignItems="start"
-                      justifyContent="end"
-                    >
-                      <Text>Choose avatar image</Text>
-                      <Text
-                        ml={2}
-                        fontSize={["xs", "sm"]}
-                        color="brand.grayLight"
+              }}
+            >
+              {({ values, dirty, isValid, setFieldValue }) => (
+                <Form>
+                  <Container maxW="1200px" px="15px">
+                    {/* {console.log('Form values',values)} */}
+                    <CommonStack stackTitle="1. project info">
+                      <Stack
+                        pb="30px"
+                        alignItems="start"
+                        justifyContent="space-between"
+                        direction={["column", "row"]}
                       >
-                        This image will also be used for navigation. <br />
-                        <br />
-                        Recommended file size is 500 x 500 px
-                      </Text>
-                      <ImageUploadThumbnail
-                        isRounded={true}
-                        width="260px"
-                        height="260px"
-                        isDisabled={actionType}
-                        id="avatar"
-                        mode={mode}
-                        isBanner={false}
-                        imageIPFSUrl={avatarIPFSUrl}
-                        setImageIPFSUrl={setAvatarIPFSUrl}
-                      />
-                    </Stack>
+                        <Stack
+                          w={{ base: "full", xl: "50%" }}
+                          direction="column"
+                          alignItems="start"
+                          justifyContent="end"
+                        >
+                          <Text>Choose avatar image</Text>
+                          <Text
+                            ml={2}
+                            fontSize={["xs", "sm"]}
+                            color="brand.grayLight"
+                          >
+                            This image will also be used for navigation. <br />
+                            <br />
+                          </Text>
+                          <ImageUploadThumbnail
+                            limitedSize={{ width: "500", height: "500" }}
+                            isRounded={true}
+                            width="260px"
+                            height="260px"
+                            isDisabled={actionType}
+                            id="avatar"
+                            mode={mode}
+                            isBanner={false}
+                            imageIPFSUrl={avatarIPFSUrl}
+                            setImageIPFSUrl={setAvatarIPFSUrl}
+                          />
+                        </Stack>
 
-                    <Stack
-                      pt={{ base: "30px", md: "0px" }}
-                      w={{ base: "full", md: "50%" }}
-                      direction="column"
-                      alignItems="start"
-                      justifyContent="start"
-                    >
-                      <Text>Choose featured image</Text>
-                      <Text
-                        ml={2}
-                        fontSize={["xs", "sm"]}
-                        color="brand.grayLight"
+                        <Stack
+                          pt={{ base: "30px", md: "0px" }}
+                          w={{ base: "full", md: "50%" }}
+                          direction="column"
+                          alignItems="start"
+                          justifyContent="start"
+                        >
+                          <Text>Choose featured image</Text>
+                          <Text
+                            ml={2}
+                            fontSize={["xs", "sm"]}
+                            color="brand.grayLight"
+                          >
+                            This image will be used for featuring your
+                            collection on the homepage, category pages, or other
+                            promotional areas of ArtZero.
+                          </Text>
+                          <ImageUploadThumbnail
+                            limitedSize={{ width: "400", height: "260" }}
+                            width="400px"
+                            height="260px"
+                            isDisabled={actionType}
+                            id="header_square"
+                            mode={mode}
+                            imageIPFSUrl={headerSquareIPFSUrl}
+                            setImageIPFSUrl={setHeaderSquareIPFSUrl}
+                          />
+                        </Stack>
+                      </Stack>
+
+                      <Stack pb="30px">
+                        <Stack
+                          w="full"
+                          direction="column"
+                          alignItems="start"
+                          justifyContent="end"
+                        >
+                          <Text>Choose header image</Text>
+
+                          <Text
+                            ml={2}
+                            fontSize={["xs", "sm"]}
+                            color="brand.grayLight"
+                          >
+                            This image will appear at the top of your collection
+                            page. Avoid including too much text in this banner
+                            image, as the dimensions change on different
+                            devices.
+                            <br />
+                            Recommended file size is 1920 x 600 px
+                          </Text>
+
+                          <ImageUploadThumbnail
+                            limitedSize={{ width: "1920", height: "600" }}
+                            width="100%"
+                            height="260px"
+                            isDisabled={actionType}
+                            id="header"
+                            mode={mode}
+                            isBanner={true}
+                            imageIPFSUrl={headerIPFSUrl}
+                            setImageIPFSUrl={setHeaderIPFSUrl}
+                          />
+                        </Stack>
+                      </Stack>
+
+                      <Stack
+                        gap={["10px", "30px"]}
+                        direction={["column", "row"]}
                       >
-                        This image will be used for featuring your collection on
-                        the homepage, category pages, or other promotional areas
-                        of ArtZero. <br />
-                        Recommended file size is 400 x 260 px
-                      </Text>
-                      <ImageUploadThumbnail
-                        width="400px"
-                        height="260px"
-                        isDisabled={actionType}
-                        id="header_square"
-                        mode={mode}
-                        imageIPFSUrl={headerSquareIPFSUrl}
-                        setImageIPFSUrl={setHeaderSquareIPFSUrl}
-                      />
-                    </Stack>
-                  </Stack>
+                        <Stack w={["100%", "416px"]}>
+                          <CommonInput
+                            mx="0"
+                            type="text"
+                            name="name"
+                            isRequired={true}
+                            label="Project name"
+                            placeholder="Project name"
+                            isDisabled={actionType}
+                          />
+                        </Stack>
 
-                  <Stack pb="30px">
-                    <Stack
-                      w="full"
-                      direction="column"
-                      alignItems="start"
-                      justifyContent="end"
-                    >
-                      <Text>Choose header image</Text>
+                        <Stack w="full">
+                          {mode === formMode.ADD && (
+                            <Stack pb="30px">
+                              <Tooltip
+                                placeContent="start"
+                                hasArrow
+                                bg="#333"
+                                color="#fff"
+                                borderRadius="0"
+                                label="Start time & end time of whole project - Lorem ad aute qui fugiat."
+                              >
+                                <Text w="fit-content" fontSize="lg" ml={1}>
+                                  Start time - End time{" "}
+                                  <Text as="span" fontSize="lg" color="#fc8181">
+                                    *
+                                  </Text>
+                                </Text>
+                              </Tooltip>
 
-                      <Text
-                        ml={2}
-                        fontSize={["xs", "sm"]}
-                        color="brand.grayLight"
+                              <DateTimeRangePicker
+                                disableClock
+                                disabled={!!actionType}
+                                onChange={(e) =>
+                                  handleOnchangeSchedule(e, setFieldValue)
+                                }
+                                value={
+                                  !values?.startTime
+                                    ? null
+                                    : [
+                                        new Date(parseInt(values?.startTime)),
+                                        new Date(parseInt(values?.endTime)),
+                                      ]
+                                }
+                                locale="en-EN"
+                              />
+                              {/* TEMP FIX with parseInt */}
+                            </Stack>
+                          )}
+                        </Stack>
+                      </Stack>
+
+                      <Stack
+                        gap={["10px", "30px"]}
+                        direction={["column", "row"]}
                       >
-                        This image will appear at the top of your collection
-                        page. Avoid including too much text in this banner
-                        image, as the dimensions change on different devices.
-                        <br />
-                        Recommended file size is 1920 x 600 px
-                      </Text>
+                        <CommonInput
+                          mx="0"
+                          type="text"
+                          name="website"
+                          label="Website URL"
+                          placeholder={"Website URL"}
+                          isDisabled={actionType}
+                        />
+                        <CommonInput
+                          mx="0"
+                          type="text"
+                          name="twitter"
+                          label="Twitter URL"
+                          placeholder={"Twitter URL"}
+                          isDisabled={actionType}
+                        />
+                        <CommonInput
+                          mx="0"
+                          type="text"
+                          name="discord"
+                          label="Discord URL"
+                          placeholder={"Discord URL"}
+                          isDisabled={actionType}
+                        />
+                      </Stack>
 
-                      <ImageUploadThumbnail
-                        bg="green"
-                        width="100%"
-                        height="260px"
-                        isDisabled={actionType}
-                        id="header"
-                        mode={mode}
-                        isBanner={true}
-                        imageIPFSUrl={headerIPFSUrl}
-                        setImageIPFSUrl={setHeaderIPFSUrl}
-                      />
-                    </Stack>
-                  </Stack>
+                      <Stack>
+                        <TextArea
+                          mx="0"
+                          height="140"
+                          type="text"
+                          isRequired={true}
+                          name="description"
+                          label="Project description"
+                          placeholder="Project description"
+                          isDisabled={actionType}
+                        />
+                      </Stack>
 
-                  <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
-                    <Stack w={["100%", "416px"]}>
-                      <CommonInput
-                        mx="0"
-                        type="text"
-                        name="name"
-                        isRequired={true}
-                        label="Project name"
-                        placeholder="Project name"
-                        isDisabled={actionType}
-                      />
-                    </Stack>
-
-                    <Stack w="full">
-                      {mode === formMode.ADD && (
-                        <Stack pb="30px">
+                      <Stack
+                        minH="86px"
+                        alignItems={["start", "end"]}
+                        gap={["10px", "30px"]}
+                        direction={["column", "row"]}
+                      >
+                        {mode === formMode.ADD && (
                           <Tooltip
                             placeContent="start"
                             hasArrow
                             bg="#333"
                             color="#fff"
                             borderRadius="0"
-                            label="Start time & end time of whole project - Lorem ad aute qui fugiat."
-                          >
-                            <Text w="fit-content" fontSize="lg" ml={1}>
-                              Start time - End time{" "}
-                              <Text as="span" fontSize="lg" color="#fc8181">
-                                *
-                              </Text>
-                            </Text>
-                          </Tooltip>
-
-                          <DateTimeRangePicker
-                            disableClock
-                            disabled={!!actionType}
-                            onChange={(e) =>
-                              handleOnchangeSchedule(e, setFieldValue)
-                            }
-                            value={
-                              !values?.startTime
-                                ? null
-                                : [
-                                    new Date(parseInt(values?.startTime)),
-                                    new Date(parseInt(values?.endTime)),
-                                  ]
-                            }
-                            locale="en-EN"
-                          />
-                          {/* TEMP FIX with parseInt */}
-                        </Stack>
-                      )}
-                    </Stack>
-                  </Stack>
-
-                  <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
-                    <CommonInput
-                      mx="0"
-                      type="text"
-                      name="website"
-                      label="Website URL"
-                      placeholder={"Website URL"}
-                      isDisabled={actionType}
-                    />
-                    <CommonInput
-                      mx="0"
-                      type="text"
-                      name="twitter"
-                      label="Twitter URL"
-                      placeholder={"Twitter URL"}
-                      isDisabled={actionType}
-                    />
-                    <CommonInput
-                      mx="0"
-                      type="text"
-                      name="discord"
-                      label="Discord URL"
-                      placeholder={"Discord URL"}
-                      isDisabled={actionType}
-                    />
-                  </Stack>
-
-                  <Stack>
-                    <TextArea
-                      mx="0"
-                      height="140"
-                      type="text"
-                      isRequired={true}
-                      name="description"
-                      label="Project description"
-                      placeholder="Project description"
-                      isDisabled={actionType}
-                    />
-                  </Stack>
-
-                  <Stack
-                    minH="86px"
-                    alignItems={["start", "end"]}
-                    gap={["10px", "30px"]}
-                    direction={["column", "row"]}
-                  >
-                    {mode === formMode.ADD && (
-                      <Tooltip
-                        placeContent="start"
-                        hasArrow
-                        bg="#333"
-                        color="#fff"
-                        borderRadius="0"
-                        label="Royalty Fee gives the NFT creator a percentage of the sale price each time the NFT is sold on the marketplace.
+                            label="Royalty Fee gives the NFT creator a percentage of the sale price each time the NFT is sold on the marketplace.
                         "
-                      >
-                        <Stack
-                          minW={"238px"}
-                          alignItems="end"
-                          direction={{ base: "column", "2xl": "row" }}
-                        >
-                          <AdvancedModeSwitch
-                            name="collectRoyalFee"
-                            label="Collect Royalty Fee"
-                            isDisabled={actionType}
-                            onChange={() => {
-                              values.collectRoyalFee = !values.collectRoyalFee;
-                              setIsSetRoyal(!isSetRoyal);
-                            }}
-                          />
-                        </Stack>
-                      </Tooltip>
-                    )}
+                          >
+                            <Stack
+                              minW={"238px"}
+                              alignItems="end"
+                              direction={{ base: "column", "2xl": "row" }}
+                            >
+                              <AdvancedModeSwitch
+                                name="collectRoyalFee"
+                                label="Collect Royalty Fee"
+                                isDisabled={actionType}
+                                onChange={() => {
+                                  values.collectRoyalFee =
+                                    !values.collectRoyalFee;
+                                  setIsSetRoyal(!isSetRoyal);
+                                }}
+                              />
+                            </Stack>
+                          </Tooltip>
+                        )}
 
-                    <Flex display={!isSetRoyal ? "none" : "flex"}>
-                      <NumberInput
-                        isDisabled={!isSetRoyal || actionType}
-                        max={maxRoyalFeeRate}
-                        label={`Royalty Fee (max ${maxRoyalFeeRate}%)`}
-                        name="royalFee"
-                        type="number"
-                        placeholder="Royalty Fee"
-                        inputWidth={"8rem"}
-                      />
-                      {/* <Text
+                        <Flex display={!isSetRoyal ? "none" : "flex"}>
+                          <NumberInput
+                            isDisabled={!isSetRoyal || actionType}
+                            max={maxRoyalFeeRate}
+                            label={`Royalty Fee (max ${maxRoyalFeeRate}%)`}
+                            name="royalFee"
+                            type="number"
+                            placeholder="Royalty Fee"
+                            inputWidth={"8rem"}
+                          />
+                          {/* <Text
                         ml={2}
                         fontSize={["xs", "sm"]}
                         color="brand.grayLight"
@@ -830,230 +852,232 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         the sale price each time the NFT is sold on the
                         marketplace. .
                       </Text> */}
-                    </Flex>
-                  </Stack>
+                        </Flex>
+                      </Stack>
 
-                  <Stack my="30px">
-                    <Stack w="full" mb="30px">
-                      <Heading size="h5">project roadmap</Heading>
+                      <Stack my="30px">
+                        <Stack w="full" mb="30px">
+                          <Heading size="h5">project roadmap</Heading>
 
-                      <Text
-                        ml={2}
-                        fontSize={["xs", "sm"]}
-                        color="brand.grayLight"
-                      >
-                        You can provide high-level goals and deliverables on
-                        your project's timeline.
-                      </Text>
-                    </Stack>
+                          <Text
+                            ml={2}
+                            fontSize={["xs", "sm"]}
+                            color="brand.grayLight"
+                          >
+                            You can provide high-level goals and deliverables on
+                            your project's timeline.
+                          </Text>
+                        </Stack>
 
-                    <AddRoadmap
-                      name="roadmap"
-                      mode={mode}
-                      isDisabled={actionType}
-                    />
-                  </Stack>
+                        <AddRoadmap
+                          name="roadmap"
+                          mode={mode}
+                          isDisabled={actionType}
+                        />
+                      </Stack>
 
-                  <Stack my="30px">
-                    <Stack w="full" mb="30px">
-                      <Heading size="h5">project team member</Heading>
-                    </Stack>
+                      <Stack my="30px">
+                        <Stack w="full" mb="30px">
+                          <Heading size="h5">project team member</Heading>
+                        </Stack>
 
-                    <AddMember
-                      name="members"
-                      mode={mode}
-                      isDisabled={actionType}
-                    />
-                  </Stack>
-                </CommonStack>
+                        <AddMember
+                          name="members"
+                          mode={mode}
+                          isDisabled={actionType}
+                        />
+                      </Stack>
+                    </CommonStack>
 
-                <CommonStack
-                  stackTitle="2. nft info"
-                  desc="The launchpad will create the NFT Smart Contract for you, to
+                    <CommonStack
+                      stackTitle="2. nft info"
+                      desc="The launchpad will create the NFT Smart Contract for you, to
                     do so general information such as NFT Name, Symbol and Total
                     Supply is required"
-                >
-                  <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
-                    <CommonInput
-                      type="text"
-                      name="nftName"
-                      label="NFT Name"
-                      isRequired={true}
-                      placeholder="NFT Name"
-                      isDisabled={actionType}
-                    />
+                    >
+                      <Stack
+                        gap={["10px", "30px"]}
+                        direction={["column", "row"]}
+                      >
+                        <CommonInput
+                          type="text"
+                          name="nftName"
+                          label="NFT Name"
+                          isRequired={true}
+                          placeholder="NFT Name"
+                          isDisabled={actionType}
+                        />
 
-                    <CommonInput
-                      type="text"
-                      name="nftSymbol"
-                      label="NFT Symbol"
-                      isRequired={true}
-                      placeholder="NFT Symbol"
-                      isDisabled={actionType}
-                    />
+                        <CommonInput
+                          type="text"
+                          name="nftSymbol"
+                          label="NFT Symbol"
+                          isRequired={true}
+                          placeholder="NFT Symbol"
+                          isDisabled={actionType}
+                        />
+                        {mode === formMode.ADD && (
+                          <NumberInput
+                            precision={0}
+                            isRequired={true}
+                            name="totalSupply"
+                            hasStepper={false}
+                            inputWidth={{ base: "full", xl: "260px" }}
+                            label="Total Supply"
+                            isDisabled={actionType}
+                            min={1}
+                          />
+                        )}
+                      </Stack>
+                    </CommonStack>
+
                     {mode === formMode.ADD && (
-                      <NumberInput
-                        precision={0}
-                        isRequired={true}
-                        name="totalSupply"
-                        hasStepper={false}
-                        inputWidth={{ base: "full", xl: "260px" }}
-                        label="Total Supply"
-                        isDisabled={actionType}
-                        min={1}
-                      />
-                    )}
-                  </Stack>
-                </CommonStack>
-
-                {mode === formMode.ADD && (
-                  <CommonStack
-                    stackTitle="3. sale phase information"
-                    desc={`A sale phase is a control mechanism that defines how you
+                      <CommonStack
+                        stackTitle="3. sale phase information"
+                        desc={`A sale phase is a control mechanism that defines how you
                         will sell the NFT collection. You can add different
                         phases to control how you will sell the collection. By
                         default, you can add whitelist to every sale phase in
                         Administrator Page after the project creation. If Allow
                         public mint is selected, anyone can mint the NFT at
                         fixed price.`}
-                  >
-                    <AddPhase
-                      name="phases"
-                      mode={mode}
-                      isDisabled={actionType}
-                    />
-                  </CommonStack>
-                )}
-
-                {mode === formMode.ADD && (
-                  <CommonStack stackTitle="4. Contact info">
-                    <CommonInput
-                      isRequired={true}
-                      type="text"
-                      name="email_owner"
-                      label="Enter your email so we can contact for additional information."
-                      placeholder={"Email Contact"}
-                      isDisabled={actionType}
-                    />
-                  </CommonStack>
-                )}
-
-                <VStack maxW="900px" mx="auto">
-                  {mode === formMode.ADD && (
-                    <>
-                      {/*addProjectTotalFee*/}
-                      <HStack
-                        w="full"
-                        px="15px"
-                        alignItems="center"
-                        justifyContent="start"
                       >
-                        <Stack>
-                          <CommonCheckbox
-                            justifyContent="center"
-                            isDisabled={actionType}
-                            name="agreeFeeCheckbox"
-                            content={``}
-                          />
-                        </Stack>
-                        <HStack
-                          alignItems="center"
-                          justifyContent="start"
-                          w="full"
-                        >
-                          <Text color="#888">{`Create new project you will pay`}</Text>
-                          <Text color="#fff" as="span">
-                            {`${addProjectTotalFee} $AZERO`}
-                          </Text>
-                          <Text color="#888">{`in fee to ArtZero.io. This fee is non-refundable.`}</Text>
-                        </HStack>
-                      </HStack>
+                        <AddPhase
+                          name="phases"
+                          mode={mode}
+                          isDisabled={actionType}
+                        />
+                      </CommonStack>
+                    )}
 
-                      {/*agreeProjectMintFeeCheckbox*/}
-                      <HStack
-                        w="full"
-                        px="15px"
-                        alignItems="center"
-                        justifyContent="start"
-                      >
-                        <Stack>
-                          <CommonCheckbox
-                            justifyContent="center"
-                            isDisabled={actionType}
-                            name="agreeProjectMintFeeCheckbox"
-                            content={``}
-                          />
-                        </Stack>
-                        <HStack
-                          alignItems="center"
-                          justifyContent="start"
-                          w="full"
-                        >
-                          <Text color="#888">{`I agree to pay`}</Text>
-                          <Text color="#fff" as="span">
-                            {`${projectMintFeeRate}%`}
-                          </Text>
-                          <Text color="#888">{`of mint price per succeed mint to ArtZero.io.`}</Text>
-                        </HStack>
-                      </HStack>
+                    {mode === formMode.ADD && (
+                      <CommonStack stackTitle="4. Contact info">
+                        <CommonInput
+                          isRequired={true}
+                          type="text"
+                          name="email_owner"
+                          label="Enter your email so we can contact for additional information."
+                          placeholder={"Email Contact"}
+                          isDisabled={actionType}
+                        />
+                      </CommonStack>
+                    )}
 
-                      {/*Terms of Service*/}
-                      <HStack
-                        w="full"
-                        px="15px"
-                        alignItems="center"
-                        justifyContent="start"
-                      >
-                        <Stack>
-                          <CommonCheckbox
-                            isDisabled={actionType}
-                            name="agreeTosCheckbox"
-                            content=""
-                          />
-                        </Stack>
-                        <HStack
-                          alignItems="center"
-                          justifyContent="start"
-                          w="full"
-                        >
-                          <Text color="#888">I agree to ArtZero's</Text>
-                          <Link
-                            _hover={{
-                              color: "#7ae7ff",
-                              textDecoration: "underline",
-                            }}
-                            textTransform="none"
-                            isExternal
-                            href={`${window.location.pathname}#${ROUTES.LEGAL}`}
+                    <Box w="full" mx="auto" px="30px" mb="30px">
+                      {mode === formMode.ADD && (
+                        <>
+                          {/*addProjectTotalFee*/}
+                          <HStack
+                            w="full"
+                            p="15px"
+                            alignItems="center"
+                            justifyContent="start"
                           >
-                            Terms of Service
-                          </Link>
-                        </HStack>
-                      </HStack>
-                    </>
-                  )}
+                            <Stack>
+                              <CommonCheckbox
+                                justifyContent="center"
+                                isDisabled={actionType}
+                                name="agreeFeeCheckbox"
+                                content={``}
+                              />
+                            </Stack>
+                            <HStack
+                              alignItems="center"
+                              justifyContent="start"
+                              w="full"
+                            >
+                              <Text color="#888">{`Create new project you will pay`}</Text>
+                              <Text color="#fff" as="span">
+                                {`${addProjectTotalFee} $AZERO`}
+                              </Text>
+                              <Text color="#888">{`in fee to ArtZero.io. This fee is non-refundable.`}</Text>
+                            </HStack>
+                          </HStack>
 
-                  <Stack
-                    w={{ base: "full", xl: "940px" }}
-                    px={{ base: "15px", xl: "0px" }}
-                  >
-                    <CommonButton
-                      mx="0"
-                      onRedirect={handleOnRedirect}
-                      w="full"
-                      my="24px"
-                      {...rest}
-                      type="submit"
-                      text={`${
-                        mode === formMode.ADD ? "create" : "update"
-                      } project`}
-                      isDisabled={!(dirty && isValid) && noImagesChange}
-                    />
-                  </Stack>
-                </VStack>
-              </Form>
-            )}
-          </Formik>
+                          {/*agreeProjectMintFeeCheckbox*/}
+                          <HStack
+                            w="full"
+                            p="15px"
+                            alignItems="center"
+                            justifyContent="start"
+                          >
+                            <Stack>
+                              <CommonCheckbox
+                                justifyContent="center"
+                                isDisabled={actionType}
+                                name="agreeProjectMintFeeCheckbox"
+                                content={``}
+                              />
+                            </Stack>
+                            <HStack
+                              alignItems="center"
+                              justifyContent="start"
+                              w="full"
+                            >
+                              <Text color="#888">{`I agree to pay`}</Text>
+                              <Text color="#fff" as="span">
+                                {`${projectMintFeeRate}%`}
+                              </Text>
+                              <Text color="#888">{`of mint price per succeed mint to ArtZero.io.`}</Text>
+                            </HStack>
+                          </HStack>
+
+                          {/*Terms of Service*/}
+                          <HStack
+                            w="full"
+                            p="15px"
+                            alignItems="center"
+                            justifyContent="start"
+                          >
+                            <Stack>
+                              <CommonCheckbox
+                                isDisabled={actionType}
+                                name="agreeTosCheckbox"
+                                content=""
+                              />
+                            </Stack>
+                            <HStack
+                              alignItems="center"
+                              justifyContent="start"
+                              w="full"
+                            >
+                              <Text color="#888">I agree to ArtZero's</Text>
+                              <Link
+                                _hover={{
+                                  color: "#7ae7ff",
+                                  textDecoration: "underline",
+                                }}
+                                textTransform="none"
+                                isExternal
+                                href={`${window.location.pathname}#${ROUTES.LEGAL}`}
+                              >
+                                Terms of Service
+                              </Link>
+                            </HStack>
+                          </HStack>
+                        </>
+                      )}
+
+                      <Stack w="full">
+                        <CommonButton
+                          mx="0"
+                          onRedirect={handleOnRedirect}
+                          w="full"
+                          my="24px"
+                          {...rest}
+                          type="submit"
+                          text={`${
+                            mode === formMode.ADD ? "create" : "update"
+                          } project`}
+                          isDisabled={!(dirty && isValid) && noImagesChange}
+                        />
+                      </Stack>
+                    </Box>
+                  </Container>
+                </Form>
+              )}
+            </Formik>
+          </Stack>
         </Stack>
       )}
     </>

@@ -255,7 +255,7 @@ function AddPhase({
                 key={index}
                 p={["10px", "30px"]}
                 gap={["0px", "0px"]}
-                border="2px solid #333"
+                bg="#222"
               >
                 <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
                   <Stack w={["100%", "50%"]}>
