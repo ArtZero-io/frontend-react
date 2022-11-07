@@ -95,7 +95,7 @@ const AddNewNFTForm = ({
             return result;
           });
       }
-      
+
       setAvatarIPFSUrl(rest.avatar);
       currentAvatarIPFSUrl.current = rest.avatar;
       setInitialValues(newInitialValues);
@@ -293,9 +293,7 @@ const AddNewNFTForm = ({
                 );
               } else {
                 // add deleted properties
-                const oldAttrsKeysList = rest.attrsList.map(
-                  (item) => Object.keys(item)[0]
-                );
+                const oldAttrsKeysList = Object.keys(traits);
 
                 const newAttrsKeysList = attributes.map((item) => item.name);
 
