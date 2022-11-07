@@ -1,4 +1,4 @@
-import { Box, Flex, Progress, Spacer, Text } from "@chakra-ui/react";
+import { Box, Flex, Progress, Spacer, Text, Tooltip } from "@chakra-ui/react";
 import { createLevelAttribute } from "@utils";
 
 export default function LevelCard({
@@ -22,9 +22,22 @@ export default function LevelCard({
     >
       <Flex w="full" pb={["8px"]}>
         <Box color="brand.grayLight" w="full" maxW="100px">
-          <Text textTransform="capitalize" isTruncated fontSize={["sm", "md"]}>
-            {objItem[0]}
-          </Text>
+          <Tooltip
+            hasArrow
+            bg="#333"
+            color="#fff"
+            cursor="pointer"
+            borderRadius="0"
+            label={objItem[0]}
+          >
+            <Text
+              isTruncated
+              fontSize={["sm", "md"]}
+              textTransform="capitalize"
+            >
+              {objItem[0]}
+            </Text>
+          </Tooltip>
         </Box>
 
         <Spacer />
@@ -37,20 +50,12 @@ export default function LevelCard({
             </Text>
           </Flex>
         )}
-        {/* <Flex
-          display={["none", "flex"]}
-          fontSize={["sm", "lg"]}
-          w="full"
-          justifyContent="end"
-        >
-          <Text color="#fff">asd{`${level} of ${levelMax}`}</Text>
-        </Flex> */}
       </Flex>
       <Flex
+        w="full"
         fontStyle="italic"
         display={["none", "flex"]}
         fontSize={["sm", "lg"]}
-        w="full"
         justifyContent="end"
       >
         <Text color="#7AE7FF">{`${level} of ${levelMax}`}</Text>

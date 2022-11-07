@@ -82,6 +82,7 @@ import PropCard from "@components/Card/PropCard";
 import LevelCard from "@components/Card/LevelCard";
 import { Helmet } from "react-helmet";
 import ImageCloudFlare from "../../components/ImageWrapper/ImageCloudFlare";
+import SocialShare from "@components/SocialShare/SocialShare";
 
 function TokenPage() {
   const dispatch = useDispatch();
@@ -353,6 +354,7 @@ function TokenPage() {
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
   const imageUrl = token?.avatar?.replace("ipfs://", "https://ipfs.io/ipfs/");
+  const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
 
   return (
     <NftLayout>
@@ -541,9 +543,15 @@ function TokenPage() {
                       isDisabled={token?.is_for_sale || actionType}
                     />
                   )}
+
+                  <SocialShare
+                    title={token?.nftName}
+                    shareUrl={window.location.href}
+                  />
                 </HStack>
               </Stack>
 
+              {/* Mobile */}
               <HStack display={["flex", "none"]} spacing="10px" justify="start">
                 {!token?.is_locked &&
                   collection?.showOnChainMetadata &&
@@ -657,6 +665,13 @@ function TokenPage() {
                     isDisabled={token?.is_for_sale || actionType}
                   />
                 )}
+
+                <SocialShare
+                  width="40px"
+                  height="40px"
+                  title={token?.nftName}
+                  shareUrl={window.location.href}
+                />
               </HStack>
 
               <Stack
@@ -902,7 +917,7 @@ function TokenPage() {
                         w="full"
                         gap="24px"
                         id="grid-attrs"
-                        templateColumns={`repeat(auto-fill, minmax(min(100%, 128px), 1fr))`}
+                        templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
                       >
                         {token?.attrsList
                           .filter(

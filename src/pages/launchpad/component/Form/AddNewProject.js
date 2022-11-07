@@ -233,7 +233,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             pb="100px"
             w="full"
             pos="relative"
-            maxW="940px"
+            maxW="1200px"
             mx="auto"
             textAlign="center"
           >
@@ -252,8 +252,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               </Text>
             </VStack>
             <IconButton
+              display={["none", "flex"]}
               pos="absolute"
-              left="0"
+              left="30px"
               top={["0px", "5px"]}
               onClick={() => history.goBack()}
               variant="iconOutline"

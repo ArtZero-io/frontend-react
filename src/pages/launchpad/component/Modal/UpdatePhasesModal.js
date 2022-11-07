@@ -11,7 +11,7 @@ import {
 import React, { useCallback, useEffect, useState } from "react";
 
 import { Form, Formik } from "formik";
-import CommonStack from "../Form/CommonStack";
+// import CommonStack from "../Form/CommonStack";
 import UpdatePhase from "../Form/UpdatePhase";
 import * as Yup from "yup";
 import { SCROLLBAR } from "@constants";
@@ -155,7 +155,7 @@ const UpdatePhasesModal = React.memo(function ({
       <ModalContent
         pt="20px"
         pb="30px"
-        px={[0, "30px"]}
+        px={[0, "20px"]}
         borderRadius="0"
         position="relative"
         bg="brand.grayDark"
@@ -227,27 +227,13 @@ const UpdatePhasesModal = React.memo(function ({
             >
               {({ values, dirty, isValid, setFieldValue }) => (
                 <Form>
-                  <CommonStack>
-                    <UpdatePhase
-                      startTime={startTime}
-                      endTime={endTime}
-                      name="phases"
-                      mode="EDIT"
-                      collection_address={collection_address}
-                    />
-                  </CommonStack>
-
-                  {/* <Stack>
-                    <StatusButton
-                      // w="940px"
-                      // w="full"AddPhase
-                      text="project"
-                      // isLoading={addCollectionTnxStatus}
-                      // disabled={!(dirty && isValid) && noImagesChange}
-                      // loadingText={`${addCollectionTnxStatus?.status}`}
-                      // type={AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS}
-                    />
-                  </Stack> */}
+                  <UpdatePhase
+                    startTime={startTime}
+                    endTime={endTime}
+                    name="phases"
+                    mode="EDIT"
+                    collection_address={collection_address}
+                  />
                 </Form>
               )}
             </Formik>
@@ -258,65 +244,3 @@ const UpdatePhasesModal = React.memo(function ({
   );
 });
 export default UpdatePhasesModal;
-export const fetchInitialPhasesValue = async () => {
-  let initialValuesData = {
-    phases: [
-      {
-        name: "",
-        start: "",
-        end: "",
-        isPublic: false,
-        publicMintingFee: 0,
-        publicAmount: 0,
-        publicMaxMintingAmount: 0,
-      },
-    ],
-  };
-
-  let currentPhaseId;
-
-  // fetch and reformat phases data to form formik initial values
-  // format start
-  // ...
-  // ...
-  // format start
-
-  initialValuesData = {
-    phases: [
-      {
-        id: 1,
-        name: "OG",
-        start: 1659805200000,
-        end: 1660496399999,
-        isPublic: false,
-        publicAmount: 0,
-        publicMaxMintingAmount: 0,
-        publicMintingFee: 0,
-      },
-      {
-        id: 2,
-        name: "WL",
-        start: 1660496400000,
-        end: 1661014799999,
-        isPublic: false,
-        publicAmount: 0,
-        publicMaxMintingAmount: 0,
-        publicMintingFee: 0,
-      },
-      {
-        id: 3,
-        name: "Public",
-        start: 1661792400000,
-        end: 1661965199999,
-        isPublic: true,
-        publicAmount: 3,
-        publicMaxMintingAmount: 0,
-        publicMintingFee: 99,
-      },
-    ],
-  };
-
-  currentPhaseId = 1;
-
-  return { initialValuesData, currentPhaseId };
-};

@@ -1,4 +1,4 @@
-import { Box, Flex, Spacer, Text } from "@chakra-ui/react";
+import { Box, Flex, Spacer, Text, Tooltip } from "@chakra-ui/react";
 
 export default function PropCard({
   item,
@@ -40,16 +40,28 @@ export default function PropCard({
       <Box h="6px"></Box>
 
       <Flex
-        justifyContent="flex-end"
         w="full"
         color="#7AE7FF"
         fontSize={["sm", "lg"]}
-        // fontFamily="Evogria Italic"
+        justifyContent="flex-end"
       >
-        <Text textTransform="capitalize" isTruncated pr={1} fontStyle="italic">
-          {objItem[1]}
-        </Text>
-        {/* <Spacer /> */}
+        <Tooltip
+          hasArrow
+          bg="#333"
+          color="#fff"
+          cursor="pointer"
+          borderRadius="0"
+          label={objItem[1]}
+        >
+          <Text
+            pr={1}
+            isTruncated
+            fontStyle="italic"
+            textTransform="capitalize"
+          >
+            {objItem[1]}
+          </Text>
+        </Tooltip>
       </Flex>
     </Box>
   );

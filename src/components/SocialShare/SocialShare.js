@@ -25,6 +25,8 @@ import {
 import { BsShare } from "react-icons/bs";
 
 function SocialShare({
+  width = "50px",
+  height = "50px",
   shareUrl = "https://artzero.io/",
   title = "ArtZero.io - NFT Marketplace for Aleph Zero Blockchain",
 }) {
@@ -37,8 +39,8 @@ function SocialShare({
               aria-label="More social share options"
               icon={<BsShare />}
               variant="solid"
-              h="50px"
-              w="50px"
+              width={width}
+              height={height}
               // w="fit-content"
             />
           </PopoverTrigger>

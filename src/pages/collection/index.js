@@ -37,6 +37,7 @@ import { Helmet } from "react-helmet";
 import qs from "qs";
 import * as ROUTES from "@constants/routes";
 import { useQuery } from "react-query";
+// import toast from "react-hot-toast";
 
 const NUMBER_PER_PAGE = 12;
 
@@ -146,12 +147,15 @@ function CollectionPage() {
     ret.totalListed = totalListedCount || 0;
 
     const {
-      ret: [floorPrice],
+      // status,
+      // message,
+      ret: floorPrice,
     } = await APICall.getCollectionFloorPrice({
       collection_address,
     });
-   
-    ret.floorPrice = floorPrice?.price || 0;
+    // status === "FAILED" && toast.error(message);
+
+    ret.floorPrice = !floorPrice ? 0 : floorPrice[0]?.price;
 
     setTotalCount(ret?.result?.totalResults || 0);
 

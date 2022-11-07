@@ -916,7 +916,7 @@ const LaunchpadDetailPage = () => {
                               </Text>
                             </Text>
 
-                            <Text>
+                            {/* <Text>
                               Minted:{" "}
                               <Text as="span" color="#fff">
                                 {item.claimedAmount}{" "}
@@ -924,7 +924,7 @@ const LaunchpadDetailPage = () => {
                                   NFT{item.claimedAmount > 1 ? "s" : ""}
                                 </Text>
                               </Text>
-                            </Text>
+                            </Text> */}
 
                             <Text>
                               Price:{" "}

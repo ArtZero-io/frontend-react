@@ -3,7 +3,7 @@ import Layout from "@components/Layout/Layout";
 import { GroupCard } from "./component/GroupCard";
 import React, { useEffect, useState } from "react";
 import { useSubstrateState } from "@utils/substrate";
- 
+
 import { APICall } from "../../api/client";
 
 export const LaunchpadPage = () => {
@@ -99,7 +99,8 @@ export const LaunchpadPage = () => {
   );
 };
 
-const getProjectStatus = (startTime, endTime) => {
+const getProjectStatus = ({ startTime, endTime }) => {
+
   const currentTime = Date.now();
 
   if (currentTime >= endTime) return "ended";
