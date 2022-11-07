@@ -56,10 +56,8 @@ function AddMember({ name, mode, isDisabled }) {
                 border="2px solid #333"
               >
                 <Stack direction={["column"]} gap="2px">
-                  <Text>Choose avatar image</Text>
+                  <Text fontSize="lg">Choose avatar image</Text>
                   <Text ml={2} fontSize={["xs", "sm"]} color="brand.grayLight">
-                    Adipisicing adipisicing ut laboris cupidatat proident
-                    cupidatat in. <br />
                     Recommended file size is 500 x 500 px
                   </Text>
                   <ImageUploadThumbnail

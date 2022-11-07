@@ -100,16 +100,17 @@ export default function UpdateURIModal({
         />
         <ModalHeader textAlign="center">
           <Heading size="h4" my={2}>
-            update base URI
+            update art location
           </Heading>
-          <Text ml={1} fontSize="sm" fontWeight="400">
-            You MUST inform ArtZero team and share the files (artworks &
-            metadata) to cache all files before you update base URI. Otherwise,
-            your NFTs won’t reveal or fetch artworks in Launchpad / Collection /
-            My NFTs sections.
+          <Text fontSize="sm" fontWeight="400">
+            We currently use IPFS to store Art Work of all collections. The
+            example format of Art Location is
+            /ipfs/QmRKH5MUw52KRvzxBQJr9QHd2EqshyTYscLGXowP7RiXja/
           </Text>
-          <Text ml={1} fontSize="sm" fontWeight="400">
-            Ex: /ipfs/QmRKH5MUw52KRvzxBQJr9QHd2EqshyTYscLGXowP7RiXja/
+          <Text fontSize="sm" fontWeight="400">
+            Note that: to make the process quicker, please contract our team to
+            have your art work cached in our server. If you don't want to reveal
+            your art during sale period, you can leave this empty.{" "}
           </Text>
         </ModalHeader>
 

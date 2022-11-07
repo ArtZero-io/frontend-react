@@ -612,7 +612,7 @@ function MyNFTTabInfo(props) {
             >
               <Text>
                 <Text as="span" color="brand.grayLight">
-                  Royal fee:
+                  Royalty fee:
                 </Text>{" "}
                 {formatNumDynamicDecimal((askPrice * royalFee) / 10000)}{" "}
                 <AzeroIcon w="15px" mb="2px" /> ({(royalFee / 100).toFixed(2)}%)
@@ -647,7 +647,7 @@ function MyNFTTabInfo(props) {
             >
               <Text>
                 <Text as="span" color="brand.grayLight">
-                  Royal fee:
+                  Royalty fee:
                 </Text>{" "}
                 {formatNumDynamicDecimal((price / 10 ** 16) * royalFee)}{" "}
                 <AzeroIcon w="15px" mb="2px" /> ({(royalFee / 100).toFixed(2)}%)

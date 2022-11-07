@@ -237,15 +237,20 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             mx="auto"
             textAlign="center"
           >
-            <Heading
-              w="full"
-              color="#fff"
-              fontSize={["32px", "48px", "48px"]}
-              lineHeight={["38px", "60px", "60px"]}
-            >
-              {`${mode === "ADD" ? "create new" : "edit"} project`}
-            </Heading>
-
+            <VStack px="30px" mx="auto">
+              <Heading
+                w="full"
+                color="#fff"
+                fontSize={["32px", "48px", "48px"]}
+                lineHeight={["38px", "60px", "60px"]}
+              >
+                {`${mode === "ADD" ? "create new" : "edit"} project`}
+              </Heading>
+              <Text maxW="360px" fontSize="lg" mx="auto" px={["15px", "5px"]}>
+                The premier destination to launch your NFT Collection on Aleph
+                Zero Network.
+              </Text>
+            </VStack>
             <IconButton
               pos="absolute"
               left="0"
@@ -785,7 +790,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         bg="#333"
                         color="#fff"
                         borderRadius="0"
-                        label="Collect Royal Fee - Lorem ad aute qui fugiat Lorem ad aute qui fugiat."
+                        label="Royalty Fee gives the NFT creator a percentage of the sale price each time the NFT is sold on the marketplace.
+                        "
                       >
                         <Stack
                           minW={"238px"}
@@ -794,7 +800,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         >
                           <AdvancedModeSwitch
                             name="collectRoyalFee"
-                            label="Collect Royal Fee"
+                            label="Collect Royalty Fee"
                             isDisabled={actionType}
                             onChange={() => {
                               values.collectRoyalFee = !values.collectRoyalFee;
@@ -808,25 +814,22 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     <Flex display={!isSetRoyal ? "none" : "flex"}>
                       <NumberInput
                         isDisabled={!isSetRoyal || actionType}
-                        // isDisplay={isSetRoyal}
                         max={maxRoyalFeeRate}
-                        label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
+                        label={`Royalty Fee (max ${maxRoyalFeeRate}%)`}
                         name="royalFee"
                         type="number"
-                        placeholder="Royal Fee"
+                        placeholder="Royalty Fee"
                         inputWidth={"8rem"}
                       />
-                      <Text
+                      {/* <Text
                         ml={2}
                         fontSize={["xs", "sm"]}
                         color="brand.grayLight"
                       >
-                        (*) Exercitation velit nisi esse ad incididunt cillum do
-                        consequat aliquip aliquip. Nostrud culpa voluptate velit
-                        voluptate Amet consectetur occaecat veniam in officia
-                        cupidatat ea cupidatat ipsum anim ex eu anim pidatat ea
-                        cupidatat ipsum anim ex eu anim.
-                      </Text>
+                        (*) Royalty Fee gives the NFT creator a percentage of
+                        the sale price each time the NFT is sold on the
+                        marketplace. .
+                      </Text> */}
                     </Flex>
                   </Stack>
 
@@ -839,12 +842,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         fontSize={["xs", "sm"]}
                         color="brand.grayLight"
                       >
-                        Exercitation velit nisi esse ad incididunt cillum do
-                        consequat aliquip aliquip. Nostrud culpa voluptate velit
-                        voluptate sit veniam duis veniam. Sint ea in eiusmod
-                        proident sit et in et elit laborum officia commodo
-                        cupidatat cillum. Amet consectetur occaecat veniam in
-                        officia cupidatat ea cupidatat ipsum anim ex eu anim.
+                        You can provide high-level goals and deliverables on
+                        your project's timeline.
                       </Text>
                     </Stack>
 
@@ -858,19 +857,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   <Stack my="30px">
                     <Stack w="full" mb="30px">
                       <Heading size="h5">project team member</Heading>
-
-                      <Text
-                        ml={2}
-                        fontSize={["xs", "sm"]}
-                        color="brand.grayLight"
-                      >
-                        Exercitation velit nisi esse ad incididunt cillum do
-                        consequat aliquip aliquip. Nostrud culpa voluptate velit
-                        voluptate sit veniam duis veniam. Sint ea in eiusmod
-                        proident sit et in et elit laborum officia commodo
-                        cupidatat cillum. Amet consectetur occaecat veniam in
-                        officia cupidatat ea cupidatat ipsum anim ex eu anim.
-                      </Text>
                     </Stack>
 
                     <AddMember
@@ -881,7 +867,12 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   </Stack>
                 </CommonStack>
 
-                <CommonStack stackTitle="2. nft info">
+                <CommonStack
+                  stackTitle="2. nft info"
+                  desc="The launchpad will create the NFT Smart Contract for you, to
+                    do so general information such as NFT Name, Symbol and Total
+                    Supply is required"
+                >
                   <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
                     <CommonInput
                       type="text"
@@ -916,17 +907,16 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 </CommonStack>
 
                 {mode === formMode.ADD && (
-                  <CommonStack stackTitle="3. phases info">
-                    <Stack w="full" mb="30px">
-                      <Text fontSize={["xs", "sm"]} color="brand.grayLight">
-                        Exercitation velit nisi esse ad incididunt cillum do
-                        consequat aliquip aliquip. Nostrud culpa voluptate velit
-                        voluptate sit veniam duis veniam. Sint ea in eiusmod
-                        proident sit et in et elit laborum officia commodo
-                        cupidatat cillum. Amet consectetur occaecat veniam in
-                        officia cupidatat ea cupidatat ipsum anim ex eu anim.
-                      </Text>
-                    </Stack>
+                  <CommonStack
+                    stackTitle="3. sale phase information"
+                    desc={`A sale phase is a control mechanism that defines how you
+                        will sell the NFT collection. You can add different
+                        phases to control how you will sell the collection. By
+                        default, you can add whitelist to every sale phase in
+                        Administrator Page after the project creation. If Allow
+                        public mint is selected, anyone can mint the NFT at
+                        fixed price.`}
+                  >
                     <AddPhase
                       name="phases"
                       mode={mode}

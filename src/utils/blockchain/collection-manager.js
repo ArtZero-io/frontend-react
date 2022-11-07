@@ -271,7 +271,7 @@ const collection_manager = {
               }
             ],
             "docs": [
-              " Simple New Collection Creation - Auto create NFT Contract - Collection_Owner is owner of NFT contract and receive royal fee"
+              " Simple New Collection Creation - Auto create NFT Contract - Collection_Owner is owner of NFT contract and receive royalty fee"
             ],
             "label": "auto_new_collection",
             "mutates": true,
@@ -342,7 +342,7 @@ const collection_manager = {
               }
             ],
             "docs": [
-              " Advanced Add new collection - with fee in AZERO 1% = 100 - anyone can add Existing contract - Collection_Owner is owner of NFT contract and receive royal fee"
+              " Advanced Add new collection - with fee in AZERO 1% = 100 - anyone can add Existing contract - Collection_Owner is owner of NFT contract and receive royalty fee"
             ],
             "label": "add_new_collection",
             "mutates": true,
@@ -377,7 +377,7 @@ const collection_manager = {
               }
             ],
             "docs": [
-              " Update Owner of Collecion - who receive royal fee - Only Admin can change"
+              " Update Owner of Collecion - who receive royalty fee - Only Admin can change"
             ],
             "label": "update_collection_owner",
             "mutates": true,
@@ -559,7 +559,7 @@ const collection_manager = {
               }
             ],
             "docs": [
-              " Update Is Royal Fee - Only Admin can change"
+              " Update Is Royalty Fee - Only Admin can change"
             ],
             "label": "update_is_collect_royal_fee",
             "mutates": true,
@@ -768,7 +768,7 @@ const collection_manager = {
               }
             ],
             "docs": [
-              " Update Max Royal Fee Rate - only Owner"
+              " Update Max Royalty Fee Rate - only Owner"
             ],
             "label": "update_max_royal_fee_rate",
             "mutates": true,
@@ -1174,7 +1174,7 @@ const collection_manager = {
               }
             ],
             "docs": [
-              " Get royal fee of the Collection"
+              " Get royalty fee of the Collection"
             ],
             "label": "CrossArtZeroCollection::get_royal_fee",
             "mutates": false,

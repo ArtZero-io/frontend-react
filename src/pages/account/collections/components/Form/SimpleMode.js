@@ -439,7 +439,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                       <SimpleModeSwitch
                         name="collectRoyalFee"
                         isDisabled={actionType}
-                        label="Collect Royal Fee"
+                        label="Collect Royalty Fee"
                         onChange={() => {
                           values.collectRoyalFee = !values.collectRoyalFee;
                           setIsSetRoyal(!isSetRoyal);
@@ -452,9 +452,9 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                       inputWidth={"8rem"}
                       isDisplay={isSetRoyal}
                       max={maxRoyalFeeRate}
-                      placeholder="Royal Fee"
+                      placeholder="Royalty Fee"
                       isDisabled={!isSetRoyal || actionType}
-                      label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
+                      label={`Royalty Fee (max ${maxRoyalFeeRate}%)`}
                     />
                   </Stack>
 

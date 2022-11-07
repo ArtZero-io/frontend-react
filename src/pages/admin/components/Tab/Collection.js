@@ -246,7 +246,7 @@ function CollectionAdmin() {
                   fontWeight="normal"
                   py={7}
                 >
-                  Royal Fee
+                  Royalty Fee
                 </Th>
                 <Th
                   fontFamily="Evogria"

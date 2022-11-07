@@ -1,7 +1,7 @@
-import { Box, Flex, Heading, Spacer } from "@chakra-ui/react";
+import { Box, Flex, Heading, Spacer, Stack, Text } from "@chakra-ui/react";
 import React from "react";
 
-function CommonStack({ stackTitle, children }) {
+function CommonStack({ stackTitle, desc, children }) {
   return (
     <Box
       w="full"
@@ -12,11 +12,17 @@ function CommonStack({ stackTitle, children }) {
       mb="30px"
       maxW="940px"
     >
-      <Flex w="full" mb="30px">
+      <Flex w="full">
         <Heading fontSize={["2xl", "3xl-mid"]}>{stackTitle}</Heading>
         <Spacer />
       </Flex>
-      
+      <Stack w="full" mb="30px">
+        {desc && (
+          <Text fontSize={["xs", "sm"]} color="brand.grayLight">
+            {desc}
+          </Text>
+        )}
+      </Stack>
       {children}
     </Box>
   );
