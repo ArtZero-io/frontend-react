@@ -423,7 +423,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                         <AdvancedModeSwitch
                           name="collectRoyalFee"
                           isDisabled={actionType}
-                          label="Collect Royal Fee"
+                          label="Collect Royalty Fee"
                           onChange={() => {
                             values.collectRoyalFee = !values.collectRoyalFee;
                             setIsSetRoyal(!isSetRoyal);
@@ -436,10 +436,10 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       name="royalFee"
                       inputWidth={"8rem"}
                       max={maxRoyalFeeRate}
-                      placeholder="Royal Fee"
+                      placeholder="Royalty Fee"
                       isDisplay={isSetRoyal}
                       isDisabled={!isSetRoyal || actionType}
-                      label={`Royal Fee (max ${maxRoyalFeeRate}%)`}
+                      label={`Royalty Fee (max ${maxRoyalFeeRate}%)`}
                     />
                   </Stack>
 

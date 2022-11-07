@@ -149,7 +149,7 @@ function CollectionHeader({
               alignItems="center"
               border="1px solid white"
             >
-              <Text>Royal fee: {royalFee / 100}%</Text>
+              <Text>Royalty fee: {royalFee / 100}%</Text>
             </Flex>
           </HStack>
 

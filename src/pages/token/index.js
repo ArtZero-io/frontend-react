@@ -1358,7 +1358,7 @@ const FeeCalculatedBar = ({ feeCalculated }) => {
       <VStack alignItems="start">
         <Text fontSize={{ base: "13px", md: "16px" }}>
           <Text as="span" color="brand.grayLight">
-            Royal fee:
+            Royalty fee:
           </Text>{" "}
           ({feeCalculated.royalFeePercent}%)
         </Text>
