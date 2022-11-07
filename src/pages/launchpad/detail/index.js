@@ -348,14 +348,16 @@ const LaunchpadDetailPage = () => {
 
     const { data } = await api.query.system.account(currentAccount.address);
     const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
-    const mintingFee = userWLInfo[activePhaseId - 1]?.mintingFee;
+    const mintingFee =
+      (whitelistMintingAmount * userWLInfo[activePhaseId - 1]?.mintingFee) /
+      10 ** 12;
 
     if (balance < 0.5) {
       toast.error("Low balance to mint");
       return;
     }
 
-    if (balance < mintingFee / 10 ** 12 + 0.01) {
+    if (balance < mintingFee + 0.01) {
       toast.error("Not enough balance to mint");
       return;
     }
@@ -395,14 +397,15 @@ const LaunchpadDetailPage = () => {
 
     const { data } = await api.query.system.account(currentAccount.address);
     const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
-    const mintingFee = mintingAmount * currentPhase.publicMintingFee;
+    const mintingFee =
+      (mintingAmount * currentPhase.publicMintingFee) / 10 ** 12;
 
     if (balance < 0.5) {
       toast.error("Low balance to mint");
       return;
     }
 
-    if (balance < mintingFee / 10 ** 12 + 0.01) {
+    if (balance < mintingFee + 0.01) {
       toast.error("Not enough balance to mint");
       return;
     }

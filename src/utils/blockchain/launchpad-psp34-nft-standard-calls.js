@@ -471,8 +471,8 @@ async function publicMint(
 async function whitelistMint(
   caller_account,
   phaseId,
-  amount,
-  minting_fee,
+  mintAmount,
+  mintingFee,
   dispatch,
   txType,
   api
@@ -486,9 +486,7 @@ async function whitelistMint(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN((minting_fee * amount) / 10 ** 6)
-    .mul(new BN(10 ** 6))
-    .toString();
+  const value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 6)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -496,13 +494,13 @@ async function whitelistMint(
     value,
     "whitelistMint",
     phaseId,
-    amount
+    mintAmount
   );
 
   console.log("ret ret uri xxx", gasLimit);
 
   contract.tx
-    .whitelistMint({ gasLimit, value }, phaseId, amount)
+    .whitelistMint({ gasLimit, value }, phaseId, mintAmount)
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,
