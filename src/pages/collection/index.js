@@ -150,7 +150,7 @@ function CollectionPage() {
     } = await APICall.getCollectionFloorPrice({
       collection_address,
     });
-
+   
     ret.floorPrice = floorPrice?.price || 0;
 
     setTotalCount(ret?.result?.totalResults || 0);
