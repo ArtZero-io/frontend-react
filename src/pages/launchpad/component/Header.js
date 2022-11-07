@@ -242,49 +242,49 @@ function LaunchpadDetailHeader({
                     <Text mx={["25px", "42px"]}>
                       Price:{" "}
                       <Text display={["block", "inline"]} color="#fff">
-                        <Skeleton
+                        {/* <Skeleton
                           w="150px"
                           as="span"
-                          isLoaded={currentPhase?.publicMintingFee}
-                        >
+                          isLoaded={currentPhase?.isPublic}
+                        > */}
                           {currentPhase?.publicMintingFee / 10 ** 12}{" "}
                           <AzeroIcon
                             mb={["2px", "5px"]}
                             width={["14px", "16px"]}
                             height={["14px", "16px"]}
                           />
-                        </Skeleton>
+                        {/* </Skeleton> */}
                       </Text>
                     </Text>
                   )}
 
-                  <Skeleton w="150px" as="span" isLoaded={userWLInfo}>
+                  {/* <Skeleton w="150px" as="span" isLoaded={userWLInfo}> */}
                     {currentAccount?.address &&
                       (!userWLInfo[currentPhase?.id - 1] ||
                         userWLInfo[currentPhase?.id - 1]?.remainAmount <=
                           0) && (
-                        <Text mx={["25px", "42px"]} w="100px">
+                        <Text mx={["25px", "42px"]} w="150px">
                           Price:{" "}
                           <Text display={["block", "inline"]} color="#fff">
-                            <Skeleton
+                            {/* <Skeleton
                               w="150px"
                               as="span"
                               isLoaded={currentPhase?.publicMintingFee}
-                            >
+                            > */}
                               {currentPhase?.publicMintingFee / 10 ** 12}{" "}
                               <AzeroIcon
                                 mb={["2px", "5px"]}
                                 width={["14px", "16px"]}
                                 height={["14px", "16px"]}
                               />
-                            </Skeleton>
+                            {/* </Skeleton> */}
                           </Text>
                         </Text>
                       )}
 
                     {currentAccount?.address &&
                       userWLInfo[currentPhase?.id - 1]?.remainAmount > 0 && (
-                        <Text mx={["25px", "42px"]} w="100px">
+                        <Text mx={["25px", "42px"]} w="150px">
                           Price:{" "}
                           <Text display={["block", "inline"]} color="#fff">
                             {userWLInfo[currentPhase?.id - 1]?.mintingFee /
@@ -297,7 +297,7 @@ function LaunchpadDetailHeader({
                           </Text>
                         </Text>
                       )}
-                  </Skeleton>
+                  {/* </Skeleton> */}
 
                   <Text mx={["5px", "42px"]}>
                     Phase:{" "}
