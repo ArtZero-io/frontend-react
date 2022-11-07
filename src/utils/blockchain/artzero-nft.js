@@ -1,8 +1,8 @@
 const artzero_nft = {
-  CONTRACT_ADDRESS: "5EmboP7YC3mUgGZa5wScK9apMQv9UVXFhSDe9u9j79EZf5zf",
+  CONTRACT_ADDRESS: "5G53Lqhgr9XB3kgLBxmKS8PsL6GbVd1ed7eSuG13SoAtGuyM",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xd513bf081af2b670bee0eebec29e4f7a4021356de5b7d5aa7f23f964e1ad2544",
+      "hash": "0xcb619312916c09ee59bbe017b179d7ddc715b132d2057484bd77caea39f26329",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -1204,158 +1204,6 @@ const artzero_nft = {
           {
             "args": [
               {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "OwnerOfInput1"
-                  ],
-                  "type": 1
-                }
-              }
-            ],
-            "docs": [
-              " Returns the owner of the token if any."
-            ],
-            "label": "PSP34::owner_of",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "OwnerOfOutput"
-              ],
-              "type": 19
-            },
-            "selector": "0x1168624d"
-          },
-          {
-            "args": [
-              {
-                "label": "to",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "TransferInput1"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "TransferInput2"
-                  ],
-                  "type": 1
-                }
-              },
-              {
-                "label": "data",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "TransferInput3"
-                  ],
-                  "type": 7
-                }
-              }
-            ],
-            "docs": [
-              " Transfer approved or owned token from caller.",
-              "",
-              " On success a `Transfer` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Returns `TokenNotExists` error if `id` does not exist.",
-              "",
-              " Returns `NotApproved` error if `from` doesn't have allowance for transferring.",
-              "",
-              " Returns `SafeTransferCheckFailed` error if `to` doesn't accept transfer."
-            ],
-            "label": "PSP34::transfer",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "TransferOutput"
-              ],
-              "type": 50
-            },
-            "selector": "0x3128d61b"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Returns the collection `Id` of the NFT token.",
-              "",
-              " This can represents the relationship between tokens/contracts/pallets."
-            ],
-            "label": "PSP34::collection_id",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "CollectionIdOutput"
-              ],
-              "type": 1
-            },
-            "selector": "0xffa27a5f"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Returns current NFT total supply."
-            ],
-            "label": "PSP34::total_supply",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "TotalSupplyOutput"
-              ],
-              "type": 6
-            },
-            "selector": "0x628413fe"
-          },
-          {
-            "args": [
-              {
-                "label": "owner",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "BalanceOfInput1"
-                  ],
-                  "type": 8
-                }
-              }
-            ],
-            "docs": [
-              " Returns the balance of the owner.",
-              "",
-              " This represents the amount of unique tokens the owner has."
-            ],
-            "label": "PSP34::balance_of",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "BalanceOfOutput"
-              ],
-              "type": 4
-            },
-            "selector": "0xcde7e55f"
-          },
-          {
-            "args": [
-              {
                 "label": "owner",
                 "type": {
                   "displayName": [
@@ -1460,6 +1308,158 @@ const artzero_nft = {
             "selector": "0x1932a8b0"
           },
           {
+            "args": [],
+            "docs": [
+              " Returns current NFT total supply."
+            ],
+            "label": "PSP34::total_supply",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "TotalSupplyOutput"
+              ],
+              "type": 6
+            },
+            "selector": "0x628413fe"
+          },
+          {
+            "args": [
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "OwnerOfInput1"
+                  ],
+                  "type": 1
+                }
+              }
+            ],
+            "docs": [
+              " Returns the owner of the token if any."
+            ],
+            "label": "PSP34::owner_of",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "OwnerOfOutput"
+              ],
+              "type": 19
+            },
+            "selector": "0x1168624d"
+          },
+          {
+            "args": [
+              {
+                "label": "to",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "TransferInput1"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "TransferInput2"
+                  ],
+                  "type": 1
+                }
+              },
+              {
+                "label": "data",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "TransferInput3"
+                  ],
+                  "type": 7
+                }
+              }
+            ],
+            "docs": [
+              " Transfer approved or owned token from caller.",
+              "",
+              " On success a `Transfer` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Returns `TokenNotExists` error if `id` does not exist.",
+              "",
+              " Returns `NotApproved` error if `from` doesn't have allowance for transferring.",
+              "",
+              " Returns `SafeTransferCheckFailed` error if `to` doesn't accept transfer."
+            ],
+            "label": "PSP34::transfer",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "TransferOutput"
+              ],
+              "type": 50
+            },
+            "selector": "0x3128d61b"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the collection `Id` of the NFT token.",
+              "",
+              " This can represents the relationship between tokens/contracts/pallets."
+            ],
+            "label": "PSP34::collection_id",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "CollectionIdOutput"
+              ],
+              "type": 1
+            },
+            "selector": "0xffa27a5f"
+          },
+          {
+            "args": [
+              {
+                "label": "owner",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "BalanceOfInput1"
+                  ],
+                  "type": 8
+                }
+              }
+            ],
+            "docs": [
+              " Returns the balance of the owner.",
+              "",
+              " This represents the amount of unique tokens the owner has."
+            ],
+            "label": "PSP34::balance_of",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "BalanceOfOutput"
+              ],
+              "type": 4
+            },
+            "selector": "0xcde7e55f"
+          },
+          {
             "args": [
               {
                 "label": "id",
@@ -1498,6 +1498,35 @@ const artzero_nft = {
               "type": 52
             },
             "selector": "0xf19d48d1"
+          },
+          {
+            "args": [
+              {
+                "label": "index",
+                "type": {
+                  "displayName": [
+                    "psp34enumerable_external",
+                    "TokenByIndexInput1"
+                  ],
+                  "type": 6
+                }
+              }
+            ],
+            "docs": [
+              " Returns a token `Id` at a given `index` of all the tokens stored by the contract.",
+              " Use along with `total_supply` to enumerate all tokens."
+            ],
+            "label": "PSP34Enumerable::token_by_index",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34enumerable_external",
+                "TokenByIndexOutput"
+              ],
+              "type": 53
+            },
+            "selector": "0xcd0340d0"
           },
           {
             "args": [
@@ -1541,31 +1570,64 @@ const artzero_nft = {
           {
             "args": [
               {
-                "label": "index",
+                "label": "uri",
                 "type": {
                   "displayName": [
-                    "psp34enumerable_external",
-                    "TokenByIndexInput1"
+                    "psp34traits_external",
+                    "SetBaseUriInput1"
                   ],
-                  "type": 6
+                  "type": 38
                 }
               }
             ],
             "docs": [
-              " Returns a token `Id` at a given `index` of all the tokens stored by the contract.",
-              " Use along with `total_supply` to enumerate all tokens."
+              " Change baseURI"
             ],
-            "label": "PSP34Enumerable::token_by_index",
+            "label": "Psp34Traits::set_base_uri",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "SetBaseUriOutput"
+              ],
+              "type": 43
+            },
+            "selector": "0x4de6850b"
+          },
+          {
+            "args": [],
+            "docs": [
+              "Get Attribute Count"
+            ],
+            "label": "Psp34Traits::get_attribute_count",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "psp34enumerable_external",
-                "TokenByIndexOutput"
+                "psp34traits_external",
+                "GetAttributeCountOutput"
               ],
-              "type": 53
+              "type": 4
             },
-            "selector": "0xcd0340d0"
+            "selector": "0x61c50d69"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Get owner address"
+            ],
+            "label": "Psp34Traits::get_owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "GetOwnerOutput"
+              ],
+              "type": 8
+            },
+            "selector": "0x8e1d8d71"
           },
           {
             "args": [
@@ -1594,79 +1656,6 @@ const artzero_nft = {
               "type": 38
             },
             "selector": "0xfcfe34de"
-          },
-          {
-            "args": [
-              {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "TokenUriInput1"
-                  ],
-                  "type": 5
-                }
-              }
-            ],
-            "docs": [
-              " Get URI from token ID"
-            ],
-            "label": "Psp34Traits::token_uri",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "TokenUriOutput"
-              ],
-              "type": 38
-            },
-            "selector": "0x249dfd4f"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Get owner address"
-            ],
-            "label": "Psp34Traits::get_owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "GetOwnerOutput"
-              ],
-              "type": 8
-            },
-            "selector": "0x8e1d8d71"
-          },
-          {
-            "args": [
-              {
-                "label": "uri",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "SetBaseUriInput1"
-                  ],
-                  "type": 38
-                }
-              }
-            ],
-            "docs": [
-              " Change baseURI"
-            ],
-            "label": "Psp34Traits::set_base_uri",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "SetBaseUriOutput"
-              ],
-              "type": 43
-            },
-            "selector": "0x4de6850b"
           },
           {
             "args": [
@@ -1723,6 +1712,34 @@ const artzero_nft = {
                 "type": {
                   "displayName": [
                     "psp34traits_external",
+                    "TokenUriInput1"
+                  ],
+                  "type": 5
+                }
+              }
+            ],
+            "docs": [
+              " Get URI from token ID"
+            ],
+            "label": "Psp34Traits::token_uri",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "TokenUriOutput"
+              ],
+              "type": 38
+            },
+            "selector": "0x249dfd4f"
+          },
+          {
+            "args": [
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
                     "GetAttributesInput1"
                   ],
                   "type": 1
@@ -1753,23 +1770,6 @@ const artzero_nft = {
               "type": 39
             },
             "selector": "0x18209102"
-          },
-          {
-            "args": [],
-            "docs": [
-              "Get Attribute Count"
-            ],
-            "label": "Psp34Traits::get_attribute_count",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "GetAttributeCountOutput"
-              ],
-              "type": 4
-            },
-            "selector": "0x61c50d69"
           }
         ]
       },

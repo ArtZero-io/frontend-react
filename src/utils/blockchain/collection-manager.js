@@ -1,8 +1,8 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5EF6G8JWP5H4pR6mHH3GvTHZJ5JbRR8eYHuHr1GbxTeFN2bZ",
+  CONTRACT_ADDRESS: "5EtF1AUzAmKP5KVgUbimLmuyDU6xoiYTeniLuBEr55o4EVxJ",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x8db1ef367d8005dd754bc7c53da9977408fa395520e8e8b72147e56d9fc5d2b5",
+      "hash": "0x856915e36d54318143879ad83946cdfdbee71fe5b049e205ee0618ce21b6b93a",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -1024,33 +1024,6 @@ const collection_manager = {
             "selector": "0x389a10e6"
           },
           {
-            "args": [],
-            "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 18
-            },
-            "selector": "0x5e228753"
-          },
-          {
             "args": [
               {
                 "label": "new_owner",
@@ -1090,6 +1063,33 @@ const collection_manager = {
           {
             "args": [],
             "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 18
+            },
+            "selector": "0x5e228753"
+          },
+          {
+            "args": [],
+            "docs": [
               " Returns the address of the current owner."
             ],
             "label": "Ownable::owner",
@@ -1111,26 +1111,26 @@ const collection_manager = {
                 "type": {
                   "displayName": [
                     "crossartzerocollection_external",
-                    "GetContractTypeInput1"
+                    "IsActiveInput1"
                   ],
                   "type": 0
                 }
               }
             ],
             "docs": [
-              " Get NFT Contract Type 1 or 2 for PSP34"
+              " Check if the Collection is active not"
             ],
-            "label": "CrossArtZeroCollection::get_contract_type",
+            "label": "CrossArtZeroCollection::is_active",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "crossartzerocollection_external",
-                "GetContractTypeOutput"
+                "IsActiveOutput"
               ],
-              "type": 2
+              "type": 9
             },
-            "selector": "0x81fa82e9"
+            "selector": "0x74687faf"
           },
           {
             "args": [
@@ -1167,6 +1167,34 @@ const collection_manager = {
                 "type": {
                   "displayName": [
                     "crossartzerocollection_external",
+                    "GetContractTypeInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Get NFT Contract Type 1 or 2 for PSP34"
+            ],
+            "label": "CrossArtZeroCollection::get_contract_type",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "GetContractTypeOutput"
+              ],
+              "type": 2
+            },
+            "selector": "0x81fa82e9"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
                     "GetRoyalFeeInput1"
                   ],
                   "type": 0
@@ -1187,34 +1215,6 @@ const collection_manager = {
               "type": 10
             },
             "selector": "0xfa0f936e"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
-                    "IsActiveInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Check if the Collection is active not"
-            ],
-            "label": "CrossArtZeroCollection::is_active",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "IsActiveOutput"
-              ],
-              "type": 9
-            },
-            "selector": "0x74687faf"
           }
         ]
       },
