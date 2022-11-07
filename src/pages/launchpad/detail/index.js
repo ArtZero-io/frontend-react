@@ -396,7 +396,7 @@ const LaunchpadDetailPage = () => {
     const { data } = await api.query.system.account(currentAccount.address);
     const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
     const mintingFee = mintingAmount * currentPhase.publicMintingFee;
-
+    console.log('mintingFee', mintingFee);
     if (balance < 0.5) {
       toast.error("Low balance to mint");
       return;

@@ -432,7 +432,7 @@ async function publicMint(
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
-  const value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const value = new BN(mintingFee).toString();
 
   gasLimit = await getEstimatedGas(
     address,

@@ -144,15 +144,15 @@ function CollectionPage() {
       );
 
     ret.totalListed = totalListedCount || 0;
-
+    console.log('res', ret);
     const {
       ret: [floorPrice],
     } = await APICall.getCollectionFloorPrice({
       collection_address,
     });
-
+   
     ret.floorPrice = floorPrice?.price || 0;
-
+    console.log(ret.floorPrice);
     setTotalCount(ret?.result?.totalResults || 0);
 
     return ret;
