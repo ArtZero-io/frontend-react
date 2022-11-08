@@ -27,6 +27,7 @@ import Input from "@components/Input/Input";
 import NumberInput from "@components/Input/NumberInput";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import CommonButton from "@components/Button/CommonButton";
+import { isPhaseEnd } from "@utils";
 
 function UpdatePhase({
   name,
@@ -615,17 +616,6 @@ const canEditPhase = (startTime) => {
   const now = new Date();
 
   if (startTime > now) return true;
-
-  return false;
-};
-
-export const isPhaseEnd = (endTime = "") => {
-  console.log("endTime", endTime);
-  endTime = parseInt(JSON.stringify(endTime)?.replaceAll(",", ""));
-
-  const now = Date.now();
-
-  if (endTime <= now) return true;
 
   return false;
 };

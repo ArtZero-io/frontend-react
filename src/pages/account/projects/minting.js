@@ -34,6 +34,7 @@ import FadeIn from "react-fade-in";
 import { APICall } from "@api/client";
 import { useMemo } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
+import { isPhaseEnd } from "@utils";
 
 function MyMintingProjectPage() {
   const dispatch = useDispatch();
@@ -155,8 +156,13 @@ function MyMintingProjectPage() {
   }, [fetchPhasesInfoData]);
 
   const onOwnerMint = async () => {
-    if (!selectedProjectAddress) {
+    if (!selectedProjectAddress || selectedProjectAddress === "0") {
       toast.error(`Please pick your project!`);
+      return;
+    }
+
+    if (!isLastPhaseEnded) {
+      toast.error(`Project is not ended yet!`);
       return;
     }
 
@@ -187,50 +193,7 @@ function MyMintingProjectPage() {
   };
 
   const onChangeProjAddr = async (address) => {
-    // const launchpad_psp34_nft_standard_contract = new ContractPromise(
-    //   api,
-    //   launchpad_psp34_nft_standard.CONTRACT_ABI,
-    //   address
-    // );
-
-    // launchpad_psp34_nft_standard_calls.setContract(
-    //   launchpad_psp34_nft_standard_contract
-    // );
-
-    // const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(
-    //   currentAccount
-    // );
-
-    // let phasesTmp = [];
-    // let maxMintTmp = 0;
-    // for (let i = 1; i <= totalPhase; i++) {
-    //   const phaseSchedule =
-    //     await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-    //       currentAccount,
-    //       i
-    //     );
-
-    //   console.log("phaseSchedule", phaseSchedule);
-
-    //   if (phaseSchedule.isActive && phaseSchedule.endTime) {
-    //     maxMintTmp =
-    //       parseInt(maxMintTmp) +
-    //       parseInt(phaseSchedule.totalAmount.replaceAll(",", "")) -
-    //       parseInt(phaseSchedule.claimedAmount.replaceAll(",", ""));
-    //   }
-    // }
-    // const ownerClaimedAmount =
-    //   await launchpad_psp34_nft_standard_calls.getOwnerClaimedAmount(
-    //     currentAccount
-    //   );
-
-    // console.log("ownerClaimedAmount", ownerClaimedAmount);
-    // maxMintTmp -= parseInt(ownerClaimedAmount.replaceAll(",", ""));
-    // setMaxMint(maxMintTmp);
-    // setPhasesList(phasesTmp);
-
     setSelectedProjectAddress(address);
-    // setSelectedPhaseCode(0);
   };
 
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
@@ -240,19 +203,24 @@ function MyMintingProjectPage() {
     fetchPhasesInfoData();
   });
 
-  const { totalSupply, remainAmount } = useMemo(() => {
-    const selectedProj = myProjectsList.find(
-      (item) => item.nftContractAddress === selectedProjectAddress
-    );
+  const { totalSupply, remainAmount, projStatus, isLastPhaseEnded } =
+    useMemo(() => {
+      const selectedProj = myProjectsList.find(
+        (item) => item.nftContractAddress === selectedProjectAddress
+      );
 
-    const totalSupply = selectedProj?.nft_count || 0;
+      const totalSupply = selectedProj?.nft_count || 0;
+      const projStatus = selectedProj?.isActive;
 
-    const remainAmount = phasesInfo.reduce((acc, item) => {
-      return (acc -= item.claimedAmount);
-    }, totalSupply - ownerMinted);
+      const lastPhase = [...phasesInfo]?.pop();
+      const isLastPhaseEnded = isPhaseEnd(lastPhase?.endTime);
 
-    return { totalSupply, remainAmount };
-  }, [myProjectsList, ownerMinted, phasesInfo, selectedProjectAddress]);
+      const remainAmount = phasesInfo?.reduce((acc, item) => {
+        return (acc -= item.claimedAmount);
+      }, totalSupply - ownerMinted);
+
+      return { totalSupply, remainAmount, projStatus, isLastPhaseEnded };
+    }, [myProjectsList, ownerMinted, phasesInfo, selectedProjectAddress]);
 
   return (
     <Stack>
@@ -307,7 +275,12 @@ function MyMintingProjectPage() {
               h="3.125rem"
               max={remainAmount}
               value={mintAmount}
-              isDisabled={actionType || remainAmount <= 0}
+              isDisabled={
+                actionType ||
+                remainAmount <= 0 ||
+                !projStatus ||
+                !isLastPhaseEnded
+              }
               onChange={(valueString) => setMintAmount(valueString)}
             >
               <NumberInputField
@@ -323,12 +296,12 @@ function MyMintingProjectPage() {
             </NumberInput>
           </Box>
 
-          {
+          {!projStatus || !isLastPhaseEnded ? null : (
             <>
               <>
                 {selectedProjectAddress && parseInt(mintAmount) < 1 ? (
                   <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                    Mint Amount must be greater than or equal to 1.
+                    Mint amount must be greater than or equal to 1.
                   </Text>
                 ) : null}
               </>
@@ -342,7 +315,7 @@ function MyMintingProjectPage() {
                 ) : null}
               </>
             </>
-          }
+          )}
         </Stack>
         <HStack spacing="30px" justify="space-between" alignItems="center">
           <CommonButton
@@ -352,7 +325,12 @@ function MyMintingProjectPage() {
             variant="outline"
             text="mint"
             onClick={() => onOwnerMint()}
-            isDisabled={remainAmount <= 0 || loadingForceUpdate}
+            isDisabled={
+              !projStatus ||
+              !isLastPhaseEnded ||
+              remainAmount <= 0 ||
+              loadingForceUpdate
+            }
           />
         </HStack>
       </Stack>
@@ -364,36 +342,63 @@ function MyMintingProjectPage() {
         borderBottom="1px solid #303030"
       >
         <FadeIn>
-          {selectedProjectAddress && (
-            <HStack color="#888" spacing="50px">
-              <Text minW="150px" textAlign="left">
-                Total Supply:{" "}
-                <Text as="span" color="#fff">
-                  {totalSupply}{" "}
+          {!selectedProjectAddress ||
+            (selectedProjectAddress !== "0" && (
+              <HStack color="#888" spacing="0px">
+                <Text minW="150px" textAlign="left">
+                  Project status:{" "}
+                  {projStatus ? (
+                    <Text as="span" color="#fff">
+                      Active
+                    </Text>
+                  ) : (
+                    <Text as="span" color="#ff8c8c">
+                      Inactive
+                    </Text>
+                  )}
                 </Text>
-                NFT
-                {totalSupply > 1 ? "s" : ""}
-              </Text>
 
-              <Text minW="150px" textAlign="left">
-                Owner Minted:{" "}
-                <Text as="span" color="#fff">
-                  {ownerMinted}{" "}
+                <Text minW="150px" textAlign="left">
+                  All phases ended:{" "}
+                  {isLastPhaseEnded ? (
+                    <Text as="span" color="#fff">
+                      Yes
+                    </Text>
+                  ) : (
+                    <Text as="span" color="#ff8c8c">
+                      No
+                    </Text>
+                  )}
                 </Text>
-                NFT
-                {ownerMinted > 1 ? "s" : ""}
-              </Text>
 
-              <Text minW="150px" textAlign="left">
-                Total Remain:{" "}
-                <Text as="span" color="#fff">
-                  {remainAmount}{" "}
+                <Text minW="150px" textAlign="left">
+                  Supply:{" "}
+                  <Text as="span" color="#fff">
+                    {totalSupply}{" "}
+                  </Text>
+                  NFT
+                  {totalSupply > 1 ? "s" : ""}
                 </Text>
-                NFT
-                {remainAmount > 1 ? "s" : ""}
-              </Text>
-            </HStack>
-          )}{" "}
+
+                <Text minW="150px" textAlign="left">
+                  Owner Minted:{" "}
+                  <Text as="span" color="#fff">
+                    {ownerMinted}{" "}
+                  </Text>
+                  NFT
+                  {ownerMinted > 1 ? "s" : ""}
+                </Text>
+
+                <Text minW="150px" textAlign="left">
+                  Total Remain:{" "}
+                  <Text as="span" color="#fff">
+                    {remainAmount}{" "}
+                  </Text>
+                  NFT
+                  {remainAmount > 1 ? "s" : ""}
+                </Text>
+              </HStack>
+            ))}{" "}
         </FadeIn>
 
         {!phasesInfo?.length ? (

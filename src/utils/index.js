@@ -35,7 +35,6 @@ export async function getCloudFlareImage(imageHash = "", size = 500) {
 
   try {
     const response = await axios.get(ret);
-    // console.log("getCloudFlareImage res", response);
     result = response?.data || fallbackURL;
   } catch (error) {
     console.error("getCloudFlareImage error", error.message);
@@ -123,10 +122,17 @@ export function convertNumberWithoutCommas(input) {
 }
 
 export function convertStringToDateTime(stringTimeStamp) {
-  /* eslint-disable no-useless-escape */
-  const a = stringTimeStamp.replace(/\,/g, "");
-  const dateObject = new Date(parseInt(a));
-  return dateObject.toLocaleString(); //2019-12-9 10:30:15
+  let timeStamp = stringTimeStamp;
+
+  if (typeof stringTimeStamp === "string") {
+    /* eslint-disable no-useless-escape */
+    timeStamp = stringTimeStamp.replace(/\,/g, "");
+  }
+
+  const dateObject = new Date(parseInt(timeStamp));
+
+  return dateObject.toLocaleString();
+  //2019-12-9 10:30:15
 }
 
 export function isValidAddressPolkadotAddress(address) {
@@ -135,7 +141,7 @@ export function isValidAddressPolkadotAddress(address) {
 
     return true;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return false;
   }
 }
@@ -486,4 +492,19 @@ export const strToNumber = (str = "") => {
 
   const number = str.replace(/,/g, "");
   return parseFloat(number);
+};
+
+export const isPhaseEnd = (endTime = "") => {
+  let timeStamp = endTime;
+
+  if (typeof endTime === "string") {
+    /* eslint-disable no-useless-escape */
+    timeStamp = endTime.replace(/\,/g, "");
+  }
+
+  const now = Date.now();
+
+  if (timeStamp <= now) return true;
+
+  return false;
 };
