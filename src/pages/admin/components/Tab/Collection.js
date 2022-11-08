@@ -57,16 +57,19 @@ function CollectionAdmin() {
       new BN(balance.free, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6
     );
   };
+
   const onGetCollectionContractOwner = async (e) => {
     let res = await collection_manager_calls.owner(currentAccount);
     if (res) setCollectionContractOwner(res);
     else setCollectionContractOwner("");
   };
+
   const onGetCollectionContractAdmin = async (e) => {
     let res = await collection_manager_calls.getAdminAddress(currentAccount);
     if (res) setCollectionContractAdmin(res);
     else setCollectionContractAdmin("");
   };
+
   const onGetCollectionCount = async () => {
     let res = await collection_manager_calls.getCollectionCount(currentAccount);
     if (res) {
@@ -74,6 +77,7 @@ function CollectionAdmin() {
       setCollectionCount(res);
     } else setCollectionCount(0);
   };
+
   const getAllCollections = async (e) => {
     const options_active = {
       limit: collection_count,
@@ -106,6 +110,7 @@ function CollectionAdmin() {
     // console.log('collections',collections);
     setCollections(collections);
   };
+  
   const onSetStatusCollection = async (collection_contract, isActive) => {
     if (collectionContractAdmin !== activeAddress) {
       toast.error(`You are not admin of this contract`);
