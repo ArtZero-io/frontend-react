@@ -324,6 +324,24 @@ async function getWhitelistByAccountId(
   return null;
 }
 
+async function getLastTokenId(caller_account) {
+  if (!contract || !caller_account) {
+    console.log("invalid inputs");
+    return null;
+  }
+  const address = caller_account?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+  const { result, output } = await contract.query.getLastTokenId(address, {
+    value: azero_value,
+    gasLimit,
+  });
+  if (result.isOk) {
+    return new BN(output, 10, "le").toNumber();
+  }
+  return null;
+}
+
 async function editProjectInformation(
   caller_account,
   projectInfo,
@@ -420,7 +438,8 @@ async function publicMint(
   mintAmount,
   dispatch,
   txType,
-  api
+  api,
+  collection_address
 ) {
   if (!contract || !caller_account) {
     toast.error(`Contract or caller not valid!`);
@@ -452,7 +471,7 @@ async function publicMint(
   );
 
   await txNotSign
-    .signAndSend(address, { signer }, ({ status, dispatchError }) => {
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,
         dispatchError,
@@ -461,6 +480,30 @@ async function publicMint(
         api,
         caller_account,
       });
+
+      if (status.isFinalized) {
+        contract.query
+          .getLastTokenId(address, {
+            value: 0,
+            gasLimit: -1,
+          })
+          .then(async ({ result, output }) => {
+            if (result.isOk) {
+              const lastTokenId = new BN(output, 10, "le").toNumber();
+
+              for (
+                let token_id = lastTokenId - mintAmount + 1;
+                token_id <= lastTokenId;
+                token_id++
+              ) {
+                await APICall.askBeUpdateNftData({
+                  collection_address,
+                  token_id,
+                });
+              }
+            }
+          });
+      }
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
@@ -475,7 +518,8 @@ async function whitelistMint(
   mintingFee,
   dispatch,
   txType,
-  api
+  api,
+  collection_address
 ) {
   if (!contract || !caller_account) {
     throw Error(`Contract or caller not valid!`);
@@ -510,6 +554,30 @@ async function whitelistMint(
         api,
         caller_account,
       });
+
+      if (status.isFinalized) {
+        contract.query
+          .getLastTokenId(address, {
+            value: 0,
+            gasLimit: -1,
+          })
+          .then(async ({ result, output }) => {
+            if (result.isOk) {
+              const lastTokenId = new BN(output, 10, "le").toNumber();
+
+              for (
+                let token_id = lastTokenId - mintAmount + 1;
+                token_id <= lastTokenId;
+                token_id++
+              ) {
+                await APICall.askBeUpdateNftData({
+                  collection_address,
+                  token_id,
+                });
+              }
+            }
+          });
+      }
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
@@ -632,24 +700,6 @@ async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
     .catch((error) => txErrorHandler({ error, dispatch }));
 
   return unsubscribe;
-}
-
-async function getLastTokenId(caller_account) {
-  if (!contract || !caller_account) {
-    console.log("invalid inputs");
-    return null;
-  }
-  const address = caller_account?.address;
-  const gasLimit = -1;
-  const azero_value = 0;
-  const { result, output } = await contract.query.getLastTokenId(address, {
-    value: azero_value,
-    gasLimit,
-  });
-  if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
-  }
-  return null;
 }
 
 async function ownerOf(caller_account, tokenID) {
@@ -859,7 +909,7 @@ async function deactivePhase(caller_account, phaseId, dispatch, txType, api) {
   const value = 0;
 
   console.log("deactivePhase phaseId", phaseId);
-  
+
   gasLimit = await getEstimatedGas(
     address,
     contract,

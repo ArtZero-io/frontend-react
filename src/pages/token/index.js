@@ -354,7 +354,7 @@ function TokenPage() {
 
   const iconWidth = useBreakpointValue(["40px", "50px"]);
   const imageUrl = token?.avatar?.replace("ipfs://", "https://ipfs.io/ipfs/");
-  const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
+  const gridSize = useBreakpointValue({ base: `8rem`, md: `11rem` });
 
   return (
     <NftLayout>
@@ -1035,6 +1035,13 @@ export const buyToken = async (
   tokenID,
   dispatch
 ) => {
+  console.log("TokenPage buyToken currentAccount", currentAccount);
+  console.log("TokenPage buyToken isOwner", isOwner);
+  console.log("TokenPage buyToken askPrice", askPrice);
+  console.log("TokenPage buyToken nftContractAddress", nftContractAddress);
+  console.log("TokenPage buyToken ownerAddress", ownerAddress);
+  console.log("TokenPage buyToken tokenID", tokenID);
+
   // check wallet connected
   if (!currentAccount) {
     toast.error("Please connect wallet first!");

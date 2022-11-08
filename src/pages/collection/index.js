@@ -155,7 +155,7 @@ function CollectionPage() {
     });
     // status === "FAILED" && toast.error(message);
 
-    ret.floorPrice = !floorPrice ? 0 : floorPrice[0]?.price;
+    ret.floorPrice = !floorPrice?.length ? 0 : floorPrice[0]?.price;
 
     setTotalCount(ret?.result?.totalResults || 0);
 
@@ -273,12 +273,15 @@ function CollectionPage() {
       const getPurchaseEvents = await APICall.getPurchaseEvents({
         collection_address,
       });
+
       const getBidWinEvents = await APICall.getBidWinEvents({
         collection_address,
       });
+
       const getUnlistEvents = await APICall.getUnlistEvents({
         collection_address,
       });
+
       const getNewListEvents = await APICall.getNewListEvents({
         collection_address,
       });

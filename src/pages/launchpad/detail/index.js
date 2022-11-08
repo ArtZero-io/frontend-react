@@ -382,7 +382,8 @@ const LaunchpadDetailPage = () => {
         mintingFee,
         dispatch,
         WHITELIST_MINT,
-        api
+        api,
+        collection_address
       );
     } catch (error) {
       toast.error(error.message);
@@ -430,7 +431,8 @@ const LaunchpadDetailPage = () => {
         mintingAmount,
         dispatch,
         PUBLIC_MINT,
-        api
+        api,
+        collection_address
       );
     } catch (error) {
       toast.error(error.message);
@@ -776,7 +778,6 @@ const LaunchpadDetailPage = () => {
           {phasesInfo?.length
             ? phasesInfo.map((item, index) => (
                 <FadeIn>
-
                   <Stack
                     key={index}
                     w="full"
