@@ -59,7 +59,8 @@ function HistoryTable({ tableHeaders, tableData }) {
           fontSize="lg"
           sx={SCROLLBAR}
           overflowY="scroll"
-          h={{ base: "390px", "2xl": "480px" }}
+          maxH="680px"
+          h={{ base: "390px", xl: "420px", "2xl": "480px" }}
         >
           <motion.div
             initial={{ opacity: 0 }}
@@ -103,7 +104,9 @@ function HistoryTable({ tableHeaders, tableData }) {
                           // minW={["auto", "250px"]}
                           py={{ base: "1rem", "2xl": "1.75rem" }}
                         >
-                          {formatDataCell(itemObj, item.name)}
+                          {!itemObj[item.name]
+                            ? "-"
+                            : formatDataCell(itemObj, item.name)}
                         </Td>
                       ))}
                     </Tr>

@@ -5,7 +5,7 @@ import { Text } from "@chakra-ui/react";
 import { APICall } from "@api/client";
 import HistoryTable from "@components/Table/HistoryTable";
 
-function OwnershipHistory({
+function TxHistory({
   nftContractAddress,
   tokenID,
   is_for_sale,
@@ -17,11 +17,14 @@ function OwnershipHistory({
   const [historyList, setHistoryList] = useState(null);
 
   const headers = [
+    // { name: "tokenID", label: "token ID" },
     { name: "blockNumber", label: "block number" },
-    { name: "nftContractAddress", label: "nft address" },
+    // { name: "nftContractAddress", label: "nft address" },
+    { name: "trader", label: "owner" },
+    { name: "seller", label: "seller" },
+    { name: "buyer", label: "buyer" },
+    { name: "type", label: "action" },
     { name: "price", label: "price" },
-    { name: "seller", label: "from" },
-    { name: "buyer", label: "owner" },
   ];
 
   useEffect(() => {
@@ -31,8 +34,14 @@ function OwnershipHistory({
         collection_address: nftContractAddress,
       });
 
-      const data = historyListData.filter((item) => {
-        return !!item.seller;
+      const data = historyListData.map((i) => {
+        const type = i.seller
+          ? "BUY/BID ACCEPTED"
+          : !i.price
+          ? "UNLIST"
+          : "LIST";
+
+        return { ...i, type };
       });
 
       setHistoryList(data);
@@ -71,4 +80,4 @@ function OwnershipHistory({
   );
 }
 
-export default OwnershipHistory;
+export default TxHistory;

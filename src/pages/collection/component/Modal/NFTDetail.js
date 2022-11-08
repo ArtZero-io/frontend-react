@@ -16,6 +16,7 @@ import OwnershipHistory from "../Tab/OwnershipHistory";
 import useTxStatus from "@hooks/useTxStatus";
 import { FINALIZED, END } from "@constants";
 import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
+import TxHistory from "../Tab/TxHistory";
 
 function NFTDetailModal({ isOpen, onClose, ...rest }) {
   const tabHeight = useBreakpointValue({
@@ -42,8 +43,13 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
       isDisabled: actionType || !rest?.is_for_sale,
     },
     {
-      label: "history",
+      label: "owner history",
       content: <OwnershipHistory {...rest} />,
+      isDisabled: actionType,
+    },
+    {
+      label: "tx history",
+      content: <TxHistory {...rest} />,
       isDisabled: actionType,
     },
   ];
