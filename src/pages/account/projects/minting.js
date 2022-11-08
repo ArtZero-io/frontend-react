@@ -34,7 +34,7 @@ import FadeIn from "react-fade-in";
 import { APICall } from "@api/client";
 import { useMemo } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
-import { isPhaseEnd } from "@utils";
+// import { isPhaseEnd } from "@utils";
 
 function MyMintingProjectPage() {
   const dispatch = useDispatch();
@@ -161,11 +161,10 @@ function MyMintingProjectPage() {
       return;
     }
 
-    if (!isLastPhaseEnded) {
-      toast.error(`Project is not ended yet!`);
-      return;
-    }
-
+    // if (!isLastPhaseEnded) {
+    //   toast.error(`Project is not ended yet!`);
+    //   return;
+    // }
     try {
       const launchpad_psp34_nft_standard_contract = new ContractPromise(
         api,
@@ -203,24 +202,23 @@ function MyMintingProjectPage() {
     fetchPhasesInfoData();
   });
 
-  const { totalSupply, remainAmount, projStatus, isLastPhaseEnded } =
-    useMemo(() => {
-      const selectedProj = myProjectsList.find(
-        (item) => item.nftContractAddress === selectedProjectAddress
-      );
+  const { totalSupply, remainAmount, projStatus } = useMemo(() => {
+    const selectedProj = myProjectsList.find(
+      (item) => item.nftContractAddress === selectedProjectAddress
+    );
 
-      const totalSupply = selectedProj?.nft_count || 0;
-      const projStatus = selectedProj?.isActive;
+    const totalSupply = selectedProj?.nft_count || 0;
+    const projStatus = selectedProj?.isActive;
 
-      const lastPhase = [...phasesInfo]?.pop();
-      const isLastPhaseEnded = isPhaseEnd(lastPhase?.endTime);
+    // const lastPhase = [...phasesInfo]?.pop();
+    // const isLastPhaseEnded = isPhaseEnd(lastPhase?.endTime);
 
-      const remainAmount = phasesInfo?.reduce((acc, item) => {
-        return (acc -= item.claimedAmount);
-      }, totalSupply - ownerMinted);
+    const remainAmount = phasesInfo?.reduce((acc, item) => {
+      return (acc -= item.claimedAmount);
+    }, totalSupply - ownerMinted);
 
-      return { totalSupply, remainAmount, projStatus, isLastPhaseEnded };
-    }, [myProjectsList, ownerMinted, phasesInfo, selectedProjectAddress]);
+    return { totalSupply, remainAmount, projStatus };
+  }, [myProjectsList, ownerMinted, phasesInfo, selectedProjectAddress]);
 
   return (
     <Stack>
@@ -275,12 +273,7 @@ function MyMintingProjectPage() {
               h="3.125rem"
               max={remainAmount}
               value={mintAmount}
-              isDisabled={
-                actionType ||
-                remainAmount <= 0 ||
-                !projStatus ||
-                !isLastPhaseEnded
-              }
+              isDisabled={actionType || remainAmount <= 0 || !projStatus}
               onChange={(valueString) => setMintAmount(valueString)}
             >
               <NumberInputField
@@ -296,7 +289,7 @@ function MyMintingProjectPage() {
             </NumberInput>
           </Box>
 
-          {!projStatus || !isLastPhaseEnded ? null : (
+          {!projStatus ? null : (
             <>
               <>
                 {selectedProjectAddress && parseInt(mintAmount) < 1 ? (
@@ -325,12 +318,7 @@ function MyMintingProjectPage() {
             variant="outline"
             text="mint"
             onClick={() => onOwnerMint()}
-            isDisabled={
-              !projStatus ||
-              !isLastPhaseEnded ||
-              remainAmount <= 0 ||
-              loadingForceUpdate
-            }
+            isDisabled={!projStatus || remainAmount <= 0 || loadingForceUpdate}
           />
         </HStack>
       </Stack>
@@ -358,7 +346,7 @@ function MyMintingProjectPage() {
                   )}
                 </Text>
 
-                <Text minW="150px" textAlign="left">
+                {/* <Text minW="150px" textAlign="left">
                   All phases ended:{" "}
                   {isLastPhaseEnded ? (
                     <Text as="span" color="#fff">
@@ -369,7 +357,7 @@ function MyMintingProjectPage() {
                       No
                     </Text>
                   )}
-                </Text>
+                </Text> */}
 
                 <Text minW="150px" textAlign="left">
                   Supply:{" "}
