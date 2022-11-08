@@ -460,7 +460,7 @@ export async function getEstimatedGas(
         ret = gasRequired.toString();
       }
     } catch (error) {
-      console.log(error);
+      console.log("fetchGas error xx>>", error.message);
     }
 
     return ret;

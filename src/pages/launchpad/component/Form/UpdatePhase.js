@@ -1,9 +1,8 @@
-/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { FieldArray, useField } from "formik";
-import { Heading, HStack, Stack, Text } from "@chakra-ui/react";
+import { Button, Heading, HStack, Stack, Text } from "@chakra-ui/react";
 import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
 
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
@@ -28,6 +27,7 @@ import NumberInput from "@components/Input/NumberInput";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import CommonButton from "@components/Button/CommonButton";
 import { isPhaseEnd } from "@utils";
+import { clearTxStatus } from "@store/actions/txStatus";
 
 function UpdatePhase({
   name,
@@ -191,6 +191,8 @@ function UpdatePhase({
       );
     } catch (error) {
       console.log("error", error);
+      toast.error(error.message);
+      dispatch(clearTxStatus());
     }
   };
 
@@ -253,23 +255,28 @@ function UpdatePhase({
 
     console.log("value[index]", value[index]);
 
-    dispatch(
-      setTxStatus({ type: ADD_PHASE, step: START, tokenIDArray: [index] })
-    );
+    try {
+      dispatch(
+        setTxStatus({ type: ADD_PHASE, step: START, tokenIDArray: [index] })
+      );
 
-    await launchpad_psp34_nft_standard_calls.addNewPhase(
-      currentAccount,
-      name,
-      isPublic,
-      publicMintingFee,
-      publicAmount,
-      publicMaxMintingAmount,
-      start,
-      end,
-      dispatch,
-      ADD_PHASE,
-      api
-    );
+      await launchpad_psp34_nft_standard_calls.addNewPhase(
+        currentAccount,
+        name,
+        isPublic,
+        publicMintingFee,
+        publicAmount,
+        publicMaxMintingAmount,
+        start,
+        end,
+        dispatch,
+        ADD_PHASE,
+        api
+      );
+    } catch (error) {
+      toast.error(error.message);
+      dispatch(clearTxStatus());
+    }
   };
 
   const onDeletePhase = async (index) => {
@@ -283,17 +290,23 @@ function UpdatePhase({
       launchpad_psp34_nft_standard_contract
     );
 
-    dispatch(
-      setTxStatus({ type: DELETE_PHASE, step: START, tokenIDArray: [index] })
-    );
-
-    await launchpad_psp34_nft_standard_calls.deactivePhase(
-      currentAccount,
-      id,
-      dispatch,
-      DELETE_PHASE,
-      api
-    );
+    try {
+      dispatch(
+        setTxStatus({ type: DELETE_PHASE, step: START, tokenIDArray: [index] })
+      );
+      
+      console.log("ididid", id);
+      await launchpad_psp34_nft_standard_calls.deactivePhase(
+        currentAccount,
+        id,
+        dispatch,
+        DELETE_PHASE,
+        api
+      );
+    } catch (error) {
+      toast.error(error.message);
+      dispatch(clearTxStatus());
+    }
   };
 
   return (
@@ -489,7 +502,9 @@ function UpdatePhase({
                     !value[index].new &&
                     mode === formMode.EDIT &&
                     canEditPhase(value[index].start) ? (
-                      <Heading
+                      <Button
+                        size="sm"
+                        variant="outline"
                         _hover={{
                           color:
                             !(index === 0 && value.length === 1) && "#7ae7ff",
@@ -504,7 +519,7 @@ function UpdatePhase({
                         isDisabled={index === 0 && value.length === 1}
                       >
                         update
-                      </Heading>
+                      </Button>
                     ) : null
                   }
 
@@ -514,7 +529,9 @@ function UpdatePhase({
                     !value[index].new &&
                     mode === formMode.EDIT &&
                     canEditPhase(value[index].start) ? (
-                      <Heading
+                      <Button
+                        size="sm"
+                        variant="outline"
                         _hover={{
                           color:
                             !(index === 0 && value.length === 1) && "#7ae7ff",
@@ -529,7 +546,7 @@ function UpdatePhase({
                         isDisabled={index === 0 && value.length === 1}
                       >
                         Delete
-                      </Heading>
+                      </Button>
                     ) : null
                   }
 

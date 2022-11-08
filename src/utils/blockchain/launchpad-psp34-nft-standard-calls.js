@@ -788,10 +788,6 @@ async function updateSchedulePhase(
     return null;
   }
 
-  publicMintingFee = new BN(publicMintingFee * 10 ** 6)
-    .mul(new BN(10 ** 6))
-    .toString();
-
   let unsubscribe;
   let gasLimit = -1;
 
@@ -862,6 +858,8 @@ async function deactivePhase(caller_account, phaseId, dispatch, txType, api) {
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
+  console.log("deactivePhase phaseId", phaseId);
+  
   gasLimit = await getEstimatedGas(
     address,
     contract,

@@ -112,7 +112,7 @@ const UpdatePhasesModal = React.memo(function ({
         phasesTmp.push(phaseInfo);
       }
     }
-
+    console.log("phasesTmp", phasesTmp);
     initialValuesData.phases = phasesTmp;
 
     // console.log("xxxUpdatePhasesModal::phasesTmp", phasesTmp);

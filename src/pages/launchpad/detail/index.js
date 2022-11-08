@@ -776,7 +776,13 @@ const LaunchpadDetailPage = () => {
           {phasesInfo?.length
             ? phasesInfo.map((item, index) => (
                 <FadeIn>
-                  <Stack key={index} w="full" my="15px">
+
+                  <Stack
+                    key={index}
+                    w="full"
+                    my="15px"
+                    fontSize={["15px", "18px"]}
+                  >
                     <HStack>
                       <Text border="1px solid #7ae7ff" px="4px">
                         {item.isPublic ? "WL & Public Mint" : "WL Mint Only"}
@@ -784,190 +790,114 @@ const LaunchpadDetailPage = () => {
                       <Tag minW="min-content">{item?.title}</Tag>
                     </HStack>
 
-                    {/* Whitelist Mint */}
-                    {!currentAccount && <>Connect to check your whitelist</>}
+                    <Stack
+                      fontSize={["15px", "18px"]}
+                      w="full"
+                      minW="fit-content"
+                      direction={["column", "row"]}
+                    >
+                      <Text color="brand.blue">
+                        Start:{" "}
+                        <Text as="span" color="#fff">
+                          {new Date(Number(item?.startTime)).toLocaleString()}{" "}
+                        </Text>
+                      </Text>
 
-                    {/* Not in whitelist */}
-                    {currentAccount && !userWLInfo[index] && (
-                      <UnorderedList pl="16px">
-                        <ListItem>You are not in whitelist!</ListItem>
-                      </UnorderedList>
-                    )}
+                      <Text as="span" display={["none", "flex"]}>
+                        -
+                      </Text>
 
-                    {/* Have whitelist */}
-                    {currentAccount && userWLInfo[index] && (
-                      <>
-                        <UnorderedList pl="20px">
-                          <ListItem>Your whitelist mint info</ListItem>
-                        </UnorderedList>{" "}
-                        <Stack
-                          px="2px"
-                          w="full"
-                          direction={["column", "column"]}
-                          fontSize={["15px", "18px", "18px"]}
-                        >
-                          <Stack
-                            w="full"
-                            color="#888"
-                            spacing="30px"
-                            direction={["row"]}
-                            alignContent="space-between"
-                            // minH={{ base: "1rem", "2xl": "3.375rem" }}
-                          >
-                            <Tooltip
-                              hasArrow
-                              bg="#333"
-                              color="#fff"
-                              borderRadius="0"
-                              label="Total whitelist address of this phase"
-                            >
-                              <span>
-                                <Text>
-                                  Whitelist:{" "}
-                                  <Text as="span" color="#fff">
-                                    {item.totalCountWLAddress}
-                                  </Text>
-                                </Text>
-                              </span>
-                            </Tooltip>
+                      <Text color="brand.blue">
+                        End:{" "}
+                        <Text as="span" color="#fff">
+                          {new Date(Number(item?.endTime)).toLocaleString()}{" "}
+                        </Text>
+                      </Text>
+                    </Stack>
 
-                            {userWLInfo[index]?.whitelistAmount && (
-                              <Text>
-                                Minted / Max Mint:{" "}
-                                <Text as="span" color="#fff">
-                                  {userWLInfo[index]?.claimedAmount} /{" "}
-                                  {userWLInfo[index]?.whitelistAmount} NFTs
-                                </Text>
-                              </Text>
-                            )}
+                    <HStack pb="20px" color="#888" spacing="20px">
+                      <Text>
+                        Total whitelist amount:{" "}
+                        <Text as="span" color="#fff">
+                          {item?.whitelistAmount} NFT
+                          {item?.whitelistAmount > 1 ? "s" : ""}
+                        </Text>
+                      </Text>
 
-                            {userWLInfo[index]?.mintingFee && (
-                              <Text>
-                                Price:{" "}
-                                <Text as="span" color="#fff">
-                                  {userWLInfo[index]?.mintingFee / 10 ** 12}{" "}
-                                  <AzeroIcon
-                                    mb="5px"
-                                    w={["14px", "16px"]}
-                                    h={["14px", "16px"]}
-                                  />
-                                </Text>
-                              </Text>
-                            )}
-                          </Stack>
+                      <Text>
+                        Total public mint amount:{" "}
+                        <Text as="span" color="#fff">
+                          {item?.publicMintingAmount} NFT
+                          {item?.publicMintingAmount > 1 ? "s" : ""}
+                        </Text>
+                      </Text>
 
-                          <Stack
-                            w="full"
-                            minW="fit-content"
-                            direction={["column", "row"]}
-                          >
-                            <Text color="brand.blue">
-                              Start:{" "}
-                              <Text as="span" color="#fff">
-                                {new Date(
-                                  Number(item?.startTime)
-                                ).toLocaleString()}{" "}
-                              </Text>
-                            </Text>
+                      <Text>
+                        Public mint price:{" "}
+                        <Text as="span" color="#fff">
+                          {item?.publicMintingFee / 10 ** 12}{" "}
+                          <AzeroIcon
+                            mb="5px"
+                            w={["14px", "16px"]}
+                            h={["14px", "16px"]}
+                          />
+                        </Text>
+                      </Text>
+                    </HStack>
 
-                            <Text as="span" display={["none", "flex"]}>
-                              -
-                            </Text>
+                    <Text>Your info:</Text>
+                    <Stack color="#888">
+                      {/* Whitelist Mint */}
+                      <UnorderedList pl="20px">
+                        {!currentAccount && (
+                          <Text>Connect to check your whitelist</Text>
+                        )}
+                        <ListItem>
+                          {/* Not in whitelist */}
+                          {currentAccount && !userWLInfo[index] && (
+                            <Text>You are not in the whitelist!</Text>
+                          )}
 
-                            <Text color="brand.blue">
-                              End:{" "}
-                              <Text as="span" color="#fff">
-                                {new Date(
-                                  Number(item?.endTime)
-                                ).toLocaleString()}{" "}
-                              </Text>
-                            </Text>
-                          </Stack>
-                        </Stack>
-                      </>
-                    )}
-                    {/* END ~ Whitelist Mint */}
-
-                    {/* Public Mint */}
-                    {item.isPublic && (
-                      <Stack pt="20px">
-                        <UnorderedList>
-                          <ListItem>Your public mint info</ListItem>
-                        </UnorderedList>
-
-                        <Stack
-                          px="2px"
-                          w="full"
-                          direction={["column"]}
-                          fontSize={["15px", "18px", "18px"]}
-                        >
-                          <Stack
-                            w="full"
-                            color="#888"
-                            spacing="30px"
-                            direction={["row"]}
-                            alignContent="space-between"
-                            // minH={{ base: "1rem", "2xl": "3.375rem" }}
-                          >
+                          {/* Have whitelist */}
+                          {currentAccount && userWLInfo[index] && (
                             <Text>
-                              Total:{" "}
+                              You are whitelisted to mint{" "}
+                              {console.log("userWLInfo", userWLInfo)}
                               <Text as="span" color="#fff">
-                                {item.publicMintingAmount}
-                              </Text>
-                            </Text>
-
-                            {/* <Text>
-                              Minted:{" "}
+                                {userWLInfo[index]?.whitelistAmount} NFT
+                                {userWLInfo[index]?.whitelistAmount > 1
+                                  ? "s"
+                                  : ""}
+                              </Text>{" "}
+                              at price:{" "}
                               <Text as="span" color="#fff">
-                                {item.claimedAmount}{" "}
-                                <Text as="span">
-                                  NFT{item.claimedAmount > 1 ? "s" : ""}
-                                </Text>
-                              </Text>
-                            </Text> */}
-
-                            <Text>
-                              Price:{" "}
-                              <Text as="span" color="#fff">
-                                {item.publicMintingFee / 10 ** 12}{" "}
+                                {userWLInfo[index]?.mintingFee / 10 ** 12}{" "}
                                 <AzeroIcon
                                   mb="5px"
                                   w={["14px", "16px"]}
                                   h={["14px", "16px"]}
                                 />
                               </Text>
+                              . You have minted from whitelist{" "}
+                              <Text as="span" color="#fff">
+                                {userWLInfo[index]?.claimedAmount} NFT
+                                {userWLInfo[index]?.claimedAmount > 1
+                                  ? "s"
+                                  : ""}
+                              </Text>
                             </Text>
-                          </Stack>
+                          )}
+                        </ListItem>
 
-                          <Stack
-                            w="full"
-                            minW="fit-content"
-                            direction={["column", "row"]}
-                          >
-                            <Text color="brand.blue">
-                              Start:{" "}
-                              <Text as="span" color="#fff">
-                                {new Date(
-                                  Number(item?.startTime)
-                                ).toLocaleString()}{" "}
-                              </Text>
-                            </Text>
-                            <Text as="span" display={["none", "flex"]}>
-                              -
-                            </Text>
-                            <Text color="brand.blue">
-                              End:{" "}
-                              <Text as="span" color="#fff">
-                                {new Date(
-                                  Number(item?.endTime)
-                                ).toLocaleString()}{" "}
-                              </Text>
-                            </Text>
-                          </Stack>
-                        </Stack>
-                      </Stack>
-                    )}
-                    {/* END Public Mint */}
+                        {/* Public Mint */}
+                        <ListItem>
+                          <Text>
+                            You have minted: … NFTs (scroll down to view your
+                            NFTs)
+                          </Text>
+                        </ListItem>
+                      </UnorderedList>{" "}
+                    </Stack>
                   </Stack>
                   <Divider mt={["20px", "30px"]} />
                 </FadeIn>
