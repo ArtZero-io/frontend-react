@@ -42,30 +42,34 @@ export default function UpdateAdminAddressModal({
   }, [dispatch, onClose, rest.step]);
 
   const updateAdminAddress = async () => {
-    // console.log("updateAdminAddress...", newAdminAddress);
     if (!isValidAddressPolkadotAddress(newAdminAddress)) {
       return toast.error(`Invalid address! Please check again!`);
     }
+    try {
+      const launchpad_psp34_nft_standard_contract = new ContractPromise(
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        collection_address
+      );
 
-    const launchpad_psp34_nft_standard_contract = new ContractPromise(
-      api,
-      launchpad_psp34_nft_standard.CONTRACT_ABI,
-      collection_address
-    );
+      launchpad_psp34_nft_standard_calls.setContract(
+        launchpad_psp34_nft_standard_contract
+      );
 
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
+      dispatch(setTxStatus({ type: UPDATE_ADMIN_ADDRESS, step: START }));
 
-    dispatch(setTxStatus({ type: UPDATE_ADMIN_ADDRESS, step: START }));
-
-    await launchpad_psp34_nft_standard_calls.updateAdminAddress(
-      currentAccount,
-      newAdminAddress,
-      dispatch,
-      UPDATE_ADMIN_ADDRESS,
-      api
-    );
+      await launchpad_psp34_nft_standard_calls.updateAdminAddress(
+        currentAccount,
+        newAdminAddress,
+        dispatch,
+        UPDATE_ADMIN_ADDRESS,
+        api,
+        collection_address
+      );
+    } catch (error) {
+      toast.error(error.message);
+      dispatch(clearTxStatus());
+    }
   };
 
   return (

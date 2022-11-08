@@ -540,7 +540,8 @@ async function updateAdminAddress(
   adminAddress,
   dispatch,
   txType,
-  api
+  api,
+  collection_address
 ) {
   if (!contract || !caller_account) {
     throw Error(`Contract or caller not valid!`);
@@ -575,6 +576,12 @@ async function updateAdminAddress(
         api,
         caller_account,
       });
+
+      if (status.isFinalized) {
+        await APICall.askBeUpdateProjectData({
+          project_address: collection_address,
+        });
+      }
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));

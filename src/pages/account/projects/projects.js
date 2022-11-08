@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Heading, Spacer, Stack, Text, useMediaQuery } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
-import { getProjectListDetails } from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import CommonContainer from "@components/Container/CommonContainer";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import GridA from "@components/Grid/GridA";
 import WhitelistManagerModal from "./components/WhitelistManagerModal";
 import OwnerMintModal from "./components/OwnerMintModal";
-import { ContractPromise } from "@polkadot/api-contract";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
-import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { APICall } from "@api/client";
 
 const MyProjectsPage = () => {
   const { api, currentAccount } = useSubstrateState();
@@ -23,46 +20,23 @@ const MyProjectsPage = () => {
     const fetchMyProjectListDetails = async () => {
       try {
         setLoading(true);
-        setProjects([]);
-        setAdminProjQty(0);
-        const projectListDetails = await getProjectListDetails({
-          currentAccount,
-          api,
+
+        const { ret: projList1 } = await APICall.getAllProjects({});
+        const { ret: projList2 } = await APICall.getAllProjects({
+          isActive: false,
         });
-        console.log("projectListDetails", projectListDetails);
-        const myProjectListDetails = projectListDetails.filter(
-          (i) => i.projectOwner === currentAccount?.address
+
+        const projList = projList1.concat(projList2);
+
+        const myProjList = projList.filter(
+          ({ collectionAdmin, collectionOwner }) =>
+            collectionAdmin === currentAccount.address ||
+            collectionOwner === currentAccount.address
         );
-
-        // get projects admin data
-        const adminProjList = await Promise.all(
-          myProjectListDetails.map(async (p) => {
-            const launchpad_psp34_nft_standard_contract = new ContractPromise(
-              api,
-              launchpad_psp34_nft_standard.CONTRACT_ABI,
-              p.nftContractAddress
-            );
-
-            launchpad_psp34_nft_standard_calls.setContract(
-              launchpad_psp34_nft_standard_contract
-            );
-
-            const contractAdminAddress =
-              await launchpad_psp34_nft_standard_calls.getAdminAddress(
-                currentAccount
-              );
-
-            if (contractAdminAddress === currentAccount.address) {
-              return p;
-            }
-          })
-        );
-
-        console.log("adminProjList", adminProjList);
 
         if (isUnmounted) return;
-        setAdminProjQty(adminProjList.length);
-        setProjects(myProjectListDetails);
+        setAdminProjQty(myProjList?.length);
+        setProjects(myProjList);
         setLoading(false);
       } catch (error) {
         if (isUnmounted) return;
@@ -73,9 +47,9 @@ const MyProjectsPage = () => {
     };
 
     fetchMyProjectListDetails();
+
     return () => (isUnmounted = true);
   }, [api, currentAccount]);
-  // console.log("projects", projects);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
