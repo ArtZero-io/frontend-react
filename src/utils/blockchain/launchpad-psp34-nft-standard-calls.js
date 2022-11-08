@@ -278,7 +278,7 @@ async function getPhaseAccountLink(caller_account, phaseId, index) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  console.log("getPhaseAccountLink", phaseId, index);
+
   const { result, output } = await contract.query.getPhaseAccountLink(
     address,
     {

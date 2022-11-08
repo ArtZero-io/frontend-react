@@ -28,7 +28,7 @@ import { ContractPromise } from "@polkadot/api-contract";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { Select } from "@chakra-ui/react";
-import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
+
 import {
   convertNumberWithoutCommas,
   convertStringToPrice,
@@ -55,7 +55,6 @@ function MyWhiteListProjectPage() {
 
   const [myProjectsList, setMyProjectsList] = useState([]);
   const [phasesListWhitelist, setPhasesListWhitelist] = useState(null);
-  const [phasesListAll, setPhasesListAll] = useState(null);
 
   const [currentPhase, setCurrentPhase] = useState({});
 
@@ -66,95 +65,30 @@ function MyWhiteListProjectPage() {
   const [availableToken, setAvailableToken] = useState(0);
   const whitelistAmountRef = useRef(whitelistAmount);
 
-  console.log("whitelistAmountRef", whitelistAmountRef);
   const [selectedProjectAddress, setSelectedProjectAddress] = useState(null);
   const [selectedPhaseCode, setSelectedPhaseCode] = useState(0);
-
-  const [maxSlot, setMaxSlot] = useState(0);
 
   const [loading, setLoading] = useState(false);
 
   const [isUpdateMode, setIsUpdateMode] = useState(null);
   const [whitelistAmountClaimed, setWhitelistAmountClaimed] = useState(0);
 
-  useEffect(() => {
-    if (!phasesListAll) return setMaxSlot(0);
-
-    const totalSupply = myProjectsList
-      .find((i) => i.nftContractAddress === selectedProjectAddress)
-      ?.totalSupply.replaceAll(",", "");
-
-    const maxSlotCalc = phasesListAll?.reduce((acc, curr) => {
-      let number = parseInt(curr?.whitelistAmount?.replaceAll(",", ""));
-
-      if (curr.isPublic) {
-        number += parseInt(curr?.publicMintingAmount?.replaceAll(",", ""));
-      }
-
-      return acc - number;
-    }, parseInt(totalSupply));
-
-    setMaxSlot(maxSlotCalc < 0 ? 0 : maxSlotCalc);
-  }, [myProjectsList, phasesListAll, selectedProjectAddress]);
-
   const fetchMyProjectList = useCallback(async () => {
-    const adminAddress = currentAccount?.address;
-    let projectCount = await launchpad_contract_calls.getProjectCount(
-      currentAccount
+    const { ret: projList1 } = await APICall.getAllProjects({});
+    const { ret: projList2 } = await APICall.getAllProjects({
+      isActive: false,
+    });
+
+    const projList = projList1.concat(projList2);
+
+    const myProjList = projList.filter(
+      ({ collectionAdmin, collectionOwner }) =>
+        collectionAdmin === currentAccount.address ||
+        collectionOwner === currentAccount.address
     );
-    let projectsTmp = [];
-    if (projectCount > 0) {
-      for (let i = 1; i <= projectCount; i++) {
-        const projectAddr = await launchpad_contract_calls.getProjectById(
-          currentAccount,
-          i
-        );
 
-        const projectMetadata =
-          await launchpad_contract_calls.getProjectByNftAddress(
-            currentAccount,
-            projectAddr
-          );
-
-        const launchpad_psp34_nft_standard_contract = new ContractPromise(
-          api,
-          launchpad_psp34_nft_standard.CONTRACT_ABI,
-          projectAddr
-        );
-
-        launchpad_psp34_nft_standard_calls.setContract(
-          launchpad_psp34_nft_standard_contract
-        );
-        const contractAdminAddress =
-          await launchpad_psp34_nft_standard_calls.getAdminAddress(
-            currentAccount
-          );
-
-        // console.log("zzz", contractAdminAddress, adminAddress);
-
-        if (contractAdminAddress === adminAddress) {
-          const projectInfoHash =
-            await launchpad_psp34_nft_standard_calls.getProjectInfo(
-              currentAccount
-            );
-
-          const projectInfo = await APICall.getProjectInfoByHash({
-            projectHash: projectInfoHash,
-          });
-          console.log("projectInfo", projectInfo);
-          const projectTmp = {
-            name: projectInfo.name,
-            nftContractAddress: projectAddr,
-            ...projectMetadata,
-          };
-          projectsTmp.push(projectTmp);
-        }
-      }
-    }
-
-    // console.log("projectsTmp", projectsTmp);
-    setMyProjectsList(projectsTmp);
-  }, [api, currentAccount]);
+    setMyProjectsList(myProjList);
+  }, [currentAccount]);
 
   useEffect(() => {
     fetchMyProjectList();
@@ -256,8 +190,6 @@ function MyWhiteListProjectPage() {
         api
       );
     } catch (error) {
-      console.log("X_x error.message", error.message);
-      console.log("X_x error.message", error.message);
       toast.error(error.message);
       dispatch(clearTxStatus());
     }
@@ -302,8 +234,9 @@ function MyWhiteListProjectPage() {
         );
       if (phaseSchedule.isActive) {
         phasesListAll.push({ ...phaseSchedule });
+
         const phaseCode = phaseSchedule.title;
-        // console.log("zzzphaseSchedule", phaseSchedule);
+
         const phaseInfo = {
           id: i,
           code: phaseCode,
@@ -313,8 +246,6 @@ function MyWhiteListProjectPage() {
       }
     }
 
-    // console.log("phasesListAll", phasesListAll);
-    setPhasesListAll(phasesListAll);
     setPhasesListWhitelist(phasesTmp);
     setSelectedProjectAddress(address);
     setWhitelistAddress("");
@@ -348,8 +279,6 @@ function MyWhiteListProjectPage() {
         );
       setAvailableToken(convertNumberWithoutCommas(availableTokenAmount));
 
-      console.log("availableTokenAmount", availableTokenAmount);
-
       const launchpad_psp34_nft_standard_contract = new ContractPromise(
         api,
         launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -365,7 +294,7 @@ function MyWhiteListProjectPage() {
           currentAccount,
           selectedPhaseCode
         );
-      // console.log("phase info", phaseInfo);
+
       if (phaseInfo?.isActive) {
         setCurrentPhase(phaseInfo);
       }
@@ -376,7 +305,7 @@ function MyWhiteListProjectPage() {
           selectedPhaseCode
         );
       let whiteListDataTableTmp = [];
-      console.log("totalPhaseAccountLink", totalPhaseAccountLink);
+
       for (let i = 0; i < totalPhaseAccountLink; i++) {
         const whitelistPhaseAccountAddress =
           await launchpad_psp34_nft_standard_calls.getPhaseAccountLink(
@@ -403,6 +332,7 @@ function MyWhiteListProjectPage() {
           whiteListDataTableTmp.push(whiteListDataItemTmp);
         }
       }
+
       setWhiteListDataTable(whiteListDataTableTmp);
       setLoading(false);
     } catch (error) {
@@ -599,7 +529,8 @@ function MyWhiteListProjectPage() {
               : ""}{" "}
             {isUpdateMode === "EDIT"
               ? `(Claimed: ${whitelistAmountClaimed} NFTs). Min: ${whitelistAmountClaimed} - Max: ${
-                  parseInt(maxSlot) + parseInt(whitelistAmountRef.current)
+                  parseInt(availableToken) +
+                  parseInt(whitelistAmountRef.current)
                 }`
               : null}
           </Text>
@@ -616,8 +547,9 @@ function MyWhiteListProjectPage() {
               px={0}
               max={
                 isUpdateMode === "EDIT"
-                  ? parseInt(maxSlot) + parseInt(whitelistAmountRef.current)
-                  : maxSlot
+                  ? parseInt(availableToken) +
+                    parseInt(whitelistAmountRef.current)
+                  : availableToken
               }
             >
               <NumberInputField
@@ -641,10 +573,12 @@ function MyWhiteListProjectPage() {
                 </Text>
               ) : null}{" "}
               {whitelistAmount >
-              parseInt(maxSlot) + parseInt(whitelistAmountRef.current) ? (
+              parseInt(availableToken) +
+                parseInt(whitelistAmountRef.current) ? (
                 <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
                   Update amount must be less than or equal to{" "}
-                  {parseInt(maxSlot) + parseInt(whitelistAmountRef.current)}
+                  {parseInt(availableToken) +
+                    parseInt(whitelistAmountRef.current)}
                 </Text>
               ) : null}{" "}
             </>
@@ -655,9 +589,10 @@ function MyWhiteListProjectPage() {
                   Number must be greater than or equal to zero.
                 </Text>
               ) : null}{" "}
-              {whitelistAmount > parseInt(maxSlot) ? (
+              {whitelistAmount > parseInt(availableToken) ? (
                 <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                  Number must be less than or equal to {parseInt(maxSlot)}
+                  Number must be less than or equal to{" "}
+                  {parseInt(availableToken)}
                 </Text>
               ) : null}{" "}
             </>
@@ -667,8 +602,6 @@ function MyWhiteListProjectPage() {
         <HStack w="full" hidden={!isUpdateMode} justify="start">
           <Stack
             w="full"
-            // spacing="30px"
-            // direction={{ base: "column", xl: "row" }}
             direction="column"
             justify="space-between"
             alignItems="center"
@@ -690,14 +623,12 @@ function MyWhiteListProjectPage() {
 
           <Stack
             w="full"
-            // spacing="30px"
-            // direction={{ base: "column", xl: "row" }}
             direction="column"
             justify="space-between"
             alignItems="center"
             hidden={isUpdateMode === "EDIT"}
           >
-            {maxSlot <= 0 ? (
+            {availableToken <= 0 ? (
               <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
                 The remaining slot is 0. You can't add more!{" "}
               </Text>
@@ -710,7 +641,7 @@ function MyWhiteListProjectPage() {
               text="add new"
               onClick={() => onAddWhitelist()}
               isDisabled={
-                maxSlot <= 0 ||
+                availableToken <= 0 ||
                 loadingForceUpdate ||
                 (actionType && actionType !== ADD_WHITELIST)
               }
