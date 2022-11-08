@@ -1,6 +1,5 @@
 import {
   Box,
-  Flex,
   Text,
   NumberInput,
   NumberInputField,
@@ -8,10 +7,7 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   Heading,
-  TableContainer,
   Stack,
-  Wrap,
-  WrapItem,
   Tag,
   HStack,
 } from "@chakra-ui/react";
@@ -24,205 +20,239 @@ import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { Select } from "@chakra-ui/react";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
-import { convertStringToPrice, convertStringToDateTime } from "@utils";
-import AzeroIcon from "@theme/assets/icon/Azero.js";
+import {
+  getPublicCurrentAccount,
+  strToNumber,
+  isValidAddressPolkadotAddress,
+} from "@utils";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { OWNER_MINT, START } from "@constants";
 import { setTxStatus } from "@store/actions/txStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
-import AnimationLoader from "@components/Loader/AnimationLoader";
 import FadeIn from "react-fade-in";
-import { APICall } from "../../../api/client";
+import { APICall } from "@api/client";
+import { useMemo } from "react";
+import { clearTxStatus } from "@store/actions/txStatus";
 
 function MyMintingProjectPage() {
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
 
   const [myProjectsList, setMyProjectsList] = useState([]);
-  const [phasesList, setPhasesList] = useState(null);
-
-  const [currentPhase, setCurrentPhase] = useState(null);
-  const [mintAmount, setMintAmount] = useState(1);
-
   const [selectedProjectAddress, setSelectedProjectAddress] = useState(null);
-  const [selectedPhaseCode, setSelectedPhaseCode] = useState(0);
-
-  const [maxMint, setMaxMint] = useState(1);
+  const [mintAmount, setMintAmount] = useState(1);
 
   const fetchMyProjectList = useCallback(async () => {
     let projectAddrList = await launchpad_contract_calls.getProjectsByOwner(
       currentAccount,
       currentAccount?.address
     );
-    let projectsTmp = [];
-    for (const projectAddr of projectAddrList) {
-      // const project = await launchpad_contract_calls.getProjectByNftAddress(
-      //   currentAccount,
-      //   projectAddr
-      // );
+
+    const { ret: projList1 } = await APICall.getAllProjects({
+      isActive: false,
+    });
+
+    const { ret: projList2 } = await APICall.getAllProjects({
+      isActive: true,
+    });
+
+    const projList = projList1.concat(projList2);
+
+    const ret = projectAddrList?.map((item) => {
+      const proj = projList.find((proj) => proj.nftContractAddress === item);
+
+      return proj;
+    });
+
+    setMyProjectsList(ret);
+  }, [currentAccount]);
+
+  useEffect(() => {
+    fetchMyProjectList();
+  }, [fetchMyProjectList]);
+
+  const [phasesInfo, setPhasesInfo] = useState([]);
+  const [ownerMinted, setOwnerMinted] = useState(0);
+
+  const fetchPhasesInfoData = useCallback(
+    async (isUnmount) => {
+      if (!isValidAddressPolkadotAddress(selectedProjectAddress)) {
+        setPhasesInfo([]);
+
+        return;
+      }
+
       const launchpad_psp34_nft_standard_contract = new ContractPromise(
         api,
         launchpad_psp34_nft_standard.CONTRACT_ABI,
-        projectAddr
+        selectedProjectAddress
       );
 
       launchpad_psp34_nft_standard_calls.setContract(
         launchpad_psp34_nft_standard_contract
       );
 
-      const projectInfoHash =
-        await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
+      const ownerClaimedAmount =
+        await launchpad_psp34_nft_standard_calls.getOwnerClaimedAmount(
+          currentAccount
+        );
 
-      const projectInfo = await APICall.getProjectInfoByHash({
-        projectHash: projectInfoHash,
-      });
+      setOwnerMinted(ownerClaimedAmount);
 
-      console.log("projectInfo", projectInfo);
+      const totalPhase =
+        await launchpad_psp34_nft_standard_calls.getLastPhaseId(
+          getPublicCurrentAccount()
+        );
 
-      const projectTmp = {
-        name: projectInfo.name,
-        nftContractAddress: projectAddr,
-        ...projectInfo,
-      };
+      const allPhases = await Promise.all(
+        [...new Array(totalPhase)].map(async (_, index) => {
+          const totalCountWLAddress =
+            await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(
+              getPublicCurrentAccount(),
+              index + 1
+            );
 
-      projectsTmp.push(projectTmp);
-    }
+          const data =
+            await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
+              getPublicCurrentAccount(),
+              index + 1
+            );
 
-    setMyProjectsList(projectsTmp);
-  }, [api, currentAccount]);
+          const formattedData = {
+            ...data,
+            id: index + 1,
+
+            publicMintingFee: strToNumber(data.publicMintingFee),
+            publicMintingAmount: strToNumber(data.publicMintingAmount),
+            publicMaxMintingAmount: strToNumber(data.publicMaxMintingAmount),
+
+            totalCountWLAddress: strToNumber(totalCountWLAddress),
+            whitelistAmount: strToNumber(data.whitelistAmount),
+
+            claimedAmount: strToNumber(data.claimedAmount),
+            totalAmount: strToNumber(data.totalAmount),
+
+            startTime: strToNumber(data.startTime),
+            endTime: strToNumber(data.endTime),
+          };
+
+          return formattedData;
+        })
+      );
+
+      setPhasesInfo(allPhases);
+    },
+    [api, currentAccount, selectedProjectAddress]
+  );
 
   useEffect(() => {
-    fetchMyProjectList();
-  }, [fetchMyProjectList]);
+    let isUnmounted = false;
+
+    fetchPhasesInfoData(isUnmounted);
+
+    return () => (isUnmounted = true);
+  }, [fetchPhasesInfoData]);
 
   const onOwnerMint = async () => {
     if (!selectedProjectAddress) {
-      setPhasesList(null);
       toast.error(`Please pick your project!`);
       return;
     }
 
-    const launchpad_psp34_nft_standard_contract = new ContractPromise(
-      api,
-      launchpad_psp34_nft_standard.CONTRACT_ABI,
-      selectedProjectAddress
-    );
-
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
-
-    dispatch(setTxStatus({ type: OWNER_MINT, step: START }));
-
-    await launchpad_psp34_nft_standard_calls.mint(
-      currentAccount,
-      mintAmount,
-      dispatch,
-      OWNER_MINT,
-      api
-    );
-  };
-
-  const onChangeSelectedProjectAddress = async (address) => {
-    if (!address) {
-      setPhasesList(null);
-      setSelectedPhaseCode(0);
-
-      // toast.error(`Select your project!`);
-      return;
-    }
-
-    const launchpad_psp34_nft_standard_contract = new ContractPromise(
-      api,
-      launchpad_psp34_nft_standard.CONTRACT_ABI,
-      address
-    );
-
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
-
-    const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(
-      currentAccount
-    );
-
-    let phasesTmp = [];
-    let maxMintTmp = 0;
-    for (let i = 1; i <= totalPhase; i++) {
-      const phaseSchedule =
-        await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-          currentAccount,
-          i
-        );
-
-      console.log("phaseSchedule", phaseSchedule);
-
-      if (phaseSchedule.isActive && phaseSchedule.endTime) {
-        maxMintTmp =
-          parseInt(maxMintTmp) +
-          parseInt(phaseSchedule.totalAmount.replaceAll(",", "")) -
-          parseInt(phaseSchedule.claimedAmount.replaceAll(",", ""));
-      }
-    }
-    const ownerClaimedAmount =
-      await launchpad_psp34_nft_standard_calls.getOwnerClaimedAmount(
-        currentAccount
+    try {
+      const launchpad_psp34_nft_standard_contract = new ContractPromise(
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        selectedProjectAddress
       );
 
-    console.log("ownerClaimedAmount", ownerClaimedAmount);
-    maxMintTmp -= parseInt(ownerClaimedAmount.replaceAll(",", ""));
-    setMaxMint(maxMintTmp);
-    setPhasesList(phasesTmp);
+      launchpad_psp34_nft_standard_calls.setContract(
+        launchpad_psp34_nft_standard_contract
+      );
+
+      dispatch(setTxStatus({ type: OWNER_MINT, step: START }));
+
+      await launchpad_psp34_nft_standard_calls.mint(
+        currentAccount,
+        mintAmount,
+        dispatch,
+        OWNER_MINT,
+        api
+      );
+    } catch (error) {
+      toast.error(error.message);
+      dispatch(clearTxStatus());
+    }
+  };
+
+  const onChangeProjAddr = async (address) => {
+    // const launchpad_psp34_nft_standard_contract = new ContractPromise(
+    //   api,
+    //   launchpad_psp34_nft_standard.CONTRACT_ABI,
+    //   address
+    // );
+
+    // launchpad_psp34_nft_standard_calls.setContract(
+    //   launchpad_psp34_nft_standard_contract
+    // );
+
+    // const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(
+    //   currentAccount
+    // );
+
+    // let phasesTmp = [];
+    // let maxMintTmp = 0;
+    // for (let i = 1; i <= totalPhase; i++) {
+    //   const phaseSchedule =
+    //     await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
+    //       currentAccount,
+    //       i
+    //     );
+
+    //   console.log("phaseSchedule", phaseSchedule);
+
+    //   if (phaseSchedule.isActive && phaseSchedule.endTime) {
+    //     maxMintTmp =
+    //       parseInt(maxMintTmp) +
+    //       parseInt(phaseSchedule.totalAmount.replaceAll(",", "")) -
+    //       parseInt(phaseSchedule.claimedAmount.replaceAll(",", ""));
+    //   }
+    // }
+    // const ownerClaimedAmount =
+    //   await launchpad_psp34_nft_standard_calls.getOwnerClaimedAmount(
+    //     currentAccount
+    //   );
+
+    // console.log("ownerClaimedAmount", ownerClaimedAmount);
+    // maxMintTmp -= parseInt(ownerClaimedAmount.replaceAll(",", ""));
+    // setMaxMint(maxMintTmp);
+    // setPhasesList(phasesTmp);
+
     setSelectedProjectAddress(address);
-    setSelectedPhaseCode(0);
+    // setSelectedPhaseCode(0);
   };
-
-  const onChangeSelectedPhaseCode = async (phaseId) => {
-    setSelectedPhaseCode(phaseId);
-  };
-
-  const fetchPhaseInfo = useCallback(async () => {
-    if (!selectedPhaseCode || !selectedProjectAddress) {
-      setCurrentPhase(null);
-
-      return;
-    }
-    const launchpad_psp34_nft_standard_contract = new ContractPromise(
-      api,
-      launchpad_psp34_nft_standard.CONTRACT_ABI,
-      selectedProjectAddress
-    );
-
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
-
-    if (selectedPhaseCode && selectedProjectAddress) {
-      const phaseInfo =
-        await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-          currentAccount,
-          selectedPhaseCode
-        );
-
-      console.log("phaseInfo", phaseInfo);
-      if (phaseInfo.isActive) {
-        setCurrentPhase(phaseInfo);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, currentAccount, selectedPhaseCode]);
-
-  useEffect(() => {
-    fetchPhaseInfo();
-  }, [fetchPhaseInfo]);
 
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   const { loading: loadingForceUpdate } = useForceUpdate([OWNER_MINT], () => {
     setMintAmount(1);
-    fetchPhaseInfo();
+    fetchPhasesInfoData();
   });
+
+  const { totalSupply, remainAmount } = useMemo(() => {
+    const selectedProj = myProjectsList.find(
+      (item) => item.nftContractAddress === selectedProjectAddress
+    );
+
+    const totalSupply = selectedProj?.nft_count || 0;
+
+    const remainAmount = phasesInfo.reduce((acc, item) => {
+      return (acc -= item.claimedAmount);
+    }, totalSupply - ownerMinted);
+
+    return { totalSupply, remainAmount };
+  }, [myProjectsList, ownerMinted, phasesInfo, selectedProjectAddress]);
 
   return (
     <Stack>
@@ -230,11 +260,13 @@ function MyMintingProjectPage() {
         <Heading fontSize="32px" pb="15px" textAlign="center">
           Owner Mint
         </Heading>
+
         <Text w="full">
           If you are an owner project, you can mint the remain NFTs of public
           phases.
           <br /> This action is free
         </Text>
+
         <Stack textAlign="left">
           <Text py={2}>Choose Project</Text>
           <Box>
@@ -247,9 +279,7 @@ function MyMintingProjectPage() {
               color="#7ae7ff"
               textTransform="capitalize"
               fontFamily="Oswald, san serif"
-              onChange={({ target }) =>
-                onChangeSelectedProjectAddress(target.value)
-              }
+              onChange={({ target }) => onChangeProjAddr(target.value)}
             >
               <option className="my-option" value={0}>
                 Click to pick project
@@ -264,49 +294,21 @@ function MyMintingProjectPage() {
             </Select>
           </Box>
         </Stack>
-        {/* <Stack textAlign="left">
-          <Text py={2}>Choose Phase</Text>
-          <Box>
-            <Select
-              isDisabled={actionType}
-              h="50px"
-              borderRadius="0"
-              fontSize="15px"
-              color="#7ae7ff"
-              value={selectedPhaseCode}
-              fontFamily="Oswald, san serif"
-              textTransform="capitalize"
-              border="1px solid #343333"
-              onChange={({ target }) => onChangeSelectedPhaseCode(target.value)}
-            >
-              <option className="my-option" value={0}>
-                Click to pick phase
-              </option>
-              {phasesList?.length
-                ? phasesList.map((item, index) => (
-                    <option value={item.id} key={index}>
-                      {item.code}
-                    </option>
-                  ))
-                : ""}
-            </Select>
-          </Box>
-        </Stack> */}
 
         <Stack textAlign="left" pb="30px">
           <Text py={2}>Mint Amount</Text>
           <Box>
             <NumberInput
-              isDisabled={actionType || maxMint <= 0}
               bg="black"
               min={1}
-              onChange={(valueString) => setMintAmount(valueString)}
-              value={mintAmount}
               mr={3}
-              h="3.125rem"
               w="full"
               px={0}
-              max={maxMint}
+              h="3.125rem"
+              max={remainAmount}
+              value={mintAmount}
+              isDisabled={actionType || remainAmount <= 0}
+              onChange={(valueString) => setMintAmount(valueString)}
             >
               <NumberInputField
                 h="3.125rem"
@@ -324,9 +326,7 @@ function MyMintingProjectPage() {
           {
             <>
               <>
-                {selectedProjectAddress &&
-                selectedPhaseCode > 0 &&
-                parseInt(mintAmount) < 1 ? (
+                {selectedProjectAddress && parseInt(mintAmount) < 1 ? (
                   <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
                     Mint Amount must be greater than or equal to 1.
                   </Text>
@@ -334,24 +334,17 @@ function MyMintingProjectPage() {
               </>
               <>
                 {selectedProjectAddress &&
-                selectedPhaseCode > 0 &&
-                mintAmount > parseInt(maxMint) ? (
+                mintAmount > parseInt(remainAmount) ? (
                   <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                    {console.log(mintAmount, "ád", maxMint)}
-                    Mint Amount must be less than or equal to{" "}
-                    {parseInt(maxMint)}.
+                    Mint amount must be less than or equal to{" "}
+                    {parseInt(remainAmount)}.
                   </Text>
                 ) : null}
               </>
             </>
           }
         </Stack>
-        <HStack
-          spacing="30px"
-          // direction={{ base: "column", xl: "row" }}
-          justify="space-between"
-          alignItems="center"
-        >
+        <HStack spacing="30px" justify="space-between" alignItems="center">
           <CommonButton
             mx="0"
             {...rest}
@@ -359,39 +352,71 @@ function MyMintingProjectPage() {
             variant="outline"
             text="mint"
             onClick={() => onOwnerMint()}
-            isDisabled={maxMint <= 0 || loadingForceUpdate}
+            isDisabled={remainAmount <= 0 || loadingForceUpdate}
           />
         </HStack>
       </Stack>
+
       <Stack
         py="10px"
         w="full"
         borderTop="1px solid #303030"
         borderBottom="1px solid #303030"
       >
-        {!currentPhase ? (
+        <FadeIn>
+          {selectedProjectAddress && (
+            <HStack color="#888" spacing="50px">
+              <Text minW="150px" textAlign="left">
+                Total Supply:{" "}
+                <Text as="span" color="#fff">
+                  {totalSupply}{" "}
+                </Text>
+                NFT
+                {totalSupply > 1 ? "s" : ""}
+              </Text>
+
+              <Text minW="150px" textAlign="left">
+                Owner Minted:{" "}
+                <Text as="span" color="#fff">
+                  {ownerMinted}{" "}
+                </Text>
+                NFT
+                {ownerMinted > 1 ? "s" : ""}
+              </Text>
+
+              <Text minW="150px" textAlign="left">
+                Total Remain:{" "}
+                <Text as="span" color="#fff">
+                  {remainAmount}{" "}
+                </Text>
+                NFT
+                {remainAmount > 1 ? "s" : ""}
+              </Text>
+            </HStack>
+          )}{" "}
+        </FadeIn>
+
+        {!phasesInfo?.length ? (
           <Text>No info found!</Text>
         ) : (
           <>
             <FadeIn>
-              <Wrap flexWrap={true} w="full" my="15px">
-                <HStack>
-                  <Text border="1px solid #7ae7ff" px="4px">
-                    {currentPhase?.isPublic
-                      ? "Whitelist & Public Mint"
-                      : "Whitelist Mint Only"}
+              {phasesInfo.map((phase, index) => (
+                <HStack justifyContent="space-between" my="15px" w="full">
+                  <Text
+                    px="4px"
+                    minW="100px"
+                    w="fit-content"
+                    border="1px solid #7ae7ff"
+                  >
+                    {phase?.isPublic ? "WL & PL Mint" : "WL Mint Only"}
                   </Text>
 
-                  <Tag minW="min-content">{currentPhase?.title}</Tag>
-                </HStack>
+                  <HStack justifyContent="center" minW="160px">
+                    <Tag w="fit-content">{phase?.title}</Tag>
+                  </HStack>
 
-                {currentPhase && (
-                  <Stack
-                    px="2px"
-                    w="full"
-                    direction={["column", "row"]}
-                    fontSize={["15px", "18px", "18px"]}
-                  >
+                  {phase && (
                     <Stack
                       w="full"
                       color="#888"
@@ -400,323 +425,40 @@ function MyMintingProjectPage() {
                       alignContent="space-between"
                       minH={{ base: "1rem", "2xl": "3.375rem" }}
                     >
-                      <Text>
+                      <Text minW="150px" textAlign="left">
                         Total:{" "}
                         <Text as="span" color="#fff">
-                          {currentPhase.publicMintingAmount}
+                          {phase.totalAmount}{" "}
                         </Text>
+                        NFT
+                        {phase.totalAmount > 1 ? "s" : ""}
                       </Text>
 
-                      <Text>
+                      <Text minW="150px" textAlign="left">
                         Minted:{" "}
                         <Text as="span" color="#fff">
-                          {currentPhase.claimedAmount}{" "}
-                          <Text as="span">
-                            NFT
-                            {currentPhase.claimedAmount > 1 ? "s" : ""}
-                          </Text>
+                          {phase.claimedAmount}{" "}
                         </Text>
+                        NFT
+                        {phase.claimedAmount > 1 ? "s" : ""}
                       </Text>
 
-                      <Text>
-                        Price:{" "}
+                      <Text minW="150px" textAlign="left">
+                        Remain:{" "}
                         <Text as="span" color="#fff">
-                          {convertStringToPrice(currentPhase.publicMintingFee)}{" "}
-                          <AzeroIcon
-                            mb="5px"
-                            w={["14px", "16px"]}
-                            h={["14px", "16px"]}
-                          />
+                          {phase.totalAmount - phase.claimedAmount}{" "}
                         </Text>
+                        NFT
+                        {phase.totalAmount - phase.claimedAmount > 1 ? "s" : ""}
                       </Text>
                     </Stack>
-
-                    <Stack
-                      w="full"
-                      minW="fit-content"
-                      direction={["column", "row"]}
-                    >
-                      <Text color="brand.blue">
-                        Start:{" "}
-                        <Text as="span" color="#fff">
-                          {convertStringToDateTime(currentPhase.startTime)}
-                        </Text>
-                      </Text>
-                      <Text as="span" display={["none", "flex"]}>
-                        -
-                      </Text>
-                      <Text color="brand.blue">
-                        End:{" "}
-                        <Text as="span" color="#fff">
-                          {convertStringToDateTime(currentPhase.endTime)}
-                        </Text>
-                      </Text>
-                    </Stack>
-                  </Stack>
-                )}
-              </Wrap>
+                  )}
+                </HStack>
+              ))}
             </FadeIn>
           </>
         )}
       </Stack>
-      <Box
-        hidden
-        mx="auto"
-        px={{ base: "6", "2xl": "8" }}
-        py={{ base: "8", "2xl": "4" }}
-      >
-        <Box maxW="6xl-mid" fontSize="lg">
-          <Flex
-            direction={{ base: "column", xl: "row" }}
-            align="start"
-            justify="space-between"
-            w="full"
-            py={12}
-            textAlign="left"
-          >
-            <Box
-              minH="650px"
-              mx={2}
-              fontSize="lg"
-              bg="brand.grayDark"
-              padding={12}
-              maxW="xl"
-              w="100%"
-            >
-              <Flex direction="column" justifyContent="space-between" h="full">
-                <Box h="full">
-                  <Heading size="h4">Owner Mint</Heading>
-                  <Text py={2}>
-                    If you are an owner project, you can mint the remain NFTs of
-                    public phases. This action is free
-                  </Text>
-                  <Box h="full">
-                    {" "}
-                    <Box mt={7}>
-                      <Text py={2}>Choose project</Text>
-                      <Box className="custom-select">
-                        <Select
-                          isDisabled={actionType}
-                          h="50px"
-                          borderRadius="0"
-                          fontSize="15px"
-                          border="1px solid #343333"
-                          fontFamily="Evogria, san serif"
-                          onChange={({ target }) =>
-                            onChangeSelectedProjectAddress(target.value)
-                          }
-                        >
-                          <option className="my-option" value={0}>
-                            click to pick project
-                          </option>
-                          {myProjectsList?.length
-                            ? myProjectsList.map((item, index) => (
-                                <option
-                                  className="my-option"
-                                  value={item.nftContractAddress}
-                                  key={index}
-                                >
-                                  {item.name}
-                                </option>
-                              ))
-                            : ""}
-                        </Select>
-                      </Box>
-                    </Box>
-                    <Box mt={7}>
-                      <Text py={2}>Choose phase</Text>
-                      <Box>
-                        <Select
-                          isDisabled={actionType}
-                          h="50px"
-                          value={selectedPhaseCode}
-                          borderRadius="0"
-                          fontSize="15px"
-                          border="1px solid #343333"
-                          fontFamily="Evogria, san serif"
-                          onChange={({ target }) =>
-                            onChangeSelectedPhaseCode(target.value)
-                          }
-                        >
-                          <option value={0}>click to pick phase</option>
-                          {phasesList?.length
-                            ? phasesList.map((item, index) => (
-                                <option value={item.id} key={index}>
-                                  {item.code}
-                                </option>
-                              ))
-                            : ""}
-                        </Select>
-                      </Box>
-                    </Box>
-                    <Box mt={7}>
-                      <Text py={2}>Mint Amount</Text>
-                      <Box>
-                        <NumberInput
-                          isDisabled={actionType || maxMint <= 0}
-                          bg="black"
-                          min={1}
-                          onChange={(valueString) => setMintAmount(valueString)}
-                          value={mintAmount}
-                          mr={3}
-                          h="3.125rem"
-                          w="full"
-                          px={0}
-                          max={maxMint}
-                        >
-                          <NumberInputField
-                            h="3.125rem"
-                            borderRadius={0}
-                            borderWidth={0}
-                            color="#fff"
-                          />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-
-                        <Stack py="15px" alignItems="center">
-                          <CommonButton
-                            mx="0"
-                            {...rest}
-                            w="full"
-                            text="mint"
-                            onClick={() => onOwnerMint()}
-                            isDisabled={maxMint <= 0 || loadingForceUpdate}
-                          />
-                        </Stack>
-                      </Box>
-                    </Box>
-                  </Box>
-                </Box>
-              </Flex>
-            </Box>
-
-            <Box
-              minH="650px"
-              mx={2}
-              fontSize="lg"
-              bg="brand.grayDark"
-              padding={12}
-              maxW="xl"
-              w="100%"
-            >
-              <Flex direction="column" justifyContent="space-between" h="full">
-                <Box h="full">
-                  <Heading size="h4">Phase Information</Heading>
-
-                  <Box mt={7}>
-                    {loadingForceUpdate ? (
-                      <AnimationLoader />
-                    ) : (
-                      <TableContainer
-                        fontSize="lg"
-                        w={{ base: "1100px", "2xl": "1560px" }}
-                      >
-                        {!currentPhase ? (
-                          <Text>No info found!</Text>
-                        ) : (
-                          <>
-                            <FadeIn>
-                              <Wrap flexWrap={true} w="full" my="15px">
-                                <WrapItem>
-                                  <Tag w="full">{currentPhase.title}</Tag>
-                                </WrapItem>
-
-                                {currentPhase.publicPhase && (
-                                  <Stack
-                                    px="2px"
-                                    w="full"
-                                    direction={["column", "row"]}
-                                    fontSize={["15px", "18px", "18px"]}
-                                  >
-                                    <Stack
-                                      w="full"
-                                      color="#888"
-                                      spacing="30px"
-                                      direction={["row"]}
-                                      alignContent="space-between"
-                                      minH={{ base: "1rem", "2xl": "3.375rem" }}
-                                    >
-                                      <Text>
-                                        Total:{" "}
-                                        <Text as="span" color="#fff">
-                                          {currentPhase.publicMintingAmount}
-                                        </Text>
-                                      </Text>
-
-                                      <Text>
-                                        Minted:{" "}
-                                        <Text as="span" color="#fff">
-                                          {currentPhase.claimedAmount}{" "}
-                                          <Text as="span">
-                                            NFT
-                                            {currentPhase.claimedAmount > 1
-                                              ? "s"
-                                              : ""}
-                                          </Text>
-                                        </Text>
-                                      </Text>
-
-                                      <Text>
-                                        Price:{" "}
-                                        <Text as="span" color="#fff">
-                                          {convertStringToPrice(
-                                            currentPhase.publicMintingFee
-                                          )}{" "}
-                                          <AzeroIcon
-                                            mb="5px"
-                                            w={["14px", "16px"]}
-                                            h={["14px", "16px"]}
-                                          />
-                                        </Text>
-                                      </Text>
-                                    </Stack>
-
-                                    <Stack
-                                      w="full"
-                                      minW="fit-content"
-                                      direction={["column", "row"]}
-                                    >
-                                      <Text color="brand.blue">
-                                        Start:{" "}
-                                        <Text as="span" color="#fff">
-                                          {convertStringToDateTime(
-                                            currentPhase.startTime
-                                          )}
-                                        </Text>
-                                      </Text>
-                                      <Text
-                                        as="span"
-                                        display={["none", "flex"]}
-                                      >
-                                        -
-                                      </Text>
-                                      <Text color="brand.blue">
-                                        End:{" "}
-                                        <Text as="span" color="#fff">
-                                          {convertStringToDateTime(
-                                            currentPhase.endTime
-                                          )}
-                                        </Text>
-                                      </Text>
-                                    </Stack>
-                                  </Stack>
-                                )}
-                              </Wrap>
-                            </FadeIn>
-                          </>
-                        )}
-                      </TableContainer>
-                    )}
-                  </Box>
-                </Box>
-              </Flex>
-            </Box>
-          </Flex>
-        </Box>
-      </Box>
     </Stack>
   );
 }
