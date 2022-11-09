@@ -38,6 +38,7 @@ function UpdatePhase({
   endTime,
 }) {
   const [{ value }, , helpers] = useField(name);
+
   const [isPublic, setIsPublic] = useState(false);
   const { currentAccount, api } = useSubstrateState();
   // const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
@@ -132,6 +133,17 @@ function UpdatePhase({
     const prjEndTime = strToNumber(endTime);
 
     if (phasesArray?.length) {
+      const { availableTokenAmount, currPublicAmount, publicAmount } =
+        phasesArray[index];
+
+      if (availableTokenAmount + currPublicAmount - publicAmount < 0) {
+        return toast.error(
+          `Public amount can not excess ${
+            availableTokenAmount + currPublicAmount
+          }`
+        );
+      }
+
       const startFirstPhase = phasesArray[0]?.start;
       const endLastPhase = [...phasesArray].pop().end;
 

@@ -20,9 +20,10 @@ import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
 import {
-  timestampWithoutCommas,
+  // timestampWithoutCommas,
   convertStringToPrice,
-  convertNumberWithoutCommas,
+  // convertNumberWithoutCommas,
+  strToNumber,
 } from "@utils";
 import useTxStatus from "@hooks/useTxStatus";
 import { FINALIZED, END } from "@constants";
@@ -71,6 +72,10 @@ const UpdatePhasesModal = React.memo(function ({
     launchpad_psp34_nft_standard_calls.setContract(
       launchpad_psp34_nft_standard_contract
     );
+    const availableTokenAmount =
+      await launchpad_psp34_nft_standard_calls.getAvailableTokenAmount(
+        currentAccount
+      );
 
     const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(
       currentAccount
@@ -91,17 +96,17 @@ const UpdatePhasesModal = React.memo(function ({
       // console.log("xxx phaseSchedule", phaseSchedule);
       if (phaseSchedule.isActive) {
         let phaseInfo = {
+          availableTokenAmount: strToNumber(availableTokenAmount),
+          currPublicAmount: strToNumber(phaseSchedule?.publicMintingAmount),
           id: i,
-          canEdit: false,
+          // canEdit: false,
           name: phaseSchedule.title,
-          start: Number(timestampWithoutCommas(phaseSchedule.startTime)),
-          end: Number(timestampWithoutCommas(phaseSchedule.endTime)),
+          start: strToNumber(phaseSchedule.startTime),
+          end: strToNumber(phaseSchedule.endTime),
           isPublic: phaseSchedule.isPublic,
-          publicAmount: Number(
-            convertNumberWithoutCommas(phaseSchedule.publicMintingAmount)
-          ),
-          publicMaxMintingAmount: Number(
-            convertNumberWithoutCommas(phaseSchedule.publicMaxMintingAmount)
+          publicAmount: strToNumber(phaseSchedule.publicMintingAmount),
+          publicMaxMintingAmount: strToNumber(
+            phaseSchedule.publicMaxMintingAmount
           ),
           publicMintingFee: convertStringToPrice(
             phaseSchedule.publicMintingFee
