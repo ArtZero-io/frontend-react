@@ -2,7 +2,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { FieldArray, useField } from "formik";
-import { Button, Heading, HStack, Stack, Text } from "@chakra-ui/react";
+import { Button, HStack, Stack, Text } from "@chakra-ui/react";
 import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
 
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
@@ -294,7 +294,7 @@ function UpdatePhase({
       dispatch(
         setTxStatus({ type: DELETE_PHASE, step: START, tokenIDArray: [index] })
       );
-      
+
       console.log("ididid", id);
       await launchpad_psp34_nft_standard_calls.deactivePhase(
         currentAccount,
@@ -552,7 +552,9 @@ function UpdatePhase({
 
                   {value[index].new && mode === formMode.EDIT && (
                     <>
-                      <Heading
+                      <Button
+                        size="sm"
+                        variant="outline"
                         _hover={{
                           color:
                             !(index === 0 && value.length === 1) && "#7ae7ff",
@@ -567,8 +569,10 @@ function UpdatePhase({
                         isDisabled={index === 0 && value.length === 1}
                       >
                         add
-                      </Heading>
-                      <Heading
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
                         _hover={{
                           color:
                             !(index === 0 && value.length === 1) && "#7ae7ff",
@@ -586,7 +590,7 @@ function UpdatePhase({
                         isDisabled={index === 0 && value.length === 1}
                       >
                         delete
-                      </Heading>
+                      </Button>
                     </>
                   )}
                 </HStack>

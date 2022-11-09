@@ -65,9 +65,10 @@ export const Card = ({ variant, project }) => {
       if (!currPhaseStatus) {
         return setProgressPercent(0);
       }
+
       setProgressPercent(
         (currPhaseStatus?.claimedAmount?.replaceAll(",", "") /
-          currPhaseStatus?.whitelistAmount?.replaceAll(",", "")) *
+          currPhaseStatus?.totalAmount?.replaceAll(",", "")) *
           100
       );
     } catch (error) {

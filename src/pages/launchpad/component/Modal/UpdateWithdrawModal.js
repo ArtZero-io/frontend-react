@@ -27,7 +27,7 @@ import { setTxStatus } from "@store/actions/txStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { UPDATE_BASE_URI, START, FINALIZED, END } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
-//   import toast from "react-hot-toast";
+
 import BN from "bn.js";
 import toast from "react-hot-toast";
 
@@ -46,6 +46,7 @@ export default function UpdateWithdrawModal({
     const fetch = async () => {
       if (rest.step === END) {
         dispatch(clearTxStatus());
+        setWithdrawBalance(0);
         onClose();
       }
       const launchpad_psp34_nft_standard_contract = new ContractPromise(
@@ -148,6 +149,7 @@ export default function UpdateWithdrawModal({
                 px={0}
                 min={0}
                 defaultValue={1}
+                isDisabled={actionType}
                 max={contractBalance}
                 value={withdrawBalance}
                 onChange={(valueString) => setWithdrawBalance(valueString)}
@@ -163,7 +165,11 @@ export default function UpdateWithdrawModal({
                   <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput>
-              <Button variant="outline" onClick={() => handleAddMax()}>
+              <Button
+                variant="outline"
+                isDisabled={actionType}
+                onClick={() => handleAddMax()}
+              >
                 Max
               </Button>
             </HStack>

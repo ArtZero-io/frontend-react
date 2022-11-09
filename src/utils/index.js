@@ -472,8 +472,8 @@ export async function getEstimatedGas(
     fetchGas().then((data) => (result = data)),
     {
       loading: "Fetching gas...",
-      success: (data) =>
-        `Estimated gas is ${formatNumDynamicDecimal(data / 10 ** 12)} AZERO`,
+      success: () => `Fetch estimated gas done !`,
+      // `Estimated gas is ${formatNumDynamicDecimal(data / 10 ** 12)} AZERO`,
       error: "Could not fetching gas!",
     },
     {
