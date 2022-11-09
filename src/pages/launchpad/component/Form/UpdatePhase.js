@@ -228,6 +228,15 @@ function UpdatePhase({
     const prjEndTime = parseInt(JSON.stringify(endTime).replaceAll(",", ""));
 
     if (phasesArray?.length) {
+      const { publicAmount } = phasesArray[index];
+      const { availableTokenAmount } = phasesArray[index - 1];
+
+      if (availableTokenAmount - publicAmount < 0) {
+        return toast.error(
+          `Public amount can not excess ${availableTokenAmount}`
+        );
+      }
+
       const startFirstPhase = phasesArray[0]?.start;
       const endLastPhase = [...phasesArray].pop().end;
 
