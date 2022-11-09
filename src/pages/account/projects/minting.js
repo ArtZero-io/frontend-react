@@ -34,7 +34,7 @@ import FadeIn from "react-fade-in";
 import { APICall } from "@api/client";
 import { useMemo } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
-// import { isPhaseEnd } from "@utils";
+import { isPhaseEnd } from "@utils";
 
 function MyMintingProjectPage() {
   const dispatch = useDispatch();
@@ -210,15 +210,17 @@ function MyMintingProjectPage() {
     const totalSupply = selectedProj?.nft_count || 0;
     const projStatus = selectedProj?.isActive;
 
-    // const lastPhase = [...phasesInfo]?.pop();
-    // const isLastPhaseEnded = isPhaseEnd(lastPhase?.endTime);
-
     const remainAmount = phasesInfo?.reduce((acc, item) => {
-      return (acc -= item.claimedAmount);
-    }, totalSupply - ownerMinted);
+      const { isActive, totalAmount, claimedAmount, endTime } = item;
+      const isEnded = isPhaseEnd(endTime);
+
+      return !isEnded && isActive
+        ? acc
+        : (acc = acc + totalAmount - claimedAmount);
+    }, 0);
 
     return { totalSupply, remainAmount, projStatus };
-  }, [myProjectsList, ownerMinted, phasesInfo, selectedProjectAddress]);
+  }, [myProjectsList, phasesInfo, selectedProjectAddress]);
 
   return (
     <Stack>
@@ -300,6 +302,7 @@ function MyMintingProjectPage() {
               </>
               <>
                 {selectedProjectAddress &&
+                remainAmount > 0 &&
                 mintAmount > parseInt(remainAmount) ? (
                   <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
                     Mint amount must be less than or equal to{" "}
@@ -346,19 +349,6 @@ function MyMintingProjectPage() {
                   )}
                 </Text>
 
-                {/* <Text minW="150px" textAlign="left">
-                  All phases ended:{" "}
-                  {isLastPhaseEnded ? (
-                    <Text as="span" color="#fff">
-                      Yes
-                    </Text>
-                  ) : (
-                    <Text as="span" color="#ff8c8c">
-                      No
-                    </Text>
-                  )}
-                </Text> */}
-
                 <Text minW="150px" textAlign="left">
                   Supply:{" "}
                   <Text as="span" color="#fff">
@@ -366,6 +356,15 @@ function MyMintingProjectPage() {
                   </Text>
                   NFT
                   {totalSupply > 1 ? "s" : ""}
+                </Text>
+
+                <Text minW="150px" textAlign="left">
+                  Total Remain:{" "}
+                  <Text as="span" color="#fff">
+                    {remainAmount}{" "}
+                  </Text>
+                  NFT
+                  {remainAmount > 1 ? "s" : ""}
                 </Text>
 
                 <Text minW="150px" textAlign="left">
@@ -378,12 +377,12 @@ function MyMintingProjectPage() {
                 </Text>
 
                 <Text minW="150px" textAlign="left">
-                  Total Remain:{" "}
+                  Total available:{" "}
                   <Text as="span" color="#fff">
-                    {remainAmount}{" "}
+                    {remainAmount - ownerMinted}{" "}
                   </Text>
                   NFT
-                  {remainAmount > 1 ? "s" : ""}
+                  {remainAmount - ownerMinted > 1 ? "s" : ""}
                 </Text>
               </HStack>
             ))}{" "}
@@ -413,36 +412,43 @@ function MyMintingProjectPage() {
                     <Stack
                       w="full"
                       color="#888"
-                      spacing="30px"
+                      spacing="0px"
                       direction={["row"]}
                       alignContent="space-between"
                       minH={{ base: "1rem", "2xl": "3.375rem" }}
                     >
-                      <Text minW="150px" textAlign="left">
+                      <Text minW="120px" textAlign="left">
                         Total:{" "}
                         <Text as="span" color="#fff">
                           {phase.totalAmount}{" "}
                         </Text>
-                        NFT
-                        {phase.totalAmount > 1 ? "s" : ""}
                       </Text>
 
-                      <Text minW="150px" textAlign="left">
+                      <Text minW="120px" textAlign="left">
                         Minted:{" "}
                         <Text as="span" color="#fff">
                           {phase.claimedAmount}{" "}
                         </Text>
-                        NFT
-                        {phase.claimedAmount > 1 ? "s" : ""}
                       </Text>
 
-                      <Text minW="150px" textAlign="left">
+                      <Text minW="120px" textAlign="left">
                         Remain:{" "}
                         <Text as="span" color="#fff">
                           {phase.totalAmount - phase.claimedAmount}{" "}
                         </Text>
-                        NFT
-                        {phase.totalAmount - phase.claimedAmount > 1 ? "s" : ""}
+                      </Text>
+
+                      <Text minW="120px" textAlign="left">
+                        Mint Ended:{" "}
+                        {isPhaseEnd(phase?.endTime) ? (
+                          <Text as="span" color="#fff">
+                            Yes
+                          </Text>
+                        ) : (
+                          <Text as="span" color="#ff8c8c">
+                            No
+                          </Text>
+                        )}
                       </Text>
                     </Stack>
                   )}
