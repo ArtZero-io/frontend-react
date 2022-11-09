@@ -287,11 +287,17 @@ const LaunchpadDetailPage = () => {
 
   const [userWLInfo, setUserWLInfo] = useState([]);
   const [loadingUserWLInfo, setLoadingUserWLInfo] = useState(false);
+  const [PLMintAllPhases, setPLMintAllPhases] = useState();
 
   const fetchWhitelistData = useCallback(
     async (isUnmounted) => {
       setLoadingUserWLInfo(true);
       try {
+        const totalNFTCount = await getAccountBalanceOfPsp34NFT({
+          currentAccount,
+        });
+        // console.log("totalNFTCount", totalNFTCount);
+
         const allPhasesAddWL = await Promise.all(
           phasesInfo?.map(async (item) => {
             const data =
@@ -319,8 +325,14 @@ const LaunchpadDetailPage = () => {
           })
         );
 
+        const WLMintAllPhases = allPhasesAddWL.reduce(
+          (acc, phase) => (!phase ? acc : acc + phase?.claimedAmount),
+          0
+        );
+
         if (isUnmounted) return;
 
+        setPLMintAllPhases(totalNFTCount - WLMintAllPhases);
         setUserWLInfo(allPhasesAddWL);
         setLoadingUserWLInfo(false);
       } catch (error) {
@@ -774,7 +786,18 @@ const LaunchpadDetailPage = () => {
             <Heading fontSize={["24px", "32px"]}>phases</Heading>
             <Spacer />
           </Flex>
-
+          {currentAccount?.address && (
+            <Stack color="#888" fontSize={["15px", "18px"]}>
+              <Text>
+                You have minted from Public Mint:{" "}
+                <Text as="span" color="#fff">
+                  {PLMintAllPhases} NFT
+                  {PLMintAllPhases > 1 ? "s" : ""}
+                </Text>{" "}
+                (altogether in all phases - scroll down to see your NFTs)
+              </Text>
+            </Stack>
+          )}
           {phasesInfo?.length
             ? phasesInfo.map((item, index) => (
                 <FadeIn>
@@ -891,12 +914,24 @@ const LaunchpadDetailPage = () => {
                         </ListItem>
 
                         {/* Public Mint */}
-                        <ListItem>
+                        {/* <ListItem>
                           <Text>
                             You have minted: … NFTs (scroll down to view your
                             NFTs)
                           </Text>
-                        </ListItem>
+                        </ListItem> */}
+                        {/* All Public Mint */}
+                        {/* <ListItem>
+                          <Text>
+                            You have minted from Public Mint:{" "}
+                            <Text as="span" color="#fff">
+                              {PLMintAllPhases} NFT
+                              {PLMintAllPhases > 1 ? "s" : ""}
+                            </Text>{" "}
+                            (altogether in all phases - scroll down to see your
+                            NFTs)
+                          </Text>
+                        </ListItem> */}
                       </UnorderedList>{" "}
                     </Stack>
                   </Stack>
