@@ -83,7 +83,10 @@ import LevelCard from "@components/Card/LevelCard";
 import { Helmet } from "react-helmet";
 import ImageCloudFlare from "../../components/ImageWrapper/ImageCloudFlare";
 import SocialShare from "@components/SocialShare/SocialShare";
-
+import CommonTabs from "@components/Tabs/CommonTabs";
+import OwnershipHistory from "../collection/component/Tab/OwnershipHistory";
+import TxHistory from "../collection/component/Tab/TxHistory";
+import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
 function TokenPage() {
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
@@ -355,6 +358,24 @@ function TokenPage() {
   const iconWidth = useBreakpointValue(["40px", "50px"]);
   const imageUrl = token?.avatar?.replace("ipfs://", "https://ipfs.io/ipfs/");
   const gridSize = useBreakpointValue({ base: `8rem`, md: `11rem` });
+
+  const tabsData = [
+    {
+      label: "offers",
+      component: <MyNFTOffer {...token} {...collection} />,
+      isDisabled: actionType || !token?.is_for_sale,
+    },
+    {
+      label: "owner history",
+      component: <OwnershipHistory {...token} {...collection} />,
+      isDisabled: actionType,
+    },
+    {
+      label: "tx history",
+      component: <TxHistory {...token} {...collection} />,
+      isDisabled: actionType,
+    },
+  ];
 
   return (
     <NftLayout>
@@ -988,31 +1009,8 @@ function TokenPage() {
               </Stack>
             </Stack>
 
-            <Stack
-              mx="auto"
-              w="full"
-              py="15px"
-              px={["0px", "85px"]}
-              display={["none", "flex"]}
-              maxW={["full", "1200px"]}
-              hidden={!token?.is_for_sale}
-            >
-              <Heading pl="4px" fontSize="xl">
-                Offers List
-              </Heading>{" "}
-              {bidsList?.length === 0 ? (
-                <Text textAlign="left" py="2rem">
-                  There is no bid yet.
-                </Text>
-              ) : (
-                <CommonTable
-                  shadow="lg"
-                  isOwner={isOwner}
-                  tableData={bidsList}
-                  tableHeaders={headers}
-                  onClickHandler={handleAcceptBidAction}
-                />
-              )}
+            <Stack px="20px" maxW="1200" w="full">
+              <CommonTabs tabsData={tabsData} />
             </Stack>
           </VStack>
         )}
@@ -1035,13 +1033,6 @@ export const buyToken = async (
   tokenID,
   dispatch
 ) => {
-  console.log("TokenPage buyToken currentAccount", currentAccount);
-  console.log("TokenPage buyToken isOwner", isOwner);
-  console.log("TokenPage buyToken askPrice", askPrice);
-  console.log("TokenPage buyToken nftContractAddress", nftContractAddress);
-  console.log("TokenPage buyToken ownerAddress", ownerAddress);
-  console.log("TokenPage buyToken tokenID", tokenID);
-
   // check wallet connected
   if (!currentAccount) {
     toast.error("Please connect wallet first!");
