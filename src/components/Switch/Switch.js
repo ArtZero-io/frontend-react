@@ -46,7 +46,7 @@ export default function SimpleModeSwitch({
         pl={2}
         as={Switch}
         size={switchSize}
-        colorScheme="teal"
+        // colorScheme="teal"
         {...field}
         {...props}
       />

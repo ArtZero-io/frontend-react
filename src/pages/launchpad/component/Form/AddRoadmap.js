@@ -24,7 +24,7 @@ function AddRoadmap({ name, mode, isDisabled }) {
       name="roadmap"
       render={(arrayHelpers) => {
         const roadmapErrors = arrayHelpers?.form?.errors?.roadmap;
-        // console.log(arrayHelpers);
+
         return (
           <Stack>
             {value?.map((_, index) => (
@@ -64,17 +64,8 @@ function AddRoadmap({ name, mode, isDisabled }) {
                   ) : null}
                 </Stack>
 
-                <HStack justifyContent="end" w="full">
-                  <Heading
-                    _hover={{
-                      color: !(index === 0 && value.length === 1) && "#7ae7ff",
-                    }}
-                    fontSize="sm"
-                    color="#555"
-                    fontStyle="unset"
-                    cursor="pointer"
-                    fontFamily="Evogria"
-                    textDecoration="underline"
+                <HStack justifyContent="start" w="full">
+                  <Button
                     onClick={() => {
                       if (index === 0 && value.length === 1) return;
                       arrayHelpers.remove(index);
@@ -82,7 +73,7 @@ function AddRoadmap({ name, mode, isDisabled }) {
                     isDisabled={index === 0 && value.length === 1}
                   >
                     delete
-                  </Heading>
+                  </Button>
                 </HStack>
               </Stack>
             ))}
@@ -94,9 +85,8 @@ function AddRoadmap({ name, mode, isDisabled }) {
                   </Text>
                 ) : null}
               </Stack>
-
               <Button
-                variant="solid"
+                variant="outline"
                 w="140px"
                 type="button"
                 isDisabled={

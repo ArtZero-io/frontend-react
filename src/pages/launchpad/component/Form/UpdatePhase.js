@@ -342,10 +342,10 @@ function UpdatePhase({
                 key={index}
                 p={["10px", "30px"]}
                 gap={["0px", "0px"]}
-                border="2px solid #333"
+                bg="#222"
               >
                 <Stack gap={["10px", "15px"]} direction={["column", "row"]}>
-                  <Stack w={["100%", "50%"]}>
+                  <Stack w={["100%", "31%"]}>
                     <Input
                       mx="0"
                       type="text"
@@ -361,7 +361,7 @@ function UpdatePhase({
                     />{" "}
                   </Stack>
 
-                  <Stack w="full">
+                  <Stack w={["100%", "66%"]}>
                     <Stack pb="30px">
                       <Text fontSize="lg" ml={1}>
                         Start time - End time{" "}
@@ -393,199 +393,118 @@ function UpdatePhase({
                     </Stack>
                   </Stack>
                 </Stack>
-
                 <Stack
-                  minH="86px"
-                  alignItems={["start", "start"]}
-                  gap={["10px", "15px"]}
-                  direction={["column", "row"]}
+                  minW="260px"
+                  alignItems="end"
+                  direction={{ base: "column", "2xl": "row" }}
                 >
+                  <AdvancedModeSwitch
+                    hasTooltipPublicMint={true}
+                    label="Set public mint"
+                    isDisabled={
+                      actionType ||
+                      isPhaseEnd(endTime) ||
+                      (!canEditPhase(value[index].start) && !value[index].new)
+                    }
+                    isChecked={value[index].isPublic}
+                    name={`phases[${index}].isPublic`}
+                    onChange={() => {
+                      value[index].isPublic = !value[index].isPublic;
+                      setIsPublic(!isPublic);
+                    }}
+                  />
+                </Stack>
+                {value[index].isPublic && (
                   <Stack
-                    minW="260px"
-                    alignItems="end"
-                    direction={{ base: "column", "2xl": "row" }}
+                    minH="86px"
+                    alignItems={["start", "start"]}
+                    gap={["10px", "15px"]}
+                    direction={["column", "row"]}
                   >
-                    <AdvancedModeSwitch
-                      hasTooltipPublicMint={true}
-                      label="Set public mint"
+                    <NumberInput
+                      type="number"
+                      isRequired={value[index].isPublic}
+                      height="50px"
+                      min="0"
+                      hasStepper={false}
                       isDisabled={
                         actionType ||
                         isPhaseEnd(endTime) ||
-                        (!canEditPhase(value[index].start) && !value[index].new)
+                        (!value[index].new && !canEditPhase(value[index].start))
                       }
-                      isChecked={value[index].isPublic}
-                      name={`phases[${index}].isPublic`}
-                      onChange={() => {
-                        value[index].isPublic = !value[index].isPublic;
-                        setIsPublic(!isPublic);
-                      }}
+                      label="Public minting fee"
+                      isDisplay={value[index].isPublic}
+                      name={`phases[${index}].publicMintingFee`}
+                    />{" "}
+                    <NumberInput
+                      isRequired={value[index].isPublic}
+                      type="number"
+                      height="50px"
+                      precision={0}
+                      hasStepper={false}
+                      isDisabled={
+                        actionType ||
+                        isPhaseEnd(endTime) ||
+                        (!value[index].new && !canEditPhase(value[index].start))
+                      }
+                      label="Total Mint Amount"
+                      isDisplay={value[index].isPublic}
+                      name={`phases[${index}].publicAmount`}
+                    />
+                    <NumberInput
+                      isRequired={value[index].isPublic}
+                      max={50}
+                      type="number"
+                      height="50px"
+                      precision={0}
+                      hasStepper={false}
+                      isDisabled={
+                        actionType ||
+                        isPhaseEnd(endTime) ||
+                        (!value[index].new && !canEditPhase(value[index].start))
+                      }
+                      label="Max per mint"
+                      isDisplay={value[index].isPublic}
+                      name={`phases[${index}].publicMaxMintingAmount`}
                     />
                   </Stack>
-                  <NumberInput
-                    type="number"
-                    isRequired={value[index].isPublic}
-                    height="50px"
-                    min="0"
-                    hasStepper={false}
-                    isDisabled={
-                      actionType ||
-                      isPhaseEnd(endTime) ||
-                      (!value[index].new && !canEditPhase(value[index].start))
-                    }
-                    label="Public minting fee"
-                    isDisplay={value[index].isPublic}
-                    name={`phases[${index}].publicMintingFee`}
-                  />{" "}
-                  <NumberInput
-                    isRequired={value[index].isPublic}
-                    type="number"
-                    height="50px"
-                    precision={0}
-                    hasStepper={false}
-                    isDisabled={
-                      actionType ||
-                      isPhaseEnd(endTime) ||
-                      (!value[index].new && !canEditPhase(value[index].start))
-                    }
-                    label="Total Mint Amount"
-                    // inputWidth={"100%"}
-                    isDisplay={value[index].isPublic}
-                    name={`phases[${index}].publicAmount`}
-                  />
-                  <NumberInput
-                    isRequired={value[index].isPublic}
-                    max={50}
-                    type="number"
-                    height="50px"
-                    precision={0}
-                    hasStepper={false}
-                    isDisabled={
-                      actionType ||
-                      isPhaseEnd(endTime) ||
-                      (!value[index].new && !canEditPhase(value[index].start))
-                    }
-                    label="Max per mint"
-                    // inputWidth={"100%"}
-                    isDisplay={value[index].isPublic}
-                    name={`phases[${index}].publicMaxMintingAmount`}
-                  />
-                </Stack>
+                )}
 
-                <HStack justifyContent="end" w="full">
+                <HStack justifyContent="start" w="full">
                   {!value[index].new && !canEditPhase(value[index].start) && (
                     <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
                       You can not edit this phase!{" "}
                     </Text>
                   )}
-                  {/* phase can not edit */}
-                  {/* {!canEditPhase(value[index].start) ? (
-                    <Heading
-                      // _hover={{
-                      //   color:
-                      //     !(index === 0 && value.length === 1) && "#7ae7ff",
-                      // }}
-                      fontSize="sm"
-                      // color="#555"
-                      fontStyle="unset"
-                      // cursor="pointer"
-                      fontFamily="Evogria"
-                      // textDecoration="underline"
-                      // onClick={() => onUpdatePhase(index)}
-                      // isDisabled={index === 0 && value.length === 1}
-                    >You can not edit this phase!</Heading>
-                  ) : null} */}
 
-                  {/* {mode === formMode.ADD ? (
-                    <Heading
-                      _hover={{
-                        color:
-                          !(index === 0 && value.length === 1) && "#7ae7ff",
-                      }}
-                      fontSize="sm"
-                      color="#555"
-                      fontStyle="unset"
-                      cursor="pointer"
-                      fontFamily="Evogria"
-                      textDecoration="underline"
-                      onClick={() => {
-                        if (index === 0 && value.length === 1) return;
-                        arrayHelpers.remove(index);
-                      }}
+                  {!value[index].new &&
+                  mode === formMode.EDIT &&
+                  canEditPhase(value[index].start) ? (
+                    <Button
+                      size="sm"
+                      onClick={() => onUpdatePhase(index)}
                       isDisabled={index === 0 && value.length === 1}
                     >
-                      delete
-                    </Heading>
-                  ) : null} */}
+                      update
+                    </Button>
+                  ) : null}
 
-                  {
-                    // !value[index].new &&
-
-                    !value[index].new &&
-                    mode === formMode.EDIT &&
-                    canEditPhase(value[index].start) ? (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        _hover={{
-                          color:
-                            !(index === 0 && value.length === 1) && "#7ae7ff",
-                        }}
-                        fontSize="sm"
-                        color="#555"
-                        fontStyle="unset"
-                        cursor="pointer"
-                        fontFamily="Evogria"
-                        textDecoration="underline"
-                        onClick={() => onUpdatePhase(index)}
-                        isDisabled={index === 0 && value.length === 1}
-                      >
-                        update
-                      </Button>
-                    ) : null
-                  }
-
-                  {
-                    // !value[index].new &&
-
-                    !value[index].new &&
-                    mode === formMode.EDIT &&
-                    canEditPhase(value[index].start) ? (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        _hover={{
-                          color:
-                            !(index === 0 && value.length === 1) && "#7ae7ff",
-                        }}
-                        fontSize="sm"
-                        color="#555"
-                        fontStyle="unset"
-                        cursor="pointer"
-                        fontFamily="Evogria"
-                        textDecoration="underline"
-                        onClick={() => onDeletePhase(index)}
-                        isDisabled={index === 0 && value.length === 1}
-                      >
-                        Delete
-                      </Button>
-                    ) : null
-                  }
+                  {!value[index].new &&
+                  mode === formMode.EDIT &&
+                  canEditPhase(value[index].start) ? (
+                    <Button
+                      size="sm"
+                      onClick={() => onDeletePhase(index)}
+                      isDisabled={index === 0 && value.length === 1}
+                    >
+                      Delete
+                    </Button>
+                  ) : null}
 
                   {value[index].new && mode === formMode.EDIT && (
                     <>
                       <Button
                         size="sm"
-                        variant="outline"
-                        _hover={{
-                          color:
-                            !(index === 0 && value.length === 1) && "#7ae7ff",
-                        }}
-                        fontSize="sm"
-                        color="#555"
-                        fontStyle="unset"
-                        cursor="pointer"
-                        fontFamily="Evogria"
-                        textDecoration="underline"
                         onClick={() => onAddNewPhase(index)}
                         isDisabled={index === 0 && value.length === 1}
                       >
@@ -593,17 +512,6 @@ function UpdatePhase({
                       </Button>
                       <Button
                         size="sm"
-                        variant="outline"
-                        _hover={{
-                          color:
-                            !(index === 0 && value.length === 1) && "#7ae7ff",
-                        }}
-                        fontSize="sm"
-                        color="#555"
-                        fontStyle="unset"
-                        cursor="pointer"
-                        fontFamily="Evogria"
-                        textDecoration="underline"
                         onClick={() => {
                           if (index === 0 && value.length === 1) return;
                           arrayHelpers.remove(index);
@@ -627,14 +535,13 @@ function UpdatePhase({
                 ) : null}
               </Stack>
               <CommonButton
-                w="140px"
-                // w={{ base: "full", lg: "140px" }}
-                my="24px"
                 {...rest}
-                onClick={() => handleAddPhase(arrayHelpers)}
-                text={`${mode === formMode.ADD ? "add more" : "add new phase"}`}
-                // isDisabled={!(dirty && isValid) && noImagesChange}
+                w="140px"
+                my="24px"
+                variant="outline"
+                text="add new phase"
                 isDisabled={isPhaseEnd(endTime)}
+                onClick={() => handleAddPhase(arrayHelpers)}
               />
             </Stack>
           </Stack>

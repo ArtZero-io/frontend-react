@@ -1,4 +1,4 @@
-import { Button, Heading, HStack, Stack, Text } from "@chakra-ui/react";
+import { Button, HStack, Stack, Text } from "@chakra-ui/react";
 import { FieldArray, useField } from "formik";
 import toast from "react-hot-toast";
 import Input from "@components/Input/Input";
@@ -70,7 +70,7 @@ function AddMember({ name, mode, isDisabled }) {
                   />
                 </Stack>
 
-                <Stack w="full" p={["10px", "10px"]} gap={["0px", "0px"]}>
+                <Stack w="full" pl="30px" gap={["0px"]}>
                   <Stack direction={["column", "row"]} gap={["0px", "30px"]}>
                     <Input
                       isDisabled={isDisabled}
@@ -109,18 +109,8 @@ function AddMember({ name, mode, isDisabled }) {
                     />
                   </Stack>
 
-                  <HStack justifyContent="end" w="full">
-                    <Heading
-                      _hover={{
-                        color:
-                          !(index === 0 && value.length === 1) && "#7ae7ff",
-                      }}
-                      fontSize="sm"
-                      color="#555"
-                      fontStyle="unset"
-                      cursor="pointer"
-                      fontFamily="Evogria"
-                      textDecoration="underline"
+                  <HStack justifyContent="start" w="full">
+                    <Button
                       onClick={() => {
                         if (index === 0 && value.length === 1) return;
                         arrayHelpers.remove(index);
@@ -128,7 +118,7 @@ function AddMember({ name, mode, isDisabled }) {
                       isDisabled={index === 0 && value.length === 1}
                     >
                       delete
-                    </Heading>
+                    </Button>
                   </HStack>
                 </Stack>
               </HStack>
@@ -144,7 +134,7 @@ function AddMember({ name, mode, isDisabled }) {
 
               <Button
                 w="140px"
-                variant="solid"
+                variant="outline"
                 type="button"
                 isDisabled={
                   isDisabled ||

@@ -147,7 +147,7 @@ export const Footer = () => {
                   cursor={"pointer"}
                   onClick={() =>
                     window.open(
-                      "https://artzero.io/demo-internal/assets/ArtZero_Terms_Of_Service .pdf",
+                      "https://artzero.io/demo-internal/assets/ArtZero_Terms_Of_Service.pdf",
                       "_blank"
                     )
                   }

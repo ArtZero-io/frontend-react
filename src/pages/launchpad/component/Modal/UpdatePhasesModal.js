@@ -163,7 +163,7 @@ const UpdatePhasesModal = React.memo(function ({
         px={[0, "20px"]}
         borderRadius="0"
         position="relative"
-        bg="brand.grayDark"
+        bg="#151515"
         maxW={["340px", "1040px"]}
       >
         <ModalCloseButton

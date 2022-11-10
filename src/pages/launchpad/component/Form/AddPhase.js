@@ -1,21 +1,11 @@
-/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
 import { FieldArray, useField } from "formik";
-import { Heading, HStack, Stack, Text } from "@chakra-ui/react";
+import { Button, HStack, Stack, Text } from "@chakra-ui/react";
 import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
-
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
-import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
-import { ContractPromise } from "@polkadot/api-contract";
-
-import { isPhaseTimeOverlap } from "@utils";
-import { useSubstrateState } from "@utils/substrate";
-import { formMode, UPDATE_PHASE, ADD_PHASE, START } from "@constants";
+import { formMode } from "@constants";
 
 import useTxStatus from "@hooks/useTxStatus";
-import { setTxStatus } from "@store/actions/txStatus";
 
 import Input from "@components/Input/Input";
 import NumberInput from "@components/Input/NumberInput";
@@ -32,28 +22,11 @@ function AddPhase({
 }) {
   const [{ value }, , helpers] = useField(name);
   const [isPublic, setIsPublic] = useState(false);
-  const { currentAccount, api } = useSubstrateState();
   // const hasEmptyLevel = value.some((p) => p.name?.trim() === "");
-  const dispatch = useDispatch();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   const handlePhaseTime = (e, index) => {
     if (e) {
-      // if (value.length >= 1) {
-      //   const end = e[1].getTime();
-      //   const start = e[0].getTime();
-
-      //   const newValue = [...value];
-      //   console.log("newValue", newValue);
-      //   newValue.push({ start, end });
-      //   console.log("newValue11", newValue);
-
-      //   const isOverlap = isPhaseTimeOverlap(newValue);
-
-      //   if (isOverlap) {
-      //     return toast.error("Phase time is not valid or overlap.");
-      //   }
-      // }
       const valueAddHash = value.map((item, idx) => {
         if (!e) {
           return { ...item, start: null, end: null };
@@ -71,7 +44,7 @@ function AddPhase({
 
   const handleAddPhase = (arrayHelpers) => {
     if (!value[value.length - 1].start || !value[value.length - 1].end) {
-      toast.error("Please check Start - End time phase.");
+      toast.error("Please pick Start - End time phase.");
       return;
     }
 
@@ -106,128 +79,6 @@ function AddPhase({
     });
   };
 
-  const onUpdatePhase = async (index) => {
-    console.log("onUpdatePhase startTime", startTime);
-    console.log("onUpdatePhase endTime", endTime);
-    console.log("onUpdatePhase value", value);
-    const isOverlap = isPhaseTimeOverlap(value);
-
-    if (isOverlap) {
-      return toast.error("Sub phase time is not valid or overlap.");
-    }
-    //TODOs: check with proj phase time
-
-    // const phasesArray = [...value];
-    // if (phasesArray?.length) {
-    //   const startFirstPhase = phasesArray[0]?.start;
-    //   const endLastPhase = [...phasesArray].pop().end;
-    //   const prjStartTime = parseInt(startTime.replaceAll(",", ""));
-    //   const prjEndTime = parseInt(endTime.replaceAll(",", ""));
-
-    //   if (
-    //     !(
-    //       prjStartTime <= startFirstPhase &&
-    //       startFirstPhase <= endLastPhase &&
-    //       endLastPhase <= prjEndTime
-    //     )
-    //   ) {
-    //     toast.error(
-    //       "Sub phase time is not valid or overlap project phase time."
-    //     );
-    //     return;
-    //   }
-    // }
-
-    const launchpad_psp34_nft_standard_contract = new ContractPromise(
-      api,
-      launchpad_psp34_nft_standard.CONTRACT_ABI,
-      collection_address
-    );
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
-
-    const {
-      name,
-      id,
-      isPublic,
-      publicMintingFee,
-      publicAmount,
-      publicMaxMintingAmount,
-      start,
-      end,
-    } = value[index];
-
-    console.log("value[index]", value[index]);
-
-    dispatch(
-      setTxStatus({ type: UPDATE_PHASE, step: START, tokenIDArray: [index] })
-    );
-
-    await launchpad_psp34_nft_standard_calls.updateSchedulePhase(
-      currentAccount,
-      id,
-      name,
-      isPublic,
-      publicMintingFee,
-      publicAmount,
-      publicMaxMintingAmount,
-      start,
-      end,
-      dispatch,
-      UPDATE_PHASE,
-      api
-    );
-  };
-
-  const onAddNewPhase = async (index) => {
-    const isOverlap = isPhaseTimeOverlap(value);
-
-    if (isOverlap) {
-      return toast.error("Sub phase time is not valid or overlap.");
-    }
-
-    const launchpad_psp34_nft_standard_contract = new ContractPromise(
-      api,
-      launchpad_psp34_nft_standard.CONTRACT_ABI,
-      collection_address
-    );
-
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
-
-    const {
-      name,
-      isPublic,
-      publicMintingFee,
-      publicAmount,
-      publicMaxMintingAmount,
-      start,
-      end,
-    } = value[index];
-
-    console.log("value[index]", value[index]);
-
-    dispatch(
-      setTxStatus({ type: ADD_PHASE, step: START, tokenIDArray: [index] })
-    );
-
-    await launchpad_psp34_nft_standard_calls.addNewPhase(
-      currentAccount,
-      name,
-      isPublic,
-      publicMintingFee,
-      publicAmount,
-      publicMaxMintingAmount,
-      start,
-      end,
-      dispatch,
-      ADD_PHASE,
-      api
-    );
-  };
-
   const handleOnChangeSwitch = (index) => {
     console.log("value[index].isPublic", value[index].isPublic);
 
@@ -243,6 +94,7 @@ function AddPhase({
     value[index].isPublic = true;
     setIsPublic(!isPublic);
   };
+
   return (
     <FieldArray
       name="phases"
@@ -258,7 +110,7 @@ function AddPhase({
                 bg="#222"
               >
                 <Stack gap={["10px", "30px"]} direction={["column", "row"]}>
-                  <Stack w={["100%", "50%"]}>
+                  <Stack w={["100%", "31%"]}>
                     <Input
                       mx="0"
                       type="text"
@@ -270,7 +122,7 @@ function AddPhase({
                     />{" "}
                   </Stack>
 
-                  <Stack w="full">
+                  <Stack w={["100%", "66%"]}>
                     <Stack pb="30px">
                       <Text fontSize="lg" ml={1}>
                         Start time - End time{" "}
@@ -299,77 +151,70 @@ function AddPhase({
                 </Stack>
 
                 <Stack
-                  minH="86px"
-                  alignItems="start"
-                  gap={["10px", "30px"]}
-                  direction={["column", "row"]}
+                  minW="260px"
+                  alignItems="end"
+                  direction={{ base: "column", "2xl": "row" }}
                 >
-                  <Stack
-                    minW="260px"
-                    alignItems="end"
-                    direction={{ base: "column", "2xl": "row" }}
-                  >
-                    <AdvancedModeSwitch
-                      hasTooltipPublicMint={true}
-                      label="Allow public mint"
-                      isDisabled={actionType}
-                      isChecked={value[index].isPublic}
-                      name={`phases[${index}].isPublic`}
-                      onChange={() => handleOnChangeSwitch(index)}
-                    />
-                  </Stack>
-                  <NumberInput
-                    type="number"
-                    isRequired={value[index].isPublic}
-                    height="50px"
-                    min="0"
-                    hasStepper={false}
+                  <AdvancedModeSwitch
+                    hasTooltipPublicMint={true}
+                    label="Allow public mint"
                     isDisabled={actionType}
-                    label="Public minting fee"
-                    isDisplay={value[index].isPublic}
-                    name={`phases[${index}].publicMintingFee`}
-                  />{" "}
-                  <NumberInput
-                    isRequired={value[index].isPublic}
-                    type="number"
-                    height="50px"
-                    precision={0}
-                    min={1}
-                    hasStepper={false}
-                    isDisabled={actionType}
-                    label="Total Mint Amount"
-                    // inputWidth={"100%"}
-                    isDisplay={value[index].isPublic}
-                    name={`phases[${index}].publicAmount`}
-                  />
-                  <NumberInput
-                    isRequired={value[index].isPublic}
-                    max={50}
-                    type="number"
-                    height="50px"
-                    precision={0}
-                    hasStepper={false}
-                    isDisabled={actionType}
-                    label="Max per mint"
-                    min={1}
-                    isDisplay={value[index].isPublic}
-                    name={`phases[${index}].publicMaxMintingAmount`}
+                    isChecked={value[index].isPublic}
+                    name={`phases[${index}].isPublic`}
+                    onChange={() => handleOnChangeSwitch(index)}
                   />
                 </Stack>
 
-                <HStack justifyContent="end" w="full">
+                {value[index].isPublic && (
+                  <Stack
+                    minH="86px"
+                    alignItems="start"
+                    gap={["10px", "30px"]}
+                    direction={["column", "row"]}
+                  >
+                    <NumberInput
+                      type="number"
+                      isRequired={value[index].isPublic}
+                      height="50px"
+                      min="0"
+                      hasStepper={false}
+                      isDisabled={actionType}
+                      label="Public minting fee"
+                      isDisplay={value[index].isPublic}
+                      name={`phases[${index}].publicMintingFee`}
+                    />{" "}
+                    <NumberInput
+                      isRequired={value[index].isPublic}
+                      type="number"
+                      height="50px"
+                      precision={0}
+                      min={1}
+                      hasStepper={false}
+                      isDisabled={actionType}
+                      label="Total Mint Amount"
+                      // inputWidth={"100%"}
+                      isDisplay={value[index].isPublic}
+                      name={`phases[${index}].publicAmount`}
+                    />
+                    <NumberInput
+                      isRequired={value[index].isPublic}
+                      max={50}
+                      type="number"
+                      height="50px"
+                      precision={0}
+                      hasStepper={false}
+                      isDisabled={actionType}
+                      label="Max per mint"
+                      min={1}
+                      isDisplay={value[index].isPublic}
+                      name={`phases[${index}].publicMaxMintingAmount`}
+                    />
+                  </Stack>
+                )}
+
+                <HStack justifyContent="start" w="full">
                   {mode === formMode.ADD ? (
-                    <Heading
-                      _hover={{
-                        color:
-                          !(index === 0 && value.length === 1) && "#7ae7ff",
-                      }}
-                      fontSize="sm"
-                      color="#555"
-                      fontStyle="unset"
-                      cursor="pointer"
-                      fontFamily="Evogria"
-                      textDecoration="underline"
+                    <Button
                       onClick={() => {
                         if (index === 0 && value.length === 1) return;
                         arrayHelpers.remove(index);
@@ -377,7 +222,7 @@ function AddPhase({
                       isDisabled={index === 0 && value.length === 1}
                     >
                       delete
-                    </Heading>
+                    </Button>
                   ) : null}
                 </HStack>
               </Stack>
@@ -392,13 +237,12 @@ function AddPhase({
                 ) : null}
               </Stack>
               <CommonButton
+                variant="outline"
                 w="140px"
-                // w={{ base: "full", lg: "140px" }}
                 my="24px"
                 {...rest}
                 onClick={() => handleAddPhase(arrayHelpers)}
-                text={`${mode === formMode.ADD ? "add more" : "add new phase"}`}
-                // isDisabled={!(dirty && isValid) && noImagesChange}
+                text="add more"
                 isDisabled={
                   mode === formMode.ADD ? isDisabled || actionType : false
                 }
@@ -420,11 +264,3 @@ export default AddPhase;
 // Button delete sẽ không hiển thị ở những phase đã có sẵn
 // end > Date.now()
 //
-
-const canEditPhase = (startTime) => {
-  const now = new Date();
-
-  if (startTime > now) return true;
-
-  return false;
-};

@@ -703,7 +703,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         gap={["10px", "30px"]}
                         direction={["column", "row"]}
                       >
-                        <Stack w={["100%", "416px"]}>
+                        <Stack w={["100%", "31%"]}>
                           <CommonInput
                             mx="0"
                             type="text"
@@ -715,44 +715,44 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           />
                         </Stack>
 
-                        <Stack w="full">
-                          {mode === formMode.ADD && (
-                            <Stack pb="30px">
-                              <Tooltip
-                                placeContent="start"
-                                hasArrow
-                                bg="#333"
-                                color="#fff"
-                                borderRadius="0"
-                                label="Start time & end time of whole project - Lorem ad aute qui fugiat."
-                              >
-                                <Text w="fit-content" fontSize="lg" ml={1}>
-                                  Start time - End time{" "}
-                                  <Text as="span" fontSize="lg" color="#fc8181">
-                                    *
-                                  </Text>
+                        <Stack w="66%">
+                          {/* {mode === formMode.ADD && ( */}
+                          <Stack pb="30px">
+                            <Tooltip
+                              placeContent="start"
+                              hasArrow
+                              bg="#333"
+                              color="#fff"
+                              borderRadius="0"
+                              label="Start time & end time of whole project."
+                            >
+                              <Text w="fit-content" fontSize="lg" ml={1}>
+                                Start time - End time{" "}
+                                <Text as="span" fontSize="lg" color="#fc8181">
+                                  *
                                 </Text>
-                              </Tooltip>
+                              </Text>
+                            </Tooltip>
 
-                              <DateTimeRangePicker
-                                disableClock
-                                disabled={!!actionType}
-                                onChange={(e) =>
-                                  handleOnchangeSchedule(e, setFieldValue)
-                                }
-                                value={
-                                  !values?.startTime
-                                    ? null
-                                    : [
-                                        new Date(parseInt(values?.startTime)),
-                                        new Date(parseInt(values?.endTime)),
-                                      ]
-                                }
-                                locale="en-EN"
-                              />
-                              {/* TEMP FIX with parseInt */}
-                            </Stack>
-                          )}
+                            <DateTimeRangePicker
+                              disableClock
+                              disabled={!!actionType || mode === formMode.EDIT}
+                              onChange={(e) =>
+                                handleOnchangeSchedule(e, setFieldValue)
+                              }
+                              value={
+                                !values?.startTime
+                                  ? null
+                                  : [
+                                      new Date(parseInt(values?.startTime)),
+                                      new Date(parseInt(values?.endTime)),
+                                    ]
+                              }
+                              locale="en-EN"
+                            />
+                            {/* TEMP FIX with parseInt */}
+                          </Stack>
+                          {/* )} */}
                         </Stack>
                       </Stack>
 
@@ -786,10 +786,10 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         />
                       </Stack>
 
-                      <Stack>
+                      <Stack minH="180px">
                         <TextArea
                           mx="0"
-                          height="140"
+                          textAreaHeight="120"
                           type="text"
                           isRequired={true}
                           name="description"
@@ -834,6 +834,20 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           </Tooltip>
                         )}
 
+                        {mode === formMode.EDIT && (
+                          <HStack my="30px" py="30px">
+                            <Text>Collect Royalty Fee :</Text>
+                            <Box
+                              px="3px"
+                              borderWidth="1px"
+                              borderColor="#7ae7ff"
+                              textTransform="capitalize"
+                            >
+                              {initialValues.royalFee}% Royalty
+                            </Box>
+                          </HStack>
+                        )}
+
                         <Flex display={!isSetRoyal ? "none" : "flex"}>
                           <NumberInput
                             isDisabled={!isSetRoyal || actionType}
@@ -857,8 +871,13 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       </Stack>
 
                       <Stack my="30px">
-                        <Stack w="full" mb="30px">
-                          <Heading size="h5">project roadmap</Heading>
+                        <Stack
+                          w="full"
+                          mb="30px"
+                          pb="30px"
+                          borderBottom="1px solid #2F2F2F"
+                        >
+                          <Heading fontSize="3xl">project roadmap</Heading>
 
                           <Text
                             ml={2}
@@ -878,8 +897,13 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       </Stack>
 
                       <Stack my="30px">
-                        <Stack w="full" mb="30px">
-                          <Heading size="h5">project team member</Heading>
+                        <Stack
+                          w="full"
+                          mb="30px"
+                          pb="30px"
+                          borderBottom="1px solid #2F2F2F"
+                        >
+                          <Heading fontSize="3xl">project team member</Heading>
                         </Stack>
 
                         <AddMember
@@ -917,18 +941,17 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           placeholder="NFT Symbol"
                           isDisabled={actionType}
                         />
-                        {mode === formMode.ADD && (
-                          <NumberInput
-                            precision={0}
-                            isRequired={true}
-                            name="totalSupply"
-                            hasStepper={false}
-                            inputWidth={{ base: "full", xl: "260px" }}
-                            label="Total Supply"
-                            isDisabled={actionType}
-                            min={1}
-                          />
-                        )}
+
+                        <NumberInput
+                          inputWidth="full"
+                          precision={0}
+                          isRequired={true}
+                          name="totalSupply"
+                          hasStepper={false}
+                          label="Total Supply"
+                          isDisabled={actionType || mode !== formMode.ADD}
+                          min={1}
+                        />
                       </Stack>
                     </CommonStack>
 
@@ -1050,7 +1073,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                                 }}
                                 textTransform="none"
                                 isExternal
-                                href={`${window.location.pathname}#${ROUTES.LEGAL}`}
+                                href={
+                                  "https://artzero.io/demo-internal/assets/ArtZero_Terms_Of_Service.pdf"
+                                }
                               >
                                 Terms of Service
                               </Link>

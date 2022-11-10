@@ -8,6 +8,7 @@ export default function SimpleModeTextarea({
   height = "144px",
   width = "full",
   isRequired = false,
+  textAreaHeight,
   ...props
 }) {
   const [field, meta] = useField(props);
@@ -34,6 +35,7 @@ export default function SimpleModeTextarea({
         borderRadius="0"
         borderWidth="0"
         as={Textarea}
+        minH={textAreaHeight}
         bg="black"
         {...field}
         {...props}
