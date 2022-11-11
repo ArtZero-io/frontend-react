@@ -11,9 +11,9 @@ import React from "react";
 
 function CommonStack({ stackTitle, desc, children }) {
   return (
-    <Box w="full" mx="auto" px="30px" py="26px" mb="30px">
+    <Box w="full" mx="auto" px={["15px", "30px"]} py="26px" mb="30px">
       <Flex w="full" mb="10px">
-        <Heading color="#7ae7ff" fontSize={["2xl", "4xl-mid"]}>
+        <Heading color="#7ae7ff" fontSize={["3xl", "4xl-mid"]}>
           {stackTitle}
         </Heading>
         <Spacer />

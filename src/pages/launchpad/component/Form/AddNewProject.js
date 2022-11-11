@@ -586,7 +586,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             >
               {({ values, dirty, isValid, setFieldValue }) => (
                 <Form>
-                  <Container maxW="1200px" px="15px">
+                  <Container maxW="1200px" px={["0px", "15px"]}>
                     {/* {console.log('Form values',values)} */}
                     <CommonStack stackTitle="1. project info">
                       <Stack
@@ -598,30 +598,36 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         <Stack
                           w={{ base: "full", xl: "50%" }}
                           direction="column"
-                          alignItems="start"
+                          alignItems={["center", "start"]}
                           justifyContent="end"
                         >
-                          <Text>Choose avatar image</Text>
-                          <Text
-                            ml={2}
-                            fontSize={["xs", "sm"]}
-                            color="brand.grayLight"
-                          >
-                            This image will also be used for navigation. <br />
-                            <br />
-                          </Text>
-                          <ImageUploadThumbnail
-                            limitedSize={{ width: "500", height: "500" }}
-                            isRounded={true}
-                            width="260px"
-                            height="260px"
-                            isDisabled={actionType}
-                            id="avatar"
-                            mode={mode}
-                            isBanner={false}
-                            imageIPFSUrl={avatarIPFSUrl}
-                            setImageIPFSUrl={setAvatarIPFSUrl}
-                          />
+                          <Stack w="full">
+                            <Text>Choose avatar image</Text>
+                            <Text
+                              ml={2}
+                              fontSize={["xs", "sm"]}
+                              color="brand.grayLight"
+                            >
+                              This image will also be used for navigation.{" "}
+                              <br />
+                              <br />
+                            </Text>
+                          </Stack>
+
+                          <VStack>
+                            <ImageUploadThumbnail
+                              limitedSize={{ width: "500", height: "500" }}
+                              isRounded={true}
+                              width="260px"
+                              height="260px"
+                              isDisabled={actionType}
+                              id="avatar"
+                              mode={mode}
+                              isBanner={false}
+                              imageIPFSUrl={avatarIPFSUrl}
+                              setImageIPFSUrl={setAvatarIPFSUrl}
+                            />
+                          </VStack>
                         </Stack>
 
                         <Stack
@@ -643,8 +649,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           </Text>
                           <ImageUploadThumbnail
                             limitedSize={{ width: "400", height: "260" }}
-                            width="400px"
-                            height="260px"
+                            width={["100%", "400px"]}
+                            height={["250px", "260px"]}
                             isDisabled={actionType}
                             id="header_square"
                             mode={mode}
@@ -672,14 +678,12 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                             page. Avoid including too much text in this banner
                             image, as the dimensions change on different
                             devices.
-                            <br />
-                            Recommended file size is 1920 x 600 px
                           </Text>
 
                           <ImageUploadThumbnail
                             limitedSize={{ width: "1920", height: "600" }}
                             width="100%"
-                            height="260px"
+                            height={["120px", "260px"]}
                             isDisabled={actionType}
                             id="header"
                             mode={mode}
@@ -706,7 +710,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           />
                         </Stack>
 
-                        <Stack w="66%">
+                        <Stack w={["100%", "66%"]}>
                           {/* {mode === formMode.ADD && ( */}
                           <Stack pb="30px">
                             <Tooltip
@@ -859,7 +863,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           pb="30px"
                           borderBottom="1px solid #2F2F2F"
                         >
-                          <Heading fontSize="3xl">project roadmap</Heading>
+                          <Heading fontSize={["2xl", "3xl"]}>
+                            project roadmap
+                          </Heading>
 
                           <Text
                             ml={2}
@@ -885,7 +891,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           pb="30px"
                           borderBottom="1px solid #2F2F2F"
                         >
-                          <Heading fontSize="3xl">project team member</Heading>
+                          <Heading fontSize={["2xl", "3xl"]}>
+                            project team member
+                          </Heading>
                         </Stack>
 
                         <AddMember

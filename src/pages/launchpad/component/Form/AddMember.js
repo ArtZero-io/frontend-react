@@ -1,4 +1,4 @@
-import { Button, HStack, Stack, Text } from "@chakra-ui/react";
+import { Button, HStack, Stack, Text, VStack } from "@chakra-ui/react";
 import { FieldArray, useField } from "formik";
 import toast from "react-hot-toast";
 import Input from "@components/Input/Input";
@@ -49,28 +49,39 @@ function AddMember({ name, mode, isDisabled }) {
         return (
           <Stack>
             {value?.map((_, index) => (
-              <HStack bg="#222" w="full" key={index} p={["10px", "30px"]}>
-                <Stack direction={["column"]} gap="2px">
-                  <Text fontSize="lg">Choose avatar image</Text>
+              <Stack
+                flexDirection={["column", "row"]}
+                bg="#222"
+                w="full"
+                key={index}
+                p={["10px", "30px"]}
+                alignItems="center"
+              >
+                <Stack w={["full", "auto"]} alignItems={["center", "start"]}>
+                  <Stack w="full">
+                    <Text fontSize="lg">Choose avatar image</Text>
+                  </Stack>
 
-                  <ImageUploadThumbnail
-                    isSmallThumbnail={true}
-                    width="200px"
-                    height="200px"
-                    title={"Member Avatar"}
-                    isDisabled={isDisabled}
-                    index={index}
-                    mode={mode}
-                    isBanner={false}
-                    isRequired={true}
-                    id={`memberAvatar${index}`}
-                    imageIPFSUrl={value[index].avatar}
-                    setImageIPFSUrl={handleAvatarUrl}
-                    limitedSize={{ width: "500", height: "500" }}
-                  />
+                  <VStack>
+                    <ImageUploadThumbnail
+                      isSmallThumbnail={true}
+                      width="200px"
+                      height="200px"
+                      title={"Member Avatar"}
+                      isDisabled={isDisabled}
+                      index={index}
+                      mode={mode}
+                      isBanner={false}
+                      isRequired={true}
+                      id={`memberAvatar${index}`}
+                      imageIPFSUrl={value[index].avatar}
+                      setImageIPFSUrl={handleAvatarUrl}
+                      limitedSize={{ width: "500", height: "500" }}
+                    />
+                  </VStack>
                 </Stack>
 
-                <Stack w="full" pl="30px" gap={["0px"]}>
+                <Stack w="full" pl={[0, "30px"]} gap={["0px"]}>
                   <Stack direction={["column", "row"]} gap={["0px", "30px"]}>
                     <Input
                       isDisabled={isDisabled}
@@ -121,7 +132,7 @@ function AddMember({ name, mode, isDisabled }) {
                     </Button>
                   </HStack>
                 </Stack>
-              </HStack>
+              </Stack>
             ))}
             <Stack w="full" py="30px">
               <Stack>

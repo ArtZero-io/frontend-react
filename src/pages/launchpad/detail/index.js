@@ -563,7 +563,7 @@ const LaunchpadDetailPage = () => {
         />
       )}
 
-      <VStack w="full" px={["24px", "0px"]} spacing={["24px", "30px"]}>
+      <VStack w="full" px={["8px", "0px"]} spacing={["24px", "30px"]}>
         {isLastPhaseEnded ? (
           <Box
             w="full"

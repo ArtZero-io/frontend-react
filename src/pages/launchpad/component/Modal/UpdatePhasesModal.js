@@ -7,6 +7,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 
@@ -141,16 +142,18 @@ const UpdatePhasesModal = React.memo(function ({
       onClose();
     }
   }, [dispatch, fetchData, onClose, rest.step]);
+  
+  const modalSize = useBreakpointValue({ base: "full", md: "xl" });
 
   return (
     <Modal
+      isCentered
+      size={modalSize}
+      isOpen={isOpen}
+      onClose={onClose}
+      closeOnEsc={false}
       scrollBehavior="inside"
       closeOnOverlayClick={false}
-      closeOnEsc={false}
-      onClose={onClose}
-      isCentered
-      isOpen={isOpen}
-      size={["xs", "6xl"]}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -164,7 +167,7 @@ const UpdatePhasesModal = React.memo(function ({
         borderRadius="0"
         position="relative"
         bg="#151515"
-        maxW={["340px", "1040px"]}
+        maxW={["full", "1040px"]}
       >
         <ModalCloseButton
           borderWidth={2}
@@ -184,7 +187,7 @@ const UpdatePhasesModal = React.memo(function ({
           </Text>
         </ModalHeader>
 
-        <ModalBody overflowY="auto" sx={SCROLLBAR}>
+        <ModalBody overflowY="auto" sx={SCROLLBAR} px="8px">
           {initialValues && (
             <Formik
               initialValues={initialValues}

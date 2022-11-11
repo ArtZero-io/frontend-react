@@ -171,6 +171,7 @@ function AddPhase({
                     alignItems="start"
                     gap={["10px", "30px"]}
                     direction={["column", "row"]}
+                    pb="4px"
                   >
                     <NumberInput
                       type="number"
