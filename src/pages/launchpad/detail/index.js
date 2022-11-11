@@ -520,9 +520,9 @@ const LaunchpadDetailPage = () => {
               currentAccount,
               tokenID: index,
             });
-            //TODO: add nft_name to API
+
             return {
-              nftName: `${projectInfo?.name} #${idOfNFT}`,
+              nftName: `${projectInfo?.nftName} #${idOfNFT}`,
               avatar: "Qmc1az4MVBL9MhfLLv3b1Hf9RCs9AoqXR2AZuUZb2XBhpJ",
             };
           })
@@ -532,7 +532,7 @@ const LaunchpadDetailPage = () => {
         setMyNFTs(ret);
       }
     },
-    [api, collection_address, currentAccount, projectInfo?.name]
+    [api, collection_address, currentAccount, projectInfo?.nftName]
   );
 
   useEffect(() => {
@@ -644,6 +644,7 @@ const LaunchpadDetailPage = () => {
 
               {/* //Public phases*/}
               {currentAccount &&
+                activePhaseId &&
                 currentPhase?.isPublic &&
                 (!userWLInfo[currentPhase?.id - 1] ||
                   userWLInfo[currentPhase?.id - 1]?.remainAmount <= 0) && (
@@ -709,6 +710,7 @@ const LaunchpadDetailPage = () => {
 
               {/* //WhiteList phases*/}
               {currentAccount &&
+                activePhaseId &&
                 userWLInfo[currentPhase?.id - 1] &&
                 userWLInfo[currentPhase?.id - 1]?.remainAmount > 0 && (
                   <HStack

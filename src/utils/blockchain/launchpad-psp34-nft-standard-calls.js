@@ -347,7 +347,8 @@ async function editProjectInformation(
   projectInfo,
   dispatch,
   txType,
-  api
+  api,
+  nftContractAddress
 ) {
   if (!contract || !caller_account) {
     throw Error(`Contract or caller not valid!`);
@@ -382,6 +383,14 @@ async function editProjectInformation(
         api,
         caller_account,
       });
+
+      if (status.isFinalized) {
+        const res = await APICall.askBeUpdateProjectData({
+          project_address: nftContractAddress,
+        });
+
+        console.log("askBeUpdateProjectData res", res);
+      }
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
@@ -646,9 +655,11 @@ async function updateAdminAddress(
       });
 
       if (status.isFinalized) {
-        await APICall.askBeUpdateProjectData({
+        const res = await APICall.askBeUpdateProjectData({
           project_address: collection_address,
         });
+
+        console.log("askBeUpdateProjectData res", res);
       }
     })
     .then((unsub) => (unsubscribe = unsub))

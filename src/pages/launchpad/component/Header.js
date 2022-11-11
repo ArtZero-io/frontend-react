@@ -490,7 +490,11 @@ function LaunchpadDetailHeader({
                 onClick={() =>
                   projectAdminAddress === currentAccount?.address
                     ? history.push({
-                        state: { formMode: "EDIT", collection_address },
+                        state: {
+                          formMode: "EDIT",
+                          collection_address,
+                          projectInfo: project,
+                        },
                         pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
                       })
                     : toast.error(

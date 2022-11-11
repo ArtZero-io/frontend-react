@@ -1,17 +1,14 @@
-/* eslint-disable no-unused-vars */
 import React, { useState, useRef } from "react";
 import { Center, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 
 import { Buffer } from "buffer";
 import toast from "react-hot-toast";
-import { formMode } from "@constants";
 
 import { ipfsClient } from "@api/client";
-import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 import UploadIcon from "@theme/assets/icon/Upload";
 import ThumbnailImage from "@theme/assets/icon/ThumbnailImage";
-import { getCachedImageShort, getCloudFlareImage } from "../../utils";
-import { useMemo } from "react";
+import { getCloudFlareImage } from "../../utils";
+import { useEffect } from "react";
 
 const supportedFormat = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
 
@@ -79,11 +76,6 @@ const Thumbnail = ({
       toast.promise(
         uploadPromise().then(async (created) => {
           setImageIPFSUrl(created?.path, index);
-
-          // clientAPI("post", "/cacheImage", {
-          //   input: created?.path,
-          //   is1920: isBanner,
-          // });
         }),
         {
           loading: "Uploading...",
@@ -102,16 +94,19 @@ const Thumbnail = ({
     }
   };
 
-  const xxx = useMemo(() => {
-    const result = async () => {
-      const xxxxx = await getCachedImageShort(imageIPFSUrl, 500);
+  const [projImage, setProjImage] = useState("");
 
-      console.log("xxxxx", xxxxx);
-      return xxxxx;
-    };
+  useEffect(() => {
+    try {
+      imageIPFSUrl &&
+        getCloudFlareImage(imageIPFSUrl, isBanner ? 1920 : 500).then((res) => {
+          return setProjImage(res);
+        });
+    } catch (error) {
+      console.log("err", error);
+    }
+  }, [imageIPFSUrl, isBanner]);
 
-    return result;
-  }, [imageIPFSUrl]);
   return (
     <VStack fontSize="lg" w="full">
       <Center w="full" justifyContent="start">
@@ -135,8 +130,8 @@ const Thumbnail = ({
               justifyContent="space-evenly"
               backgroundSize="cover"
               backgroundImage={
-                imagePreviewUrl ||
-                `https://artzeronft.infura-ipfs.io/ipfs/${imageIPFSUrl}`
+                imagePreviewUrl || projImage
+                // `https://artzeronft.infura-ipfs.io/ipfs/${imageIPFSUrl}`
                 //TODO: update new cloudflare image url
               }
               sx={{

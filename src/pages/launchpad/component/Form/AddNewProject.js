@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Heading,
   Box,
@@ -13,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 import BN from "bn.js";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
-// import ImageUpload from "@components/ImageUpload/Collection";
 import NumberInput from "@components/Input/NumberInput";
 import TextArea from "@components/TextArea/TextArea";
 import { formMode } from "@constants";
@@ -33,7 +33,6 @@ import AddMember from "./AddMember";
 import AddPhase from "./AddPhase";
 import AddRoadmap from "./AddRoadmap";
 import CommonInput from "@components/Input/Input";
-import { timestampWithoutCommas } from "@utils";
 import { useHistory, useLocation } from "react-router-dom";
 import { ContractPromise } from "@polkadot/api-contract";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
@@ -102,21 +101,18 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const [addingFee, setAddingFee] = useState(0);
   const [maxRoyalFeeRate, setMaxRoyalFeeRate] = useState(0);
   const [addProjectTotalFee, setAddProjectTotalFee] = useState(null);
-  // eslint-disable-next-line no-unused-vars
-  const [newNFTAddress, setNewNFTAddress] = useState(null);
 
   const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
   const currentHeaderIPFSUrl = useRef(headerIPFSUrl);
 
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
-  // eslint-disable-next-line no-unused-vars
   const noImagesChange =
     currentAvatarIPFSUrl.current === avatarIPFSUrl &&
     currentHeaderIPFSUrl.current === headerIPFSUrl;
 
   const location = useLocation();
-  // console.log("nftContractAddress add new", nftContractAddress);
+
   mode = location.state?.formMode || formMode.ADD;
 
   if (mode === "EDIT") {
@@ -169,12 +165,15 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
         api,
         mode,
         collection_address: nftContractAddress,
+        projectInfo: location.state?.projectInfo,
       });
+
       if (maxRoyalFeeRate === 0) {
         const maxRoyalFeeRateData =
           await collection_manager_calls.getMaxRoyalFeeRate(currentAccount);
 
         setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
+
         if (addingFee === 0) {
           const addingFeeData =
             await collection_manager_calls.getAdvanceModeAddingFee(
@@ -184,6 +183,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
           setAddingFee(addingFeeData / 10 ** 12);
         }
       }
+
       if (!error) {
         setInitialValues(initialValues);
         setAvatarIPFSUrl(avatarIPFSUrl);
@@ -201,6 +201,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     addingFee,
     api,
     currentAccount,
+    location.state?.projectInfo,
     maxRoyalFeeRate,
     mode,
     nftContractAddress,
@@ -274,27 +275,29 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               initialValues={initialValues}
               validationSchema={validationSchema}
               onSubmit={async (values, { setSubmitting }) => {
-                // console.log("create proj ...");
-
                 // check wallet connect?
                 if (!currentAccount) {
                   return toast.error("Please connect wallet first!");
                 }
 
-                // check Total Mint Amount của Phase vs total Supply (FE)
-                const totalSupply = parseInt(values.totalSupply);
-                const phases = values.phases;
+                // ADD MODE CHECKING values.isEditMode false
 
-                const allPhasesMintAmount = phases.reduce((acc, cur) => {
-                  return cur?.isPublic
-                    ? acc + parseInt(cur?.publicAmount)
-                    : acc;
-                }, 0);
+                if (!values.isEditMode) {
+                  // check Total Mint Amount của Phase vs total Supply (FE)
+                  const totalSupply = parseInt(values.totalSupply);
+                  const phases = values.phases;
 
-                if (totalSupply < allPhasesMintAmount) {
-                  return toast.error(
-                    "Total mint of phases must less than Total supply!"
-                  );
+                  const allPhasesMintAmount = phases.reduce((acc, cur) => {
+                    return cur?.isPublic
+                      ? acc + parseInt(cur?.publicAmount)
+                      : acc;
+                  }, 0);
+
+                  if (totalSupply < allPhasesMintAmount) {
+                    return toast.error(
+                      "Total mint of phases must less than Total supply!"
+                    );
+                  }
                 }
 
                 // check all image uploaded?
@@ -368,97 +371,90 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   return toast.error(`Your balance too low!`);
                 }
 
-                const project_info = {
-                  name: values.name.trim(),
-                  description: values.description.trim(),
-                  website: values.website.trim(),
-                  twitter: values.twitter.trim(),
-                  discord: values.discord.trim(),
-                  nft_name: values.nftName.trim(),
-                  nft_symbol: values.nftSymbol.trim(),
-                  header: values.headerIPFSUrl,
-                  headerSquare: values.headerSquareIPFSUrl,
-                  avatar: values.avatarIPFSUrl,
-                  team_members: values.members,
-                  roadmaps: values.roadmap,
-                };
-
-                const project_info_ipfs = await ipfsClient.add(
-                  JSON.stringify(project_info)
-                );
-
-                // console.log(
-                //   "ADD project_info_ipfs NEED CHECK",
-                //   project_info_ipfs
-                // );
-                let code_phases = [];
-                let start_time_phases = [];
-                let end_time_phases = [];
-                let is_public_phases = [];
-                let public_minting_fee_phases = [];
-                let public_minting_amout_phases = [];
-                let public_max_minting_amount_phases = [];
-                for (let phase of values.phases) {
-                  code_phases.push(phase.name);
-                  is_public_phases.push(phase.isPublic);
-                  let public_minting_fee_phase_tmp = phase.isPublic
-                    ? new BN(phase.publicMintingFee * 10 ** 6)
-                        .mul(new BN(10 ** 6))
-                        .toString()
-                    : 0;
-                  public_minting_fee_phases.push(public_minting_fee_phase_tmp);
-                  let public_minting_amout_phase_tmp =
-                    phase.isPublic && phase.publicAmount
-                      ? phase.publicAmount
-                      : 0;
-
-                  let public_max_minting_amount_phase_tmp =
-                    phase.isPublic && phase.publicMaxMintingAmount
-                      ? phase.publicMaxMintingAmount
-                      : 0;
-                  public_minting_amout_phases.push(
-                    public_minting_amout_phase_tmp
-                  );
-                  public_max_minting_amount_phases.push(
-                    public_max_minting_amount_phase_tmp
-                  );
-                  start_time_phases.push(phase.start);
-                  end_time_phases.push(phase.end);
-                }
-
-                const data = {
-                  total_supply: Number(values.totalSupply),
-                  start_time: values.startTime,
-                  end_time: values.endTime,
-                  project_info: project_info_ipfs.path,
-                  code_phases: code_phases,
-                  start_time_phases: start_time_phases,
-                  end_time_phases: end_time_phases,
-                  collectionName: values.name.trim(),
-                  collectionDescription: values.description.trim(),
-                  avatarIPFSUrl: values.avatarIPFSUrl,
-                  headerIPFSUrl: values.headerIPFSUrl,
-                  headerSquareIPFSUrl: values.headerSquareIPFSUrl,
-                  website: values.website.trim(),
-                  twitter: values.twitter.trim(),
-                  discord: values.discord.trim(),
-                  collectRoyalFee: isSetRoyal,
-                  royalFee: values.royalFee,
-                  collectionAddingFee: addingFee,
-                  is_public_phases: is_public_phases,
-                  public_minting_fee_phases: public_minting_fee_phases,
-                  public_minting_amout_phases: public_minting_amout_phases,
-                  public_max_minting_amount_phases:
-                    public_max_minting_amount_phases,
-                };
-
                 if (mode === formMode.ADD) {
-                  const createNewCollection = async (nft_address) => {
-                    setNewNFTAddress(nft_address);
-                    console.log(
-                      "ADD createNewCollection nft_address",
-                      nft_address
+                  const project_info = {
+                    name: values.name.trim(),
+                    description: values.description.trim(),
+                    website: values.website.trim(),
+                    twitter: values.twitter.trim(),
+                    discord: values.discord.trim(),
+                    nft_name: values.nftName.trim(),
+                    nft_symbol: values.nftSymbol.trim(),
+                    header: values.headerIPFSUrl,
+                    headerSquare: values.headerSquareIPFSUrl,
+                    avatar: values.avatarIPFSUrl,
+                    team_members: values.members,
+                    roadmaps: values.roadmap,
+                  };
+
+                  const project_info_ipfs = await ipfsClient.add(
+                    JSON.stringify(project_info)
+                  );
+
+                  let code_phases = [];
+                  let start_time_phases = [];
+                  let end_time_phases = [];
+                  let is_public_phases = [];
+                  let public_minting_fee_phases = [];
+                  let public_minting_amout_phases = [];
+                  let public_max_minting_amount_phases = [];
+                  for (let phase of values.phases) {
+                    code_phases.push(phase.name);
+                    is_public_phases.push(phase.isPublic);
+                    let public_minting_fee_phase_tmp = phase.isPublic
+                      ? new BN(phase.publicMintingFee * 10 ** 6)
+                          .mul(new BN(10 ** 6))
+                          .toString()
+                      : 0;
+                    public_minting_fee_phases.push(
+                      public_minting_fee_phase_tmp
                     );
+                    let public_minting_amout_phase_tmp =
+                      phase.isPublic && phase.publicAmount
+                        ? phase.publicAmount
+                        : 0;
+
+                    let public_max_minting_amount_phase_tmp =
+                      phase.isPublic && phase.publicMaxMintingAmount
+                        ? phase.publicMaxMintingAmount
+                        : 0;
+                    public_minting_amout_phases.push(
+                      public_minting_amout_phase_tmp
+                    );
+                    public_max_minting_amount_phases.push(
+                      public_max_minting_amount_phase_tmp
+                    );
+                    start_time_phases.push(phase.start);
+                    end_time_phases.push(phase.end);
+                  }
+
+                  const data = {
+                    total_supply: Number(values.totalSupply),
+                    start_time: values.startTime,
+                    end_time: values.endTime,
+                    project_info: project_info_ipfs.path,
+                    code_phases: code_phases,
+                    start_time_phases: start_time_phases,
+                    end_time_phases: end_time_phases,
+                    collectionName: values.name.trim(),
+                    collectionDescription: values.description.trim(),
+                    avatarIPFSUrl: values.avatarIPFSUrl,
+                    headerIPFSUrl: values.headerIPFSUrl,
+                    headerSquareIPFSUrl: values.headerSquareIPFSUrl,
+                    website: values.website.trim(),
+                    twitter: values.twitter.trim(),
+                    discord: values.discord.trim(),
+                    collectRoyalFee: isSetRoyal,
+                    royalFee: values.royalFee,
+                    collectionAddingFee: addingFee,
+                    is_public_phases: is_public_phases,
+                    public_minting_fee_phases: public_minting_fee_phases,
+                    public_minting_amout_phases: public_minting_amout_phases,
+                    public_max_minting_amount_phases:
+                      public_max_minting_amount_phases,
+                  };
+
+                  const createNewCollection = async (nft_address) => {
                     // Lay gia tri nft_address tu launchpad_contract_calls roi tao collection
                     const collectionData = {
                       nftContractAddress: nft_address,
@@ -529,8 +525,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       );
                   };
 
-                  // console.log("addNewProject data", data);
-
                   dispatch(setTxStatus({ type: CREATE_PROJECT, step: START }));
 
                   toast.success("Step 1. Creating project...");
@@ -564,11 +558,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     const project_info_ipfs = await ipfsClient.add(
                       JSON.stringify(project_info)
                     );
-                    // console.log(
-                    //   "EDIT project_info_ipfs NEED CHECK",
-                    //   project_info_ipfs.path,
-                    //   project_info
-                    // );
+
                     const launchpad_psp34_nft_standard_contract =
                       new ContractPromise(
                         api,
@@ -587,7 +577,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       project_info_ipfs.path,
                       dispatch,
                       EDIT_PROJECT,
-                      api
+                      api,
+                      nftContractAddress
                     );
                   }
                 }
@@ -843,7 +834,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                               borderColor="#7ae7ff"
                               textTransform="capitalize"
                             >
-                              {initialValues.royalFee}% Royalty
+                              {initialValues?.royalFee}% Royalty
                             </Box>
                           </HStack>
                         )}
@@ -858,15 +849,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                             placeholder="Royalty Fee"
                             inputWidth={"8rem"}
                           />
-                          {/* <Text
-                        ml={2}
-                        fontSize={["xs", "sm"]}
-                        color="brand.grayLight"
-                      >
-                        (*) Royalty Fee gives the NFT creator a percentage of
-                        the sale price each time the NFT is sold on the
-                        marketplace. .
-                      </Text> */}
                         </Flex>
                       </Stack>
 
@@ -1002,20 +984,23 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                                 justifyContent="center"
                                 isDisabled={actionType}
                                 name="agreeFeeCheckbox"
-                                content={``}
+                                content={
+                                  <>
+                                    <Text
+                                      as="span"
+                                      color="#888"
+                                    >{`Create new project you will pay `}</Text>
+                                    <Text color="#fff" as="span">
+                                      {`${addProjectTotalFee} $AZERO`}
+                                    </Text>
+                                    <Text
+                                      as="span"
+                                      color="#888"
+                                    >{` in fee to ArtZero.io. This fee is non-refundable.`}</Text>
+                                  </>
+                                }
                               />
                             </Stack>
-                            <HStack
-                              alignItems="center"
-                              justifyContent="start"
-                              w="full"
-                            >
-                              <Text color="#888">{`Create new project you will pay`}</Text>
-                              <Text color="#fff" as="span">
-                                {`${addProjectTotalFee} $AZERO`}
-                              </Text>
-                              <Text color="#888">{`in fee to ArtZero.io. This fee is non-refundable.`}</Text>
-                            </HStack>
                           </HStack>
 
                           {/*agreeProjectMintFeeCheckbox*/}
@@ -1030,20 +1015,24 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                                 justifyContent="center"
                                 isDisabled={actionType}
                                 name="agreeProjectMintFeeCheckbox"
-                                content={``}
+                                content={
+                                  <>
+                                    {" "}
+                                    <Text
+                                      as="span"
+                                      color="#888"
+                                    >{`I agree to pay `}</Text>
+                                    <Text color="#fff" as="span">
+                                      {`${projectMintFeeRate}%`}
+                                    </Text>
+                                    <Text
+                                      as="span"
+                                      color="#888"
+                                    >{` of mint price per succeed mint to ArtZero.io.`}</Text>
+                                  </>
+                                }
                               />
                             </Stack>
-                            <HStack
-                              alignItems="center"
-                              justifyContent="start"
-                              w="full"
-                            >
-                              <Text color="#888">{`I agree to pay`}</Text>
-                              <Text color="#fff" as="span">
-                                {`${projectMintFeeRate}%`}
-                              </Text>
-                              <Text color="#888">{`of mint price per succeed mint to ArtZero.io.`}</Text>
-                            </HStack>
                           </HStack>
 
                           {/*Terms of Service*/}
@@ -1057,29 +1046,29 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                               <CommonCheckbox
                                 isDisabled={actionType}
                                 name="agreeTosCheckbox"
-                                content=""
+                                content={
+                                  <>
+                                    <Text as="span" color="#888">
+                                      {`I agree to ArtZero's `}
+                                    </Text>
+                                    <Link
+                                      color="#fff"
+                                      _hover={{
+                                        color: "#7ae7ff",
+                                        textDecoration: "underline",
+                                      }}
+                                      textTransform="none"
+                                      isExternal
+                                      href={
+                                        "https://artzero.io/demo-internal/assets/ArtZero_Terms_Of_Service.pdf"
+                                      }
+                                    >
+                                      Terms of Service
+                                    </Link>
+                                  </>
+                                }
                               />
                             </Stack>
-                            <HStack
-                              alignItems="center"
-                              justifyContent="start"
-                              w="full"
-                            >
-                              <Text color="#888">I agree to ArtZero's</Text>
-                              <Link
-                                _hover={{
-                                  color: "#7ae7ff",
-                                  textDecoration: "underline",
-                                }}
-                                textTransform="none"
-                                isExternal
-                                href={
-                                  "https://artzero.io/demo-internal/assets/ArtZero_Terms_Of_Service.pdf"
-                                }
-                              >
-                                Terms of Service
-                              </Link>
-                            </HStack>
                           </HStack>
                         </>
                       )}
@@ -1138,6 +1127,7 @@ export const fetchInitialValuesProject = async ({
   api,
   mode,
   collection_address,
+  projectInfo,
 }) => {
   let initialValues = {
     isEditMode: false,
@@ -1169,86 +1159,48 @@ export const fetchInitialValuesProject = async ({
     agreeFeeCheckbox: false,
   };
 
-  // TEMP COMMENT
   if (mode === formMode.ADD) {
     return { initialValues };
   }
 
   try {
-    const project = await launchpad_contract_calls.getProjectByNftAddress(
-      currentAccount,
-      collection_address
-    );
-
-    const launchpad_psp34_nft_standard_contract = new ContractPromise(
-      api,
-      launchpad_psp34_nft_standard.CONTRACT_ABI,
-      collection_address
-    );
-
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
-
-    const projectInfoHash =
-      await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
-
-    const projectInfo = await APICall.getProjectInfoByHash({
-      projectHash: projectInfoHash,
-    });
-    // Update initialValues
-    const {
-      // isActive,
-      // projectType,
-      // projectOwner,
-      totalSupply,
-      startTime,
-      endTime,
-    } = project;
     const {
       name,
       description,
       website,
       twitter,
       discord,
-      nft_name,
-      nft_symbol,
-      header,
-      headerSquare,
-      avatar,
-      team_members,
+      nftName,
+      nftSymbol,
+      headerImage,
+      squareImage,
+      avatarImage,
+      teamMembers,
       roadmaps,
+      nft_count,
+      startTime,
+      endTime,
     } = projectInfo;
 
-    console.log("fetchInitialValuesProject projectInfo", projectInfo);
-
     initialValues.isEditMode = true;
-    initialValues.nftName = nft_name;
-    initialValues.nftSymbol = nft_symbol;
+    initialValues.nftName = nftName;
+    initialValues.nftSymbol = nftSymbol;
     initialValues.name = name;
     initialValues.description = description;
-    initialValues.totalSupply = totalSupply;
-    initialValues.startTime = timestampWithoutCommas(startTime);
-    initialValues.endTime = timestampWithoutCommas(endTime);
+    initialValues.totalSupply = nft_count;
+    initialValues.startTime = startTime;
+    initialValues.endTime = endTime;
     initialValues.website = website;
     initialValues.twitter = twitter;
     initialValues.discord = discord;
-    initialValues.members = team_members;
+    initialValues.members = teamMembers;
     initialValues.roadmap = roadmaps;
-    initialValues.phases = [
-      {
-        name: "OG!!",
-        start: new Date(1659027600000),
-        end: new Date(1659286799999),
-      },
-    ];
-    // TEMP SET TIME FRAME
 
     return {
       initialValues,
-      avatarIPFSUrl: avatar,
-      headerIPFSUrl: header,
-      headerSquareIPFSUrl: headerSquare,
+      avatarIPFSUrl: avatarImage,
+      headerIPFSUrl: headerImage,
+      headerSquareIPFSUrl: squareImage,
     };
   } catch (error) {
     console.log(error);
