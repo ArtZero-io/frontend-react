@@ -153,9 +153,9 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
 
                         <HStack
                           spacing="0px"
-                          alignItems="end"
+                          alignItems="start"
                           pl={["0px", "10px"]}
-                          height={["90px", "50px"]}
+                          height={["90px", "70px"]}
                         >
                           <NumberInput
                             h={"50px"}
@@ -163,7 +163,8 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
                             step={1}
                             type="number"
                             precision={0}
-                            max={levels.levelMax}
+                            // max={levels.levelMax}
+                            max={10}
                             inputWidth={["full", "110px"]}
                             name={`levels.${index}.level`}
                             label={isBigScreen ? "" : "Level"}

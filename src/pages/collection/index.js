@@ -53,7 +53,7 @@ function CollectionPage() {
   const [priceQuery, setPriceQuery] = useState({});
   const [traitsQuery, setTraitsQuery] = useState({});
   const [totalCount, setTotalCount] = useState(0);
-  const [activeTab, setActiveTab] = useState();
+  const [activeTab, setActiveTab] = useState("LISTED");
   const [latestBlockNumber, setLatestBlockNumber] = useState(null);
 
   useEffect(() => {

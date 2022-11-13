@@ -205,7 +205,7 @@ const AddNewNFTForm = ({
                     then: Yup.number()
                       .required("Must have min value.")
                       .min(0, "Must be bigger than 0")
-                      .max(Yup.ref("levelMax"), "Must smaller than max"),
+                      .max(10, "Must smaller than max"),
                     otherwise: Yup.number().notRequired(),
                   }),
                   levelMax: Yup.number().when("name", {

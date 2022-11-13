@@ -207,50 +207,67 @@ const LaunchpadDetailPage = () => {
   }, [api, collection_address]);
 
   const [phasesInfo, setPhasesInfo] = useState([]);
+  const [loadingPhaseInfo, setLoadingPhaseInfo] = useState(false);
 
-  const fetchPublicPhasesInfoData = useCallback(async (isUnmount) => {
-    const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(
-      getPublicCurrentAccount()
-    );
+  const fetchPublicPhasesInfoData = useCallback(
+    async (isUnmounted) => {
+      setLoadingPhaseInfo(true);
 
-    const allPhases = await Promise.all(
-      [...new Array(totalPhase)].map(async (_, index) => {
-        const totalCountWLAddress =
-          await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(
-            getPublicCurrentAccount(),
-            index + 1
+      try {
+        const totalPhase =
+          await launchpad_psp34_nft_standard_calls.getLastPhaseId(
+            getPublicCurrentAccount()
           );
 
-        const data =
-          await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-            getPublicCurrentAccount(),
-            index + 1
-          );
+        const allPhases = await Promise.all(
+          [...new Array(totalPhase)].map(async (_, index) => {
+            const totalCountWLAddress =
+              await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(
+                getPublicCurrentAccount(),
+                index + 1
+              );
 
-        const formattedData = {
-          ...data,
-          id: index + 1,
+            const data =
+              await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
+                getPublicCurrentAccount(),
+                index + 1
+              );
 
-          publicMintingFee: strToNumber(data.publicMintingFee),
-          publicMintingAmount: strToNumber(data.publicMintingAmount),
-          publicMaxMintingAmount: strToNumber(data.publicMaxMintingAmount),
+            const formattedData = {
+              ...data,
+              id: index + 1,
 
-          totalCountWLAddress: strToNumber(totalCountWLAddress),
-          whitelistAmount: strToNumber(data.whitelistAmount),
+              publicMintingFee: strToNumber(data.publicMintingFee),
+              publicMintingAmount: strToNumber(data.publicMintingAmount),
+              publicMaxMintingAmount: strToNumber(data.publicMaxMintingAmount),
 
-          claimedAmount: strToNumber(data.claimedAmount),
-          totalAmount: strToNumber(data.totalAmount),
+              totalCountWLAddress: strToNumber(totalCountWLAddress),
+              whitelistAmount: strToNumber(data.whitelistAmount),
 
-          startTime: strToNumber(data.startTime),
-          endTime: strToNumber(data.endTime),
-        };
+              claimedAmount: strToNumber(data.claimedAmount),
+              totalAmount: strToNumber(data.totalAmount),
 
-        return formattedData;
-      })
-    );
+              startTime: strToNumber(data.startTime),
+              endTime: strToNumber(data.endTime),
+            };
 
-    setPhasesInfo(allPhases);
-  }, []);
+            return formattedData;
+          })
+        );
+
+        if (isUnmounted) return;
+
+        setPhasesInfo(allPhases);
+        setLoadingPhaseInfo(false);
+      } catch (error) {
+        if (isUnmounted) return;
+
+        console.log("fetchPublicPhasesInfoData error", error.message);
+        setLoadingPhaseInfo(false);
+      }
+    },
+    [collection_address]
+  );
 
   useEffect(() => {
     let isUnmounted = false;
@@ -465,7 +482,7 @@ const LaunchpadDetailPage = () => {
     });
 
   const fetchNFTs = useCallback(
-    async (isUnmount) => {
+    async (isUnmounted) => {
       const launchpad_psp34_nft_standard_contract = new ContractPromise(
         api,
         launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -481,7 +498,7 @@ const LaunchpadDetailPage = () => {
       const totalNFTCount = await getAccountBalanceOfPsp34NFT({
         currentAccount,
       });
-      if (isUnmount) return;
+      if (isUnmounted) return;
       setBalanceOfPsp34NFT(totalNFTCount || 0);
 
       if (!totalNFTCount) return ret;
@@ -493,7 +510,7 @@ const LaunchpadDetailPage = () => {
         );
         const baseUri = tokenUri.replace("1.json", "");
 
-        if (isUnmount) return;
+        if (isUnmounted) return;
 
         ret = await Promise.all(
           [...Array(totalNFTCount)].map(async (_, index) => {
@@ -510,7 +527,7 @@ const LaunchpadDetailPage = () => {
 
         setMyNFTs(ret);
       } catch (error) {
-        if (isUnmount) return;
+        if (isUnmounted) return;
 
         console.log("error", error);
 
@@ -552,6 +569,8 @@ const LaunchpadDetailPage = () => {
     <Layout backdrop={projectInfo?.headerImage} variant="launchpad-detail">
       {isValidAddressPolkadotAddress(collection_address) && (
         <LaunchpadDetailHeader
+          loading={loading}
+          loadingPhaseInfo={loadingPhaseInfo}
           loadingUserWLInfo={loadingUserWLInfo || loadingForceUpdate}
           project={projectInfo}
           phasesInfo={phasesInfo}

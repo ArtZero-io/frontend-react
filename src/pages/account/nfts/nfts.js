@@ -135,7 +135,11 @@ const MyNFTsPage = () => {
 
         let { ret: Bids } = await APICall.getBidsByBidderAddress(options);
 
-        Bids.length ? setOwner(Bids[0].bidder) : setOwner(null);
+        if (!Bids?.length) {
+          return setOwner(null);
+        }
+
+        setOwner(Bids[0].bidder);
 
         let length = Bids.length;
 
@@ -147,12 +151,16 @@ const MyNFTsPage = () => {
             collection_address: bid.nftContractAddress,
           });
 
+          if (!collection) return;
+
           const options = {
             collection_address: bid.nftContractAddress,
             token_id: bid.tokenID,
           };
 
           let { ret: dataList } = await APICall.getNFTByID(options);
+
+          if (!dataList) return;
 
           let data = dataList?.map((item) => {
             return {

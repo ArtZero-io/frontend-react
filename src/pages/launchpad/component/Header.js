@@ -49,6 +49,8 @@ function LaunchpadDetailHeader({
   phasesInfo = [],
   isLastPhaseEnded,
   collection_address,
+  loadingPhaseInfo,
+  loadingUserWLInfo,
 }) {
   const {
     name,
@@ -179,16 +181,14 @@ function LaunchpadDetailHeader({
                 justifyContent="space-between"
                 minH={{ base: "3.5rem", "2xl": "7.125rem" }}
               >
-                <Skeleton w="full" minH="fit-content" isLoaded={!loading}>
-                  <Heading
-                    w="full"
-                    color="#fff"
-                    fontSize={["32px", "48px"]}
-                    lineHeight={["38px", "60px"]}
-                  >
-                    {name}
-                  </Heading>
-                </Skeleton>
+                <Heading
+                  w="full"
+                  color="#fff"
+                  fontSize={["32px", "48px"]}
+                  lineHeight={["38px", "60px"]}
+                >
+                  {name}
+                </Heading>
 
                 <VStack
                   minW={["auto", "870px"]}
@@ -198,14 +198,14 @@ function LaunchpadDetailHeader({
                   pt={["12px", "12px"]}
                   pb={["20px", "30px"]}
                 >
-                  <Skeleton isLoaded={!loading}>
-                    <Heading fontSize={["sm", "md"]} mb={["6px", "8px"]}>
-                      project creator:{" "}
-                      <Text as="span" color="#7ae7ff">
-                        {truncateStr(projectOwner)}{" "}
-                      </Text>
-                    </Heading>
+                  <Heading fontSize={["sm", "md"]} mb={["6px", "8px"]}>
+                    project creator:{" "}
+                    <Text as="span" color="#7ae7ff">
+                      {truncateStr(projectOwner)}{" "}
+                    </Text>
+                  </Heading>
 
+                  <Skeleton isLoaded={!loading}>
                     {(projectAdminAddress === currentAccount?.address ||
                       projectOwner === currentAccount?.address) && (
                       <Heading fontSize={["sm", "md"]}>
@@ -218,9 +218,7 @@ function LaunchpadDetailHeader({
                   </Skeleton>
                 </VStack>
 
-                <Skeleton
-                  display="flex"
-                  isLoaded={!loading}
+                <Flex
                   pt={["2px", "22px"]}
                   pb={["30px", "30px"]}
                   w="full"
@@ -241,43 +239,44 @@ function LaunchpadDetailHeader({
                   {!currentAccount?.address && (
                     <Text mx={["25px", "42px"]}>
                       Price:{" "}
-                      <Text display={["block", "inline"]} color="#fff">
-                        {/* <Skeleton
-                          w="150px"
-                          as="span"
-                          isLoaded={currentPhase?.isPublic}
-                        > */}
-                        {currentPhase?.publicMintingFee / 10 ** 12}{" "}
-                        <AzeroIcon
-                          mb={["2px", "5px"]}
-                          width={["14px", "16px"]}
-                          height={["14px", "16px"]}
-                        />
-                        {/* </Skeleton> */}
-                      </Text>
-                    </Text>
-                  )}
-
-                  {/* <Skeleton w="150px" as="span" isLoaded={userWLInfo}> */}
-                  {currentAccount?.address &&
-                    (!userWLInfo[currentPhase?.id - 1] ||
-                      userWLInfo[currentPhase?.id - 1]?.remainAmount <= 0) && (
-                      <Text mx={["25px", "42px"]} w="150px">
-                        Price:{" "}
+                      <Skeleton
+                        w="150px"
+                        as="span"
+                        isLoaded={!loadingPhaseInfo}
+                      >
                         <Text display={["block", "inline"]} color="#fff">
-                          {/* <Skeleton
-                              w="150px"
-                              as="span"
-                              isLoaded={currentPhase?.publicMintingFee}
-                            > */}
-                          {currentPhase?.publicMintingFee / 10 ** 12}{" "}
+                          {currentPhase?.publicMintingFee / 10 ** 12 || 0}{" "}
                           <AzeroIcon
                             mb={["2px", "5px"]}
                             width={["14px", "16px"]}
                             height={["14px", "16px"]}
                           />
-                          {/* </Skeleton> */}
                         </Text>
+                      </Skeleton>
+                    </Text>
+                  )}
+
+                  {currentAccount?.address &&
+                    (!userWLInfo[currentPhase?.id - 1] ||
+                      userWLInfo[currentPhase?.id - 1]?.remainAmount <= 0) && (
+                      <Text mx={["25px", "42px"]} w="150px">
+                        Price:{" "}
+                        <Skeleton as="span" isLoaded={!loadingUserWLInfo}>
+                          <Skeleton
+                            w="150px"
+                            as="span"
+                            isLoaded={!loadingPhaseInfo}
+                          >
+                            <Text display={["block", "inline"]} color="#fff">
+                              {currentPhase?.publicMintingFee / 10 ** 12 || 0}{" "}
+                              <AzeroIcon
+                                mb={["2px", "5px"]}
+                                width={["14px", "16px"]}
+                                height={["14px", "16px"]}
+                              />
+                            </Text>
+                          </Skeleton>
+                        </Skeleton>
                       </Text>
                     )}
 
@@ -296,15 +295,18 @@ function LaunchpadDetailHeader({
                         </Text>
                       </Text>
                     )}
-                  {/* </Skeleton> */}
 
-                  <Text mx={["5px", "42px"]}>
+                  <Text textAlign="left" mx={["25px", "42px"]}>
                     Phase:{" "}
-                    <Text display={["block", "inline"]} color="#fff">
+                    <Text
+                      minW="60px"
+                      display={["block", "inline"]}
+                      color="#fff"
+                    >
                       {currentPhase?.title}
                     </Text>
                   </Text>
-                </Skeleton>
+                </Flex>
               </VStack>
             </motion.div>
           </HStack>
