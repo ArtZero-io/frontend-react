@@ -6,17 +6,13 @@ import {
   AccordionPanel,
   Box,
   Button,
-  CloseButton,
   Collapse,
   Flex,
   Heading,
-  HStack,
   IconButton,
   Input,
   Spacer,
   Stack,
-  Tag,
-  TagLabel,
   Text,
   useDisclosure,
   VStack,
@@ -155,77 +151,18 @@ function LeftPanel({
         </Flex>
 
         <Heading size="h5" mb={"24px"}>
-          Attribute
+          Attributes
         </Heading>
-        <HStack my="20px" spacing={"8px"} flexWrap="wrap">
-          {Object.entries(traitsQuery).map(([k, arr]) => (
-            <Fragment key={k}>
-              {arr.map((item, idx) => (
-                <Tag
-                  key={idx}
-                  my="8px"
-                  size="sm"
-                  variant="outline"
-                  colorScheme="black"
-                >
-                  <TagLabel mr="4px" fontSize="13px">
-                    {k}: {item}
-                  </TagLabel>
-                  <CloseButton
-                    size="sm"
-                    onClick={() => {
-                      const newTraitsQuery = { ...traitsQuery };
-                      const newArray = traitsQuery[k].filter((i) => i !== item);
 
-                      newArray.length === 0
-                        ? delete newTraitsQuery[k]
-                        : (newTraitsQuery[k] = newArray);
-
-                      setTraitsQuery(newTraitsQuery);
-                    }}
-                  />
-                </Tag>
-              ))}
-            </Fragment>
-          ))}
-        </HStack>
         <Box sx={SCROLLBAR} overflowY="scroll" h="350px" pr="10px">
           <VStack spacing="10px">
-            <Accordion w="full" maxW="300px" allowToggle>
+            <Accordion w="full" allowToggle p="4px" border="0px solid #0000">
               {rarityTable &&
                 Object.entries(rarityTable).map(([key, value]) => (
                   <Fragment key={key}>
-                    <Button
-                      hidden
-                      w="full"
-                      h="50px"
-                      px="18px"
-                      bg="black"
-                      color="#fff"
-                      minW={80}
-                      fontSize="18px"
-                      fontWeight="400"
-                      textTransform="none"
-                      variant="outline"
-                      fontFamily="Oswald"
-                    >
-                      <Flex
-                        w="full"
-                        alignItems="center"
-                        justifyContent="space-between"
-                      >
-                        {key} <Spacer />
-                        <Text mr="10px">({value.length})</Text>
-                        <RightArrowIcon
-                          ml="4px"
-                          width={"18px"}
-                          height={"18px"}
-                        />
-                      </Flex>
-                    </Button>
                     <AccordionItem>
                       <AccordionButton
-                        fontFamily="Oswald, sans-serif;"
+                        my="4px"
                         w="full"
                         h="50px"
                         px="18px"
@@ -235,6 +172,9 @@ function LeftPanel({
                         fontWeight="400"
                         textTransform="none"
                         variant="outline"
+                        fontFamily="Oswald, sans-serif;"
+                        border="1px solid #fff0"
+                        _hover={{ border: "1px solid #7ae7ff" }}
                       >
                         <Text mr="10px">{key}</Text>
                         <Spacer />
@@ -242,14 +182,20 @@ function LeftPanel({
                         <AccordionIcon />
                       </AccordionButton>
 
-                      <AccordionPanel>
-                        <Stack spacing="10px">
+                      <AccordionPanel my="8px" p="0px" w="full">
+                        <Stack spacing="10px" w="full">
                           {value.map((item) => (
-                            <Flex
+                            <Stack
+                              border={
+                                !traitsQuery[key] ||
+                                traitsQuery[key]?.indexOf(item.name) === -1
+                                  ? "1px solid #333"
+                                  : "1px solid #7AE7FF"
+                              }
                               key={item.name}
-                              p="4px"
+                              p="16px"
                               cursor="pointer"
-                              _hover={{ bg: "#7ae7ff", color: "black" }}
+                              _hover={{ bg: "#222" }}
                               onClick={() => {
                                 const newTraitsQuery = { ...traitsQuery };
 
@@ -272,10 +218,36 @@ function LeftPanel({
                                 setTraitsQuery(newTraitsQuery);
                               }}
                             >
-                              {item.name}
-                              <Spacer />
-                              {((item.count / totalNftCount) * 100).toFixed(0)}%
-                            </Flex>
+                              <Flex>
+                                <Text
+                                  fontFamily="Oswald, sans-serif"
+                                  fontStyle="italic"
+                                  color="#7AE7FF"
+                                  fontSize="18px"
+                                >
+                                  {item.name}
+                                </Text>
+                                <Spacer />
+                                <Text>
+                                  {item.count}/{totalNftCount}
+                                </Text>
+                              </Flex>
+                              <Flex>
+                                {" "}
+                                <Spacer />
+                                <Text
+                                  fontSize="12px"
+                                  border="1px solid #7ae7ff"
+                                  px="2px"
+                                  lineHeight="22px"
+                                >
+                                  {((item.count / totalNftCount) * 100).toFixed(
+                                    0
+                                  )}
+                                  %
+                                </Text>
+                              </Flex>
+                            </Stack>
                           ))}
                         </Stack>
                       </AccordionPanel>

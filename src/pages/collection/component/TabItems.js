@@ -11,6 +11,11 @@ import {
   useMediaQuery,
   HStack,
   SimpleGrid,
+  Wrap,
+  WrapItem,
+  Tag,
+  TagLabel,
+  CloseButton,
 } from "@chakra-ui/react";
 import { BsGrid3X3 } from "react-icons/bs";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
@@ -234,6 +239,57 @@ const CollectionItems = ({
             ) : null}
           </Flex>
         </Box>
+
+        <Wrap>
+          {Object.entries(traitsQuery).map(([k, arr]) => (
+            <WrapItem key={k}>
+              {arr.map((item, idx) => (
+                <Tag
+                  mx="4px"
+                  borderRadius="0"
+                  border="none"
+                  key={idx}
+                  size="sm"
+                  colorScheme="black"
+                >
+                  <TagLabel mx="4px" fontSize="14px">
+                    {k}: {item}
+                  </TagLabel>
+                  <CloseButton
+                    size="sm"
+                    borderRadius="0"
+                    onClick={() => {
+                      const newTraitsQuery = { ...traitsQuery };
+                      const newArray = traitsQuery[k].filter((i) => i !== item);
+
+                      newArray.length === 0
+                        ? delete newTraitsQuery[k]
+                        : (newTraitsQuery[k] = newArray);
+
+                      setTraitsQuery(newTraitsQuery);
+                    }}
+                  />
+                </Tag>
+              ))}
+            </WrapItem>
+          ))}
+          <WrapItem>
+            <Tag
+              h="24px"
+              mx="4px"
+              size="sm"
+              borderRadius="0"
+              colorScheme="black"
+              border="1px solid #7ae7ff"
+              onClick={() => setTraitsQuery({})}
+              display={Object.keys(traitsQuery)?.length === 0 ? "none" : "flex"}
+            >
+              <TagLabel cursor="pointer" mx="4px" fontSize="14px">
+                Clear all
+              </TagLabel>
+            </Tag>
+          </WrapItem>
+        </Wrap>
 
         <Box
           ref={newGridWrapperRef}

@@ -78,7 +78,7 @@ function GridA({
             to={
               variant === "my-projects"
                 ? `${ROUTES.LAUNCHPAD_BASE}/${c?.nftContractAddress}`
-                : `${ROUTES.DETAIL_COLLECTION_BASE}/${c?.nftContractAddress}`
+                : `${ROUTES.DETAIL_COLLECTION_BASE}/${c?.nftContractAddress}?is_for_sale=true`
             }
             style={{ textDecoration: "none" }}
             onClick={() =>
