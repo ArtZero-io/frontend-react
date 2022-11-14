@@ -1,8 +1,8 @@
 const marketplace = {
-  CONTRACT_ADDRESS: "5F1XuDgadcPZwcBaQE33UaKNBeyiN594SviQicjF1Jh5HJ7V",
+  CONTRACT_ADDRESS: "5DSBFiGpE5jNYGkEJ8QTVYWafXjwbUQx3HgTzmXWXi1xuNiK",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xe465fa55cd72bfc7d02bb5df6de0c107e103280c43c98c07a2ead62787310b25",
+      "hash": "0x9a35960c48dd6bcf460a63061bf43a213ea2409cd81e82e1367867e1e7667859",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -1280,6 +1280,43 @@ const marketplace = {
             "selector": "0x8bb87aca"
           },
           {
+            "args": [
+              {
+                "label": "new_owner",
+                "type": {
+                  "displayName": [
+                    "ownable_external",
+                    "TransferOwnershipInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Transfers ownership of the contract to a `new_owner`.",
+              " Can only be called by the current owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner.",
+              "",
+              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
+            ],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "TransferOwnershipOutput"
+              ],
+              "type": 29
+            },
+            "selector": "0x11f43efd"
+          },
+          {
             "args": [],
             "docs": [
               " Returns the address of the current owner."
@@ -1322,43 +1359,6 @@ const marketplace = {
               "type": 29
             },
             "selector": "0x5e228753"
-          },
-          {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Transfers ownership of the contract to a `new_owner`.",
-              " Can only be called by the current owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner.",
-              "",
-              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
-            ],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 29
-            },
-            "selector": "0x11f43efd"
           }
         ]
       },
