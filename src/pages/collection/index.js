@@ -56,6 +56,8 @@ function CollectionPage() {
   const [activeTab, setActiveTab] = useState("LISTED");
   const [latestBlockNumber, setLatestBlockNumber] = useState(null);
 
+  const [sortData, setSortData] = useState(-1);
+
   useEffect(() => {
     if (!search) return;
     const query = qs.parse(search, { ignoreQueryPrefix: true });
@@ -129,7 +131,7 @@ function CollectionPage() {
     }
 
     const { ret } = await APICall.searchNFTOfCollectionByTraits({
-      sort: -1,
+      sort: sortData,
       offset: offset,
       limit: pageSize,
       traitFilters: JSON.stringify(traitsFilter),
@@ -179,7 +181,15 @@ function CollectionPage() {
   });
 
   const { data, isLoading } = useQuery(
-    ["getAllNFTs", traitsQuery, priceQuery, activeTab, currentPage, search],
+    [
+      "getAllNFTs",
+      traitsQuery,
+      priceQuery,
+      activeTab,
+      currentPage,
+      search,
+      sortData,
+    ],
     fetchData
   );
 
@@ -252,6 +262,7 @@ function CollectionPage() {
           loading={isLoading || loadingForceUpdate}
           forceUpdate={() => fetchData()}
           totalCount={totalCount}
+          setSortData={setSortData}
         />
       ),
     },

@@ -57,6 +57,7 @@ const CollectionItems = ({
   setTraitsQuery,
   priceQuery,
   setPriceQuery,
+  setSortData,
   ...rest
 }) => {
   const { currentAccount } = useSubstrateState();
@@ -69,20 +70,23 @@ const CollectionItems = ({
     "Price: Low to High",
     "Price: High to Low",
   ];
-  //  0 Low first, 1 High first, 2 Newest
+
+  // 0 Low first, setSortData(1)
+  // 1 High first, setSortData(-1)
+  // 2 Newest
 
   const getSortedNFT = () => {
     if (!result?.totalResults) return [];
 
     let ret = result?.NFTList;
 
-    if (selectedItem === 0) {
-      ret = ret.sort((a, b) => a.price - b.price);
-    }
+    // if (selectedItem === 0) {
+    //   ret = ret.sort((a, b) => a.price - b.price);
+    // }
 
-    if (selectedItem === 1) {
-      ret = ret.sort((a, b) => b.price - a.price);
-    }
+    // if (selectedItem === 1) {
+    //   ret = ret.sort((a, b) => b.price - a.price);
+    // }
 
     return ret;
   };
@@ -169,7 +173,10 @@ const CollectionItems = ({
                 minW={["330px", "250px"]}
                 options={options}
                 selectedItem={selectedItem}
-                setSelectedItem={setSelectedItem}
+                setSelectedItem={(i) => {
+                  setSelectedItem(i);
+                  i === 0 ? setSortData(1) : setSortData(-1);
+                }}
               />
             </Flex>
 
