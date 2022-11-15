@@ -471,14 +471,12 @@ export async function getEstimatedGas(
   await toast.promise(
     fetchGas().then((data) => (result = data)),
     {
-      loading: "Fetching gas...",
-      success: () => `Fetch estimated gas done !`,
-      // `Estimated gas is ${formatNumDynamicDecimal(data / 10 ** 12)} AZERO`,
+      success: `Estimated transaction fee...`,
       error: "Could not fetching gas!",
     },
     {
       success: {
-        duration: 5000,
+        duration: 500,
         icon: "🔥",
       },
     }

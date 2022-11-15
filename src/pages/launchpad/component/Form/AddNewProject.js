@@ -910,7 +910,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       stackTitle="2. nft info"
                       desc="The launchpad will create the NFT Smart Contract for you, to
                     do so general information such as NFT Name, Symbol and Total
-                    Supply is required"
+                    Supply is required. Those info can not be changed after initial."
                     >
                       <Stack
                         gap={["10px", "30px"]}

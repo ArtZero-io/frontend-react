@@ -46,7 +46,6 @@ import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard
 
 import staking_calls from "@utils/blockchain/staking_calls";
 
-import CommonTable from "@components/Table/Table";
 import NftLayout from "@components/Layout/NftLayout";
 import CommonButton from "@components/Button/CommonButton";
 import ModalLoader from "@components/Loader/ModalLoader";
@@ -96,7 +95,7 @@ function TokenPage() {
   const [token, setToken] = useState(null);
   const [bidPrice, setBidPrice] = useState(1);
   const [askPrice, setAskPrice] = useState(1);
-  const [bidsList, setBidsList] = useState(null);
+  // const [bidsList, setBidsList] = useState(null);
   const [collection, setCollection] = useState(null);
   const [ownerName, setOwnerName] = useState(null);
   const [myTradingFee, setMyTradingFee] = useState(null);
@@ -201,7 +200,7 @@ function TokenPage() {
         }
 
         setToken(tokenDetails);
-        setBidsList(listBidder);
+        // setBidsList(listBidder);
         setCollection(collectionDetails);
 
         setLoading(false);
@@ -319,23 +318,23 @@ function TokenPage() {
     }
   };
 
-  const handleAcceptBidAction = async (bidId) => {
-    try {
-      await acceptBid(
-        api,
-        currentAccount,
-        isOwner,
-        token?.nftContractAddress,
-        token?.tokenID,
-        bidId,
-        dispatch
-      );
-    } catch (error) {
-      console.error(error);
-      toast.error(error.message);
-      dispatch(clearTxStatus());
-    }
-  };
+  // const handleAcceptBidAction = async (bidId) => {
+  //   try {
+  //     await acceptBid(
+  //       api,
+  //       currentAccount,
+  //       isOwner,
+  //       token?.nftContractAddress,
+  //       token?.tokenID,
+  //       bidId,
+  //       dispatch
+  //     );
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error(error.message);
+  //     dispatch(clearTxStatus());
+  //   }
+  // };
 
   useEffect(() => {
     let p = askPrice;
@@ -438,10 +437,10 @@ function TokenPage() {
               maxW={["full", "1200px"]}
               spacing="25px"
             >
-              <Stack minW={["auto", "484px"]}>
+              <Stack minW={["auto", "550px"]}>
                 <ImageCloudFlare
-                  maxH={["375px", "484px"]}
-                  maxW={["375px", "484px"]}
+                  maxH={["375px", "550px"]}
+                  maxW={["375px", "550px"]}
                   size={500}
                   src={token?.avatar}
                 />
@@ -698,8 +697,8 @@ function TokenPage() {
               <Stack
                 w="full"
                 spacing="20px"
-                px={["0px", "30px"]}
-                minW={["auto", "650px"]}
+                px={["0px"]}
+                minW={["auto", "584px"]}
               >
                 <Stack spacing="5px" w="full">
                   <Heading fontSize={["xl", "3xl"]} isTruncated>
@@ -983,7 +982,7 @@ function TokenPage() {
                   )}
                 </Stack>
 
-                <Stack
+                {/* <Stack
                   w="full"
                   py="15px"
                   display={["flex", "none"]}
@@ -1005,7 +1004,7 @@ function TokenPage() {
                       onClickHandler={handleAcceptBidAction}
                     />
                   )}
-                </Stack>
+                </Stack> */}
               </Stack>
             </Stack>
 
@@ -1021,7 +1020,7 @@ function TokenPage() {
 
 export default TokenPage;
 
-const headers = ["address", "time", "price", "action"];
+// const headers = ["address", "time", "price", "action"];
 
 export const buyToken = async (
   api,
