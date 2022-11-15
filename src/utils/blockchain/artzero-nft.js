@@ -1,5 +1,5 @@
 const artzero_nft = {
-  CONTRACT_ADDRESS: "5G53Lqhgr9XB3kgLBxmKS8PsL6GbVd1ed7eSuG13SoAtGuyM",
+  CONTRACT_ADDRESS: "5CPhzRP3Fd6sXQs95HT792Uujfeyy8Fke5sBUrkWLPwAk8xP",
   CONTRACT_ABI: {
     "source": {
       "hash": "0x0d113d2d8d6cebf462a82d6a458458afe72b2dbdcada5d70ee6378f386ba894c",
