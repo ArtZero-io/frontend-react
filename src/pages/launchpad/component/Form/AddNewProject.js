@@ -719,7 +719,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                               bg="#333"
                               color="#fff"
                               borderRadius="0"
-                              label="Start time & end time of whole project."
+                              label="Start time & end time of launchpad project."
                             >
                               <Text w="fit-content" fontSize="lg" ml={1}>
                                 Start time - End time{" "}
@@ -789,7 +789,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           isRequired={true}
                           name="description"
                           label="Project description"
-                          placeholder="Project description"
+                          placeholder="Launchpad project description"
                           isDisabled={actionType}
                         />
                       </Stack>
@@ -801,32 +801,22 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         direction={["column", "row"]}
                       >
                         {mode === formMode.ADD && (
-                          <Tooltip
-                            placeContent="start"
-                            hasArrow
-                            bg="#333"
-                            color="#fff"
-                            borderRadius="0"
-                            label="Royalty Fee gives the NFT creator a percentage of the sale price each time the NFT is sold on the marketplace.
-                        "
+                          <Stack
+                            minW={"238px"}
+                            alignItems="end"
+                            direction={{ base: "column", "2xl": "row" }}
                           >
-                            <Stack
-                              minW={"238px"}
-                              alignItems="end"
-                              direction={{ base: "column", "2xl": "row" }}
-                            >
-                              <AdvancedModeSwitch
-                                name="collectRoyalFee"
-                                label="Collect Royalty Fee"
-                                isDisabled={actionType}
-                                onChange={() => {
-                                  values.collectRoyalFee =
-                                    !values.collectRoyalFee;
-                                  setIsSetRoyal(!isSetRoyal);
-                                }}
-                              />
-                            </Stack>
-                          </Tooltip>
+                            <AdvancedModeSwitch
+                              name="collectRoyalFee"
+                              label="Collect Royalty Fee"
+                              isDisabled={actionType}
+                              onChange={() => {
+                                values.collectRoyalFee =
+                                  !values.collectRoyalFee;
+                                setIsSetRoyal(!isSetRoyal);
+                              }}
+                            />
+                          </Stack>
                         )}
 
                         {mode === formMode.EDIT && (
@@ -843,16 +833,28 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           </HStack>
                         )}
 
-                        <Flex display={!isSetRoyal ? "none" : "flex"}>
-                          <NumberInput
-                            isDisabled={!isSetRoyal || actionType}
-                            max={maxRoyalFeeRate}
-                            label={`Royalty Fee (max ${maxRoyalFeeRate}%)`}
-                            name="royalFee"
-                            type="number"
-                            placeholder="Royalty Fee"
-                            inputWidth={"8rem"}
-                          />
+                        <Flex
+                          justifyContent="start"
+                          alignItems={["center", "end"]}
+                          w="full"
+                          display={!isSetRoyal ? "none" : "flex"}
+                        >
+                          <Stack minW="10rem">
+                            <NumberInput
+                              isDisabled={!isSetRoyal || actionType}
+                              max={maxRoyalFeeRate}
+                              label={`Royalty Fee (max ${maxRoyalFeeRate}%)`}
+                              name="royalFee"
+                              type="number"
+                              placeholder="Royalty Fee"
+                              inputWidth={"8rem"}
+                            />
+                          </Stack>
+                          <Text fontSize={["xs", "sm"]} color="brand.grayLight">
+                            (*) Royalty Fee gives the NFT creator a percentage
+                            of the sale price each time the NFT is sold on the
+                            marketplace.
+                          </Text>
                         </Flex>
                       </Stack>
 
@@ -920,7 +922,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           label="NFT Name"
                           isRequired={true}
                           placeholder="NFT Name"
-                          isDisabled={actionType}
+                          isDisabled={actionType || mode !== formMode.ADD}
                         />
 
                         <CommonInput
@@ -929,7 +931,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           label="NFT Symbol"
                           isRequired={true}
                           placeholder="NFT Symbol"
-                          isDisabled={actionType}
+                          isDisabled={actionType || mode !== formMode.ADD}
                         />
 
                         <NumberInput

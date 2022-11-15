@@ -27,6 +27,7 @@ import { Fragment } from "react";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { memo } from "react";
+import { useRef } from "react";
 
 function LeftPanel({
   rarityTable,
@@ -69,6 +70,19 @@ function LeftPanel({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
+
+  const rarityTableRef = useRef(rarityTable);
+  if (rarityTable !== undefined && rarityTableRef.current !== rarityTable) {
+    rarityTableRef.current = rarityTable;
+  }
+
+  const totalNftCountRef = useRef(totalNftCount);
+  if (
+    totalNftCount !== undefined &&
+    totalNftCountRef.current !== totalNftCount
+  ) {
+    totalNftCountRef.current = totalNftCount;
+  }
 
   return (
     <Box textAlign="left" pr="20px" maxW="300px">
@@ -157,8 +171,8 @@ function LeftPanel({
         <Box sx={SCROLLBAR} overflowY="scroll" h="350px" pr="10px">
           <VStack spacing="10px">
             <Accordion w="full" allowToggle p="4px" border="0px solid #0000">
-              {rarityTable &&
-                Object.entries(rarityTable).map(([key, value]) => (
+              {rarityTableRef.current &&
+                Object.entries(rarityTableRef.current).map(([key, value]) => (
                   <Fragment key={key}>
                     <AccordionItem>
                       <AccordionButton
@@ -229,7 +243,7 @@ function LeftPanel({
                                 </Text>
                                 <Spacer />
                                 <Text>
-                                  {item.count}/{totalNftCount}
+                                  {item.count}/{totalNftCountRef.current}
                                 </Text>
                               </Flex>
                               <Flex>
@@ -241,9 +255,10 @@ function LeftPanel({
                                   px="2px"
                                   lineHeight="22px"
                                 >
-                                  {((item.count / totalNftCount) * 100).toFixed(
-                                    0
-                                  )}
+                                  {(
+                                    (item.count / totalNftCountRef.current) *
+                                    100
+                                  ).toFixed(0)}
                                   %
                                 </Text>
                               </Flex>

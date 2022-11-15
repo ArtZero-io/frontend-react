@@ -130,7 +130,8 @@ function MyCollectionsPage() {
             exit={{ opacity: 0 }}
           >
             <Text textAlign="left" color="brand.grayLight">
-              There are {collections?.length || 0} collections
+              You have created {collections?.length || 0} collection
+              {collections?.length > 1 ? "s" : ""}.
             </Text>
           </motion.div>
 

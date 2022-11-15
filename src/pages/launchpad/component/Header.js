@@ -379,7 +379,7 @@ function LaunchpadDetailHeader({
                   projectOwner === currentAccount?.address
                     ? onOpenURI()
                     : toast.error(
-                        "You must be the project owner to update base uri!"
+                        "You must be the project owner to update art location!"
                       )
                 }
               >
@@ -399,7 +399,7 @@ function LaunchpadDetailHeader({
                   textDecoration="underline"
                   fontFamily="Evogria, sans-serif"
                 >
-                  update base uri
+                  update art location
                 </Heading>
               </HStack>
 

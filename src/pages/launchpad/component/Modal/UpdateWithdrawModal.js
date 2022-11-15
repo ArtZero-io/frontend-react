@@ -28,7 +28,6 @@ import CommonButton from "@components/Button/CommonButton";
 import { UPDATE_BASE_URI, START, FINALIZED, END } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
 
-import BN from "bn.js";
 import toast from "react-hot-toast";
 
 export default function UpdateWithdrawModal({
@@ -61,10 +60,13 @@ export default function UpdateWithdrawModal({
       const { data: balance } = await api.query.system.account(
         collection_address
       );
-      setContractBalance(
-        new BN(balance.free, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6
-      );
+
+      const tempBal = balance.free.toNumber() / 10 ** 6;
+      const tempBalFloorRound = Math.floor(tempBal);
+
+      setContractBalance(tempBalFloorRound / 10 ** 6);
     };
+
     fetch();
   }, [api, collection_address, dispatch, onClose, rest.step]);
 
@@ -135,7 +137,7 @@ export default function UpdateWithdrawModal({
             Withdraw Balance
           </Heading>
           <Text ml={1} fontSize="sm" fontWeight="400">
-            Your balance {contractBalance} ZERO.
+            Your balance {contractBalance} AZERO.
           </Text>
         </ModalHeader>
 

@@ -7,6 +7,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Text,
   VStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
@@ -107,6 +108,9 @@ export default function UpdateAdminAddressModal({
           <Heading size="h4" my={2}>
             update admin address
           </Heading>
+          <Text fontSize="sm" fontWeight="400">
+            Only owner of project can change admin address.
+          </Text>
         </ModalHeader>
 
         <ModalBody>

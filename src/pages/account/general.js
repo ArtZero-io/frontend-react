@@ -56,6 +56,7 @@ import { setTxStatus } from "@store/actions/txStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 
 import { APICall } from "@api/client";
+import { useMemo } from "react";
 
 function GeneralPage() {
   const history = useHistory();
@@ -254,7 +255,6 @@ function GeneralPage() {
 
         await getTradeFee();
         setLoading(false);
-
       } catch (error) {
         setLoading(false);
 
@@ -265,12 +265,21 @@ function GeneralPage() {
     fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, checkRewardStatus, currentAccount, getRewardHistory]);
+
+  const lastDay = useMemo(() => {
+    const now = new Date();
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    return lastDay.toLocaleString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }, []);
+
+  console.log("lastDay", lastDay);
   return (
     <CommonContainer>
-      {/* {loading ? (
-        // <Text>Loading...</Text>
-        <AnimationLoader loadingTime={3} />
-      ) : ( */}
       <>
         <VStack as="section" w="full">
           <Box w="full" textAlign="left" mb={[0, "24px"]}>
@@ -407,7 +416,7 @@ function GeneralPage() {
           pos="relative"
           maxW="container.xl"
           p={{ base: "20px", md: "30px" }}
-          direction={{ base: "column", xl: "row" }}
+          direction={{ base: "column", md: "row" }}
         >
           <Square
             mx="auto"
@@ -426,7 +435,7 @@ function GeneralPage() {
 
           <Flex w="full" display={["flex", "none"]} justifyContent="start">
             <Tag variant="outline" my="10px">
-              <TagLabel>Trade Fee: {tradeFee && `${tradeFee}%`}</TagLabel>
+              <TagLabel>Your Trade Fee: {tradeFee && `${tradeFee}%`}</TagLabel>
             </Tag>
           </Flex>
 
@@ -435,21 +444,21 @@ function GeneralPage() {
             pr={[0, "8px"]}
             textAlign="left"
             h={{ xl: "288px" }}
-            pl={{ base: "0", xl: "40px" }}
-            spacing="010px"
+            pl={{ base: "0", lg: "10px", xl: "40px" }}
+            spacing="10px"
           >
             <Flex w="full" mb="8px">
               <Box
                 w="full"
                 lineHeight={["30px", "48px"]}
                 fontFamily="Evogria Italic"
-                fontSize={{ base: "24px", xl: "3xl-mid" }}
+                fontSize={{ base: "24px", md: "28px", xl: "3xl-mid" }}
               >
                 <span>stake your </span>
                 <span style={{ color: "#7AE7FF" }}>
                   praying mantis predators
-                </span>
-                <div />
+                </span>{" "}
+                <Box display={{ base: "none", xl: "flex" }} />
                 <span>to reduce your </span>
                 <span style={{ color: "#7AE7FF" }}>fees</span>
                 <span> and earn </span>
@@ -458,23 +467,22 @@ function GeneralPage() {
 
               <Spacer />
 
-              <Box
-                h={32}
-                w={28}
-                variant="outline"
-                display={{ base: "none", md: "flex" }}
-              >
+              <Box variant="outline" display={{ base: "none", md: "flex" }}>
                 <Tag variant="outline" h={6} minW={"128px"} mt={3}>
                   {
                     <TagLabel fontSize="16px">
-                      Trade Fee: {tradeFee && `${tradeFee}%`}
+                      Your Trade Fee: {tradeFee && `${tradeFee}%`}
                     </TagLabel>
                   }
                 </Tag>
               </Box>
             </Flex>
 
-            <Stack direction={["column", "row"]} w="full" spacing="8px">
+            <Stack
+              w="full"
+              spacing="8px"
+              direction={{ base: "column", md: "row" }}
+            >
               <Stack minW="280px">
                 <Text color="#fff" fontSize={{ base: "16px", xl: "lg" }}>
                   Your Total Stake:{" "}
@@ -496,8 +504,7 @@ function GeneralPage() {
             <Stack
               w="full"
               spacing="8px"
-              // align="flex-start"
-              direction={{ base: "column", xl: "row" }}
+              direction={{ base: "column", md: "row" }}
             >
               <Skeleton minW="280px" isLoaded={!loading}>
                 <Text color="#fff" fontSize={{ base: "16px", xl: "lg" }}>
@@ -523,26 +530,24 @@ function GeneralPage() {
                 <Text fontSize={{ base: "16px", xl: "lg" }}>
                   Next Payout:{" "}
                   <Text as="span" color="#7AE7FF" mr="30px">
-                    Sep 01, 2022
+                    {lastDay}
                   </Text>
                 </Text>
               </Stack>
             </Stack>
 
             <Skeleton
+              h="full"
+              w="full"
+              pt={["10px", 0]}
               display="flex"
               isLoaded={!loading}
-              pt="10px"
-              w="full"
               alignItems={["start", "center"]}
-              // justifyContent="flex-start"
               flexDirection={{ base: "column", md: "row" }}
-              // flexDirection="column"
             >
               <Button
-                mt={["20px", "0"]}
-                w={{ base: "full", xl: "auto" }}
                 variant="solid"
+                w={{ base: "full", md: "auto" }}
                 onClick={() => history.push(ROUTES.ACCOUNT_MY_STAKES)}
               >
                 stake now
@@ -551,17 +556,18 @@ function GeneralPage() {
               {rewardStarted && !claimed ? (
                 <CommonButton
                   {...rest}
-                  minW="160px"
-                  maxW={["auto", "220px"]}
                   w="full"
+                  minW="120px"
                   mx={["0", "30px"]}
+                  my={["20px", "30px"]}
+                  maxW={["auto", "220px"]}
                   text={claimed ? "rewards is claimed" : "claim rewards"}
                   isDisabled={claimed || !estimatedEarningBaseRewardPool}
                   onClick={() => claimReward()}
                 />
               ) : null}
 
-              <FeeInfoModal />
+              <FeeInfoModal tradeFee={tradeFee} />
             </Skeleton>
           </VStack>
         </Stack>

@@ -1,5 +1,12 @@
 import React, { useState, useRef } from "react";
-import { Center, Flex, HStack, Text, VStack } from "@chakra-ui/react";
+import {
+  Center,
+  Flex,
+  HStack,
+  Text,
+  useMediaQuery,
+  VStack,
+} from "@chakra-ui/react";
 
 import { Buffer } from "buffer";
 import toast from "react-hot-toast";
@@ -107,6 +114,8 @@ const Thumbnail = ({
     }
   }, [imageIPFSUrl, isBanner]);
 
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+
   return (
     <VStack fontSize="lg" w="full">
       <Center w="full" justifyContent="start">
@@ -151,7 +160,7 @@ const Thumbnail = ({
               }}
             >
               <Flex
-                pb="20px"
+                pb={id === "header" && !isBigScreen ? "8px" : "20px"}
                 h="full"
                 w="full"
                 alignItems="center"
@@ -161,12 +170,25 @@ const Thumbnail = ({
                 borderRadius={isRounded && "full"}
                 _hover={{ cursor: "pointer" }}
               >
-                <ThumbnailImage
-                  width={isSmallThumbnail ? "45px" : "64px"}
-                  height={isSmallThumbnail ? "45px" : "64px"}
-                />
+                {isBigScreen ? (
+                  <ThumbnailImage
+                    width={isSmallThumbnail ? "45px" : "64px"}
+                    height={isSmallThumbnail ? "45px" : "64px"}
+                  />
+                ) : id !== "header" ? (
+                  <ThumbnailImage
+                    width={isSmallThumbnail ? "45px" : "64px"}
+                    height={isSmallThumbnail ? "45px" : "64px"}
+                  />
+                ) : (
+                  <ThumbnailImage width="36px" height="36px" />
+                )}
 
-                <Flex alignItems="center" pb="10px" mt="40px">
+                <Flex
+                  alignItems="center"
+                  pb="10px"
+                  mt={id === "header" && !isBigScreen ? "10px" : "40px"}
+                >
                   <UploadIcon color="" />
 
                   <Text

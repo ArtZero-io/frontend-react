@@ -9,6 +9,7 @@ import {
   VStack,
   Input,
   Text,
+  Link,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -22,6 +23,7 @@ import CommonButton from "@components/Button/CommonButton";
 import { UPDATE_BASE_URI, START, FINALIZED, END } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
 import toast from "react-hot-toast";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 export default function UpdateURIModal({
   collection_address,
@@ -108,9 +110,12 @@ export default function UpdateURIModal({
             /ipfs/QmRKH5MUw52KRvzxBQJr9QHd2EqshyTYscLGXowP7RiXja/
           </Text>
           <Text fontSize="sm" fontWeight="400">
-            Note that: to make the process quicker, please contract our team to
+            Note that: to make the process quicker, please contact our team to
             have your art work cached in our server. If you don't want to reveal
-            your art during sale period, you can leave this empty.{" "}
+            your art during sale period, you can leave this empty. See more at{" "}
+            <Link textTransform="none" href="https://google.com" isExternal>
+              this link <ExternalLinkIcon mx="2px" />
+            </Link>
           </Text>
         </ModalHeader>
 

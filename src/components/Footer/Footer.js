@@ -61,7 +61,6 @@ export const Footer = () => {
             }}
             spacing={{
               base: "4",
-              md: "12",
             }}
             w={{
               base: "full",
@@ -101,14 +100,14 @@ export const Footer = () => {
                       "_blank"
                     )
                   }
-                  mr="4"
+                  mx="4"
                   size="h6"
                   fontSize="14px"
                   fontStyle="normal"
                   textTransform="none"
                   fontFamily="Oswald, sans-serif"
                 >
-                  Cookies
+                  Cookies Policy
                 </Button>
                 <Button
                   color="#fff"
@@ -126,14 +125,14 @@ export const Footer = () => {
                       "_blank"
                     )
                   }
-                  mr="4"
+                  mx="4"
                   size="h6"
                   fontSize="14px"
                   fontStyle="normal"
                   textTransform="none"
                   fontFamily="Oswald, sans-serif"
                 >
-                  Privacy
+                  Privacy Policy
                 </Button>
                 <Button
                   color="#fff"
@@ -151,14 +150,14 @@ export const Footer = () => {
                       "_blank"
                     )
                   }
-                  mr="4"
+                  mx="4"
                   size="h6"
                   fontSize="14px"
                   fontStyle="normal"
                   textTransform="none"
                   fontFamily="Oswald, sans-serif"
                 >
-                  ToS
+                  Terms of Service
                 </Button>
               </Flex>
               <Text
