@@ -437,13 +437,42 @@ function TokenPage() {
               maxW={["full", "1200px"]}
               spacing="25px"
             >
-              <Stack minW={["auto", "550px"]}>
+              <Stack minW={["auto", "484px"]}>
                 <ImageCloudFlare
-                  maxH={["375px", "550px"]}
-                  maxW={["375px", "550px"]}
+                  maxH={["375px", "484px"]}
+                  maxW={["375px", "484px"]}
                   size={500}
                   src={token?.avatar}
                 />
+
+                <Stack spacing="5px" w="full">
+                  <Heading fontSize={["xl", "3xl"]} isTruncated>
+                    {token?.nftName}
+                  </Heading>
+
+                  <Text
+                    isTruncated
+                    maxW={["300px", "600px"]}
+                    fontSize="lg"
+                    color="brand.grayLight"
+                  >
+                    {token?.description}
+                  </Text>
+
+                  <Text>
+                    Owned by{" "}
+                    <Link
+                      // to="/user/xxx"
+                      to="#"
+                      color="brand.blue"
+                      textTransform="none"
+                      textDecoration="underline"
+                      as={ReactRouterLink}
+                    >
+                      {ownerName}
+                    </Link>
+                  </Text>
+                </Stack>
 
                 <HStack
                   py="20px"
@@ -696,11 +725,11 @@ function TokenPage() {
 
               <Stack
                 w="full"
-                spacing="20px"
+                spacing="0px"
                 px={["0px"]}
-                minW={["auto", "584px"]}
+                minW={["auto", "650px"]}
               >
-                <Stack spacing="5px" w="full">
+                <Stack hidden spacing="5px" w="full">
                   <Heading fontSize={["xl", "3xl"]} isTruncated>
                     {token?.nftName}
                   </Heading>
@@ -727,6 +756,67 @@ function TokenPage() {
                       {ownerName}
                     </Link>
                   </Text>
+                </Stack>
+
+                <Stack w="full" py="15px">
+                  <Heading fontSize="xl" pb="16px">
+                    attributes
+                  </Heading>
+
+                  {token?.attrsList?.length === 0 ? (
+                    <Text py="2rem">This NFT has no props/ levels.</Text>
+                  ) : (
+                    // THIS LINE FUCKING FIX FOR SAFARI IOS
+                    // FUCKING IOS FUCKING IOS FUCKING IOS
+                    <div style={{ display: "grid" }}>
+                      <Grid
+                        // maxH={!token?.is_for_sale ? "245px" : "155px"}
+                        w="full"
+                        gap="24px"
+                        id="grid-attrs"
+                        templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
+                      >
+                        {token?.attrsList
+                          .filter(
+                            (i) =>
+                              !JSON.stringify(Object.values(i)).includes("|")
+                          )
+                          .map((item, idx) => {
+                            return (
+                              <GridItem w="100%" h="100%" key={idx}>
+                                <PropCard
+                                  item={item}
+                                  traitCount={getTraitCount(
+                                    collection?.rarityTable,
+                                    item
+                                  )}
+                                  totalNftCount={collection?.nft_count}
+                                />
+                              </GridItem>
+                            );
+                          })}
+
+                        {token?.attrsList
+                          .filter((i) =>
+                            JSON.stringify(Object.values(i)).includes("|")
+                          )
+                          .map((item, idx) => {
+                            return (
+                              <GridItem w="100%" h="100%" key={idx}>
+                                <LevelCard
+                                  item={item}
+                                  traitCount={getTraitCount(
+                                    collection?.rarityTable,
+                                    item
+                                  )}
+                                  totalNftCount={collection?.nft_count}
+                                />
+                              </GridItem>
+                            );
+                          })}
+                      </Grid>
+                    </div>
+                  )}
                 </Stack>
 
                 <Stack w="full">
@@ -920,68 +1010,6 @@ function TokenPage() {
                     </>
                   )}
                 </Stack>
-
-                <Stack w="full" py="15px">
-                  <Heading fontSize="xl" pb="16px">
-                    attributes
-                  </Heading>
-
-                  {token?.attrsList?.length === 0 ? (
-                    <Text py="2rem">This NFT has no props/ levels.</Text>
-                  ) : (
-                    // THIS LINE FUCKING FIX FOR SAFARI IOS
-                    // FUCKING IOS FUCKING IOS FUCKING IOS
-                    <div style={{ display: "grid" }}>
-                      <Grid
-                        // maxH={!token?.is_for_sale ? "245px" : "155px"}
-                        w="full"
-                        gap="24px"
-                        id="grid-attrs"
-                        templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
-                      >
-                        {token?.attrsList
-                          .filter(
-                            (i) =>
-                              !JSON.stringify(Object.values(i)).includes("|")
-                          )
-                          .map((item, idx) => {
-                            return (
-                              <GridItem w="100%" h="100%" key={idx}>
-                                <PropCard
-                                  item={item}
-                                  traitCount={getTraitCount(
-                                    collection?.rarityTable,
-                                    item
-                                  )}
-                                  totalNftCount={collection?.nft_count}
-                                />
-                              </GridItem>
-                            );
-                          })}
-
-                        {token?.attrsList
-                          .filter((i) =>
-                            JSON.stringify(Object.values(i)).includes("|")
-                          )
-                          .map((item, idx) => {
-                            return (
-                              <GridItem w="100%" h="100%" key={idx}>
-                                <LevelCard
-                                  item={item}
-                                  traitCount={getTraitCount(
-                                    collection?.rarityTable,
-                                    item
-                                  )}
-                                  totalNftCount={collection?.nft_count}
-                                />
-                              </GridItem>
-                            );
-                          })}
-                      </Grid>
-                    </div>
-                  )}
-                </Stack>
-
                 {/* <Stack
                   w="full"
                   py="15px"
