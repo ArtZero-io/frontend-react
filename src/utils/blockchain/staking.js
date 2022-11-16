@@ -1,8 +1,8 @@
 const staking = {
-  CONTRACT_ADDRESS: "5EYdJjsg6LVDzNiDSeJXYrf2kk5WwXaqNCYJvBednuAcKwCc",
+  CONTRACT_ADDRESS: "5Fn3zZA6E29eRmvyjGCdFPd7QrktSVTzxxb3qfkfPA1TjUss",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xc5ccfd5948848e4c8fb29cd8e34174eea0789b212270e141441bca1ee7d65c84",
+      "hash": "0x138fbdb374051261d2ad3e142054fdeffa61b022b27611d715a963734d930557",
       "language": "ink! 3.3.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -963,6 +963,23 @@ const staking = {
           {
             "args": [],
             "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
+          },
+          {
+            "args": [],
+            "docs": [
               " Leaves the contract without owner. It will not be possible to call",
               " owner's functions anymore. Can only be called by the current owner.",
               "",
@@ -1025,21 +1042,32 @@ const staking = {
             "selector": "0x11f43efd"
           },
           {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
+            "args": [
+              {
+                "label": "account",
+                "type": {
+                  "displayName": [
+                    "crossartzerostaking_external",
+                    "GetTotalPendingUnstakedByAccountInput1"
+                  ],
+                  "type": 0
+                }
+              }
             ],
-            "label": "Ownable::owner",
+            "docs": [
+              " Get User NFT staked in the contract"
+            ],
+            "label": "CrossArtZeroStaking::get_total_pending_unstaked_by_account",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "ownable_external",
-                "OwnerOutput"
+                "crossartzerostaking_external",
+                "GetTotalPendingUnstakedByAccountOutput"
               ],
-              "type": 0
+              "type": 9
             },
-            "selector": "0x4fa43c8c"
+            "selector": "0x3d9ff06d"
           },
           {
             "args": [
@@ -1068,34 +1096,6 @@ const staking = {
               "type": 9
             },
             "selector": "0x487f1cac"
-          },
-          {
-            "args": [
-              {
-                "label": "account",
-                "type": {
-                  "displayName": [
-                    "crossartzerostaking_external",
-                    "GetTotalPendingUnstakedByAccountInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Get User NFT staked in the contract"
-            ],
-            "label": "CrossArtZeroStaking::get_total_pending_unstaked_by_account",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerostaking_external",
-                "GetTotalPendingUnstakedByAccountOutput"
-              ],
-              "type": 9
-            },
-            "selector": "0x3d9ff06d"
           }
         ]
       },

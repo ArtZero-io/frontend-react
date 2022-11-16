@@ -1,8 +1,8 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5FGYaaHQDpiDpeXmNXowonavgnjQmvD8YFsSJ1vvT2RZYJqZ",
+  CONTRACT_ADDRESS: "5F41SXKobnVUjSMEebr7hm497wGnWLR4eNenDsdQxRLHoXiM",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x856915e36d54318143879ad83946cdfdbee71fe5b049e205ee0618ce21b6b93a",
+      "hash": "0x4b39fd3b387908c96cdb1b8fc543074ef1b3b9ff79aba97f66da26076965d40d",
       "language": "ink! 3.3.1",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -1024,6 +1024,23 @@ const collection_manager = {
             "selector": "0x389a10e6"
           },
           {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
+          },
+          {
             "args": [
               {
                 "label": "new_owner",
@@ -1088,21 +1105,60 @@ const collection_manager = {
             "selector": "0x5e228753"
           },
           {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "GetRoyalFeeInput1"
+                  ],
+                  "type": 0
+                }
+              }
             ],
-            "label": "Ownable::owner",
+            "docs": [
+              " Get royal fee of the Collection"
+            ],
+            "label": "CrossArtZeroCollection::get_royal_fee",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "ownable_external",
-                "OwnerOutput"
+                "crossartzerocollection_external",
+                "GetRoyalFeeOutput"
               ],
-              "type": 0
+              "type": 10
             },
-            "selector": "0x4fa43c8c"
+            "selector": "0xfa0f936e"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "crossartzerocollection_external",
+                    "GetContractTypeInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Get NFT Contract Type 1 or 2 for PSP34"
+            ],
+            "label": "CrossArtZeroCollection::get_contract_type",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "crossartzerocollection_external",
+                "GetContractTypeOutput"
+              ],
+              "type": 2
+            },
+            "selector": "0x81fa82e9"
           },
           {
             "args": [
@@ -1159,62 +1215,6 @@ const collection_manager = {
               "type": 26
             },
             "selector": "0xb1f1e401"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
-                    "GetContractTypeInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Get NFT Contract Type 1 or 2 for PSP34"
-            ],
-            "label": "CrossArtZeroCollection::get_contract_type",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "GetContractTypeOutput"
-              ],
-              "type": 2
-            },
-            "selector": "0x81fa82e9"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
-                    "GetRoyalFeeInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Get royal fee of the Collection"
-            ],
-            "label": "CrossArtZeroCollection::get_royal_fee",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "GetRoyalFeeOutput"
-              ],
-              "type": 10
-            },
-            "selector": "0xfa0f936e"
           }
         ]
       },
