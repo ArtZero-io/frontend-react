@@ -124,6 +124,10 @@ function MyMintingProjectPage() {
             ...data,
             id: index + 1,
 
+            publicClaimedAmount: strToNumber(data.publicClaimedAmount),
+            publicRemainAmount: strToNumber(
+              data.publicMintingAmount - data.publicClaimedAmount
+            ),
             publicMintingFee: strToNumber(data.publicMintingFee),
             publicMintingAmount: strToNumber(data.publicMintingAmount),
             publicMaxMintingAmount: strToNumber(data.publicMaxMintingAmount),
