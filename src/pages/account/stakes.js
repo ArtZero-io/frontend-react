@@ -77,6 +77,7 @@ const MyStakesPage = () => {
         currentAccount,
         marketplace_contract_calls
       );
+
       const fee = await fetchPlatformTradingFee(
         currentAccount,
         marketplace_contract_calls
@@ -96,8 +97,6 @@ const MyStakesPage = () => {
       const PMPCollectionDetail = await getPMPCollectionDetail();
 
       PMPCollectionDetail.listNFT = [];
-      // console.log("xx activeTab", activeTab);
-      // console.log("xx PENDING_UNSTAKE", PENDING_UNSTAKE);
 
       if (activeTab === "NOT_STAKED") {
         const myUnstakePMP = await getMyUnstakePMP({
@@ -113,7 +112,6 @@ const MyStakesPage = () => {
           pendingCount: pendingCount,
           currentAccount,
         });
-        // console.log("xx myPendingPMP", myPendingPMP);
 
         PMPCollectionDetail.listNFT = myPendingPMP;
       }
@@ -263,7 +261,7 @@ const MyStakesPage = () => {
                     : item === "stakedCount"
                     ? "Total Staked"
                     : item === "myTradingFee"
-                    ? "Trading Fee"
+                    ? "Your Trading Fee"
                     : null}
                   :
                 </Text>
@@ -357,7 +355,7 @@ export const fetchPlatformStakingDiscountStep = async (
   const response = await marketplace_contract_calls.getStakingDiscountCriteria(
     currentAccount
   );
-  return Array.from(response).reverse();
+  return Array.from(response);
 };
 
 export const fetchPlatformStakingDiscountRate = async (
@@ -372,7 +370,7 @@ export const fetchPlatformStakingDiscountRate = async (
     return rate.div(createNumberBN(100)).toNumber();
   });
 
-  return ret.reverse();
+  return ret;
 };
 
 export const fetchPlatformTradingFee = async (
@@ -397,10 +395,12 @@ export const fetchMyTradingFee = async (
     currentAccount,
     marketplace_contract_calls
   );
+
   const rateArr = await fetchPlatformStakingDiscountRate(
     currentAccount,
     marketplace_contract_calls
   );
+
   const platformTradingFee = await fetchPlatformTradingFee(
     currentAccount,
     marketplace_contract_calls
