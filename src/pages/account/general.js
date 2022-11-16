@@ -67,6 +67,7 @@ function GeneralPage() {
   const [totalStaked, setTotalStaked] = useState(null);
   const [dashboardInfo, setDashboardInfo] = useState(null);
   const [tradeFee, setTradeFee] = useState(null);
+  const [platformFee, setPlatformFee] = useState(null);
 
   const [estimatedEarning, setEstimatedEarning] = useState(0);
   const [rewardHistory, setRewardHistory] = useState([]);
@@ -88,13 +89,11 @@ function GeneralPage() {
       currentAccount
     );
 
-    // console.log("zxczxczxc is_reward_started", is_reward_started);
     setIsRewardStarted(is_reward_started);
     let is_claimed = await staking_calls.isClaimed(
       currentAccount,
       currentAccount.address
     );
-    // console.log("zxczxczxc is_claimed", is_claimed);
     setClaimed(is_claimed);
   }, [currentAccount]);
 
@@ -102,7 +101,6 @@ function GeneralPage() {
     let { ret: rewards } = await APICall.getAllRewardClaimed({
       staker_address: currentAccount.address,
     });
-    // console.log("rewards", rewards);
 
     rewards?.length ? setRewardHistory(rewards) : setRewardHistory([]);
   }, [currentAccount]);
@@ -120,17 +118,13 @@ function GeneralPage() {
       );
 
       //setPlatformTotalStaked(platformTotalStaked);
-      // console.log("zxc platformTotalStaked", platformTotalStaked);
       const totalStakedPromise = await staking_calls.getTotalStakedByAccount(
         currentAccount,
         currentAccount?.address
       );
-      // console.log("zxc totalStakedPromise", totalStakedPromise);
 
       const marketplaceProfit =
         await marketplace_contract_calls.getCurrentProfit(currentAccount);
-
-      // console.log("zxc marketplaceProfit", marketplaceProfit);
 
       const launchpadBalance = await fetchUserBalance({
         currentAccount,
@@ -206,6 +200,8 @@ function GeneralPage() {
     let my_discount_rate =
       (await marketplace_contract_calls.getPlatformFee(currentAccount)) / 100;
 
+    setPlatformFee(my_discount_rate);
+
     let length = stakingDiscountRate.length;
 
     for (var index = 0; index < length; index++) {
@@ -277,7 +273,7 @@ function GeneralPage() {
     });
   }, []);
 
-  console.log("lastDay", lastDay);
+
   return (
     <CommonContainer>
       <>
@@ -567,7 +563,7 @@ function GeneralPage() {
                 />
               ) : null}
 
-              <FeeInfoModal tradeFee={tradeFee} />
+              <FeeInfoModal platformFee={platformFee} />
             </Skeleton>
           </VStack>
         </Stack>
