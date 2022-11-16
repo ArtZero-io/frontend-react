@@ -237,6 +237,10 @@ const LaunchpadDetailPage = () => {
               ...data,
               id: index + 1,
 
+              publicClaimedAmount: strToNumber(data.publicClaimedAmount),
+              publicRemainAmount: strToNumber(
+                data.publicMintingAmount - data.publicClaimedAmount
+              ),
               publicMintingFee: strToNumber(data.publicMintingFee),
               publicMintingAmount: strToNumber(data.publicMintingAmount),
               publicMaxMintingAmount: strToNumber(data.publicMaxMintingAmount),
@@ -684,11 +688,16 @@ const LaunchpadDetailPage = () => {
                           // mb={["10px", 0]}
                           isDisabled={
                             actionType ||
-                            currentPhase?.claimedAmount >=
+                            currentPhase?.publicClaimedAmount >=
                               currentPhase?.publicMintingAmount
                           }
                           value={mintingAmount}
-                          max={currentPhase?.publicMaxMintingAmount}
+                          max={
+                            currentPhase?.publicRemainAmount >
+                            currentPhase?.publicMaxMintingAmount
+                              ? currentPhase?.publicMaxMintingAmount
+                              : currentPhase?.publicRemainAmount
+                          }
                           onChange={(valueString) =>
                             setMintingAmount(valueString)
                           }
@@ -714,7 +723,7 @@ const LaunchpadDetailPage = () => {
                           isDisabled={
                             loading ||
                             loadingForceUpdate ||
-                            currentPhase?.claimedAmount >=
+                            currentPhase?.publicClaimedAmount >=
                               currentPhase?.publicMintingAmount
                           }
                         />
