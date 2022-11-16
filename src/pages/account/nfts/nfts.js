@@ -136,7 +136,10 @@ const MyNFTsPage = () => {
         let { ret: Bids } = await APICall.getBidsByBidderAddress(options);
 
         if (!Bids?.length) {
-          return setOwner(null);
+          setOwner(null);
+          setLoading(false);
+
+          return;
         }
 
         setOwner(Bids[0].bidder);
