@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { Fragment } from "react";
 
-const FeeInfoModal = ({ tradeFee }) => {
+const FeeInfoModal = ({ platformFee }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   const modalSize = useBreakpointValue({
@@ -152,7 +152,7 @@ const FeeInfoModal = ({ tradeFee }) => {
                             minW={"5rem"}
                             fontSize={{ base: "sm", md: "24px" }}
                           >
-                            {((100 - item.percent) * tradeFee) / 100} %
+                            {((100 - item.percent) * platformFee) / 100} %
                           </Heading>
                         </Flex>
                       </Flex>
