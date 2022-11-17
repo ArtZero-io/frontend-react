@@ -355,6 +355,7 @@ function MyWhiteListProjectPage() {
       setWhiteListPrice(0);
       setWhitelistAddress("");
       setWhitelistAmount(1);
+      setIsUpdateMode(null);
       fetchPhaseInfo();
     }
   );
