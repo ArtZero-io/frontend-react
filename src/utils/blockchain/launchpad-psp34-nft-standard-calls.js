@@ -1127,6 +1127,38 @@ async function withdrawFee(caller_account, amount, dispatch, txType, api) {
   return unsubscribe;
 }
 
+export const getPhaseAccountPublicClaimedAmount = async ({
+  currentAccount,
+  nftContractAddress,
+  phaseId,
+  api,
+}) => {
+  if (!nftContractAddress || !currentAccount) {
+    console.log("invalid inputs nftContractAddress || currentAccount");
+    return null;
+  }
+
+  const contract = new ContractPromise(
+    api,
+    launchpad_psp34_nft_standard.CONTRACT_ABI,
+    nftContractAddress
+  );
+
+  const address = currentAccount?.address;
+  const gasLimit = -1;
+  const azero_value = 0;
+
+  const { result, output } = await contract.query.getPhaseAccountPublicClaimedAmount(address, {
+    value: azero_value,
+    gasLimit,
+  }, address, phaseId);
+
+  if (result.isOk) {
+    return output.toHuman();
+  }
+  return null;
+};
+
 const launchpad_psp34_nft_standard_calls = {
   getTotalSupply,
   getLastPhaseId,
@@ -1156,6 +1188,7 @@ const launchpad_psp34_nft_standard_calls = {
   deactivePhase,
   getAvailableTokenAmount,
   getOwnerClaimedAmount,
+  getPhaseAccountPublicClaimedAmount
 };
 
 export default launchpad_psp34_nft_standard_calls;
