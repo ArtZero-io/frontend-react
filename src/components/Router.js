@@ -1,29 +1,28 @@
-import { Switch, Route } from "react-router-dom";
-import * as ROUTES from "@constants/routes";
+import { Switch, Route } from 'react-router-dom';
+import * as ROUTES from '@constants/routes';
 
-import HomePage from "@pages/home";
+import HomePage from '@pages/home';
 // import AdminPage from "@pages/admin";
 
-import CollectionsPage from "@pages/collections/collections";
-import { LaunchpadPage } from "@pages/launchpad";
-import CollectionPage from "@pages/collection";
+import CollectionsPage from '@pages/collections/collections';
+import { LaunchpadPage } from '@pages/launchpad';
+import CollectionPage from '@pages/collection';
 
-import MyCollectionsPage from "@pages/account/collections/collections";
-import GeneralPage from "@pages/account/general";
-import MyNFTsPage from "@pages/account/nfts/nfts";
-import MyStakesPage from "@pages/account/stakes";
-import StatsPage from "@pages/stats";
+import MyCollectionsPage from '@pages/account/collections/collections';
+import GeneralPage from '@pages/account/general';
+import MyNFTsPage from '@pages/account/nfts/nfts';
+import MyStakesPage from '@pages/account/stakes';
+import StatsPage from '@pages/stats';
 
-import PrivateRoute from "./PrivateRoute/PrivateRoute";
-import AccountLayout from "./Layout/AccountLayout";
-import AdminLayout from "./Layout/AdminLayout";
-import LaunchpadDetailPage from "../pages/launchpad/detail";
-import AddProject from "../pages/launchpad/add-project";
-import MyProjectsPage from "@pages/account/projects/projects";
-import MyWhiteListProjectPage from "@pages/account/projects/whitelist";
-import MyMintingProjectPage from "@pages/account/projects/minting";
-import NftDetailPage from "../pages/token/";
-import LegalPage from "../pages/legal";
+import PrivateRoute from './PrivateRoute/PrivateRoute';
+import AccountLayout from './Layout/AccountLayout';
+import AdminLayout from './Layout/AdminLayout';
+import LaunchpadDetailPage from '../pages/launchpad/detail';
+import AddProject from '../pages/launchpad/add-project';
+import MyProjectsPage from '@pages/account/projects/projects';
+import MyWhiteListProjectPage from '@pages/account/projects/whitelist';
+import MyMintingProjectPage from '@pages/account/projects/minting';
+import NftDetailPage from '../pages/token/';
 // import NotFound from "./NotFound/NotFound";
 
 const Router = () => {
@@ -86,7 +85,6 @@ const Router = () => {
         component={LaunchpadDetailPage}
       />
       <Route exact path={ROUTES.LAUNCHPAD_BASE} component={LaunchpadPage} />
-      <Route exact path={ROUTES.LEGAL} component={LegalPage} />
       <Route exact path={ROUTES.HOME} component={HomePage} />
     </Switch>
   );
