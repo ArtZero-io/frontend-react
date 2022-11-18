@@ -1,15 +1,13 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 
-import { clearTxStatus } from "../store/actions/txStatus";
-import { END } from "@constants/index";
-import { useEffect, useState } from "react";
-import { delay } from "../utils";
+import { clearTxStatus } from '../store/actions/txStatus';
+import { FINALIZED } from '@constants/index';
+import { useEffect, useState } from 'react';
+import { delay } from '../utils';
 
 function useForceUpdate(typeArray, cb) {
   const dispatch = useDispatch();
-  const { type, step, timeStamp, endTimeStamp } = useSelector(
-    (s) => s.txStatus
-  );
+  const { type, step } = useSelector((s) => s.txStatus);
 
   const [loading, setLoading] = useState(false);
   const [loadingTime, setLoadingTime] = useState(null);
@@ -19,16 +17,20 @@ function useForceUpdate(typeArray, cb) {
       return;
     }
 
-    if (!step || (step && step !== END)) {
+    if (!step || (step && step !== FINALIZED)) {
       return;
     }
 
-    if (!timeStamp || !endTimeStamp) {
-      return;
-    }
+    // if (!timeStamp || !endTimeStamp) {
+    //   return;
+    // }
 
-    const diffTime = 7500 - Number(endTimeStamp - timeStamp);
-    const delayTime = diffTime > 500 ? diffTime : 500;
+    // const diffTime = 7500 - Number(endTimeStamp - timeStamp);
+    // const delayTime = diffTime > 500 ? diffTime : 500;
+
+    // 9 giay
+    console.log('useForceUpdate first');
+    const delayTime = 9000;
 
     const doDelay = async () => {
       try {
@@ -43,6 +45,7 @@ function useForceUpdate(typeArray, cb) {
           setLoading(false);
         });
       } catch (error) {
+        dispatch(clearTxStatus());
         setLoading(false);
 
         console.log(error);
@@ -50,7 +53,7 @@ function useForceUpdate(typeArray, cb) {
     };
 
     doDelay();
-  }, [cb, dispatch, endTimeStamp, step, timeStamp, type, typeArray]);
+  }, [cb, dispatch, step, type, typeArray]);
 
   return {
     loading,
