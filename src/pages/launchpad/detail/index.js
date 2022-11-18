@@ -630,14 +630,16 @@ const LaunchpadDetailPage = () => {
                   label="Mint progress of this phase"
                 >
                   <span>
-                    <Text color="#888" fontSize={['sm', 'md']}>
-                      {Math.round(
-                        (currentPhase?.claimedAmount * 100) /
-                          currentPhase?.totalAmount
-                      )}
-                      % ({currentPhase?.claimedAmount}/
-                      {currentPhase?.totalAmount})
-                    </Text>
+                    <Skeleton isLoaded={!loadingForceUpdate}>
+                      <Text as="span" color="#888" fontSize={['sm', 'md']}>
+                        {Math.round(
+                          (currentPhase?.claimedAmount * 100) /
+                            currentPhase?.totalAmount
+                        )}
+                        % ({currentPhase?.claimedAmount}/
+                        {currentPhase?.totalAmount})
+                      </Text>
+                    </Skeleton>
                   </span>
                 </Tooltip>
               )}
@@ -964,12 +966,17 @@ const LaunchpadDetailPage = () => {
                                 />
                               </Text>
                               . You have minted from whitelist{' '}
-                              <Text as="span" color="#fff">
-                                {userWLInfo[index]?.claimedAmount} NFT
-                                {userWLInfo[index]?.claimedAmount > 1
-                                  ? 's'
-                                  : ''}
-                              </Text>
+                              <Skeleton
+                                isLoaded={!loadingForceUpdate}
+                                as="span"
+                              >
+                                <Text as="span" color="#fff">
+                                  {userWLInfo[index]?.claimedAmount} NFT
+                                  {userWLInfo[index]?.claimedAmount > 1
+                                    ? 's'
+                                    : ''}
+                                </Text>
+                              </Skeleton>
                             </Text>
                           )}
                         </ListItem>
@@ -1172,7 +1179,7 @@ const LaunchpadDetailPage = () => {
 
                   <ImageCloudFlare
                     mr={['12px', '32px']}
-                    size="100"
+                    size="500"
                     w="128px"
                     h="128px"
                     src={item['avatar']}
