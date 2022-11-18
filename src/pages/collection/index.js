@@ -1,24 +1,24 @@
-import { Flex, Spacer } from "@chakra-ui/react";
-import React, { useCallback, useEffect, useState } from "react";
-import { useHistory, useLocation, useParams } from "react-router-dom";
-import { usePagination } from "@ajna/pagination";
-import { useDispatch } from "react-redux";
+import { Flex, Spacer } from '@chakra-ui/react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { usePagination } from '@ajna/pagination';
+import { useDispatch } from 'react-redux';
 
-import Layout from "@components/Layout/Layout";
-import PaginationMP from "@components/Pagination/Pagination";
+import Layout from '@components/Layout/Layout';
+import PaginationMP from '@components/Pagination/Pagination';
 
-import TabActivity from "./component/TabActivity";
-import TabCollectionItems from "./component/TabItems";
-import CollectionHeader from "./component/Header/Header";
+import TabActivity from './component/TabActivity';
+import TabCollectionItems from './component/TabItems';
+import CollectionHeader from './component/Header/Header';
 
-import { APICall } from "@api/client";
-import useInterval from "@hooks/useInterval";
+import { APICall } from '@api/client';
+import useInterval from '@hooks/useInterval';
 
-import { AccountActionTypes } from "@store/types/account.types";
-import { getPublicCurrentAccount } from "@utils";
+import { AccountActionTypes } from '@store/types/account.types';
+import { getPublicCurrentAccount } from '@utils';
 
-import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import CommonTabs from "@components/Tabs/CommonTabs";
+import marketplace_contract_calls from '@utils/blockchain/marketplace_contract_calls';
+import CommonTabs from '@components/Tabs/CommonTabs';
 import {
   BUY,
   BID,
@@ -30,13 +30,13 @@ import {
   TRANSFER,
   CREATE_NFT,
   EDIT_NFT,
-} from "@constants";
-import useTxStatus from "@hooks/useTxStatus";
-import useForceUpdate from "@hooks/useForceUpdate";
-import { Helmet } from "react-helmet";
-import qs from "qs";
-import * as ROUTES from "@constants/routes";
-import { useQuery } from "react-query";
+} from '@constants';
+import useTxStatus from '@hooks/useTxStatus';
+import useForceUpdate from '@hooks/useForceUpdate';
+import { Helmet } from 'react-helmet';
+import qs from 'qs';
+import * as ROUTES from '@constants/routes';
+import { useQuery } from 'react-query';
 // import toast from "react-hot-toast";
 
 const NUMBER_PER_PAGE = 12;
@@ -53,7 +53,7 @@ function CollectionPage() {
   const [priceQuery, setPriceQuery] = useState({});
   const [traitsQuery, setTraitsQuery] = useState({});
   const [totalCount, setTotalCount] = useState(0);
-  const [activeTab, setActiveTab] = useState("LISTED");
+  const [activeTab, setActiveTab] = useState('LISTED');
   const [latestBlockNumber, setLatestBlockNumber] = useState(null);
 
   const [sortData, setSortData] = useState(-1);
@@ -67,13 +67,13 @@ function CollectionPage() {
     }
 
     if (query?.is_for_sale === undefined) {
-      setActiveTab("ALL");
+      setActiveTab('ALL');
     }
-    if (query?.is_for_sale === "true") {
-      setActiveTab("LISTED");
+    if (query?.is_for_sale === 'true') {
+      setActiveTab('LISTED');
     }
-    if (query?.is_for_sale === "false") {
-      setActiveTab("UNLISTED");
+    if (query?.is_for_sale === 'false') {
+      setActiveTab('UNLISTED');
     }
 
     if (query?.traits && Object.keys(query?.traits).length) {
@@ -88,11 +88,11 @@ function CollectionPage() {
   };
 
   if (activeTab === tabList.LISTED) {
-    queryFilter["is_for_sale"] = true;
+    queryFilter['is_for_sale'] = true;
   }
 
   if (activeTab === tabList.UNLISTED) {
-    queryFilter["is_for_sale"] = false;
+    queryFilter['is_for_sale'] = false;
   }
 
   const fetchData = async () => {
@@ -105,7 +105,7 @@ function CollectionPage() {
     let traitsFilter = {};
 
     if (queryFilter?.is_for_sale !== undefined) {
-      traitsFilter["is_for_sale"] = queryFilter.is_for_sale;
+      traitsFilter['is_for_sale'] = queryFilter.is_for_sale;
     }
 
     if (Object.keys(traitsQuery).length) {
@@ -164,58 +164,6 @@ function CollectionPage() {
     return ret;
   };
 
-  const {
-    pagesCount,
-    currentPage,
-    isDisabled,
-    offset,
-    pageSize,
-    setCurrentPage,
-  } = usePagination({
-    total: totalCount,
-    initialState: {
-      currentPage: 1,
-      isDisabled: false,
-      pageSize: NUMBER_PER_PAGE,
-    },
-  });
-
-  const { data, isLoading } = useQuery(
-    [
-      "getAllNFTs",
-      traitsQuery,
-      priceQuery,
-      activeTab,
-      currentPage,
-      search,
-      sortData,
-    ],
-    fetchData
-  );
-
-  useEffect(() => {
-    if (currentPage > pagesCount) {
-      setCurrentPage(1);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagesCount]);
-
-  useEffect(() => {
-    const cleanQuery = { ...queryFilter };
-
-    if (!cleanQuery?.price?.min || !cleanQuery?.price?.max) {
-      delete cleanQuery.price;
-    }
-
-    const query = qs.stringify(cleanQuery);
-
-    history.push(
-      `${ROUTES.DETAIL_COLLECTION_BASE}/${collection_address}?${query}`
-    );
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [collection_address, traitsQuery, priceQuery, activeTab]);
-
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
     [
       BUY,
@@ -244,9 +192,62 @@ function CollectionPage() {
     }
   );
 
+  const {
+    pagesCount,
+    currentPage,
+    isDisabled,
+    offset,
+    pageSize,
+    setCurrentPage,
+  } = usePagination({
+    total: totalCount,
+    initialState: {
+      currentPage: 1,
+      isDisabled: false,
+      pageSize: NUMBER_PER_PAGE,
+    },
+  });
+
+  const { data, isLoading } = useQuery(
+    [
+      'getAllNFTs',
+      traitsQuery,
+      priceQuery,
+      activeTab,
+      currentPage,
+      search,
+      sortData,
+      loadingForceUpdate,
+    ],
+    fetchData
+  );
+
+  useEffect(() => {
+    if (currentPage > pagesCount) {
+      setCurrentPage(1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pagesCount]);
+
+  useEffect(() => {
+    const cleanQuery = { ...queryFilter };
+
+    if (!cleanQuery?.price?.min || !cleanQuery?.price?.max) {
+      delete cleanQuery.price;
+    }
+
+    const query = qs.stringify(cleanQuery);
+
+    history.push(
+      `${ROUTES.DETAIL_COLLECTION_BASE}/${collection_address}?${query}`
+    );
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [collection_address, traitsQuery, priceQuery, activeTab]);
+
   const tabsData = [
     {
-      label: "items",
+      label: 'items',
       isDisabled: false,
       component: (
         <TabCollectionItems
@@ -267,7 +268,7 @@ function CollectionPage() {
       ),
     },
     {
-      label: "activity",
+      label: 'activity',
       isDisabled: false,
       component: (
         <TabActivity {...data} latestBlockNumber={latestBlockNumber} />
@@ -314,7 +315,7 @@ function CollectionPage() {
 
       return { events: result, latestBlockNumber };
     } catch (error) {
-      console.log("error", error);
+      console.log('error', error);
 
       return error;
     }
@@ -338,8 +339,8 @@ function CollectionPage() {
 
   const [tabIndex, setTabIndex] = useState(0);
   const imageUrl = data?.avatarImage?.replace(
-    "ipfs://",
-    "https://ipfs.io/ipfs/"
+    'ipfs://',
+    'https://ipfs.io/ipfs/'
   );
 
   return (
@@ -352,7 +353,7 @@ function CollectionPage() {
         <meta property="og:image" content={imageUrl} />
         <meta property="og:url" content={window.location.href} />
         {/* <!-- Twitter Meta Tags --> */}
-        <meta name="twitter:image" content={imageUrl} />{" "}
+        <meta name="twitter:image" content={imageUrl} />{' '}
         <meta property="twitter:url" content={window.location.href} />
       </Helmet>
 
@@ -364,11 +365,11 @@ function CollectionPage() {
         <Flex
           w="full"
           bg="brand.semiBlack"
-          pt={{ base: "14px", xl: "40px" }}
-          pb={{ base: "50px", xl: "100px" }}
-          px={{ base: "12px", "2xl": "100px" }}
+          pt={{ base: '14px', xl: '40px' }}
+          pb={{ base: '50px', xl: '100px' }}
+          px={{ base: '12px', '2xl': '100px' }}
           hidden={pagesCount === 0 ? true : false}
-          display={tabIndex === 1 ? "none" : "flex"}
+          display={tabIndex === 1 ? 'none' : 'flex'}
         >
           <PaginationMP
             pagesCount={pagesCount}
@@ -376,7 +377,7 @@ function CollectionPage() {
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           />
-          <Spacer my={{ base: "3", "2xl": "auto" }} />
+          <Spacer my={{ base: '3', '2xl': 'auto' }} />
         </Flex>
       </>
     </Layout>
@@ -386,7 +387,7 @@ function CollectionPage() {
 export default CollectionPage;
 
 export const tabList = {
-  ALL: "ALL",
-  LISTED: "LISTED",
-  UNLISTED: "UNLISTED",
+  ALL: 'ALL',
+  LISTED: 'LISTED',
+  UNLISTED: 'UNLISTED',
 };

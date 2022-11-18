@@ -11,32 +11,34 @@ import {
   Text,
   useBreakpointValue,
   VStack,
-} from "@chakra-ui/react";
-import AzeroIcon from "@theme/assets/icon/Azero.js";
+} from '@chakra-ui/react';
+import AzeroIcon from '@theme/assets/icon/Azero.js';
 
-import SocialCard from "@components/Card/Social";
+import SocialCard from '@components/Card/Social';
 
-import { shortenNumber } from "@utils";
-import { memo } from "react";
-import { useState } from "react";
-import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
+import { shortenNumber } from '@utils';
+import { memo } from 'react';
+import { useState } from 'react';
+import ImageCloudFlare from '@components/ImageWrapper/ImageCloudFlare';
 
 const overlay =
-  "linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)";
+  'linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)';
 
-function CollectionHeader({
-  avatarImage,
-  name,
-  description,
-  website,
-  twitter,
-  discord,
-  volume,
-  floorPrice,
-  totalListed,
-  nft_count,
-  royalFee,
-}) {
+function CollectionHeader(props) {
+  const {
+    avatarImage,
+    name,
+    description,
+    website,
+    twitter,
+    discord,
+    volume,
+    floorPrice,
+    totalListed,
+    nft_count,
+    royalFee,
+  } = props;
+
   const [isSeeMore, setIsSeeMore] = useState(false);
   const descLength = useBreakpointValue([115, 175]);
 
@@ -46,20 +48,20 @@ function CollectionHeader({
       bg={overlay}
       as="section"
       position="relative"
-      minH={{ sm: "625px", md: "34rem" }}
+      minH={{ sm: '625px', md: '34rem' }}
     >
       <Box
         h="full"
         mx="auto"
-        px={{ base: "32px", md: "8" }}
-        pb={{ base: "36px", md: "90px" }}
-        pt={{ base: "56px", md: "120px" }}
+        px={{ base: '32px', md: '8' }}
+        pb={{ base: '36px', md: '90px' }}
+        pt={{ base: '56px', md: '120px' }}
       >
         <VStack h="full">
           <Center
             rounded="full"
-            w={["68px", "128px"]}
-            h={["68px", "128px"]}
+            w={['68px', '128px']}
+            h={['68px', '128px']}
             mt={-8}
             p="-px"
             border="4px solid"
@@ -70,30 +72,30 @@ function CollectionHeader({
             <ImageCloudFlare
               size="500"
               borderRadius="full"
-              h={["68px", "120px", "120px"]}
-              w={["68px", "120px", "120px"]}
+              h={['68px', '120px', '120px']}
+              w={['68px', '120px', '120px']}
               src={avatarImage}
             />
           </Center>
 
           <HStack
             w="full"
-            pt={["4px", "28px"]}
-            pb={["8px", "14px"]}
+            pt={['4px', '28px']}
+            pb={['8px', '14px']}
             justifyContent="center"
           >
             <Skeleton w="full" maxW="680px" isLoaded={name?.length}>
               <VStack
                 textAlign="center"
                 justifyContent="space-between"
-                minH={"60px"}
+                minH={'60px'}
               >
                 <Heading
                   px="4px"
                   color="#fff"
                   noOfLines={[2, 2]}
-                  fontSize={["32px", "48px"]}
-                  lineHeight={["46px", "60px"]}
+                  fontSize={['32px', '48px']}
+                  lineHeight={['46px', '60px']}
                 >
                   {name}
                 </Heading>
@@ -114,9 +116,9 @@ function CollectionHeader({
               maxW="576px"
               textAlign="center"
               position="relative"
-              minH={["48px", "54px"]}
+              minH={['48px', '54px']}
               justifyContent="center"
-              fontSize={["16px", "18px"]}
+              fontSize={['16px', '18px']}
             >
               <Text noOfLines={[isSeeMore ? 999 : 2]}>{description}</Text>
 
@@ -133,9 +135,9 @@ function CollectionHeader({
                 justifyContent="center"
                 textDecoration="underline"
                 onClick={() => setIsSeeMore(!isSeeMore)}
-                display={description?.length > descLength ? "flex" : "none"}
+                display={description?.length > descLength ? 'flex' : 'none'}
               >
-                {isSeeMore ? "See less" : "Show more"}
+                {isSeeMore ? 'See less' : 'Show more'}
               </Flex>
             </Flex>
           </Skeleton>
@@ -161,21 +163,21 @@ function CollectionHeader({
             bg="black"
             color="#7ae7ff"
             border="2px solid #7ae7ff"
-            maxW={["280px", "680px"]}
+            maxW={['280px', '680px']}
           >
             <SimpleGrid columns={{ base: 2, md: 4 }}>
               <Flex
-                minH={["100px", "110px"]}
+                minH={['100px', '110px']}
                 justify="center"
                 position="relative"
                 direction="column"
                 alignItems="center"
               >
-                <Text fontSize={["34px", "40px"]}>{nft_count || 0}</Text>
-                <Text fontSize={["14px", "16px"]}>Items</Text>
+                <Text fontSize={['34px', '40px']}>{nft_count || 0}</Text>
+                <Text fontSize={['14px', '16px']}>Items</Text>
                 <Divider
                   w="0"
-                  h={["100px", "50px"]}
+                  h={['100px', '50px']}
                   right="0"
                   bg="#232323"
                   position="absolute"
@@ -184,14 +186,14 @@ function CollectionHeader({
               </Flex>
 
               <Flex
-                minH={["100px", "110px"]}
+                minH={['100px', '110px']}
                 justify="center"
                 position="relative"
                 direction="column"
                 alignItems="center"
               >
-                <Text fontSize={["34px", "40px"]}>{totalListed || 0}</Text>
-                <Text fontSize={["14px", "16px"]}>Listed</Text>
+                <Text fontSize={['34px', '40px']}>{totalListed || 0}</Text>
+                <Text fontSize={['14px', '16px']}>Listed</Text>
                 <Divider
                   w="0"
                   h="50px"
@@ -199,12 +201,12 @@ function CollectionHeader({
                   bg="#232323"
                   position="absolute"
                   orientation="vertical"
-                  display={["none", "flex"]}
+                  display={['none', 'flex']}
                 />
               </Flex>
 
               <Flex
-                minH={["100px", "110px"]}
+                minH={['100px', '110px']}
                 justify="center"
                 position="relative"
                 direction="column"
@@ -217,19 +219,19 @@ function CollectionHeader({
                   left="0"
                   bg="#232323"
                   position="absolute"
-                  display={["flex", "none"]}
+                  display={['flex', 'none']}
                 />
                 <Flex alignItems="center" justifyContent="center">
-                  <Text fontSize={["34px", "40px"]}>
+                  <Text fontSize={['34px', '40px']}>
                     {shortenNumber(floorPrice / 10 ** 12) || 0}
                   </Text>
 
                   <AzeroIcon ml="6px" w="20px" />
                 </Flex>
-                <Text fontSize={["14px", "16px"]}>Floor price</Text>
+                <Text fontSize={['14px', '16px']}>Floor price</Text>
                 <Divider
                   w="0"
-                  h={["100px", "50px"]}
+                  h={['100px', '50px']}
                   right="0"
                   bg="#232323"
                   position="absolute"
@@ -238,18 +240,18 @@ function CollectionHeader({
               </Flex>
 
               <Flex
-                minH={["100px", "110px"]}
+                minH={['100px', '110px']}
                 justify="center"
                 direction="column"
                 alignItems="center"
               >
                 <Flex alignItems="center" justifyContent="center">
-                  <Text fontSize={["34px", "40px"]}>
+                  <Text fontSize={['34px', '40px']}>
                     {shortenNumber(volume) || 0}
                   </Text>
                   <AzeroIcon ml="6px" w="20px" />
                 </Flex>
-                <Text fontSize={["14px", "16px"]}>Volume traded</Text>
+                <Text fontSize={['14px', '16px']}>Volume traded</Text>
               </Flex>
             </SimpleGrid>
           </Container>
@@ -258,7 +260,7 @@ function CollectionHeader({
             bottom="0"
             right="100px"
             justifyContent="center"
-            pos={{ base: "", xl: "absolute" }}
+            pos={{ base: '', xl: 'absolute' }}
             profile={[{ website }, { twitter }, { discord }]}
           />
         </VStack>

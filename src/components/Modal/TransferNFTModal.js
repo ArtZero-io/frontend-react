@@ -13,29 +13,29 @@ import {
   Input,
   VStack,
   useBreakpointValue,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import { useSubstrateState } from "@utils/substrate";
+import { useSubstrateState } from '@utils/substrate';
 
-import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
 
-import { ContractPromise } from "@polkadot/api-contract";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import { web3FromSource } from "@utils/wallets/extension-dapp";
+import { ContractPromise } from '@polkadot/api-contract';
+import nft721_psp34_standard from '@utils/blockchain/nft721-psp34-standard';
+import { web3FromSource } from '@utils/wallets/extension-dapp';
 import {
   txErrorHandler,
   txResponseErrorHandler,
-} from "@store/actions/txStatus";
-import { setTxStatus } from "@store/actions/txStatus";
-import { stringToU8a } from "@polkadot/util";
-import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
-import { APICall } from "@api/client";
-import { START, FINALIZED, TRANSFER, END } from "@constants";
-import useTxStatus from "@hooks/useTxStatus";
-import CommonButton from "@components/Button/CommonButton";
-import TransferIcon from "../../theme/assets/icon/Transfer";
+} from '@store/actions/txStatus';
+import { setTxStatus } from '@store/actions/txStatus';
+import { stringToU8a } from '@polkadot/util';
+import { isValidAddressPolkadotAddress, getEstimatedGas } from '@utils';
+import { APICall } from '@api/client';
+import { START, FINALIZED, TRANSFER, END } from '@constants';
+import useTxStatus from '@hooks/useTxStatus';
+import CommonButton from '@components/Button/CommonButton';
+import TransferIcon from '../../theme/assets/icon/Transfer';
 
 function TransferNFTModal({
   owner,
@@ -49,8 +49,8 @@ function TransferNFTModal({
   const { onOpen, onClose, isOpen } = useDisclosure();
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
-  const [receiverAddress, setReceiverAddress] = useState("");
-  const iconWidth = useBreakpointValue(["40px", "50px"]);
+  const [receiverAddress, setReceiverAddress] = useState('');
+  const iconWidth = useBreakpointValue(['40px', '50px']);
 
   const transferNFTsHandler = async () => {
     if (!isValidAddressPolkadotAddress(receiverAddress)) {
@@ -58,7 +58,7 @@ function TransferNFTModal({
     }
 
     if (owner !== currentAccount?.address) {
-      return toast.error("You are not the owner of this NFT");
+      return toast.error('You are not the owner of this NFT');
     }
 
     if (nftContractAddress) {
@@ -77,21 +77,21 @@ function TransferNFTModal({
       const { signer } = await web3FromSource(currentAccount?.meta?.source);
       const value = 0;
 
-      let additionalData = "";
+      let additionalData = '';
 
       gasLimit = await getEstimatedGas(
         address,
         contract,
         value,
-        "psp34::transfer",
+        'psp34::transfer',
         receiverAddress,
         { u64: tokenID },
         stringToU8a(additionalData)
       );
 
-      console.log("ret ret uri xxx", gasLimit);
+      console.log('ret ret uri xxx', gasLimit);
 
-      await contract.tx["psp34::transfer"](
+      await contract.tx['psp34::transfer'](
         { value, gasLimit },
         receiverAddress,
         { u64: tokenID },
@@ -137,38 +137,37 @@ function TransferNFTModal({
         placement="bottom"
         closeOnBlur={false}
       >
-        {showOnChainMetadata && (
-          <PopoverTrigger mt="0px">
-            <Tooltip
-              hasArrow
-              bg="#333"
-              top="-10px"
-              color="#fff"
-              label="Transfer NFT"
+        <PopoverTrigger mt="0px">
+          <Tooltip
+            hasArrow
+            bg="#333"
+            top="-10px"
+            color="#fff"
+            label="Transfer NFT"
+          >
+            <span
+              onClick={
+                isDisabled || actionType
+                  ? () => toast.error('This item is currently for sale!')
+                  : onOpen
+              }
+              style={{
+                width: iconWidth,
+                height: iconWidth,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '2px solid #333333',
+              }}
             >
-              <span
-                onClick={
-                  isDisabled || actionType
-                    ? () => toast.error("This item is currently for sale!")
-                    : onOpen
-                }
-                style={{
-                  width: iconWidth,
-                  height: iconWidth,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  border: "2px solid #333333",
-                }}
-              >
-                <TransferIcon
-                  width={["20px", "25px"]}
-                  height={["20px", "25px"]}
-                />
-              </span>
-            </Tooltip>
-          </PopoverTrigger>
-        )}
+              <TransferIcon
+                width={['20px', '25px']}
+                height={['20px', '25px']}
+              />
+            </span>
+          </Tooltip>
+        </PopoverTrigger>
+
         <PopoverContent bg="#333" borderRadius="0" fontSize="sm">
           <PopoverArrow />
 
@@ -187,7 +186,7 @@ function TransferNFTModal({
                 px="4px"
                 isDisabled={actionType}
                 placeholder="5ABC..."
-                _placeholder={{ fontSize: "12px" }}
+                _placeholder={{ fontSize: '12px' }}
                 onChange={(val) => setReceiverAddress(val.target.value)}
               />
             </VStack>

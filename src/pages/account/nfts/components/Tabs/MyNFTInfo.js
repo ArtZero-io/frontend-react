@@ -16,48 +16,48 @@ import {
   NumberInputField,
   InputRightElement,
   useBreakpointValue,
-} from "@chakra-ui/react";
-import AzeroIcon from "@theme/assets/icon/Azero.js";
+} from '@chakra-ui/react';
+import AzeroIcon from '@theme/assets/icon/Azero.js';
 
-import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { Link as ReactRouterLink } from "react-router-dom";
-import React, { useCallback, useEffect, useState } from "react";
+import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { Link as ReactRouterLink } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
 
-import profile_calls from "@utils/blockchain/profile_calls";
-import staking_calls from "@utils/blockchain/staking_calls";
-import marketplace_contract from "@utils/blockchain/marketplace";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
-import marketplace from "@utils/blockchain/marketplace";
+import profile_calls from '@utils/blockchain/profile_calls';
+import staking_calls from '@utils/blockchain/staking_calls';
+import marketplace_contract from '@utils/blockchain/marketplace';
+import nft721_psp34_standard from '@utils/blockchain/nft721-psp34-standard';
+import marketplace_contract_calls from '@utils/blockchain/marketplace_contract_calls';
+import nft721_psp34_standard_calls from '@utils/blockchain/nft721-psp34-standard-calls';
+import marketplace from '@utils/blockchain/marketplace';
 
-import { useSubstrateState } from "@utils/substrate";
-import { ContractPromise } from "@polkadot/api-contract";
-import { truncateStr, getTraitCount } from "@utils";
-import { convertStringToPrice, formatNumDynamicDecimal } from "@utils";
+import { useSubstrateState } from '@utils/substrate';
+import { ContractPromise } from '@polkadot/api-contract';
+import { truncateStr, getTraitCount } from '@utils';
+import { convertStringToPrice, formatNumDynamicDecimal } from '@utils';
 
-import { formMode } from "@constants";
+import { formMode } from '@constants';
 
-import LockNFTModal from "@components/Modal/LockNFTModal";
-import TransferNFTModal from "@components/Modal/TransferNFTModal";
+import LockNFTModal from '@components/Modal/LockNFTModal';
+import TransferNFTModal from '@components/Modal/TransferNFTModal';
 
-import AddNewNFTModal from "@pages/collection/component/Modal/AddNewNFT";
+import AddNewNFTModal from '@pages/collection/component/Modal/AddNewNFT';
 import {
   fetchMyPMPStakedCount,
   fetchMyTradingFee,
-} from "@pages/account/stakes";
-import { SCROLLBAR } from "@constants";
-import useTxStatus from "@hooks/useTxStatus";
-import CommonButton from "@components/Button/CommonButton";
-import { REMOVE_BID, UNLIST_TOKEN, LIST_TOKEN } from "@constants";
-import { clearTxStatus } from "@store/actions/txStatus";
-import { listToken, unlistToken, removeBid } from "@pages/token";
-import UnlockIcon from "@theme/assets/icon/Unlock";
-import LockIcon from "@theme/assets/icon/Lock";
-import PropCard from "@components/Card/PropCard";
-import LevelCard from "@components/Card/LevelCard";
-import ImageCloudFlare from "../../../../../components/ImageWrapper/ImageCloudFlare";
+} from '@pages/account/stakes';
+import { SCROLLBAR } from '@constants';
+import useTxStatus from '@hooks/useTxStatus';
+import CommonButton from '@components/Button/CommonButton';
+import { REMOVE_BID, UNLIST_TOKEN, LIST_TOKEN } from '@constants';
+import { clearTxStatus } from '@store/actions/txStatus';
+import { listToken, unlistToken, removeBid } from '@pages/token';
+import UnlockIcon from '@theme/assets/icon/Unlock';
+import LockIcon from '@theme/assets/icon/Lock';
+import PropCard from '@components/Card/PropCard';
+import LevelCard from '@components/Card/LevelCard';
+import ImageCloudFlare from '../../../../../components/ImageWrapper/ImageCloudFlare';
 
 function MyNFTTabInfo(props) {
   const {
@@ -79,7 +79,6 @@ function MyNFTTabInfo(props) {
     rarityTable,
     // traits = {},
   } = props;
-
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
@@ -87,15 +86,15 @@ function MyNFTTabInfo(props) {
 
   const dispatch = useDispatch();
 
-  const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
+  const gridSize = useBreakpointValue({ base: `8rem`, '2xl': `11rem` });
 
   const [saleInfo, setSaleInfo] = useState(null);
   const [isBided, setIsBided] = useState(false);
   const [bidPrice, setBidPrice] = useState(0);
   const [myTradingFee, setMyTradingFee] = useState(null);
-  const [ownerName, setOwnerName] = useState("");
+  const [ownerName, setOwnerName] = useState('');
   const [isOwner, setIsOwner] = useState(false);
-  const [ownerAddress, setOwnerAddress] = useState("");
+  const [ownerAddress, setOwnerAddress] = useState('');
   const [, setLoading] = useState(false);
 
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
@@ -147,9 +146,9 @@ function MyNFTTabInfo(props) {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      toast.error("There is some error when fetching sale info!");
+      toast.error('There is some error when fetching sale info!');
 
-      console.log("error", error);
+      console.log('error', error);
     }
   }, [currentAccount, is_for_sale, nftContractAddress, owner, tokenID]);
 
@@ -282,7 +281,7 @@ function MyNFTTabInfo(props) {
     fetchTradeFee();
   }, [currentAccount]);
 
-  const iconWidth = useBreakpointValue(["40px", "50px"]);
+  const iconWidth = useBreakpointValue(['40px', '50px']);
 
   return (
     <>
@@ -313,20 +312,19 @@ function MyNFTTabInfo(props) {
                       style={{
                         width: iconWidth,
                         height: iconWidth,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        border: "2px solid #333333",
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        border: '2px solid #333333',
                       }}
                     >
                       <UnlockIcon
-                        width={["20px", "25px"]}
-                        height={["20px", "25px"]}
+                        width={['20px', '25px']}
+                        height={['20px', '25px']}
                       />
                     </span>
                   </Tooltip>
                 )}
-
               {!is_locked && !showOnChainMetadata && (
                 <Tooltip
                   hasArrow
@@ -339,20 +337,19 @@ function MyNFTTabInfo(props) {
                     style={{
                       width: iconWidth,
                       height: iconWidth,
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      border: "2px solid #333333",
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '2px solid #333333',
                     }}
                   >
                     <UnlockIcon
-                      width={["20px", "25px"]}
-                      height={["20px", "25px"]}
+                      width={['20px', '25px']}
+                      height={['20px', '25px']}
                     />
                   </span>
                 </Tooltip>
               )}
-
               {is_locked && showOnChainMetadata && (
                 <Tooltip
                   hasArrow
@@ -365,27 +362,25 @@ function MyNFTTabInfo(props) {
                     style={{
                       width: iconWidth,
                       height: iconWidth,
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      border: "2px solid #333333",
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      border: '2px solid #333333',
                     }}
                   >
                     <LockIcon
-                      width={["20px", "25px"]}
-                      height={["20px", "25px"]}
+                      width={['20px', '25px']}
+                      height={['20px', '25px']}
                     />
                   </span>
                 </Tooltip>
               )}
-
               {!is_locked && owner === currentAccount?.address && (
                 <LockNFTModal
                   {...props}
                   isDisabled={is_for_sale || actionType}
                 />
               )}
-
               {!is_locked &&
                 showOnChainMetadata &&
                 owner === currentAccount.address && (
@@ -396,8 +391,7 @@ function MyNFTTabInfo(props) {
                     isDisabled={is_for_sale || actionType}
                   />
                 )}
-
-              {owner === currentAccount?.address && (
+              {ownerAddress === currentAccount?.address && (
                 <TransferNFTModal
                   {...props}
                   isDisabled={is_for_sale || actionType}
@@ -412,7 +406,7 @@ function MyNFTTabInfo(props) {
               fontSize="lg"
               color="brand.grayLight"
               lineHeight="1.35"
-              maxW={{ base: "500px", "2xl": "610px" }}
+              maxW={{ base: '500px', '2xl': '610px' }}
             >
               {description}
             </Text>
@@ -421,7 +415,7 @@ function MyNFTTabInfo(props) {
           <Stack>
             <Skeleton as="span" isLoaded={ownerName} minW="150px">
               <Text color="#fff" maxW="max-content">
-                Owned by{" "}
+                Owned by{' '}
                 <Link
                   as={ReactRouterLink}
                   // to="/user/xxx"
@@ -440,9 +434,9 @@ function MyNFTTabInfo(props) {
             {attrsList?.length === 0 ? (
               <Stack>
                 <Text
-                  mt={{ base: "6px", "2xl": "12px" }}
-                  display={{ base: "none", xl: "block" }}
-                  fontSize={{ base: "14px", "2xl": "16px" }}
+                  mt={{ base: '6px', '2xl': '12px' }}
+                  display={{ base: 'none', xl: 'block' }}
+                  fontSize={{ base: '14px', '2xl': '16px' }}
                 >
                   This NFT has no props/ levels.
                 </Text>
@@ -452,7 +446,7 @@ function MyNFTTabInfo(props) {
                 <Grid
                   mb={2}
                   w="full"
-                  pr={"22px"}
+                  pr={'22px'}
                   gap="30px"
                   sx={SCROLLBAR}
                   id="grid-attrs"
@@ -463,7 +457,7 @@ function MyNFTTabInfo(props) {
                   {attrsList?.length
                     ? attrsList
                         .filter(
-                          (i) => !JSON.stringify(Object.values(i)).includes("|")
+                          (i) => !JSON.stringify(Object.values(i)).includes('|')
                         )
                         .map((item, idx) => (
                           <GridItem key={idx} w="100%" h="100%">
@@ -474,12 +468,12 @@ function MyNFTTabInfo(props) {
                             />
                           </GridItem>
                         ))
-                    : ""}
+                    : ''}
 
                   {attrsList?.length
                     ? attrsList
                         .filter((i) =>
-                          JSON.stringify(Object.values(i)).includes("|")
+                          JSON.stringify(Object.values(i)).includes('|')
                         )
                         .map((item, idx) => (
                           <GridItem w="100%" h="100%" key={idx}>
@@ -523,7 +517,7 @@ function MyNFTTabInfo(props) {
                     borderWidth={0}
                     color="#fff"
                   />
-                  <InputRightElement bg="transparent" h={"52px"} w={16}>
+                  <InputRightElement bg="transparent" h={'52px'} w={16}>
                     <AzeroIcon />
                   </InputRightElement>
                 </NumberInput>
@@ -537,7 +531,7 @@ function MyNFTTabInfo(props) {
               </Flex>
             )}
 
-            {filterSelected !== "BIDS" &&
+            {filterSelected !== 'BIDS' &&
               owner === marketplace_contract.CONTRACT_ADDRESS &&
               is_for_sale && (
                 <Flex
@@ -580,7 +574,6 @@ function MyNFTTabInfo(props) {
                   alignItems="center"
                   justifyContent="start"
                 >
-                  {" "}
                   <CommonButton
                     mx="0"
                     px="2px"
@@ -603,7 +596,7 @@ function MyNFTTabInfo(props) {
             )}
           </Stack>
 
-          {filterSelected === "COLLECTED" ? (
+          {filterSelected === 'COLLECTED' ? (
             <HStack
               w="full"
               pt="10px"
@@ -613,32 +606,32 @@ function MyNFTTabInfo(props) {
               <Text>
                 <Text as="span" color="brand.grayLight">
                   Royalty fee:
-                </Text>{" "}
-                {formatNumDynamicDecimal((askPrice * royalFee) / 10000)}{" "}
+                </Text>{' '}
+                {formatNumDynamicDecimal((askPrice * royalFee) / 10000)}{' '}
                 <AzeroIcon w="15px" mb="2px" /> ({(royalFee / 100).toFixed(2)}%)
               </Text>
               <Text>
                 <Text as="span" color="brand.grayLight">
                   Trade fee:
-                </Text>{" "}
-                {formatNumDynamicDecimal((askPrice * myTradingFee) / 100)}{" "}
+                </Text>{' '}
+                {formatNumDynamicDecimal((askPrice * myTradingFee) / 100)}{' '}
                 <AzeroIcon w="15px" mb="2px" /> ({myTradingFee}%)
               </Text>
               <Text>
                 <Text as="span" color="brand.grayLight">
-                  You will receive:{" "}
+                  You will receive:{' '}
                 </Text>
                 {formatNumDynamicDecimal(
                   askPrice -
                     (askPrice * myTradingFee) / 100 -
                     (askPrice * royalFee) / 10000
-                )}{" "}
+                )}{' '}
                 <AzeroIcon w="15px" mb="2px" />
               </Text>
             </HStack>
           ) : null}
 
-          {filterSelected === "LISTING" ? (
+          {filterSelected === 'LISTING' ? (
             <HStack
               w="full"
               pt="10px"
@@ -648,27 +641,27 @@ function MyNFTTabInfo(props) {
               <Text>
                 <Text as="span" color="brand.grayLight">
                   Royalty fee:
-                </Text>{" "}
-                {formatNumDynamicDecimal((price / 10 ** 16) * royalFee)}{" "}
+                </Text>{' '}
+                {formatNumDynamicDecimal((price / 10 ** 16) * royalFee)}{' '}
                 <AzeroIcon w="15px" mb="2px" /> ({(royalFee / 100).toFixed(2)}%)
               </Text>
               <Text>
                 <Text as="span" color="brand.grayLight">
                   Trade fee:
-                </Text>{" "}
-                {formatNumDynamicDecimal((price / 10 ** 14) * myTradingFee)}{" "}
+                </Text>{' '}
+                {formatNumDynamicDecimal((price / 10 ** 14) * myTradingFee)}{' '}
                 <AzeroIcon w="15px" mb="2px" /> ({myTradingFee}%)
               </Text>
               <Text>
                 <Text as="span" color="brand.grayLight">
-                  You will receive:{" "}
-                </Text>{" "}
+                  You will receive:{' '}
+                </Text>{' '}
                 {formatNumDynamicDecimal(
                   price *
                     (1 / 10 ** 12 -
                       myTradingFee / 10 ** 14 -
                       royalFee / 10 ** 16)
-                )}{" "}
+                )}{' '}
                 <AzeroIcon w="15px" mb="2px" />
               </Text>
             </HStack>

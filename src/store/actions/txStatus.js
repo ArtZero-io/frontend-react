@@ -1,6 +1,6 @@
-import toast from "react-hot-toast";
-import { SET_STATUS, CLEAR_STATUS } from "../types/txStatus";
-import { READY, FINALIZED } from "@constants";
+import toast from 'react-hot-toast';
+import { SET_STATUS, CLEAR_STATUS } from '../types/txStatus';
+import { READY, FINALIZED } from '@constants';
 // import { fetchUserBalance } from "../../pages/launchpad/component/Form/AddNewProject";
 
 export const setTxStatus = (props) => {
@@ -25,8 +25,8 @@ export const txErrorHandler = ({ error, dispatch }) => {
 
   const errStr = error.toString();
 
-  if (errStr.includes("RpcError")) {
-    message = errStr.slice(errStr.indexOf("RpcError") + 16);
+  if (errStr.includes('RpcError')) {
+    message = errStr.slice(errStr.indexOf('RpcError') + 16);
 
     return toast.error(message);
   }
@@ -56,7 +56,7 @@ export const txResponseErrorHandler = async ({
 
       const url = `https://test.azero.dev/#/explorer/query/`;
 
-      console.log("^^ Error\t\t\t\t:", `${section}.${name}: ${docs.join(" ")}`);
+      console.log('^^ Error\t\t\t\t:', `${section}.${name}: ${docs.join(' ')}`);
 
       const apiAt = await api.at(statusToHuman[0][1]);
       const allEventsRecords = await apiAt.query.system.events();
@@ -64,9 +64,9 @@ export const txResponseErrorHandler = async ({
       allEventsRecords.forEach(({ event }, index) => {
         if (api.events.transactionPayment?.TransactionFeePaid.is(event)) {
           console.log(
-            "^^ Txn Fee Paid\t\t\t:   -",
+            '^^ Txn Fee Paid\t\t\t:   -',
             (
-              parseInt(event.data[1].toHuman().replaceAll(",", "")) /
+              parseInt(event.data[1].toHuman().replaceAll(',', '')) /
               10 ** 12
             ).toFixed(6)
           );
@@ -74,9 +74,9 @@ export const txResponseErrorHandler = async ({
 
         if (api.events.balances?.Reserved.is(event)) {
           console.log(
-            "^^ Reserved\t\t\t\t:   -",
+            '^^ Reserved\t\t\t\t:   -',
             (
-              parseInt(event.data[1].toHuman().replaceAll(",", "")) /
+              parseInt(event.data[1].toHuman().replaceAll(',', '')) /
               10 ** 12
             ).toFixed(6)
           );
@@ -84,9 +84,9 @@ export const txResponseErrorHandler = async ({
 
         if (api.events.balances?.ReserveRepatriated.is(event)) {
           console.log(
-            "^^ Reserve Repatriated\t:   +",
+            '^^ Reserve Repatriated\t:   +',
             (
-              parseInt(event.data[2].toHuman().replaceAll(",", "")) /
+              parseInt(event.data[2].toHuman().replaceAll(',', '')) /
               10 ** 12
             ).toFixed(6)
           );
@@ -98,17 +98,17 @@ export const txResponseErrorHandler = async ({
       );
 
       console.log(
-        "^^ Balance END\t\t\t:",
+        '^^ Balance END\t\t\t:',
         balance.free.toHuman().slice(0, -16) +
-          "." +
+          '.' +
           balance.free.toHuman().slice(-15, -8)
       );
 
-      console.log("^^ Tx finalized at ", `${url}${statusToHuman[0][1]}`);
+      console.log('^^ Tx finalized at ', `${url}${statusToHuman[0][1]}`);
       console.log(`^^==================Log end==================`);
 
       toast.error(`There is some error with your request..`);
-      console.log("section", `${section}.${name}: ${docs.join(" ")}`);
+      console.log('section', `${section}.${name}: ${docs.join(' ')}`);
       // return toast.error(`${section}.${name}: ${docs.join(" ")}`);
     } else {
       // console.log("dispatchError.toString()", dispatchError.toString());
@@ -121,7 +121,7 @@ export const txResponseErrorHandler = async ({
 
     const url = `https://test.azero.dev/#/explorer/query/`;
 
-    if (Object.keys(status.toHuman())[0] === "0") {
+    if (Object.keys(status.toHuman())[0] === '0') {
       dispatch(setTxStatus({ txType, txStatus: READY, step: READY, type }));
 
       // await fetchUserBalance({ currentAccount: caller_account, api }).then(
@@ -173,9 +173,9 @@ export const txResponseErrorHandler = async ({
 
           if (api.events.transactionPayment?.TransactionFeePaid.is(event)) {
             console.log(
-              "^^ Txn Fee Paid\t\t\t:   -",
+              '^^ Txn Fee Paid\t\t\t:   -',
               (
-                parseInt(event.data[1].toHuman().replaceAll(",", "")) /
+                parseInt(event.data[1].toHuman().replaceAll(',', '')) /
                 10 ** 12
               ).toFixed(6)
             );
@@ -183,9 +183,9 @@ export const txResponseErrorHandler = async ({
 
           if (api.events.balances?.Reserved.is(event)) {
             console.log(
-              "^^ Reserved\t\t\t\t:   -",
+              '^^ Reserved\t\t\t\t:   -',
               (
-                parseInt(event.data[1].toHuman().replaceAll(",", "")) /
+                parseInt(event.data[1].toHuman().replaceAll(',', '')) /
                 10 ** 12
               ).toFixed(6)
             );
@@ -193,26 +193,25 @@ export const txResponseErrorHandler = async ({
 
           if (api.events.balances?.ReserveRepatriated.is(event)) {
             console.log(
-              "^^ Reserve Repatriated\t:   +",
+              '^^ Reserve Repatriated\t:   +',
               (
-                parseInt(event.data[2].toHuman().replaceAll(",", "")) /
+                parseInt(event.data[2].toHuman().replaceAll(',', '')) /
                 10 ** 12
               ).toFixed(6)
             );
           }
         });
-
         const { data: balance } = await api.query.system.account(
           caller_account?.address
         );
 
         console.log(
-          "^^ Balance END\t\t\t:",
+          '^^ Balance END\t\t\t:',
           balance.free.toHuman().slice(0, -16) +
-            "." +
+            '.' +
             balance.free.toHuman().slice(-15, -8)
         );
-        console.log("^^ Tx finalized at ", `${url}${statusToHuman[0][1]}`);
+        console.log('^^ Tx finalized at ', `${url}${statusToHuman[0][1]}`);
         console.log(`^^==================Log end==================`);
       }
     }

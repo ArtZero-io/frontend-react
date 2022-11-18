@@ -6,19 +6,19 @@ import {
   Text,
   HStack,
   useMediaQuery,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import React, { useEffect, useState } from "react";
-import MyNFTGroupCard from "@components/Card/MyNFTGroup";
-import { useSubstrateState } from "@utils/substrate";
-import RefreshIcon from "@theme/assets/icon/Refresh.js";
-import { clientAPI } from "@api/client";
-import AnimationLoader from "@components/Loader/AnimationLoader";
-import CommonButton from "@components/Button/CommonButton";
-import CommonContainer from "@components/Container/CommonContainer";
-import useForceUpdate from "@hooks/useForceUpdate";
-import useTxStatus from "@hooks/useTxStatus";
-import DropdownMobile from "@components/Dropdown/DropdownMobile";
+import React, { useCallback, useEffect, useState } from 'react';
+import MyNFTGroupCard from '@components/Card/MyNFTGroup';
+import { useSubstrateState } from '@utils/substrate';
+import RefreshIcon from '@theme/assets/icon/Refresh.js';
+import { clientAPI } from '@api/client';
+import AnimationLoader from '@components/Loader/AnimationLoader';
+import CommonButton from '@components/Button/CommonButton';
+import CommonContainer from '@components/Container/CommonContainer';
+import useForceUpdate from '@hooks/useForceUpdate';
+import useTxStatus from '@hooks/useTxStatus';
+import DropdownMobile from '@components/Dropdown/DropdownMobile';
 
 import {
   REMOVE_BID,
@@ -27,8 +27,8 @@ import {
   LOCK,
   TRANSFER,
   ACCEPT_BID,
-} from "@constants";
-import { APICall } from "../../../api/client";
+} from '@constants';
+import { APICall } from '../../../api/client';
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
@@ -41,17 +41,22 @@ const MyNFTsPage = () => {
 
   const [owner, setOwner] = useState(null);
   const [loading, setLoading] = useState(null);
-  const [filterSelected, setFilterSelected] = useState("COLLECTED");
+  const [filterSelected, setFilterSelected] = useState('COLLECTED');
   const [myCollections, setMyCollections] = useState(null);
 
   const handleForceUpdate = async () => {
-    if (actionType === LIST_TOKEN) return setFilterSelected("LISTING");
-
-    if (actionType === UNLIST_TOKEN) {
-      return setFilterSelected("COLLECTED");
+    if (actionType === ACCEPT_BID) {
+      fetchMyCollections();
+      return setFilterSelected('LISTING');
     }
 
-    setFilterSelected("COLLECTED");
+    if (actionType === LIST_TOKEN) return setFilterSelected('LISTING');
+
+    if (actionType === UNLIST_TOKEN) {
+      return setFilterSelected('COLLECTED');
+    }
+
+    setFilterSelected('COLLECTED');
   };
 
   function onClickHandler(v) {
@@ -61,67 +66,67 @@ const MyNFTsPage = () => {
     }
   }
 
-  useEffect(() => {
-    const fetchMyCollections = async () => {
-      try {
-        setLoading(true);
-        const allCollectionsOwned = await clientAPI("post", "/getCollections", {
-          limit: 10000,
-          offset: 0,
-          sort: -1,
-          isActive: true,
-        });
-        // console.log("allCollectionsOwned", allCollectionsOwned);
-        let data = await Promise.all(
-          allCollectionsOwned?.map(async (collection) => {
-            const options = {
-              collection_address: collection.nftContractAddress,
-              owner: currentAccount?.address,
-              limit: 10000,
-              offset: 0,
-              sort: -1,
-            };
+  const fetchMyCollections = useCallback(async () => {
+    try {
+      setLoading(true);
+      const allCollectionsOwned = await clientAPI('post', '/getCollections', {
+        limit: 10000,
+        offset: 0,
+        sort: -1,
+        isActive: true,
+      });
+      // console.log("allCollectionsOwned", allCollectionsOwned);
+      let data = await Promise.all(
+        allCollectionsOwned?.map(async (collection) => {
+          const options = {
+            collection_address: collection.nftContractAddress,
+            owner: currentAccount?.address,
+            limit: 10000,
+            offset: 0,
+            sort: -1,
+          };
 
-            let { ret: dataList } = await APICall.getNFTsByOwnerAndCollection(
-              options
-            );
+          let { ret: dataList } = await APICall.getNFTsByOwnerAndCollection(
+            options
+          );
 
-            if (filterSelected === "COLLECTED") {
-              dataList = dataList.filter((item) => item.is_for_sale !== true);
-            }
+          if (filterSelected === 'COLLECTED') {
+            dataList = dataList.filter((item) => item.is_for_sale !== true);
+          }
 
-            if (filterSelected === "LISTING") {
-              dataList = dataList.filter((item) => item.is_for_sale === true);
-            }
+          if (filterSelected === 'LISTING') {
+            dataList = dataList.filter((item) => item.is_for_sale === true);
+          }
 
-            const data = dataList?.map((item) => {
-              return { ...item, stakeStatus: 0 };
-            });
+          const data = dataList?.map((item) => {
+            return { ...item, stakeStatus: 0 };
+          });
 
-            collection.listNFT = data;
+          collection.listNFT = data;
 
-            return collection;
-          })
-        );
+          return collection;
+        })
+      );
 
-        //Don't Display Collection with no NFT
-        data = data.filter((item) => item.listNFT?.length > 0);
+      //Don't Display Collection with no NFT
+      data = data.filter((item) => item.listNFT?.length > 0);
 
-        if (data?.length) {
-          setMyCollections(data);
-          const nft = data[0].listNFT[0];
+      if (data?.length) {
+        setMyCollections(data);
+        const nft = data[0].listNFT[0];
 
-          setOwner(nft.is_for_sale ? nft.nft_owner : nft.owner);
-        } else {
-          setMyCollections(null);
-        }
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
+        setOwner(nft.is_for_sale ? nft.nft_owner : nft.owner);
+      } else {
+        setMyCollections(null);
       }
-    };
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  }, [currentAccount?.address, filterSelected]);
 
+  useEffect(() => {
     const fetchMyBids = async () => {
       try {
         setLoading(true);
@@ -200,32 +205,32 @@ const MyNFTsPage = () => {
     };
 
     // if (!myCollections || owner !== currentAccount?.address) {
-    filterSelected !== "BIDS" ? fetchMyCollections() : fetchMyBids();
+    filterSelected !== 'BIDS' ? fetchMyCollections() : fetchMyBids();
     // }
-  }, [currentAccount?.address, filterSelected, owner]);
+  }, [currentAccount?.address, fetchMyCollections, filterSelected, owner]);
 
-  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+  const [isBigScreen] = useMediaQuery('(min-width: 480px)');
 
   return (
     <CommonContainer>
       <Flex
         w="full"
         alignItems="center"
-        mb={["20px", "48px"]}
-        direction={{ base: "column", xl: "row" }}
+        mb={['20px', '48px']}
+        direction={{ base: 'column', xl: 'row' }}
       >
-        <Heading fontSize={["3xl-mid", "5xl"]} minW="100px">
+        <Heading fontSize={['3xl-mid', '5xl']} minW="100px">
           my nfts
         </Heading>
 
         <Spacer />
 
         {isBigScreen && (
-          <HStack maxW={{ base: "320px", md: "500px" }}>
+          <HStack maxW={{ base: '320px', md: '500px' }}>
             {[
-              { id: "COLLECTED", text: "my collected" },
-              { id: "LISTING", text: "my listing" },
-              { id: "BIDS", text: "my bids" },
+              { id: 'COLLECTED', text: 'my collected' },
+              { id: 'LISTING', text: 'my listing' },
+              { id: 'BIDS', text: 'my bids' },
             ].map((i, idx) => (
               <CommonButton
                 {...i}
@@ -249,7 +254,7 @@ const MyNFTsPage = () => {
       </Flex>
 
       {!isBigScreen && (
-        <HStack w="full" pb={[0, "8px"]} justifyContent="space-between">
+        <HStack w="full" pb={[0, '8px']} justifyContent="space-between">
           <IconButton
             mr="2px"
             size="icon"
@@ -257,10 +262,10 @@ const MyNFTsPage = () => {
             aria-label="refresh"
             onClick={() => setMyCollections(null)}
             icon={<RefreshIcon />}
-            _hover={{ color: "black", bg: "#7ae7ff" }}
+            _hover={{ color: 'black', bg: '#7ae7ff' }}
           />
 
-          <Spacer display={["none", "flex"]} />
+          <Spacer display={['none', 'flex']} />
 
           <DropdownMobile
             minW="256px"
@@ -286,7 +291,7 @@ const MyNFTsPage = () => {
             <HStack
               py={10}
               ml={3}
-              w={"full"}
+              w={'full'}
               align="start"
               justifyContent="center"
             >
@@ -295,7 +300,7 @@ const MyNFTsPage = () => {
               </Text>
             </HStack>
           )}
-
+          {console.log('myCollections', myCollections)}{' '}
           {myCollections &&
             myCollections?.map((item, idx) => {
               return (
@@ -316,7 +321,7 @@ const MyNFTsPage = () => {
 export default MyNFTsPage;
 
 export const tabList = {
-  COLLECTED: "COLLECTED",
-  LISTING: "MY LISTING",
-  BIDS: "MY BIDS",
+  COLLECTED: 'COLLECTED',
+  LISTING: 'MY LISTING',
+  BIDS: 'MY BIDS',
 };

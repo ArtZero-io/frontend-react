@@ -16,27 +16,27 @@ import {
   Tag,
   TagLabel,
   CloseButton,
-} from "@chakra-ui/react";
-import { BsGrid3X3 } from "react-icons/bs";
-import RefreshIcon from "@theme/assets/icon/Refresh.js";
-import BigGridIcon from "@theme/assets/icon/BigGrid";
+} from '@chakra-ui/react';
+import { BsGrid3X3 } from 'react-icons/bs';
+import RefreshIcon from '@theme/assets/icon/Refresh.js';
+import BigGridIcon from '@theme/assets/icon/BigGrid';
 
-import { useHistory } from "react-router-dom";
-import React, { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useHistory } from 'react-router-dom';
+import React, { useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 
-import AddNewNFTModal from "./Modal/AddNewNFT";
-import NFTDetailModal from "./Modal/NFTDetail";
+import AddNewNFTModal from './Modal/AddNewNFT';
+import NFTDetailModal from './Modal/NFTDetail';
 
-import { formMode } from "@constants";
-import { useSubstrateState } from "@utils/substrate/SubstrateContext";
+import { formMode } from '@constants';
+import { useSubstrateState } from '@utils/substrate/SubstrateContext';
 
-import Dropdown from "@components/Dropdown/Dropdown";
-import CommonButton from "@components/Button/CommonButton";
-import AnimationLoader from "@components/Loader/AnimationLoader";
-import DropdownMobile from "@components/Dropdown/DropdownMobile";
-import { CommonCard } from "@components/Card/NFTChangeSize";
-import LeftPanel from "./LeftPanel";
+import Dropdown from '@components/Dropdown/Dropdown';
+import CommonButton from '@components/Button/CommonButton';
+import AnimationLoader from '@components/Loader/AnimationLoader';
+import DropdownMobile from '@components/Dropdown/DropdownMobile';
+import { CommonCard } from '@components/Card/NFTChangeSize';
+import LeftPanel from './LeftPanel';
 
 const CollectionItems = ({
   result,
@@ -63,12 +63,13 @@ const CollectionItems = ({
   const { currentAccount } = useSubstrateState();
 
   const [bigCardNew, setBigCardNew] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(0);
+  const [selectedItem, setSelectedItem] = useState(1);
 
   const options = [
     // "Price: Newest",
-    "Price: Low to High",
-    "Price: High to Low",
+    `${activeTab === 'LISTED' ? 'Price' : 'ID'}: Low to High`,
+    `${activeTab === 'LISTED' ? 'Price' : 'ID'}: High to Low`,
+    // 'Price: High to Low',
   ];
 
   // 0 Low first, setSortData(1)
@@ -93,7 +94,7 @@ const CollectionItems = ({
 
   const sortedNFT = getSortedNFT();
 
-  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+  const [isBigScreen] = useMediaQuery('(min-width: 480px)');
 
   // NEW FIXED GRID LAYOUT START
   const newGridWrapperRef = useRef();
@@ -124,9 +125,9 @@ const CollectionItems = ({
       />
 
       <Stack flexGrow={1}>
-        <Box w="full" mx="auto" textAlign="left" px={["12px", 0]}>
-          <Stack direction={{ base: "column", md: "row" }} w="full">
-            <HStack pb={[0, "8px"]} justifyContent="space-between">
+        <Box w="full" mx="auto" textAlign="left" px={['12px', 0]}>
+          <Stack direction={{ base: 'column', md: 'row' }} w="full">
+            <HStack pb={[0, '8px']} justifyContent="space-between">
               <IconButton
                 mr="2px"
                 size="icon"
@@ -134,10 +135,10 @@ const CollectionItems = ({
                 aria-label="refresh"
                 onClick={() => forceUpdate()}
                 icon={<RefreshIcon />}
-                _hover={{ color: "black", bg: "#7ae7ff" }}
+                _hover={{ color: 'black', bg: '#7ae7ff' }}
               />
 
-              <Spacer display={["none", "flex"]} />
+              <Spacer display={['none', 'flex']} />
 
               {!isBigScreen ? (
                 <DropdownMobile
@@ -159,18 +160,18 @@ const CollectionItems = ({
                     variant="outline"
                     isActive={item === activeTab}
                     onClick={() => setActiveTab(item)}
-                    _active={{ bg: "brand.blue", color: "black" }}
+                    _active={{ bg: 'brand.blue', color: 'black' }}
                   />
                 ))
               )}
             </HStack>
 
-            <Spacer display={["none", "flex"]} />
+            <Spacer display={['none', 'flex']} />
 
-            <Flex justifyContent="space-between" align="center" pr={[0, "8px"]}>
+            <Flex justifyContent="space-between" align="center" pr={[0, '8px']}>
               <Dropdown
                 width="full"
-                minW={["330px", "250px"]}
+                minW={['330px', '250px']}
                 options={options}
                 selectedItem={selectedItem}
                 setSelectedItem={(i) => {
@@ -186,9 +187,9 @@ const CollectionItems = ({
               size="icon"
               variant="iconSolid"
               aria-label="big-card"
-              bg={bigCardNew ? "#7ae7ff" : "#222"}
-              color={bigCardNew ? "#000" : "#fff"}
-              display={{ base: "none", xl: "flex" }}
+              bg={bigCardNew ? '#7ae7ff' : '#222'}
+              color={bigCardNew ? '#000' : '#fff'}
+              display={{ base: 'none', xl: 'flex' }}
               icon={<BigGridIcon />}
               // onClick={() => setBigCard(true)}
               onClick={() => setBigCardNew(true)}
@@ -199,9 +200,9 @@ const CollectionItems = ({
               size="icon"
               variant="iconSolid"
               aria-label="small-card"
-              bg={!bigCardNew ? "#7ae7ff" : "#222"}
-              color={!bigCardNew ? "#000" : "#fff"}
-              display={{ base: "none", xl: "flex" }}
+              bg={!bigCardNew ? '#7ae7ff' : '#222'}
+              color={!bigCardNew ? '#000' : '#fff'}
+              display={{ base: 'none', xl: 'flex' }}
               icon={<BsGrid3X3 fontSize="20px" />}
               //   onClick={() => setBigCard(false)}
               onClick={() => setBigCardNew(false)}
@@ -210,9 +211,9 @@ const CollectionItems = ({
 
           <Flex
             align="center"
-            pt={{ base: "10px", xl: "34px", "2xl": "34px" }}
-            pb={{ base: "10px", xl: "16px" }}
-            minH={{ base: 14, "2xl": 24 }}
+            pt={{ base: '10px', xl: '34px', '2xl': '34px' }}
+            pb={{ base: '10px', xl: '16px' }}
+            minH={{ base: 14, '2xl': 24 }}
             w="full"
           >
             {sortedNFT && (
@@ -223,14 +224,14 @@ const CollectionItems = ({
               >
                 <Text px={2} color="#888">
                   {totalCount || 0} item
-                  {totalCount > 1 ? "s " : " "}
-                  {activeTab === "ALL"
-                    ? "in total"
-                    : activeTab === "LISTED"
-                    ? "listed"
-                    : activeTab === "UNLISTED"
-                    ? "unlisted"
-                    : ""}
+                  {totalCount > 1 ? 's ' : ' '}
+                  {activeTab === 'ALL'
+                    ? 'in total'
+                    : activeTab === 'LISTED'
+                    ? 'listed'
+                    : activeTab === 'UNLISTED'
+                    ? 'unlisted'
+                    : ''}
                 </Text>
               </motion.div>
             )}
@@ -289,7 +290,7 @@ const CollectionItems = ({
               colorScheme="black"
               border="1px solid #7ae7ff"
               onClick={() => setTraitsQuery({})}
-              display={Object.keys(traitsQuery)?.length === 0 ? "none" : "flex"}
+              display={Object.keys(traitsQuery)?.length === 0 ? 'none' : 'flex'}
             >
               <TagLabel cursor="pointer" mx="4px" fontSize="14px">
                 Clear all
@@ -302,7 +303,7 @@ const CollectionItems = ({
           ref={newGridWrapperRef}
           maxW="1722px"
           mx="auto"
-          px={["12px", "0px"]}
+          px={['12px', '0px']}
         >
           {loading ? (
             <AnimationLoader loadingTime={loadingTime} />
@@ -327,9 +328,9 @@ const CollectionItems = ({
 export default CollectionItems;
 
 export const tabList = {
-  ALL: "show all",
-  LISTED: "show listed",
-  UNLISTED: "show unlisted",
+  ALL: 'show all',
+  LISTED: 'show listed',
+  UNLISTED: 'show unlisted',
 };
 
 const CollectionGridNew = ({
@@ -346,7 +347,7 @@ const CollectionGridNew = ({
   const [selectedNft, setSelectedNft] = useState(null);
 
   const history = useHistory();
-  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+  const [isBigScreen] = useMediaQuery('(min-width: 480px)');
 
   function handleOnClick(item) {
     if (isBigScreen) {

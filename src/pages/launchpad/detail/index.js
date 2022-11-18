@@ -662,7 +662,6 @@ const LaunchpadDetailPage = () => {
                   </Text>
                 </Flex>
               ) : null}
-
               {/* //Public phases*/}
               {currentAccount &&
                 activePhaseId &&
@@ -690,12 +689,10 @@ const LaunchpadDetailPage = () => {
                               currentPhase?.publicMintingAmount
                           }
                           value={mintingAmount}
-                          max={
-                            currentPhase?.publicRemainAmount >
+                          max={Math.min(
+                            currentPhase?.publicRemainAmount,
                             currentPhase?.publicMaxMintingAmount
-                              ? currentPhase?.publicMaxMintingAmount
-                              : currentPhase?.publicRemainAmount
-                          }
+                          )}
                           onChange={(valueString) =>
                             setMintingAmount(valueString)
                           }
@@ -725,6 +722,37 @@ const LaunchpadDetailPage = () => {
                               currentPhase?.publicMintingAmount
                           }
                         />
+
+                        {currentPhase?.publicClaimedAmount <
+                          currentPhase?.publicMintingAmount &&
+                        mintingAmount >
+                          Math.min(
+                            currentPhase?.publicRemainAmount,
+                            currentPhase?.publicMaxMintingAmount
+                          ) ? (
+                          <Text
+                            textAlign="left"
+                            color="#ff8c8c"
+                            ml={1}
+                            fontSize="sm"
+                          >
+                            You can only mint maximum{' '}
+                            {Math.min(
+                              currentPhase?.publicRemainAmount,
+                              currentPhase?.publicMaxMintingAmount
+                            )}{' '}
+                            NFT
+                            {Math.min(
+                              currentPhase?.publicRemainAmount,
+                              currentPhase?.publicMaxMintingAmount
+                            ) > 1
+                              ? 's'
+                              : ''}
+                            .
+                          </Text>
+                        ) : (
+                          ''
+                        )}
                       </>
                     ) : (
                       <Text fontSize="lg" color="#888">
@@ -733,7 +761,6 @@ const LaunchpadDetailPage = () => {
                     )}
                   </HStack>
                 )}
-
               {/* //WhiteList phases*/}
               {currentAccount &&
                 activePhaseId &&
@@ -747,7 +774,6 @@ const LaunchpadDetailPage = () => {
                   >
                     {userWLInfo[currentPhase?.id - 1]?.whitelistAmount ? (
                       <>
-                        {' '}
                         <NumberInput
                           bg="black"
                           min={1}
@@ -776,6 +802,7 @@ const LaunchpadDetailPage = () => {
                             <NumberDecrementStepper />
                           </NumberInputStepper>
                         </NumberInput>
+
                         <CommonButton
                           w={['full', 'auto']}
                           mx="0"
@@ -789,6 +816,23 @@ const LaunchpadDetailPage = () => {
                           text="whitelist mint"
                           onClick={onWhiteListMint}
                         />
+
+                        {whitelistMintingAmount >
+                        userWLInfo[currentPhase?.id - 1]?.remainAmount ? (
+                          <Text
+                            textAlign="left"
+                            color="#ff8c8c"
+                            ml={1}
+                            fontSize="sm"
+                          >
+                            You can only mint maximum{' '}
+                            {userWLInfo[currentPhase?.id - 1]?.remainAmount} NFT
+                            {userWLInfo[currentPhase?.id - 1]?.remainAmount > 1
+                              ? 's'
+                              : ''}
+                            .
+                          </Text>
+                        ) : null}
                       </>
                     ) : (
                       <Text fontSize="lg" color="#888">
@@ -1091,11 +1135,17 @@ const LaunchpadDetailPage = () => {
 
               <HStack
                 py="15px"
+                px="30px"
                 alignItems="center"
-                justifyContent={['space-between', 'start']}
                 borderBottom="1px solid #303030"
+                justifyContent={['space-between', 'start']}
               >
-                <Heading color="#888" fontSize="15px" minW={['100px', '240px']}>
+                <Heading
+                  w="50%"
+                  color="#888"
+                  fontSize="15px"
+                  minW={['100px', '240px']}
+                >
                   NFT Name
                 </Heading>
                 <Heading color="#888" fontSize="15px">
@@ -1105,21 +1155,26 @@ const LaunchpadDetailPage = () => {
 
               {pageNFT.map((item, idx) => (
                 <HStack
-                  justifyContent={['space-between', 'start']}
                   key={idx}
                   py="15px"
+                  px="30px"
                   alignItems="center"
                   borderBottom="1px solid #303030"
+                  justifyContent={['space-between', 'start']}
                 >
-                  <Heading fontSize={['md', 'lg']} minW={['100px', '240px']}>
+                  <Heading
+                    w="50%"
+                    fontSize={['md', 'lg']}
+                    minW={['100px', '240px']}
+                  >
                     {item.nftName}
                   </Heading>
 
                   <ImageCloudFlare
                     mr={['12px', '32px']}
                     size="100"
-                    w="50px"
-                    h="50px"
+                    w="128px"
+                    h="128px"
                     src={item['avatar']}
                   />
                 </HStack>
