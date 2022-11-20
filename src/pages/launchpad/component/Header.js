@@ -649,7 +649,7 @@ const CountDownTimer = memo(({ countDownTimer, status }) => {
       borderWidth={2}
       color="brand.blue"
       borderColor="brand.blue"
-      h={["210px", "full", "full"]}
+      h={["202px", "full", "full"]}
     >
       <Box
         h="32px"

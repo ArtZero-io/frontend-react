@@ -72,8 +72,8 @@ function CollectionHeader(props) {
             <ImageCloudFlare
               size="500"
               borderRadius="full"
-              h={['68px', '120px', '120px']}
-              w={['68px', '120px', '120px']}
+              h={['60px', '120px', '120px']}
+              w={['60px', '120px', '120px']}
               src={avatarImage}
             />
           </Center>

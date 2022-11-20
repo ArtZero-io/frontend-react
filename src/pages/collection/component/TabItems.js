@@ -249,9 +249,9 @@ const CollectionItems = ({
         </Box>
 
         <Wrap>
-          {Object.entries(traitsQuery).map(([k, arr]) => (
-            <WrapItem key={k}>
-              {arr.map((item, idx) => (
+          {Object.entries(traitsQuery).map(([k, arr]) => {
+            return arr?.map((item, idx) => (
+              <WrapItem key={k}>
                 <Tag
                   mx="4px"
                   borderRadius="0"
@@ -278,9 +278,9 @@ const CollectionItems = ({
                     }}
                   />
                 </Tag>
-              ))}
-            </WrapItem>
-          ))}
+              </WrapItem>
+            ));
+          })}
           <WrapItem>
             <Tag
               h="24px"
