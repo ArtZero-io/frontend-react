@@ -8,11 +8,11 @@ import {
   useDisclosure,
   useBreakpointValue,
   ModalHeader,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import useTxStatus from "@hooks/useTxStatus";
-import { formMode, SCROLLBAR, FINALIZED } from "@constants";
-import MyWhiteListProjectPage from "../whitelist";
+import useTxStatus from '@hooks/useTxStatus';
+import { formMode, SCROLLBAR, FINALIZED } from '@constants';
+import MyWhiteListProjectPage from '../whitelist';
 
 function WhitelistManagerModal({
   mode = formMode.ADD,
@@ -22,7 +22,7 @@ function WhitelistManagerModal({
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { step, onEndClick } = useTxStatus();
-  const modalSize = useBreakpointValue(["xs", "6xl"]);
+  const modalSize = useBreakpointValue(['xs', '6xl']);
 
   // useEffect(() => {
   //   step === END && onClose();
@@ -32,6 +32,7 @@ function WhitelistManagerModal({
     <>
       {mode === formMode.ADD && (
         <Button
+          w={['full', 'auto']}
           isDisabled={isDisabled}
           variant="outline"
           color="brand.blue"
@@ -47,7 +48,7 @@ function WhitelistManagerModal({
         size={modalSize}
         onClose={onClose}
         closeOnEsc={false}
-        scrollBehavior={"inside"}
+        scrollBehavior={'inside'}
         closeOnOverlayClick={false}
       >
         <ModalOverlay
@@ -59,15 +60,15 @@ function WhitelistManagerModal({
           textAlign="center"
           position="relative"
           bg="brand.grayDark"
-          px={["4px", "24px", "24px"]}
-          pb={["4px", "32px", "32px"]}
+          px={['4px', '24px', '24px']}
+          pb={['4px', '32px', '32px']}
         >
           <ModalCloseButton
             borderWidth={2}
             borderRadius="0"
             position="absolute"
-            top={["0", "-8", "-8"]}
-            right={["0", "-8", "-8"]}
+            top={['0', '-8', '-8']}
+            right={['0', '-8', '-8']}
             onClick={() => step === FINALIZED && onEndClick()}
           />
           <ModalHeader></ModalHeader>

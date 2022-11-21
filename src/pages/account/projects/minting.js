@@ -35,6 +35,7 @@ import { APICall } from '@api/client';
 import { useMemo } from 'react';
 import { clearTxStatus } from '@store/actions/txStatus';
 import { isPhaseEnd } from '@utils';
+import { SCROLLBAR } from '@constants';
 
 function MyMintingProjectPage() {
   const dispatch = useDispatch();
@@ -331,6 +332,8 @@ function MyMintingProjectPage() {
       </Stack>
 
       <Stack
+        overflowX="scroll"
+        sx={SCROLLBAR}
         py="10px"
         w="full"
         borderTop="1px solid #303030"

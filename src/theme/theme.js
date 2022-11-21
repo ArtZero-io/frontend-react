@@ -1,136 +1,136 @@
-import { extendTheme } from "@chakra-ui/react";
+import { extendTheme } from '@chakra-ui/react';
 
 const theme = extendTheme({
-  config: { initialColorMode: "dark", useSystemColorMode: false },
+  config: { initialColorMode: 'dark', useSystemColorMode: false },
   fonts: {
     heading: `Evogria Italic, sans-serif`,
     body: `Oswald, sans-serif`,
   },
   fontSizes: {
-    "3xl-mid": "2rem", //32px
-    "4xl-mid": "2.5rem", //40px
-    "5xl-mid": "3.5rem", // 56px
+    '3xl-mid': '2rem', //32px
+    '4xl-mid': '2.5rem', //40px
+    '5xl-mid': '3.5rem', // 56px
   },
   colors: {
     brand: {
-      blue: "#7AE7FF",
-      grayLight: "#888888",
-      grayDark: "#222222",
-      semiBlack: "#171717",
+      blue: '#7AE7FF',
+      grayLight: '#888888',
+      grayDark: '#222222',
+      semiBlack: '#171717',
     },
   },
   sizes: {
-    "6xl-mid": "78rem",
+    '6xl-mid': '78rem',
     container: {
-      "3xl": "1920px",
+      '3xl': '1920px',
     },
   },
   styles: {
     global: {
-      "*": {
-        // border: "1px yellow dotted",
+      '*': {
+        // border: '1px yellow dotted',
       },
       html: {
-        minHeight: "100vh",
-        scrollBehavior: "smooth",
+        minHeight: '100vh',
+        scrollBehavior: 'smooth',
       },
       body: {
-        height: "100%",
+        height: '100%',
         margin: 0,
         padding: 0,
-        backgroundColor: "#000",
-        color: "#fff",
-        fontWeight: "normal",
-        fontSize: "16px",
+        backgroundColor: '#000',
+        color: '#fff',
+        fontWeight: 'normal',
+        fontSize: '16px',
         // "-msOverflowStyle": "none",
-        scrollbarWidth: "none",
+        scrollbarWidth: 'none',
       },
-      "body::-webkit-scrollbar": {
-        display: "none",
+      'body::-webkit-scrollbar': {
+        display: 'none',
       },
-      "#root": {
-        height: "100%",
+      '#root': {
+        height: '100%',
       },
-      "#tsparticles .tsparticles-canvas": {
-        height: "100%",
-        width: "100%",
+      '#tsparticles .tsparticles-canvas': {
+        height: '100%',
+        width: '100%',
         // minHeight: "4133px",
       },
-      h1: { textTransform: "uppercase" },
-      h2: { textTransform: "uppercase" },
-      h3: { textTransform: "uppercase" },
-      h4: { textTransform: "uppercase" },
-      h5: { textTransform: "uppercase" },
-      h6: { textTransform: "uppercase" },
-      a: { textTransform: "uppercase" },
+      h1: { textTransform: 'uppercase' },
+      h2: { textTransform: 'uppercase' },
+      h3: { textTransform: 'uppercase' },
+      h4: { textTransform: 'uppercase' },
+      h5: { textTransform: 'uppercase' },
+      h6: { textTransform: 'uppercase' },
+      a: { textTransform: 'uppercase' },
       button: {
         fontFamily: `Evogria, sans-serif`,
-        fontStyle: "normal",
-        fontWeight: "normal",
-        fontSize: "0.9375rem",
-        lineHeight: "1.1875rem",
-        textAlign: "center",
-        textTransform: "uppercase",
-        color: "#7AE7FF",
+        fontStyle: 'normal',
+        fontWeight: 'normal',
+        fontSize: '0.9375rem',
+        lineHeight: '1.1875rem',
+        textAlign: 'center',
+        textTransform: 'uppercase',
+        color: '#7AE7FF',
       },
     },
   },
   components: {
     Button: {
       baseStyle: {
-        height: "3.125rem",
+        height: '3.125rem',
         // minWidth: "11.25rem",
         borderRadius: 0,
-        px: "2rem",
-        fontWeight: "normal",
+        px: '2rem',
+        fontWeight: 'normal',
       },
       sizes: {
         icon: {
-          maxWidth: "3.125rem",
-          minWidth: "3.125rem",
+          maxWidth: '3.125rem',
+          minWidth: '3.125rem',
         },
       },
       variants: {
         outline: (props) => ({
-          border: "2px solid #333",
-          bg: "transparent",
-          color: "#7AE7FF",
+          border: '2px solid #333',
+          bg: 'transparent',
+          color: '#7AE7FF',
           _hover: {
-            border: "2px solid #7AE7FF",
-            bg: "transparent",
-            filter: "drop-shadow(1px 3px 7px #7AE7FF70)",
-            transition: "all 0.2s cubic-bezier(.08,.52,.52,1)",
+            border: '2px solid #7AE7FF',
+            bg: 'transparent',
+            filter: 'drop-shadow(1px 3px 7px #7AE7FF70)',
+            transition: 'all 0.2s cubic-bezier(.08,.52,.52,1)',
 
             _disabled: {
-              color: "#888",
-              border: "2px solid #333",
-              filter: "none",
+              color: '#888',
+              border: '2px solid #333',
+              filter: 'none',
             },
           },
           _focus: {
-            border: "2px solid #7AE7FF",
-            bg: "transparent",
+            border: '2px solid #7AE7FF',
+            bg: 'transparent',
           },
           _disabled: {
-            color: "#888",
-            border: "2px solid #333",
+            color: '#888',
+            border: '2px solid #333',
           },
         }),
         solid: (props) => ({
-          bg: "#7AE7FF",
-          color: "#000",
+          bg: '#7AE7FF',
+          color: '#000',
           _hover: {
-            bg: "#7AE7FF",
-            filter: "drop-shadow(0px 0px 14px #7AE7FF70)",
-            transition: "all 0.2s cubic-bezier(.08,.52,.52,1)",
+            bg: '#7AE7FF',
+            filter: 'drop-shadow(0px 0px 14px #7AE7FF70)',
+            transition: 'all 0.2s cubic-bezier(.08,.52,.52,1)',
             _disabled: {
-              bg: "#555",
-              filter: "none",
+              bg: '#555',
+              filter: 'none',
             },
           },
           _disabled: {
-            bg: "#555",
-            color: "#888",
+            bg: '#555',
+            color: '#888',
           },
         }),
         // icon: (props) => ({
@@ -141,48 +141,48 @@ const theme = extendTheme({
         //   },
         // }),
         iconSolid: (props) => ({
-          bg: "#222",
-          color: "#fff",
+          bg: '#222',
+          color: '#fff',
           _hover: {
-            bg: "#7AE7FF",
-            color: "black",
-            filter: "drop-shadow(0px 0px 14px #7AE7FF70)",
-            transition: "all 0.2s cubic-bezier(.08,.52,.52,1)",
+            bg: '#7AE7FF',
+            color: 'black',
+            filter: 'drop-shadow(0px 0px 14px #7AE7FF70)',
+            transition: 'all 0.2s cubic-bezier(.08,.52,.52,1)',
             _disabled: {
-              bg: "#555",
-              color: "#888",
-              filter: "none",
+              bg: '#555',
+              color: '#888',
+              filter: 'none',
             },
           },
           _disabled: {
-            bg: "#555",
-            color: "#888",
-            filter: "none",
+            bg: '#555',
+            color: '#888',
+            filter: 'none',
           },
         }),
         iconOutline: (props) => ({
-          bg: "#000",
-          border: "2px solid #333",
-          color: "#fff",
+          bg: '#000',
+          border: '2px solid #333',
+          color: '#fff',
           _hover: {
-            border: "2px solid #7AE7FF",
-            bg: "#000",
-            filter: "drop-shadow(1px 3px 7px #7AE7FF70)",
-            transition: "all 0.2s cubic-bezier(.08,.52,.52,1)",
+            border: '2px solid #7AE7FF',
+            bg: '#000',
+            filter: 'drop-shadow(1px 3px 7px #7AE7FF70)',
+            transition: 'all 0.2s cubic-bezier(.08,.52,.52,1)',
 
             _disabled: {
-              color: "#888",
-              border: "2px solid #333",
-              filter: "none",
+              color: '#888',
+              border: '2px solid #333',
+              filter: 'none',
             },
           },
           _focus: {
-            border: "2px solid #7AE7FF",
-            bg: "#000",
+            border: '2px solid #7AE7FF',
+            bg: '#000',
           },
           _disabled: {
-            color: "#888",
-            border: "2px solid #333",
+            color: '#888',
+            border: '2px solid #333',
           },
         }),
         // "buy-sell": (props) => ({
@@ -192,27 +192,27 @@ const theme = extendTheme({
         // }),
       },
       defaultProps: {
-        size: "5xl",
-        variant: "solid",
+        size: '5xl',
+        variant: 'solid',
       },
     },
     Input: {
       baseStyle: {
         field: {
-          px: "2rem",
-          h: "3.125rem",
-          bg: "#222222",
-          borderRadius: "0px",
-          mx: "0.25rem",
+          px: '2rem',
+          h: '3.125rem',
+          bg: '#222222',
+          borderRadius: '0px',
+          mx: '0.25rem',
           _placeholder: {
-            fontSize: "lg",
-            color: "brand.darkLight",
+            fontSize: 'lg',
+            color: 'brand.darkLight',
           },
         },
       },
       sizes: {
         brand: {
-          fontSize: "lg",
+          fontSize: 'lg',
         },
       },
       variants: {
@@ -222,129 +222,129 @@ const theme = extendTheme({
         // }),
       },
       defaultProps: {
-        size: "brand",
+        size: 'brand',
         variant: null,
       },
     },
     Heading: {
-      baseStyle: { fontFamily: "heading", fontWeight: "normal" },
+      baseStyle: { fontFamily: 'heading', fontWeight: 'normal' },
       sizes: {
         h1: {
-          fontSize: ["4xl-mid", null, "5xl-mid"],
+          fontSize: ['4xl-mid', null, '5xl-mid'],
           lineHeight: 1.25,
-          color: "#fff",
+          color: '#fff',
         },
         h2: {
-          fontSize: ["4xl", null, "5xl"],
+          fontSize: ['4xl', null, '5xl'],
           lineHeight: 1.25,
-          color: "#fff",
+          color: '#fff',
         },
         h3: {
-          fontSize: ["3xl-mid", null, "4xl-mid"],
+          fontSize: ['3xl-mid', null, '4xl-mid'],
           lineHeight: 1.25,
-          color: "#fff",
+          color: '#fff',
         },
         h4: {
-          fontSize: ["3xl", null, "3xl-mid"],
+          fontSize: ['3xl', null, '3xl-mid'],
           lineHeight: 1.25,
-          color: "#fff",
+          color: '#fff',
         },
         h5: {
-          fontSize: ["xl", null, "2xl"],
+          fontSize: ['xl', null, '2xl'],
           lineHeight: 1.25,
-          color: "#fff",
+          color: '#fff',
         },
         h6: {
-          fontSize: ["md", null, "lg"],
+          fontSize: ['md', null, 'lg'],
           lineHeight: 1.25,
-          color: "#fff",
+          color: '#fff',
         },
       },
     },
     Tag: {
       baseStyle: {
         container: {
-          backgroundColor: "#000",
+          backgroundColor: '#000',
         },
-        label: { bg: "#000" },
+        label: { bg: '#000' },
       },
       sizes: {
         xl: {
           container: {
             minH: 10,
-            width: "fit-content",
-            fontSize: "md",
+            width: 'fit-content',
+            fontSize: 'md',
             borderRadius: 0,
             borderWidth: 0,
             px: 3,
           },
           label: {
-            textAlign: "center",
-            color: "#fff",
+            textAlign: 'center',
+            color: '#fff',
           },
         },
-        "2xl": {
+        '2xl': {
           container: {
-            minH: "3.125rem",
-            width: "fit-content",
-            fontSize: "md",
+            minH: '3.125rem',
+            width: 'fit-content',
+            fontSize: 'md',
             borderRadius: 0,
             borderWidth: 0,
             px: 3,
           },
           label: {
-            textAlign: "center",
+            textAlign: 'center',
           },
         },
       },
       variants: {
         outline: (props) => ({
           container: {
-            backgroundColor: "transparent",
-            borderColor: "#7AE7FF",
+            backgroundColor: 'transparent',
+            borderColor: '#7AE7FF',
             borderWidth: 0.5,
           },
           label: {
-            backgroundColor: "transparent",
-            color: "#7AE7FF",
+            backgroundColor: 'transparent',
+            color: '#7AE7FF',
           },
         }),
         grayBg: (props) => ({
           container: {
-            backgroundColor: "#222",
+            backgroundColor: '#222',
           },
           label: {
-            backgroundColor: "transparent",
-            color: "#fff",
-            fontSize: "lg",
+            backgroundColor: 'transparent',
+            color: '#fff',
+            fontSize: 'lg',
           },
         }),
         active: (props) => ({
           container: {
-            backgroundColor: "transparent",
-            borderColor: "#7AE7FF",
+            backgroundColor: 'transparent',
+            borderColor: '#7AE7FF',
             borderWidth: 0,
           },
           label: {
-            backgroundColor: "transparent",
-            color: "#7AE7FF",
+            backgroundColor: 'transparent',
+            color: '#7AE7FF',
           },
         }),
         inActive: (props) => ({
           container: {
-            backgroundColor: "transparent",
-            borderColor: "#7AE7FF",
+            backgroundColor: 'transparent',
+            borderColor: '#7AE7FF',
             borderWidth: 0,
           },
           label: {
-            backgroundColor: "transparent",
-            color: "#888",
+            backgroundColor: 'transparent',
+            color: '#888',
           },
         }),
       },
       defaultProps: {
-        size: "xl",
-        variant: "unstyled",
+        size: 'xl',
+        variant: 'unstyled',
       },
     },
   },

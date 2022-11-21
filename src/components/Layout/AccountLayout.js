@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+/* eslint-disable no-unused-vars */
+import { useEffect, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import {
   Box,
   HStack,
@@ -8,11 +9,12 @@ import {
   TabPanels,
   Tabs,
   useMediaQuery,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import * as ROUTES from "@constants/routes";
-import Layout from "@components/Layout/Layout";
-import ProfileHeader from "@pages/account/components/Header";
+import * as ROUTES from '@constants/routes';
+import Layout from '@components/Layout/Layout';
+import ProfileHeader from '@pages/account/components/Header';
+import { SCROLLBAR } from '@constants';
 
 const AccountLayout = ({ children }) => {
   const history = useHistory();
@@ -30,7 +32,7 @@ const AccountLayout = ({ children }) => {
     window.scrollTo(0, 0);
   }, []);
 
-  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+  const [isBigScreen] = useMediaQuery('(min-width: 480px)');
 
   return (
     <Layout>
@@ -51,20 +53,23 @@ const AccountLayout = ({ children }) => {
                 //  sx={SCROLLBAR}
                 overflowY="hidden"
                 overflowX="scroll"
+                py="16px"
               >
                 {tabsData.map((tab) => (
                   <Tab
-                    minW={["120px", "auto"]}
-                    px="0.5px"
+                    minW={['135px', 'auto']}
+                    px="2.5px"
                     color="#fff"
                     key={tab.label}
                     isDisabled={tab.isDisabled}
-                    py={["8px", "20px"]}
-                    fontSize={["md", "lg", "lg"]}
+                    py={['8px', '20px']}
+                    fontSize={['md', 'lg', 'lg']}
                     fontFamily="Evogria Italic, san serif"
                     _selected={{
-                      color: "#7ae7ff",
-                      borderBottom: "2px #7ae7ff solid",
+                      // color: '#7ae7ff',
+                      color: '#000',
+                      borderBottom: '2px #7ae7ff solid',
+                      bg: '#7ae7ff',
                     }}
                   >
                     {tab.label}
@@ -79,12 +84,12 @@ const AccountLayout = ({ children }) => {
                   color="#fff"
                   key={tab.label}
                   isDisabled={tab.isDisabled}
-                  py={["8px", "20px"]}
-                  fontSize={["md", "lg", "lg"]}
+                  py={['8px', '20px']}
+                  fontSize={['md', 'lg', 'lg']}
                   fontFamily="Evogria Italic, san serif"
                   _selected={{
-                    color: "#7ae7ff",
-                    borderBottom: "2px #7ae7ff solid",
+                    color: '#7ae7ff',
+                    borderBottom: '2px #7ae7ff solid',
                   }}
                 >
                   {tab.label}
@@ -111,27 +116,27 @@ export default AccountLayout;
 
 const tabsList = [
   {
-    label: "General",
+    label: 'General',
     isDisabled: false,
     route: ROUTES.ACCOUNT,
   },
   {
-    label: "My Collections",
+    label: 'My Collections',
     isDisabled: false,
     route: ROUTES.ACCOUNT_MY_COLLECTIONS,
   },
   {
-    label: "My NFTS",
+    label: 'My NFTS',
     isDisabled: false,
     route: ROUTES.ACCOUNT_MY_NFTS,
   },
   {
-    label: "My Stakes",
+    label: 'My Stakes',
     isDisabled: false,
     route: ROUTES.ACCOUNT_MY_STAKES,
   },
   {
-    label: "My Projects",
+    label: 'My Projects',
     isDisabled: false,
     route: ROUTES.ACCOUNT_MY_PROJECTS,
   },
