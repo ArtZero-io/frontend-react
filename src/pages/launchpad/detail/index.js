@@ -69,6 +69,7 @@ import ImageCloudFlare from '@components/ImageWrapper/ImageCloudFlare';
 import { APICall } from '@api/client';
 import { getMetaDataOffChain, strToNumber } from '@utils';
 import { clearTxStatus } from '@store/actions/txStatus';
+import AnimationLoader from '@components/Loader/AnimationLoader';
 
 const NUMBER_PER_PAGE = 6;
 
@@ -315,14 +316,6 @@ const LaunchpadDetailPage = () => {
       try {
         const allPhasesAddWL = await Promise.all(
           phasesInfo?.map(async (item) => {
-            const publicClaimedAmount =
-              await launchpad_psp34_nft_standard_calls.getPhaseAccountPublicClaimedAmount(
-                currentAccount,
-                collection_address,
-                item.id,
-                api
-              );
-
             const data =
               await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
                 currentAccount,
@@ -342,7 +335,6 @@ const LaunchpadDetailPage = () => {
                   data?.whitelistAmount - data?.claimedAmount
                 ),
                 mintingFee: strToNumber(data?.mintingFee),
-                publicClaimedAmount: strToNumber(publicClaimedAmount),
               };
             }
 
@@ -361,16 +353,67 @@ const LaunchpadDetailPage = () => {
         setLoadingUserWLInfo(false);
       }
     },
+    [currentAccount, phasesInfo]
+  );
+
+  const [userPLClaimedInfo, setUserPLClaimedInfo] = useState([]);
+
+  console.log('userPLClaimedInfo', userPLClaimedInfo);
+  const fetchUserPLClaimedData = useCallback(
+    async (isUnmounted) => {
+      // setLoadingUserWLInfo(true);
+
+      try {
+        const allPhasesAddWL = await Promise.all(
+          phasesInfo?.map(async (item) => {
+            let ret = null;
+
+            const userPublicClaimedAmount =
+              await launchpad_psp34_nft_standard_calls.getPhaseAccountPublicClaimedAmount(
+                currentAccount,
+                collection_address,
+                item.id,
+                api
+              );
+
+            if (userPublicClaimedAmount) {
+              ret = strToNumber(userPublicClaimedAmount);
+            }
+
+            return ret;
+          })
+        );
+
+        if (isUnmounted) return;
+
+        setUserPLClaimedInfo(allPhasesAddWL);
+        // setLoadingUserWLInfo(false);
+      } catch (error) {
+        if (isUnmounted) return;
+
+        console.log(error.message);
+        setLoadingUserWLInfo(false);
+      }
+    },
     [api, collection_address, currentAccount, phasesInfo]
   );
 
   useEffect(() => {
     let isUnmounted = false;
 
-    currentAccount && activePhaseId && fetchWhitelistData(isUnmounted);
+    if (currentAccount && activePhaseId) {
+      fetchWhitelistData(isUnmounted);
+      fetchUserPLClaimedData(isUnmounted);
+    }
 
     return () => (isUnmounted = true);
-  }, [activePhaseId, currentAccount, fetchWhitelistData, phasesInfo]);
+  }, [
+    activePhaseId,
+    currentAccount,
+    fetchUserPLClaimedData,
+    fetchWhitelistData,
+    phasesInfo,
+  ]);
 
   const onWhiteListMint = async () => {
     if (!projectInfo?.isActive) {
@@ -483,8 +526,10 @@ const LaunchpadDetailPage = () => {
       },
     });
 
+  const [loadingUserNft, setLoadingUserNft] = useState(false);
   const fetchNFTs = useCallback(
     async (isUnmounted) => {
+      setLoadingUserNft(true);
       const launchpad_psp34_nft_standard_contract = new ContractPromise(
         api,
         launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -500,19 +545,26 @@ const LaunchpadDetailPage = () => {
       const totalNFTCount = await getAccountBalanceOfPsp34NFT({
         currentAccount,
       });
+
+      console.log('totalNFTCount', totalNFTCount);
+      console.log('currentAccount', currentAccount);
       if (isUnmounted) return;
       setBalanceOfPsp34NFT(totalNFTCount || 0);
 
-      if (!totalNFTCount) return ret;
+      if (!totalNFTCount) {
+        setLoadingUserNft(false);
+        setMyNFTs([]);
+        return ret;
+      }
 
       try {
+        if (isUnmounted) return;
+
         let tokenUri = await launchpad_psp34_nft_standard_calls.tokenUri(
           currentAccount,
           1
         );
         const baseUri = tokenUri.replace('1.json', '');
-
-        if (isUnmounted) return;
 
         ret = await Promise.all(
           [...Array(totalNFTCount)].map(async (_, index) => {
@@ -528,6 +580,7 @@ const LaunchpadDetailPage = () => {
         );
 
         setMyNFTs(ret);
+        setLoadingUserNft(false);
       } catch (error) {
         if (isUnmounted) return;
 
@@ -549,6 +602,7 @@ const LaunchpadDetailPage = () => {
 
         // console.log("Promise ret error", ret);
         setMyNFTs(ret);
+        setLoadingUserNft(false);
       }
     },
     [api, collection_address, currentAccount, projectInfo?.nftName]
@@ -620,7 +674,7 @@ const LaunchpadDetailPage = () => {
               </Heading>
 
               <Spacer />
-
+              {console.log('currentPhase', currentPhase)}
               {activePhaseId && (
                 <Tooltip
                   hasArrow
@@ -986,8 +1040,8 @@ const LaunchpadDetailPage = () => {
                           <Text>
                             You have minted from Public Mint:{' '}
                             <Text as="span" color="#fff">
-                              {userWLInfo[index]?.publicClaimedAmount || 0} NFT
-                              {userWLInfo[index]?.publicClaimedAmount > 1
+                              {userPLClaimedInfo[currentPhase?.id - 1] || 0} NFT
+                              {userPLClaimedInfo[currentPhase?.id - 1] > 1
                                 ? 's'
                                 : ''}
                             </Text>{' '}
@@ -1130,7 +1184,9 @@ const LaunchpadDetailPage = () => {
             <Spacer />
           </Flex>
 
-          {myNFTs?.length === 0 ? (
+          {loadingUserNft ? (
+            <AnimationLoader loadingTime={1} />
+          ) : myNFTs?.length === 0 ? (
             <Text fontSize="lg" color="#888">
               No NFT found
             </Text>
@@ -1186,6 +1242,7 @@ const LaunchpadDetailPage = () => {
                   />
                 </HStack>
               ))}
+
               <Stack w="full" py="30px">
                 <PaginationMP
                   bg="#333"
