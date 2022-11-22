@@ -1,23 +1,23 @@
-import { decodeAddress, encodeAddress } from "@polkadot/keyring";
-import { hexToU8a, isHex } from "@polkadot/util";
-import { AccountActionTypes } from "../store/types/account.types";
-import Keyring from "@polkadot/keyring";
-import { IPFS_BASE_URL } from "@constants/index";
-import numeral from "numeral";
-import axios from "axios";
-import toast from "react-hot-toast";
-import { APICall } from "../api/client";
+import { decodeAddress, encodeAddress } from '@polkadot/keyring';
+import { hexToU8a, isHex } from '@polkadot/util';
+import { AccountActionTypes } from '../store/types/account.types';
+import Keyring from '@polkadot/keyring';
+import { IPFS_BASE_URL } from '@constants/index';
+import numeral from 'numeral';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { APICall } from '../api/client';
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 export function getCachedImage(imageHash, size, url) {
   // console.log('getImage',imageHash, size, url)
   return (
-    baseURL + "/getImage?input=" + imageHash + "&size=" + size + "&url=" + url
+    baseURL + '/getImage?input=' + imageHash + '&size=' + size + '&url=' + url
   );
 }
 
-export function getCachedImageShort(imageHash = "", size = 100) {
-  const fallbackURL = `${IPFS_BASE_URL}/${imageHash.replace("ipfs://", "")}`;
+export function getCachedImageShort(imageHash = '', size = 100) {
+  const fallbackURL = `${IPFS_BASE_URL}/${imageHash.replace('ipfs://', '')}`;
 
   const ret = `${baseURL}/getImage?input=${imageHash}&size=${size}&url=${fallbackURL}`;
 
@@ -26,8 +26,8 @@ export function getCachedImageShort(imageHash = "", size = 100) {
 }
 
 // new func to getImage source from CloudFlare
-export async function getCloudFlareImage(imageHash = "", size = 500) {
-  const fallbackURL = `${IPFS_BASE_URL}/${imageHash.replace("ipfs://", "")}`;
+export async function getCloudFlareImage(imageHash = '', size = 500) {
+  const fallbackURL = `${IPFS_BASE_URL}/${imageHash.replace('ipfs://', '')}`;
 
   const ret = `${baseURL}/getImage?input=${imageHash}&size=${size}&url=${fallbackURL}`;
 
@@ -37,7 +37,7 @@ export async function getCloudFlareImage(imageHash = "", size = 500) {
     const response = await axios.get(ret);
     result = response?.data || fallbackURL;
   } catch (error) {
-    console.error("getCloudFlareImage error", error.message);
+    console.error('getCloudFlareImage error', error.message);
     result = fallbackURL;
   }
 
@@ -67,13 +67,13 @@ export function shortenNumber(number) {
 
 function nFormatter(num, digits) {
   var si = [
-    { value: 1, symbol: "" },
-    { value: 1e3, symbol: "K" },
-    { value: 1e6, symbol: "M" },
-    { value: 1e9, symbol: "G" },
-    { value: 1e12, symbol: "T" },
-    { value: 1e15, symbol: "P" },
-    { value: 1e18, symbol: "E" },
+    { value: 1, symbol: '' },
+    { value: 1e3, symbol: 'K' },
+    { value: 1e6, symbol: 'M' },
+    { value: 1e9, symbol: 'G' },
+    { value: 1e12, symbol: 'T' },
+    { value: 1e15, symbol: 'P' },
+    { value: 1e18, symbol: 'E' },
   ];
   var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
   var i;
@@ -82,7 +82,7 @@ function nFormatter(num, digits) {
       break;
     }
   }
-  return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
+  return (num / si[i].value).toFixed(digits).replace(rx, '$1') + si[i].symbol;
 }
 export function isValidImage(imageUrl) {
   try {
@@ -97,7 +97,7 @@ export function isValidImage(imageUrl) {
 }
 
 export function timestampWithoutCommas(input) {
-  return input.replace(/,/g, "");
+  return input.replace(/,/g, '');
 }
 
 export function convertDateToTimeStamp(dateStr) {
@@ -108,7 +108,7 @@ export function convertDateToTimeStamp(dateStr) {
 export function convertStringToPrice(stringPrice) {
   try {
     /* eslint-disable no-useless-escape */
-    const a = stringPrice.replace(/\,/g, "");
+    const a = stringPrice.replace(/\,/g, '');
     // let price = new BN(a, 10).div(new BN(10 ** 6)).toNumber();
     return a / 10 ** 12;
   } catch (error) {
@@ -118,15 +118,15 @@ export function convertStringToPrice(stringPrice) {
 }
 
 export function convertNumberWithoutCommas(input) {
-  return input.replace(/,/g, "");
+  return input.replace(/,/g, '');
 }
 
 export function convertStringToDateTime(stringTimeStamp) {
   let timeStamp = stringTimeStamp;
 
-  if (typeof stringTimeStamp === "string") {
+  if (typeof stringTimeStamp === 'string') {
     /* eslint-disable no-useless-escape */
-    timeStamp = stringTimeStamp.replace(/\,/g, "");
+    timeStamp = stringTimeStamp.replace(/\,/g, '');
   }
 
   const dateObject = new Date(parseInt(timeStamp));
@@ -153,20 +153,20 @@ export function delay(timeout) {
 }
 
 export const convertTimeStamp = (input) => {
-  let time = input.replace(/\,/g, "");
-  if (time <= 0) return "";
+  let time = input.replace(/\,/g, '');
+  if (time <= 0) return '';
   var d = new Date(time);
   return (
     twoDigit(d.getDate()) +
-    "/" +
+    '/' +
     twoDigit(d.getMonth() + 1) +
-    "/" +
+    '/' +
     d.getFullYear() +
-    " " +
+    ' ' +
     twoDigit(d.getHours()) +
-    ":" +
+    ':' +
     twoDigit(d.getMinutes()) +
-    ":" +
+    ':' +
     twoDigit(d.getSeconds())
   );
 };
@@ -189,36 +189,36 @@ export const secondsToTime = (secs) => {
 };
 
 export const convertTimeStampNoTime = (input) => {
-  let time = input.replace(/\,/g, "");
-  if (time <= 0) return "";
+  let time = input.replace(/\,/g, '');
+  if (time <= 0) return '';
   var d = new Date(time);
   return (
     twoDigit(d.getDate()) +
-    "/" +
+    '/' +
     twoDigit(d.getMonth() + 1) +
-    "/" +
+    '/' +
     d.getFullYear()
   );
 };
 
 export const twoDigit = (myNumber) => {
-  return ("0" + myNumber).slice(-2);
+  return ('0' + myNumber).slice(-2);
 };
 
 export const twoDigitTime = (time) => {
-  if (time < 10) return "0" + time;
-  else return time + "";
+  if (time < 10) return '0' + time;
+  else return time + '';
 };
 
 export const truncateStr = (str, n = 6) => {
-  if (!str) return "";
+  if (!str) return '';
   return str.length > n
-    ? str.substr(0, n - 1) + "..." + str.substr(str.length - n, str.length - 1)
+    ? str.substr(0, n - 1) + '...' + str.substr(str.length - n, str.length - 1)
     : str;
 };
 
 export const numberWithCommas = (x) => {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
 export function handleContractCall(status, dispatchError, dispatch, contract) {
@@ -227,7 +227,7 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
       const decoded = contract.registry.findMetaError(dispatchError.asModule);
       const { docs, name, section } = decoded;
 
-      console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
+      console.log(`Lỗi: ${section}.${name}: ${docs.join(' ')}`);
     } else {
       console.log(dispatchError.toString());
     }
@@ -236,10 +236,10 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
   if (status) {
     const statusToHuman = Object.entries(status.toHuman());
 
-    if (Object.keys(status.toHuman())[0] === "0") {
+    if (Object.keys(status.toHuman())[0] === '0') {
       dispatch({
         type: AccountActionTypes.SET_TNX_STATUS,
-        payload: { status: "Ready" },
+        payload: { status: 'Ready' },
       });
     } else {
       dispatch({
@@ -275,13 +275,13 @@ export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
   }
   // console.log("createObjAttrsNFT attrsArr", attrsArr);
   // console.log("createObjAttrsNFT attrsValArr", attrsValArr);
-  return console.log("Can not create attributes Object");
+  return console.log('Can not create attributes Object');
 };
 
 export const createLevelAttribute = (levelString) => {
-  if (!levelString) return { level: "", levelMax: "" };
+  if (!levelString) return { level: '', levelMax: '' };
 
-  const location = Number(levelString.indexOf("|"));
+  const location = Number(levelString.indexOf('|'));
   const level = levelString.slice(0, location);
   const levelMax = levelString.slice(location + 1, levelString.length);
 
@@ -289,11 +289,11 @@ export const createLevelAttribute = (levelString) => {
 };
 
 export const getPublicCurrentAccount = () => {
-  const keyring = new Keyring({ type: "sr25519" });
+  const keyring = new Keyring({ type: 'sr25519' });
   const PHRASE =
-    "entire material egg meadow latin bargain dutch coral blood melt acoustic thought";
+    'entire material egg meadow latin bargain dutch coral blood melt acoustic thought';
 
-  keyring.addFromUri(PHRASE, { name: "Nobody" });
+  keyring.addFromUri(PHRASE, { name: 'Nobody' });
 
   const keyringOptions = keyring
     .getPairs()
@@ -316,10 +316,10 @@ export function handleContractCallAnimation(status, dispatchError, dispatch) {
   if (!dispatchError && status) {
     const statusToHuman = Object.entries(status.toHuman());
 
-    if (Object.keys(status.toHuman())[0] === "0") {
+    if (Object.keys(status.toHuman())[0] === '0') {
       dispatch({
         type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-        payload: { status: "Ready" },
+        payload: { status: 'Ready' },
       });
     } else {
       const finalizedTimeStamp = Date.now();
@@ -351,16 +351,16 @@ export function handleContractCallAddNftAnimation(
     const statusToHuman = Object.entries(status.toHuman());
     const url = `https://test.azero.dev/#/explorer/query/`;
 
-    if (Object.keys(status.toHuman())[0] === "0") {
+    if (Object.keys(status.toHuman())[0] === '0') {
       dispatch({
         type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-        payload: { status: "Ready" },
+        payload: { status: 'Ready' },
       });
     } else {
       const finalizedTimeStamp = Date.now();
 
-      if (statusToHuman[0][0] === "Finalized") {
-        console.log("Tx finalized at ", `${url}${statusToHuman[0][1]}`);
+      if (statusToHuman[0][0] === 'Finalized') {
+        console.log('Tx finalized at ', `${url}${statusToHuman[0][1]}`);
       }
 
       dispatch({
@@ -378,11 +378,11 @@ export function handleContractCallAddNftAnimation(
 export function onCloseButtonModal({ status, dispatch, type }) {
   const endTimeStamp = Date.now();
 
-  status === "Finalized" &&
+  status === 'Finalized' &&
     dispatch({
       type: type,
       payload: {
-        status: "End",
+        status: 'End',
         endTimeStamp,
       },
     });
@@ -391,16 +391,16 @@ export function onCloseButtonModal({ status, dispatch, type }) {
 export const formatNumDynamicDecimal = (num = 0, dec = 6) => {
   const number = parseInt(num * 10 ** dec) / 10 ** dec;
   const numStr = number.toString();
-  const dotIdx = numStr.indexOf(".");
+  const dotIdx = numStr.indexOf('.');
 
   if (dotIdx === -1) {
-    return numeral(numStr).format("0,0");
+    return numeral(numStr).format('0,0');
   }
 
-  const intPart = numeral(numStr.slice(0, dotIdx)).format("0,0");
+  const intPart = numeral(numStr.slice(0, dotIdx)).format('0,0');
   const decPart = numStr.slice(dotIdx + 1, numStr.length);
 
-  return intPart + `${dotIdx === -1 ? "" : `.${decPart}`}`;
+  return intPart + `${dotIdx === -1 ? '' : `.${decPart}`}`;
 };
 
 export const isPhaseTimeOverlap = (phaseArr) => {
@@ -416,7 +416,7 @@ export const isPhaseTimeOverlap = (phaseArr) => {
 export default function isNotEmptyStr(data) {
   if (!data) return false;
 
-  if (typeof data === "string") {
+  if (typeof data === 'string') {
     return data.trim().length > 0;
   }
 
@@ -450,17 +450,22 @@ export async function getEstimatedGas(
     let ret = -1;
 
     try {
-      const { gasRequired, result } = await contract.query[queryName](
+      const { gasRequired, result, output } = await contract.query[queryName](
         address,
         { gasLimit: -1, storageDepositLimit: null, value },
         ...args
       );
 
+      if (output.isErr) {
+        console.log('getEstimatedGas error xx>>', output.value.toString());
+        return output.value.toString();
+      }
+
       if (result.isOk) {
         ret = gasRequired.toString();
       }
     } catch (error) {
-      console.log("fetchGas error xx>>", error.message);
+      console.log('fetchGas error xx>>', error.message);
     }
 
     return ret;
@@ -472,12 +477,12 @@ export async function getEstimatedGas(
     fetchGas().then((data) => (result = data)),
     {
       success: `Estimated transaction fee...`,
-      error: "Could not fetching gas!",
+      error: 'Could not fetching gas!',
     },
     {
       success: {
         duration: 500,
-        icon: "🔥",
+        icon: '🔥',
       },
     }
   );
@@ -485,19 +490,19 @@ export async function getEstimatedGas(
   return result;
 }
 
-export const strToNumber = (str = "") => {
-  if (typeof str !== "string") return str;
+export const strToNumber = (str = '') => {
+  if (typeof str !== 'string') return str;
 
-  const number = str.replace(/,/g, "");
+  const number = str.replace(/,/g, '');
   return parseFloat(number);
 };
 
-export const isPhaseEnd = (endTime = "") => {
+export const isPhaseEnd = (endTime = '') => {
   let timeStamp = endTime;
 
-  if (typeof endTime === "string") {
+  if (typeof endTime === 'string') {
     /* eslint-disable no-useless-escape */
-    timeStamp = endTime.replace(/\,/g, "");
+    timeStamp = endTime.replace(/\,/g, '');
   }
 
   const now = Date.now();

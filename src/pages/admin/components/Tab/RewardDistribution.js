@@ -13,39 +13,41 @@ import {
   Center,
   Stack,
   TableContainer,
-} from "@chakra-ui/react";
-import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
-import { useSubstrateState } from "@utils/substrate";
-import Loader from "@components/Loader/CommonLoader";
-import staking_calls from "@utils/blockchain/staking_calls";
+} from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
+import { useSubstrateState } from '@utils/substrate';
+import Loader from '@components/Loader/CommonLoader';
+import staking_calls from '@utils/blockchain/staking_calls';
 
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { delay, truncateStr } from "@utils";
-import toast from "react-hot-toast";
-import { fetchUserBalance } from "../../../launchpad/component/Form/AddNewProject";
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { delay, truncateStr } from '@utils';
+import toast from 'react-hot-toast';
+import { fetchUserBalance } from '../../../launchpad/component/Form/AddNewProject';
 
-import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import launchpad_manager from "@utils/blockchain/launchpad-manager";
-import collection_manager from "@utils/blockchain/collection-manager";
-import { useMemo } from "react";
-import { formatNumDynamicDecimal } from "@utils";
-import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-import CommonButton from "@components/Button/CommonButton";
-import useTxStatus from "@hooks/useTxStatus";
-import { setTxStatus } from "@store/actions/txStatus";
+import marketplace_contract_calls from '@utils/blockchain/marketplace_contract_calls';
+import launchpad_manager from '@utils/blockchain/launchpad-manager';
+import collection_manager from '@utils/blockchain/collection-manager';
+import { useMemo } from 'react';
+import { formatNumDynamicDecimal } from '@utils';
+import collection_manager_calls from '@utils/blockchain/collection-manager-calls';
+import CommonButton from '@components/Button/CommonButton';
+import useTxStatus from '@hooks/useTxStatus';
+import { setTxStatus } from '@store/actions/txStatus';
 import {
   WITHDRAW_COLLECTION,
   WITHDRAW_LAUNCHPAD,
   WITHDRAW_MARKETPLACE,
   START,
-} from "@constants";
-import { withdrawCollectionContract } from "@utils/blockchain/collection-manager-calls";
-import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
-import { withdrawLaunchpadContract } from "@utils/blockchain/launchpad-contract-calls";
-import { withdrawMarketplaceContract } from "@utils/blockchain/marketplace_contract_calls";
-import { useCallback } from "react";
-import useForceUpdate from "@hooks/useForceUpdate";
+  ENABLE_CLAIM,
+} from '@constants';
+import { withdrawCollectionContract } from '@utils/blockchain/collection-manager-calls';
+import launchpad_contract_calls from '@utils/blockchain/launchpad-contract-calls';
+import { withdrawLaunchpadContract } from '@utils/blockchain/launchpad-contract-calls';
+import { withdrawMarketplaceContract } from '@utils/blockchain/marketplace_contract_calls';
+import { useCallback } from 'react';
+import useForceUpdate from '@hooks/useForceUpdate';
+import { clearTxStatus } from '@store/actions/txStatus';
 
 function RewardDistribution() {
   const { api, currentAccount } = useSubstrateState();
@@ -57,7 +59,7 @@ function RewardDistribution() {
   const [totalStaked, setTotalStaked] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
   const [rewardStarted, setIsRewardStarted] = useState(false);
-  const [adminAddress, setAdminAddress] = useState("");
+  const [adminAddress, setAdminAddress] = useState('');
   const [stakersCount, setStakerCount] = useState(0);
   const [stakers, setStakers] = useState([]);
 
@@ -118,7 +120,7 @@ function RewardDistribution() {
 
   const setStakingStatus = async (status) => {
     if (activeAddress !== adminAddress) {
-      return toast.error("Only Admin allowed");
+      return toast.error('Only Admin allowed');
     }
     await staking_calls.updateIsLocked(currentAccount, status);
     await delay(3000);
@@ -127,7 +129,7 @@ function RewardDistribution() {
 
   const setRewardDistribution = async (status) => {
     if (activeAddress !== adminAddress) {
-      return toast.error("Only Admin allowed");
+      return toast.error('Only Admin allowed');
     }
     if (status) await staking_calls.startRewardDistribution(currentAccount);
     else await staking_calls.stopRewardDistribution(currentAccount);
@@ -135,13 +137,35 @@ function RewardDistribution() {
     await onRefresh();
   };
 
-  const enableClaim = async (staker) => {
+  const enableClaim = async (stakerAddress) => {
     if (activeAddress !== adminAddress) {
-      return toast.error("Only Admin allowed");
+      return toast.error('Only Admin allowed');
     }
-    console.log("staker", staker);
-    await staking_calls.setClaimable(currentAccount, staker);
-    getStakers();
+
+    try {
+      dispatch(
+        setTxStatus({
+          type: ENABLE_CLAIM,
+          step: START,
+          tokenIDArray: Array.of(stakerAddress),
+        })
+      );
+
+      console.log('stakerAddress', stakerAddress);
+      await staking_calls.setClaimable(
+        currentAccount,
+        stakerAddress,
+        dispatch,
+        ENABLE_CLAIM,
+        api
+      );
+
+      getStakers();
+    } catch (error) {
+      console.log(error);
+      toast.error('There was an error while enable Claim the rewards.');
+      dispatch(clearTxStatus());
+    }
   };
 
   useEffect(async () => {
@@ -183,7 +207,7 @@ function RewardDistribution() {
         launchpad: launchpadBalance,
       });
     } catch (error) {
-      console.log("x_x fetchContractBalance error", error);
+      console.log('x_x fetchContractBalance error', error);
     }
   }, [api, currentAccount]);
 
@@ -196,15 +220,15 @@ function RewardDistribution() {
       return {
         name: k.toUpperCase(),
         balance: v,
-        percent: "30%",
+        percent: '30%',
         net: v * 0.3,
       };
     });
 
     const total = {
-      name: "TOTAL",
+      name: 'TOTAL',
       balance: balance.reduce((a, b) => a + b.balance, 0),
-      percent: "",
+      percent: '',
       net: balance.reduce((a, b) => a + b.net, 0),
     };
 
@@ -214,12 +238,12 @@ function RewardDistribution() {
   const handleWithdrawBalance = async (item) => {
     try {
       // claim marketplace contract
-      if (item.name === "MARKETPLACE") {
+      if (item.name === 'MARKETPLACE') {
         const marketplaceAdminAddress = await marketplace_contract_calls.owner(
           currentAccount
         );
 
-        console.log("marketplaceAdminAddress", marketplaceAdminAddress);
+        console.log('marketplaceAdminAddress', marketplaceAdminAddress);
         if (currentAccount.address !== marketplaceAdminAddress) {
           return toast.error(
             `Only admin (${truncateStr(marketplaceAdminAddress)}) is allowed!`
@@ -241,7 +265,7 @@ function RewardDistribution() {
       }
 
       // claim collection contract
-      if (item.name === "COLLECTION") {
+      if (item.name === 'COLLECTION') {
         const collectionAdminAddress =
           await collection_manager_calls.getAdminAddress(currentAccount);
 
@@ -267,11 +291,11 @@ function RewardDistribution() {
       }
 
       // claim launchpad contract
-      if (item.name === "LAUNCHPAD") {
+      if (item.name === 'LAUNCHPAD') {
         const launchpadAdminAddress =
           await launchpad_contract_calls.getAdminAddress(currentAccount);
 
-        console.log("launchpadAdminAddress", launchpadAdminAddress);
+        console.log('launchpadAdminAddress', launchpadAdminAddress);
         if (currentAccount.address !== launchpadAdminAddress) {
           return toast.error(
             `Only admin (${truncateStr(launchpadAdminAddress)}) is allowed!`
@@ -293,7 +317,7 @@ function RewardDistribution() {
         );
       }
     } catch (error) {
-      console.log("x_x handleWithdrawBalance error", error);
+      console.log('x_x handleWithdrawBalance error', error);
     }
   };
 
@@ -305,8 +329,8 @@ function RewardDistribution() {
         <>
           <Box
             mx="auto"
-            px={{ base: "6", "2xl": "8" }}
-            py={{ base: "8", "2xl": "4" }}
+            px={{ base: '6', '2xl': '8' }}
+            py={{ base: '8', '2xl': '4' }}
           >
             <Box maxW="6xl-mid" fontSize="lg" pb="30px">
               <Heading textAlign="left" size="h5">
@@ -334,9 +358,9 @@ function RewardDistribution() {
                         <Td>{formatNumDynamicDecimal(item.net, 2)} AZERO</Td>
 
                         <Td>
-                          {console.log("actionType", actionType?.toUpperCase())}
-                          {console.log("item.name", item.name)}
-                          {item.name !== "TOTAL" && (
+                          {console.log('actionType', actionType?.toUpperCase())}
+                          {console.log('item.name', item.name)}
+                          {item.name !== 'TOTAL' && (
                             <CommonButton
                               h="40px"
                               {...rest}
@@ -358,7 +382,7 @@ function RewardDistribution() {
 
             <Box maxW="6xl-mid" fontSize="lg">
               <Stack
-                direction={{ base: "column", xl: "row" }}
+                direction={{ base: 'column', xl: 'row' }}
                 pb={5}
                 borderBottomWidth={1}
               >
@@ -403,7 +427,7 @@ function RewardDistribution() {
                 </Flex>
               </Stack>
               <Stack
-                direction={{ base: "column", xl: "row" }}
+                direction={{ base: 'column', xl: 'row' }}
                 pb={5}
                 borderBottomWidth={1}
               >
@@ -430,7 +454,7 @@ function RewardDistribution() {
                 </Flex>
               </Stack>
               <Stack
-                direction={{ base: "column", xl: "row" }}
+                direction={{ base: 'column', xl: 'row' }}
                 pb={5}
                 borderBottomWidth={1}
               >
@@ -474,7 +498,7 @@ function RewardDistribution() {
                 </Flex>
               </Stack>
               <Stack
-                direction={{ base: "column", xl: "row" }}
+                direction={{ base: 'column', xl: 'row' }}
                 pb={5}
                 borderBottomWidth={1}
               >
@@ -483,7 +507,7 @@ function RewardDistribution() {
                     Staking Contract Status
                   </Text>
                   <Text color="#7ae7ff" ml={2}>
-                    {isLocked ? "Locked" : "Unlocked"}
+                    {isLocked ? 'Locked' : 'Unlocked'}
                   </Text>
                 </Flex>
 
@@ -492,12 +516,12 @@ function RewardDistribution() {
                     Reward Distribution
                   </Text>
                   <Text color="#7ae7ff" ml={2}>
-                    {rewardStarted ? "Started" : "Not Started"}
+                    {rewardStarted ? 'Started' : 'Not Started'}
                   </Text>
                 </Flex>
               </Stack>
               <Flex
-                direction={{ base: "column", xl: "row" }}
+                direction={{ base: 'column', xl: 'row' }}
                 align="start"
                 justify="space-between"
                 w="full"
@@ -523,11 +547,11 @@ function RewardDistribution() {
 
                       <Box h="full">
                         <Box mt={7}>
-                          <Text color={"#fff"} py={2}>
+                          <Text color={'#fff'} py={2}>
                             Only Admin
                           </Text>
                           <Flex
-                            direction={{ base: "column", xl: "row" }}
+                            direction={{ base: 'column', xl: 'row' }}
                             justify="space-between"
                             alignItems="center"
                           >
@@ -535,7 +559,7 @@ function RewardDistribution() {
                               mt={7}
                               variant="solid"
                               w="100%"
-                              maxW={"3xs"}
+                              maxW={'3xs'}
                               onClick={() => setStakingStatus(true)}
                             >
                               Lock Staking
@@ -544,14 +568,14 @@ function RewardDistribution() {
                               mt={7}
                               variant="solid"
                               w="100%"
-                              maxW={"3xs"}
+                              maxW={'3xs'}
                               onClick={() => setStakingStatus(false)}
                             >
                               Unlock Staking
                             </Button>
                           </Flex>
                           <Flex
-                            direction={{ base: "column", xl: "row" }}
+                            direction={{ base: 'column', xl: 'row' }}
                             justify="space-between"
                             alignItems="center"
                           >
@@ -559,7 +583,7 @@ function RewardDistribution() {
                               mt={7}
                               variant="solid"
                               w="100%"
-                              maxW={"3xs"}
+                              maxW={'3xs'}
                               onClick={() => setRewardDistribution(true)}
                             >
                               Start Reward Distribution
@@ -568,18 +592,18 @@ function RewardDistribution() {
                               mt={7}
                               variant="solid"
                               w="100%"
-                              maxW={"3xs"}
+                              maxW={'3xs'}
                               onClick={() => setRewardDistribution(false)}
                             >
                               Stop Reward Distribution
                             </Button>
                           </Flex>
                           <Flex
-                            direction={{ base: "column", xl: "row" }}
+                            direction={{ base: 'column', xl: 'row' }}
                             justify="space-between"
                             alignItems="center"
                           >
-                            <Text color={"#fff"} py={2}>
+                            <Text color={'#fff'} py={2}>
                               To do Step 3, admin need to run the script on the
                               server to set all stakers is_claimed to FALSE
                             </Text>
@@ -614,7 +638,7 @@ function RewardDistribution() {
                       </Button>*/}
                       <Heading size="h4">Add Rewards</Heading>
                       <Box mt={7}>
-                        <Text color={"#fff"} py={2}>
+                        <Text color={'#fff'} py={2}>
                           Only when staking is locked. Anyone can add.
                         </Text>
                         <Box>
@@ -675,19 +699,19 @@ function RewardDistribution() {
                 h="full"
                 overflow="auto"
                 sx={{
-                  "&::-webkit-scrollbar": {
-                    width: "4px",
-                    height: "4px",
-                    borderRadius: "0px",
+                  '&::-webkit-scrollbar': {
+                    width: '4px',
+                    height: '4px',
+                    borderRadius: '0px',
                     backgroundColor: `transparent`,
                   },
-                  "&::-webkit-scrollbar-thumb": {
+                  '&::-webkit-scrollbar-thumb': {
                     backgroundColor: `#7ae7ff`,
                   },
-                  "&::-webkit-scrollbar-thumb:hover": {
+                  '&::-webkit-scrollbar-thumb:hover': {
                     backgroundColor: `#7ae7ff`,
                   },
-                  "&::-webkit-scrollbar-track": {
+                  '&::-webkit-scrollbar-track': {
                     backgroundColor: `transparent`,
                   },
                 }}
@@ -735,7 +759,7 @@ function RewardDistribution() {
                       </Th>
                     </Tr>
                   </Thead>
-                  {console.log("stakers", stakers)}
+                  {console.log('stakers', stakers)}
                   <Tbody>
                     {stakers.length === 0 ? (
                       <Tr color="#fff">
@@ -757,24 +781,36 @@ function RewardDistribution() {
                             py={7}
                             // isNumeric
                           >
-                            {" "}
+                            {' '}
                             {staker.isClaimed
-                              ? "Claimed"
-                              : "Not Claimed or Not Set"}
+                              ? 'Claimed'
+                              : 'Not Claimed or Not Set'}
                           </Td>
                           <Td
                             py={7}
                             // isNumeric
                           >
-                            {" "}
-                            <Button
+                            {' '}
+                            {/* <Button
+                              hidden
+                              isDisabled={!staker.isClaimed}
                               variant="solid"
                               w="100%"
-                              maxW={"3xs"}
+                              // maxW={'3xs'}
                               onClick={() => enableClaim(staker.address)}
                             >
                               Enable Claim
-                            </Button>
+                            </Button> */}
+                            <CommonButton
+                              {...rest}
+                              text="enable claim"
+                              onClick={() => enableClaim(staker.address)}
+                              isDisabled={
+                                !staker.isClaimed ||
+                                (actionType &&
+                                  !tokenIDArray?.includes(staker.address))
+                              }
+                            />
                           </Td>
                         </Tr>
                       ))

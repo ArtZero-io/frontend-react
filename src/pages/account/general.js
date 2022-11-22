@@ -81,8 +81,12 @@ function GeneralPage() {
   const [loading, setLoading] = useState(false);
 
   // eslint-disable-next-line no-unused-vars
-  const { loading: loadingForceUpdate } = useForceUpdate([CLAIM_REWARDS], () =>
-    getRewardHistory()
+  const { loading: loadingForceUpdate } = useForceUpdate(
+    [CLAIM_REWARDS],
+    () => {
+      checkRewardStatus();
+      getRewardHistory();
+    }
   );
 
   const checkRewardStatus = useCallback(async () => {
@@ -556,7 +560,7 @@ function GeneralPage() {
                 stake now
               </Button>
 
-              {rewardStarted && !claimed ? (
+              {rewardStarted ? (
                 <CommonButton
                   {...rest}
                   w="full"
@@ -565,7 +569,9 @@ function GeneralPage() {
                   my={['20px', '30px']}
                   maxW={['auto', '220px']}
                   text={claimed ? 'rewards is claimed' : 'claim rewards'}
-                  isDisabled={claimed || !estimatedEarningBaseRewardPool}
+                  isDisabled={
+                    claimed || !estimatedEarningBaseRewardPool || actionType
+                  }
                   onClick={() => claimReward()}
                 />
               ) : null}
