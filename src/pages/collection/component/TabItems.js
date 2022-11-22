@@ -113,7 +113,7 @@ const CollectionItems = ({
   // NEW FIXED GRID LAYOUT END
 
   return (
-    <Flex>
+    <Flex maxW="1920px">
       <LeftPanel
         activeTab={activeTab}
         priceQuery={priceQuery}

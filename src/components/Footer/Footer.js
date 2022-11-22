@@ -96,7 +96,7 @@ export const Footer = () => {
                   cursor={"pointer"}
                   onClick={() =>
                     window.open(
-                      "https://artzero.io/demo-internal/assets/ArtZero_Cookies_Policy.pdf",
+                      "https://artzero.io/demotestnet/assets/ArtZero_Cookies_Policy.pdf",
                       "_blank"
                     )
                   }
@@ -121,7 +121,7 @@ export const Footer = () => {
                   cursor={"pointer"}
                   onClick={() =>
                     window.open(
-                      "https://artzero.io/demo-internal/assets/ArtZero_Privacy_Policy.pdf",
+                      "https://artzero.io/demotestnet/assets/ArtZero_Privacy_Policy.pdf",
                       "_blank"
                     )
                   }
@@ -146,7 +146,7 @@ export const Footer = () => {
                   cursor={"pointer"}
                   onClick={() =>
                     window.open(
-                      "https://artzero.io/demo-internal/assets/ArtZero_Terms_Of_Service.pdf",
+                      "https://artzero.io/demotestnet/assets/ArtZero_Terms_Of_Service.pdf",
                       "_blank"
                     )
                   }

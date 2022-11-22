@@ -14,6 +14,7 @@ import {
   DrawerOverlay,
   Flex,
   Heading,
+  Icon,
   IconButton,
   Input,
   Spacer,
@@ -35,6 +36,8 @@ import { useState } from 'react';
 import { memo } from 'react';
 import { useRef } from 'react';
 import CommonButton from '@components/Button/CommonButton';
+
+import { FiFilter } from 'react-icons/fi';
 
 function LeftPanel({
   rarityTable,
@@ -127,13 +130,15 @@ function LeftPanel({
               variant="iconSolid"
               onClick={() => onToggle()}
               icon={
-                <motion.div
-                  animate={{
-                    rotate: isOpen ? 0 : 180,
-                  }}
-                >
-                  <LeftArrowIcon />
-                </motion.div>
+                // <motion.div
+                //   animate={
+                //     {
+                //       rotate: isOpen ? 0 : 180,
+                //     }
+                //   }
+                // >
+                <Icon as={FiFilter} w="24px" h="24px" />
+                // </motion.div>
               }
               _hover={{ color: 'black', bg: '#7ae7ff' }}
             />

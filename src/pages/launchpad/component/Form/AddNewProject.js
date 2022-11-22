@@ -1070,7 +1070,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                                       textTransform="none"
                                       isExternal
                                       href={
-                                        "https://artzero.io/demo-internal/assets/ArtZero_Terms_Of_Service.pdf"
+                                        "https://artzero.io/demotestnet/assets/ArtZero_Terms_Of_Service.pdf"
                                       }
                                     >
                                       Terms of Service

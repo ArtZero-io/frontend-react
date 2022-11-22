@@ -1,4 +1,5 @@
-import { Flex, Spacer } from '@chakra-ui/react';
+/* eslint-disable no-unused-vars */
+import { Flex, Spacer, Stack } from '@chakra-ui/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { usePagination } from '@ajna/pagination';
@@ -364,20 +365,22 @@ function CollectionPage() {
 
         <Flex
           w="full"
+          mx="auto"
           bg="brand.semiBlack"
           pt={{ base: '14px', xl: '40px' }}
           pb={{ base: '50px', xl: '100px' }}
-          px={{ base: '12px', '2xl': '100px' }}
+          px={{ base: '24px', '2xl': '100px' }}
           hidden={pagesCount === 0 ? true : false}
           display={tabIndex === 1 ? 'none' : 'flex'}
         >
-          <PaginationMP
-            pagesCount={pagesCount}
-            isDisabled={isDisabled}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-          />
-          <Spacer my={{ base: '3', '2xl': 'auto' }} />
+          <Flex w="full" maxW="1920px" mx="auto">
+            <PaginationMP
+              pagesCount={pagesCount}
+              isDisabled={isDisabled}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+            />
+          </Flex>
         </Flex>
       </>
     </Layout>
