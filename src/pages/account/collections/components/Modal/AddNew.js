@@ -17,7 +17,7 @@ import SimpleMode from "./SimpleMode";
 
 import AddCollectionIcon from "@theme/assets/icon/AddCollection";
 import { useEffect } from "react";
-import { formMode, END } from "@constants";
+import { formMode, FINALIZED } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 
 function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
@@ -26,7 +26,7 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
   const { step } = useTxStatus();
 
   useEffect(() => {
-    step === END && onClose();
+    step === FINALIZED && onClose();
   }, [step, onClose]);
 
   const modalSize = useBreakpointValue({ base: "xs", md: "xl" });

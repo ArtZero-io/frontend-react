@@ -11,53 +11,54 @@ import {
   Flex,
   Container,
   Link,
-} from "@chakra-ui/react";
-import BN from "bn.js";
-import CommonCheckbox from "@components/Checkbox/Checkbox";
-import NumberInput from "@components/Input/NumberInput";
-import TextArea from "@components/TextArea/TextArea";
-import { formMode } from "@constants";
+} from '@chakra-ui/react';
+import BN from 'bn.js';
+import CommonCheckbox from '@components/Checkbox/Checkbox';
+import NumberInput from '@components/Input/NumberInput';
+import TextArea from '@components/TextArea/TextArea';
+import { formMode } from '@constants';
 
-import { formatBalance } from "@polkadot/util";
-import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
-import { useSubstrateState } from "@utils/substrate";
-import DateTimeRangePicker from "@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker";
+import { formatBalance } from '@polkadot/util';
+import launchpad_contract_calls from '@utils/blockchain/launchpad-contract-calls';
+import { useSubstrateState } from '@utils/substrate';
+import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker/dist/DateTimeRangePicker';
 
-import { Form, Formik } from "formik";
+import { Form, Formik } from 'formik';
 
-import React, { useEffect, useRef, useState } from "react";
-import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import * as Yup from "yup";
-import AddMember from "./AddMember";
-import AddPhase from "./AddPhase";
-import AddRoadmap from "./AddRoadmap";
-import CommonInput from "@components/Input/Input";
-import { useHistory, useLocation } from "react-router-dom";
-import { ContractPromise } from "@polkadot/api-contract";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
-import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
-import AdvancedModeSwitch from "@components/Switch/Switch";
-import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-import CommonStack from "./CommonStack";
-import emailjs from "@emailjs/browser";
+import React, { useEffect, useRef, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import * as Yup from 'yup';
+import AddMember from './AddMember';
+import AddPhase from './AddPhase';
+import AddRoadmap from './AddRoadmap';
+import CommonInput from '@components/Input/Input';
+import { useHistory, useLocation } from 'react-router-dom';
+import { ContractPromise } from '@polkadot/api-contract';
+import launchpad_psp34_nft_standard from '@utils/blockchain/launchpad-psp34-nft-standard';
+import launchpad_psp34_nft_standard_calls from '@utils/blockchain/launchpad-psp34-nft-standard-calls';
+import AdvancedModeSwitch from '@components/Switch/Switch';
+import collection_manager_calls from '@utils/blockchain/collection-manager-calls';
+import CommonStack from './CommonStack';
+import emailjs from '@emailjs/browser';
 
-import useTxStatus from "@hooks/useTxStatus";
-import { setTxStatus } from "@store/actions/txStatus";
-import CommonButton from "@components/Button/CommonButton";
+import useTxStatus from '@hooks/useTxStatus';
+import { setTxStatus } from '@store/actions/txStatus';
+import CommonButton from '@components/Button/CommonButton';
 import {
   CREATE_PROJECT,
   EDIT_PROJECT,
   CREATE_COLLECTION,
   START,
-} from "@constants";
-import * as ROUTES from "@constants/routes";
-import { getPublicCurrentAccount } from "@utils";
+  FINALIZED,
+} from '@constants';
+import * as ROUTES from '@constants/routes';
+import { getPublicCurrentAccount } from '@utils';
 
-import { ipfsClient } from "@api/client";
-import { ArrowBackIcon } from "@chakra-ui/icons";
-import { getProjectMintFeeRate } from "@utils/blockchain/launchpad-contract-calls";
-import { isPhaseTimeOverlap } from "@utils";
+import { ipfsClient } from '@api/client';
+import { ArrowBackIcon } from '@chakra-ui/icons';
+import { getProjectMintFeeRate } from '@utils/blockchain/launchpad-contract-calls';
+import { isPhaseTimeOverlap } from '@utils';
 
 import {
   validationCollectionName,
@@ -71,9 +72,10 @@ import {
   validationAgreeProjectMintFeeCheckbox,
   validationAgreeFeeCheckbox,
   validationEmail,
-} from "@constants/yup";
-import { APICall } from "@api/client";
-import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
+} from '@constants/yup';
+import { APICall } from '@api/client';
+import ImageUploadThumbnail from '@components/ImageUpload/Thumbnail';
+import { useCallback } from 'react';
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
@@ -91,9 +93,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     fetchProjectMintFee();
   }, [api, currentAccount]);
 
-  const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
-  const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
-  const [headerSquareIPFSUrl, setHeaderSquareIPFSUrl] = useState("");
+  const [avatarIPFSUrl, setAvatarIPFSUrl] = useState('');
+  const [headerIPFSUrl, setHeaderIPFSUrl] = useState('');
+  const [headerSquareIPFSUrl, setHeaderSquareIPFSUrl] = useState('');
 
   const [initialValues, setInitialValues] = useState(null);
   const [userBalance, setUserBalance] = useState(null);
@@ -115,42 +117,42 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
   mode = location.state?.formMode || formMode.ADD;
 
-  if (mode === "EDIT") {
+  if (mode === 'EDIT') {
     nftContractAddress = location.state?.collection_address;
   }
 
   const handleOnchangeSchedule = (e, setFieldValue) => {
     if (!e) {
-      setFieldValue("startTime", null);
-      setFieldValue("endTime", null);
+      setFieldValue('startTime', null);
+      setFieldValue('endTime', null);
       return;
     }
 
     if (e[1]?.getTime() < Date.now()) {
-      toast.error("Project end time must be greater than current time!");
+      toast.error('Project end time must be greater than current time!');
       return;
     }
 
     if (e[0]?.getTime() > e[1]?.getTime()) {
-      toast.error("Project end time must be greater than start time!");
+      toast.error('Project end time must be greater than start time!');
       return;
     }
 
-    setFieldValue("startTime", e[0]?.getTime());
-    setFieldValue("endTime", e[1]?.getTime());
+    setFieldValue('startTime', e[0]?.getTime());
+    setFieldValue('endTime', e[1]?.getTime());
   };
 
-  const handleOnRedirect = () => {
+  const handleOnRedirect = useCallback(() => {
     if (mode === formMode.ADD) {
       toast.success(
-        "Thank you for submitting. Our team member will get in touch with you in the next 48 hours."
+        'Thank you for submitting. Our team member will get in touch with you in the next 48 hours.'
       );
 
       history.push(`/account/projects`);
     } else {
       history.push(`${ROUTES.LAUNCHPAD_BASE}/${nftContractAddress}`);
     }
-  };
+  }, [history, mode, nftContractAddress]);
 
   useEffect(() => {
     const prepareData = async () => {
@@ -226,6 +228,10 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     fetchAddProjectFee();
   }, [currentAccount]);
 
+  useEffect(() => {
+    rest?.step === FINALIZED && handleOnRedirect();
+  }, [actionType, handleOnRedirect, rest?.step]);
+
   return (
     <>
       {initialValues && (
@@ -242,30 +248,30 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               <Heading
                 w="full"
                 color="#fff"
-                fontSize={["32px", "48px", "48px"]}
-                lineHeight={["38px", "60px", "60px"]}
+                fontSize={['32px', '48px', '48px']}
+                lineHeight={['38px', '60px', '60px']}
               >
-                {`${mode === "ADD" ? "create new" : "edit"} project`}
+                {`${mode === 'ADD' ? 'create new' : 'edit'} project`}
               </Heading>
-              <Text maxW="360px" fontSize="lg" mx="auto" px={["15px", "5px"]}>
+              <Text maxW="360px" fontSize="lg" mx="auto" px={['15px', '5px']}>
                 The premier destination to launch your NFT Collection on Aleph
                 Zero Network.
               </Text>
             </VStack>
             <IconButton
-              display={["none", "flex"]}
+              display={['none', 'flex']}
               pos="absolute"
               left="30px"
-              top={["0px", "5px"]}
+              top={['0px', '5px']}
               onClick={() => history.goBack()}
               variant="iconOutline"
-              width={["40px", "50px"]}
-              height={["40px", "50px"]}
+              width={['40px', '50px']}
+              height={['40px', '50px']}
               icon={<ArrowBackIcon fontSize="2xl" />}
               _hover={{
-                bg: "brand.blue",
-                color: "black",
-                borderWidth: "0",
+                bg: 'brand.blue',
+                color: 'black',
+                borderWidth: '0',
               }}
             />
           </HStack>
@@ -277,7 +283,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               onSubmit={async (values, { setSubmitting }) => {
                 // check wallet connect?
                 if (!currentAccount) {
-                  return toast.error("Please connect wallet first!");
+                  return toast.error('Please connect wallet first!');
                 }
 
                 // ADD MODE CHECKING values.isEditMode false
@@ -295,7 +301,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                   if (totalSupply < allPhasesMintAmount) {
                     return toast.error(
-                      "Total mint of phases must less than Total supply!"
+                      'Total mint of phases must less than Total supply!'
                     );
                   }
                 }
@@ -308,7 +314,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   !values.isEditMode &&
                   (!headerIPFSUrl || !avatarIPFSUrl || !isAllMemberAvatarUpload)
                 ) {
-                  return toast.error("Upload avatar or header please!");
+                  return toast.error('Upload avatar or header please!');
                 }
 
                 values.avatarIPFSUrl = avatarIPFSUrl;
@@ -320,7 +326,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   const prjStartTime = values?.startTime;
                   const prjEndTime = values?.endTime;
                   if (!values.isEditMode && (!prjStartTime || !prjStartTime)) {
-                    return toast.error("Please pick time frame for project!");
+                    return toast.error('Please pick time frame for project!');
                   }
 
                   // check all phase time-frame is picked?
@@ -332,7 +338,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                   if (phasesArray && !isPhaseTimePicked) {
                     return toast.error(
-                      "Please pick time frame for all phases!"
+                      'Please pick time frame for all phases!'
                     );
                   }
 
@@ -343,7 +349,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                   if (isOverlap) {
                     return toast.error(
-                      "Sub phase time is not valid or overlap."
+                      'Sub phase time is not valid or overlap.'
                     );
                   }
 
@@ -359,7 +365,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       )
                     ) {
                       toast.error(
-                        "Sub phase time is not valid or overlap project phase time."
+                        'Sub phase time is not valid or overlap project phase time.'
                       );
                       return;
                     }
@@ -459,14 +465,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     const collectionData = {
                       nftContractAddress: nft_address,
                       attributes: [
-                        "name",
-                        "description",
-                        "avatar_image",
-                        "header_image",
-                        "header_square_image",
-                        "website",
-                        "twitter",
-                        "discord",
+                        'name',
+                        'description',
+                        'avatar_image',
+                        'header_image',
+                        'header_square_image',
+                        'website',
+                        'twitter',
+                        'discord',
                       ],
 
                       attributeVals: [
@@ -489,8 +495,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       setTxStatus({ type: CREATE_COLLECTION, step: START })
                     );
 
-                    toast.success("Step 2. Creating collection...");
-
+                    toast.success('Step 2. Creating collection...');
+                    console.log('Add proj 1 , collectionData', collectionData);
                     await collection_manager_calls.addNewCollection(
                       currentAccount,
                       collectionData,
@@ -506,28 +512,28 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     };
                     emailjs
                       .send(
-                        "service_gz6dl9u",
-                        "template_980idtm",
+                        'service_gz6dl9u',
+                        'template_980idtm',
                         templateParams,
-                        "q4EO2tL6l8kY1jEZh"
+                        'q4EO2tL6l8kY1jEZh'
                       )
                       .then(
                         function (response) {
                           console.log(
-                            "SUCCESS!",
+                            'SUCCESS!',
                             response.status,
                             response.text
                           );
                         },
                         function (error) {
-                          console.log("FAILED...", error);
+                          console.log('FAILED...', error);
                         }
                       );
                   };
 
                   dispatch(setTxStatus({ type: CREATE_PROJECT, step: START }));
 
-                  toast.success("Step 1. Creating project...");
+                  toast.success('Step 1. Creating project...');
 
                   await launchpad_contract_calls.addNewProject(
                     currentAccount,
@@ -539,7 +545,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   );
                 } else {
                   if (mode === formMode.EDIT) {
-                    console.log("EDIT values", values);
+                    console.log('EDIT values', values);
                     const project_info = {
                       name: values.name.trim(),
                       description: values.description.trim(),
@@ -586,29 +592,29 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             >
               {({ values, dirty, isValid, setFieldValue }) => (
                 <Form>
-                  <Container maxW="1200px" px={["0px", "15px"]}>
+                  <Container maxW="1200px" px={['0px', '15px']}>
                     {/* {console.log('Form values',values)} */}
                     <CommonStack stackTitle="1. project info">
                       <Stack
                         pb="30px"
                         alignItems="start"
                         justifyContent="space-between"
-                        direction={["column", "row"]}
+                        direction={['column', 'row']}
                       >
                         <Stack
-                          w={{ base: "full", xl: "50%" }}
+                          w={{ base: 'full', xl: '50%' }}
                           direction="column"
-                          alignItems={["center", "start"]}
+                          alignItems={['center', 'start']}
                           justifyContent="end"
                         >
                           <Stack w="full">
                             <Text>Choose avatar image</Text>
                             <Text
                               ml={2}
-                              fontSize={["xs", "sm"]}
+                              fontSize={['xs', 'sm']}
                               color="brand.grayLight"
                             >
-                              This image will also be used for navigation.{" "}
+                              This image will also be used for navigation.{' '}
                               <br />
                               <br />
                             </Text>
@@ -616,7 +622,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                           <VStack>
                             <ImageUploadThumbnail
-                              limitedSize={{ width: "500", height: "500" }}
+                              limitedSize={{ width: '500', height: '500' }}
                               isRounded={true}
                               width="260px"
                               height="260px"
@@ -631,8 +637,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         </Stack>
 
                         <Stack
-                          pt={{ base: "30px", md: "0px" }}
-                          w={{ base: "full", md: "50%" }}
+                          pt={{ base: '30px', md: '0px' }}
+                          w={{ base: 'full', md: '50%' }}
                           direction="column"
                           alignItems="start"
                           justifyContent="start"
@@ -640,7 +646,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           <Text>Choose featured image</Text>
                           <Text
                             ml={2}
-                            fontSize={["xs", "sm"]}
+                            fontSize={['xs', 'sm']}
                             color="brand.grayLight"
                           >
                             This image will be used for featuring your
@@ -648,9 +654,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                             promotional areas of ArtZero.
                           </Text>
                           <ImageUploadThumbnail
-                            limitedSize={{ width: "400", height: "260" }}
-                            width={["100%", "400px"]}
-                            height={["250px", "260px"]}
+                            limitedSize={{ width: '400', height: '260' }}
+                            width={['100%', '400px']}
+                            height={['250px', '260px']}
                             isDisabled={actionType}
                             id="header_square"
                             mode={mode}
@@ -671,7 +677,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                           <Text
                             ml={2}
-                            fontSize={["xs", "sm"]}
+                            fontSize={['xs', 'sm']}
                             color="brand.grayLight"
                           >
                             This image will appear at the top of your collection
@@ -681,9 +687,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           </Text>
 
                           <ImageUploadThumbnail
-                            limitedSize={{ width: "1920", height: "600" }}
+                            limitedSize={{ width: '1920', height: '600' }}
                             width="100%"
-                            height={["120px", "260px"]}
+                            height={['120px', '260px']}
                             isDisabled={actionType}
                             id="header"
                             mode={mode}
@@ -695,10 +701,10 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       </Stack>
 
                       <Stack
-                        gap={["10px", "30px"]}
-                        direction={["column", "row"]}
+                        gap={['10px', '30px']}
+                        direction={['column', 'row']}
                       >
-                        <Stack w={["100%", "31%"]}>
+                        <Stack w={['100%', '31%']}>
                           <CommonInput
                             mx="0"
                             type="text"
@@ -710,7 +716,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           />
                         </Stack>
 
-                        <Stack w={["100%", "66%"]}>
+                        <Stack w={['100%', '66%']}>
                           {/* {mode === formMode.ADD && ( */}
                           <Stack pb="30px">
                             <Tooltip
@@ -722,7 +728,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                               label="Start time & end time of launchpad project."
                             >
                               <Text w="fit-content" fontSize="lg" ml={1}>
-                                Start time - End time{" "}
+                                Start time - End time{' '}
                                 <Text as="span" fontSize="lg" color="#fc8181">
                                   *
                                 </Text>
@@ -752,15 +758,15 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       </Stack>
 
                       <Stack
-                        gap={["10px", "30px"]}
-                        direction={["column", "row"]}
+                        gap={['10px', '30px']}
+                        direction={['column', 'row']}
                       >
                         <CommonInput
                           mx="0"
                           type="text"
                           name="website"
                           label="Website URL"
-                          placeholder={"Website URL"}
+                          placeholder={'Website URL'}
                           isDisabled={actionType}
                         />
                         <CommonInput
@@ -768,7 +774,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           type="text"
                           name="twitter"
                           label="Twitter URL"
-                          placeholder={"Twitter URL"}
+                          placeholder={'Twitter URL'}
                           isDisabled={actionType}
                         />
                         <CommonInput
@@ -776,7 +782,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           type="text"
                           name="discord"
                           label="Discord URL"
-                          placeholder={"Discord URL"}
+                          placeholder={'Discord URL'}
                           isDisabled={actionType}
                         />
                       </Stack>
@@ -796,15 +802,15 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                       <Stack
                         minH="86px"
-                        alignItems={["start", "end"]}
-                        gap={["10px", "30px"]}
-                        direction={["column", "row"]}
+                        alignItems={['start', 'end']}
+                        gap={['10px', '30px']}
+                        direction={['column', 'row']}
                       >
                         {mode === formMode.ADD && (
                           <Stack
-                            minW={"238px"}
+                            minW={'238px'}
                             alignItems="end"
-                            direction={{ base: "column", "2xl": "row" }}
+                            direction={{ base: 'column', '2xl': 'row' }}
                           >
                             <AdvancedModeSwitch
                               name="collectRoyalFee"
@@ -835,9 +841,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                         <Flex
                           justifyContent="start"
-                          alignItems={["center", "end"]}
+                          alignItems={['center', 'end']}
                           w="full"
-                          display={!isSetRoyal ? "none" : "flex"}
+                          display={!isSetRoyal ? 'none' : 'flex'}
                         >
                           <Stack minW="10rem">
                             <NumberInput
@@ -847,10 +853,10 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                               name="royalFee"
                               type="number"
                               placeholder="Royalty Fee"
-                              inputWidth={"8rem"}
+                              inputWidth={'8rem'}
                             />
                           </Stack>
-                          <Text fontSize={["xs", "sm"]} color="brand.grayLight">
+                          <Text fontSize={['xs', 'sm']} color="brand.grayLight">
                             (*) Royalty Fee gives the NFT creator a percentage
                             of the sale price each time the NFT is sold on the
                             marketplace.
@@ -865,13 +871,13 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           pb="30px"
                           borderBottom="1px solid #2F2F2F"
                         >
-                          <Heading fontSize={["2xl", "3xl"]}>
+                          <Heading fontSize={['2xl', '3xl']}>
                             project roadmap
                           </Heading>
 
                           <Text
                             ml={2}
-                            fontSize={["xs", "sm"]}
+                            fontSize={['xs', 'sm']}
                             color="brand.grayLight"
                           >
                             You can provide high-level goals and deliverables on
@@ -893,7 +899,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           pb="30px"
                           borderBottom="1px solid #2F2F2F"
                         >
-                          <Heading fontSize={["2xl", "3xl"]}>
+                          <Heading fontSize={['2xl', '3xl']}>
                             project team member
                           </Heading>
                         </Stack>
@@ -913,8 +919,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     Supply is required. Those info can not be changed after initial."
                     >
                       <Stack
-                        gap={["10px", "30px"]}
-                        direction={["column", "row"]}
+                        gap={['10px', '30px']}
+                        direction={['column', 'row']}
                       >
                         <CommonInput
                           type="text"
@@ -973,7 +979,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           type="text"
                           name="email_owner"
                           label="Enter your email so we can contact for additional information."
-                          placeholder={"Email Contact"}
+                          placeholder={'Email Contact'}
                           isDisabled={actionType}
                         />
                       </CommonStack>
@@ -1027,7 +1033,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                                 name="agreeProjectMintFeeCheckbox"
                                 content={
                                   <>
-                                    {" "}
+                                    {' '}
                                     <Text
                                       as="span"
                                       color="#888"
@@ -1064,13 +1070,13 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                                     <Link
                                       color="#fff"
                                       _hover={{
-                                        color: "#7ae7ff",
-                                        textDecoration: "underline",
+                                        color: '#7ae7ff',
+                                        textDecoration: 'underline',
                                       }}
                                       textTransform="none"
                                       isExternal
                                       href={
-                                        "https://artzero.io/demotestnet/assets/ArtZero_Terms_Of_Service.pdf"
+                                        'https://artzero.io/demotestnet/assets/ArtZero_Terms_Of_Service.pdf'
                                       }
                                     >
                                       Terms of Service
@@ -1092,7 +1098,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           {...rest}
                           type="submit"
                           text={`${
-                            mode === formMode.ADD ? "create" : "update"
+                            mode === formMode.ADD ? 'create' : 'update'
                           } project`}
                           isDisabled={!(dirty && isValid) && noImagesChange}
                         />
@@ -1122,11 +1128,11 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
     // return balance with 4 digits after decimal
     const formattedStrBal = formatBalance(
       balance,
-      { withSi: false, forceUnit: "-" },
+      { withSi: false, forceUnit: '-' },
       chainDecimals
     );
 
-    const formattedNumBal = formattedStrBal.replaceAll(",", "") * 1;
+    const formattedNumBal = formattedStrBal.replaceAll(',', '') * 1;
 
     return { balance: formattedNumBal };
   }
@@ -1141,23 +1147,23 @@ export const fetchInitialValuesProject = async ({
 }) => {
   let initialValues = {
     isEditMode: false,
-    name: "",
-    website: "",
-    twitter: "",
-    discord: "",
-    description: "",
-    roadmap: [{ type: "", content: "" }],
-    members: [{ name: "", title: "", socialLink: "", avatar: "" }],
-    nftName: "",
-    nftSymbol: "",
+    name: '',
+    website: '',
+    twitter: '',
+    discord: '',
+    description: '',
+    roadmap: [{ type: '', content: '' }],
+    members: [{ name: '', title: '', socialLink: '', avatar: '' }],
+    nftName: '',
+    nftSymbol: '',
     totalSupply: 0,
     royalFee: 0.5,
 
     phases: [
       {
-        name: "",
-        start: "",
-        end: "",
+        name: '',
+        start: '',
+        end: '',
         isPublic: false,
         publicMintingFee: 0,
         publicAmount: 0,
@@ -1214,7 +1220,7 @@ export const fetchInitialValuesProject = async ({
     };
   } catch (error) {
     console.log(error);
-    toast.error("There was an error while fetching data.");
+    toast.error('There was an error while fetching data.');
 
     return { error };
   }
@@ -1228,16 +1234,16 @@ const validationSchema = Yup.object().shape({
   discord: validationDiscord,
   description: validationDescription,
   roadmap: Yup.array()
-    .min(1, "Roadmap must have at least 1 items")
+    .min(1, 'Roadmap must have at least 1 items')
     .of(
       Yup.object().shape(
         {
           type: Yup.string()
             .trim()
-            .when("content", {
+            .when('content', {
               is: (val) => val,
               then: Yup.string()
-                .test("Test type", "Duplicated milestone!", (value, schema) => {
+                .test('Test type', 'Duplicated milestone!', (value, schema) => {
                   const array = schema?.from[1].value?.roadmap;
                   const keyArray = array.map((p) => p.type?.trim());
                   const [isDup] = keyArray.filter(
@@ -1245,38 +1251,38 @@ const validationSchema = Yup.object().shape({
                   );
                   return !(isDup && isDup.trim() === value.trim());
                 })
-                .required("This field is required")
-                .min(2, "Must be at least 2 characters")
-                .max(100, "Must be at most 100 characters"),
+                .required('This field is required')
+                .min(2, 'Must be at least 2 characters')
+                .max(100, 'Must be at most 100 characters'),
               otherwise: Yup.string().notRequired(),
             }),
           content: Yup.string()
             .trim()
-            .when("type", {
+            .when('type', {
               is: (val) => val,
               then: Yup.string()
-                .required("This field is required")
-                .min(2, "Must be at least 2 characters")
-                .max(5000, "Must be at most 5000 characters"),
+                .required('This field is required')
+                .min(2, 'Must be at least 2 characters')
+                .max(5000, 'Must be at most 5000 characters'),
               otherwise: Yup.string().notRequired(),
             }),
         },
-        [["type", "content"]]
+        [['type', 'content']]
       )
     ),
   members: Yup.array()
-    .min(1, "Members must have at least 1 team member")
+    .min(1, 'Members must have at least 1 team member')
     .of(
       Yup.object().shape(
         {
           name: Yup.string()
             .trim()
-            .when("title", {
+            .when('title', {
               is: (val) => val,
               then: Yup.string()
                 .test(
-                  "Test name",
-                  "Duplicated member name!",
+                  'Test name',
+                  'Duplicated member name!',
                   (value, schema) => {
                     const array = schema?.from[1].value?.members;
                     const keyArray = array.map((p) => p.name?.trim());
@@ -1286,37 +1292,37 @@ const validationSchema = Yup.object().shape({
                     return !(isDup && isDup.trim() === value.trim());
                   }
                 )
-                .required("This field is required")
-                .min(2, "Must be at least 2 characters")
-                .max(100, "Must be at most 100 characters"),
+                .required('This field is required')
+                .min(2, 'Must be at least 2 characters')
+                .max(100, 'Must be at most 100 characters'),
               otherwise: Yup.string().notRequired(),
             }),
           title: Yup.string()
             .trim()
-            .when("name", {
+            .when('name', {
               is: (val) => val,
               then: Yup.string()
-                .required("This field is required")
-                .min(2, "Must be at least 2 characters")
-                .max(100, "Must be at most 100 characters"),
+                .required('This field is required')
+                .min(2, 'Must be at least 2 characters')
+                .max(100, 'Must be at most 100 characters'),
               otherwise: Yup.string().notRequired(),
             }),
           socialLink: validationWebsite,
         },
-        [["name", "title"]]
+        [['name', 'title']]
       )
     ),
   nftName: validationNftName,
   nftSymbol: validationNftSymbol,
   phases: Yup.array()
-    .min(1, "Phases must have at least 1 items")
+    .min(1, 'Phases must have at least 1 items')
     .of(
       Yup.object().shape({
         name: Yup.string()
-          .required("This field is required")
-          .min(2, "Must be at least 2 characters")
-          .max(100, "Must be at most 100 characters")
-          .test("Test name", "Duplicated phase name!", (value, schema) => {
+          .required('This field is required')
+          .min(2, 'Must be at least 2 characters')
+          .max(100, 'Must be at most 100 characters')
+          .test('Test name', 'Duplicated phase name!', (value, schema) => {
             const array = schema?.from[1].value?.phases;
             const keyArray = array.map((p) => p.name?.trim());
             const [isDup] = keyArray.filter(
@@ -1325,14 +1331,14 @@ const validationSchema = Yup.object().shape({
             return !(isDup && isDup.trim() === value.trim());
           }),
         isPublic: Yup.boolean(),
-        publicMintingFee: "",
-        publicAmount: "",
-        publicMaxMintingAmount: Yup.number().when("publicAmount", {
+        publicMintingFee: '',
+        publicAmount: '',
+        publicMaxMintingAmount: Yup.number().when('publicAmount', {
           is: (val) => val,
           then: Yup.number()
-            .required("Must have value.")
-            .min(1, "Must be bigger than 1")
-            .max(Yup.ref("publicAmount"), "Must smaller than public amount"),
+            .required('Must have value.')
+            .min(1, 'Must be bigger than 1')
+            .max(Yup.ref('publicAmount'), 'Must smaller than public amount'),
           otherwise: Yup.number().notRequired(),
         }),
       })

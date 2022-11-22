@@ -13,6 +13,7 @@ import {
 import useTxStatus from '@hooks/useTxStatus';
 import { formMode, SCROLLBAR, FINALIZED } from '@constants';
 import MyWhiteListProjectPage from '../whitelist';
+// import { useEffect } from 'react';
 
 function WhitelistManagerModal({
   mode = formMode.ADD,
@@ -25,7 +26,7 @@ function WhitelistManagerModal({
   const modalSize = useBreakpointValue(['xs', '6xl']);
 
   // useEffect(() => {
-  //   step === END && onClose();
+  //   step === FINALIZED && onClose();
   // }, [step, onClose]);
 
   return (

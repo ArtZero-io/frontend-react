@@ -32,7 +32,7 @@ import { setTxStatus } from '@store/actions/txStatus';
 import { stringToU8a } from '@polkadot/util';
 import { isValidAddressPolkadotAddress, getEstimatedGas } from '@utils';
 import { APICall } from '@api/client';
-import { START, FINALIZED, TRANSFER, END } from '@constants';
+import { START, FINALIZED, TRANSFER } from '@constants';
 import useTxStatus from '@hooks/useTxStatus';
 import CommonButton from '@components/Button/CommonButton';
 import TransferIcon from '../../theme/assets/icon/Transfer';
@@ -125,7 +125,7 @@ function TransferNFTModal({
   };
 
   useEffect(() => {
-    rest.step === END && onClose();
+    rest.step === FINALIZED && onClose();
   }, [onClose, rest.step]);
 
   return (

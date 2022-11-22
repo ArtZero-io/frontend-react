@@ -9,43 +9,43 @@ import {
   TabPanels,
   Tabs,
   useBreakpointValue,
-} from "@chakra-ui/react";
-import MyNFTTabInfo from "@pages/account/nfts/components/Tabs/MyNFTInfo";
-import MyNFTTabOffers from "@pages/account/nfts/components/Tabs/MyNFTOffers";
-import { useEffect } from "react";
+} from '@chakra-ui/react';
+import MyNFTTabInfo from '@pages/account/nfts/components/Tabs/MyNFTInfo';
+import MyNFTTabOffers from '@pages/account/nfts/components/Tabs/MyNFTOffers';
+import { useEffect } from 'react';
 
-import { FINALIZED, END } from "@constants";
-import useTxStatus from "@hooks/useTxStatus";
+import { FINALIZED } from '@constants';
+import useTxStatus from '@hooks/useTxStatus';
 
 export default function ResponsivelySizedModal({
   onClose,
   isOpen,
-  filterSelected = "LISTING",
+  filterSelected = 'LISTING',
   ...rest
 }) {
   const tabHeight = useBreakpointValue({
     base: `1rem`,
     xl: `3.5rem`,
-    "2xl": `4.5rem`,
+    '2xl': `4.5rem`,
   });
 
   const { step, onEndClick, actionType } = useTxStatus();
 
   useEffect(() => {
-    step === END && onClose();
+    step === FINALIZED && onClose();
   }, [step, onClose]);
 
   const tabData = [
     {
-      label: "nft info",
+      label: 'nft info',
       content: <MyNFTTabInfo filterSelected={filterSelected} {...rest} />,
       isDisabled: actionType,
     },
     {
-      label: "offers",
+      label: 'offers',
       content: <MyNFTTabOffers {...rest} />,
       isDisabled:
-        filterSelected === "COLLECTED" || actionType || !rest?.is_for_sale,
+        filterSelected === 'COLLECTED' || actionType || !rest?.is_for_sale,
     },
   ];
 
@@ -75,9 +75,9 @@ export default function ResponsivelySizedModal({
         <ModalCloseButton
           borderRadius="0"
           position="absolute"
-          borderWidth={[0, "2px"]}
-          top={["0", "-8", "-8"]}
-          right={["0", "-8", "-8"]}
+          borderWidth={[0, '2px']}
+          top={['0', '-8', '-8']}
+          right={['0', '-8', '-8']}
           onClick={() => step === FINALIZED && onEndClick()}
         />
 
@@ -90,15 +90,15 @@ export default function ResponsivelySizedModal({
                 key={index}
                 color="#fff"
                 _selected={{
-                  color: "brand.blue",
-                  borderBottom: "2px solid #7ae7ff",
+                  color: 'brand.blue',
+                  borderBottom: '2px solid #7ae7ff',
                 }}
                 minH={tabHeight}
                 isDisabled={tab.isDisabled}
                 fontFamily="Evogria Italic"
-                py={["10px", "20px", "20px"]}
-                fontSize={["13px", null, "18px"]}
-                lineHeight={["21px", null, "30px"]}
+                py={['10px', '20px', '20px']}
+                fontSize={['13px', null, '18px']}
+                lineHeight={['21px', null, '30px']}
               >
                 {tab.label}
               </Tab>

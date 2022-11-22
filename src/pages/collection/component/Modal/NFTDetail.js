@@ -9,46 +9,46 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-} from "@chakra-ui/react";
-import React, { useEffect } from "react";
-import NFTTabCollectible from "../Tab/Collectible";
-import OwnershipHistory from "../Tab/OwnershipHistory";
-import useTxStatus from "@hooks/useTxStatus";
-import { FINALIZED, END } from "@constants";
-import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
-import TxHistory from "../Tab/TxHistory";
+} from '@chakra-ui/react';
+import React, { useEffect } from 'react';
+import NFTTabCollectible from '../Tab/Collectible';
+import OwnershipHistory from '../Tab/OwnershipHistory';
+import useTxStatus from '@hooks/useTxStatus';
+import { FINALIZED } from '@constants';
+import MyNFTOffer from '@pages/account/nfts/components/Tabs/MyNFTOffers';
+import TxHistory from '../Tab/TxHistory';
 
 function NFTDetailModal({ isOpen, onClose, ...rest }) {
   const tabHeight = useBreakpointValue({
     base: `1rem`,
     xl: `3.5rem`,
-    "2xl": `4.5rem`,
+    '2xl': `4.5rem`,
   });
 
   const { step, onEndClick, actionType } = useTxStatus();
 
   useEffect(() => {
-    step === END && onClose();
+    step === FINALIZED && onClose();
   }, [step, onClose]);
 
   const tabData = [
     {
-      label: "collectible",
+      label: 'collectible',
       content: <NFTTabCollectible {...rest} />,
       isDisabled: actionType,
     },
     {
-      label: "offers",
+      label: 'offers',
       content: <MyNFTOffer {...rest} />,
       isDisabled: actionType || !rest?.is_for_sale,
     },
     {
-      label: "owner history",
+      label: 'owner history',
       content: <OwnershipHistory {...rest} />,
       isDisabled: actionType,
     },
     {
-      label: "tx history",
+      label: 'tx history',
       content: <TxHistory {...rest} />,
       isDisabled: actionType,
     },
@@ -79,9 +79,9 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
         <ModalCloseButton
           borderRadius="0"
           position="absolute"
-          borderWidth={[0, "2px"]}
-          top={["0", "-8", "-8"]}
-          right={["0", "-8", "-8"]}
+          borderWidth={[0, '2px']}
+          top={['0', '-8', '-8']}
+          right={['0', '-8', '-8']}
           onClick={() => step === FINALIZED && onEndClick()}
         />
 
@@ -94,15 +94,15 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
                 key={index}
                 color="#fff"
                 _selected={{
-                  color: "brand.blue",
-                  borderBottom: "2px solid #7ae7ff",
+                  color: 'brand.blue',
+                  borderBottom: '2px solid #7ae7ff',
                 }}
                 minH={tabHeight}
                 isDisabled={tab.isDisabled}
                 fontFamily="Evogria Italic"
-                py={["10px", "20px", "20px"]}
-                fontSize={["13px", null, "18px"]}
-                lineHeight={["21px", null, "30px"]}
+                py={['10px', '20px', '20px']}
+                fontSize={['13px', null, '18px']}
+                lineHeight={['21px', null, '30px']}
               >
                 {tab.label}
               </Tab>

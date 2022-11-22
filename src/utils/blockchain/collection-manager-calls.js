@@ -1,16 +1,16 @@
-import BN from "bn.js";
-import toast from "react-hot-toast";
-import { web3FromSource } from "../wallets/extension-dapp";
-import { isValidAddressPolkadotAddress } from "@utils";
-import { ContractPromise, Abi } from "@polkadot/api-contract";
+import BN from 'bn.js';
+import toast from 'react-hot-toast';
+import { web3FromSource } from '../wallets/extension-dapp';
+import { isValidAddressPolkadotAddress } from '@utils';
+import { ContractPromise, Abi } from '@polkadot/api-contract';
 import {
   txErrorHandler,
   txResponseErrorHandler,
-} from "@store/actions/txStatus";
-import { APICall } from "@api/client";
-import { clientAPI } from "@api/client";
-import collection_manager from "@utils/blockchain/collection-manager";
-import { getEstimatedGas } from "..";
+} from '@store/actions/txStatus';
+import { APICall } from '@api/client';
+import { clientAPI } from '@api/client';
+import collection_manager from '@utils/blockchain/collection-manager';
+import { getEstimatedGas } from '..';
 
 let contract;
 
@@ -44,21 +44,33 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = await getAdvanceModeAddingFee(caller_account);
+  console.log('value', value);
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    'addNewCollection',
+    address,
+    data?.nftContractAddress,
+    data.attributes,
+    data.attributeVals,
+    data.collectionAllowRoyalFee,
+    data.collectionRoyalFeeData
+  );
 
-  // gasLimit = await getEstimatedGas(
-  //   address,
-  //   contract,
-  //   value,
-  //   "addNewCollection",
-  //   address,
-  //   data?.nftContractAddress,
-  //   data.attributes,
-  //   data.attributeVals,
-  //   data.collectionAllowRoyalFee,
-  //   data.collectionRoyalFeeData
-  // );
-
-  // console.log("ret ret uri xxx", gasLimit);
+  console.log('ret ret uri xxx', gasLimit);
+  console.log('ret ret address', address);
+  console.log('ret ret data?.nftContractAddress', data?.nftContractAddress);
+  console.log('ret ret data.attributes', data.attributes);
+  console.log('ret ret data.attributeVals', data.attributeVals);
+  console.log(
+    'ret ret data.collectionAllowRoyalFee',
+    data.collectionAllowRoyalFee
+  );
+  console.log(
+    'ret ret data.collectionRoyalFeeData',
+    data.collectionRoyalFeeData
+  );
 
   contract.tx
     .addNewCollection(
@@ -87,48 +99,48 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
         });
         if (transactionData.attributes?.length) {
           let cacheImages = [];
-          console.log("attributes", transactionData.attributes);
-          console.log("attributes.length", transactionData.attributes.length);
+          console.log('attributes', transactionData.attributes);
+          console.log('attributes.length', transactionData.attributes.length);
           for (let i = 0; i < transactionData.attributes.length; i++) {
             console.log(transactionData.attributes[i]);
-            if (transactionData.attributes[i] === "avatar_image") {
+            if (transactionData.attributes[i] === 'avatar_image') {
               cacheImages.push({
                 input: transactionData.attributeVals[i],
                 is1920: false,
-                imageType: "collection",
+                imageType: 'collection',
                 metadata: {
                   collectionAddress: data?.nftContractAddress,
-                  type: "avatar_image",
+                  type: 'avatar_image',
                 },
               });
             }
-            if (transactionData.attributes[i] === "header_image") {
+            if (transactionData.attributes[i] === 'header_image') {
               cacheImages.push({
                 input: transactionData.attributeVals[i],
                 is1920: false,
-                imageType: "collection",
+                imageType: 'collection',
                 metadata: {
                   collectionAddress: data?.nftContractAddress,
-                  type: "header_image",
+                  type: 'header_image',
                 },
               });
             }
-            if (transactionData.attributes[i] === "header_square_image") {
+            if (transactionData.attributes[i] === 'header_square_image') {
               cacheImages.push({
                 input: transactionData.attributeVals[i],
                 is1920: true,
-                imageType: "collection",
+                imageType: 'collection',
                 metadata: {
                   collectionAddress: data?.nftContractAddress,
-                  type: "header_square_image",
+                  type: 'header_square_image',
                 },
               });
             }
           }
-          console.log("cacheImages", cacheImages);
+          console.log('cacheImages', cacheImages);
           if (cacheImages.length) {
-            console.log("cacheImages::POST_API");
-            await clientAPI("post", "/cacheImages", {
+            console.log('cacheImages::POST_API');
+            await clientAPI('post', '/cacheImages', {
               images: JSON.stringify(cacheImages),
             });
           }
@@ -181,7 +193,7 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
         if (status?.isFinalized) {
           events.forEach(
             async ({ event: { data, method, section }, phase }) => {
-              if (section === "contracts" && method === "ContractEmitted") {
+              if (section === 'contracts' && method === 'ContractEmitted') {
                 const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
                 const contract_address = accId.toString();
                 if (contract_address === collection_manager.CONTRACT_ADDRESS) {
@@ -197,15 +209,15 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
                     const value = decodedEvent.args[i];
                     eventValues.push(value.toString());
                   }
-                  if (event_name === "AddNewCollectionEvent") {
+                  if (event_name === 'AddNewCollectionEvent') {
                     await APICall.askBeUpdateCollectionData({
                       collection_address: eventValues[1],
                     });
                     if (transactionData.attributes?.length) {
                       let cacheImages = [];
-                      console.log("attributes", transactionData.attributes);
+                      console.log('attributes', transactionData.attributes);
                       console.log(
-                        "attributes.length",
+                        'attributes.length',
                         transactionData.attributes.length
                       );
                       for (
@@ -214,47 +226,47 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
                         i++
                       ) {
                         console.log(transactionData.attributes[i]);
-                        if (transactionData.attributes[i] === "avatar_image") {
+                        if (transactionData.attributes[i] === 'avatar_image') {
                           cacheImages.push({
                             input: transactionData.attributeVals[i],
                             is1920: false,
-                            imageType: "collection",
+                            imageType: 'collection',
                             metadata: {
                               collectionAddress: eventValues[1],
-                              type: "avatar_image",
+                              type: 'avatar_image',
                             },
                           });
                         }
-                        if (transactionData.attributes[i] === "header_image") {
+                        if (transactionData.attributes[i] === 'header_image') {
                           cacheImages.push({
                             input: transactionData.attributeVals[i],
                             is1920: false,
-                            imageType: "collection",
+                            imageType: 'collection',
                             metadata: {
                               collectionAddress: eventValues[1],
-                              type: "header_image",
+                              type: 'header_image',
                             },
                           });
                         }
                         if (
                           transactionData.attributes[i] ===
-                          "header_square_image"
+                          'header_square_image'
                         ) {
                           cacheImages.push({
                             input: transactionData.attributeVals[i],
                             is1920: true,
-                            imageType: "collection",
+                            imageType: 'collection',
                             metadata: {
                               collectionAddress: eventValues[1],
-                              type: "header_square_image",
+                              type: 'header_square_image',
                             },
                           });
                         }
                       }
-                      console.log("cacheImages", cacheImages);
+                      console.log('cacheImages', cacheImages);
                       if (cacheImages.length) {
-                        console.log("cacheImages::POST_API");
-                        await clientAPI("post", "/cacheImages", {
+                        console.log('cacheImages::POST_API');
+                        await clientAPI('post', '/cacheImages', {
                           images: JSON.stringify(cacheImages),
                         });
                       }
@@ -294,12 +306,12 @@ async function updateIsActive(caller_account, collection_address, isActive) {
     address,
     contract,
     value,
-    "updateIsActive",
+    'updateIsActive',
     collection_address,
     isActive
   );
 
-  console.log("ret ret uri xxx", gasLimit);
+  console.log('ret ret uri xxx', gasLimit);
 
   //TODO: update tx and Error handler
   contract.tx
@@ -309,7 +321,7 @@ async function updateIsActive(caller_account, collection_address, isActive) {
         if (dispatchError.isModule) {
           toast.error(`There is some error with your request`);
         } else {
-          console.log("dispatchError ", dispatchError.toString());
+          console.log('dispatchError ', dispatchError.toString());
         }
       }
 
@@ -317,7 +329,7 @@ async function updateIsActive(caller_account, collection_address, isActive) {
         const statusText = Object.keys(status.toHuman())[0];
         toast.success(
           `Update Collection Status ${
-            statusText === "0" ? "started" : statusText.toLowerCase()
+            statusText === '0' ? 'started' : statusText.toLowerCase()
           }.`
         );
 
@@ -329,7 +341,7 @@ async function updateIsActive(caller_account, collection_address, isActive) {
       }
     })
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log("e", e));
+    .catch((e) => console.log('e', e));
   return unsubscribe;
 }
 //GETTERS
@@ -347,7 +359,7 @@ async function getCollectionCount(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return new BN(output, 10, 'le').toNumber();
   }
   return null;
 }
@@ -399,15 +411,15 @@ async function getAdminAddress(caller_account) {
   const gasLimit = -1;
   const azero_value = 0;
   //console.log(contract);
-  console.log("CCC contract", contract);
-  console.log("CCC caller_account", caller_account);
+  console.log('CCC contract', contract);
+  console.log('CCC caller_account', caller_account);
 
   const { result, output } = await contract.query.getAdminAddress(address, {
     value: azero_value,
     gasLimit,
   });
 
-  console.log("CCC output.toHuman()", output.toHuman());
+  console.log('CCC output.toHuman()', output.toHuman());
 
   if (result.isOk) {
     return output.toHuman();
@@ -429,7 +441,7 @@ async function isActive(caller_account, collection_address) {
   //console.log(contract);
 
   const { result, output } = await contract.query[
-    "crossArtZeroCollection::isActive"
+    'crossArtZeroCollection::isActive'
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
     return output.toHuman();
@@ -451,10 +463,10 @@ async function getRoyalFee(caller_account, collection_address) {
   //console.log(contract);
 
   const { result, output } = await contract.query[
-    "crossArtZeroCollection::getRoyalFee"
+    'crossArtZeroCollection::getRoyalFee'
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return new BN(output, 10, 'le').toNumber();
   }
   return null;
 }
@@ -473,10 +485,10 @@ async function getContractType(caller_account, collection_address) {
   //console.log(contract);
 
   const { result, output } = await contract.query[
-    "crossArtZeroCollection::getContractType"
+    'crossArtZeroCollection::getContractType'
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return new BN(output, 10, 'le').toNumber();
   }
   return null;
 }
@@ -495,7 +507,7 @@ async function getCollectionOwner(caller_account, collection_address) {
   const address = caller_account?.address;
 
   const { result, output } = await contract.query[
-    "crossArtZeroCollection::getCollectionOwner"
+    'crossArtZeroCollection::getCollectionOwner'
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
     return output.toHuman();
@@ -537,7 +549,7 @@ async function getSimpleModeAddingFee(caller_account) {
     }
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return new BN(output, 10, 'le').toNumber();
   }
   return null;
 }
@@ -553,7 +565,7 @@ async function getAdvanceModeAddingFee(caller_account) {
   );
 
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return new BN(output, 10, 'le').toNumber();
   }
   return null;
 }
@@ -565,7 +577,7 @@ async function getMaxRoyalFeeRate(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return new BN(output, 10, 'le').toNumber();
   }
   return null;
 }
@@ -579,7 +591,7 @@ async function owner(caller_account) {
   const azero_value = 0;
   //console.log(contract);
 
-  const { result, output } = await contract.query["ownable::owner"](address, {
+  const { result, output } = await contract.query['ownable::owner'](address, {
     value: azero_value,
     gasLimit,
   });
@@ -606,7 +618,7 @@ async function getActiveCollectionCount(caller_account) {
     }
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return new BN(output, 10, 'le').toNumber();
   }
   return null;
 }
@@ -660,13 +672,13 @@ async function setMultipleAttributes(
     address,
     contract,
     value,
-    "setMultipleAttributes",
+    'setMultipleAttributes',
     collection_address,
     attributes,
     values
   );
 
-  console.log("ret ret uri xxx", gasLimit);
+  console.log('ret ret uri xxx', gasLimit);
 
   caller_account &&
     contract.tx
@@ -692,47 +704,47 @@ async function setMultipleAttributes(
           });
           if (attributes?.length) {
             let cacheImages = [];
-            console.log("attributes", attributes);
-            console.log("attributes.length", attributes.length);
+            console.log('attributes', attributes);
+            console.log('attributes.length', attributes.length);
             for (let i = 0; i < attributes.length; i++) {
-              if (attributes[i] === "avatar_image") {
+              if (attributes[i] === 'avatar_image') {
                 cacheImages.push({
                   input: values[i],
                   is1920: false,
-                  imageType: "collection",
+                  imageType: 'collection',
                   metadata: {
                     collectionAddress: collection_address,
-                    type: "avatar_image",
+                    type: 'avatar_image',
                   },
                 });
               }
-              if (attributes[i] === "header_image") {
+              if (attributes[i] === 'header_image') {
                 cacheImages.push({
                   input: values[i],
                   is1920: false,
-                  imageType: "collection",
+                  imageType: 'collection',
                   metadata: {
                     collectionAddress: collection_address,
-                    type: "header_image",
+                    type: 'header_image',
                   },
                 });
               }
-              if (attributes[i] === "header_square_image") {
+              if (attributes[i] === 'header_square_image') {
                 cacheImages.push({
                   input: values[i],
                   is1920: true,
-                  imageType: "collection",
+                  imageType: 'collection',
                   metadata: {
                     collectionAddress: collection_address,
-                    type: "header_square_image",
+                    type: 'header_square_image',
                   },
                 });
               }
             }
-            console.log("cacheImages", cacheImages);
+            console.log('cacheImages', cacheImages);
             if (cacheImages.length) {
-              console.log("cacheImages::POST_API");
-              await clientAPI("post", "/cacheImages", {
+              console.log('cacheImages::POST_API');
+              await clientAPI('post', '/cacheImages', {
                 images: JSON.stringify(cacheImages),
               });
             }
@@ -802,11 +814,11 @@ export const withdrawCollectionContract = async (
     address,
     contract,
     value,
-    "withdrawFee",
+    'withdrawFee',
     amountFormatted
   );
 
-  console.log("ret ret xxx", gasLimit);
+  console.log('ret ret xxx', gasLimit);
 
   const txNotSign = contract.tx.withdrawFee(
     { gasLimit, value },

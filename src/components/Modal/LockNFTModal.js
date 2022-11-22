@@ -12,28 +12,28 @@ import {
   Tooltip,
   HStack,
   useBreakpointValue,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import { useSubstrateState } from "@utils/substrate";
+import { useSubstrateState } from '@utils/substrate';
 
-import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
+import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
 
-import { ContractPromise } from "@polkadot/api-contract";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import { web3FromSource } from "@utils/wallets/extension-dapp";
+import { ContractPromise } from '@polkadot/api-contract';
+import nft721_psp34_standard from '@utils/blockchain/nft721-psp34-standard';
+import { web3FromSource } from '@utils/wallets/extension-dapp';
 import {
   txErrorHandler,
   txResponseErrorHandler,
-} from "@store/actions/txStatus";
-import { APICall } from "@api/client";
-import { setTxStatus } from "@store/actions/txStatus";
-import { START, FINALIZED, LOCK, END } from "@constants";
-import useTxStatus from "@hooks/useTxStatus";
-import CommonButton from "@components/Button/CommonButton";
-import { useEffect } from "react";
-import UnlockIcon from "../../theme/assets/icon/Unlock";
-import { getEstimatedGas } from "@utils/";
+} from '@store/actions/txStatus';
+import { APICall } from '@api/client';
+import { setTxStatus } from '@store/actions/txStatus';
+import { START, FINALIZED, LOCK } from '@constants';
+import useTxStatus from '@hooks/useTxStatus';
+import CommonButton from '@components/Button/CommonButton';
+import { useEffect } from 'react';
+import UnlockIcon from '../../theme/assets/icon/Unlock';
+import { getEstimatedGas } from '@utils/';
 
 function LockNFTModal({
   owner,
@@ -50,7 +50,7 @@ function LockNFTModal({
 
   const lockNFTsHandler = async () => {
     if (owner !== currentAccount?.address) {
-      return toast.error("You are not the owner of this NFT");
+      return toast.error('You are not the owner of this NFT');
     }
 
     if (nftContractAddress) {
@@ -69,11 +69,11 @@ function LockNFTModal({
       const { signer } = await web3FromSource(currentAccount?.meta?.source);
       const value = 0;
 
-      gasLimit = await getEstimatedGas(address, contract, value, "lock", {
+      gasLimit = await getEstimatedGas(address, contract, value, 'lock', {
         u64: tokenID,
       });
 
-      console.log("ret ret uri xxx", gasLimit);
+      console.log('ret ret uri xxx', gasLimit);
 
       await contract.tx
         .lock({ value, gasLimit }, { u64: tokenID })
@@ -105,10 +105,10 @@ function LockNFTModal({
   };
 
   useEffect(() => {
-    rest.step === END && onClose();
+    rest.step === FINALIZED && onClose();
   }, [onClose, rest.step]);
 
-  const iconWidth = useBreakpointValue(["40px", "50px"]);
+  const iconWidth = useBreakpointValue(['40px', '50px']);
 
   return (
     <>
@@ -131,21 +131,21 @@ function LockNFTModal({
               <span
                 onClick={
                   isDisabled || actionType
-                    ? () => toast.error("This item is currently for sale!")
+                    ? () => toast.error('This item is currently for sale!')
                     : onOpen
                 }
                 style={{
                   width: iconWidth,
                   height: iconWidth,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  border: "2px solid #333333",
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '2px solid #333333',
                 }}
               >
                 <UnlockIcon
-                  width={["20px", "25px"]}
-                  height={["20px", "25px"]}
+                  width={['20px', '25px']}
+                  height={['20px', '25px']}
                 />
               </span>
             </Tooltip>
