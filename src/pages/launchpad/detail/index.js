@@ -565,7 +565,7 @@ const LaunchpadDetailPage = () => {
           1
         );
         const baseUri = tokenUri.replace('1.json', '');
-
+        console.log('baseUri', baseUri);
         ret = await Promise.all(
           [...Array(totalNFTCount)].map(async (_, index) => {
             const idOfNFT = await getIdOfPsp34NFT({

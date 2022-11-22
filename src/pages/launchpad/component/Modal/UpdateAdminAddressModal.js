@@ -9,20 +9,20 @@ import {
   ModalOverlay,
   Text,
   VStack,
-} from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useSubstrateState } from "@utils/substrate";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
-import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
-import { ContractPromise } from "@polkadot/api-contract";
-import useTxStatus from "@hooks/useTxStatus";
-import { setTxStatus } from "@store/actions/txStatus";
-import CommonButton from "@components/Button/CommonButton";
-import { UPDATE_ADMIN_ADDRESS, START, FINALIZED, END } from "@constants";
-import { clearTxStatus } from "@store/actions/txStatus";
-import { isValidAddressPolkadotAddress } from "@utils";
-import toast from "react-hot-toast";
+} from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSubstrateState } from '@utils/substrate';
+import launchpad_psp34_nft_standard from '@utils/blockchain/launchpad-psp34-nft-standard';
+import launchpad_psp34_nft_standard_calls from '@utils/blockchain/launchpad-psp34-nft-standard-calls';
+import { ContractPromise } from '@polkadot/api-contract';
+import useTxStatus from '@hooks/useTxStatus';
+import { setTxStatus } from '@store/actions/txStatus';
+import CommonButton from '@components/Button/CommonButton';
+import { UPDATE_ADMIN_ADDRESS, START, FINALIZED } from '@constants';
+import { clearTxStatus } from '@store/actions/txStatus';
+import { isValidAddressPolkadotAddress } from '@utils';
+import toast from 'react-hot-toast';
 
 export default function UpdateAdminAddressModal({
   collection_address,
@@ -31,12 +31,12 @@ export default function UpdateAdminAddressModal({
 }) {
   const dispatch = useDispatch();
 
-  const [newAdminAddress, setNewAdminAddress] = useState("");
+  const [newAdminAddress, setNewAdminAddress] = useState('');
   const { currentAccount, api } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
-    if (rest.step === END) {
+    if (rest.step === FINALIZED) {
       dispatch(clearTxStatus());
       onClose();
     }
@@ -80,7 +80,7 @@ export default function UpdateAdminAddressModal({
       onClose={onClose}
       isCentered
       isOpen={isOpen}
-      size={["xs", "xl"]}
+      size={['xs', 'xl']}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -90,18 +90,18 @@ export default function UpdateAdminAddressModal({
       <ModalContent
         pt="20px"
         pb="30px"
-        px={[0, "30px"]}
+        px={[0, '30px']}
         borderRadius="0"
         position="relative"
         bg="brand.grayDark"
-        maxW={["340px", "600px"]}
+        maxW={['340px', '600px']}
       >
         <ModalCloseButton
           borderWidth={2}
           borderRadius="0"
           position="absolute"
-          top={["0", "-8", "-8"]}
-          right={["0", "-8", "-8"]}
+          top={['0', '-8', '-8']}
+          right={['0', '-8', '-8']}
           onClick={() => rest?.step === FINALIZED && rest?.onEndClick()}
         />
         <ModalHeader textAlign="center">

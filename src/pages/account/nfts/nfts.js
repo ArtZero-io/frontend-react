@@ -50,6 +50,11 @@ const MyNFTsPage = () => {
       return setFilterSelected('LISTING');
     }
 
+    if (actionType === TRANSFER) {
+      fetchMyCollections();
+      return setFilterSelected('COLLECTED');
+    }
+
     if (actionType === LIST_TOKEN) return setFilterSelected('LISTING');
 
     if (actionType === UNLIST_TOKEN) {

@@ -9,39 +9,39 @@ import {
   Spacer,
   Text,
   VStack,
-} from "@chakra-ui/react";
-import * as Yup from "yup";
-import toast from "react-hot-toast";
-import { Formik, Form } from "formik";
-import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+} from '@chakra-ui/react';
+import * as Yup from 'yup';
+import toast from 'react-hot-toast';
+import { Formik, Form } from 'formik';
+import React, { useEffect, useState, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
-import { useSubstrateState } from "@utils/substrate";
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
+import { useSubstrateState } from '@utils/substrate';
+import nft721_psp34_standard from '@utils/blockchain/nft721-psp34-standard';
+import nft721_psp34_standard_calls from '@utils/blockchain/nft721-psp34-standard-calls';
 
-import { ContractPromise } from "@polkadot/api-contract";
+import { ContractPromise } from '@polkadot/api-contract';
 
-import AddNewNFTInput from "@components/Input/Input";
-import AddNewNFTTextArea from "@components/TextArea/TextArea";
-import AddNewNFTImageUpload from "@components/ImageUpload/Collection";
+import AddNewNFTInput from '@components/Input/Input';
+import AddNewNFTTextArea from '@components/TextArea/TextArea';
+import AddNewNFTImageUpload from '@components/ImageUpload/Collection';
 
-import AddLevelsModal from "../Modal/AddLevels";
-import AddPropertiesModal from "../Modal/AddProperties";
+import AddLevelsModal from '../Modal/AddLevels';
+import AddPropertiesModal from '../Modal/AddProperties';
 
-import { createLevelAttribute, getTraitCount } from "@utils";
-import useTxStatus from "@hooks/useTxStatus";
-import CommonButton from "@components/Button/CommonButton";
-import { formMode, CREATE_NFT, EDIT_NFT, START } from "@constants";
+import { createLevelAttribute, getTraitCount } from '@utils';
+import useTxStatus from '@hooks/useTxStatus';
+import CommonButton from '@components/Button/CommonButton';
+import { formMode, CREATE_NFT, EDIT_NFT, START } from '@constants';
 
-import { setTxStatus } from "@store/actions/txStatus";
-import PropCard from "@components/Card/PropCard";
-import isNotEmptyStr from "@utils";
-import LevelCard from "@components/Card/LevelCard";
+import { setTxStatus } from '@store/actions/txStatus';
+import PropCard from '@components/Card/PropCard';
+import isNotEmptyStr from '@utils';
+import LevelCard from '@components/Card/LevelCard';
 
 const AddNewNFTForm = ({
-  mode = "add",
+  mode = 'add',
   collectionOwner,
   tokenID,
   traits,
@@ -49,7 +49,7 @@ const AddNewNFTForm = ({
   totalNftCount,
   ...rest
 }) => {
-  const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
+  const [avatarIPFSUrl, setAvatarIPFSUrl] = useState('');
   const { currentAccount, api } = useSubstrateState();
   const [initialValues, setInitialValues] = useState(undefined);
 
@@ -66,10 +66,10 @@ const AddNewNFTForm = ({
 
   useEffect(() => {
     let newInitialValues = {
-      NFTName: "",
-      description: "",
-      properties: [{ type: "", name: "" }],
-      levels: [{ name: "", level: "", levelMax: "" }],
+      NFTName: '',
+      description: '',
+      properties: [{ type: '', name: '' }],
+      levels: [{ name: '', level: '', levelMax: '' }],
     };
 
     if (mode === formMode.EDIT) {
@@ -79,16 +79,16 @@ const AddNewNFTForm = ({
       // console.log("restrest", rest);
       if (traits) {
         newInitialValues.properties = Object.entries(traits)
-          ?.filter(([_, name]) => !name.includes("|"))
+          ?.filter(([_, name]) => !name.includes('|'))
           .map(([type, name]) => {
             return { type, name };
           });
 
         newInitialValues.levels = Object.entries(traits)
-          ?.filter(([_, value]) => value.includes("|"))
+          ?.filter(([_, value]) => value.includes('|'))
           .map(([name, value]) => {
             let result = createLevelAttribute(value);
-            console.log("result", result);
+            console.log('result', result);
 
             result.name = name;
 
@@ -114,26 +114,26 @@ const AddNewNFTForm = ({
           validationSchema={Yup.object({
             NFTName: Yup.string()
               .trim()
-              .min(3, "Must be at least 3 characters")
-              .max(30, "Must be at most 30 characters")
-              .required("This field is required"),
+              .min(3, 'Must be at least 3 characters')
+              .max(30, 'Must be at most 30 characters')
+              .required('This field is required'),
             description: Yup.string()
               .trim()
-              .min(3, "Must be at least 3 characters")
-              .max(150, "Must be 150 characters or less")
-              .required("This field is required"),
+              .min(3, 'Must be at least 3 characters')
+              .max(150, 'Must be 150 characters or less')
+              .required('This field is required'),
             properties: Yup.array()
               .of(
                 Yup.object().shape(
                   {
                     type: Yup.string()
                       .trim()
-                      .when("name", {
+                      .when('name', {
                         is: (val) => val,
                         then: Yup.string()
                           .test(
-                            "Test Prop",
-                            "Duplicated Props Type!",
+                            'Test Prop',
+                            'Duplicated Props Type!',
                             (value, schema) => {
                               const propsArr =
                                 schema?.from[1].value?.properties;
@@ -149,38 +149,38 @@ const AddNewNFTForm = ({
                               return !(isDup && isDup.trim() === value.trim());
                             }
                           )
-                          .required("Must have type value.")
-                          .min(3, "Must be at least 3 characters")
-                          .max(30, "Must be at most 30 characters"),
+                          .required('Must have type value.')
+                          .min(3, 'Must be at least 3 characters')
+                          .max(30, 'Must be at most 30 characters'),
                         otherwise: Yup.string().notRequired(),
                       }),
                     name: Yup.string()
                       .trim()
-                      .when("type", {
+                      .when('type', {
                         is: (val) => val,
                         then: Yup.string()
-                          .required("Must have name value.")
-                          .min(3, "Must be at least 3 characters")
-                          .max(30, "Must be at most 30 characters"),
+                          .required('Must have name value.')
+                          .min(3, 'Must be at least 3 characters')
+                          .max(30, 'Must be at most 30 characters'),
                         otherwise: Yup.string().notRequired(),
                       }),
                   },
-                  [["type", "name"]]
+                  [['type', 'name']]
                 )
               )
               .min(0)
-              .max(10, "Property must have less than or equal to 10 items!"),
+              .max(10, 'Property must have less than or equal to 10 items!'),
             levels: Yup.array(
               Yup.object().shape(
                 {
                   name: Yup.string()
                     .trim()
-                    .when("level", {
+                    .when('level', {
                       is: (val) => val,
                       then: Yup.string()
                         .test(
-                          "Test Level",
-                          "Duplicated Levels Name!",
+                          'Test Level',
+                          'Duplicated Levels Name!',
                           (value, schema) => {
                             const levelsArr = schema?.from[1].value?.levels;
 
@@ -195,42 +195,42 @@ const AddNewNFTForm = ({
                             return !(isDup && isDup.trim() === value.trim());
                           }
                         )
-                        .required("Must have level name.")
-                        .min(3, "Must be at least 3 characters")
-                        .max(30, "Must be at most 30 characters"),
+                        .required('Must have level name.')
+                        .min(3, 'Must be at least 3 characters')
+                        .max(30, 'Must be at most 30 characters'),
                       otherwise: Yup.string().notRequired(),
                     }),
-                  level: Yup.number().when("levelMax", {
+                  level: Yup.number().when('levelMax', {
                     is: (val) => val,
                     then: Yup.number()
-                      .required("Must have min value.")
-                      .min(0, "Must be bigger than 0")
-                      .max(10, "Must smaller than max"),
+                      .required('Must have min value.')
+                      .min(0, 'Must be bigger than 0')
+                      .max(10, 'Must smaller than max'),
                     otherwise: Yup.number().notRequired(),
                   }),
-                  levelMax: Yup.number().when("name", {
+                  levelMax: Yup.number().when('name', {
                     is: (val) => val,
                     then: Yup.number()
-                      .required("Must have max value.")
-                      .min(Yup.ref("level"), "Must greater than level")
-                      .max(10, "Must be smaller than 10"),
+                      .required('Must have max value.')
+                      .min(Yup.ref('level'), 'Must greater than level')
+                      .max(10, 'Must be smaller than 10'),
                     otherwise: Yup.number().notRequired(),
                   }),
                 },
-                [["name", "level", "levelMax"]]
+                [['name', 'level', 'levelMax']]
               )
             )
               .min(0)
-              .max(10, "Level must have less than or equal to 10 items!"),
+              .max(10, 'Level must have less than or equal to 10 items!'),
           })}
           onSubmit={async (values) => {
-            !avatarIPFSUrl && toast.error("Upload images first");
+            !avatarIPFSUrl && toast.error('Upload images first');
 
             if (avatarIPFSUrl) {
               values.avatarIPFSUrl = avatarIPFSUrl;
 
-              console.log("collectionOwner", collectionOwner);
-              console.log("currentAccount?.address", currentAccount?.address);
+              console.log('collectionOwner', collectionOwner);
+              console.log('currentAccount?.address', currentAccount?.address);
               if (
                 mode === formMode.ADD &&
                 collectionOwner !== currentAccount?.address
@@ -240,15 +240,15 @@ const AddNewNFTForm = ({
 
               let attributes = [
                 {
-                  name: "nft_name",
+                  name: 'nft_name',
                   value: values.NFTName,
                 },
                 {
-                  name: "description",
+                  name: 'description',
                   value: values.description,
                 },
                 {
-                  name: "avatar",
+                  name: 'avatar',
                   value: values.avatarIPFSUrl,
                 },
               ];
@@ -266,7 +266,7 @@ const AddNewNFTForm = ({
                 for (const level of values.levels) {
                   attributes.push({
                     name: level.name,
-                    value: level.level + "|" + level.levelMax,
+                    value: level.level + '|' + level.levelMax,
                   });
                 }
               }
@@ -301,7 +301,7 @@ const AddNewNFTForm = ({
                   if (newAttrsKeysList.indexOf(oldAttr) === -1) {
                     attributes.push({
                       name: oldAttr,
-                      value: "",
+                      value: '',
                     });
                   }
                 }
@@ -347,26 +347,26 @@ const AddNewNFTForm = ({
                 imageIPFSUrl={avatarIPFSUrl}
                 setImageIPFSUrl={setAvatarIPFSUrl}
                 title="NFT Image"
-                limitedSize={{ width: "1000", height: "1000" }}
+                limitedSize={{ width: '1000', height: '1000' }}
                 isBanner={false}
               />
               {/* Add Props  */}
               <Box py={6} borderBottomWidth={1}>
                 <Flex w="full" pb={3}>
                   <VStack alignItems="start">
-                    <Heading fontSize={["lg", "xl", "xl"]}>properties</Heading>
-                    <Text fontSize={"lg"} fontWeight="medium">
-                      Textural trails that show up as rectangles
+                    <Heading fontSize={['lg', 'xl', 'xl']}>properties</Heading>
+                    <Text fontSize={'lg'} fontWeight="medium">
+                      Textual trails that show up as rectangles.
                     </Text>
                   </VStack>
                   <Spacer />
                   <Button
-                    fontSize={["sm", "md", "md"]}
-                    px={["12px", "32px", "32px"]}
+                    fontSize={['sm', 'md', 'md']}
+                    px={['12px', '32px', '32px']}
                     isDisabled={actionType}
                     variant="outline"
                     color="brand.blue"
-                    onClick={() => setModifierToEdit("properties")}
+                    onClick={() => setModifierToEdit('properties')}
                   >
                     Add properties
                   </Button>
@@ -406,26 +406,26 @@ const AddNewNFTForm = ({
                   mode={mode}
                   name="properties"
                   onClose={() => setModifierToEdit(null)}
-                  isOpen={modifierToEdit === "properties"}
+                  isOpen={modifierToEdit === 'properties'}
                 />
               </Box>
               {/* End Add Props  */}
               <Box py={6} borderBottomWidth={1}>
                 <Flex w="full" pb={3}>
                   <VStack alignItems="start">
-                    <Heading fontSize={["lg", "xl", "xl"]}>Levels</Heading>
-                    <Text fontSize={"lg"}>
+                    <Heading fontSize={['lg', 'xl', 'xl']}>Levels</Heading>
+                    <Text fontSize={'lg'}>
                       Numerical traits that show as a progress bar
                     </Text>
                   </VStack>
                   <Spacer />
                   <Button
-                    fontSize={["sm", "md", "md"]}
-                    px={["12px", "32px", "32px"]}
+                    fontSize={['sm', 'md', 'md']}
+                    px={['12px', '32px', '32px']}
                     isDisabled={actionType}
                     variant="outline"
                     color="brand.blue"
-                    onClick={() => setModifierToEdit("levels")}
+                    onClick={() => setModifierToEdit('levels')}
                   >
                     Add levels
                   </Button>
@@ -466,7 +466,7 @@ const AddNewNFTForm = ({
                   mode={mode}
                   name="levels"
                   onClose={() => setModifierToEdit(null)}
-                  isOpen={modifierToEdit === "levels"}
+                  isOpen={modifierToEdit === 'levels'}
                 />
               </Box>
               {errors?.properties && (
@@ -485,7 +485,7 @@ const AddNewNFTForm = ({
                 my="24px"
                 {...restOfTxStatus}
                 type="submit"
-                text={`${mode === formMode.ADD ? "create" : "update"} nft`}
+                text={`${mode === formMode.ADD ? 'create' : 'update'} nft`}
                 isDisabled={!(isValid && (!noImagesChange || dirty))}
               />
             </Form>

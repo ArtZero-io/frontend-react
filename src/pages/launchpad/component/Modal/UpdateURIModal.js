@@ -10,20 +10,20 @@ import {
   Input,
   Text,
   Link,
-} from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useSubstrateState } from "@utils/substrate";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
-import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
-import { ContractPromise } from "@polkadot/api-contract";
-import useTxStatus from "@hooks/useTxStatus";
-import { setTxStatus } from "@store/actions/txStatus";
-import CommonButton from "@components/Button/CommonButton";
-import { UPDATE_BASE_URI, START, FINALIZED, END } from "@constants";
-import { clearTxStatus } from "@store/actions/txStatus";
-import toast from "react-hot-toast";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+} from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSubstrateState } from '@utils/substrate';
+import launchpad_psp34_nft_standard from '@utils/blockchain/launchpad-psp34-nft-standard';
+import launchpad_psp34_nft_standard_calls from '@utils/blockchain/launchpad-psp34-nft-standard-calls';
+import { ContractPromise } from '@polkadot/api-contract';
+import useTxStatus from '@hooks/useTxStatus';
+import { setTxStatus } from '@store/actions/txStatus';
+import CommonButton from '@components/Button/CommonButton';
+import { UPDATE_BASE_URI, START, FINALIZED } from '@constants';
+import { clearTxStatus } from '@store/actions/txStatus';
+import toast from 'react-hot-toast';
+import { ExternalLinkIcon } from '@chakra-ui/icons';
 
 export default function UpdateURIModal({
   collection_address,
@@ -32,41 +32,48 @@ export default function UpdateURIModal({
 }) {
   const dispatch = useDispatch();
 
-  const [newURI, setNewURI] = useState("");
+  const [newURI, setNewURI] = useState('');
   const { currentAccount, api } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
-    if (rest.step === END) {
+    if (rest.step === FINALIZED) {
       dispatch(clearTxStatus());
       onClose();
     }
   }, [dispatch, onClose, rest.step]);
 
   const updateBaseUri = async () => {
-    if (newURI.toString().substr(-1) !== "/") {
-      toast.error("Base Uri must be end with /");
+    if (newURI.toString().substr(-1) !== '/') {
+      toast.error('Base Uri must be end with /');
       return;
     }
-    const launchpad_psp34_nft_standard_contract = new ContractPromise(
-      api,
-      launchpad_psp34_nft_standard.CONTRACT_ABI,
-      collection_address
-    );
 
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
+    try {
+      const launchpad_psp34_nft_standard_contract = new ContractPromise(
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        collection_address
+      );
 
-    dispatch(setTxStatus({ type: UPDATE_BASE_URI, step: START }));
+      launchpad_psp34_nft_standard_calls.setContract(
+        launchpad_psp34_nft_standard_contract
+      );
 
-    await launchpad_psp34_nft_standard_calls.updateBaseUri(
-      currentAccount,
-      newURI,
-      dispatch,
-      UPDATE_BASE_URI,
-      api
-    );
+      dispatch(setTxStatus({ type: UPDATE_BASE_URI, step: START }));
+
+      await launchpad_psp34_nft_standard_calls.updateBaseUri(
+        currentAccount,
+        newURI,
+        dispatch,
+        UPDATE_BASE_URI,
+        api
+      );
+    } catch (error) {
+      console.log(error);
+      toast.error('There was an error while update art location.');
+      dispatch(clearTxStatus());
+    }
   };
 
   return (
@@ -76,7 +83,7 @@ export default function UpdateURIModal({
       onClose={onClose}
       isCentered
       isOpen={isOpen}
-      size={["xs", "xl"]}
+      size={['xs', 'xl']}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -86,18 +93,18 @@ export default function UpdateURIModal({
       <ModalContent
         pt="20px"
         pb="30px"
-        px={[0, "30px"]}
+        px={[0, '30px']}
         borderRadius="0"
         position="relative"
         bg="brand.grayDark"
-        maxW={["340px", "600px"]}
+        maxW={['340px', '600px']}
       >
         <ModalCloseButton
           borderWidth={2}
           borderRadius="0"
           position="absolute"
-          top={["0", "-8", "-8"]}
-          right={["0", "-8", "-8"]}
+          top={['0', '-8', '-8']}
+          right={['0', '-8', '-8']}
           onClick={() => rest?.step === FINALIZED && rest?.onEndClick()}
         />
         <ModalHeader textAlign="center">
@@ -112,8 +119,8 @@ export default function UpdateURIModal({
           <Text fontSize="sm" fontWeight="400">
             Note that: to make the process quicker, please contact our team to
             have your art work cached in our server. If you don't want to reveal
-            your art during sale period, you can leave this empty. See more at{" "}
-            <Link textTransform="none" href="https://google.com" isExternal>
+            your art during sale period, you can leave this empty. See more at{' '}
+            <Link textTransform="none" href="#" isExternal>
               this link <ExternalLinkIcon mx="2px" />
             </Link>
           </Text>

@@ -44,6 +44,7 @@ export const txResponseErrorHandler = async ({
   type,
   api,
   caller_account,
+  isApprovalTx = false,
 }) => {
   if (dispatchError) {
     dispatch(clearTxStatus());
@@ -145,16 +146,28 @@ export const txResponseErrorHandler = async ({
       //     balance.free.toHuman().slice(-15, -8)
       // );
     } else {
-      dispatch(
+      if (!isApprovalTx) {
+        dispatch(
+          setTxStatus({
+            type,
+            txType: txType,
+            timeStamp: Date.now(),
+            step: statusToHuman[0][0],
+            txStatus: statusToHuman[0][0],
+          })
+        );
+      }
+
+      if (isApprovalTx && statusToHuman[0][0] !== FINALIZED) {
         setTxStatus({
           type,
           txType: txType,
           timeStamp: Date.now(),
           step: statusToHuman[0][0],
           txStatus: statusToHuman[0][0],
-        })
-      );
-
+        });
+      }
+      
       if (statusToHuman[0][0] === FINALIZED) {
         // await fetchUserBalance({ currentAccount: caller_account, api }).then(
         //   ({ balance }) =>
