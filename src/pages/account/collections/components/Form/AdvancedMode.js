@@ -263,7 +263,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
 
               if (mode === formMode.ADD) {
                 dispatch(setTxStatus({ type: CREATE_COLLECTION, step: START }));
-                console.log("ADD data", data);
+
                 await collection_manager_calls.addNewCollection(
                   currentAccount,
                   data,

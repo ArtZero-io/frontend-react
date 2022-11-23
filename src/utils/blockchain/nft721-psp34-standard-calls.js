@@ -82,7 +82,7 @@ async function mint(caller_account) {
 
   gasLimit = await getEstimatedGas(address, contract, value, 'mint');
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   contract.tx
     .mint({ gasLimit, value })
@@ -110,8 +110,7 @@ async function mint(caller_account) {
     )
     .then((unsub) => {
       unsubscribe = unsub;
-      console.log(unsubscribe);
-    })
+     })
     .catch((e) => console.log('e', e));
   return unsubscribe;
 }
@@ -183,7 +182,7 @@ async function mintWithAttributes(
     metadata
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   contract.tx
     .mintWithAttributes({ gasLimit, value }, metadata)
@@ -200,7 +199,7 @@ async function mintWithAttributes(
       if (status?.isFinalized) {
         const token_id = await getTotalSupply(address);
 
-        console.log('nft721-psp34-standard-calls mintWithAttributes', token_id);
+    
 
         await APICall.askBeUpdateNftData({
           collection_address: nft_address,
@@ -208,7 +207,7 @@ async function mintWithAttributes(
         });
         if (attributes?.length) {
           let cacheImages = [];
-          console.log('attributes', attributes);
+      
 
           for (let i = 0; i < attributes.length; i++) {
             console.log(attributes[i]);
@@ -225,7 +224,7 @@ async function mintWithAttributes(
               });
             }
           }
-          console.log('cacheImages', cacheImages);
+        
           if (cacheImages.length) {
             await clientAPI('post', '/cacheImages', {
               images: JSON.stringify(cacheImages),
@@ -361,7 +360,7 @@ async function approve(
     is_approve
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   await contract.tx['psp34::approve'](
     { gasLimit, value },
@@ -413,7 +412,7 @@ async function setMultipleAttributesNFT(
   for (const attribute of attributes) {
     metadata.push([attribute.name.trim(), attribute.value.trim()]);
   }
-  console.log('mintWithAttributes::metadata', metadata);
+
 
   let unsubscribe;
   let gasLimit = -1;
@@ -431,7 +430,7 @@ async function setMultipleAttributesNFT(
     metadata
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   await contract.tx['psp34Traits::setMultipleAttributes'](
     { value, gasLimit },
@@ -456,7 +455,7 @@ async function setMultipleAttributesNFT(
 
         if (attributes?.length) {
           let cacheImages = [];
-          console.log('attributes', attributes);
+      
 
           for (let i = 0; i < attributes.length; i++) {
             console.log(attributes[i]);
@@ -473,7 +472,7 @@ async function setMultipleAttributesNFT(
               });
             }
           }
-          console.log('cacheImages', cacheImages);
+        
           if (cacheImages.length) {
             await clientAPI('post', '/cacheImages', {
               images: JSON.stringify(cacheImages),

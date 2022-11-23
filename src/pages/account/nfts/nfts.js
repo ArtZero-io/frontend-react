@@ -305,7 +305,6 @@ const MyNFTsPage = () => {
               </Text>
             </HStack>
           )}
-          {console.log('myCollections', myCollections)}{' '}
           {myCollections &&
             myCollections?.map((item, idx) => {
               return (

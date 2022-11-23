@@ -44,7 +44,7 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
   const value = await getAdvanceModeAddingFee(caller_account);
-  console.log('value', value);
+
   gasLimit = await getEstimatedGas(
     address,
     contract,
@@ -55,20 +55,6 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
     data.attributes,
     data.attributeVals,
     data.collectionAllowRoyalFee,
-    data.collectionRoyalFeeData
-  );
-
-  console.log('ret ret uri xxx', gasLimit);
-  console.log('ret ret address', address);
-  console.log('ret ret data?.nftContractAddress', data?.nftContractAddress);
-  console.log('ret ret data.attributes', data.attributes);
-  console.log('ret ret data.attributeVals', data.attributeVals);
-  console.log(
-    'ret ret data.collectionAllowRoyalFee',
-    data.collectionAllowRoyalFee
-  );
-  console.log(
-    'ret ret data.collectionRoyalFeeData',
     data.collectionRoyalFeeData
   );
 
@@ -99,8 +85,8 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
         });
         if (transactionData.attributes?.length) {
           let cacheImages = [];
-          console.log('attributes', transactionData.attributes);
-          console.log('attributes.length', transactionData.attributes.length);
+      
+      
           for (let i = 0; i < transactionData.attributes.length; i++) {
             console.log(transactionData.attributes[i]);
             if (transactionData.attributes[i] === 'avatar_image') {
@@ -137,9 +123,9 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
               });
             }
           }
-          console.log('cacheImages', cacheImages);
+        
           if (cacheImages.length) {
-            console.log('cacheImages::POST_API');
+ 
             await clientAPI('post', '/cacheImages', {
               images: JSON.stringify(cacheImages),
             });
@@ -215,18 +201,14 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
                     });
                     if (transactionData.attributes?.length) {
                       let cacheImages = [];
-                      console.log('attributes', transactionData.attributes);
-                      console.log(
-                        'attributes.length',
-                        transactionData.attributes.length
-                      );
+                  
+                      
                       for (
                         let i = 0;
                         i < transactionData.attributes.length;
                         i++
                       ) {
-                        console.log(transactionData.attributes[i]);
-                        if (transactionData.attributes[i] === 'avatar_image') {
+                         if (transactionData.attributes[i] === 'avatar_image') {
                           cacheImages.push({
                             input: transactionData.attributeVals[i],
                             is1920: false,
@@ -263,9 +245,9 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
                           });
                         }
                       }
-                      console.log('cacheImages', cacheImages);
+           
                       if (cacheImages.length) {
-                        console.log('cacheImages::POST_API');
+             
                         await clientAPI('post', '/cacheImages', {
                           images: JSON.stringify(cacheImages),
                         });
@@ -310,8 +292,6 @@ async function updateIsActive(caller_account, collection_address, isActive) {
     collection_address,
     isActive
   );
-
-  console.log('ret ret uri xxx', gasLimit);
 
   //TODO: update tx and Error handler
   contract.tx
@@ -411,15 +391,15 @@ async function getAdminAddress(caller_account) {
   const gasLimit = -1;
   const azero_value = 0;
   //console.log(contract);
-  console.log('CCC contract', contract);
-  console.log('CCC caller_account', caller_account);
+
+
 
   const { result, output } = await contract.query.getAdminAddress(address, {
     value: azero_value,
     gasLimit,
   });
 
-  console.log('CCC output.toHuman()', output.toHuman());
+
 
   if (result.isOk) {
     return output.toHuman();
@@ -678,8 +658,6 @@ async function setMultipleAttributes(
     values
   );
 
-  console.log('ret ret uri xxx', gasLimit);
-
   caller_account &&
     contract.tx
       .setMultipleAttributes(
@@ -704,8 +682,8 @@ async function setMultipleAttributes(
           });
           if (attributes?.length) {
             let cacheImages = [];
-            console.log('attributes', attributes);
-            console.log('attributes.length', attributes.length);
+        
+        
             for (let i = 0; i < attributes.length; i++) {
               if (attributes[i] === 'avatar_image') {
                 cacheImages.push({
@@ -741,9 +719,9 @@ async function setMultipleAttributes(
                 });
               }
             }
-            console.log('cacheImages', cacheImages);
+ 
             if (cacheImages.length) {
-              console.log('cacheImages::POST_API');
+   
               await clientAPI('post', '/cacheImages', {
                 images: JSON.stringify(cacheImages),
               });
@@ -818,7 +796,7 @@ export const withdrawCollectionContract = async (
     amountFormatted
   );
 
-  console.log('ret ret xxx', gasLimit);
+  
 
   const txNotSign = contract.tx.withdrawFee(
     { gasLimit, value },

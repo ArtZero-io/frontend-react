@@ -349,7 +349,7 @@ async function claimReward(caller_account, dispatch, txType, api) {
 
   gasLimit = await getEstimatedGas(address, contract, value, 'claimReward');
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   await contract.tx
     .claimReward({ gasLimit, value })
@@ -390,7 +390,7 @@ async function setClaimable(caller_account, account, dispatch, txType, api) {
     account
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   await contract.tx
     .setClaimedStatus({ gasLimit, value }, account)
@@ -425,7 +425,7 @@ async function addReward(caller_account, amount) {
 
   gasLimit = await getEstimatedGas(address, contract, value, 'addReward');
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   // TODO update new Error handler
   await contract.tx
@@ -480,7 +480,7 @@ async function updateIsLocked(caller_account, status) {
     status
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   // TODO update new Error handler
   await contract.tx
@@ -535,7 +535,7 @@ async function startRewardDistribution(caller_account) {
     'startRewardDistribution'
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   // TODO update new Error handler
   await contract.tx
@@ -590,7 +590,7 @@ async function stopRewardDistribution(caller_account) {
     'stopRewardDistribution'
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   // TODO update new Error handler
   await contract.tx
@@ -647,7 +647,7 @@ async function stake(caller_account, token_ids, dispatch, txType, api) {
     token_ids
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   contract.tx
     .stake({ gasLimit, value }, token_ids)
@@ -696,7 +696,7 @@ async function unstake(caller_account, token_ids, dispatch, txType, api) {
     token_ids
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   contract.tx
     .unstake({ gasLimit, value }, token_ids)
@@ -752,7 +752,7 @@ async function requestUnstake(
     token_ids
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   contract.tx
     .requestUnstake({ gasLimit, value }, token_ids)
@@ -807,7 +807,7 @@ async function cancelRequestUnstake(
     token_ids
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   contract.tx
     .cancelRequestUnstake({ gasLimit, value }, token_ids)

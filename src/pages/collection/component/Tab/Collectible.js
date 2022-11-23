@@ -376,7 +376,7 @@ const NFTTabCollectible = (props) => {
                   }}
                 >
                   {/* is_for_sale true no sale always show no matter is owner or nor*/}
-                  {/* {console.log("is_for_sale", is_for_sale)} */}
+
                   {!is_for_sale ? (
                     <Flex
                       w="full"
@@ -548,7 +548,7 @@ const NFTTabCollectible = (props) => {
               </Stack>
 
               <Stack display={["none", "flex", "flex"]} w="full" flexGrow="1">
-                {/* {console.log("traits", traits)}{" "} */}
+
                 {attrsList?.length === 0 ? (
                   <Stack>
                     <Text

@@ -5,19 +5,19 @@ import {
   Button,
   TableContainer,
   Stack,
-} from "@chakra-ui/react";
-import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
-import { useSubstrateState } from "@utils/substrate";
-import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
-import collection_manager from "@utils/blockchain/collection-manager";
-import { useSelector } from "react-redux";
-import { useCallback, useEffect, useState } from "react";
-import { delay, truncateStr } from "@utils";
-import toast from "react-hot-toast";
-import BN from "bn.js";
-import { SCROLLBAR } from "@constants";
-import AddressCopier from "@components/AddressCopier/AddressCopier";
-import { APICall } from "../../../../api/client";
+} from '@chakra-ui/react';
+import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
+import { useSubstrateState } from '@utils/substrate';
+import collection_manager_calls from '@utils/blockchain/collection-manager-calls';
+import collection_manager from '@utils/blockchain/collection-manager';
+import { useSelector } from 'react-redux';
+import { useCallback, useEffect, useState } from 'react';
+import { delay, truncateStr } from '@utils';
+import toast from 'react-hot-toast';
+import BN from 'bn.js';
+import { SCROLLBAR } from '@constants';
+import AddressCopier from '@components/AddressCopier/AddressCopier';
+import { APICall } from '../../../../api/client';
 
 let collection_count = 0;
 
@@ -28,8 +28,8 @@ function CollectionAdmin() {
   const [collectionCount, setCollectionCount] = useState(0);
 
   const [collections, setCollections] = useState([]);
-  const [collectionContractOwner, setCollectionContractOwner] = useState("");
-  const [collectionContractAdmin, setCollectionContractAdmin] = useState("");
+  const [collectionContractOwner, setCollectionContractOwner] = useState('');
+  const [collectionContractAdmin, setCollectionContractAdmin] = useState('');
   const [collectionContractBalance, setCollectionContractBalance] = useState(0);
 
   const onRefreshCollection = useCallback(async () => {
@@ -54,20 +54,20 @@ function CollectionAdmin() {
       collection_manager.CONTRACT_ADDRESS
     );
     setCollectionContractBalance(
-      new BN(balance.free, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6
+      new BN(balance.free, 10, 'le').div(new BN(10 ** 6)).toNumber() / 10 ** 6
     );
   };
 
   const onGetCollectionContractOwner = async (e) => {
     let res = await collection_manager_calls.owner(currentAccount);
     if (res) setCollectionContractOwner(res);
-    else setCollectionContractOwner("");
+    else setCollectionContractOwner('');
   };
 
   const onGetCollectionContractAdmin = async (e) => {
     let res = await collection_manager_calls.getAdminAddress(currentAccount);
     if (res) setCollectionContractAdmin(res);
-    else setCollectionContractAdmin("");
+    else setCollectionContractAdmin('');
   };
 
   const onGetCollectionCount = async () => {
@@ -91,8 +91,6 @@ function CollectionAdmin() {
       options_active
     );
 
-    console.log("collections_actives", collections_actives);
-
     const options_inactive = {
       limit: collection_count,
       offset: 0,
@@ -105,12 +103,11 @@ function CollectionAdmin() {
       options_inactive
     );
 
-    console.log("collections_inactive", collections_inactive);
     let collections = collections_actives.concat(collections_inactive);
-    // console.log('collections',collections);
+
     setCollections(collections);
   };
-  
+
   const onSetStatusCollection = async (collection_contract, isActive) => {
     if (collectionContractAdmin !== activeAddress) {
       toast.error(`You are not admin of this contract`);
@@ -130,21 +127,21 @@ function CollectionAdmin() {
   return (
     <Box
       mx="auto"
-      px={{ base: "6", "2xl": "8" }}
-      py={{ base: "8", "2xl": "4" }}
+      px={{ base: '6', '2xl': '8' }}
+      py={{ base: '8', '2xl': '4' }}
     >
       <Box maxW="6xl-mid" fontSize="lg" minH="50rem">
         <Stack
-          direction={{ base: "column", xl: "row" }}
+          direction={{ base: 'column', xl: 'row' }}
           pb={5}
           borderBottomWidth={1}
         >
           <Flex alignItems="start" pr={20}>
             <Text ml={1} color="brand.grayLight">
-              Total Collection:{" "}
+              Total Collection:{' '}
             </Text>
             <Text color="#fff" ml={2}>
-              {collectionCount}{" "}
+              {collectionCount}{' '}
             </Text>
           </Flex>
           <Flex alignItems="start" pr={{ base: 0, xl: 20 }}>
@@ -158,13 +155,13 @@ function CollectionAdmin() {
         </Stack>
 
         <Stack
-          direction={{ base: "column", xl: "row" }}
+          direction={{ base: 'column', xl: 'row' }}
           py={5}
           borderBottomWidth={1}
         >
           <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>
             <Text ml={1} color="brand.grayLight">
-              Collection Contract Owner:{" "}
+              Collection Contract Owner:{' '}
             </Text>
             <Text color="#fff" ml={2}>
               {truncateStr(collectionContractOwner, 9)}
@@ -172,7 +169,7 @@ function CollectionAdmin() {
           </Stack>
           <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>
             <Text ml={1} color="brand.grayLight">
-              Collection Contract Admin:{" "}
+              Collection Contract Admin:{' '}
             </Text>
             <Text color="#fff" ml={2}>
               {truncateStr(collectionContractAdmin, 9)}
@@ -279,7 +276,6 @@ function CollectionAdmin() {
               ) : (
                 collections.map((collection, index) => (
                   <Tr key={index}>
-                    {console.log("collection", collection)}
                     <Td py={7}>{collection.index}</Td>
                     <Td py={7}>
                       <AddressCopier address={collection.nftContractAddress} />
@@ -287,10 +283,10 @@ function CollectionAdmin() {
                     <Td py={7}>{collection.name}</Td>
                     <Td py={7}>{truncateStr(collection.collectionOwner, 5)}</Td>
                     <Td>
-                      {collection.contractType === 2 ? "Auto" : "Manual"}{" "}
+                      {collection.contractType === 2 ? 'Auto' : 'Manual'}{' '}
                     </Td>
                     <Td py={7}>
-                      {collection.isActive ? "Active" : "Inactive"}{" "}
+                      {collection.isActive ? 'Active' : 'Inactive'}{' '}
                     </Td>
                     <Td
                       py={7}
@@ -303,13 +299,13 @@ function CollectionAdmin() {
                       //  isNumeric
                     >
                       {collection.isCollectRoyalFee
-                        ? collection.royalFee / 100 + "%"
-                        : "N/A"}{" "}
+                        ? collection.royalFee / 100 + '%'
+                        : 'N/A'}{' '}
                     </Td>
                     <Td py={7}>
                       {collection.showOnChainMetadata
-                        ? "On-chain"
-                        : "Off-chain"}{" "}
+                        ? 'On-chain'
+                        : 'Off-chain'}{' '}
                     </Td>
                     <Td>
                       {!collection.isActive ? (

@@ -496,7 +496,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     );
 
                     toast.success('Step 2. Creating collection...');
-                    console.log('Add proj 1 , collectionData', collectionData);
+                
                     await collection_manager_calls.addNewCollection(
                       currentAccount,
                       collectionData,
@@ -526,7 +526,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           );
                         },
                         function (error) {
-                          console.log('FAILED...', error);
+                          console.log('error send email FAILED...', error);
                         }
                       );
                   };
@@ -545,7 +545,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   );
                 } else {
                   if (mode === formMode.EDIT) {
-                    console.log('EDIT values', values);
+                
                     const project_info = {
                       name: values.name.trim(),
                       description: values.description.trim(),
@@ -593,7 +593,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               {({ values, dirty, isValid, setFieldValue }) => (
                 <Form>
                   <Container maxW="1200px" px={['0px', '15px']}>
-                    {/* {console.log('Form values',values)} */}
+
                     <CommonStack stackTitle="1. project info">
                       <Stack
                         pb="30px"

@@ -267,7 +267,7 @@ const LaunchpadDetailPage = () => {
       } catch (error) {
         if (isUnmounted) return;
 
-        console.log('fetchPublicPhasesInfoData error', error.message);
+        console.log('error fetchPublicPhasesInfoData', error.message);
         setLoadingPhaseInfo(false);
       }
     },
@@ -324,7 +324,7 @@ const LaunchpadDetailPage = () => {
               );
 
             let userWhitelist = null;
-            console.log('fetchPublicPhasesInfoData allPhasesAddWL', data);
+        
 
             if (data) {
               userWhitelist = {
@@ -358,7 +358,7 @@ const LaunchpadDetailPage = () => {
 
   const [userPLClaimedInfo, setUserPLClaimedInfo] = useState([]);
 
-  console.log('userPLClaimedInfo', userPLClaimedInfo);
+
   const fetchUserPLClaimedData = useCallback(
     async (isUnmounted) => {
       // setLoadingUserWLInfo(true);
@@ -546,8 +546,6 @@ const LaunchpadDetailPage = () => {
         currentAccount,
       });
 
-      console.log('totalNFTCount', totalNFTCount);
-      console.log('currentAccount', currentAccount);
       if (isUnmounted) return;
       setBalanceOfPsp34NFT(totalNFTCount || 0);
 
@@ -565,7 +563,7 @@ const LaunchpadDetailPage = () => {
           1
         );
         const baseUri = tokenUri.replace('1.json', '');
-        console.log('baseUri', baseUri);
+    
         ret = await Promise.all(
           [...Array(totalNFTCount)].map(async (_, index) => {
             const idOfNFT = await getIdOfPsp34NFT({
@@ -674,7 +672,7 @@ const LaunchpadDetailPage = () => {
               </Heading>
 
               <Spacer />
-              {console.log('currentPhase', currentPhase)}
+
               {activePhaseId && (
                 <Tooltip
                   hasArrow
@@ -1003,7 +1001,7 @@ const LaunchpadDetailPage = () => {
                           {currentAccount && userWLInfo[index] && (
                             <Text>
                               You are whitelisted to mint{' '}
-                              {console.log('userWLInfo', userWLInfo)}
+
                               <Text as="span" color="#fff">
                                 {userWLInfo[index]?.whitelistAmount} NFT
                                 {userWLInfo[index]?.whitelistAmount > 1

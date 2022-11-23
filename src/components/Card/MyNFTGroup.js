@@ -229,7 +229,7 @@ function GridNftA({
 
   async function handleStakeAction(action, tokenIDArray) {
     if (isStakingContractLocked) {
-      console.log("isStakingContractLocked", isStakingContractLocked);
+
       return toast.error("Staking contract is locked!");
     }
 

@@ -70,7 +70,7 @@ function LockNFTModalMobile({
         u64: tokenID,
       });
 
-      console.log("ret ret uri xxx", gasLimit);
+      
 
       await contract.tx
         .lock({ value, gasLimit }, { u64: tokenID })

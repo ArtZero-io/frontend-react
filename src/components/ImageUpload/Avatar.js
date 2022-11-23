@@ -44,8 +44,8 @@ export default function ImageUploadAvatar({
     if (e) data = e.target.files[0];
 
     if (!supportedFormat.includes(data?.type)) {
-      console.log("includes Date.now()", Date.now());
 
+      
       toast.error(
         `Please use .png .jpeg .jpeg, .gif format, the ${
           e.target?.files[0] && e.target.files[0].type.split("/")[1]
@@ -81,7 +81,7 @@ export default function ImageUploadAvatar({
       const uploadPromise = () =>
         new Promise(function (resolve) {
           const created = ipfsClient.add(Buffer(reader.result));
-          console.log("created", created);
+
           if (created) {
             resolve(created);
           }

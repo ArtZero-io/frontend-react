@@ -277,7 +277,7 @@ async function whitelistMint(
     mint_amount
   );
 
-  console.log("ret ret uri xxx", gasLimit);
+  
 
   const txNotSign = contract.tx.whitelistMint({ gasLimit, value }, mint_amount);
 
@@ -597,7 +597,7 @@ async function approve(
     is_approve
   );
 
-  console.log("ret ret uri xxx", gasLimit);
+  
 
   await contract.tx["psp34::approve"](
     { gasLimit, value },

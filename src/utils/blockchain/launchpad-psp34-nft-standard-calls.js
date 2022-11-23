@@ -106,7 +106,7 @@ async function updateWhitelist(
     minting_fee
   );
 
-  console.log('ret ret xxx', gasLimit);
+  
 
   const txNotSign = contract.tx.updateWhitelist(
     { gasLimit, value },
@@ -178,7 +178,7 @@ async function addWhitelist(
     minting_fee
   );
 
-  console.log('ret ret xxx', gasLimit);
+  
 
   const txNotSign = contract.tx.addWhitelist(
     { gasLimit, value },
@@ -368,7 +368,7 @@ async function editProjectInformation(
     projectInfo
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   contract.tx
     .editProjectInformation({ gasLimit, value }, projectInfo)
@@ -417,7 +417,7 @@ async function mint(caller_account, mintAmount, dispatch, txType, api) {
     mintAmount
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   const txNotSign = contract.tx.mint({ gasLimit, value }, mintAmount);
 
@@ -469,7 +469,7 @@ async function publicMint(
     mintAmount
   );
 
-  console.log('ret ret xxx', gasLimit);
+  
 
   const txNotSign = contract.tx.publicMint(
     { gasLimit, value },
@@ -548,7 +548,7 @@ async function whitelistMint(
     mintAmount
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   contract.tx
     .whitelistMint({ gasLimit, value }, phaseId, mintAmount)
@@ -638,7 +638,7 @@ async function updateAdminAddress(
     adminAddress
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   contract.tx
     .updateAdminAddress({ gasLimit, value }, adminAddress)
@@ -687,7 +687,7 @@ async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
     uri
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   const txNotSign = contract.tx['psp34Traits::setBaseUri'](
     { gasLimit, value },
@@ -798,7 +798,7 @@ async function addNewPhase(
     endTime
   );
 
-  console.log('ret ret xxx', gasLimit);
+  
 
   const txNotSign = contract.tx.addNewPhase(
     { gasLimit, value },
@@ -873,7 +873,7 @@ async function updateSchedulePhase(
     endTime
   );
 
-  console.log('ret ret xxx', gasLimit);
+  
 
   const txNotSign = contract.tx.updateSchedulePhase(
     { gasLimit, value },
@@ -917,7 +917,7 @@ async function deactivePhase(caller_account, phaseId, dispatch, txType, api) {
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
-  console.log('deactivePhase phaseId', phaseId);
+
 
   gasLimit = await getEstimatedGas(
     address,
@@ -927,7 +927,7 @@ async function deactivePhase(caller_account, phaseId, dispatch, txType, api) {
     phaseId
   );
 
-  console.log('ret ret xxx', gasLimit);
+  
 
   const txNotSign = contract.tx.deactivePhase({ gasLimit, value }, phaseId);
 
@@ -1105,7 +1105,7 @@ async function withdrawFee(caller_account, amount, dispatch, txType, api) {
     withdrawAmount
   );
 
-  console.log('ret ret uri xxx', gasLimit);
+  
 
   contract.tx
     .withdrawFee({ gasLimit, value }, withdrawAmount)

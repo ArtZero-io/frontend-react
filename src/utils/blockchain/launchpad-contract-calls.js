@@ -162,15 +162,15 @@ async function getAdminAddress(caller_account) {
   const gasLimit = -1;
   const azero_value = 0;
   //console.log(contract);
-  console.log('LP contract', contract);
-  console.log('LP caller_account', caller_account);
+
+
 
   const { result, output } = await contract.query.getAdminAddress(address, {
     value: azero_value,
     gasLimit,
   });
 
-  console.log('LP output.toHuman()', output.toHuman());
+
   if (result.isOk) {
     return output.toHuman();
   }
@@ -276,8 +276,6 @@ async function addNewProject(
     data.end_time_phases
   );
 
-  console.log('ret ret uri xxx', gasLimit);
-
   contract.tx
     .addNewProject(
       { gasLimit, value },
@@ -382,8 +380,6 @@ async function editProject(caller_account, data, dispatch, txType, api) {
     data.project_info
   );
 
-  console.log('ret ret uri xxx', gasLimit);
-
   contract.tx
     .editProject(
       { gasLimit, value },
@@ -461,8 +457,6 @@ async function updateIsActiveProject(
     collection_address
   );
 
-  console.log('ret ret uri xxx', gasLimit);
-
   contract.tx
     .updateIsActiveProject({ gasLimit, value }, isActive, collection_address)
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
@@ -480,7 +474,7 @@ async function updateIsActiveProject(
           project_address: collection_address,
         });
 
-        console.log('ret', ret);
+        console.log('askBeUpdateProjectData', ret);
       }
     })
     .then((unsub) => (unsubscribe = unsub))
@@ -562,8 +556,6 @@ export const withdrawLaunchpadContract = async (
     'withdrawFee',
     amountFormatted
   );
-
-  console.log('ret ret xxx', gasLimit);
 
   const txNotSign = contract.tx.withdrawFee(
     { gasLimit, value },

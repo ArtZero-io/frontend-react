@@ -75,10 +75,10 @@ function StatsPage() {
         address: collection_manager?.CONTRACT_ADDRESS,
       });
 
-      console.log("PF profit START %---------------");
-      console.log("PF marketplace \t", currentProfit);
-      console.log("PF collection \t", collectionBalance?.balance);
-      console.log("PF launchpad \t", launchpadBalance?.balance);
+      // console.log("PF profit START %---------------");
+      // console.log("PF marketplace \t", currentProfit);
+      // console.log("PF collection \t", collectionBalance?.balance);
+      // console.log("PF launchpad \t", launchpadBalance?.balance);
 
       const totalVolume = await marketplace_contract_calls.getTotalVolume(
         currentAccount || getPublicCurrentAccount()
@@ -86,11 +86,11 @@ function StatsPage() {
 
       const totalProfit =
         currentProfit + launchpadBalance?.balance + collectionBalance?.balance;
-      console.log("PF --------------------------------");
+      // console.log("PF --------------------------------");
 
-      console.log("PF totalProfit \t", totalProfit);
-      console.log("PF Profit 30% \t", totalProfit * 0.3);
-      console.log("PF profit END %---------------");
+      // console.log("PF totalProfit \t", totalProfit);
+      // console.log("PF Profit 30% \t", totalProfit * 0.3);
+      // console.log("PF profit END %---------------");
 
       const { ret: dataList } = await APICall.getCollectionsByVolume({
         limit: 5,

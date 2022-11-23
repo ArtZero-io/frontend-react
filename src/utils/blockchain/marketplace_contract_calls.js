@@ -1,15 +1,15 @@
-import BN from "bn.js";
-import { web3FromSource } from "../wallets/extension-dapp";
-import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
-import { TypeRegistry, U32 } from "@polkadot/types";
-import { ContractPromise } from "@polkadot/api-contract";
+import BN from 'bn.js';
+import { web3FromSource } from '../wallets/extension-dapp';
+import { isValidAddressPolkadotAddress, getEstimatedGas } from '@utils';
+import { TypeRegistry, U32 } from '@polkadot/types';
+import { ContractPromise } from '@polkadot/api-contract';
 
-import { APICall } from "@api/client";
+import { APICall } from '@api/client';
 import {
   txErrorHandler,
   txResponseErrorHandler,
-} from "@store/actions/txStatus";
-import toast from "react-hot-toast";
+} from '@store/actions/txStatus';
+import toast from 'react-hot-toast';
 
 let contract;
 
@@ -34,7 +34,7 @@ async function totalTokensForSale(
     !isValidAddressPolkadotAddress(nft_contract_address) ||
     !isValidAddressPolkadotAddress(seller)
   ) {
-    console.log("invalid inputs");
+    console.log('invalid inputs');
     return null;
   }
   const address = caller_account?.address;
@@ -49,7 +49,7 @@ async function totalTokensForSale(
     seller
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return new BN(output, 10, 'le').toNumber();
   }
   return null;
 }
@@ -59,7 +59,7 @@ async function getVolumeByCollection(caller_account, nft_contract_address) {
     !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
   ) {
-    console.log("invalid inputs");
+    console.log('invalid inputs');
     return 0;
   }
   const address = caller_account?.address;
@@ -74,14 +74,14 @@ async function getVolumeByCollection(caller_account, nft_contract_address) {
   );
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
-    const a = output.toHuman().replace(/\,/g, "");
+    const a = output.toHuman().replace(/\,/g, '');
     return a / 10 ** 12;
   }
   return 0;
 }
 async function getTotalVolume(caller_account) {
   if (!contract || !caller_account) {
-    console.log("invalid inputs");
+    console.log('invalid inputs');
     return null;
   }
   const address = caller_account?.address;
@@ -95,7 +95,7 @@ async function getTotalVolume(caller_account) {
   });
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
-    const a = output.toHuman().replace(/\,/g, "");
+    const a = output.toHuman().replace(/\,/g, '');
     return a / 10 ** 12;
   }
   return null;
@@ -107,14 +107,14 @@ async function getNftSaleInfo(caller_account, nft_contract_address, token_id) {
     !isValidAddressPolkadotAddress(nft_contract_address) ||
     !token_id
   ) {
-    !contract && console.log("invalid inputs > contract", contract);
+    !contract && console.log('invalid inputs > contract', contract);
     !caller_account &&
       !isValidAddressPolkadotAddress(nft_contract_address) &&
       console.log(
-        "invalid inputs > nft_contract_address",
+        'invalid inputs > nft_contract_address',
         nft_contract_address
       );
-    !token_id && console.log("invalid inputs > token_id", token_id);
+    !token_id && console.log('invalid inputs > token_id', token_id);
     return null;
   }
 
@@ -146,7 +146,7 @@ async function getForSaleTokenId(
     !isValidAddressPolkadotAddress(nft_contract_address) ||
     !isValidAddressPolkadotAddress(seller)
   ) {
-    console.log("invalid inputs");
+    console.log('invalid inputs');
     return null;
   }
   const address = caller_account?.address;
@@ -162,7 +162,7 @@ async function getForSaleTokenId(
     index
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return new BN(output, 10, 'le').toNumber();
   }
   return null;
 }
@@ -178,12 +178,12 @@ async function getAllBids(
     !isValidAddressPolkadotAddress(nft_contract_address) ||
     !isValidAddressPolkadotAddress(seller)
   ) {
-    !contract && console.log("invalid inputs > contract", contract);
+    !contract && console.log('invalid inputs > contract', contract);
     !caller_account &&
       // console.log("invalid inputs > caller_account ", caller_account);
       !isValidAddressPolkadotAddress(nft_contract_address) &&
       console.log(
-        "invalid inputs > nft_contract_address",
+        'invalid inputs > nft_contract_address',
         nft_contract_address
       );
     // !isValidAddressPolkadotAddress(seller) &&
@@ -213,7 +213,7 @@ async function getAllBids(
 }
 async function owner(caller_account) {
   if (!contract || !caller_account) {
-    console.log("invalid inputs");
+    console.log('invalid inputs');
     return null;
   }
   const address = caller_account?.address;
@@ -221,7 +221,7 @@ async function owner(caller_account) {
   const azero_value = 0;
   //console.log(contract);
 
-  const { result, output } = await contract.query["ownable::owner"](address, {
+  const { result, output } = await contract.query['ownable::owner'](address, {
     value: azero_value,
     gasLimit,
   });
@@ -232,7 +232,7 @@ async function owner(caller_account) {
 }
 async function getStakingDiscountCriteria(caller_account) {
   if (!contract || !caller_account) {
-    console.log("invalid inputs");
+    console.log('invalid inputs');
     return null;
   }
   const address = caller_account?.address;
@@ -251,7 +251,7 @@ async function getStakingDiscountCriteria(caller_account) {
 }
 async function getStakingDiscountRate(caller_account) {
   if (!contract || !caller_account) {
-    console.log("invalid inputs");
+    console.log('invalid inputs');
     return null;
   }
   const address = caller_account?.address;
@@ -270,7 +270,7 @@ async function getStakingDiscountRate(caller_account) {
 }
 async function getPlatformFee(caller_account) {
   if (!contract || !caller_account) {
-    console.log("invalid inputs");
+    console.log('invalid inputs');
     return null;
   }
   const address = caller_account?.address;
@@ -283,13 +283,13 @@ async function getPlatformFee(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le");
+    return new BN(output, 10, 'le');
   }
   return null;
 }
 async function getCurrentProfit(caller_account) {
   if (!contract || !caller_account) {
-    console.log("invalid inputs");
+    console.log('invalid inputs');
     return null;
   }
   const address = caller_account?.address;
@@ -303,14 +303,14 @@ async function getCurrentProfit(caller_account) {
   });
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
-    const a = output.toHuman().replace(/\,/g, "");
+    const a = output.toHuman().replace(/\,/g, '');
     return a / 10 ** 12;
   }
   return null;
 }
 async function getTotalProfit(caller_account) {
   if (!contract || !caller_account) {
-    console.log("invalid inputs");
+    console.log('invalid inputs');
     return null;
   }
   const address = caller_account?.address;
@@ -324,7 +324,7 @@ async function getTotalProfit(caller_account) {
   });
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
-    const a = output.toHuman().replace(/\,/g, "");
+    const a = output.toHuman().replace(/\,/g, '');
     return a / 10 ** 12;
   }
   return null;
@@ -338,7 +338,7 @@ async function getListedTokenCountByCollectionAddress(
     !caller_account ||
     !isValidAddressPolkadotAddress(nft_contract_address)
   ) {
-    console.log("invalid inputs");
+    console.log('invalid inputs');
     return null;
   }
   const address = caller_account?.address;
@@ -353,7 +353,7 @@ async function getListedTokenCountByCollectionAddress(
       nft_contract_address
     );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return new BN(output, 10, 'le').toNumber();
   }
   return null;
 }
@@ -390,13 +390,11 @@ async function list(
     address,
     contract,
     value,
-    "list",
+    'list',
     nft_contract_address,
     token_id,
     sale_price
   );
-
-  console.log("ret ret uri xxx", gasLimit);
 
   contract.tx
     .list({ gasLimit, value }, nft_contract_address, token_id, sale_price)
@@ -452,12 +450,10 @@ async function unlist(
     address,
     contract,
     value,
-    "unlist",
+    'unlist',
     nft_contract_address,
     token_id
   );
-
-  console.log("ret ret uri xxx", gasLimit);
 
   contract.tx
     .unlist({ gasLimit, value }, nft_contract_address, token_id)
@@ -524,12 +520,10 @@ async function bid(
     address,
     contract,
     value,
-    "bid",
+    'bid',
     nft_contract_address,
     token_id
   );
-
-  console.log("ret ret uri xxx", gasLimit);
 
   contract.tx
     .bid({ gasLimit, value }, nft_contract_address, token_id)
@@ -591,12 +585,10 @@ async function removeBid(
     address,
     contract,
     value,
-    "removeBid",
+    'removeBid',
     nft_contract_address,
     token_id
   );
-
-  console.log("ret ret uri xxx", gasLimit);
 
   contract.tx
     .removeBid({ gasLimit, value }, nft_contract_address, token_id)
@@ -659,12 +651,10 @@ async function buy(
     address,
     contract,
     value,
-    "buy",
+    'buy',
     nft_contract_address,
     token_id
   );
-
-  console.log("ret ret uri xxx", gasLimit);
 
   contract.tx
     .buy({ gasLimit, value }, nft_contract_address, token_id)
@@ -733,13 +723,11 @@ async function acceptBid(
     address,
     contract,
     value,
-    "acceptBid",
+    'acceptBid',
     nft_contract_address,
     token_id,
     bid_id
   );
-
-  console.log("ret ret uri xxx", gasLimit);
 
   contract.tx
     .acceptBid({ gasLimit, value }, nft_contract_address, token_id, bid_id)
@@ -833,12 +821,10 @@ export const withdrawMarketplaceContract = async (
     address,
     contract,
     value,
-    "withdrawProfit",
+    'withdrawProfit',
     amountFormatted,
     receiver_address || address
   );
-
-  console.log("ret ret xxx", gasLimit);
 
   // withdrawFee for emergency withdraw only
   // withdrawProfit for normal use case

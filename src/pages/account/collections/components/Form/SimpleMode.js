@@ -110,7 +110,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
     const fetchCollectionsByID = async () => {
       try {
         const { ret: dataList } = await APICall.getCollectionByID({ id });
-        console.log("dataList", dataList);
+
         newInitialValues = {
           isEditMode: true,
           nftName: "",

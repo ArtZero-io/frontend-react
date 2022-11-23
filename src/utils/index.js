@@ -275,7 +275,7 @@ export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
   }
   // console.log("createObjAttrsNFT attrsArr", attrsArr);
   // console.log("createObjAttrsNFT attrsValArr", attrsValArr);
-  return console.log('Can not create attributes Object');
+  return console.log('error Can not create attributes Object');
 };
 
 export const createLevelAttribute = (levelString) => {
@@ -360,7 +360,7 @@ export function handleContractCallAddNftAnimation(
       const finalizedTimeStamp = Date.now();
 
       if (statusToHuman[0][0] === 'Finalized') {
-        console.log('Tx finalized at ', `${url}${statusToHuman[0][1]}`);
+        console.log('^^Tx finalized at ', `${url}${statusToHuman[0][1]}`);
       }
 
       dispatch({
@@ -457,7 +457,7 @@ export async function getEstimatedGas(
       );
 
       if (output.isErr) {
-        console.log('getEstimatedGas error xx>>', output.value.toString());
+        console.log('error getEstimatedGas xx>>', output.value.toString());
         return output.value.toString();
       }
 
@@ -465,7 +465,7 @@ export async function getEstimatedGas(
         ret = gasRequired.toString();
       }
     } catch (error) {
-      console.log('fetchGas error xx>>', error.message);
+      console.log('error fetchGas xx>>', error.message);
     }
 
     return ret;

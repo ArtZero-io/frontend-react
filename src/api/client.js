@@ -65,7 +65,7 @@ const client = async (
   });
 
   if (data?.status === "FAILED") {
-    console.log("FAILED @ xx>>", url, data?.message);
+    console.log("error FAILED @ xx>>", url, data?.message);
   }
 
   return data;
@@ -122,7 +122,6 @@ export const APICall = {
       project_address,
     });
 
-    console.log("askBeUpdateProjectData ret", ret);
 
     return ret;
   },
@@ -374,7 +373,7 @@ export const APICall = {
       collection_address,
       token_id,
     });
-    console.log("getOwnershipHistoryOfNFT ret", ret);
+
     return ret;
   },
 

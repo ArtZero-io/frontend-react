@@ -113,12 +113,12 @@ const UpdatePhasesModal = React.memo(function ({
             phaseSchedule.publicMintingFee
           ),
         };
-        console.log('phaseInfo', phaseInfo);
+    
 
         phasesTmp.push(phaseInfo);
       }
     }
-    console.log('phasesTmp', phasesTmp);
+
     initialValuesData.phases = phasesTmp;
 
     // console.log("xxxUpdatePhasesModal::phasesTmp", phasesTmp);

@@ -67,8 +67,8 @@ function ProjectAdmin() {
     let projectCount = await launchpad_contract_calls.getProjectCount(
       currentAccount
     );
-    console.log('projectCount',projectCount);
-    // console.log('collections_inactives',collections_inactives);
+
+    
     let tmpProjects = [];
     for (let i = 1; i <= projectCount; i++) {
       const nftAddress = await launchpad_contract_calls.getProjectById(
@@ -80,7 +80,7 @@ function ProjectAdmin() {
         currentAccount,
         nftAddress
       );
-      console.log("xxxx");
+
       const launchpad_psp34_nft_standard_contract = new ContractPromise(
         api,
         launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -92,11 +92,11 @@ function ProjectAdmin() {
       const projectInfoHash =
         await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
       // console.log(projectInfoHash);
-      // console.log('xxx');
+      
       const projectInfo = await APICall.getProjectInfoByHash({
         projectHash: projectInfoHash,
       });
-      // console.log('projectInfo', projectInfo);
+      
       const currentTime = Date.now();
       let projectTypeLabel = "live";
       if (
@@ -124,7 +124,7 @@ function ProjectAdmin() {
 
       tmpProjects.push(projectTmp);
     }
-    // console.log('collections',collections);
+    
     setCollections(tmpProjects);
   };
   const onSetStatusCollection = async (collection_contract, isActive) => {

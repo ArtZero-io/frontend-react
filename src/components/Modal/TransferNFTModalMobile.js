@@ -88,7 +88,7 @@ function TransferNFTModalMobile({
         stringToU8a(additionalData)
       );
 
-      console.log("ret ret uri xxx", gasLimit);
+      
 
       await contract.tx["psp34::transfer"](
         { value, gasLimit },

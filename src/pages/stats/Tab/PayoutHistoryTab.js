@@ -19,7 +19,7 @@ function PayoutHistoryTab() {
         offset: 0,
         sort: -1,
       });
-      console.log("fetchData data", data);
+
       data = data.map((item, idx) => {
         return { ...item, order: idx + 1 };
       });

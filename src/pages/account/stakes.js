@@ -224,8 +224,6 @@ const MyStakesPage = () => {
             options={tabList}
             selectedItem={activeTab}
             setSelectedItem={(i) => {
-              console.log("i", i);
-              console.log("filterSelected", activeTab);
               setActiveTab(i);
             }}
           />

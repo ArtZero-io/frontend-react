@@ -88,8 +88,7 @@ const AddNewNFTForm = ({
           ?.filter(([_, value]) => value.includes('|'))
           .map(([name, value]) => {
             let result = createLevelAttribute(value);
-            console.log('result', result);
-
+ 
             result.name = name;
 
             return result;
@@ -229,8 +228,8 @@ const AddNewNFTForm = ({
             if (avatarIPFSUrl) {
               values.avatarIPFSUrl = avatarIPFSUrl;
 
-              console.log('collectionOwner', collectionOwner);
-              console.log('currentAccount?.address', currentAccount?.address);
+   
+   
               if (
                 mode === formMode.ADD &&
                 collectionOwner !== currentAccount?.address

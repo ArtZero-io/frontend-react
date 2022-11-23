@@ -99,7 +99,7 @@ export const GroupCard = ({ variant = "live", projectsList, loading }) => {
               </Text>
             </HStack>
           )}
-          {/* {console.log("projectsList.length", projectsList)} */}
+
           {projectsList.length > NO_OF_PROJ_TO_DISPLAY ? (
             <Stack
               w="full"

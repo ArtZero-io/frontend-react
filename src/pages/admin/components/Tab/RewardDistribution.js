@@ -151,7 +151,6 @@ function RewardDistribution() {
         })
       );
 
-      console.log('stakerAddress', stakerAddress);
       await staking_calls.setClaimable(
         currentAccount,
         stakerAddress,
@@ -243,7 +242,6 @@ function RewardDistribution() {
           currentAccount
         );
 
-        console.log('marketplaceAdminAddress', marketplaceAdminAddress);
         if (currentAccount.address !== marketplaceAdminAddress) {
           return toast.error(
             `Only admin (${truncateStr(marketplaceAdminAddress)}) is allowed!`
@@ -295,7 +293,6 @@ function RewardDistribution() {
         const launchpadAdminAddress =
           await launchpad_contract_calls.getAdminAddress(currentAccount);
 
-        console.log('launchpadAdminAddress', launchpadAdminAddress);
         if (currentAccount.address !== launchpadAdminAddress) {
           return toast.error(
             `Only admin (${truncateStr(launchpadAdminAddress)}) is allowed!`
@@ -358,8 +355,8 @@ function RewardDistribution() {
                         <Td>{formatNumDynamicDecimal(item.net, 2)} AZERO</Td>
 
                         <Td>
-                          {console.log('actionType', actionType?.toUpperCase())}
-                          {console.log('item.name', item.name)}
+
+
                           {item.name !== 'TOTAL' && (
                             <CommonButton
                               h="40px"
@@ -759,7 +756,7 @@ function RewardDistribution() {
                       </Th>
                     </Tr>
                   </Thead>
-                  {console.log('stakers', stakers)}
+
                   <Tbody>
                     {stakers.length === 0 ? (
                       <Tr color="#fff">

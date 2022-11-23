@@ -29,7 +29,7 @@ function useForceUpdate(typeArray, cb) {
     // const delayTime = diffTime > 500 ? diffTime : 500;
 
     // 9 giay
-    console.log('useForceUpdate first');
+
     const delayTime = 9000;
 
     const doDelay = async () => {

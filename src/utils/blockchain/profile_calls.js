@@ -84,7 +84,7 @@ export async function setSingleAttributeProfileOnChain(currentAccount, data) {
     data?.value
   );
 
-  console.log("ret ret uri xxx", gasLimit);
+  
 
   currentAccount &&
     contract.tx
@@ -186,9 +186,9 @@ export async function setMultipleAttributesProfileOnChain(
               });
             }
           }
-          console.log("cacheImages", cacheImages);
+
           if (cacheImages.length) {
-            console.log("cacheImages::POST_API");
+
             await clientAPI("post", "/cacheImages", {
               images: JSON.stringify(cacheImages),
             });
