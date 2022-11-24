@@ -10,7 +10,6 @@ import { APICall } from '../api/client';
 const baseURL = process.env.REACT_APP_API_BASE_URL;
 
 export function getCachedImage(imageHash, size, url) {
-  // console.log('getImage',imageHash, size, url)
   return (
     baseURL + '/getImage?input=' + imageHash + '&size=' + size + '&url=' + url
   );
@@ -21,7 +20,6 @@ export function getCachedImageShort(imageHash = '', size = 100) {
 
   const ret = `${baseURL}/getImage?input=${imageHash}&size=${size}&url=${fallbackURL}`;
 
-  // console.log("ret", ret);
   return ret;
 }
 
@@ -270,11 +268,9 @@ export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
 
     result.attrsList = formatList.filter((obj) => !!Object.values(obj)[0]);
 
-    // console.log("createObjAttrsNFT formatList", result.formatList);
     return result;
   }
-  // console.log("createObjAttrsNFT attrsArr", attrsArr);
-  // console.log("createObjAttrsNFT attrsValArr", attrsValArr);
+
   return console.log('error Can not create attributes Object');
 };
 
@@ -457,7 +453,8 @@ export async function getEstimatedGas(
       );
 
       if (output.isErr) {
-        console.log('error getEstimatedGas xx>>', output.value.toString());
+        toast.error('error: ', output.value.toString());
+        // console.log('error getEstimatedGas xx>>', output.value.toString());
         return output.value.toString();
       }
 

@@ -52,7 +52,7 @@ async function getProjectsByOwner(caller_account, ownerAddress) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query.getProjectsByOwner(
     address,
@@ -142,7 +142,7 @@ async function owner(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query['ownable::owner'](address, {
     value: azero_value,
@@ -161,7 +161,7 @@ async function getAdminAddress(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
 
 
@@ -184,16 +184,17 @@ async function getProjectCount(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query.getProjectCount(address, {
     value: azero_value,
     gasLimit,
   });
-  // console.log(output);
+
   if (result.isOk) {
     return new BN(output, 10, 'le').toNumber();
   }
+
   return null;
 }
 
@@ -412,7 +413,7 @@ async function getProjectAddingFee(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query.getProjectAddingFee(address, {
     value: azero_value,

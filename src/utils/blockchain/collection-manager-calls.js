@@ -20,7 +20,7 @@ export const setCollectionContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
-  // console.log("contract setCollectionContract", contract);
+
 };
 
 //SETTERS
@@ -332,7 +332,7 @@ async function getCollectionCount(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query.getCollectionCount(address, {
     value: azero_value,
@@ -370,7 +370,7 @@ async function getContractById(caller_account, collection_id) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query.getContractById(
     address,
@@ -390,7 +390,7 @@ async function getAdminAddress(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
 
 
@@ -418,7 +418,7 @@ async function isActive(caller_account, collection_address) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query[
     'crossArtZeroCollection::isActive'
@@ -440,7 +440,7 @@ async function getRoyalFee(caller_account, collection_address) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query[
     'crossArtZeroCollection::getRoyalFee'
@@ -462,7 +462,7 @@ async function getContractType(caller_account, collection_address) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query[
     'crossArtZeroCollection::getContractType'
@@ -569,7 +569,7 @@ async function owner(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query['ownable::owner'](address, {
     value: azero_value,
@@ -588,7 +588,7 @@ async function getActiveCollectionCount(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query.getActiveCollectionCount(
     address,

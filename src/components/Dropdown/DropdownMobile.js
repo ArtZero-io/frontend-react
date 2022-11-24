@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -6,7 +6,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
 function DropdownMobile({
   options,
@@ -16,9 +16,6 @@ function DropdownMobile({
   ...rest
 }) {
   const onClickHandler = (item) => setSelectedItem(item);
-
-  // console.log("options", options);
-  // console.log("selectedItem", selectedItem);
 
   return (
     <Box color="brand.blue" height="100%" {...rest}>
@@ -31,7 +28,7 @@ function DropdownMobile({
           color="#fff"
           textAlign="left"
           variant="outline"
-          _active={{ bg: "brand.grayDark" }}
+          _active={{ bg: 'brand.grayDark' }}
           rightIcon={<ChevronDownIcon fontSize="2xl" />}
         >
           {options[selectedItem]}
@@ -49,8 +46,8 @@ function DropdownMobile({
                 key={k}
                 color="#fff"
                 onClick={() => onClickHandler(k)}
-                display={k === selectedItem ? "none" : ""}
-                _hover={{ bg: "brand.grayLight", color: "white" }}
+                display={k === selectedItem ? 'none' : ''}
+                _hover={{ bg: 'brand.grayLight', color: 'white' }}
               >
                 {v}
               </MenuItem>

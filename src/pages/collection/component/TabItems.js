@@ -106,7 +106,7 @@ const CollectionItems = ({
   const columnsSmallCardNew = useBreakpointValue({ base: 2, md: 4, xl: 6 });
 
   const columns = bigCardNew ? columnsBigCardNew : columnsSmallCardNew;
-  const stackSpacing = useBreakpointValue({ base: 15, md: 15, xl: 30 });
+  const stackSpacing = useBreakpointValue({ base: 15, md: 15, '2xl': 30 });
 
   const nftCardWidthNew =
     (newGridWrapperWidth - stackSpacing * (columns - 1)) / columns;
@@ -317,6 +317,7 @@ const CollectionItems = ({
               showOnChainMetadata={showOnChainMetadata}
               rarityTable={rarityTable}
               totalNftCount={nft_count}
+              bigCardNew={bigCardNew}
             />
           )}
         </Box>
@@ -342,6 +343,7 @@ const CollectionGridNew = ({
   showOnChainMetadata,
   rarityTable,
   totalNftCount,
+  bigCardNew,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedNft, setSelectedNft] = useState(null);
@@ -375,7 +377,11 @@ const CollectionGridNew = ({
       <SimpleGrid columns={columns} gap={gap}>
         {dataList.map((token, idx) => (
           <div onClick={() => handleOnClick(token)} key={idx}>
-            <CommonCard {...token} cardWidth={cardWidth} />
+            <CommonCard
+              {...token}
+              cardWidth={cardWidth}
+              bigCardNew={bigCardNew}
+            />
           </div>
         ))}
       </SimpleGrid>

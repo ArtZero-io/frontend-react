@@ -43,7 +43,6 @@ const Thumbnail = ({
     if (e) data = e.target.files[0];
 
     if (!supportedFormat.includes(data?.type)) {
-      // console.log("includes Date.now()", Date.now());
 
       toast.error(
         `Please use .png .jpeg .jpeg .gif format, the ${

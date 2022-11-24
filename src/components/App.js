@@ -110,7 +110,7 @@ const Main = () => {
       }
     };
     initContract();
-    // console.log("initContract()...");
+
   }, [
     api,
     apiState,

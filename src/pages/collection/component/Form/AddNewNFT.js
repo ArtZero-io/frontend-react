@@ -76,7 +76,7 @@ const AddNewNFTForm = ({
       newInitialValues.NFTName = rest.nftName;
       newInitialValues.description = rest.description;
 
-      // console.log("restrest", rest);
+
       if (traits) {
         newInitialValues.properties = Object.entries(traits)
           ?.filter(([_, name]) => !name.includes('|'))

@@ -86,13 +86,15 @@ function ProjectAdmin() {
         launchpad_psp34_nft_standard.CONTRACT_ABI,
         nftAddress
       );
+      
       launchpad_psp34_nft_standard_calls.setContract(
         launchpad_psp34_nft_standard_contract
       );
+
       const projectInfoHash =
         await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
-      // console.log(projectInfoHash);
-      
+
+        
       const projectInfo = await APICall.getProjectInfoByHash({
         projectHash: projectInfoHash,
       });

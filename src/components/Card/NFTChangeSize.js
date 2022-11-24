@@ -9,12 +9,13 @@ import {
   TagRightIcon,
   Text,
   Stack,
-} from "@chakra-ui/react";
-import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { getCloudFlareImage } from "@utils/index";
-import { motion } from "framer-motion";
-import { formatNumDynamicDecimal } from "@utils";
-import { useEffect, useState } from "react";
+  useBreakpointValue,
+} from '@chakra-ui/react';
+import AzeroIcon from '@theme/assets/icon/Azero.js';
+import { getCloudFlareImage } from '@utils/index';
+import { motion } from 'framer-motion';
+import { formatNumDynamicDecimal } from '@utils';
+import { useEffect, useState } from 'react';
 
 export const CommonCard = (props) => {
   const {
@@ -25,9 +26,10 @@ export const CommonCard = (props) => {
     highest_bid,
     stackSpacing,
     cardWidth,
+    bigCardNew,
   } = props;
 
-  const [projImage, setProjImage] = useState("");
+  const [projImage, setProjImage] = useState('');
 
   useEffect(() => {
     avatar &&
@@ -36,14 +38,20 @@ export const CommonCard = (props) => {
       });
   }, [avatar]);
 
+  const fontSizeHeading = useBreakpointValue({
+    base: '12px',
+    md: bigCardNew ? '18px' : '14px',
+    '2xl': '18px',
+  });
+
   return (
     <motion.div
       whileHover={{
-        borderColor: "#7ae7ff",
+        borderColor: '#7ae7ff',
       }}
       style={{
-        border: "solid 2px #7ae7ff00",
-        transition: "all 0.15s cubic-bezier(.17,.67,.83,.67)",
+        border: 'solid 2px #7ae7ff00',
+        transition: 'all 0.15s cubic-bezier(.17,.67,.83,.67)',
       }}
     >
       <Stack borderColor="#fff0" bg="#222" spacing={stackSpacing}>
@@ -61,21 +69,25 @@ export const CommonCard = (props) => {
 
         <Stack
           textAlign="left"
-          p={["10px", "20px"]}
-          pt={["2px", "12px"]}
-          spacing={["5px", "10px"]}
+          p={{
+            base: '10px',
+            md: !bigCardNew ? '12px' : '20px',
+            '2xl': '20px',
+          }}
+          pt={['2px', '12px']}
+          spacing={['5px', '10px']}
         >
-          <Heading fontSize={["12px", "18px"]}>{nftName}</Heading>
+          <Heading fontSize={fontSizeHeading}>{nftName}</Heading>
           {is_for_sale ? (
             <>
               <Flex w="full">
-                <Tag minH={["30px", "40px"]}>
-                  <TagLabel fontSize={["14px", "16px", "16px"]}>
+                <Tag minH={['30px', '40px']}>
+                  <TagLabel fontSize={['14px', '16px', '16px']}>
                     {formatNumDynamicDecimal(price / 10 ** 12)}
                   </TagLabel>
                   <TagRightIcon
-                    h={["12px", "16px", "16px"]}
-                    w={["12px", "16px", "16px"]}
+                    h={['12px', '16px', '16px']}
+                    w={['12px', '16px', '16px']}
                     as={AzeroIcon}
                   />
                 </Tag>
@@ -94,29 +106,29 @@ export const CommonCard = (props) => {
                 {highest_bid ? (
                   <>
                     <Text
-                      fontSize={["14px", "16px"]}
+                      fontSize={['14px', '16px']}
                       bg="transparent"
                       color="#fff"
                     >
-                      Best Offer{" "}
+                      Best Offer{' '}
                       {formatNumDynamicDecimal(highest_bid / 10 ** 12)}
                     </Text>
                     <TagRightIcon
-                      h={["12px", "16px", "16px"]}
-                      w={["12px", "16px", "16px"]}
+                      h={['12px', '16px', '16px']}
+                      w={['12px', '16px', '16px']}
                       as={AzeroIcon}
                     />
                   </>
                 ) : (
-                  <Text fontSize={["14px", "16px"]} bg="transparent">
+                  <Text fontSize={['14px', '16px']} bg="transparent">
                     No offer yet
                   </Text>
                 )}
               </Flex>
             </>
           ) : (
-            <Tag minH={["30px", "40px"]}>
-              <TagLabel fontSize={["14px", "16px"]}>Not for sale</TagLabel>
+            <Tag minH={['30px', '40px']}>
+              <TagLabel fontSize={['14px', '16px']}>Not for sale</TagLabel>
             </Tag>
           )}
         </Stack>

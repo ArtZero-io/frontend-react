@@ -5,16 +5,16 @@ import {
   TagLabel,
   TagRightIcon,
   useClipboard,
-} from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useSubstrateState } from "@utils/substrate/SubstrateContext";
-import AzeroIcon from "@theme/assets/icon/Azero.js";
-import BN from "bn.js";
-import { shortenNumber } from "@utils";
-import { motion } from "framer-motion";
-import toast from "react-hot-toast";
-import { CopyIcon } from "@chakra-ui/icons";
+} from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useSubstrateState } from '@utils/substrate/SubstrateContext';
+import AzeroIcon from '@theme/assets/icon/Azero.js';
+import BN from 'bn.js';
+import { shortenNumber } from '@utils';
+import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
+import { CopyIcon } from '@chakra-ui/icons';
 
 function WalletMenu() {
   const { api, currentAccount } = useSubstrateState();
@@ -29,14 +29,8 @@ function WalletMenu() {
       api.query.system
         .account(activeAddress, (balance) => {
           let oneSZERO = new BN(10 ** 12);
-          let balSZERO = new BN(balance.data.free, 10, "le");
-
-          // console.log(
-          //   "bal mil-AZERO:",
-          //   balSZERO.toHuman().slice(0, -16) +
-          //     "." +
-          //     balSZERO.toHuman().slice(-15, -8)
-          // );
+          let balSZERO = new BN(balance.data.free, 10, 'le');
+          console.log(balance?.data.toHuman());
           if (balSZERO.gt(oneSZERO)) {
             balSZERO = balSZERO.div(new BN(10 ** 12)).toNumber();
           } else {
@@ -59,7 +53,7 @@ function WalletMenu() {
   const { hasCopied, onCopy } = useClipboard(currentAccount?.address);
 
   useEffect(() => {
-    hasCopied && toast.success("Copied to clipboard!");
+    hasCopied && toast.success('Copied to clipboard!');
   }, [hasCopied]);
 
   return currentAccount ? (
@@ -71,7 +65,7 @@ function WalletMenu() {
       >
         <Flex alignItems="center">
           <IconButton
-            display={["none", "flex"]}
+            display={['none', 'flex']}
             mr={2}
             size="icon"
             color="#fff"

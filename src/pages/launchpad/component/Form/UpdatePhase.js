@@ -52,9 +52,7 @@ function UpdatePhase({
       //   const start = e[0].getTime();
 
       //   const newValue = [...value];
-      //   console.log("newValue", newValue);
       //   newValue.push({ start, end });
-      //   console.log("newValue11", newValue);
 
       //   const isOverlap = isPhaseTimeOverlap(newValue);
 

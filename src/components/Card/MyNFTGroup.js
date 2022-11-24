@@ -127,7 +127,6 @@ function MyNFTGroupCard({
     getAttributesData();
     return () => (isSubscribed = false);
 
-    //console.log(listNFT,'showOnChainMetadata',showOnChainMetadata);
   }, [api, currentAccount, listNFT, nftContractAddress, showOnChainMetadata]);
 
   return (

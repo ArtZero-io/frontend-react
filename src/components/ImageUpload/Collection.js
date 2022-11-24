@@ -7,20 +7,17 @@ import {
   Spacer,
   Text,
   VStack,
-} from "@chakra-ui/react";
-import React, { useState, useRef } from "react";
+} from '@chakra-ui/react';
+import React, { useState, useRef } from 'react';
 
-import { Buffer } from "buffer";
-import toast from "react-hot-toast";
-// import { clientAPI } from "@api/client";
-// import { getCachedImageShort } from "@utils/index";
-import { formMode } from "@constants";
+import { Buffer } from 'buffer';
+import toast from 'react-hot-toast';
+import { formMode } from '@constants';
 
-import { ipfsClient } from "@api/client";
-// import { APICall } from "../../api/client";
-import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
+import { ipfsClient } from '@api/client';
+import ImageCloudFlare from '../ImageWrapper/ImageCloudFlare';
 
-const supportedFormat = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
+const supportedFormat = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
 
 const ImageUploadCollection = ({
   id,
@@ -30,15 +27,15 @@ const ImageUploadCollection = ({
   isBanner,
   limitedSize,
   imageIPFSUrl,
-  minH = "64px",
+  minH = '64px',
   setImageIPFSUrl,
   isDisabled = false,
   isRequired = false,
 }) => {
   // eslint-disable-next-line no-unused-vars
-  const [imgURL, setImgURL] = useState("");
+  const [imgURL, setImgURL] = useState('');
 
-  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+  const [imagePreviewUrl, setImagePreviewUrl] = useState('');
   const ref = useRef();
 
   const retrieveNewAvatar = (e) => {
@@ -46,16 +43,14 @@ const ImageUploadCollection = ({
     if (e) data = e.target.files[0];
 
     if (!supportedFormat.includes(data?.type)) {
-      // console.log("includes Date.now()", Date.now());
-
       toast.error(
         `Please use .png .jpeg .jpeg .gif format, the ${
-          e.target?.files[0] && e.target.files[0].type.split("/")[1]
+          e.target?.files[0] && e.target.files[0].type.split('/')[1]
         } format is not supported.`
       );
       ref.current.value = null;
       // setNewAvatarData(null);
-      setImagePreviewUrl("");
+      setImagePreviewUrl('');
       return;
     }
 
@@ -67,7 +62,7 @@ const ImageUploadCollection = ({
       );
       ref.current.value = null;
       // setNewAvatarData(null);
-      setImagePreviewUrl("");
+      setImagePreviewUrl('');
       return;
     }
 
@@ -100,16 +95,16 @@ const ImageUploadCollection = ({
           // });
         }),
         {
-          loading: "Uploading...",
-          success: "Upload successful!",
-          error: "Could not upload your image!!!.",
+          loading: 'Uploading...',
+          success: 'Upload successful!',
+          error: 'Could not upload your image!!!.',
         }
       );
     };
 
     e.preventDefault();
 
-    if (e.target.value !== "") {
+    if (e.target.value !== '') {
       const src = URL.createObjectURL(e.target.files[0]);
 
       setImagePreviewUrl(src);
@@ -125,7 +120,7 @@ const ImageUploadCollection = ({
     >
       {title ? (
         <Text color="#fff" ml={0}>
-          {title}{" "}
+          {title}{' '}
           {isRequired ? (
             <Text as="span" color="#ff8c8c">
               *
@@ -136,7 +131,7 @@ const ImageUploadCollection = ({
 
       <Center w="full" justifyContent="center">
         <HStack py="1" justifyContent="center" minH={minH}>
-          <label htmlFor={`${id}InputTag`} style={{ cursor: "pointer" }}>
+          <label htmlFor={`${id}InputTag`} style={{ cursor: 'pointer' }}>
             <Flex alignItems="center">
               <Button
                 isDisabled={isDisabled}
@@ -144,10 +139,10 @@ const ImageUploadCollection = ({
                 variant="outline"
                 color="brand.blue"
                 fontFamily="Evogria"
-                fontSize={["sm", "md", "md"]}
-                px={["12px", "32px", "32px"]}
+                fontSize={['sm', 'md', 'md']}
+                px={['12px', '32px', '32px']}
               >
-                {!imagePreviewUrl ? "select image" : "pick another"}
+                {!imagePreviewUrl ? 'select image' : 'pick another'}
               </Button>
               <Text hidden minW={28} ml={4} color="brand.grayLight">
                 No file chosen
@@ -155,7 +150,7 @@ const ImageUploadCollection = ({
               <input
                 disabled={isDisabled}
                 ref={ref}
-                style={{ display: "none" }}
+                style={{ display: 'none' }}
                 id={`${id}InputTag`}
                 onChange={retrieveNewAvatar}
                 type="file"
@@ -180,8 +175,8 @@ const ImageUploadCollection = ({
         {imagePreviewUrl && (
           <HStack justifyContent="center" minH={16}>
             <Avatar
-              minH={["52px", "64px", "64px"]}
-              minW={["52px", "64px", "64px"]}
+              minH={['52px', '64px', '64px']}
+              minW={['52px', '64px', '64px']}
               mx={4}
               src={imagePreviewUrl}
             />
@@ -190,7 +185,7 @@ const ImageUploadCollection = ({
         <Spacer />
       </Center>
       {limitedSize ? (
-        <Text ml={2} fontSize={["xs", "sm", "sm"]} color="brand.grayLight">
+        <Text ml={2} fontSize={['xs', 'sm', 'sm']} color="brand.grayLight">
           Recommended file size is {limitedSize.width}x{limitedSize.height} px
         </Text>
       ) : null}

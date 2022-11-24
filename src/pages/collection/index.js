@@ -139,8 +139,8 @@ function CollectionPage() {
       collectionAddress: collection_address,
     });
 
-    // console.log("xx>> ret", ret);
 
+    
     const totalListedCount =
       await marketplace_contract_calls.getListedTokenCountByCollectionAddress(
         getPublicCurrentAccount(),

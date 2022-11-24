@@ -15,8 +15,8 @@ import {
   Th,
   Thead,
   Tr,
-  HStack,
   Stack,
+  Flex,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { useSubstrateState } from '@utils/substrate';
@@ -607,7 +607,7 @@ function MyWhiteListProjectPage() {
           )}
         </Stack>
 
-        <HStack w="full" hidden={!isUpdateMode} justify="start">
+        <Flex w="full" hidden={!isUpdateMode} justify="start">
           <Stack
             w="full"
             direction="column"
@@ -629,7 +629,7 @@ function MyWhiteListProjectPage() {
             />
           </Stack>
 
-          <Stack
+          <Flex
             w="full"
             direction="column"
             justify="space-between"
@@ -654,8 +654,8 @@ function MyWhiteListProjectPage() {
                 (actionType && actionType !== ADD_WHITELIST)
               }
             />
-          </Stack>
-        </HStack>
+          </Flex>
+        </Flex>
       </Stack>
 
       <Stack w={['full', '70%']} pb="30px">

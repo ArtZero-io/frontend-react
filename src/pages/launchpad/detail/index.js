@@ -598,7 +598,6 @@ const LaunchpadDetailPage = () => {
           })
         );
 
-        // console.log("Promise ret error", ret);
         setMyNFTs(ret);
         setLoadingUserNft(false);
       }

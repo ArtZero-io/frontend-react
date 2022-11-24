@@ -120,7 +120,7 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
           <FieldArray
             name="properties"
             render={(arrayHelpers) => {
-              // console.log("arrayHelpers", arrayHelpers);
+
               return (
                 <div>
                   {value?.map((properties, index) => (

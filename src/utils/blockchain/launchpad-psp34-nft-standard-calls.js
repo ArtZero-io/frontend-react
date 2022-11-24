@@ -19,7 +19,6 @@ export const setContract = (c) => {
 };
 
 async function getTotalSupply(caller_account) {
-  // console.log("getTotalSupply before check", !caller_account);
   if (!contract || !caller_account) {
     return null;
   }
@@ -27,7 +26,6 @@ async function getTotalSupply(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
 
   const { result, output } = await contract.query.getTotalSupply(address, {
     value: azero_value,
@@ -40,7 +38,6 @@ async function getTotalSupply(caller_account) {
 }
 
 async function getPhaseScheduleById(caller_account, phaseId) {
-  // console.log("getTotalSupply before check", !caller_account);
   if (!contract || !caller_account) {
     return null;
   }
@@ -48,7 +45,6 @@ async function getPhaseScheduleById(caller_account, phaseId) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
 
   const { result, output } = await contract.query.getPhaseScheduleById(
     address,
@@ -105,8 +101,6 @@ async function updateWhitelist(
     amount,
     minting_fee
   );
-
-  
 
   const txNotSign = contract.tx.updateWhitelist(
     { gasLimit, value },
@@ -178,8 +172,6 @@ async function addWhitelist(
     minting_fee
   );
 
-  
-
   const txNotSign = contract.tx.addWhitelist(
     { gasLimit, value },
     account,
@@ -206,7 +198,6 @@ async function addWhitelist(
 }
 
 async function getLastPhaseId(caller_account) {
-  // console.log("getTotalSupply before check", !caller_account);
   if (!contract || !caller_account) {
     return null;
   }
@@ -214,7 +205,6 @@ async function getLastPhaseId(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
 
   const { result, output } = await contract.query.getLastPhaseId(address, {
     value: azero_value,
@@ -313,9 +303,7 @@ async function getWhitelistByAccountId(
     accountAddress,
     phaseId
   );
-  // console.log(accountAddress, phaseId);
-  // console.log("getWhitelistByAccountId", accountAddress);
-  // console.log("getWhitelistByAccountId::index", phaseId);
+
   if (result.isOk) {
     return output.toHuman();
   }
@@ -368,8 +356,6 @@ async function editProjectInformation(
     projectInfo
   );
 
-  
-
   contract.tx
     .editProjectInformation({ gasLimit, value }, projectInfo)
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
@@ -416,8 +402,6 @@ async function mint(caller_account, mintAmount, dispatch, txType, api) {
     'mint',
     mintAmount
   );
-
-  
 
   const txNotSign = contract.tx.mint({ gasLimit, value }, mintAmount);
 
@@ -468,8 +452,6 @@ async function publicMint(
     phaseId,
     mintAmount
   );
-
-  
 
   const txNotSign = contract.tx.publicMint(
     { gasLimit, value },
@@ -547,8 +529,6 @@ async function whitelistMint(
     phaseId,
     mintAmount
   );
-
-  
 
   contract.tx
     .whitelistMint({ gasLimit, value }, phaseId, mintAmount)
@@ -638,8 +618,6 @@ async function updateAdminAddress(
     adminAddress
   );
 
-  
-
   contract.tx
     .updateAdminAddress({ gasLimit, value }, adminAddress)
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
@@ -686,8 +664,6 @@ async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
     'psp34Traits::setBaseUri',
     uri
   );
-
-  
 
   const txNotSign = contract.tx['psp34Traits::setBaseUri'](
     { gasLimit, value },
@@ -798,8 +774,6 @@ async function addNewPhase(
     endTime
   );
 
-  
-
   const txNotSign = contract.tx.addNewPhase(
     { gasLimit, value },
     phaseCode,
@@ -873,8 +847,6 @@ async function updateSchedulePhase(
     endTime
   );
 
-  
-
   const txNotSign = contract.tx.updateSchedulePhase(
     { gasLimit, value },
     phaseId,
@@ -917,8 +889,6 @@ async function deactivePhase(caller_account, phaseId, dispatch, txType, api) {
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
-
-
   gasLimit = await getEstimatedGas(
     address,
     contract,
@@ -926,8 +896,6 @@ async function deactivePhase(caller_account, phaseId, dispatch, txType, api) {
     'deactivePhase',
     phaseId
   );
-
-  
 
   const txNotSign = contract.tx.deactivePhase({ gasLimit, value }, phaseId);
 
@@ -1104,8 +1072,6 @@ async function withdrawFee(caller_account, amount, dispatch, txType, api) {
     'withdrawFee',
     withdrawAmount
   );
-
-  
 
   contract.tx
     .withdrawFee({ gasLimit, value }, withdrawAmount)
@@ -1318,7 +1284,6 @@ export const getCurrentPhaseStatusOfProject = async ({
   );
 
   if (result.isOk) {
-    // console.log("output.toHuman", output.toHuman());
     return output.toHuman();
   }
   return null;

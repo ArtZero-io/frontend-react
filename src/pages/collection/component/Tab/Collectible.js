@@ -147,7 +147,6 @@ const NFTTabCollectible = (props) => {
     return { [k]: v };
   });
 
-  // console.log("attrsList", attrsList);
 
   useEffect(() => {
     fetchSaleInfo();

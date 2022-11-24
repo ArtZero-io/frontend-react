@@ -104,7 +104,7 @@ function CheckCollection() {
         );
 
         if (image !== metadata.image) {
-          // console.log(metadata.image);
+
           image_count++;
           setCachedImageCount(image_count);
         }

@@ -80,7 +80,7 @@ const MyNFTsPage = () => {
         sort: -1,
         isActive: true,
       });
-      // console.log("allCollectionsOwned", allCollectionsOwned);
+
       let data = await Promise.all(
         allCollectionsOwned?.map(async (collection) => {
           const options = {

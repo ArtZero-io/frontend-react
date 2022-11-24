@@ -75,7 +75,6 @@ function RewardDistribution() {
     );
     let admin_address = await staking_calls.getAdminAddress(currentAccount);
 
-    // console.log(reward_pool,claimable_reward);
     setClaimableReward(claimable_reward);
     setRewardPool(reward_pool);
     setTotalStaked(total_staked);
@@ -90,14 +89,13 @@ function RewardDistribution() {
     );
     setStakerCount(staker_count);
 
-    // console.log("staker_count", staker_count);
     let stakers = [];
     for (var i = 0; i < staker_count; i++) {
       let staker = await staking_calls.getStakedAccountsAccountByIndex(
         currentAccount,
         i
       );
-      // console.log("staker", staker);
+
       let staker_info = {
         address: staker,
         amount: await staking_calls.getTotalStakedByAccount(
@@ -106,7 +104,6 @@ function RewardDistribution() {
         ),
         isClaimed: await staking_calls.isClaimed(currentAccount, staker),
       };
-      // console.log("staker_info", staker_info);
       stakers.push(staker_info);
     }
     setStakers(stakers);

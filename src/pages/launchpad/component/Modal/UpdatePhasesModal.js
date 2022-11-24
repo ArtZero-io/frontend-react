@@ -58,7 +58,6 @@ const UpdatePhasesModal = React.memo(function ({
 
   const [currentPhaseId, setCurrentPhaseId] = useState(null);
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
-  // console.log("UpdatePhasesModal...");
 
   const fetchData = useCallback(async () => {
     let initialValuesData = {};
@@ -81,20 +80,16 @@ const UpdatePhasesModal = React.memo(function ({
     const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(
       currentAccount
     );
-    // console.log("UpdatePhasesModal::totalPhase", totalPhase);
 
     let phasesTmp = [];
-    // console.log("xxx phasesTmp", phasesTmp);
 
     for (let i = 1; i <= totalPhase; i++) {
-      // console.log('xxx i', i)
       let phaseSchedule =
         await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
           currentAccount,
           i
         );
 
-      // console.log("xxx phaseSchedule", phaseSchedule);
       if (phaseSchedule.isActive) {
         let phaseInfo = {
           availableTokenAmount: strToNumber(availableTokenAmount),
@@ -121,14 +116,9 @@ const UpdatePhasesModal = React.memo(function ({
 
     initialValuesData.phases = phasesTmp;
 
-    // console.log("xxxUpdatePhasesModal::phasesTmp", phasesTmp);
-    // console.log("xxxinitialValuesData", initialValuesData);
-    // console.log("xxxcurrentPhaseId", currentPhaseId);
     setInitialValues(initialValuesData);
     setCurrentPhaseId(currentPhaseId);
 
-    // console.log("initialValuesData", phasesTmp);
-    // console.log("currentPhaseId", currentPhaseId);
   }, [api, collection_address, currentAccount, currentPhaseId]);
 
   useEffect(() => {

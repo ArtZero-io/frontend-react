@@ -1,9 +1,6 @@
-import { Helmet } from "react-helmet";
+import { Helmet } from 'react-helmet';
 
 export default function HeadHelmet({ title, image }) {
-  // console.log("title", title);
-  // console.log("image", image);
-
   return (
     <Helmet>
       <meta charset="utf-8" />

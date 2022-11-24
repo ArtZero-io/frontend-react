@@ -16,7 +16,7 @@ export const setAZNFTContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
-  // console.log("contract setAZNFTContract", contract);
+
 };
 
 /*
@@ -30,7 +30,7 @@ async function owner(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query["ownable::owner"](address, {
     value: azero_value,
@@ -49,7 +49,7 @@ async function getAdminAddress(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query.getAdminAddress(address, {
     value: azero_value,
@@ -68,7 +68,7 @@ async function totalSupply(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query["psp34::totalSupply"](
     address,
@@ -87,7 +87,7 @@ async function balanceOf(caller_account, account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query["psp34::balanceOf"](
     address,
@@ -110,7 +110,7 @@ async function getWhitelistAccount(caller_account, index) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query.getWhitelistAccount(
     address,
@@ -118,7 +118,6 @@ async function getWhitelistAccount(caller_account, index) {
     index
   );
   if (result.isOk) {
-    //console.log(output);
     return output.toHuman();
   }
   return null;
@@ -131,7 +130,7 @@ async function getWhitelistCount(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query.getWhitelistCount(address, {
     value: azero_value,
@@ -150,7 +149,7 @@ async function getWhitelist(caller_account, account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
   try {
     const { result, output } = await contract.query.getWhitelist(
       address,
@@ -174,7 +173,7 @@ async function getMintingFee(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query.getMintingFee(address, {
     value: azero_value,
@@ -195,7 +194,7 @@ async function getPublicSaleAmount(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query.getPublicSaleAmount(address, {
     value: azero_value,
@@ -213,7 +212,7 @@ async function getPublicSaleMintedAmount(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query.getPublicSaleMintedCount(
     address,
@@ -638,7 +637,7 @@ async function getPublicMaxMintingAmount(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
+  
 
   const { result, output } = await contract.query.getPublicMaxMintingAmount(
     address,

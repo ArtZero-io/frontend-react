@@ -21,11 +21,10 @@ let contract;
 
 export const setContract = (c) => {
   contract = c;
-  // console.log("contract setPsp34Contract", contract);
 };
 
 async function getTotalSupply(caller_account) {
-  // console.log("getTotalSupply before check", !caller_account);
+;
   if (!contract || !caller_account) {
     return null;
   }
@@ -33,7 +32,6 @@ async function getTotalSupply(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(collection_manager_contract);
 
   const { result, output } = await contract.query['psp34::totalSupply'](
     address,
@@ -46,7 +44,7 @@ async function getTotalSupply(caller_account) {
 }
 
 async function tokenUri(caller_account, token_id) {
-  // console.log("getTotalSupply before check", !caller_account);
+
   if (!contract || !caller_account) {
     return null;
   }

@@ -19,7 +19,6 @@ export const setMarketplaceContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
-  // console.log("contract setMarketplaceContract", contract);
 };
 
 //GETS
@@ -40,7 +39,6 @@ async function totalTokensForSale(
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
 
   const { result, output } = await contract.query.totalTokensForSale(
     address,
@@ -65,7 +63,6 @@ async function getVolumeByCollection(caller_account, nft_contract_address) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
 
   const { result, output } = await contract.query.getVolumeByCollection(
     address,
@@ -87,7 +84,6 @@ async function getTotalVolume(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
 
   const { result, output } = await contract.query.getTotalVolume(address, {
     value: azero_value,
@@ -121,7 +117,6 @@ async function getNftSaleInfo(caller_account, nft_contract_address, token_id) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
 
   const { result, output } = await contract.query.getNftSaleInfo(
     address,
@@ -152,7 +147,6 @@ async function getForSaleTokenId(
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
 
   const { result, output } = await contract.query.getForSaleTokenId(
     address,
@@ -180,21 +174,18 @@ async function getAllBids(
   ) {
     !contract && console.log('invalid inputs > contract', contract);
     !caller_account &&
-      // console.log("invalid inputs > caller_account ", caller_account);
       !isValidAddressPolkadotAddress(nft_contract_address) &&
       console.log(
         'invalid inputs > nft_contract_address',
         nft_contract_address
       );
-    // !isValidAddressPolkadotAddress(seller) &&
-    // console.log("invalid inputs > seller", seller);
+
     return null;
   }
 
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
 
   const { result, output } = await contract.query.getAllBids(
     address,
@@ -219,7 +210,6 @@ async function owner(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
 
   const { result, output } = await contract.query['ownable::owner'](address, {
     value: azero_value,
@@ -238,7 +228,6 @@ async function getStakingDiscountCriteria(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
 
   const { result, output } = await contract.query.getStakingDiscountCriteria(
     address,
@@ -257,7 +246,6 @@ async function getStakingDiscountRate(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
 
   const { result, output } = await contract.query.getStakingDiscountRate(
     address,
@@ -276,7 +264,6 @@ async function getPlatformFee(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
 
   const { result, output } = await contract.query.getPlatformFee(address, {
     value: azero_value,
@@ -295,7 +282,6 @@ async function getCurrentProfit(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
 
   const { result, output } = await contract.query.getCurrentProfit(address, {
     value: azero_value,
@@ -316,7 +302,6 @@ async function getTotalProfit(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
 
   const { result, output } = await contract.query.getTotalProfit(address, {
     value: azero_value,
@@ -344,7 +329,6 @@ async function getListedTokenCountByCollectionAddress(
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  //console.log(contract);
 
   const { result, output } =
     await contract.query.getListedTokenCountByCollectionAddress(
