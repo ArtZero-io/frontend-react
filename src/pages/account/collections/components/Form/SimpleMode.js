@@ -86,7 +86,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
       currentAccount?.address
     );
 
-    if (balance.free.toNumber() > addingFee) {
+    if (balance.free.toNumber() - balance.miscFrozen.toNumber() > addingFee) {
       return true;
     } else {
       return false;

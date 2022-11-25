@@ -271,6 +271,7 @@ const LaunchpadDetailPage = () => {
         setLoadingPhaseInfo(false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [collection_address]
   );
 
@@ -324,7 +325,6 @@ const LaunchpadDetailPage = () => {
               );
 
             let userWhitelist = null;
-        
 
             if (data) {
               userWhitelist = {
@@ -357,7 +357,6 @@ const LaunchpadDetailPage = () => {
   );
 
   const [userPLClaimedInfo, setUserPLClaimedInfo] = useState([]);
-
 
   const fetchUserPLClaimedData = useCallback(
     async (isUnmounted) => {
@@ -421,7 +420,9 @@ const LaunchpadDetailPage = () => {
     }
 
     const { data } = await api.query.system.account(currentAccount.address);
-    const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+    const balance =
+      new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
+      new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
     const mintingFee =
       (whitelistMintingAmount * userWLInfo[activePhaseId - 1]?.mintingFee) /
       10 ** 12;
@@ -471,7 +472,10 @@ const LaunchpadDetailPage = () => {
     }
 
     const { data } = await api.query.system.account(currentAccount.address);
-    const balance = new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+    const balance =
+      new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
+      new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+
     const mintingFee =
       (mintingAmount * currentPhase.publicMintingFee) / 10 ** 12;
 
@@ -563,7 +567,7 @@ const LaunchpadDetailPage = () => {
           1
         );
         const baseUri = tokenUri.replace('1.json', '');
-    
+
         ret = await Promise.all(
           [...Array(totalNFTCount)].map(async (_, index) => {
             const idOfNFT = await getIdOfPsp34NFT({
@@ -1000,7 +1004,6 @@ const LaunchpadDetailPage = () => {
                           {currentAccount && userWLInfo[index] && (
                             <Text>
                               You are whitelisted to mint{' '}
-
                               <Text as="span" color="#fff">
                                 {userWLInfo[index]?.whitelistAmount} NFT
                                 {userWLInfo[index]?.whitelistAmount > 1

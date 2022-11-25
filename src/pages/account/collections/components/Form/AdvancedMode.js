@@ -1,36 +1,36 @@
-import { Stack, Text, Box, HStack, VStack } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
-import React, { useState, useEffect, useRef } from "react";
-import { Formik, Form } from "formik";
-import toast from "react-hot-toast";
-import * as Yup from "yup";
+import { Stack, Text, Box, HStack, VStack } from '@chakra-ui/react';
+import { useDispatch } from 'react-redux';
+import React, { useState, useEffect, useRef } from 'react';
+import { Formik, Form } from 'formik';
+import toast from 'react-hot-toast';
+import * as Yup from 'yup';
 
-import { useSubstrateState } from "@utils/substrate";
-import { isValidAddressPolkadotAddress } from "@utils";
-import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+import { useSubstrateState } from '@utils/substrate';
+import { isValidAddressPolkadotAddress } from '@utils';
+import collection_manager_calls from '@utils/blockchain/collection-manager-calls';
 
-import ImageUpload from "@components/ImageUpload/Collection";
-import AdvancedModeInput from "@components/Input/Input";
-import AdvancedModeSwitch from "@components/Switch/Switch";
-import AdvancedModeTextArea from "@components/TextArea/TextArea";
+import ImageUpload from '@components/ImageUpload/Collection';
+import AdvancedModeInput from '@components/Input/Input';
+import AdvancedModeSwitch from '@components/Switch/Switch';
+import AdvancedModeTextArea from '@components/TextArea/TextArea';
 
-import AddCollectionNumberInput from "@components/Input/NumberInput";
-import CommonCheckbox from "@components/Checkbox/Checkbox";
+import AddCollectionNumberInput from '@components/Input/NumberInput';
+import CommonCheckbox from '@components/Checkbox/Checkbox';
 import {
   formMode,
   CREATE_COLLECTION,
   EDIT_COLLECTION,
   START,
-} from "@constants";
-import useTxStatus from "@hooks/useTxStatus";
-import CommonButton from "@components/Button/CommonButton";
-import { setTxStatus } from "@store/actions/txStatus";
-import { APICall } from "../../../../../api/client";
+} from '@constants';
+import useTxStatus from '@hooks/useTxStatus';
+import CommonButton from '@components/Button/CommonButton';
+import { setTxStatus } from '@store/actions/txStatus';
+import { APICall } from '../../../../../api/client';
 
-const AdvancedModeForm = ({ mode = "add", id }) => {
-  const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
-  const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
-  const [headerSquareIPFSUrl, setHeaderSquareIPFSUrl] = useState("");
+const AdvancedModeForm = ({ mode = 'add', id }) => {
+  const [avatarIPFSUrl, setAvatarIPFSUrl] = useState('');
+  const [headerIPFSUrl, setHeaderIPFSUrl] = useState('');
+  const [headerSquareIPFSUrl, setHeaderSquareIPFSUrl] = useState('');
   const [addingFee, setAddingFee] = useState(0);
   const [isSetRoyal, setIsSetRoyal] = useState(false);
   const [initialValues, setInitialValues] = useState(null);
@@ -81,7 +81,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
       currentAccount?.address
     );
 
-    if (balance.free.toNumber() > addingFee) {
+    if (balance.free.toNumber() - balance.miscFrozen.toNumber() > addingFee) {
       return true;
     } else {
       return false;
@@ -91,14 +91,14 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
   useEffect(() => {
     let newInitialValues = {
       isEditMode: false,
-      nftContractAddress: "",
-      collectionName: "",
-      collectionDescription: "",
-      collectRoyalFee: "",
+      nftContractAddress: '',
+      collectionName: '',
+      collectionDescription: '',
+      collectRoyalFee: '',
       royalFee: 5,
-      website: "",
-      twitter: "",
-      discord: "",
+      website: '',
+      twitter: '',
+      discord: '',
       agreeTosCheckbox: false,
     };
 
@@ -151,7 +151,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
       } catch (error) {
         console.log(error);
 
-        toast.error("There was an error while fetching the collections.");
+        toast.error('There was an error while fetching the collections.');
       }
     };
 
@@ -170,43 +170,43 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
 
             nftContractAddress: Yup.string()
               .trim()
-              .min(3, "Must be at least 3 characters")
-              .max(48, "Must be at most 48 characters")
-              .required("This field is required"),
+              .min(3, 'Must be at least 3 characters')
+              .max(48, 'Must be at most 48 characters')
+              .required('This field is required'),
             collectionName: Yup.string()
               .trim()
-              .min(3, "Must be at least 3 characters")
-              .max(30, "Must be at most 30 characters")
-              .required("This field is required"),
+              .min(3, 'Must be at least 3 characters')
+              .max(30, 'Must be at most 30 characters')
+              .required('This field is required'),
             collectionDescription: Yup.string()
               .trim()
-              .min(3, "Must be at least 3 characters")
-              .max(150, "Must be at most 150 characters")
-              .required("This field is required"),
+              .min(3, 'Must be at least 3 characters')
+              .max(150, 'Must be at most 150 characters')
+              .required('This field is required'),
             collectRoyalFee: Yup.boolean(),
             website: Yup.string()
               .trim()
-              .url("URL must start with http:// or https://")
-              .max(50, "Must be at most 50 characters"),
+              .url('URL must start with http:// or https://')
+              .max(50, 'Must be at most 50 characters'),
             twitter: Yup.string()
               .trim()
-              .url("URL must start with http:// or https://")
-              .matches(/\btwitter.com\b/, "URL must be twitter.com")
-              .max(50, "Must be at most 50 characters"),
+              .url('URL must start with http:// or https://')
+              .matches(/\btwitter.com\b/, 'URL must be twitter.com')
+              .max(50, 'Must be at most 50 characters'),
             discord: Yup.string()
               .trim()
-              .url("URL must start with http:// or https://")
+              .url('URL must start with http:// or https://')
               .matches(
                 /\bdiscord.(com|gg)\b/,
-                "URL must be discord.com or discord.gg"
+                'URL must be discord.com or discord.gg'
               )
-              .max(50, "Must be at most 50 characters"),
+              .max(50, 'Must be at most 50 characters'),
 
-            agreeTosCheckbox: Yup.boolean().when("isEditMode", {
+            agreeTosCheckbox: Yup.boolean().when('isEditMode', {
               is: false,
               then: Yup.boolean()
-                .required("The terms and conditions must be accepted.")
-                .oneOf([true], "The TOCs must be accepted."),
+                .required('The terms and conditions must be accepted.')
+                .oneOf([true], 'The TOCs must be accepted.'),
             }),
           })}
           onSubmit={async (values, { setSubmitting }) => {
@@ -214,7 +214,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               !values.isEditMode &&
               (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl)
             ) {
-              return toast.error("Upload avatar or header too");
+              return toast.error('Upload avatar or header too');
             }
 
             // if (avatarIPFSUrl && headerIPFSUrl && headerSquareIPFSUrl) {
@@ -233,14 +233,14 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 nftContractAddress: values.nftContractAddress,
 
                 attributes: [
-                  "name",
-                  "description",
-                  "avatar_image",
-                  "header_image",
-                  "header_square_image",
-                  "website",
-                  "twitter",
-                  "discord",
+                  'name',
+                  'description',
+                  'avatar_image',
+                  'header_image',
+                  'header_square_image',
+                  'website',
+                  'twitter',
+                  'discord',
                 ],
 
                 attributeVals: [
@@ -293,8 +293,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           {({ values, dirty, isValid }) => (
             <Form>
               <Stack
-                gap={["10px", "30px"]}
-                direction={{ base: "column", md: "row" }}
+                gap={['10px', '30px']}
+                direction={{ base: 'column', md: 'row' }}
               >
                 <AdvancedModeInput
                   type="text"
@@ -315,29 +315,29 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               </Stack>
 
               <Stack
-                gap={["10px", "30px"]}
-                direction={{ base: "column", md: "row" }}
+                gap={['10px', '30px']}
+                direction={{ base: 'column', md: 'row' }}
               >
                 <AdvancedModeInput
                   type="text"
                   name="website"
                   label="Website URL"
                   isDisabled={actionType}
-                  placeholder={"Website URL"}
+                  placeholder={'Website URL'}
                 />
                 <AdvancedModeInput
                   type="text"
                   name="twitter"
                   label="Twitter URL"
                   isDisabled={actionType}
-                  placeholder={"Twitter URL"}
+                  placeholder={'Twitter URL'}
                 />
                 <AdvancedModeInput
                   type="text"
                   name="discord"
                   label="Discord URL"
                   isDisabled={actionType}
-                  placeholder={"Discord URL"}
+                  placeholder={'Discord URL'}
                 />
               </Stack>
 
@@ -353,7 +353,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               <Stack
                 alignItems="start"
                 justifyContent="space-between"
-                direction={{ base: "column", md: "row" }}
+                direction={{ base: 'column', md: 'row' }}
               >
                 <Stack
                   w="50%"
@@ -369,7 +369,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     imageIPFSUrl={avatarIPFSUrl}
                     title="Collection Avatar Image"
                     setImageIPFSUrl={setAvatarIPFSUrl}
-                    limitedSize={{ width: "100", height: "100" }}
+                    limitedSize={{ width: '100', height: '100' }}
                   />
                   <ImageUpload
                     mode={mode}
@@ -379,7 +379,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     imageIPFSUrl={headerIPFSUrl}
                     title="Collection Main Header"
                     setImageIPFSUrl={setHeaderIPFSUrl}
-                    limitedSize={{ width: "1920", height: "600" }}
+                    limitedSize={{ width: '1920', height: '600' }}
                   />
                 </Stack>
 
@@ -397,7 +397,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     title="Collection Square Header"
                     imageIPFSUrl={headerSquareIPFSUrl}
                     setImageIPFSUrl={setHeaderSquareIPFSUrl}
-                    limitedSize={{ width: "500", height: "500" }}
+                    limitedSize={{ width: '500', height: '500' }}
                   />
 
                   {mode === formMode.EDIT && (
@@ -417,7 +417,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
 
               {mode === formMode.ADD && (
                 <Stack mt={5} minH={20}>
-                  <Stack direction={["column", "row"]} minH="85px">
+                  <Stack direction={['column', 'row']} minH="85px">
                     <Stack minW="225px">
                       <Box w="12rem">
                         <AdvancedModeSwitch
@@ -434,7 +434,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                     <AddCollectionNumberInput
                       type="number"
                       name="royalFee"
-                      inputWidth={"8rem"}
+                      inputWidth={'8rem'}
                       max={maxRoyalFeeRate}
                       placeholder="Royalty Fee"
                       isDisplay={isSetRoyal}
@@ -444,7 +444,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   </Stack>
 
                   <VStack pt="30px">
-                    <Text color="#fff" fontSize={["md", "lg", "lg"]}>
+                    <Text color="#fff" fontSize={['md', 'lg', 'lg']}>
                       Create new collection you will pay
                       <strong> {addingFee} $AZERO </strong> in fee to ArtZero.io
                     </Text>
@@ -464,7 +464,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 {...rest}
                 type="submit"
                 text={`${
-                  mode === formMode.ADD ? "create" : "update"
+                  mode === formMode.ADD ? 'create' : 'update'
                 } collection`}
                 isDisabled={!(dirty && isValid) && noImagesChange}
               />

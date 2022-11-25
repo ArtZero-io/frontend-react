@@ -30,13 +30,16 @@ function WalletMenu() {
         .account(activeAddress, (balance) => {
           let oneSZERO = new BN(10 ** 12);
           let balSZERO = new BN(balance.data.free, 10, 'le');
+          let miscFrozenBalSZERO = new BN(balance.data.miscFrozen, 10, 'le');
           console.log(balance?.data.toHuman());
           if (balSZERO.gt(oneSZERO)) {
-            balSZERO = balSZERO.div(new BN(10 ** 12)).toNumber();
+            balSZERO =
+              balSZERO.div(new BN(10 ** 12)).toNumber() -
+              miscFrozenBalSZERO.div(new BN(10 ** 12)).toNumber();
           } else {
             balSZERO = balSZERO.toNumber() / 10 ** 12;
           }
-
+          console.log('balSZERO - freeze', balSZERO);
           if (balSZERO >= 1) {
             balSZERO = shortenNumber(balSZERO);
           } else {
