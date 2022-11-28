@@ -266,7 +266,14 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
   return unsubscribe;
 }
 
-async function updateIsActive(caller_account, collection_address, isActive) {
+async function updateIsActive(
+  caller_account,
+  collection_address,
+  isActive,
+  dispatch,
+  txType,
+  api
+) {
   if (
     !contract ||
     !caller_account ||
@@ -292,37 +299,30 @@ async function updateIsActive(caller_account, collection_address, isActive) {
     isActive
   );
 
-  //TODO: update tx and Error handler
   contract.tx
     .updateIsActive({ gasLimit, value }, collection_address, isActive)
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
-      if (dispatchError) {
-        if (dispatchError.isModule) {
-          toast.error(`There is some error with your request`);
-        } else {
-          console.log('dispatchError ', dispatchError.toString());
-        }
-      }
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
 
-      if (status) {
-        const statusText = Object.keys(status.toHuman())[0];
-        toast.success(
-          `Update Collection Status ${
-            statusText === '0' ? 'started' : statusText.toLowerCase()
-          }.`
-        );
-
-        if (status?.isFinalized) {
-          await APICall.askBeUpdateCollectionData({
-            collection_address: collection_address,
-          });
-        }
+      if (status?.isFinalized) {
+        await APICall.askBeUpdateCollectionData({
+          collection_address: collection_address,
+        });
       }
     })
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log('e', e));
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
   return unsubscribe;
 }
+
 //GETTERS
 async function getCollectionCount(caller_account) {
   if (!contract || !caller_account) {

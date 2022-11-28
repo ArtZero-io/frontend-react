@@ -352,8 +352,6 @@ function RewardDistribution() {
                         <Td>{formatNumDynamicDecimal(item.net, 2)} AZERO</Td>
 
                         <Td>
-
-
                           {item.name !== 'TOTAL' && (
                             <CommonButton
                               h="40px"

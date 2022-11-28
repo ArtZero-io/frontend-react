@@ -39,6 +39,7 @@ export const WHITELIST_MINT = 'whitelistMint';
 //COLLECTION ACTIONS
 export const CREATE_COLLECTION = 'createCollection';
 export const EDIT_COLLECTION = 'editCollection';
+export const UPDATE_COLLECTION_STATUS = 'updateCollectionStatus';
 
 // PROJECT STATUS
 export const LIVE = 'live';

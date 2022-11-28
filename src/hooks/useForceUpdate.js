@@ -5,7 +5,7 @@ import { FINALIZED } from '@constants/index';
 import { useEffect, useState } from 'react';
 import { delay } from '../utils';
 
-function useForceUpdate(typeArray, cb) {
+function useForceUpdate(typeArray, cb, noDelay = false) {
   const dispatch = useDispatch();
   const { type, step } = useSelector((s) => s.txStatus);
 
@@ -28,9 +28,9 @@ function useForceUpdate(typeArray, cb) {
     // const diffTime = 7500 - Number(endTimeStamp - timeStamp);
     // const delayTime = diffTime > 500 ? diffTime : 500;
 
-    // 9 giay
+    // 8 giay
 
-    const delayTime = 9000;
+    const delayTime = noDelay ? 500 : 8000;
 
     const doDelay = async () => {
       try {
@@ -53,7 +53,7 @@ function useForceUpdate(typeArray, cb) {
     };
 
     doDelay();
-  }, [cb, dispatch, step, type, typeArray]);
+  }, [cb, dispatch, noDelay, step, type, typeArray]);
 
   return {
     loading,
