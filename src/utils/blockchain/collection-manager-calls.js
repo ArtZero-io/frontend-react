@@ -20,7 +20,6 @@ export const setCollectionContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
-
 };
 
 //SETTERS
@@ -79,14 +78,15 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
       });
 
       if (status?.isFinalized) {
+        toast.success('Collection is created successful!');
+
         let transactionData = data;
         await APICall.askBeUpdateCollectionData({
           collection_address: data?.nftContractAddress,
         });
         if (transactionData.attributes?.length) {
           let cacheImages = [];
-      
-      
+
           for (let i = 0; i < transactionData.attributes.length; i++) {
             console.log(transactionData.attributes[i]);
             if (transactionData.attributes[i] === 'avatar_image') {
@@ -123,9 +123,8 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
               });
             }
           }
-        
+
           if (cacheImages.length) {
- 
             await clientAPI('post', '/cacheImages', {
               images: JSON.stringify(cacheImages),
             });
@@ -177,6 +176,8 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
           caller_account,
         });
         if (status?.isFinalized) {
+          toast.success('Collection is created successful!');
+
           events.forEach(
             async ({ event: { data, method, section }, phase }) => {
               if (section === 'contracts' && method === 'ContractEmitted') {
@@ -201,14 +202,13 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
                     });
                     if (transactionData.attributes?.length) {
                       let cacheImages = [];
-                  
-                      
+
                       for (
                         let i = 0;
                         i < transactionData.attributes.length;
                         i++
                       ) {
-                         if (transactionData.attributes[i] === 'avatar_image') {
+                        if (transactionData.attributes[i] === 'avatar_image') {
                           cacheImages.push({
                             input: transactionData.attributeVals[i],
                             is1920: false,
@@ -245,9 +245,8 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
                           });
                         }
                       }
-           
+
                       if (cacheImages.length) {
-             
                         await clientAPI('post', '/cacheImages', {
                           images: JSON.stringify(cacheImages),
                         });
@@ -332,7 +331,6 @@ async function getCollectionCount(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getCollectionCount(address, {
     value: azero_value,
@@ -370,7 +368,6 @@ async function getContractById(caller_account, collection_id) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getContractById(
     address,
@@ -390,16 +387,11 @@ async function getAdminAddress(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
-
-
 
   const { result, output } = await contract.query.getAdminAddress(address, {
     value: azero_value,
     gasLimit,
   });
-
-
 
   if (result.isOk) {
     return output.toHuman();
@@ -418,7 +410,6 @@ async function isActive(caller_account, collection_address) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query[
     'crossArtZeroCollection::isActive'
@@ -440,7 +431,6 @@ async function getRoyalFee(caller_account, collection_address) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query[
     'crossArtZeroCollection::getRoyalFee'
@@ -462,7 +452,6 @@ async function getContractType(caller_account, collection_address) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query[
     'crossArtZeroCollection::getContractType'
@@ -569,7 +558,6 @@ async function owner(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query['ownable::owner'](address, {
     value: azero_value,
@@ -588,7 +576,6 @@ async function getActiveCollectionCount(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getActiveCollectionCount(
     address,
@@ -677,13 +664,14 @@ async function setMultipleAttributes(
         });
 
         if (status?.isFinalized) {
+          toast.success('Collection is updated successful!');
+
           await APICall.askBeUpdateCollectionData({
             collection_address: collection_address,
           });
           if (attributes?.length) {
             let cacheImages = [];
-        
-        
+
             for (let i = 0; i < attributes.length; i++) {
               if (attributes[i] === 'avatar_image') {
                 cacheImages.push({
@@ -719,9 +707,8 @@ async function setMultipleAttributes(
                 });
               }
             }
- 
+
             if (cacheImages.length) {
-   
               await clientAPI('post', '/cacheImages', {
                 images: JSON.stringify(cacheImages),
               });
@@ -795,8 +782,6 @@ export const withdrawCollectionContract = async (
     'withdrawFee',
     amountFormatted
   );
-
-  
 
   const txNotSign = contract.tx.withdrawFee(
     { gasLimit, value },
