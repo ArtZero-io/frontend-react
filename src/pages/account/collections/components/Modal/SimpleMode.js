@@ -11,6 +11,7 @@ import {
   IconButton,
   Tooltip,
   useBreakpointValue,
+  Text,
 } from '@chakra-ui/react';
 import { QuestionIcon } from '@chakra-ui/icons';
 import EditIcon from '@theme/assets/icon/Edit.js';
@@ -20,7 +21,14 @@ import useTxStatus from '@hooks/useTxStatus';
 import SimpleModeForm from '../Form/SimpleMode';
 import { formMode, SCROLLBAR, FINALIZED } from '@constants';
 
-function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
+function SimpleModeModal({
+  mode = formMode.ADD,
+  id,
+  nftContractAddress,
+  contractType,
+  ...rest
+}) {
+  console.log('SimpleModeModal rest', rest);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { step, onEndClick } = useTxStatus();
   const modalSize = useBreakpointValue(['xs', '4xl', '4xl']);
@@ -46,6 +54,20 @@ function SimpleModeModal({ mode = formMode.ADD, id, nftContractAddress }) {
 
       {mode === formMode.EDIT && (
         <>
+          <Text
+            h="40px"
+            px="8px"
+            bg="black"
+            top="2px"
+            zIndex="1"
+            minW="40px"
+            right="40px"
+            pos="absolute"
+            lineHeight="36px"
+            color="#7ae7ff"
+          >
+            {contractType === 2 ? 'Simple' : contractType === 1 ? 'Adv' : ''}
+          </Text>
           <IconButton
             h="40px"
             top="2px"

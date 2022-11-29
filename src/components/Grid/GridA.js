@@ -1,18 +1,18 @@
-import { Link } from "@chakra-ui/react";
-import { motion, useAnimation } from "framer-motion";
-import { memo, useEffect, useRef } from "react";
-import { Link as ReactRouterLink } from "react-router-dom";
-import AdvancedModeModal from "../../pages/account/collections/components/Modal/AdvancedMode";
-import SimpleModeModal from "../../pages/account/collections/components/Modal/SimpleMode";
-import { CollectionCard } from "../Card/Collection";
-import * as ROUTES from "@constants/routes";
-import { useDimensions } from "@chakra-ui/react";
-import { formMode } from "@constants";
+import { Link } from '@chakra-ui/react';
+import { motion, useAnimation } from 'framer-motion';
+import { memo, useEffect, useRef } from 'react';
+import { Link as ReactRouterLink } from 'react-router-dom';
+import AdvancedModeModal from '../../pages/account/collections/components/Modal/AdvancedMode';
+import SimpleModeModal from '../../pages/account/collections/components/Modal/SimpleMode';
+import { CollectionCard } from '../Card/Collection';
+import * as ROUTES from '@constants/routes';
+import { useDimensions } from '@chakra-ui/react';
+import { formMode } from '@constants';
 
 function GridA({
   collections,
   scrollToCollectionAddress,
-  variant = "my-collection",
+  variant = 'my-collection',
 }) {
   const originOffset = useRef({ top: 0, left: 0 });
   const controls = useAnimation();
@@ -32,7 +32,7 @@ function GridA({
     (dimensions?.borderBox?.width - (nftCardColumn - 1) * 30) / nftCardColumn;
 
   useEffect(() => {
-    controls.start("visible");
+    controls.start('visible');
   }, [collections, controls]);
 
   return (
@@ -43,14 +43,14 @@ function GridA({
       variants={{}}
       id="grid-item-div"
       style={{
-        position: "relative",
-        margin: "2.5rem auto",
-        display: "grid",
-        gridGap: "30px",
+        position: 'relative',
+        margin: '2.5rem auto',
+        display: 'grid',
+        gridGap: '30px',
         gridTemplateColumns: `repeat(auto-fill, minmax(min(100%, ${nftCardWidth}px), 1fr))`,
-        gridAutoRows: "31.25rem",
-        gridAutoFlow: "dense",
-        justifyItems: "center",
+        gridAutoRows: '31.25rem',
+        gridAutoFlow: 'dense',
+        justifyItems: 'center',
       }}
     >
       {collections?.map((c, i) => (
@@ -61,29 +61,31 @@ function GridA({
           originOffset={originOffset}
           id="grid-item-a"
         >
-          {variant === "my-collection" && Number(c.contractType) === 2 && (
-            <SimpleModeModal
-              mode={formMode.EDIT}
-              id={c.index}
-              pos={"absolute"}
-              {...c}
-            />
+          {variant === 'my-collection' && Number(c.contractType) === 2 && (
+            <>
+              <SimpleModeModal
+                mode={formMode.EDIT}
+                id={c.index}
+                pos={'absolute'}
+                {...c}
+              />
+            </>
           )}
 
-          {variant === "my-collection" && Number(c.contractType) === 1 && (
+          {variant === 'my-collection' && Number(c.contractType) === 1 && (
             <AdvancedModeModal mode={formMode.EDIT} id={c.index} {...c} />
           )}
           <Link
             as={ReactRouterLink}
             to={
-              variant === "my-projects"
+              variant === 'my-projects'
                 ? `${ROUTES.LAUNCHPAD_BASE}/${c?.nftContractAddress}`
                 : `${ROUTES.DETAIL_COLLECTION_BASE}/${c?.nftContractAddress}?is_for_sale=true`
             }
-            style={{ textDecoration: "none" }}
+            style={{ textDecoration: 'none' }}
             onClick={() =>
               sessionStorage.setItem(
-                "scroll-position-collection-nft-contract-address",
+                'scroll-position-collection-nft-contract-address',
                 c.nftContractAddress
               )
             }
@@ -145,8 +147,8 @@ function GridItemA({ delayPerPixel, i, originIndex, originOffset, children }) {
       variants={itemVariants}
       custom={delayRef}
       style={{
-        position: "relative",
-        width: "100%",
+        position: 'relative',
+        width: '100%',
         // maxWidth: "24.5625rem"
       }}
     >
