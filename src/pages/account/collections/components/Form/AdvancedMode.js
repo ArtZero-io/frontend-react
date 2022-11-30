@@ -9,6 +9,7 @@ import { useSubstrateState } from '@utils/substrate';
 import { isValidAddressPolkadotAddress } from '@utils';
 import collection_manager_calls from '@utils/blockchain/collection-manager-calls';
 
+// eslint-disable-next-line no-unused-vars
 import ImageUpload from '@components/ImageUpload/Collection';
 import AdvancedModeInput from '@components/Input/Input';
 import AdvancedModeSwitch from '@components/Switch/Switch';
@@ -26,6 +27,7 @@ import useTxStatus from '@hooks/useTxStatus';
 import CommonButton from '@components/Button/CommonButton';
 import { setTxStatus } from '@store/actions/txStatus';
 import { APICall } from '../../../../../api/client';
+import ImageUploadThumbnail from '@components/ImageUpload/Thumbnail';
 
 const AdvancedModeForm = ({ mode = 'add', id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState('');
@@ -355,7 +357,7 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
                 justifyContent="space-between"
                 direction={{ base: 'column', md: 'row' }}
               >
-                <Stack
+                {/* <Stack
                   w="50%"
                   direction="column"
                   alignItems="start"
@@ -381,7 +383,7 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
                     setImageIPFSUrl={setHeaderIPFSUrl}
                     limitedSize={{ width: '1920', height: '600' }}
                   />
-                </Stack>
+                </Stack> */}
 
                 <Stack
                   w="50%"
@@ -389,7 +391,7 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
                   alignItems="start"
                   justifyContent="end"
                 >
-                  <ImageUpload
+                  {/* <ImageUpload
                     mode={mode}
                     isBanner={true}
                     isDisabled={actionType}
@@ -398,7 +400,7 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
                     imageIPFSUrl={headerSquareIPFSUrl}
                     setImageIPFSUrl={setHeaderSquareIPFSUrl}
                     limitedSize={{ width: '500', height: '500' }}
-                  />
+                  /> */}
 
                   {mode === formMode.EDIT && (
                     <Box my="30px" py="30px">
@@ -412,6 +414,116 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
                       </Box>
                     </Box>
                   )}
+                </Stack>
+              </Stack>
+
+              <Stack w="full">
+                <Stack
+                  pb="30px"
+                  alignItems="start"
+                  justifyContent="space-between"
+                  direction={['column', 'row']}
+                >
+                  <Stack
+                    w={{ base: 'full', xl: '50%' }}
+                    direction="column"
+                    alignItems={['center', 'start']}
+                    justifyContent="end"
+                  >
+                    <Stack w="full" textAlign="left">
+                      <Text>Choose avatar image</Text>
+                      <Text
+                        ml={2}
+                        fontSize={['xs', 'sm']}
+                        color="brand.grayLight"
+                      >
+                        This image will also be used for navigation. <br />
+                        <br />
+                      </Text>
+                    </Stack>
+
+                    <VStack>
+                      <ImageUploadThumbnail
+                        mode={mode}
+                        isBanner={false}
+                        id="collection-avatar"
+                        isDisabled={actionType}
+                        imageIPFSUrl={avatarIPFSUrl}
+                        setImageIPFSUrl={setAvatarIPFSUrl}
+                        limitedSize={{ width: '500', height: '500' }}
+                        isRounded={true}
+                        width="260px"
+                        height="260px"
+                      />
+                    </VStack>
+                  </Stack>
+
+                  <Stack
+                    textAlign="left"
+                    pt={{ base: '30px', md: '0px' }}
+                    w={{ base: 'full', md: '50%' }}
+                    direction="column"
+                    alignItems="start"
+                    justifyContent="start"
+                  >
+                    <Text>Choose featured image</Text>
+                    <Text
+                      ml={2}
+                      fontSize={['xs', 'sm']}
+                      color="brand.grayLight"
+                    >
+                      This image will be used for featuring your collection on
+                      the homepage, category pages, or other promotional areas
+                      of ArtZero.
+                    </Text>
+                    <ImageUploadThumbnail
+                      mode={mode}
+                      isBanner={false}
+                      isDisabled={actionType}
+                      id="collection-header-square"
+                      imageIPFSUrl={headerSquareIPFSUrl}
+                      setImageIPFSUrl={setHeaderSquareIPFSUrl}
+                      limitedSize={{ width: '400', height: '260' }}
+                      width={['100%', '400px']}
+                      height={['200px', '260px']}
+                      // height={['170px', '260px']}
+                    />
+                  </Stack>
+                </Stack>
+
+                <Stack pb="30px">
+                  <Stack
+                    w="full"
+                    direction="column"
+                    alignItems="start"
+                    justifyContent="end"
+                    textAlign="left"
+                  >
+                    <Text>Choose header image</Text>
+
+                    <Text
+                      ml={2}
+                      fontSize={['xs', 'sm']}
+                      color="brand.grayLight"
+                    >
+                      This image will appear at the top of your collection page.
+                      Avoid including too much text in this banner image, as the
+                      dimensions change on different devices.
+                    </Text>
+
+                    <ImageUploadThumbnail
+                      id="collection-header"
+                      mode={mode}
+                      isBanner={true}
+                      isDisabled={actionType}
+                      imageIPFSUrl={headerIPFSUrl}
+                      setImageIPFSUrl={setHeaderIPFSUrl}
+                      limitedSize={{ width: '1920', height: '600' }}
+                      width="100%"
+                      // height={['80px', '260px']}
+                      height={['120px', '260px']}
+                    />
+                  </Stack>
                 </Stack>
               </Stack>
 
