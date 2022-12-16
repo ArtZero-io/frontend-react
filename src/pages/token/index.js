@@ -439,9 +439,10 @@ function TokenPage() {
             >
               <Stack minW={['auto', '484px']}>
                 <ImageCloudFlare
+                  size={500}
                   maxH={['375px', '484px']}
                   maxW={['375px', '484px']}
-                  size={500}
+                  objectFitContain={true}
                   src={token?.avatar}
                 />
 

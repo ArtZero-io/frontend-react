@@ -126,7 +126,6 @@ function MyNFTGroupCard({
 
     getAttributesData();
     return () => (isSubscribed = false);
-
   }, [api, currentAccount, listNFT, nftContractAddress, showOnChainMetadata]);
 
   return (
@@ -228,7 +227,6 @@ function GridNftA({
 
   async function handleStakeAction(action, tokenIDArray) {
     if (isStakingContractLocked) {
-
       return toast.error("Staking contract is locked!");
     }
 

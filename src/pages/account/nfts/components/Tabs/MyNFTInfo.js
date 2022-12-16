@@ -290,6 +290,7 @@ function MyNFTTabInfo(props) {
           h="484px"
           src={avatar}
           size={500}
+          objectFitContain={true}
           w={{ base: '404px', xl: '484px' }}
         />
 

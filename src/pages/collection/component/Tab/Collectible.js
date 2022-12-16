@@ -224,6 +224,7 @@ const NFTTabCollectible = (props) => {
         <ImageCloudFlare
           h={['484px']}
           src={avatar}
+          objectFitContain={true}
           w={{ base: '404px', xl: '484px' }}
         />
 
