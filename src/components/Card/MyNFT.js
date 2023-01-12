@@ -14,29 +14,29 @@ import {
   HStack,
   Checkbox,
   useBreakpointValue,
-} from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
-import AzeroIcon from '@theme/assets/icon/Azero.js';
+} from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import AzeroIcon from "@theme/assets/icon/Azero.js";
 import {
   getCloudFlareImage,
   secondsToTime,
   formatNumDynamicDecimal,
-} from '@utils';
-import staking_calls from '@utils/blockchain/staking_calls';
-import { useSubstrateState } from '@utils/substrate';
-import toast from 'react-hot-toast';
-import useInterval from 'use-interval';
-import { motion } from 'framer-motion';
+} from "@utils";
+import staking_calls from "@utils/blockchain/staking_calls";
+import { useSubstrateState } from "@utils/substrate";
+import toast from "react-hot-toast";
+import useInterval from "use-interval";
+import { motion } from "framer-motion";
 import {
   STAKE,
   UNSTAKE,
   REQUEST_UNSTAKE,
   CANCEL_REQUEST_UNSTAKE,
-} from '@constants';
-import { useHistory } from 'react-router-dom';
-import CommonButton from '../Button/CommonButton';
-import useTxStatus from '@hooks/useTxStatus';
-import { MAX_ITEM_STAKE } from '@constants';
+} from "@constants";
+import { useHistory } from "react-router-dom";
+import CommonButton from "../Button/CommonButton";
+import useTxStatus from "@hooks/useTxStatus";
+import { MAX_ITEM_STAKE } from "@constants";
 
 // Stake Status
 // 0 not show, 1 not staked,
@@ -94,7 +94,7 @@ function MyNFTCard({
       return;
     }
 
-    return toast.error('Please select same action!');
+    return toast.error("Please select same action!");
   };
 
   useInterval(() => {
@@ -119,7 +119,7 @@ function MyNFTCard({
         tokenID
       );
       /* eslint-disable no-useless-escape */
-      const unstakeRequestTimeTmp = time.replace(/\,/g, '');
+      const unstakeRequestTimeTmp = time.replace(/\,/g, "");
       setUnstakeRequestTime(unstakeRequestTimeTmp);
 
       let limitUnstakeTimeTmp = await staking_calls.getLimitUnstakeTime(
@@ -147,7 +147,7 @@ function MyNFTCard({
     if (stakeStatus === 3) getRequestTime();
   }, [currentAccount, stakeStatus, tokenID]);
 
-  const [projImage, setProjImage] = useState('');
+  const [projImage, setProjImage] = useState("");
 
   useEffect(() => {
     avatar &&
@@ -160,32 +160,32 @@ function MyNFTCard({
     <motion.div
       className="my-nft-card"
       whileHover={{
-        borderColor: '#7ae7ff',
+        borderColor: "#7ae7ff",
       }}
       style={{
-        position: 'relative',
-        borderWidth: '2px',
+        position: "relative",
+        borderWidth: "2px",
         borderColor: `${
-          multiStakeData?.list?.includes(tokenID) ? '#7ae7ff' : 'transparent'
+          multiStakeData?.list?.includes(tokenID) ? "#7ae7ff" : "transparent"
         }`,
         maxWidth: cardSize,
 
-        transitionDuration: '0.15s',
-        transitionProperty: 'all',
-        transitionTimingFunction: 'cubic-bezier(.17,.67,.83,.67)',
+        transitionDuration: "0.15s",
+        transitionProperty: "all",
+        transitionTimingFunction: "cubic-bezier(.17,.67,.83,.67)",
       }}
     >
-      {!is_for_sale && location?.pathname === '/account/stakes' ? (
+      {!is_for_sale && location?.pathname === "/account/stakes" ? (
         <Checkbox
           sx={{
-            'span.chakra-checkbox__control': {
-              borderRadius: '0',
-              borderWidth: '0.2px',
-              borderColor: 'brand.blue',
-              backgroundColor: 'brand.semiBlack',
+            "span.chakra-checkbox__control": {
+              borderRadius: "0",
+              borderWidth: "0.2px",
+              borderColor: "brand.blue",
+              backgroundColor: "brand.semiBlack",
             },
-            'span.chakra-checkbox__control[data-checked] > div': {
-              color: 'brand.blue',
+            "span.chakra-checkbox__control[data-checked] > div": {
+              color: "brand.blue",
             },
           }}
           size="lg"
@@ -201,7 +201,7 @@ function MyNFTCard({
           }
           onChange={(e) => handleOnChangeCheckbox(e)}
         />
-      ) : null}{' '}
+      ) : null}{" "}
       <Flex
         direction="column"
         align="center"
@@ -215,14 +215,14 @@ function MyNFTCard({
             alt={nftName}
             w="full"
             h="full"
-            objectFit="cover"
             src={projImage}
+            objectFit="contain"
             fallback={<Skeleton w={imgCardSize} h={imgCardSize} />}
           />
         </Square>
 
         <Box w="full" p={3}>
-          <Heading mb={3} fontSize={['xs', 'md']} textAlign="left">
+          <Heading mb={3} fontSize={["xs", "md"]} textAlign="left">
             {nftName}
           </Heading>
 
@@ -231,9 +231,9 @@ function MyNFTCard({
               <Text
                 textAlign="center"
                 color="brand.grayLight"
-                fontSize={['xs', 'md']}
+                fontSize={["xs", "md"]}
               >
-                Unstake in {countdownTime?.h || 0}h : {countdownTime?.m || 0}m :{' '}
+                Unstake in {countdownTime?.h || 0}h : {countdownTime?.m || 0}m :{" "}
                 {countdownTime?.s || 0}s
               </Text>
             </Flex>
@@ -250,15 +250,15 @@ function MyNFTCard({
                 mx="0"
                 variant="outline"
                 // minW="100px"
-                height={['36px', '40px']}
+                height={["36px", "40px"]}
                 text={
                   stakeStatus === 1
-                    ? 'Stake'
+                    ? "Stake"
                     : stakeStatus === 2
-                    ? 'Request Unstake'
+                    ? "Request Unstake"
                     : !isUnstakeTime
-                    ? 'Cancel Unstake'
-                    : 'Unstake'
+                    ? "Cancel Unstake"
+                    : "Unstake"
                 }
                 onClick={() =>
                   handleStakeAction(
@@ -282,9 +282,9 @@ function MyNFTCard({
               <Flex align="center" justify="start" w="full">
                 <VStack align="start">
                   <Text ml={1} color="brand.grayLight">
-                    {is_for_sale && 'For Sale At'}
+                    {is_for_sale && "For Sale At"}
                   </Text>
-                  <Tag minH={['30px', '40px']}>
+                  <Tag minH={["30px", "40px"]}>
                     <TagLabel>
                       {formatNumDynamicDecimal(price / 10 ** 12)}
                     </TagLabel>
@@ -299,10 +299,10 @@ function MyNFTCard({
 
                 <HStack align="center" justify="flex-end">
                   <Text color="brand.grayLight" textAlign="center" w="full">
-                    {isBid?.status && 'My offer'}
+                    {isBid?.status && "My offer"}
                   </Text>
                   {isBid?.status ? (
-                    <HStack minH={'20px'} bg="transparent">
+                    <HStack minH={"20px"} bg="transparent">
                       <TagLabel bg="transparent">
                         {formatNumDynamicDecimal(isBid?.bidPrice / 10 ** 12)}
                       </TagLabel>
@@ -320,10 +320,10 @@ function MyNFTCard({
                       color="brand.grayLight"
                     >
                       <Text textAlign="center" w="full">
-                        {highest_bid ? '  Best offer' : 'No offer'}
+                        {highest_bid ? "  Best offer" : "No offer"}
                       </Text>
                       {highest_bid ? (
-                        <HStack ml={'6px'} bg="transparent" i>
+                        <HStack ml={"6px"} bg="transparent" i>
                           <Text color="#fff" bg="transparent">
                             {formatNumDynamicDecimal(highest_bid / 10 ** 12)}
                           </Text>

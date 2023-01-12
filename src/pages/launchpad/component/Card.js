@@ -7,18 +7,18 @@ import {
   HStack,
   Progress,
   Text,
-} from "@chakra-ui/react";
-import React, { useCallback, useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { useHistory } from "react-router-dom";
-import { secondsToTime } from "@utils/index";
-import * as ROUTES from "@constants/routes";
-import useInterval from "use-interval";
-import FadeIn from "react-fade-in";
-import { useSubstrateState } from "@utils/substrate";
-import { getCurrentPhaseStatusOfProject } from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
-import { getPublicCurrentAccount } from "@utils";
-import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
+} from '@chakra-ui/react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
+import { useHistory } from 'react-router-dom';
+import { secondsToTime } from '@utils/index';
+import * as ROUTES from '@constants/routes';
+import useInterval from 'use-interval';
+import FadeIn from 'react-fade-in';
+import { useSubstrateState } from '@utils/substrate';
+import { getCurrentPhaseStatusOfProject } from '@utils/blockchain/launchpad-psp34-nft-standard-calls';
+import { getPublicCurrentAccount } from '@utils';
+import ImageCloudFlare from '../../../components/ImageWrapper/ImageCloudFlare';
 
 export const Card = ({ variant, project }) => {
   const history = useHistory();
@@ -36,13 +36,13 @@ export const Card = ({ variant, project }) => {
   } = project;
 
   useInterval(() => {
-    if (variant !== "upcoming") {
+    if (variant !== 'upcoming') {
       return;
     }
 
     const now = new Date().getTime() / 1000;
 
-    const timeLeft = startTime.replaceAll(",", "") - now;
+    const timeLeft = startTime - now;
 
     if (timeLeft <= 0) {
       setCountdown({ h: 0, m: 0, s: 0 });
@@ -67,8 +67,8 @@ export const Card = ({ variant, project }) => {
       }
 
       setProgressPercent(
-        (currPhaseStatus?.claimedAmount?.replaceAll(",", "") /
-          currPhaseStatus?.totalAmount?.replaceAll(",", "")) *
+        (currPhaseStatus?.claimedAmount?.replaceAll(',', '') /
+          currPhaseStatus?.totalAmount?.replaceAll(',', '')) *
           100
       );
     } catch (error) {
@@ -85,7 +85,7 @@ export const Card = ({ variant, project }) => {
   return (
     <FadeIn>
       <Flex
-        m={{ base: "10px", "2xl": "15px" }}
+        m={{ base: '10px', '2xl': '15px' }}
         h="full"
         w="full"
         shadow="lg"
@@ -97,7 +97,7 @@ export const Card = ({ variant, project }) => {
         bg="brand.grayDark"
         position="relative"
       >
-        {variant === "live" && (
+        {variant === 'live' && (
           <Flex
             alignItems="start"
             justifyContent="flex-start"
@@ -120,10 +120,10 @@ export const Card = ({ variant, project }) => {
                   duration: 1,
                 }}
                 style={{
-                  top: "7px",
-                  left: "7px",
-                  position: "absolute",
-                  overflow: "visible",
+                  top: '7px',
+                  left: '7px',
+                  position: 'absolute',
+                  overflow: 'visible',
                 }}
               >
                 <Circle bg="white" h="16px" w="16px" />
@@ -142,7 +142,7 @@ export const Card = ({ variant, project }) => {
           </Flex>
         )}
 
-        {variant === "upcoming" && (
+        {variant === 'upcoming' && (
           <Flex
             alignItems="center"
             justifyContent="center"
@@ -157,7 +157,7 @@ export const Card = ({ variant, project }) => {
           </Flex>
         )}
 
-        {variant === "ended" && (
+        {variant === 'ended' && (
           <Flex
             alignItems="center"
             justifyContent="center"
@@ -183,20 +183,20 @@ export const Card = ({ variant, project }) => {
         />
 
         <Box w="full" px="16px" py="20px">
-          {variant === "live" && (
+          {variant === 'live' && (
             <Progress w="258px" h="8px" value={progressPercent} mb="12px" />
           )}
 
           <Heading
-            mt={variant === "live" ? "20px" : 0}
+            mt={variant === 'live' ? '20px' : 0}
             mb="14px"
-            fontSize={["15px", "16px", "17px"]}
+            fontSize={['15px', '16px', '17px']}
             textAlign="center"
           >
             {name}
           </Heading>
 
-          {variant === "upcoming" && (
+          {variant === 'upcoming' && (
             <HStack
               alignItems="center"
               justifyContent="center"
@@ -206,7 +206,7 @@ export const Card = ({ variant, project }) => {
             >
               <Text mx="10px">
                 {Math.ceil(countdown?.h / 24)} day
-                {Math.ceil(countdown?.h / 24) > 1 ? "s" : ""}
+                {Math.ceil(countdown?.h / 24) > 1 ? 's' : ''}
               </Text>
               <Text>:</Text>
               <Text mx="10px">{countdown?.h % 24} hrs</Text>
@@ -228,7 +228,7 @@ export const Card = ({ variant, project }) => {
           >
             view project
           </Button>
-          {variant === "ended" && (
+          {variant === 'ended' && (
             <Button
               mt="10px"
               variant="outline"

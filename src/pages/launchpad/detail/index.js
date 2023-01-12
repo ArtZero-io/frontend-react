@@ -992,16 +992,20 @@ const LaunchpadDetailPage = () => {
                       {/* Whitelist Mint */}
                       <UnorderedList pl="20px">
                         {!currentAccount && (
-                          <Text>Connect to check your whitelist</Text>
+                          <ListItem>
+                            <Text>Connect to check your whitelist</Text>
+                          </ListItem>
                         )}
-                        <ListItem>
-                          {/* Not in whitelist */}
-                          {currentAccount && !userWLInfo[index] && (
+                        {/* Not in whitelist */}
+                        {currentAccount && !userWLInfo[index] && (
+                          <ListItem>
                             <Text>You are not in the whitelist!</Text>
-                          )}
+                          </ListItem>
+                        )}
 
-                          {/* Have whitelist */}
-                          {currentAccount && userWLInfo[index] && (
+                        {/* Have whitelist */}
+                        {currentAccount && userWLInfo[index] && (
+                          <ListItem>
                             <Text>
                               You are whitelisted to mint{' '}
                               <Text as="span" color="#fff">
@@ -1032,8 +1036,8 @@ const LaunchpadDetailPage = () => {
                                 </Text>
                               </Skeleton>
                             </Text>
-                          )}
-                        </ListItem>
+                          </ListItem>
+                        )}
 
                         {/* Public Mint */}
                         <ListItem>
@@ -1048,7 +1052,7 @@ const LaunchpadDetailPage = () => {
                             (scroll down to view your NFTs)
                           </Text>
                         </ListItem>
-                      </UnorderedList>{' '}
+                      </UnorderedList>
                     </Stack>
                   </Stack>
                   <Divider mt={['20px', '30px']} />

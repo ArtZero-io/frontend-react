@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,40 +18,40 @@ import {
   InputRightElement,
   Tooltip,
   useBreakpointValue,
-} from "@chakra-ui/react";
-import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { MdOutlineArrowBackIos } from "react-icons/md";
+} from '@chakra-ui/react';
+import AzeroIcon from '@theme/assets/icon/Azero.js';
+import { MdOutlineArrowBackIos } from 'react-icons/md';
 
-import toast from "react-hot-toast";
+import toast from 'react-hot-toast';
 import {
   Link as ReactRouterLink,
   useHistory,
   useParams,
-} from "react-router-dom";
+} from 'react-router-dom';
 
-import { APICall } from "@api/client";
-import { useSubstrateState } from "@utils/substrate";
+import { APICall } from '@api/client';
+import { useSubstrateState } from '@utils/substrate';
 
 import {
   formatNumDynamicDecimal,
   getPublicCurrentAccount,
   getTraitCount,
-} from "@utils";
-import { getNFTDetails } from "@utils/blockchain/nft721-psp34-standard-calls";
-import marketplace from "@utils/blockchain/marketplace";
-import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
+} from '@utils';
+import { getNFTDetails } from '@utils/blockchain/nft721-psp34-standard-calls';
+import marketplace from '@utils/blockchain/marketplace';
+import marketplace_contract_calls from '@utils/blockchain/marketplace_contract_calls';
 
-import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
+import nft721_psp34_standard from '@utils/blockchain/nft721-psp34-standard';
+import nft721_psp34_standard_calls from '@utils/blockchain/nft721-psp34-standard-calls';
 
-import staking_calls from "@utils/blockchain/staking_calls";
+import staking_calls from '@utils/blockchain/staking_calls';
 
-import NftLayout from "@components/Layout/NftLayout";
-import CommonButton from "@components/Button/CommonButton";
-import ModalLoader from "@components/Loader/ModalLoader";
-import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
-import { useDispatch } from "react-redux";
-import { clearTxStatus, setTxStatus } from "@store/actions/txStatus";
+import NftLayout from '@components/Layout/NftLayout';
+import CommonButton from '@components/Button/CommonButton';
+import ModalLoader from '@components/Loader/ModalLoader';
+import { fetchUserBalance } from '../launchpad/component/Form/AddNewProject';
+import { useDispatch } from 'react-redux';
+import { clearTxStatus, setTxStatus } from '@store/actions/txStatus';
 import {
   BUY,
   BID,
@@ -60,32 +60,32 @@ import {
   ACCEPT_BID,
   LIST_TOKEN,
   UNLIST_TOKEN,
-} from "@constants";
-import useTxStatus from "@hooks/useTxStatus";
-import useForceUpdate from "@hooks/useForceUpdate";
-import { ContractPromise } from "@polkadot/api-contract";
-import { delay } from "@utils";
+} from '@constants';
+import useTxStatus from '@hooks/useTxStatus';
+import useForceUpdate from '@hooks/useForceUpdate';
+import { ContractPromise } from '@polkadot/api-contract';
+import { delay } from '@utils';
 
-import LockNFTModalMobile from "@components/Modal/LockNFTModalMobile";
-import { formMode } from "@constants";
-import AddNewNFTModal from "@pages/collection/component/Modal/AddNewNFT";
+import LockNFTModalMobile from '@components/Modal/LockNFTModalMobile';
+import { formMode } from '@constants';
+import AddNewNFTModal from '@pages/collection/component/Modal/AddNewNFT';
 import {
   fetchMyPMPStakedCount,
   fetchMyTradingFee,
-} from "@pages/account/stakes";
-import TransferNFTModalMobile from "@components/Modal/TransferNFTModalMobile";
-import { truncateStr } from "@utils";
-import UnlockIcon from "@theme/assets/icon/Unlock";
-import LockIcon from "@theme/assets/icon/Lock";
-import PropCard from "@components/Card/PropCard";
-import LevelCard from "@components/Card/LevelCard";
-import { Helmet } from "react-helmet";
-import ImageCloudFlare from "../../components/ImageWrapper/ImageCloudFlare";
-import SocialShare from "@components/SocialShare/SocialShare";
-import CommonTabs from "@components/Tabs/CommonTabs";
-import OwnershipHistory from "../collection/component/Tab/OwnershipHistory";
-import TxHistory from "../collection/component/Tab/TxHistory";
-import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
+} from '@pages/account/stakes';
+import TransferNFTModalMobile from '@components/Modal/TransferNFTModalMobile';
+import { truncateStr } from '@utils';
+import UnlockIcon from '@theme/assets/icon/Unlock';
+import LockIcon from '@theme/assets/icon/Lock';
+import PropCard from '@components/Card/PropCard';
+import LevelCard from '@components/Card/LevelCard';
+import { Helmet } from 'react-helmet';
+import ImageCloudFlare from '../../components/ImageWrapper/ImageCloudFlare';
+import SocialShare from '@components/SocialShare/SocialShare';
+import CommonTabs from '@components/Tabs/CommonTabs';
+import OwnershipHistory from '../collection/component/Tab/OwnershipHistory';
+import TxHistory from '../collection/component/Tab/TxHistory';
+import MyNFTOffer from '@pages/account/nfts/components/Tabs/MyNFTOffers';
 function TokenPage() {
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
@@ -171,8 +171,8 @@ function TokenPage() {
             //sort highest price first
             listBidder.sort((a, b) => {
               return (
-                b.bidValue.replaceAll(",", "") * 1 -
-                a.bidValue.replaceAll(",", "") * 1
+                b.bidValue.replaceAll(',', '') * 1 -
+                a.bidValue.replaceAll(',', '') * 1
               );
             });
 
@@ -187,7 +187,7 @@ function TokenPage() {
             const myBid = listBidder.filter((item) => item.isMyBid === true);
             if (myBid.length) {
               const bidValue =
-                (myBid[0].bidValue.replaceAll(",", "") * 1) / 10 ** 12;
+                (myBid[0].bidValue.replaceAll(',', '') * 1) / 10 ** 12;
 
               setBidPrice(bidValue);
               setIsAlreadyBid(true);
@@ -216,7 +216,7 @@ function TokenPage() {
 
   useEffect(() => {
     if (!currentAccount) {
-      toast.error("Please connect wallet for full-function using!");
+      toast.error('Please connect wallet for full-function using!');
     }
 
     fetchData();
@@ -354,23 +354,23 @@ function TokenPage() {
     token?.price,
   ]);
 
-  const iconWidth = useBreakpointValue(["40px", "50px"]);
-  const imageUrl = token?.avatar?.replace("ipfs://", "https://ipfs.io/ipfs/");
+  const iconWidth = useBreakpointValue(['40px', '50px']);
+  const imageUrl = token?.avatar?.replace('ipfs://', 'https://ipfs.io/ipfs/');
   const gridSize = useBreakpointValue({ base: `8rem`, md: `11rem` });
 
   const tabsData = [
     {
-      label: "offers",
+      label: 'offers',
       component: <MyNFTOffer {...token} {...collection} />,
       isDisabled: actionType || !token?.is_for_sale,
     },
     {
-      label: "owner history",
+      label: 'owner history',
       component: <OwnershipHistory {...token} {...collection} />,
       isDisabled: actionType,
     },
     {
-      label: "tx history",
+      label: 'tx history',
       component: <TxHistory {...token} {...collection} />,
       isDisabled: actionType,
     },
@@ -412,8 +412,8 @@ function TokenPage() {
               p="18px"
               bg="black"
               w="full"
-              px={["20px", "8px"]}
-              maxW={["full", "1160px"]}
+              px={['20px', '8px']}
+              maxW={['full', '1160px']}
             >
               <Breadcrumb w="full">
                 <BreadcrumbItem isCurrentPage>
@@ -433,26 +433,27 @@ function TokenPage() {
             <Stack
               px="20px"
               pt="17px"
-              direction={["column", "row"]}
-              maxW={["full", "1200px"]}
+              direction={['column', 'row']}
+              maxW={['full', '1200px']}
               spacing="25px"
             >
-              <Stack minW={["auto", "484px"]}>
+              <Stack minW={['auto', '484px']}>
                 <ImageCloudFlare
-                  maxH={["375px", "484px"]}
-                  maxW={["375px", "484px"]}
                   size={500}
+                  maxH={['375px', '484px']}
+                  maxW={['375px', '484px']}
+                  objectFitContain={true}
                   src={token?.avatar}
                 />
 
                 <Stack spacing="5px" w="full">
-                  <Heading fontSize={["xl", "3xl"]} isTruncated>
+                  <Heading fontSize={['xl', '3xl']} isTruncated>
                     {token?.nftName}
                   </Heading>
 
                   <Text
                     isTruncated
-                    maxW={["300px", "600px"]}
+                    maxW={['300px', '600px']}
                     fontSize="lg"
                     color="brand.grayLight"
                   >
@@ -460,7 +461,7 @@ function TokenPage() {
                   </Text>
 
                   <Text>
-                    Owned by{" "}
+                    Owned by{' '}
                     <Link
                       // to="/user/xxx"
                       to="#"
@@ -478,7 +479,7 @@ function TokenPage() {
                   py="20px"
                   spacing="10px"
                   justify="start"
-                  display={["none", "flex"]}
+                  display={['none', 'flex']}
                 >
                   {!token?.is_locked &&
                     collection?.showOnChainMetadata &&
@@ -505,15 +506,15 @@ function TokenPage() {
                           style={{
                             width: iconWidth,
                             height: iconWidth,
-                            display: "inline-flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            border: "2px solid #333333",
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            border: '2px solid #333333',
                           }}
                         >
                           <UnlockIcon
-                            width={["20px", "25px"]}
-                            height={["20px", "25px"]}
+                            width={['20px', '25px']}
+                            height={['20px', '25px']}
                           />
                         </span>
                       </Tooltip>
@@ -531,15 +532,15 @@ function TokenPage() {
                         style={{
                           width: iconWidth,
                           height: iconWidth,
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          border: "2px solid #333333",
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          border: '2px solid #333333',
                         }}
                       >
                         <UnlockIcon
-                          width={["20px", "25px"]}
-                          height={["20px", "25px"]}
+                          width={['20px', '25px']}
+                          height={['20px', '25px']}
                         />
                       </span>
                     </Tooltip>
@@ -557,15 +558,15 @@ function TokenPage() {
                         style={{
                           width: iconWidth,
                           height: iconWidth,
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          border: "2px solid #333333",
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          border: '2px solid #333333',
                         }}
                       >
                         <LockIcon
-                          width={["20px", "25px"]}
-                          height={["20px", "25px"]}
+                          width={['20px', '25px']}
+                          height={['20px', '25px']}
                         />
                       </span>
                     </Tooltip>
@@ -601,7 +602,7 @@ function TokenPage() {
               </Stack>
 
               {/* Mobile */}
-              <HStack display={["flex", "none"]} spacing="10px" justify="start">
+              <HStack display={['flex', 'none']} spacing="10px" justify="start">
                 {!token?.is_locked &&
                   collection?.showOnChainMetadata &&
                   isOwner && (
@@ -627,15 +628,15 @@ function TokenPage() {
                         style={{
                           width: iconWidth,
                           height: iconWidth,
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          border: "2px solid #333333",
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          border: '2px solid #333333',
                         }}
                       >
                         <UnlockIcon
-                          width={["20px", "25px"]}
-                          height={["20px", "25px"]}
+                          width={['20px', '25px']}
+                          height={['20px', '25px']}
                         />
                       </span>
                     </Tooltip>
@@ -653,15 +654,15 @@ function TokenPage() {
                       style={{
                         width: iconWidth,
                         height: iconWidth,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        border: "2px solid #333333",
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        border: '2px solid #333333',
                       }}
                     >
                       <UnlockIcon
-                        width={["20px", "25px"]}
-                        height={["20px", "25px"]}
+                        width={['20px', '25px']}
+                        height={['20px', '25px']}
                       />
                     </span>
                   </Tooltip>
@@ -679,15 +680,15 @@ function TokenPage() {
                       style={{
                         width: iconWidth,
                         height: iconWidth,
-                        display: "inline-flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        border: "2px solid #333333",
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        border: '2px solid #333333',
                       }}
                     >
                       <LockIcon
-                        width={["20px", "25px"]}
-                        height={["20px", "25px"]}
+                        width={['20px', '25px']}
+                        height={['20px', '25px']}
                       />
                     </span>
                   </Tooltip>
@@ -726,17 +727,17 @@ function TokenPage() {
               <Stack
                 w="full"
                 spacing="0px"
-                px={["0px"]}
-                minW={["auto", "650px"]}
+                px={['0px']}
+                minW={['auto', '650px']}
               >
                 <Stack hidden spacing="5px" w="full">
-                  <Heading fontSize={["xl", "3xl"]} isTruncated>
+                  <Heading fontSize={['xl', '3xl']} isTruncated>
                     {token?.nftName}
                   </Heading>
 
                   <Text
                     isTruncated
-                    maxW={["300px", "600px"]}
+                    maxW={['300px', '600px']}
                     fontSize="lg"
                     color="brand.grayLight"
                   >
@@ -744,7 +745,7 @@ function TokenPage() {
                   </Text>
 
                   <Text>
-                    Owned by{" "}
+                    Owned by{' '}
                     <Link
                       // to="/user/xxx"
                       to="#"
@@ -768,7 +769,7 @@ function TokenPage() {
                   ) : (
                     // THIS LINE FUCKING FIX FOR SAFARI IOS
                     // FUCKING IOS FUCKING IOS FUCKING IOS
-                    <div style={{ display: "grid" }}>
+                    <div style={{ display: 'grid' }}>
                       <Grid
                         // maxH={!token?.is_for_sale ? "245px" : "155px"}
                         w="full"
@@ -777,9 +778,9 @@ function TokenPage() {
                         templateColumns={`repeat(auto-fill, minmax(min(100%, ${gridSize}), 1fr))`}
                       >
                         {token?.attrsList
-                          .filter(
+                          ?.filter(
                             (i) =>
-                              !JSON.stringify(Object.values(i)).includes("|")
+                              !JSON.stringify(Object.values(i)).includes('|')
                           )
                           .map((item, idx) => {
                             return (
@@ -797,8 +798,8 @@ function TokenPage() {
                           })}
 
                         {token?.attrsList
-                          .filter((i) =>
-                            JSON.stringify(Object.values(i)).includes("|")
+                          ?.filter((i) =>
+                            JSON.stringify(Object.values(i)).includes('|')
                           )
                           .map((item, idx) => {
                             return (
@@ -835,7 +836,7 @@ function TokenPage() {
                           <HStack spacing="20px" mb="12px">
                             <NumberInput
                               w="50%"
-                              minW={"85px"}
+                              minW={'85px'}
                               isDisabled={actionType}
                               bg="black"
                               max={999000000}
@@ -854,7 +855,7 @@ function TokenPage() {
                               />
                               <InputRightElement
                                 bg="transparent"
-                                h={"40px"}
+                                h={'40px'}
                                 w={8}
                               >
                                 <AzeroIcon w="14px" h="14px" />
@@ -896,7 +897,7 @@ function TokenPage() {
                               isDisabled={
                                 actionType && actionType !== UNLIST_TOKEN
                               }
-                            />{" "}
+                            />{' '}
                             <VStack w="50%" alignItems="end">
                               <Text color="#888">Current price</Text>
 
@@ -979,7 +980,7 @@ function TokenPage() {
                             />
 
                             <NumberInput
-                              w={"50%"}
+                              w={'50%'}
                               isDisabled={actionType}
                               bg="black"
                               max={999000000}
@@ -998,7 +999,7 @@ function TokenPage() {
                               />
                               <InputRightElement
                                 bg="transparent"
-                                h={"40px"}
+                                h={'40px'}
                                 w={8}
                               >
                                 <AzeroIcon w="14px" />
@@ -1062,7 +1063,7 @@ export const buyToken = async (
 ) => {
   // check wallet connected
   if (!currentAccount) {
-    toast.error("Please connect wallet first!");
+    toast.error('Please connect wallet first!');
     return;
   }
   //check owner of the NFT
@@ -1108,7 +1109,7 @@ export const placeBid = async (
 ) => {
   // check wallet connected
   if (!currentAccount) {
-    toast.error("Please connect wallet first!");
+    toast.error('Please connect wallet first!');
     return;
   }
 
@@ -1163,7 +1164,7 @@ export const removeBid = async (
 ) => {
   // check wallet connected
   if (!currentAccount) {
-    toast.error("Please connect wallet first!");
+    toast.error('Please connect wallet first!');
     return;
   }
 
@@ -1208,7 +1209,7 @@ export const listToken = async (
 ) => {
   // check wallet connected
   if (!currentAccount) {
-    toast.error("Please connect wallet first!");
+    toast.error('Please connect wallet first!');
     return;
   }
 
@@ -1251,7 +1252,7 @@ export const listToken = async (
   let res;
 
   if (!isAllowance) {
-    toast.success("Step 1: Approving NFT transfer...");
+    toast.success('Step 1: Approving NFT transfer...');
 
     res = await contract_calls.approve(
       currentAccount,
@@ -1265,7 +1266,7 @@ export const listToken = async (
   }
   if (res || isAllowance) {
     await delay(6000).then(async () => {
-      toast.success(`${res ? "Step 2:" : ""} Listing on marketplace...`);
+      toast.success(`${res ? 'Step 2:' : ''} Listing on marketplace...`);
 
       await marketplace_contract_calls.list(
         currentAccount,
@@ -1290,7 +1291,7 @@ export const unlistToken = async (
 ) => {
   // check wallet connected
   if (!currentAccount) {
-    toast.error("Please connect wallet first!");
+    toast.error('Please connect wallet first!');
     return;
   }
 
@@ -1329,7 +1330,7 @@ export const acceptBid = async (
 ) => {
   // check wallet connected
   if (!currentAccount) {
-    toast.error("Please connect wallet first!");
+    toast.error('Please connect wallet first!');
     return;
   }
 
@@ -1393,13 +1394,13 @@ const FeeCalculatedBar = ({ feeCalculated }) => {
       w="full"
       justify="space-between"
       borderTop="1px solid #282828"
-      pt={["10px", "20px"]}
+      pt={['10px', '20px']}
     >
       <VStack alignItems="start">
-        <Text fontSize={{ base: "13px", md: "16px" }}>
+        <Text fontSize={{ base: '13px', md: '16px' }}>
           <Text as="span" color="brand.grayLight">
             Royalty fee:
-          </Text>{" "}
+          </Text>{' '}
           ({feeCalculated.royalFeePercent}%)
         </Text>
 
@@ -1409,10 +1410,10 @@ const FeeCalculatedBar = ({ feeCalculated }) => {
       </VStack>
 
       <VStack alignItems="start">
-        <Text fontSize={{ base: "13px", md: "16px" }}>
+        <Text fontSize={{ base: '13px', md: '16px' }}>
           <Text as="span" color="brand.grayLight">
             Trade fee:
-          </Text>{" "}
+          </Text>{' '}
           ({feeCalculated.tradeFeePercent}%)
         </Text>
         <Text color="#fff">
@@ -1421,7 +1422,7 @@ const FeeCalculatedBar = ({ feeCalculated }) => {
       </VStack>
 
       <VStack alignItems="start">
-        <Text fontSize={{ base: "13px", md: "16px" }} color="brand.grayLight">
+        <Text fontSize={{ base: '13px', md: '16px' }} color="brand.grayLight">
           You will receive:
         </Text>
         <Text color="#fff">

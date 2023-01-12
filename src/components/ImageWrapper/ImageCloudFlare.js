@@ -2,7 +2,12 @@ import { Image, Skeleton, Square } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { getCloudFlareImage } from "@utils";
 
-export default function ImageCloudFlare({ src, size = 500, ...props }) {
+export default function ImageCloudFlare({
+  src,
+  size = 500,
+  objectFitContain = false,
+  ...props
+}) {
   const [projImage, setProjImage] = useState("");
 
   useEffect(() => {
@@ -19,7 +24,7 @@ export default function ImageCloudFlare({ src, size = 500, ...props }) {
         width="full"
         height="full"
         src={projImage}
-        objectFit="cover"
+        objectFit={objectFitContain ? "contain" : "cover"}
         fallback={<Skeleton />}
         className="image-cloudflare"
       />

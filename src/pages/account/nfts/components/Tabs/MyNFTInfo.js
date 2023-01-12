@@ -285,12 +285,22 @@ function MyNFTTabInfo(props) {
 
   return (
     <>
-      <HStack spacing="45px" alignItems="stretch">
-        <ImageCloudFlare w="484px" h="484px" src={avatar} size={500} />
+      <HStack alignItems="stretch" spacing={{ base: '20px', xl: '45px' }}>
+        <ImageCloudFlare
+          h="484px"
+          src={avatar}
+          size={500}
+          objectFitContain={true}
+          w={{ base: '404px', xl: '484px' }}
+        />
 
         <Stack alignItems="flex-start" w="full">
           <HStack w="full">
-            <Heading color="#fff" size="h4" fontSize="32px">
+            <Heading
+              color="#fff"
+              size="h4"
+              fontSize={{ base: '28px', '2xl': '32px' }}
+            >
               {nftName}
             </Heading>
 
