@@ -1,14 +1,14 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5F2QffMSC6V7tjXhJJvCk6vaBPZShLjjNPTB5AwQPPNATx5Y",
+  CONTRACT_ADDRESS: "5CrRtY6u5QhRXuTUeYmEcnny8ZojXB7eyqQWoqVcQBN1RKf5",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x4b39fd3b387908c96cdb1b8fc543074ef1b3b9ff79aba97f66da26076965d40d",
-      "language": "ink! 3.3.1",
+      "hash": "0x74684aaee538f3bb6fd7460270eea2b72a43213207d6966729afc2b0b00f3952",
+      "language": "ink! 3.4.0",
       "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
       "name": "artzero_collection_manager",
-      "version": "1.2.0",
+      "version": "1.0.0",
       "authors": [
         "ArtZero <admin@artzero.io>"
       ]
@@ -28,21 +28,12 @@ const collection_manager = {
                 }
               },
               {
-                "label": "owner_address",
-                "type": {
-                  "displayName": [
-                    "AccountId"
-                  ],
-                  "type": 0
-                }
-              },
-              {
                 "label": "standard_nft_hash",
                 "type": {
                   "displayName": [
                     "Hash"
                   ],
-                  "type": 4
+                  "type": 12
                 }
               },
               {
@@ -51,7 +42,7 @@ const collection_manager = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 6
+                  "type": 14
                 }
               },
               {
@@ -60,20 +51,24 @@ const collection_manager = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 6
+                  "type": 14
                 }
               },
               {
-                "label": "max_royal_fee_rate",
+                "label": "max_royalty_fee_rate",
                 "type": {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 10
+                  "type": 5
                 }
               }
             ],
-            "docs": [],
+            "docs": [
+              "Collection Contract Manager manages all collections on ArtZero platform. User can create in simple mode or in advanced mode",
+              "In Simple mode, the contract will automatically create the standard NFT contract for the User",
+              "In Advanced mode, user creates their own customized NFT Contract and add the contract address to the Collection Manager"
+            ],
             "label": "new",
             "payable": false,
             "selector": "0x9bae9d5e"
@@ -91,7 +86,7 @@ const collection_manager = {
                   "displayName": [
                     "Option"
                   ],
-                  "type": 26
+                  "type": 42
                 }
               },
               {
@@ -102,7 +97,7 @@ const collection_manager = {
                   "displayName": [
                     "Option"
                   ],
-                  "type": 26
+                  "type": 42
                 }
               },
               {
@@ -111,9 +106,9 @@ const collection_manager = {
                 "label": "contract_type",
                 "type": {
                   "displayName": [
-                    "u8"
+                    "CollectionType"
                   ],
-                  "type": 2
+                  "type": 17
                 }
               },
               {
@@ -124,7 +119,7 @@ const collection_manager = {
                   "displayName": [
                     "bool"
                   ],
-                  "type": 9
+                  "type": 18
                 }
               },
               {
@@ -135,7 +130,7 @@ const collection_manager = {
                   "displayName": [
                     "bool"
                   ],
-                  "type": 9
+                  "type": 18
                 }
               }
             ],
@@ -147,21 +142,12 @@ const collection_manager = {
           {
             "args": [
               {
-                "label": "admin_address",
-                "type": {
-                  "displayName": [
-                    "AccountId"
-                  ],
-                  "type": 0
-                }
-              },
-              {
                 "label": "standard_nft_hash",
                 "type": {
                   "displayName": [
                     "Hash"
                   ],
-                  "type": 4
+                  "type": 12
                 }
               },
               {
@@ -170,7 +156,7 @@ const collection_manager = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 6
+                  "type": 14
                 }
               },
               {
@@ -179,16 +165,25 @@ const collection_manager = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 6
+                  "type": 14
                 }
               },
               {
-                "label": "max_royal_fee_rate",
+                "label": "max_royalty_fee_rate",
                 "type": {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 10
+                  "type": 5
+                }
+              },
+              {
+                "label": "admin_address",
+                "type": {
+                  "displayName": [
+                    "AccountId"
+                  ],
+                  "type": 0
                 }
               }
             ],
@@ -200,7 +195,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 18
+              "type": 34
             },
             "selector": "0xf2f6dba3"
           },
@@ -212,7 +207,7 @@ const collection_manager = {
                   "displayName": [
                     "String"
                   ],
-                  "type": 20
+                  "type": 31
                 }
               },
               {
@@ -221,16 +216,7 @@ const collection_manager = {
                   "displayName": [
                     "String"
                   ],
-                  "type": 20
-                }
-              },
-              {
-                "label": "collection_owner",
-                "type": {
-                  "displayName": [
-                    "AccountId"
-                  ],
-                  "type": 0
+                  "type": 31
                 }
               },
               {
@@ -239,7 +225,7 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 21
+                  "type": 38
                 }
               },
               {
@@ -248,30 +234,30 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 21
+                  "type": 38
                 }
               },
               {
-                "label": "is_collect_royal_fee",
+                "label": "is_collect_royalty_fee",
                 "type": {
                   "displayName": [
                     "bool"
                   ],
-                  "type": 9
+                  "type": 18
                 }
               },
               {
-                "label": "royal_fee",
+                "label": "royalty_fee",
                 "type": {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 10
+                  "type": 5
                 }
               }
             ],
             "docs": [
-              " Simple New Collection Creation - Auto create NFT Contract - Collection_Owner is owner of NFT contract and receive royal fee"
+              " Simple New Collection Creation - Auto create NFT Contract - Collection_Owner is owner of NFT contract and receive royalty fee"
             ],
             "label": "auto_new_collection",
             "mutates": true,
@@ -280,21 +266,12 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 34
             },
             "selector": "0x05c561cd"
           },
           {
             "args": [
-              {
-                "label": "collection_owner",
-                "type": {
-                  "displayName": [
-                    "AccountId"
-                  ],
-                  "type": 0
-                }
-              },
               {
                 "label": "nft_contract_address",
                 "type": {
@@ -310,7 +287,7 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 21
+                  "type": 38
                 }
               },
               {
@@ -319,25 +296,25 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 21
+                  "type": 38
                 }
               },
               {
-                "label": "is_collect_royal_fee",
+                "label": "is_collect_royalty_fee",
                 "type": {
                   "displayName": [
                     "bool"
                   ],
-                  "type": 9
+                  "type": 18
                 }
               },
               {
-                "label": "royal_fee",
+                "label": "royalty_fee",
                 "type": {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 10
+                  "type": 5
                 }
               }
             ],
@@ -351,7 +328,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 34
             },
             "selector": "0x36193f5f"
           },
@@ -377,7 +354,7 @@ const collection_manager = {
               }
             ],
             "docs": [
-              " Update Owner of Collecion - who receive royal fee - Only Admin can change"
+              " Update Owner of Collecion - who receive royalty fee - Only Admin can change"
             ],
             "label": "update_collection_owner",
             "mutates": true,
@@ -386,7 +363,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 34
             },
             "selector": "0x5c7d9082"
           },
@@ -412,7 +389,7 @@ const collection_manager = {
               }
             ],
             "docs": [
-              " Update nft_contract_address - Only Admin can change"
+              " Update NFT Contract Address of a collection - Only Admin Role can change"
             ],
             "label": "update_nft_contract_address",
             "mutates": true,
@@ -421,7 +398,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 34
             },
             "selector": "0x6500109f"
           },
@@ -442,7 +419,7 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 21
+                  "type": 38
                 }
               },
               {
@@ -451,12 +428,12 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 21
+                  "type": 38
                 }
               }
             ],
             "docs": [
-              " Set multiple profile attributes"
+              " Set attributes for the collections"
             ],
             "label": "set_multiple_attributes",
             "mutates": true,
@@ -465,14 +442,14 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 34
             },
             "selector": "0x8119d25e"
           },
           {
             "args": [
               {
-                "label": "account",
+                "label": "contract_address",
                 "type": {
                   "displayName": [
                     "AccountId"
@@ -486,7 +463,7 @@ const collection_manager = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 21
+                  "type": 38
                 }
               }
             ],
@@ -498,9 +475,138 @@ const collection_manager = {
               "displayName": [
                 "Vec"
               ],
-              "type": 21
+              "type": 38
             },
             "selector": "0x8d76b3fe"
+          },
+          {
+            "args": [
+              {
+                "label": "contract_address",
+                "type": {
+                  "displayName": [
+                    "AccountId"
+                  ],
+                  "type": 0
+                }
+              },
+              {
+                "label": "attribute_key",
+                "type": {
+                  "displayName": [
+                    "String"
+                  ],
+                  "type": 31
+                }
+              }
+            ],
+            "docs": [],
+            "label": "get_attribute",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "String"
+              ],
+              "type": 31
+            },
+            "selector": "0x97f86da4"
+          },
+          {
+            "args": [
+              {
+                "label": "contract_address",
+                "type": {
+                  "displayName": [
+                    "AccountId"
+                  ],
+                  "type": 0
+                }
+              },
+              {
+                "label": "attribute_key",
+                "type": {
+                  "displayName": [
+                    "String"
+                  ],
+                  "type": 31
+                }
+              }
+            ],
+            "docs": [
+              " Check collection has an attribute"
+            ],
+            "label": "has_attribute",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "bool"
+              ],
+              "type": 18
+            },
+            "selector": "0xad107a1c"
+          },
+          {
+            "args": [
+              {
+                "label": "contract_address",
+                "type": {
+                  "displayName": [
+                    "AccountId"
+                  ],
+                  "type": 0
+                }
+              },
+              {
+                "label": "attribute_key",
+                "type": {
+                  "displayName": [
+                    "String"
+                  ],
+                  "type": 31
+                }
+              }
+            ],
+            "docs": [
+              " Get attribute index of collection"
+            ],
+            "label": "get_collection_attribute_index",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Option"
+              ],
+              "type": 39
+            },
+            "selector": "0x3e3fd068"
+          },
+          {
+            "args": [
+              {
+                "label": "contract_address",
+                "type": {
+                  "displayName": [
+                    "AccountId"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Count attributes of collection"
+            ],
+            "label": "get_collection_attribute_count",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "Option"
+              ],
+              "type": 39
+            },
+            "selector": "0xc1763e9b"
           },
           {
             "args": [
@@ -517,14 +623,14 @@ const collection_manager = {
                 "label": "contract_type",
                 "type": {
                   "displayName": [
-                    "u8"
+                    "CollectionType"
                   ],
-                  "type": 2
+                  "type": 17
                 }
               }
             ],
             "docs": [
-              " Update Type Collection - only Admin can change - 1: Manual 2: Auto"
+              " Update Type Collection - Only Admin Role can change - 1: Manual 2: Auto"
             ],
             "label": "update_contract_type",
             "mutates": true,
@@ -533,7 +639,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 34
             },
             "selector": "0xeb59ea76"
           },
@@ -549,28 +655,28 @@ const collection_manager = {
                 }
               },
               {
-                "label": "is_collect_royal_fee",
+                "label": "is_collect_royalty_fee",
                 "type": {
                   "displayName": [
                     "bool"
                   ],
-                  "type": 9
+                  "type": 18
                 }
               }
             ],
             "docs": [
-              " Update Is Royal Fee - Only Admin can change"
+              " Update Is Royalty Fee - Only Admin Role can change"
             ],
-            "label": "update_is_collect_royal_fee",
+            "label": "update_is_collect_royalty_fee",
             "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 34
             },
-            "selector": "0x96c46720"
+            "selector": "0xb92832e7"
           },
           {
             "args": [
@@ -589,23 +695,23 @@ const collection_manager = {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 10
+                  "type": 5
                 }
               }
             ],
             "docs": [
-              " Update royal_fee - Only Admin can change"
+              " Update royalty fee of an NFT Collection - Only Admin Role can change"
             ],
-            "label": "update_royal_fee",
+            "label": "update_royalty_fee",
             "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 34
             },
-            "selector": "0x482ff6b1"
+            "selector": "0xa347ca95"
           },
           {
             "args": [
@@ -624,7 +730,7 @@ const collection_manager = {
                   "displayName": [
                     "bool"
                   ],
-                  "type": 9
+                  "type": 18
                 }
               }
             ],
@@ -638,7 +744,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 34
             },
             "selector": "0x0fb1f1cf"
           },
@@ -659,7 +765,7 @@ const collection_manager = {
                   "displayName": [
                     "bool"
                   ],
-                  "type": 9
+                  "type": 18
                 }
               }
             ],
@@ -673,7 +779,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 34
             },
             "selector": "0x33ad2887"
           },
@@ -685,7 +791,7 @@ const collection_manager = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 6
+                  "type": 14
                 }
               }
             ],
@@ -699,7 +805,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 34
             },
             "selector": "0xb3bb96b4"
           },
@@ -711,7 +817,7 @@ const collection_manager = {
                   "displayName": [
                     "Hash"
                   ],
-                  "type": 4
+                  "type": 12
                 }
               }
             ],
@@ -725,7 +831,7 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 34
             },
             "selector": "0xad51a976"
           },
@@ -737,7 +843,7 @@ const collection_manager = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 6
+                  "type": 14
                 }
               }
             ],
@@ -751,87 +857,35 @@ const collection_manager = {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 34
             },
             "selector": "0x4b11f798"
           },
           {
             "args": [
               {
-                "label": "max_royal_fee_rate",
+                "label": "max_royalty_fee_rate",
                 "type": {
                   "displayName": [
                     "u32"
                   ],
-                  "type": 10
+                  "type": 5
                 }
               }
             ],
             "docs": [
-              " Update Max Royal Fee Rate - only Owner"
+              " Update Max Royalty Fee Rate - only Owner"
             ],
-            "label": "update_max_royal_fee_rate",
+            "label": "update_max_royalty_fee_rate",
             "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
                 "Result"
               ],
-              "type": 22
+              "type": 34
             },
-            "selector": "0xa4dfde0d"
-          },
-          {
-            "args": [
-              {
-                "label": "admin_address",
-                "type": {
-                  "displayName": [
-                    "AccountId"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Update Admin Address - only Owner"
-            ],
-            "label": "update_admin_address",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "Result"
-              ],
-              "type": 22
-            },
-            "selector": "0xb470cada"
-          },
-          {
-            "args": [
-              {
-                "label": "value",
-                "type": {
-                  "displayName": [
-                    "Balance"
-                  ],
-                  "type": 6
-                }
-              }
-            ],
-            "docs": [
-              " Withdraw Fees - only Owner"
-            ],
-            "label": "withdraw_fee",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "Result"
-              ],
-              "type": 22
-            },
-            "selector": "0x07fdb555"
+            "selector": "0x8d0b94ef"
           },
           {
             "args": [
@@ -855,7 +909,7 @@ const collection_manager = {
               "displayName": [
                 "Option"
               ],
-              "type": 24
+              "type": 40
             },
             "selector": "0x786d1a79"
           },
@@ -881,7 +935,7 @@ const collection_manager = {
               "displayName": [
                 "Option"
               ],
-              "type": 25
+              "type": 41
             },
             "selector": "0x83091e54"
           },
@@ -897,7 +951,7 @@ const collection_manager = {
               "displayName": [
                 "Hash"
               ],
-              "type": 4
+              "type": 12
             },
             "selector": "0xbeb47f47"
           },
@@ -909,7 +963,7 @@ const collection_manager = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 5
+                  "type": 13
                 }
               }
             ],
@@ -923,7 +977,7 @@ const collection_manager = {
               "displayName": [
                 "Option"
               ],
-              "type": 26
+              "type": 42
             },
             "selector": "0x672b1346"
           },
@@ -939,7 +993,7 @@ const collection_manager = {
               "displayName": [
                 "u64"
               ],
-              "type": 5
+              "type": 13
             },
             "selector": "0x95c014c7"
           },
@@ -955,7 +1009,7 @@ const collection_manager = {
               "displayName": [
                 "u64"
               ],
-              "type": 5
+              "type": 13
             },
             "selector": "0xe149966a"
           },
@@ -971,7 +1025,7 @@ const collection_manager = {
               "displayName": [
                 "Balance"
               ],
-              "type": 6
+              "type": 14
             },
             "selector": "0x97db002d"
           },
@@ -987,41 +1041,228 @@ const collection_manager = {
               "displayName": [
                 "Balance"
               ],
-              "type": 6
+              "type": 14
             },
             "selector": "0xa333e69e"
           },
           {
             "args": [],
             "docs": [
-              " Get Admin Address"
+              " Get Royalty Max Fee"
             ],
-            "label": "get_admin_address",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "AccountId"
-              ],
-              "type": 0
-            },
-            "selector": "0x8938ef71"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Get Royal Max Fee"
-            ],
-            "label": "get_max_royal_fee_rate",
+            "label": "get_max_royalty_fee_rate",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "u32"
               ],
-              "type": 10
+              "type": 5
             },
-            "selector": "0x389a10e6"
+            "selector": "0x8c734238"
+          },
+          {
+            "args": [
+              {
+                "label": "role",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "HasRoleInput1"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "label": "address",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "HasRoleInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Returns `true` if `account` has been granted `role`."
+            ],
+            "label": "AccessControl::has_role",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "accesscontrol_external",
+                "HasRoleOutput"
+              ],
+              "type": 18
+            },
+            "selector": "0xc1d9ac18"
+          },
+          {
+            "args": [
+              {
+                "label": "role",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "GrantRoleInput1"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "label": "account",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "GrantRoleInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Grants `role` to `account`.",
+              "",
+              " On success a `RoleGranted` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Returns with `MissingRole` error if caller can't grant the role.",
+              " Returns with `RoleRedundant` error `account` has `role`."
+            ],
+            "label": "AccessControl::grant_role",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "accesscontrol_external",
+                "GrantRoleOutput"
+              ],
+              "type": 43
+            },
+            "selector": "0x4ac062fd"
+          },
+          {
+            "args": [
+              {
+                "label": "role",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "RevokeRoleInput1"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "label": "account",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "RevokeRoleInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Revokes `role` from `account`.",
+              "",
+              " On success a `RoleRevoked` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
+            ],
+            "label": "AccessControl::revoke_role",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "accesscontrol_external",
+                "RevokeRoleOutput"
+              ],
+              "type": 43
+            },
+            "selector": "0x6e4f0991"
+          },
+          {
+            "args": [
+              {
+                "label": "role",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "RenounceRoleInput1"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "label": "account",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "RenounceRoleInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Revokes `role` from the calling account.",
+              " Roles are often managed via `grant_role` and `revoke_role`: this function's",
+              " purpose is to provide a mechanism for accounts to lose their privileges",
+              " if they are compromised (such as when a trusted device is misplaced).",
+              "",
+              " On success a `RoleRevoked` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Returns with `InvalidCaller` error if caller is not `account`.",
+              " Returns with `MissingRole` error if `account` doesn't have `role`."
+            ],
+            "label": "AccessControl::renounce_role",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "accesscontrol_external",
+                "RenounceRoleOutput"
+              ],
+              "type": 43
+            },
+            "selector": "0xeaf1248a"
+          },
+          {
+            "args": [
+              {
+                "label": "role",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "GetRoleAdminInput1"
+                  ],
+                  "type": 5
+                }
+              }
+            ],
+            "docs": [
+              " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
+            ],
+            "label": "AccessControl::get_role_admin",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "accesscontrol_external",
+                "GetRoleAdminOutput"
+              ],
+              "type": 5
+            },
+            "selector": "0x83da3bb2"
           },
           {
             "args": [],
@@ -1039,6 +1280,33 @@ const collection_manager = {
               "type": 0
             },
             "selector": "0x4fa43c8c"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 44
+            },
+            "selector": "0x5e228753"
           },
           {
             "args": [
@@ -1073,64 +1341,37 @@ const collection_manager = {
                 "ownable_external",
                 "TransferOwnershipOutput"
               ],
-              "type": 18
+              "type": 44
             },
             "selector": "0x11f43efd"
           },
           {
-            "args": [],
-            "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 18
-            },
-            "selector": "0x5e228753"
-          },
-          {
             "args": [
               {
                 "label": "nft_contract_address",
                 "type": {
                   "displayName": [
-                    "crossartzerocollection_external",
-                    "GetRoyalFeeInput1"
+                    "artzerocollectiontrait_external",
+                    "GetRoyaltyFeeInput1"
                   ],
                   "type": 0
                 }
               }
             ],
             "docs": [
-              " Get royal fee of the Collection"
+              " This function returns royalty fee of a Collection"
             ],
-            "label": "CrossArtZeroCollection::get_royal_fee",
+            "label": "ArtZeroCollectionTrait::get_royalty_fee",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "crossartzerocollection_external",
-                "GetRoyalFeeOutput"
+                "artzerocollectiontrait_external",
+                "GetRoyaltyFeeOutput"
               ],
-              "type": 10
+              "type": 5
             },
-            "selector": "0xfa0f936e"
+            "selector": "0xfd0ba95a"
           },
           {
             "args": [
@@ -1138,35 +1379,7 @@ const collection_manager = {
                 "label": "nft_contract_address",
                 "type": {
                   "displayName": [
-                    "crossartzerocollection_external",
-                    "GetContractTypeInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Get NFT Contract Type 1 or 2 for PSP34"
-            ],
-            "label": "CrossArtZeroCollection::get_contract_type",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "crossartzerocollection_external",
-                "GetContractTypeOutput"
-              ],
-              "type": 2
-            },
-            "selector": "0x81fa82e9"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "crossartzerocollection_external",
+                    "artzerocollectiontrait_external",
                     "IsActiveInput1"
                   ],
                   "type": 0
@@ -1174,19 +1387,19 @@ const collection_manager = {
               }
             ],
             "docs": [
-              " Check if the Collection is active not"
+              " This function checks if the Collection is active or not. Only Active Collections can be seen on the Marketplace"
             ],
-            "label": "CrossArtZeroCollection::is_active",
+            "label": "ArtZeroCollectionTrait::is_active",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "crossartzerocollection_external",
+                "artzerocollectiontrait_external",
                 "IsActiveOutput"
               ],
-              "type": 9
+              "type": 18
             },
-            "selector": "0x74687faf"
+            "selector": "0x08c3a1b4"
           },
           {
             "args": [
@@ -1194,7 +1407,35 @@ const collection_manager = {
                 "label": "nft_contract_address",
                 "type": {
                   "displayName": [
-                    "crossartzerocollection_external",
+                    "artzerocollectiontrait_external",
+                    "GetContractTypeInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " This function returns NFT Contract Type. When the collection is created using auto_new_collection, this set to 2 and when using add_new_collection, this set to 1. Contract Type is to identify if the contract is standard or customized one."
+            ],
+            "label": "ArtZeroCollectionTrait::get_contract_type",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "artzerocollectiontrait_external",
+                "GetContractTypeOutput"
+              ],
+              "type": 17
+            },
+            "selector": "0xdcd3b8f4"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "artzerocollectiontrait_external",
                     "GetCollectionOwnerInput1"
                   ],
                   "type": 0
@@ -1202,19 +1443,153 @@ const collection_manager = {
               }
             ],
             "docs": [
-              " Get Collection Owner by Collection Address (NFT address)"
+              " This function returns the Owner of a Collection"
             ],
-            "label": "CrossArtZeroCollection::get_collection_owner",
+            "label": "ArtZeroCollectionTrait::get_collection_owner",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "crossartzerocollection_external",
+                "artzerocollectiontrait_external",
                 "GetCollectionOwnerOutput"
               ],
-              "type": 26
+              "type": 42
             },
-            "selector": "0xb1f1e401"
+            "selector": "0xeb3b33fd"
+          },
+          {
+            "args": [
+              {
+                "label": "value",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "WithdrawFeeInput1"
+                  ],
+                  "type": 14
+                }
+              },
+              {
+                "label": "receiver",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "WithdrawFeeInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " This function allows contract owner to withdraw contract balance to his account."
+            ],
+            "label": "AdminTrait::withdraw_fee",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "admintrait_external",
+                "WithdrawFeeOutput"
+              ],
+              "type": 34
+            },
+            "selector": "0x07573e99"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferNftInput1"
+                  ],
+                  "type": 0
+                }
+              },
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferNftInput2"
+                  ],
+                  "type": 45
+                }
+              },
+              {
+                "label": "receiver",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferNftInput3"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
+            ],
+            "label": "AdminTrait::tranfer_nft",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "admintrait_external",
+                "TranferNftOutput"
+              ],
+              "type": 34
+            },
+            "selector": "0xed1e1dfa"
+          },
+          {
+            "args": [
+              {
+                "label": "psp22_contract_address",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferPsp22Input1"
+                  ],
+                  "type": 0
+                }
+              },
+              {
+                "label": "amount",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferPsp22Input2"
+                  ],
+                  "type": 14
+                }
+              },
+              {
+                "label": "receiver",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferPsp22Input3"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " This function allow contract owner withdraw PSP22 to an account in case there is any token sent to contract by mistake"
+            ],
+            "label": "AdminTrait::tranfer_psp22",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "admintrait_external",
+                "TranferPsp22Output"
+              ],
+              "type": 34
+            },
+            "selector": "0xd9aad284"
           }
         ]
       },
@@ -1272,8 +1647,96 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xc495634e00000000000000000000000000000000000000000000000000000000",
+                          "key": "0x75b08c5a00000000000000000000000000000000000000000000000000000000",
                           "ty": 4
+                        }
+                      },
+                      "name": "admin_roles"
+                    },
+                    {
+                      "layout": {
+                        "struct": {
+                          "fields": [
+                            {
+                              "layout": {
+                                "cell": {
+                                  "key": "0x2779f6fc00000000000000000000000000000000000000000000000000000000",
+                                  "ty": 8
+                                }
+                              },
+                              "name": "members"
+                            },
+                            {
+                              "layout": {
+                                "enum": {
+                                  "dispatchKey": "0x2879f6fc00000000000000000000000000000000000000000000000000000000",
+                                  "variants": {
+                                    "0": {
+                                      "fields": [
+                                        {
+                                          "layout": {
+                                            "cell": {
+                                              "key": "0x2979f6fc00000000000000000000000000000000000000000000000000000000",
+                                              "ty": 3
+                                            }
+                                          },
+                                          "name": null
+                                        }
+                                      ]
+                                    },
+                                    "1": {
+                                      "fields": []
+                                    }
+                                  }
+                                }
+                              },
+                              "name": "_reserved"
+                            }
+                          ]
+                        }
+                      },
+                      "name": "members"
+                    },
+                    {
+                      "layout": {
+                        "enum": {
+                          "dispatchKey": "0x76b08c5a00000000000000000000000000000000000000000000000000000000",
+                          "variants": {
+                            "0": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x77b08c5a00000000000000000000000000000000000000000000000000000000",
+                                      "ty": 3
+                                    }
+                                  },
+                                  "name": null
+                                }
+                              ]
+                            },
+                            "1": {
+                              "fields": []
+                            }
+                          }
+                        }
+                      },
+                      "name": "_reserved"
+                    }
+                  ]
+                }
+              },
+              "name": "access"
+            },
+            {
+              "layout": {
+                "struct": {
+                  "fields": [
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xa15a5f6200000000000000000000000000000000000000000000000000000000",
+                          "ty": 12
                         }
                       },
                       "name": "standard_nft_hash"
@@ -1281,17 +1744,8 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xc595634e00000000000000000000000000000000000000000000000000000000",
-                          "ty": 0
-                        }
-                      },
-                      "name": "admin_address"
-                    },
-                    {
-                      "layout": {
-                        "cell": {
-                          "key": "0xc695634e00000000000000000000000000000000000000000000000000000000",
-                          "ty": 5
+                          "key": "0xa25a5f6200000000000000000000000000000000000000000000000000000000",
+                          "ty": 13
                         }
                       },
                       "name": "collection_count"
@@ -1299,8 +1753,8 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xc795634e00000000000000000000000000000000000000000000000000000000",
-                          "ty": 6
+                          "key": "0xa35a5f6200000000000000000000000000000000000000000000000000000000",
+                          "ty": 14
                         }
                       },
                       "name": "simple_mode_adding_fee"
@@ -1308,8 +1762,8 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xc895634e00000000000000000000000000000000000000000000000000000000",
-                          "ty": 6
+                          "key": "0xa45a5f6200000000000000000000000000000000000000000000000000000000",
+                          "ty": 14
                         }
                       },
                       "name": "advance_mode_adding_fee"
@@ -1317,8 +1771,8 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xc995634e00000000000000000000000000000000000000000000000000000000",
-                          "ty": 7
+                          "key": "0xa55a5f6200000000000000000000000000000000000000000000000000000000",
+                          "ty": 15
                         }
                       },
                       "name": "collections"
@@ -1326,8 +1780,8 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xca95634e00000000000000000000000000000000000000000000000000000000",
-                          "ty": 12
+                          "key": "0xa65a5f6200000000000000000000000000000000000000000000000000000000",
+                          "ty": 21
                         }
                       },
                       "name": "collections_by_id"
@@ -1335,8 +1789,8 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xcb95634e00000000000000000000000000000000000000000000000000000000",
-                          "ty": 13
+                          "key": "0xa75a5f6200000000000000000000000000000000000000000000000000000000",
+                          "ty": 24
                         }
                       },
                       "name": "collections_by_owner"
@@ -1344,17 +1798,17 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xcc95634e00000000000000000000000000000000000000000000000000000000",
-                          "ty": 10
+                          "key": "0xa85a5f6200000000000000000000000000000000000000000000000000000000",
+                          "ty": 5
                         }
                       },
-                      "name": "max_royal_fee_rate"
+                      "name": "max_royalty_fee_rate"
                     },
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xcd95634e00000000000000000000000000000000000000000000000000000000",
-                          "ty": 5
+                          "key": "0xa95a5f6200000000000000000000000000000000000000000000000000000000",
+                          "ty": 13
                         }
                       },
                       "name": "active_collection_count"
@@ -1362,8 +1816,8 @@ const collection_manager = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xce95634e00000000000000000000000000000000000000000000000000000000",
-                          "ty": 15
+                          "key": "0xaa5a5f6200000000000000000000000000000000000000000000000000000000",
+                          "ty": 28
                         }
                       },
                       "name": "attributes"
@@ -1371,14 +1825,14 @@ const collection_manager = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0xcf95634e00000000000000000000000000000000000000000000000000000000",
+                          "dispatchKey": "0xab5a5f6200000000000000000000000000000000000000000000000000000000",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0xd095634e00000000000000000000000000000000000000000000000000000000",
+                                      "key": "0xac5a5f6200000000000000000000000000000000000000000000000000000000",
                                       "ty": 3
                                     }
                                   },
@@ -1398,6 +1852,41 @@ const collection_manager = {
                 }
               },
               "name": "manager"
+            },
+            {
+              "layout": {
+                "struct": {
+                  "fields": [
+                    {
+                      "layout": {
+                        "enum": {
+                          "dispatchKey": "0x7cce04ff00000000000000000000000000000000000000000000000000000000",
+                          "variants": {
+                            "0": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x7dce04ff00000000000000000000000000000000000000000000000000000000",
+                                      "ty": 3
+                                    }
+                                  },
+                                  "name": null
+                                }
+                              ]
+                            },
+                            "1": {
+                              "fields": []
+                            }
+                          }
+                        }
+                      },
+                      "name": "_reserved"
+                    }
+                  ]
+                }
+              },
+              "name": "admin_data"
             }
           ]
         }
@@ -1457,6 +1946,127 @@ const collection_manager = {
               "composite": {
                 "fields": [
                   {
+                    "type": 6
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "K",
+                "type": 5
+              },
+              {
+                "name": "V",
+                "type": 5
+              }
+            ],
+            "path": [
+              "openbrush_lang",
+              "storage",
+              "mapping",
+              "Mapping"
+            ]
+          }
+        },
+        {
+          "id": 5,
+          "type": {
+            "def": {
+              "primitive": "u32"
+            }
+          }
+        },
+        {
+          "id": 6,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 7
+              }
+            }
+          }
+        },
+        {
+          "id": 7,
+          "type": {
+            "def": {
+              "tuple": [
+                5,
+                5
+              ]
+            }
+          }
+        },
+        {
+          "id": 8,
+          "type": {
+            "def": {
+              "composite": {
+                "fields": [
+                  {
+                    "type": 10
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "K",
+                "type": 9
+              },
+              {
+                "name": "V",
+                "type": 3
+              }
+            ],
+            "path": [
+              "openbrush_lang",
+              "storage",
+              "mapping",
+              "Mapping"
+            ]
+          }
+        },
+        {
+          "id": 9,
+          "type": {
+            "def": {
+              "tuple": [
+                5,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "id": 10,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 11
+              }
+            }
+          }
+        },
+        {
+          "id": 11,
+          "type": {
+            "def": {
+              "tuple": [
+                9,
+                3
+              ]
+            }
+          }
+        },
+        {
+          "id": 12,
+          "type": {
+            "def": {
+              "composite": {
+                "fields": [
+                  {
                     "type": 1,
                     "typeName": "[u8; 32]"
                   }
@@ -1471,7 +2081,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 5,
+          "id": 13,
           "type": {
             "def": {
               "primitive": "u64"
@@ -1479,7 +2089,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 6,
+          "id": 14,
           "type": {
             "def": {
               "primitive": "u128"
@@ -1487,15 +2097,13 @@ const collection_manager = {
           }
         },
         {
-          "id": 7,
+          "id": 15,
           "type": {
             "def": {
               "composite": {
                 "fields": [
                   {
-                    "name": "offset_key",
-                    "type": 11,
-                    "typeName": "Key"
+                    "type": 19
                   }
                 ]
               }
@@ -1507,19 +2115,19 @@ const collection_manager = {
               },
               {
                 "name": "V",
-                "type": 8
+                "type": 16
               }
             ],
             "path": [
-              "ink_storage",
-              "lazy",
+              "openbrush_lang",
+              "storage",
               "mapping",
               "Mapping"
             ]
           }
         },
         {
-          "id": 8,
+          "id": 16,
           "type": {
             "def": {
               "composite": {
@@ -1536,41 +2144,88 @@ const collection_manager = {
                   },
                   {
                     "name": "contract_type",
-                    "type": 2,
-                    "typeName": "u8"
+                    "type": 17,
+                    "typeName": "CollectionType"
                   },
                   {
-                    "name": "is_collect_royal_fee",
-                    "type": 9,
+                    "name": "is_collect_royalty_fee",
+                    "type": 18,
                     "typeName": "bool"
                   },
                   {
-                    "name": "royal_fee",
-                    "type": 10,
+                    "name": "royalty_fee",
+                    "type": 5,
                     "typeName": "u32"
                   },
                   {
                     "name": "is_active",
-                    "type": 9,
+                    "type": 18,
                     "typeName": "bool"
                   },
                   {
                     "name": "show_on_chain_metadata",
-                    "type": 9,
+                    "type": 18,
                     "typeName": "bool"
                   }
                 ]
               }
             },
             "path": [
-              "artzero_collection_manager",
-              "artzero_collection_manager",
+              "artzero_project",
+              "impls",
+              "collection_manager",
+              "data",
               "Collection"
             ]
           }
         },
         {
-          "id": 9,
+          "id": 17,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "index": 0,
+                    "name": "Unknown"
+                  },
+                  {
+                    "index": 1,
+                    "name": "Psp34Manual"
+                  },
+                  {
+                    "index": 2,
+                    "name": "Psp34Auto"
+                  },
+                  {
+                    "index": 3,
+                    "name": "Psp1155Manual"
+                  },
+                  {
+                    "index": 4,
+                    "name": "Psp1155Auto"
+                  },
+                  {
+                    "index": 5,
+                    "name": "Reserved1"
+                  },
+                  {
+                    "index": 6,
+                    "name": "Reserved2"
+                  }
+                ]
+              }
+            },
+            "path": [
+              "artzero_project",
+              "traits",
+              "collection_manager",
+              "CollectionType"
+            ]
+          }
+        },
+        {
+          "id": 18,
           "type": {
             "def": {
               "primitive": "bool"
@@ -1578,161 +2233,220 @@ const collection_manager = {
           }
         },
         {
-          "id": 10,
-          "type": {
-            "def": {
-              "primitive": "u32"
-            }
-          }
-        },
-        {
-          "id": 11,
-          "type": {
-            "def": {
-              "composite": {
-                "fields": [
-                  {
-                    "type": 1,
-                    "typeName": "[u8; 32]"
-                  }
-                ]
-              }
-            },
-            "path": [
-              "ink_primitives",
-              "Key"
-            ]
-          }
-        },
-        {
-          "id": 12,
-          "type": {
-            "def": {
-              "composite": {
-                "fields": [
-                  {
-                    "name": "offset_key",
-                    "type": 11,
-                    "typeName": "Key"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "K",
-                "type": 5
-              },
-              {
-                "name": "V",
-                "type": 0
-              }
-            ],
-            "path": [
-              "ink_storage",
-              "lazy",
-              "mapping",
-              "Mapping"
-            ]
-          }
-        },
-        {
-          "id": 13,
-          "type": {
-            "def": {
-              "composite": {
-                "fields": [
-                  {
-                    "name": "offset_key",
-                    "type": 11,
-                    "typeName": "Key"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "K",
-                "type": 0
-              },
-              {
-                "name": "V",
-                "type": 14
-              }
-            ],
-            "path": [
-              "ink_storage",
-              "lazy",
-              "mapping",
-              "Mapping"
-            ]
-          }
-        },
-        {
-          "id": 14,
+          "id": 19,
           "type": {
             "def": {
               "sequence": {
-                "type": 0
+                "type": 20
               }
             }
           }
         },
         {
-          "id": 15,
-          "type": {
-            "def": {
-              "composite": {
-                "fields": [
-                  {
-                    "name": "offset_key",
-                    "type": 11,
-                    "typeName": "Key"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "K",
-                "type": 16
-              },
-              {
-                "name": "V",
-                "type": 17
-              }
-            ],
-            "path": [
-              "ink_storage",
-              "lazy",
-              "mapping",
-              "Mapping"
-            ]
-          }
-        },
-        {
-          "id": 16,
+          "id": 20,
           "type": {
             "def": {
               "tuple": [
                 0,
-                17
+                16
               ]
             }
           }
         },
         {
-          "id": 17,
+          "id": 21,
+          "type": {
+            "def": {
+              "composite": {
+                "fields": [
+                  {
+                    "type": 22
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "K",
+                "type": 13
+              },
+              {
+                "name": "V",
+                "type": 0
+              }
+            ],
+            "path": [
+              "openbrush_lang",
+              "storage",
+              "mapping",
+              "Mapping"
+            ]
+          }
+        },
+        {
+          "id": 22,
           "type": {
             "def": {
               "sequence": {
-                "type": 2
+                "type": 23
               }
             }
           }
         },
         {
-          "id": 18,
+          "id": 23,
+          "type": {
+            "def": {
+              "tuple": [
+                13,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "id": 24,
+          "type": {
+            "def": {
+              "composite": {
+                "fields": [
+                  {
+                    "type": 26
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "K",
+                "type": 0
+              },
+              {
+                "name": "V",
+                "type": 25
+              }
+            ],
+            "path": [
+              "openbrush_lang",
+              "storage",
+              "mapping",
+              "Mapping"
+            ]
+          }
+        },
+        {
+          "id": 25,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 0
+              }
+            }
+          }
+        },
+        {
+          "id": 26,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 27
+              }
+            }
+          }
+        },
+        {
+          "id": 27,
+          "type": {
+            "def": {
+              "tuple": [
+                0,
+                25
+              ]
+            }
+          }
+        },
+        {
+          "id": 28,
+          "type": {
+            "def": {
+              "composite": {
+                "fields": [
+                  {
+                    "type": 32
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "K",
+                "type": 0
+              },
+              {
+                "name": "V",
+                "type": 29
+              }
+            ],
+            "path": [
+              "openbrush_lang",
+              "storage",
+              "mapping",
+              "Mapping"
+            ]
+          }
+        },
+        {
+          "id": 29,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 30
+              }
+            }
+          }
+        },
+        {
+          "id": 30,
+          "type": {
+            "def": {
+              "tuple": [
+                31,
+                31
+              ]
+            }
+          }
+        },
+        {
+          "id": 31,
+          "type": {
+            "def": {
+              "primitive": "str"
+            }
+          }
+        },
+        {
+          "id": 32,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 33
+              }
+            }
+          }
+        },
+        {
+          "id": 33,
+          "type": {
+            "def": {
+              "tuple": [
+                0,
+                29
+              ]
+            }
+          }
+        },
+        {
+          "id": 34,
           "type": {
             "def": {
               "variant": {
@@ -1749,7 +2463,7 @@ const collection_manager = {
                   {
                     "fields": [
                       {
-                        "type": 19
+                        "type": 35
                       }
                     ],
                     "index": 1,
@@ -1765,7 +2479,7 @@ const collection_manager = {
               },
               {
                 "name": "E",
-                "type": 19
+                "type": 35
               }
             ],
             "path": [
@@ -1774,7 +2488,226 @@ const collection_manager = {
           }
         },
         {
-          "id": 19,
+          "id": 35,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "fields": [
+                      {
+                        "type": 31,
+                        "typeName": "String"
+                      }
+                    ],
+                    "index": 0,
+                    "name": "Custom"
+                  },
+                  {
+                    "index": 1,
+                    "name": "OnlyOwner"
+                  },
+                  {
+                    "index": 2,
+                    "name": "OnlyAdmin"
+                  },
+                  {
+                    "index": 3,
+                    "name": "InvalidCaller"
+                  },
+                  {
+                    "index": 4,
+                    "name": "InvalidFee"
+                  },
+                  {
+                    "index": 5,
+                    "name": "TokenOwnerNotMatch"
+                  },
+                  {
+                    "index": 6,
+                    "name": "NotApproved"
+                  },
+                  {
+                    "index": 7,
+                    "name": "CannotTransfer"
+                  },
+                  {
+                    "index": 8,
+                    "name": "CannotMint"
+                  },
+                  {
+                    "index": 9,
+                    "name": "NotPublicMint"
+                  },
+                  {
+                    "index": 10,
+                    "name": "NotEnoughBalance"
+                  },
+                  {
+                    "index": 11,
+                    "name": "MaxSupply"
+                  },
+                  {
+                    "index": 12,
+                    "name": "AlreadyInit"
+                  },
+                  {
+                    "index": 13,
+                    "name": "NotOwner"
+                  },
+                  {
+                    "index": 14,
+                    "name": "NotTokenOwner"
+                  },
+                  {
+                    "index": 15,
+                    "name": "ProjectNotExist"
+                  },
+                  {
+                    "index": 16,
+                    "name": "ProjectOwnerAndAdmin"
+                  },
+                  {
+                    "index": 17,
+                    "name": "InvalidStartTimeAndEndTime"
+                  },
+                  {
+                    "index": 18,
+                    "name": "InvalidPhaseCount"
+                  },
+                  {
+                    "index": 19,
+                    "name": "CollectionOwnerAndAdmin"
+                  },
+                  {
+                    "index": 20,
+                    "name": "CollectionNotActive"
+                  },
+                  {
+                    "index": 21,
+                    "name": "InvalidInput"
+                  },
+                  {
+                    "index": 22,
+                    "name": "InvalidType"
+                  },
+                  {
+                    "index": 23,
+                    "name": "ClaimedAll"
+                  },
+                  {
+                    "index": 24,
+                    "name": "TokenLimitReached"
+                  },
+                  {
+                    "index": 25,
+                    "name": "UpdatePhase"
+                  },
+                  {
+                    "index": 26,
+                    "name": "PhaseNotExist"
+                  },
+                  {
+                    "index": 27,
+                    "name": "PhaseExpired"
+                  },
+                  {
+                    "index": 28,
+                    "name": "WhitelistNotExist"
+                  },
+                  {
+                    "index": 29,
+                    "name": "WithdrawFeeError"
+                  },
+                  {
+                    "index": 30,
+                    "name": "WithdrawNFTError"
+                  },
+                  {
+                    "index": 31,
+                    "name": "WithdrawPSP22Error"
+                  },
+                  {
+                    "index": 32,
+                    "name": "NotListed"
+                  },
+                  {
+                    "index": 33,
+                    "name": "BidAlreadyExist"
+                  },
+                  {
+                    "index": 34,
+                    "name": "BidNotExist"
+                  },
+                  {
+                    "index": 35,
+                    "name": "NotInMarket"
+                  },
+                  {
+                    "index": 36,
+                    "name": "NotForSale"
+                  },
+                  {
+                    "index": 37,
+                    "name": "NotInSaleList"
+                  },
+                  {
+                    "index": 38,
+                    "name": "InvalidBidLength"
+                  },
+                  {
+                    "index": 39,
+                    "name": "InvalidCollectionOwner"
+                  },
+                  {
+                    "index": 40,
+                    "name": "InvalidTime"
+                  },
+                  {
+                    "index": 41,
+                    "name": "RewardStarted"
+                  },
+                  {
+                    "index": 42,
+                    "name": "RewardNotStarted"
+                  },
+                  {
+                    "index": 43,
+                    "name": "ClaimMustBeFalse"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 36,
+                        "typeName": "OwnableError"
+                      }
+                    ],
+                    "index": 44,
+                    "name": "OwnableError"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 37,
+                        "typeName": "AccessControlError"
+                      }
+                    ],
+                    "index": 45,
+                    "name": "AccessControlError"
+                  }
+                ]
+              }
+            },
+            "path": [
+              "artzero_project",
+              "traits",
+              "error",
+              "Error"
+            ]
+          }
+        },
+        {
+          "id": 36,
           "type": {
             "def": {
               "variant": {
@@ -1800,109 +2733,47 @@ const collection_manager = {
           }
         },
         {
-          "id": 20,
-          "type": {
-            "def": {
-              "primitive": "str"
-            }
-          }
-        },
-        {
-          "id": 21,
-          "type": {
-            "def": {
-              "sequence": {
-                "type": 20
-              }
-            }
-          }
-        },
-        {
-          "id": 22,
+          "id": 37,
           "type": {
             "def": {
               "variant": {
                 "variants": [
                   {
-                    "fields": [
-                      {
-                        "type": 3
-                      }
-                    ],
                     "index": 0,
-                    "name": "Ok"
-                  },
-                  {
-                    "fields": [
-                      {
-                        "type": 23
-                      }
-                    ],
-                    "index": 1,
-                    "name": "Err"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "T",
-                "type": 3
-              },
-              {
-                "name": "E",
-                "type": 23
-              }
-            ],
-            "path": [
-              "Result"
-            ]
-          }
-        },
-        {
-          "id": 23,
-          "type": {
-            "def": {
-              "variant": {
-                "variants": [
-                  {
-                    "fields": [
-                      {
-                        "type": 20,
-                        "typeName": "String"
-                      }
-                    ],
-                    "index": 0,
-                    "name": "Custom"
+                    "name": "InvalidCaller"
                   },
                   {
                     "index": 1,
-                    "name": "CollectionOwnerAndAdmin"
+                    "name": "MissingRole"
                   },
                   {
                     "index": 2,
-                    "name": "OnlyOwner"
-                  },
-                  {
-                    "index": 3,
-                    "name": "OnlyAdmin"
-                  },
-                  {
-                    "index": 4,
-                    "name": "InvalidCaller"
+                    "name": "RoleRedundant"
                   }
                 ]
               }
             },
             "path": [
-              "artzero_collection_manager",
-              "artzero_collection_manager",
-              "Error"
+              "openbrush_contracts",
+              "traits",
+              "errors",
+              "access_control",
+              "AccessControlError"
             ]
           }
         },
         {
-          "id": 24,
+          "id": 38,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 31
+              }
+            }
+          }
+        },
+        {
+          "id": 39,
           "type": {
             "def": {
               "variant": {
@@ -1914,7 +2785,7 @@ const collection_manager = {
                   {
                     "fields": [
                       {
-                        "type": 8
+                        "type": 13
                       }
                     ],
                     "index": 1,
@@ -1926,7 +2797,7 @@ const collection_manager = {
             "params": [
               {
                 "name": "T",
-                "type": 8
+                "type": 13
               }
             ],
             "path": [
@@ -1935,7 +2806,7 @@ const collection_manager = {
           }
         },
         {
-          "id": 25,
+          "id": 40,
           "type": {
             "def": {
               "variant": {
@@ -1947,7 +2818,7 @@ const collection_manager = {
                   {
                     "fields": [
                       {
-                        "type": 14
+                        "type": 16
                       }
                     ],
                     "index": 1,
@@ -1959,7 +2830,7 @@ const collection_manager = {
             "params": [
               {
                 "name": "T",
-                "type": 14
+                "type": 16
               }
             ],
             "path": [
@@ -1968,7 +2839,40 @@ const collection_manager = {
           }
         },
         {
-          "id": 26,
+          "id": 41,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "index": 0,
+                    "name": "None"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 25
+                      }
+                    ],
+                    "index": 1,
+                    "name": "Some"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "T",
+                "type": 25
+              }
+            ],
+            "path": [
+              "Option"
+            ]
+          }
+        },
+        {
+          "id": 42,
           "type": {
             "def": {
               "variant": {
@@ -1998,6 +2902,185 @@ const collection_manager = {
             "path": [
               "Option"
             ]
+          }
+        },
+        {
+          "id": 43,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "fields": [
+                      {
+                        "type": 3
+                      }
+                    ],
+                    "index": 0,
+                    "name": "Ok"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 37
+                      }
+                    ],
+                    "index": 1,
+                    "name": "Err"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "T",
+                "type": 3
+              },
+              {
+                "name": "E",
+                "type": 37
+              }
+            ],
+            "path": [
+              "Result"
+            ]
+          }
+        },
+        {
+          "id": 44,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "fields": [
+                      {
+                        "type": 3
+                      }
+                    ],
+                    "index": 0,
+                    "name": "Ok"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 36
+                      }
+                    ],
+                    "index": 1,
+                    "name": "Err"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "T",
+                "type": 3
+              },
+              {
+                "name": "E",
+                "type": 36
+              }
+            ],
+            "path": [
+              "Result"
+            ]
+          }
+        },
+        {
+          "id": 45,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "fields": [
+                      {
+                        "type": 2,
+                        "typeName": "u8"
+                      }
+                    ],
+                    "index": 0,
+                    "name": "U8"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 46,
+                        "typeName": "u16"
+                      }
+                    ],
+                    "index": 1,
+                    "name": "U16"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 5,
+                        "typeName": "u32"
+                      }
+                    ],
+                    "index": 2,
+                    "name": "U32"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 13,
+                        "typeName": "u64"
+                      }
+                    ],
+                    "index": 3,
+                    "name": "U64"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 14,
+                        "typeName": "u128"
+                      }
+                    ],
+                    "index": 4,
+                    "name": "U128"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 47,
+                        "typeName": "Vec<u8>"
+                      }
+                    ],
+                    "index": 5,
+                    "name": "Bytes"
+                  }
+                ]
+              }
+            },
+            "path": [
+              "openbrush_contracts",
+              "traits",
+              "types",
+              "Id"
+            ]
+          }
+        },
+        {
+          "id": 46,
+          "type": {
+            "def": {
+              "primitive": "u16"
+            }
+          }
+        },
+        {
+          "id": 47,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 2
+              }
+            }
           }
         }
       ]

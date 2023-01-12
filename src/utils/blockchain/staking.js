@@ -1,14 +1,14 @@
 const staking = {
-  CONTRACT_ADDRESS: "5EUbfR22NYBVZzzfyu6Ejk6dwKtPB186RFuzfbgZyJB6e7n1",
+  CONTRACT_ADDRESS: "5FUc1TGwQ2ja97nbnHgN6hoHiHmGa257JJBLTYaHxjxd45ed",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x138fbdb374051261d2ad3e142054fdeffa61b022b27611d715a963734d930557",
-      "language": "ink! 3.3.0",
+      "hash": "0x5df2f28fdd161ac3a67798f6f85f2c76f5b1f4ae7bc7900fec60676842fd62b3",
+      "language": "ink! 3.4.0",
       "compiler": "rustc 1.61.0-nightly"
     },
     "contract": {
       "name": "artzero_staking_nft",
-      "version": "1.2.0",
+      "version": "1.0.0",
       "authors": [
         "ArtZero <admin@artzero.io>"
       ]
@@ -18,15 +18,6 @@ const staking = {
         "constructors": [
           {
             "args": [
-              {
-                "label": "contract_owner",
-                "type": {
-                  "displayName": [
-                    "AccountId"
-                  ],
-                  "type": 0
-                }
-              },
               {
                 "label": "admin_address",
                 "type": {
@@ -51,7 +42,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 9
+                  "type": 17
                 }
               }
             ],
@@ -73,7 +64,7 @@ const staking = {
                   "displayName": [
                     "Option"
                   ],
-                  "type": 23
+                  "type": 34
                 }
               },
               {
@@ -84,7 +75,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 9
+                  "type": 17
                 }
               }
             ],
@@ -101,7 +92,7 @@ const staking = {
                   "displayName": [
                     "Option"
                   ],
-                  "type": 23
+                  "type": 34
                 }
               },
               {
@@ -112,7 +103,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 9
+                  "type": 17
                 }
               }
             ],
@@ -129,7 +120,7 @@ const staking = {
                   "displayName": [
                     "Option"
                   ],
-                  "type": 23
+                  "type": 34
                 }
               },
               {
@@ -140,7 +131,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 9
+                  "type": 17
                 }
               }
             ],
@@ -157,7 +148,7 @@ const staking = {
                   "displayName": [
                     "Option"
                   ],
-                  "type": 23
+                  "type": 34
                 }
               },
               {
@@ -168,7 +159,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 9
+                  "type": 17
                 }
               }
             ],
@@ -185,7 +176,7 @@ const staking = {
                   "displayName": [
                     "Option"
                   ],
-                  "type": 23
+                  "type": 34
                 }
               },
               {
@@ -196,7 +187,7 @@ const staking = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 14
+                  "type": 23
                 }
               },
               {
@@ -207,7 +198,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 9
+                  "type": 17
                 }
               }
             ],
@@ -224,7 +215,7 @@ const staking = {
                   "displayName": [
                     "Balance"
                   ],
-                  "type": 14
+                  "type": 23
                 }
               },
               {
@@ -235,7 +226,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 9
+                  "type": 17
                 }
               }
             ],
@@ -261,7 +252,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 9
+                  "type": 17
                 }
               },
               {
@@ -282,7 +273,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 16
+              "type": 27
             },
             "selector": "0xf2f6dba3"
           },
@@ -308,7 +299,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 18
+              "type": 27
             },
             "selector": "0x1bb3d394"
           },
@@ -320,7 +311,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 9
+                  "type": 17
                 }
               }
             ],
@@ -334,7 +325,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 18
+              "type": 27
             },
             "selector": "0x675e7b6f"
           },
@@ -360,7 +351,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 18
+              "type": 27
             },
             "selector": "0xb470cada"
           },
@@ -372,12 +363,12 @@ const staking = {
                   "displayName": [
                     "bool"
                   ],
-                  "type": 4
+                  "type": 12
                 }
               }
             ],
             "docs": [
-              " Update is locked - only Admin"
+              " Update is locked - Only Admin Role can change"
             ],
             "label": "update_is_locked",
             "mutates": true,
@@ -386,7 +377,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 18
+              "type": 27
             },
             "selector": "0x04230988"
           },
@@ -400,7 +391,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 18
+              "type": 27
             },
             "selector": "0x95f19c6c"
           },
@@ -414,7 +405,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 18
+              "type": 27
             },
             "selector": "0xcdcd1ca5"
           },
@@ -430,7 +421,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 18
+              "type": 27
             },
             "selector": "0x1b146ead"
           },
@@ -456,7 +447,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 18
+              "type": 27
             },
             "selector": "0xa625d829"
           },
@@ -472,7 +463,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 18
+              "type": 27
             },
             "selector": "0x9a8353a7"
           },
@@ -486,7 +477,7 @@ const staking = {
               "displayName": [
                 "Balance"
               ],
-              "type": 14
+              "type": 23
             },
             "selector": "0x443c6a4a"
           },
@@ -500,7 +491,7 @@ const staking = {
               "displayName": [
                 "Balance"
               ],
-              "type": 14
+              "type": 23
             },
             "selector": "0x411901a1"
           },
@@ -524,7 +515,7 @@ const staking = {
               "displayName": [
                 "bool"
               ],
-              "type": 4
+              "type": 12
             },
             "selector": "0xc58eed46"
           },
@@ -538,7 +529,7 @@ const staking = {
               "displayName": [
                 "bool"
               ],
-              "type": 4
+              "type": 12
             },
             "selector": "0xca663a02"
           },
@@ -570,7 +561,7 @@ const staking = {
               "displayName": [
                 "bool"
               ],
-              "type": 4
+              "type": 12
             },
             "selector": "0x72d8d756"
           },
@@ -607,7 +598,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 9
+                  "type": 17
                 }
               }
             ],
@@ -621,7 +612,7 @@ const staking = {
               "displayName": [
                 "u64"
               ],
-              "type": 9
+              "type": 17
             },
             "selector": "0x5d08378a"
           },
@@ -642,7 +633,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 9
+                  "type": 17
                 }
               }
             ],
@@ -656,7 +647,7 @@ const staking = {
               "displayName": [
                 "Option"
               ],
-              "type": 21
+              "type": 32
             },
             "selector": "0xd5ee8ef6"
           },
@@ -682,7 +673,7 @@ const staking = {
               "displayName": [
                 "Option"
               ],
-              "type": 22
+              "type": 33
             },
             "selector": "0xdeaeabe3"
           },
@@ -694,7 +685,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 9
+                  "type": 17
                 }
               }
             ],
@@ -708,7 +699,7 @@ const staking = {
               "displayName": [
                 "Option"
               ],
-              "type": 23
+              "type": 34
             },
             "selector": "0x9698ca4b"
           },
@@ -724,7 +715,7 @@ const staking = {
               "displayName": [
                 "u64"
               ],
-              "type": 9
+              "type": 17
             },
             "selector": "0xf7c0188d"
           },
@@ -745,7 +736,7 @@ const staking = {
                   "displayName": [
                     "u64"
                   ],
-                  "type": 9
+                  "type": 17
                 }
               }
             ],
@@ -759,7 +750,7 @@ const staking = {
               "displayName": [
                 "Option"
               ],
-              "type": 21
+              "type": 32
             },
             "selector": "0xf154c3c5"
           },
@@ -775,7 +766,7 @@ const staking = {
               "displayName": [
                 "u64"
               ],
-              "type": 9
+              "type": 17
             },
             "selector": "0x02c779a5"
           },
@@ -791,7 +782,7 @@ const staking = {
               "displayName": [
                 "u64"
               ],
-              "type": 9
+              "type": 17
             },
             "selector": "0x50d71ce0"
           },
@@ -803,7 +794,7 @@ const staking = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 24
+                  "type": 35
                 }
               }
             ],
@@ -817,7 +808,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 18
+              "type": 27
             },
             "selector": "0x5adb38de"
           },
@@ -829,7 +820,7 @@ const staking = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 24
+                  "type": 35
                 }
               }
             ],
@@ -843,7 +834,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 18
+              "type": 27
             },
             "selector": "0xfd83c46b"
           },
@@ -855,7 +846,7 @@ const staking = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 24
+                  "type": 35
                 }
               }
             ],
@@ -869,7 +860,7 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 18
+              "type": 27
             },
             "selector": "0xc5bd017e"
           },
@@ -881,7 +872,7 @@ const staking = {
                   "displayName": [
                     "Vec"
                   ],
-                  "type": 24
+                  "type": 35
                 }
               }
             ],
@@ -895,70 +886,249 @@ const staking = {
               "displayName": [
                 "Result"
               ],
-              "type": 18
+              "type": 27
             },
             "selector": "0x82364901"
           },
           {
             "args": [
               {
-                "label": "value",
+                "label": "role",
                 "type": {
                   "displayName": [
-                    "Balance"
+                    "accesscontrol_external",
+                    "RevokeRoleInput1"
                   ],
-                  "type": 14
-                }
-              }
-            ],
-            "docs": [
-              " Withdraw Fees - only Owner"
-            ],
-            "label": "withdraw_fee",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "Result"
-              ],
-              "type": 18
-            },
-            "selector": "0x07fdb555"
-          },
-          {
-            "args": [
-              {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "Id"
-                  ],
-                  "type": 25
+                  "type": 5
                 }
               },
               {
-                "label": "receiver",
+                "label": "account",
                 "type": {
                   "displayName": [
-                    "AccountId"
+                    "accesscontrol_external",
+                    "RevokeRoleInput2"
                   ],
                   "type": 0
                 }
               }
             ],
             "docs": [
-              " Transfer NFT token"
+              " Revokes `role` from `account`.",
+              "",
+              " On success a `RoleRevoked` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
             ],
-            "label": "tranfer_nft",
+            "label": "AccessControl::revoke_role",
             "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
-                "Result"
+                "accesscontrol_external",
+                "RevokeRoleOutput"
               ],
-              "type": 18
+              "type": 36
             },
-            "selector": "0xd34ab274"
+            "selector": "0x6e4f0991"
+          },
+          {
+            "args": [
+              {
+                "label": "role",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "GetRoleAdminInput1"
+                  ],
+                  "type": 5
+                }
+              }
+            ],
+            "docs": [
+              " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
+            ],
+            "label": "AccessControl::get_role_admin",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "accesscontrol_external",
+                "GetRoleAdminOutput"
+              ],
+              "type": 5
+            },
+            "selector": "0x83da3bb2"
+          },
+          {
+            "args": [
+              {
+                "label": "role",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "HasRoleInput1"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "label": "address",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "HasRoleInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Returns `true` if `account` has been granted `role`."
+            ],
+            "label": "AccessControl::has_role",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "accesscontrol_external",
+                "HasRoleOutput"
+              ],
+              "type": 12
+            },
+            "selector": "0xc1d9ac18"
+          },
+          {
+            "args": [
+              {
+                "label": "role",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "RenounceRoleInput1"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "label": "account",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "RenounceRoleInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Revokes `role` from the calling account.",
+              " Roles are often managed via `grant_role` and `revoke_role`: this function's",
+              " purpose is to provide a mechanism for accounts to lose their privileges",
+              " if they are compromised (such as when a trusted device is misplaced).",
+              "",
+              " On success a `RoleRevoked` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Returns with `InvalidCaller` error if caller is not `account`.",
+              " Returns with `MissingRole` error if `account` doesn't have `role`."
+            ],
+            "label": "AccessControl::renounce_role",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "accesscontrol_external",
+                "RenounceRoleOutput"
+              ],
+              "type": 36
+            },
+            "selector": "0xeaf1248a"
+          },
+          {
+            "args": [
+              {
+                "label": "role",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "GrantRoleInput1"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "label": "account",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "GrantRoleInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Grants `role` to `account`.",
+              "",
+              " On success a `RoleGranted` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Returns with `MissingRole` error if caller can't grant the role.",
+              " Returns with `RoleRedundant` error `account` has `role`."
+            ],
+            "label": "AccessControl::grant_role",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "accesscontrol_external",
+                "GrantRoleOutput"
+              ],
+              "type": 36
+            },
+            "selector": "0x4ac062fd"
+          },
+          {
+            "args": [
+              {
+                "label": "new_owner",
+                "type": {
+                  "displayName": [
+                    "ownable_external",
+                    "TransferOwnershipInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Transfers ownership of the contract to a `new_owner`.",
+              " Can only be called by the current owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner.",
+              "",
+              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
+            ],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "TransferOwnershipOutput"
+              ],
+              "type": 37
+            },
+            "selector": "0x11f43efd"
           },
           {
             "args": [],
@@ -1000,46 +1170,9 @@ const staking = {
                 "ownable_external",
                 "RenounceOwnershipOutput"
               ],
-              "type": 16
+              "type": 37
             },
             "selector": "0x5e228753"
-          },
-          {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Transfers ownership of the contract to a `new_owner`.",
-              " Can only be called by the current owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner.",
-              "",
-              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
-            ],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 16
-            },
-            "selector": "0x11f43efd"
           },
           {
             "args": [
@@ -1047,7 +1180,7 @@ const staking = {
                 "label": "account",
                 "type": {
                   "displayName": [
-                    "crossartzerostaking_external",
+                    "artzerostakingtrait_external",
                     "GetTotalPendingUnstakedByAccountInput1"
                   ],
                   "type": 0
@@ -1055,19 +1188,19 @@ const staking = {
               }
             ],
             "docs": [
-              " Get User NFT staked in the contract"
+              " This function returns the total PMP NFT that is pending to be unstaked by an account"
             ],
-            "label": "CrossArtZeroStaking::get_total_pending_unstaked_by_account",
+            "label": "ArtZeroStakingTrait::get_total_pending_unstaked_by_account",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "crossartzerostaking_external",
+                "artzerostakingtrait_external",
                 "GetTotalPendingUnstakedByAccountOutput"
               ],
-              "type": 9
+              "type": 17
             },
-            "selector": "0x3d9ff06d"
+            "selector": "0xcc24ad6d"
           },
           {
             "args": [
@@ -1075,7 +1208,7 @@ const staking = {
                 "label": "account",
                 "type": {
                   "displayName": [
-                    "crossartzerostaking_external",
+                    "artzerostakingtrait_external",
                     "GetTotalStakedByAccountInput1"
                   ],
                   "type": 0
@@ -1083,19 +1216,153 @@ const staking = {
               }
             ],
             "docs": [
-              " Get User NFT staked in the contract"
+              " This function returns the total PMP NFT Staked by an account"
             ],
-            "label": "CrossArtZeroStaking::get_total_staked_by_account",
+            "label": "ArtZeroStakingTrait::get_total_staked_by_account",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "crossartzerostaking_external",
+                "artzerostakingtrait_external",
                 "GetTotalStakedByAccountOutput"
               ],
-              "type": 9
+              "type": 17
             },
-            "selector": "0x487f1cac"
+            "selector": "0x5da4d83d"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferNftInput1"
+                  ],
+                  "type": 0
+                }
+              },
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferNftInput2"
+                  ],
+                  "type": 38
+                }
+              },
+              {
+                "label": "receiver",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferNftInput3"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
+            ],
+            "label": "AdminTrait::tranfer_nft",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "admintrait_external",
+                "TranferNftOutput"
+              ],
+              "type": 27
+            },
+            "selector": "0xed1e1dfa"
+          },
+          {
+            "args": [
+              {
+                "label": "psp22_contract_address",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferPsp22Input1"
+                  ],
+                  "type": 0
+                }
+              },
+              {
+                "label": "amount",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferPsp22Input2"
+                  ],
+                  "type": 23
+                }
+              },
+              {
+                "label": "receiver",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferPsp22Input3"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " This function allow contract owner withdraw PSP22 to an account in case there is any token sent to contract by mistake"
+            ],
+            "label": "AdminTrait::tranfer_psp22",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "admintrait_external",
+                "TranferPsp22Output"
+              ],
+              "type": 27
+            },
+            "selector": "0xd9aad284"
+          },
+          {
+            "args": [
+              {
+                "label": "value",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "WithdrawFeeInput1"
+                  ],
+                  "type": 23
+                }
+              },
+              {
+                "label": "receiver",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "WithdrawFeeInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " This function allows contract owner to withdraw contract balance to his account."
+            ],
+            "label": "AdminTrait::withdraw_fee",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "admintrait_external",
+                "WithdrawFeeOutput"
+              ],
+              "type": 27
+            },
+            "selector": "0x07573e99"
           }
         ]
       },
@@ -1153,8 +1420,96 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x971e61b600000000000000000000000000000000000000000000000000000000",
+                          "key": "0x75b08c5a00000000000000000000000000000000000000000000000000000000",
                           "ty": 4
+                        }
+                      },
+                      "name": "admin_roles"
+                    },
+                    {
+                      "layout": {
+                        "struct": {
+                          "fields": [
+                            {
+                              "layout": {
+                                "cell": {
+                                  "key": "0x2779f6fc00000000000000000000000000000000000000000000000000000000",
+                                  "ty": 8
+                                }
+                              },
+                              "name": "members"
+                            },
+                            {
+                              "layout": {
+                                "enum": {
+                                  "dispatchKey": "0x2879f6fc00000000000000000000000000000000000000000000000000000000",
+                                  "variants": {
+                                    "0": {
+                                      "fields": [
+                                        {
+                                          "layout": {
+                                            "cell": {
+                                              "key": "0x2979f6fc00000000000000000000000000000000000000000000000000000000",
+                                              "ty": 3
+                                            }
+                                          },
+                                          "name": null
+                                        }
+                                      ]
+                                    },
+                                    "1": {
+                                      "fields": []
+                                    }
+                                  }
+                                }
+                              },
+                              "name": "_reserved"
+                            }
+                          ]
+                        }
+                      },
+                      "name": "members"
+                    },
+                    {
+                      "layout": {
+                        "enum": {
+                          "dispatchKey": "0x76b08c5a00000000000000000000000000000000000000000000000000000000",
+                          "variants": {
+                            "0": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x77b08c5a00000000000000000000000000000000000000000000000000000000",
+                                      "ty": 3
+                                    }
+                                  },
+                                  "name": null
+                                }
+                              ]
+                            },
+                            "1": {
+                              "fields": []
+                            }
+                          }
+                        }
+                      },
+                      "name": "_reserved"
+                    }
+                  ]
+                }
+              },
+              "name": "access"
+            },
+            {
+              "layout": {
+                "struct": {
+                  "fields": [
+                    {
+                      "layout": {
+                        "cell": {
+                          "key": "0xa037626f00000000000000000000000000000000000000000000000000000000",
+                          "ty": 12
                         }
                       },
                       "name": "is_locked"
@@ -1162,7 +1517,7 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x981e61b600000000000000000000000000000000000000000000000000000000",
+                          "key": "0xa137626f00000000000000000000000000000000000000000000000000000000",
                           "ty": 0
                         }
                       },
@@ -1171,8 +1526,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x991e61b600000000000000000000000000000000000000000000000000000000",
-                          "ty": 5
+                          "key": "0xa237626f00000000000000000000000000000000000000000000000000000000",
+                          "ty": 13
                         }
                       },
                       "name": "staked_accounts"
@@ -1180,8 +1535,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x9a1e61b600000000000000000000000000000000000000000000000000000000",
-                          "ty": 8
+                          "key": "0xa337626f00000000000000000000000000000000000000000000000000000000",
+                          "ty": 16
                         }
                       },
                       "name": "staking_list"
@@ -1189,8 +1544,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x9b1e61b600000000000000000000000000000000000000000000000000000000",
-                          "ty": 8
+                          "key": "0xa437626f00000000000000000000000000000000000000000000000000000000",
+                          "ty": 16
                         }
                       },
                       "name": "pending_unstaking_list"
@@ -1198,7 +1553,7 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x9c1e61b600000000000000000000000000000000000000000000000000000000",
+                          "key": "0xa537626f00000000000000000000000000000000000000000000000000000000",
                           "ty": 0
                         }
                       },
@@ -1207,8 +1562,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x9d1e61b600000000000000000000000000000000000000000000000000000000",
-                          "ty": 9
+                          "key": "0xa637626f00000000000000000000000000000000000000000000000000000000",
+                          "ty": 17
                         }
                       },
                       "name": "total_staked"
@@ -1216,8 +1571,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x9e1e61b600000000000000000000000000000000000000000000000000000000",
-                          "ty": 9
+                          "key": "0xa737626f00000000000000000000000000000000000000000000000000000000",
+                          "ty": 17
                         }
                       },
                       "name": "limit_unstake_time"
@@ -1225,8 +1580,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0x9f1e61b600000000000000000000000000000000000000000000000000000000",
-                          "ty": 12
+                          "key": "0xa837626f00000000000000000000000000000000000000000000000000000000",
+                          "ty": 20
                         }
                       },
                       "name": "request_unstaking_time"
@@ -1234,8 +1589,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xa01e61b600000000000000000000000000000000000000000000000000000000",
-                          "ty": 14
+                          "key": "0xa937626f00000000000000000000000000000000000000000000000000000000",
+                          "ty": 23
                         }
                       },
                       "name": "reward_pool"
@@ -1243,8 +1598,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xa11e61b600000000000000000000000000000000000000000000000000000000",
-                          "ty": 14
+                          "key": "0xaa37626f00000000000000000000000000000000000000000000000000000000",
+                          "ty": 23
                         }
                       },
                       "name": "claimable_reward"
@@ -1252,8 +1607,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xa21e61b600000000000000000000000000000000000000000000000000000000",
-                          "ty": 4
+                          "key": "0xab37626f00000000000000000000000000000000000000000000000000000000",
+                          "ty": 12
                         }
                       },
                       "name": "reward_started"
@@ -1261,8 +1616,8 @@ const staking = {
                     {
                       "layout": {
                         "cell": {
-                          "key": "0xa31e61b600000000000000000000000000000000000000000000000000000000",
-                          "ty": 15
+                          "key": "0xac37626f00000000000000000000000000000000000000000000000000000000",
+                          "ty": 24
                         }
                       },
                       "name": "is_claimed"
@@ -1270,14 +1625,14 @@ const staking = {
                     {
                       "layout": {
                         "enum": {
-                          "dispatchKey": "0xa41e61b600000000000000000000000000000000000000000000000000000000",
+                          "dispatchKey": "0xad37626f00000000000000000000000000000000000000000000000000000000",
                           "variants": {
                             "0": {
                               "fields": [
                                 {
                                   "layout": {
                                     "cell": {
-                                      "key": "0xa51e61b600000000000000000000000000000000000000000000000000000000",
+                                      "key": "0xae37626f00000000000000000000000000000000000000000000000000000000",
                                       "ty": 3
                                     }
                                   },
@@ -1297,6 +1652,41 @@ const staking = {
                 }
               },
               "name": "manager"
+            },
+            {
+              "layout": {
+                "struct": {
+                  "fields": [
+                    {
+                      "layout": {
+                        "enum": {
+                          "dispatchKey": "0x7cce04ff00000000000000000000000000000000000000000000000000000000",
+                          "variants": {
+                            "0": {
+                              "fields": [
+                                {
+                                  "layout": {
+                                    "cell": {
+                                      "key": "0x7dce04ff00000000000000000000000000000000000000000000000000000000",
+                                      "ty": 3
+                                    }
+                                  },
+                                  "name": null
+                                }
+                              ]
+                            },
+                            "1": {
+                              "fields": []
+                            }
+                          }
+                        }
+                      },
+                      "name": "_reserved"
+                    }
+                  ]
+                }
+              },
+              "name": "admin_data"
             }
           ]
         }
@@ -1353,18 +1743,139 @@ const staking = {
           "id": 4,
           "type": {
             "def": {
-              "primitive": "bool"
-            }
+              "composite": {
+                "fields": [
+                  {
+                    "type": 6
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "K",
+                "type": 5
+              },
+              {
+                "name": "V",
+                "type": 5
+              }
+            ],
+            "path": [
+              "openbrush_lang",
+              "storage",
+              "mapping",
+              "Mapping"
+            ]
           }
         },
         {
           "id": 5,
           "type": {
             "def": {
+              "primitive": "u32"
+            }
+          }
+        },
+        {
+          "id": 6,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 7
+              }
+            }
+          }
+        },
+        {
+          "id": 7,
+          "type": {
+            "def": {
+              "tuple": [
+                5,
+                5
+              ]
+            }
+          }
+        },
+        {
+          "id": 8,
+          "type": {
+            "def": {
               "composite": {
                 "fields": [
                   {
-                    "type": 6
+                    "type": 10
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "K",
+                "type": 9
+              },
+              {
+                "name": "V",
+                "type": 3
+              }
+            ],
+            "path": [
+              "openbrush_lang",
+              "storage",
+              "mapping",
+              "Mapping"
+            ]
+          }
+        },
+        {
+          "id": 9,
+          "type": {
+            "def": {
+              "tuple": [
+                5,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "id": 10,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 11
+              }
+            }
+          }
+        },
+        {
+          "id": 11,
+          "type": {
+            "def": {
+              "tuple": [
+                9,
+                3
+              ]
+            }
+          }
+        },
+        {
+          "id": 12,
+          "type": {
+            "def": {
+              "primitive": "bool"
+            }
+          }
+        },
+        {
+          "id": 13,
+          "type": {
+            "def": {
+              "composite": {
+                "fields": [
+                  {
+                    "type": 14
                   }
                 ]
               }
@@ -1388,17 +1899,17 @@ const staking = {
           }
         },
         {
-          "id": 6,
+          "id": 14,
           "type": {
             "def": {
               "sequence": {
-                "type": 7
+                "type": 15
               }
             }
           }
         },
         {
-          "id": 7,
+          "id": 15,
           "type": {
             "def": {
               "tuple": [
@@ -1409,13 +1920,13 @@ const staking = {
           }
         },
         {
-          "id": 8,
+          "id": 16,
           "type": {
             "def": {
               "composite": {
                 "fields": [
                   {
-                    "type": 10
+                    "type": 18
                   }
                 ]
               }
@@ -1427,7 +1938,7 @@ const staking = {
               },
               {
                 "name": "V",
-                "type": 9
+                "type": 17
               }
             ],
             "path": [
@@ -1439,7 +1950,7 @@ const staking = {
           }
         },
         {
-          "id": 9,
+          "id": 17,
           "type": {
             "def": {
               "primitive": "u64"
@@ -1447,36 +1958,34 @@ const staking = {
           }
         },
         {
-          "id": 10,
+          "id": 18,
           "type": {
             "def": {
               "sequence": {
-                "type": 11
+                "type": 19
               }
             }
           }
         },
         {
-          "id": 11,
+          "id": 19,
           "type": {
             "def": {
               "tuple": [
                 0,
-                9
+                17
               ]
             }
           }
         },
         {
-          "id": 12,
+          "id": 20,
           "type": {
             "def": {
               "composite": {
                 "fields": [
                   {
-                    "name": "offset_key",
-                    "type": 13,
-                    "typeName": "Key"
+                    "type": 21
                   }
                 ]
               }
@@ -1484,42 +1993,44 @@ const staking = {
             "params": [
               {
                 "name": "K",
-                "type": 11
+                "type": 19
               },
               {
                 "name": "V",
-                "type": 9
+                "type": 17
               }
             ],
             "path": [
-              "ink_storage",
-              "lazy",
+              "openbrush_lang",
+              "storage",
               "mapping",
               "Mapping"
             ]
           }
         },
         {
-          "id": 13,
+          "id": 21,
           "type": {
             "def": {
-              "composite": {
-                "fields": [
-                  {
-                    "type": 1,
-                    "typeName": "[u8; 32]"
-                  }
-                ]
+              "sequence": {
+                "type": 22
               }
-            },
-            "path": [
-              "ink_primitives",
-              "Key"
-            ]
+            }
           }
         },
         {
-          "id": 14,
+          "id": 22,
+          "type": {
+            "def": {
+              "tuple": [
+                19,
+                17
+              ]
+            }
+          }
+        },
+        {
+          "id": 23,
           "type": {
             "def": {
               "primitive": "u128"
@@ -1527,15 +2038,13 @@ const staking = {
           }
         },
         {
-          "id": 15,
+          "id": 24,
           "type": {
             "def": {
               "composite": {
                 "fields": [
                   {
-                    "name": "offset_key",
-                    "type": 13,
-                    "typeName": "Key"
+                    "type": 25
                   }
                 ]
               }
@@ -1547,19 +2056,40 @@ const staking = {
               },
               {
                 "name": "V",
-                "type": 4
+                "type": 12
               }
             ],
             "path": [
-              "ink_storage",
-              "lazy",
+              "openbrush_lang",
+              "storage",
               "mapping",
               "Mapping"
             ]
           }
         },
         {
-          "id": 16,
+          "id": 25,
+          "type": {
+            "def": {
+              "sequence": {
+                "type": 26
+              }
+            }
+          }
+        },
+        {
+          "id": 26,
+          "type": {
+            "def": {
+              "tuple": [
+                0,
+                12
+              ]
+            }
+          }
+        },
+        {
+          "id": 27,
           "type": {
             "def": {
               "variant": {
@@ -1576,7 +2106,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 17
+                        "type": 28
                       }
                     ],
                     "index": 1,
@@ -1592,7 +2122,7 @@ const staking = {
               },
               {
                 "name": "E",
-                "type": 17
+                "type": 28
               }
             ],
             "path": [
@@ -1601,7 +2131,234 @@ const staking = {
           }
         },
         {
-          "id": 17,
+          "id": 28,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "fields": [
+                      {
+                        "type": 29,
+                        "typeName": "String"
+                      }
+                    ],
+                    "index": 0,
+                    "name": "Custom"
+                  },
+                  {
+                    "index": 1,
+                    "name": "OnlyOwner"
+                  },
+                  {
+                    "index": 2,
+                    "name": "OnlyAdmin"
+                  },
+                  {
+                    "index": 3,
+                    "name": "InvalidCaller"
+                  },
+                  {
+                    "index": 4,
+                    "name": "InvalidFee"
+                  },
+                  {
+                    "index": 5,
+                    "name": "TokenOwnerNotMatch"
+                  },
+                  {
+                    "index": 6,
+                    "name": "NotApproved"
+                  },
+                  {
+                    "index": 7,
+                    "name": "CannotTransfer"
+                  },
+                  {
+                    "index": 8,
+                    "name": "CannotMint"
+                  },
+                  {
+                    "index": 9,
+                    "name": "NotPublicMint"
+                  },
+                  {
+                    "index": 10,
+                    "name": "NotEnoughBalance"
+                  },
+                  {
+                    "index": 11,
+                    "name": "MaxSupply"
+                  },
+                  {
+                    "index": 12,
+                    "name": "AlreadyInit"
+                  },
+                  {
+                    "index": 13,
+                    "name": "NotOwner"
+                  },
+                  {
+                    "index": 14,
+                    "name": "NotTokenOwner"
+                  },
+                  {
+                    "index": 15,
+                    "name": "ProjectNotExist"
+                  },
+                  {
+                    "index": 16,
+                    "name": "ProjectOwnerAndAdmin"
+                  },
+                  {
+                    "index": 17,
+                    "name": "InvalidStartTimeAndEndTime"
+                  },
+                  {
+                    "index": 18,
+                    "name": "InvalidPhaseCount"
+                  },
+                  {
+                    "index": 19,
+                    "name": "CollectionOwnerAndAdmin"
+                  },
+                  {
+                    "index": 20,
+                    "name": "CollectionNotActive"
+                  },
+                  {
+                    "index": 21,
+                    "name": "InvalidInput"
+                  },
+                  {
+                    "index": 22,
+                    "name": "InvalidType"
+                  },
+                  {
+                    "index": 23,
+                    "name": "ClaimedAll"
+                  },
+                  {
+                    "index": 24,
+                    "name": "TokenLimitReached"
+                  },
+                  {
+                    "index": 25,
+                    "name": "UpdatePhase"
+                  },
+                  {
+                    "index": 26,
+                    "name": "PhaseNotExist"
+                  },
+                  {
+                    "index": 27,
+                    "name": "PhaseExpired"
+                  },
+                  {
+                    "index": 28,
+                    "name": "WhitelistNotExist"
+                  },
+                  {
+                    "index": 29,
+                    "name": "WithdrawFeeError"
+                  },
+                  {
+                    "index": 30,
+                    "name": "WithdrawNFTError"
+                  },
+                  {
+                    "index": 31,
+                    "name": "WithdrawPSP22Error"
+                  },
+                  {
+                    "index": 32,
+                    "name": "NotListed"
+                  },
+                  {
+                    "index": 33,
+                    "name": "BidAlreadyExist"
+                  },
+                  {
+                    "index": 34,
+                    "name": "BidNotExist"
+                  },
+                  {
+                    "index": 35,
+                    "name": "NotInMarket"
+                  },
+                  {
+                    "index": 36,
+                    "name": "NotForSale"
+                  },
+                  {
+                    "index": 37,
+                    "name": "NotInSaleList"
+                  },
+                  {
+                    "index": 38,
+                    "name": "InvalidBidLength"
+                  },
+                  {
+                    "index": 39,
+                    "name": "InvalidCollectionOwner"
+                  },
+                  {
+                    "index": 40,
+                    "name": "InvalidTime"
+                  },
+                  {
+                    "index": 41,
+                    "name": "RewardStarted"
+                  },
+                  {
+                    "index": 42,
+                    "name": "RewardNotStarted"
+                  },
+                  {
+                    "index": 43,
+                    "name": "ClaimMustBeFalse"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 30,
+                        "typeName": "OwnableError"
+                      }
+                    ],
+                    "index": 44,
+                    "name": "OwnableError"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 31,
+                        "typeName": "AccessControlError"
+                      }
+                    ],
+                    "index": 45,
+                    "name": "AccessControlError"
+                  }
+                ]
+              }
+            },
+            "path": [
+              "artzero_project",
+              "traits",
+              "error",
+              "Error"
+            ]
+          }
+        },
+        {
+          "id": 29,
+          "type": {
+            "def": {
+              "primitive": "str"
+            }
+          }
+        },
+        {
+          "id": 30,
           "type": {
             "def": {
               "variant": {
@@ -1627,103 +2384,37 @@ const staking = {
           }
         },
         {
-          "id": 18,
+          "id": 31,
           "type": {
             "def": {
               "variant": {
                 "variants": [
                   {
-                    "fields": [
-                      {
-                        "type": 3
-                      }
-                    ],
                     "index": 0,
-                    "name": "Ok"
-                  },
-                  {
-                    "fields": [
-                      {
-                        "type": 19
-                      }
-                    ],
-                    "index": 1,
-                    "name": "Err"
-                  }
-                ]
-              }
-            },
-            "params": [
-              {
-                "name": "T",
-                "type": 3
-              },
-              {
-                "name": "E",
-                "type": 19
-              }
-            ],
-            "path": [
-              "Result"
-            ]
-          }
-        },
-        {
-          "id": 19,
-          "type": {
-            "def": {
-              "variant": {
-                "variants": [
-                  {
-                    "fields": [
-                      {
-                        "type": 20,
-                        "typeName": "String"
-                      }
-                    ],
-                    "index": 0,
-                    "name": "Custom"
+                    "name": "InvalidCaller"
                   },
                   {
                     "index": 1,
-                    "name": "TokenOwnerNotMatch"
+                    "name": "MissingRole"
                   },
                   {
                     "index": 2,
-                    "name": "NotApproved"
-                  },
-                  {
-                    "index": 3,
-                    "name": "CannotTransfer"
-                  },
-                  {
-                    "index": 4,
-                    "name": "OnlyOwner"
-                  },
-                  {
-                    "index": 5,
-                    "name": "OnlyAdmin"
+                    "name": "RoleRedundant"
                   }
                 ]
               }
             },
             "path": [
-              "artzero_staking_nft",
-              "artzero_staking_nft",
-              "Error"
+              "openbrush_contracts",
+              "traits",
+              "errors",
+              "access_control",
+              "AccessControlError"
             ]
           }
         },
         {
-          "id": 20,
-          "type": {
-            "def": {
-              "primitive": "str"
-            }
-          }
-        },
-        {
-          "id": 21,
+          "id": 32,
           "type": {
             "def": {
               "variant": {
@@ -1735,7 +2426,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 9
+                        "type": 17
                       }
                     ],
                     "index": 1,
@@ -1747,7 +2438,7 @@ const staking = {
             "params": [
               {
                 "name": "T",
-                "type": 9
+                "type": 17
               }
             ],
             "path": [
@@ -1756,7 +2447,7 @@ const staking = {
           }
         },
         {
-          "id": 22,
+          "id": 33,
           "type": {
             "def": {
               "variant": {
@@ -1768,7 +2459,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 14
+                        "type": 23
                       }
                     ],
                     "index": 1,
@@ -1780,7 +2471,7 @@ const staking = {
             "params": [
               {
                 "name": "T",
-                "type": 14
+                "type": 23
               }
             ],
             "path": [
@@ -1789,7 +2480,7 @@ const staking = {
           }
         },
         {
-          "id": 23,
+          "id": 34,
           "type": {
             "def": {
               "variant": {
@@ -1822,17 +2513,101 @@ const staking = {
           }
         },
         {
-          "id": 24,
+          "id": 35,
           "type": {
             "def": {
               "sequence": {
-                "type": 9
+                "type": 17
               }
             }
           }
         },
         {
-          "id": 25,
+          "id": 36,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "fields": [
+                      {
+                        "type": 3
+                      }
+                    ],
+                    "index": 0,
+                    "name": "Ok"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 31
+                      }
+                    ],
+                    "index": 1,
+                    "name": "Err"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "T",
+                "type": 3
+              },
+              {
+                "name": "E",
+                "type": 31
+              }
+            ],
+            "path": [
+              "Result"
+            ]
+          }
+        },
+        {
+          "id": 37,
+          "type": {
+            "def": {
+              "variant": {
+                "variants": [
+                  {
+                    "fields": [
+                      {
+                        "type": 3
+                      }
+                    ],
+                    "index": 0,
+                    "name": "Ok"
+                  },
+                  {
+                    "fields": [
+                      {
+                        "type": 30
+                      }
+                    ],
+                    "index": 1,
+                    "name": "Err"
+                  }
+                ]
+              }
+            },
+            "params": [
+              {
+                "name": "T",
+                "type": 3
+              },
+              {
+                "name": "E",
+                "type": 30
+              }
+            ],
+            "path": [
+              "Result"
+            ]
+          }
+        },
+        {
+          "id": 38,
           "type": {
             "def": {
               "variant": {
@@ -1850,7 +2625,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 26,
+                        "type": 39,
                         "typeName": "u16"
                       }
                     ],
@@ -1860,7 +2635,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 27,
+                        "type": 5,
                         "typeName": "u32"
                       }
                     ],
@@ -1870,7 +2645,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 9,
+                        "type": 17,
                         "typeName": "u64"
                       }
                     ],
@@ -1880,7 +2655,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 14,
+                        "type": 23,
                         "typeName": "u128"
                       }
                     ],
@@ -1890,7 +2665,7 @@ const staking = {
                   {
                     "fields": [
                       {
-                        "type": 28,
+                        "type": 40,
                         "typeName": "Vec<u8>"
                       }
                     ],
@@ -1909,7 +2684,7 @@ const staking = {
           }
         },
         {
-          "id": 26,
+          "id": 39,
           "type": {
             "def": {
               "primitive": "u16"
@@ -1917,15 +2692,7 @@ const staking = {
           }
         },
         {
-          "id": 27,
-          "type": {
-            "def": {
-              "primitive": "u32"
-            }
-          }
-        },
-        {
-          "id": 28,
+          "id": 40,
           "type": {
             "def": {
               "sequence": {
