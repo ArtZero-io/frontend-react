@@ -1,16 +1,16 @@
-import BN from 'bn.js';
-import toast from 'react-hot-toast';
-import { web3FromSource } from '../wallets/extension-dapp';
-import { isValidAddressPolkadotAddress } from '@utils';
-import { ContractPromise, Abi } from '@polkadot/api-contract';
+import BN from "bn.js";
+import toast from "react-hot-toast";
+import { web3FromSource } from "../wallets/extension-dapp";
+import { isValidAddressPolkadotAddress } from "@utils";
+import { ContractPromise, Abi } from "@polkadot/api-contract";
 import {
   txErrorHandler,
   txResponseErrorHandler,
-} from '@store/actions/txStatus';
-import { APICall } from '@api/client';
-import { clientAPI } from '@api/client';
-import collection_manager from '@utils/blockchain/collection-manager';
-import { getEstimatedGas } from '..';
+} from "@store/actions/txStatus";
+import { APICall } from "@api/client";
+import { clientAPI } from "@api/client";
+import collection_manager from "@utils/blockchain/collection-manager";
+import { getEstimatedGas } from "..";
 
 let contract;
 
@@ -48,24 +48,22 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
     address,
     contract,
     value,
-    'addNewCollection',
-    address,
+    "addNewCollection",
     data?.nftContractAddress,
     data.attributes,
     data.attributeVals,
-    data.collectionAllowRoyalFee,
-    data.collectionRoyalFeeData
+    data.collectionAllowRoyaltyFee,
+    data.collectionRoyaltyFeeData
   );
 
   contract.tx
     .addNewCollection(
       { gasLimit, value },
-      address,
       data?.nftContractAddress,
       data.attributes,
       data.attributeVals,
-      data.collectionAllowRoyalFee,
-      data.collectionRoyalFeeData
+      data.collectionAllowRoyaltyFee,
+      data.collectionRoyaltyFeeData
     )
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
@@ -78,7 +76,7 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
       });
 
       if (status?.isFinalized) {
-        toast.success('Collection is created successful!');
+        toast.success("Collection is created successful!");
 
         let transactionData = data;
         await APICall.askBeUpdateCollectionData({
@@ -89,43 +87,43 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
 
           for (let i = 0; i < transactionData.attributes.length; i++) {
             console.log(transactionData.attributes[i]);
-            if (transactionData.attributes[i] === 'avatar_image') {
+            if (transactionData.attributes[i] === "avatar_image") {
               cacheImages.push({
                 input: transactionData.attributeVals[i],
                 is1920: false,
-                imageType: 'collection',
+                imageType: "collection",
                 metadata: {
                   collectionAddress: data?.nftContractAddress,
-                  type: 'avatar_image',
+                  type: "avatar_image",
                 },
               });
             }
-            if (transactionData.attributes[i] === 'header_image') {
+            if (transactionData.attributes[i] === "header_image") {
               cacheImages.push({
                 input: transactionData.attributeVals[i],
                 is1920: false,
-                imageType: 'collection',
+                imageType: "collection",
                 metadata: {
                   collectionAddress: data?.nftContractAddress,
-                  type: 'header_image',
+                  type: "header_image",
                 },
               });
             }
-            if (transactionData.attributes[i] === 'header_square_image') {
+            if (transactionData.attributes[i] === "header_square_image") {
               cacheImages.push({
                 input: transactionData.attributeVals[i],
                 is1920: true,
-                imageType: 'collection',
+                imageType: "collection",
                 metadata: {
                   collectionAddress: data?.nftContractAddress,
-                  type: 'header_square_image',
+                  type: "header_square_image",
                 },
               });
             }
           }
 
           if (cacheImages.length) {
-            await clientAPI('post', '/cacheImages', {
+            await clientAPI("post", "/cacheImages", {
               images: JSON.stringify(cacheImages),
             });
           }
@@ -147,7 +145,7 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
   let unsubscribe;
   let gasLimit = -1;
   let transactionData = data;
-
+  console.log("data", data);
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = await getSimpleModeAddingFee(caller_account);
@@ -157,11 +155,10 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
       { gasLimit, value },
       data.nftName,
       data.nftSymbol,
-      address,
       data.attributes,
       data.attributeVals,
-      data.collectionAllowRoyalFee,
-      data.collectionRoyalFeeData
+      data.collectionAllowRoyaltyFee,
+      data.collectionRoyaltyFeeData
     )
     .signAndSend(
       address,
@@ -176,11 +173,11 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
           caller_account,
         });
         if (status?.isFinalized) {
-          toast.success('Collection is created successful!');
+          toast.success("Collection is created successful!");
 
           events.forEach(
             async ({ event: { data, method, section }, phase }) => {
-              if (section === 'contracts' && method === 'ContractEmitted') {
+              if (section === "contracts" && method === "ContractEmitted") {
                 const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
                 const contract_address = accId.toString();
                 if (contract_address === collection_manager.CONTRACT_ADDRESS) {
@@ -196,7 +193,7 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
                     const value = decodedEvent.args[i];
                     eventValues.push(value.toString());
                   }
-                  if (event_name === 'AddNewCollectionEvent') {
+                  if (event_name === "AddNewCollectionEvent") {
                     await APICall.askBeUpdateCollectionData({
                       collection_address: eventValues[1],
                     });
@@ -208,46 +205,46 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
                         i < transactionData.attributes.length;
                         i++
                       ) {
-                        if (transactionData.attributes[i] === 'avatar_image') {
+                        if (transactionData.attributes[i] === "avatar_image") {
                           cacheImages.push({
                             input: transactionData.attributeVals[i],
                             is1920: false,
-                            imageType: 'collection',
+                            imageType: "collection",
                             metadata: {
                               collectionAddress: eventValues[1],
-                              type: 'avatar_image',
+                              type: "avatar_image",
                             },
                           });
                         }
-                        if (transactionData.attributes[i] === 'header_image') {
+                        if (transactionData.attributes[i] === "header_image") {
                           cacheImages.push({
                             input: transactionData.attributeVals[i],
                             is1920: false,
-                            imageType: 'collection',
+                            imageType: "collection",
                             metadata: {
                               collectionAddress: eventValues[1],
-                              type: 'header_image',
+                              type: "header_image",
                             },
                           });
                         }
                         if (
                           transactionData.attributes[i] ===
-                          'header_square_image'
+                          "header_square_image"
                         ) {
                           cacheImages.push({
                             input: transactionData.attributeVals[i],
                             is1920: true,
-                            imageType: 'collection',
+                            imageType: "collection",
                             metadata: {
                               collectionAddress: eventValues[1],
-                              type: 'header_square_image',
+                              type: "header_square_image",
                             },
                           });
                         }
                       }
 
                       if (cacheImages.length) {
-                        await clientAPI('post', '/cacheImages', {
+                        await clientAPI("post", "/cacheImages", {
                           images: JSON.stringify(cacheImages),
                         });
                       }
@@ -294,7 +291,7 @@ async function updateIsActive(
     address,
     contract,
     value,
-    'updateIsActive',
+    "updateIsActive",
     collection_address,
     isActive
   );
@@ -337,7 +334,7 @@ async function getCollectionCount(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
@@ -412,7 +409,7 @@ async function isActive(caller_account, collection_address) {
   const azero_value = 0;
 
   const { result, output } = await contract.query[
-    'crossArtZeroCollection::isActive'
+    "crossArtZeroCollection::isActive"
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
     return output.toHuman();
@@ -420,7 +417,7 @@ async function isActive(caller_account, collection_address) {
   return null;
 }
 
-async function getRoyalFee(caller_account, collection_address) {
+async function getRoyaltyFee(caller_account, collection_address) {
   if (
     !contract ||
     !caller_account ||
@@ -433,10 +430,11 @@ async function getRoyalFee(caller_account, collection_address) {
   const azero_value = 0;
 
   const { result, output } = await contract.query[
-    'crossArtZeroCollection::getRoyalFee'
+    "artZeroCollectionTrait::getRoyaltyFee"
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    console.log("new BN(output, 10,", new BN(output, 10, "le").toNumber());
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
@@ -454,10 +452,10 @@ async function getContractType(caller_account, collection_address) {
   const azero_value = 0;
 
   const { result, output } = await contract.query[
-    'crossArtZeroCollection::getContractType'
+    "crossArtZeroCollection::getContractType"
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
@@ -476,7 +474,7 @@ async function getCollectionOwner(caller_account, collection_address) {
   const address = caller_account?.address;
 
   const { result, output } = await contract.query[
-    'crossArtZeroCollection::getCollectionOwner'
+    "crossArtZeroCollection::getCollectionOwner"
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
     return output.toHuman();
@@ -518,7 +516,7 @@ async function getSimpleModeAddingFee(caller_account) {
     }
   );
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
@@ -534,19 +532,22 @@ async function getAdvanceModeAddingFee(caller_account) {
   );
 
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
 
-async function getMaxRoyalFeeRate(caller_account) {
+async function getMaxRoyaltyFeeRate(caller_account) {
   const gasLimit = -1;
   const address = caller_account?.address;
-  const { result, output } = await contract.query.getMaxRoyalFeeRate(address, {
-    gasLimit,
-  });
+  const { result, output } = await contract.query.getMaxRoyaltyFeeRate(
+    address,
+    {
+      gasLimit,
+    }
+  );
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
@@ -559,7 +560,7 @@ async function owner(caller_account) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query['ownable::owner'](address, {
+  const { result, output } = await contract.query["ownable::owner"](address, {
     value: azero_value,
     gasLimit,
   });
@@ -585,7 +586,7 @@ async function getActiveCollectionCount(caller_account) {
     }
   );
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
@@ -639,7 +640,7 @@ async function setMultipleAttributes(
     address,
     contract,
     value,
-    'setMultipleAttributes',
+    "setMultipleAttributes",
     collection_address,
     attributes,
     values
@@ -664,7 +665,7 @@ async function setMultipleAttributes(
         });
 
         if (status?.isFinalized) {
-          toast.success('Collection is updated successful!');
+          toast.success("Collection is updated successful!");
 
           await APICall.askBeUpdateCollectionData({
             collection_address: collection_address,
@@ -673,43 +674,43 @@ async function setMultipleAttributes(
             let cacheImages = [];
 
             for (let i = 0; i < attributes.length; i++) {
-              if (attributes[i] === 'avatar_image') {
+              if (attributes[i] === "avatar_image") {
                 cacheImages.push({
                   input: values[i],
                   is1920: false,
-                  imageType: 'collection',
+                  imageType: "collection",
                   metadata: {
                     collectionAddress: collection_address,
-                    type: 'avatar_image',
+                    type: "avatar_image",
                   },
                 });
               }
-              if (attributes[i] === 'header_image') {
+              if (attributes[i] === "header_image") {
                 cacheImages.push({
                   input: values[i],
                   is1920: false,
-                  imageType: 'collection',
+                  imageType: "collection",
                   metadata: {
                     collectionAddress: collection_address,
-                    type: 'header_image',
+                    type: "header_image",
                   },
                 });
               }
-              if (attributes[i] === 'header_square_image') {
+              if (attributes[i] === "header_square_image") {
                 cacheImages.push({
                   input: values[i],
                   is1920: true,
-                  imageType: 'collection',
+                  imageType: "collection",
                   metadata: {
                     collectionAddress: collection_address,
-                    type: 'header_square_image',
+                    type: "header_square_image",
                   },
                 });
               }
             }
 
             if (cacheImages.length) {
-              await clientAPI('post', '/cacheImages', {
+              await clientAPI("post", "/cacheImages", {
                 images: JSON.stringify(cacheImages),
               });
             }
@@ -733,7 +734,7 @@ const collection_manager_calls = {
   getContractById,
   getAdminAddress,
   isActive,
-  getRoyalFee,
+  getRoyaltyFee,
   getContractType,
   getCollectionOwner,
   updateIsActive,
@@ -742,7 +743,7 @@ const collection_manager_calls = {
   getAttributes,
   setCollectionContract,
   setMultipleAttributes,
-  getMaxRoyalFeeRate,
+  getMaxRoyaltyFeeRate,
 };
 
 export default collection_manager_calls;
@@ -779,7 +780,7 @@ export const withdrawCollectionContract = async (
     address,
     contract,
     value,
-    'withdrawFee',
+    "withdrawFee",
     amountFormatted
   );
 

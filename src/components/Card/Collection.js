@@ -30,7 +30,7 @@ export const CollectionCard = ({
   variant,
   nftContractAddress,
   scrollToCollectionAddress,
-  royalFee,
+  royaltyFee,
 }) => {
   const restorationRef = useRef();
 
@@ -211,7 +211,7 @@ export const CollectionCard = ({
                     borderColor="#7ae7ff"
                     fontSize="12px"
                   >
-                    {royalFee / 100}% Royalty
+                    {royaltyFee / 100}% Royalty
                   </Box>
                 </>
               )}

@@ -74,7 +74,7 @@ function MyNFTTabInfo(props) {
     contractType,
     is_locked,
     showOnChainMetadata,
-    royalFee,
+    royaltyFee,
     nft_count,
     rarityTable,
     // traits = {},
@@ -617,8 +617,8 @@ function MyNFTTabInfo(props) {
                 <Text as="span" color="brand.grayLight">
                   Royalty fee:
                 </Text>{' '}
-                {formatNumDynamicDecimal((askPrice * royalFee) / 10000)}{' '}
-                <AzeroIcon w="15px" mb="2px" /> ({(royalFee / 100).toFixed(2)}%)
+                {formatNumDynamicDecimal((askPrice * royaltyFee) / 10000)}{' '}
+                <AzeroIcon w="15px" mb="2px" /> ({(royaltyFee / 100).toFixed(2)}%)
               </Text>
               <Text>
                 <Text as="span" color="brand.grayLight">
@@ -634,7 +634,7 @@ function MyNFTTabInfo(props) {
                 {formatNumDynamicDecimal(
                   askPrice -
                     (askPrice * myTradingFee) / 100 -
-                    (askPrice * royalFee) / 10000
+                    (askPrice * royaltyFee) / 10000
                 )}{' '}
                 <AzeroIcon w="15px" mb="2px" />
               </Text>
@@ -652,8 +652,8 @@ function MyNFTTabInfo(props) {
                 <Text as="span" color="brand.grayLight">
                   Royalty fee:
                 </Text>{' '}
-                {formatNumDynamicDecimal((price / 10 ** 16) * royalFee)}{' '}
-                <AzeroIcon w="15px" mb="2px" /> ({(royalFee / 100).toFixed(2)}%)
+                {formatNumDynamicDecimal((price / 10 ** 16) * royaltyFee)}{' '}
+                <AzeroIcon w="15px" mb="2px" /> ({(royaltyFee / 100).toFixed(2)}%)
               </Text>
               <Text>
                 <Text as="span" color="brand.grayLight">
@@ -670,7 +670,7 @@ function MyNFTTabInfo(props) {
                   price *
                     (1 / 10 ** 12 -
                       myTradingFee / 10 ** 14 -
-                      royalFee / 10 ** 16)
+                      royaltyFee / 10 ** 16)
                 )}{' '}
                 <AzeroIcon w="15px" mb="2px" />
               </Text>

@@ -101,7 +101,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const [userBalance, setUserBalance] = useState(null);
   const [isSetRoyal, setIsSetRoyal] = useState(false);
   const [addingFee, setAddingFee] = useState(0);
-  const [maxRoyalFeeRate, setMaxRoyalFeeRate] = useState(0);
+  const [maxRoyaltyFeeRate, setMaxRoyaltyFeeRate] = useState(0);
   const [addProjectTotalFee, setAddProjectTotalFee] = useState(null);
 
   const currentAvatarIPFSUrl = useRef(avatarIPFSUrl);
@@ -170,11 +170,11 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
         projectInfo: location.state?.projectInfo,
       });
 
-      if (maxRoyalFeeRate === 0) {
-        const maxRoyalFeeRateData =
-          await collection_manager_calls.getMaxRoyalFeeRate(currentAccount);
+      if (maxRoyaltyFeeRate === 0) {
+        const maxRoyaltyFeeRateData =
+          await collection_manager_calls.getMaxRoyaltyFeeRate(currentAccount);
 
-        setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
+        setMaxRoyaltyFeeRate(maxRoyaltyFeeRateData / 100);
 
         if (addingFee === 0) {
           const addingFeeData =
@@ -204,7 +204,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     api,
     currentAccount,
     location.state?.projectInfo,
-    maxRoyalFeeRate,
+    maxRoyaltyFeeRate,
     mode,
     nftContractAddress,
   ]);
@@ -450,8 +450,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     website: values.website.trim(),
                     twitter: values.twitter.trim(),
                     discord: values.discord.trim(),
-                    collectRoyalFee: isSetRoyal,
-                    royalFee: values.royalFee,
+                    collectRoyaltyFee: isSetRoyal,
+                    royaltyFee: values.royaltyFee,
                     collectionAddingFee: addingFee,
                     is_public_phases: is_public_phases,
                     public_minting_fee_phases: public_minting_fee_phases,
@@ -485,9 +485,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         values.twitter,
                         values.discord,
                       ],
-                      collectionAllowRoyalFee: isSetRoyal,
-                      collectionRoyalFeeData: isSetRoyal
-                        ? Math.round(values.royalFee * 100)
+                      collectionAllowRoyaltyFee: isSetRoyal,
+                      collectionRoyaltyFeeData: isSetRoyal
+                        ? Math.round(values.royaltyFee * 100)
                         : 0,
                     };
 
@@ -811,12 +811,12 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                             direction={{ base: 'column', '2xl': 'row' }}
                           >
                             <AdvancedModeSwitch
-                              name="collectRoyalFee"
+                              name="collectRoyaltyFee"
                               label="Collect Royalty Fee"
                               isDisabled={actionType}
                               onChange={() => {
-                                values.collectRoyalFee =
-                                  !values.collectRoyalFee;
+                                values.collectRoyaltyFee =
+                                  !values.collectRoyaltyFee;
                                 setIsSetRoyal(!isSetRoyal);
                               }}
                             />
@@ -832,7 +832,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                               borderColor="#7ae7ff"
                               textTransform="capitalize"
                             >
-                              {initialValues?.royalFee}% Royalty
+                              {initialValues?.royaltyFee}% Royalty
                             </Box>
                           </HStack>
                         )}
@@ -846,9 +846,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           <Stack minW="10rem">
                             <NumberInput
                               isDisabled={!isSetRoyal || actionType}
-                              max={maxRoyalFeeRate}
-                              label={`Royalty Fee (max ${maxRoyalFeeRate}%)`}
-                              name="royalFee"
+                              max={maxRoyaltyFeeRate}
+                              label={`Royalty Fee (max ${maxRoyaltyFeeRate}%)`}
+                              name="royaltyFee"
                               type="number"
                               placeholder="Royalty Fee"
                               inputWidth={'8rem'}
@@ -1162,7 +1162,7 @@ export const fetchInitialValuesProject = async ({
     nftName: '',
     nftSymbol: '',
     totalSupply: 0,
-    royalFee: 0.5,
+    royaltyFee: 0.5,
 
     phases: [
       {

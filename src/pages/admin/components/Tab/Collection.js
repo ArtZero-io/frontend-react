@@ -366,8 +366,8 @@ function CollectionAdmin() {
                       </Td>
                       <Td py={7}>{collection.nft_count}</Td>
                       <Td py={7}>
-                        {collection.isCollectRoyalFee
-                          ? collection.royalFee / 100 + '%'
+                        {collection.isCollectRoyaltyFee
+                          ? collection.royaltyFee / 100 + '%'
                           : 'N/A'}{' '}
                       </Td>
                       <Td py={7}>

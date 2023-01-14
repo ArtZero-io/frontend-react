@@ -36,7 +36,7 @@ function CollectionHeader(props) {
     floorPrice,
     totalListed,
     nft_count,
-    royalFee,
+    royaltyFee,
   } = props;
 
   const [isSeeMore, setIsSeeMore] = useState(false);
@@ -151,7 +151,7 @@ function CollectionHeader(props) {
               alignItems="center"
               border="1px solid white"
             >
-              <Text>Royalty fee: {royalFee / 100}%</Text>
+              <Text>Royalty fee: {royaltyFee / 100}%</Text>
             </Flex>
           </HStack>
 

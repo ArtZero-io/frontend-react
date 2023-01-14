@@ -119,7 +119,7 @@ function EventTable({ tableHeaders, tableData, collectionOwnerName, type }) {
                           >
                             {i === "price" ||
                             i === "platformFee" ||
-                            i === "royalFee" ? (
+                            i === "royaltyFee" ? (
                               <>
                                 {formatNumDynamicDecimal(item[i])}
                                 <TagRightIcon as={AzeroIcon} w="16px" />

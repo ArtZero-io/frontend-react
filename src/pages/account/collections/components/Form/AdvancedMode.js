@@ -36,7 +36,7 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
   const [addingFee, setAddingFee] = useState(0);
   const [isSetRoyal, setIsSetRoyal] = useState(false);
   const [initialValues, setInitialValues] = useState(null);
-  const [maxRoyalFeeRate, setMaxRoyalFeeRate] = useState(0);
+  const [maxRoyaltyFeeRate, setMaxRoyaltyFeeRate] = useState(0);
 
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
@@ -68,15 +68,15 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
 
   useEffect(() => {
     const fetchFee = async () => {
-      if (maxRoyalFeeRate === 0) {
-        const maxRoyalFeeRateData =
-          await collection_manager_calls.getMaxRoyalFeeRate(currentAccount);
+      if (maxRoyaltyFeeRate === 0) {
+        const maxRoyaltyFeeRateData =
+          await collection_manager_calls.getMaxRoyaltyFeeRate(currentAccount);
 
-        setMaxRoyalFeeRate(maxRoyalFeeRateData / 100);
+        setMaxRoyaltyFeeRate(maxRoyaltyFeeRateData / 100);
       }
     };
     fetchFee();
-  }, [maxRoyalFeeRate, currentAccount]);
+  }, [maxRoyaltyFeeRate, currentAccount]);
 
   const checkCurrentBalance = async () => {
     const { data: balance } = await api.query.system.account(
@@ -96,8 +96,8 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
       nftContractAddress: '',
       collectionName: '',
       collectionDescription: '',
-      collectRoyalFee: '',
-      royalFee: 5,
+      collectRoyaltyFee: '',
+      royaltyFee: 5,
       website: '',
       twitter: '',
       discord: '',
@@ -114,8 +114,8 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
           nftContractAddress,
           name: collectionName,
           description: collectionDescription,
-          isCollectRoyalFee: collectRoyalFee,
-          royalFee,
+          isCollectRoyaltyFee: collectRoyaltyFee,
+          royaltyFee,
           avatarImage,
           headerImage,
           squareImage,
@@ -129,8 +129,8 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
           nftContractAddress,
           collectionName,
           collectionDescription,
-          collectRoyalFee,
-          royalFee: royalFee / 100,
+          collectRoyaltyFee,
+          royaltyFee: royaltyFee / 100,
           agreeTosCheckbox: false,
           website,
           twitter,
@@ -141,7 +141,7 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
           setAvatarIPFSUrl(avatarImage);
           setHeaderIPFSUrl(headerImage);
           setHeaderSquareIPFSUrl(squareImage);
-          setIsSetRoyal(collectRoyalFee);
+          setIsSetRoyal(collectRoyaltyFee);
           setInitialValues(newInitialValues);
 
           currentAvatarIPFSUrl.current = avatarImage;
@@ -185,7 +185,7 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
               .min(3, 'Must be at least 3 characters')
               .max(150, 'Must be at most 150 characters')
               .required('This field is required'),
-            collectRoyalFee: Yup.boolean(),
+            collectRoyaltyFee: Yup.boolean(),
             website: Yup.string()
               .trim()
               .url('URL must start with http:// or https://')
@@ -256,10 +256,10 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
                   values.discord,
                 ],
 
-                collectionAllowRoyalFee: values.collectRoyalFee,
+                collectionAllowRoyaltyFee: values.collectRoyaltyFee,
 
-                collectionRoyalFeeData: values.collectRoyalFee
-                  ? Math.round(values.royalFee * 100)
+                collectionRoyaltyFeeData: values.collectRoyaltyFee
+                  ? Math.round(values.royaltyFee * 100)
                   : 0,
               };
 
@@ -410,7 +410,7 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
                         borderColor="#7ae7ff"
                         textTransform="capitalize"
                       >
-                        {initialValues.royalFee}% Royalty
+                        {initialValues.royaltyFee}% Royalty
                       </Box>
                     </Box>
                   )}
@@ -533,11 +533,11 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
                     <Stack minW="225px">
                       <Box w="12rem">
                         <AdvancedModeSwitch
-                          name="collectRoyalFee"
+                          name="collectRoyaltyFee"
                           isDisabled={actionType}
                           label="Collect Royalty Fee"
                           onChange={() => {
-                            values.collectRoyalFee = !values.collectRoyalFee;
+                            values.collectRoyaltyFee = !values.collectRoyaltyFee;
                             setIsSetRoyal(!isSetRoyal);
                           }}
                         />
@@ -545,13 +545,13 @@ const AdvancedModeForm = ({ mode = 'add', id }) => {
                     </Stack>
                     <AddCollectionNumberInput
                       type="number"
-                      name="royalFee"
+                      name="royaltyFee"
                       inputWidth={'8rem'}
-                      max={maxRoyalFeeRate}
+                      max={maxRoyaltyFeeRate}
                       placeholder="Royalty Fee"
                       isDisplay={isSetRoyal}
                       isDisabled={!isSetRoyal || actionType}
-                      label={`Royalty Fee (max ${maxRoyalFeeRate}%)`}
+                      label={`Royalty Fee (max ${maxRoyaltyFeeRate}%)`}
                     />
                   </Stack>
 
