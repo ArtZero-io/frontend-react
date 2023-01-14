@@ -263,7 +263,6 @@ async function addNewProject(
     contract,
     value,
     'addNewProject',
-    address,
     data.total_supply,
     data.start_time,
     data.end_time,
@@ -280,7 +279,6 @@ async function addNewProject(
   contract.tx
     .addNewProject(
       { gasLimit, value },
-      address,
       data.total_supply,
       data.start_time,
       data.end_time,
@@ -509,7 +507,7 @@ export const getProjectMintFeeRate = async function (caller_account, api) {
 
   setLaunchPadContract(api, launchpad_manager);
   const { result, output } = await contract.query[
-    'crossArtZeroLaunchPadPSP34::getProjectMintFeeRate'
+    'artZeroLaunchPadTrait::getProjectMintFeeRate'
   ](address, {
     value: azero_value,
     gasLimit,

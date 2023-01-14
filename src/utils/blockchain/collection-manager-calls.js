@@ -542,10 +542,9 @@ async function getMaxRoyaltyFeeRate(caller_account) {
   const address = caller_account?.address;
   const { result, output } = await contract.query.getMaxRoyaltyFeeRate(
     address,
-    {
-      gasLimit,
-    }
+    { gasLimit }
   );
+  
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
