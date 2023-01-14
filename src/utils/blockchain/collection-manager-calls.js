@@ -49,7 +49,6 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
     contract,
     value,
     'addNewCollection',
-    address,
     data?.nftContractAddress,
     data.attributes,
     data.attributeVals,
@@ -60,7 +59,6 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
   contract.tx
     .addNewCollection(
       { gasLimit, value },
-      address,
       data?.nftContractAddress,
       data.attributes,
       data.attributeVals,
@@ -542,7 +540,7 @@ async function getAdvanceModeAddingFee(caller_account) {
 async function getMaxRoyalFeeRate(caller_account) {
   const gasLimit = -1;
   const address = caller_account?.address;
-  const { result, output } = await contract.query.getMaxRoyalFeeRate(address, {
+  const { result, output } = await contract.query.getMaxRoyaltyFeeRate(address, {
     gasLimit,
   });
   if (result.isOk) {
