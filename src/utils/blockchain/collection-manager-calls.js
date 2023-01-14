@@ -409,7 +409,7 @@ async function isActive(caller_account, collection_address) {
   const azero_value = 0;
 
   const { result, output } = await contract.query[
-    "crossArtZeroCollection::isActive"
+    "artZeroCollectionTrait::isActive"
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
     return output.toHuman();
@@ -452,7 +452,7 @@ async function getContractType(caller_account, collection_address) {
   const azero_value = 0;
 
   const { result, output } = await contract.query[
-    "crossArtZeroCollection::getContractType"
+    "artZeroCollectionTrait::getContractType"
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
@@ -474,7 +474,7 @@ async function getCollectionOwner(caller_account, collection_address) {
   const address = caller_account?.address;
 
   const { result, output } = await contract.query[
-    "crossArtZeroCollection::getCollectionOwner"
+    "artZeroCollectionTrait::getCollectionOwner"
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
     return output.toHuman();
@@ -544,7 +544,7 @@ async function getMaxRoyaltyFeeRate(caller_account) {
     address,
     { gasLimit }
   );
-  
+
   if (result.isOk) {
     return new BN(output, 10, "le").toNumber();
   }
@@ -779,11 +779,11 @@ export const withdrawCollectionContract = async (
     address,
     contract,
     value,
-    "withdrawFee",
+    "adminTrait::withdrawFee",
     amountFormatted
   );
 
-  const txNotSign = contract.tx.withdrawFee(
+  const txNotSign = contract.tx["adminTrait::withdrawFee"](
     { gasLimit, value },
     amountFormatted
   );

@@ -552,11 +552,11 @@ export const withdrawLaunchpadContract = async (
     address,
     contract,
     value,
-    'withdrawFee',
+    "adminTrait::withdrawFee",
     amountFormatted
   );
 
-  const txNotSign = contract.tx.withdrawFee(
+  const txNotSign = contract.tx["adminTrait::withdrawFee"](
     { gasLimit, value },
     amountFormatted
   );

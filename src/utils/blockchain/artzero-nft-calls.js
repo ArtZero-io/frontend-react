@@ -506,8 +506,7 @@ async function withdrawFee(caller_account, amount) {
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
-  contract.tx
-    .withdrawFee(
+  contract.tx["adminTrait::withdrawFee"](
       { gasLimit, value: azero_value },
       new BN(parseFloat(amount) * 10 ** 6).mul(new BN(10 ** 6)).toString()
     )

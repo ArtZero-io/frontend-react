@@ -69,7 +69,7 @@ async function getTotalPendingUnstakedByAccount(caller_account, account) {
   
 
   const { result, output } = await contract.query[
-    'crossArtZeroStaking::getTotalPendingUnstakedByAccount'
+    'artZeroStakingTrait::getTotalPendingUnstakedByAccount'
   ](address, { value: azero_value, gasLimit }, account);
   if (result.isOk) {
     return new BN(output, 10, 'le').toNumber();

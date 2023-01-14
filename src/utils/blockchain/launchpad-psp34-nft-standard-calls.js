@@ -1,16 +1,16 @@
-import toast from 'react-hot-toast';
-import { web3FromSource } from '../wallets/extension-dapp';
-import BN from 'bn.js';
-import { APICall } from '../../api/client';
-import { isValidAddressPolkadotAddress } from '@utils';
-import launchpad_contract_calls from './launchpad-contract-calls';
-import launchpad_psp34_nft_standard from '@utils/blockchain/launchpad-psp34-nft-standard';
-import { ContractPromise } from '@polkadot/api-contract';
+import toast from "react-hot-toast";
+import { web3FromSource } from "../wallets/extension-dapp";
+import BN from "bn.js";
+import { APICall } from "../../api/client";
+import { isValidAddressPolkadotAddress } from "@utils";
+import launchpad_contract_calls from "./launchpad-contract-calls";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import { ContractPromise } from "@polkadot/api-contract";
 import {
   txErrorHandler,
   txResponseErrorHandler,
-} from '@store/actions/txStatus';
-import { getEstimatedGas } from '..';
+} from "@store/actions/txStatus";
+import { getEstimatedGas } from "..";
 
 let contract;
 
@@ -32,7 +32,7 @@ async function getTotalSupply(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
@@ -95,7 +95,7 @@ async function updateWhitelist(
     address,
     contract,
     value,
-    'updateWhitelist',
+    "updateWhitelist",
     account,
     phaseId,
     amount,
@@ -165,7 +165,7 @@ async function addWhitelist(
     address,
     contract,
     value,
-    'addWhitelist',
+    "addWhitelist",
     account,
     phaseId,
     amount,
@@ -211,14 +211,14 @@ async function getLastPhaseId(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
 
 async function getCurrentPhase(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -237,7 +237,7 @@ async function getCurrentPhase(caller_account) {
 
 async function getPhaseAccountLastIndex(caller_account, phaseId) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -260,7 +260,7 @@ async function getPhaseAccountLastIndex(caller_account, phaseId) {
 
 async function getPhaseAccountLink(caller_account, phaseId, index) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -288,7 +288,7 @@ async function getWhitelistByAccountId(
   accountAddress
 ) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -312,7 +312,7 @@ async function getWhitelistByAccountId(
 
 async function getLastTokenId(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -323,7 +323,7 @@ async function getLastTokenId(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
@@ -352,7 +352,7 @@ async function editProjectInformation(
     address,
     contract,
     value,
-    'editProjectInformation',
+    "editProjectInformation",
     projectInfo
   );
 
@@ -373,7 +373,7 @@ async function editProjectInformation(
           project_address: nftContractAddress,
         });
 
-        console.log('askBeUpdateProjectData res', res);
+        console.log("askBeUpdateProjectData res", res);
       }
     })
     .then((unsub) => (unsubscribe = unsub))
@@ -399,7 +399,7 @@ async function mint(caller_account, mintAmount, dispatch, txType, api) {
     address,
     contract,
     value,
-    'mint',
+    "mint",
     mintAmount
   );
 
@@ -448,7 +448,7 @@ async function publicMint(
     address,
     contract,
     value,
-    'publicMint',
+    "publicMint",
     phaseId,
     mintAmount
   );
@@ -478,7 +478,7 @@ async function publicMint(
           })
           .then(async ({ result, output }) => {
             if (result.isOk) {
-              const lastTokenId = new BN(output, 10, 'le').toNumber();
+              const lastTokenId = new BN(output, 10, "le").toNumber();
 
               for (
                 let token_id = lastTokenId - mintAmount + 1;
@@ -525,7 +525,7 @@ async function whitelistMint(
     address,
     contract,
     value,
-    'whitelistMint',
+    "whitelistMint",
     phaseId,
     mintAmount
   );
@@ -550,7 +550,7 @@ async function whitelistMint(
           })
           .then(async ({ result, output }) => {
             if (result.isOk) {
-              const lastTokenId = new BN(output, 10, 'le').toNumber();
+              const lastTokenId = new BN(output, 10, "le").toNumber();
 
               for (
                 let token_id = lastTokenId - mintAmount + 1;
@@ -574,7 +574,7 @@ async function whitelistMint(
 
 async function getProjectInfo(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -614,7 +614,7 @@ async function updateAdminAddress(
     address,
     contract,
     value,
-    'updateAdminAddress',
+    "updateAdminAddress",
     adminAddress
   );
 
@@ -635,7 +635,7 @@ async function updateAdminAddress(
           project_address: collection_address,
         });
 
-        console.log('askBeUpdateProjectData res', res);
+        console.log("askBeUpdateProjectData res", res);
       }
     })
     .then((unsub) => (unsubscribe = unsub))
@@ -661,11 +661,11 @@ async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
     address,
     contract,
     value,
-    'psp34Traits::setBaseUri',
+    "psp34Traits::setBaseUri",
     uri
   );
 
-  const txNotSign = contract.tx['psp34Traits::setBaseUri'](
+  const txNotSign = contract.tx["psp34Traits::setBaseUri"](
     { gasLimit, value },
     uri
   );
@@ -689,13 +689,13 @@ async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
 
 async function ownerOf(caller_account, tokenID) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  const { result, output } = await contract.query['psp34::ownerOf'](
+  const { result, output } = await contract.query["psp34::ownerOf"](
     address,
     {
       value: azero_value,
@@ -717,7 +717,7 @@ async function tokenUri(caller_account, tokenId) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query['psp34Traits::tokenUri'](
+  const { result, output } = await contract.query["psp34Traits::tokenUri"](
     address,
     {
       value: azero_value,
@@ -764,7 +764,7 @@ async function addNewPhase(
     address,
     contract,
     value,
-    'addNewPhase',
+    "addNewPhase",
     phaseCode,
     isPublic,
     publicMintingFee,
@@ -836,7 +836,7 @@ async function updateSchedulePhase(
     address,
     contract,
     value,
-    'updateSchedulePhase',
+    "updateSchedulePhase",
     phaseId,
     phaseCode,
     isPublic,
@@ -893,7 +893,7 @@ async function deactivePhase(caller_account, phaseId, dispatch, txType, api) {
     address,
     contract,
     value,
-    'deactivePhase',
+    "deactivePhase",
     phaseId
   );
 
@@ -918,7 +918,7 @@ async function deactivePhase(caller_account, phaseId, dispatch, txType, api) {
 
 async function getPublicMintedCount(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -932,7 +932,7 @@ async function getPublicMintedCount(caller_account) {
     }
   );
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
@@ -977,8 +977,8 @@ export const getProjectListDetails = async ({ currentAccount, api }) => {
       avatarImage: avatar,
       squareImage: headerSquare,
       nftContractAddress: nftAddress,
-      endTime: parseInt(project?.endTime?.replaceAll(',', '')),
-      startTime: parseInt(project?.startTime?.replaceAll(',', '')),
+      endTime: parseInt(project?.endTime?.replaceAll(",", "")),
+      startTime: parseInt(project?.startTime?.replaceAll(",", "")),
     };
     ret.push(proj);
   }
@@ -987,7 +987,7 @@ export const getProjectListDetails = async ({ currentAccount, api }) => {
 
 async function getAdminAddress(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -1005,7 +1005,7 @@ async function getAdminAddress(caller_account) {
 
 async function getAvailableTokenAmount(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -1026,7 +1026,7 @@ async function getAvailableTokenAmount(caller_account) {
 
 async function getOwnerClaimedAmount(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -1069,12 +1069,11 @@ async function withdrawFee(caller_account, amount, dispatch, txType, api) {
     address,
     contract,
     value,
-    'withdrawFee',
+    "adminTrait::withdrawFee",
     withdrawAmount
   );
 
-  contract.tx
-    .withdrawFee({ gasLimit, value }, withdrawAmount)
+  contract.tx["adminTrait::withdrawFee"]({ gasLimit, value }, withdrawAmount)
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,
@@ -1098,7 +1097,7 @@ export const getPhaseAccountPublicClaimedAmount = async (
   api
 ) => {
   if (!nftContractAddress || !currentAccount) {
-    console.log('invalid inputs nftContractAddress || currentAccount');
+    console.log("invalid inputs nftContractAddress || currentAccount");
     return null;
   }
 
@@ -1175,7 +1174,7 @@ export const getAccountBalanceOfPsp34NFT = async ({
   const value = 0;
   const gasLimit = -1;
 
-  const { result, output } = await contract.query['psp34::balanceOf'](
+  const { result, output } = await contract.query["psp34::balanceOf"](
     currentAccount?.address,
     { value, gasLimit },
     targetAddress || currentAccount?.address
@@ -1184,7 +1183,7 @@ export const getAccountBalanceOfPsp34NFT = async ({
   let ret = null;
 
   if (result.isOk) {
-    ret = new BN(output, 10, 'le').toNumber();
+    ret = new BN(output, 10, "le").toNumber();
   }
 
   return ret;
@@ -1203,7 +1202,7 @@ export const getIdOfPsp34NFT = async ({
   const gasLimit = -1;
 
   const { result, output } = await contract.query[
-    'psp34Enumerable::ownersTokenByIndex'
+    "psp34Enumerable::ownersTokenByIndex"
   ](
     currentAccount?.address,
     { value, gasLimit },
@@ -1226,7 +1225,7 @@ export const getCurrentPhaseByProjectAddress = async ({
   api,
 }) => {
   if (!nftContractAddress || !currentAccount) {
-    console.log('invalid inputs nftContractAddress || currentAccount');
+    console.log("invalid inputs nftContractAddress || currentAccount");
     return null;
   }
 
@@ -1257,7 +1256,7 @@ export const getCurrentPhaseStatusOfProject = async ({
   api,
 }) => {
   if (!nftContractAddress || !currentAccount) {
-    console.log('invalid inputs nftContractAddress || currentAccount');
+    console.log("invalid inputs nftContractAddress || currentAccount");
     return null;
   }
 
