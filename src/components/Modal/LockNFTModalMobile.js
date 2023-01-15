@@ -70,10 +70,10 @@ function LockNFTModalMobile({
         u64: tokenID,
       });
 
-      
-
-      await contract.tx
-        .lock({ value, gasLimit }, { u64: tokenID })
+      await contract.tx["psp34Traits::lock"](
+        { value, gasLimit },
+        { u64: tokenID }
+      )
         .signAndSend(
           currentAccount?.address,
           { signer },

@@ -18,46 +18,47 @@ import {
   Text,
   Tooltip,
   useBreakpointValue,
-} from '@chakra-ui/react';
-import AzeroIcon from '@theme/assets/icon/Azero.js';
+} from "@chakra-ui/react";
+import AzeroIcon from "@theme/assets/icon/Azero.js";
 
-import { Link as ReactRouterLink } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Link as ReactRouterLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import React, { useCallback, useEffect, useState } from "react";
 
-import toast from 'react-hot-toast';
-import { motion } from 'framer-motion';
+import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 import {
   convertStringToPrice,
   getPublicCurrentAccount,
   formatNumDynamicDecimal,
   getTraitCount,
-} from '@utils';
+} from "@utils";
 
-import { useSubstrateState } from '@utils/substrate';
+import { useSubstrateState } from "@utils/substrate";
 
-import marketplace_contract_calls from '@utils/blockchain/marketplace_contract_calls';
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
-import { formMode } from '@constants';
+import { formMode } from "@constants";
 
-import LockNFTModal from '@components/Modal/LockNFTModal';
+import LockNFTModal from "@components/Modal/LockNFTModal";
 
-import AddNewNFTModal from '../Modal/AddNewNFT';
-import { SCROLLBAR } from '@constants';
-import CommonButton from '@components/Button/CommonButton';
-import { BUY, BID, REMOVE_BID } from '@constants';
-import useTxStatus from '@hooks/useTxStatus';
-import { buyToken, placeBid, removeBid } from '../../../token';
-import { clearTxStatus } from '@store/actions/txStatus';
-import { truncateStr } from '@utils';
-import UnlockIcon from '@theme/assets/icon/Unlock';
-import LockIcon from '@theme/assets/icon/Lock';
-import PropCard from '@components/Card/PropCard';
-import LevelCard from '@components/Card/LevelCard';
-import { Fragment } from 'react';
-import ImageCloudFlare from '@components/ImageWrapper/ImageCloudFlare';
-import SocialShare from '@components/SocialShare/SocialShare';
+import AddNewNFTModal from "../Modal/AddNewNFT";
+import { SCROLLBAR } from "@constants";
+import CommonButton from "@components/Button/CommonButton";
+import { BUY, BID, REMOVE_BID } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
+import { buyToken, placeBid, removeBid } from "../../../token";
+import { clearTxStatus } from "@store/actions/txStatus";
+import { truncateStr } from "@utils";
+import UnlockIcon from "@theme/assets/icon/Unlock";
+import LockIcon from "@theme/assets/icon/Lock";
+import PropCard from "@components/Card/PropCard";
+import LevelCard from "@components/Card/LevelCard";
+import { Fragment } from "react";
+import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
+import SocialShare from "@components/SocialShare/SocialShare";
+import { MAX_BID_COUNT } from "../../../../constants";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -78,7 +79,7 @@ const NFTTabCollectible = (props) => {
 
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
-  const gridSize = useBreakpointValue({ base: `8rem`, '2xl': `11rem` });
+  const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
 
   const [doOffer] = useState(false);
   const [bidPrice, setBidPrice] = useState(1);
@@ -86,12 +87,14 @@ const NFTTabCollectible = (props) => {
   const [isBided, setIsBided] = useState(false);
   const [saleInfo, setSaleInfo] = useState(null);
 
-  const [ownerName, setOwnerName] = useState('');
-  const [ownerAddress, setOwnerAddress] = useState('');
+  const [ownerName, setOwnerName] = useState("");
+  const [ownerAddress, setOwnerAddress] = useState("");
   const [isOwner, setIsOwner] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
+
+  const [bidderCount, setBidderCount] = useState(0);
 
   const fetchSaleInfo = useCallback(async () => {
     setLoading(true);
@@ -113,7 +116,7 @@ const NFTTabCollectible = (props) => {
           sale_info?.nftOwner,
           { u64: tokenID }
         );
-
+        setBidderCount(listBidder?.length || 0);
         accountAddress = is_for_sale ? sale_info?.nftOwner : owner;
 
         if (listBidder) {
@@ -138,8 +141,8 @@ const NFTTabCollectible = (props) => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      toast.error('There is some error when fetching sale info!');
-      console.log('error', error);
+      toast.error("There is some error when fetching sale info!");
+      console.log("error", error);
     }
   }, [currentAccount, is_for_sale, nftContractAddress, owner, tokenID]);
 
@@ -188,6 +191,11 @@ const NFTTabCollectible = (props) => {
   };
 
   const handleBidAction = async () => {
+    if (bidderCount > MAX_BID_COUNT) {
+      toast.error(`This NFT had reached max ${MAX_BID_COUNT} bids!`);
+      return;
+    }
+
     try {
       await placeBid(
         api,
@@ -207,11 +215,11 @@ const NFTTabCollectible = (props) => {
     }
   };
 
-  const iconWidth = useBreakpointValue(['40px', '50px']);
+  const iconWidth = useBreakpointValue(["40px", "50px"]);
 
   const path = `${window.location.href.replace(
-    '#/collection/',
-    '#/nft/'
+    "#/collection/",
+    "#/nft/"
   )}/${tokenID}`;
 
   return (
@@ -219,13 +227,13 @@ const NFTTabCollectible = (props) => {
       <Stack
         alignItems="stretch"
         direction="row"
-        spacing={{ base: '20px', xl: '45px' }}
+        spacing={{ base: "20px", xl: "45px" }}
       >
         <ImageCloudFlare
-          h={['484px']}
+          h={["484px"]}
           src={avatar}
           objectFitContain={true}
-          w={{ base: '404px', xl: '484px' }}
+          w={{ base: "404px", xl: "484px" }}
         />
 
         <Stack alignItems="flex-start" w="full">
@@ -237,7 +245,7 @@ const NFTTabCollectible = (props) => {
               <Heading
                 color="#fff"
                 size="h4"
-                fontSize={{ base: '28px', '2xl': '32px' }}
+                fontSize={{ base: "28px", "2xl": "32px" }}
               >
                 {nftName}
               </Heading>
@@ -274,15 +282,15 @@ const NFTTabCollectible = (props) => {
                     style={{
                       width: iconWidth,
                       height: iconWidth,
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      border: '2px solid #333333',
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "2px solid #333333",
                     }}
                   >
                     <UnlockIcon
-                      width={['20px', '25px']}
-                      height={['20px', '25px']}
+                      width={["20px", "25px"]}
+                      height={["20px", "25px"]}
                     />
                   </span>
                 </Tooltip>
@@ -300,15 +308,15 @@ const NFTTabCollectible = (props) => {
                     style={{
                       width: iconWidth,
                       height: iconWidth,
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      border: '2px solid #333333',
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "2px solid #333333",
                     }}
                   >
                     <UnlockIcon
-                      width={['20px', '25px']}
-                      height={['20px', '25px']}
+                      width={["20px", "25px"]}
+                      height={["20px", "25px"]}
                     />
                   </span>
                 </Tooltip>
@@ -326,15 +334,15 @@ const NFTTabCollectible = (props) => {
                     style={{
                       width: iconWidth,
                       height: iconWidth,
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      border: '2px solid #333333',
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "2px solid #333333",
                     }}
                   >
                     <LockIcon
-                      width={['20px', '25px']}
-                      height={['20px', '25px']}
+                      width={["20px", "25px"]}
+                      height={["20px", "25px"]}
                     />
                   </span>
                 </Tooltip>
@@ -349,7 +357,7 @@ const NFTTabCollectible = (props) => {
               fontSize="lg"
               color="brand.grayLight"
               lineHeight="1.35"
-              maxW={{ base: '500px', '2xl': '610px' }}
+              maxW={{ base: "500px", "2xl": "610px" }}
             >
               {description}
             </Text>
@@ -358,7 +366,7 @@ const NFTTabCollectible = (props) => {
           <Stack w="full">
             <Skeleton isLoaded={!loading}>
               <Text color="#fff" maxW="max-content">
-                Owned by{' '}
+                Owned by{" "}
                 <Link
                   as={ReactRouterLink}
                   // to="/user/xxx"
@@ -381,9 +389,9 @@ const NFTTabCollectible = (props) => {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   style={{
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
                   }}
                 >
                   {/* is_for_sale true no sale always show no matter is owner or nor*/}
@@ -402,11 +410,11 @@ const NFTTabCollectible = (props) => {
 
                   <Stack
                     display={
-                      saleInfo && is_for_sale && !isOwner ? 'flex' : 'none'
+                      saleInfo && is_for_sale && !isOwner ? "flex" : "none"
                     }
-                    direction={{ base: 'column', md: 'row' }}
+                    direction={{ base: "column", md: "row" }}
                     w="full"
-                    pr={{ base: '0', '2xl': '28px' }}
+                    pr={{ base: "0", "2xl": "28px" }}
                   >
                     {is_for_sale && saleInfo && !isOwner && (
                       <>
@@ -417,7 +425,7 @@ const NFTTabCollectible = (props) => {
                           borderWidth={2}
                           alignItems="center"
                           borderColor="#343333"
-                          px={['8px', '16px']}
+                          px={["8px", "16px"]}
                           minH="80px"
                         >
                           <CommonButton
@@ -474,10 +482,10 @@ const NFTTabCollectible = (props) => {
                             mr="30px"
                             display="flex"
                             borderWidth={2}
-                            px={['8px', '16px']}
+                            px={["8px", "16px"]}
                             alignItems="center"
                             borderColor="#333"
-                            minH={['4.15rem', '4.75rem', '4.75rem']}
+                            minH={["4.15rem", "4.75rem", "4.75rem"]}
                           >
                             {!isBided && (
                               <>
@@ -497,7 +505,7 @@ const NFTTabCollectible = (props) => {
                                   h="50px"
                                   bg="black"
                                   precision={6}
-                                  minW={'85px'}
+                                  minW={"85px"}
                                   max={999000000}
                                   value={bidPrice}
                                   isDisabled={actionType}
@@ -511,7 +519,7 @@ const NFTTabCollectible = (props) => {
                                   />
                                   <InputRightElement
                                     bg="transparent"
-                                    h={'50px'}
+                                    h={"50px"}
                                     w={8}
                                   >
                                     <AzeroIcon />
@@ -558,13 +566,13 @@ const NFTTabCollectible = (props) => {
                 </motion.div>
               </Stack>
 
-              <Stack display={['none', 'flex', 'flex']} w="full" flexGrow="1">
+              <Stack display={["none", "flex", "flex"]} w="full" flexGrow="1">
                 {attrsList?.length === 0 ? (
                   <Stack>
                     <Text
-                      mt={{ base: '6px', '2xl': '12px' }}
-                      display={{ base: 'none', xl: 'block' }}
-                      fontSize={{ base: '14px', '2xl': '16px' }}
+                      mt={{ base: "6px", "2xl": "12px" }}
+                      display={{ base: "none", xl: "block" }}
+                      fontSize={{ base: "14px", "2xl": "16px" }}
                     >
                       This NFT has no props/ levels.
                     </Text>
@@ -585,7 +593,7 @@ const NFTTabCollectible = (props) => {
                         ? attrsList
                             .filter(
                               (i) =>
-                                !JSON.stringify(Object.values(i)).includes('|')
+                                !JSON.stringify(Object.values(i)).includes("|")
                             )
                             .map((item, idx) => {
                               return (
@@ -603,12 +611,12 @@ const NFTTabCollectible = (props) => {
                                 </Fragment>
                               );
                             })
-                        : ''}
+                        : ""}
 
                       {attrsList?.length
                         ? attrsList
                             .filter((i) =>
-                              JSON.stringify(Object.values(i)).includes('|')
+                              JSON.stringify(Object.values(i)).includes("|")
                             )
                             .map((item, idx) => {
                               return (

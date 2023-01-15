@@ -86,6 +86,8 @@ import CommonTabs from "@components/Tabs/CommonTabs";
 import OwnershipHistory from "../collection/component/Tab/OwnershipHistory";
 import TxHistory from "../collection/component/Tab/TxHistory";
 import MyNFTOffer from "@pages/account/nfts/components/Tabs/MyNFTOffers";
+import { MAX_BID_COUNT } from "../../constants";
+
 function TokenPage() {
   const dispatch = useDispatch();
   const { currentAccount, api } = useSubstrateState();
@@ -104,6 +106,8 @@ function TokenPage() {
   const [isOwner, setIsOwner] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isAlreadyBid, setIsAlreadyBid] = useState(false);
+
+  const [bidderCount, setBidderCount] = useState(0);
 
   const { actionType, tokenIDArray, ...rest } = useTxStatus();
 
@@ -166,6 +170,7 @@ function TokenPage() {
             ownerAddress,
             { u64: token_id }
           );
+          setBidderCount(listBidder?.length || 0);
 
           if (listBidder?.length) {
             //sort highest price first
@@ -243,6 +248,11 @@ function TokenPage() {
   };
 
   const handleBidAction = async () => {
+    if (bidderCount > MAX_BID_COUNT) {
+      toast.error(`This NFT had reached max ${MAX_BID_COUNT} bids!`);
+      return;
+    }
+
     try {
       await placeBid(
         api,

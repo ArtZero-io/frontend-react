@@ -1,38 +1,38 @@
 /* eslint-disable no-unused-vars */
-import { Box, HStack, Stack, Text, VStack } from '@chakra-ui/react';
-import { useDispatch } from 'react-redux';
-import React, { useState, useEffect, useRef } from 'react';
-import { Formik, Form } from 'formik';
-import toast from 'react-hot-toast';
-import * as Yup from 'yup';
+import { Box, HStack, Stack, Text, VStack } from "@chakra-ui/react";
+import { useDispatch } from "react-redux";
+import React, { useState, useEffect, useRef } from "react";
+import { Formik, Form } from "formik";
+import toast from "react-hot-toast";
+import * as Yup from "yup";
 
-import CollectionImageUpload from '@components/ImageUpload/Collection';
-import SimpleModeInput from '@components/Input/Input';
-import SimpleModeTextArea from '@components/TextArea/TextArea';
-import SimpleModeSwitch from '@components/Switch/Switch';
+import CollectionImageUpload from "@components/ImageUpload/Collection";
+import SimpleModeInput from "@components/Input/Input";
+import SimpleModeTextArea from "@components/TextArea/TextArea";
+import SimpleModeSwitch from "@components/Switch/Switch";
 
-import { useSubstrateState } from '@utils/substrate';
-import collection_manager_calls from '@utils/blockchain/collection-manager-calls';
+import { useSubstrateState } from "@utils/substrate";
+import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 
-import AddCollectionNumberInput from '@components/Input/NumberInput';
-import CommonCheckbox from '@components/Checkbox/Checkbox';
+import AddCollectionNumberInput from "@components/Input/NumberInput";
+import CommonCheckbox from "@components/Checkbox/Checkbox";
 import {
   formMode,
   CREATE_COLLECTION,
   EDIT_COLLECTION,
   START,
-} from '@constants';
-import useTxStatus from '@hooks/useTxStatus';
-import CommonButton from '@components/Button/CommonButton';
-import { setTxStatus } from '@store/actions/txStatus';
-import { APICall } from '../../../../../api/client';
-import { clearTxStatus } from '@store/actions/txStatus';
-import ImageUploadThumbnail from '@components/ImageUpload/Thumbnail';
+} from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
+import CommonButton from "@components/Button/CommonButton";
+import { setTxStatus } from "@store/actions/txStatus";
+import { APICall } from "../../../../../api/client";
+import { clearTxStatus } from "@store/actions/txStatus";
+import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 
 const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
-  const [avatarIPFSUrl, setAvatarIPFSUrl] = useState('');
-  const [headerIPFSUrl, setHeaderIPFSUrl] = useState('');
-  const [headerSquareIPFSUrl, setHeaderSquareIPFSUrl] = useState('');
+  const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
+  const [headerIPFSUrl, setHeaderIPFSUrl] = useState("");
+  const [headerSquareIPFSUrl, setHeaderSquareIPFSUrl] = useState("");
   const [addingFee, setAddingFee] = useState(0);
   const [isSetRoyal, setIsSetRoyal] = useState(false);
   const [initialValues, setInitialValues] = useState(null);
@@ -64,7 +64,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
           setAddingFee(addingFeeData / 10 ** 12);
         }
       } catch (error) {
-        console.log('error fetchFee', error.message);
+        console.log("error fetchFee", error.message);
       }
     };
 
@@ -98,15 +98,15 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
   useEffect(() => {
     let newInitialValues = {
       isEditMode: false,
-      nftName: '',
-      nftSymbol: '',
-      collectionName: '',
-      collectionDescription: '',
-      collectRoyaltyFee: '',
+      nftName: "",
+      nftSymbol: "",
+      collectionName: "",
+      collectionDescription: "",
+      collectRoyaltyFee: "",
       royaltyFee: 5,
-      website: '',
-      twitter: '',
-      discord: '',
+      website: "",
+      twitter: "",
+      discord: "",
       agreeTosCheckbox: false,
     };
     const fetchCollectionsByID = async () => {
@@ -115,8 +115,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
 
         newInitialValues = {
           isEditMode: true,
-          nftName: '',
-          nftSymbol: '',
+          nftName: "",
+          nftSymbol: "",
           collectionName: dataList[0].name,
           collectionDescription: dataList[0].description,
           collectRoyaltyFee: dataList[0].isCollectRoyaltyFee,
@@ -142,7 +142,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
       } catch (error) {
         console.log(error);
 
-        toast.error('There was an error while fetching the collections.');
+        toast.error("There was an error while fetching the collections.");
       }
     };
 
@@ -161,59 +161,62 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
 
             collectionName: Yup.string()
               .trim()
-              .min(3, 'Must be at least 3 characters')
-              .max(30, 'Must be at most 30 characters')
-              .required('This field is required'),
+              .min(3, "Must be at least 3 characters")
+              .max(30, "Must be at most 30 characters")
+              .required("This field is required"),
             collectionDescription: Yup.string()
               .trim()
-              .min(3, 'Must be at least 3 characters')
-              .max(150, 'Must be at most 150 characters')
-              .required('This field is required'),
+              .min(3, "Must be at least 3 characters")
+              .max(150, "Must be at most 150 characters")
+              .required("This field is required"),
             collectRoyaltyFee: Yup.boolean(),
             website: Yup.string()
               .trim()
-              .url('URL must start with http:// or https://')
-              .max(50, 'Must be at most 50 characters'),
+              .url("URL must start with http:// or https://")
+              .max(50, "Must be at most 50 characters"),
             twitter: Yup.string()
               .trim()
-              .url('URL must start with http:// or https://')
-              .matches(/\btwitter.com\b/, 'URL must be twitter.com')
-              .max(50, 'Must be at most 50 characters'),
+              .url("URL must start with http:// or https://")
+              .matches(/\btwitter.com\b/, "URL must be twitter.com")
+              .max(50, "Must be at most 50 characters"),
             discord: Yup.string()
               .trim()
-              .url('URL must start with http:// or https://')
+              .url("URL must start with http:// or https://")
               .matches(
                 /\bdiscord.(com|gg)\b/,
-                'URL must be discord.com or discord.gg'
+                "URL must be discord.com or discord.gg"
               )
-              .max(50, 'Must be at most 50 characters'),
+              .max(50, "Must be at most 50 characters"),
 
             nftName: Yup.string()
               .trim()
-              .when('isEditMode', {
+              .when("isEditMode", {
                 is: false,
                 then: Yup.string()
-                  .min(3, 'Must be at least 3 characters')
-                  .max(25, 'Must be at most 25 characters')
-                  .required('This field is required'),
+                  .min(3, "Must be at least 3 characters")
+                  .max(25, "Must be at most 25 characters")
+                  .required("This field is required"),
               }),
             nftSymbol: Yup.string()
               .trim()
-              .when('isEditMode', {
+              .when("isEditMode", {
                 is: false,
                 then: Yup.string()
-                  .min(3, 'Must be at least 3 characters')
-                  .max(8, 'Must be at most 8 characters')
-                  .required('This field is required'),
+                  .min(3, "Must be at least 3 characters")
+                  .max(8, "Must be at most 8 characters")
+                  .required("This field is required"),
               }),
-            agreeTosCheckbox: Yup.boolean().when('isEditMode', {
+            agreeTosCheckbox: Yup.boolean().when("isEditMode", {
               is: false,
               then: Yup.boolean()
-                .required('The terms and conditions must be accepted.')
-                .oneOf([true], 'The TOCs must be accepted.'),
+                .required("The terms and conditions must be accepted.")
+                .oneOf([true], "The TOCs must be accepted."),
             }),
           })}
           onSubmit={async (values, { setSubmitting }) => {
+            if (addingFee <= 0) {
+              return toast.error("Creation fee must greater than zero!");
+            }
             // if (
             //   !values.isEditMode &&
             //   (!headerIPFSUrl || !avatarIPFSUrl || !headerSquareIPFSUrl)
@@ -234,14 +237,14 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 nftSymbol: values.nftSymbol,
 
                 attributes: [
-                  'name',
-                  'description',
-                  'avatar_image',
-                  'header_image',
-                  'header_square_image',
-                  'website',
-                  'twitter',
-                  'discord',
+                  "name",
+                  "description",
+                  "avatar_image",
+                  "header_image",
+                  "header_square_image",
+                  "website",
+                  "twitter",
+                  "discord",
                 ],
 
                 attributeVals: [
@@ -299,8 +302,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
           {({ values, dirty, isValid }) => (
             <Form>
               <Stack
-                gap={['10px', '30px']}
-                direction={{ base: 'column', md: 'row' }}
+                gap={["10px", "30px"]}
+                direction={{ base: "column", md: "row" }}
               >
                 {mode === formMode.ADD && (
                   <>
@@ -333,29 +336,29 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               </Stack>
 
               <Stack
-                gap={['10px', '30px']}
-                direction={{ base: 'column', md: 'row' }}
+                gap={["10px", "30px"]}
+                direction={{ base: "column", md: "row" }}
               >
                 <SimpleModeInput
                   type="text"
                   name="website"
                   label="Website URL"
                   isDisabled={actionType}
-                  placeholder={'Website URL'}
+                  placeholder={"Website URL"}
                 />
                 <SimpleModeInput
                   type="text"
                   name="twitter"
                   label="Twitter URL"
                   isDisabled={actionType}
-                  placeholder={'Twitter URL'}
+                  placeholder={"Twitter URL"}
                 />
                 <SimpleModeInput
                   type="text"
                   name="discord"
                   label="Discord URL"
                   isDisabled={actionType}
-                  placeholder={'Discord URL'}
+                  placeholder={"Discord URL"}
                 />
               </Stack>
 
@@ -371,7 +374,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               <Stack
                 alignItems="start"
                 justifyContent="space-between"
-                direction={{ base: 'column', md: 'row' }}
+                direction={{ base: "column", md: "row" }}
               >
                 {/* <Stack
                   hidden
@@ -440,19 +443,19 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   pb="30px"
                   alignItems="start"
                   justifyContent="space-between"
-                  direction={['column', 'row']}
+                  direction={["column", "row"]}
                 >
                   <Stack
-                    w={{ base: 'full', xl: '50%' }}
+                    w={{ base: "full", xl: "50%" }}
                     direction="column"
-                    alignItems={['center', 'start']}
+                    alignItems={["center", "start"]}
                     justifyContent="end"
                   >
                     <Stack w="full" textAlign="left">
                       <Text>Choose avatar image</Text>
                       <Text
                         ml={2}
-                        fontSize={['xs', 'sm']}
+                        fontSize={["xs", "sm"]}
                         color="brand.grayLight"
                       >
                         This image will also be used for navigation. <br />
@@ -468,7 +471,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                         isDisabled={actionType}
                         imageIPFSUrl={avatarIPFSUrl}
                         setImageIPFSUrl={setAvatarIPFSUrl}
-                        limitedSize={{ width: '500', height: '500' }}
+                        limitedSize={{ width: "500", height: "500" }}
                         isRounded={true}
                         width="260px"
                         height="260px"
@@ -478,8 +481,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
 
                   <Stack
                     textAlign="left"
-                    pt={{ base: '30px', md: '0px' }}
-                    w={{ base: 'full', md: '50%' }}
+                    pt={{ base: "30px", md: "0px" }}
+                    w={{ base: "full", md: "50%" }}
                     direction="column"
                     alignItems="start"
                     justifyContent="start"
@@ -487,7 +490,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                     <Text>Choose featured image</Text>
                     <Text
                       ml={2}
-                      fontSize={['xs', 'sm']}
+                      fontSize={["xs", "sm"]}
                       color="brand.grayLight"
                     >
                       This image will be used for featuring your collection on
@@ -501,9 +504,9 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                       isDisabled={actionType}
                       imageIPFSUrl={headerSquareIPFSUrl}
                       setImageIPFSUrl={setHeaderSquareIPFSUrl}
-                      limitedSize={{ width: '400', height: '260' }}
-                      width={['100%', '400px']}
-                      height={['200px', '260px']}
+                      limitedSize={{ width: "400", height: "260" }}
+                      width={["100%", "400px"]}
+                      height={["200px", "260px"]}
                       // height={['170px', '260px']}
                     />
                   </Stack>
@@ -521,7 +524,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
 
                     <Text
                       ml={2}
-                      fontSize={['xs', 'sm']}
+                      fontSize={["xs", "sm"]}
                       color="brand.grayLight"
                     >
                       This image will appear at the top of your collection page.
@@ -536,10 +539,10 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                       isDisabled={actionType}
                       imageIPFSUrl={headerIPFSUrl}
                       setImageIPFSUrl={setHeaderIPFSUrl}
-                      limitedSize={{ width: '1920', height: '600' }}
+                      limitedSize={{ width: "1920", height: "600" }}
                       width="100%"
                       // height={['80px', '260px']}
-                      height={['120px', '260px']}
+                      height={["120px", "260px"]}
                     />
                   </Stack>
                 </Stack>
@@ -547,7 +550,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
 
               {mode === formMode.ADD && (
                 <Stack mt={5} minH={20}>
-                  <Stack direction={['column', 'row']} minH="85px">
+                  <Stack direction={["column", "row"]} minH="85px">
                     <Stack minW="225px">
                       <SimpleModeSwitch
                         name="collectRoyaltyFee"
@@ -562,7 +565,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                     <AddCollectionNumberInput
                       type="number"
                       name="royaltyFee"
-                      inputWidth={'8rem'}
+                      inputWidth={"8rem"}
                       isDisplay={isSetRoyal}
                       max={maxRoyaltyFeeRate}
                       placeholder="Royalty Fee"
@@ -572,7 +575,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   </Stack>
 
                   <VStack pt="30px">
-                    <Text color="#fff" fontSize={['md', 'lg', 'lg']}>
+                    <Text color="#fff" fontSize={["md", "lg", "lg"]}>
                       Create new collection you will pay
                       <strong> {addingFee} $AZERO </strong> in fee to ArtZero.io
                     </Text>
@@ -592,7 +595,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 {...rest}
                 type="submit"
                 text={`${
-                  mode === formMode.ADD ? 'create' : 'update'
+                  mode === formMode.ADD ? "create" : "update"
                 } collection`}
                 isDisabled={!(dirty && isValid) && noImagesChange}
               />

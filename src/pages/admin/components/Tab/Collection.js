@@ -7,27 +7,27 @@ import {
   TableContainer,
   Stack,
   Skeleton,
-} from '@chakra-ui/react';
-import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
-import { useSubstrateState } from '@utils/substrate';
-import collection_manager_calls from '@utils/blockchain/collection-manager-calls';
-import collection_manager from '@utils/blockchain/collection-manager';
-import { useEffect, useState } from 'react';
-import { truncateStr } from '@utils';
-import toast from 'react-hot-toast';
-import BN from 'bn.js';
-import { SCROLLBAR } from '@constants';
-import AddressCopier from '@components/AddressCopier/AddressCopier';
-import { APICall } from '@api/client';
-import { useDispatch } from 'react-redux';
-import { setTxStatus } from '@store/actions/txStatus';
-import { START, UPDATE_COLLECTION_STATUS } from '@constants';
-import { clearTxStatus } from '@store/actions/txStatus';
-import useTxStatus from '@hooks/useTxStatus';
-import CommonButton from '@components/Button/CommonButton';
-import useForceUpdate from '@hooks/useForceUpdate';
-import { useCallback } from 'react';
-import { Fragment } from 'react';
+} from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
+import { useSubstrateState } from "@utils/substrate";
+import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+import collection_manager from "@utils/blockchain/collection-manager";
+import { useEffect, useState } from "react";
+import { truncateStr } from "@utils";
+import toast from "react-hot-toast";
+import BN from "bn.js";
+import { SCROLLBAR } from "@constants";
+import AddressCopier from "@components/AddressCopier/AddressCopier";
+import { APICall } from "@api/client";
+import { useDispatch } from "react-redux";
+import { setTxStatus } from "@store/actions/txStatus";
+import { START, UPDATE_COLLECTION_STATUS } from "@constants";
+import { clearTxStatus } from "@store/actions/txStatus";
+import useTxStatus from "@hooks/useTxStatus";
+import CommonButton from "@components/Button/CommonButton";
+import useForceUpdate from "@hooks/useForceUpdate";
+import { useCallback } from "react";
+import { Fragment } from "react";
 
 let collection_count = 0;
 
@@ -50,8 +50,8 @@ function CollectionAdmin() {
       collection_manager.CONTRACT_ADDRESS
     );
     setCollectionContractBalance(
-      new BN(balance.free, 10, 'le').div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
-        new BN(balance.miscFrozen, 10, 'le').div(new BN(10 ** 6)).toNumber() /
+      new BN(balance.free, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
+        new BN(balance.miscFrozen, 10, "le").div(new BN(10 ** 6)).toNumber() /
           10 ** 6
     );
   }, [api.query.system]);
@@ -59,13 +59,13 @@ function CollectionAdmin() {
   const onGetCollectionContractOwner = useCallback(async () => {
     let res = await collection_manager_calls.owner(currentAccount);
     if (res) setCollectionContractOwner(res);
-    else setCollectionContractOwner('');
+    else setCollectionContractOwner("");
   }, [currentAccount]);
 
   const onGetCollectionContractAdmin = useCallback(async () => {
     let res = await collection_manager_calls.getAdminAddress(currentAccount);
     if (res) setCollectionContractAdmin(res);
-    else setCollectionContractAdmin('');
+    else setCollectionContractAdmin("");
   }, [currentAccount]);
 
   const onGetCollectionCount = useCallback(async () => {
@@ -124,7 +124,7 @@ function CollectionAdmin() {
       doRefresh();
     } catch (error) {
       console.log(error);
-      toast.error('There are something wrong when fetching collections.');
+      toast.error("There are something wrong when fetching collections.");
       setLoading(false);
     }
   }, [
@@ -162,7 +162,7 @@ function CollectionAdmin() {
       );
     } catch (error) {
       console.log(error);
-      toast.error('There was an error while update collection status.');
+      toast.error("There was an error while update collection status.");
       dispatch(clearTxStatus());
     }
   };
@@ -175,18 +175,18 @@ function CollectionAdmin() {
   return (
     <Box
       mx="auto"
-      px={{ base: '6', '2xl': '8' }}
-      py={{ base: '8', '2xl': '4' }}
+      px={{ base: "6", "2xl": "8" }}
+      py={{ base: "8", "2xl": "4" }}
     >
       <Box maxW="8xl" fontSize="lg" minH="50rem">
         <Stack
-          direction={{ base: 'column', xl: 'row' }}
+          direction={{ base: "column", xl: "row" }}
           pb={5}
           borderBottomWidth={1}
         >
           <Flex alignItems="start" pr={20}>
             <Text ml={1} color="brand.grayLight">
-              Total Collection:{' '}
+              Total Collection:{" "}
             </Text>
             <Skeleton
               ml={2}
@@ -195,7 +195,7 @@ function CollectionAdmin() {
               color="#fff"
               isLoaded={collectionCount}
             >
-              {collectionCount}{' '}
+              {collectionCount}{" "}
             </Skeleton>
           </Flex>
           <Flex alignItems="start" pr={{ base: 0, xl: 20 }}>
@@ -216,7 +216,7 @@ function CollectionAdmin() {
 
           <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>
             <Text ml={1} color="brand.grayLight">
-              Collection Contract Owner:{' '}
+              Collection Contract Owner:{" "}
             </Text>
             <Skeleton
               ml={2}
@@ -231,7 +231,7 @@ function CollectionAdmin() {
 
           <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>
             <Text ml={1} color="brand.grayLight">
-              Collection Contract Admin:{' '}
+              Collection Contract Admin:{" "}
             </Text>
             <Skeleton
               ml={2}
@@ -246,7 +246,7 @@ function CollectionAdmin() {
         </Stack>
 
         <Skeleton
-          h={loading || loadingForceUpdate ? '160px' : 'auto'}
+          h={loading || loadingForceUpdate ? "160px" : "auto"}
           isLoaded={!(loading || loadingForceUpdate)}
         >
           <TableContainer
@@ -359,29 +359,31 @@ function CollectionAdmin() {
                         {truncateStr(collection.collectionOwner, 5)}
                       </Td>
                       <Td>
-                        {collection.contractType === 2 ? 'Auto' : 'Manual'}{' '}
+                        {collection.contractType === "Psp34Auto"
+                          ? "Auto"
+                          : "Manual"}{" "}
                       </Td>
                       <Td py={7}>
-                        {collection.isActive ? 'Active' : 'Inactive'}{' '}
+                        {collection.isActive ? "Active" : "Inactive"}{" "}
                       </Td>
                       <Td py={7}>{collection.nft_count}</Td>
                       <Td py={7}>
                         {collection.isCollectRoyaltyFee
-                          ? collection.royaltyFee / 100 + '%'
-                          : 'N/A'}{' '}
+                          ? collection.royaltyFee / 100 + "%"
+                          : "N/A"}{" "}
                       </Td>
                       <Td py={7}>
                         {collection.showOnChainMetadata
-                          ? 'On-chain'
-                          : 'Off-chain'}{' '}
+                          ? "On-chain"
+                          : "Off-chain"}{" "}
                       </Td>
                       <Td>
                         <CommonButton
                           {...rest}
                           size="sm"
                           maxW="120px"
-                          variant={collection.isActive ? 'outline' : ''}
-                          text={!collection.isActive ? 'Enable' : 'Disable'}
+                          variant={collection.isActive ? "outline" : ""}
+                          text={!collection.isActive ? "Enable" : "Disable"}
                           isDisabled={
                             actionType &&
                             !tokenIDArray?.includes(

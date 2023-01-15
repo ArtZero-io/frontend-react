@@ -160,9 +160,9 @@ function CheckCollection() {
             <Box maxW="6xl-mid">
               <Text color="#fff" py={2}>
                 Contract Type:{" "}
-                {contractType === 2
+                {contractType === 'Psp34Auto'
                   ? "Simple Mode"
-                  : contractType === 1
+                  : contractType === 'Psp34Manual'
                   ? "Advanced Mode"
                   : "Unknown"}
               </Text>

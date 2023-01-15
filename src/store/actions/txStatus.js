@@ -95,16 +95,16 @@ export const txResponseErrorHandler = async ({
         }
       });
 
-      const { data: balance } = await api.query.system.account(
-        caller_account?.address
-      );
+      // const { data: balance } = await api.query.system.account(
+      //   caller_account?.address
+      // );
 
-      console.log(
-        '^^ Balance END\t\t\t:',
-        balance.free.toHuman().slice(0, -16) +
-          '.' +
-          balance.free.toHuman().slice(-15, -8)
-      );
+      // console.log(
+      //   '^^ Balance END\t\t\t:',
+      //   balance.free.toHuman().slice(0, -16) +
+      //     '.' +
+      //     balance.free.toHuman().slice(-15, -8)
+      // );
 
       console.log('^^ Tx finalized at ', `${url}${statusToHuman[0][1]}`);
       console.log(`^^==================Log end==================`);
@@ -137,15 +137,15 @@ export const txResponseErrorHandler = async ({
 
       console.log(`^^ Log time\t\t\t\t: ${new Date(Number(now))}`);
       console.log(`^^ ActionType\t\t\t: ${txType}`);
-      const { data: balance } = await api.query.system.account(
-        caller_account?.address
-      );
-      console.log(
-        "^^ Balance START\t\t:",
-        balance.free.toHuman().slice(0, -16) +
-          "." +
-          balance.free.toHuman().slice(-15, -8)
-      );
+      // const { data: balance } = await api.query.system.account(
+      //   caller_account?.address
+      // );
+      // console.log(
+      //   "^^ Balance START\t\t:",
+      //   balance.free.toHuman().slice(0, -16) +
+      //     "." +
+      //     balance.free.toHuman().slice(-15, -8)
+      // );
     } else {
       if (!isApprovalTx) {
         dispatch(
@@ -215,16 +215,16 @@ export const txResponseErrorHandler = async ({
             );
           }
         });
-        const { data: balance } = await api.query.system.account(
-          caller_account?.address
-        );
+        // const { data: balance } = await api.query.system.account(
+        //   caller_account?.address
+        // );
 
-        console.log(
-          '^^ Balance END\t\t\t:',
-          balance.free.toHuman().slice(0, -16) +
-            '.' +
-            balance.free.toHuman().slice(-15, -8)
-        );
+        // console.log(
+        //   '^^ Balance END\t\t\t:',
+        //   balance.free.toHuman().slice(0, -16) +
+        //     '.' +
+        //     balance.free.toHuman().slice(-15, -8)
+        // );
         console.log('^^ Tx finalized at ', `${url}${statusToHuman[0][1]}`);
         console.log(`^^==================Log end==================`);
       }

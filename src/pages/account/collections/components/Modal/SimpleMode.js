@@ -12,14 +12,14 @@ import {
   Tooltip,
   useBreakpointValue,
   Text,
-} from '@chakra-ui/react';
-import { QuestionIcon } from '@chakra-ui/icons';
-import EditIcon from '@theme/assets/icon/Edit.js';
+} from "@chakra-ui/react";
+import { QuestionIcon } from "@chakra-ui/icons";
+import EditIcon from "@theme/assets/icon/Edit.js";
 
-import { useEffect } from 'react';
-import useTxStatus from '@hooks/useTxStatus';
-import SimpleModeForm from '../Form/SimpleMode';
-import { formMode, SCROLLBAR, FINALIZED } from '@constants';
+import { useEffect } from "react";
+import useTxStatus from "@hooks/useTxStatus";
+import SimpleModeForm from "../Form/SimpleMode";
+import { formMode, SCROLLBAR, FINALIZED } from "@constants";
 
 function SimpleModeModal({
   mode = formMode.ADD,
@@ -28,10 +28,10 @@ function SimpleModeModal({
   contractType,
   ...rest
 }) {
-  console.log('SimpleModeModal rest', rest);
+  console.log("SimpleModeModal rest", rest);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { step, onEndClick } = useTxStatus();
-  const modalSize = useBreakpointValue(['xs', '4xl', '4xl']);
+  const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
 
   useEffect(() => {
     step === FINALIZED && onClose();
@@ -66,7 +66,11 @@ function SimpleModeModal({
             lineHeight="36px"
             color="#7ae7ff"
           >
-            {contractType === 2 ? 'Simple' : contractType === 1 ? 'Adv' : ''}
+            {contractType === "Psp34Auto"
+              ? "Simple"
+              : contractType === "Psp34Manual"
+              ? "Adv"
+              : ""}
           </Text>
           <IconButton
             h="40px"
@@ -75,7 +79,7 @@ function SimpleModeModal({
             right="2px"
             minW="40px"
             size="icon"
-            zIndex={'1'}
+            zIndex={"1"}
             pos="absolute"
             borderWidth={0}
             color="#7ae7ff"
@@ -83,8 +87,8 @@ function SimpleModeModal({
             variant="iconSolid"
             onClick={() => onOpen()}
             _hover={{
-              color: '#000',
-              bg: '#7ae7ff',
+              color: "#000",
+              bg: "#7ae7ff",
             }}
             icon={
               <EditIcon p="0" width="17px" height="17px" color="currentColor" />
@@ -99,7 +103,7 @@ function SimpleModeModal({
         size={modalSize}
         onClose={onClose}
         closeOnEsc={false}
-        scrollBehavior={'inside'}
+        scrollBehavior={"inside"}
         closeOnOverlayClick={false}
       >
         <ModalOverlay
@@ -111,20 +115,20 @@ function SimpleModeModal({
           textAlign="center"
           position="relative"
           bg="brand.grayDark"
-          px={['4px', '24px', '24px']}
-          pb={['4px', '32px', '32px']}
+          px={["4px", "24px", "24px"]}
+          pb={["4px", "32px", "32px"]}
         >
           <ModalCloseButton
             borderWidth={2}
             borderRadius="0"
             position="absolute"
-            top={['0', '-8', '-8']}
-            right={['0', '-8', '-8']}
+            top={["0", "-8", "-8"]}
+            right={["0", "-8", "-8"]}
             onClick={() => step === FINALIZED && onEndClick()}
           />
           <ModalHeader>
-            <Heading fontSize={['2xl', '3xl', '3xl']} m={2}>
-              {mode === formMode.ADD ? 'Simple Mode' : 'Edit Collection'}{' '}
+            <Heading fontSize={["2xl", "3xl", "3xl"]} m={2}>
+              {mode === formMode.ADD ? "Simple Mode" : "Edit Collection"}{" "}
               <Tooltip
                 bg="#333"
                 color="#fff"

@@ -6,19 +6,22 @@ import {
   Text,
   HStack,
   useMediaQuery,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import React, { useCallback, useEffect, useState } from 'react';
-import MyNFTGroupCard from '@components/Card/MyNFTGroup';
-import { useSubstrateState } from '@utils/substrate';
-import RefreshIcon from '@theme/assets/icon/Refresh.js';
-import { clientAPI } from '@api/client';
-import AnimationLoader from '@components/Loader/AnimationLoader';
-import CommonButton from '@components/Button/CommonButton';
-import CommonContainer from '@components/Container/CommonContainer';
-import useForceUpdate from '@hooks/useForceUpdate';
-import useTxStatus from '@hooks/useTxStatus';
-import DropdownMobile from '@components/Dropdown/DropdownMobile';
+import React, { useCallback, useEffect, useState } from "react";
+import MyNFTGroupCard from "@components/Card/MyNFTGroup";
+import { useSubstrateState } from "@utils/substrate";
+import RefreshIcon from "@theme/assets/icon/Refresh.js";
+import { clientAPI } from "@api/client";
+import AnimationLoader from "@components/Loader/AnimationLoader";
+import CommonButton from "@components/Button/CommonButton";
+import CommonContainer from "@components/Container/CommonContainer";
+import useForceUpdate from "@hooks/useForceUpdate";
+import useTxStatus from "@hooks/useTxStatus";
+import DropdownMobile from "@components/Dropdown/DropdownMobile";
+import { formatBalance } from "@polkadot/util";
+import { web3FromSource } from "@utils/wallets/extension-dapp";
+import { getEstimatedGas } from "@utils/";
 
 import {
   REMOVE_BID,
@@ -27,11 +30,15 @@ import {
   LOCK,
   TRANSFER,
   ACCEPT_BID,
-} from '@constants';
-import { APICall } from '../../../api/client';
+} from "@constants";
+import { APICall } from "../../../api/client";
+import { ContractPromise } from "@polkadot/api-contract";
+import marketplace from "../../../utils/blockchain/marketplace";
+import toast from "react-hot-toast";
+import { delay } from "@utils";
 
 const MyNFTsPage = () => {
-  const { currentAccount } = useSubstrateState();
+  const { currentAccount, api } = useSubstrateState();
   const { actionType } = useTxStatus();
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
@@ -41,27 +48,27 @@ const MyNFTsPage = () => {
 
   const [owner, setOwner] = useState(null);
   const [loading, setLoading] = useState(null);
-  const [filterSelected, setFilterSelected] = useState('COLLECTED');
+  const [filterSelected, setFilterSelected] = useState("COLLECTED");
   const [myCollections, setMyCollections] = useState(null);
 
   const handleForceUpdate = async () => {
     if (actionType === ACCEPT_BID) {
       fetchMyCollections();
-      return setFilterSelected('LISTING');
+      return setFilterSelected("LISTING");
     }
 
     if (actionType === TRANSFER) {
       fetchMyCollections();
-      return setFilterSelected('COLLECTED');
+      return setFilterSelected("COLLECTED");
     }
 
-    if (actionType === LIST_TOKEN) return setFilterSelected('LISTING');
+    if (actionType === LIST_TOKEN) return setFilterSelected("LISTING");
 
     if (actionType === UNLIST_TOKEN) {
-      return setFilterSelected('COLLECTED');
+      return setFilterSelected("COLLECTED");
     }
 
-    setFilterSelected('COLLECTED');
+    setFilterSelected("COLLECTED");
   };
 
   function onClickHandler(v) {
@@ -74,7 +81,7 @@ const MyNFTsPage = () => {
   const fetchMyCollections = useCallback(async () => {
     try {
       setLoading(true);
-      const allCollectionsOwned = await clientAPI('post', '/getCollections', {
+      const allCollectionsOwned = await clientAPI("post", "/getCollections", {
         limit: 10000,
         offset: 0,
         sort: -1,
@@ -95,11 +102,11 @@ const MyNFTsPage = () => {
             options
           );
 
-          if (filterSelected === 'COLLECTED') {
+          if (filterSelected === "COLLECTED") {
             dataList = dataList.filter((item) => item.is_for_sale !== true);
           }
 
-          if (filterSelected === 'LISTING') {
+          if (filterSelected === "LISTING") {
             dataList = dataList.filter((item) => item.is_for_sale === true);
           }
 
@@ -210,32 +217,68 @@ const MyNFTsPage = () => {
     };
 
     // if (!myCollections || owner !== currentAccount?.address) {
-    filterSelected !== 'BIDS' ? fetchMyCollections() : fetchMyBids();
+    filterSelected !== "BIDS" ? fetchMyCollections() : fetchMyBids();
     // }
   }, [currentAccount?.address, fetchMyCollections, filterSelected, owner]);
 
-  const [isBigScreen] = useMediaQuery('(min-width: 480px)');
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
+  const [claimAmount, setClaimAmount] = useState(0);
 
+  const fetchMyBidHoldInfo = useCallback(async () => {
+    const queryResult = await execContractQuery(
+      currentAccount?.address,
+      api,
+      marketplace.CONTRACT_ABI,
+      marketplace.CONTRACT_ADDRESS,
+      "getHoldAmountOfBidder",
+      currentAccount?.address
+    );
+
+    const amount = formatQueryResultToNumber(queryResult);
+
+    setClaimAmount(amount);
+  }, [api, currentAccount?.address]);
+
+  useEffect(() => {
+    fetchMyBidHoldInfo();
+  }, [fetchMyBidHoldInfo]);
+
+  const onClaimHandler = async () => {
+    await execContractTx(
+      currentAccount,
+      api,
+      marketplace.CONTRACT_ABI,
+      marketplace.CONTRACT_ADDRESS,
+      0, //=>value
+      "receiveHoldAmount",
+      currentAccount?.address
+    );
+
+    await delay(500).then(() => {
+      console.log("first");
+      fetchMyBidHoldInfo();
+    });
+  };
   return (
     <CommonContainer>
       <Flex
         w="full"
         alignItems="center"
-        mb={['20px', '48px']}
-        direction={{ base: 'column', xl: 'row' }}
+        mb={["20px", "48px"]}
+        direction={{ base: "column", xl: "row" }}
       >
-        <Heading fontSize={['3xl-mid', '5xl']} minW="100px">
+        <Heading fontSize={["3xl-mid", "5xl"]} minW="100px">
           my nfts
         </Heading>
 
         <Spacer />
 
         {isBigScreen && (
-          <HStack maxW={{ base: '320px', md: '500px' }}>
+          <HStack maxW={{ base: "320px", md: "500px" }}>
             {[
-              { id: 'COLLECTED', text: 'my collected' },
-              { id: 'LISTING', text: 'my listing' },
-              { id: 'BIDS', text: 'my bids' },
+              { id: "COLLECTED", text: "my collected" },
+              { id: "LISTING", text: "my listing" },
+              { id: "BIDS", text: "my bids" },
             ].map((i, idx) => (
               <CommonButton
                 {...i}
@@ -259,7 +302,7 @@ const MyNFTsPage = () => {
       </Flex>
 
       {!isBigScreen && (
-        <HStack w="full" pb={[0, '8px']} justifyContent="space-between">
+        <HStack w="full" pb={[0, "8px"]} justifyContent="space-between">
           <IconButton
             mr="2px"
             size="icon"
@@ -267,10 +310,10 @@ const MyNFTsPage = () => {
             aria-label="refresh"
             onClick={() => setMyCollections(null)}
             icon={<RefreshIcon />}
-            _hover={{ color: 'black', bg: '#7ae7ff' }}
+            _hover={{ color: "black", bg: "#7ae7ff" }}
           />
 
-          <Spacer display={['none', 'flex']} />
+          <Spacer display={["none", "flex"]} />
 
           <DropdownMobile
             minW="256px"
@@ -287,7 +330,15 @@ const MyNFTsPage = () => {
           />
         </HStack>
       )}
-
+      {filterSelected === "BIDS" && (
+        <Flex alignItems="center" w="full">
+          <CommonButton
+            isDisabled={claimAmount <= 0}
+            text={`Claim bids hold: ${claimAmount} AZERO`}
+            onClick={() => onClaimHandler()}
+          />
+        </Flex>
+      )}
       {loading || loadingForceUpdate ? (
         <AnimationLoader loadingTime={loadingTime} />
       ) : (
@@ -296,7 +347,7 @@ const MyNFTsPage = () => {
             <HStack
               py={10}
               ml={3}
-              w={'full'}
+              w={"full"}
               align="start"
               justifyContent="center"
             >
@@ -325,7 +376,98 @@ const MyNFTsPage = () => {
 export default MyNFTsPage;
 
 export const tabList = {
-  COLLECTED: 'COLLECTED',
-  LISTING: 'MY LISTING',
-  BIDS: 'MY BIDS',
+  COLLECTED: "COLLECTED",
+  LISTING: "MY LISTING",
+  BIDS: "MY BIDS",
 };
+
+export async function execContractQuery(
+  callerAddress, // -> currentAccount?.address
+  api,
+  contractAbi,
+  contractAddress,
+  queryName,
+  ...args
+) {
+  const contract = new ContractPromise(api, contractAbi, contractAddress);
+  // let gasLimit = 6946816000 * 5;
+
+  try {
+    const { result, output } = await contract.query[queryName](
+      callerAddress,
+      { gasLimit: -1, storageDepositLimit: null, value: 0 },
+      ...args
+    );
+
+    if (result.isOk) {
+      return output;
+    }
+  } catch (error) {
+    console.log("@_@ ", queryName, " error >>", error.message);
+  }
+}
+
+export const formatQueryResultToNumber = (result, chainDecimals = 12) => {
+  const ret = result?.toHuman()?.replaceAll(",", "");
+
+  const formattedStrBal = formatBalance(ret, {
+    withSi: false,
+    forceUnit: "-",
+    decimals: chainDecimals,
+  });
+
+  return formattedStrBal;
+};
+export async function execContractTx(
+  caller, // -> currentAccount Object
+  api,
+  contractAbi,
+  contractAddress,
+  value = 0,
+  queryName,
+  ...args
+) {
+  // NOTE: amount need to convert before passing in
+  // const totalAmount = new BN(token_amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  console.log("execContractTx ", queryName);
+
+  const contract = new ContractPromise(api, contractAbi, contractAddress);
+
+  let unsubscribe;
+  let gasLimit;
+  // 6946816000 * 5;
+
+  const { signer } = await web3FromSource(caller?.meta?.source);
+
+  gasLimit = await getEstimatedGas(
+    caller?.address,
+    contract,
+    value,
+    queryName,
+    ...args
+  );
+  // console.log("gasLimit", gasLimit);
+  const txNotSign = contract.tx[queryName]({ gasLimit, value }, ...args);
+
+  await txNotSign
+    .signAndSend(caller.address, { signer }, ({ events = [], status }) => {
+      if (Object.keys(status.toHuman())[0] === "0") {
+        toast.success(`Processing ...`);
+      }
+
+      events.forEach(({ event: { method } }) => {
+        if (method === "ExtrinsicSuccess" && status.type === "InBlock") {
+          toast.success("Successful!");
+        } else if (method === "ExtrinsicFailed") {
+          toast.error(`Error: ${method}.`);
+        }
+      });
+    })
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => {
+      console.log("error", error);
+      toast.error(`Error ${error}.`);
+    });
+
+  return unsubscribe;
+}

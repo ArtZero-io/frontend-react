@@ -1,21 +1,21 @@
 /* eslint-disable no-unused-vars */
-import BN from 'bn.js';
-import toast from 'react-hot-toast';
-import { web3FromSource } from '../wallets/extension-dapp';
-import { TypeRegistry, U64 } from '@polkadot/types';
-import { clientAPI } from '@api/client';
+import BN from "bn.js";
+import toast from "react-hot-toast";
+import { web3FromSource } from "../wallets/extension-dapp";
+import { TypeRegistry, U64 } from "@polkadot/types";
+import { clientAPI } from "@api/client";
 
-import { APICall } from '@api/client';
-import { ContractPromise } from '@polkadot/api-contract';
+import { APICall } from "@api/client";
+import { ContractPromise } from "@polkadot/api-contract";
 
-import nft721_psp34_standard from '@utils/blockchain/nft721-psp34-standard';
-import { createObjAttrsNFT, getEstimatedGas } from '..';
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import { createObjAttrsNFT, getEstimatedGas } from "..";
 import {
   setTxStatus,
   txErrorHandler,
   txResponseErrorHandler,
-} from '@store/actions/txStatus';
-import { START } from '@constants';
+} from "@store/actions/txStatus";
+import { START } from "@constants";
 
 let contract;
 
@@ -32,12 +32,12 @@ async function getTotalSupply(caller_account) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query['psp34::totalSupply'](
+  const { result, output } = await contract.query["psp34::totalSupply"](
     address,
     { value: azero_value, gasLimit }
   );
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
@@ -51,7 +51,7 @@ async function tokenUri(caller_account, token_id) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query['psp34Traits::tokenUri'](
+  const { result, output } = await contract.query["psp34Traits::tokenUri"](
     address,
     { value: azero_value, gasLimit },
     token_id
@@ -76,7 +76,7 @@ async function mint(caller_account) {
 
   const value = 0;
 
-  gasLimit = await getEstimatedGas(address, contract, value, 'mint');
+  gasLimit = await getEstimatedGas(address, contract, value, "mint");
 
   contract.tx
     .mint({ gasLimit, value })
@@ -88,7 +88,7 @@ async function mint(caller_account) {
           if (dispatchError.isModule) {
             toast.error(`There is some error with your request`);
           } else {
-            console.log('dispatchError', dispatchError.toString());
+            console.log("dispatchError", dispatchError.toString());
           }
         }
 
@@ -96,7 +96,7 @@ async function mint(caller_account) {
           const statusText = Object.keys(status.toHuman())[0];
           toast.success(
             `Public Minting ${
-              statusText === '0' ? 'started' : statusText.toLowerCase()
+              statusText === "0" ? "started" : statusText.toLowerCase()
             }.`
           );
         }
@@ -105,7 +105,7 @@ async function mint(caller_account) {
     .then((unsub) => {
       unsubscribe = unsub;
     })
-    .catch((e) => console.log('e', e));
+    .catch((e) => console.log("e", e));
   return unsubscribe;
 }
 
@@ -118,7 +118,7 @@ async function getAttributeName(caller_account, attributeIndex) {
   const azero_value = 0;
 
   const { result, output } = await contract.query[
-    'psp34Traits::getAttributeName'
+    "psp34Traits::getAttributeName"
   ](address, { value: azero_value, gasLimit }, attributeIndex);
   if (result.isOk) {
     return output.toHuman();
@@ -135,10 +135,10 @@ async function getAttributeCount(caller_account) {
   const azero_value = 0;
 
   const { result, output } = await contract.query[
-    'psp34Traits::getAttributeCount'
+    "psp34Traits::getAttributeCount"
   ](address, { value: azero_value, gasLimit });
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
@@ -172,10 +172,10 @@ async function mintWithAttributes(
     address,
     contract,
     value,
-    'mintWithAttributes',
+    "mintWithAttributes",
     metadata
   );
-
+  console.log("metadata", metadata);
   contract.tx
     .mintWithAttributes({ gasLimit, value }, metadata)
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
@@ -189,7 +189,7 @@ async function mintWithAttributes(
       });
 
       if (status?.isFinalized) {
-        toast.success('NFT is created successful!');
+        toast.success("NFT is created successful!");
 
         const token_id = await getTotalSupply(address);
 
@@ -202,22 +202,22 @@ async function mintWithAttributes(
 
           for (let i = 0; i < attributes.length; i++) {
             console.log(attributes[i]);
-            if (attributes[i].name === 'avatar') {
+            if (attributes[i].name === "avatar") {
               cacheImages.push({
                 input: attributes[i].value,
                 is1920: false,
-                imageType: 'nft',
+                imageType: "nft",
                 metadata: {
                   collectionAddress: nft_address,
                   tokenId: token_id,
-                  type: 'avatar',
+                  type: "avatar",
                 },
               });
             }
           }
 
           if (cacheImages.length) {
-            await clientAPI('post', '/cacheImages', {
+            await clientAPI("post", "/cacheImages", {
               images: JSON.stringify(cacheImages),
             });
           }
@@ -239,7 +239,7 @@ async function getAttribute(caller_account, tokenId, attribute) {
   const azero_value = 0;
 
   const { result, output } = await contract.query[
-    'psp34Metadata::getAttribute'
+    "psp34Metadata::getAttribute"
   ](caller_account, { value: azero_value, gasLimit }, tokenId, attribute);
 
   if (result.isOk) {
@@ -256,7 +256,7 @@ async function getAttributes(caller_account, tokenId, attributes) {
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query['psp34Traits::getAttributes'](
+  const { result, output } = await contract.query["psp34Traits::getAttributes"](
     address,
     { value: azero_value, gasLimit },
     tokenId,
@@ -277,11 +277,11 @@ async function getOwnerAddressByTokenId(caller_account, token_id) {
   const azero_value = 0;
 
   // const tokenId = new U64(new TypeRegistry(), token_id);
-  const tokenId = await contract.api.createType('ContractsPsp34Id', {
+  const tokenId = await contract.api.createType("ContractsPsp34Id", {
     U64: new U64(new TypeRegistry(), token_id),
   });
 
-  const { result, output } = await contract.query['psp34::ownerOf'](
+  const { result, output } = await contract.query["psp34::ownerOf"](
     address,
     { value: azero_value, gasLimit },
     tokenId
@@ -307,7 +307,7 @@ async function allowance(
   const gasLimit = -1;
   const azero_value = 0;
 
-  const { result, output } = await contract.query['psp34::allowance'](
+  const { result, output } = await contract.query["psp34::allowance"](
     address,
     { value: azero_value, gasLimit },
     owner_address,
@@ -345,13 +345,13 @@ async function approve(
     address,
     contract,
     value,
-    'psp34::approve',
+    "psp34::approve",
     operator_address,
     token_id,
     is_approve
   );
 
-  await contract.tx['psp34::approve'](
+  await contract.tx["psp34::approve"](
     { gasLimit, value },
     operator_address,
     token_id,
@@ -413,12 +413,13 @@ async function setMultipleAttributesNFT(
     address,
     contract,
     value,
-    'psp34Traits::setMultipleAttributes',
+    "psp34Traits::setMultipleAttributes",
     { u64: tokenID },
     metadata
   );
+  console.log("setMultipleAttributesNFT metadata", metadata);
 
-  await contract.tx['psp34Traits::setMultipleAttributes'](
+  await contract.tx["psp34Traits::setMultipleAttributes"](
     { value, gasLimit },
     { u64: tokenID },
     metadata
@@ -434,7 +435,7 @@ async function setMultipleAttributesNFT(
       });
 
       if (status.isFinalized) {
-        toast.success('NFT is updated successful!');
+        toast.success("NFT is updated successful!");
 
         await APICall.askBeUpdateNftData({
           collection_address,
@@ -446,22 +447,22 @@ async function setMultipleAttributesNFT(
 
           for (let i = 0; i < attributes.length; i++) {
             console.log(attributes[i]);
-            if (attributes[i].name === 'avatar') {
+            if (attributes[i].name === "avatar") {
               cacheImages.push({
                 input: attributes[i].value,
                 is1920: false,
-                imageType: 'nft',
+                imageType: "nft",
                 metadata: {
                   collectionAddress: collection_address,
                   tokenId: tokenID,
-                  type: 'avatar',
+                  type: "avatar",
                 },
               });
             }
           }
 
           if (cacheImages.length) {
-            await clientAPI('post', '/cacheImages', {
+            await clientAPI("post", "/cacheImages", {
               images: JSON.stringify(cacheImages),
             });
           }
@@ -470,7 +471,6 @@ async function setMultipleAttributesNFT(
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
-
   return unsubscribe;
 }
 
@@ -491,7 +491,7 @@ const getTokenUriType1 = async function (
   const value = 0;
   const gasLimit = -1;
 
-  const { result, output } = await contract.query['psp34Traits::tokenUri'](
+  const { result, output } = await contract.query["psp34Traits::tokenUri"](
     currentAccount?.address,
     { value, gasLimit },
     tokenID
@@ -519,14 +519,14 @@ const getBaseTokenUriType1 = async function (
   const value = 0;
   const gasLimit = -1;
 
-  const { result, output } = await contract.query['psp34Traits::tokenUri'](
+  const { result, output } = await contract.query["psp34Traits::tokenUri"](
     currentAccount?.address,
     { value, gasLimit },
     1
   );
 
   if (result.isOk) {
-    return output.toHuman()?.replace('1.json', '');
+    return output.toHuman()?.replace("1.json", "");
   }
 
   return null;
@@ -545,7 +545,7 @@ const getNftAttrsType1 = async function (
     tokenID
   );
 
-  const metadata = await clientAPI('get', '/getJSON?input=' + token_uri, {});
+  const metadata = await clientAPI("get", "/getJSON?input=" + token_uri, {});
 
   if (metadata) {
     const attrsList = metadata?.attributes?.map((item) => {
@@ -577,8 +577,8 @@ export const getNFTDetails = async function (
     token_id,
   });
 
-  // Collections Type 2 - Simple Mode
-  if (contractType === 2) {
+  // Collections Type 'Psp34Auto' - Simple Mode
+  if (contractType === "Psp34Auto") {
     const data = createObjAttrsNFT(
       tokenDetails.attributes,
       tokenDetails.attributesValue
@@ -587,8 +587,8 @@ export const getNFTDetails = async function (
     tokenDetails = { ...tokenDetails, ...data };
   }
 
-  // Collections Type 1 - Adv Mode
-  if (contractType === 1) {
+  // Collections Type 'Psp34Manual' - Adv Mode
+  if (contractType === "Psp34Manual") {
     const data = await getNftAttrsType1(
       api,
       currentAccount,

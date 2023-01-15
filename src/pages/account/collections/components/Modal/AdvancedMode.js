@@ -12,24 +12,24 @@ import {
   Tooltip,
   useBreakpointValue,
   useDisclosure,
-} from '@chakra-ui/react';
-import { QuestionIcon } from '@chakra-ui/icons';
-import EditIcon from '@theme/assets/icon/Edit.js';
+} from "@chakra-ui/react";
+import { QuestionIcon } from "@chakra-ui/icons";
+import EditIcon from "@theme/assets/icon/Edit.js";
 
-import { useEffect } from 'react';
-import useTxStatus from '@hooks/useTxStatus';
-import AdvancedModeForm from '../Form/AdvancedMode';
-import { formMode, SCROLLBAR, FINALIZED } from '@constants';
+import { useEffect } from "react";
+import useTxStatus from "@hooks/useTxStatus";
+import AdvancedModeForm from "../Form/AdvancedMode";
+import { formMode, SCROLLBAR, FINALIZED } from "@constants";
 
 function AdvancedModeModal({
-  mode = 'add',
+  mode = "add",
   id,
   nftContractAddress,
   contractType,
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { step, onEndClick } = useTxStatus();
-  const modalSize = useBreakpointValue(['xs', '4xl', '4xl']);
+  const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
 
   useEffect(() => {
     step === FINALIZED && onClose();
@@ -49,7 +49,8 @@ function AdvancedModeModal({
           </Button>
         </Tooltip>
       )}
-
+      {console.log("contractType", contractType)}
+      {console.log("mode", mode)}
       {mode === formMode.EDIT && (
         <>
           <Text
@@ -64,7 +65,11 @@ function AdvancedModeModal({
             lineHeight="36px"
             color="#7ae7ff"
           >
-            {contractType === 2 ? 'Simple' : contractType === 1 ? 'Adv' : ''}
+            {contractType === "Psp34Auto"
+              ? "Simple"
+              : contractType === "Psp34Manual"
+              ? "Adv"
+              : ""}
           </Text>
           <IconButton
             h="40px"
@@ -73,7 +78,7 @@ function AdvancedModeModal({
             size="icon"
             right="2px"
             minW="40px"
-            zIndex={'1'}
+            zIndex={"1"}
             borderWidth={0}
             pos="absolute"
             aria-label="edit"
@@ -81,8 +86,8 @@ function AdvancedModeModal({
             color="#7ae7ff"
             onClick={() => onOpen()}
             _hover={{
-              color: '#000',
-              bg: '#7ae7ff',
+              color: "#000",
+              bg: "#7ae7ff",
             }}
             icon={
               <EditIcon p="0" width="17px" height="17px" color="currentColor" />
@@ -97,7 +102,7 @@ function AdvancedModeModal({
         size={modalSize}
         onClose={onClose}
         closeOnEsc={false}
-        scrollBehavior={'inside'}
+        scrollBehavior={"inside"}
         closeOnOverlayClick={false}
       >
         <ModalOverlay
@@ -109,20 +114,20 @@ function AdvancedModeModal({
           position="relative"
           bg="brand.grayDark"
           textAlign="center"
-          px={['4px', '24px', '24px']}
-          pb={['4px', '32px', '32px']}
+          px={["4px", "24px", "24px"]}
+          pb={["4px", "32px", "32px"]}
         >
           <ModalCloseButton
             borderWidth={2}
             borderRadius="0"
             position="absolute"
-            top={['0', '-8', '-8']}
-            right={['0', '-8', '-8']}
+            top={["0", "-8", "-8"]}
+            right={["0", "-8", "-8"]}
             onClick={() => step === FINALIZED && onEndClick()}
           />
           <ModalHeader>
-            <Heading fontSize={['2xl', '3xl', '3xl']} m={2}>
-              {mode === formMode.ADD ? 'Advanced Mode' : 'Edit Collection'}{' '}
+            <Heading fontSize={["2xl", "3xl", "3xl"]} m={2}>
+              {mode === formMode.ADD ? "Advanced Mode" : "Edit Collection"}{" "}
               <Tooltip
                 bg="#333"
                 color="#fff"

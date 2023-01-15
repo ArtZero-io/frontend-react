@@ -73,6 +73,7 @@ export const WITHDRAW_MARKETPLACE = 'withdrawMarketplace';
 // OTHERS
 export const NUMBER_PER_PAGE = 6;
 export const MAX_ITEM_STAKE = 5;
+export const MAX_BID_COUNT = 30;
 
 export const SCROLLBAR = {
   '&::-webkit-scrollbar': {
