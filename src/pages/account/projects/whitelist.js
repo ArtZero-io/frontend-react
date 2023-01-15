@@ -17,37 +17,38 @@ import {
   Tr,
   Stack,
   Flex,
-} from '@chakra-ui/react';
-import { motion } from 'framer-motion';
-import { useSubstrateState } from '@utils/substrate';
-import { useDispatch } from 'react-redux';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { convertStringToDateTime } from '@utils';
-import toast from 'react-hot-toast';
-import { ContractPromise } from '@polkadot/api-contract';
-import launchpad_psp34_nft_standard from '@utils/blockchain/launchpad-psp34-nft-standard';
-import launchpad_psp34_nft_standard_calls from '@utils/blockchain/launchpad-psp34-nft-standard-calls';
-import { Select } from '@chakra-ui/react';
+} from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import { useSubstrateState } from "@utils/substrate";
+import { useDispatch } from "react-redux";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { convertStringToDateTime } from "@utils";
+import toast from "react-hot-toast";
+import { ContractPromise } from "@polkadot/api-contract";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { Select } from "@chakra-ui/react";
 
 import {
   convertNumberWithoutCommas,
   convertStringToPrice,
   truncateStr,
-} from '@utils';
-import AzeroIcon from '@theme/assets/icon/Azero.js';
+} from "@utils";
+import AzeroIcon from "@theme/assets/icon/Azero.js";
 
-import useTxStatus from '@hooks/useTxStatus';
-import CommonButton from '@components/Button/CommonButton';
-import { ADD_WHITELIST, UPDATE_WHITELIST, START } from '@constants';
-import { setTxStatus } from '@store/actions/txStatus';
-import useForceUpdate from '@hooks/useForceUpdate';
-import AnimationLoader from '@components/Loader/AnimationLoader';
-import { isValidAddressPolkadotAddress } from '@utils';
-import { SCROLLBAR } from '@constants';
-import { clearTxStatus } from '@store/actions/txStatus';
-import { APICall } from '../../../api/client';
+import useTxStatus from "@hooks/useTxStatus";
+import CommonButton from "@components/Button/CommonButton";
+import { ADD_WHITELIST, UPDATE_WHITELIST, START } from "@constants";
+import { setTxStatus } from "@store/actions/txStatus";
+import useForceUpdate from "@hooks/useForceUpdate";
+import AnimationLoader from "@components/Loader/AnimationLoader";
+import { isValidAddressPolkadotAddress } from "@utils";
+import { SCROLLBAR } from "@constants";
+import { clearTxStatus } from "@store/actions/txStatus";
+import { APICall } from "../../../api/client";
+import { execContractQuery } from "../nfts/nfts";
 
-const tableHeaders = ['Address', 'Amount', 'Claimed', 'Price'];
+const tableHeaders = ["Address", "Amount", "Claimed", "Price"];
 
 function MyWhiteListProjectPage() {
   const dispatch = useDispatch();
@@ -58,7 +59,7 @@ function MyWhiteListProjectPage() {
 
   const [currentPhase, setCurrentPhase] = useState({});
 
-  const [whitelistAddress, setWhitelistAddress] = useState('');
+  const [whitelistAddress, setWhitelistAddress] = useState("");
   const [whiteListPrice, setWhiteListPrice] = useState(0);
   const [whitelistAmount, setWhitelistAmount] = useState(1);
   const [whiteListDataTable, setWhiteListDataTable] = useState([]);
@@ -72,23 +73,49 @@ function MyWhiteListProjectPage() {
 
   const [isUpdateMode, setIsUpdateMode] = useState(null);
   const [whitelistAmountClaimed, setWhitelistAmountClaimed] = useState(0);
-
   const fetchMyProjectList = useCallback(async () => {
+    const checkIsAdmin = async ({ nftContractAddress, address }) => {
+      if (!api) return;
+
+      const queryResult1 = await execContractQuery(
+        currentAccount?.address,
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        nftContractAddress,
+        "accessControl::hasRole",
+        3739740293,
+        address
+      );
+
+      if (queryResult1.isTrue) {
+        return true;
+      }
+
+      return false;
+    };
     const { ret: projList1 } = await APICall.getAllProjects({});
     const { ret: projList2 } = await APICall.getAllProjects({
       isActive: false,
     });
 
     const projList = projList1.concat(projList2);
+    const projAddCheckAdmin = await Promise.all(
+      projList.map(async (proj) => {
+        const isAdmin = await checkIsAdmin({
+          nftContractAddress: proj?.nftContractAddress,
+          address: currentAccount?.address,
+        });
 
-    const myProjList = projList.filter(
-      ({ collectionAdmin, collectionOwner }) =>
-        collectionAdmin === currentAccount.address ||
-        collectionOwner === currentAccount.address
+        return { ...proj, isAdmin };
+      })
+    );
+    const myProjList = projAddCheckAdmin.filter(
+      ({ isAdmin, collectionOwner }) =>
+        collectionOwner === currentAccount.address || isAdmin
     );
 
     setMyProjectsList(myProjList);
-  }, [currentAccount]);
+  }, [api, currentAccount.address]);
 
   useEffect(() => {
     fetchMyProjectList();
@@ -160,7 +187,7 @@ function MyWhiteListProjectPage() {
 
     const claimedAmount = whiteListDataTable
       .find((i) => i.address === whitelistAddress)
-      ?.claimedAmount.replaceAll(',', '');
+      ?.claimedAmount.replaceAll(",", "");
 
     if (parseInt(claimedAmount) > whitelistAmount) {
       return toast.error(`New amount must greater than claimed amount!`);
@@ -204,7 +231,7 @@ function MyWhiteListProjectPage() {
     setWhiteListPrice(0);
     setWhitelistAmount(1);
 
-    if (!address || address === '0') {
+    if (!address || address === "0") {
       setPhasesListWhitelist(null);
       setSelectedPhaseCode(0);
       return;
@@ -248,7 +275,7 @@ function MyWhiteListProjectPage() {
 
     setPhasesListWhitelist(phasesTmp);
     setSelectedProjectAddress(address);
-    setWhitelistAddress('');
+    setWhitelistAddress("");
   };
 
   const onChangeSelectedPhaseCode = async (phaseId) => {
@@ -256,7 +283,7 @@ function MyWhiteListProjectPage() {
       setWhiteListDataTable([]);
     }
 
-    setWhitelistAddress('');
+    setWhitelistAddress("");
     setIsUpdateMode(null);
     setCurrentPhase({});
     setWhiteListPrice(0);
@@ -352,7 +379,7 @@ function MyWhiteListProjectPage() {
   const { loading: loadingForceUpdate } = useForceUpdate(
     [UPDATE_WHITELIST, ADD_WHITELIST],
     () => {
-      setWhitelistAddress('');
+      setWhitelistAddress("");
       setWhiteListPrice(0);
       setWhitelistAmount(1);
       setIsUpdateMode(null);
@@ -365,13 +392,13 @@ function MyWhiteListProjectPage() {
       w="full"
       spacing="30px"
       alignItems="start"
-      direction={['column', 'row']}
+      direction={["column", "row"]}
     >
       <Stack
         pb="30px"
         //  borderBottom="1px #333 solid"
         textAlign="left"
-        w={['full', '30%']}
+        w={["full", "30%"]}
       >
         <Heading fontSize="32px" pb="20px" textAlign="center">
           add whitelist
@@ -401,7 +428,7 @@ function MyWhiteListProjectPage() {
                       {item.name}
                     </option>
                   ))
-                : ''}
+                : ""}
             </Select>
           </Box>
         </Stack>
@@ -429,7 +456,7 @@ function MyWhiteListProjectPage() {
                       {item.code}
                     </option>
                   ))
-                : ''}
+                : ""}
             </Select>
           </Box>
         </Stack>
@@ -441,7 +468,7 @@ function MyWhiteListProjectPage() {
               isDisabled={
                 actionType ||
                 parseInt(selectedPhaseCode) === 0 ||
-                parseInt(currentPhase?.endTime?.replaceAll(',', '')) <
+                parseInt(currentPhase?.endTime?.replaceAll(",", "")) <
                   Date.now()
               }
               bg="black"
@@ -463,7 +490,7 @@ function MyWhiteListProjectPage() {
                     .includes(event.target.value.toString());
 
                   if (!isAlreadyAdded) {
-                    setIsUpdateMode('ADD');
+                    setIsUpdateMode("ADD");
                   } else {
                     const editAddr = whiteListDataTable.find(
                       (i) => i.address === event.target.value.toString()
@@ -473,7 +500,7 @@ function MyWhiteListProjectPage() {
                     setWhitelistAmount(editAddr.whitelistAmount);
                     whitelistAmountRef.current = editAddr.whitelistAmount;
                     setWhitelistAmountClaimed(editAddr.claimedAmount);
-                    setIsUpdateMode('EDIT');
+                    setIsUpdateMode("EDIT");
                   }
                 }
                 setWhitelistAddress(event.target.value.toString());
@@ -481,7 +508,7 @@ function MyWhiteListProjectPage() {
             />
           </Box>
           <>
-            {parseInt(currentPhase?.endTime?.replaceAll(',', '')) <
+            {parseInt(currentPhase?.endTime?.replaceAll(",", "")) <
             Date.now() ? (
               <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
                 This phase is ended!
@@ -491,11 +518,11 @@ function MyWhiteListProjectPage() {
         </Stack>
         <Stack hidden={!isUpdateMode}>
           <Text py={2}>
-            {isUpdateMode === 'ADD'
-              ? 'Price'
-              : isUpdateMode === 'EDIT'
-              ? 'New price'
-              : ''}
+            {isUpdateMode === "ADD"
+              ? "Price"
+              : isUpdateMode === "EDIT"
+              ? "New price"
+              : ""}
           </Text>
           <NumberInput
             bg="black"
@@ -522,13 +549,13 @@ function MyWhiteListProjectPage() {
         </Stack>
         <Stack hidden={!isUpdateMode} pb="30px">
           <Text py={2}>
-            {' '}
-            {isUpdateMode === 'ADD'
-              ? 'Add number'
-              : isUpdateMode === 'EDIT'
-              ? 'Update amount'
-              : ''}{' '}
-            {isUpdateMode === 'EDIT'
+            {" "}
+            {isUpdateMode === "ADD"
+              ? "Add number"
+              : isUpdateMode === "EDIT"
+              ? "Update amount"
+              : ""}{" "}
+            {isUpdateMode === "EDIT"
               ? `(Claimed: ${whitelistAmountClaimed} NFTs). Min: ${
                   parseInt(whitelistAmountClaimed) + 1
                 } - Max: ${
@@ -542,7 +569,7 @@ function MyWhiteListProjectPage() {
               isDisabled={actionType}
               bg="black"
               min={
-                isUpdateMode === 'EDIT'
+                isUpdateMode === "EDIT"
                   ? parseInt(whitelistAmountClaimed) + 1
                   : 0
               }
@@ -553,7 +580,7 @@ function MyWhiteListProjectPage() {
               w="full"
               px={0}
               max={
-                isUpdateMode === 'EDIT'
+                isUpdateMode === "EDIT"
                   ? parseInt(availableToken) +
                     parseInt(whitelistAmountRef.current)
                   : availableToken
@@ -571,24 +598,24 @@ function MyWhiteListProjectPage() {
               </NumberInputStepper>
             </NumberInput>
           </Box>
-          {isUpdateMode === 'EDIT' ? (
+          {isUpdateMode === "EDIT" ? (
             <>
               {parseInt(whitelistAmount) <
               parseInt(whitelistAmountClaimed) + 1 ? (
                 <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                  Update amount must be greater than or equal to{' '}
+                  Update amount must be greater than or equal to{" "}
                   {parseInt(whitelistAmountClaimed) + 1}
                 </Text>
-              ) : null}{' '}
+              ) : null}{" "}
               {whitelistAmount >
               parseInt(availableToken) +
                 parseInt(whitelistAmountRef.current) ? (
                 <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                  Update amount must be less than or equal to{' '}
+                  Update amount must be less than or equal to{" "}
                   {parseInt(availableToken) +
                     parseInt(whitelistAmountRef.current)}
                 </Text>
-              ) : null}{' '}
+              ) : null}{" "}
             </>
           ) : (
             <>
@@ -596,13 +623,13 @@ function MyWhiteListProjectPage() {
                 <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
                   Number must be greater than or equal to zero.
                 </Text>
-              ) : null}{' '}
+              ) : null}{" "}
               {whitelistAmount > parseInt(availableToken) ? (
                 <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                  Number must be less than or equal to{' '}
+                  Number must be less than or equal to{" "}
                   {parseInt(availableToken)}
                 </Text>
-              ) : null}{' '}
+              ) : null}{" "}
             </>
           )}
         </Stack>
@@ -613,7 +640,7 @@ function MyWhiteListProjectPage() {
             direction="column"
             justify="space-between"
             alignItems="center"
-            hidden={isUpdateMode === 'ADD'}
+            hidden={isUpdateMode === "ADD"}
           >
             <CommonButton
               mx="0"
@@ -634,11 +661,11 @@ function MyWhiteListProjectPage() {
             direction="column"
             justify="space-between"
             alignItems="center"
-            hidden={isUpdateMode === 'EDIT'}
+            hidden={isUpdateMode === "EDIT"}
           >
             {availableToken <= 0 ? (
               <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                The remaining slot is 0. You can't add more!{' '}
+                The remaining slot is 0. You can't add more!{" "}
               </Text>
             ) : null}
             <CommonButton
@@ -658,7 +685,7 @@ function MyWhiteListProjectPage() {
         </Flex>
       </Stack>
 
-      <Stack w={['full', '70%']} pb="30px">
+      <Stack w={["full", "70%"]} pb="30px">
         <Heading fontSize="32px" pb="20px" textAlign="center">
           Whitelist Management
         </Heading>
@@ -672,24 +699,24 @@ function MyWhiteListProjectPage() {
               py="20px"
               borderTop="1px #303030 solid"
               borderBottom="1px #303030 solid"
-              direction={['column', 'row']}
-              fontSize={['15px', '16px']}
+              direction={["column", "row"]}
+              fontSize={["15px", "16px"]}
             >
               <Stack
                 w="full"
                 color="#888"
-                spacing={['6px', '30px']}
-                direction={['column', 'row']}
+                spacing={["6px", "30px"]}
+                direction={["column", "row"]}
                 alignContent="space-between"
                 justifyContent="flex-start"
-                minH={{ base: '1rem', '2xl': '3.375rem' }}
+                minH={{ base: "1rem", "2xl": "3.375rem" }}
               >
                 <Text>
                   Total amount: <br />
                   <Text as="span" color="#fff">
-                    {currentPhase.whitelistAmount}{' '}
+                    {currentPhase.whitelistAmount}{" "}
                     <Text as="span">
-                      NFT{currentPhase.whitelistAmount > 1 ? 's' : ''}
+                      NFT{currentPhase.whitelistAmount > 1 ? "s" : ""}
                     </Text>
                   </Text>
                 </Text>
@@ -712,18 +739,18 @@ function MyWhiteListProjectPage() {
                 </Text>
               </Stack>
 
-              <Stack w="full" minW="fit-content" direction={['column', 'row']}>
+              <Stack w="full" minW="fit-content" direction={["column", "row"]}>
                 <Text color="#fff">
-                  Start:{' '}
+                  Start:{" "}
                   <Text as="span" color="#7ae7ff">
                     {convertStringToDateTime(currentPhase.startTime)}
                   </Text>
                 </Text>
-                <Text as="span" display={['none', 'flex']}>
+                <Text as="span" display={["none", "flex"]}>
                   -
                 </Text>
                 <Text color="#fff">
-                  End:{' '}
+                  End:{" "}
                   <Text as="span" color="#7ae7ff">
                     {convertStringToDateTime(currentPhase.endTime)}
                   </Text>
@@ -737,7 +764,7 @@ function MyWhiteListProjectPage() {
           <AnimationLoader />
         ) : (
           <motion.div
-            style={{ marginTop: '20px' }}
+            style={{ marginTop: "20px" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -746,7 +773,7 @@ function MyWhiteListProjectPage() {
               fontSize="lg"
               w="full"
               // w={{ base: "full", xl: "1560px" }}
-              maxH={{ base: '390px', xl: '400px' }}
+              maxH={{ base: "390px", xl: "400px" }}
               overflowY="scroll"
               sx={SCROLLBAR}
             >

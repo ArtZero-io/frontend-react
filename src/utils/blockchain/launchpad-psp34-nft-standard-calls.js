@@ -644,6 +644,64 @@ async function updateAdminAddress(
   return unsubscribe;
 }
 
+async function grantAdminRoleToAddress(
+  caller_account,
+  adminAddress,
+  dispatch,
+  txType,
+  api,
+  collection_address
+) {
+  if (!contract || !caller_account) {
+    throw Error(`Contract or caller not valid!`);
+  }
+
+  let unsubscribe;
+  let gasLimit = -1;
+
+  const address = caller_account?.address;
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+
+  const value = 0;
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "accessControl::grantRole",
+    3739740293,
+    adminAddress
+  );
+
+  contract.tx["accessControl::grantRole"](
+    { gasLimit, value },
+    3739740293,
+    adminAddress
+  )
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+
+      if (status.isFinalized) {
+        const res = await APICall.askBeUpdateProjectData({
+          project_address: collection_address,
+        });
+
+        console.log("askBeUpdateProjectData res", res);
+      }
+    })
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
+  return unsubscribe;
+}
+
 async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
   if (!contract || !caller_account) {
     toast.error(`Contract or caller not valid!`);
@@ -1070,10 +1128,15 @@ async function withdrawFee(caller_account, amount, dispatch, txType, api) {
     contract,
     value,
     "adminTrait::withdrawFee",
-    withdrawAmount
+    withdrawAmount,
+    address
   );
 
-  contract.tx["adminTrait::withdrawFee"]({ gasLimit, value }, withdrawAmount)
+  contract.tx["adminTrait::withdrawFee"](
+    { gasLimit, value },
+    withdrawAmount,
+    address
+  )
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,
@@ -1152,6 +1215,7 @@ const launchpad_psp34_nft_standard_calls = {
   updateSchedulePhase,
   getAdminAddress,
   updateAdminAddress,
+  grantAdminRoleToAddress,
   mint,
   withdrawFee,
   deactivePhase,

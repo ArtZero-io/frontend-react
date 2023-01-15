@@ -8,28 +8,23 @@ import {
   ModalOverlay,
   Text,
   useBreakpointValue,
-} from '@chakra-ui/react';
-import React, { useCallback, useEffect, useState } from 'react';
+} from "@chakra-ui/react";
+import React, { useCallback, useEffect, useState } from "react";
 
-import { Form, Formik } from 'formik';
+import { Form, Formik } from "formik";
 // import CommonStack from "../Form/CommonStack";
-import UpdatePhase from '../Form/UpdatePhase';
-import * as Yup from 'yup';
-import { SCROLLBAR } from '@constants';
-import { useSubstrateState } from '@utils/substrate';
-import launchpad_psp34_nft_standard from '@utils/blockchain/launchpad-psp34-nft-standard';
-import launchpad_psp34_nft_standard_calls from '@utils/blockchain/launchpad-psp34-nft-standard-calls';
-import { ContractPromise } from '@polkadot/api-contract';
-import {
-  // timestampWithoutCommas,
-  convertStringToPrice,
-  // convertNumberWithoutCommas,
-  strToNumber,
-} from '@utils';
-import useTxStatus from '@hooks/useTxStatus';
-import { FINALIZED } from '@constants';
-import { useDispatch } from 'react-redux';
-import { clearTxStatus } from '@store/actions/txStatus';
+import UpdatePhase from "../Form/UpdatePhase";
+import * as Yup from "yup";
+import { SCROLLBAR } from "@constants";
+import { useSubstrateState } from "@utils/substrate";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { ContractPromise } from "@polkadot/api-contract";
+import { convertStringToPrice, strToNumber } from "@utils";
+import useTxStatus from "@hooks/useTxStatus";
+import { FINALIZED } from "@constants";
+import { useDispatch } from "react-redux";
+import { clearTxStatus } from "@store/actions/txStatus";
 
 const UpdatePhasesModal = React.memo(function ({
   isOpen,
@@ -45,9 +40,9 @@ const UpdatePhasesModal = React.memo(function ({
   const [initialValues, setInitialValues] = useState({
     phases: [
       {
-        name: '',
-        start: '',
-        end: '',
+        name: "",
+        start: "",
+        end: "",
         isPublic: false,
         publicMintingFee: 0,
         publicAmount: 0,
@@ -108,7 +103,6 @@ const UpdatePhasesModal = React.memo(function ({
             phaseSchedule.publicMintingFee
           ),
         };
-    
 
         phasesTmp.push(phaseInfo);
       }
@@ -118,7 +112,6 @@ const UpdatePhasesModal = React.memo(function ({
 
     setInitialValues(initialValuesData);
     setCurrentPhaseId(currentPhaseId);
-
   }, [api, collection_address, currentAccount, currentPhaseId]);
 
   useEffect(() => {
@@ -128,12 +121,12 @@ const UpdatePhasesModal = React.memo(function ({
   useEffect(() => {
     if (rest.step === FINALIZED) {
       fetchData();
-      dispatch(clearTxStatus());
       onClose();
+      dispatch(clearTxStatus());
     }
   }, [dispatch, fetchData, onClose, rest.step]);
 
-  const modalSize = useBreakpointValue({ base: 'full', md: 'xl' });
+  const modalSize = useBreakpointValue({ base: "full", md: "xl" });
 
   return (
     <Modal
@@ -153,18 +146,18 @@ const UpdatePhasesModal = React.memo(function ({
       <ModalContent
         pt="20px"
         pb="30px"
-        px={[0, '20px']}
+        px={[0, "20px"]}
         borderRadius="0"
         position="relative"
         bg="#151515"
-        maxW={['full', '1040px']}
+        maxW={["full", "1040px"]}
       >
         <ModalCloseButton
           borderWidth={2}
           borderRadius="0"
           position="absolute"
-          top={['0', '-8', '-8']}
-          right={['0', '-8', '-8']}
+          top={["0", "-8", "-8"]}
+          right={["0", "-8", "-8"]}
           onClick={() => rest?.step === FINALIZED && rest?.onEndClick()}
         />
         <ModalHeader textAlign="center">
@@ -183,16 +176,16 @@ const UpdatePhasesModal = React.memo(function ({
               initialValues={initialValues}
               validationSchema={Yup.object().shape({
                 phases: Yup.array()
-                  .min(1, 'Phases must have at least 1 items')
+                  .min(1, "Phases must have at least 1 items")
                   .of(
                     Yup.object().shape({
                       name: Yup.string()
-                        .required('This field is required')
-                        .min(2, 'Must be at least 2 characters')
-                        .max(100, 'Must be at most 100 characters')
+                        .required("This field is required")
+                        .min(2, "Must be at least 2 characters")
+                        .max(100, "Must be at most 100 characters")
                         .test(
-                          'Test name',
-                          'Duplicated phase name!',
+                          "Test name",
+                          "Duplicated phase name!",
                           (value, schema) => {
                             const array = schema?.from[1].value?.phases;
                             const keyArray = array.map((p) => p.name?.trim());
@@ -202,18 +195,18 @@ const UpdatePhasesModal = React.memo(function ({
                             return !(isDup && isDup.trim() === value.trim());
                           }
                         ),
-                      publicMintingFee: '',
-                      publicAmount: '',
+                      publicMintingFee: "",
+                      publicAmount: "",
                       publicMaxMintingAmount: Yup.number().when(
-                        'publicAmount',
+                        "publicAmount",
                         {
                           is: (val) => val,
                           then: Yup.number()
-                            .required('Must have value.')
-                            .min(1, 'Must be bigger than 1')
+                            .required("Must have value.")
+                            .min(1, "Must be bigger than 1")
                             .max(
-                              Yup.ref('publicAmount'),
-                              'Must smaller than public amount'
+                              Yup.ref("publicAmount"),
+                              "Must smaller than public amount"
                             ),
                           otherwise: Yup.number().notRequired(),
                         }

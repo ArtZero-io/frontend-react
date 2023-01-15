@@ -7,6 +7,8 @@ import GridA from "@components/Grid/GridA";
 import WhitelistManagerModal from "./components/WhitelistManagerModal";
 import OwnerMintModal from "./components/OwnerMintModal";
 import { APICall } from "@api/client";
+import { execContractQuery } from "../nfts/nfts";
+import launchpad_psp34_nft_standard from "../../../utils/blockchain/launchpad-psp34-nft-standard";
 
 const MyProjectsPage = () => {
   const { api, currentAccount } = useSubstrateState();
@@ -16,6 +18,25 @@ const MyProjectsPage = () => {
   const [adminProjQty, setAdminProjQty] = useState(0);
 
   useEffect(() => {
+    const checkIsAdmin = async ({ nftContractAddress, address }) => {
+      if (!api) return;
+
+      const queryResult1 = await execContractQuery(
+        currentAccount?.address,
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        nftContractAddress,
+        "accessControl::hasRole",
+        3739740293,
+        address
+      );
+
+      if (queryResult1.isTrue) {
+        return true;
+      }
+
+      return false;
+    };
     let isUnmounted = false;
     const fetchMyProjectListDetails = async () => {
       try {
@@ -27,11 +48,19 @@ const MyProjectsPage = () => {
         });
 
         const projList = projList1.concat(projList2);
+        const projAddCheckAdmin = await Promise.all(
+          projList.map(async (proj) => {
+            const isAdmin = await checkIsAdmin({
+              nftContractAddress: proj?.nftContractAddress,
+              address: currentAccount?.address,
+            });
 
-        const myProjList = projList.filter(
-          ({ collectionAdmin, collectionOwner }) =>
-            collectionAdmin === currentAccount.address ||
-            collectionOwner === currentAccount.address
+            return { ...proj, isAdmin };
+          })
+        );
+        const myProjList = projAddCheckAdmin.filter(
+          ({ collectionOwner, isAdmin }) =>
+            collectionOwner === currentAccount.address || isAdmin
         );
 
         if (isUnmounted) return;

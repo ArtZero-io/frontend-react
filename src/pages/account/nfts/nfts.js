@@ -225,6 +225,8 @@ const MyNFTsPage = () => {
   const [claimAmount, setClaimAmount] = useState(0);
 
   const fetchMyBidHoldInfo = useCallback(async () => {
+    if (!api) return;
+
     const queryResult = await execContractQuery(
       currentAccount?.address,
       api,
@@ -389,6 +391,8 @@ export async function execContractQuery(
   queryName,
   ...args
 ) {
+  if (!api) return toast.error("Api invalid");
+
   const contract = new ContractPromise(api, contractAbi, contractAddress);
   // let gasLimit = 6946816000 * 5;
 
