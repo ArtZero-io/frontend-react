@@ -48,7 +48,7 @@ function CheckCollection() {
     );
 
     setContractType(contract_type);
-
+ 
     let is_active = await collection_manager_calls.isActive(
       currentAccount,
       collectionAddress
@@ -67,6 +67,7 @@ function CheckCollection() {
     let total_supply = await nft721_psp34_standard_calls.getTotalSupply(
       currentAccount
     );
+    console.log("total_supply ...", total_supply);
 
     setTotalSupply(total_supply);
 
@@ -104,7 +105,6 @@ function CheckCollection() {
         );
 
         if (image !== metadata.image) {
-
           image_count++;
           setCachedImageCount(image_count);
         }
@@ -160,9 +160,9 @@ function CheckCollection() {
             <Box maxW="6xl-mid">
               <Text color="#fff" py={2}>
                 Contract Type:{" "}
-                {contractType === 'Psp34Auto'
+                {contractType === "Psp34Auto"
                   ? "Simple Mode"
-                  : contractType === 'Psp34Manual'
+                  : contractType === "Psp34Manual"
                   ? "Advanced Mode"
                   : "Unknown"}
               </Text>

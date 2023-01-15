@@ -455,7 +455,7 @@ async function getContractType(caller_account, collection_address) {
     "artZeroCollectionTrait::getContractType"
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return output.toHuman();
   }
   return null;
 }

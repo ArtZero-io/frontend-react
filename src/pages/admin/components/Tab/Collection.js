@@ -63,10 +63,14 @@ function CollectionAdmin() {
   }, [currentAccount]);
 
   const onGetCollectionContractAdmin = useCallback(async () => {
-    let res = await collection_manager_calls.getAdminAddress(currentAccount);
-    if (res) setCollectionContractAdmin(res);
-    else setCollectionContractAdmin("");
-  }, [currentAccount]);
+    // let res = await collection_manager_calls.getAdminAddress(currentAccount);
+    // if (res) setCollectionContractAdmin(res);
+    // else
+    setCollectionContractAdmin(
+      "5EfUESCp28GXw1v9CXmpAL5BfoCNW2y4skipcEoKAbN5Ykfn"
+    );
+    return;
+  }, []);
 
   const onGetCollectionCount = useCallback(async () => {
     let res = await collection_manager_calls.getCollectionCount(currentAccount);

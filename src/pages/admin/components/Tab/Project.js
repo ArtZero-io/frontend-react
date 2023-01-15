@@ -53,9 +53,10 @@ function ProjectAdmin() {
     else setCollectionContractOwner("");
   };
   const onGetCollectionContractAdmin = async (e) => {
-    let res = await launchpad_contract_calls.getAdminAddress(currentAccount);
-    if (res) setCollectionContractAdmin(res);
-    else setCollectionContractAdmin("");
+    // let res = await launchpad_contract_calls.getAdminAddress(currentAccount);
+    // if (res) setCollectionContractAdmin(res);
+    // else 
+    setCollectionContractAdmin("5EfUESCp28GXw1v9CXmpAL5BfoCNW2y4skipcEoKAbN5Ykfn");
   };
   const onGetCollectionCount = async () => {
     let res = await launchpad_contract_calls.getProjectCount(currentAccount);
