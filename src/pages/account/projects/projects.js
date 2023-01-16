@@ -31,7 +31,7 @@ const MyProjectsPage = () => {
         address
       );
 
-      if (queryResult1.isTrue) {
+      if (queryResult1?.isTrue) {
         return true;
       }
 

@@ -5,6 +5,7 @@ import {
   Button,
   TableContainer,
   Stack,
+  Input,
 } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
@@ -20,6 +21,10 @@ import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp3
 import { Link, Link as ReactRouterLink } from "react-router-dom";
 import * as ROUTES from "@constants/routes";
 import { APICall } from "../../../../api/client";
+import { execContractQuery, execContractTx } from "../../../account/nfts/nfts";
+import launchpad_manager from "../../../../utils/blockchain/launchpad-manager";
+
+import { isValidAddressPolkadotAddress } from "@utils";
 
 function ProjectAdmin() {
   const dispatch = useDispatch();
@@ -30,33 +35,41 @@ function ProjectAdmin() {
 
   const [collections, setCollections] = useState([]);
   const [collectionContractOwner, setCollectionContractOwner] = useState("");
-  const [collectionContractAdmin, setCollectionContractAdmin] = useState("");
-
-  const onRefreshCollection = useCallback(async () => {
-    await onGetCollectionContractOwner();
-    await onGetCollectionContractAdmin();
-    await onGetCollectionCount();
-    await delay(1000);
-    await getAllCollections();
-  }, []);
-
-  useEffect(() => {
-    const doRefresh = async () => {
-      await onRefreshCollection();
-    };
-    doRefresh();
-  }, [currentAccount, onRefreshCollection]);
+  const [isLPAdmin, setIsLPAdmin] = useState(null);
 
   const onGetCollectionContractOwner = async (e) => {
     let res = await launchpad_contract_calls.owner(currentAccount);
     if (res) setCollectionContractOwner(res);
     else setCollectionContractOwner("");
   };
+  const isOwner = collectionContractOwner === currentAccount?.account;
   const onGetCollectionContractAdmin = async (e) => {
-    // let res = await launchpad_contract_calls.getAdminAddress(currentAccount);
-    // if (res) setCollectionContractAdmin(res);
-    // else 
-    setCollectionContractAdmin("5EfUESCp28GXw1v9CXmpAL5BfoCNW2y4skipcEoKAbN5Ykfn");
+    const checkIsAdmin = async ({ address }) => {
+      if (!api) return;
+
+      const queryResult1 = await execContractQuery(
+        currentAccount?.address,
+        api,
+        launchpad_manager.CONTRACT_ABI,
+        launchpad_manager.CONTRACT_ADDRESS,
+        "accessControl::hasRole",
+        3739740293,
+        address
+      );
+
+      if (queryResult1?.isTrue) {
+        return true;
+      }
+      console.log("address", address);
+      console.log("queryResult1?.isTrue", queryResult1?.isTrue);
+      return false;
+    };
+    const isLPAdmin = await checkIsAdmin({
+      address: currentAccount?.address,
+    });
+
+    setIsLPAdmin(isLPAdmin);
+    return;
   };
   const onGetCollectionCount = async () => {
     let res = await launchpad_contract_calls.getProjectCount(currentAccount);
@@ -69,7 +82,6 @@ function ProjectAdmin() {
       currentAccount
     );
 
-    
     let tmpProjects = [];
     for (let i = 1; i <= projectCount; i++) {
       const nftAddress = await launchpad_contract_calls.getProjectById(
@@ -87,7 +99,7 @@ function ProjectAdmin() {
         launchpad_psp34_nft_standard.CONTRACT_ABI,
         nftAddress
       );
-      
+
       launchpad_psp34_nft_standard_calls.setContract(
         launchpad_psp34_nft_standard_contract
       );
@@ -95,11 +107,10 @@ function ProjectAdmin() {
       const projectInfoHash =
         await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
 
-        
       const projectInfo = await APICall.getProjectInfoByHash({
         projectHash: projectInfoHash,
       });
-      
+
       const currentTime = Date.now();
       let projectTypeLabel = "live";
       if (
@@ -127,11 +138,19 @@ function ProjectAdmin() {
 
       tmpProjects.push(projectTmp);
     }
-    
+
     setCollections(tmpProjects);
   };
+
+  const onRefreshCollection = useCallback(async () => {
+    await onGetCollectionContractOwner();
+    await onGetCollectionContractAdmin();
+    await onGetCollectionCount();
+    await delay(1000);
+    await getAllCollections();
+  }, [currentAccount?.address]);
   const onSetStatusCollection = async (collection_contract, isActive) => {
-    if (currentAccount.address !== collectionContractAdmin) {
+    if (!isLPAdmin) {
       return toast.error("Only admin can set status collection");
     }
 
@@ -149,7 +168,39 @@ function ProjectAdmin() {
     await delay(1000);
     await getAllCollections();
   };
+  useEffect(() => {
+    const doRefresh = async () => {
+      await onRefreshCollection();
+    };
+    doRefresh();
+  }, [currentAccount, onRefreshCollection]);
+  const [newAdminAddress, setNewAdminAddress] = useState("");
+  const grantAdminAddress = async () => {
+    if (!isOwner) {
+      return toast.error(`Only owner can grant admin role!`);
+    }
 
+    if (!isValidAddressPolkadotAddress(newAdminAddress)) {
+      return toast.error(`Invalid address! Please check again!`);
+    }
+    try {
+      await execContractTx(
+        currentAccount,
+        api,
+        launchpad_manager.CONTRACT_ABI,
+        launchpad_manager.CONTRACT_ADDRESS,
+        0, //=>value
+        "accessControl::grantRole",
+        3739740293,
+        newAdminAddress
+      );
+      setNewAdminAddress("");
+    } catch (error) {
+      setNewAdminAddress("");
+      toast.error(error.message);
+      console.log("error.message", error.message);
+    }
+  };
   return (
     <Box
       mx="auto"
@@ -187,12 +238,21 @@ function ProjectAdmin() {
           </Stack>
           <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>
             <Text ml={1} color="brand.grayLight">
-              Collection Contract Admin:{" "}
+              Your role:{" "}
             </Text>
-            <Text color="#fff" ml={2}>
-              {truncateStr(collectionContractAdmin, 9)}
-            </Text>
+            <Text> {isLPAdmin ? "Admin" : "Not admin"}</Text>
           </Stack>
+          <Flex>
+            <Input
+              bg="black"
+              mb="15px"
+              px={2}
+              value={newAdminAddress}
+              placeholder="Your new address here"
+              onChange={({ target }) => setNewAdminAddress(target.value)}
+            />
+            <Button onClick={grantAdminAddress}>Grant admin</Button>
+          </Flex>
         </Stack>
         <TableContainer
           maxW="6xl-mid"

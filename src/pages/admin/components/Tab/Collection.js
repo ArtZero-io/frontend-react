@@ -1,12 +1,12 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Flex,
   Text,
-  Button,
   TableContainer,
   Stack,
   Skeleton,
+  Input,
+  Button,
 } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
@@ -27,7 +27,8 @@ import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import useForceUpdate from "@hooks/useForceUpdate";
 import { useCallback } from "react";
-import { Fragment } from "react";
+import { execContractQuery, execContractTx } from "../../../account/nfts/nfts";
+import { isValidAddressPolkadotAddress } from "@utils";
 
 let collection_count = 0;
 
@@ -38,7 +39,7 @@ function CollectionAdmin() {
 
   const [collections, setCollections] = useState([]);
   const [collectionContractOwner, setCollectionContractOwner] = useState(null);
-  const [collectionContractAdmin, setCollectionContractAdmin] = useState(null);
+  const [isCollectionAdmin, setIsCollectionAdmin] = useState(null);
   const [collectionContractBalance, setCollectionContractBalance] =
     useState(null);
   const [loading, setLoading] = useState(false);
@@ -62,15 +63,40 @@ function CollectionAdmin() {
     else setCollectionContractOwner("");
   }, [currentAccount]);
 
+  const isOwner = collectionContractOwner === currentAccount?.account;
+
   const onGetCollectionContractAdmin = useCallback(async () => {
     // let res = await collection_manager_calls.getAdminAddress(currentAccount);
-    // if (res) setCollectionContractAdmin(res);
+    // if (res) setIsCollectionAdmin(res);
     // else
-    setCollectionContractAdmin(
-      "5EfUESCp28GXw1v9CXmpAL5BfoCNW2y4skipcEoKAbN5Ykfn"
-    );
+    const checkIsAdmin = async ({ address }) => {
+      if (!api) return;
+
+      const queryResult1 = await execContractQuery(
+        currentAccount?.address,
+        api,
+        collection_manager.CONTRACT_ABI,
+        collection_manager.CONTRACT_ADDRESS,
+        "accessControl::hasRole",
+        3739740293,
+        address
+      );
+
+      if (queryResult1?.isTrue) {
+        return true;
+      }
+      console.log("address", address);
+      console.log("queryResult1?.isTrue", queryResult1?.isTrue);
+      return false;
+    };
+    const isCollectionAdmin = await checkIsAdmin({
+      address: currentAccount?.address,
+    });
+
+    console.log("isCollectionAdmin", isCollectionAdmin);
+    setIsCollectionAdmin(isCollectionAdmin);
     return;
-  }, []);
+  }, [api, currentAccount?.address]);
 
   const onGetCollectionCount = useCallback(async () => {
     let res = await collection_manager_calls.getCollectionCount(currentAccount);
@@ -142,7 +168,7 @@ function CollectionAdmin() {
   ]);
 
   const onSetStatusCollection = async (collection_contract, isActive) => {
-    if (collectionContractAdmin !== currentAccount?.address) {
+    if (!(isCollectionAdmin || isOwner)) {
       toast.error(`You are not admin of this contract`);
       return;
     }
@@ -175,6 +201,33 @@ function CollectionAdmin() {
     [UPDATE_COLLECTION_STATUS],
     () => getAllCollections()
   );
+  const [newAdminAddress, setNewAdminAddress] = useState("");
+  const grantAdminAddress = async () => {
+    if (!isOwner) {
+      return toast.error(`Only owner can grant admin role!`);
+    }
+
+    if (!isValidAddressPolkadotAddress(newAdminAddress)) {
+      return toast.error(`Invalid address! Please check again!`);
+    }
+    try {
+      await execContractTx(
+        currentAccount,
+        api,
+        collection_manager.CONTRACT_ABI,
+        collection_manager.CONTRACT_ADDRESS,
+        0, //=>value
+        "accessControl::grantRole",
+        3739740293,
+        newAdminAddress
+      );
+      setNewAdminAddress("");
+    } catch (error) {
+      setNewAdminAddress("");
+      toast.error(error.message);
+      console.log("error.message", error.message);
+    }
+  };
 
   return (
     <Box
@@ -235,18 +288,22 @@ function CollectionAdmin() {
 
           <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>
             <Text ml={1} color="brand.grayLight">
-              Collection Contract Admin:{" "}
+              Your role:{" "}
             </Text>
-            <Skeleton
-              ml={2}
-              h="35px"
-              w="150px"
-              color="#fff"
-              isLoaded={collectionContractAdmin}
-            >
-              {truncateStr(collectionContractAdmin, 9)}
-            </Skeleton>
+            <Text> {isCollectionAdmin ? "Admin" : "Not admin"}</Text>
           </Stack>
+          <Flex>
+            <Input
+              bg="black"
+              mb="15px"
+              px={2}
+              isDisabled={actionType}
+              value={newAdminAddress}
+              placeholder="Your new address here"
+              onChange={({ target }) => setNewAdminAddress(target.value)}
+            />
+            <Button onClick={grantAdminAddress}>Grant admin</Button>
+          </Flex>
         </Stack>
 
         <Skeleton
