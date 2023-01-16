@@ -33,12 +33,10 @@ import {
 } from "@constants";
 import { APICall } from "../../../api/client";
 import { ContractPromise } from "@polkadot/api-contract";
-import marketplace from "../../../utils/blockchain/marketplace";
 import toast from "react-hot-toast";
-import { delay } from "@utils";
 
 const MyNFTsPage = () => {
-  const { currentAccount, api } = useSubstrateState();
+  const { currentAccount } = useSubstrateState();
   const { actionType } = useTxStatus();
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
@@ -222,45 +220,7 @@ const MyNFTsPage = () => {
   }, [currentAccount?.address, fetchMyCollections, filterSelected, owner]);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
-  const [claimAmount, setClaimAmount] = useState(0);
 
-  const fetchMyBidHoldInfo = useCallback(async () => {
-    if (!api) return;
-
-    const queryResult = await execContractQuery(
-      currentAccount?.address,
-      api,
-      marketplace.CONTRACT_ABI,
-      marketplace.CONTRACT_ADDRESS,
-      "getHoldAmountOfBidder",
-      currentAccount?.address
-    );
-
-    const amount = formatQueryResultToNumber(queryResult);
-
-    setClaimAmount(amount);
-  }, [api, currentAccount?.address]);
-
-  useEffect(() => {
-    fetchMyBidHoldInfo();
-  }, [fetchMyBidHoldInfo]);
-
-  const onClaimHandler = async () => {
-    await execContractTx(
-      currentAccount,
-      api,
-      marketplace.CONTRACT_ABI,
-      marketplace.CONTRACT_ADDRESS,
-      0, //=>value
-      "receiveHoldAmount",
-      currentAccount?.address
-    );
-
-    await delay(500).then(() => {
-      console.log("first");
-      fetchMyBidHoldInfo();
-    });
-  };
   return (
     <CommonContainer>
       <Flex
@@ -332,15 +292,7 @@ const MyNFTsPage = () => {
           />
         </HStack>
       )}
-      {filterSelected === "BIDS" && (
-        <Flex alignItems="center" w="full">
-          <CommonButton
-            isDisabled={claimAmount <= 0}
-            text={`Claim bids hold: ${claimAmount} AZERO`}
-            onClick={() => onClaimHandler()}
-          />
-        </Flex>
-      )}
+
       {loading || loadingForceUpdate ? (
         <AnimationLoader loadingTime={loadingTime} />
       ) : (

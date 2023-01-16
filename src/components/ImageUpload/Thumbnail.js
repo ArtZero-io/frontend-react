@@ -43,7 +43,6 @@ const Thumbnail = ({
     if (e) data = e.target.files[0];
 
     if (!supportedFormat.includes(data?.type)) {
-
       toast.error(
         `Please use .png .jpeg .jpeg .gif format, the ${
           e.target?.files[0] && e.target.files[0].type.split("/")[1]
@@ -159,7 +158,12 @@ const Thumbnail = ({
               }}
             >
               <Flex
-                pb={id === "header" && !isBigScreen ? "8px" : "20px"}
+                pb={
+                  (id === "collection-header" || id === "header") &&
+                  !isBigScreen
+                    ? "8px"
+                    : "20px"
+                }
                 h="full"
                 w="full"
                 alignItems="center"
@@ -174,19 +178,24 @@ const Thumbnail = ({
                     width={isSmallThumbnail ? "45px" : "64px"}
                     height={isSmallThumbnail ? "45px" : "64px"}
                   />
-                ) : id !== "header" ? (
+                ) : id === "header" || id === "collection-header" ? (
+                  <ThumbnailImage width="36px" height="36px" />
+                ) : (
                   <ThumbnailImage
                     width={isSmallThumbnail ? "45px" : "64px"}
                     height={isSmallThumbnail ? "45px" : "64px"}
                   />
-                ) : (
-                  <ThumbnailImage width="36px" height="36px" />
                 )}
 
                 <Flex
                   alignItems="center"
                   pb="10px"
-                  mt={id === "header" && !isBigScreen ? "10px" : "40px"}
+                  mt={
+                    (id === "collection-header" || id === "header") &&
+                    !isBigScreen
+                      ? "10px"
+                      : "40px"
+                  }
                 >
                   <UploadIcon color="" />
 

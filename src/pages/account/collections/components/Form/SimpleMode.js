@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Box, HStack, Stack, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, HStack, Stack, Text, VStack } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import React, { useState, useEffect, useRef } from "react";
 import { Formik, Form } from "formik";
@@ -550,9 +550,10 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
 
               {mode === formMode.ADD && (
                 <Stack mt={5} minH={20}>
-                  <Stack direction={["column", "row"]} minH="85px">
+                  <Stack direction={["column", "column"]} minH="85px">
                     <Stack minW="225px">
                       <SimpleModeSwitch
+                        size="md"
                         name="collectRoyaltyFee"
                         isDisabled={actionType}
                         label="Collect Royalty Fee"
@@ -562,20 +563,44 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                         }}
                       />
                     </Stack>
-                    <AddCollectionNumberInput
-                      type="number"
-                      name="royaltyFee"
-                      inputWidth={"8rem"}
-                      isDisplay={isSetRoyal}
-                      max={maxRoyaltyFeeRate}
-                      placeholder="Royalty Fee"
-                      isDisabled={!isSetRoyal || actionType}
-                      label={`Royalty Fee (max ${maxRoyaltyFeeRate}%)`}
-                    />
+
+                    <Flex alignItems="end" hidden={!isSetRoyal}>
+                      <Stack>
+                        <Text
+                          textAlign="left"
+                          fontSize={["xs", "sm"]}
+                          color="brand.grayLight"
+                        >
+                          {`Royalty Fee (max ${maxRoyaltyFeeRate}%)`}
+                        </Text>
+                        <AddCollectionNumberInput
+                          type="number"
+                          name="royaltyFee"
+                          inputWidth={"8rem"}
+                          isDisplay={isSetRoyal}
+                          max={maxRoyaltyFeeRate}
+                          placeholder="Royalty Fee"
+                          isDisabled={!isSetRoyal || actionType}
+                          label=""
+                          // {`Royalty Fee (max ${maxRoyaltyFeeRate}%)`}
+                        />
+                      </Stack>
+                      {parseFloat(values?.royaltyFee) > maxRoyaltyFeeRate && (
+                        <Text
+                          textAlign="left"
+                          color="#ff8c8c"
+                          mx={3}
+                          fontSize="sm"
+                        >
+                          Your Royalty fee can not greater than{" "}
+                          {maxRoyaltyFeeRate}%
+                        </Text>
+                      )}
+                    </Flex>
                   </Stack>
 
-                  <VStack pt="30px">
-                    <Text color="#fff" fontSize={["md", "lg", "lg"]}>
+                  <VStack alignItems="start" pt="30px">
+                    <Text textAlign='left' color="#fff" fontSize={["md", "lg", "lg"]}>
                       Create new collection you will pay
                       <strong> {addingFee} $AZERO </strong> in fee to ArtZero.io
                     </Text>

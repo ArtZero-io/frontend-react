@@ -24,8 +24,10 @@ export default function SimpleModeSwitch({
       color="#fff"
       display="flex"
       fontSize={["md", "lg", "lg"]}
-    >
+      alignItems="center"
+     >
       <FormLabel
+        mb="0px"
         ml={[0, 1]}
         fontSize={["md", "lg", "lg"]}
         htmlFor={props.id || props.name}

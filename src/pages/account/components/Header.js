@@ -8,6 +8,8 @@ import {
   useDisclosure,
   IconButton,
   useBreakpointValue,
+  Flex,
+  Tooltip,
 } from "@chakra-ui/react";
 
 import EditIcon from "@theme/assets/icon/Edit.js";
@@ -26,10 +28,21 @@ import { UPDATE_PROFILE } from "@constants";
 import useForceUpdate from "@hooks/useForceUpdate";
 import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
 
+import CommonButton from "@components/Button/CommonButton";
+
+import marketplace from "../../../utils/blockchain/marketplace";
+import { delay } from "@utils";
+import {
+  execContractQuery,
+  execContractTx,
+  formatQueryResultToNumber,
+} from "../nfts/nfts";
+import { QuestionOutlineIcon } from "@chakra-ui/icons";
+
 function ProfileHeader() {
   const dispatch = useDispatch();
 
-  const { currentAccount } = useSubstrateState();
+  const { currentAccount, api } = useSubstrateState();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [profile, setProfile] = useState(null);
@@ -85,6 +98,46 @@ function ProfileHeader() {
       }
     }
   );
+
+  const [claimAmount, setClaimAmount] = useState(0);
+
+  const fetchMyBidHoldInfo = useCallback(async () => {
+    if (!api) return;
+
+    const queryResult = await execContractQuery(
+      currentAccount?.address,
+      api,
+      marketplace.CONTRACT_ABI,
+      marketplace.CONTRACT_ADDRESS,
+      "getHoldAmountOfBidder",
+      currentAccount?.address
+    );
+
+    const amount = formatQueryResultToNumber(queryResult);
+
+    setClaimAmount(amount);
+  }, [api, currentAccount?.address]);
+
+  useEffect(() => {
+    fetchMyBidHoldInfo();
+  }, [fetchMyBidHoldInfo]);
+
+  const onClaimHandler = async () => {
+    await execContractTx(
+      currentAccount,
+      api,
+      marketplace.CONTRACT_ABI,
+      marketplace.CONTRACT_ADDRESS,
+      0, //=>value
+      "receiveHoldAmount",
+      currentAccount?.address
+    );
+
+    await delay(2000).then(() => {
+      toast.success("You have unsuccessful Bids to claim!");
+      fetchMyBidHoldInfo();
+    });
+  };
 
   return (
     <Box
@@ -163,6 +216,25 @@ function ProfileHeader() {
                   })}
               />
             )}
+
+            <Flex alignItems="center" w="full" justifyContent="center">
+              <CommonButton
+                isDisabled={claimAmount <= 0}
+                text={`Claim unsuccessful Bids: ${claimAmount} AZERO`}
+                onClick={() => onClaimHandler()}
+              />{" "}
+              <Tooltip
+                mx="4px"
+                hasArrow
+                bg="#333"
+                color="#fff"
+                cursor="pointer"
+                borderRadius="0"
+                label={`Claim back your bids when NFT is unlisted or sold to a different user`}
+              >
+                <QuestionOutlineIcon />
+              </Tooltip>
+            </Flex>
           </VStack>
         </HStack>
       </VStack>
