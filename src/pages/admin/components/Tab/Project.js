@@ -39,10 +39,14 @@ function ProjectAdmin() {
 
   const onGetCollectionContractOwner = async (e) => {
     let res = await launchpad_contract_calls.owner(currentAccount);
+
+    console.log("res", res);
     if (res) setCollectionContractOwner(res);
     else setCollectionContractOwner("");
   };
-  const isOwner = collectionContractOwner === currentAccount?.account;
+
+  const isOwner = collectionContractOwner === currentAccount?.address;
+
   const onGetCollectionContractAdmin = async (e) => {
     const checkIsAdmin = async ({ address }) => {
       if (!api) return;
@@ -215,7 +219,7 @@ function ProjectAdmin() {
         >
           <Flex alignItems="start" pr={20}>
             <Text ml={1} color="brand.grayLight">
-              Total Collection:{" "}
+              Total Collection:
             </Text>
             <Text color="#fff" ml={2}>
               {collectionCount}{" "}

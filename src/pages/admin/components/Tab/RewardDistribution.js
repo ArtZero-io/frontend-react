@@ -28,6 +28,7 @@ import { fetchUserBalance } from '../../../launchpad/component/Form/AddNewProjec
 import marketplace_contract_calls from '@utils/blockchain/marketplace_contract_calls';
 import launchpad_manager from '@utils/blockchain/launchpad-manager';
 import collection_manager from '@utils/blockchain/collection-manager';
+import staking_contract from '@utils/blockchain/staking';
 import { useMemo } from 'react';
 import { formatNumDynamicDecimal } from '@utils';
 import collection_manager_calls from '@utils/blockchain/collection-manager-calls';
@@ -48,6 +49,7 @@ import { withdrawMarketplaceContract } from '@utils/blockchain/marketplace_contr
 import { useCallback } from 'react';
 import useForceUpdate from '@hooks/useForceUpdate';
 import { clearTxStatus } from '@store/actions/txStatus';
+import {execContractQuery} from '../../../account/nfts/nfts';
 
 function RewardDistribution() {
   const { api, currentAccount } = useSubstrateState();
@@ -73,13 +75,23 @@ function RewardDistribution() {
     let is_reward_started = await staking_calls.getRewardStarted(
       currentAccount
     );
-    let admin_address = await staking_calls.getAdminAddress(currentAccount);
+    // let admin_address = await staking_calls.getAdminAddress(currentAccount);
+    const queryResult1 = await execContractQuery(
+      currentAccount?.address,
+      api,
+      staking_contract.CONTRACT_ABI,
+      collection_manager.CONTRACT_ADDRESS,
+      "accessControl::hasRole",
+      3739740293,
+      currentAccount?.address
+    );
 
+     
     setClaimableReward(claimable_reward);
     setRewardPool(reward_pool);
     setTotalStaked(total_staked);
     setIsLocked(is_locked);
-    setAdminAddress(admin_address);
+    setAdminAddress(queryResult1?.isTrue);
     setIsRewardStarted(is_reward_started);
   };
 

@@ -63,7 +63,7 @@ function CollectionAdmin() {
     else setCollectionContractOwner("");
   }, [currentAccount]);
 
-  const isOwner = collectionContractOwner === currentAccount?.account;
+  const isOwner = collectionContractOwner === currentAccount?.address;
 
   const onGetCollectionContractAdmin = useCallback(async () => {
     // let res = await collection_manager_calls.getAdminAddress(currentAccount);
