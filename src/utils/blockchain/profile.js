@@ -1,5 +1,5 @@
 const profile = {
-  CONTRACT_ADDRESS: "5HgU7daGv8RGptsBZbr5HQZRZekNajtYfTwYfwynLTWdxiLv",
+  CONTRACT_ADDRESS: "5FZZBpLTMEUwakh3ouERrK6Y9zvNTjrmWHzQGBrx7NpDaW6U",
   CONTRACT_ABI: {
     "source": {
       "hash": "0x443be41163188d9619be0f70ee55d38bb31b83fb49ec46bf103cee1e3adbb7ae",
