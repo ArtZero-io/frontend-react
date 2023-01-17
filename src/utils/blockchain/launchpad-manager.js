@@ -1,8 +1,8 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5GwR3miDmYH1HUisnevmN3KBQdUA3Qug46E27wrU2sswHUXN",
+  CONTRACT_ADDRESS: "5CdfKCwaNZ1Np45L8ydFhqWsHEc7rWfSb5FpS2gC4Ss8qnHu",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xc7b31c720a0e8290f9fcc511fe09725f56f5dc76f7c0a9dfe438e2dc03d9c3c3",
+      "hash": "0x635c6c4507f57debee1739db0227f8af47ae171f0253dae67ce9469a7eecd9ff",
       "language": "ink! 3.4.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -640,7 +640,7 @@ const launchpad_manager = {
                 "type": {
                   "displayName": [
                     "accesscontrol_external",
-                    "GrantRoleInput1"
+                    "RevokeRoleInput1"
                   ],
                   "type": 5
                 }
@@ -650,33 +650,60 @@ const launchpad_manager = {
                 "type": {
                   "displayName": [
                     "accesscontrol_external",
-                    "GrantRoleInput2"
+                    "RevokeRoleInput2"
                   ],
                   "type": 0
                 }
               }
             ],
             "docs": [
-              " Grants `role` to `account`.",
+              " Revokes `role` from `account`.",
               "",
-              " On success a `RoleGranted` event is emitted.",
+              " On success a `RoleRevoked` event is emitted.",
               "",
               " # Errors",
               "",
-              " Returns with `MissingRole` error if caller can't grant the role.",
-              " Returns with `RoleRedundant` error `account` has `role`."
+              " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
             ],
-            "label": "AccessControl::grant_role",
+            "label": "AccessControl::revoke_role",
             "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
                 "accesscontrol_external",
-                "GrantRoleOutput"
+                "RevokeRoleOutput"
               ],
               "type": 36
             },
-            "selector": "0x4ac062fd"
+            "selector": "0x6e4f0991"
+          },
+          {
+            "args": [
+              {
+                "label": "role",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "GetRoleAdminInput1"
+                  ],
+                  "type": 5
+                }
+              }
+            ],
+            "docs": [
+              " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
+            ],
+            "label": "AccessControl::get_role_admin",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "accesscontrol_external",
+                "GetRoleAdminOutput"
+              ],
+              "type": 5
+            },
+            "selector": "0x83da3bb2"
           },
           {
             "args": [
@@ -723,35 +750,7 @@ const launchpad_manager = {
                 "type": {
                   "displayName": [
                     "accesscontrol_external",
-                    "GetRoleAdminInput1"
-                  ],
-                  "type": 5
-                }
-              }
-            ],
-            "docs": [
-              " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
-            ],
-            "label": "AccessControl::get_role_admin",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "accesscontrol_external",
-                "GetRoleAdminOutput"
-              ],
-              "type": 5
-            },
-            "selector": "0x83da3bb2"
-          },
-          {
-            "args": [
-              {
-                "label": "role",
-                "type": {
-                  "displayName": [
-                    "accesscontrol_external",
-                    "RevokeRoleInput1"
+                    "GrantRoleInput1"
                   ],
                   "type": 5
                 }
@@ -761,32 +760,33 @@ const launchpad_manager = {
                 "type": {
                   "displayName": [
                     "accesscontrol_external",
-                    "RevokeRoleInput2"
+                    "GrantRoleInput2"
                   ],
                   "type": 0
                 }
               }
             ],
             "docs": [
-              " Revokes `role` from `account`.",
+              " Grants `role` to `account`.",
               "",
-              " On success a `RoleRevoked` event is emitted.",
+              " On success a `RoleGranted` event is emitted.",
               "",
               " # Errors",
               "",
-              " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
+              " Returns with `MissingRole` error if caller can't grant the role.",
+              " Returns with `RoleRedundant` error `account` has `role`."
             ],
-            "label": "AccessControl::revoke_role",
+            "label": "AccessControl::grant_role",
             "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
                 "accesscontrol_external",
-                "RevokeRoleOutput"
+                "GrantRoleOutput"
               ],
               "type": 36
             },
-            "selector": "0x6e4f0991"
+            "selector": "0x4ac062fd"
           },
           {
             "args": [
@@ -954,6 +954,44 @@ const launchpad_manager = {
           {
             "args": [
               {
+                "label": "value",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "WithdrawFeeInput1"
+                  ],
+                  "type": 26
+                }
+              },
+              {
+                "label": "receiver",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "WithdrawFeeInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " This function allows contract owner to withdraw contract balance to his account."
+            ],
+            "label": "AdminTrait::withdraw_fee",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "admintrait_external",
+                "WithdrawFeeOutput"
+              ],
+              "type": 27
+            },
+            "selector": "0x07573e99"
+          },
+          {
+            "args": [
+              {
                 "label": "nft_contract_address",
                 "type": {
                   "displayName": [
@@ -1046,44 +1084,6 @@ const launchpad_manager = {
               "type": 27
             },
             "selector": "0xd9aad284"
-          },
-          {
-            "args": [
-              {
-                "label": "value",
-                "type": {
-                  "displayName": [
-                    "admintrait_external",
-                    "WithdrawFeeInput1"
-                  ],
-                  "type": 26
-                }
-              },
-              {
-                "label": "receiver",
-                "type": {
-                  "displayName": [
-                    "admintrait_external",
-                    "WithdrawFeeInput2"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " This function allows contract owner to withdraw contract balance to his account."
-            ],
-            "label": "AdminTrait::withdraw_fee",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "admintrait_external",
-                "WithdrawFeeOutput"
-              ],
-              "type": 27
-            },
-            "selector": "0x07573e99"
           }
         ]
       },

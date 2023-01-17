@@ -1,8 +1,8 @@
 const profile = {
-  CONTRACT_ADDRESS: "5FZZBpLTMEUwakh3ouERrK6Y9zvNTjrmWHzQGBrx7NpDaW6U",
+  CONTRACT_ADDRESS: "5ChmwiGTgS2NoxiCT2scdTw1bPr2aSgtQBACJGFQBsgTgtix",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x443be41163188d9619be0f70ee55d38bb31b83fb49ec46bf103cee1e3adbb7ae",
+      "hash": "0xa24fc108a21e40c7a44fd520a08e8cb144f739616d87c22aab76f81f72b8e9e7",
       "language": "ink! 3.4.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -106,6 +106,23 @@ const profile = {
             "selector": "0x8d76b3fe"
           },
           {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
+          },
+          {
             "args": [
               {
                 "label": "new_owner",
@@ -145,23 +162,6 @@ const profile = {
           {
             "args": [],
             "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [],
-            "docs": [
               " Leaves the contract without owner. It will not be possible to call",
               " owner's functions anymore. Can only be called by the current owner.",
               "",
@@ -189,61 +189,13 @@ const profile = {
           {
             "args": [
               {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "admintrait_external",
-                    "TranferNftInput1"
-                  ],
-                  "type": 0
-                }
-              },
-              {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "admintrait_external",
-                    "TranferNftInput2"
-                  ],
-                  "type": 16
-                }
-              },
-              {
-                "label": "receiver",
-                "type": {
-                  "displayName": [
-                    "admintrait_external",
-                    "TranferNftInput3"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
-            ],
-            "label": "AdminTrait::tranfer_nft",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "admintrait_external",
-                "TranferNftOutput"
-              ],
-              "type": 11
-            },
-            "selector": "0xed1e1dfa"
-          },
-          {
-            "args": [
-              {
                 "label": "value",
                 "type": {
                   "displayName": [
                     "admintrait_external",
                     "WithdrawFeeInput1"
                   ],
-                  "type": 20
+                  "type": 16
                 }
               },
               {
@@ -291,7 +243,7 @@ const profile = {
                     "admintrait_external",
                     "TranferPsp22Input2"
                   ],
-                  "type": 20
+                  "type": 16
                 }
               },
               {
@@ -319,6 +271,54 @@ const profile = {
               "type": 11
             },
             "selector": "0xd9aad284"
+          },
+          {
+            "args": [
+              {
+                "label": "nft_contract_address",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferNftInput1"
+                  ],
+                  "type": 0
+                }
+              },
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferNftInput2"
+                  ],
+                  "type": 17
+                }
+              },
+              {
+                "label": "receiver",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferNftInput3"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
+            ],
+            "label": "AdminTrait::tranfer_nft",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "admintrait_external",
+                "TranferNftOutput"
+              ],
+              "type": 11
+            },
+            "selector": "0xed1e1dfa"
           }
         ]
       },
@@ -926,6 +926,14 @@ const profile = {
           "id": 16,
           "type": {
             "def": {
+              "primitive": "u128"
+            }
+          }
+        },
+        {
+          "id": 17,
+          "type": {
+            "def": {
               "variant": {
                 "variants": [
                   {
@@ -941,7 +949,7 @@ const profile = {
                   {
                     "fields": [
                       {
-                        "type": 17,
+                        "type": 18,
                         "typeName": "u16"
                       }
                     ],
@@ -951,7 +959,7 @@ const profile = {
                   {
                     "fields": [
                       {
-                        "type": 18,
+                        "type": 19,
                         "typeName": "u32"
                       }
                     ],
@@ -961,7 +969,7 @@ const profile = {
                   {
                     "fields": [
                       {
-                        "type": 19,
+                        "type": 20,
                         "typeName": "u64"
                       }
                     ],
@@ -971,7 +979,7 @@ const profile = {
                   {
                     "fields": [
                       {
-                        "type": 20,
+                        "type": 16,
                         "typeName": "u128"
                       }
                     ],
@@ -1000,7 +1008,7 @@ const profile = {
           }
         },
         {
-          "id": 17,
+          "id": 18,
           "type": {
             "def": {
               "primitive": "u16"
@@ -1008,7 +1016,7 @@ const profile = {
           }
         },
         {
-          "id": 18,
+          "id": 19,
           "type": {
             "def": {
               "primitive": "u32"
@@ -1016,18 +1024,10 @@ const profile = {
           }
         },
         {
-          "id": 19,
-          "type": {
-            "def": {
-              "primitive": "u64"
-            }
-          }
-        },
-        {
           "id": 20,
           "type": {
             "def": {
-              "primitive": "u128"
+              "primitive": "u64"
             }
           }
         }

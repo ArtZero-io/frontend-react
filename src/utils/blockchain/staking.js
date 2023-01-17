@@ -2,7 +2,7 @@ const staking = {
   CONTRACT_ADDRESS: "5GQZbtqkagF9pZFYCwx5hg9WmXYTsWpW4EAZiwDiCdpQQoSD",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x5df2f28fdd161ac3a67798f6f85f2c76f5b1f4ae7bc7900fec60676842fd62b3",
+      "hash": "0x855d50632a64b14b5ac9bf310c12d3333185dfa56b650d962268fd0ff383116f",
       "language": "ink! 3.4.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -897,50 +897,6 @@ const staking = {
                 "type": {
                   "displayName": [
                     "accesscontrol_external",
-                    "RevokeRoleInput1"
-                  ],
-                  "type": 5
-                }
-              },
-              {
-                "label": "account",
-                "type": {
-                  "displayName": [
-                    "accesscontrol_external",
-                    "RevokeRoleInput2"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Revokes `role` from `account`.",
-              "",
-              " On success a `RoleRevoked` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
-            ],
-            "label": "AccessControl::revoke_role",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "accesscontrol_external",
-                "RevokeRoleOutput"
-              ],
-              "type": 36
-            },
-            "selector": "0x6e4f0991"
-          },
-          {
-            "args": [
-              {
-                "label": "role",
-                "type": {
-                  "displayName": [
-                    "accesscontrol_external",
                     "GetRoleAdminInput1"
                   ],
                   "type": 5
@@ -961,44 +917,6 @@ const staking = {
               "type": 5
             },
             "selector": "0x83da3bb2"
-          },
-          {
-            "args": [
-              {
-                "label": "role",
-                "type": {
-                  "displayName": [
-                    "accesscontrol_external",
-                    "HasRoleInput1"
-                  ],
-                  "type": 5
-                }
-              },
-              {
-                "label": "address",
-                "type": {
-                  "displayName": [
-                    "accesscontrol_external",
-                    "HasRoleInput2"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Returns `true` if `account` has been granted `role`."
-            ],
-            "label": "AccessControl::has_role",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "accesscontrol_external",
-                "HasRoleOutput"
-              ],
-              "type": 12
-            },
-            "selector": "0xc1d9ac18"
           },
           {
             "args": [
@@ -1096,6 +1014,132 @@ const staking = {
           {
             "args": [
               {
+                "label": "role",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "RevokeRoleInput1"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "label": "account",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "RevokeRoleInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Revokes `role` from `account`.",
+              "",
+              " On success a `RoleRevoked` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
+            ],
+            "label": "AccessControl::revoke_role",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "accesscontrol_external",
+                "RevokeRoleOutput"
+              ],
+              "type": 36
+            },
+            "selector": "0x6e4f0991"
+          },
+          {
+            "args": [
+              {
+                "label": "role",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "HasRoleInput1"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "label": "address",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "HasRoleInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Returns `true` if `account` has been granted `role`."
+            ],
+            "label": "AccessControl::has_role",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "accesscontrol_external",
+                "HasRoleOutput"
+              ],
+              "type": 12
+            },
+            "selector": "0xc1d9ac18"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 37
+            },
+            "selector": "0x5e228753"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the address of the current owner."
+            ],
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
+          },
+          {
+            "args": [
+              {
                 "label": "new_owner",
                 "type": {
                   "displayName": [
@@ -1131,48 +1175,32 @@ const staking = {
             "selector": "0x11f43efd"
           },
           {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
+            "args": [
+              {
+                "label": "account",
+                "type": {
+                  "displayName": [
+                    "artzerostakingtrait_external",
+                    "GetTotalStakedByAccountInput1"
+                  ],
+                  "type": 0
+                }
+              }
             ],
-            "label": "Ownable::owner",
+            "docs": [
+              " This function returns the total PMP NFT Staked by an account"
+            ],
+            "label": "ArtZeroStakingTrait::get_total_staked_by_account",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "ownable_external",
-                "OwnerOutput"
+                "artzerostakingtrait_external",
+                "GetTotalStakedByAccountOutput"
               ],
-              "type": 0
+              "type": 17
             },
-            "selector": "0x4fa43c8c"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 37
-            },
-            "selector": "0x5e228753"
+            "selector": "0x5da4d83d"
           },
           {
             "args": [
@@ -1205,30 +1233,40 @@ const staking = {
           {
             "args": [
               {
-                "label": "account",
+                "label": "value",
                 "type": {
                   "displayName": [
-                    "artzerostakingtrait_external",
-                    "GetTotalStakedByAccountInput1"
+                    "admintrait_external",
+                    "WithdrawFeeInput1"
+                  ],
+                  "type": 23
+                }
+              },
+              {
+                "label": "receiver",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "WithdrawFeeInput2"
                   ],
                   "type": 0
                 }
               }
             ],
             "docs": [
-              " This function returns the total PMP NFT Staked by an account"
+              " This function allows contract owner to withdraw contract balance to his account."
             ],
-            "label": "ArtZeroStakingTrait::get_total_staked_by_account",
-            "mutates": false,
+            "label": "AdminTrait::withdraw_fee",
+            "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
-                "artzerostakingtrait_external",
-                "GetTotalStakedByAccountOutput"
+                "admintrait_external",
+                "WithdrawFeeOutput"
               ],
-              "type": 17
+              "type": 27
             },
-            "selector": "0x5da4d83d"
+            "selector": "0x07573e99"
           },
           {
             "args": [
@@ -1325,44 +1363,6 @@ const staking = {
               "type": 27
             },
             "selector": "0xd9aad284"
-          },
-          {
-            "args": [
-              {
-                "label": "value",
-                "type": {
-                  "displayName": [
-                    "admintrait_external",
-                    "WithdrawFeeInput1"
-                  ],
-                  "type": 23
-                }
-              },
-              {
-                "label": "receiver",
-                "type": {
-                  "displayName": [
-                    "admintrait_external",
-                    "WithdrawFeeInput2"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " This function allows contract owner to withdraw contract balance to his account."
-            ],
-            "label": "AdminTrait::withdraw_fee",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "admintrait_external",
-                "WithdrawFeeOutput"
-              ],
-              "type": 27
-            },
-            "selector": "0x07573e99"
           }
         ]
       },

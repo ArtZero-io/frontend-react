@@ -1,7 +1,7 @@
 const nft721_psp34_standard = {
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xcaad9aa5004361356acebcfa1a3b03ec6144aa52a359926a6fb88b3859a7fe8a",
+      "hash": "0xeb21f69407731b1b4431164d6a5dd82f671d339b4a035d44b7bdf940428b867d",
       "language": "ink! 3.4.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -97,6 +97,33 @@ const nft721_psp34_standard = {
             "selector": "0xf90b8f61"
           },
           {
+            "args": [],
+            "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
+            "label": "Ownable::renounce_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "RenounceOwnershipOutput"
+              ],
+              "type": 40
+            },
+            "selector": "0x5e228753"
+          },
+          {
             "args": [
               {
                 "label": "new_owner",
@@ -136,33 +163,6 @@ const nft721_psp34_standard = {
           {
             "args": [],
             "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 40
-            },
-            "selector": "0x5e228753"
-          },
-          {
-            "args": [],
-            "docs": [
               " Returns the address of the current owner."
             ],
             "label": "Ownable::owner",
@@ -178,21 +178,32 @@ const nft721_psp34_standard = {
             "selector": "0x4fa43c8c"
           },
           {
-            "args": [],
-            "docs": [
-              " Returns current NFT total supply."
+            "args": [
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "OwnerOfInput1"
+                  ],
+                  "type": 1
+                }
+              }
             ],
-            "label": "PSP34::total_supply",
+            "docs": [
+              " Returns the owner of the token if any."
+            ],
+            "label": "PSP34::owner_of",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34_external",
-                "TotalSupplyOutput"
+                "OwnerOfOutput"
               ],
-              "type": 6
+              "type": 19
             },
-            "selector": "0x628413fe"
+            "selector": "0x1168624d"
           },
           {
             "args": [
@@ -244,138 +255,21 @@ const nft721_psp34_standard = {
             "selector": "0x4790f55a"
           },
           {
-            "args": [
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "OwnerOfInput1"
-                  ],
-                  "type": 1
-                }
-              }
-            ],
-            "docs": [
-              " Returns the owner of the token if any."
-            ],
-            "label": "PSP34::owner_of",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "OwnerOfOutput"
-              ],
-              "type": 19
-            },
-            "selector": "0x1168624d"
-          },
-          {
             "args": [],
             "docs": [
-              " Returns the collection `Id` of the NFT token.",
-              "",
-              " This can represents the relationship between tokens/contracts/pallets."
+              " Returns current NFT total supply."
             ],
-            "label": "PSP34::collection_id",
+            "label": "PSP34::total_supply",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34_external",
-                "CollectionIdOutput"
+                "TotalSupplyOutput"
               ],
-              "type": 1
+              "type": 6
             },
-            "selector": "0xffa27a5f"
-          },
-          {
-            "args": [
-              {
-                "label": "operator",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput1"
-                  ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "id",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput2"
-                  ],
-                  "type": 14
-                }
-              },
-              {
-                "label": "approved",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "ApproveInput3"
-                  ],
-                  "type": 30
-                }
-              }
-            ],
-            "docs": [
-              " Approves `operator` to withdraw the `id` token from the caller's account.",
-              " If `id` is `None` approves or disapproves the operator for all tokens of the caller.",
-              "",
-              " On success a `Approval` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Returns `SelfApprove` error if it is self approve.",
-              "",
-              " Returns `NotApproved` error if caller is not owner of `id`."
-            ],
-            "label": "PSP34::approve",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "ApproveOutput"
-              ],
-              "type": 41
-            },
-            "selector": "0x1932a8b0"
-          },
-          {
-            "args": [
-              {
-                "label": "owner",
-                "type": {
-                  "displayName": [
-                    "psp34_external",
-                    "BalanceOfInput1"
-                  ],
-                  "type": 8
-                }
-              }
-            ],
-            "docs": [
-              " Returns the balance of the owner.",
-              "",
-              " This represents the amount of unique tokens the owner has."
-            ],
-            "label": "PSP34::balance_of",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34_external",
-                "BalanceOfOutput"
-              ],
-              "type": 4
-            },
-            "selector": "0xcde7e55f"
+            "selector": "0x628413fe"
           },
           {
             "args": [
@@ -438,6 +332,112 @@ const nft721_psp34_standard = {
           {
             "args": [
               {
+                "label": "operator",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput1"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "id",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput2"
+                  ],
+                  "type": 14
+                }
+              },
+              {
+                "label": "approved",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "ApproveInput3"
+                  ],
+                  "type": 30
+                }
+              }
+            ],
+            "docs": [
+              " Approves `operator` to withdraw the `id` token from the caller's account.",
+              " If `id` is `None` approves or disapproves the operator for all tokens of the caller.",
+              "",
+              " On success a `Approval` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Returns `SelfApprove` error if it is self approve.",
+              "",
+              " Returns `NotApproved` error if caller is not owner of `id`."
+            ],
+            "label": "PSP34::approve",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "ApproveOutput"
+              ],
+              "type": 41
+            },
+            "selector": "0x1932a8b0"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Returns the collection `Id` of the NFT token.",
+              "",
+              " This can represents the relationship between tokens/contracts/pallets."
+            ],
+            "label": "PSP34::collection_id",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "CollectionIdOutput"
+              ],
+              "type": 1
+            },
+            "selector": "0xffa27a5f"
+          },
+          {
+            "args": [
+              {
+                "label": "owner",
+                "type": {
+                  "displayName": [
+                    "psp34_external",
+                    "BalanceOfInput1"
+                  ],
+                  "type": 8
+                }
+              }
+            ],
+            "docs": [
+              " Returns the balance of the owner.",
+              "",
+              " This represents the amount of unique tokens the owner has."
+            ],
+            "label": "PSP34::balance_of",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34_external",
+                "BalanceOfOutput"
+              ],
+              "type": 4
+            },
+            "selector": "0xcde7e55f"
+          },
+          {
+            "args": [
+              {
                 "label": "id",
                 "type": {
                   "displayName": [
@@ -474,6 +474,37 @@ const nft721_psp34_standard = {
               "type": 43
             },
             "selector": "0xf19d48d1"
+          },
+          {
+            "args": [
+              {
+                "label": "index",
+                "type": {
+                  "displayName": [
+                    "psp34enumerable_external",
+                    "TokenByIndexInput1"
+                  ],
+                  "type": 6
+                }
+              }
+            ],
+            "docs": [
+              " Returns a token `Id` at a given `index` of all the tokens stored by the contract.",
+              " Use along with `total_supply` to enumerate all tokens.",
+              "",
+              " The start index is zero."
+            ],
+            "label": "PSP34Enumerable::token_by_index",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34enumerable_external",
+                "TokenByIndexOutput"
+              ],
+              "type": 44
+            },
+            "selector": "0xcd0340d0"
           },
           {
             "args": [
@@ -515,155 +546,6 @@ const nft721_psp34_standard = {
               "type": 44
             },
             "selector": "0x3bcfb511"
-          },
-          {
-            "args": [
-              {
-                "label": "index",
-                "type": {
-                  "displayName": [
-                    "psp34enumerable_external",
-                    "TokenByIndexInput1"
-                  ],
-                  "type": 6
-                }
-              }
-            ],
-            "docs": [
-              " Returns a token `Id` at a given `index` of all the tokens stored by the contract.",
-              " Use along with `total_supply` to enumerate all tokens.",
-              "",
-              " The start index is zero."
-            ],
-            "label": "PSP34Enumerable::token_by_index",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34enumerable_external",
-                "TokenByIndexOutput"
-              ],
-              "type": 44
-            },
-            "selector": "0xcd0340d0"
-          },
-          {
-            "args": [
-              {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "TokenUriInput1"
-                  ],
-                  "type": 5
-                }
-              }
-            ],
-            "docs": [
-              " This function return the metadata location of an NFT. The format is baseURI/<token_id>.json"
-            ],
-            "label": "Psp34Traits::token_uri",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "TokenUriOutput"
-              ],
-              "type": 33
-            },
-            "selector": "0x249dfd4f"
-          },
-          {
-            "args": [
-              {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "IsLockedNftInput1"
-                  ],
-                  "type": 1
-                }
-              }
-            ],
-            "docs": [
-              " This function check if an NFT is locked or not"
-            ],
-            "label": "Psp34Traits::is_locked_nft",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "IsLockedNftOutput"
-              ],
-              "type": 30
-            },
-            "selector": "0x59271420"
-          },
-          {
-            "args": [],
-            "docs": [
-              " This function return the owner of the NFT Contract"
-            ],
-            "label": "Psp34Traits::get_owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "GetOwnerOutput"
-              ],
-              "type": 8
-            },
-            "selector": "0x8e1d8d71"
-          },
-          {
-            "args": [
-              {
-                "label": "index",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "GetAttributeNameInput1"
-                  ],
-                  "type": 4
-                }
-              }
-            ],
-            "docs": [
-              " This function return the attribute name using attribute index. Beacause attributes of an NFT can be set to anything by Contract Owner, AztZero uses this function to get all attributes of an NFT"
-            ],
-            "label": "Psp34Traits::get_attribute_name",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "GetAttributeNameOutput"
-              ],
-              "type": 33
-            },
-            "selector": "0xfcfe34de"
-          },
-          {
-            "args": [],
-            "docs": [
-              " This function return how many unique attributes in the contract"
-            ],
-            "label": "Psp34Traits::get_attribute_count",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "GetAttributeCountOutput"
-              ],
-              "type": 4
-            },
-            "selector": "0x61c50d69"
           },
           {
             "args": [
@@ -713,6 +595,90 @@ const nft721_psp34_standard = {
           {
             "args": [
               {
+                "label": "index",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "GetAttributeNameInput1"
+                  ],
+                  "type": 4
+                }
+              }
+            ],
+            "docs": [
+              " This function return the attribute name using attribute index. Beacause attributes of an NFT can be set to anything by Contract Owner, AztZero uses this function to get all attributes of an NFT"
+            ],
+            "label": "Psp34Traits::get_attribute_name",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "GetAttributeNameOutput"
+              ],
+              "type": 33
+            },
+            "selector": "0xfcfe34de"
+          },
+          {
+            "args": [
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "LockInput1"
+                  ],
+                  "type": 1
+                }
+              }
+            ],
+            "docs": [
+              " This function lets NFT owner to lock their NFT. Once locked, the NFT traits (attributes) can not be changed"
+            ],
+            "label": "Psp34Traits::lock",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "LockOutput"
+              ],
+              "type": 34
+            },
+            "selector": "0xa7245b9b"
+          },
+          {
+            "args": [
+              {
+                "label": "token_id",
+                "type": {
+                  "displayName": [
+                    "psp34traits_external",
+                    "TokenUriInput1"
+                  ],
+                  "type": 5
+                }
+              }
+            ],
+            "docs": [
+              " This function return the metadata location of an NFT. The format is baseURI/<token_id>.json"
+            ],
+            "label": "Psp34Traits::token_uri",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "TokenUriOutput"
+              ],
+              "type": 33
+            },
+            "selector": "0x249dfd4f"
+          },
+          {
+            "args": [
+              {
                 "label": "token_id",
                 "type": {
                   "displayName": [
@@ -751,47 +717,19 @@ const nft721_psp34_standard = {
           {
             "args": [],
             "docs": [
-              " This function returns how many NFTs have been locked by its owners"
+              " This function return the owner of the NFT Contract"
             ],
-            "label": "Psp34Traits::get_locked_token_count",
+            "label": "Psp34Traits::get_owner",
             "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
                 "psp34traits_external",
-                "GetLockedTokenCountOutput"
+                "GetOwnerOutput"
               ],
-              "type": 5
+              "type": 8
             },
-            "selector": "0x8fe2ce73"
-          },
-          {
-            "args": [
-              {
-                "label": "token_id",
-                "type": {
-                  "displayName": [
-                    "psp34traits_external",
-                    "LockInput1"
-                  ],
-                  "type": 1
-                }
-              }
-            ],
-            "docs": [
-              " This function lets NFT owner to lock their NFT. Once locked, the NFT traits (attributes) can not be changed"
-            ],
-            "label": "Psp34Traits::lock",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "psp34traits_external",
-                "LockOutput"
-              ],
-              "type": 34
-            },
-            "selector": "0xa7245b9b"
+            "selector": "0x8e1d8d71"
           },
           {
             "args": [
@@ -832,52 +770,66 @@ const nft721_psp34_standard = {
             "selector": "0x5bf8416b"
           },
           {
+            "args": [],
+            "docs": [
+              " This function return how many unique attributes in the contract"
+            ],
+            "label": "Psp34Traits::get_attribute_count",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "GetAttributeCountOutput"
+              ],
+              "type": 4
+            },
+            "selector": "0x61c50d69"
+          },
+          {
             "args": [
               {
-                "label": "psp22_contract_address",
+                "label": "token_id",
                 "type": {
                   "displayName": [
-                    "admintrait_external",
-                    "TranferPsp22Input1"
+                    "psp34traits_external",
+                    "IsLockedNftInput1"
                   ],
-                  "type": 8
-                }
-              },
-              {
-                "label": "amount",
-                "type": {
-                  "displayName": [
-                    "admintrait_external",
-                    "TranferPsp22Input2"
-                  ],
-                  "type": 6
-                }
-              },
-              {
-                "label": "receiver",
-                "type": {
-                  "displayName": [
-                    "admintrait_external",
-                    "TranferPsp22Input3"
-                  ],
-                  "type": 8
+                  "type": 1
                 }
               }
             ],
             "docs": [
-              " This function allow contract owner withdraw PSP22 to an account in case there is any token sent to contract by mistake"
+              " This function check if an NFT is locked or not"
             ],
-            "label": "AdminTrait::tranfer_psp22",
-            "mutates": true,
+            "label": "Psp34Traits::is_locked_nft",
+            "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "admintrait_external",
-                "TranferPsp22Output"
+                "psp34traits_external",
+                "IsLockedNftOutput"
               ],
-              "type": 34
+              "type": 30
             },
-            "selector": "0xd9aad284"
+            "selector": "0x59271420"
+          },
+          {
+            "args": [],
+            "docs": [
+              " This function returns how many NFTs have been locked by its owners"
+            ],
+            "label": "Psp34Traits::get_locked_token_count",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "psp34traits_external",
+                "GetLockedTokenCountOutput"
+              ],
+              "type": 5
+            },
+            "selector": "0x8fe2ce73"
           },
           {
             "args": [
@@ -964,6 +916,54 @@ const nft721_psp34_standard = {
               "type": 34
             },
             "selector": "0xed1e1dfa"
+          },
+          {
+            "args": [
+              {
+                "label": "psp22_contract_address",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferPsp22Input1"
+                  ],
+                  "type": 8
+                }
+              },
+              {
+                "label": "amount",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferPsp22Input2"
+                  ],
+                  "type": 6
+                }
+              },
+              {
+                "label": "receiver",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "TranferPsp22Input3"
+                  ],
+                  "type": 8
+                }
+              }
+            ],
+            "docs": [
+              " This function allow contract owner withdraw PSP22 to an account in case there is any token sent to contract by mistake"
+            ],
+            "label": "AdminTrait::tranfer_psp22",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "admintrait_external",
+                "TranferPsp22Output"
+              ],
+              "type": 34
+            },
+            "selector": "0xd9aad284"
           },
           {
             "args": [

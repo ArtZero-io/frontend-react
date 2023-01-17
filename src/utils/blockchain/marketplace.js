@@ -1,8 +1,8 @@
 const marketplace = {
-  CONTRACT_ADDRESS: "5GpE91q3a7qYoRdQuBcUBpJ1aEJpEkJ4yfWo2iCLE51ghsJ3",
+  CONTRACT_ADDRESS: "5DGdZhu2gLRD24wUmUiMvUH6FMK7dRbS77rvA91EEivz9wWr",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x0fd6ab341e7f67702a8f44c11ca9e46b1816a449aef918ca4680c2b5d7077923",
+      "hash": "0x3743db18908df7fe90ec57216804c0608a8afbc1636aa1a3a054e1e9fad8c019",
       "language": "ink! 3.4.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -1330,50 +1330,6 @@ const marketplace = {
             "selector": "0x8bb87aca"
           },
           {
-            "args": [],
-            "docs": [
-              " Leaves the contract without owner. It will not be possible to call",
-              " owner's functions anymore. Can only be called by the current owner.",
-              "",
-              " NOTE: Renouncing ownership will leave the contract without an owner,",
-              " thereby removing any functionality that is only available to the owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner"
-            ],
-            "label": "Ownable::renounce_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "RenounceOwnershipOutput"
-              ],
-              "type": 49
-            },
-            "selector": "0x5e228753"
-          },
-          {
-            "args": [],
-            "docs": [
-              " Returns the address of the current owner."
-            ],
-            "label": "Ownable::owner",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "OwnerOutput"
-              ],
-              "type": 0
-            },
-            "selector": "0x4fa43c8c"
-          },
-          {
             "args": [
               {
                 "label": "new_owner",
@@ -1411,42 +1367,48 @@ const marketplace = {
             "selector": "0x11f43efd"
           },
           {
-            "args": [
-              {
-                "label": "value",
-                "type": {
-                  "displayName": [
-                    "admintrait_external",
-                    "WithdrawFeeInput1"
-                  ],
-                  "type": 10
-                }
-              },
-              {
-                "label": "receiver",
-                "type": {
-                  "displayName": [
-                    "admintrait_external",
-                    "WithdrawFeeInput2"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
+            "args": [],
             "docs": [
-              " This function allows contract owner to withdraw contract balance to his account."
+              " Returns the address of the current owner."
             ],
-            "label": "AdminTrait::withdraw_fee",
+            "label": "Ownable::owner",
+            "mutates": false,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "OwnerOutput"
+              ],
+              "type": 0
+            },
+            "selector": "0x4fa43c8c"
+          },
+          {
+            "args": [],
+            "docs": [
+              " Leaves the contract without owner. It will not be possible to call",
+              " owner's functions anymore. Can only be called by the current owner.",
+              "",
+              " NOTE: Renouncing ownership will leave the contract without an owner,",
+              " thereby removing any functionality that is only available to the owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner"
+            ],
+            "label": "Ownable::renounce_ownership",
             "mutates": true,
             "payable": false,
             "returnType": {
               "displayName": [
-                "admintrait_external",
-                "WithdrawFeeOutput"
+                "ownable_external",
+                "RenounceOwnershipOutput"
               ],
-              "type": 40
+              "type": 49
             },
-            "selector": "0x07573e99"
+            "selector": "0x5e228753"
           },
           {
             "args": [
@@ -1543,6 +1505,44 @@ const marketplace = {
               "type": 40
             },
             "selector": "0xd9aad284"
+          },
+          {
+            "args": [
+              {
+                "label": "value",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "WithdrawFeeInput1"
+                  ],
+                  "type": 10
+                }
+              },
+              {
+                "label": "receiver",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "WithdrawFeeInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " This function allows contract owner to withdraw contract balance to his account."
+            ],
+            "label": "AdminTrait::withdraw_fee",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "admintrait_external",
+                "WithdrawFeeOutput"
+              ],
+              "type": 40
+            },
+            "selector": "0x07573e99"
           }
         ]
       },

@@ -1,8 +1,8 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5GTZSrBCYJTFZQE6TjfCePq2XLxp37adLXTH2wCv5hBaYMBV",
+  CONTRACT_ADDRESS: "5D375jDrc3NwHMUzAXMjG8S1tj3vKrrqHy5mvPqkpZ1g4T5o",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x74684aaee538f3bb6fd7460270eea2b72a43213207d6966729afc2b0b00f3952",
+      "hash": "0x19a26c7bc3a4037e3355b6fdad214d9184963855d87826722e5ce172f9638010",
       "language": "ink! 3.4.0",
       "compiler": "rustc 1.61.0-nightly"
     },
@@ -1068,6 +1068,54 @@ const collection_manager = {
                 "type": {
                   "displayName": [
                     "accesscontrol_external",
+                    "RenounceRoleInput1"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "label": "account",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "RenounceRoleInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Revokes `role` from the calling account.",
+              " Roles are often managed via `grant_role` and `revoke_role`: this function's",
+              " purpose is to provide a mechanism for accounts to lose their privileges",
+              " if they are compromised (such as when a trusted device is misplaced).",
+              "",
+              " On success a `RoleRevoked` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Returns with `InvalidCaller` error if caller is not `account`.",
+              " Returns with `MissingRole` error if `account` doesn't have `role`."
+            ],
+            "label": "AccessControl::renounce_role",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "accesscontrol_external",
+                "RenounceRoleOutput"
+              ],
+              "type": 43
+            },
+            "selector": "0xeaf1248a"
+          },
+          {
+            "args": [
+              {
+                "label": "role",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
                     "HasRoleInput1"
                   ],
                   "type": 5
@@ -1098,51 +1146,6 @@ const collection_manager = {
               "type": 18
             },
             "selector": "0xc1d9ac18"
-          },
-          {
-            "args": [
-              {
-                "label": "role",
-                "type": {
-                  "displayName": [
-                    "accesscontrol_external",
-                    "GrantRoleInput1"
-                  ],
-                  "type": 5
-                }
-              },
-              {
-                "label": "account",
-                "type": {
-                  "displayName": [
-                    "accesscontrol_external",
-                    "GrantRoleInput2"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Grants `role` to `account`.",
-              "",
-              " On success a `RoleGranted` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Returns with `MissingRole` error if caller can't grant the role.",
-              " Returns with `RoleRedundant` error `account` has `role`."
-            ],
-            "label": "AccessControl::grant_role",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "accesscontrol_external",
-                "GrantRoleOutput"
-              ],
-              "type": 43
-            },
-            "selector": "0x4ac062fd"
           },
           {
             "args": [
@@ -1195,54 +1198,6 @@ const collection_manager = {
                 "type": {
                   "displayName": [
                     "accesscontrol_external",
-                    "RenounceRoleInput1"
-                  ],
-                  "type": 5
-                }
-              },
-              {
-                "label": "account",
-                "type": {
-                  "displayName": [
-                    "accesscontrol_external",
-                    "RenounceRoleInput2"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Revokes `role` from the calling account.",
-              " Roles are often managed via `grant_role` and `revoke_role`: this function's",
-              " purpose is to provide a mechanism for accounts to lose their privileges",
-              " if they are compromised (such as when a trusted device is misplaced).",
-              "",
-              " On success a `RoleRevoked` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Returns with `InvalidCaller` error if caller is not `account`.",
-              " Returns with `MissingRole` error if `account` doesn't have `role`."
-            ],
-            "label": "AccessControl::renounce_role",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "accesscontrol_external",
-                "RenounceRoleOutput"
-              ],
-              "type": 43
-            },
-            "selector": "0xeaf1248a"
-          },
-          {
-            "args": [
-              {
-                "label": "role",
-                "type": {
-                  "displayName": [
-                    "accesscontrol_external",
                     "GetRoleAdminInput1"
                   ],
                   "type": 5
@@ -1263,6 +1218,88 @@ const collection_manager = {
               "type": 5
             },
             "selector": "0x83da3bb2"
+          },
+          {
+            "args": [
+              {
+                "label": "role",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "GrantRoleInput1"
+                  ],
+                  "type": 5
+                }
+              },
+              {
+                "label": "account",
+                "type": {
+                  "displayName": [
+                    "accesscontrol_external",
+                    "GrantRoleInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Grants `role` to `account`.",
+              "",
+              " On success a `RoleGranted` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Returns with `MissingRole` error if caller can't grant the role.",
+              " Returns with `RoleRedundant` error `account` has `role`."
+            ],
+            "label": "AccessControl::grant_role",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "accesscontrol_external",
+                "GrantRoleOutput"
+              ],
+              "type": 43
+            },
+            "selector": "0x4ac062fd"
+          },
+          {
+            "args": [
+              {
+                "label": "new_owner",
+                "type": {
+                  "displayName": [
+                    "ownable_external",
+                    "TransferOwnershipInput1"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " Transfers ownership of the contract to a `new_owner`.",
+              " Can only be called by the current owner.",
+              "",
+              " On success a `OwnershipTransferred` event is emitted.",
+              "",
+              " # Errors",
+              "",
+              " Panics with `CallerIsNotOwner` error if caller is not owner.",
+              "",
+              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
+            ],
+            "label": "Ownable::transfer_ownership",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "ownable_external",
+                "TransferOwnershipOutput"
+              ],
+              "type": 44
+            },
+            "selector": "0x11f43efd"
           },
           {
             "args": [],
@@ -1307,71 +1344,6 @@ const collection_manager = {
               "type": 44
             },
             "selector": "0x5e228753"
-          },
-          {
-            "args": [
-              {
-                "label": "new_owner",
-                "type": {
-                  "displayName": [
-                    "ownable_external",
-                    "TransferOwnershipInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " Transfers ownership of the contract to a `new_owner`.",
-              " Can only be called by the current owner.",
-              "",
-              " On success a `OwnershipTransferred` event is emitted.",
-              "",
-              " # Errors",
-              "",
-              " Panics with `CallerIsNotOwner` error if caller is not owner.",
-              "",
-              " Panics with `NewOwnerIsZero` error if new owner's address is zero."
-            ],
-            "label": "Ownable::transfer_ownership",
-            "mutates": true,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "ownable_external",
-                "TransferOwnershipOutput"
-              ],
-              "type": 44
-            },
-            "selector": "0x11f43efd"
-          },
-          {
-            "args": [
-              {
-                "label": "nft_contract_address",
-                "type": {
-                  "displayName": [
-                    "artzerocollectiontrait_external",
-                    "GetRoyaltyFeeInput1"
-                  ],
-                  "type": 0
-                }
-              }
-            ],
-            "docs": [
-              " This function returns royalty fee of a Collection"
-            ],
-            "label": "ArtZeroCollectionTrait::get_royalty_fee",
-            "mutates": false,
-            "payable": false,
-            "returnType": {
-              "displayName": [
-                "artzerocollectiontrait_external",
-                "GetRoyaltyFeeOutput"
-              ],
-              "type": 5
-            },
-            "selector": "0xfd0ba95a"
           },
           {
             "args": [
@@ -1460,40 +1432,30 @@ const collection_manager = {
           {
             "args": [
               {
-                "label": "value",
+                "label": "nft_contract_address",
                 "type": {
                   "displayName": [
-                    "admintrait_external",
-                    "WithdrawFeeInput1"
-                  ],
-                  "type": 14
-                }
-              },
-              {
-                "label": "receiver",
-                "type": {
-                  "displayName": [
-                    "admintrait_external",
-                    "WithdrawFeeInput2"
+                    "artzerocollectiontrait_external",
+                    "GetRoyaltyFeeInput1"
                   ],
                   "type": 0
                 }
               }
             ],
             "docs": [
-              " This function allows contract owner to withdraw contract balance to his account."
+              " This function returns royalty fee of a Collection"
             ],
-            "label": "AdminTrait::withdraw_fee",
-            "mutates": true,
+            "label": "ArtZeroCollectionTrait::get_royalty_fee",
+            "mutates": false,
             "payable": false,
             "returnType": {
               "displayName": [
-                "admintrait_external",
-                "WithdrawFeeOutput"
+                "artzerocollectiontrait_external",
+                "GetRoyaltyFeeOutput"
               ],
-              "type": 34
+              "type": 5
             },
-            "selector": "0x07573e99"
+            "selector": "0xfd0ba95a"
           },
           {
             "args": [
@@ -1590,6 +1552,44 @@ const collection_manager = {
               "type": 34
             },
             "selector": "0xd9aad284"
+          },
+          {
+            "args": [
+              {
+                "label": "value",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "WithdrawFeeInput1"
+                  ],
+                  "type": 14
+                }
+              },
+              {
+                "label": "receiver",
+                "type": {
+                  "displayName": [
+                    "admintrait_external",
+                    "WithdrawFeeInput2"
+                  ],
+                  "type": 0
+                }
+              }
+            ],
+            "docs": [
+              " This function allows contract owner to withdraw contract balance to his account."
+            ],
+            "label": "AdminTrait::withdraw_fee",
+            "mutates": true,
+            "payable": false,
+            "returnType": {
+              "displayName": [
+                "admintrait_external",
+                "WithdrawFeeOutput"
+              ],
+              "type": 34
+            },
+            "selector": "0x07573e99"
           }
         ]
       },
