@@ -186,7 +186,6 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
                             fontSize="lg"
                             h={"50px"}
                             step={1}
-                            max={10}
                             type="number"
                             precision={0}
                             min={levels.level}

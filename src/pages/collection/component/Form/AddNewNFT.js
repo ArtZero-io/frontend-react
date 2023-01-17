@@ -277,10 +277,9 @@ const AddNewNFTForm = ({
 
               if (mode === formMode.ADD) {
                 dispatch(setTxStatus({ type: CREATE_NFT, step: START }));
-
                 await nft721_psp34_standard_calls.mintWithAttributes(
                   currentAccount,
-                  collection_address,
+                  collection_address || rest?.nftContractAddress,
                   attributes,
                   dispatch,
                   CREATE_NFT,

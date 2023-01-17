@@ -413,6 +413,7 @@ function HomePage() {
                 you will need some testnet azero (tzero) to start. get free
                 tzero from{" "}
                 <Link
+                  isExternal
                   color="#7ae7ff"
                   textDecoration="underline"
                   href="https://faucet-smartnet.test.azero.dev/"

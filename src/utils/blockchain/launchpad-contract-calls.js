@@ -1,19 +1,19 @@
-import BN from 'bn.js';
-import toast from 'react-hot-toast';
-import { web3FromSource } from '../wallets/extension-dapp';
+import BN from "bn.js";
+import toast from "react-hot-toast";
+import { web3FromSource } from "../wallets/extension-dapp";
 import {
   getEstimatedGas,
   handleContractCallAnimation,
   isValidAddressPolkadotAddress,
-} from '@utils';
-import { ContractPromise, Abi } from '@polkadot/api-contract';
-import { AccountActionTypes } from '@store/types/account.types';
+} from "@utils";
+import { ContractPromise, Abi } from "@polkadot/api-contract";
+import { AccountActionTypes } from "@store/types/account.types";
 import {
   txErrorHandler,
   txResponseErrorHandler,
-} from '@store/actions/txStatus';
-import launchpad_manager from '@utils/blockchain/launchpad-manager';
-import { APICall } from '@api/client';
+} from "@store/actions/txStatus";
+import launchpad_manager from "@utils/blockchain/launchpad-manager";
+import { APICall } from "@api/client";
 
 let contract;
 
@@ -52,7 +52,6 @@ async function getProjectsByOwner(caller_account, ownerAddress) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getProjectsByOwner(
     address,
@@ -100,7 +99,7 @@ async function setMultipleAttributes(
             if (dispatchError.isModule) {
               toast.error(`There is some error with your request`);
             } else {
-              console.log('dispatchError ', dispatchError.toString());
+              console.log("dispatchError ", dispatchError.toString());
             }
           }
 
@@ -142,9 +141,8 @@ async function owner(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
-  const { result, output } = await contract.query['ownable::owner'](address, {
+  const { result, output } = await contract.query["ownable::owner"](address, {
     value: azero_value,
     gasLimit,
   });
@@ -161,15 +159,11 @@ async function getAdminAddress(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
-
-
 
   const { result, output } = await contract.query.getAdminAddress(address, {
     value: azero_value,
     gasLimit,
   });
-
 
   if (result.isOk) {
     return output.toHuman();
@@ -184,7 +178,6 @@ async function getProjectCount(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getProjectCount(address, {
     value: azero_value,
@@ -192,7 +185,7 @@ async function getProjectCount(caller_account) {
   });
 
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
 
   return null;
@@ -262,7 +255,7 @@ async function addNewProject(
     address,
     contract,
     value,
-    'addNewProject',
+    "addNewProject",
     data.total_supply,
     data.start_time,
     data.end_time,
@@ -278,7 +271,7 @@ async function addNewProject(
 
   contract.tx
     .addNewProject(
-      { gasLimit, value },
+      { gasLimit, value: value },
       data.total_supply,
       data.start_time,
       data.end_time,
@@ -307,7 +300,7 @@ async function addNewProject(
 
         if (status.isInBlock) {
           events.forEach(({ event: { data, method, section }, phase }) => {
-            if (section === 'contracts' && method === 'ContractEmitted') {
+            if (section === "contracts" && method === "ContractEmitted") {
               const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
 
               const contract_address = accId.toString();
@@ -321,7 +314,7 @@ async function addNewProject(
 
                 let event_name = decodedEvent.event.identifier;
 
-                if (event_name === 'AddNewProjectEvent') {
+                if (event_name === "AddNewProjectEvent") {
                   const eventValues = [];
 
                   for (let i = 0; i < decodedEvent.args.length; i++) {
@@ -337,7 +330,7 @@ async function addNewProject(
                     }))();
 
                   console.log(
-                    'APICall.askBeUpdateProjectData addNewProject nft_address,',
+                    "APICall.askBeUpdateProjectData addNewProject nft_address,",
                     nft_address
                   );
                   createNewCollection(nft_address);
@@ -372,7 +365,7 @@ async function editProject(caller_account, data, dispatch, txType, api) {
     address,
     contract,
     value,
-    'editProject',
+    "editProject",
     data.contract_address,
     data.start_time,
     data.end_time,
@@ -405,20 +398,19 @@ async function editProject(caller_account, data, dispatch, txType, api) {
 
 async function getProjectAddingFee(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getProjectAddingFee(address, {
     value: azero_value,
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, 'le');
+    return new BN(output, 10, "le");
   }
   return null;
 }
@@ -451,7 +443,7 @@ async function updateIsActiveProject(
     address,
     contract,
     value,
-    'updateIsActiveProject',
+    "updateIsActiveProject",
     isActive,
     collection_address
   );
@@ -473,7 +465,7 @@ async function updateIsActiveProject(
           project_address: collection_address,
         });
 
-        console.log('askBeUpdateProjectData', ret);
+        console.log("askBeUpdateProjectData", ret);
       }
     })
     .then((unsub) => (unsubscribe = unsub))
@@ -507,7 +499,7 @@ export const getProjectMintFeeRate = async function (caller_account, api) {
 
   setLaunchPadContract(api, launchpad_manager);
   const { result, output } = await contract.query[
-    'artZeroLaunchPadTrait::getProjectMintFeeRate'
+    "artZeroLaunchPadTrait::getProjectMintFeeRate"
   ](address, {
     value: azero_value,
     gasLimit,

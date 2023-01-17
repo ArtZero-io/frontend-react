@@ -175,7 +175,6 @@ async function mintWithAttributes(
     "mintWithAttributes",
     metadata
   );
-  console.log("metadata", metadata);
   contract.tx
     .mintWithAttributes({ gasLimit, value }, metadata)
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
@@ -201,7 +200,6 @@ async function mintWithAttributes(
           let cacheImages = [];
 
           for (let i = 0; i < attributes.length; i++) {
-            console.log(attributes[i]);
             if (attributes[i].name === "avatar") {
               cacheImages.push({
                 input: attributes[i].value,
@@ -417,7 +415,6 @@ async function setMultipleAttributesNFT(
     { u64: tokenID },
     metadata
   );
-  console.log("setMultipleAttributesNFT metadata", metadata);
 
   await contract.tx["psp34Traits::setMultipleAttributes"](
     { value, gasLimit },

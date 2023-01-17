@@ -8,6 +8,7 @@ import { CollectionCard } from "../Card/Collection";
 import * as ROUTES from "@constants/routes";
 import { useDimensions } from "@chakra-ui/react";
 import { formMode } from "@constants";
+import AddNewNFTModal from "../../pages/collection/component/Modal/AddNewNFT";
 
 function GridA({
   collections,
@@ -63,11 +64,12 @@ function GridA({
         >
           {variant === "my-collection" && c.contractType === "Psp34Auto" && (
             <>
+              <AddNewNFTModal variant="quick-create-nft" {...c} />
               <SimpleModeModal
                 mode={formMode.EDIT}
                 id={c.index}
-                pos={"absolute"}
                 {...c}
+                pos={"absolute"}
               />
             </>
           )}

@@ -8,17 +8,18 @@ import {
   TagLabel,
   TagLeftIcon,
   Text,
+  Tooltip,
   VStack,
-} from '@chakra-ui/react';
-import { shortenNumber } from '@utils';
-import ActiveIcon from '@theme/assets/icon/Active.js';
-import InActiveIcon from '@theme/assets/icon/InActive.js';
-import AzeroIcon from '@theme/assets/icon/Azero.js';
-import { motion } from 'framer-motion';
+} from "@chakra-ui/react";
+import { shortenNumber } from "@utils";
+// import ActiveIcon from '@theme/assets/icon/Active.js';
+import InActiveIcon from "@theme/assets/icon/InActive.js";
+import AzeroIcon from "@theme/assets/icon/Azero.js";
+import { motion } from "framer-motion";
 
-import { useEffect, useRef } from 'react';
-import { delay } from '@utils';
-import ImageCloudFlare from '../ImageWrapper/ImageCloudFlare';
+import { useEffect, useRef } from "react";
+import { delay } from "@utils";
+import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 
 export const CollectionCard = ({
   squareImage,
@@ -38,8 +39,8 @@ export const CollectionCard = ({
     const doScroll = async () => {
       await delay(1000).then(() => {
         restorationRef.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
+          behavior: "smooth",
+          block: "center",
         });
       });
     };
@@ -52,15 +53,15 @@ export const CollectionCard = ({
       ref={restorationRef}
       className="my-collection-card"
       whileHover={{
-        borderColor: '#7ae7ff',
+        borderColor: "#7ae7ff",
       }}
       style={{
-        borderWidth: '2px',
-        borderColor: '#7ae7ff00',
+        borderWidth: "2px",
+        borderColor: "#7ae7ff00",
 
-        transitionDuration: '0.15s',
-        transitionProperty: 'all',
-        transitionTimingFunction: 'cubic-bezier(.17,.67,.83,.67)',
+        transitionDuration: "0.15s",
+        transitionProperty: "all",
+        transitionTimingFunction: "cubic-bezier(.17,.67,.83,.67)",
       }}
     >
       <Flex
@@ -74,50 +75,50 @@ export const CollectionCard = ({
         <Box
           pos="relative"
           width="full"
-          h={'16.25rem'}
+          h={"16.25rem"}
           style={{
-            transitionDuration: '0.15s',
-            transitionProperty: 'all',
-            transitionTimingFunction: 'cubic-bezier(.17,.67,.83,.67)',
+            transitionDuration: "0.15s",
+            transitionProperty: "all",
+            transitionTimingFunction: "cubic-bezier(.17,.67,.83,.67)",
           }}
           sx={{
-            '.my-collection-card &': {
+            ".my-collection-card &": {
               _after: {
                 content: '""',
-                position: 'absolute',
+                position: "absolute",
                 bottom: 0,
                 left: 0,
-                width: 'full',
-                height: '6rem',
+                width: "full",
+                height: "6rem",
                 backgroundImage:
-                  'linear-gradient(180deg, rgba(0, 0, 0, 0) 25.77%, #000000 100%);',
+                  "linear-gradient(180deg, rgba(0, 0, 0, 0) 25.77%, #000000 100%);",
               },
             },
-            '.my-collection-card:hover &': {
+            ".my-collection-card:hover &": {
               _after: {
                 content: '""',
-                position: 'absolute',
+                position: "absolute",
                 bottom: 0,
                 left: 0,
-                width: '0',
-                height: '0',
+                width: "0",
+                height: "0",
               },
               _before: {
                 content: '""',
-                position: 'absolute',
+                position: "absolute",
                 bottom: 0,
                 left: 0,
-                width: 'full',
-                height: '6rem',
+                width: "full",
+                height: "6rem",
                 backgroundImage:
-                  'linear-gradient(180deg, rgba(122, 231, 255, 0) 25.77%, #7AE7FF 100%);',
+                  "linear-gradient(180deg, rgba(122, 231, 255, 0) 25.77%, #7AE7FF 100%);",
               },
             },
           }}
         >
           <ImageCloudFlare
-            h={'260px'}
-            w={'full'}
+            h={"260px"}
+            w={"full"}
             src={squareImage}
             alt={`header-img-${name}`}
           />
@@ -137,8 +138,8 @@ export const CollectionCard = ({
         >
           <ImageCloudFlare
             size="500"
-            h={'60px'}
-            w={'60px'}
+            h={"60px"}
+            w={"60px"}
             bg="#d8d8d8"
             src={avatarImage}
             borderRadius="full"
@@ -161,8 +162,8 @@ export const CollectionCard = ({
             textTransform="none"
             textAlign="center"
             noOfLines={3}
-            maxW={{ base: 'unset', md: '20rem' }}
-            minH={'4.5rem'}
+            maxW={{ base: "unset", md: "20rem" }}
+            minH={"4.5rem"}
             color="#888"
           >
             {description}
@@ -171,29 +172,29 @@ export const CollectionCard = ({
           <Flex
             mt="24px !important"
             w={
-              variant === 'my-collection' || variant === 'my-projects'
-                ? 'full'
+              variant === "my-collection" || variant === "my-projects"
+                ? "full"
                 : 36
             }
             alignItems="center"
             justify="center"
           >
-            {variant !== 'my-projects' && (
+            {variant !== "my-projects" && (
               <Tag>
                 <TagLeftIcon
-                  h={['12px', '16px', '16px']}
-                  w={['12px', '16px', '16px']}
+                  h={["12px", "16px", "16px"]}
+                  w={["12px", "16px", "16px"]}
                 >
-                  <AzeroIcon fill={isActive ? '#7AE7FF' : '#888'} />
+                  <AzeroIcon fill={isActive ? "#7AE7FF" : "#888"} />
                 </TagLeftIcon>
                 <TagLabel
-                  color={isActive ? '#fff' : '#888'}
+                  color={isActive ? "#fff" : "#888"}
                   textTransform="capitalize"
-                  fontSize={['14px', '16px']}
+                  fontSize={["14px", "16px"]}
                 >
                   <Text as="span" fontWeight="400">
                     Volume
-                  </Text>{' '}
+                  </Text>{" "}
                   <Text as="span" fontWeight="600">
                     {shortenNumber(volume) || 0}
                   </Text>
@@ -201,7 +202,7 @@ export const CollectionCard = ({
               </Tag>
             )}
             <>
-              {variant === 'my-collection' && (
+              {variant === "my-collection" && (
                 <>
                   <Spacer />
                   <Box
@@ -215,19 +216,32 @@ export const CollectionCard = ({
                   </Box>
                 </>
               )}
-              {variant !== 'marketplace-collection' && (
+              {variant !== "marketplace-collection" && (
                 <>
-                  {isActive && (
+                  {/* {isActive && (
                     <Tag variant="active" fontSize={['14px', '16px']}>
                       <TagLeftIcon as={ActiveIcon} />
                       <TagLabel textTransform="capitalize">Active</TagLabel>
                     </Tag>
-                  )}
+                  )} */}
                   {!isActive && (
-                    <Tag variant="inActive" fontSize={['14px', '16px']}>
-                      <TagLeftIcon as={InActiveIcon} />
-                      <TagLabel textTransform="capitalize">Inactive</TagLabel>
-                    </Tag>
+                    <>
+                      <Tooltip
+                        placeContent="start"
+                        hasArrow
+                        bg="#333"
+                        color="#fff"
+                        borderRadius="0"
+                        label="Contact ArtZero to activate your Collection"
+                      >
+                        <Tag variant="inActive" fontSize={["14px", "16px"]}>
+                          <TagLeftIcon as={InActiveIcon} />
+                          <TagLabel textTransform="capitalize">
+                            Inactive
+                          </TagLabel>
+                        </Tag>
+                      </Tooltip>
+                    </>
                   )}
                 </>
               )}

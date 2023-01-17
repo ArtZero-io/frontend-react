@@ -52,8 +52,8 @@ export const validationNftSymbol = Yup.string()
 export const validationAgreeTosCheckbox = Yup.boolean().when("isEditMode", {
   is: false,
   then: Yup.boolean()
-    .required("The terms and conditions must be accepted.")
-    .oneOf([true], "The TOCs must be accepted."),
+    .required("The terms of service must be accepted.")
+    .oneOf([true], "The TOS must be accepted."),
 });
 
 export const validationAgreeProjectMintFeeCheckbox = Yup.boolean().when(

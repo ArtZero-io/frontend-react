@@ -1,12 +1,10 @@
-/* eslint-disable no-unused-vars */
-import { Box, Flex, HStack, Stack, Text, VStack } from "@chakra-ui/react";
+import { Box, Link, Flex, HStack, Stack, Text, VStack } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import React, { useState, useEffect, useRef } from "react";
 import { Formik, Form } from "formik";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 
-import CollectionImageUpload from "@components/ImageUpload/Collection";
 import SimpleModeInput from "@components/Input/Input";
 import SimpleModeTextArea from "@components/TextArea/TextArea";
 import SimpleModeSwitch from "@components/Switch/Switch";
@@ -25,9 +23,10 @@ import {
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { setTxStatus } from "@store/actions/txStatus";
-import { APICall } from "../../../../../api/client";
+import { APICall } from "@api/client";
 import { clearTxStatus } from "@store/actions/txStatus";
 import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
+import { convertStringToPrice } from "@utils";
 
 const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -83,17 +82,23 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
     fetchFee();
   }, [maxRoyaltyFeeRate, currentAccount]);
 
-  const checkCurrentBalance = async () => {
-    const { data: balance } = await api.query.system.account(
-      currentAccount?.address
-    );
+  const [userBalance, setUserBalance] = useState(0);
+  useEffect(() => {
+    const checkCurrentBalance = async () => {
+      const { data: balance } = await api.query.system.account(
+        currentAccount?.address
+      );
 
-    if (balance.free.toNumber() - balance.miscFrozen.toNumber() > addingFee) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+      const free = convertStringToPrice(balance.toHuman().free);
+      const miscFrozen = convertStringToPrice(balance.toHuman().miscFrozen);
+
+      const bal = free - miscFrozen;
+
+      setUserBalance(bal);
+    };
+
+    checkCurrentBalance();
+  }, [api.query.system, currentAccount?.address]);
 
   useEffect(() => {
     let newInitialValues = {
@@ -209,13 +214,23 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
             agreeTosCheckbox: Yup.boolean().when("isEditMode", {
               is: false,
               then: Yup.boolean()
-                .required("The terms and conditions must be accepted.")
-                .oneOf([true], "The TOCs must be accepted."),
+                .required("The terms of service must be accepted.")
+                .oneOf([true], "The TOS must be accepted."),
             }),
           })}
           onSubmit={async (values, { setSubmitting }) => {
             if (addingFee <= 0) {
               return toast.error("Creation fee must greater than zero!");
+            }
+
+            if (userBalance <= 0) {
+              return toast.error("Low balance!");
+            }
+
+            if (userBalance <= addingFee) {
+              return toast.error(
+                `You need ${addingFee} AZERO to create new collection!`
+              );
             }
             // if (
             //   !values.isEditMode &&
@@ -229,73 +244,67 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
             values.headerIPFSUrl = headerIPFSUrl;
             values.headerSquareIPFSUrl = headerSquareIPFSUrl;
 
-            if (!checkCurrentBalance) {
-              return toast.error(`Your balance not enough`);
-            } else {
-              const data = {
-                nftName: values.nftName,
-                nftSymbol: values.nftSymbol,
+            const data = {
+              nftName: values.nftName,
+              nftSymbol: values.nftSymbol,
 
-                attributes: [
-                  "name",
-                  "description",
-                  "avatar_image",
-                  "header_image",
-                  "header_square_image",
-                  "website",
-                  "twitter",
-                  "discord",
-                ],
+              attributes: [
+                "name",
+                "description",
+                "avatar_image",
+                "header_image",
+                "header_square_image",
+                "website",
+                "twitter",
+                "discord",
+              ],
 
-                attributeVals: [
-                  values.collectionName.trim(),
-                  values.collectionDescription.trim(),
-                  values.avatarIPFSUrl,
-                  values.headerIPFSUrl,
-                  values.headerSquareIPFSUrl,
-                  values.website,
-                  values.twitter,
-                  values.discord,
-                ],
+              attributeVals: [
+                values.collectionName.trim(),
+                values.collectionDescription.trim(),
+                values.avatarIPFSUrl,
+                values.headerIPFSUrl,
+                values.headerSquareIPFSUrl,
+                values.website,
+                values.twitter,
+                values.discord,
+              ],
 
-                collectionAllowRoyaltyFee: values.collectRoyaltyFee,
-                collectionRoyaltyFeeData: values.collectRoyaltyFee
-                  ? Math.round(values.royaltyFee * 100)
-                  : 0,
-              };
+              collectionAllowRoyaltyFee: values.collectRoyaltyFee,
+              collectionRoyaltyFeeData: values.collectRoyaltyFee
+                ? Math.round(values.royaltyFee * 100)
+                : 0,
+            };
 
-              try {
-                if (mode === formMode.ADD) {
-                  dispatch(
-                    setTxStatus({ type: CREATE_COLLECTION, step: START })
-                  );
+            try {
+              if (mode === formMode.ADD) {
+                dispatch(setTxStatus({ type: CREATE_COLLECTION, step: START }));
 
-                  await collection_manager_calls.autoNewCollection(
-                    currentAccount,
-                    data,
-                    dispatch,
-                    CREATE_COLLECTION,
-                    api
-                  );
-                }
-
-                if (mode === formMode.EDIT) {
-                  dispatch(setTxStatus({ type: EDIT_COLLECTION, step: START }));
-
-                  await collection_manager_calls.setMultipleAttributes(
-                    currentAccount,
-                    nftContractAddress,
-                    data.attributes,
-                    data.attributeVals,
-                    dispatch,
-                    EDIT_COLLECTION,
-                    api
-                  );
-                }
-              } catch (error) {
-                toast.error(error.message);
-                dispatch(clearTxStatus());
+                await collection_manager_calls.autoNewCollection(
+                  currentAccount,
+                  data,
+                  dispatch,
+                  CREATE_COLLECTION,
+                  api
+                );
               }
+
+              if (mode === formMode.EDIT) {
+                dispatch(setTxStatus({ type: EDIT_COLLECTION, step: START }));
+
+                await collection_manager_calls.setMultipleAttributes(
+                  currentAccount,
+                  nftContractAddress,
+                  data.attributes,
+                  data.attributeVals,
+                  dispatch,
+                  EDIT_COLLECTION,
+                  api
+                );
+              }
+            } catch (error) {
+              toast.error(error.message);
+              dispatch(clearTxStatus());
             }
           }}
         >
@@ -600,15 +609,39 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   </Stack>
 
                   <VStack alignItems="start" pt="30px">
-                    <Text textAlign='left' color="#fff" fontSize={["md", "lg", "lg"]}>
+                    <Text
+                      textAlign="left"
+                      color="#fff"
+                      fontSize={["md", "lg", "lg"]}
+                    >
                       Create new collection you will pay
-                      <strong> {addingFee} $AZERO </strong> in fee to ArtZero.io
+                      <strong> {addingFee} AZERO </strong> in fee to ArtZero.io
                     </Text>
                     <HStack justifyContent="center">
                       <CommonCheckbox
                         isDisabled={actionType}
                         name="agreeTosCheckbox"
-                        content="I agree to ArtZero's Terms of Service"
+                        content={
+                          <>
+                            <Text as="span" color="#888">
+                              {`I agree to ArtZero's `}
+                            </Text>
+                            <Link
+                              color="#fff"
+                              _hover={{
+                                color: "#7ae7ff",
+                                textDecoration: "underline",
+                              }}
+                              textTransform="none"
+                              isExternal
+                              href={
+                                "https://artzero.io/demotestnet/assets/ArtZero_Terms_Of_Service.pdf"
+                              }
+                            >
+                              Terms of Service
+                            </Link>
+                          </>
+                        }
                       />
                     </HStack>
                   </VStack>

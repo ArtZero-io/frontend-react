@@ -1,4 +1,4 @@
-import { Stack, Text, Box, HStack, VStack, Flex } from "@chakra-ui/react";
+import { Stack, Text, Box, HStack, VStack, Flex, Link } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import React, { useState, useEffect, useRef } from "react";
 import { Formik, Form } from "formik";
@@ -26,8 +26,9 @@ import {
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
 import { setTxStatus } from "@store/actions/txStatus";
-import { APICall } from "../../../../../api/client";
+import { APICall } from "@api/client";
 import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
+import { convertStringToPrice } from "@utils";
 
 const AdvancedModeForm = ({ mode = "add", id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -78,17 +79,23 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
     fetchFee();
   }, [maxRoyaltyFeeRate, currentAccount]);
 
-  const checkCurrentBalance = async () => {
-    const { data: balance } = await api.query.system.account(
-      currentAccount?.address
-    );
+  const [userBalance, setUserBalance] = useState(0);
+  useEffect(() => {
+    const checkCurrentBalance = async () => {
+      const { data: balance } = await api.query.system.account(
+        currentAccount?.address
+      );
 
-    if (balance.free.toNumber() - balance.miscFrozen.toNumber() > addingFee) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+      const free = convertStringToPrice(balance.toHuman().free);
+      const miscFrozen = convertStringToPrice(balance.toHuman().miscFrozen);
+
+      const bal = free - miscFrozen;
+
+      setUserBalance(bal);
+    };
+
+    checkCurrentBalance();
+  }, [api.query.system, currentAccount?.address]);
 
   useEffect(() => {
     let newInitialValues = {
@@ -207,8 +214,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
             agreeTosCheckbox: Yup.boolean().when("isEditMode", {
               is: false,
               then: Yup.boolean()
-                .required("The terms and conditions must be accepted.")
-                .oneOf([true], "The TOCs must be accepted."),
+                .required("The terms of service must be accepted.")
+                .oneOf([true], "The TOS must be accepted."),
             }),
           })}
           onSubmit={async (values, { setSubmitting }) => {
@@ -228,8 +235,14 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
             values.headerIPFSUrl = headerIPFSUrl;
             values.headerSquareIPFSUrl = headerSquareIPFSUrl;
 
-            if (!checkCurrentBalance) {
-              return toast.error(`Your balance not enough!`);
+            if (userBalance <= 0) {
+              return toast.error("Low balance!");
+            }
+
+            if (userBalance < addingFee) {
+              return toast.error(
+                `You need ${addingFee} AZERO to create new collection!`
+              );
             }
 
             if (!isValidAddressPolkadotAddress(values.nftContractAddress)) {
@@ -592,13 +605,33 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       fontSize={["md", "lg", "lg"]}
                     >
                       Create new collection you will pay
-                      <strong> {addingFee} $AZERO </strong> in fee to ArtZero.io
+                      <strong> {addingFee} AZERO </strong> in fee to ArtZero.io
                     </Text>
                     <HStack justifyContent="center">
                       <CommonCheckbox
                         isDisabled={actionType}
                         name="agreeTosCheckbox"
-                        content="I agree to ArtZero's Terms of Service"
+                        content={
+                          <>
+                            <Text as="span" color="#888">
+                              {`I agree to ArtZero's `}
+                            </Text>
+                            <Link
+                              color="#fff"
+                              _hover={{
+                                color: "#7ae7ff",
+                                textDecoration: "underline",
+                              }}
+                              textTransform="none"
+                              isExternal
+                              href={
+                                "https://artzero.io/demotestnet/assets/ArtZero_Terms_Of_Service.pdf"
+                              }
+                            >
+                              Terms of Service
+                            </Link>
+                          </>
+                        }
                       />
                     </HStack>
                   </VStack>
