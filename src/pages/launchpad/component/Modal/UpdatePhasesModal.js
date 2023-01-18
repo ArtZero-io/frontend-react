@@ -20,7 +20,7 @@ import { useSubstrateState } from "@utils/substrate";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
-import { convertStringToPrice, strToNumber } from "@utils";
+import { convertStringToPrice, strToNumber, delay } from "@utils";
 import useTxStatus from "@hooks/useTxStatus";
 import { FINALIZED } from "@constants";
 import { useDispatch } from "react-redux";
@@ -119,11 +119,15 @@ const UpdatePhasesModal = React.memo(function ({
   }, [api, currentAccount, collection_address, currentPhaseId, fetchData]);
 
   useEffect(() => {
-    if (rest.step === FINALIZED) {
-      fetchData();
-      onClose();
-      dispatch(clearTxStatus());
-    }
+    const reload = async () => {
+      if (rest.step === "InBlock") {
+        await fetchData();
+        await delay(1000);
+        dispatch(clearTxStatus());
+        onClose();
+      }
+    };
+    reload();
   }, [dispatch, fetchData, onClose, rest.step]);
 
   const modalSize = useBreakpointValue({ base: "full", md: "xl" });

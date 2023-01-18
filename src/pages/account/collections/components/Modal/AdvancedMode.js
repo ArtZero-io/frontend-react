@@ -49,8 +49,7 @@ function AdvancedModeModal({
           </Button>
         </Tooltip>
       )}
-      {console.log("contractType", contractType)}
-      {console.log("mode", mode)}
+
       {mode === formMode.EDIT && (
         <>
           <Text

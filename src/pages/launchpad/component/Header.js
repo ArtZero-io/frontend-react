@@ -139,11 +139,11 @@ function LaunchpadDetailHeader({
     return projectOwner === currentAccount?.address;
   }, [currentAccount?.address, projectOwner]);
 
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(null);
 
   useEffect(() => {
     const checkIsAdmin = async () => {
-      if (!api) return;
+      if (!api || !currentAccount?.address) return;
       const queryResult1 = await execContractQuery(
         currentAccount?.address,
         api,
@@ -272,7 +272,11 @@ function LaunchpadDetailHeader({
                         as="span"
                         isLoaded={!loadingPhaseInfo}
                       >
-                        <Text display={["block", "inline"]} color="#fff">
+                        <Text
+                          as="span"
+                          display={["block", "inline"]}
+                          color="#fff"
+                        >
                           {currentPhase?.publicMintingFee / 10 ** 12 || 0}{" "}
                           <AzeroIcon
                             mb={["2px", "5px"]}
@@ -295,7 +299,11 @@ function LaunchpadDetailHeader({
                             as="span"
                             isLoaded={!loadingPhaseInfo}
                           >
-                            <Text display={["block", "inline"]} color="#fff">
+                            <Text
+                              as="span"
+                              display={["block", "inline"]}
+                              color="#fff"
+                            >
                               {currentPhase?.publicMintingFee / 10 ** 12 || 0}{" "}
                               <AzeroIcon
                                 mb={["2px", "5px"]}
@@ -312,7 +320,11 @@ function LaunchpadDetailHeader({
                     userWLInfo[currentPhase?.id - 1]?.remainAmount > 0 && (
                       <Text mx={["25px", "42px"]} w="150px">
                         Price:{" "}
-                        <Text display={["block", "inline"]} color="#fff">
+                        <Text
+                          as="span"
+                          display={["block", "inline"]}
+                          color="#fff"
+                        >
                           {userWLInfo[currentPhase?.id - 1]?.mintingFee /
                             10 ** 12}{" "}
                           <AzeroIcon
@@ -327,6 +339,7 @@ function LaunchpadDetailHeader({
                   <Text textAlign="left" mx={["25px", "42px"]}>
                     Phase:{" "}
                     <Text
+                      as="span"
                       minW="60px"
                       display={["block", "inline"]}
                       color="#fff"
@@ -607,7 +620,10 @@ function LaunchpadDetailHeader({
           <UpdatePhasesModal
             {...project}
             isOpen={isOpenPhase}
-            onClose={onClosePhase}
+            onClose={() => {
+              console.log("UpdatePhasesModal onClosePhase...");
+              onClosePhase();
+            }}
             collection_address={collection_address}
           />
         </>

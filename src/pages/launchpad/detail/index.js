@@ -268,7 +268,7 @@ const LaunchpadDetailPage = () => {
 
         if (isUnmounted) return;
 
-        setPhasesInfo(allPhases);
+        setPhasesInfo(allPhases.filter((p) => p.isActive === true));
         setLoadingPhaseInfo(false);
       } catch (error) {
         if (isUnmounted) return;
@@ -1124,10 +1124,12 @@ const LaunchpadDetailPage = () => {
               gap="30px"
             >
               {projectInfo?.teamMembers?.length
-                ? projectInfo?.teamMembers?.map((item) => (
-                    <GridItem>
-                      <TeamCard team_member={item} />
-                    </GridItem>
+                ? projectInfo?.teamMembers?.map((item, idx) => (
+                    <Fragment key={idx}>
+                      <GridItem>
+                        <TeamCard team_member={item} />
+                      </GridItem>
+                    </Fragment>
                   ))
                 : ""}
             </Grid>

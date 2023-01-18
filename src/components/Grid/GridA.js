@@ -73,7 +73,6 @@ function GridA({
               />
             </>
           )}
-          {console.log("c.contractType", c.contractType)}{" "}
           {variant === "my-collection" && c.contractType === "Psp34Manual" && (
             <AdvancedModeModal mode={formMode.EDIT} id={c.index} {...c} />
           )}

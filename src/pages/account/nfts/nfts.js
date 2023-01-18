@@ -343,7 +343,16 @@ export async function execContractQuery(
   queryName,
   ...args
 ) {
-  if (!api) return toast.error("Api invalid");
+  if (
+    !api ||
+    !callerAddress ||
+    !queryName ||
+    !contractAbi ||
+    !contractAddress
+  ) {
+    return toast.error("Api invalid");
+  }
+  console.log("@_@ ", queryName, " callerAddress ", callerAddress);
 
   const contract = new ContractPromise(api, contractAbi, contractAddress);
   // let gasLimit = 6946816000 * 5;
@@ -356,6 +365,15 @@ export async function execContractQuery(
     );
 
     if (result.isOk) {
+      console.log(
+        "@_@ ",
+        queryName,
+        " callerAddress ",
+        callerAddress,
+        "result.isOk",
+        result.isOk
+      );
+
       return output;
     }
   } catch (error) {

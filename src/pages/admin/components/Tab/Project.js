@@ -64,8 +64,7 @@ function ProjectAdmin() {
       if (queryResult1?.isTrue) {
         return true;
       }
-      console.log("address", address);
-      console.log("queryResult1?.isTrue", queryResult1?.isTrue);
+
       return false;
     };
     const isLPAdmin = await checkIsAdmin({
