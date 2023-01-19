@@ -66,7 +66,7 @@ const ProfileForm = ({ profile }) => {
           telegram: Yup.string()
             .trim()
             .url("URL must start with http:// or https://")
-            .matches(/\btelegram.org\b/, "URL must be telegram.com")
+            .matches(/\btelegram.org\b/, "URL must be telegram.org")
             .max(50, "Must be 50 characters or less"),
           instagram: Yup.string()
             .trim()

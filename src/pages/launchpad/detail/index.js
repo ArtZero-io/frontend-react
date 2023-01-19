@@ -245,9 +245,9 @@ const LaunchpadDetailPage = () => {
               id: index + 1,
 
               publicClaimedAmount: strToNumber(data.publicClaimedAmount),
-              publicRemainAmount: strToNumber(
-                data.publicMintingAmount - data.publicClaimedAmount
-              ),
+              publicRemainAmount:
+                strToNumber(data.publicMintingAmount) -
+                strToNumber(data.publicClaimedAmount),
               publicMintingFee: strToNumber(data.publicMintingFee),
               publicMintingAmount: strToNumber(data.publicMintingAmount),
               publicMaxMintingAmount: strToNumber(data.publicMaxMintingAmount),
@@ -1046,9 +1046,9 @@ const LaunchpadDetailPage = () => {
                             <Text>
                               You have minted from Public Mint:{" "}
                               <Text as="span" color="#fff">
-                                {userPLClaimedInfo[currentPhase?.id - 1] || 0}{" "}
+                                {userPLClaimedInfo[index] || 0}{" "}
                                 NFT
-                                {userPLClaimedInfo[currentPhase?.id - 1] > 1
+                                {userPLClaimedInfo[index] > 1
                                   ? "s"
                                   : ""}
                               </Text>{" "}

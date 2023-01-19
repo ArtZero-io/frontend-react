@@ -343,6 +343,8 @@ export async function execContractQuery(
   queryName,
   ...args
 ) {
+  if (contractAddress === undefined) return;
+
   if (
     !api ||
     !callerAddress ||
@@ -350,7 +352,8 @@ export async function execContractQuery(
     !contractAbi ||
     !contractAddress
   ) {
-    return toast.error("Api invalid");
+    console.log("Api invalid");
+    // return toast.error("Api invalid");
   }
   console.log("@_@ ", queryName, " callerAddress ", callerAddress);
 

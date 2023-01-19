@@ -10,32 +10,32 @@ import {
   Stack,
   Tag,
   HStack,
-} from '@chakra-ui/react';
-import { useSubstrateState } from '@utils/substrate';
-import { useDispatch } from 'react-redux';
-import { useCallback, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
-import { ContractPromise } from '@polkadot/api-contract';
-import launchpad_psp34_nft_standard from '@utils/blockchain/launchpad-psp34-nft-standard';
-import launchpad_psp34_nft_standard_calls from '@utils/blockchain/launchpad-psp34-nft-standard-calls';
-import { Select } from '@chakra-ui/react';
-import launchpad_contract_calls from '@utils/blockchain/launchpad-contract-calls';
+} from "@chakra-ui/react";
+import { useSubstrateState } from "@utils/substrate";
+import { useDispatch } from "react-redux";
+import { useCallback, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { ContractPromise } from "@polkadot/api-contract";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { Select } from "@chakra-ui/react";
+import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
 import {
   getPublicCurrentAccount,
   strToNumber,
   isValidAddressPolkadotAddress,
-} from '@utils';
-import useTxStatus from '@hooks/useTxStatus';
-import CommonButton from '@components/Button/CommonButton';
-import { OWNER_MINT, START } from '@constants';
-import { setTxStatus } from '@store/actions/txStatus';
-import useForceUpdate from '@hooks/useForceUpdate';
-import FadeIn from 'react-fade-in';
-import { APICall } from '@api/client';
-import { useMemo } from 'react';
-import { clearTxStatus } from '@store/actions/txStatus';
-import { isPhaseEnd } from '@utils';
-import { SCROLLBAR } from '@constants';
+} from "@utils";
+import useTxStatus from "@hooks/useTxStatus";
+import CommonButton from "@components/Button/CommonButton";
+import { OWNER_MINT, START } from "@constants";
+import { setTxStatus } from "@store/actions/txStatus";
+import useForceUpdate from "@hooks/useForceUpdate";
+import FadeIn from "react-fade-in";
+import { APICall } from "@api/client";
+import { useMemo } from "react";
+import { clearTxStatus } from "@store/actions/txStatus";
+import { isPhaseEnd } from "@utils";
+import { SCROLLBAR } from "@constants";
 
 function MyMintingProjectPage() {
   const dispatch = useDispatch();
@@ -126,9 +126,9 @@ function MyMintingProjectPage() {
             id: index + 1,
 
             publicClaimedAmount: strToNumber(data.publicClaimedAmount),
-            publicRemainAmount: strToNumber(
-              data.publicMintingAmount - data.publicClaimedAmount
-            ),
+            publicRemainAmount:
+              strToNumber(data.publicMintingAmount) -
+              strToNumber(data.publicClaimedAmount),
             publicMintingFee: strToNumber(data.publicMintingFee),
             publicMintingAmount: strToNumber(data.publicMintingAmount),
             publicMaxMintingAmount: strToNumber(data.publicMaxMintingAmount),
@@ -147,7 +147,7 @@ function MyMintingProjectPage() {
         })
       );
 
-      setPhasesInfo(allPhases);
+      setPhasesInfo(allPhases.filter((p) => p.isActive === true));
     },
     [api, currentAccount, selectedProjectAddress]
   );
@@ -161,7 +161,7 @@ function MyMintingProjectPage() {
   }, [fetchPhasesInfoData]);
 
   const onOwnerMint = async () => {
-    if (!selectedProjectAddress || selectedProjectAddress === '0') {
+    if (!selectedProjectAddress || selectedProjectAddress === "0") {
       toast.error(`Please pick your project!`);
       return;
     }
@@ -263,7 +263,7 @@ function MyMintingProjectPage() {
                       {item.name}
                     </option>
                   ))
-                : ''}
+                : ""}
             </Select>
           </Box>
         </Stack>
@@ -310,7 +310,7 @@ function MyMintingProjectPage() {
                 remainAmount > 0 &&
                 mintAmount > parseInt(remainAmount) ? (
                   <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                    Mint amount must be less than or equal to{' '}
+                    Mint amount must be less than or equal to{" "}
                     {parseInt(remainAmount)}.
                   </Text>
                 ) : null}
@@ -341,10 +341,10 @@ function MyMintingProjectPage() {
       >
         <FadeIn>
           {!selectedProjectAddress ||
-            (selectedProjectAddress !== '0' && (
+            (selectedProjectAddress !== "0" && (
               <HStack color="#888" spacing="0px">
                 <Text minW="150px" textAlign="left">
-                  Project status:{' '}
+                  Project status:{" "}
                   {projStatus ? (
                     <Text as="span" color="#fff">
                       Active
@@ -357,42 +357,42 @@ function MyMintingProjectPage() {
                 </Text>
 
                 <Text minW="150px" textAlign="left">
-                  Supply:{' '}
+                  Supply:{" "}
                   <Text as="span" color="#fff">
-                    {totalSupply}{' '}
+                    {totalSupply}{" "}
                   </Text>
                   NFT
-                  {totalSupply > 1 ? 's' : ''}
+                  {totalSupply > 1 ? "s" : ""}
                 </Text>
 
                 <Text minW="150px" textAlign="left">
-                  Total Remain:{' '}
+                  Total Remain:{" "}
                   <Text as="span" color="#fff">
-                    {remainAmount}{' '}
+                    {remainAmount}{" "}
                   </Text>
                   NFT
-                  {remainAmount > 1 ? 's' : ''}
+                  {remainAmount > 1 ? "s" : ""}
                 </Text>
 
                 <Text minW="150px" textAlign="left">
-                  Owner Minted:{' '}
+                  Owner Minted:{" "}
                   <Text as="span" color="#fff">
-                    {ownerMinted}{' '}
+                    {ownerMinted}{" "}
                   </Text>
                   NFT
-                  {ownerMinted > 1 ? 's' : ''}
+                  {ownerMinted > 1 ? "s" : ""}
                 </Text>
 
                 <Text minW="150px" textAlign="left">
-                  Total available:{' '}
+                  Total available:{" "}
                   <Text as="span" color="#fff">
-                    {remainAmount - ownerMinted}{' '}
+                    {remainAmount - ownerMinted}{" "}
                   </Text>
                   NFT
-                  {remainAmount - ownerMinted > 1 ? 's' : ''}
+                  {remainAmount - ownerMinted > 1 ? "s" : ""}
                 </Text>
               </HStack>
-            ))}{' '}
+            ))}{" "}
         </FadeIn>
 
         {!phasesInfo?.length ? (
@@ -408,7 +408,7 @@ function MyMintingProjectPage() {
                     w="fit-content"
                     border="1px solid #7ae7ff"
                   >
-                    {phase?.isPublic ? 'WL & PL Mint' : 'WL Mint Only'}
+                    {phase?.isPublic ? "WL & PL Mint" : "WL Mint Only"}
                   </Text>
 
                   <HStack justifyContent="center" minW="160px">
@@ -420,34 +420,34 @@ function MyMintingProjectPage() {
                       w="full"
                       color="#888"
                       spacing="0px"
-                      direction={['row']}
+                      direction={["row"]}
                       alignItems="center"
                       alignContent="space-between"
-                      minH={{ base: '1rem', '2xl': '3.375rem' }}
+                      minH={{ base: "1rem", "2xl": "3.375rem" }}
                     >
                       <Text minW="120px" textAlign="left">
-                        Total:{' '}
+                        Total:{" "}
                         <Text as="span" color="#fff">
-                          {phase.totalAmount}{' '}
+                          {phase.totalAmount}{" "}
                         </Text>
                       </Text>
 
                       <Text minW="120px" textAlign="left">
-                        Minted:{' '}
+                        Minted:{" "}
                         <Text as="span" color="#fff">
-                          {phase.claimedAmount}{' '}
+                          {phase.claimedAmount}{" "}
                         </Text>
                       </Text>
 
                       <Text minW="120px" textAlign="left">
-                        Remain:{' '}
+                        Remain:{" "}
                         <Text as="span" color="#fff">
-                          {phase.totalAmount - phase.claimedAmount}{' '}
+                          {phase.totalAmount - phase.claimedAmount}{" "}
                         </Text>
                       </Text>
 
                       <Text minW="120px" textAlign="left">
-                        Mint Ended:{' '}
+                        Mint Ended:{" "}
                         {isPhaseEnd(phase?.endTime) ? (
                           <Text as="span" color="#fff">
                             Yes

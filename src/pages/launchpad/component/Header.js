@@ -567,25 +567,26 @@ function LaunchpadDetailHeader({
       </Box>
 
       <HStack
-        pt="27px"
+        cursor="pointer"
+        onClick={() => history.goBack()}
+        mt="27px"
         top="0"
         w={["full", "auto"]}
         display={["none", "flex"]}
         left={{ base: "30px", xl: "100px" }}
         position={{ base: "unset", md: "absolute" }}
+        // _hover={{
+        //   bg: "brand.blue",
+        //   // color: "black",
+        //   borderWidth: "0",
+        // }}
       >
         <IconButton
           mr="8px"
-          onClick={() => history.goBack()}
           variant="iconOutline"
           width={["40px", "50px"]}
           height={["40px", "50px"]}
           icon={<ArrowBackIcon fontSize="2xl" />}
-          _hover={{
-            bg: "brand.blue",
-            color: "black",
-            borderWidth: "0",
-          }}
         />
         <Text fontSize="lg">Go back</Text>
       </HStack>

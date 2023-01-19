@@ -3,9 +3,9 @@ import { useLocation } from "react-router-dom";
 
 import {
   Box,
-  Button,
   Flex,
   Heading,
+  Link,
   Stack,
   Text,
   VStack,
@@ -84,81 +84,39 @@ export const Footer = () => {
                 discover, collect and trade nfts on artzero
               </Heading>
               <Flex w="full" align="center" justifyContent="center">
-                <Button
-                  color="#fff"
-                  variant=""
-                  p="0"
-                  h="20px"
+                <Link
+                  mx="20px"
+                  textTransform="none"
                   _hover={{
                     textDecoration: "underline",
                     color: "#7ae7ff",
                   }}
-                  cursor={"pointer"}
-                  onClick={() =>
-                    window.open(
-                      "https://artzero.io/demotestnet/assets/ArtZero_Cookies_Policy.pdf",
-                      "_blank"
-                    )
-                  }
-                  mx="4"
-                  size="h6"
-                  fontSize="14px"
-                  fontStyle="normal"
-                  textTransform="none"
-                  fontFamily="Oswald, sans-serif"
+                  href="https://artzero.io/demotestnet/assets/ArtZero_Cookies_Policy.pdf"
                 >
                   Cookies Policy
-                </Button>
-                <Button
-                  color="#fff"
-                  variant=""
-                  p="0"
-                  h="20px"
+                </Link>
+                <Link
+                  mx="20px"
+                  textTransform="none"
                   _hover={{
                     textDecoration: "underline",
                     color: "#7ae7ff",
                   }}
-                  cursor={"pointer"}
-                  onClick={() =>
-                    window.open(
-                      "https://artzero.io/demotestnet/assets/ArtZero_Privacy_Policy.pdf",
-                      "_blank"
-                    )
-                  }
-                  mx="4"
-                  size="h6"
-                  fontSize="14px"
-                  fontStyle="normal"
-                  textTransform="none"
-                  fontFamily="Oswald, sans-serif"
+                  href="https://artzero.io/demotestnet/assets/ArtZero_Privacy_Policy.pdf"
                 >
                   Privacy Policy
-                </Button>
-                <Button
-                  color="#fff"
-                  variant=""
-                  p="0"
-                  h="20px"
+                </Link>
+                <Link
+                  mx="20px"
+                  textTransform="none"
                   _hover={{
                     textDecoration: "underline",
                     color: "#7ae7ff",
                   }}
-                  cursor={"pointer"}
-                  onClick={() =>
-                    window.open(
-                      "https://artzero.io/demotestnet/assets/ArtZero_Terms_Of_Service.pdf",
-                      "_blank"
-                    )
-                  }
-                  mx="4"
-                  size="h6"
-                  fontSize="14px"
-                  fontStyle="normal"
-                  textTransform="none"
-                  fontFamily="Oswald, sans-serif"
+                  href="https://artzero.io/demotestnet/assets/ArtZero_Terms_Of_Service.pdf"
                 >
                   Terms of Service
-                </Button>
+                </Link>
               </Flex>
               <Text
                 color="#888"
