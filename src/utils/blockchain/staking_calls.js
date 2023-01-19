@@ -1,14 +1,14 @@
-import BN from 'bn.js';
-import toast from 'react-hot-toast';
-import { ContractPromise } from '@polkadot/api-contract';
-import { web3FromSource } from '../wallets/extension-dapp';
-import { isValidAddressPolkadotAddress, getEstimatedGas } from '@utils';
-import artzero_nft from '@utils/blockchain/artzero-nft';
+import BN from "bn.js";
+import toast from "react-hot-toast";
+import { ContractPromise } from "@polkadot/api-contract";
+import { web3FromSource } from "../wallets/extension-dapp";
+import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
+import artzero_nft from "@utils/blockchain/artzero-nft";
 import {
   txErrorHandler,
   txResponseErrorHandler,
-} from '@store/actions/txStatus';
-import { APICall } from '../../api/client';
+} from "@store/actions/txStatus";
+import { APICall } from "../../api/client";
 
 let contract;
 
@@ -23,68 +23,64 @@ export const setStakingContract = (api, data) => {
 //GETTERS
 async function getTotalStaked(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getTotalStaked(address, {
     value: azero_value,
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
 async function getTotalStakedByAccount(caller_account, account) {
   if (!contract || !caller_account || !isValidAddressPolkadotAddress(account)) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query[
-    'artZeroStakingTrait::getTotalStakedByAccount'
+    "artZeroStakingTrait::getTotalStakedByAccount"
   ](address, { value: azero_value, gasLimit }, account);
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
 async function getTotalPendingUnstakedByAccount(caller_account, account) {
   if (!contract || !caller_account || !isValidAddressPolkadotAddress(account)) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query[
-    'artZeroStakingTrait::getTotalPendingUnstakedByAccount'
+    "artZeroStakingTrait::getTotalPendingUnstakedByAccount"
   ](address, { value: azero_value, gasLimit }, account);
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
 async function getStakedId(caller_account, account, index) {
   if (!contract || !caller_account || !isValidAddressPolkadotAddress(account)) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getStakedId(
     address,
@@ -100,13 +96,12 @@ async function getStakedId(caller_account, account, index) {
 }
 async function getPendingUnstakedId(caller_account, account, index) {
   if (!contract || !caller_account || !isValidAddressPolkadotAddress(account)) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getPendingUnstakedId(
     address,
@@ -126,7 +121,7 @@ async function getRequestUnstakeTime(caller_account, account, token_id) {
     !isValidAddressPolkadotAddress(account) ||
     !token_id
   ) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -148,7 +143,7 @@ async function getRequestUnstakeTime(caller_account, account, token_id) {
 
 async function getLimitUnstakeTime(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -161,13 +156,13 @@ async function getLimitUnstakeTime(caller_account) {
   });
 
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
 async function getTotalCountOfStakeholders(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -182,14 +177,14 @@ async function getTotalCountOfStakeholders(caller_account) {
     }
   );
   if (result.isOk) {
-    return new BN(output, 10, 'le').toNumber();
+    return new BN(output, 10, "le").toNumber();
   }
   return null;
 }
 
 async function getStakedAccountsAccountByIndex(caller_account, index) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -213,7 +208,7 @@ async function getStakedAccountsAccountByIndex(caller_account, index) {
 
 async function isClaimed(caller_account, account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -236,7 +231,7 @@ async function isClaimed(caller_account, account) {
 
 async function getIsLocked(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -255,7 +250,7 @@ async function getIsLocked(caller_account) {
 
 async function getRewardStarted(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -274,7 +269,7 @@ async function getRewardStarted(caller_account) {
 
 async function getClaimableReward(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -287,7 +282,7 @@ async function getClaimableReward(caller_account) {
   });
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
-    const a = output.toHuman().replace(/\,/g, '');
+    const a = output.toHuman().replace(/\,/g, "");
     return a / 10 ** 12;
   }
   return null;
@@ -295,7 +290,7 @@ async function getClaimableReward(caller_account) {
 
 async function getRewardPool(caller_account) {
   if (!contract || !caller_account) {
-    console.log('invalid inputs');
+    console.log("invalid inputs");
     return null;
   }
   const address = caller_account?.address;
@@ -308,7 +303,7 @@ async function getRewardPool(caller_account) {
   });
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
-    const a = output.toHuman().replace(/\,/g, '');
+    const a = output.toHuman().replace(/\,/g, "");
     return a / 10 ** 12;
   }
   return null;
@@ -321,7 +316,6 @@ async function getAdminAddress(caller_account) {
   const address = caller_account?.address;
   const gasLimit = -1;
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getAdminAddress(address, {
     value: azero_value,
@@ -346,9 +340,7 @@ async function claimReward(caller_account, dispatch, txType, api) {
 
   const value = 0;
 
-  gasLimit = await getEstimatedGas(address, contract, value, 'claimReward');
-
-  
+  gasLimit = await getEstimatedGas(address, contract, value, "claimReward");
 
   await contract.tx
     .claimReward({ gasLimit, value })
@@ -385,11 +377,9 @@ async function setClaimable(caller_account, account, dispatch, txType, api) {
     address,
     contract,
     value,
-    'setClaimedStatus',
+    "setClaimedStatus",
     account
   );
-
-  
 
   await contract.tx
     .setClaimedStatus({ gasLimit, value }, account)
@@ -422,9 +412,7 @@ async function addReward(caller_account, amount) {
 
   const value = amount * 10 ** 12;
 
-  gasLimit = await getEstimatedGas(address, contract, value, 'addReward');
-
-  
+  gasLimit = await getEstimatedGas(address, contract, value, "addReward");
 
   // TODO update new Error handler
   await contract.tx
@@ -437,9 +425,9 @@ async function addReward(caller_account, amount) {
           );
           const { docs, name, section } = decoded;
 
-          console.log(`Lỗi: ${section}.${name}: ${docs.join(' ')}`);
+          console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
         } else {
-          console.log('dispatchError claimReward', dispatchError.toString());
+          console.log("dispatchError claimReward", dispatchError.toString());
         }
       }
 
@@ -448,13 +436,13 @@ async function addReward(caller_account, amount) {
 
         toast.success(
           `add Reward ${
-            statusText === '0' ? 'start' : statusText.toLowerCase()
+            statusText === "0" ? "start" : statusText.toLowerCase()
           }.`
         );
       }
     })
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log('e', e));
+    .catch((e) => console.log("e", e));
 
   return unsubscribe;
 }
@@ -475,11 +463,9 @@ async function updateIsLocked(caller_account, status) {
     address,
     contract,
     value,
-    'updateIsLocked',
+    "updateIsLocked",
     status
   );
-
-  
 
   // TODO update new Error handler
   await contract.tx
@@ -492,9 +478,9 @@ async function updateIsLocked(caller_account, status) {
           );
           const { docs, name, section } = decoded;
 
-          console.log(`Lỗi: ${section}.${name}: ${docs.join(' ')}`);
+          console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
         } else {
-          console.log('dispatchError claimReward', dispatchError.toString());
+          console.log("dispatchError claimReward", dispatchError.toString());
         }
       }
 
@@ -503,13 +489,13 @@ async function updateIsLocked(caller_account, status) {
 
         toast.success(
           `add Reward ${
-            statusText === '0' ? 'start' : statusText.toLowerCase()
+            statusText === "0" ? "start" : statusText.toLowerCase()
           }.`
         );
       }
     })
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log('e', e));
+    .catch((e) => console.log("e", e));
 
   return unsubscribe;
 }
@@ -531,10 +517,8 @@ async function startRewardDistribution(caller_account) {
     address,
     contract,
     value,
-    'startRewardDistribution'
+    "startRewardDistribution"
   );
-
-  
 
   // TODO update new Error handler
   await contract.tx
@@ -547,9 +531,9 @@ async function startRewardDistribution(caller_account) {
           );
           const { docs, name, section } = decoded;
 
-          console.log(`Lỗi: ${section}.${name}: ${docs.join(' ')}`);
+          console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
         } else {
-          console.log('dispatchError claimReward', dispatchError.toString());
+          console.log("dispatchError claimReward", dispatchError.toString());
         }
       }
 
@@ -558,13 +542,13 @@ async function startRewardDistribution(caller_account) {
 
         toast.success(
           `start Reward Distribution ${
-            statusText === '0' ? 'start' : statusText.toLowerCase()
+            statusText === "0" ? "start" : statusText.toLowerCase()
           }.`
         );
       }
     })
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log('e', e));
+    .catch((e) => console.log("e", e));
 
   return unsubscribe;
 }
@@ -586,10 +570,8 @@ async function stopRewardDistribution(caller_account) {
     address,
     contract,
     value,
-    'stopRewardDistribution'
+    "stopRewardDistribution"
   );
-
-  
 
   // TODO update new Error handler
   await contract.tx
@@ -602,9 +584,9 @@ async function stopRewardDistribution(caller_account) {
           );
           const { docs, name, section } = decoded;
 
-          console.log(`Lỗi: ${section}.${name}: ${docs.join(' ')}`);
+          console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
         } else {
-          console.log('dispatchError claimReward', dispatchError.toString());
+          console.log("dispatchError claimReward", dispatchError.toString());
         }
       }
 
@@ -613,13 +595,13 @@ async function stopRewardDistribution(caller_account) {
 
         toast.success(
           `stop Reward Distribution ${
-            statusText === '0' ? 'start' : statusText.toLowerCase()
+            statusText === "0" ? "start" : statusText.toLowerCase()
           }.`
         );
       }
     })
     .then((unsub) => (unsubscribe = unsub))
-    .catch((e) => console.log('e', e));
+    .catch((e) => console.log("e", e));
 
   return unsubscribe;
 }
@@ -642,12 +624,11 @@ async function stake(caller_account, token_ids, dispatch, txType, api) {
     address,
     contract,
     value,
-    'stake',
+    "stake",
     token_ids
   );
 
-  
-
+  console.log("token_ids", token_ids);
   contract.tx
     .stake({ gasLimit, value }, token_ids)
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
@@ -691,11 +672,9 @@ async function unstake(caller_account, token_ids, dispatch, txType, api) {
     address,
     contract,
     value,
-    'unstake',
+    "unstake",
     token_ids
   );
-
-  
 
   contract.tx
     .unstake({ gasLimit, value }, token_ids)
@@ -747,11 +726,9 @@ async function requestUnstake(
     address,
     contract,
     value,
-    'requestUnstake',
+    "requestUnstake",
     token_ids
   );
-
-  
 
   contract.tx
     .requestUnstake({ gasLimit, value }, token_ids)
@@ -802,11 +779,9 @@ async function cancelRequestUnstake(
     address,
     contract,
     value,
-    'cancelRequestUnstake',
+    "cancelRequestUnstake",
     token_ids
   );
-
-  
 
   contract.tx
     .cancelRequestUnstake({ gasLimit, value }, token_ids)

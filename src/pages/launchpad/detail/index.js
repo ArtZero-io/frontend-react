@@ -771,7 +771,6 @@ const LaunchpadDetailPage = () => {
                             <NumberDecrementStepper />
                           </NumberInputStepper>
                         </NumberInput>
-
                         <CommonButton
                           w={["full", "auto"]}
                           {...rest}
@@ -782,7 +781,8 @@ const LaunchpadDetailPage = () => {
                             loading ||
                             loadingForceUpdate ||
                             currentPhase?.publicClaimedAmount >=
-                              currentPhase?.publicMintingAmount
+                              currentPhase?.publicMintingAmount ||
+                            mintingAmount > currentPhase?.publicMaxMintingAmount
                           }
                         />
 
@@ -873,7 +873,10 @@ const LaunchpadDetailPage = () => {
                           isDisabled={
                             loading ||
                             loadingForceUpdate ||
-                            userWLInfo[currentPhase?.id - 1]?.remainAmount <= 0
+                            userWLInfo[currentPhase?.id - 1]?.remainAmount <=
+                              0 ||
+                            whitelistMintingAmount >
+                              userWLInfo[currentPhase?.id - 1]?.remainAmount
                           }
                           variant="outline"
                           text="whitelist mint"
@@ -1046,11 +1049,8 @@ const LaunchpadDetailPage = () => {
                             <Text>
                               You have minted from Public Mint:{" "}
                               <Text as="span" color="#fff">
-                                {userPLClaimedInfo[index] || 0}{" "}
-                                NFT
-                                {userPLClaimedInfo[index] > 1
-                                  ? "s"
-                                  : ""}
+                                {userPLClaimedInfo[index] || 0} NFT
+                                {userPLClaimedInfo[index] > 1 ? "s" : ""}
                               </Text>{" "}
                               (scroll down to view your NFTs)
                             </Text>

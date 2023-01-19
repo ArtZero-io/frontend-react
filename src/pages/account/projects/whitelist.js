@@ -546,6 +546,11 @@ function MyWhiteListProjectPage() {
               <NumberDecrementStepper />
             </NumberInputStepper>
           </NumberInput>
+          {whiteListPrice < 0 ? (
+            <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+              Whitelist price must be greater than or equal to 0 Azero
+            </Text>
+          ) : null}{" "}
         </Stack>
         <Stack hidden={!isUpdateMode} pb="30px">
           <Text py={2}>
@@ -651,7 +656,13 @@ function MyWhiteListProjectPage() {
               onClick={() => onUpdateWhitelist()}
               isDisabled={
                 loadingForceUpdate ||
-                (actionType && actionType !== UPDATE_WHITELIST)
+                (actionType && actionType !== UPDATE_WHITELIST) ||
+                whiteListPrice < 0 ||
+                parseInt(whitelistAmount) <
+                  parseInt(whitelistAmountClaimed) + 1 ||
+                whitelistAmount >
+                  parseInt(availableToken) +
+                    parseInt(whitelistAmountRef.current)
               }
             />
           </Stack>
@@ -678,7 +689,11 @@ function MyWhiteListProjectPage() {
               isDisabled={
                 availableToken <= 0 ||
                 loadingForceUpdate ||
-                (actionType && actionType !== ADD_WHITELIST)
+                (actionType && actionType !== ADD_WHITELIST) ||
+                !isValidAddressPolkadotAddress(whitelistAddress) ||
+                whiteListPrice < 0 ||
+                parseInt(whitelistAmount) < 0 ||
+                whitelistAmount > parseInt(availableToken)
               }
             />
           </Flex>
