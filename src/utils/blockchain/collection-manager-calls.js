@@ -173,7 +173,21 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
           caller_account,
         });
         if (status?.isFinalized) {
-          toast.success("Collection is created successful!");
+          toast(
+            "Thank you for submitting. Your Collection has been created successfully. It will need enabling by our team. We will get in touch with you within the next 48 hours. In the meantime, you can navigate to MY ACCOUNT/MY COLLECTIONS and start creating NFTs in the Collection.",
+            {
+              icon: "👏",
+              duration: 8000,
+              reverseOrder: true,
+              position: "bottom-left",
+              style: {
+                color: "#000",
+                padding: "8px",
+                borderRadius: 0,
+                background: "#7AE7FF",
+              },
+            }
+          );
 
           events.forEach(
             async ({ event: { data, method, section }, phase }) => {
