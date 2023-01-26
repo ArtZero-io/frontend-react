@@ -25,7 +25,7 @@ const AddNewNFTModal = ({
   isDisabled,
   ...rest
 }) => {
-  console.log("rest", rest);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { actionType, step, onEndClick } = useTxStatus();
 

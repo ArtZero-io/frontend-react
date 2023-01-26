@@ -76,6 +76,7 @@ import { APICall } from "@api/client";
 import { getMetaDataOffChain, strToNumber } from "@utils";
 import { clearTxStatus } from "@store/actions/txStatus";
 import AnimationLoader from "@components/Loader/AnimationLoader";
+import { ImageCloudFlareLaunchpad } from "../../../components/ImageWrapper/ImageCloudFlare";
 
 const NUMBER_PER_PAGE = 6;
 
@@ -1243,7 +1244,7 @@ const LaunchpadDetailPage = () => {
                     {item.nftName}
                   </Heading>
 
-                  <ImageCloudFlare
+                  <ImageCloudFlareLaunchpad
                     mr={["12px", "32px"]}
                     size="500"
                     w="128px"

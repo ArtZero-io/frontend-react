@@ -28,7 +28,7 @@ function SimpleModeModal({
   contractType,
   ...rest
 }) {
-  console.log("SimpleModeModal rest", rest);
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { step, onEndClick } = useTxStatus();
   const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
