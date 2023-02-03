@@ -37,7 +37,7 @@ async function owner(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -56,7 +56,7 @@ async function getAdminAddress(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -118,7 +118,7 @@ async function getWhitelistAccount(caller_account, index) {
     index
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -157,7 +157,7 @@ async function getWhitelist(caller_account, account) {
       account
     );
     if (result.isOk) {
-      return output.toHuman();
+      return output.toHuman().Ok;
     }
   } catch (e) {
     return null;
@@ -181,7 +181,7 @@ async function getMintingFee(caller_account) {
   });
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
-    const a = output.toHuman().replace(/\,/g, "");
+    const a = output.toHuman().Ok.replace(/\,/g, "");
     return a / 10 ** 12;
   }
   return null;
@@ -244,7 +244,7 @@ async function tokenUri(caller_account, tokenId) {
     tokenId
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -370,7 +370,7 @@ async function addWhitelist(caller_account, account, amount) {
         }
 
         if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
+          const statusText = Object.keys(status.toHuman().Ok)[0];
           toast.success(
             `Add Whitelist ${
               statusText === "0" ? "started" : statusText.toLowerCase()
@@ -431,7 +431,7 @@ async function initialize(
         }
 
         if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
+          const statusText = Object.keys(status.toHuman().Ok)[0];
           toast.success(
             `Initialize ${
               statusText === "0" ? "started" : statusText.toLowerCase()
@@ -476,7 +476,7 @@ async function updateWhitelistAmount(caller_account, account, amount) {
         }
 
         if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
+          const statusText = Object.keys(status.toHuman().Ok)[0];
           toast.success(
             `Update Whitelist ${
               statusText === "0" ? "started" : statusText.toLowerCase()
@@ -523,7 +523,7 @@ async function withdrawFee(caller_account, amount) {
         }
 
         if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
+          const statusText = Object.keys(status.toHuman().Ok)[0];
           toast.success(
             `Withdraw Fee ${
               statusText === "0" ? "started" : statusText.toLowerCase()
@@ -561,7 +561,7 @@ async function allowance(
     token_id
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -613,7 +613,7 @@ async function approve(
       }
 
       if (status) {
-        const statusText = Object.keys(status.toHuman())[0];
+        const statusText = Object.keys(status.toHuman().Ok)[0];
         if (status.isFinalized) {
           toast.success(
             `Approve ${

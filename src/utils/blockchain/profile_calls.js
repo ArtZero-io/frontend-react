@@ -46,13 +46,13 @@ export async function getProfileOnChain({ callerAccount, accountAddress }) {
     profileInfo = {
       status: "OK",
       data: {
-        username: output.toHuman()[0],
-        avatar: output.toHuman()[1],
-        bio: output.toHuman()[2],
-        facebook: output.toHuman()[3],
-        twitter: output.toHuman()[4],
-        instagram: output.toHuman()[5],
-        telegram: output.toHuman()[6],
+        username: output.toHuman().Ok[0],
+        avatar: output.toHuman().Ok[1],
+        bio: output.toHuman().Ok[2],
+        facebook: output.toHuman().Ok[3],
+        twitter: output.toHuman().Ok[4],
+        instagram: output.toHuman().Ok[5],
+        telegram: output.toHuman().Ok[6],
       },
     };
   } else {
@@ -106,7 +106,7 @@ export async function setSingleAttributeProfileOnChain(currentAccount, data) {
         }
 
         if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
+          const statusText = Object.keys(status.toHuman().Ok)[0];
 
           console.log(
             `Profile update ${

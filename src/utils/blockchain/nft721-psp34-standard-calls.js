@@ -57,7 +57,7 @@ async function tokenUri(caller_account, token_id) {
     token_id
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
 
   return null;
@@ -93,7 +93,7 @@ async function mint(caller_account) {
         }
 
         if (status) {
-          const statusText = Object.keys(status.toHuman())[0];
+          const statusText = Object.keys(status.toHuman().Ok)[0];
           toast.success(
             `Public Minting ${
               statusText === "0" ? "started" : statusText.toLowerCase()
@@ -121,7 +121,7 @@ async function getAttributeName(caller_account, attributeIndex) {
     "psp34Traits::getAttributeName"
   ](address, { value: azero_value, gasLimit }, attributeIndex);
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -241,7 +241,7 @@ async function getAttribute(caller_account, tokenId, attribute) {
   ](caller_account, { value: azero_value, gasLimit }, tokenId, attribute);
 
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -261,7 +261,7 @@ async function getAttributes(caller_account, tokenId, attributes) {
     attributes
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -286,7 +286,7 @@ async function getOwnerAddressByTokenId(caller_account, token_id) {
   );
 
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -313,7 +313,7 @@ async function allowance(
     token_id
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -495,7 +495,7 @@ const getTokenUriType1 = async function (
   );
 
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
 
   return null;
@@ -523,7 +523,7 @@ const getBaseTokenUriType1 = async function (
   );
 
   if (result.isOk) {
-    return output.toHuman()?.replace("1.json", "");
+    return output.toHuman().Ok?.replace("1.json", "");
   }
 
   return null;

@@ -367,7 +367,7 @@ async function getCollectionsByOwner(caller_account, owner) {
     owner
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -386,7 +386,7 @@ async function getContractById(caller_account, collection_id) {
     collection_id
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -405,7 +405,7 @@ async function getAdminAddress(caller_account) {
   });
 
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -426,7 +426,7 @@ async function isActive(caller_account, collection_address) {
     "artZeroCollectionTrait::isActive"
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -469,7 +469,7 @@ async function getContractType(caller_account, collection_address) {
     "artZeroCollectionTrait::getContractType"
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -491,7 +491,7 @@ async function getCollectionOwner(caller_account, collection_address) {
     "artZeroCollectionTrait::getCollectionOwner"
   ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -515,7 +515,7 @@ async function getCollectionByAddress(caller_account, collection_address) {
     collection_address
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -578,7 +578,7 @@ async function owner(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -619,7 +619,7 @@ async function getAttributes(caller_account, collection_address, attributes) {
     attributes
   );
   if (result.isOk) {
-    attributeVals = output.toHuman();
+    attributeVals = output.toHuman().Ok;
   }
   return attributeVals;
 }

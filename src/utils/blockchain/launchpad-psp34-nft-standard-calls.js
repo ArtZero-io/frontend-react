@@ -52,7 +52,7 @@ async function getPhaseScheduleById(caller_account, phaseId) {
     phaseId
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -230,7 +230,7 @@ async function getCurrentPhase(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -253,7 +253,7 @@ async function getPhaseAccountLastIndex(caller_account, phaseId) {
     phaseId
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -277,7 +277,7 @@ async function getPhaseAccountLink(caller_account, phaseId, index) {
     index
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -305,7 +305,7 @@ async function getWhitelistByAccountId(
   );
 
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -585,7 +585,7 @@ async function getProjectInfo(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -762,7 +762,7 @@ async function ownerOf(caller_account, tokenID) {
     tokenID
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -784,7 +784,7 @@ async function tokenUri(caller_account, tokenId) {
     tokenId
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -1056,7 +1056,7 @@ async function getAdminAddress(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -1077,7 +1077,7 @@ async function getAvailableTokenAmount(caller_account) {
     }
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -1098,7 +1098,7 @@ async function getOwnerClaimedAmount(caller_account) {
     }
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -1186,7 +1186,7 @@ export const getPhaseAccountPublicClaimedAmount = async (
     );
 
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 };
@@ -1277,7 +1277,7 @@ export const getIdOfPsp34NFT = async ({
   let ret = null;
 
   if (result.isOk) {
-    ret = output.toHuman().Ok?.U64;
+    ret = output.toHuman().Ok.Ok?.U64;
   }
 
   return ret;
@@ -1309,7 +1309,7 @@ export const getCurrentPhaseByProjectAddress = async ({
   });
 
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 };
@@ -1347,7 +1347,7 @@ export const getCurrentPhaseStatusOfProject = async ({
   );
 
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 };

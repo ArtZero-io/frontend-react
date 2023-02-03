@@ -90,7 +90,7 @@ async function getStakedId(caller_account, account, index) {
   );
 
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -110,7 +110,7 @@ async function getPendingUnstakedId(caller_account, account, index) {
     index
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -136,7 +136,7 @@ async function getRequestUnstakeTime(caller_account, account, token_id) {
   );
 
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -201,7 +201,7 @@ async function getStakedAccountsAccountByIndex(caller_account, index) {
       index
     );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -224,7 +224,7 @@ async function isClaimed(caller_account, account) {
     account
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -243,7 +243,7 @@ async function getIsLocked(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -262,7 +262,7 @@ async function getRewardStarted(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -282,7 +282,7 @@ async function getClaimableReward(caller_account) {
   });
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
-    const a = output.toHuman().replace(/\,/g, "");
+    const a = output.toHuman().Ok.replace(/\,/g, "");
     return a / 10 ** 12;
   }
   return null;
@@ -303,7 +303,7 @@ async function getRewardPool(caller_account) {
   });
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
-    const a = output.toHuman().replace(/\,/g, "");
+    const a = output.toHuman().Ok.replace(/\,/g, "");
     return a / 10 ** 12;
   }
   return null;
@@ -322,7 +322,7 @@ async function getAdminAddress(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -432,7 +432,7 @@ async function addReward(caller_account, amount) {
       }
 
       if (status) {
-        const statusText = Object.keys(status.toHuman())[0];
+        const statusText = Object.keys(status.toHuman().Ok)[0];
 
         toast.success(
           `add Reward ${
@@ -485,7 +485,7 @@ async function updateIsLocked(caller_account, status) {
       }
 
       if (status) {
-        const statusText = Object.keys(status.toHuman())[0];
+        const statusText = Object.keys(status.toHuman().Ok)[0];
 
         toast.success(
           `add Reward ${
@@ -538,7 +538,7 @@ async function startRewardDistribution(caller_account) {
       }
 
       if (status) {
-        const statusText = Object.keys(status.toHuman())[0];
+        const statusText = Object.keys(status.toHuman().Ok)[0];
 
         toast.success(
           `start Reward Distribution ${
@@ -591,7 +591,7 @@ async function stopRewardDistribution(caller_account) {
       }
 
       if (status) {
-        const statusText = Object.keys(status.toHuman())[0];
+        const statusText = Object.keys(status.toHuman().Ok)[0];
 
         toast.success(
           `stop Reward Distribution ${

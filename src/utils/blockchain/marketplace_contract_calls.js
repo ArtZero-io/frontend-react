@@ -71,7 +71,7 @@ async function getVolumeByCollection(caller_account, nft_contract_address) {
   );
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
-    const a = output.toHuman().replace(/\,/g, "");
+    const a = output.toHuman().Ok.replace(/\,/g, "");
     return a / 10 ** 12;
   }
   return 0;
@@ -91,7 +91,7 @@ async function getTotalVolume(caller_account) {
   });
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
-    const a = output.toHuman().replace(/\,/g, "");
+    const a = output.toHuman().Ok.replace(/\,/g, "");
     return a / 10 ** 12;
   }
   return null;
@@ -125,7 +125,7 @@ async function getNftSaleInfo(caller_account, nft_contract_address, token_id) {
     token_id
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -195,7 +195,7 @@ async function getAllBids(
     token_id
   );
   if (result.isOk) {
-    if (output.isSome) return output.toHuman();
+    if (output.isSome) return output.toHuman().Ok;
     else {
       return null;
     }
@@ -216,7 +216,7 @@ async function owner(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -289,7 +289,7 @@ async function getCurrentProfit(caller_account) {
   });
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
-    const a = output.toHuman().replace(/\,/g, "");
+    const a = output.toHuman().Ok.replace(/\,/g, "");
     return a / 10 ** 12;
   }
   return null;
@@ -309,7 +309,7 @@ async function getTotalProfit(caller_account) {
   });
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
-    const a = output.toHuman().replace(/\,/g, "");
+    const a = output.toHuman().Ok.replace(/\,/g, "");
     return a / 10 ** 12;
   }
   return null;

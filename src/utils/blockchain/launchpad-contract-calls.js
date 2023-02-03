@@ -40,7 +40,7 @@ async function getAttributes(caller_account, collection_address, attributes) {
     attributes
   );
   if (result.isOk) {
-    attributeVals = output.toHuman();
+    attributeVals = output.toHuman().Ok;
   }
   return attributeVals;
 }
@@ -62,7 +62,7 @@ async function getProjectsByOwner(caller_account, ownerAddress) {
     ownerAddress
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -112,7 +112,7 @@ async function setMultipleAttributes(
               });
             }
 
-            // const statusText = Object.keys(status.toHuman())[0];
+            // const statusText = Object.keys(status.toHuman().Ok)[0];
             // toast.success(
             //   `Update Collection Attributes ${
             //     statusText === "0" ? "started" : statusText.toLowerCase()
@@ -147,7 +147,7 @@ async function owner(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -166,7 +166,7 @@ async function getAdminAddress(caller_account) {
   });
 
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -202,7 +202,7 @@ async function getProjectById(caller_account, project_id) {
     project_id
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -226,7 +226,7 @@ async function getProjectByNftAddress(caller_account, nft_address) {
     nft_address
   );
   if (result.isOk) {
-    return output.toHuman();
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -506,7 +506,7 @@ export const getProjectMintFeeRate = async function (caller_account, api) {
   });
 
   if (result.isOk) {
-    const ret = output.toHuman();
+    const ret = output.toHuman().Ok;
     return ret;
   }
   return null;
