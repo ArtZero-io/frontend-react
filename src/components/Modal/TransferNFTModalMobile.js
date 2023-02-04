@@ -70,7 +70,7 @@ function TransferNFTModalMobile({
         nftContractAddress
       );
       let unsubscribe;
-      let gasLimit = -1;
+      let gasLimit ;
 
       const address = currentAccount?.address;
       const { signer } = await web3FromSource(currentAccount?.meta?.source);

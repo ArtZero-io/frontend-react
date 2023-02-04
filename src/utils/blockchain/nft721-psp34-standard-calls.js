@@ -9,7 +9,7 @@ import { APICall } from "@api/client";
 import { ContractPromise } from "@polkadot/api-contract";
 
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import { createObjAttrsNFT, getEstimatedGas } from "..";
+import { createObjAttrsNFT, getEstimatedGas, readOnlyGasLimit } from "..";
 import {
   setTxStatus,
   txErrorHandler,
@@ -29,7 +29,7 @@ async function getTotalSupply(caller_account) {
   }
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query["psp34::totalSupply"](
@@ -48,7 +48,7 @@ async function tokenUri(caller_account, token_id) {
   }
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query["psp34Traits::tokenUri"](
@@ -69,7 +69,7 @@ async function mint(caller_account) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -114,7 +114,7 @@ async function getAttributeName(caller_account, attributeIndex) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query[
@@ -131,7 +131,7 @@ async function getAttributeCount(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query[
@@ -156,7 +156,7 @@ async function mintWithAttributes(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   let metadata = [];
   for (const attribute of attributes) {
@@ -233,7 +233,7 @@ async function getAttribute(caller_account, tokenId, attribute) {
     return null;
   }
 
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query[
@@ -251,7 +251,7 @@ async function getAttributes(caller_account, tokenId, attributes) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query["psp34Traits::getAttributes"](
@@ -271,7 +271,7 @@ async function getOwnerAddressByTokenId(caller_account, token_id) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   // const tokenId = new U64(new TypeRegistry(), token_id);
@@ -302,7 +302,7 @@ async function allowance(
   }
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query["psp34::allowance"](
@@ -333,7 +333,7 @@ async function approve(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -401,7 +401,7 @@ async function setMultipleAttributesNFT(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -486,7 +486,7 @@ const getTokenUriType1 = async function (
   );
 
   const value = 0;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
 
   const { result, output } = await contract.query["psp34Traits::tokenUri"](
     currentAccount?.address,
@@ -514,7 +514,7 @@ const getBaseTokenUriType1 = async function (
   );
 
   const value = 0;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
 
   const { result, output } = await contract.query["psp34Traits::tokenUri"](
     currentAccount?.address,

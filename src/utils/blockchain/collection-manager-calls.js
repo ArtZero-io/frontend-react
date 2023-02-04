@@ -10,7 +10,7 @@ import {
 import { APICall } from "@api/client";
 import { clientAPI } from "@api/client";
 import collection_manager from "@utils/blockchain/collection-manager";
-import { getEstimatedGas } from "..";
+import { getEstimatedGas, readOnlyGasLimit } from "..";
 
 let contract;
 
@@ -37,7 +37,7 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit = readOnlyGasLimit(contract);
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -143,7 +143,7 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit = readOnlyGasLimit(contract);
   let transactionData = data;
   console.log("data", data);
   const address = caller_account?.address;
@@ -294,7 +294,7 @@ async function updateIsActive(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit = readOnlyGasLimit(contract);
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -340,7 +340,7 @@ async function getCollectionCount(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getCollectionCount(address, {
@@ -357,7 +357,7 @@ async function getCollectionsByOwner(caller_account, owner) {
   if (!contract || !caller_account || !isValidAddressPolkadotAddress(owner)) {
     return null;
   }
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const address = caller_account?.address;
 
@@ -377,7 +377,7 @@ async function getContractById(caller_account, collection_id) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getContractById(
@@ -396,7 +396,7 @@ async function getAdminAddress(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getAdminAddress(address, {
@@ -419,7 +419,7 @@ async function isActive(caller_account, collection_address) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query[
@@ -440,7 +440,7 @@ async function getRoyaltyFee(caller_account, collection_address) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query[
@@ -462,7 +462,7 @@ async function getContractType(caller_account, collection_address) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query[
@@ -483,7 +483,7 @@ async function getCollectionOwner(caller_account, collection_address) {
     return null;
   }
 
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const address = caller_account?.address;
 
@@ -505,7 +505,7 @@ async function getCollectionByAddress(caller_account, collection_address) {
     return null;
   }
 
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const address = caller_account?.address;
 
@@ -521,7 +521,7 @@ async function getCollectionByAddress(caller_account, collection_address) {
 }
 
 async function getSimpleModeAddingFee(caller_account) {
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const address = caller_account?.address;
   const { result, output } = await contract.query.getSimpleModeAddingFee(
     address,
@@ -536,7 +536,7 @@ async function getSimpleModeAddingFee(caller_account) {
 }
 
 async function getAdvanceModeAddingFee(caller_account) {
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const address = caller_account?.address;
   const { result, output } = await contract.query.getAdvanceModeAddingFee(
     address,
@@ -552,7 +552,7 @@ async function getAdvanceModeAddingFee(caller_account) {
 }
 
 async function getMaxRoyaltyFeeRate(caller_account) {
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const address = caller_account?.address;
   const { result, output } = await contract.query.getMaxRoyaltyFeeRate(
     address,
@@ -570,7 +570,7 @@ async function owner(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query["ownable::owner"](address, {
@@ -588,7 +588,7 @@ async function getActiveCollectionCount(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getActiveCollectionCount(
@@ -609,7 +609,7 @@ async function getAttributes(caller_account, collection_address, attributes) {
     return null;
   }
   let attributeVals;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const address = caller_account?.address;
   const { result, output } = await contract.query.getAttributes(
@@ -642,7 +642,7 @@ async function setMultipleAttributes(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit = readOnlyGasLimit(contract);
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -779,7 +779,7 @@ export const withdrawCollectionContract = async (
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit = readOnlyGasLimit(contract);
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);

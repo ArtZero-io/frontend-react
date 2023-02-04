@@ -1,18 +1,20 @@
-import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
 import { web3FromSource } from "../wallets/extension-dapp";
-import { getPublicCurrentAccount, truncateStr, getEstimatedGas } from "..";
+import {
+  getPublicCurrentAccount,
+  truncateStr,
+  getEstimatedGas,
+  readOnlyGasLimit,
+} from "..";
 import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import { clientAPI } from "@api/client";
+import toast from "react-hot-toast";
 
-// let account;
 let contract;
 const value = 0;
-const gasLimit = -1;
-// export const setAccount = (newAccount) => (account = newAccount);
 
 export const setProfileContract = (api, data) => {
   contract = new ContractPromise(
@@ -23,107 +25,54 @@ export const setProfileContract = (api, data) => {
 };
 
 export async function getProfileOnChain({ callerAccount, accountAddress }) {
+  if (!contract || !callerAccount) {
+    toast.error(`Contract or caller not valid!`);
+    return null;
+  }
   const address = callerAccount?.address;
 
   let profileInfo;
+  let gasLimit = readOnlyGasLimit(contract);
 
-  const { result, output } = await contract.query.getAttributes(
-    address,
-    { value, gasLimit },
-    accountAddress || address,
-    [
-      "username",
-      "avatar",
-      "bio",
-      "facebook",
-      "twitter",
-      "instagram",
-      "telegram",
-    ]
-  );
-
-  if (result.isOk) {
-    profileInfo = {
-      status: "OK",
-      data: {
-        username: output.toHuman().Ok[0],
-        avatar: output.toHuman().Ok[1],
-        bio: output.toHuman().Ok[2],
-        facebook: output.toHuman().Ok[3],
-        twitter: output.toHuman().Ok[4],
-        instagram: output.toHuman().Ok[5],
-        telegram: output.toHuman().Ok[6],
-      },
-    };
-  } else {
-    profileInfo = {
-      status: "ERROR",
-      message: "Error when fetch profile info.",
-    };
+  try {
+    const { result, output } = await contract.query.getAttributes(
+      address,
+      { value, gasLimit },
+      accountAddress || address,
+      [
+        "username",
+        "avatar",
+        "bio",
+        "facebook",
+        "twitter",
+        "instagram",
+        "telegram",
+      ]
+    );
+    if (result.isOk) {
+      profileInfo = {
+        status: "OK",
+        data: {
+          username: output.toHuman().Ok[0],
+          avatar: output.toHuman().Ok[1],
+          bio: output.toHuman().Ok[2],
+          facebook: output.toHuman().Ok[3],
+          twitter: output.toHuman().Ok[4],
+          instagram: output.toHuman().Ok[5],
+          telegram: output.toHuman().Ok[6],
+        },
+      };
+    } else {
+      profileInfo = {
+        status: "ERROR",
+        message: "Error when fetch profile info.",
+      };
+    }
+  } catch (error) {
+    console.log("error", error);
   }
 
   return profileInfo;
-}
-
-export async function setSingleAttributeProfileOnChain(currentAccount, data) {
-  let unsubscribe;
-  let gasLimit = -1;
-
-  const address = currentAccount?.address;
-  const { signer } = await web3FromSource(currentAccount?.meta?.source);
-
-  const value = 0;
-
-  gasLimit = await getEstimatedGas(
-    address,
-    contract,
-    value,
-    "setProfileAttribute",
-    data?.attribute,
-    data?.value
-  );
-
-  
-
-  currentAccount &&
-    contract.tx
-      .setProfileAttribute({ gasLimit, value }, data?.attribute, data?.value)
-      .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
-        if (dispatchError) {
-          if (dispatchError.isModule) {
-            const decoded = contract.registry.findMetaError(
-              dispatchError.asModule
-            );
-            const { docs, name, section } = decoded;
-
-            console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
-          } else {
-            console.log(
-              "dispatchError setProfileAttribute",
-              dispatchError.toString()
-            );
-          }
-        }
-
-        if (status) {
-          const statusText = Object.keys(status.toHuman().Ok)[0];
-
-          console.log(
-            `Profile update ${
-              statusText === "0" ? "start" : statusText.toLowerCase()
-            }.`
-          );
-          toast.success(
-            `Profile update ${
-              statusText === "0" ? "start" : statusText.toLowerCase()
-            }.`
-          );
-        }
-      })
-      .then((unsub) => (unsubscribe = unsub))
-      .catch((e) => console.log("e", e));
-
-  return unsubscribe;
 }
 
 export async function setMultipleAttributesProfileOnChain(
@@ -139,7 +88,7 @@ export async function setMultipleAttributesProfileOnChain(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -168,11 +117,7 @@ export async function setMultipleAttributesProfileOnChain(
       if (status?.isFinalized) {
         if (attributes?.length) {
           let cacheImages = [];
-          for (
-            let i = 0;
-            i < attributes.length;
-            i++
-          ) {
+          for (let i = 0; i < attributes.length; i++) {
             console.log(attributes[i]);
             if (attributes[i] === "avatar") {
               cacheImages.push({
@@ -187,7 +132,6 @@ export async function setMultipleAttributesProfileOnChain(
           }
 
           if (cacheImages.length) {
-
             await clientAPI("post", "/cacheImages", {
               images: JSON.stringify(cacheImages),
             });
@@ -204,7 +148,6 @@ export async function setMultipleAttributesProfileOnChain(
 const blockchainModule = {
   getProfileOnChain,
   setProfileContract,
-  setSingleAttributeProfileOnChain,
   setMultipleAttributesProfileOnChain,
 };
 

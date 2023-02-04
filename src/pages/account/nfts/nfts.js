@@ -34,6 +34,7 @@ import {
 import { APICall } from "../../../api/client";
 import { ContractPromise } from "@polkadot/api-contract";
 import toast from "react-hot-toast";
+import { readOnlyGasLimit } from "@utils";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
@@ -358,12 +359,13 @@ export async function execContractQuery(
   console.log("@_@ ", queryName, " callerAddress ", callerAddress);
 
   const contract = new ContractPromise(api, contractAbi, contractAddress);
-  // let gasLimit = 6946816000 * 5;
+
+  const gasLimit = readOnlyGasLimit(contract);
 
   try {
     const { result, output } = await contract.query[queryName](
       callerAddress,
-      { gasLimit: -1, storageDepositLimit: null, value: 0 },
+      { gasLimit, storageDepositLimit: null, value: 0 },
       ...args
     );
 

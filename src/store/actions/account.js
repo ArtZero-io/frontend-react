@@ -28,26 +28,6 @@ export function getProfile(currentAccount) {
   };
 }
 
-export function setProfileAttribute(data) {
-  return async function (dispatch) {
-    const loadingName = "setProfileAttribute";
-
-    dispatch({
-      type: AccountActionTypes.ACCOUNT_LOADING,
-      payload: loadingName,
-    });
-
-    try {
-      await profile_calls.setSingleAttributeProfileOnChain(data);
-    } catch (error) {
-      dispatch({
-        type: AccountActionTypes.ACCOUNT_ERROR,
-        payload: loadingName,
-      });
-    }
-  };
-}
-
 export function setMultipleAttributes(
   currentAccount,
   attributes,

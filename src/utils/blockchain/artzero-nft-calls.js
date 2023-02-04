@@ -7,6 +7,7 @@ import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "../../store/actions/txStatus";
+import { readOnlyGasLimit } from "..";
 
 let contract;
 
@@ -16,7 +17,6 @@ export const setAZNFTContract = (api, data) => {
     data?.CONTRACT_ABI,
     data?.CONTRACT_ADDRESS
   );
-
 };
 
 /*
@@ -28,9 +28,8 @@ async function owner(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query["ownable::owner"](address, {
     value: azero_value,
@@ -47,9 +46,8 @@ async function getAdminAddress(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getAdminAddress(address, {
     value: azero_value,
@@ -66,9 +64,8 @@ async function totalSupply(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query["psp34::totalSupply"](
     address,
@@ -85,9 +82,8 @@ async function balanceOf(caller_account, account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query["psp34::balanceOf"](
     address,
@@ -108,9 +104,8 @@ async function getWhitelistAccount(caller_account, index) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getWhitelistAccount(
     address,
@@ -128,9 +123,8 @@ async function getWhitelistCount(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getWhitelistCount(address, {
     value: azero_value,
@@ -147,9 +141,9 @@ async function getWhitelist(caller_account, account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  
+
   try {
     const { result, output } = await contract.query.getWhitelist(
       address,
@@ -171,9 +165,8 @@ async function getMintingFee(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getMintingFee(address, {
     value: azero_value,
@@ -192,9 +185,8 @@ async function getPublicSaleAmount(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getPublicSaleAmount(address, {
     value: azero_value,
@@ -210,9 +202,8 @@ async function getPublicSaleMintedAmount(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getPublicSaleMintedCount(
     address,
@@ -232,7 +223,7 @@ async function tokenUri(caller_account, tokenId) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query["psp34Traits::tokenUri"](
@@ -262,7 +253,7 @@ async function whitelistMint(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -275,8 +266,6 @@ async function whitelistMint(
     "whitelistMint",
     mint_amount
   );
-
-  
 
   const txNotSign = contract.tx.whitelistMint({ gasLimit, value }, mint_amount);
 
@@ -310,7 +299,7 @@ async function paidMint(
   let unsubscribe;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = Math.round(fee * 10 ** 12);
   const injector = await web3FromSource(caller_account?.meta?.source);
 
@@ -351,7 +340,7 @@ async function addWhitelist(caller_account, account, amount) {
   let unsubscribe;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
@@ -404,7 +393,7 @@ async function initialize(
   let unsubscribe;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
@@ -457,7 +446,7 @@ async function updateWhitelistAmount(caller_account, account, amount) {
   let unsubscribe;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
@@ -502,14 +491,14 @@ async function withdrawFee(caller_account, amount) {
   let unsubscribe;
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const injector = await web3FromSource(caller_account?.meta?.source);
 
   contract.tx["adminTrait::withdrawFee"](
-      { gasLimit, value: azero_value },
-      new BN(parseFloat(amount) * 10 ** 6).mul(new BN(10 ** 6)).toString()
-    )
+    { gasLimit, value: azero_value },
+    new BN(parseFloat(amount) * 10 ** 6).mul(new BN(10 ** 6)).toString()
+  )
     .signAndSend(
       address,
       { signer: injector.signer },
@@ -548,7 +537,7 @@ async function allowance(
   }
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   // const tokenId = await contract.api.createType("ContractsPsp34Id", {
   //   U64: new U64(new TypeRegistry(), token_id),
@@ -579,7 +568,7 @@ async function approve(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -594,8 +583,6 @@ async function approve(
     token_id,
     is_approve
   );
-
-  
 
   await contract.tx["psp34::approve"](
     { gasLimit, value },
@@ -634,9 +621,8 @@ async function getPublicMaxMintingAmount(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
-  
 
   const { result, output } = await contract.query.getPublicMaxMintingAmount(
     address,

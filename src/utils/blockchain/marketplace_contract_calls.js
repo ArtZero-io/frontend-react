@@ -10,6 +10,7 @@ import {
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import toast from "react-hot-toast";
+import { readOnlyGasLimit } from "..";
 
 let contract;
 
@@ -37,7 +38,7 @@ async function totalTokensForSale(
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.totalTokensForSale(
@@ -61,7 +62,7 @@ async function getVolumeByCollection(caller_account, nft_contract_address) {
     return 0;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getVolumeByCollection(
@@ -82,7 +83,7 @@ async function getTotalVolume(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getTotalVolume(address, {
@@ -115,7 +116,7 @@ async function getNftSaleInfo(caller_account, nft_contract_address, token_id) {
   }
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getNftSaleInfo(
@@ -145,7 +146,7 @@ async function getForSaleTokenId(
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getForSaleTokenId(
@@ -184,7 +185,7 @@ async function getAllBids(
   }
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getAllBids(
@@ -208,7 +209,7 @@ async function owner(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query["ownable::owner"](address, {
@@ -226,7 +227,7 @@ async function getStakingDiscountCriteria(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getStakingDiscountCriteria(
@@ -244,7 +245,7 @@ async function getStakingDiscountRate(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getStakingDiscountRate(
@@ -262,7 +263,7 @@ async function getPlatformFee(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getPlatformFee(address, {
@@ -280,7 +281,7 @@ async function getCurrentProfit(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getCurrentProfit(address, {
@@ -300,7 +301,7 @@ async function getTotalProfit(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getTotalProfit(address, {
@@ -327,7 +328,7 @@ async function getListedTokenCountByCollectionAddress(
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } =
@@ -361,7 +362,7 @@ async function list(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -425,7 +426,7 @@ async function unlist(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -495,7 +496,7 @@ async function bid(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -560,7 +561,7 @@ async function removeBid(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -626,7 +627,7 @@ async function buy(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -696,7 +697,7 @@ async function acceptBid(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -793,7 +794,7 @@ export const withdrawMarketplaceContract = async (
     return;
   }
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);

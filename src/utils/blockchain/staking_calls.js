@@ -9,6 +9,7 @@ import {
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import { APICall } from "../../api/client";
+import { readOnlyGasLimit } from "@utils";
 
 let contract;
 
@@ -27,7 +28,7 @@ async function getTotalStaked(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getTotalStaked(address, {
@@ -45,7 +46,7 @@ async function getTotalStakedByAccount(caller_account, account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query[
@@ -62,7 +63,7 @@ async function getTotalPendingUnstakedByAccount(caller_account, account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query[
@@ -79,7 +80,7 @@ async function getStakedId(caller_account, account, index) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getStakedId(
@@ -100,7 +101,7 @@ async function getPendingUnstakedId(caller_account, account, index) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getPendingUnstakedId(
@@ -125,7 +126,7 @@ async function getRequestUnstakeTime(caller_account, account, token_id) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getRequestUnstakeTime(
@@ -147,7 +148,7 @@ async function getLimitUnstakeTime(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getLimitUnstakeTime(address, {
@@ -166,7 +167,7 @@ async function getTotalCountOfStakeholders(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getStakedAccountsLastIndex(
@@ -188,7 +189,7 @@ async function getStakedAccountsAccountByIndex(caller_account, index) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } =
@@ -212,7 +213,7 @@ async function isClaimed(caller_account, account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.isClaimed(
@@ -235,7 +236,7 @@ async function getIsLocked(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getIsLocked(address, {
@@ -254,7 +255,7 @@ async function getRewardStarted(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getRewardStarted(address, {
@@ -273,7 +274,7 @@ async function getClaimableReward(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getClaimableReward(address, {
@@ -294,7 +295,7 @@ async function getRewardPool(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getRewardPool(address, {
@@ -314,7 +315,7 @@ async function getAdminAddress(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getAdminAddress(address, {
@@ -333,7 +334,7 @@ async function claimReward(caller_account, dispatch, txType, api) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -366,7 +367,7 @@ async function setClaimable(caller_account, account, dispatch, txType, api) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -405,7 +406,7 @@ async function addReward(caller_account, amount) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -452,7 +453,7 @@ async function updateIsLocked(caller_account, status) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -506,7 +507,7 @@ async function startRewardDistribution(caller_account) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -559,7 +560,7 @@ async function stopRewardDistribution(caller_account) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -613,7 +614,7 @@ async function stake(caller_account, token_ids, dispatch, txType, api) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -661,7 +662,7 @@ async function unstake(caller_account, token_ids, dispatch, txType, api) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -715,7 +716,7 @@ async function requestUnstake(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -768,7 +769,7 @@ async function cancelRequestUnstake(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);

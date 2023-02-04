@@ -10,7 +10,7 @@ import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
-import { getEstimatedGas } from "..";
+import { getEstimatedGas, readOnlyGasLimit } from "..";
 
 let contract;
 
@@ -24,7 +24,7 @@ async function getTotalSupply(caller_account) {
   }
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getTotalSupply(address, {
@@ -43,7 +43,7 @@ async function getPhaseScheduleById(caller_account, phaseId) {
   }
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getPhaseScheduleById(
@@ -83,7 +83,7 @@ async function updateWhitelist(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -153,7 +153,7 @@ async function addWhitelist(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -203,7 +203,7 @@ async function getLastPhaseId(caller_account) {
   }
 
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getLastPhaseId(address, {
@@ -222,7 +222,7 @@ async function getCurrentPhase(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getCurrentPhase(address, {
@@ -241,7 +241,7 @@ async function getPhaseAccountLastIndex(caller_account, phaseId) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getPhaseAccountLastIndex(
@@ -264,7 +264,7 @@ async function getPhaseAccountLink(caller_account, phaseId, index) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getPhaseAccountLink(
@@ -292,7 +292,7 @@ async function getWhitelistByAccountId(
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const { result, output } = await contract.query.getWhitelistByAccountId(
     address,
@@ -316,7 +316,7 @@ async function getLastTokenId(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const { result, output } = await contract.query.getLastTokenId(address, {
     value: azero_value,
@@ -341,7 +341,7 @@ async function editProjectInformation(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -389,7 +389,7 @@ async function mint(caller_account, mintAmount, dispatch, txType, api) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -438,7 +438,7 @@ async function publicMint(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -474,7 +474,7 @@ async function publicMint(
         contract.query
           .getLastTokenId(address, {
             value: 0,
-            gasLimit: -1,
+            gasLimit,
           })
           .then(async ({ result, output }) => {
             if (result.isOk) {
@@ -514,7 +514,7 @@ async function whitelistMint(
     throw Error(`Contract or caller not valid!`);
   }
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -546,7 +546,7 @@ async function whitelistMint(
         contract.query
           .getLastTokenId(address, {
             value: 0,
-            gasLimit: -1,
+            gasLimit,
           })
           .then(async ({ result, output }) => {
             if (result.isOk) {
@@ -578,7 +578,7 @@ async function getProjectInfo(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const { result, output } = await contract.query.getProjectInfo(address, {
     value: azero_value,
@@ -603,7 +603,7 @@ async function updateAdminAddress(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -657,7 +657,7 @@ async function grantAdminRoleToAddress(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -709,7 +709,7 @@ async function updateBaseUri(caller_account, uri, dispatch, txType, api) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -751,7 +751,7 @@ async function ownerOf(caller_account, tokenID) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const { result, output } = await contract.query["psp34::ownerOf"](
     address,
@@ -772,7 +772,7 @@ async function tokenUri(caller_account, tokenId) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query["psp34Traits::tokenUri"](
@@ -808,7 +808,7 @@ async function addNewPhase(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -880,7 +880,7 @@ async function updateSchedulePhase(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -941,7 +941,7 @@ async function deactivePhase(caller_account, phaseId, dispatch, txType, api) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -980,7 +980,7 @@ async function getPublicMintedCount(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const { result, output } = await contract.query.getPublicMintedCount(
     address,
@@ -1049,7 +1049,7 @@ async function getAdminAddress(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const { result, output } = await contract.query.getAdminAddress(address, {
     value: azero_value,
@@ -1067,7 +1067,7 @@ async function getAvailableTokenAmount(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const { result, output } = await contract.query.getAvailableTokenAmount(
     address,
@@ -1088,7 +1088,7 @@ async function getOwnerClaimedAmount(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const { result, output } = await contract.query.getOwnerClaimedAmount(
     address,
@@ -1113,7 +1113,7 @@ async function withdrawFee(caller_account, amount, dispatch, txType, api) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -1171,7 +1171,7 @@ export const getPhaseAccountPublicClaimedAmount = async (
   );
 
   const address = currentAccount?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } =
@@ -1236,7 +1236,7 @@ export const getAccountBalanceOfPsp34NFT = async ({
   }
 
   const value = 0;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
 
   const { result, output } = await contract.query["psp34::balanceOf"](
     currentAccount?.address,
@@ -1263,7 +1263,7 @@ export const getIdOfPsp34NFT = async ({
   }
 
   const value = 0;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
 
   const { result, output } = await contract.query[
     "psp34Enumerable::ownersTokenByIndex"
@@ -1300,7 +1300,7 @@ export const getCurrentPhaseByProjectAddress = async ({
   );
 
   const address = currentAccount?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getCurrentPhase(address, {
@@ -1337,7 +1337,7 @@ export const getCurrentPhaseStatusOfProject = async ({
   });
 
   const address = currentAccount?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getPhaseScheduleById(

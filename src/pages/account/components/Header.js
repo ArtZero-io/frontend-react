@@ -55,6 +55,8 @@ function ProfileHeader() {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      if (!api) return;
+
       const res = await dispatch(getProfile(currentAccount));
       if (res.status === "OK") {
         if (!res.data.username) {
@@ -75,7 +77,7 @@ function ProfileHeader() {
     if (!profile?.address || profile?.address !== currentAccount?.address) {
       fetchProfile();
     }
-  }, [currentAccount, dispatch, profile]);
+  }, [api, currentAccount, dispatch, profile]);
 
   // eslint-disable-next-line no-unused-vars
   const { loading: loadingForceUpdate } = useForceUpdate(

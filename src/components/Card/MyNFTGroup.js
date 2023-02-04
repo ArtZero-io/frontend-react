@@ -34,7 +34,7 @@ import { delay } from "@utils";
 import CommonButton from "../Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
 import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
-import { getMetaDataOffChain } from "../../utils";
+import { getMetaDataOffChain, readOnlyGasLimit } from "../../utils";
 
 function MyNFTGroupCard({
   name,
@@ -97,7 +97,7 @@ function MyNFTGroupCard({
             nftContractAddress
           );
 
-          const gasLimit = -1;
+          const gasLimit = readOnlyGasLimit(nft_contract);
           const azero_value = 0;
 
           const { result, output } = await nft_contract.query[

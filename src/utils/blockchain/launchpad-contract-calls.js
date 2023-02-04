@@ -14,6 +14,7 @@ import {
 } from "@store/actions/txStatus";
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import { APICall } from "@api/client";
+import { readOnlyGasLimit } from "..";
 
 let contract;
 
@@ -30,7 +31,7 @@ async function getAttributes(caller_account, collection_address, attributes) {
     return null;
   }
   let attributeVals;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const address = caller_account?.address;
   const { result, output } = await contract.query.getAttributes(
@@ -50,7 +51,7 @@ async function getProjectsByOwner(caller_account, ownerAddress) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getProjectsByOwner(
@@ -78,7 +79,7 @@ async function setMultipleAttributes(
   let unsubscribe;
 
   const address = account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const value = 0;
 
   const injector = await web3FromSource(account?.meta?.source);
@@ -139,7 +140,7 @@ async function owner(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query["ownable::owner"](address, {
@@ -157,7 +158,7 @@ async function getAdminAddress(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getAdminAddress(address, {
@@ -176,7 +177,7 @@ async function getProjectCount(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getProjectCount(address, {
@@ -192,7 +193,7 @@ async function getProjectCount(caller_account) {
 }
 
 async function getProjectById(caller_account, project_id) {
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const address = caller_account?.address;
 
@@ -216,7 +217,7 @@ async function getProjectByNftAddress(caller_account, nft_address) {
     return null;
   }
 
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const address = caller_account?.address;
 
@@ -244,7 +245,7 @@ async function addNewProject(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -354,7 +355,7 @@ async function editProject(caller_account, data, dispatch, txType, api) {
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -402,7 +403,7 @@ async function getProjectAddingFee(caller_account) {
     return null;
   }
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   const { result, output } = await contract.query.getProjectAddingFee(address, {
@@ -432,7 +433,7 @@ async function updateIsActiveProject(
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
@@ -494,7 +495,7 @@ export default launchpad_contract_calls;
 
 export const getProjectMintFeeRate = async function (caller_account, api) {
   const address = caller_account?.address;
-  const gasLimit = -1;
+  const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
   setLaunchPadContract(api, launchpad_manager);
@@ -530,7 +531,7 @@ export const withdrawLaunchpadContract = async (
   }
 
   let unsubscribe;
-  let gasLimit = -1;
+  let gasLimit;
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
