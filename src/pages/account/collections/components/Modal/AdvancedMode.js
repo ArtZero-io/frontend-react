@@ -29,7 +29,7 @@ function AdvancedModeModal({
 }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { step, onEndClick } = useTxStatus();
-  const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
+  const modalSize = useBreakpointValue(["xs", "5xl", "5xl"]);
 
   useEffect(() => {
     step === FINALIZED && onClose();

@@ -18,7 +18,6 @@
     "deploy": "gh-pages -d build -m '[ci skip] Updates'",
     "postinstall": "patch-package"
   },
-  "homepage": "https://artzero.io/demo-ink4/",
   "dependencies": {
     "@ajna/pagination": "^1.4.17",
     "@chakra-ui/icons": "^1.1.7",

@@ -23,6 +23,12 @@ export const validationDiscord = Yup.string()
   .max(100, "Must be at most 100 characters")
   .matches(/\bdiscord.(com|gg)\b/, "URL must be discord.com or discord.gg");
 
+export const validationTelegram = Yup.string()
+  .trim()
+  .url("URL must start with http:// or https://")
+  .max(100, "Must be at most 100 characters")
+  .matches(/\bt.me\b/, "URL must be t.me");
+
 export const validationDescription = Yup.string()
   .trim()
   .min(2, "Must be at least 2 characters")

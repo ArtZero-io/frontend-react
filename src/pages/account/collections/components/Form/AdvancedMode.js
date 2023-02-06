@@ -108,6 +108,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
       website: "",
       twitter: "",
       discord: "",
+      telegram: "",
       agreeTosCheckbox: false,
     };
 
@@ -129,6 +130,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           website,
           twitter,
           discord,
+          telegram,
         } = dataList;
 
         newInitialValues = {
@@ -142,6 +144,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           website,
           twitter,
           discord,
+          telegram,
         };
 
         if (dataList) {
@@ -210,7 +213,11 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 "URL must be discord.com or discord.gg"
               )
               .max(50, "Must be at most 50 characters"),
-
+            telegram: Yup.string()
+              .trim()
+              .url("URL must start with http:// or https://")
+              .matches(/\bt.me\b/, "URL must be t.me")
+              .max(50, "Must be at most 50 characters"),
             agreeTosCheckbox: Yup.boolean().when("isEditMode", {
               is: false,
               then: Yup.boolean()
@@ -260,6 +267,9 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   "website",
                   "twitter",
                   "discord",
+                  "telegram",
+                  "is_doxxed",
+                  "is_duplication_checked",
                 ],
 
                 attributeVals: [
@@ -271,6 +281,9 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   values.website,
                   values.twitter,
                   values.discord,
+                  values.telegram,
+                  false,
+                  false,
                 ],
 
                 collectionAllowRoyaltyFee: values.collectRoyaltyFee,
@@ -282,6 +295,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
 
               if (mode === formMode.ADD) {
                 dispatch(setTxStatus({ type: CREATE_COLLECTION, step: START }));
+                console.log("Adv Mode data", data);
 
                 await collection_manager_calls.addNewCollection(
                   currentAccount,
@@ -357,6 +371,13 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   label="Discord URL"
                   isDisabled={actionType}
                   placeholder={"Discord URL"}
+                />
+                <AdvancedModeInput
+                  type="text"
+                  name="telegram"
+                  label="Telegram URL"
+                  isDisabled={actionType}
+                  placeholder={"Telegram URL"}
                 />
               </Stack>
 

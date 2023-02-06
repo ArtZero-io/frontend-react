@@ -150,6 +150,19 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = await getSimpleModeAddingFee(caller_account);
 
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "autoNewCollection",
+    data.nftName,
+    data.nftSymbol,
+    data.attributes,
+    data.attributeVals,
+    data.collectionAllowRoyaltyFee,
+    data.collectionRoyaltyFeeData
+  );
+
   contract.tx
     .autoNewCollection(
       { gasLimit, value },

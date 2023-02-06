@@ -219,9 +219,13 @@ function ProfileHeader() {
               />
             )}
 
-            <Flex alignItems="center" w="full" justifyContent="center">
+            <Flex
+              hidden={claimAmount <= 0}
+              alignItems="center"
+              w="full"
+              justifyContent="center"
+            >
               <CommonButton
-                isDisabled={claimAmount <= 0}
                 text={`Claim unsuccessful Bids: ${claimAmount} AZERO`}
                 onClick={() => onClaimHandler()}
               />{" "}

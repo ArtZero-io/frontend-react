@@ -71,6 +71,7 @@ import {
   validationAgreeProjectMintFeeCheckbox,
   validationAgreeFeeCheckbox,
   validationEmail,
+  validationTelegram,
 } from "@constants/yup";
 import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 import { useCallback } from "react";
@@ -381,6 +382,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     website: values.website.trim(),
                     twitter: values.twitter.trim(),
                     discord: values.discord.trim(),
+                    telegram: values.telegram.trim(),
                     nft_name: values.nftName.trim(),
                     nft_symbol: values.nftSymbol.trim(),
                     header: values.headerIPFSUrl,
@@ -447,6 +449,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     website: values.website.trim(),
                     twitter: values.twitter.trim(),
                     discord: values.discord.trim(),
+                    telegram: values.telegram.trim(),
                     collectRoyaltyFee: isSetRoyal,
                     royaltyFee: values.royaltyFee,
                     collectionAddingFee: addingFee,
@@ -470,6 +473,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         "website",
                         "twitter",
                         "discord",
+                        "telegram",
+                        "is_doxxed",
+                        "is_duplication_checked",
                       ],
 
                       attributeVals: [
@@ -481,6 +487,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         values.website,
                         values.twitter,
                         values.discord,
+                        values.telegram,
+                        false,
+                        false,
                       ],
                       collectionAllowRoyaltyFee: isSetRoyal,
                       collectionRoyaltyFeeData: isSetRoyal
@@ -548,6 +557,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       website: values.website.trim(),
                       twitter: values.twitter.trim(),
                       discord: values.discord.trim(),
+                      telegram: values.telegram.trim(),
                       nft_name: values.nftName.trim(),
                       nft_symbol: values.nftSymbol.trim(),
                       header: values.headerIPFSUrl,
@@ -780,6 +790,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                           name="discord"
                           label="Discord URL"
                           placeholder={"Discord URL"}
+                          isDisabled={actionType}
+                        />
+                        <CommonInput
+                          mx="0"
+                          type="text"
+                          name="telegram"
+                          label="Telegram URL"
+                          placeholder={"Telegram URL"}
                           isDisabled={actionType}
                         />
                       </Stack>
@@ -1155,6 +1173,7 @@ export const fetchInitialValuesProject = async ({
     website: "",
     twitter: "",
     discord: "",
+    telegram: "",
     description: "",
     roadmap: [{ type: "", content: "" }],
     members: [{ name: "", title: "", socialLink: "", avatar: "" }],
@@ -1190,6 +1209,7 @@ export const fetchInitialValuesProject = async ({
       website,
       twitter,
       discord,
+      telegram,
       nftName,
       nftSymbol,
       headerImage,
@@ -1213,6 +1233,7 @@ export const fetchInitialValuesProject = async ({
     initialValues.website = website;
     initialValues.twitter = twitter;
     initialValues.discord = discord;
+    initialValues.telegram = telegram;
     initialValues.members = teamMembers;
     initialValues.roadmap = roadmaps;
 
@@ -1236,6 +1257,7 @@ const validationSchema = Yup.object().shape({
   website: validationWebsite,
   twitter: validationTwitter,
   discord: validationDiscord,
+  telegram: validationTelegram,
   description: validationDescription,
   roadmap: Yup.array()
     .min(1, "Roadmap must have at least 1 items")

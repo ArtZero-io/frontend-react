@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Box, Link, Flex, HStack, Stack, Text, VStack } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import React, { useState, useEffect, useRef } from "react";
@@ -112,6 +113,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
       website: "",
       twitter: "",
       discord: "",
+      telegram: "",
       agreeTosCheckbox: false,
     };
     const fetchCollectionsByID = async () => {
@@ -129,6 +131,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
           website: dataList[0].website,
           twitter: dataList[0].twitter,
           discord: dataList[0].discord,
+          telegram: dataList[0].telegram,
         };
 
         if (dataList?.length) {
@@ -172,7 +175,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
             collectionDescription: Yup.string()
               .trim()
               .min(3, "Must be at least 3 characters")
-              .max(150, "Must be at most 150 characters")
+              .max(3000, "Must be at most 3000 characters")
               .required("This field is required"),
             collectRoyaltyFee: Yup.boolean(),
             website: Yup.string()
@@ -191,6 +194,11 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 /\bdiscord.(com|gg)\b/,
                 "URL must be discord.com or discord.gg"
               )
+              .max(50, "Must be at most 50 characters"),
+            telegram: Yup.string()
+              .trim()
+              .url("URL must start with http:// or https://")
+              .matches(/\bt.me\b/, "URL must be t.me")
               .max(50, "Must be at most 50 characters"),
 
             nftName: Yup.string()
@@ -257,6 +265,9 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 "website",
                 "twitter",
                 "discord",
+                "telegram",
+                "is_doxxed",
+                "is_duplication_checked",
               ],
 
               attributeVals: [
@@ -268,6 +279,9 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 values.website,
                 values.twitter,
                 values.discord,
+                values.telegram,
+                false,
+                false,
               ],
 
               collectionAllowRoyaltyFee: values.collectRoyaltyFee,
@@ -279,7 +293,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
             try {
               if (mode === formMode.ADD) {
                 dispatch(setTxStatus({ type: CREATE_COLLECTION, step: START }));
-
+                console.log("SimpleMode data", data);
                 await collection_manager_calls.autoNewCollection(
                   currentAccount,
                   data,
@@ -368,6 +382,13 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   label="Discord URL"
                   isDisabled={actionType}
                   placeholder={"Discord URL"}
+                />
+                <SimpleModeInput
+                  type="text"
+                  name="telegram"
+                  label="Telegram URL"
+                  isDisabled={actionType}
+                  placeholder={"Telegram URL"}
                 />
               </Stack>
 
