@@ -379,7 +379,7 @@ export async function execContractQuery(
 
 export const formatQueryResultToNumber = (result, chainDecimals = 12) => {
   const ret = result?.toHuman().Ok?.replaceAll(",", "");
-  console.log("result", result?.toHuman());
+
   const formattedStrBal = formatBalance(ret, {
     withSi: false,
     forceUnit: "-",
@@ -388,6 +388,7 @@ export const formatQueryResultToNumber = (result, chainDecimals = 12) => {
 
   return formattedStrBal;
 };
+
 export async function execContractTx(
   caller, // -> currentAccount Object
   api,
@@ -416,7 +417,7 @@ export async function execContractTx(
     queryName,
     ...args
   );
-  // console.log("gasLimit", gasLimit);
+
   const txNotSign = contract.tx[queryName]({ gasLimit, value }, ...args);
 
   await txNotSign

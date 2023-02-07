@@ -274,7 +274,6 @@ const LaunchpadDetailPage = () => {
       } catch (error) {
         if (isUnmounted) return;
 
-        console.log("error fetchPublicPhasesInfoData", error.message);
         setLoadingPhaseInfo(false);
       }
     },

@@ -1248,7 +1248,7 @@ export const listToken = async (
     contract_abi,
     nftContractAddress
   );
-  console.log("nft721_psp34_standard_contract", nft721_psp34_standard_contract);
+
   contract_calls.setContract(nft721_psp34_standard_contract);
 
   const isAllowance = await contract_calls.allowance(

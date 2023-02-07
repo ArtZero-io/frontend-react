@@ -144,16 +144,13 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
 
   let unsubscribe;
   let gasLimit;
-  console.log("gasLimit", gasLimit);
+
   let transactionData = data;
-  console.log("data", data);
+
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = await getSimpleModeAddingFee(caller_account);
 
-  console.log("value value", value);
-
-  console.log("data", data);
   gasLimit = await getEstimatedGas(
     address,
     contract,
@@ -166,8 +163,6 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
     data.collectionAllowRoyaltyFee,
     data.collectionRoyaltyFeeData
   );
-
-  console.log("gasLimit A", gasLimit.toHuman());
 
   contract.tx
     .autoNewCollection(
@@ -587,7 +582,6 @@ async function owner(caller_account) {
   if (!contract || !caller_account) {
     return null;
   }
-  console.log("owner ...");
 
   const address = caller_account?.address;
   const gasLimit = readOnlyGasLimit(contract);
@@ -597,7 +591,7 @@ async function owner(caller_account) {
     value: azero_value,
     gasLimit,
   });
-  console.log("output", output);
+
   if (result.isOk) {
     return output.toHuman().Ok;
   }

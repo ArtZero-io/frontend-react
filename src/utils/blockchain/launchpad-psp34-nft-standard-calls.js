@@ -478,7 +478,7 @@ async function publicMint(
           })
           .then(async ({ result, output }) => {
             if (result.isOk) {
-              const lastTokenId = new BN(output, 10, "le").toNumber();
+              const lastTokenId = formatOutput(output);
 
               for (
                 let token_id = lastTokenId - mintAmount + 1;
@@ -550,7 +550,7 @@ async function whitelistMint(
           })
           .then(async ({ result, output }) => {
             if (result.isOk) {
-              const lastTokenId = new BN(output, 10, "le").toNumber();
+              const lastTokenId = formatOutput(output);
 
               for (
                 let token_id = lastTokenId - mintAmount + 1;
@@ -1247,8 +1247,7 @@ export const getAccountBalanceOfPsp34NFT = async ({
   let ret = null;
 
   if (result.isOk) {
-    console.log("jjj", output);
-    ret = new BN(output, 10, "le").toNumber();
+    ret = formatOutput(output);
   }
 
   return ret;

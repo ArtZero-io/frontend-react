@@ -235,11 +235,20 @@ async function getStakingDiscountCriteria(caller_account) {
     { value: azero_value, gasLimit }
   );
   if (result.isOk) {
-    console.log("output.toHuman()", output.toString());
-    return output.toHuman();
+    const ret = output.toHuman().Ok;
+
+    return hexToBytes(ret).slice(1);
   }
   return null;
 }
+
+function hexToBytes(hex) {
+  let bytes = [];
+  for (let c = 0; c < hex.length; c += 2)
+    bytes.push(parseInt(hex.substr(c, 2), 16));
+  return bytes;
+}
+
 async function getStakingDiscountRate(caller_account) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
@@ -254,7 +263,6 @@ async function getStakingDiscountRate(caller_account) {
     { value: azero_value, gasLimit }
   );
   if (result.isOk) {
-    console.log("output", output.toHuman().Ok);
     return output.toHuman().Ok;
   }
   return null;
@@ -382,9 +390,7 @@ async function list(
     token_id,
     sale_price
   );
-  console.log("nft_contract_address", nft_contract_address);
-  console.log("token_id", token_id);
-  console.log("sale_price", sale_price);
+
   contract.tx
     .list({ gasLimit, value }, nft_contract_address, token_id, sale_price)
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {

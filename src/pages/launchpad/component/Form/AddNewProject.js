@@ -219,8 +219,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
           currentAccount || getPublicCurrentAccount()
         );
 
-      const totalFee =
-        addProjFee.toNumber() / 10 ** 12 + addCollectionFee / 10 ** 12;
+      const totalFee = addProjFee / 10 ** 12 + addCollectionFee / 10 ** 12;
+
       setAddProjectTotalFee(totalFee);
     };
 
@@ -566,12 +566,10 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       team_members: values.members,
                       roadmaps: values.roadmap,
                     };
-                    console.log("mode", mode);
-                    console.log("project_info", project_info);
+
                     const project_info_ipfs = await ipfsClient.add(
                       JSON.stringify(project_info)
                     );
-                    console.log("project_info_ipfs", project_info_ipfs);
 
                     const launchpad_psp34_nft_standard_contract =
                       new ContractPromise(

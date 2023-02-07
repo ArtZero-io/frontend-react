@@ -281,8 +281,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 values.twitter,
                 values.discord,
                 values.telegram,
-                'NO',
-                'NO',
+                "NO",
+                "NO",
               ],
 
               collectionAllowRoyaltyFee: values.collectRoyaltyFee,
@@ -294,7 +294,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
             try {
               if (mode === formMode.ADD) {
                 dispatch(setTxStatus({ type: CREATE_COLLECTION, step: START }));
-                console.log("SimpleMode data", data);
+
                 await collection_manager_calls.autoNewCollection(
                   currentAccount,
                   data,

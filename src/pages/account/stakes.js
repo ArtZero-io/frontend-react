@@ -70,7 +70,7 @@ const MyStakesPage = () => {
         artzero_nft_calls
       );
 
-      const totalCount = stakedCount + pendingCount + unstakedCount;
+      const totalCount = stakedCount * 1 + pendingCount * 1 + unstakedCount * 1;
 
       const myTradingFee = await fetchMyTradingFee(
         stakedCount,
@@ -276,11 +276,13 @@ const MyStakesPage = () => {
           ))}
       </Stack>
       <Stack minHeight="504px" h="full">
+
         {loading || loadingForceUpdate ? (
           <Stack h="574px">
             <AnimationLoader loadingTime={loadingTime || 3} />
           </Stack>
-        ) : PMPCollectionDetail?.listNFT?.length === 0 ? (
+        ) : PMPCollectionDetail?.listNFT ||
+          PMPCollectionDetail?.listNFT?.length === 0 ? (
           <Heading py="3rem" size="h6">
             No NFTs found
           </Heading>
@@ -353,6 +355,7 @@ export const fetchPlatformStakingDiscountStep = async (
   const response = await marketplace_contract_calls.getStakingDiscountCriteria(
     currentAccount
   );
+
   return Array.from(response);
 };
 

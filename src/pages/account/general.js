@@ -24,7 +24,6 @@ import {
   Tr,
   Tbody,
   Th,
-  Center,
   Td,
   Skeleton,
 } from "@chakra-ui/react";
@@ -146,9 +145,11 @@ function GeneralPage() {
         launchpadBalance?.balance +
         collectionBalance?.balance;
 
-      const estimatedEarning = platformTotalStaked
-        ? (totalProfit * 0.3 * totalStakedPromise) / platformTotalStaked
-        : 0;
+      const estimatedEarning =
+        platformTotalStaked * 1
+          ? (totalProfit * 0.3 * totalStakedPromise) / (platformTotalStaked * 1)
+          : 0;
+
       setEstimatedEarning(estimatedEarning);
       let rewardPoolData = await staking_calls.getRewardPool(currentAccount);
 
@@ -158,7 +159,7 @@ function GeneralPage() {
 
       setEstimatedEarningBaseRewardPool(estimatedEarningBaseRewardPoolData);
 
-      Promise.all([nftListPromise, totalStakedPromise]).then(
+      Promise.all([nftListPromise, 1 * totalStakedPromise]).then(
         ([nftList, totalStaked]) => {
           const nftForSale = nftList.reduce(function (a, b) {
             return a + (b.is_for_sale | 0);
@@ -193,28 +194,23 @@ function GeneralPage() {
       currentAccount,
       currentAccount.address
     );
-    console.log("getTradeFee my_total_staked_az_nfts", my_total_staked_az_nfts);
 
     let stakingDiscountCriteria =
       await marketplace_contract_calls.getStakingDiscountCriteria(
         currentAccount
       );
-      console.log("getTradeFee stakingDiscountCriteria", stakingDiscountCriteria);
 
     let stakingDiscountRate =
       await marketplace_contract_calls.getStakingDiscountRate(currentAccount);
-      console.log("getTradeFee stakingDiscountRate", stakingDiscountRate);
 
     let my_discount_rate =
       (await marketplace_contract_calls.getPlatformFee(currentAccount)) / 100;
-      console.log("getTradeFee my_discount_rate", my_discount_rate);
 
     setPlatformFee(my_discount_rate);
-    console.log("stakingDiscountRate", stakingDiscountRate);
+
     let length = stakingDiscountRate?.length;
 
     for (var index = 0; index < length; index++) {
-      console.log('new BN(stakingDiscountCriteria[index]).toNumber()',stakingDiscountCriteria[index])
       if (
         my_total_staked_az_nfts >=
         new BN(stakingDiscountCriteria[index]).toNumber()
@@ -483,7 +479,7 @@ function GeneralPage() {
                 <Tag variant="outline" h={6} minW={"128px"} mt={3}>
                   {
                     <TagLabel fontSize="16px">
-                   asd   Your Trade Fee: {tradeFee && `${tradeFee}%`}
+                      Your Trade Fee: {tradeFee && `${tradeFee}%`}
                     </TagLabel>
                   }
                 </Tag>
@@ -668,7 +664,9 @@ function GeneralPage() {
                   <Tbody>
                     {rewardHistory.length === 0 ? (
                       <Tr color="#fff">
-                        <Center py={7}>No record found</Center>
+                        <Td colSpan={4} py={7} textAlign="center">
+                          No record found
+                        </Td>
                       </Tr>
                     ) : (
                       rewardHistory.map((reward, index) => (

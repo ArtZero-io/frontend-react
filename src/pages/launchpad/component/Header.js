@@ -622,7 +622,6 @@ function LaunchpadDetailHeader({
             {...project}
             isOpen={isOpenPhase}
             onClose={() => {
-              console.log("UpdatePhasesModal onClosePhase...");
               onClosePhase();
             }}
             collection_address={collection_address}

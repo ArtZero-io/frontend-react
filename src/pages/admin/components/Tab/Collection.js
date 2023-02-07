@@ -82,17 +82,14 @@ function CollectionAdmin() {
         address
       );
 
-      if (queryResult1?.isTrue) {
-        return true;
-      }
-
-      return false;
+      return queryResult1.toHuman().Ok;
     };
+    
     const isCollectionAdmin = await checkIsAdmin({
       address: currentAccount?.address,
     });
 
-    console.log("isCollectionAdmin", isCollectionAdmin);
+
     setIsCollectionAdmin(isCollectionAdmin);
     return;
   }, [api, currentAccount?.address]);
