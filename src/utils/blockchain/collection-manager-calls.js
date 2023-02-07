@@ -10,7 +10,7 @@ import {
 import { APICall } from "@api/client";
 import { clientAPI } from "@api/client";
 import collection_manager from "@utils/blockchain/collection-manager";
-import { getEstimatedGas, readOnlyGasLimit } from "..";
+import { getEstimatedGas, readOnlyGasLimit, convertStringToPrice } from "..";
 
 let contract;
 
@@ -559,7 +559,7 @@ async function getAdvanceModeAddingFee(caller_account) {
   );
 
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return new BN(convertStringToPrice(output.toHuman().Ok), 10, "le").toNumber();
   }
   return null;
 }
@@ -573,7 +573,7 @@ async function getMaxRoyaltyFeeRate(caller_account) {
   );
 
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return new BN(convertStringToPrice(output.toHuman().Ok), 10, "le").toNumber();
   }
   return null;
 }
