@@ -9,7 +9,9 @@ import {
   IconButton,
   Skeleton,
   Stack,
+  Tag,
   Text,
+  Tooltip,
   useBreakpointValue,
   useDisclosure,
   VStack,
@@ -43,6 +45,7 @@ import launchpad_psp34_nft_standard from "../../../utils/blockchain/launchpad-ps
 import { useEffect } from "react";
 import { execContractQuery } from "../../account/nfts/nfts";
 import { useMemo } from "react";
+import { APICall } from "../../../api/client";
 
 function LaunchpadDetailHeader({
   loading,
@@ -61,6 +64,7 @@ function LaunchpadDetailHeader({
     discord,
     twitter,
     website,
+    telegram,
     isActive,
     avatarImage,
     description,
@@ -153,12 +157,29 @@ function LaunchpadDetailHeader({
         3739740293,
         currentAccount?.address
       );
-      if (queryResult1?.isTrue) {
-        setIsAdmin(true);
-      }
+
+      setIsAdmin(queryResult1?.toHuman().Ok);
     };
     checkIsAdmin();
   }, [api, currentAccount?.address, nftContractAddress]);
+
+  const [isDoxxed, setIsDoxxed] = useState(false);
+  const [isDuplicationChecked, setIsDuplicationChecked] = useState(false);
+
+  useEffect(() => {
+    const fetchProjInfo = async () => {
+      const { ret, status } = await APICall.getCollectionByAddress({
+        collection_address,
+      });
+
+      if (status === "OK") {
+        setIsDoxxed(ret?.isDoxxed);
+        setIsDuplicationChecked(ret?.isDuplicationChecked);
+      }
+    };
+
+    fetchProjInfo();
+  }, [collection_address]);
 
   return (
     <Box as="section" position="relative" w="full" mt={["30px", "320px"]}>
@@ -196,6 +217,24 @@ function LaunchpadDetailHeader({
               bg={isActive ? "#34B979" : "#666"}
             />
           </Center>
+
+          <HStack spacing="10px" pt="10px">
+            {isDoxxed === "YES" && (
+              <Tooltip label="Team is privately doxxed.">
+                <Box p="1">
+                  <Tag border="1px solid #7ae7ff">Team Doxxed</Tag>
+                </Box>
+              </Tooltip>
+            )}
+
+            {isDuplicationChecked === "YES" && (
+              <Tooltip label="Collection is duplication checked.">
+                <Box p="1">
+                  <Tag border="1px solid #7ae7ff">Duplication Checked</Tag>
+                </Box>
+              </Tooltip>
+            )}
+          </HStack>
 
           <HStack w="full" justifyContent="space-around">
             <motion.div
@@ -598,7 +637,9 @@ function LaunchpadDetailHeader({
         w={["full", "auto"]}
         position={{ base: "unset", xl: "absolute" }}
       >
-        <SocialCard profile={[{ website }, { twitter }, { discord }]} />
+        <SocialCard
+          profile={[{ website }, { twitter }, { discord }, { telegram }]}
+        />
       </VStack>
 
       {(isProjOwner || isAdmin) && (

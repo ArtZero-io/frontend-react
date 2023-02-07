@@ -31,11 +31,7 @@ const MyProjectsPage = () => {
         address
       );
 
-      if (queryResult1?.isTrue) {
-        return true;
-      }
-
-      return false;
+      return queryResult1.toHuman().Ok;
     };
     let isUnmounted = false;
     const fetchMyProjectListDetails = async () => {

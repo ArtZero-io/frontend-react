@@ -38,7 +38,7 @@ export const CollectionCard = ({
   useEffect(() => {
     const doScroll = async () => {
       await delay(1000).then(() => {
-        restorationRef.current.scrollIntoView({
+        restorationRef?.current?.scrollIntoView({
           behavior: "smooth",
           block: "center",
         });

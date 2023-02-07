@@ -23,49 +23,49 @@ import {
   Link,
   Icon,
   DrawerFooter,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import { NavLink } from './NavLink';
-import WalletSelector from '../WalletSelector/index';
-import * as ROUTES from '@constants/routes';
+import { NavLink } from "./NavLink";
+import WalletSelector from "../WalletSelector/index";
+import * as ROUTES from "@constants/routes";
 
-import { useSubstrateState } from '@utils/substrate/SubstrateContext';
-import { Link as ReactRouterLink } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { ArtZeroLogo } from '@theme/assets/logo/ArtZeroLogo';
-import SocialCard from '../Card/Social';
-import SearchDrawer from '../SearchBox/SearchDrawer';
-import AddNewCollectionModal from '@pages/account/collections/components/Modal/AddNew';
+import { useSubstrateState } from "@utils/substrate/SubstrateContext";
+import { Link as ReactRouterLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { ArtZeroLogo } from "@theme/assets/logo/ArtZeroLogo";
+import SocialCard from "../Card/Social";
+import SearchDrawer from "../SearchBox/SearchDrawer";
+import AddNewCollectionModal from "@pages/account/collections/components/Modal/AddNew";
 
-import { formMode } from '@constants';
+import { formMode } from "@constants";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
   CloseIcon,
   HamburgerIcon,
-} from '@chakra-ui/icons';
+} from "@chakra-ui/icons";
 
 const links = [
-  { label: 'Marketplace', href: ROUTES.MARKETPLACE },
-  { label: 'Launchpad', href: ROUTES.LAUNCHPAD_BASE },
-  { label: 'Stats', href: ROUTES.STATS },
+  { label: "Marketplace", href: ROUTES.MARKETPLACE },
+  { label: "Launchpad", href: ROUTES.LAUNCHPAD_BASE },
+  { label: "Stats", href: ROUTES.STATS },
 ];
 
 const MobileNavContent = (props) => {
   const { isOpen, onClose, onToggle } = useDisclosure();
   isOpen
-    ? (document.body.style.position = 'fixed')
-    : (document.body.style.position = 'static');
+    ? (document.body.style.position = "fixed")
+    : (document.body.style.position = "static");
 
   const docHeight = () => {
     const doc = document.documentElement;
 
-    doc.style.setProperty('--doc-height', `${window.innerHeight}px`);
+    doc.style.setProperty("--doc-height", `${window.innerHeight}px`);
   };
 
-  window.addEventListener('resize', docHeight);
+  window.addEventListener("resize", docHeight);
 
   docHeight();
 
@@ -73,8 +73,8 @@ const MobileNavContent = (props) => {
     <>
       <Box
         w="full"
-        style={{ marginTop: '0px' }}
-        display={{ base: 'block', md: 'none' }}
+        style={{ marginTop: "0px" }}
+        display={{ base: "block", md: "none" }}
         zIndex="sticky"
         // backdropBlur="2px"
         // position={scroll ? "fixed" : "sticky"}
@@ -82,14 +82,14 @@ const MobileNavContent = (props) => {
         // bg={scroll ? "rgba(0, 0, 0, 0.75)" : "rgba(0, 0, 0, 0)"}
       >
         <Flex
-          align={'center'}
-          h={['57.25px', '79px']}
+          align={"center"}
+          h={["57.25px", "79px"]}
           justifyContent="space-between"
         >
           <Flex
             h="31.25px"
             alignItems="center"
-            display={{ base: 'flex', md: 'none' }}
+            display={{ base: "flex", md: "none" }}
           >
             <IconButton
               icon={
@@ -102,17 +102,17 @@ const MobileNavContent = (props) => {
               h="15px"
               w="20px"
               onClick={onToggle}
-              variant={'ghost'}
-              aria-label={'Toggle Navigation'}
+              variant={"ghost"}
+              aria-label={"Toggle Navigation"}
             />
           </Flex>
 
-          <Flex justify={{ base: 'center', md: 'start' }}>
+          <Flex justify={{ base: "center", md: "start" }}>
             <ArtZeroLogo
               height="20px"
               width="138px"
               alt="ArtZeroLogo"
-              display={{ base: 'flex', md: 'none' }}
+              display={{ base: "flex", md: "none" }}
             />
           </Flex>
 
@@ -122,7 +122,7 @@ const MobileNavContent = (props) => {
             fontSize="2xl"
             color="white"
             onClick={onToggle}
-            display={{ base: 'flex', md: 'none' }}
+            display={{ base: "flex", md: "none" }}
           />
         </Flex>
 
@@ -138,19 +138,19 @@ const DesktopNavContent = (props) => {
   const { currentAccount } = useSubstrateState();
 
   return (
-    <Flex w="full" display={{ base: 'none', md: 'flex' }}>
+    <Flex w="full" display={{ base: "none", md: "flex" }}>
       <HStack
         w="full"
         align="stretch"
         overflowX="hidden"
         alignItems="center"
         justifyContent={{
-          base: 'flex-start',
-          md: 'space-between',
-          xl: 'flex-start',
+          base: "flex-start",
+          md: "space-between",
+          xl: "flex-start",
         }}
-        spacing={{ xl: '35px', '2xl': '55px' }}
-        pl={{ base: '8px', md: '32px', xl: '50px' }}
+        spacing={{ xl: "35px", "2xl": "55px" }}
+        pl={{ base: "8px", md: "32px", xl: "50px" }}
         pr="10px"
         {...props}
       >
@@ -168,9 +168,9 @@ const DesktopNavContent = (props) => {
         )}
       </HStack>
 
-      <SearchDrawer display={{ base: 'none', md: 'flex' }} />
+      <SearchDrawer display={{ base: "none", md: "flex" }} />
 
-      <WalletSelector display={{ base: 'none', lg: 'flex' }} />
+      <WalletSelector display={{ base: "none", lg: "flex" }} />
     </Flex>
   );
 };
@@ -181,11 +181,12 @@ export const NavContent = {
 };
 
 const myAccountList = [
-  { label: 'General', href: ROUTES.ACCOUNT },
-  { label: 'My Collections', href: ROUTES.ACCOUNT_MY_COLLECTIONS },
-  { label: 'My NFTs', href: ROUTES.ACCOUNT_MY_NFTS },
-  { label: 'My Stakes', href: ROUTES.ACCOUNT_MY_STAKES },
-  { label: 'My Projects', href: ROUTES.ACCOUNT_MY_PROJECTS },
+  { label: "General", href: ROUTES.ACCOUNT },
+  { label: "My Collections", href: ROUTES.ACCOUNT_MY_COLLECTIONS },
+  { label: "My NFTs", href: ROUTES.ACCOUNT_MY_NFTS },
+  { label: "My Stakes", href: ROUTES.ACCOUNT_MY_STAKES },
+  { label: "My Projects", href: ROUTES.ACCOUNT_MY_PROJECTS },
+  { label: "Stake to earn", href: "https://inkwhale.net/", isExternal: true },
 ];
 
 const MyAccountDropdown = () => {
@@ -200,7 +201,7 @@ const MyAccountDropdown = () => {
 
   const [myAccOpen, setMyAccOpen] = useState(false);
   return (
-    <Box px={{ base: '23px', lg: '0' }} py={{ base: '0px', lg: '0' }}>
+    <Box px={{ base: "23px", lg: "0" }} py={{ base: "0px", lg: "0" }}>
       <Menu
         autoSelect={false}
         placement="bottom"
@@ -222,27 +223,27 @@ const MyAccountDropdown = () => {
             borderBottom="2px"
             transition="all 0.2s"
             justifyContent="center"
-            fontSize={{ base: '24px', md: '15px' }}
+            fontSize={{ base: "24px", md: "15px" }}
             _hover={{
-              borderColor: 'brand.blue',
-              color: 'brand.blue',
+              borderColor: "brand.blue",
+              color: "brand.blue",
             }}
             _focus={{
-              bg: 'transparent',
+              bg: "transparent",
             }}
             borderColor={
-              path.includes('/account/') ? 'brand.blue' : 'transparent'
+              path.includes("/account/") ? "brand.blue" : "transparent"
             }
-            color={path.includes('/account/') ? 'brand.blue' : '#fff'}
+            color={path.includes("/account/") ? "brand.blue" : "#fff"}
           >
             my account
-          </MenuButton>{' '}
+          </MenuButton>{" "}
         </Show>
 
         {/* Phone button here */}
         <Show below="sm">
           <MenuButton
-            w={['full', 'auto']}
+            w={["full", "auto"]}
             p={0}
             ring={0}
             h="41px"
@@ -262,35 +263,35 @@ const MyAccountDropdown = () => {
             border="none"
             transition="all 0.2s"
             justifyContent="center"
-            fontSize={{ base: '24px', md: '15px' }}
+            fontSize={{ base: "24px", md: "15px" }}
             _hover={{
-              borderBottomColor: 'brand.blue',
-              color: 'brand.blue',
-              borderBottomWidth: '2px',
+              borderBottomColor: "brand.blue",
+              color: "brand.blue",
+              borderBottomWidth: "2px",
             }}
             _focus={{
-              bg: 'transparent',
+              bg: "transparent",
             }}
             _active={{
-              bg: 'transparent',
-              borderBottom: 'none',
+              bg: "transparent",
+              borderBottom: "none",
             }}
             borderColor={
-              path.includes('/account/') ? 'brand.blue' : 'transparent'
+              path.includes("/account/") ? "brand.blue" : "transparent"
             }
-            color={path.includes('/account/') ? 'brand.blue' : '#fff'}
+            color={path.includes("/account/") ? "brand.blue" : "#fff"}
           >
             my account
           </MenuButton>
         </Show>
 
         <MenuList
-          px={['0', '15px']}
-          py={['0', '15px']}
+          px={["0", "15px"]}
+          py={["0", "15px"]}
           minW="250px"
-          borderWidth={['0px', '2px']}
+          borderWidth={["0px", "2px"]}
           borderRadius="0"
-          bg={['black', 'brand.grayDark']}
+          bg={["black", "brand.grayDark"]}
           borderColor="brand.blue"
           // ml={{ base: "20px", lg: "auto" }}
         >
@@ -298,14 +299,18 @@ const MyAccountDropdown = () => {
             <MenuItem
               to="#"
               key={idx}
-              ml={['20px', 'auto']}
-              py={['4px', '12px']}
-              px={['4px', '15px']}
-              _hover={{ bg: 'black' }}
+              ml={["20px", "auto"]}
+              py={["4px", "12px"]}
+              px={["4px", "15px"]}
+              _hover={{ bg: "black" }}
               as={ReactRouterLink}
               fontFamily="Evogria, sans-serif"
-              onClick={() => history.push(item.href)}
-              fontSize={{ base: '18px', md: '15px' }}
+              onClick={() =>
+                item?.isExternal
+                  ? window.open(item.href, "_blank")
+                  : history.push(item.href)
+              }
+              fontSize={{ base: "18px", md: "15px" }}
             >
               {item.label}
             </MenuItem>
@@ -317,11 +322,11 @@ const MyAccountDropdown = () => {
 };
 
 const profile = [
-  { discord: 'https://discord.gg/wzkZ2JTvN4' },
-  { twitter: 'https://twitter.com/ArtZero_io' },
-  { medium: 'https://medium.com/@artzero_io' },
-  { telegram: 'https://t.me/artzero_io' },
-  { mail: 'mailto:admin@artzero.io' },
+  { discord: "https://discord.gg/wzkZ2JTvN4" },
+  { twitter: "https://twitter.com/ArtZero_io" },
+  { medium: "https://medium.com/@artzero_io" },
+  { telegram: "https://t.me/artzero_io" },
+  { mail: "mailto:admin@artzero.io" },
 ];
 
 const MobileNav = ({ onClose, isOpen }) => {
@@ -355,13 +360,13 @@ const MobileNav = ({ onClose, isOpen }) => {
                 alt="ArtZeroLogo"
                 height="20px"
                 width="138px"
-                display={{ base: 'flex', md: 'none' }}
+                display={{ base: "flex", md: "none" }}
               />
             </Flex>
           </DrawerHeader>
 
           <Flex pt="28px" w="full">
-            <WalletSelector display={{ base: 'flex', md: 'none' }} />
+            <WalletSelector display={{ base: "flex", md: "none" }} />
           </Flex>
 
           <DrawerBody px="18px">
@@ -379,7 +384,7 @@ const MobileNav = ({ onClose, isOpen }) => {
               w="full"
               direction="column"
               justifyContent="center"
-              display={{ base: 'flex', md: 'none' }}
+              display={{ base: "flex", md: "none" }}
             >
               <Center w="full" textAlign="center">
                 <SocialCard profile={profile} />
@@ -388,10 +393,10 @@ const MobileNav = ({ onClose, isOpen }) => {
               <Center w="full" textAlign="center">
                 <Text
                   color="#ababab"
-                  fontSize={['13px', 'sm']}
-                  width={['260px', 'full']}
+                  fontSize={["13px", "sm"]}
+                  width={["260px", "full"]}
                 >
-                  © Copyright 2022 ArtZero. All Rights Reserved{' '}
+                  © Copyright 2022 ArtZero. All Rights Reserved{" "}
                 </Text>
               </Center>
             </Flex>
@@ -417,12 +422,12 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
       <Stack>
         <Link
           _hover={{
-            textDecoration: 'none',
-            color: '#7ae7ff',
+            textDecoration: "none",
+            color: "#7ae7ff",
           }}
           _focus={{
-            textDecoration: 'none',
-            color: '#7ae7ff',
+            textDecoration: "none",
+            color: "#7ae7ff",
           }}
           pb="14px"
           isExternal
@@ -431,17 +436,17 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
         >
           <Text
             _hover={{
-              textDecoration: 'none',
-              color: '#7ae7ff',
+              textDecoration: "none",
+              color: "#7ae7ff",
             }}
             _focus={{
-              textDecoration: 'none',
-              color: '#7ae7ff',
+              textDecoration: "none",
+              color: "#7ae7ff",
             }}
             fontSize="32px"
             lineHeight="shorter"
             fontFamily="Evogria, sans-serif"
-            color={isOpen ? '#7ae7ff' : '#fff'}
+            color={isOpen ? "#7ae7ff" : "#fff"}
           >
             {label}
           </Text>
@@ -449,7 +454,7 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
       </Stack>
     );
 
-  if (label === 'my account') {
+  if (label === "my account") {
     if (!currentAccount?.address) {
       return null;
     } else {
@@ -459,24 +464,24 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
           spacing={4}
           onClick={children ? onToggle : () => handleNavigate(href)}
         >
-          <Flex align={'center'} justify={'space-between'}>
+          <Flex align={"center"} justify={"space-between"}>
             <Text
               _hover={{
-                textDecoration: 'none',
-                color: '#7ae7ff',
+                textDecoration: "none",
+                color: "#7ae7ff",
               }}
               _active={{
-                textDecoration: 'none',
-                color: '#7ae7ff',
+                textDecoration: "none",
+                color: "#7ae7ff",
               }}
               _focus={{
-                textDecoration: 'none',
-                color: '#7ae7ff',
+                textDecoration: "none",
+                color: "#7ae7ff",
               }}
               fontSize="32px"
               lineHeight="shorter"
               fontFamily="Evogria, sans-serif"
-              color={isOpen ? '#7ae7ff' : '#fff'}
+              color={isOpen ? "#7ae7ff" : "#fff"}
             >
               {label}
             </Text>
@@ -486,9 +491,9 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
                 w={6}
                 h={6}
                 as={ChevronDownIcon}
-                color={isOpen ? '#7ae7ff' : '#fff'}
-                transition={'all .25s ease-in-out'}
-                transform={isOpen ? 'rotate(180deg)' : ''}
+                color={isOpen ? "#7ae7ff" : "#fff"}
+                transition={"all .25s ease-in-out"}
+                transform={isOpen ? "rotate(180deg)" : ""}
               />
             )}
           </Flex>
@@ -496,10 +501,10 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
           <Collapse
             in={isOpen}
             animateOpacity
-            style={{ marginTop: '0!important' }}
+            style={{ marginTop: "0!important" }}
           >
             <Stack
-              align={'start'}
+              align={"start"}
               fontSize="18px"
               lineHeight="shorter"
               fontFamily="Evogria, sans-serif"
@@ -507,7 +512,7 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
               {children &&
                 children.map((child) => (
                   <Text
-                    py={'5px'}
+                    py={"5px"}
                     key={child.label}
                     onClick={() => handleNavigate(child.href)}
                   >
@@ -527,24 +532,24 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
       spacing={4}
       onClick={children ? onToggle : () => handleNavigate(href)}
     >
-      <Flex align={'center'} justify={'space-between'}>
+      <Flex align={"center"} justify={"space-between"}>
         <Text
           _hover={{
-            textDecoration: 'none',
-            color: '#7ae7ff',
+            textDecoration: "none",
+            color: "#7ae7ff",
           }}
           _active={{
-            textDecoration: 'none',
-            color: '#7ae7ff',
+            textDecoration: "none",
+            color: "#7ae7ff",
           }}
           _focus={{
-            textDecoration: 'none',
-            color: '#7ae7ff',
+            textDecoration: "none",
+            color: "#7ae7ff",
           }}
           fontSize="32px"
           lineHeight="shorter"
           fontFamily="Evogria, sans-serif"
-          color={isOpen ? '#7ae7ff' : '#fff'}
+          color={isOpen ? "#7ae7ff" : "#fff"}
         >
           {label}
         </Text>
@@ -554,16 +559,16 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
             w={6}
             h={6}
             as={ChevronDownIcon}
-            color={isOpen ? '#7ae7ff' : '#fff'}
-            transition={'all .25s ease-in-out'}
-            transform={isOpen ? 'rotate(180deg)' : ''}
+            color={isOpen ? "#7ae7ff" : "#fff"}
+            transition={"all .25s ease-in-out"}
+            transform={isOpen ? "rotate(180deg)" : ""}
           />
         )}
       </Flex>
 
-      <Collapse in={isOpen} animateOpacity style={{ marginTop: '0!important' }}>
+      <Collapse in={isOpen} animateOpacity style={{ marginTop: "0!important" }}>
         <Stack
-          align={'start'}
+          align={"start"}
           fontSize="18px"
           lineHeight="shorter"
           fontFamily="Evogria, sans-serif"
@@ -571,7 +576,7 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
           {children &&
             children.map((child) => (
               <Text
-                py={'5px'}
+                py={"5px"}
                 key={child.label}
                 onClick={() => handleNavigate(child.href)}
               >
@@ -586,44 +591,49 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
 
 const NAV_ITEMS = [
   {
-    label: 'marketplace',
+    label: "marketplace",
     href: ROUTES.MARKETPLACE,
   },
   {
-    label: 'launchpad',
+    label: "launchpad",
     href: ROUTES.LAUNCHPAD_BASE,
   },
   {
-    label: 'stats',
+    label: "stats",
     href: ROUTES.STATS,
   },
   {
-    label: 'docs',
+    label: "docs",
     href: ROUTES.DOCS,
     isExternal: true,
   },
   {
-    label: 'my account',
+    label: "my account",
     children: [
       {
-        label: 'general',
+        label: "general",
         href: ROUTES.ACCOUNT,
       },
       {
-        label: 'my collections',
+        label: "my collections",
         href: ROUTES.ACCOUNT_MY_COLLECTIONS,
       },
       {
-        label: 'my NFTs',
+        label: "my NFTs",
         href: ROUTES.ACCOUNT_MY_NFTS,
       },
       {
-        label: 'my stakes',
+        label: "my stakes",
         href: ROUTES.ACCOUNT_MY_STAKES,
       },
       {
-        label: 'my projects',
+        label: "my projects",
         href: ROUTES.ACCOUNT_MY_PROJECTS,
+      },
+      {
+        label: "stake to earn",
+        href: "https://inkwhale.net/",
+        isExternal: true,
       },
     ],
   },

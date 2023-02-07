@@ -84,11 +84,10 @@ function CollectionAdmin() {
 
       return queryResult1.toHuman().Ok;
     };
-    
+
     const isCollectionAdmin = await checkIsAdmin({
       address: currentAccount?.address,
     });
-
 
     setIsCollectionAdmin(isCollectionAdmin);
     return;
@@ -224,6 +223,65 @@ function CollectionAdmin() {
       console.log("error.message", error.message);
     }
   };
+
+  async function setDoxxedHandler(address, curDoxxedStatus) {
+    if (!(isCollectionAdmin || isOwner)) {
+      toast.error(`You are not admin of this contract`);
+      return;
+    }
+
+    const statusBeSet = curDoxxedStatus ? "0" : "1";
+
+    try {
+      await execContractTx(
+        currentAccount,
+        api,
+        collection_manager.CONTRACT_ABI,
+        collection_manager.CONTRACT_ADDRESS,
+        0, //=>value
+        "setMultipleAttributes",
+        address,
+        ["is_doxxed"],
+        [statusBeSet]
+      );
+
+      await APICall.askBeUpdateCollectionData({
+        collection_address: address,
+      });
+    } catch (error) {
+      toast.error(error.message);
+      console.log("error.message", error.message);
+    }
+  }
+  async function setDupCheckedHandler(address, currDupStatus) {
+    if (!(isCollectionAdmin || isOwner)) {
+      toast.error(`You are not admin of this contract`);
+      return;
+    }
+
+    const statusBeSet =currDupStatus ? "0" : "1";
+
+    try {
+      await execContractTx(
+        currentAccount,
+        api,
+        collection_manager.CONTRACT_ABI,
+        collection_manager.CONTRACT_ADDRESS,
+        0, //=>value
+        "setMultipleAttributes",
+        address,
+        ["is_duplicated_checked"],
+        [statusBeSet]
+      );
+
+      await APICall.askBeUpdateCollectionData({
+        collection_address: address,
+      });
+    } catch (error) {
+      toast.error(error.message);
+      console.log("error.message", error.message);
+    }
+  }
 
   return (
     <Box
@@ -394,6 +452,22 @@ function CollectionAdmin() {
                     fontWeight="normal"
                     py={7}
                   >
+                    Is Doxxed
+                  </Th>
+                  <Th
+                    fontFamily="Evogria"
+                    fontSize="sm"
+                    fontWeight="normal"
+                    py={7}
+                  >
+                    Dup Checked
+                  </Th>
+                  <Th
+                    fontFamily="Evogria"
+                    fontSize="sm"
+                    fontWeight="normal"
+                    py={7}
+                  >
                     Action
                   </Th>
                 </Tr>
@@ -434,6 +508,57 @@ function CollectionAdmin() {
                           ? "On-chain"
                           : "Off-chain"}{" "}
                       </Td>
+                      <Td py={7}>
+                        {collection.isDoxxed ? "YES" : "NO"}{" "}
+                        <CommonButton
+                          {...rest}
+                          size="sm"
+                          maxW="120px"
+                          variant={collection.isDoxxed ? "outline" : ""}
+                          text={!collection.isDoxxed ? "Set Yes" : "Set No"}
+                          isDisabled={
+                            actionType &&
+                            !tokenIDArray?.includes(
+                              collection.nftContractAddress
+                            )
+                          }
+                          onClick={() =>
+                            setDoxxedHandler(
+                              collection.nftContractAddress,
+                              collection.isDoxxed
+                            )
+                          }
+                        />
+                      </Td>
+                      <Td py={7}>
+                        {collection.isDuplicatedChecked ? "YES" : "NO"}
+                        <CommonButton
+                          {...rest}
+                          size="sm"
+                          maxW="120px"
+                          variant={
+                            collection.isDuplicatedChecked ? "outline" : ""
+                          }
+                          text={
+                            !collection.isDuplicatedChecked
+                              ? "Set Yes"
+                              : "Set No"
+                          }
+                          isDisabled={
+                            actionType &&
+                            !tokenIDArray?.includes(
+                              collection.nftContractAddress
+                            )
+                          }
+                          onClick={() =>
+                            setDupCheckedHandler(
+                              collection.nftContractAddress,
+                              collection.isDuplicatedChecked
+                            )
+                          }
+                        />
+                      </Td>
+
                       <Td>
                         <CommonButton
                           {...rest}

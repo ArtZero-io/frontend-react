@@ -9,7 +9,12 @@ import { APICall } from "@api/client";
 import { ContractPromise } from "@polkadot/api-contract";
 
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import { createObjAttrsNFT, formatOutput, getEstimatedGas, readOnlyGasLimit } from "..";
+import {
+  createObjAttrsNFT,
+  formatOutput,
+  getEstimatedGas,
+  readOnlyGasLimit,
+} from "..";
 import {
   setTxStatus,
   txErrorHandler,
@@ -421,51 +426,61 @@ async function setMultipleAttributesNFT(
     { u64: tokenID },
     metadata
   )
-    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
-      txResponseErrorHandler({
-        status,
-        dispatchError,
-        dispatch,
-        txType,
-        api,
-        caller_account,
-      });
-
-      if (status.isFinalized) {
-        toast.success("NFT is updated successful!");
-
-        await APICall.askBeUpdateNftData({
-          collection_address,
-          token_id: tokenID,
+    .signAndSend(
+      address,
+      { signer },
+      async ({ events = [], status, dispatchError }) => {
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
         });
 
-        if (attributes?.length) {
-          let cacheImages = [];
+        events.forEach(({ event: { method } }) => {
+          if (method === "ExtrinsicSuccess" && status.type === "InBlock") {
+            toast.success("NFT is updated successful!");
+          } else if (method === "ExtrinsicFailed") {
+            toast.error(`Error: ${method}.`);
+          }
+        });
 
-          for (let i = 0; i < attributes.length; i++) {
-            console.log(attributes[i]);
-            if (attributes[i].name === "avatar") {
-              cacheImages.push({
-                input: attributes[i].value,
-                is1920: false,
-                imageType: "nft",
-                metadata: {
-                  collectionAddress: collection_address,
-                  tokenId: tokenID,
-                  type: "avatar",
-                },
+        if (status.isFinalized) {
+          await APICall.askBeUpdateNftData({
+            collection_address,
+            token_id: tokenID,
+          });
+
+          if (attributes?.length) {
+            let cacheImages = [];
+
+            for (let i = 0; i < attributes.length; i++) {
+              console.log(attributes[i]);
+              if (attributes[i].name === "avatar") {
+                cacheImages.push({
+                  input: attributes[i].value,
+                  is1920: false,
+                  imageType: "nft",
+                  metadata: {
+                    collectionAddress: collection_address,
+                    tokenId: tokenID,
+                    type: "avatar",
+                  },
+                });
+              }
+            }
+
+            if (cacheImages.length) {
+              await clientAPI("post", "/cacheImages", {
+                images: JSON.stringify(cacheImages),
               });
             }
           }
-
-          if (cacheImages.length) {
-            await clientAPI("post", "/cacheImages", {
-              images: JSON.stringify(cacheImages),
-            });
-          }
         }
       }
-    })
+    )
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
   return unsubscribe;

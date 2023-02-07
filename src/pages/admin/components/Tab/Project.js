@@ -61,11 +61,8 @@ function ProjectAdmin() {
         address
       );
 
-      if (queryResult1?.isTrue) {
-        return true;
-      }
+      return queryResult1.toHuman().Ok;
 
-      return false;
     };
     const isLPAdmin = await checkIsAdmin({
       address: currentAccount?.address,

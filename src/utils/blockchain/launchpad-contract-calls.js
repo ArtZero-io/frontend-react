@@ -298,7 +298,27 @@ async function addNewProject(
           caller_account,
           isApprovalTx: true,
         });
-
+        // events.forEach(({ event: { method } }) => {
+        //   if (method === "ExtrinsicSuccess" && status.type === "InBlock") {
+        //     toast(
+        //       "Thank you for submitting. Our team member will get in touch with you in the next 48 hours.",
+        //       {
+        //         icon: "👏",
+        //         duration: 8000,
+        //         reverseOrder: true,
+        //         position: "bottom-left",
+        //         style: {
+        //           color: "#000",
+        //           padding: "8px",
+        //           borderRadius: 0,
+        //           background: "#7AE7FF",
+        //         },
+        //       }
+        //     );
+        //   } else if (method === "ExtrinsicFailed") {
+        //     toast.error(`Error: ${method}.`);
+        //   }
+        // });
         if (status.isInBlock) {
           events.forEach(({ event: { data, method, section }, phase }) => {
             if (section === "contracts" && method === "ContractEmitted") {

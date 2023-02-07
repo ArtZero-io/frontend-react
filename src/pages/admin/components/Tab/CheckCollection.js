@@ -75,13 +75,14 @@ function CheckCollection() {
     if (total_supply > 0) {
       token_uri = await nft721_psp34_standard_calls.tokenUri(currentAccount, 1);
     }
-
+    console.log("token_uri", token_uri);
+    if(!token_uri) toast.error('No token_uri!')
     const metadata = await clientAPI("get", "/getJSON?input=" + token_uri, {});
 
     setImageUri(metadata.image);
 
     let base_uri = token_uri.replace("1.json", "");
-
+    console.log("base_uri", base_uri);
     setTokenUri(base_uri);
 
     let json_count = 0;
