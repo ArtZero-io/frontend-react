@@ -38,6 +38,7 @@ import { Helmet } from "react-helmet";
 import qs from "qs";
 import * as ROUTES from "@constants/routes";
 import { useQuery } from "react-query";
+import toast from "react-hot-toast";
 // import toast from "react-hot-toast";
 
 const NUMBER_PER_PAGE = 12;
@@ -131,13 +132,21 @@ function CollectionPage() {
       };
     }
 
-    const { ret } = await APICall.searchNFTOfCollectionByTraits({
-      sort: sortData,
-      offset: offset,
-      limit: pageSize,
-      traitFilters: JSON.stringify(traitsFilter),
-      collectionAddress: collection_address,
-    });
+    let ret = {};
+
+    const { ret: result, status } = await APICall.searchNFTOfCollectionByTraits(
+      {
+        sort: sortData,
+        offset: offset,
+        limit: pageSize,
+        traitFilters: JSON.stringify(traitsFilter),
+        collectionAddress: collection_address,
+      }
+    );
+
+    if (status === "OK") {
+      ret = result;
+    }
 
     const totalListedCount =
       await marketplace_contract_calls.getListedTokenCountByCollectionAddress(
@@ -148,15 +157,18 @@ function CollectionPage() {
     ret.totalListed = totalListedCount || 0;
 
     const {
-      // status,
-      // message,
+      status: floorStatus,
+      message,
       ret: floorPrice,
     } = await APICall.getCollectionFloorPrice({
       collection_address,
     });
-    // status === "FAILED" && toast.error(message);
 
-    ret.floorPrice = !floorPrice?.length ? 0 : floorPrice[0]?.price;
+    if (status === "OK") {
+      ret.floorPrice = !floorPrice?.length ? 0 : floorPrice[0]?.price;
+    } else {
+      toast.error(message);
+    }
 
     setTotalCount(ret?.result?.totalResults || 0);
 

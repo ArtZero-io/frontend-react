@@ -31,7 +31,7 @@ function WalletMenu() {
           let oneSZERO = new BN(10 ** 12);
           let balSZERO = new BN(balance.data.free, 10, 'le');
           let miscFrozenBalSZERO = new BN(balance.data.miscFrozen, 10, 'le');
-          console.log(balance?.data.toHuman());
+          // console.log(balance?.data.toHuman());
           if (balSZERO.gt(oneSZERO)) {
             balSZERO =
               balSZERO.div(new BN(10 ** 12)).toNumber() -
@@ -39,7 +39,7 @@ function WalletMenu() {
           } else {
             balSZERO = balSZERO.toNumber() / 10 ** 12;
           }
-          console.log('balSZERO - freeze', balSZERO);
+          // console.log('balSZERO - freeze', balSZERO);
           if (balSZERO >= 1) {
             balSZERO = shortenNumber(balSZERO);
           } else {

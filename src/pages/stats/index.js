@@ -77,8 +77,8 @@ function StatsPage() {
 
       // console.log("PF profit START %---------------");
       // console.log("PF marketplace \t", currentProfit);
-      // console.log("PF collection \t", collectionBalance?.balance);
       // console.log("PF launchpad \t", launchpadBalance?.balance);
+      // console.log("PF collection \t", collectionBalance?.balance);
 
       const totalVolume = await marketplace_contract_calls.getTotalVolume(
         currentAccount || getPublicCurrentAccount()

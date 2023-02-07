@@ -79,18 +79,24 @@ const CollectionsPage = () => {
 
     const fetchFeaturedCollections = async () => {
       try {
-        const { ret: featCollectionsAddrList } =
+        const { ret: featCollectionsAddrList, status } =
           await APICall.getFeaturedCollections();
+
+        if (status !== "OK" || featCollectionsAddrList?.length === 0) {
+          console.log('status...',)
+          return setFeaturedCollections([]);
+        }
 
         Promise.all(
           featCollectionsAddrList.map(async (collection_address) => {
-            const {
-              ret: [collectionByAddress],
-            } = await APICall.getCollectionByAddress({
+            const { ret, status } = await APICall.getCollectionByAddress({
               collection_address,
             });
 
-            return collectionByAddress;
+            if (status === "OK") {
+              const collectionByAddress = ret[0];
+              return collectionByAddress;
+            }
           })
         ).then((resultsArr) => {
           isSubscribed && setFeaturedCollections(resultsArr);

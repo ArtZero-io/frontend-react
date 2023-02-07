@@ -363,9 +363,8 @@ export const fetchPlatformStakingDiscountRate = async (
   const response = await marketplace_contract_calls.getStakingDiscountRate(
     currentAccount
   );
-
-  const ret = response.map((rate) => {
-    return rate.div(createNumberBN(100)).toNumber();
+  const ret = response?.map((rate) => {
+    return rate.replaceAll(",", "") / 100;
   });
 
   return ret;
@@ -451,12 +450,16 @@ export const getMyPendingPMP = async ({
     [...Array(pendingCount)].map(async (_, index) => {
       const token_id = await getTokenIdOfPendingPMP({ currentAccount, index });
 
-      const {
-        ret: [token_info],
-      } = await APICall.getNFTByID({
+      let token_info;
+
+      const { ret, status } = await APICall.getNFTByID({
         collection_address: PMPContractAddress,
         token_id,
       });
+
+      if (status === "OK") {
+        token_info = ret[0];
+      }
 
       return { ...token_info, stakeStatus: 3 };
     })
@@ -476,13 +479,16 @@ export const getMyStakedPMP = async ({ stakedCount, currentAccount }) => {
     [...Array(stakedCount)].map(async (_, index) => {
       const token_id = await getTokenIdOfStakedPMP({ currentAccount, index });
 
-      const {
-        ret: [token_info],
-      } = await APICall.getNFTByID({
+      let token_info;
+
+      const { ret, status } = await APICall.getNFTByID({
         collection_address: PMPContractAddress,
         token_id,
       });
 
+      if (status === "OK") {
+        token_info = ret[0];
+      }
       return { ...token_info, stakeStatus: 2 };
     })
   );
@@ -515,13 +521,15 @@ export const getTokenIdOfStakedPMP = async ({ currentAccount, index }) => {
 };
 
 export const getPMPCollectionDetail = async () => {
-  const {
-    ret: [data],
-  } = await APICall.getCollectionByAddress({
+  const { ret, status } = await APICall.getCollectionByAddress({
     collection_address: artzero_nft.CONTRACT_ADDRESS,
   });
 
-  return data;
+  if (status === "OK") {
+    return ret[0];
+  }
+
+  return {};
 };
 
 const NOT_STAKED = "NOT STAKED";

@@ -9,7 +9,7 @@ import { APICall } from "@api/client";
 import { ContractPromise } from "@polkadot/api-contract";
 
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
-import { createObjAttrsNFT, getEstimatedGas, readOnlyGasLimit } from "..";
+import { createObjAttrsNFT, formatOutput, getEstimatedGas, readOnlyGasLimit } from "..";
 import {
   setTxStatus,
   txErrorHandler,
@@ -37,7 +37,7 @@ async function getTotalSupply(caller_account) {
     { value: azero_value, gasLimit }
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -138,7 +138,7 @@ async function getAttributeCount(caller_account) {
     "psp34Traits::getAttributeCount"
   ](address, { value: azero_value, gasLimit });
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }

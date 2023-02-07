@@ -10,7 +10,7 @@ import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
-import { getEstimatedGas, readOnlyGasLimit } from "..";
+import { formatOutput, getEstimatedGas, readOnlyGasLimit } from "..";
 
 let contract;
 
@@ -32,7 +32,7 @@ async function getTotalSupply(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -211,7 +211,7 @@ async function getLastPhaseId(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -323,7 +323,7 @@ async function getLastTokenId(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -990,7 +990,7 @@ async function getPublicMintedCount(caller_account) {
     }
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -1247,6 +1247,7 @@ export const getAccountBalanceOfPsp34NFT = async ({
   let ret = null;
 
   if (result.isOk) {
+    console.log("jjj", output);
     ret = new BN(output, 10, "le").toNumber();
   }
 

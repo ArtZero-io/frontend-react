@@ -61,6 +61,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
             await collection_manager_calls.getSimpleModeAddingFee(
               currentAccount
             );
+
           setAddingFee(addingFeeData / 10 ** 12);
         }
       } catch (error) {
@@ -280,8 +281,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 values.twitter,
                 values.discord,
                 values.telegram,
-                false,
-                false,
+                'NO',
+                'NO',
               ],
 
               collectionAllowRoyaltyFee: values.collectRoyaltyFee,

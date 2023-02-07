@@ -1,4 +1,5 @@
 import { BN } from "@polkadot/util";
+import { convertWeight } from "@polkadot/api-contract/base/util";
 
 const toContractAbiMessage = (contractPromise, message) => {
   const value = contractPromise.abi.messages.find((m) => m.method === message);
@@ -26,7 +27,14 @@ export default async function getGasLimit(
   args = []
   // temporarily type is Weight instead of WeightV2 until polkadot-js type `ContractExecResult` will be changed to WeightV2
 ) {
+  console.log("getGasLimit userAddress", userAddress);
+  console.log("getGasLimit message", message);
+  console.log("getGasLimit options", options);
+  console.log("getGasLimit args", args);
+  console.log("getGasLimit contract", contract);
   const abiMessage = toContractAbiMessage(contract, message);
+  console.log("getGasLimit abiMessage", abiMessage);
+  console.log("getGasLimit abiMessage.Ok", abiMessage.Ok);
   if (!abiMessage.ok) return abiMessage;
 
   const { value, gasLimit, storageDepositLimit } = options;
@@ -40,5 +48,14 @@ export default async function getGasLimit(
     abiMessage.value.toU8a(args)
   );
 
-  return { ok: true, value: result.gasRequired };
+  const { v2Weight } = convertWeight(result.gasRequired);
+
+  const gasRequired = api.registry.createType("WeightV2", {
+    refTime: v2Weight.refTime.mul(new BN(4)),
+    proofSize: v2Weight.proofSize,
+  });
+
+  console.log("gasRequired", gasRequired);
+  
+  return { ok: true, value: gasRequired };
 }

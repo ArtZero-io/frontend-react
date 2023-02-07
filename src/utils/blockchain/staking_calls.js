@@ -1,4 +1,3 @@
-import BN from "bn.js";
 import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
 import { web3FromSource } from "../wallets/extension-dapp";
@@ -10,6 +9,7 @@ import {
 } from "@store/actions/txStatus";
 import { APICall } from "../../api/client";
 import { readOnlyGasLimit } from "@utils";
+import { formatOutput } from "..";
 
 let contract;
 
@@ -36,7 +36,7 @@ async function getTotalStaked(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -53,7 +53,7 @@ async function getTotalStakedByAccount(caller_account, account) {
     "artZeroStakingTrait::getTotalStakedByAccount"
   ](address, { value: azero_value, gasLimit }, account);
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -70,7 +70,7 @@ async function getTotalPendingUnstakedByAccount(caller_account, account) {
     "artZeroStakingTrait::getTotalPendingUnstakedByAccount"
   ](address, { value: azero_value, gasLimit }, account);
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -157,7 +157,7 @@ async function getLimitUnstakeTime(caller_account) {
   });
 
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -178,7 +178,7 @@ async function getTotalCountOfStakeholders(caller_account) {
     }
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }

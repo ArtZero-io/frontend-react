@@ -1135,28 +1135,27 @@ export default AddNewProjectForm;
 export const fetchUserBalance = async ({ currentAccount, api, address }) => {
   if (currentAccount && api) {
     const {
-      data: { free: balance, miscFrozen },
+      data: { free, miscFrozen },
     } = await api.query.system.account(address || currentAccount?.address);
 
     const [chainDecimals] = await api.registry.chainDecimals;
 
-    // return balance with 4 digits after decimal
-    const formattedStrBal = formatBalance(
-      balance,
-      { withSi: false, forceUnit: "-" },
-      chainDecimals
-    );
-    const formattedStrBalMiscFrozen = formatBalance(
-      miscFrozen,
-      { withSi: false, forceUnit: "-" },
-      chainDecimals
-    );
+    const formattedStrBal = formatBalance(free, {
+      withSi: false,
+      forceUnit: "-",
+      chainDecimals,
+    });
+    const formattedStrBalMiscFrozen = formatBalance(miscFrozen, {
+      withSi: false,
+      forceUnit: "-",
+      chainDecimals,
+    });
 
     const formattedNumBal =
       formattedStrBal.replaceAll(",", "") * 1 -
       formattedStrBalMiscFrozen.replaceAll(",", "") * 1;
 
-    return { balance: formattedNumBal };
+    return { balance: formattedNumBal / 10 ** 12 };
   }
 };
 

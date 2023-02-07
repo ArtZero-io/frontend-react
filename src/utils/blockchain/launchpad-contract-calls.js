@@ -14,7 +14,7 @@ import {
 } from "@store/actions/txStatus";
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import { APICall } from "@api/client";
-import { readOnlyGasLimit, convertStringToPrice } from "..";
+import { readOnlyGasLimit, formatOutput } from "..";
 
 let contract;
 
@@ -186,7 +186,7 @@ async function getProjectCount(caller_account) {
   });
 
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
 
   return null;
@@ -411,8 +411,9 @@ async function getProjectAddingFee(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(convertStringToPrice(output.toHuman().Ok), 10, "le");
+    return formatOutput(output);
   }
+
   return null;
 }
 

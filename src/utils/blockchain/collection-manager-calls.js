@@ -10,7 +10,7 @@ import {
 import { APICall } from "@api/client";
 import { clientAPI } from "@api/client";
 import collection_manager from "@utils/blockchain/collection-manager";
-import { getEstimatedGas, readOnlyGasLimit, convertStringToPrice } from "..";
+import { getEstimatedGas, readOnlyGasLimit, formatOutput } from "..";
 
 let contract;
 
@@ -143,13 +143,17 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
   }
 
   let unsubscribe;
-  let gasLimit = readOnlyGasLimit(contract);
+  let gasLimit;
+  console.log("gasLimit", gasLimit);
   let transactionData = data;
   console.log("data", data);
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = await getSimpleModeAddingFee(caller_account);
 
+  console.log("value value", value);
+
+  console.log("data", data);
   gasLimit = await getEstimatedGas(
     address,
     contract,
@@ -162,6 +166,8 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
     data.collectionAllowRoyaltyFee,
     data.collectionRoyaltyFeeData
   );
+
+  console.log("gasLimit A", gasLimit.toHuman());
 
   contract.tx
     .autoNewCollection(
@@ -361,7 +367,7 @@ async function getCollectionCount(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -459,9 +465,9 @@ async function getRoyaltyFee(caller_account, collection_address) {
   const { result, output } = await contract.query[
     "artZeroCollectionTrait::getRoyaltyFee"
   ](address, { value: azero_value, gasLimit }, collection_address);
+
   if (result.isOk) {
-    console.log("new BN(output, 10,", new BN(output, 10, "le").toNumber());
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -543,8 +549,9 @@ async function getSimpleModeAddingFee(caller_account) {
     }
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
+
   return null;
 }
 
@@ -553,13 +560,11 @@ async function getAdvanceModeAddingFee(caller_account) {
   const address = caller_account?.address;
   const { result, output } = await contract.query.getAdvanceModeAddingFee(
     address,
-    {
-      gasLimit,
-    }
+    { gasLimit }
   );
 
   if (result.isOk) {
-    return new BN(convertStringToPrice(output.toHuman().Ok), 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -573,7 +578,7 @@ async function getMaxRoyaltyFeeRate(caller_account) {
   );
 
   if (result.isOk) {
-    return new BN(convertStringToPrice(output.toHuman().Ok), 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -582,6 +587,8 @@ async function owner(caller_account) {
   if (!contract || !caller_account) {
     return null;
   }
+  console.log("owner ...");
+
   const address = caller_account?.address;
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
@@ -590,6 +597,7 @@ async function owner(caller_account) {
     value: azero_value,
     gasLimit,
   });
+  console.log("output", output);
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -612,8 +620,9 @@ async function getActiveCollectionCount(caller_account) {
     }
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
+
   return null;
 }
 

@@ -370,15 +370,6 @@ export async function execContractQuery(
     );
 
     if (result.isOk) {
-      console.log(
-        "@_@ ",
-        queryName,
-        " callerAddress ",
-        callerAddress,
-        "result.isOk",
-        result.isOk
-      );
-
       return output;
     }
   } catch (error) {
@@ -387,8 +378,8 @@ export async function execContractQuery(
 }
 
 export const formatQueryResultToNumber = (result, chainDecimals = 12) => {
-  const ret = result?.toHuman()?.replaceAll(",", "");
-
+  const ret = result?.toHuman().Ok?.replaceAll(",", "");
+  console.log("result", result?.toHuman());
   const formattedStrBal = formatBalance(ret, {
     withSi: false,
     forceUnit: "-",

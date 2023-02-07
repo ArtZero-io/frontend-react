@@ -7,7 +7,7 @@ import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "../../store/actions/txStatus";
-import { readOnlyGasLimit } from "..";
+import { formatOutput, readOnlyGasLimit } from "..";
 
 let contract;
 
@@ -72,7 +72,7 @@ async function totalSupply(caller_account) {
     { value: azero_value, gasLimit }
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -91,7 +91,7 @@ async function balanceOf(caller_account, account) {
     account
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -131,7 +131,7 @@ async function getWhitelistCount(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -193,7 +193,7 @@ async function getPublicSaleAmount(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -213,7 +213,7 @@ async function getPublicSaleMintedAmount(caller_account) {
     }
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -632,7 +632,7 @@ async function getPublicMaxMintingAmount(caller_account) {
     }
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }

@@ -532,3 +532,9 @@ export const isPhaseEnd = (endTime = "") => {
 
   return false;
 };
+
+export function formatOutput(o) {
+  const frmtRet = o.toHuman().Ok;
+
+  return frmtRet?.replaceAll(",", "");
+}

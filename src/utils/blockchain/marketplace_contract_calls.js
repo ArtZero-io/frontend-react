@@ -10,7 +10,7 @@ import {
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import toast from "react-hot-toast";
-import { readOnlyGasLimit } from "..";
+import { formatOutput, readOnlyGasLimit } from "..";
 
 let contract;
 
@@ -48,7 +48,7 @@ async function totalTokensForSale(
     seller
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -157,7 +157,7 @@ async function getForSaleTokenId(
     index
   );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
@@ -235,7 +235,8 @@ async function getStakingDiscountCriteria(caller_account) {
     { value: azero_value, gasLimit }
   );
   if (result.isOk) {
-    return output;
+    console.log("output.toHuman()", output.toString());
+    return output.toHuman();
   }
   return null;
 }
@@ -253,7 +254,8 @@ async function getStakingDiscountRate(caller_account) {
     { value: azero_value, gasLimit }
   );
   if (result.isOk) {
-    return output;
+    console.log("output", output.toHuman().Ok);
+    return output.toHuman().Ok;
   }
   return null;
 }
@@ -271,7 +273,7 @@ async function getPlatformFee(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return new BN(output, 10, "le");
+    return formatOutput(output);
   }
   return null;
 }
@@ -338,7 +340,7 @@ async function getListedTokenCountByCollectionAddress(
       nft_contract_address
     );
   if (result.isOk) {
-    return new BN(output, 10, "le").toNumber();
+    return formatOutput(output);
   }
   return null;
 }
