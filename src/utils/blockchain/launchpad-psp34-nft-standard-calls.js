@@ -10,7 +10,12 @@ import {
   txErrorHandler,
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
-import { formatOutput, getEstimatedGas, readOnlyGasLimit } from "..";
+import {
+  formatNumberOutput,
+  formatOutput,
+  getEstimatedGas,
+  readOnlyGasLimit,
+} from "..";
 
 let contract;
 
@@ -1247,7 +1252,7 @@ export const getAccountBalanceOfPsp34NFT = async ({
   let ret = null;
 
   if (result.isOk) {
-    ret = formatOutput(output);
+    ret = formatNumberOutput(output);
   }
 
   return ret;
@@ -1277,7 +1282,7 @@ export const getIdOfPsp34NFT = async ({
   let ret = null;
 
   if (result.isOk) {
-    ret = output.toHuman().Ok.Ok?.U64;
+    ret = output.toHuman().Ok?.U64;
   }
 
   return ret;

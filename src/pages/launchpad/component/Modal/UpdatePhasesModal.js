@@ -57,7 +57,6 @@ const UpdatePhasesModal = React.memo(function ({
   const fetchData = useCallback(async () => {
     let initialValuesData = {};
 
-    console.log(collection_address);
     const launchpad_psp34_nft_standard_contract = new ContractPromise(
       api,
       launchpad_psp34_nft_standard.CONTRACT_ABI,

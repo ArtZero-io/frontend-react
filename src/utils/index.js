@@ -538,3 +538,9 @@ export function formatOutput(o) {
 
   return frmtRet?.replaceAll(",", "");
 }
+
+export function formatNumberOutput(o) {
+  const frmtRet = o.toHuman().Ok;
+
+  return parseInt(frmtRet?.replaceAll(",", ""));
+}

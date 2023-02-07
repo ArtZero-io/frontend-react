@@ -73,7 +73,7 @@ const MyStakesPage = () => {
       const totalCount = stakedCount * 1 + pendingCount * 1 + unstakedCount * 1;
 
       const myTradingFee = await fetchMyTradingFee(
-        stakedCount,
+        stakedCount * 1,
         currentAccount,
         marketplace_contract_calls
       );
@@ -109,7 +109,7 @@ const MyStakesPage = () => {
       if (activeTab === "PENDING_UNSTAKE") {
         const myPendingPMP = await getMyPendingPMP({
           api,
-          pendingCount: pendingCount,
+          pendingCount: pendingCount * 1,
           currentAccount,
         });
 
@@ -119,7 +119,7 @@ const MyStakesPage = () => {
       if (activeTab === "STAKED") {
         const myStakedPMP = await getMyStakedPMP({
           api,
-          stakedCount: stakedCount,
+          stakedCount: stakedCount * 1,
           currentAccount,
         });
 
@@ -276,7 +276,6 @@ const MyStakesPage = () => {
           ))}
       </Stack>
       <Stack minHeight="504px" h="full">
-
         {loading || loadingForceUpdate ? (
           <Stack h="574px">
             <AnimationLoader loadingTime={loadingTime || 3} />
@@ -448,25 +447,31 @@ export const getMyPendingPMP = async ({
   if (pendingCount === 0) return ret;
 
   const PMPContractAddress = artzero_nft.CONTRACT_ADDRESS;
+  try {
+    ret = await Promise.all(
+      [...Array(pendingCount)].map(async (_, index) => {
+        const token_id = await getTokenIdOfPendingPMP({
+          currentAccount,
+          index,
+        });
 
-  ret = await Promise.all(
-    [...Array(pendingCount)].map(async (_, index) => {
-      const token_id = await getTokenIdOfPendingPMP({ currentAccount, index });
+        let token_info;
 
-      let token_info;
+        const { ret, status } = await APICall.getNFTByID({
+          collection_address: PMPContractAddress,
+          token_id,
+        });
 
-      const { ret, status } = await APICall.getNFTByID({
-        collection_address: PMPContractAddress,
-        token_id,
-      });
+        if (status === "OK") {
+          token_info = ret[0];
+        }
 
-      if (status === "OK") {
-        token_info = ret[0];
-      }
-
-      return { ...token_info, stakeStatus: 3 };
-    })
-  );
+        return { ...token_info, stakeStatus: 3 };
+      })
+    );
+  } catch (error) {
+    console.log(error);
+  }
 
   return ret;
 };

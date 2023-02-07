@@ -572,7 +572,7 @@ const LaunchpadDetailPage = () => {
           currentAccount,
           1
         );
-        const baseUri = tokenUri.replace("1.json", "");
+        const baseUri = tokenUri?.replace("1.json", "");
 
         ret = await Promise.all(
           [...Array(totalNFTCount)].map(async (_, index) => {
