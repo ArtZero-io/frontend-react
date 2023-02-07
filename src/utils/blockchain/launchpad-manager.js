@@ -1,8 +1,8 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5EgDRJhFETgTWZnL7pzZEdA4dWmEMtRvY5XvicrewjCchmY6",
+  CONTRACT_ADDRESS: "5D4rYbyX36woCv4ECwrp71rKRmixhy94xdR34YtwgmvaCpo3",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xa641831ebb21557aa04a931811e66e46d7ddf21762c2d928abe1c3691ecea2c1",
+      "hash": "0x0837d0b95b94e620dc19103852bd83c4bd86eb34e9a5b00fd27210d969965007",
       "language": "ink! 4.0.0-beta",
       "compiler": "rustc 1.69.0-nightly",
       "build_info": {
@@ -678,26 +678,16 @@ const launchpad_manager = {
               "type": {
                 "displayName": [
                   "accesscontrol_external",
-                  "HasRoleInput1"
+                  "GetRoleAdminInput1"
                 ],
                 "type": 4
-              }
-            },
-            {
-              "label": "address",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "HasRoleInput2"
-                ],
-                "type": 0
               }
             }
           ],
           "docs": [
-            " Returns `true` if `account` has been granted `role`."
+            " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
           ],
-          "label": "AccessControl::has_role",
+          "label": "AccessControl::get_role_admin",
           "mutates": false,
           "payable": false,
           "returnType": {
@@ -707,7 +697,7 @@ const launchpad_manager = {
             ],
             "type": 34
           },
-          "selector": "0xc1d9ac18"
+          "selector": "0x83da3bb2"
         },
         {
           "args": [
@@ -761,6 +751,54 @@ const launchpad_manager = {
               "type": {
                 "displayName": [
                   "accesscontrol_external",
+                  "RenounceRoleInput1"
+                ],
+                "type": 4
+              }
+            },
+            {
+              "label": "account",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "RenounceRoleInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Revokes `role` from the calling account.",
+            " Roles are often managed via `grant_role` and `revoke_role`: this function's",
+            " purpose is to provide a mechanism for accounts to lose their privileges",
+            " if they are compromised (such as when a trusted device is misplaced).",
+            "",
+            " On success a `RoleRevoked` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Returns with `InvalidCaller` error if caller is not `account`.",
+            " Returns with `MissingRole` error if `account` doesn't have `role`."
+          ],
+          "label": "AccessControl::renounce_role",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 22
+          },
+          "selector": "0xeaf1248a"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
                   "RevokeRoleInput1"
                 ],
                 "type": 4
@@ -805,16 +843,26 @@ const launchpad_manager = {
               "type": {
                 "displayName": [
                   "accesscontrol_external",
-                  "GetRoleAdminInput1"
+                  "HasRoleInput1"
                 ],
                 "type": 4
+              }
+            },
+            {
+              "label": "address",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "HasRoleInput2"
+                ],
+                "type": 0
               }
             }
           ],
           "docs": [
-            " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
+            " Returns `true` if `account` has been granted `role`."
           ],
-          "label": "AccessControl::get_role_admin",
+          "label": "AccessControl::has_role",
           "mutates": false,
           "payable": false,
           "returnType": {
@@ -824,55 +872,7 @@ const launchpad_manager = {
             ],
             "type": 35
           },
-          "selector": "0x83da3bb2"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "RenounceRoleInput1"
-                ],
-                "type": 4
-              }
-            },
-            {
-              "label": "account",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "RenounceRoleInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Revokes `role` from the calling account.",
-            " Roles are often managed via `grant_role` and `revoke_role`: this function's",
-            " purpose is to provide a mechanism for accounts to lose their privileges",
-            " if they are compromised (such as when a trusted device is misplaced).",
-            "",
-            " On success a `RoleRevoked` event is emitted.",
-            "",
-            " # Errors",
-            "",
-            " Returns with `InvalidCaller` error if caller is not `account`.",
-            " Returns with `MissingRole` error if `account` doesn't have `role`."
-          ],
-          "label": "AccessControl::renounce_role",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 22
-          },
-          "selector": "0xeaf1248a"
+          "selector": "0xc1d9ac18"
         },
         {
           "args": [],
@@ -958,6 +958,23 @@ const launchpad_manager = {
         {
           "args": [],
           "docs": [
+            " This function returns the rate in % that the launchpad will collect for each NFT minting"
+          ],
+          "label": "ArtZeroLaunchPadTrait::get_project_mint_fee_rate",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 34
+          },
+          "selector": "0x87b065fe"
+        },
+        {
+          "args": [],
+          "docs": [
             " This function returns the maximal amount of NFT that one can mint each time"
           ],
           "label": "ArtZeroLaunchPadTrait::get_public_max_minting_amount",
@@ -971,71 +988,6 @@ const launchpad_manager = {
             "type": 25
           },
           "selector": "0x5cae8061"
-        },
-        {
-          "args": [],
-          "docs": [
-            " This function returns the rate in % that the launchpad will collect for each NFT minting"
-          ],
-          "label": "ArtZeroLaunchPadTrait::get_project_mint_fee_rate",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 35
-          },
-          "selector": "0x87b065fe"
-        },
-        {
-          "args": [
-            {
-              "label": "psp22_contract_address",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferPsp22Input1"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "amount",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferPsp22Input2"
-                ],
-                "type": 9
-              }
-            },
-            {
-              "label": "receiver",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferPsp22Input3"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " This function allow contract owner withdraw PSP22 to an account in case there is any token sent to contract by mistake"
-          ],
-          "label": "AdminTrait::tranfer_psp22",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 12
-          },
-          "selector": "0xd9aad284"
         },
         {
           "args": [
@@ -1122,6 +1074,54 @@ const launchpad_manager = {
             "type": 12
           },
           "selector": "0xed1e1dfa"
+        },
+        {
+          "args": [
+            {
+              "label": "psp22_contract_address",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferPsp22Input1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "amount",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferPsp22Input2"
+                ],
+                "type": 9
+              }
+            },
+            {
+              "label": "receiver",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferPsp22Input3"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " This function allow contract owner withdraw PSP22 to an account in case there is any token sent to contract by mistake"
+          ],
+          "label": "AdminTrait::tranfer_psp22",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 12
+          },
+          "selector": "0xd9aad284"
         },
         {
           "args": [
@@ -2661,48 +2661,6 @@ const launchpad_manager = {
                 {
                   "fields": [
                     {
-                      "type": 7
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 11
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 7
-            },
-            {
-              "name": "E",
-              "type": 11
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 35,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
                       "type": 4
                     }
                   ],
@@ -2725,6 +2683,48 @@ const launchpad_manager = {
             {
               "name": "T",
               "type": 4
+            },
+            {
+              "name": "E",
+              "type": 11
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 35,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 7
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 11
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 7
             },
             {
               "name": "E",
