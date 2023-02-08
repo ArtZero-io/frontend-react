@@ -1,8 +1,6 @@
-/* eslint-disable no-unused-vars */
-import toast from 'react-hot-toast';
-import { SET_STATUS, CLEAR_STATUS } from '../types/txStatus';
-import { READY, FINALIZED } from '@constants';
-// import { fetchUserBalance } from "../../pages/launchpad/component/Form/AddNewProject";
+import toast from "react-hot-toast";
+import { SET_STATUS, CLEAR_STATUS } from "../types/txStatus";
+import { READY, FINALIZED } from "@constants";
 
 export const setTxStatus = (props) => {
   return (dispatch) => {
@@ -26,8 +24,8 @@ export const txErrorHandler = ({ error, dispatch }) => {
 
   const errStr = error.toString();
 
-  if (errStr.includes('RpcError')) {
-    message = errStr.slice(errStr.indexOf('RpcError') + 16);
+  if (errStr.includes("RpcError")) {
+    message = errStr.slice(errStr.indexOf("RpcError") + 16);
 
     return toast.error(message);
   }
@@ -47,71 +45,80 @@ export const txResponseErrorHandler = async ({
   caller_account,
   isApprovalTx = false,
 }) => {
+  const url = `https://test.azero.dev/#/explorer/query/`;
+  const statusToHuman = Object.entries(status.toHuman());
+
   if (dispatchError) {
     dispatch(clearTxStatus());
 
     if (dispatchError.isModule) {
-      const decoded = api.registry.findMetaError(dispatchError.asModule);
-      const { docs, name, section } = decoded;
+      toast.error(`There is some error with your request... ..`);
+      // return toast.error(`${section}.${name}: ${docs.join(" ")}`);
 
-      const statusToHuman = Object.entries(status.toHuman());
+      // FOR DEV ONLY FALSE CASE
+      if (process.env.NODE_ENV === "development") {
+        if (statusToHuman[0][0] === FINALIZED) {
+          const decoded = api.registry.findMetaError(dispatchError.asModule);
+          const { docs, name, section } = decoded;
 
-      const url = `https://test.azero.dev/#/explorer/query/`;
+          console.table({
+            txType,
+            Event: "dispatchError",
+            section,
+            name,
+            docs: docs.join(" "),
+          });
 
-      console.log('^^ Error\t\t\t\t:', `${section}.${name}: ${docs.join(' ')}`);
+          const apiAt = await api.at(statusToHuman[0][1]);
+          const allEventsRecords = await apiAt.query.system.events();
 
-      const apiAt = await api.at(statusToHuman[0][1]);
-      const allEventsRecords = await apiAt.query.system.events();
+          // Transfer Event
+          allEventsRecords.forEach(({ event }, index) => {
+            if (api.events.balances?.Transfer.is(event)) {
+              console.table({
+                Event: "balances.Transfer (-)",
+                From: event.data[0].toHuman(),
+                To: event.data[1].toHuman(),
+                Amount: event.data[2].toHuman(),
+              });
+            }
 
-      allEventsRecords.forEach(({ event }, index) => {
-        if (api.events.transactionPayment?.TransactionFeePaid.is(event)) {
-          console.log(
-            '^^ Txn Fee Paid\t\t\t:   -',
-            (
-              parseInt(event.data[1].toHuman().replaceAll(',', '')) /
-              10 ** 12
-            ).toFixed(6)
+            if (api.events.transactionPayment?.TransactionFeePaid.is(event)) {
+              console.table({
+                Event: "transactionPayment?.TransactionFeePaid (-)",
+                Amount: event.data[1]?.toHuman(),
+              });
+            }
+
+            if (api.events.balances?.Reserved.is(event)) {
+              console.table({
+                Event: "balances?.Reserved (-)",
+                Amount: event.data[1]?.toHuman(),
+              });
+            }
+
+            if (api.events.balances?.ReserveRepatriated.is(event)) {
+              console.table({
+                Event: "balances?.ReserveRepatriated (+)",
+                Amount: event.data[2].toHuman(),
+              });
+            }
+          });
+
+          const { data: balance } = await api.query.system.account(
+            caller_account?.address
           );
+
+          console.table({
+            "Balance END":
+              balance.free.toHuman().slice(0, -16) +
+              "." +
+              balance.free.toHuman().slice(-15, -8),
+          });
+
+          console.log("Err Tx finalized at ", `${url}${statusToHuman[0][1]}`);
         }
-
-        if (api.events.balances?.Reserved.is(event)) {
-          console.log(
-            '^^ Reserved\t\t\t\t:   -',
-            (
-              parseInt(event.data[1].toHuman().replaceAll(',', '')) /
-              10 ** 12
-            ).toFixed(6)
-          );
-        }
-
-        if (api.events.balances?.ReserveRepatriated.is(event)) {
-          console.log(
-            '^^ Reserve Repatriated\t:   +',
-            (
-              parseInt(event.data[2].toHuman().replaceAll(',', '')) /
-              10 ** 12
-            ).toFixed(6)
-          );
-        }
-      });
-
-      // const { data: balance } = await api.query.system.account(
-      //   caller_account?.address
-      // );
-
-      // console.log(
-      //   '^^ Balance END\t\t\t:',
-      //   balance.free.toHuman().slice(0, -16) +
-      //     '.' +
-      //     balance.free.toHuman().slice(-15, -8)
-      // );
-
-      console.log('^^ Tx finalized at ', `${url}${statusToHuman[0][1]}`);
-      console.log(`^^==================Log end==================`);
-
-      toast.error(`There is some error with your request..`);
-      console.log('section', `${section}.${name}: ${docs.join(' ')}`);
-      return toast.error(`${section}.${name}: ${docs.join(" ")}`);
+      }
     } else {
       console.log("dispatchError.toString()", dispatchError.toString());
       return toast.error(dispatchError.toString());
@@ -119,33 +126,8 @@ export const txResponseErrorHandler = async ({
   }
 
   if (!dispatchError && status) {
-    const statusToHuman = Object.entries(status.toHuman());
-
-    const url = `https://test.azero.dev/#/explorer/query/`;
-
-    if (Object.keys(status.toHuman())[0] === '0') {
+    if (Object.keys(status.toHuman())[0] === "0") {
       dispatch(setTxStatus({ txType, txStatus: READY, step: READY, type }));
-
-      // await fetchUserBalance({ currentAccount: caller_account, api }).then(
-      //   ({ balance }) =>
-      //     console.log("===ActionType:", txType, ". Balance START: ", balance)
-      // );
-
-      const now = await api.query.timestamp.now();
-      console.log(`^^\n`);
-      console.log(`^^================Log start==================`);
-
-      console.log(`^^ Log time\t\t\t\t: ${new Date(Number(now))}`);
-      console.log(`^^ ActionType\t\t\t: ${txType}`);
-      // const { data: balance } = await api.query.system.account(
-      //   caller_account?.address
-      // );
-      // console.log(
-      //   "^^ Balance START\t\t:",
-      //   balance.free.toHuman().slice(0, -16) +
-      //     "." +
-      //     balance.free.toHuman().slice(-15, -8)
-      // );
     } else {
       if (!isApprovalTx) {
         dispatch(
@@ -169,64 +151,58 @@ export const txResponseErrorHandler = async ({
         });
       }
 
-      if (statusToHuman[0][0] === FINALIZED) {
-        // await fetchUserBalance({ currentAccount: caller_account, api }).then(
-        //   ({ balance }) =>
-        //     console.log("===ActionType:", txType, "Balance END: ", balance)
-        // );
+      // FOR DEV ONLY SUCCESS CASE
+      if (process.env.NODE_ENV === "development") {
+        if (statusToHuman[0][0] === FINALIZED) {
+          const apiAt = await api.at(statusToHuman[0][1]);
+          const allEventsRecords = await apiAt.query.system.events();
 
-        const apiAt = await api.at(statusToHuman[0][1]);
-        const allEventsRecords = await apiAt.query.system.events();
+          // Transfer Event
+          allEventsRecords.forEach(({ event }, index) => {
+            if (api.events.balances?.Transfer.is(event)) {
+              console.table({
+                Event: "balances.Transfer (-)",
+                From: event.data[0].toHuman(),
+                To: event.data[1].toHuman(),
+                Amount: event.data[2].toHuman(),
+              });
+            }
 
-        allEventsRecords.forEach(({ event }, index) => {
-          if (api.events.balances?.Transfer.is(event)) {
-            console.log("===0Transfer From\t\t\t\t: -", event.data[0].toHuman());
-            console.log("===1Transfer To\t\t\t\t: -", event.data[1].toHuman());
-            console.log("===2Transfer Amount\t\t\t\t: -", event.data[2].toHuman());
-          }
+            if (api.events.transactionPayment?.TransactionFeePaid.is(event)) {
+              console.table({
+                Event: "transactionPayment?.TransactionFeePaid (-)",
+                Amount: event.data[1]?.toHuman(),
+              });
+            }
 
-          if (api.events.transactionPayment?.TransactionFeePaid.is(event)) {
-            console.log(
-              '^^ Txn Fee Paid\t\t\t:   -',
-              (
-                parseInt(event.data[1].toHuman().replaceAll(',', '')) /
-                10 ** 12
-              ).toFixed(6)
-            );
-          }
+            if (api.events.balances?.Reserved.is(event)) {
+              console.table({
+                Event: "balances?.Reserved (-)",
+                Amount: event.data[1]?.toHuman(),
+              });
+            }
 
-          if (api.events.balances?.Reserved.is(event)) {
-            console.log(
-              '^^ Reserved\t\t\t\t:   -',
-              (
-                parseInt(event.data[1].toHuman().replaceAll(',', '')) /
-                10 ** 12
-              ).toFixed(6)
-            );
-          }
+            if (api.events.balances?.ReserveRepatriated.is(event)) {
+              console.table({
+                Event: "balances?.ReserveRepatriated (+)",
+                Amount: event.data[2].toHuman(),
+              });
+            }
+          });
 
-          if (api.events.balances?.ReserveRepatriated.is(event)) {
-            console.log(
-              '^^ Reserve Repatriated\t:   +',
-              (
-                parseInt(event.data[2].toHuman().replaceAll(',', '')) /
-                10 ** 12
-              ).toFixed(6)
-            );
-          }
-        });
-        // const { data: balance } = await api.query.system.account(
-        //   caller_account?.address
-        // );
+          const { data: balance } = await api.query.system.account(
+            caller_account?.address
+          );
 
-        // console.log(
-        //   '^^ Balance END\t\t\t:',
-        //   balance.free.toHuman().slice(0, -16) +
-        //     '.' +
-        //     balance.free.toHuman().slice(-15, -8)
-        // );
-        console.log('^^ Tx finalized at ', `${url}${statusToHuman[0][1]}`);
-        console.log(`^^==================Log end==================`);
+          console.table({
+            "Balance END":
+              balance.free.toHuman().slice(0, -16) +
+              "." +
+              balance.free.toHuman().slice(-15, -8),
+          });
+
+          console.log("Tx finalized at ", `${url}${statusToHuman[0][1]}`);
+        }
       }
     }
   }
