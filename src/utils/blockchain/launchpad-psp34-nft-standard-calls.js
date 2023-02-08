@@ -1263,7 +1263,7 @@ export const getIdOfPsp34NFT = async ({
   let ret = null;
 
   if (result.isOk) {
-    ret = output.toHuman().Ok?.U64;
+    ret = output.toHuman().Ok?.Ok?.U64;
   }
 
   return ret;
