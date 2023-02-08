@@ -275,12 +275,13 @@ const MyStakesPage = () => {
             </motion.div>
           ))}
       </Stack>
+
       <Stack minHeight="504px" h="full">
         {loading || loadingForceUpdate ? (
           <Stack h="574px">
             <AnimationLoader loadingTime={loadingTime || 3} />
           </Stack>
-        ) : PMPCollectionDetail?.listNFT ||
+        ) : !PMPCollectionDetail?.listNFT ||
           PMPCollectionDetail?.listNFT?.length === 0 ? (
           <Heading py="3rem" size="h6">
             No NFTs found
