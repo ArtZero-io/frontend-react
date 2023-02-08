@@ -456,12 +456,12 @@ export async function getEstimatedGas(
         address,
         queryName,
         contract,
-        {},
+        { value },
         args
       );
 
       if (!gasLimitResult.ok) {
-        console.log(queryName, "getEstimatedGas", gasLimitResult.error);
+        console.log(queryName, "getEstimatedGas err ", gasLimitResult.error);
         return;
       }
 
