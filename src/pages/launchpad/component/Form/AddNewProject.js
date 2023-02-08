@@ -75,6 +75,7 @@ import {
 } from "@constants/yup";
 import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 import { useCallback } from "react";
+import { clearTxStatus } from "@store/actions/txStatus";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
@@ -147,11 +148,13 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
         "Thank you for submitting. Our team member will get in touch with you in the next 48 hours."
       );
 
+      dispatch(clearTxStatus());
+
       history.push(`/account/projects`);
     } else {
       history.push(`${ROUTES.LAUNCHPAD_BASE}/${nftContractAddress}`);
     }
-  }, [history, mode, nftContractAddress]);
+  }, [dispatch, history, mode, nftContractAddress]);
 
   useEffect(() => {
     const prepareData = async () => {
@@ -1218,7 +1221,7 @@ export const fetchInitialValuesProject = async ({
       startTime,
       endTime,
     } = projectInfo;
-    console.log('projectInfo', projectInfo)
+    console.log("projectInfo", projectInfo);
     initialValues.isEditMode = true;
     initialValues.nftName = nftName;
     initialValues.nftSymbol = nftSymbol;
