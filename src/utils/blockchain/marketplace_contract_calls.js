@@ -195,12 +195,11 @@ async function getAllBids(
     seller,
     token_id
   );
+
   if (result.isOk) {
-    if (output.isSome) return output.toHuman().Ok;
-    else {
-      return null;
-    }
+    return output.toHuman().Ok;
   }
+
   return null;
 }
 async function owner(caller_account) {

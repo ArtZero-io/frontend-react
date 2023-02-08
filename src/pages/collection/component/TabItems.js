@@ -22,7 +22,7 @@ import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import BigGridIcon from "@theme/assets/icon/BigGrid";
 
 import { useHistory } from "react-router-dom";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 import AddNewNFTModal from "./Modal/AddNewNFT";
@@ -37,6 +37,7 @@ import AnimationLoader from "@components/Loader/AnimationLoader";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
 import { CommonCard } from "@components/Card/NFTChangeSize";
 import LeftPanel from "./LeftPanel";
+import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
 const CollectionItems = ({
   result,
@@ -76,23 +77,70 @@ const CollectionItems = ({
   // 1 High first, setSortData(-1)
   // 2 Newest
 
-  const getSortedNFT = () => {
-    if (!result?.totalResults) return [];
+  const [sortedNFT, setSortedNFT] = useState();
+  useEffect(() => {
+    const abc = async () => {
+      if (!result) return;
+      const fetchData = await Promise.all(
+        result &&
+          result?.NFTList?.map(async (i) => {
+            const sale_info = await marketplace_contract_calls.getNftSaleInfo(
+              currentAccount,
+              i.nftContractAddress,
+              { u64: i.tokenID }
+            );
 
-    let ret = result?.NFTList;
+            if (!sale_info) return i;
 
-    // if (selectedItem === 0) {
-    //   ret = ret.sort((a, b) => a.price - b.price);
-    // }
+            let listBidder = await marketplace_contract_calls.getAllBids(
+              currentAccount,
+              i.nftContractAddress,
+              sale_info?.nftOwner,
+              { u64: i.tokenID }
+            );
 
-    // if (selectedItem === 1) {
-    //   ret = ret.sort((a, b) => b.price - a.price);
-    // }
+            // map array index to bidId
+            listBidder = listBidder?.map((i, idx) => {
+              return { ...i, bidId: idx };
+            });
 
-    return ret;
-  };
+            //sort highest price first
+            listBidder?.length &&
+              listBidder.sort((a, b) => {
+                return (
+                  b.bidValue.replaceAll(",", "") * 1 -
+                  a.bidValue.replaceAll(",", "") * 1
+                );
+              });
 
-  const sortedNFT = getSortedNFT();
+            const highest_bid =
+              listBidder && listBidder[0]?.bidValue?.replaceAll(",", "");
+
+            return { ...i, highest_bid };
+          })
+      );
+      setSortedNFT(fetchData);
+    };
+    abc();
+  }, [currentAccount, result, result?.NFTList]);
+
+  // const getSortedNFT = () => {
+  //   if (!result?.totalResults) return [];
+
+  //   let ret = result?.NFTList;
+
+  //   // if (selectedItem === 0) {
+  //   //   ret = ret.sort((a, b) => a.price - b.price);
+  //   // }
+
+  //   // if (selectedItem === 1) {
+  //   //   ret = ret.sort((a, b) => b.price - a.price);
+  //   // }
+
+  //   return ret;
+  // };
+
+  // const sortedNFT = getSortedNFT();
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
@@ -375,7 +423,7 @@ const CollectionGridNew = ({
       )}
 
       <SimpleGrid columns={columns} gap={gap}>
-        {dataList.map((token, idx) => (
+        {dataList?.map((token, idx) => (
           <div onClick={() => handleOnClick(token)} key={idx}>
             <CommonCard
               {...token}
