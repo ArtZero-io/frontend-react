@@ -1,7 +1,7 @@
 const launchpad_psp34_nft_standard = {
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x04ad58b1c96402cdb1214feb669836514d0c35f0414baf1212ed8d7cc36cfe68",
+      "hash": "0x34a8a19142dfc443a3be1291b5730d59bae45ad7d70134a5e0b371b6977c40db",
       "language": "ink! 4.0.0-beta",
       "compiler": "rustc 1.69.0-nightly",
       "build_info": {
@@ -1069,43 +1069,6 @@ const launchpad_psp34_nft_standard = {
           "selector": "0x95a79e40"
         },
         {
-          "args": [
-            {
-              "label": "new_owner",
-              "type": {
-                "displayName": [
-                  "ownable_external",
-                  "TransferOwnershipInput1"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Transfers ownership of the contract to a `new_owner`.",
-            " Can only be called by the current owner.",
-            "",
-            " On success a `OwnershipTransferred` event is emitted.",
-            "",
-            " # Errors",
-            "",
-            " Panics with `CallerIsNotOwner` error if caller is not owner.",
-            "",
-            " Panics with `NewOwnerIsZero` error if new owner's address is zero."
-          ],
-          "label": "Ownable::transfer_ownership",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 38
-          },
-          "selector": "0x11f43efd"
-        },
-        {
           "args": [],
           "docs": [
             " Returns the address of the current owner."
@@ -1152,6 +1115,90 @@ const launchpad_psp34_nft_standard = {
         {
           "args": [
             {
+              "label": "new_owner",
+              "type": {
+                "displayName": [
+                  "ownable_external",
+                  "TransferOwnershipInput1"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Transfers ownership of the contract to a `new_owner`.",
+            " Can only be called by the current owner.",
+            "",
+            " On success a `OwnershipTransferred` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Panics with `CallerIsNotOwner` error if caller is not owner.",
+            "",
+            " Panics with `NewOwnerIsZero` error if new owner's address is zero."
+          ],
+          "label": "Ownable::transfer_ownership",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 38
+          },
+          "selector": "0x11f43efd"
+        },
+        {
+          "args": [
+            {
+              "label": "owner",
+              "type": {
+                "displayName": [
+                  "psp34_external",
+                  "BalanceOfInput1"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Returns the balance of the owner.",
+            "",
+            " This represents the amount of unique tokens the owner has."
+          ],
+          "label": "PSP34::balance_of",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 40
+          },
+          "selector": "0xcde7e55f"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Returns current NFT total supply."
+          ],
+          "label": "PSP34::total_supply",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 41
+          },
+          "selector": "0x628413fe"
+        },
+        {
+          "args": [
+            {
               "label": "owner",
               "type": {
                 "displayName": [
@@ -1178,7 +1225,7 @@ const launchpad_psp34_nft_standard = {
                   "psp34_external",
                   "AllowanceInput3"
                 ],
-                "type": 40
+                "type": 42
               }
             }
           ],
@@ -1194,9 +1241,85 @@ const launchpad_psp34_nft_standard = {
               "ink",
               "MessageResult"
             ],
-            "type": 42
+            "type": 44
           },
           "selector": "0x4790f55a"
+        },
+        {
+          "args": [
+            {
+              "label": "operator",
+              "type": {
+                "displayName": [
+                  "psp34_external",
+                  "ApproveInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "id",
+              "type": {
+                "displayName": [
+                  "psp34_external",
+                  "ApproveInput2"
+                ],
+                "type": 42
+              }
+            },
+            {
+              "label": "approved",
+              "type": {
+                "displayName": [
+                  "psp34_external",
+                  "ApproveInput3"
+                ],
+                "type": 9
+              }
+            }
+          ],
+          "docs": [
+            " Approves `operator` to withdraw the `id` token from the caller's account.",
+            " If `id` is `None` approves or disapproves the operator for all tokens of the caller.",
+            "",
+            " On success a `Approval` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Returns `SelfApprove` error if it is self approve.",
+            "",
+            " Returns `NotApproved` error if caller is not owner of `id`."
+          ],
+          "label": "PSP34::approve",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 45
+          },
+          "selector": "0x1932a8b0"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Returns the collection `Id` of the NFT token.",
+            "",
+            " This can represents the relationship between tokens/contracts/pallets."
+          ],
+          "label": "PSP34::collection_id",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 48
+          },
+          "selector": "0xffa27a5f"
         },
         {
           "args": [
@@ -1217,7 +1340,7 @@ const launchpad_psp34_nft_standard = {
                   "psp34_external",
                   "TransferInput2"
                 ],
-                "type": 41
+                "type": 43
               }
             },
             {
@@ -1252,7 +1375,7 @@ const launchpad_psp34_nft_standard = {
               "ink",
               "MessageResult"
             ],
-            "type": 43
+            "type": 45
           },
           "selector": "0x3128d61b"
         },
@@ -1265,7 +1388,7 @@ const launchpad_psp34_nft_standard = {
                   "psp34_external",
                   "OwnerOfInput1"
                 ],
-                "type": 41
+                "type": 43
               }
             }
           ],
@@ -1280,132 +1403,9 @@ const launchpad_psp34_nft_standard = {
               "ink",
               "MessageResult"
             ],
-            "type": 46
-          },
-          "selector": "0x1168624d"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Returns current NFT total supply."
-          ],
-          "label": "PSP34::total_supply",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 48
-          },
-          "selector": "0x628413fe"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Returns the collection `Id` of the NFT token.",
-            "",
-            " This can represents the relationship between tokens/contracts/pallets."
-          ],
-          "label": "PSP34::collection_id",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
             "type": 49
           },
-          "selector": "0xffa27a5f"
-        },
-        {
-          "args": [
-            {
-              "label": "operator",
-              "type": {
-                "displayName": [
-                  "psp34_external",
-                  "ApproveInput1"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "id",
-              "type": {
-                "displayName": [
-                  "psp34_external",
-                  "ApproveInput2"
-                ],
-                "type": 40
-              }
-            },
-            {
-              "label": "approved",
-              "type": {
-                "displayName": [
-                  "psp34_external",
-                  "ApproveInput3"
-                ],
-                "type": 9
-              }
-            }
-          ],
-          "docs": [
-            " Approves `operator` to withdraw the `id` token from the caller's account.",
-            " If `id` is `None` approves or disapproves the operator for all tokens of the caller.",
-            "",
-            " On success a `Approval` event is emitted.",
-            "",
-            " # Errors",
-            "",
-            " Returns `SelfApprove` error if it is self approve.",
-            "",
-            " Returns `NotApproved` error if caller is not owner of `id`."
-          ],
-          "label": "PSP34::approve",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 43
-          },
-          "selector": "0x1932a8b0"
-        },
-        {
-          "args": [
-            {
-              "label": "owner",
-              "type": {
-                "displayName": [
-                  "psp34_external",
-                  "BalanceOfInput1"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Returns the balance of the owner.",
-            "",
-            " This represents the amount of unique tokens the owner has."
-          ],
-          "label": "PSP34::balance_of",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 50
-          },
-          "selector": "0xcde7e55f"
+          "selector": "0x1168624d"
         },
         {
           "args": [
@@ -1416,7 +1416,7 @@ const launchpad_psp34_nft_standard = {
                   "psp34metadata_external",
                   "GetAttributeInput1"
                 ],
-                "type": 41
+                "type": 43
               }
             },
             {
@@ -1532,7 +1532,7 @@ const launchpad_psp34_nft_standard = {
               "ink",
               "MessageResult"
             ],
-            "type": 50
+            "type": 40
           },
           "selector": "0x61c50d69"
         },
@@ -1543,93 +1543,9 @@ const launchpad_psp34_nft_standard = {
               "type": {
                 "displayName": [
                   "psp34traits_external",
-                  "TokenUriInput1"
-                ],
-                "type": 6
-              }
-            }
-          ],
-          "docs": [
-            " This function return the metadata location of an NFT. The format is baseURI/<token_id>.json"
-          ],
-          "label": "Psp34Traits::token_uri",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 55
-          },
-          "selector": "0x249dfd4f"
-        },
-        {
-          "args": [
-            {
-              "label": "index",
-              "type": {
-                "displayName": [
-                  "psp34traits_external",
-                  "GetAttributeNameInput1"
-                ],
-                "type": 5
-              }
-            }
-          ],
-          "docs": [
-            " This function return the attribute name using attribute index. Beacause attributes of an NFT can be set to anything by Contract Owner, AztZero uses this function to get all attributes of an NFT"
-          ],
-          "label": "Psp34Traits::get_attribute_name",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 55
-          },
-          "selector": "0xfcfe34de"
-        },
-        {
-          "args": [
-            {
-              "label": "uri",
-              "type": {
-                "displayName": [
-                  "psp34traits_external",
-                  "SetBaseUriInput1"
-                ],
-                "type": 10
-              }
-            }
-          ],
-          "docs": [
-            " This function sets the baseURI for the NFT contract. Only Contract Owner can perform this function. baseURI is the location of the metadata files if the NFT collection use external source to keep their NFT artwork. ArtZero uses IPFS by default, the baseURI can have format like this: ipfs://<hash_ID>/"
-          ],
-          "label": "Psp34Traits::set_base_uri",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 17
-          },
-          "selector": "0x4de6850b"
-        },
-        {
-          "args": [
-            {
-              "label": "token_id",
-              "type": {
-                "displayName": [
-                  "psp34traits_external",
                   "LockInput1"
                 ],
-                "type": 41
+                "type": 43
               }
             }
           ],
@@ -1666,6 +1582,51 @@ const launchpad_psp34_nft_standard = {
           "selector": "0x8fe2ce73"
         },
         {
+          "args": [],
+          "docs": [
+            " This function return the latest token ID, everytime new NFT is mint, last_token_id is increased by 1 in mint function. Note: This is not the same as the total supply return by the psp34 function as NFT can be burnt."
+          ],
+          "label": "Psp34Traits::get_last_token_id",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 24
+          },
+          "selector": "0x6f315836"
+        },
+        {
+          "args": [
+            {
+              "label": "token_id",
+              "type": {
+                "displayName": [
+                  "psp34traits_external",
+                  "IsLockedNftInput1"
+                ],
+                "type": 43
+              }
+            }
+          ],
+          "docs": [
+            " This function check if an NFT is locked or not"
+          ],
+          "label": "Psp34Traits::is_locked_nft",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 44
+          },
+          "selector": "0x59271420"
+        },
+        {
           "args": [
             {
               "label": "token_id",
@@ -1674,7 +1635,7 @@ const launchpad_psp34_nft_standard = {
                   "psp34traits_external",
                   "GetAttributesInput1"
                 ],
-                "type": 41
+                "type": 43
               }
             },
             {
@@ -1699,26 +1660,9 @@ const launchpad_psp34_nft_standard = {
               "ink",
               "MessageResult"
             ],
-            "type": 56
+            "type": 55
           },
           "selector": "0x18209102"
-        },
-        {
-          "args": [],
-          "docs": [
-            " This function return the latest token ID, everytime new NFT is mint, last_token_id is increased by 1 in mint function. Note: This is not the same as the total supply return by the psp34 function as NFT can be burnt."
-          ],
-          "label": "Psp34Traits::get_last_token_id",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 24
-          },
-          "selector": "0x6f315836"
         },
         {
           "args": [],
@@ -1740,20 +1684,20 @@ const launchpad_psp34_nft_standard = {
         {
           "args": [
             {
-              "label": "token_id",
+              "label": "index",
               "type": {
                 "displayName": [
                   "psp34traits_external",
-                  "IsLockedNftInput1"
+                  "GetAttributeNameInput1"
                 ],
-                "type": 41
+                "type": 5
               }
             }
           ],
           "docs": [
-            " This function check if an NFT is locked or not"
+            " This function return the attribute name using attribute index. Beacause attributes of an NFT can be set to anything by Contract Owner, AztZero uses this function to get all attributes of an NFT"
           ],
-          "label": "Psp34Traits::is_locked_nft",
+          "label": "Psp34Traits::get_attribute_name",
           "mutates": false,
           "payable": false,
           "returnType": {
@@ -1761,9 +1705,65 @@ const launchpad_psp34_nft_standard = {
               "ink",
               "MessageResult"
             ],
-            "type": 42
+            "type": 56
           },
-          "selector": "0x59271420"
+          "selector": "0xfcfe34de"
+        },
+        {
+          "args": [
+            {
+              "label": "token_id",
+              "type": {
+                "displayName": [
+                  "psp34traits_external",
+                  "TokenUriInput1"
+                ],
+                "type": 6
+              }
+            }
+          ],
+          "docs": [
+            " This function return the metadata location of an NFT. The format is baseURI/<token_id>.json"
+          ],
+          "label": "Psp34Traits::token_uri",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 56
+          },
+          "selector": "0x249dfd4f"
+        },
+        {
+          "args": [
+            {
+              "label": "uri",
+              "type": {
+                "displayName": [
+                  "psp34traits_external",
+                  "SetBaseUriInput1"
+                ],
+                "type": 10
+              }
+            }
+          ],
+          "docs": [
+            " This function sets the baseURI for the NFT contract. Only Contract Owner can perform this function. baseURI is the location of the metadata files if the NFT collection use external source to keep their NFT artwork. ArtZero uses IPFS by default, the baseURI can have format like this: ipfs://<hash_ID>/"
+          ],
+          "label": "Psp34Traits::set_base_uri",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 17
+          },
+          "selector": "0x4de6850b"
         },
         {
           "args": [
@@ -1774,7 +1774,7 @@ const launchpad_psp34_nft_standard = {
                   "psp34traits_external",
                   "SetMultipleAttributesInput1"
                 ],
-                "type": 41
+                "type": 43
               }
             },
             {
@@ -1854,72 +1854,6 @@ const launchpad_psp34_nft_standard = {
               "type": {
                 "displayName": [
                   "accesscontrol_external",
-                  "GetRoleAdminInput1"
-                ],
-                "type": 5
-              }
-            }
-          ],
-          "docs": [
-            " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
-          ],
-          "label": "AccessControl::get_role_admin",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 50
-          },
-          "selector": "0x83da3bb2"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "HasRoleInput1"
-                ],
-                "type": 5
-              }
-            },
-            {
-              "label": "address",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "HasRoleInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Returns `true` if `account` has been granted `role`."
-          ],
-          "label": "AccessControl::has_role",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 42
-          },
-          "selector": "0xc1d9ac18"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
                   "GrantRoleInput1"
                 ],
                 "type": 5
@@ -1957,6 +1891,72 @@ const launchpad_psp34_nft_standard = {
             "type": 22
           },
           "selector": "0x4ac062fd"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "GetRoleAdminInput1"
+                ],
+                "type": 5
+              }
+            }
+          ],
+          "docs": [
+            " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
+          ],
+          "label": "AccessControl::get_role_admin",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 40
+          },
+          "selector": "0x83da3bb2"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "HasRoleInput1"
+                ],
+                "type": 5
+              }
+            },
+            {
+              "label": "address",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "HasRoleInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Returns `true` if `account` has been granted `role`."
+          ],
+          "label": "AccessControl::has_role",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 44
+          },
+          "selector": "0xc1d9ac18"
         },
         {
           "args": [
@@ -2005,6 +2005,54 @@ const launchpad_psp34_nft_standard = {
             "type": 22
           },
           "selector": "0xeaf1248a"
+        },
+        {
+          "args": [
+            {
+              "label": "nft_contract_address",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "token_id",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput2"
+                ],
+                "type": 43
+              }
+            },
+            {
+              "label": "receiver",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput3"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
+          ],
+          "label": "AdminTrait::tranfer_nft",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 17
+          },
+          "selector": "0xed1e1dfa"
         },
         {
           "args": [
@@ -2095,54 +2143,6 @@ const launchpad_psp34_nft_standard = {
         {
           "args": [
             {
-              "label": "nft_contract_address",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput1"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "token_id",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput2"
-                ],
-                "type": 41
-              }
-            },
-            {
-              "label": "receiver",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput3"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
-          ],
-          "label": "AdminTrait::tranfer_nft",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 17
-          },
-          "selector": "0xed1e1dfa"
-        },
-        {
-          "args": [
-            {
               "label": "account",
               "type": {
                 "displayName": [
@@ -2159,7 +2159,7 @@ const launchpad_psp34_nft_standard = {
                   "psp34burnable_external",
                   "BurnInput2"
                 ],
-                "type": 41
+                "type": 43
               }
             }
           ],
@@ -2172,7 +2172,7 @@ const launchpad_psp34_nft_standard = {
               "ink",
               "MessageResult"
             ],
-            "type": 43
+            "type": 45
           },
           "selector": "0x63c9877a"
         }
@@ -4374,13 +4374,97 @@ const launchpad_psp34_nft_standard = {
             "variant": {
               "variants": [
                 {
+                  "fields": [
+                    {
+                      "type": 5
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 5
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 41,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 7
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 7
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 42,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
                   "index": 0,
                   "name": "None"
                 },
                 {
                   "fields": [
                     {
-                      "type": 41
+                      "type": 43
                     }
                   ],
                   "index": 1,
@@ -4392,7 +4476,7 @@ const launchpad_psp34_nft_standard = {
           "params": [
             {
               "name": "T",
-              "type": 41
+              "type": 43
             }
           ],
           "path": [
@@ -4401,7 +4485,7 @@ const launchpad_psp34_nft_standard = {
         }
       },
       {
-        "id": 41,
+        "id": 43,
         "type": {
           "def": {
             "variant": {
@@ -4478,7 +4562,7 @@ const launchpad_psp34_nft_standard = {
         }
       },
       {
-        "id": 42,
+        "id": 44,
         "type": {
           "def": {
             "variant": {
@@ -4520,7 +4604,7 @@ const launchpad_psp34_nft_standard = {
         }
       },
       {
-        "id": 43,
+        "id": 45,
         "type": {
           "def": {
             "variant": {
@@ -4528,7 +4612,7 @@ const launchpad_psp34_nft_standard = {
                 {
                   "fields": [
                     {
-                      "type": 44
+                      "type": 46
                     }
                   ],
                   "index": 0,
@@ -4549,7 +4633,7 @@ const launchpad_psp34_nft_standard = {
           "params": [
             {
               "name": "T",
-              "type": 44
+              "type": 46
             },
             {
               "name": "E",
@@ -4562,7 +4646,7 @@ const launchpad_psp34_nft_standard = {
         }
       },
       {
-        "id": 44,
+        "id": 46,
         "type": {
           "def": {
             "variant": {
@@ -4579,7 +4663,7 @@ const launchpad_psp34_nft_standard = {
                 {
                   "fields": [
                     {
-                      "type": 45
+                      "type": 47
                     }
                   ],
                   "index": 1,
@@ -4595,7 +4679,7 @@ const launchpad_psp34_nft_standard = {
             },
             {
               "name": "E",
-              "type": 45
+              "type": 47
             }
           ],
           "path": [
@@ -4604,7 +4688,7 @@ const launchpad_psp34_nft_standard = {
         }
       },
       {
-        "id": 45,
+        "id": 47,
         "type": {
           "def": {
             "variant": {
@@ -4658,7 +4742,7 @@ const launchpad_psp34_nft_standard = {
         }
       },
       {
-        "id": 46,
+        "id": 48,
         "type": {
           "def": {
             "variant": {
@@ -4666,7 +4750,7 @@ const launchpad_psp34_nft_standard = {
                 {
                   "fields": [
                     {
-                      "type": 47
+                      "type": 43
                     }
                   ],
                   "index": 0,
@@ -4687,7 +4771,7 @@ const launchpad_psp34_nft_standard = {
           "params": [
             {
               "name": "T",
-              "type": 47
+              "type": 43
             },
             {
               "name": "E",
@@ -4700,7 +4784,49 @@ const launchpad_psp34_nft_standard = {
         }
       },
       {
-        "id": 47,
+        "id": 49,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 50
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 50
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 50,
         "type": {
           "def": {
             "variant": {
@@ -4729,132 +4855,6 @@ const launchpad_psp34_nft_standard = {
           ],
           "path": [
             "Option"
-          ]
-        }
-      },
-      {
-        "id": 48,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 7
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 16
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 7
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 49,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 41
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 16
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 41
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 50,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 5
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 16
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 5
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
-          "path": [
-            "Result"
           ]
         }
       },
@@ -4984,7 +4984,7 @@ const launchpad_psp34_nft_standard = {
                 {
                   "fields": [
                     {
-                      "type": 41
+                      "type": 43
                     }
                   ],
                   "index": 0,
@@ -4993,7 +4993,7 @@ const launchpad_psp34_nft_standard = {
                 {
                   "fields": [
                     {
-                      "type": 45
+                      "type": 47
                     }
                   ],
                   "index": 1,
@@ -5005,11 +5005,11 @@ const launchpad_psp34_nft_standard = {
           "params": [
             {
               "name": "T",
-              "type": 41
+              "type": 43
             },
             {
               "name": "E",
-              "type": 45
+              "type": 47
             }
           ],
           "path": [
@@ -5019,48 +5019,6 @@ const launchpad_psp34_nft_standard = {
       },
       {
         "id": 55,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 10
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 16
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 10
-            },
-            {
-              "name": "E",
-              "type": 16
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 56,
         "type": {
           "def": {
             "variant": {
@@ -5090,6 +5048,48 @@ const launchpad_psp34_nft_standard = {
             {
               "name": "T",
               "type": 11
+            },
+            {
+              "name": "E",
+              "type": 16
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 56,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 10
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 10
             },
             {
               "name": "E",

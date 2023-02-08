@@ -1,8 +1,8 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5C4mkKoUFm5RjYFkNDrg7TUgeZGBGWGYZV4ykvLrQoYHk761",
+  CONTRACT_ADDRESS: "5EeLsoPYu4QJnQR1YKqPgr5iEbfVhyVqdGMAAam7a8qyK4Ee",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xed443c20600eba93912e1766de3128c6d93c1b6453dd57d4c567d3eb82358ed6",
+      "hash": "0xe2ad960fec296abb4a1e984b3e81f82f10e860cfc5d30320260a9921846b00bd",
       "language": "ink! 4.0.0-beta",
       "compiler": "rustc 1.69.0-nightly",
       "build_info": {
@@ -1147,7 +1147,7 @@ const collection_manager = {
               "type": {
                 "displayName": [
                   "accesscontrol_external",
-                  "RevokeRoleInput1"
+                  "GrantRoleInput1"
                 ],
                 "type": 4
               }
@@ -1157,22 +1157,23 @@ const collection_manager = {
               "type": {
                 "displayName": [
                   "accesscontrol_external",
-                  "RevokeRoleInput2"
+                  "GrantRoleInput2"
                 ],
                 "type": 0
               }
             }
           ],
           "docs": [
-            " Revokes `role` from `account`.",
+            " Grants `role` to `account`.",
             "",
-            " On success a `RoleRevoked` event is emitted.",
+            " On success a `RoleGranted` event is emitted.",
             "",
             " # Errors",
             "",
-            " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
+            " Returns with `MissingRole` error if caller can't grant the role.",
+            " Returns with `RoleRedundant` error `account` has `role`."
           ],
-          "label": "AccessControl::revoke_role",
+          "label": "AccessControl::grant_role",
           "mutates": true,
           "payable": false,
           "returnType": {
@@ -1182,7 +1183,7 @@ const collection_manager = {
             ],
             "type": 39
           },
-          "selector": "0x6e4f0991"
+          "selector": "0x4ac062fd"
         },
         {
           "args": [
@@ -1277,7 +1278,7 @@ const collection_manager = {
               "type": {
                 "displayName": [
                   "accesscontrol_external",
-                  "GrantRoleInput1"
+                  "RevokeRoleInput1"
                 ],
                 "type": 4
               }
@@ -1287,23 +1288,22 @@ const collection_manager = {
               "type": {
                 "displayName": [
                   "accesscontrol_external",
-                  "GrantRoleInput2"
+                  "RevokeRoleInput2"
                 ],
                 "type": 0
               }
             }
           ],
           "docs": [
-            " Grants `role` to `account`.",
+            " Revokes `role` from `account`.",
             "",
-            " On success a `RoleGranted` event is emitted.",
+            " On success a `RoleRevoked` event is emitted.",
             "",
             " # Errors",
             "",
-            " Returns with `MissingRole` error if caller can't grant the role.",
-            " Returns with `RoleRedundant` error `account` has `role`."
+            " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
           ],
-          "label": "AccessControl::grant_role",
+          "label": "AccessControl::revoke_role",
           "mutates": true,
           "payable": false,
           "returnType": {
@@ -1313,7 +1313,7 @@ const collection_manager = {
             ],
             "type": 39
           },
-          "selector": "0x4ac062fd"
+          "selector": "0x6e4f0991"
         },
         {
           "args": [],
@@ -1403,16 +1403,16 @@ const collection_manager = {
               "type": {
                 "displayName": [
                   "artzerocollectiontrait_external",
-                  "GetRoyaltyFeeInput1"
+                  "GetContractTypeInput1"
                 ],
                 "type": 0
               }
             }
           ],
           "docs": [
-            " This function returns royalty fee of a Collection"
+            " This function returns NFT Contract Type. When the collection is created using auto_new_collection, this set to 2 and when using add_new_collection, this set to 1. Contract Type is to identify if the contract is standard or customized one."
           ],
-          "label": "ArtZeroCollectionTrait::get_royalty_fee",
+          "label": "ArtZeroCollectionTrait::get_contract_type",
           "mutates": false,
           "payable": false,
           "returnType": {
@@ -1420,37 +1420,9 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 38
+            "type": 44
           },
-          "selector": "0xfd0ba95a"
-        },
-        {
-          "args": [
-            {
-              "label": "nft_contract_address",
-              "type": {
-                "displayName": [
-                  "artzerocollectiontrait_external",
-                  "GetCollectionOwnerInput1"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " This function returns the Owner of a Collection"
-          ],
-          "label": "ArtZeroCollectionTrait::get_collection_owner",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 34
-          },
-          "selector": "0xeb3b33fd"
+          "selector": "0xdcd3b8f4"
         },
         {
           "args": [
@@ -1487,16 +1459,16 @@ const collection_manager = {
               "type": {
                 "displayName": [
                   "artzerocollectiontrait_external",
-                  "GetContractTypeInput1"
+                  "GetCollectionOwnerInput1"
                 ],
                 "type": 0
               }
             }
           ],
           "docs": [
-            " This function returns NFT Contract Type. When the collection is created using auto_new_collection, this set to 2 and when using add_new_collection, this set to 1. Contract Type is to identify if the contract is standard or customized one."
+            " This function returns the Owner of a Collection"
           ],
-          "label": "ArtZeroCollectionTrait::get_contract_type",
+          "label": "ArtZeroCollectionTrait::get_collection_owner",
           "mutates": false,
           "payable": false,
           "returnType": {
@@ -1504,18 +1476,56 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 44
+            "type": 34
           },
-          "selector": "0xdcd3b8f4"
+          "selector": "0xeb3b33fd"
         },
         {
           "args": [
             {
-              "label": "value",
+              "label": "nft_contract_address",
+              "type": {
+                "displayName": [
+                  "artzerocollectiontrait_external",
+                  "GetRoyaltyFeeInput1"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " This function returns royalty fee of a Collection"
+          ],
+          "label": "ArtZeroCollectionTrait::get_royalty_fee",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 38
+          },
+          "selector": "0xfd0ba95a"
+        },
+        {
+          "args": [
+            {
+              "label": "psp22_contract_address",
               "type": {
                 "displayName": [
                   "admintrait_external",
-                  "WithdrawFeeInput1"
+                  "TranferPsp22Input1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "amount",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferPsp22Input2"
                 ],
                 "type": 7
               }
@@ -1525,16 +1535,16 @@ const collection_manager = {
               "type": {
                 "displayName": [
                   "admintrait_external",
-                  "WithdrawFeeInput2"
+                  "TranferPsp22Input3"
                 ],
                 "type": 0
               }
             }
           ],
           "docs": [
-            " This function allows contract owner to withdraw contract balance to his account."
+            " This function allow contract owner withdraw PSP22 to an account in case there is any token sent to contract by mistake"
           ],
-          "label": "AdminTrait::withdraw_fee",
+          "label": "AdminTrait::tranfer_psp22",
           "mutates": true,
           "payable": false,
           "returnType": {
@@ -1544,7 +1554,7 @@ const collection_manager = {
             ],
             "type": 15
           },
-          "selector": "0x07573e99"
+          "selector": "0xd9aad284"
         },
         {
           "args": [
@@ -1597,21 +1607,11 @@ const collection_manager = {
         {
           "args": [
             {
-              "label": "psp22_contract_address",
+              "label": "value",
               "type": {
                 "displayName": [
                   "admintrait_external",
-                  "TranferPsp22Input1"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "amount",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferPsp22Input2"
+                  "WithdrawFeeInput1"
                 ],
                 "type": 7
               }
@@ -1621,16 +1621,16 @@ const collection_manager = {
               "type": {
                 "displayName": [
                   "admintrait_external",
-                  "TranferPsp22Input3"
+                  "WithdrawFeeInput2"
                 ],
                 "type": 0
               }
             }
           ],
           "docs": [
-            " This function allow contract owner withdraw PSP22 to an account in case there is any token sent to contract by mistake"
+            " This function allows contract owner to withdraw contract balance to his account."
           ],
-          "label": "AdminTrait::tranfer_psp22",
+          "label": "AdminTrait::withdraw_fee",
           "mutates": true,
           "payable": false,
           "returnType": {
@@ -1640,7 +1640,7 @@ const collection_manager = {
             ],
             "type": 15
           },
-          "selector": "0xd9aad284"
+          "selector": "0x07573e99"
         },
         {
           "args": [
