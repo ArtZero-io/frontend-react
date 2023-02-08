@@ -457,7 +457,6 @@ async function setMultipleAttributesNFT(
             let cacheImages = [];
 
             for (let i = 0; i < attributes.length; i++) {
-              console.log(attributes[i]);
               if (attributes[i].name === "avatar") {
                 cacheImages.push({
                   input: attributes[i].value,
