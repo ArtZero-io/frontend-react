@@ -41,25 +41,25 @@ export default async function getGasLimit(
   );
 
   // FOR DEV ONLY
-  if (process.env.NODE_ENV === "development") {
-    console.table({
-      ActionType: message,
-      "gasRequired.refTime": gasRequired.refTime.toHuman(),
-      "gasRequired.proofSize": gasRequired.proofSize.toHuman(),
-    });
+  // if (process.env.NODE_ENV === "development") {
+  //   console.table({
+  //     ActionType: message,
+  //     "gasRequired.refTime": gasRequired.refTime.toHuman(),
+  //     "gasRequired.proofSize": gasRequired.proofSize.toHuman(),
+  //   });
 
-    const { data: balance } = await api.query.system.account(userAddress);
+  //   const { data: balance } = await api.query.system.account(userAddress);
 
-    const now = await api.query.timestamp.now();
+  //   const now = await api.query.timestamp.now();
 
-    console.table({
-      "Log time": now.toString(),
-      "Balance START":
-        balance.free.toHuman().slice(0, -16) +
-        "." +
-        balance.free.toHuman().slice(-15, -8),
-    });
-  }
+  //   console.table({
+  //     "Log time": now.toString(),
+  //     "Balance START":
+  //       balance.free.toHuman().slice(0, -16) +
+  //       "." +
+  //       balance.free.toHuman().slice(-15, -8),
+  //   });
+  // }
 
   return { ok: true, value: gasRequired };
 }
