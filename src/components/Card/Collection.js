@@ -118,6 +118,33 @@ export const CollectionCard = ({
             },
           }}
         >
+          <Flex
+            alignItems="start"
+            justifyContent="flex-start"
+            position="absolute"
+            top="0"
+            left="0"
+            minW="60px"
+          >
+            <>
+              {isDoxxed && (
+                <Tooltip label="At least one of team members verified his identity.">
+                  <Tag bg="#34B979" border="1px solid #7ae7ff">
+                    DOXXED
+                  </Tag>
+                </Tooltip>
+              )}
+
+              {isDuplicationChecked && (
+                <Tooltip label="Artwork is verified by third-party for its uniqueness">
+                  <Tag ml="4px" bg="#34B979" border="1px solid #7ae7ff">
+                    VERIFIED
+                  </Tag>
+                </Tooltip>
+              )}
+            </>
+          </Flex>
+
           <ImageCloudFlare
             h={"260px"}
             w={"full"}
@@ -218,25 +245,7 @@ export const CollectionCard = ({
                   </Box>
                 </>
               )}
-              {variant === "marketplace-collection" && (
-                <>
-                  {isDoxxed && (
-                    <Tooltip label="At least one of team members verified his identity.">
-                      <Box p="1">
-                        <Tag border="1px solid #7ae7ff">DOXXED</Tag>
-                      </Box>
-                    </Tooltip>
-                  )}
 
-                  {isDuplicationChecked && (
-                    <Tooltip label="Artwork is verified by third-party for its uniqueness">
-                      <Box p="1">
-                        <Tag border="1px solid #7ae7ff">VERIFIED</Tag>
-                      </Box>
-                    </Tooltip>
-                  )}
-                </>
-              )}
               {variant !== "marketplace-collection" && (
                 <>
                   {/* {isActive && (
