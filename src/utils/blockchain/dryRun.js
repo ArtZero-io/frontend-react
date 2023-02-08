@@ -45,9 +45,15 @@ export default async function getGasLimit(
   const { v2Weight } = convertWeight(result.gasRequired);
 
   const gasRequired = api.registry.createType("WeightV2", {
-    refTime: v2Weight.refTime.mul(new BN(3)),
-    proofSize: v2Weight.proofSize.mul(new BN(2)),
+    refTime: v2Weight.refTime.mul(new BN(4)),
+    proofSize: v2Weight.proofSize.mul(new BN(4)),
   });
+
+  // console.table({
+  //   message,
+  //   "gasRequired.refTime": gasRequired.refTime.toHuman(),
+  //   "gasRequired.proofSize": gasRequired.proofSize.toHuman(),
+  // });
 
   return { ok: true, value: gasRequired };
 }

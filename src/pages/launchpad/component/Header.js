@@ -173,8 +173,10 @@ function LaunchpadDetailHeader({
       });
 
       if (status === "OK") {
-        setIsDoxxed(ret?.isDoxxed);
-        setIsDuplicationChecked(ret?.isDuplicationChecked);
+        const proj = ret[0];
+        
+        setIsDoxxed(proj?.isDoxxed);
+        setIsDuplicationChecked(proj?.isDuplicationChecked);
       }
     };
 

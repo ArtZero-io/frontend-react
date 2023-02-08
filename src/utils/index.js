@@ -488,7 +488,6 @@ export async function getEstimatedGas(
     }
   );
 
-  console.log(queryName, "getEstimatedGas", result);
   return result;
 }
 

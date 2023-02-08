@@ -216,7 +216,7 @@ async function getLastPhaseId(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return formatOutput(output);
+    return formatNumberOutput(output);
   }
   return null;
 }

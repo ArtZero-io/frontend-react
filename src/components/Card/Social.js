@@ -24,7 +24,7 @@ function SocialCard({ profile, pos, right, top, bottom, justifyContent }) {
     facebook: <FaFacebook size={iconSize} />,
     instagram: <FaInstagram size={iconSize} />,
   };
-  console.log('profile', profile)
+
   return (
     <HStack
       py="3"
