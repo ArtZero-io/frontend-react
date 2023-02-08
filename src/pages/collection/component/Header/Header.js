@@ -84,18 +84,18 @@ function CollectionHeader(props) {
           </Center>
 
           <HStack spacing="10px" pt="10px">
-            {isDoxxed === "YES" && (
-              <Tooltip label="Team is privately doxxed.">
+            {isDoxxed && (
+              <Tooltip label="At least one of team members verified his identity.">
                 <Box p="1">
-                  <Tag border="1px solid #7ae7ff">Team Doxxed</Tag>
+                  <Tag border="1px solid #7ae7ff">DOXXED</Tag>
                 </Box>
               </Tooltip>
             )}
 
-            {isDuplicationChecked === "YES" && (
-              <Tooltip label="Collection is duplication checked.">
+            {isDuplicationChecked && (
+              <Tooltip label="Artwork is verified by third-party for its uniqueness">
                 <Box p="1">
-                  <Tag border="1px solid #7ae7ff">Duplication Checked</Tag>
+                  <Tag border="1px solid #7ae7ff">VERIFIED</Tag>
                 </Box>
               </Tooltip>
             )}

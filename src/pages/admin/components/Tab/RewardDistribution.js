@@ -31,7 +31,7 @@ import collection_manager from "@utils/blockchain/collection-manager";
 import staking_contract from "@utils/blockchain/staking";
 import { useMemo } from "react";
 import { formatNumDynamicDecimal } from "@utils";
-import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
+
 import CommonButton from "@components/Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
 import { setTxStatus } from "@store/actions/txStatus";
@@ -43,13 +43,14 @@ import {
   ENABLE_CLAIM,
 } from "@constants";
 import { withdrawCollectionContract } from "@utils/blockchain/collection-manager-calls";
-import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
+
 import { withdrawLaunchpadContract } from "@utils/blockchain/launchpad-contract-calls";
 import { withdrawMarketplaceContract } from "@utils/blockchain/marketplace_contract_calls";
 import { useCallback } from "react";
 import useForceUpdate from "@hooks/useForceUpdate";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { execContractQuery } from "../../../account/nfts/nfts";
+import marketplace from "@utils/blockchain/marketplace";
 
 function RewardDistribution() {
   const { api, currentAccount } = useSubstrateState();
@@ -75,7 +76,7 @@ function RewardDistribution() {
     let is_reward_started = await staking_calls.getRewardStarted(
       currentAccount
     );
-    // let admin_address = await staking_calls.getAdminAddress(currentAccount);
+
     const queryResult1 = await execContractQuery(
       currentAccount?.address,
       api,
@@ -250,15 +251,20 @@ function RewardDistribution() {
           return toast.error("No Balance to claimed");
         }
 
-        const marketplaceAdminAddress = await marketplace_contract_calls.owner(
-          currentAccount
+        const queryResult1 = await execContractQuery(
+          currentAccount?.address,
+          api,
+          marketplace.CONTRACT_ABI,
+          marketplace.CONTRACT_ADDRESS,
+          "accessControl::hasRole",
+          3739740293,
+          currentAccount?.address
         );
 
-        if (currentAccount.address !== marketplaceAdminAddress) {
-          return toast.error(
-            `Only admin (${truncateStr(marketplaceAdminAddress)}) is allowed!`
-          );
+        if (!queryResult1.toHuman().Ok) {
+          return toast.error(`Only marketplace admin is allowed!`);
         }
+
         dispatch(setTxStatus({ type: WITHDRAW_MARKETPLACE, step: START }));
 
         toast.success(
@@ -280,13 +286,18 @@ function RewardDistribution() {
           return toast.error("No Balance to claimed");
         }
 
-        const collectionAdminAddress =
-          await collection_manager_calls.getAdminAddress(currentAccount);
+        const queryResult1 = await execContractQuery(
+          currentAccount?.address,
+          api,
+          collection_manager.CONTRACT_ABI,
+          collection_manager.CONTRACT_ADDRESS,
+          "accessControl::hasRole",
+          3739740293,
+          currentAccount?.address
+        );
 
-        if (currentAccount.address !== collectionAdminAddress) {
-          return toast.error(
-            `Only admin (${truncateStr(collectionAdminAddress)}) is allowed!`
-          );
+        if (!queryResult1.toHuman().Ok) {
+          return toast.error(`Only collection admin is allowed!`);
         }
 
         dispatch(setTxStatus({ type: WITHDRAW_COLLECTION, step: START }));
@@ -310,13 +321,18 @@ function RewardDistribution() {
           return toast.error("No Balance to claimed");
         }
 
-        const launchpadAdminAddress =
-          await launchpad_contract_calls.getAdminAddress(currentAccount);
+        const queryResult1 = await execContractQuery(
+          currentAccount?.address,
+          api,
+          launchpad_manager.CONTRACT_ABI,
+          launchpad_manager.CONTRACT_ADDRESS,
+          "accessControl::hasRole",
+          3739740293,
+          currentAccount?.address
+        );
 
-        if (currentAccount.address !== launchpadAdminAddress) {
-          return toast.error(
-            `Only admin (${truncateStr(launchpadAdminAddress)}) is allowed!`
-          );
+        if (!queryResult1.toHuman().Ok) {
+          return toast.error(`Only launchpad admin is allowed!`);
         }
 
         dispatch(setTxStatus({ type: WITHDRAW_LAUNCHPAD, step: START }));

@@ -1048,24 +1048,6 @@ export const getProjectListDetails = async ({ currentAccount, api }) => {
   return ret;
 };
 
-async function getAdminAddress(caller_account) {
-  if (!contract || !caller_account) {
-    console.log("invalid inputs");
-    return null;
-  }
-  const address = caller_account?.address;
-  const gasLimit = readOnlyGasLimit(contract);
-  const azero_value = 0;
-  const { result, output } = await contract.query.getAdminAddress(address, {
-    value: azero_value,
-    gasLimit,
-  });
-  if (result.isOk) {
-    return output.toHuman().Ok;
-  }
-  return null;
-}
-
 async function getAvailableTokenAmount(caller_account) {
   if (!contract || !caller_account) {
     console.log("invalid inputs");
@@ -1218,7 +1200,6 @@ const launchpad_psp34_nft_standard_calls = {
   updateWhitelist,
   addNewPhase,
   updateSchedulePhase,
-  getAdminAddress,
   updateAdminAddress,
   grantAdminRoleToAddress,
   mint,

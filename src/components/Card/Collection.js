@@ -32,6 +32,8 @@ export const CollectionCard = ({
   nftContractAddress,
   scrollToCollectionAddress,
   royaltyFee,
+  isDoxxed,
+  isDuplicationChecked,
 }) => {
   const restorationRef = useRef();
 
@@ -214,6 +216,25 @@ export const CollectionCard = ({
                   >
                     {royaltyFee / 100}% Royalty
                   </Box>
+                </>
+              )}
+              {variant === "marketplace-collection" && (
+                <>
+                  {!isDoxxed && (
+                    <Tooltip label="At least one of team members verified his identity.">
+                      <Box p="1">
+                        <Tag border="1px solid #7ae7ff">DOXXED</Tag>
+                      </Box>
+                    </Tooltip>
+                  )}
+
+                  {!isDuplicationChecked && (
+                    <Tooltip label="Artwork is verified by third-party for its uniqueness">
+                      <Box p="1">
+                        <Tag border="1px solid #7ae7ff">VERIFIED</Tag>
+                      </Box>
+                    </Tooltip>
+                  )}
                 </>
               )}
               {variant !== "marketplace-collection" && (

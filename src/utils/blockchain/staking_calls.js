@@ -310,24 +310,6 @@ async function getRewardPool(caller_account) {
   return null;
 }
 
-async function getAdminAddress(caller_account) {
-  if (!contract || !caller_account) {
-    return null;
-  }
-  const address = caller_account?.address;
-  const gasLimit = readOnlyGasLimit(contract);
-  const azero_value = 0;
-
-  const { result, output } = await contract.query.getAdminAddress(address, {
-    value: azero_value,
-    gasLimit,
-  });
-  if (result.isOk) {
-    return output.toHuman().Ok;
-  }
-  return null;
-}
-
 async function claimReward(caller_account, dispatch, txType, api) {
   if (!contract || !caller_account) {
     throw Error(`Contract or caller not valid!`);
@@ -817,7 +799,7 @@ const staking_calls = {
   startRewardDistribution,
   getRewardStarted,
   getStakedAccountsAccountByIndex,
-  getAdminAddress,
+
   updateIsLocked,
   getIsLocked,
   claimReward,

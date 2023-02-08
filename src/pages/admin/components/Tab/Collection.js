@@ -66,9 +66,6 @@ function CollectionAdmin() {
   const isOwner = collectionContractOwner === currentAccount?.address;
 
   const onGetCollectionContractAdmin = useCallback(async () => {
-    // let res = await collection_manager_calls.getAdminAddress(currentAccount);
-    // if (res) setIsCollectionAdmin(res);
-    // else
     const checkIsAdmin = async ({ address }) => {
       if (!api) return;
 
@@ -259,7 +256,7 @@ function CollectionAdmin() {
       return;
     }
 
-    const statusBeSet =currDupStatus ? "0" : "1";
+    const statusBeSet = currDupStatus ? "0" : "1";
 
     try {
       await execContractTx(

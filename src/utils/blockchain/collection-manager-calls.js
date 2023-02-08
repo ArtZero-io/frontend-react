@@ -412,25 +412,6 @@ async function getContractById(caller_account, collection_id) {
   return null;
 }
 
-async function getAdminAddress(caller_account) {
-  if (!contract || !caller_account) {
-    return null;
-  }
-  const address = caller_account?.address;
-  const gasLimit = readOnlyGasLimit(contract);
-  const azero_value = 0;
-
-  const { result, output } = await contract.query.getAdminAddress(address, {
-    value: azero_value,
-    gasLimit,
-  });
-
-  if (result.isOk) {
-    return output.toHuman().Ok;
-  }
-  return null;
-}
-
 async function isActive(caller_account, collection_address) {
   if (
     !contract ||
@@ -768,7 +749,6 @@ const collection_manager_calls = {
   getCollectionsByOwner,
   getCollectionByAddress,
   getContractById,
-  getAdminAddress,
   isActive,
   getRoyaltyFee,
   getContractType,
@@ -817,12 +797,14 @@ export const withdrawCollectionContract = async (
     contract,
     value,
     "adminTrait::withdrawFee",
-    amountFormatted
+    amountFormatted,
+    address
   );
 
   const txNotSign = contract.tx["adminTrait::withdrawFee"](
     { gasLimit, value },
-    amountFormatted
+    amountFormatted,
+    address
   );
 
   await txNotSign
