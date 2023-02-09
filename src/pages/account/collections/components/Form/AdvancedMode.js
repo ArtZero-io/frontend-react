@@ -61,7 +61,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
             currentAccount
           );
 
-        setAddingFee(addingFeeData / 10 ** 12);
+        setAddingFee(addingFeeData / 10 ** 18);
       }
     };
     fetchFee();

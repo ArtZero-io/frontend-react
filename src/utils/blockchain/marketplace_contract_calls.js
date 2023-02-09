@@ -73,7 +73,7 @@ async function getVolumeByCollection(caller_account, nft_contract_address) {
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 12;
+    return a / 10 ** 18;
   }
   return 0;
 }
@@ -93,7 +93,7 @@ async function getTotalVolume(caller_account) {
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 12;
+    return a / 10 ** 18;
   }
   return null;
 }
@@ -301,7 +301,7 @@ async function getCurrentProfit(caller_account) {
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 12;
+    return a / 10 ** 18;
   }
   return null;
 }
@@ -321,7 +321,7 @@ async function getTotalProfit(caller_account) {
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 12;
+    return a / 10 ** 18;
   }
   return null;
 }

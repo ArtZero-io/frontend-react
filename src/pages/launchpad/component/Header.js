@@ -316,7 +316,7 @@ function LaunchpadDetailHeader({
                           display={["block", "inline"]}
                           color="#fff"
                         >
-                          {currentPhase?.publicMintingFee / 10 ** 12 || 0}{" "}
+                          {currentPhase?.publicMintingFee / 10 ** 18 || 0}{" "}
                           <AzeroIcon
                             mb={["2px", "5px"]}
                             width={["14px", "16px"]}
@@ -343,7 +343,7 @@ function LaunchpadDetailHeader({
                               display={["block", "inline"]}
                               color="#fff"
                             >
-                              {currentPhase?.publicMintingFee / 10 ** 12 || 0}{" "}
+                              {currentPhase?.publicMintingFee / 10 ** 18 || 0}{" "}
                               <AzeroIcon
                                 mb={["2px", "5px"]}
                                 width={["14px", "16px"]}
@@ -365,7 +365,7 @@ function LaunchpadDetailHeader({
                           color="#fff"
                         >
                           {userWLInfo[currentPhase?.id - 1]?.mintingFee /
-                            10 ** 12}{" "}
+                            10 ** 18}{" "}
                           <AzeroIcon
                             mb={["2px", "5px"]}
                             width={["14px", "16px"]}

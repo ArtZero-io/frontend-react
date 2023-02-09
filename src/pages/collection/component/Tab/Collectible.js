@@ -459,12 +459,12 @@ const NFTTabCollectible = (props) => {
                                       border="1px solid #7ae7ff"
                                       borderRadius="0"
                                       label={formatNumDynamicDecimal(
-                                        price / 10 ** 12
+                                        price / 10 ** 18
                                       )}
                                       aria-label="A tooltip"
                                     >
                                       {formatNumDynamicDecimal(
-                                        price / 10 ** 12
+                                        price / 10 ** 18
                                       )}
                                     </Tooltip>
                                   </TagLabel>

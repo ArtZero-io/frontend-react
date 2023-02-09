@@ -431,7 +431,7 @@ const LaunchpadDetailPage = () => {
       new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
     const mintingFee =
       (whitelistMintingAmount * userWLInfo[activePhaseId - 1]?.mintingFee) /
-      10 ** 12;
+      10 ** 18;
 
     if (balance < 0.5) {
       toast.error("Low balance to mint");
@@ -483,7 +483,7 @@ const LaunchpadDetailPage = () => {
       new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
 
     const mintingFee =
-      (mintingAmount * currentPhase.publicMintingFee) / 10 ** 12;
+      (mintingAmount * currentPhase.publicMintingFee) / 10 ** 18;
 
     if (balance < 0.5) {
       toast.error("Low balance to mint");
@@ -982,7 +982,7 @@ const LaunchpadDetailPage = () => {
                         <Text>
                           Public mint price:{" "}
                           <Text as="span" color="#fff">
-                            {item?.publicMintingFee / 10 ** 12}{" "}
+                            {item?.publicMintingFee / 10 ** 18}{" "}
                             <AzeroIcon
                               mb="5px"
                               w={["14px", "16px"]}
@@ -1021,7 +1021,7 @@ const LaunchpadDetailPage = () => {
                                 </Text>{" "}
                                 at price:{" "}
                                 <Text as="span" color="#fff">
-                                  {userWLInfo[index]?.mintingFee / 10 ** 12}{" "}
+                                  {userWLInfo[index]?.mintingFee / 10 ** 18}{" "}
                                   <AzeroIcon
                                     mb="5px"
                                     w={["14px", "16px"]}

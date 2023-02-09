@@ -157,7 +157,7 @@ async function getMintingFee(caller_account) {
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 12;
+    return a / 10 ** 18;
   }
   return null;
 }
@@ -282,7 +282,7 @@ async function paidMint(
 
   const address = caller_account?.address;
   const gasLimit = readOnlyGasLimit(contract);
-  const azero_value = Math.round(fee * 10 ** 12);
+  const azero_value = Math.round(fee * 10 ** 18);
   const injector = await web3FromSource(caller_account?.meta?.source);
 
   const txNotSign = contract.tx.paidMint(

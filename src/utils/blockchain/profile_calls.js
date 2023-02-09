@@ -104,7 +104,7 @@ export async function setMultipleAttributesProfileOnChain(
     values
   );
   contract.tx
-    .setMultipleAttributes({ gasLimit, value }, attributes, values)
+    .setMultipleAttributes({ value, gasLimit }, attributes, values)
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,

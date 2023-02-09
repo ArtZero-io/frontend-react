@@ -2,11 +2,11 @@ import React, { useReducer, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import jsonrpc from "@polkadot/types/interfaces/jsonrpc";
 import { ApiPromise, WsProvider } from "@polkadot/api";
-import { web3Accounts, web3Enable } from "../wallets/extension-dapp";
 import { keyring as Keyring } from "@polkadot/ui-keyring";
 import { isTestChain } from "@polkadot/util";
 import { TypeRegistry } from "@polkadot/types/create";
-
+import { web3Accounts, web3Enable } from "../wallets/extension-dapp";
+import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
 import config from "./config";
 
 const parsedQuery = new URLSearchParams(window.location.search);
@@ -137,9 +137,20 @@ const retrieveChainInfo = async (api) => {
   };
 };
 
-///
-// Loading accounts from dev and polkadot-js extension
+export function reformatAddress (address, networkPrefix) {
 
+  const publicKey = decodeAddress(address);
+
+  if (networkPrefix < 0) {
+    return address;
+  }
+
+  return encodeAddress(publicKey, networkPrefix);
+}
+
+
+///
+// Loading accounts from  and polkadot-js extension
 export const loadAccounts = async (state, dispatch, wallet) => {
   const { api } = state;
 
@@ -150,7 +161,6 @@ export const loadAccounts = async (state, dispatch, wallet) => {
       await web3Enable(config.APP_NAME, [], wallet);
 
       let allAccounts = await web3Accounts();
-
       allAccounts = allAccounts.map(({ address, meta }) => ({
         address,
         meta: { ...meta, name: `${meta.name}` },
@@ -162,12 +172,11 @@ export const loadAccounts = async (state, dispatch, wallet) => {
         systemChainType.isDevelopment ||
         systemChainType.isLocal ||
         isTestChain(systemChain);
-
       try {
         Keyring.loadAll({ isDevelopment }, allAccounts);
       } catch (error) {
         allAccounts.forEach(({ address, meta }) => {
-          Keyring.saveAddress(address, meta);
+          Keyring.saveAddress(reformatAddress(address, systemChainType?.registry?.chainSS58 || 5), meta);
         });
       }
 

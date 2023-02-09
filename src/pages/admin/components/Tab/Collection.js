@@ -195,9 +195,9 @@ function CollectionAdmin() {
   );
   const [newAdminAddress, setNewAdminAddress] = useState("");
   const grantAdminAddress = async () => {
-    if (!isOwner) {
-      return toast.error(`Only owner can grant admin role!`);
-    }
+    // if (!isOwner) {
+    //   return toast.error(`Only owner can grant admin role!`);
+    // }
 
     if (!isValidAddressPolkadotAddress(newAdminAddress)) {
       return toast.error(`Invalid address! Please check again!`);

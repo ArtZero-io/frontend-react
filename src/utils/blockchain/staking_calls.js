@@ -284,7 +284,7 @@ async function getClaimableReward(caller_account) {
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 12;
+    return a / 10 ** 18;
   }
   return null;
 }
@@ -305,7 +305,7 @@ async function getRewardPool(caller_account) {
   if (result.isOk) {
     /* eslint-disable no-useless-escape */
     const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 12;
+    return a / 10 ** 18;
   }
   return null;
 }
@@ -393,7 +393,7 @@ async function addReward(caller_account, amount) {
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = amount * 10 ** 12;
+  const value = amount * 10 ** 18;
 
   gasLimit = await getEstimatedGas(address, contract, value, "addReward");
 

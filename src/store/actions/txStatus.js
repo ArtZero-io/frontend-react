@@ -69,7 +69,7 @@ export const txResponseErrorHandler = async ({
             '^^ Txn Fee Paid\t\t\t:   -',
             (
               parseInt(event.data[1].toHuman().replaceAll(',', '')) /
-              10 ** 12
+              10 ** 18
             ).toFixed(6)
           );
         }
@@ -79,7 +79,7 @@ export const txResponseErrorHandler = async ({
             '^^ Reserved\t\t\t\t:   -',
             (
               parseInt(event.data[1].toHuman().replaceAll(',', '')) /
-              10 ** 12
+              10 ** 18
             ).toFixed(6)
           );
         }
@@ -89,7 +89,7 @@ export const txResponseErrorHandler = async ({
             '^^ Reserve Repatriated\t:   +',
             (
               parseInt(event.data[2].toHuman().replaceAll(',', '')) /
-              10 ** 12
+              10 ** 18
             ).toFixed(6)
           );
         }
@@ -190,7 +190,7 @@ export const txResponseErrorHandler = async ({
               '^^ Txn Fee Paid\t\t\t:   -',
               (
                 parseInt(event.data[1].toHuman().replaceAll(',', '')) /
-                10 ** 12
+                10 ** 18
               ).toFixed(6)
             );
           }
@@ -200,7 +200,7 @@ export const txResponseErrorHandler = async ({
               '^^ Reserved\t\t\t\t:   -',
               (
                 parseInt(event.data[1].toHuman().replaceAll(',', '')) /
-                10 ** 12
+                10 ** 18
               ).toFixed(6)
             );
           }
@@ -210,7 +210,7 @@ export const txResponseErrorHandler = async ({
               '^^ Reserve Repatriated\t:   +',
               (
                 parseInt(event.data[2].toHuman().replaceAll(',', '')) /
-                10 ** 12
+                10 ** 18
               ).toFixed(6)
             );
           }

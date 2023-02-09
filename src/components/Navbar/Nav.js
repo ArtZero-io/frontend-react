@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { Box, Flex, Link, VisuallyHidden } from "@chakra-ui/react";
+import { Box, Flex, Image, Link, VisuallyHidden } from "@chakra-ui/react";
 import { NavContent } from "./NavContent";
-import { ArtZeroLogo } from "@theme/assets/logo/ArtZeroLogo";
+// import { ArtZeroLogo } from "@theme/assets/logo/ArtZeroLogo";
+import ArtZeroLogo from "@theme/assets/logo/shibuya_logo.png";
 import { Link as ReactRouterLink } from "react-router-dom";
 
 function Nav() {
@@ -27,9 +28,16 @@ function Nav() {
         >
           <Link as={ReactRouterLink} to="/" rel="home">
             <VisuallyHidden>ArtZero.io</VisuallyHidden>
-            <ArtZeroLogo
-              display={{ base: "none", md: "flex" }}
-              alt="ArtZeroLogo"
+            <Image
+              display={{ base: "none", xl: "block" }}
+              src={ArtZeroLogo}
+              alt="bg-ArtZeroLogo"
+              minWidth={"200px"}
+              w={"200px"}
+              h="full"
+              objectPosition="top"
+              objectFit="cover"
+              // position="absolute"
             />
           </Link>
           <NavContent.Mobile />

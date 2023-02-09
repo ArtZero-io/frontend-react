@@ -1,5 +1,5 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5EeLsoPYu4QJnQR1YKqPgr5iEbfVhyVqdGMAAam7a8qyK4Ee",
+  CONTRACT_ADDRESS: "aBcDAsJHFsHSUQqhgwFAQY2EvnqCHySgfVcNRgVZUSe6rFY",
   CONTRACT_ABI: {
     "source": {
       "hash": "0xe2ad960fec296abb4a1e984b3e81f82f10e860cfc5d30320260a9921846b00bd",

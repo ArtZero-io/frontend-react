@@ -107,7 +107,7 @@ function StatsPage() {
           return {
             ...item,
             order: index + 1,
-            floorPrice: data?.price / 10 ** 12 || 0,
+            floorPrice: data?.price / 10 ** 18 || 0,
           };
         })
       );

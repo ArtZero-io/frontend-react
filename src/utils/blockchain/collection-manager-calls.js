@@ -141,7 +141,6 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
   if (!contract || !caller_account) {
     throw Error(`Contract or caller not valid!`);
   }
-
   let unsubscribe;
   let gasLimit;
 
