@@ -297,7 +297,7 @@ const LaunchpadDetailPage = () => {
     return isEnded;
   }, [phasesInfo]);
 
-  const [currentPhase, setCurrentPhase] = useState({});
+  const [currentPhase, setCurrentPhase] = useState(null);
 
   useEffect(() => {
     if (isLastPhaseEnded) {
@@ -306,8 +306,7 @@ const LaunchpadDetailPage = () => {
     }
 
     if (!activePhaseId) {
-      const firstPhase = phasesInfo?.[0];
-      return setCurrentPhase(firstPhase);
+      return setCurrentPhase({});
     } else {
       const found = phasesInfo?.find((p) => p.id === parseInt(activePhaseId));
       setCurrentPhase(found);
@@ -704,7 +703,7 @@ const LaunchpadDetailPage = () => {
                         {Math.round(
                           (currentPhase?.claimedAmount * 100) /
                             currentPhase?.totalAmount
-                        )}
+                        ) || 0}
                         % ({currentPhase?.claimedAmount}/
                         {currentPhase?.totalAmount})
                       </Text>

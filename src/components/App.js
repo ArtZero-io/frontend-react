@@ -28,6 +28,7 @@ import { useSelector } from "react-redux";
 import "@theme/assets/TimePicker.css";
 import useTxStatus from "@hooks/useTxStatus";
 import { START } from "../constants";
+import { Helmet } from "react-helmet";
 
 export default function App() {
   const { apiState, apiError } = useSubstrateState();
@@ -110,7 +111,6 @@ const Main = () => {
       }
     };
     initContract();
-
   }, [
     api,
     apiState,
@@ -178,6 +178,9 @@ const Main = () => {
 
   return (
     <>
+      <Helmet>
+        <title>ArtZero.io - NFT Marketplace for Aleph Zero Blockchain</title>
+      </Helmet>
       {loadContractDone && (
         <Fragment>
           <Toaster

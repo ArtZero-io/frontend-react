@@ -104,6 +104,47 @@ function LaunchpadDetailHeader({
     onClose: onCloseWithdrawModal,
   } = useDisclosure();
 
+  const nextPhaseWhenNoCurrPhaseId = useMemo(() => {
+    const _phasesInfo = [...phasesInfo];
+
+    if (isLastPhaseEnded) {
+      return {
+        phase: _phasesInfo.pop(),
+        countDownTimer: 0,
+      };
+    }
+
+    if (!activePhaseId) {
+      const timeStampOnly = phasesInfo.reduce((prev, curr) => {
+        prev.push(curr.startTime);
+        prev.push(curr.endTime);
+        return prev;
+      }, []);
+
+      let phase;
+      let timeNeedCount;
+
+      for (let i = 0; i < timeStampOnly?.length; i++) {
+        const p = timeStampOnly[i];
+        const now = Date.now();
+
+        if (now > p) {
+          continue;
+        }
+
+        timeNeedCount = p;
+        phase = phasesInfo[Math.floor(i / 2)];
+      }
+
+      return {
+        phase: phase,
+        countDownTimer: timeNeedCount,
+      };
+    }
+  }, [activePhaseId, isLastPhaseEnded, phasesInfo]);
+
+  console.log("nextPhaseWhenNoCurrPhaseId", nextPhaseWhenNoCurrPhaseId);
+
   useInterval(() => {
     if (isLastPhaseEnded) {
       setCountDownTimer({
@@ -119,9 +160,7 @@ function LaunchpadDetailHeader({
     let countDownTimer;
 
     if (!activePhaseId) {
-      const firstPhase = phasesInfo?.[0];
-
-      countDownTimer = firstPhase?.startTime - Date.now();
+      countDownTimer = nextPhaseWhenNoCurrPhaseId?.countDownTimer - Date.now();
     } else {
       countDownTimer = currentPhase?.endTime - Date.now();
     }
@@ -174,7 +213,7 @@ function LaunchpadDetailHeader({
 
       if (status === "OK") {
         const proj = ret[0];
-        
+
         setIsDoxxed(proj?.isDoxxed);
         setIsDuplicationChecked(proj?.isDuplicationChecked);
       }
@@ -318,7 +357,10 @@ function LaunchpadDetailHeader({
                           display={["block", "inline"]}
                           color="#fff"
                         >
-                          {currentPhase?.publicMintingFee / 10 ** 18 || 0}{" "}
+                          {currentPhase?.publicMintingFee / 10 ** 18 || nextPhaseWhenNoCurrPhaseId?.phase
+                              ?.publicMintingFee /
+                              10 ** 18 ||
+                             0}{" "}
                           <AzeroIcon
                             mb={["2px", "5px"]}
                             width={["14px", "16px"]}
@@ -385,7 +427,8 @@ function LaunchpadDetailHeader({
                       display={["block", "inline"]}
                       color="#fff"
                     >
-                      {currentPhase?.title}
+                      {currentPhase?.title ||
+                        nextPhaseWhenNoCurrPhaseId?.phase?.title}
                     </Text>
                   </Text>
                 </Flex>
@@ -394,16 +437,19 @@ function LaunchpadDetailHeader({
           </HStack>
 
           {/* project ended? */}
-          {isLastPhaseEnded && <CountDownTimer status="mint ended" />}
-
+          {/* {isLastPhaseEnded && <CountDownTimer status="mint ended" />} */}
+          {/* <CountDownTimer status="mint ended" /> */}
           {/* project not started? */}
-          {!isLastPhaseEnded && (
+          {/* {!isLastPhaseEnded && (
             <CountDownTimer
               countDownTimer={countDownTimer}
               status={`phase ${!activePhaseId ? "start" : "end"} in`}
             />
-          )}
-
+          )} */}
+          <CountDownTimer
+            countDownTimer={countDownTimer}
+            status={`phase ${!activePhaseId ? "start" : "end"} in`}
+          />
           <Skeleton
             pt="22px"
             display="flex"

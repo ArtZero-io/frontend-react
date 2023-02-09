@@ -554,13 +554,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   );
                 } else {
                   if (mode === formMode.EDIT) {
+
                     const project_info = {
                       name: values.name.trim(),
                       description: values.description.trim(),
                       website: values.website.trim(),
                       twitter: values.twitter.trim(),
                       discord: values.discord.trim(),
-                      telegram: values.telegram.trim(),
+                      telegram: values.telegram?.trim(),
                       nft_name: values.nftName.trim(),
                       nft_symbol: values.nftSymbol.trim(),
                       header: values.headerIPFSUrl,
