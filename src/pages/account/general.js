@@ -40,7 +40,6 @@ import toast from "react-hot-toast";
 
 import staking_calls from "@utils/blockchain/staking_calls";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
-import BN from "bn.js";
 import { motion } from "framer-motion";
 import { truncateStr } from "@utils";
 import CommonContainer from "../../components/Container/CommonContainer";
@@ -211,17 +210,15 @@ function GeneralPage() {
     let length = stakingDiscountRate?.length;
 
     for (var index = 0; index < length; index++) {
-      if (
-        my_total_staked_az_nfts >=
-        new BN(stakingDiscountCriteria[index]).toNumber()
-      ) {
+      if (1 * my_total_staked_az_nfts >= stakingDiscountCriteria[index]) {
         my_discount_rate =
           (my_discount_rate *
-            (10000 - new BN(stakingDiscountRate[index]).toNumber())) /
+            (10000 - 1 * stakingDiscountRate[index]?.replaceAll(",", ""))) /
           10000;
         break;
       }
     }
+
     setTradeFee(my_discount_rate);
   }, [currentAccount]);
 

@@ -10,7 +10,7 @@ import {
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import toast from "react-hot-toast";
-import { formatOutput, readOnlyGasLimit } from "..";
+import { formatNumberOutput, formatOutput, readOnlyGasLimit } from "..";
 
 let contract;
 
@@ -280,7 +280,7 @@ async function getPlatformFee(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    return formatOutput(output);
+   return formatNumberOutput(output);
   }
   return null;
 }
