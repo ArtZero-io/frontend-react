@@ -45,15 +45,15 @@ function CollectionAdmin() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
-
+  console.log(actionType, 'actionTypeactionType');
   const getCollectionContractBalance = useCallback(async () => {
     const { data: balance } = await api.query.system.account(
       collection_manager.CONTRACT_ADDRESS
     );
     setCollectionContractBalance(
-      new BN(balance.free, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
+      new BN(balance.free, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 12 -
         new BN(balance.miscFrozen, 10, "le").div(new BN(10 ** 6)).toNumber() /
-          10 ** 6
+          10 ** 12
     );
   }, [api.query.system]);
 

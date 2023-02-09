@@ -378,7 +378,7 @@ async function list(
 
   const value = 0;
 
-  const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 12)).toString();
 
   gasLimit = await getEstimatedGas(
     address,

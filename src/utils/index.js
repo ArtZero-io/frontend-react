@@ -290,9 +290,9 @@ export const createLevelAttribute = (levelString) => {
 };
 
 export const getPublicCurrentAccount = () => {
-  const keyring = new Keyring({ type: "sr25519" });
+  const keyring = new Keyring({ ss58Format: 5 });
   const PHRASE =
-    "entire material egg meadow latin bargain dutch coral blood melt acoustic thought";
+    "cake equal grab lounge leisure truck wink shuffle lesson tired wait sausage";
 
   keyring.addFromUri(PHRASE, { name: "Nobody" });
 
@@ -389,7 +389,7 @@ export function onCloseButtonModal({ status, dispatch, type }) {
     });
 }
 
-export const formatNumDynamicDecimal = (num = 0, dec = 6) => {
+export const formatNumDynamicDecimal = (num = 0, dec = 12) => {
   const number = parseInt(num * 10 ** dec) / 10 ** dec;
   const numStr = number.toString();
   const dotIdx = numStr.indexOf(".");

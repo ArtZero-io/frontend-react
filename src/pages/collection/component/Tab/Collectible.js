@@ -130,7 +130,7 @@ const NFTTabCollectible = (props) => {
           }
         }
       }
-
+      console.log(accountAddress, currentAccount?.address, 'currentAccount?.addresscurrentAccount?.address');
       if (accountAddress === currentAccount?.address) {
         setIsOwner(true);
       }

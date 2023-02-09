@@ -437,7 +437,7 @@ function GeneralPage() {
               w="full"
               h="full"
               // src="https://api.artzero.io/getImage?input=QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH&size=500&url=https://ipfs.infura.io/ipfs/QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH"
-              src="https://imagedelivery.net/Iw4Pp5uTB3HCaJ462QFK1Q/QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH/500"
+              src="https://artzeronft.infura-ipfs.io/ipfs/QmT9KE4qi99yZjqCd5WsGYVvgxhP1wtu7osLmqjxxVoqVQ"
             />
           </Square>
 
@@ -464,7 +464,7 @@ function GeneralPage() {
               >
                 <span>stake your </span>
                 <span style={{ color: "#7AE7FF" }}>
-                  praying mantis predators
+                  Artzero NFT on Astar
                 </span>{" "}
                 <Box display={{ base: "none", xl: "flex" }} />
                 <span>to reduce your </span>

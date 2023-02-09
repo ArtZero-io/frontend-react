@@ -246,6 +246,8 @@ function MyNFTTabInfo(props) {
     }
   };
 
+  console.log(askPrice, myTradingFee, royaltyFee, 'feeeeeee');
+
   useEffect(() => {
     const ownerName = async () => {
       const accountAddress = is_for_sale ? saleInfo?.nftOwner : owner;

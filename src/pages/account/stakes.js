@@ -231,7 +231,7 @@ const MyStakesPage = () => {
         </HStack>
       )}
       <Text textAlign="left" color="#fff">
-        Praying Mantis Predators NFT Stats:
+      Artzero NFT on Astar NFT Stats:
       </Text>
 
       <Stack
