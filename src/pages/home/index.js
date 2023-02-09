@@ -416,9 +416,9 @@ function HomePage() {
                   isExternal
                   color="#7ae7ff"
                   textDecoration="underline"
-                  href="https://faucet-smartnet.test.azero.dev/"
+                  href="https://faucet.test.azero.dev/"
                 >
-                  https://faucet-smartnet.test.azero.dev/
+                  https://faucet.test.azero.dev/
                 </Link>
               </Text>
             </Center>
