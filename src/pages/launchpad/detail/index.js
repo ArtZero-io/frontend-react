@@ -572,6 +572,7 @@ const LaunchpadDetailPage = () => {
           currentAccount,
           1
         );
+
         const baseUri = tokenUri?.replace("1.json", "");
 
         ret = await Promise.all(
@@ -582,6 +583,13 @@ const LaunchpadDetailPage = () => {
             });
 
             const metaData = await getMetaDataOffChain(idOfNFT, baseUri);
+
+            if (metaData?.status === "FAILED") {
+              return {
+                nftName: `${projectInfo?.nftName} #${idOfNFT}`,
+                avatar: "Qmc1az4MVBL9MhfLLv3b1Hf9RCs9AoqXR2AZuUZb2XBhpJ",
+              };
+            }
 
             return { ...metaData };
           })

@@ -118,7 +118,6 @@ export async function setMultipleAttributesProfileOnChain(
         if (attributes?.length) {
           let cacheImages = [];
           for (let i = 0; i < attributes.length; i++) {
-            console.log(attributes[i]);
             if (attributes[i] === "avatar") {
               cacheImages.push({
                 input: values[i],

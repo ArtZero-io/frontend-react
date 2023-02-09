@@ -1,5 +1,4 @@
 import { BN } from "@polkadot/util";
-import { convertWeight } from "@polkadot/api-contract/base/util";
 
 const toContractAbiMessage = (contractPromise, message) => {
   const value = contractPromise.abi.messages.find((m) => m.method === message);
@@ -25,7 +24,6 @@ export default async function getGasLimit(
   contract,
   options = {},
   args = []
-  // temporarily type is Weight instead of WeightV2 until polkadot-js type `ContractExecResult` will be changed to WeightV2
 ) {
   const abiMessage = toContractAbiMessage(contract, message);
 
@@ -33,7 +31,7 @@ export default async function getGasLimit(
 
   const { value, gasLimit, storageDepositLimit } = options;
 
-  const result = await api.call.contractsApi.call(
+  const { gasRequired } = await api.call.contractsApi.call(
     userAddress,
     contract.address,
     value ?? new BN(0),
@@ -42,12 +40,26 @@ export default async function getGasLimit(
     abiMessage.value.toU8a(args)
   );
 
-  const { v2Weight } = convertWeight(result.gasRequired);
+  // FOR DEV ONLY
+  // if (process.env.NODE_ENV === "development") {
+  //   console.table({
+  //     ActionType: message,
+  //     "gasRequired.refTime": gasRequired.refTime.toHuman(),
+  //     "gasRequired.proofSize": gasRequired.proofSize.toHuman(),
+  //   });
 
-  const gasRequired = api.registry.createType("WeightV2", {
-    refTime: v2Weight.refTime.mul(new BN(3)),
-    proofSize: v2Weight.proofSize.mul(new BN(2)),
-  });
+  //   const { data: balance } = await api.query.system.account(userAddress);
+
+  //   const now = await api.query.timestamp.now();
+
+  //   console.table({
+  //     "Log time": now.toString(),
+  //     "Balance START":
+  //       balance.free.toHuman().slice(0, -16) +
+  //       "." +
+  //       balance.free.toHuman().slice(-15, -8),
+  //   });
+  // }
 
   return { ok: true, value: gasRequired };
 }

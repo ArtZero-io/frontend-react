@@ -267,7 +267,7 @@ function CollectionAdmin() {
         0, //=>value
         "setMultipleAttributes",
         address,
-        ["is_duplicated_checked"],
+        ["is_duplication_checked"],
         [statusBeSet]
       );
 
@@ -528,16 +528,16 @@ function CollectionAdmin() {
                         />
                       </Td>
                       <Td py={7}>
-                        {collection.isDuplicatedChecked ? "YES" : "NO"}
+                        {collection.isDuplicationChecked ? "YES" : "NO"}
                         <CommonButton
                           {...rest}
                           size="sm"
                           maxW="120px"
                           variant={
-                            collection.isDuplicatedChecked ? "outline" : ""
+                            collection.isDuplicationChecked ? "outline" : ""
                           }
                           text={
-                            !collection.isDuplicatedChecked
+                            !collection.isDuplicationChecked
                               ? "Set Yes"
                               : "Set No"
                           }
@@ -550,7 +550,7 @@ function CollectionAdmin() {
                           onClick={() =>
                             setDupCheckedHandler(
                               collection.nftContractAddress,
-                              collection.isDuplicatedChecked
+                              collection.isDuplicationChecked
                             )
                           }
                         />

@@ -59,7 +59,7 @@ function CollectionHeader(props) {
         h="full"
         mx="auto"
         px={{ base: "32px", md: "8" }}
-        pb={{ base: "36px", md: "90px" }}
+        pb={{ base: "36px", md: "30px" }}
         pt={{ base: "56px", md: "120px" }}
       >
         <VStack h="full">
@@ -280,10 +280,7 @@ function CollectionHeader(props) {
           </Container>
 
           <SocialCard
-            bottom="0"
-            right="100px"
             justifyContent="center"
-            pos={{ base: "", xl: "absolute" }}
             profile={[{ website }, { twitter }, { discord }, { telegram }]}
           />
         </VStack>

@@ -109,7 +109,7 @@ function MyNFTGroupCard({
             return;
           }
 
-          const tokenUri = output.toHuman()?.replace("1.json", "");
+          const tokenUri = output.toHuman().Ok?.replace("1.json", "");
 
           Promise.all(
             listNFT.map(async (item) => {

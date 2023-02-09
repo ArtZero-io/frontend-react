@@ -356,7 +356,7 @@ export async function execContractQuery(
     console.log("Api invalid");
     // return toast.error("Api invalid");
   }
-  console.log("@_@ ", queryName, " callerAddress ", callerAddress);
+  // console.log("@_@ ", queryName, " callerAddress ", callerAddress);
 
   const contract = new ContractPromise(api, contractAbi, contractAddress);
 

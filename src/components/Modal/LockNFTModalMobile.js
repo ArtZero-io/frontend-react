@@ -66,7 +66,7 @@ function LockNFTModalMobile({
       const { signer } = await web3FromSource(currentAccount?.meta?.source);
       const value = 0;
 
-      gasLimit = await getEstimatedGas(address, contract, value, "lock", {
+      gasLimit = await getEstimatedGas(address, contract, value, "psp34Traits::lock", {
         u64: tokenID,
       });
 

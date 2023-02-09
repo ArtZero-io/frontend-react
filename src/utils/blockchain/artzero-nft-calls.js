@@ -582,7 +582,7 @@ async function approve(
       }
 
       if (status) {
-        const statusText = Object.keys(status.toHuman().Ok)[0];
+        const statusText = Object.keys(status?.toHuman().Ok)[0];
         if (status.isFinalized) {
           toast.success(
             `Approve ${

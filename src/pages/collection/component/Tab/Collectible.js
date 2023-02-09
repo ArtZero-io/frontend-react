@@ -116,7 +116,9 @@ const NFTTabCollectible = (props) => {
           sale_info?.nftOwner,
           { u64: tokenID }
         );
+
         setBidderCount(listBidder?.length || 0);
+        
         accountAddress = is_for_sale ? sale_info?.nftOwner : owner;
 
         if (listBidder) {

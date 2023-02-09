@@ -18,6 +18,8 @@ import EditIcon from "@theme/assets/icon/Edit.js";
 import { formMode, SCROLLBAR, FINALIZED } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import toast from "react-hot-toast";
+import { clearTxStatus } from "@store/actions/txStatus";
+import { useDispatch } from "react-redux";
 
 const AddNewNFTModal = ({
   variant = "normal",
@@ -25,6 +27,7 @@ const AddNewNFTModal = ({
   isDisabled,
   ...rest
 }) => {
+  const dispatch = useDispatch();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { actionType, step, onEndClick } = useTxStatus();
@@ -33,8 +36,13 @@ const AddNewNFTModal = ({
   const iconWidth = useBreakpointValue(["40px", "50px"]);
 
   useEffect(() => {
-    step === FINALIZED && onClose();
-  }, [step, onClose]);
+    if (step === FINALIZED) {
+      if (variant === "quick-create-nft") {
+        dispatch(clearTxStatus());
+      }
+      onClose();
+    }
+  }, [step, onClose, dispatch, variant]);
 
   return (
     <>
@@ -51,7 +59,7 @@ const AddNewNFTModal = ({
             top="2px"
             zIndex="1"
             minW="40px"
-            right="96px"
+            right="100px"
             pos="absolute"
             lineHeight="36px"
             color="#7ae7ff"
@@ -64,7 +72,7 @@ const AddNewNFTModal = ({
           </Text>
         </>
       )}
-      
+
       {variant === "normal" && mode === formMode.ADD && (
         <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
           Add new NFT
