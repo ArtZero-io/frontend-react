@@ -50,7 +50,7 @@ import {
 const links = [
   { label: "Marketplace", href: ROUTES.MARKETPLACE },
   { label: "Launchpad", href: ROUTES.LAUNCHPAD_BASE },
-  { label: "Stats", href: ROUTES.STATS },
+  // { label: "Stats", href: ROUTES.STATS },
 ];
 
 const MobileNavContent = (props) => {
@@ -157,15 +157,19 @@ const DesktopNavContent = (props) => {
         {links.map((link, index) => (
           <NavLink.Desktop key={index} label={link.label} to={link.href} />
         ))}
-        {/* {currentAccount && currentAccount?.address && (
-          <NavLink.Desktop label="Admin" to={ROUTES.ACCOUNT_ADMIN} />
-        )} */}
-        {<NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />}
+
+        {
+          <NavLink.Desktop
+            label="Stake2Earn"
+            to={ROUTES.STAKE2EARN}
+            isExternal={true}
+          />
+        }
+
+        <NavLink.Desktop label="Stats" to={ROUTES.STATS} />
+        <NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />
 
         {currentAccount?.address && <MyAccountDropdown />}
-        {currentAccount?.address && (
-          <AddNewCollectionModal mode={formMode.ADD} variant="navbar" />
-        )}
       </HStack>
 
       <SearchDrawer display={{ base: "none", md: "flex" }} />
@@ -186,12 +190,12 @@ const myAccountList = [
   { label: "My NFTs", href: ROUTES.ACCOUNT_MY_NFTS },
   { label: "My Stakes", href: ROUTES.ACCOUNT_MY_STAKES },
   { label: "My Projects", href: ROUTES.ACCOUNT_MY_PROJECTS },
-  { label: "Stake to earn", href: "https://inkwhale.net/", isExternal: true },
 ];
 
 const MyAccountDropdown = () => {
   const history = useHistory();
   const location = useLocation();
+  const { currentAccount } = useSubstrateState();
 
   const [path, setPath] = useState(location.pathname);
 
@@ -295,7 +299,30 @@ const MyAccountDropdown = () => {
           borderColor="brand.blue"
           // ml={{ base: "20px", lg: "auto" }}
         >
-          {myAccountList.map((item, idx) => (
+          {myAccountList?.slice(0, 1)?.map((item, idx) => (
+            <MenuItem
+              to="#"
+              key={idx}
+              ml={["20px", "auto"]}
+              py={["4px", "12px"]}
+              px={["4px", "15px"]}
+              _hover={{ bg: "black" }}
+              as={ReactRouterLink}
+              fontFamily="Evogria, sans-serif"
+              onClick={() =>
+                item?.isExternal
+                  ? window.open(item.href, "_blank")
+                  : history.push(item.href)
+              }
+              fontSize={{ base: "18px", md: "15px" }}
+            >
+              {item.label}
+            </MenuItem>
+          ))}
+          {currentAccount?.address && (
+            <AddNewCollectionModal mode={formMode.ADD} variant="navbar" />
+          )}
+          {myAccountList?.slice(1, myAccountList?.length)?.map((item, idx) => (
             <MenuItem
               to="#"
               key={idx}
@@ -599,6 +626,11 @@ const NAV_ITEMS = [
     href: ROUTES.LAUNCHPAD_BASE,
   },
   {
+    label: "stake2earn",
+    href: ROUTES.DOCS,
+    isExternal: true,
+  },
+  {
     label: "stats",
     href: ROUTES.STATS,
   },
@@ -629,11 +661,6 @@ const NAV_ITEMS = [
       {
         label: "my projects",
         href: ROUTES.ACCOUNT_MY_PROJECTS,
-      },
-      {
-        label: "stake to earn",
-        href: "https://inkwhale.net/",
-        isExternal: true,
       },
     ],
   },
