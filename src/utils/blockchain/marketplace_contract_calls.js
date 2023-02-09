@@ -508,7 +508,7 @@ async function bid(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(bid_amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const value = new BN(bid_amount * 10 ** 6).mul(new BN(10 ** 12)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -639,7 +639,7 @@ async function buy(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(price / 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const value = new BN(price / 10 ** 6).mul(new BN(10 ** 12)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -808,7 +808,7 @@ export const withdrawMarketplaceContract = async (
   const value = 0;
 
   const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
-    .mul(new BN(10 ** 6))
+    .mul(new BN(10 ** 12))
     .toString();
 
   gasLimit = await getEstimatedGas(

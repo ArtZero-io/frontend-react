@@ -94,7 +94,7 @@ async function updateWhitelist(
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
-  const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 12)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -164,7 +164,7 @@ async function addWhitelist(
   const { signer } = await web3FromSource(caller_account?.meta?.source);
   const value = 0;
 
-  const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const minting_fee = new BN(price * 10 ** 6).mul(new BN(10 ** 12)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -447,7 +447,7 @@ async function publicMint(
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
-  const value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 12)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -524,7 +524,7 @@ async function whitelistMint(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const value = new BN(mintingFee * 10 ** 6).mul(new BN(10 ** 12)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -820,7 +820,7 @@ async function addNewPhase(
   const value = 0;
 
   publicMintingFee = new BN(publicMintingFee * 10 ** 6)
-    .mul(new BN(10 ** 6))
+    .mul(new BN(10 ** 12))
     .toString();
 
   gasLimit = await getEstimatedGas(
@@ -892,7 +892,7 @@ async function updateSchedulePhase(
   const value = 0;
 
   publicMintingFee = new BN(publicMintingFee * 10 ** 6)
-    .mul(new BN(10 ** 6))
+    .mul(new BN(10 ** 12))
     .toString();
 
   gasLimit = await getEstimatedGas(
@@ -1107,7 +1107,7 @@ async function withdrawFee(caller_account, amount, dispatch, txType, api) {
 
   const value = 0;
   const withdrawAmount = new BN(parseFloat(amount) * 10 ** 6)
-    .mul(new BN(10 ** 6))
+    .mul(new BN(10 ** 12))
     .toString();
 
   gasLimit = await getEstimatedGas(

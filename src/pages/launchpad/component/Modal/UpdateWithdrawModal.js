@@ -62,7 +62,7 @@ export default function UpdateWithdrawModal({
       );
 
       const tempBal =
-        (balance.free.toNumber() - balance.miscFrozen.toNumber()) / 10 ** 6;
+        (balance.free.toNumber() - balance.miscFrozen.toNumber()) / 10 ** 12;
       const tempBalFloorRound = Math.floor(tempBal);
 
       setContractBalance(tempBalFloorRound / 10 ** 6);

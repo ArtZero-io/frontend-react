@@ -411,7 +411,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     is_public_phases.push(phase.isPublic);
                     let public_minting_fee_phase_tmp = phase.isPublic
                       ? new BN(phase.publicMintingFee * 10 ** 6)
-                          .mul(new BN(10 ** 6))
+                          .mul(new BN(10 ** 12))
                           .toString()
                       : 0;
                     public_minting_fee_phases.push(

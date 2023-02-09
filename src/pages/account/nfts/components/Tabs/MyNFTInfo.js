@@ -246,7 +246,7 @@ function MyNFTTabInfo(props) {
     }
   };
 
-  console.log(askPrice, myTradingFee, royaltyFee, 'feeeeeee');
+  console.log(askPrice, price, myTradingFee, royaltyFee, 'feeeeeee');
 
   useEffect(() => {
     const ownerName = async () => {
@@ -655,7 +655,7 @@ function MyNFTTabInfo(props) {
                 <Text as="span" color="brand.grayLight">
                   Royalty fee:
                 </Text>{" "}
-                {formatNumDynamicDecimal((price / 10 ** 16) * royaltyFee)}{" "}
+                {formatNumDynamicDecimal((price / 10 ** 22) * royaltyFee)}{" "}
                 <AzeroIcon w="15px" mb="2px" /> ({(royaltyFee / 100).toFixed(2)}
                 %)
               </Text>
@@ -663,7 +663,7 @@ function MyNFTTabInfo(props) {
                 <Text as="span" color="brand.grayLight">
                   Trade fee:
                 </Text>{" "}
-                {formatNumDynamicDecimal((price / 10 ** 14) * myTradingFee)}{" "}
+                {formatNumDynamicDecimal((price / 10 ** 20) * myTradingFee)}{" "}
                 <AzeroIcon w="15px" mb="2px" /> ({myTradingFee}%)
               </Text>
               <Text>
@@ -673,8 +673,8 @@ function MyNFTTabInfo(props) {
                 {formatNumDynamicDecimal(
                   price *
                     (1 / 10 ** 18 -
-                      myTradingFee / 10 ** 14 -
-                      royaltyFee / 10 ** 16)
+                      myTradingFee / 10 ** 20 -
+                      royaltyFee / 10 ** 22)
                 )}{" "}
                 <AzeroIcon w="15px" mb="2px" />
               </Text>

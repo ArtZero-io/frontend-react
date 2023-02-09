@@ -426,8 +426,8 @@ const LaunchpadDetailPage = () => {
 
     const { data } = await api.query.system.account(currentAccount.address);
     const balance =
-      new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
-      new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+      new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 12 -
+      new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 12;
     const mintingFee =
       (whitelistMintingAmount * userWLInfo[activePhaseId - 1]?.mintingFee) /
       10 ** 18;
@@ -478,8 +478,8 @@ const LaunchpadDetailPage = () => {
 
     const { data } = await api.query.system.account(currentAccount.address);
     const balance =
-      new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
-      new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 6;
+      new BN(data.free).div(new BN(10 ** 6)).toNumber() / 10 ** 12 -
+      new BN(data.miscFrozen).div(new BN(10 ** 6)).toNumber() / 10 ** 12;
 
     const mintingFee =
       (mintingAmount * currentPhase.publicMintingFee) / 10 ** 18;

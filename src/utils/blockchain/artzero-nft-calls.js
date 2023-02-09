@@ -479,7 +479,7 @@ async function withdrawFee(caller_account, amount) {
 
   contract.tx["adminTrait::withdrawFee"](
     { gasLimit, value: azero_value },
-    new BN(parseFloat(amount) * 10 ** 6).mul(new BN(10 ** 6)).toString()
+    new BN(parseFloat(amount) * 10 ** 6).mul(new BN(10 ** 12)).toString()
   )
     .signAndSend(
       address,
