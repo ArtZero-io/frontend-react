@@ -179,7 +179,6 @@ function UpdatePhase({
       end,
     } = value[index];
 
-
     try {
       dispatch(
         setTxStatus({ type: UPDATE_PHASE, step: START, tokenIDArray: [index] })
@@ -272,8 +271,6 @@ function UpdatePhase({
       end,
     } = value[index];
 
-
-    
     try {
       dispatch(
         setTxStatus({ type: ADD_PHASE, step: START, tokenIDArray: [index] })
@@ -313,7 +310,6 @@ function UpdatePhase({
       dispatch(
         setTxStatus({ type: DELETE_PHASE, step: START, tokenIDArray: [index] })
       );
-
 
       await launchpad_psp34_nft_standard_calls.deactivePhase(
         currentAccount,

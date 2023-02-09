@@ -1,6 +1,7 @@
 import {
   Button,
   Heading,
+  MenuItem,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -35,39 +36,23 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
     <>
       {variant !== "navbar" && mode === formMode.ADD && (
         <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-          create Collection
+          create collection
         </Button>
       )}
 
       {variant === "navbar" && mode === formMode.ADD && (
-        <Heading
-          p={0}
-          ring={0}
-          h="41px"
-          py="10px"
-          as={Button}
-          display="flex"
-          bg="transparent"
-          textAlign="left"
-          borderBottom="2px"
-          fontFamily="Evogria"
-          borderColor="transparent"
-          transition="all 0.2s"
-          justifyContent="center"
-          fontSize={{ base: "24px", md: "15px" }}
-          _hover={{
-            borderColor: "brand.blue",
-            color: "brand.blue",
-            bg: "transparent",
-          }}
-          _focus={{
-            bg: "transparent",
-          }}
-          color="#fff"
+        <MenuItem
           onClick={() => onOpen()}
+          to="#"
+          ml={["20px", "auto"]}
+          py={["4px", "12px"]}
+          px={["4px", "15px"]}
+          _hover={{ bg: "black" }}
+          fontFamily="Evogria, sans-serif"
+          fontSize={{ base: "18px", md: "15px" }}
         >
-          create
-        </Heading>
+          create collection
+        </MenuItem>
       )}
 
       <Modal isCentered size={modalSize} isOpen={isOpen} onClose={onClose}>
