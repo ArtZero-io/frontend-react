@@ -188,7 +188,7 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
         });
 
         events.forEach(({ event: { method } }) => {
-          if (method === "ExtrinsicSuccess" && status.type === "InBlock") {
+          if (method === "ExtrinsicSuccess" && status.type === "Finalized") {
             toast(
               "Thank you for submitting. Your Collection has been created successfully. It will need enabling by our team. We will get in touch with you within the next 48 hours. In the meantime, you can navigate to MY ACCOUNT/MY COLLECTIONS and start creating NFTs in the Collection.",
               {

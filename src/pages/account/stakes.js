@@ -155,13 +155,11 @@ const MyStakesPage = () => {
   useEffect(() => {
     let isMounted = true;
 
-    if (PMPCollectionDetail) return;
-
     fetchCollectionDetail(isMounted);
 
     return () => (isMounted = false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeTab, currentAccount, PMPCollectionDetail]);
+  }, [activeTab, currentAccount]);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
@@ -193,6 +191,8 @@ const MyStakesPage = () => {
                 text={item.replace("_", " ")}
                 isActive={item === activeTab}
                 onClick={() => {
+                  if (item === activeTab) return;
+
                   setActiveTab(item);
                   setPMPCollectionDetail(null);
                 }}
@@ -205,7 +205,7 @@ const MyStakesPage = () => {
               variant="iconSolid"
               aria-label="refresh"
               icon={<RefreshIcon />}
-              onClick={() => setPMPCollectionDetail(null)}
+              onClick={() => fetchCollectionDetail(true)}
             />
           </HStack>
         )}
@@ -223,7 +223,7 @@ const MyStakesPage = () => {
             size="icon"
             variant="iconSolid"
             aria-label="refresh"
-            onClick={() => setPMPCollectionDetail(null)}
+            onClick={() => fetchCollectionDetail(true)}
             icon={<RefreshIcon />}
             _hover={{ color: "black", bg: "#7ae7ff" }}
           />

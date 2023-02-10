@@ -29,7 +29,7 @@ function MyCollectionsPage() {
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
     [CREATE_COLLECTION, EDIT_COLLECTION],
-    () => fetchCollectionsOwned()
+    () => fetchCollectionsOwned(true)
   );
 
   const {
@@ -75,6 +75,7 @@ function MyCollectionsPage() {
 
         if (!dataList?.length) {
           ownerAddress = options.owner;
+          setCollections([]);
         }
 
         if (dataList?.length) {
@@ -90,14 +91,17 @@ function MyCollectionsPage() {
             listCollection.push(item);
           }
         }
+
         if (!isMounted) return;
 
         setOwner(ownerAddress);
+
         setCollections(listCollection);
+
         setLoading(false);
       } catch (error) {
         console.log(error);
-        if (!isMounted) return;
+        setCollections([]);
 
         setLoading(false);
 
@@ -112,7 +116,9 @@ function MyCollectionsPage() {
 
     fetchCollectionsOwned(isMounted);
 
-    return () => (isMounted = false);
+    return () => {
+      isMounted = false;
+    };
   }, [currentAccount, fetchCollectionsOwned]);
 
   return (

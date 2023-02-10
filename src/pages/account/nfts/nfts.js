@@ -45,6 +45,7 @@ const MyNFTsPage = () => {
     () => handleForceUpdate()
   );
 
+  // eslint-disable-next-line no-unused-vars
   const [owner, setOwner] = useState(null);
   const [loading, setLoading] = useState(null);
   const [filterSelected, setFilterSelected] = useState("COLLECTED");
@@ -78,10 +79,9 @@ const MyNFTsPage = () => {
   }
 
   const fetchMyCollections = useCallback(async () => {
-    if (myCollections) return;
-
     try {
       setLoading(true);
+
       const allCollectionsOwned = await clientAPI("post", "/getCollections", {
         limit: 10000,
         offset: 0,
@@ -135,14 +135,14 @@ const MyNFTsPage = () => {
       setLoading(false);
     } catch (error) {
       console.log(error);
+      setMyCollections([]);
+
       setLoading(false);
     }
-  }, [currentAccount?.address, filterSelected, myCollections]);
+  }, [currentAccount?.address, filterSelected]);
 
   const fetchMyBids = useCallback(
     async (isMounted) => {
-      if (myCollections) return;
-
       try {
         setLoading(true);
 
@@ -159,6 +159,8 @@ const MyNFTsPage = () => {
 
         if (!Bids?.length) {
           setOwner(null);
+          setMyCollections([]);
+
           setLoading(false);
 
           return;
@@ -216,12 +218,14 @@ const MyNFTsPage = () => {
 
         setLoading(false);
       } catch (error) {
+        setMyCollections([]);
+
         setLoading(false);
         console.log(error);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentAccount?.address, filterSelected, myCollections]
+    [currentAccount?.address, filterSelected]
   );
 
   useEffect(() => {
@@ -230,13 +234,7 @@ const MyNFTsPage = () => {
     filterSelected !== "BIDS" ? fetchMyCollections() : fetchMyBids(isMounted);
 
     return () => (isMounted = false);
-  }, [
-    currentAccount.address,
-    fetchMyBids,
-    fetchMyCollections,
-    filterSelected,
-    owner,
-  ]);
+  }, [currentAccount.address, fetchMyBids, fetchMyCollections, filterSelected]);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
@@ -276,7 +274,9 @@ const MyNFTsPage = () => {
               variant="iconSolid"
               aria-label="refresh"
               icon={<RefreshIcon />}
-              onClick={() => setMyCollections(null)}
+              onClick={() => {
+                fetchMyCollections();
+              }}
             />
           </HStack>
         )}
@@ -289,7 +289,7 @@ const MyNFTsPage = () => {
             size="icon"
             variant="iconSolid"
             aria-label="refresh"
-            onClick={() => setMyCollections(null)}
+            onClick={() => fetchMyCollections()}
             icon={<RefreshIcon />}
             _hover={{ color: "black", bg: "#7ae7ff" }}
           />
