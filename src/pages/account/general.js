@@ -56,6 +56,7 @@ import useForceUpdate from "@hooks/useForceUpdate";
 import { APICall } from "@api/client";
 import { useMemo } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
+import { fetchMyPMPPendingCount } from "./stakes";
 
 function GeneralPage() {
   const history = useHistory();
@@ -158,6 +159,11 @@ function GeneralPage() {
 
       setEstimatedEarningBaseRewardPool(estimatedEarningBaseRewardPoolData);
 
+      const pendingCount = await fetchMyPMPPendingCount(
+        currentAccount,
+        staking_calls
+      );
+
       Promise.all([nftListPromise, 1 * totalStakedPromise]).then(
         ([nftList, totalStaked]) => {
           const nftForSale = nftList.reduce(function (a, b) {
@@ -169,9 +175,10 @@ function GeneralPage() {
             ...info,
             { name: "NFTs for sale", value: nftForSale },
             { name: "Staked NFTs", value: totalStaked },
+            { name: "Pending Staked NFTs", value: pendingCount * 1 },
             {
               name: "Total Owned NFTs",
-              value: nftList.length + totalStaked,
+              value: nftList.length + totalStaked + pendingCount * 1,
             },
           ];
 
@@ -340,11 +347,12 @@ function GeneralPage() {
             <Grid
               w="full"
               minH={"7rem"}
-              gap={{ base: "10px", md: "30px" }}
+              gap={{ base: "10px", lg: "30px" }}
               templateColumns={{
                 base: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))",
-                lg: "repeat(auto-fill, minmax(min(100%, 290px), 1fr))",
-                xl: "repeat(auto-fill, minmax(min(100%, 320px), 1fr))",
+                sm: "repeat(auto-fill, minmax(min(100%, 160px), 1fr))",
+                md: "repeat(auto-fill, minmax(min(100%, 220px), 1fr))",
+                xl: "repeat(auto-fill, minmax(min(100%, 220px), 1fr))",
               }}
             >
               {dashboardInfo
