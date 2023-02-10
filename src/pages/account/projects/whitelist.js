@@ -88,7 +88,6 @@ function MyWhiteListProjectPage() {
       );
 
       return queryResult1.toHuman().Ok;
-
     };
     const { ret: projList1 } = await APICall.getAllProjects({});
     const { ret: projList2 } = await APICall.getAllProjects({
