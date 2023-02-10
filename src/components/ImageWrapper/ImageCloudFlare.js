@@ -11,11 +11,19 @@ export default function ImageCloudFlare({
   const [projImage, setProjImage] = useState("");
 
   useEffect(() => {
+    let isMounted = true;
+
     try {
-      src && getCloudFlareImage(src, size).then((res) => setProjImage(res));
+      src &&
+        getCloudFlareImage(src, size).then((res) => {
+          if (isMounted) {
+            setProjImage(res);
+          }
+        });
     } catch (error) {
       console.log("err", error);
     }
+    return () => (isMounted = false);
   }, [size, src]);
 
   return (
@@ -41,11 +49,19 @@ export function ImageCloudFlareLaunchpad({
   const [projImage, setProjImage] = useState("");
 
   useEffect(() => {
+    let isMounted = true;
+
     try {
-      src && getCloudFlareImage(src, size).then((res) => setProjImage(res));
+      src &&
+        getCloudFlareImage(src, size).then((res) => {
+          if (isMounted) {
+            setProjImage(res);
+          }
+        });
     } catch (error) {
       console.log("err", error);
     }
+    return () => (isMounted = false);
   }, [size, src]);
 
   return (

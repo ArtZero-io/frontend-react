@@ -78,6 +78,8 @@ const MyNFTsPage = () => {
   }
 
   const fetchMyCollections = useCallback(async () => {
+    if (myCollections) return;
+
     try {
       setLoading(true);
       const allCollectionsOwned = await clientAPI("post", "/getCollections", {
@@ -128,17 +130,19 @@ const MyNFTsPage = () => {
 
         setOwner(nft.is_for_sale ? nft.nft_owner : nft.owner);
       } else {
-        setMyCollections(null);
+        setMyCollections([]);
       }
       setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
     }
-  }, [currentAccount?.address, filterSelected]);
+  }, [currentAccount?.address, filterSelected, myCollections]);
 
-  useEffect(() => {
-    const fetchMyBids = async () => {
+  const fetchMyBids = useCallback(
+    async (isMounted) => {
+      if (myCollections) return;
+
       try {
         setLoading(true);
 
@@ -150,6 +154,8 @@ const MyNFTsPage = () => {
         };
 
         let { ret: Bids } = await APICall.getBidsByBidderAddress(options);
+
+        if (!isMounted) return;
 
         if (!Bids?.length) {
           setOwner(null);
@@ -205,7 +211,7 @@ const MyNFTsPage = () => {
         if (collections?.length) {
           setMyCollections(collections);
         } else {
-          setMyCollections(null);
+          setMyCollections([]);
         }
 
         setLoading(false);
@@ -213,12 +219,24 @@ const MyNFTsPage = () => {
         setLoading(false);
         console.log(error);
       }
-    };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentAccount?.address, filterSelected, myCollections]
+  );
 
-    // if (!myCollections || owner !== currentAccount?.address) {
-    filterSelected !== "BIDS" ? fetchMyCollections() : fetchMyBids();
-    // }
-  }, [currentAccount?.address, fetchMyCollections, filterSelected, owner]);
+  useEffect(() => {
+    let isMounted = true;
+
+    filterSelected !== "BIDS" ? fetchMyCollections() : fetchMyBids(isMounted);
+
+    return () => (isMounted = false);
+  }, [
+    currentAccount.address,
+    fetchMyBids,
+    fetchMyCollections,
+    filterSelected,
+    owner,
+  ]);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
