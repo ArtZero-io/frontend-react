@@ -198,12 +198,12 @@ const AddNewNFTForm = ({
                         .max(30, "Must be at most 30 characters"),
                       otherwise: Yup.string().notRequired(),
                     }),
-                  level: Yup.number().when("levelMax", {
+                  level: Yup.number().when("name", {
                     is: (val) => val,
                     then: Yup.number()
                       .required("Must have min value.")
                       .min(0, "Must be bigger than 0")
-                      .max(10, "Must smaller than max"),
+                      .max(Yup.ref("levelMax"), "Must smaller than max"),
                     otherwise: Yup.number().notRequired(),
                   }),
                   levelMax: Yup.number().when("name", {
