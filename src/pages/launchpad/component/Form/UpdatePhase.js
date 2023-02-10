@@ -118,18 +118,19 @@ function UpdatePhase({
   };
 
   const onUpdatePhase = async (index) => {
+    // Check each phase edit is overlap?
     const isOverlap = isPhaseTimeOverlap(value);
 
     if (isOverlap) {
       return toast.error("Sub phase time is not valid or overlap.");
     }
-    //TODOs: check with proj phase time
 
     const phasesArray = [...value];
 
     const prjStartTime = strToNumber(startTime);
     const prjEndTime = strToNumber(endTime);
 
+    // check public mint amount max
     if (phasesArray?.length) {
       const { availableTokenAmount, currPublicAmount, publicAmount } =
         phasesArray[index];
@@ -144,7 +145,8 @@ function UpdatePhase({
 
       const startFirstPhase = phasesArray[0]?.start;
       const endLastPhase = [...phasesArray].pop().end;
-
+      
+      // check proj & phase overlap
       if (
         !(
           prjStartTime <= startFirstPhase &&
@@ -159,15 +161,6 @@ function UpdatePhase({
       }
     }
 
-    const launchpad_psp34_nft_standard_contract = new ContractPromise(
-      api,
-      launchpad_psp34_nft_standard.CONTRACT_ABI,
-      collection_address
-    );
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
-
     const {
       name,
       id,
@@ -179,10 +172,34 @@ function UpdatePhase({
       end,
     } = value[index];
 
+    // check phase is add Whitelist address?
+    const numberWLofPhase =
+      await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(
+        currentAccount,
+        id
+      );
+
+    if (1 * numberWLofPhase !== 0) {
+      toast.error(
+        `This phase has ${numberWLofPhase} wallet added, cannot edit!`
+      );
+      return;
+    }
+
+    const launchpad_psp34_nft_standard_contract = new ContractPromise(
+      api,
+      launchpad_psp34_nft_standard.CONTRACT_ABI,
+      collection_address
+    );
+    launchpad_psp34_nft_standard_calls.setContract(
+      launchpad_psp34_nft_standard_contract
+    );
+
     try {
       dispatch(
         setTxStatus({ type: UPDATE_PHASE, step: START, tokenIDArray: [index] })
       );
+      console.log("first1");
 
       await launchpad_psp34_nft_standard_calls.updateSchedulePhase(
         currentAccount,
@@ -198,6 +215,7 @@ function UpdatePhase({
         UPDATE_PHASE,
         api
       );
+      console.log("first");
     } catch (error) {
       console.log("error", error);
       toast.error(error.message);
