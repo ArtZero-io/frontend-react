@@ -19,9 +19,9 @@ import { useSubstrateState } from "@utils/substrate";
 import Loader from "@components/Loader/CommonLoader";
 import staking_calls from "@utils/blockchain/staking_calls";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { delay, truncateStr } from "@utils";
+import { delay } from "@utils";
 import toast from "react-hot-toast";
 import { fetchUserBalance } from "../../../launchpad/component/Form/AddNewProject";
 
@@ -54,7 +54,6 @@ import marketplace from "@utils/blockchain/marketplace";
 
 function RewardDistribution() {
   const { api, currentAccount } = useSubstrateState();
-  const { activeAddress } = useSelector((s) => s.account);
 
   const [addAmount, setAddAmount] = useState(0);
   const [rewardPool, setRewardPool] = useState(0);
@@ -62,7 +61,7 @@ function RewardDistribution() {
   const [totalStaked, setTotalStaked] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
   const [rewardStarted, setIsRewardStarted] = useState(false);
-  const [adminAddress, setAdminAddress] = useState("");
+  const [isAdminStakingContract, setIsAdminStakingContract] = useState(false);
   const [stakersCount, setStakerCount] = useState(0);
   const [stakers, setStakers] = useState([]);
 
@@ -91,7 +90,7 @@ function RewardDistribution() {
     setRewardPool(reward_pool);
     setTotalStaked(total_staked);
     setIsLocked(is_locked);
-    setAdminAddress(queryResult1?.isTrue);
+    setIsAdminStakingContract(queryResult1.toHuman().Ok);
     setIsRewardStarted(is_reward_started);
   };
 
@@ -128,7 +127,7 @@ function RewardDistribution() {
   };
 
   const setStakingStatus = async (status) => {
-    if (activeAddress !== adminAddress) {
+    if (!isAdminStakingContract) {
       return toast.error("Only Admin allowed");
     }
     await staking_calls.updateIsLocked(currentAccount, status);
@@ -137,7 +136,7 @@ function RewardDistribution() {
   };
 
   const setRewardDistribution = async (status) => {
-    if (activeAddress !== adminAddress) {
+    if (!isAdminStakingContract) {
       return toast.error("Only Admin allowed");
     }
     if (status) await staking_calls.startRewardDistribution(currentAccount);
@@ -147,7 +146,7 @@ function RewardDistribution() {
   };
 
   const enableClaim = async (stakerAddress) => {
-    if (activeAddress !== adminAddress) {
+    if (!isAdminStakingContract) {
       return toast.error("Only Admin allowed");
     }
 
@@ -176,9 +175,11 @@ function RewardDistribution() {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     onRefresh();
     getStakers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAccount]);
 
   const dispatch = useDispatch();
@@ -485,10 +486,10 @@ function RewardDistribution() {
               >
                 <Flex alignItems="start" pr={20}>
                   <Text ml={1} color="brand.grayLight">
-                    Admin
+                    Your role:
                   </Text>
                   <Text color="#7ae7ff" ml={2}>
-                    {truncateStr(adminAddress, 5)}
+                    {isAdminStakingContract ? "Admin" : "Not admin"}
                   </Text>
                 </Flex>
                 <Flex
