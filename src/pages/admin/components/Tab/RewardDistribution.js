@@ -256,13 +256,11 @@ function RewardDistribution() {
           api,
           marketplace.CONTRACT_ABI,
           marketplace.CONTRACT_ADDRESS,
-          "accessControl::hasRole",
-          3739740293,
-          currentAccount?.address
+          "ownable::owner"
         );
 
-        if (!queryResult1.toHuman().Ok) {
-          return toast.error(`Only marketplace admin is allowed!`);
+        if (currentAccount?.address !== queryResult1.toHuman().Ok) {
+          return toast.error(`Only marketplace owner is allowed!`);
         }
 
         dispatch(setTxStatus({ type: WITHDRAW_MARKETPLACE, step: START }));
@@ -291,13 +289,11 @@ function RewardDistribution() {
           api,
           collection_manager.CONTRACT_ABI,
           collection_manager.CONTRACT_ADDRESS,
-          "accessControl::hasRole",
-          3739740293,
-          currentAccount?.address
+          "ownable::owner"
         );
 
-        if (!queryResult1.toHuman().Ok) {
-          return toast.error(`Only collection admin is allowed!`);
+        if (currentAccount?.address !== queryResult1.toHuman().Ok) {
+          return toast.error(`Only collection owner is allowed!`);
         }
 
         dispatch(setTxStatus({ type: WITHDRAW_COLLECTION, step: START }));
@@ -326,13 +322,11 @@ function RewardDistribution() {
           api,
           launchpad_manager.CONTRACT_ABI,
           launchpad_manager.CONTRACT_ADDRESS,
-          "accessControl::hasRole",
-          3739740293,
-          currentAccount?.address
+          "ownable::owner"
         );
 
-        if (!queryResult1.toHuman().Ok) {
-          return toast.error(`Only launchpad admin is allowed!`);
+        if (currentAccount?.address !== queryResult1.toHuman().Ok) {
+          return toast.error(`Only launchpad owner is allowed!`);
         }
 
         dispatch(setTxStatus({ type: WITHDRAW_LAUNCHPAD, step: START }));
