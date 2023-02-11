@@ -557,9 +557,9 @@ function MyWhiteListProjectPage() {
               ? "Update amount"
               : ""}{" "}
             {isUpdateMode === "EDIT"
-              ? `(Claimed: ${whitelistAmountClaimed} NFTs). Min: ${
-                  parseInt(whitelistAmountClaimed) + 1
-                } - Max: ${
+              ? `(Claimed: ${whitelistAmountClaimed} NFTs). Min: ${parseInt(
+                  whitelistAmountClaimed
+                )} - Max: ${
                   parseInt(availableToken) +
                   parseInt(whitelistAmountRef.current)
                 }`
@@ -570,9 +570,7 @@ function MyWhiteListProjectPage() {
               isDisabled={actionType}
               bg="black"
               min={
-                isUpdateMode === "EDIT"
-                  ? parseInt(whitelistAmountClaimed) + 1
-                  : 0
+                isUpdateMode === "EDIT" ? parseInt(whitelistAmountClaimed) : 0
               }
               onChange={(valueString) => setWhitelistAmount(valueString)}
               value={whitelistAmount}
@@ -601,11 +599,10 @@ function MyWhiteListProjectPage() {
           </Box>
           {isUpdateMode === "EDIT" ? (
             <>
-              {parseInt(whitelistAmount) <
-              parseInt(whitelistAmountClaimed) + 1 ? (
+              {parseInt(whitelistAmount) < parseInt(whitelistAmountClaimed) ? (
                 <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
                   Update amount must be greater than or equal to{" "}
-                  {parseInt(whitelistAmountClaimed) + 1}
+                  {parseInt(whitelistAmountClaimed)}
                 </Text>
               ) : null}{" "}
               {whitelistAmount >
@@ -654,8 +651,7 @@ function MyWhiteListProjectPage() {
                 loadingForceUpdate ||
                 (actionType && actionType !== UPDATE_WHITELIST) ||
                 whiteListPrice < 0 ||
-                parseInt(whitelistAmount) <
-                  parseInt(whitelistAmountClaimed) + 1 ||
+                parseInt(whitelistAmount) < parseInt(whitelistAmountClaimed) ||
                 whitelistAmount >
                   parseInt(availableToken) +
                     parseInt(whitelistAmountRef.current)
@@ -815,7 +811,6 @@ function MyWhiteListProjectPage() {
                         ))}
                       </Tr>
                     </Thead>
-
                     <Tbody>
                       {whiteListDataTable?.map((item, idx) => (
                         <Tr key={idx} color="#fff">
