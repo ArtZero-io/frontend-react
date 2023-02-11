@@ -51,6 +51,7 @@ import useForceUpdate from "@hooks/useForceUpdate";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { execContractQuery } from "../../../account/nfts/nfts";
 import marketplace from "@utils/blockchain/marketplace";
+import { setStakingContract } from "../../../../utils/blockchain/staking_calls";
 
 function RewardDistribution() {
   const { api, currentAccount } = useSubstrateState();
@@ -64,6 +65,15 @@ function RewardDistribution() {
   const [isAdminStakingContract, setIsAdminStakingContract] = useState(false);
   const [stakersCount, setStakerCount] = useState(0);
   const [stakers, setStakers] = useState([]);
+
+  useEffect(() => {
+    const setContract = async () => {
+      await setStakingContract(api, staking_contract);
+    };
+
+    setContract();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onRefresh = async () => {
     let reward_pool = await staking_calls.getRewardPool(currentAccount);
@@ -121,12 +131,26 @@ function RewardDistribution() {
   };
 
   const onAddReward = async () => {
+    if (rewardStarted) {
+      return toast.error("Please stop reward distribution to add reward!");
+    }
+
+    if (!addAmount || addAmount <= 0) {
+      return toast.error("Amount is invalid!");
+    }
+
     await staking_calls.addReward(currentAccount, addAmount);
     await delay(3000);
     await onRefresh();
   };
 
   const setStakingStatus = async (status) => {
+    if (rewardStarted) {
+      return toast.error(
+        "Please stop reward distribution before unlock staking!"
+      );
+    }
+
     if (!isAdminStakingContract) {
       return toast.error("Only Admin allowed");
     }
@@ -139,6 +163,13 @@ function RewardDistribution() {
     if (!isAdminStakingContract) {
       return toast.error("Only Admin allowed");
     }
+
+    if (!isLocked) {
+      return toast.error(
+        "Please lock staking before start reward distribution!"
+      );
+    }
+
     if (status) await staking_calls.startRewardDistribution(currentAccount);
     else await staking_calls.stopRewardDistribution(currentAccount);
     await delay(3000);
@@ -582,6 +613,7 @@ function RewardDistribution() {
                             alignItems="center"
                           >
                             <Button
+                              isDisabled={isLocked}
                               mt={7}
                               variant="solid"
                               w="100%"
@@ -591,6 +623,7 @@ function RewardDistribution() {
                               Lock Staking
                             </Button>
                             <Button
+                              isDisabled={!isLocked}
                               mt={7}
                               variant="solid"
                               w="100%"
@@ -606,6 +639,7 @@ function RewardDistribution() {
                             alignItems="center"
                           >
                             <Button
+                              isDisabled={rewardStarted}
                               mt={7}
                               variant="solid"
                               w="100%"
@@ -615,6 +649,7 @@ function RewardDistribution() {
                               Start Reward Distribution
                             </Button>
                             <Button
+                              isDisabled={!rewardStarted}
                               mt={7}
                               variant="solid"
                               w="100%"
@@ -669,6 +704,7 @@ function RewardDistribution() {
                         </Text>
                         <Box>
                           <NumberInput
+                            min={0}
                             bg="black"
                             defaultValue={1}
                             onChange={(valueString) =>
@@ -693,6 +729,7 @@ function RewardDistribution() {
                           </NumberInput>
 
                           <Button
+                            isDisabled={!isLocked}
                             mt={7}
                             variant="solid"
                             w="full"
