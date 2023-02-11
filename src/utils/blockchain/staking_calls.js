@@ -10,6 +10,7 @@ import {
 import { APICall } from "../../api/client";
 import { readOnlyGasLimit } from "@utils";
 import { formatOutput } from "..";
+import { BN } from "@polkadot/util";
 
 let contract;
 
@@ -291,7 +292,8 @@ async function getClaimableReward(caller_account) {
 
 async function getRewardPool(caller_account) {
   if (!contract || !caller_account) {
-    console.log("invalid inputs");
+    console.log("invalid inputs contract", contract);
+    console.log("invalid inputs caller_account", caller_account);
     return null;
   }
   const address = caller_account?.address;
@@ -312,6 +314,8 @@ async function getRewardPool(caller_account) {
 
 async function claimReward(caller_account, dispatch, txType, api) {
   if (!contract || !caller_account) {
+    console.log("invalid inputs contract", contract);
+    console.log("invalid inputs caller_account", caller_account);
     throw Error(`Contract or caller not valid!`);
   }
 
@@ -345,6 +349,8 @@ async function claimReward(caller_account, dispatch, txType, api) {
 
 async function setClaimable(caller_account, account, dispatch, txType, api) {
   if (!contract || !caller_account) {
+    console.log("invalid inputs contract", contract);
+    console.log("invalid inputs caller_account", caller_account);
     throw Error(`Contract or caller not valid!`);
   }
 
@@ -384,6 +390,8 @@ async function setClaimable(caller_account, account, dispatch, txType, api) {
 
 async function addReward(caller_account, amount) {
   if (!contract || !caller_account) {
+    console.log("invalid inputs contract", contract);
+    console.log("invalid inputs caller_account", caller_account);
     throw Error(`Contract or caller not valid!`);
   }
 
@@ -392,8 +400,7 @@ async function addReward(caller_account, amount) {
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
-
-  const value = amount * 10 ** 18;
+  const value = new BN(amount * 10 ** 6).mul(new BN(10 ** 12)).toString();
 
   gasLimit = await getEstimatedGas(address, contract, value, "addReward");
 
@@ -415,7 +422,7 @@ async function addReward(caller_account, amount) {
       }
 
       if (status) {
-        const statusText = Object.keys(status.toHuman().Ok)[0];
+        const statusText = Object.keys(status.toHuman())[0];
 
         toast.success(
           `add Reward ${
@@ -431,6 +438,8 @@ async function addReward(caller_account, amount) {
 }
 async function updateIsLocked(caller_account, status) {
   if (!contract || !caller_account) {
+    console.log("invalid inputs contract", contract);
+    console.log("invalid inputs caller_account", caller_account);
     throw Error(`Contract or caller not valid!`);
   }
 
@@ -449,6 +458,7 @@ async function updateIsLocked(caller_account, status) {
     "updateIsLocked",
     status
   );
+  const lockingStatus = status ? "Lock" : "Unlock";
 
   // TODO update new Error handler
   await contract.tx
@@ -468,10 +478,10 @@ async function updateIsLocked(caller_account, status) {
       }
 
       if (status) {
-        const statusText = Object.keys(status.toHuman().Ok)[0];
+        const statusText = Object.keys(status.toHuman())[0];
 
         toast.success(
-          `add Reward ${
+          `${lockingStatus} staking... ${
             statusText === "0" ? "start" : statusText.toLowerCase()
           }.`
         );
@@ -485,6 +495,8 @@ async function updateIsLocked(caller_account, status) {
 
 async function startRewardDistribution(caller_account) {
   if (!contract || !caller_account) {
+    console.log("invalid inputs contract", contract);
+    console.log("invalid inputs caller_account", caller_account);
     throw Error(`Contract or caller not valid!`);
   }
 
@@ -521,7 +533,7 @@ async function startRewardDistribution(caller_account) {
       }
 
       if (status) {
-        const statusText = Object.keys(status.toHuman().Ok)[0];
+        const statusText = Object.keys(status.toHuman())[0];
 
         toast.success(
           `start Reward Distribution ${
@@ -538,6 +550,8 @@ async function startRewardDistribution(caller_account) {
 
 async function stopRewardDistribution(caller_account) {
   if (!contract || !caller_account) {
+    console.log("invalid inputs contract", contract);
+    console.log("invalid inputs caller_account", caller_account);
     throw Error(`Contract or caller not valid!`);
   }
 
@@ -574,7 +588,7 @@ async function stopRewardDistribution(caller_account) {
       }
 
       if (status) {
-        const statusText = Object.keys(status.toHuman().Ok)[0];
+        const statusText = Object.keys(status.toHuman())[0];
 
         toast.success(
           `stop Reward Distribution ${
@@ -592,6 +606,8 @@ async function stopRewardDistribution(caller_account) {
 //SETTERS
 async function stake(caller_account, token_ids, dispatch, txType, api) {
   if (!contract || !caller_account) {
+    console.log("invalid inputs contract", contract);
+    console.log("invalid inputs caller_account", caller_account);
     throw Error(`Contract or caller not valid!`);
   }
 
@@ -640,6 +656,8 @@ async function stake(caller_account, token_ids, dispatch, txType, api) {
 }
 async function unstake(caller_account, token_ids, dispatch, txType, api) {
   if (!contract || !caller_account) {
+    console.log("invalid inputs contract", contract);
+    console.log("invalid inputs caller_account", caller_account);
     throw Error(`Contract or caller not valid!`);
   }
 
@@ -694,6 +712,8 @@ async function requestUnstake(
   api
 ) {
   if (!contract || !caller_account) {
+    console.log("invalid inputs contract", contract);
+    console.log("invalid inputs caller_account", caller_account);
     throw Error(`Contract or caller not valid!`);
   }
 
@@ -747,6 +767,8 @@ async function cancelRequestUnstake(
   api
 ) {
   if (!contract || !caller_account) {
+    console.log("invalid inputs contract", contract);
+    console.log("invalid inputs caller_account", caller_account);
     throw Error(`Contract or caller not valid!`);
   }
 

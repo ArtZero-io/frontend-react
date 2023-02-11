@@ -93,11 +93,11 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
               gap={["10px", "30px"]}
               direction={{ base: "column", md: "row" }}
             >
-              <SimpleMode mode={mode} id={id} />
+              <SimpleMode variant={variant} mode={mode} id={id} />
 
               <Spacer />
 
-              <AdvancedMode mode={mode} id={id} />
+              <AdvancedMode variant={variant} mode={mode} id={id} />
             </Stack>
           </ModalBody>
         </ModalContent>

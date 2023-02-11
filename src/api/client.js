@@ -122,7 +122,6 @@ export const APICall = {
       project_address,
     });
 
-
     return ret;
   },
 
@@ -334,9 +333,19 @@ export const APICall = {
     return await client("GET", url, {});
   },
 
-  getNFTsByOwner: async ({ owner }) => {
+  getNFTsByOwner: async ({
+    owner,
+    limit = 10000,
+    offset = 0,
+    sort = -1,
+    isActive = true,
+  }) => {
     return await client("POST", "/getNFTsByOwner", {
       owner,
+      limit,
+      offset,
+      sort,
+      isActive,
     });
   },
 

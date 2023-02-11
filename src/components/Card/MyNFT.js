@@ -150,10 +150,18 @@ function MyNFTCard({
   const [projImage, setProjImage] = useState("");
 
   useEffect(() => {
+    let isMounted = true;
+
     avatar &&
       getCloudFlareImage(avatar, 500).then((res) => {
-        setProjImage(res);
+        if (isMounted) {
+          setProjImage(res);
+        }
       });
+
+    return () => {
+      isMounted = false;
+    };
   }, [avatar]);
 
   return (

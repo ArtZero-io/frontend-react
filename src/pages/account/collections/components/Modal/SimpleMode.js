@@ -20,22 +20,31 @@ import { useEffect } from "react";
 import useTxStatus from "@hooks/useTxStatus";
 import SimpleModeForm from "../Form/SimpleMode";
 import { formMode, SCROLLBAR, FINALIZED } from "@constants";
+import { useHistory } from "react-router-dom";
+import * as ROUTES from "@constants/routes";
 
 function SimpleModeModal({
   mode = formMode.ADD,
   id,
   nftContractAddress,
   contractType,
-  ...rest
+  variant,
 }) {
+  const history = useHistory();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { step, onEndClick } = useTxStatus();
   const modalSize = useBreakpointValue(["xs", "5xl", "5xl"]);
 
   useEffect(() => {
-    step === FINALIZED && onClose();
-  }, [step, onClose]);
+    if (step === FINALIZED) {
+      onClose();
+
+      if (variant === "navbar") {
+        history.push(ROUTES.ACCOUNT_MY_COLLECTIONS);
+      }
+    }
+  }, [step, onClose, variant, history]);
 
   return (
     <>

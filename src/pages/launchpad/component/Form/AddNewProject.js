@@ -554,7 +554,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   );
                 } else {
                   if (mode === formMode.EDIT) {
-
                     const project_info = {
                       name: values.name.trim(),
                       description: values.description.trim(),
@@ -1222,7 +1221,7 @@ export const fetchInitialValuesProject = async ({
       startTime,
       endTime,
     } = projectInfo;
-    console.log("projectInfo", projectInfo);
+
     initialValues.isEditMode = true;
     initialValues.nftName = nftName;
     initialValues.nftSymbol = nftSymbol;

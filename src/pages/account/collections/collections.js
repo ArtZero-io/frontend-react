@@ -29,7 +29,7 @@ function MyCollectionsPage() {
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
     [CREATE_COLLECTION, EDIT_COLLECTION],
-    () => fetchCollectionsOwned()
+    () => fetchCollectionsOwned(true)
   );
 
   const {
@@ -48,61 +48,77 @@ function MyCollectionsPage() {
     },
   });
 
-  const fetchCollectionsOwned = useCallback(async () => {
-    setLoading(true);
+  const fetchCollectionsOwned = useCallback(
+    async (isMounted) => {
+      setLoading(true);
 
-    const options = {
-      owner: currentAccount?.address,
-      limit: pageSize,
-      offset: offset,
-      sort: -1,
-    };
+      const options = {
+        owner: currentAccount?.address,
+        limit: pageSize,
+        offset: offset,
+        sort: -1,
+      };
 
-    try {
-      const { ret: totalCollectionsCountData } =
-        await APICall.getCollectionsCountByOwner({
-          owner: currentAccount?.address,
-          noNFT: true,
-        });
+      try {
+        const { ret: totalCollectionsCountData } =
+          await APICall.getCollectionsCountByOwner({
+            owner: currentAccount?.address,
+            noNFT: true,
+          });
 
-      setTotalCollectionsCount(totalCollectionsCountData);
+        setTotalCollectionsCount(totalCollectionsCountData);
 
-      const { ret: dataList } = await APICall.getCollectionsByOwner(options);
+        const { ret: dataList } = await APICall.getCollectionsByOwner(options);
 
-      let listCollection = [];
-      let ownerAddress;
+        let listCollection = [];
+        let ownerAddress;
 
-      if (!dataList?.length) {
-        ownerAddress = options.owner;
-      }
-
-      if (dataList?.length) {
-        ownerAddress = dataList[0].collectionOwner;
-
-        for (let item of dataList) {
-          item.volume = await marketplace_contract_calls.getVolumeByCollection(
-            currentAccount,
-            item.nftContractAddress
-          );
-
-          listCollection.push(item);
+        if (!dataList?.length) {
+          ownerAddress = options.owner;
+          setCollections([]);
         }
+
+        if (dataList?.length) {
+          ownerAddress = dataList[0].collectionOwner;
+
+          for (let item of dataList) {
+            item.volume =
+              await marketplace_contract_calls.getVolumeByCollection(
+                currentAccount,
+                item.nftContractAddress
+              );
+
+            listCollection.push(item);
+          }
+        }
+
+        if (!isMounted) return;
+
+        setOwner(ownerAddress);
+
+        setCollections(listCollection);
+
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setCollections([]);
+
+        setLoading(false);
+
+        toast.error("There was an error while fetching the collections.");
       }
-
-      setOwner(ownerAddress);
-      setCollections(listCollection);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-
-      setLoading(false);
-
-      toast.error("There was an error while fetching the collections.");
-    }
-  }, [currentAccount, offset, pageSize]);
+    },
+    [currentAccount, offset, pageSize]
+  );
 
   useEffect(() => {
-    fetchCollectionsOwned();
+    let isMounted = true;
+
+    fetchCollectionsOwned(isMounted);
+
+    return () => {
+      isMounted = false;
+    };
   }, [currentAccount, fetchCollectionsOwned]);
 
   return (

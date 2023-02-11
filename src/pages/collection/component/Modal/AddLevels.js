@@ -163,8 +163,7 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
                             step={1}
                             type="number"
                             precision={0}
-                            // max={levels.levelMax}
-                            max={10}
+                            max={levels.levelMax || 999999}
                             inputWidth={["full", "110px"]}
                             name={`levels.${index}.level`}
                             label={isBigScreen ? "" : "Level"}

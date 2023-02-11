@@ -48,91 +48,97 @@ const MyStakesPage = () => {
 
   const { actionType } = useTxStatus();
 
-  const fetchCollectionDetail = useCallback(async () => {
-    setLoading(true);
+  const fetchCollectionDetail = useCallback(
+    async (isMounted) => {
+      setLoading(true);
 
-    try {
-      const isLocked = await staking_calls.getIsLocked(currentAccount);
-      setIsStakingContractLocked(isLocked);
+      try {
+        const isLocked = await staking_calls.getIsLocked(currentAccount);
+        setIsStakingContractLocked(isLocked);
 
-      const stakedCount = await fetchMyPMPStakedCount(
-        currentAccount,
-        staking_calls
-      );
-
-      const pendingCount = await fetchMyPMPPendingCount(
-        currentAccount,
-        staking_calls
-      );
-
-      const unstakedCount = await fetchMyPMPUnstakedCount(
-        currentAccount,
-        artzero_nft_calls
-      );
-
-      const totalCount = stakedCount * 1 + pendingCount * 1 + unstakedCount * 1;
-
-      const myTradingFee = await fetchMyTradingFee(
-        stakedCount * 1,
-        currentAccount,
-        marketplace_contract_calls
-      );
-
-      const fee = await fetchPlatformTradingFee(
-        currentAccount,
-        marketplace_contract_calls
-      );
-
-      setPlatformTradingFee(fee);
-
-      const stats = {
-        totalCount,
-        unstakedCount,
-        pendingCount,
-        stakedCount,
-        myTradingFee,
-      };
-      setStatsInfo(stats);
-
-      const PMPCollectionDetail = await getPMPCollectionDetail();
-
-      PMPCollectionDetail.listNFT = [];
-
-      if (activeTab === "NOT_STAKED") {
-        const myUnstakePMP = await getMyUnstakePMP({
-          owner: currentAccount.address,
-          collection_address: artzero_nft.CONTRACT_ADDRESS,
-        });
-        PMPCollectionDetail.listNFT = myUnstakePMP;
-      }
-
-      if (activeTab === "PENDING_UNSTAKE") {
-        const myPendingPMP = await getMyPendingPMP({
-          api,
-          pendingCount: pendingCount * 1,
+        const stakedCount = await fetchMyPMPStakedCount(
           currentAccount,
-        });
+          staking_calls
+        );
 
-        PMPCollectionDetail.listNFT = myPendingPMP;
-      }
-
-      if (activeTab === "STAKED") {
-        const myStakedPMP = await getMyStakedPMP({
-          api,
-          stakedCount: stakedCount * 1,
+        const pendingCount = await fetchMyPMPPendingCount(
           currentAccount,
-        });
+          staking_calls
+        );
 
-        PMPCollectionDetail.listNFT = myStakedPMP;
+        const unstakedCount = await fetchMyPMPUnstakedCount(
+          currentAccount,
+          artzero_nft_calls
+        );
+
+        const totalCount =
+          stakedCount * 1 + pendingCount * 1 + unstakedCount * 1;
+
+        const myTradingFee = await fetchMyTradingFee(
+          stakedCount * 1,
+          currentAccount,
+          marketplace_contract_calls
+        );
+
+        const fee = await fetchPlatformTradingFee(
+          currentAccount,
+          marketplace_contract_calls
+        );
+
+        if (!isMounted) return;
+
+        setPlatformTradingFee(fee);
+
+        const stats = {
+          totalCount,
+          unstakedCount,
+          pendingCount,
+          stakedCount,
+          myTradingFee,
+        };
+        setStatsInfo(stats);
+
+        const PMPCollectionDetail = await getPMPCollectionDetail();
+
+        PMPCollectionDetail.listNFT = [];
+
+        if (activeTab === "NOT_STAKED") {
+          const myUnstakePMP = await getMyUnstakePMP({
+            owner: currentAccount.address,
+            collection_address: artzero_nft.CONTRACT_ADDRESS,
+          });
+          PMPCollectionDetail.listNFT = myUnstakePMP;
+        }
+
+        if (activeTab === "PENDING_UNSTAKE") {
+          const myPendingPMP = await getMyPendingPMP({
+            api,
+            pendingCount: pendingCount * 1,
+            currentAccount,
+          });
+
+          PMPCollectionDetail.listNFT = myPendingPMP;
+        }
+
+        if (activeTab === "STAKED") {
+          const myStakedPMP = await getMyStakedPMP({
+            api,
+            stakedCount: stakedCount * 1,
+            currentAccount,
+          });
+
+          PMPCollectionDetail.listNFT = myStakedPMP;
+        }
+
+        setPMPCollectionDetail(PMPCollectionDetail);
+        setLoading(false);
+      } catch (error) {
+        console.log("x_x error fetchCollectionDetail:", error);
+        setLoading(false);
       }
-
-      setPMPCollectionDetail(PMPCollectionDetail);
-      setLoading(false);
-    } catch (error) {
-      console.log("x_x error fetchCollectionDetail:", error);
-      setLoading(false);
-    }
-  }, [activeTab, api, currentAccount]);
+    },
+    [activeTab, api, currentAccount]
+  );
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
     [STAKE, UNSTAKE, REQUEST_UNSTAKE, CANCEL_REQUEST_UNSTAKE],
@@ -147,7 +153,11 @@ const MyStakesPage = () => {
   };
 
   useEffect(() => {
-    fetchCollectionDetail();
+    let isMounted = true;
+
+    fetchCollectionDetail(isMounted);
+
+    return () => (isMounted = false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, currentAccount]);
 
@@ -180,7 +190,12 @@ const MyStakesPage = () => {
                 variant="outline"
                 text={item.replace("_", " ")}
                 isActive={item === activeTab}
-                onClick={() => setActiveTab(item)}
+                onClick={() => {
+                  if (item === activeTab) return;
+
+                  setActiveTab(item);
+                  setPMPCollectionDetail(null);
+                }}
               />
             ))}
 
@@ -190,7 +205,7 @@ const MyStakesPage = () => {
               variant="iconSolid"
               aria-label="refresh"
               icon={<RefreshIcon />}
-              onClick={() => fetchCollectionDetail()}
+              onClick={() => fetchCollectionDetail(true)}
             />
           </HStack>
         )}
@@ -208,7 +223,7 @@ const MyStakesPage = () => {
             size="icon"
             variant="iconSolid"
             aria-label="refresh"
-            onClick={() => fetchCollectionDetail()}
+            onClick={() => fetchCollectionDetail(true)}
             icon={<RefreshIcon />}
             _hover={{ color: "black", bg: "#7ae7ff" }}
           />
@@ -225,6 +240,7 @@ const MyStakesPage = () => {
             selectedItem={activeTab}
             setSelectedItem={(i) => {
               setActiveTab(i);
+              setPMPCollectionDetail(null);
             }}
           />
           )

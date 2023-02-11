@@ -19,9 +19,9 @@ import { useSubstrateState } from "@utils/substrate";
 import Loader from "@components/Loader/CommonLoader";
 import staking_calls from "@utils/blockchain/staking_calls";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { delay, truncateStr } from "@utils";
+import { delay } from "@utils";
 import toast from "react-hot-toast";
 import { fetchUserBalance } from "../../../launchpad/component/Form/AddNewProject";
 
@@ -51,10 +51,10 @@ import useForceUpdate from "@hooks/useForceUpdate";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { execContractQuery } from "../../../account/nfts/nfts";
 import marketplace from "@utils/blockchain/marketplace";
+import { setStakingContract } from "../../../../utils/blockchain/staking_calls";
 
 function RewardDistribution() {
   const { api, currentAccount } = useSubstrateState();
-  const { activeAddress } = useSelector((s) => s.account);
 
   const [addAmount, setAddAmount] = useState(0);
   const [rewardPool, setRewardPool] = useState(0);
@@ -62,9 +62,18 @@ function RewardDistribution() {
   const [totalStaked, setTotalStaked] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
   const [rewardStarted, setIsRewardStarted] = useState(false);
-  const [adminAddress, setAdminAddress] = useState("");
+  const [isAdminStakingContract, setIsAdminStakingContract] = useState(false);
   const [stakersCount, setStakerCount] = useState(0);
   const [stakers, setStakers] = useState([]);
+
+  useEffect(() => {
+    const setContract = async () => {
+      await setStakingContract(api, staking_contract);
+    };
+
+    setContract();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onRefresh = async () => {
     let reward_pool = await staking_calls.getRewardPool(currentAccount);
@@ -91,7 +100,7 @@ function RewardDistribution() {
     setRewardPool(reward_pool);
     setTotalStaked(total_staked);
     setIsLocked(is_locked);
-    setAdminAddress(queryResult1?.isTrue);
+    setIsAdminStakingContract(queryResult1.toHuman().Ok);
     setIsRewardStarted(is_reward_started);
   };
 
@@ -122,13 +131,27 @@ function RewardDistribution() {
   };
 
   const onAddReward = async () => {
+    if (rewardStarted) {
+      return toast.error("Please stop reward distribution to add reward!");
+    }
+
+    if (!addAmount || addAmount <= 0) {
+      return toast.error("Amount is invalid!");
+    }
+
     await staking_calls.addReward(currentAccount, addAmount);
     await delay(3000);
     await onRefresh();
   };
 
   const setStakingStatus = async (status) => {
-    if (activeAddress !== adminAddress) {
+    if (rewardStarted) {
+      return toast.error(
+        "Please stop reward distribution before unlock staking!"
+      );
+    }
+
+    if (!isAdminStakingContract) {
       return toast.error("Only Admin allowed");
     }
     await staking_calls.updateIsLocked(currentAccount, status);
@@ -137,9 +160,16 @@ function RewardDistribution() {
   };
 
   const setRewardDistribution = async (status) => {
-    if (activeAddress !== adminAddress) {
+    if (!isAdminStakingContract) {
       return toast.error("Only Admin allowed");
     }
+
+    if (!isLocked) {
+      return toast.error(
+        "Please lock staking before start reward distribution!"
+      );
+    }
+
     if (status) await staking_calls.startRewardDistribution(currentAccount);
     else await staking_calls.stopRewardDistribution(currentAccount);
     await delay(3000);
@@ -147,7 +177,7 @@ function RewardDistribution() {
   };
 
   const enableClaim = async (stakerAddress) => {
-    if (activeAddress !== adminAddress) {
+    if (!isAdminStakingContract) {
       return toast.error("Only Admin allowed");
     }
 
@@ -176,9 +206,11 @@ function RewardDistribution() {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     onRefresh();
     getStakers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAccount]);
 
   const dispatch = useDispatch();
@@ -256,13 +288,11 @@ function RewardDistribution() {
           api,
           marketplace.CONTRACT_ABI,
           marketplace.CONTRACT_ADDRESS,
-          "accessControl::hasRole",
-          3739740293,
-          currentAccount?.address
+          "ownable::owner"
         );
 
-        if (!queryResult1.toHuman().Ok) {
-          return toast.error(`Only marketplace admin is allowed!`);
+        if (currentAccount?.address !== queryResult1.toHuman().Ok) {
+          return toast.error(`Only marketplace owner is allowed!`);
         }
 
         dispatch(setTxStatus({ type: WITHDRAW_MARKETPLACE, step: START }));
@@ -291,13 +321,11 @@ function RewardDistribution() {
           api,
           collection_manager.CONTRACT_ABI,
           collection_manager.CONTRACT_ADDRESS,
-          "accessControl::hasRole",
-          3739740293,
-          currentAccount?.address
+          "ownable::owner"
         );
 
-        if (!queryResult1.toHuman().Ok) {
-          return toast.error(`Only collection admin is allowed!`);
+        if (currentAccount?.address !== queryResult1.toHuman().Ok) {
+          return toast.error(`Only collection owner is allowed!`);
         }
 
         dispatch(setTxStatus({ type: WITHDRAW_COLLECTION, step: START }));
@@ -326,13 +354,11 @@ function RewardDistribution() {
           api,
           launchpad_manager.CONTRACT_ABI,
           launchpad_manager.CONTRACT_ADDRESS,
-          "accessControl::hasRole",
-          3739740293,
-          currentAccount?.address
+          "ownable::owner"
         );
 
-        if (!queryResult1.toHuman().Ok) {
-          return toast.error(`Only launchpad admin is allowed!`);
+        if (currentAccount?.address !== queryResult1.toHuman().Ok) {
+          return toast.error(`Only launchpad owner is allowed!`);
         }
 
         dispatch(setTxStatus({ type: WITHDRAW_LAUNCHPAD, step: START }));
@@ -491,10 +517,10 @@ function RewardDistribution() {
               >
                 <Flex alignItems="start" pr={20}>
                   <Text ml={1} color="brand.grayLight">
-                    Admin
+                    Your role:
                   </Text>
                   <Text color="#7ae7ff" ml={2}>
-                    {truncateStr(adminAddress, 5)}
+                    {isAdminStakingContract ? "Admin" : "Not admin"}
                   </Text>
                 </Flex>
                 <Flex
@@ -587,6 +613,7 @@ function RewardDistribution() {
                             alignItems="center"
                           >
                             <Button
+                              isDisabled={isLocked}
                               mt={7}
                               variant="solid"
                               w="100%"
@@ -596,6 +623,7 @@ function RewardDistribution() {
                               Lock Staking
                             </Button>
                             <Button
+                              isDisabled={!isLocked}
                               mt={7}
                               variant="solid"
                               w="100%"
@@ -611,6 +639,7 @@ function RewardDistribution() {
                             alignItems="center"
                           >
                             <Button
+                              isDisabled={rewardStarted}
                               mt={7}
                               variant="solid"
                               w="100%"
@@ -620,6 +649,7 @@ function RewardDistribution() {
                               Start Reward Distribution
                             </Button>
                             <Button
+                              isDisabled={!rewardStarted}
                               mt={7}
                               variant="solid"
                               w="100%"
@@ -674,6 +704,7 @@ function RewardDistribution() {
                         </Text>
                         <Box>
                           <NumberInput
+                            min={0}
                             bg="black"
                             defaultValue={1}
                             onChange={(valueString) =>
@@ -698,6 +729,7 @@ function RewardDistribution() {
                           </NumberInput>
 
                           <Button
+                            isDisabled={!isLocked}
                             mt={7}
                             variant="solid"
                             w="full"

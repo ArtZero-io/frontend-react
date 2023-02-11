@@ -56,6 +56,7 @@ import useForceUpdate from "@hooks/useForceUpdate";
 import { APICall } from "@api/client";
 import { useMemo } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
+import { fetchMyPMPPendingCount } from "./stakes";
 
 function GeneralPage() {
   const history = useHistory();
@@ -100,127 +101,147 @@ function GeneralPage() {
     setClaimed(is_claimed);
   }, [currentAccount]);
 
-  const getRewardHistory = useCallback(async () => {
-    let { ret: rewards } = await APICall.getAllRewardClaimed({
-      staker_address: currentAccount.address,
-    });
-
-    rewards?.length ? setRewardHistory(rewards) : setRewardHistory([]);
-  }, [currentAccount]);
-
-  const fetchAllNfts = useCallback(async () => {
-    const options = {
-      owner: currentAccount?.address,
-    };
-
-    try {
-      const { ret: nftListPromise } = await APICall.getNFTsByOwner(options);
-
-      const platformTotalStaked = await staking_calls.getTotalStaked(
-        currentAccount
-      );
-
-      //setPlatformTotalStaked(platformTotalStaked);
-      const totalStakedPromise = await staking_calls.getTotalStakedByAccount(
-        currentAccount,
-        currentAccount?.address
-      );
-
-      const marketplaceProfit =
-        await marketplace_contract_calls.getCurrentProfit(currentAccount);
-
-      const launchpadBalance = await fetchUserBalance({
-        currentAccount,
-        api,
-        address: launchpad_manager?.CONTRACT_ADDRESS,
+  const getRewardHistory = useCallback(
+    async (isMounted) => {
+      let { ret: rewards } = await APICall.getAllRewardClaimed({
+        staker_address: currentAccount.address,
       });
-      const collectionBalance = await fetchUserBalance({
-        currentAccount,
-        api,
-        address: collection_manager?.CONTRACT_ADDRESS,
-      });
-      const totalProfit =
-        marketplaceProfit +
-        launchpadBalance?.balance +
-        collectionBalance?.balance;
+      if (!isMounted) return;
+      rewards?.length ? setRewardHistory(rewards) : setRewardHistory([]);
+    },
+    [currentAccount]
+  );
 
-      const estimatedEarning =
-        platformTotalStaked * 1
-          ? (totalProfit * 0.3 * totalStakedPromise) / (platformTotalStaked * 1)
+  const fetchAllNfts = useCallback(
+    async (isMounted) => {
+      const options = {
+        owner: currentAccount?.address,
+      };
+
+      try {
+        const { ret: nftListPromise } = await APICall.getNFTsByOwner(options);
+
+        const platformTotalStaked = await staking_calls.getTotalStaked(
+          currentAccount
+        );
+
+        //setPlatformTotalStaked(platformTotalStaked);
+        const totalStakedPromise = await staking_calls.getTotalStakedByAccount(
+          currentAccount,
+          currentAccount?.address
+        );
+
+        const marketplaceProfit =
+          await marketplace_contract_calls.getCurrentProfit(currentAccount);
+
+        const launchpadBalance = await fetchUserBalance({
+          currentAccount,
+          api,
+          address: launchpad_manager?.CONTRACT_ADDRESS,
+        });
+        const collectionBalance = await fetchUserBalance({
+          currentAccount,
+          api,
+          address: collection_manager?.CONTRACT_ADDRESS,
+        });
+        const totalProfit =
+          marketplaceProfit +
+          launchpadBalance?.balance +
+          collectionBalance?.balance;
+
+        const estimatedEarning =
+          platformTotalStaked * 1
+            ? (totalProfit * 0.3 * totalStakedPromise) /
+              (platformTotalStaked * 1)
+            : 0;
+
+        if (!isMounted) return;
+
+        setEstimatedEarning(estimatedEarning);
+        let rewardPoolData = await staking_calls.getRewardPool(currentAccount);
+
+        const estimatedEarningBaseRewardPoolData = rewardPoolData
+          ? (rewardPoolData * totalStakedPromise) / platformTotalStaked
           : 0;
 
-      setEstimatedEarning(estimatedEarning);
-      let rewardPoolData = await staking_calls.getRewardPool(currentAccount);
+        setEstimatedEarningBaseRewardPool(estimatedEarningBaseRewardPoolData);
 
-      const estimatedEarningBaseRewardPoolData = rewardPoolData
-        ? (rewardPoolData * totalStakedPromise) / platformTotalStaked
-        : 0;
+        const pendingCount = await fetchMyPMPPendingCount(
+          currentAccount,
+          staking_calls
+        );
 
-      setEstimatedEarningBaseRewardPool(estimatedEarningBaseRewardPoolData);
+        Promise.all([nftListPromise, 1 * totalStakedPromise]).then(
+          ([nftList, totalStaked]) => {
+            const nftForSale = nftList.reduce(function (a, b) {
+              return a + (b.is_for_sale | 0);
+            }, 0);
+            let info = [{ address: currentAccount?.address }];
 
-      Promise.all([nftListPromise, 1 * totalStakedPromise]).then(
-        ([nftList, totalStaked]) => {
-          const nftForSale = nftList.reduce(function (a, b) {
-            return a + (b.is_for_sale | 0);
-          }, 0);
-          let info = [{ address: currentAccount?.address }];
+            info = [
+              ...info,
+              { name: "NFTs for sale", value: nftForSale },
+              { name: "Staked NFTs", value: totalStaked },
+              { name: "Pending Staked NFTs", value: pendingCount * 1 },
+              {
+                name: "Total Owned NFTs",
+                value: nftList.length + totalStaked + pendingCount * 1,
+              },
+            ];
 
-          info = [
-            ...info,
-            { name: "NFTs for sale", value: nftForSale },
-            { name: "Staked NFTs", value: totalStaked },
-            {
-              name: "Total Owned NFTs",
-              value: nftList.length + totalStaked,
-            },
-          ];
+            setDashboardInfo(info);
 
-          setDashboardInfo(info);
+            setNftList(nftList);
+            setTotalStaked(totalStaked);
+          }
+        );
+      } catch (error) {
+        console.log(error);
 
-          setNftList(nftList);
-          setTotalStaked(totalStaked);
-        }
-      );
-    } catch (error) {
-      console.log(error);
-
-      toast.error("There was an error while fetching the collections.");
-    }
-  }, [api, currentAccount]);
-
-  const getTradeFee = useCallback(async () => {
-    let my_total_staked_az_nfts = await staking_calls.getTotalStakedByAccount(
-      currentAccount,
-      currentAccount.address
-    );
-
-    let stakingDiscountCriteria =
-      await marketplace_contract_calls.getStakingDiscountCriteria(
-        currentAccount
-      );
-
-    let stakingDiscountRate =
-      await marketplace_contract_calls.getStakingDiscountRate(currentAccount);
-
-    let my_discount_rate =
-      (await marketplace_contract_calls.getPlatformFee(currentAccount)) / 100;
-
-    setPlatformFee(my_discount_rate);
-
-    let length = stakingDiscountRate?.length;
-
-    for (var index = 0; index < length; index++) {
-      if (1 * my_total_staked_az_nfts >= stakingDiscountCriteria[index]) {
-        my_discount_rate =
-          (my_discount_rate *
-            (10000 - 1 * stakingDiscountRate[index]?.replaceAll(",", ""))) /
-          10000;
-        break;
+        toast.error("There was an error while fetching the collections.");
       }
-    }
+    },
+    [api, currentAccount]
+  );
 
-    setTradeFee(my_discount_rate);
-  }, [currentAccount]);
+  const getTradeFee = useCallback(
+    async (isMounted) => {
+      let my_total_staked_az_nfts = await staking_calls.getTotalStakedByAccount(
+        currentAccount,
+        currentAccount.address
+      );
+
+      let stakingDiscountCriteria =
+        await marketplace_contract_calls.getStakingDiscountCriteria(
+          currentAccount
+        );
+
+      let stakingDiscountRate =
+        await marketplace_contract_calls.getStakingDiscountRate(currentAccount);
+
+      let my_discount_rate =
+        (await marketplace_contract_calls.getPlatformFee(currentAccount)) / 100;
+
+      if (!isMounted) return;
+
+      setPlatformFee(my_discount_rate);
+
+      let length = stakingDiscountRate?.length;
+
+      for (var index = 0; index < length; index++) {
+        if (1 * my_total_staked_az_nfts >= stakingDiscountCriteria[index]) {
+          my_discount_rate =
+            (my_discount_rate *
+              (10000 - 1 * stakingDiscountRate[index]?.replaceAll(",", ""))) /
+            10000;
+          break;
+        }
+      }
+
+      setTradeFee(my_discount_rate);
+    },
+    [currentAccount]
+  );
 
   const claimReward = async () => {
     try {
@@ -244,21 +265,26 @@ function GeneralPage() {
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetch = async () => {
       try {
         setLoading(true);
-        await checkRewardStatus();
-        await getRewardHistory();
+        await checkRewardStatus(isMounted);
+        await getRewardHistory(isMounted);
 
         if (
           !nftList ||
           (dashboardInfo?.length &&
             dashboardInfo[0].address !== currentAccount?.address)
         ) {
-          await fetchAllNfts();
+          await fetchAllNfts(isMounted);
         }
 
-        await getTradeFee();
+        await getTradeFee(isMounted);
+
+        if (!isMounted) return;
+
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -268,6 +294,10 @@ function GeneralPage() {
     };
 
     fetch();
+
+    return () => {
+      isMounted = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, checkRewardStatus, currentAccount, getRewardHistory]);
 
@@ -340,11 +370,12 @@ function GeneralPage() {
             <Grid
               w="full"
               minH={"7rem"}
-              gap={{ base: "10px", md: "30px" }}
+              gap={{ base: "10px", lg: "30px" }}
               templateColumns={{
                 base: "repeat(auto-fill, minmax(min(100%, 200px), 1fr))",
-                lg: "repeat(auto-fill, minmax(min(100%, 290px), 1fr))",
-                xl: "repeat(auto-fill, minmax(min(100%, 320px), 1fr))",
+                sm: "repeat(auto-fill, minmax(min(100%, 160px), 1fr))",
+                md: "repeat(auto-fill, minmax(min(100%, 220px), 1fr))",
+                xl: "repeat(auto-fill, minmax(min(100%, 220px), 1fr))",
               }}
             >
               {dashboardInfo
