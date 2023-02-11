@@ -20,20 +20,31 @@ import { useEffect } from "react";
 import useTxStatus from "@hooks/useTxStatus";
 import AdvancedModeForm from "../Form/AdvancedMode";
 import { formMode, SCROLLBAR, FINALIZED } from "@constants";
+import * as ROUTES from "@constants/routes";
+import { useHistory } from "react-router-dom";
 
 function AdvancedModeModal({
   mode = "add",
   id,
   nftContractAddress,
   contractType,
+  variant,
 }) {
+  const history = useHistory();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { step, onEndClick } = useTxStatus();
   const modalSize = useBreakpointValue(["xs", "5xl", "5xl"]);
 
   useEffect(() => {
-    step === FINALIZED && onClose();
-  }, [step, onClose]);
+    if (step === FINALIZED) {
+      onClose();
+
+      if (variant === "navbar") {
+        history.push(ROUTES.ACCOUNT_MY_COLLECTIONS);
+      }
+    }
+  }, [step, onClose, variant, history]);
 
   return (
     <>

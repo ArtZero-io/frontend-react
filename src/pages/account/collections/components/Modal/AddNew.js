@@ -20,22 +20,15 @@ import AddCollectionIcon from "@theme/assets/icon/AddCollection";
 import { useEffect } from "react";
 import { formMode, FINALIZED } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
-import { useHistory } from "react-router-dom";
-import { ACCOUNT_MY_COLLECTIONS } from "../../../../../constants/routes";
 
 function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { step } = useTxStatus();
-  const history = useHistory();
 
   useEffect(() => {
-    if (step === FINALIZED && variant === "navbar") {
-      history.push(ACCOUNT_MY_COLLECTIONS);
-      onClose();
-    }
     step === FINALIZED && onClose();
-  }, [step, onClose, variant, history]);
+  }, [step, onClose]);
 
   const modalSize = useBreakpointValue({ base: "xs", md: "xl" });
 
