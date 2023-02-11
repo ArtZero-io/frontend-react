@@ -554,7 +554,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   );
                 } else {
                   if (mode === formMode.EDIT) {
-
                     const project_info = {
                       name: values.name.trim(),
                       description: values.description.trim(),

@@ -29,6 +29,7 @@ import { setTxStatus } from "@store/actions/txStatus";
 import { APICall } from "@api/client";
 import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 import { convertStringToPrice } from "@utils";
+import emailjs from "@emailjs/browser";
 
 const AdvancedModeForm = ({ mode = "add", id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -303,6 +304,28 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   CREATE_COLLECTION,
                   api
                 );
+
+                var templateParams = {
+                  email_owner: "abc@gmail.com",
+                  // nft_address: nft_address,
+                  project_name: values.collectionName,
+                  reply_to: '"abc@gmail.com"',
+                };
+                emailjs
+                  .send(
+                    "service_gz6dl9u",
+                    "template_980idtm",
+                    templateParams,
+                    "q4EO2tL6l8kY1jEZh"
+                  )
+                  .then(
+                    function (response) {
+                      console.log("SUCCESS!", response.status, response.text);
+                    },
+                    function (error) {
+                      console.log("error send email FAILED...", error);
+                    }
+                  );
               }
 
               if (mode === formMode.EDIT) {
