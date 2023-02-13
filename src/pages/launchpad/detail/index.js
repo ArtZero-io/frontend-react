@@ -298,7 +298,9 @@ const LaunchpadDetailPage = () => {
   }, [phasesInfo]);
 
   const [currentPhase, setCurrentPhase] = useState(null);
-
+  // eslint-disable-next-line no-unused-vars
+  const [nextPhase, setNextPhase] = useState(null);
+  // console.log("nextPhase", nextPhase);
   useEffect(() => {
     if (isLastPhaseEnded) {
       const lastPhase = [...phasesInfo]?.pop();
@@ -306,6 +308,26 @@ const LaunchpadDetailPage = () => {
     }
 
     if (!activePhaseId) {
+      const timeStampOnly = phasesInfo.reduce((prev, curr) => {
+        prev.push(curr.startTime);
+        prev.push(curr.endTime);
+        return prev;
+      }, []);
+
+      let phase;
+
+      for (let i = 0; i < timeStampOnly?.length; i++) {
+        const p = timeStampOnly[i];
+        const now = Date.now();
+
+        if (now > p) {
+          continue;
+        }
+        phase = phasesInfo[Math.floor(i / 2)];
+
+        setNextPhase(phase);
+      }
+
       return setCurrentPhase({});
     } else {
       const found = phasesInfo?.find((p) => p.id === parseInt(activePhaseId));

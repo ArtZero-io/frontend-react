@@ -131,9 +131,13 @@ function LaunchpadDetailHeader({
         if (now > p) {
           continue;
         }
-
         timeNeedCount = p;
         phase = phasesInfo[Math.floor(i / 2)];
+
+        return {
+          phase: phase,
+          countDownTimer: timeNeedCount,
+        };
       }
 
       return {
@@ -388,7 +392,11 @@ function LaunchpadDetailHeader({
                               display={["block", "inline"]}
                               color="#fff"
                             >
-                              {currentPhase?.publicMintingFee / 10 ** 12 || 0}{" "}
+                              {currentPhase?.publicMintingFee / 10 ** 12 ||
+                                nextPhaseWhenNoCurrPhaseId?.phase
+                                  ?.publicMintingFee /
+                                  10 ** 12 ||
+                                0}{" "}
                               <AzeroIcon
                                 mb={["2px", "5px"]}
                                 width={["14px", "16px"]}

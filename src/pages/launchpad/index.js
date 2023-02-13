@@ -20,7 +20,7 @@ export const LaunchpadPage = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const { ret: projList } = await APICall.getAllProjects({});
+        const { ret: projList } = await APICall.getAllProjects({ sort: 1 });
 
         const activeProjList = projList.filter(
           ({ isActive }) => isActive === true
@@ -100,7 +100,6 @@ export const LaunchpadPage = () => {
 };
 
 const getProjectStatus = ({ startTime, endTime }) => {
-
   const currentTime = Date.now();
 
   if (currentTime >= endTime) return "ended";

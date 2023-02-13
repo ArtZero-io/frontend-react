@@ -15,20 +15,20 @@ import {
   Text,
   HStack,
   Button,
-} from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSubstrateState } from '@utils/substrate';
-import launchpad_psp34_nft_standard from '@utils/blockchain/launchpad-psp34-nft-standard';
-import launchpad_psp34_nft_standard_calls from '@utils/blockchain/launchpad-psp34-nft-standard-calls';
-import { ContractPromise } from '@polkadot/api-contract';
-import useTxStatus from '@hooks/useTxStatus';
-import { setTxStatus } from '@store/actions/txStatus';
-import CommonButton from '@components/Button/CommonButton';
-import { WITHDRAW_LAUNCHPAD, START, FINALIZED } from '@constants';
-import { clearTxStatus } from '@store/actions/txStatus';
+} from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useSubstrateState } from "@utils/substrate";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { ContractPromise } from "@polkadot/api-contract";
+import useTxStatus from "@hooks/useTxStatus";
+import { setTxStatus } from "@store/actions/txStatus";
+import CommonButton from "@components/Button/CommonButton";
+import { WITHDRAW_LAUNCHPAD, START, FINALIZED } from "@constants";
+import { clearTxStatus } from "@store/actions/txStatus";
 
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 export default function UpdateWithdrawModal({
   collection_address,
@@ -61,8 +61,12 @@ export default function UpdateWithdrawModal({
         collection_address
       );
 
-      const tempBal =
-        (balance.free.toNumber() - balance.miscFrozen.toNumber()) / 10 ** 6;
+      const balFree = balance.toHuman().free.replaceAll(",", "") / 10 ** 12;
+      const balMiscFrozen =
+        balance.toHuman().miscFrozen.replaceAll(",", "") / 10 ** 12;
+
+      const tempBal = balFree - balMiscFrozen;
+
       const tempBalFloorRound = Math.floor(tempBal);
 
       setContractBalance(tempBalFloorRound / 10 ** 6);
@@ -115,7 +119,7 @@ export default function UpdateWithdrawModal({
       onClose={onClose}
       isCentered
       isOpen={isOpen}
-      size={['xs', 'xl']}
+      size={["xs", "xl"]}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -125,18 +129,18 @@ export default function UpdateWithdrawModal({
       <ModalContent
         pt="20px"
         pb="30px"
-        px={[0, '30px']}
+        px={[0, "30px"]}
         borderRadius="0"
         position="relative"
         bg="brand.grayDark"
-        maxW={['340px', '600px']}
+        maxW={["340px", "600px"]}
       >
         <ModalCloseButton
           borderWidth={2}
           borderRadius="0"
           position="absolute"
-          top={['0', '-8', '-8']}
-          right={['0', '-8', '-8']}
+          top={["0", "-8", "-8"]}
+          right={["0", "-8", "-8"]}
           onClick={() => rest?.step === FINALIZED && rest?.onEndClick()}
         />
         <ModalHeader textAlign="center">
