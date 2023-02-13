@@ -573,7 +573,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     const project_info_ipfs = await ipfsClient.add(
                       JSON.stringify(project_info)
                     );
-
                     const launchpad_psp34_nft_standard_contract =
                       new ContractPromise(
                         api,

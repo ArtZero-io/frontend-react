@@ -580,7 +580,6 @@ async function approve(
           console.log("dispatchError ", dispatchError.toString());
         }
       }
-
       if (status) {
         const statusText = Object.keys(status?.toHuman().Ok)[0];
         if (status.isFinalized) {

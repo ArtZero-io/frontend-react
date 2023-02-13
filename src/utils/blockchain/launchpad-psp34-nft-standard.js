@@ -1071,6 +1071,23 @@ const launchpad_psp34_nft_standard = {
         {
           "args": [],
           "docs": [
+            " Returns the address of the current owner."
+          ],
+          "label": "Ownable::owner",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 33
+          },
+          "selector": "0x4fa43c8c"
+        },
+        {
+          "args": [],
+          "docs": [
             " Leaves the contract without owner. It will not be possible to call",
             " owner's functions anymore. Can only be called by the current owner.",
             "",
@@ -1094,23 +1111,6 @@ const launchpad_psp34_nft_standard = {
             "type": 38
           },
           "selector": "0x5e228753"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Returns current NFT total supply."
-          ],
-          "label": "PSP34::total_supply",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 40
-          },
-          "selector": "0x628413fe"
         },
         {
           "args": [
@@ -1223,16 +1223,17 @@ const launchpad_psp34_nft_standard = {
               "type": {
                 "displayName": [
                   "psp34_external",
-                  "OwnerOfInput1"
+                  "AllowanceInput3"
                 ],
                 "type": 42
               }
             }
           ],
           "docs": [
-            " Returns the owner of the token if any."
+            " Returns `true` if the operator is approved by the owner to withdraw `id` token.",
+            " If `id` is `None`, returns `true` if the operator is approved to withdraw all owner's tokens."
           ],
-          "label": "PSP34::owner_of",
+          "label": "PSP34::allowance",
           "mutates": false,
           "payable": false,
           "returnType": {
@@ -1242,37 +1243,7 @@ const launchpad_psp34_nft_standard = {
             ],
             "type": 44
           },
-          "selector": "0x1168624d"
-        },
-        {
-          "args": [
-            {
-              "label": "owner",
-              "type": {
-                "displayName": [
-                  "psp34_external",
-                  "BalanceOfInput1"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Returns the balance of the owner.",
-            "",
-            " This represents the amount of unique tokens the owner has."
-          ],
-          "label": "PSP34::balance_of",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 44
-          },
-          "selector": "0xcde7e55f"
+          "selector": "0x4790f55a"
         },
         {
           "args": [
@@ -1475,6 +1446,37 @@ const launchpad_psp34_nft_standard = {
             "type": 51
           },
           "selector": "0xf19d48d1"
+        },
+        {
+          "args": [
+            {
+              "label": "index",
+              "type": {
+                "displayName": [
+                  "psp34enumerable_external",
+                  "TokenByIndexInput1"
+                ],
+                "type": 7
+              }
+            }
+          ],
+          "docs": [
+            " Returns a token `Id` at a given `index` of all the tokens stored by the contract.",
+            " Use along with `total_supply` to enumerate all tokens.",
+            "",
+            " The start index is zero."
+          ],
+          "label": "PSP34Enumerable::token_by_index",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 53
+          },
+          "selector": "0xcd0340d0"
         },
         {
           "args": [
@@ -1808,34 +1810,6 @@ const launchpad_psp34_nft_standard = {
               "type": {
                 "displayName": [
                   "accesscontrol_external",
-                  "GetRoleAdminInput1"
-                ],
-                "type": 5
-              }
-            }
-          ],
-          "docs": [
-            " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
-          ],
-          "label": "AccessControl::get_role_admin",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 44
-          },
-          "selector": "0x83da3bb2"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
                   "RevokeRoleInput1"
                 ],
                 "type": 5
@@ -1997,58 +1971,30 @@ const launchpad_psp34_nft_standard = {
               }
             },
             {
-              "label": "address",
+              "label": "account",
               "type": {
                 "displayName": [
                   "accesscontrol_external",
-                  "HasRoleInput2"
+                  "RenounceRoleInput2"
                 ],
                 "type": 0
               }
             }
           ],
           "docs": [
-            " Returns `true` if `account` has been granted `role`."
+            " Revokes `role` from the calling account.",
+            " Roles are often managed via `grant_role` and `revoke_role`: this function's",
+            " purpose is to provide a mechanism for accounts to lose their privileges",
+            " if they are compromised (such as when a trusted device is misplaced).",
+            "",
+            " On success a `RoleRevoked` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Returns with `InvalidCaller` error if caller is not `account`.",
+            " Returns with `MissingRole` error if `account` doesn't have `role`."
           ],
-          "label": "AccessControl::has_role",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 50
-          },
-          "selector": "0xc1d9ac18"
-        },
-        {
-          "args": [
-            {
-              "label": "value",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "WithdrawFeeInput1"
-                ],
-                "type": 7
-              }
-            },
-            {
-              "label": "receiver",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "WithdrawFeeInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " This function allows contract owner to withdraw contract balance to his account."
-          ],
-          "label": "AdminTrait::withdraw_fee",
+          "label": "AccessControl::renounce_role",
           "mutates": true,
           "payable": false,
           "returnType": {
@@ -2056,9 +2002,9 @@ const launchpad_psp34_nft_standard = {
               "ink",
               "MessageResult"
             ],
-            "type": 17
+            "type": 22
           },
-          "selector": "0x07573e99"
+          "selector": "0xeaf1248a"
         },
         {
           "args": [
@@ -4513,7 +4459,7 @@ const launchpad_psp34_nft_standard = {
               "variants": [
                 {
                   "index": 0,
-                  "name": "Ok"
+                  "name": "None"
                 },
                 {
                   "fields": [
@@ -4522,7 +4468,7 @@ const launchpad_psp34_nft_standard = {
                     }
                   ],
                   "index": 1,
-                  "name": "Err"
+                  "name": "Some"
                 }
               ]
             }
@@ -4534,7 +4480,7 @@ const launchpad_psp34_nft_standard = {
             }
           ],
           "path": [
-            "Result"
+            "Option"
           ]
         }
       },
@@ -4624,7 +4570,7 @@ const launchpad_psp34_nft_standard = {
                 {
                   "fields": [
                     {
-                      "type": 43
+                      "type": 9
                     }
                   ],
                   "index": 0,
@@ -4645,7 +4591,7 @@ const launchpad_psp34_nft_standard = {
           "params": [
             {
               "name": "T",
-              "type": 43
+              "type": 9
             },
             {
               "name": "E",
@@ -4663,10 +4609,6 @@ const launchpad_psp34_nft_standard = {
           "def": {
             "variant": {
               "variants": [
-                {
-                  "index": 0,
-                  "name": "None"
-                },
                 {
                   "fields": [
                     {

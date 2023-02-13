@@ -362,7 +362,6 @@ function LaunchpadDetailHeader({
                               10 ** 18 ||
                              0}{" "}
                           <AzeroIcon
-                            mb={["2px", "5px"]}
                             width={["14px", "16px"]}
                             height={["14px", "16px"]}
                           />

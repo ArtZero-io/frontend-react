@@ -93,7 +93,6 @@ function ProjectAdmin() {
         currentAccount,
         nftAddress
       );
-
       const launchpad_psp34_nft_standard_contract = new ContractPromise(
         api,
         launchpad_psp34_nft_standard.CONTRACT_ABI,

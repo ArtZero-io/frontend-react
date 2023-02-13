@@ -79,9 +79,9 @@ function UpdatePhase({
       helpers.setValue(valueAddHash);
     }
   };
-
+  console.log(value, 'valuevalue');
   const handleAddPhase = (arrayHelpers) => {
-    if (!value[value.length - 1].start || !value[value.length - 1].end) {
+    if ((!value[value.length - 1]?.start || !value[value.length - 1]?.end) && !!value.length) {
       toast.error("Please check Start - End time phase.");
       return;
     }
@@ -518,7 +518,6 @@ function UpdatePhase({
                       <Button
                         size="sm"
                         onClick={() => onAddNewPhase(index)}
-                        isDisabled={index === 0 && value.length === 1}
                       >
                         add
                       </Button>
