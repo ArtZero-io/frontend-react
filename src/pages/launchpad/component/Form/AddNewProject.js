@@ -491,8 +491,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         values.twitter,
                         values.discord,
                         values.telegram,
-                        false,
-                        false,
+                        "0",
+                        "0",
                       ],
                       collectionAllowRoyaltyFee: isSetRoyal,
                       collectionRoyaltyFeeData: isSetRoyal

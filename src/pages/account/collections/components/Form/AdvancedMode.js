@@ -283,8 +283,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   values.twitter,
                   values.discord,
                   values.telegram,
-                  false,
-                  false,
+                  '0',
+                  '0',
                 ],
 
                 collectionAllowRoyaltyFee: values.collectRoyaltyFee,

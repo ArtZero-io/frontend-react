@@ -282,8 +282,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 values.twitter,
                 values.discord,
                 values.telegram,
-                "NO",
-                "NO",
+                "0",
+                "0",
               ],
 
               collectionAllowRoyaltyFee: values.collectRoyaltyFee,
