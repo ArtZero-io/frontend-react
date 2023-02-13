@@ -571,7 +571,6 @@ const LaunchpadDetailPage = () => {
           currentAccount,
           1
         );
-          console.log(tokenUri, 'tokenUritokenUri');
         const baseUri = tokenUri?.replace("1.json", "");
 
         ret = await Promise.all(
@@ -580,7 +579,6 @@ const LaunchpadDetailPage = () => {
               currentAccount,
               tokenID: index,
             });
-            console.log(idOfNFT, baseUri, 'idOfNFTidOfNFT');
             const metaData = await getMetaDataOffChain(idOfNFT, baseUri);
 
             if (metaData?.status === "FAILED") {

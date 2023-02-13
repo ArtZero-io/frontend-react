@@ -502,7 +502,7 @@ const NFTTabCollectible = (props) => {
                                 />
 
                                 <NumberInput
-                                  min={1}
+                                  min={0}
                                   ml={3}
                                   h="50px"
                                   bg="black"

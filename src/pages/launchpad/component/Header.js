@@ -388,7 +388,6 @@ function LaunchpadDetailHeader({
                             >
                               {currentPhase?.publicMintingFee / 10 ** 18 || 0}{" "}
                               <AzeroIcon
-                                mb={["2px", "5px"]}
                                 width={["14px", "16px"]}
                                 height={["14px", "16px"]}
                               />
@@ -410,7 +409,6 @@ function LaunchpadDetailHeader({
                           {userWLInfo[currentPhase?.id - 1]?.mintingFee /
                             10 ** 18}{" "}
                           <AzeroIcon
-                            mb={["2px", "5px"]}
                             width={["14px", "16px"]}
                             height={["14px", "16px"]}
                           />

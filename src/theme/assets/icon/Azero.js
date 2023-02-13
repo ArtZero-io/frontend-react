@@ -8,7 +8,7 @@ export default function AzeroIcon({
   ...rest
 }) {
   return (
-    <Image w={w} h={w || h} src={AstarLogo} display="inline-block" {...rest}>
+    <Image {...rest} marginBottom={'0px'} w={w} h={w || h} src={AstarLogo} display="inline-block" >
     </Image>
   );
 }

@@ -850,7 +850,7 @@ function TokenPage() {
                               isDisabled={actionType}
                               bg="black"
                               max={999000000}
-                              min={1}
+                              min={0}
                               precision={6}
                               onChange={(v) => setAskPrice(v)}
                               value={askPrice}
@@ -994,7 +994,7 @@ function TokenPage() {
                               isDisabled={actionType}
                               bg="black"
                               max={999000000}
-                              min={1}
+                              min={0}
                               precision={6}
                               onChange={(v) => setBidPrice(v)}
                               value={bidPrice}
@@ -1093,7 +1093,7 @@ export const buyToken = async (
   dispatch(
     setTxStatus({ type: BUY, step: START, tokenIDArray: Array.of(tokenID) })
   );
-
+    console.log(tokenID, nftContractAddress, askPrice, 'tokenIDtokenID');
   await marketplace_contract_calls.buy(
     currentAccount,
     nftContractAddress,
@@ -1260,7 +1260,7 @@ export const listToken = async (
   );
 
   let res;
-
+    console.log(isAllowance, 'isAllowanceisAllowance');
   if (!isAllowance) {
     toast.success("Step 1: Approving NFT transfer...");
 

@@ -438,8 +438,6 @@ export const APICall = {
 // IPFS API client call
 const authorization =
   "Basic " + Buffer.from(projectId + ":" + projectKey).toString("base64");
-console.log("projectId", projectId);
-console.log("projectKey", projectKey);
 export const ipfsClient = create({
   host: "ipfs.infura.io",
   port: 5001,

@@ -360,7 +360,7 @@ async function approve(
     token_id,
     is_approve
   )
-    .signAndSend(address, { signer }, ({ status, dispatchError }) => {
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,
         dispatchError,

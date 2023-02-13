@@ -516,7 +516,7 @@ function MyNFTTabInfo(props) {
                   isDisabled={actionType}
                   bg="black"
                   max={999000000}
-                  min={1}
+                  min={0}
                   precision={6}
                   onChange={(v) => setAskPrice(v)}
                   value={askPrice}
