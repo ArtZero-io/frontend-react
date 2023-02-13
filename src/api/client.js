@@ -5,8 +5,8 @@ import { Buffer } from "buffer";
 
 const { create } = require("ipfs-http-client");
 const baseURL = process.env.REACT_APP_API_BASE_URL;
-const projectId = "2DEt23644RzswJNwtdPQNbCVcef";
-const projectKey = "b352ba9d861d026ea80f6083a25b33ed";
+const projectId = process.env.REACT_APP_IPFS_PROJECT_ID;
+const projectKey = process.env.REACT_APP_IPFS_PROJECT_KEY;
 
 export const clientAPI = async (method, url, options) => {
   if (!options) options = {};
@@ -438,7 +438,8 @@ export const APICall = {
 // IPFS API client call
 const authorization =
   "Basic " + Buffer.from(projectId + ":" + projectKey).toString("base64");
-
+console.log("projectId", projectId);
+console.log("projectKey", projectKey);
 export const ipfsClient = create({
   host: "ipfs.infura.io",
   port: 5001,
