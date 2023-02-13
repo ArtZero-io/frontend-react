@@ -47,20 +47,6 @@ function UpdatePhase({
 
   const handlePhaseTime = (e, index) => {
     if (e) {
-      // if (value.length >= 1) {
-      //   const end = e[1].getTime();
-      //   const start = e[0].getTime();
-
-      //   const newValue = [...value];
-      //   newValue.push({ start, end });
-
-      //   const isOverlap = isPhaseTimeOverlap(newValue);
-
-      //   if (isOverlap) {
-      //     return toast.error("Phase time is not valid or overlap.");
-      //   }
-      // }
-
       if (!canEditPhase(e[0].getTime())) {
         return toast.error("New phase time can not in the past.");
       }
@@ -145,7 +131,7 @@ function UpdatePhase({
 
       const startFirstPhase = phasesArray[0]?.start;
       const endLastPhase = [...phasesArray].pop().end;
-      
+
       // check proj & phase overlap
       if (
         !(

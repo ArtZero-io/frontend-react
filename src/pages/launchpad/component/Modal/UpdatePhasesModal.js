@@ -25,6 +25,7 @@ import useTxStatus from "@hooks/useTxStatus";
 import { FINALIZED } from "@constants";
 import { useDispatch } from "react-redux";
 import { clearTxStatus } from "@store/actions/txStatus";
+import Loader from "@components/Loader/CommonLoader";
 
 const UpdatePhasesModal = React.memo(function ({
   isOpen,
@@ -50,67 +51,75 @@ const UpdatePhasesModal = React.memo(function ({
       },
     ],
   });
-
+  const [loading, setLoading] = useState(false);
   const [currentPhaseId, setCurrentPhaseId] = useState(null);
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   const fetchData = useCallback(async () => {
+    setLoading(true);
+
     let initialValuesData = {};
 
-    const launchpad_psp34_nft_standard_contract = new ContractPromise(
-      api,
-      launchpad_psp34_nft_standard.CONTRACT_ABI,
-      collection_address
-    );
-
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
-    const availableTokenAmount =
-      await launchpad_psp34_nft_standard_calls.getAvailableTokenAmount(
-        currentAccount
+    try {
+      const launchpad_psp34_nft_standard_contract = new ContractPromise(
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        collection_address
       );
 
-    const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(
-      currentAccount
-    );
+      launchpad_psp34_nft_standard_calls.setContract(
+        launchpad_psp34_nft_standard_contract
+      );
 
-    let phasesTmp = [];
-
-    for (let i = 1; i <= totalPhase; i++) {
-      let phaseSchedule =
-        await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-          currentAccount,
-          i
+      const availableTokenAmount =
+        await launchpad_psp34_nft_standard_calls.getAvailableTokenAmount(
+          currentAccount
         );
 
-      if (phaseSchedule.isActive) {
-        let phaseInfo = {
-          availableTokenAmount: strToNumber(availableTokenAmount),
-          currPublicAmount: strToNumber(phaseSchedule?.publicMintingAmount),
-          id: i,
-          // canEdit: false,
-          name: phaseSchedule.title,
-          start: strToNumber(phaseSchedule.startTime),
-          end: strToNumber(phaseSchedule.endTime),
-          isPublic: phaseSchedule.isPublic,
-          publicAmount: strToNumber(phaseSchedule.publicMintingAmount),
-          publicMaxMintingAmount: strToNumber(
-            phaseSchedule.publicMaxMintingAmount
-          ),
-          publicMintingFee: convertStringToPrice(
-            phaseSchedule.publicMintingFee
-          ),
-        };
+      const totalPhase =
+        await launchpad_psp34_nft_standard_calls.getLastPhaseId(currentAccount);
 
-        phasesTmp.push(phaseInfo);
+      let phasesTmp = [];
+
+      for (let i = 1; i <= totalPhase; i++) {
+        let phaseSchedule =
+          await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
+            currentAccount,
+            i
+          );
+
+        if (phaseSchedule.isActive) {
+          let phaseInfo = {
+            availableTokenAmount: strToNumber(availableTokenAmount),
+            currPublicAmount: strToNumber(phaseSchedule?.publicMintingAmount),
+            id: i,
+            // canEdit: false,
+            name: phaseSchedule.title,
+            start: strToNumber(phaseSchedule.startTime),
+            end: strToNumber(phaseSchedule.endTime),
+            isPublic: phaseSchedule.isPublic,
+            publicAmount: strToNumber(phaseSchedule.publicMintingAmount),
+            publicMaxMintingAmount: strToNumber(
+              phaseSchedule.publicMaxMintingAmount
+            ),
+            publicMintingFee: convertStringToPrice(
+              phaseSchedule.publicMintingFee
+            ),
+          };
+
+          phasesTmp.push(phaseInfo);
+        }
       }
+
+      initialValuesData.phases = phasesTmp;
+
+      setInitialValues(initialValuesData);
+      setCurrentPhaseId(currentPhaseId);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
     }
-
-    initialValuesData.phases = phasesTmp;
-
-    setInitialValues(initialValuesData);
-    setCurrentPhaseId(currentPhaseId);
   }, [api, collection_address, currentAccount, currentPhaseId]);
 
   useEffect(() => {
@@ -174,7 +183,9 @@ const UpdatePhasesModal = React.memo(function ({
         </ModalHeader>
 
         <ModalBody overflowY="auto" sx={SCROLLBAR} px="8px">
-          {initialValues && (
+          {loading ? (
+            <Loader />
+          ) : (
             <Formik
               initialValues={initialValues}
               validationSchema={Yup.object().shape({
