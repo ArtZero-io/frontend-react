@@ -627,7 +627,7 @@ const NAV_ITEMS = [
   },
   {
     label: "stake2earn",
-    href: ROUTES.DOCS,
+    href: ROUTES.STAKE2EARN,
     isExternal: true,
   },
   {
