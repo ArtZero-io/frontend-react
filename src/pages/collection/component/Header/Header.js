@@ -96,7 +96,7 @@ function CollectionHeader(props) {
 
           <HStack spacing="10px" pt="10px">
             {isDoxxed && (
-              <Tooltip label="At least one of team members verified his identity.">
+              <Tooltip label="At least one of the team members’ identity is verified.">
                 <Box p="1">
                   <Tag border="1px solid #7ae7ff">DOXXED</Tag>
                 </Box>

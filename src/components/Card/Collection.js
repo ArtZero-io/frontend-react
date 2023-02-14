@@ -128,7 +128,7 @@ export const CollectionCard = ({
           >
             <>
               {isDoxxed && (
-                <Tooltip label="At least one of team members verified his identity.">
+                <Tooltip label="At least one of the team members’ identity is verified.">
                   <Tag bg="#34B979" border="1px solid #7ae7ff">
                     DOXXED
                   </Tag>
