@@ -410,15 +410,15 @@ function HomePage() {
                 fontSize={["13px", null, "18px"]}
                 lineHeight={["21px", null, "30px"]}
               >
-                you will need some testnet azero (tzero) to start. get free
-                tzero from{" "}
+                you will need some testnet Astar (ASTR) to start. get free
+                Astar from{" "}
                 <Link
                   isExternal
                   color="#7ae7ff"
                   textDecoration="underline"
-                  href="https://faucet.test.azero.dev/"
+                  href="https://portal.astar.network/#/shibuya-testnet/assets"
                 >
-                  https://faucet.test.azero.dev/
+                  https://portal.astar.network/#/shibuya-testnet/assets
                 </Link>
               </Text>
             </Center>

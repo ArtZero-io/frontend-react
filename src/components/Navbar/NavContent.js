@@ -158,13 +158,13 @@ const DesktopNavContent = (props) => {
           <NavLink.Desktop key={index} label={link.label} to={link.href} />
         ))}
 
-        {
+        {/* {
           <NavLink.Desktop
             label="Stake2Earn"
             to={ROUTES.STAKE2EARN}
             isExternal={true}
           />
-        }
+        } */}
 
         <NavLink.Desktop label="Stats" to={ROUTES.STATS} />
         <NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />
@@ -625,11 +625,11 @@ const NAV_ITEMS = [
     label: "launchpad",
     href: ROUTES.LAUNCHPAD_BASE,
   },
-  {
-    label: "stake2earn",
-    href: ROUTES.DOCS,
-    isExternal: true,
-  },
+  // {
+  //   label: "stake2earn",
+  //   href: ROUTES.DOCS,
+  //   isExternal: true,
+  // },
   {
     label: "stats",
     href: ROUTES.STATS,

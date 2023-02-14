@@ -17,7 +17,7 @@ import collection_manager from "@utils/blockchain/collection-manager";
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
 import toast from "react-hot-toast";
 
-const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
+const url = "https://min-api.cryptocompare.com/data/price?fsym=astr&tsyms=USD";
 
 function StatsPage() {
   const { currentAccount, api } = useSubstrateState();
@@ -107,6 +107,7 @@ function StatsPage() {
           return {
             ...item,
             order: index + 1,
+            volume: item.volume / 10**6 || 0,
             floorPrice: data?.price / 10 ** 18 || 0,
           };
         })
