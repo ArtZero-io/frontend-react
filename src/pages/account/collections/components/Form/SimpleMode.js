@@ -28,7 +28,7 @@ import { APICall } from "@api/client";
 import { clearTxStatus } from "@store/actions/txStatus";
 import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 import { convertStringToPrice } from "@utils";
-import emailjs from "@emailjs/browser";
+import { validationEmail } from "@constants/yup";
 
 const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -227,6 +227,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 .required("The terms of service must be accepted.")
                 .oneOf([true], "The TOS must be accepted."),
             }),
+            emailOwner: validationEmail,
           })}
           onSubmit={async (values, { setSubmitting }) => {
             if (addingFee <= 0) {
@@ -285,46 +286,42 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 "0",
                 "0",
               ],
-
               collectionAllowRoyaltyFee: values.collectRoyaltyFee,
               collectionRoyaltyFeeData: values.collectRoyaltyFee
                 ? Math.round(values.royaltyFee * 100)
                 : 0,
             };
 
+            // Double check 3 images is exits
+            if (
+              !data?.attributeVals[2] ||
+              !data?.attributeVals[3] ||
+              !data?.attributeVals[4]
+            ) {
+              return toast.error("Some images is invalid!");
+            }
+
+
             try {
               if (mode === formMode.ADD) {
+                const templateParams = {
+                  email_owner: values.emailOwner,
+                  collection_name: values.collectionName,
+                  collection_telegram: values.telegram,
+                  reply_to: values.emailOwner,
+                };
+                console.log("templateParams", templateParams);
                 dispatch(setTxStatus({ type: CREATE_COLLECTION, step: START }));
-
+                console.log("data", data);
+                console.log("values", values);
                 await collection_manager_calls.autoNewCollection(
                   currentAccount,
                   data,
                   dispatch,
                   CREATE_COLLECTION,
-                  api
+                  api,
+                  templateParams
                 );
-
-                var templateParams = {
-                  email_owner: "abc@gmail.com",
-                  // nft_address: nft_address,
-                  project_name: values.collectionName,
-                  reply_to: '"abc@gmail.com"',
-                };
-                emailjs
-                  .send(
-                    "service_gz6dl9u",
-                    "template_980idtm",
-                    templateParams,
-                    "q4EO2tL6l8kY1jEZh"
-                  )
-                  .then(
-                    function (response) {
-                      console.log("SUCCESS!", response.status, response.text);
-                    },
-                    function (error) {
-                      console.log("error send email FAILED...", error);
-                    }
-                  );
               }
 
               if (mode === formMode.EDIT) {
@@ -652,6 +649,17 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                       )}
                     </Flex>
                   </Stack>
+
+                  {mode === formMode.ADD && (
+                    <SimpleModeInput
+                      isRequired={true}
+                      type="text"
+                      name="emailOwner"
+                      label="Enter your email so we can contact for additional information."
+                      placeholder={"Email Contact"}
+                      isDisabled={actionType}
+                    />
+                  )}
 
                   <VStack alignItems="start" pt="30px">
                     <Text
