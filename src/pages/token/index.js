@@ -1205,6 +1205,7 @@ export const removeBid = async (
   );
 };
 
+
 export const listToken = async (
   api,
   currentAccount,

@@ -10,7 +10,7 @@ import {
 import { APICall } from "@api/client";
 import { clientAPI } from "@api/client";
 import collection_manager from "@utils/blockchain/collection-manager";
-import { getEstimatedGas, readOnlyGasLimit, formatOutput } from "..";
+import { getEstimatedGas, readOnlyGasLimit, formatOutput, delay } from "..";
 
 let contract;
 
@@ -227,6 +227,7 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
                     const value = decodedEvent.args[i];
                     eventValues.push(value.toString());
                   }
+                  await delay(15000)
                   if (event_name === "AddNewCollectionEvent") {
                     await APICall.askBeUpdateCollectionData({
                       collection_address: eventValues[1],

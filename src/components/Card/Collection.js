@@ -225,7 +225,7 @@ export const CollectionCard = ({
                     Volume
                   </Text>{" "}
                   <Text as="span" fontWeight="600">
-                    {shortenNumber(volume) || 0}
+                    {shortenNumber(volume / 10**6) || 0}
                   </Text>
                 </TagLabel>
               </Tag>

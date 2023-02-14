@@ -7,6 +7,7 @@ import { clientAPI } from "@api/client";
 
 import { APICall } from "@api/client";
 import { ContractPromise } from "@polkadot/api-contract";
+import { delay } from "@utils";
 
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import {
@@ -383,7 +384,7 @@ async function approve(
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
-
+  await delay(30000)
   return unsubscribe;
 }
 
