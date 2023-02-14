@@ -423,7 +423,8 @@ const MobileNav = ({ onClose, isOpen }) => {
                   fontSize={["13px", "sm"]}
                   width={["260px", "full"]}
                 >
-                  © Copyright 2022 ArtZero. All Rights Reserved{" "}
+                  &copy; Copyright {new Date().getFullYear()} ArtZero. All
+                  Rights Reserved
                 </Text>
               </Center>
             </Flex>
