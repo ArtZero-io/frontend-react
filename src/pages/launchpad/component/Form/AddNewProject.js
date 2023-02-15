@@ -76,6 +76,7 @@ import {
 import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 import { useCallback } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
+import { APICall } from "../../../../api/client";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
@@ -1221,7 +1222,7 @@ export const fetchInitialValuesProject = async ({
       startTime,
       endTime,
     } = projectInfo;
-
+    console.log("projectInfo", projectInfo);
     initialValues.isEditMode = true;
     initialValues.nftName = nftName;
     initialValues.nftSymbol = nftSymbol;
@@ -1237,6 +1238,14 @@ export const fetchInitialValuesProject = async ({
     initialValues.members = teamMembers;
     initialValues.roadmap = roadmaps;
 
+    const { ret, status } = await APICall.getCollectionByAddress({
+      collection_address,
+    });
+
+    if (status === "OK") {
+      initialValues.royaltyFee = ret[0].royaltyFee / 100;
+    }
+    
     return {
       initialValues,
       avatarIPFSUrl: avatarImage,
