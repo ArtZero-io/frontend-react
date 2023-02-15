@@ -356,7 +356,12 @@ function MyWhiteListProjectPage() {
         }
       }
 
+      whiteListDataTableTmp = whiteListDataTableTmp.filter((item) => {
+        return item?.whitelistAmount * 1 !== 0;
+      });
+      
       setWhiteListDataTable(whiteListDataTableTmp);
+
       setLoading(false);
     } catch (error) {
       setLoading(false);
