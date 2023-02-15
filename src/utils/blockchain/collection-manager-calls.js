@@ -88,23 +88,25 @@ async function addNewCollection(
 
         events.forEach(({ event: { method } }) => {
           if (method === "ExtrinsicSuccess" && status.type === "Finalized") {
-            templateParams.collection_address = data?.nftContractAddress;
+            if (templateParams) {
+              templateParams.collection_address = data?.nftContractAddress;
 
-            emailjs
-              .send(
-                process.env.REACT_APP_EMAILJS_SERVICE_ID,
-                process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
-                templateParams,
-                process.env.REACT_APP_EMAILJS_PUBLIC_KEY
-              )
-              .then(
-                function (response) {
-                  console.log("SUCCESS!", response.status, response.text);
-                },
-                function (error) {
-                  console.log("error send email FAILED...", error);
-                }
-              );
+              emailjs
+                .send(
+                  process.env.REACT_APP_EMAILJS_SERVICE_ID,
+                  process.env.REACT_APP_EMAILJS_COLLECTION_TEMPLATE_ID,
+                  templateParams,
+                  process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+                )
+                .then(
+                  function (response) {
+                    console.log("SUCCESS!", response.status, response.text);
+                  },
+                  function (error) {
+                    console.log("error send email FAILED...", error);
+                  }
+                );
+            }
 
             toast(
               "Thank you for submitting. Your Collection has been created successfully. It will need enabling by our team. We will get in touch with you within the next 48 hours. In the meantime, you can navigate to MY ACCOUNT/MY COLLECTIONS and start creating NFTs in the Collection.",
@@ -127,8 +129,6 @@ async function addNewCollection(
         });
 
         if (status?.isFinalized) {
-          toast.success("Collection is created successful!");
-
           let transactionData = data;
           await APICall.askBeUpdateCollectionData({
             collection_address: data?.nftContractAddress,
@@ -293,7 +293,7 @@ async function autoNewCollection(
                     emailjs
                       .send(
                         process.env.REACT_APP_EMAILJS_SERVICE_ID,
-                        process.env.REACT_APP_EMAILJS_TEMPLATE_ID,
+                        process.env.REACT_APP_EMAILJS_COLLECTION_TEMPLATE_ID,
                         templateParams,
                         process.env.REACT_APP_EMAILJS_PUBLIC_KEY
                       )

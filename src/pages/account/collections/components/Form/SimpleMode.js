@@ -301,14 +301,12 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               return toast.error("Some images is invalid!");
             }
 
-
             try {
               if (mode === formMode.ADD) {
                 const templateParams = {
                   email_owner: values.emailOwner,
                   collection_name: values.collectionName,
                   collection_telegram: values.telegram,
-                  reply_to: values.emailOwner,
                 };
                 console.log("templateParams", templateParams);
                 dispatch(setTxStatus({ type: CREATE_COLLECTION, step: START }));

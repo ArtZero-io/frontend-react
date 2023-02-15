@@ -15,6 +15,7 @@ import {
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import { APICall } from "@api/client";
 import { readOnlyGasLimit, formatOutput } from "..";
+import emailjs from "@emailjs/browser";
 
 let contract;
 
@@ -219,7 +220,8 @@ async function addNewProject(
   dispatch,
   txType,
   api,
-  createNewCollection
+  createNewCollection,
+  templateParams
 ) {
   if (!contract || !caller_account) {
     throw Error(`Contract or caller not valid!`);
@@ -279,27 +281,7 @@ async function addNewProject(
           caller_account,
           isApprovalTx: true,
         });
-        // events.forEach(({ event: { method } }) => {
-        //   if (method === "ExtrinsicSuccess" && status.type === "InBlock") {
-        //     toast(
-        //       "Thank you for submitting. Our team member will get in touch with you in the next 48 hours.",
-        //       {
-        //         icon: "👏",
-        //         duration: 8000,
-        //         reverseOrder: true,
-        //         position: "bottom-left",
-        //         style: {
-        //           color: "#000",
-        //           padding: "8px",
-        //           borderRadius: 0,
-        //           background: "#7AE7FF",
-        //         },
-        //       }
-        //     );
-        //   } else if (method === "ExtrinsicFailed") {
-        //     toast.error(`Error: ${method}.`);
-        //   }
-        // });
+
         if (status.isInBlock) {
           events.forEach(({ event: { data, method, section }, phase }) => {
             if (section === "contracts" && method === "ContractEmitted") {
@@ -325,6 +307,23 @@ async function addNewProject(
                   }
 
                   const nft_address = eventValues[1];
+                  templateParams.nft_address = eventValues[1];
+
+                  emailjs
+                    .send(
+                      process.env.REACT_APP_EMAILJS_SERVICE_ID,
+                      process.env.REACT_APP_EMAILJS_PROJECT_TEMPLATE_ID,
+                      templateParams,
+                      process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+                    )
+                    .then(
+                      function (response) {
+                        console.log("SUCCESS!", response.status, response.text);
+                      },
+                      function (error) {
+                        console.log("error send email FAILED...", error);
+                      }
+                    );
 
                   (async () =>
                     await APICall.askBeUpdateProjectData({
