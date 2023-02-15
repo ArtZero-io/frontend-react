@@ -85,7 +85,7 @@ Expectations:
 Test case ID: Add_new_collection_in_simple_mode_003
 Test case Name: Add a new collection in simple mode with low balance
 Pre-requisite: 
-  - Connected active account with low balance which is not enough for either collection fee or gas fee or both
+  - Connected active account with low balance which is not enough for collection fee
 Steps: 
   1. Go to MY ACCOUNT \ CREATE COLLECTION \ SIMPLE MODE
   2. Input all information in correct format
@@ -98,6 +98,26 @@ Expectations:
   - Receive pop-up message stating Low balance to proceed
   - Impossible to process to wallet confirmation page, thus fail to create a collection.
 ```
+
+```
+Test case ID: Add_new_collection_in_simple_mode_004
+Test case Name: Add a new collection in simple mode with low balance
+Pre-requisite: 
+  - Connected active account with low balance which is enough for collection fee but not enough for gas fee
+Steps: 
+  1. Go to MY ACCOUNT \ CREATE COLLECTION \ SIMPLE MODE
+  2. Input all information in correct format
+  3. Upload 3 images
+  4. Input Royalty fee number
+  5. Add email
+  6. Tick box to agree Terms of Service
+  7. Click button CREATE COLLECTION
+  8. Fill wallet password & sign transaction
+Expectations: 
+  - Receive pop-up message stating Low balance for gas fee
+  - Impossible to create a collection.
+```
+
 
 
 #### Add new collection in advanced mode
