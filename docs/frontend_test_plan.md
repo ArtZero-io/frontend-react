@@ -8,6 +8,7 @@
     - [Marketplace](#marketplace)
       - [Add new collection in simple mode](#Add-new-collection-in-simple-mode)
       - [Edit a collection](#Edit-a-collection)
+      - [Add new collection in advanced mode](#Add-new-collection-in-advanced-mode)
       - [Add a new NFT](#Add-a-new-NFT)
       - [Edit an NFT](#Edit-an-NFT)
       - [List an NFT](#List-an-NFT)
@@ -40,6 +41,29 @@ Expectations: write the expected result here.
 ### Marketplace
 
 #### Add new collection in simple mode
+
+```
+Test case ID: Add_new_collection_in_simple_mode_001
+Test case Name: Add a new collection in simple mode with all correct data inputs
+Pre-requisite: 
+  - Connected active account with enough balance for collection fee & gas fee
+Steps: 
+  1. Go to MY ACCOUNT \ CREATE COLLECTION \ SIMPLE MODE
+  2. Input all information in correct format
+  3. Upload 3 images
+  4. Input Royalty fee number
+  5. Add email
+  6. Tick box to agree Terms of Service
+  7. Click button CREATE COLLECTION
+  8. Fill wallet password & sign transaction
+Expectations: 
+  - Receive pop-up message from the team
+  - Receive email confirming of the success of the collection creation
+  - Able to navigate the collection or edit collection in MY ACCOUNT \ MY COLLECTION
+
+```
+
+#### Add new collection in advanced mode
 
 #### Edit a collection
 
