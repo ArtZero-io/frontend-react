@@ -27,8 +27,47 @@
 
 ## Test Cases
 
-### General
+### Dashboard
+```
+Test case ID: dashboard_001
+Test case Name: Verify Dashboard Page Information Display
+Pre-requisite: User must be logged in and have access to the Dashboard page.
+Expectations:
+  The user's address should be displayed on the Dashboard page.
+  The number of NFTs for sale should be displayed on the Dashboard page.
+  The number of Staked NFTs should be displayed on the Dashboard page.
+  The number of Pending Staked NFTs should be displayed on the Dashboard page.
+  The total number of owned NFTs should be displayed on the Dashboard page.
+  The recent reward history should be displayed on the Dashboard page.
+  The Info staking NFT should be displayed on the Dashboard page.
+Test Steps:
+  Login to the NFT marketplace as a registered user.
+  Navigate to the Dashboard page.
+  Verify that the user's address is displayed on the page.
+  Verify that the number of NFTs for sale is displayed on the page.
+  Verify that the number of Staked NFTs is displayed on the page.
+  Verify that the number of Pending Staked NFTs is displayed on the page.
+  Verify that the total number of owned NFTs is displayed on the page.
+  Verify that the recent reward history is displayed on the page.
+  Verify that the Info staking NFT is displayed on the page.
+```
 
+```Test case ID: dashboard_002
+Test case Name: Verify Functionality of Trade Discount Modal for PMP NFT Staked
+Pre-requisite: User must be logged in and have access to the Dashboard page.
+Expectations:
+  The user should be able to access the Trade Discount Modal on the Dashboard page.
+  The modal should display a table with three columns: Stakers, Trade Fee, and Trade Discount by Percent.
+  The user should be able to view the stakers who are eligible for the trade discount.
+  The user should be able to view the trade fee and trade discount for each stake NFT quantity.
+Test Steps:
+  Login to the NFT marketplace as a registered user.
+  Navigate to the Dashboard page.
+  Locate and access the Trade Discount Modal.
+  Verify that the modal displays a table with the columns Stakers, Trade Fee, and Trade Discount by Percent.
+  Verify that the table displays the stakers who are eligible for the trade discount.
+  Verify that the table displays the trade fee and trade discount for each stake NFT quantity.
+```
 ### Accounts
 > Test case Template
 ```
