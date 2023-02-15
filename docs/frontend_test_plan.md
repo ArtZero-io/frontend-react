@@ -27,47 +27,8 @@
 
 ## Test Cases
 
-### Dashboard
-```
-Test case ID: dashboard_001
-Test case Name: Verify Dashboard Page Information Display
-Pre-requisite: User must be logged in and have access to the Dashboard page.
-Expectations:
-  The user's address should be displayed on the Dashboard page.
-  The number of NFTs for sale should be displayed on the Dashboard page.
-  The number of Staked NFTs should be displayed on the Dashboard page.
-  The number of Pending Staked NFTs should be displayed on the Dashboard page.
-  The total number of owned NFTs should be displayed on the Dashboard page.
-  The recent reward history should be displayed on the Dashboard page.
-  The Info staking NFT should be displayed on the Dashboard page.
-Test Steps:
-  Login to the NFT marketplace as a registered user.
-  Navigate to the Dashboard page.
-  Verify that the user's address is displayed on the page.
-  Verify that the number of NFTs for sale is displayed on the page.
-  Verify that the number of Staked NFTs is displayed on the page.
-  Verify that the number of Pending Staked NFTs is displayed on the page.
-  Verify that the total number of owned NFTs is displayed on the page.
-  Verify that the recent reward history is displayed on the page.
-  Verify that the Info staking NFT is displayed on the page.
-```
+### General
 
-```Test case ID: dashboard_002
-Test case Name: Verify Functionality of Trade Discount Modal for PMP NFT Staked
-Pre-requisite: User must be logged in and have access to the Dashboard page.
-Expectations:
-  The user should be able to access the Trade Discount Modal on the Dashboard page.
-  The modal should display a table with three columns: Stakers, Trade Fee, and Trade Discount by Percent.
-  The user should be able to view the stakers who are eligible for the trade discount.
-  The user should be able to view the trade fee and trade discount for each stake NFT quantity.
-Test Steps:
-  Login to the NFT marketplace as a registered user.
-  Navigate to the Dashboard page.
-  Locate and access the Trade Discount Modal.
-  Verify that the modal displays a table with the columns Stakers, Trade Fee, and Trade Discount by Percent.
-  Verify that the table displays the stakers who are eligible for the trade discount.
-  Verify that the table displays the trade fee and trade discount for each stake NFT quantity.
-```
 ### Accounts
 > Test case Template
 ```
@@ -101,6 +62,43 @@ Expectations:
   - Able to navigate the collection or edit collection in MY ACCOUNT \ MY COLLECTION
 
 ```
+
+```
+Test case ID: Add_new_collection_in_simple_mode_002
+Test case Name: Add a new collection in simple mode without 1 or more compulsory inputs or images
+Pre-requisite: 
+  - Connected active account with enough balance for collection fee & gas fee
+Steps: 
+  1. Go to MY ACCOUNT \ CREATE COLLECTION \ SIMPLE MODE
+  2. EITHER: Input information in correct format without 1 or more compulsory inputs (NFT Names, NFT symbol, collection name, Collection description, email) OR 
+  3. Upload less than 3 images OR
+  4. Not add email OR
+  5. Not tick box to agree Terms of Service AND
+  6. Input Royalty fee number
+  7. Click button CREATE COLLECTION
+Expectations: 
+  - Receive pop-up message or red note requesting to complete missing step
+  - Impossible to process to wallet confirmation page, thus fail to create a collection.
+```
+
+```
+Test case ID: Add_new_collection_in_simple_mode_003
+Test case Name: Add a new collection in simple mode with low balance
+Pre-requisite: 
+  - Connected active account with low balance which is not enough for either collection fee or gas fee or both
+Steps: 
+  1. Go to MY ACCOUNT \ CREATE COLLECTION \ SIMPLE MODE
+  2. Input all information in correct format
+  3. Upload 3 images
+  4. Input Royalty fee number
+  5. Add email
+  6. Tick box to agree Terms of Service
+  7. Click button CREATE COLLECTION
+Expectations: 
+  - Receive pop-up message stating Low balance to proceed
+  - Impossible to process to wallet confirmation page, thus fail to create a collection.
+```
+
 
 #### Add new collection in advanced mode
 
