@@ -169,6 +169,10 @@ function LaunchpadDetailHeader({
       countDownTimer = currentPhase?.endTime - Date.now();
     }
 
+    if (countDownTimer < 0) {
+      countDownTimer = 0;
+    }
+    
     const seconds = Math.floor((countDownTimer / 1000) % 60);
     const minutes = Math.floor((countDownTimer / 1000 / 60) % 60);
     const hours = Math.floor((countDownTimer / (1000 * 60 * 60)) % 24);
