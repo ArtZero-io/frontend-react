@@ -13,6 +13,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@chakra-ui/icons";
+import { useState } from "react";
 
 const PaginationMP = ({
   isDisabled,
@@ -23,6 +24,8 @@ const PaginationMP = ({
   maxW = "25rem",
   hasGotoPage = true,
 }) => {
+  const [gotoPage, setGotoPage] = useState();
+
   const handlePageChange = (nextPage) => {
     setCurrentPage(nextPage);
     sessionStorage.setItem("scroll-position-current-page", nextPage);
@@ -57,7 +60,7 @@ const PaginationMP = ({
       <Pagination
         isDisabled={isDisabled}
         pagesCount={pagesCount}
-        currentPage={currentPage}
+        currentPage={currentPage * 1}
         onPageChange={handlePageChange}
       >
         <PaginationContainer
@@ -75,7 +78,11 @@ const PaginationMP = ({
             aria-label="go-start"
             icon={<ArrowLeftIcon />}
             disabled={currentPage === 1}
-            onClick={() => setCurrentPage(1)}
+            onClick={() => {
+              setCurrentPage(1);
+
+              setGotoPage("");
+            }}
             _disabled={{
               bg: bg,
               color: "#555",
@@ -87,6 +94,7 @@ const PaginationMP = ({
           />
 
           <PaginationPrevious
+            onClick={() => setGotoPage("")}
             className="previous-btn"
             p={0}
             mr={2}
@@ -110,6 +118,7 @@ const PaginationMP = ({
           </PaginationPrevious>
 
           <PaginationNext
+            onClick={() => setGotoPage("")}
             className="next-btn"
             p={0}
             mr={2}
@@ -141,7 +150,10 @@ const PaginationMP = ({
             icon={<ArrowRightIcon />}
             variant="iconSolid"
             aria-label="go-end"
-            onClick={() => setCurrentPage(pagesCount)}
+            onClick={() => {
+              setCurrentPage(pagesCount);
+              setGotoPage("");
+            }}
             disabled={currentPage >= pagesCount}
             _disabled={{
               bg: bg,
@@ -154,6 +166,8 @@ const PaginationMP = ({
           />
           {hasGotoPage && (
             <Input
+            value={gotoPage}
+              onChange={(e) => setGotoPage(e.target.value)}
               fontSize="lg"
               pl="17px"
               placeholder="Go to page"
