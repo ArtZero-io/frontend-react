@@ -36,10 +36,12 @@ const PaginationMP = ({
       e.preventDefault();
 
       if (isNaN(e.target.value)) {
+        setGotoPage("");
         return toast.error("Number only!!!");
       }
 
       if (e.target.value <= 0 || e.target.value > pagesCount) {
+        setGotoPage("");
         return toast.error("Out of page range!!!");
       }
 
@@ -166,7 +168,8 @@ const PaginationMP = ({
           />
           {hasGotoPage && (
             <Input
-            value={gotoPage}
+              type="number"
+              value={gotoPage}
               onChange={(e) => setGotoPage(e.target.value)}
               fontSize="lg"
               pl="17px"
