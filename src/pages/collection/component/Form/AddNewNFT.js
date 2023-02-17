@@ -431,8 +431,7 @@ const AddNewNFTForm = ({
                     color="brand.blue"
                     onClick={() => setModifierToEdit("levels")}
                   >
-                    {mode === formMode.ADD ? "Add" : "Edit"}
-                    levels
+                    {mode === formMode.ADD ? "Add" : "Edit"} levels
                   </Button>
                 </Flex>
 
