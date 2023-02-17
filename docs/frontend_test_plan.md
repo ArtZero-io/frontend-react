@@ -676,7 +676,6 @@ Expectations:
 
 #### Add a new NFT
 
-
 ```
 Test case ID: Add_a_new_NFT_001
 Test case Name: Add a new NFT with all correct data inputs
@@ -685,37 +684,141 @@ Pre-requisite:
   - A collection created in simple mode in MY COLLECTIONS
 Steps: 
   1. Go to MY ACCOUNT \ MY COLLECTIONS and navigate to the collection to click ADD NFT
-  2. Input all information in correct format
-  3. Upload 3 images
-  4. Input Royalty fee number
-  5. Add email
-  6. Tick box to agree Terms of Service
- 
-  2. Edit each of the following information in correct format:
+  2. Input all information in correct format:
     - NFT Name: within 30 characters
-    - Description: within 
-    - Edit 3 images as avatar image, featured image, header image, any of which is of a correct format including:
-  2. Edit each of the following information in correct format:
+    - Description: within 150 characters
+    - Upload an NFT image which is of a correct format including:
       + not bigger than 5MB in size
       + format of file is: .png, .jpeg., .jpg
-    - social links in the correct format:
-      + Website starts with https:// or http://
-      + Twitter starts with https://twitter.com/ or http://twitter.com/
-      + Telegram starts with https://t.me/ or http://t.me/
-      + Discord starts with https://discord.com/ or http://discord.com/
-    - Collection description: within 3000 characters
-  3. Click button EDIT COLLECTION
+    - Add 1 or more properties
+      + Add type: within 30 characters
+      + Add name: within 30 characters
+    - Add 1 or more levels
+      + Add type: within 30 characters
+      + Add level & max level: in numbers, with level smaller than max level
+  3. Click button CREATE AN NFT
   4. Fill wallet password & sign transaction
 Expectations: 
-  - Successful transaction with editted information & able to navigate the collection or edit collection in MY ACCOUNT \ MY COLLECTION
+  - Successful transaction with an NFT & able to navigate the NFT or edit NFT in MY ACCOUNT \ MY NFTS
   - Balance is deducted gas fee
+```
+
+```
+Test case ID: Add_a_new_NFT_002
+Test case Name: Add a new NFT with 1 or more incorrect data inputs
+Pre-requisite: 
+  - Connected active account
+  - A collection created in simple mode in MY COLLECTIONS
+Steps: 
+  1. Go to MY ACCOUNT \ MY COLLECTIONS and navigate to the collection to click ADD NFT
+  2. Input all information which 1 or more inputs in incorrect format:
+    - NFT Name: longer than 30 characters
+    - Description: longer than 150 characters
+    - Upload an NFT image which is of an incorrect format including:
+      + bigger than 5MB in size
+      + format of file is not: .png, .jpeg., .jpg
+    - Add 1 or more properties
+      + Add type: longer than 30 characters
+      + Add name: longer than 30 characters
+    - Add 1 or more levels
+      + Add type: longer than 30 characters
+      + Add level & max level: not in numbers, or with level bigger than max level
+  3. Click button CREATE AN NFT
+Expectations: 
+  - Receive red note requesting to complete missing step
+  - Impossible to process to wallet confirmation page, thus fail to create a collection.
 ```
 
 #### Edit an NFT
 
+```
+Test case ID: Edit_an_NFT_001
+Test case Name: Add a new NFT with all correct data inputs
+Pre-requisite: 
+  - Connected active account with enough balance for gas fee
+  - An NFT created in simple mode in MY NFTS
+Steps: 
+  1. Go to MY ACCOUNT \ MY NFTS and navigate to the NFT to click the icon EDIT NFT
+  2. Edit all information in correct format:
+    - Edit NFT Name: within 30 characters
+    - Edit Description: within 150 characters
+    - Re-upload an NFT image which is of a correct format including:
+      + not bigger than 5MB in size
+      + format of file is: .png, .jpeg., .jpg
+    - Edit 1 or more properties
+      + Edit type: within 30 characters
+      + Edit name: within 30 characters
+    - Edit 1 or more levels
+      + Edit type: within 30 characters
+      + Edit level & max level: in numbers, with level smaller than max level
+  3. Click button UPDATE AN NFT
+  4. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction with an edit NFT & able to navigate the NFT or edit NFT in MY ACCOUNT \ MY NFTS
+  - Balance is deducted gas fee
+```
+
+```
+Test case ID: Edit_an_NFT_002
+Test case Name: Add a new NFT with 1 or more incorrect data inputs
+Pre-requisite: 
+  - Connected active account
+  - An NFT created in simple mode in MY NFTS
+Steps: 
+  1. Go to MY ACCOUNT \ MY NFTS and navigate to the NFT to click the icon EDIT NFT
+  2. Edit all information which 1 or more inputs in incorrect format:
+    - Edit NFT Name: longer than 30 characters
+    - Edit Description: longer than 150 characters
+    - Re-Upload an NFT image which is of an incorrect format including:
+      + bigger than 5MB in size
+      + format of file is not: .png, .jpeg., .jpg
+    - Edit 1 or more properties
+      + Edit type: longer than 30 characters
+      + Edit name: longer than 30 characters
+    - Edit 1 or more levels
+      + Edit type: longer than 30 characters
+      + Edit level & max level: not in numbers, or with level bigger than max level
+  3. Click button UPDATE AN NFT
+Expectations: 
+  - Receive red note requesting to complete missing step
+  - Impossible to process to wallet confirmation page, thus fail to create a collection.
+```
+
 #### List an NFT
 
+```
+Test case ID: List_an_NFT_001
+Test case Name: List an NFT with all correct data inputs
+Pre-requisite: 
+  - Connected active account with enough balance for gas fee
+  - An NFT created in simple mode or an NFT minted or bought in MY NFTS owned by the wallet but not listed yet
+Steps: 
+  1. Go to MY ACCOUNT \ MY COLLECTED \ MY NFTS and navigate to the NFT
+  2. Input the number in number format. Re-check pre-caculated numbers: amount of royal fee, amount of trade fee, amount you will receive after sale
+  3. Click button PUSH FOR SALE
+  4. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & able to navigate the NFT in MY ACCOUNT \ MY NFTS \ MY LISTED
+  - Balance is deducted gas fee
+```
+
+```
+Test case ID: List_an_NFT_002
+Test case Name: List an NFT with incorrect data input
+Pre-requisite: 
+  - Connected active account with enough balance for gas fee
+  - An NFT created in simple mode or an NFT minted or bought in MY NFTS owned by the wallet but not listed yet
+Steps: 
+  1. Go to MY ACCOUNT \ MY COLLECTED \ MY NFTS and navigate to the NFT
+  2. Input the number in other format rather than number format. 
+  3. Click button PUSH FOR SALE
+Expectations: 
+  - uccessful transaction & able to navigate the NFT in MY ACCOUNT \ MY NFTS \ MY LISTED
+  - Impossible to process to wallet confirmation page, thus fail to create a collection.
+```
+
 #### Cancel listing an NFT
+
 
 #### Buy an NFT
 
