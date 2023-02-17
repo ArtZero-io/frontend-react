@@ -349,7 +349,12 @@ const AddNewNFTForm = ({
                 <Flex w="full" pb={3}>
                   <VStack alignItems="start">
                     <Heading fontSize={["lg", "xl", "xl"]}>properties</Heading>
-                    <Text fontSize={"lg"} fontWeight="medium">
+                    <Text
+                      textAlign="left"
+                      fontSize={["md", "lg"]}
+                      fontWeight="medium"
+                      pr="4px"
+                    >
                       Textual trails that show up as rectangles.
                     </Text>
                   </VStack>
@@ -362,7 +367,7 @@ const AddNewNFTForm = ({
                     color="brand.blue"
                     onClick={() => setModifierToEdit("properties")}
                   >
-                    Add properties
+                    {mode === formMode.ADD ? "Add" : "Edit"} properties
                   </Button>
                 </Flex>
 
@@ -408,7 +413,12 @@ const AddNewNFTForm = ({
                 <Flex w="full" pb={3}>
                   <VStack alignItems="start">
                     <Heading fontSize={["lg", "xl", "xl"]}>Levels</Heading>
-                    <Text fontSize={"lg"}>
+                    <Text
+                      textAlign="left"
+                      fontSize={["md", "lg"]}
+                      fontWeight="medium"
+                      pr="4px"
+                    >
                       Numerical traits that show as a progress bar
                     </Text>
                   </VStack>
@@ -421,7 +431,8 @@ const AddNewNFTForm = ({
                     color="brand.blue"
                     onClick={() => setModifierToEdit("levels")}
                   >
-                    Add levels
+                    {mode === formMode.ADD ? "Add" : "Edit"}
+                    levels
                   </Button>
                 </Flex>
 

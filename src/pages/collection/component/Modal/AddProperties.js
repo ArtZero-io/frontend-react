@@ -94,7 +94,7 @@ function AddPropertiesModal({ name, isOpen, onClose, mode }) {
           <Heading fontSize={["2xl", "3xl", "3xl"]} my={2}>
             {mode === formMode.ADD ? "Add properties" : "Edit properties"}
           </Heading>
-          <Text fontSize={"sm"}>
+          <Text fontSize={"sm"} fontWeight={400}>
             Properties show up underneath your item, are clickable, and can be
             filtered in your collection's sidebar.{" "}
           </Text>

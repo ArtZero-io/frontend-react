@@ -101,7 +101,7 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
           <Heading fontSize={["2xl", "3xl-mid"]} my={2}>
             {mode === formMode.ADD ? "Add levels" : "Edit levels"}
           </Heading>
-          <Text fontSize={"sm"}>
+          <Text fontSize={"sm"} fontWeight={400}>
             Levels show up underneath your item, are clickable, and can be
             filtered in your collection's sidebar.{" "}
           </Text>
@@ -141,7 +141,7 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
                           <AddLevelsInput
                             // isRequired={true}
                             width="full"
-                            height={["90px", "64px"]}
+                            height={["110px", "64px"]}
                             mx="0"
                             // autoComplete="off"
                             name={`levels[${index}].name`}
@@ -150,6 +150,8 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
                             label={isBigScreen ? "" : "Name"}
                           />
                         </HStack>
+
+                        {!isBigScreen && <Text>Level</Text>}
 
                         <HStack
                           spacing="0px"
@@ -166,7 +168,6 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
                             max={levels.levelMax || 999999}
                             inputWidth={["full", "110px"]}
                             name={`levels.${index}.level`}
-                            label={isBigScreen ? "" : "Level"}
                           />
 
                           <Square
@@ -191,7 +192,6 @@ function AddLevelsModal({ name, isOpen, onClose, mode }) {
                             inputWidth={["full", "110px"]}
                             name={`levels.${index}.levelMax`}
                           />
-
                           <Box pl="10px">
                             <IconButton
                               size="icon"
