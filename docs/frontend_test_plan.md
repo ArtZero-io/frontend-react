@@ -813,7 +813,7 @@ Steps:
   2. Input the number in other format rather than number format. 
   3. Click button PUSH FOR SALE
 Expectations: 
-  - uccessful transaction & able to navigate the NFT in MY ACCOUNT \ MY NFTS \ MY LISTED
+  - Successful transaction & able to navigate the NFT in MY ACCOUNT \ MY NFTS \ MY LISTED
   - Impossible to process to wallet confirmation page, thus fail to create a collection.
 ```
 
@@ -848,18 +848,183 @@ Steps:
 Expectations: 
   - Successful transaction & able to navigate the NFT in MY ACCOUNT \ MY NFTS \ MY COLLECTED
   - Balance is deducted gas fee
-  - Observe bidders' wallet balance. Bidder(s) can come and claim unsuccessful bid(s) in MY 
+  - Observe bidders' wallet balance. Bidder(s) can come and claim unsuccessful bid(s) in MY ACCOUNT
 ```
 
 #### Buy an NFT
 
+```
+Test case ID: Buy_an_NFT_001
+Test case Name: Buy an NFT with all correct data inputs with no bid(s)
+Pre-requisite: 
+  - Connected active account with enough balance for NFT list price & gas fee and no bid(s)
+  - An NFT in a COLLECTION \ LISTED in the MARKETPLACE
+Steps: 
+  1. Navigate to the NFT in the LISTED tab a COLLECTION in the MARKETPLACE that you want to buy
+  2. Click button BUY NOW
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & able to navigate the NFT in MY ACCOUNT \ MY NFTS \ MY COLLECTED
+  - Observe the flow of sale: 
+    + royalty fee transferred to Creator of the collection
+    + trade fee transferred to ArtZero marketplace contract owner
+    + (Listed price - royalty fee - trade fee) transferred to the Seller
+    + Buyer balance deducted with sale price & gas fee
+  - Observe the STATS:
+    + Total marketplace volume increases by the listed price
+    + The next payout increases by: (Listed price x trade fee x 30%)
+```
 
+```
+Test case ID: Buy_an_NFT_002
+Test case Name: Buy an NFT with all correct data inputs with no bid(s) with low balance for NFT listed price
+Pre-requisite: 
+  - Connected active account with low balance for NFT listed price
+  - An NFT in a COLLECTION \ LISTED in the MARKETPLACE
+Steps: 
+  1. Navigate to the NFT in the LISTED tab a COLLECTION in the MARKETPLACE that you want to buy
+  2. Click button BUY NOW
+Expectations: 
+  - Receive pop-up about low balance, thus cannot proceed to sign transaction
+```
+
+```
+Test case ID: Buy_an_NFT_003
+Test case Name: Buy an NFT with all correct data inputs with 1 or more bid(s)
+Pre-requisite: 
+  - Connected active account with enough balance for NFT listed price & gas fee
+  - An NFT in a COLLECTION \ LISTED in the MARKETPLACE
+  - Use 1 or more wallets to make bid(s) for the NFT
+Steps: 
+  1. Navigate to the NFT in the LISTED tab a COLLECTION in the MARKETPLACE that you want to buy
+  2. Click button BUY NOW
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & able to navigate the NFT in MY ACCOUNT \ MY NFTS \ MY COLLECTED
+  - Observe the flow of sale: 
+    + royalty fee transferred to Creator of the collection
+    + trade fee transferred to ArtZero marketplace contract owner
+    + (Listed price - royalty fee - trade fee) transferred to the Seller
+    + Buyer balance deducted with sale price & gas fee
+  - Observe the STATS:
+    + Total marketplace volume increases by the listed price
+    + The next payout increases by: (Listed price x trade fee x 30%)
+  - Observe bidders' wallet balance. Bidder(s) can come and claim unsuccessful bid(s) in MY ACCOUNT
+```
 
 #### Make an offer
 
+```
+Test case ID: Make_an_offer_to_an_NFT_001
+Test case Name: Make an offer to an NFT with all correct data inputs
+Pre-requisite: 
+  - Connected active account with enough balance for the offer & gas fee
+  - An NFT in a COLLECTION \ LISTED in the MARKETPLACE
+Steps: 
+  1. Navigate to the NFT in the LISTED tab a COLLECTION in the MARKETPLACE that you want to buy
+  2. Fill the number you want to make and offer & Click button PLACE BID
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & able to navigate the offer in MARKETPLACE \ COLLECTION \ LISTED \ OFFERS or MY ACCOUNT \ MY NFTS \ MY BIDS
+  - Balance is deducted with bidded price & gas fee
+  - Observe if it is the highest offer, at the card of the NFT in MARKETPLACE \ COLLECTION \ LISTED, the amount of the highest offer is shown under the listed price.
+```
+
+```
+Test case ID: Make_an_offer_to_an_NFT_002
+Test case Name: Make an offer to an NFT with all incorrect data inputs
+Pre-requisite: 
+  - Connected active account
+  - An NFT in a COLLECTION \ LISTED in the MARKETPLACE
+Steps: 
+  1. Navigate to the NFT in the LISTED tab a COLLECTION in the MARKETPLACE that you want to buy
+  2. Fill the digit in incorrect format:
+  - not a number, OR
+  - a number less than 0
+  & try to lick button PLACE BID
+Expectations: 
+  - Receive pop-up or red note stating the incorrect format
+  - Impossible to process to wallet confirmation page, thus fail to create a collection.
+```
+
+```
+Test case ID: Make_an_offer_to_an_NFT_003
+Test case Name: Make an offer to an NFT with all correct data inputs but low balance for the offer & gas fee
+Pre-requisite: 
+  - Connected active account with low balance for the offer & gas fee
+  - An NFT in a COLLECTION \ LISTED in the MARKETPLACE
+Steps: 
+  1. Navigate to the NFT in the LISTED tab a COLLECTION in the MARKETPLACE that you want to buy
+  2. Fill the number you want to make and offer & Click button PLACE BID
+Expectations: 
+  - Receive pop-up about low balance, thus cannot proceed to sign transaction
+```
+
 #### Remove an offer
 
+```
+Test case ID: Remove_an_offer_to_an_NFT_001
+Test case Name: Make an offer to an NFT with all correct data inputs
+Pre-requisite: 
+  - Connected active account with enough balance for the offer & gas fee
+  - An NFT in a COLLECTION \ LISTED in the MARKETPLACE
+Steps: 
+  1. Navigate to the NFT in the LISTED tab a COLLECTION in the MARKETPLACE or MY ACCOUNT \ MY NFTS \ MY BIDS
+  2. Click button REMOVE BID
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & unable to navigate the offer in MARKETPLACE \ COLLECTION \ LISTED \ OFFERS
+  - Balance is increased with bidded price & deducted with gas fee
+  - Observe if this bid was the highest offer, at the card of the NFT in MARKETPLACE \ COLLECTION \ LISTED, the amount of the highest offer is either replaced with the next highest offer, or in case there is no other offers, it states "No offers" under the listed price.
+```
+
 #### Accept an offer
+
+```
+Test case ID: Accept_an_offer_of_an_NFT_001
+Test case Name: Accept an offer of an NFT with no bid(s)
+Pre-requisite: 
+  - Connected active account with enough balance gas fee and no other bid(s)
+  - An NFT in MY ACCOUNT \ MY NFTS \ LISTED
+Steps: 
+  1. Navigate to the NFT in MY ACCOUNT \ MY NFTS \ LISTED \ OFFERS and navigate to the offer you want to accept
+  2. Click button ACCEPT OFFER
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & unable to navigate the NFT in MY ACCOUNT \ MY NFTS
+  - Observe the flow of sale: 
+    + royalty fee transferred to Creator of the collection
+    + trade fee transferred to ArtZero marketplace contract owner
+    + (Accepted offer price - royalty fee - trade fee) transferred to the Seller
+    + Buyer balance stays the same since the balance is already deducted with offer price at the time he makes the offer
+  - Observe the STATS:
+    + Total marketplace volume increases by the accepted offer price
+    + The next payout increases by: (Accepted offer price x trade fee x 30%)
+```
+
+```
+Test case ID: Accept_an_offer_of_an_NFT_003
+Test case Name: Accept an offer of an NFT with 1 or more bid(s)
+Pre-requisite: 
+  - Connected active account with enough balance gas fee and no other bid(s)
+  - An NFT in MY ACCOUNT \ MY NFTS \ LISTED
+  - Use 1 or more wallets to make bid(s) for the NFT
+Steps: 
+  1. Navigate to the NFT in MY ACCOUNT \ MY NFTS \ LISTED \ OFFERS and navigate to the offer you want to accept
+  2. Click button ACCEPT OFFER
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & unable to navigate the NFT in MY ACCOUNT \ MY NFTS
+  - Observe the flow of sale: 
+    + royalty fee transferred to Creator of the collection
+    + trade fee transferred to ArtZero marketplace contract owner
+    + (Accepted offer price - royalty fee - trade fee) transferred to the Seller
+    + Buyer balance stays the same since the balance is already deducted with offer price at the time he makes the offer
+  - Observe the STATS:
+    + Total marketplace volume increases by the accepted offer price
+    + The next payout increases by: (Accepted offer price x trade fee x 30%)
+  - Observe other unsuccessful bidders' wallet balance. Other bidder(s) can come and claim unsuccessful bid(s) in MY ACCOUNT.
+```
 
 #### Transfer an NFT
 
