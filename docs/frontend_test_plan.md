@@ -819,6 +819,37 @@ Expectations:
 
 #### Cancel listing an NFT
 
+```
+Test case ID: Cancel_listing_an_NFT_001
+Test case Name: Cancel listing an NFT with all correct data inputs with no bid(s)
+Pre-requisite: 
+  - Connected active account with enough balance for gas fee
+  - An NFT in MY LISTING
+Steps: 
+  1. Go to MY ACCOUNT \ MY NFTS \ MY LISTING and navigate to the NFT
+  2. Click button CANCEL SALE
+  4. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & able to navigate the NFT in MY ACCOUNT \ MY NFTS \ MY COLLECTED
+  - Balance is deducted gas fee
+```
+
+```
+Test case ID: Cancel_listing_an_NFT_002
+Test case Name: Cancel listing an NFT with all correct data inputs with 1 or more bid(s)
+Pre-requisite: 
+  - Connected active account with enough balance for gas fee
+  - An NFT in MY LISTING
+  - Use 1 or more wallets to make bid(s) for the NFT
+Steps: 
+  1. Go to MY ACCOUNT \ MY NFTS \ MY LISTING and navigate to the NFT
+  2. Click button CANCEL SALE
+  4. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & able to navigate the NFT in MY ACCOUNT \ MY NFTS \ MY COLLECTED
+  - Balance is deducted gas fee
+  - Observe bidders' wallet balance. Bidder(s) can come and claim unsuccessful bid(s) in MY 
+```
 
 #### Buy an NFT
 
