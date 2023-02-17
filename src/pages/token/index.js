@@ -462,8 +462,7 @@ function TokenPage() {
                   </Heading>
 
                   <Text
-                    isTruncated
-                    maxW={["300px", "600px"]}
+                    maxW={["330px", "600px"]}
                     fontSize="lg"
                     color="brand.grayLight"
                   >
