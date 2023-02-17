@@ -674,9 +674,42 @@ Expectations:
   - Impossible to edit  collection.
 ```
 
-
-
 #### Add a new NFT
+
+
+```
+Test case ID: Add_a_new_NFT_001
+Test case Name: Add a new NFT with all correct data inputs
+Pre-requisite: 
+  - Connected active account with enough balance for gas fee
+  - A collection created in simple mode in MY COLLECTIONS
+Steps: 
+  1. Go to MY ACCOUNT \ MY COLLECTIONS and navigate to the collection to click ADD NFT
+  2. Input all information in correct format
+  3. Upload 3 images
+  4. Input Royalty fee number
+  5. Add email
+  6. Tick box to agree Terms of Service
+ 
+  2. Edit each of the following information in correct format:
+    - NFT Name: within 30 characters
+    - Description: within 
+    - Edit 3 images as avatar image, featured image, header image, any of which is of a correct format including:
+  2. Edit each of the following information in correct format:
+      + not bigger than 5MB in size
+      + format of file is: .png, .jpeg., .jpg
+    - social links in the correct format:
+      + Website starts with https:// or http://
+      + Twitter starts with https://twitter.com/ or http://twitter.com/
+      + Telegram starts with https://t.me/ or http://t.me/
+      + Discord starts with https://discord.com/ or http://discord.com/
+    - Collection description: within 3000 characters
+  3. Click button EDIT COLLECTION
+  4. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction with editted information & able to navigate the collection or edit collection in MY ACCOUNT \ MY COLLECTION
+  - Balance is deducted gas fee
+```
 
 #### Edit an NFT
 
