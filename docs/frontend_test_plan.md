@@ -853,6 +853,8 @@ Expectations:
 
 #### Buy an NFT
 
+
+
 #### Make an offer
 
 #### Remove an offer
