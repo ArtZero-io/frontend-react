@@ -1109,6 +1109,46 @@ Expectations:
   - Receiver can navidate the NFT in MY ACCOUNT \ MY NFTS \ MY COLLECTED
 ```
 
+#### Claim unsuccessful bids
+
+```
+Test case ID: Claim_unsuccessful_bids_001
+Test case Name: Claim unsuccessful bids
+Pre-requisite: 
+  - Connected active account with enough balance gas fee
+  - Unsuccessful bids (happen when you bid for an NFT but other offer gets accepted, or someone else just buy the listed price)
+Steps: 
+  1. Navigate to MY ACCOUNT
+  2. Click button CLAIM UNSUCCESSFUL BIDS ... AZERO
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & unable to navigate the button CLAIM UNSUCCESSFUL BIDS ... AZERO in MY ACCOUNT anymore
+  - Balance is increased with the unsuccessful bids and is deducted with gas fee.
+```
+
+#### Stake a PMP NFT
+
+```
+Test case ID: Stake_an_NFT_001
+Test case Name: Stake an NFT
+Pre-requisite: 
+  - Connected active account with anough balance for gas fee
+  - 20 PMP NFT in MY ACCOUNT \ MY STAKES \ NOT STAKED
+  - No PMP NFT in MY ACCOUNT \MY STAKES \ STAKED
+Steps: 
+  1. Navigate to the NFT in the LISTED tab a COLLECTION in the MARKETPLACE that you want to buy
+  2. Click button BUY NOW
+Expectations: 
+  - Receive pop-up about low balance, thus cannot proceed to sign transaction
+```
+
+#### Multi-stake a PMP NFT
+#### Unstake a PMP NFT
+#### Cancel stake of a PMP NFT
+#### Multi-Unstake a PMP NFT
+#### Multi-cancel unstake of a PMP NFT
+#### Claim earnings from staking
+
 ### LaunchPad
 
 
