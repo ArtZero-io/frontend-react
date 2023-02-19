@@ -1028,7 +1028,53 @@ Expectations:
 
 #### Transfer an NFT
 
+```
+Test case ID: Transfer_an_NFT_001
+Test case Name: Transfer an NFT with all correct data inputs
+Pre-requisite: 
+  - Connected active account with enough balance for gas fee
+  - An NFT in MY ACCOUNT \ MY NFTS \ MY COLLECTED
+Steps: 
+  1. Go to MY ACCOUNT \ MY NFTS \ MY COLLECTED and navigate to the NFT
+  2. Insert the right receiver address for Azero (Polkadot js., Subwallet, Nova wallet) & click icon TRANSFER
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & unable to navigate the NFT in MY ACCOUNT \ MY NFTS
+  - Balance is deducted gas fee
+  - Receiver can navidate the NFT in MY ACCOUNT \ MY NFTS \ MY COLLECTED
+```
+
+```
+Test case ID: Transfer_an_NFT_002
+Test case Name: Transfer an NFT with incorrect data input
+Pre-requisite: 
+  - Connected active account with enough balance for gas fee
+  - An NFT in MY ACCOUNT \ MY NFTS \ MY COLLECTED
+Steps: 
+  1. Go to MY ACCOUNT \ MY NFTS \ MY COLLECTED and navigate to the NFT
+  2. Insert the receiver address but not one of Polkadot js., Subwallet, Nova wallet & click icon TRANSFER
+Expectations: 
+  - Receive pop-up or red note stating the incorrect wallet
+  - Impossible to process to wallet confirmation page, thus fail to transfer the NFT
+```
+
 #### Lock Metadata of an NFT
+
+```
+Test case ID: Lock_metadata_of_an_NFT_001
+Test case Name: Lock Metadata of an NFT
+Pre-requisite: 
+  - Connected active account with enough balance for gas fee
+  - An NFT in MY ACCOUNT \ MY NFTS \ MY COLLECTED
+Steps: 
+  1. Go to MY ACCOUNT \ MY NFTS \ MY COLLECTED and navigate to the NFT
+  2. Insert the right receiver address for Azero (Polkadot js., Subwallet, Nova wallet) & click icon TRANSFER
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & unable to navigate the NFT in MY ACCOUNT \ MY NFTS
+  - Balance is deducted gas fee
+  - Receiver can navidate the NFT in MY ACCOUNT \ MY NFTS \ MY COLLECTED
+```
 
 #### Filter
 
