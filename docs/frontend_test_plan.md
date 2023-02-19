@@ -1106,7 +1106,7 @@ Steps:
 Expectations: 
   - Successful transaction & able to navigate the icon Metadata is locked
   - Balance is deducted gas fee
-  - When click at the icon locked metadata, a pop-up notices you about metadata is locked and cannot be un
+  - When click at the icon locked metadata, a pop-up notices you about metadata is locked and cannot be unlocked.
 ```
 
 #### Claim unsuccessful bids
@@ -1307,6 +1307,8 @@ Expectations:
   - Receive email confirming of the success of the project creation
   - Able to navigate the project or edit project in MY ACCOUNT \ MY PROJECTS
   - Balance is deducted with project fee & gas fee
+  - Observe the STATS:
+    + The next payout increases by: (Project fee x 30%)
 ```
 
 ```
@@ -1354,7 +1356,7 @@ Steps:
   3. Click button CREATE PROJECT
 Expectations: 
   - Receive pop-up warning or red note about the wrong format
-  - Impossible to process to wallet confirmation page, thus fail to create a collection.
+  - Impossible to process to wallet confirmation page, thus fail to create a project.
 ```
 
 #### Update art location
@@ -1387,7 +1389,7 @@ Steps:
   4. Fill wallet password & sign transaction
 Expectations: 
   - Receive pop-up warning or red note about the wrong format
-  - Impossible to process to wallet confirmation page, thus fail to create a collection.
+  - Impossible to process to wallet confirmation page, thus fail to update art location.
 ```
 
 #### Grant admin role
@@ -1419,7 +1421,7 @@ Steps:
   2. Insert the wrong format address for Azero (Polkadot js., Subwallet, Nova wallet) & click icon SUBMIT
 Expectations: 
   - Receive pop-up or red note stating the incorrect wallet
-  - Impossible to process to wallet confirmation page, thus fail to transfer the NFT
+  - Impossible to process to wallet confirmation page, thus fail to grant the admin role
 ```
 
 #### Update project info
@@ -1427,10 +1429,10 @@ Expectations:
 Test case ID: Update_a_project_001
 Test case Name: Update a project in the launchpad with all correct data inputs
 Pre-requisite: 
-  - Connected active account with enough balance for project fee & gas fee
-  - A project in MY ACCOUNT \ MY PROJECT
+  - Connected active project owner account or admin account by the owner account with enough balance for gas fee
+  - A project created in MY ACCOUNT \ MY PROJECT
 Steps: 
-  1. Go to LAUNCHPAD \ CREATE PROJECT
+  1. Go to MY ACCOUNT \ MY PROJECT and navigate to the project
   2. Input all information in correct format
     - Upload 3 images as avatar image, featured image, header image, any of which is of a correct format including:
       + not bigger than 5MB in size
@@ -1459,13 +1461,13 @@ Expectations:
 ```
 
 ```
-Test case ID: Update_a_project_001
+Test case ID: Update_a_project_002
 Test case Name: Update a project in the launchpad with incorrect data inputs
 Pre-requisite: 
-  - Connected active account
-  - A project in MY ACCOUNT \ MY PROJECT
+  - Connected active project owner account or admin account by the owner account with enough balance for gas fee
+  - A project created in MY ACCOUNT \ MY PROJECT
 Steps: 
-  1. Go to LAUNCHPAD \ CREATE PROJECT
+  1. Go to MY ACCOUNT \ MY PROJECT and navigate to the project
   2. Input all information, 1 or more of which is in incorrect format
     - Upload 3 images as avatar image, featured image, header image, any of which is of a incorrect format including:
       + bigger than 5MB in size
@@ -1489,14 +1491,352 @@ Steps:
   3. Click button UPDATE PROJECT
 Expectations: 
   - Receive pop-up warning or red note about the wrong format
-  - Impossible to process to wallet confirmation page, thus fail to create a collection.
+  - Impossible to process to wallet confirmation page, thus fail to update a project.
 ```
 
 #### Update project phases
+
+```
+Test case ID: Update_a_project_phases_001
+Test case Name: Update a project phases in the launchpad with all correct data inputs
+Pre-requisite: 
+  - Connected active project owner account or admin account by the owner account with enough balance for gas fee
+  - A project created in MY ACCOUNT \ MY PROJECT
+Steps: 
+  1. Go to MY ACCOUNT \ MY PROJECT and navigate to the project
+  2. Input all information in correct format
+    - Sale phase information: If a phase has started, you cannot edit that phase. Leave 1 phase or add more phase(s) including:
+      + Phase name: within 100 characters
+      + Start time - End time: start date, time & end date, time of the phase but not overlap other phases' time or project time. 
+      + Allow public mint:
+        > turn off if you only want whitelist for this phase
+        > turn on if you want both whitelist mint & public mint
+          >> Public minting fee: higher than or equal to 0
+          >> Total mint amount: of all phases not higher than total supply and must be a whole number
+          >> Max per mint: higher than 0 and must  a whole number
+  3. Click button UPDATE PHASE or ADD PHASE or DELETE PHASE
+  4. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & able to navigate the project with updated phases in MY ACCOUNT \ MY PROJECTS
+  - Balance is deducted with gas fee
+```
+
+```
+Test case ID: Update_a_project_phases_002
+Test case Name: Update a project phases in the launchpad with 1 or more incorrect data inputs
+Pre-requisite: 
+  - Connected active project owner account or admin account by the owner account with enough balance for gas fee
+  - A project created in MY ACCOUNT \ MY PROJECT
+Steps: 
+  1. Go to MY ACCOUNT \ MY PROJECT and navigate to the project
+  2. Input all information in correct format
+    - Sale phase information: If a phase has started, you cannot edit that phase. Leave 1 phase or add more phase(s) including:
+      + Phase name: within 100 characters
+      + Start time - End time: start date, time & end date, with end time begins before start time or time of the phase but overlap other phases' time or project time. 
+      + Allow public mint:
+        > turn off if you only want whitelist for this phase
+        > turn on if you want both whitelist mint & public mint
+          >> Public minting fee: less than 0
+          >> Total mint amount: of all phases is higher than total supply or is not a whole number
+          >> Max per mint: less than 0 or is not a whole number
+  3. Click button UPDATE PHASE or ADD PHASE or DELETE PHASE
+Expectations: 
+  - Receive pop-up warning or red note about the wrong format
+  - Impossible to process to wallet confirmation page, thus fail to update .
+```
+
 #### Add a whitelist
+
+```
+Test case ID: Add_a_whitelist_001
+Test case Name: Add a whitelist with all correct data inputs
+Pre-requisite: 
+  - Connected active project owner account or admin account by the owner account with enough balance for gas fee
+  - A project created in MY ACCOUNT \ MY PROJECT
+Steps: 
+  1. Go to MY ACCOUNT \ MY PROJECT
+  2. Click on button WHITELIST MANAGEMENT
+  3. Choose project & Choose phase. If phase has ended, you cannot add whitelist or make any change of the whitelist.
+   - In the Add whitelist box, insert the right address for Azero (Polkadot js., Subwallet, Nova wallet)
+   - In the price box, insert a number higher than or equal to 0
+   - In the amount box, insert a number higher than or equal to 0 and must be a whole number
+  4. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & balance is deducted with gas fee
+  - Address, price, amount is displayed in the column in the right.
+  - If the address added is already added previously, newly added information will overwright the old one.
+```
+
+```
+Test case ID: Add_a_whitelist_002
+Test case Name: Add a whitelist with 1 or more incorrect data inputs
+Pre-requisite: 
+  - Connected active project owner account or admin account by the owner account
+  - A project created in MY ACCOUNT \ MY PROJECT
+Steps: 
+  1. Go to MY ACCOUNT \ MY PROJECT
+  2. Click on button WHITELIST MANAGEMENT
+  3. Choose project & Choose phase. If phase has ended, you cannot add whitelist or make any change of the whitelist. Insert 1 or more incorrect information below:
+   - In the Add whitelist box, insert the right address but not for Azero (Polkadot js., Subwallet, Nova wallet); or
+   - In the price box, insert a number less than 0; or
+   - In the amount box, insert a number less than 0 or is not a whole number
+Expectations: 
+   - Receive pop-up warning or red note about the wrong format
+   - Impossible to process to wallet confirmation page, thus fail to add whitelist.
+```
+
 #### Owner mint
+
+```
+Test case ID: Owner_mint_001
+Test case Name: Owner mint with all correct data inputs
+Pre-requisite: 
+  - Connected active project owner account with enough balance for gas fee
+  - A project created in MY ACCOUNT \ MY PROJECT
+Steps: 
+  1. Go to MY ACCOUNT \ MY PROJECT. A dashboard will appear to show you the maximum number of NFTs you can Owner mint. 
+  2. Insert the number in the box that is higher than 0 and must be a whole number
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & balance is deducted with gas fee
+  - Dashboard will adjust number with number the you can owner mint deducted by the amount you have just minted.
+```
+
+```
+Test case ID: Owner_mint_002
+Test case Name: Owner mint with incorrect data inputs
+Pre-requisite: 
+  - Connected active project owner account with enough balance for gas fee
+  - A project created in MY ACCOUNT \ MY PROJECT
+Steps: 
+  1. Go to MY ACCOUNT \ MY PROJECT. A dashboard will appear to show you the maximum number of NFTs you can Owner mint. 
+  2. Insert the number in the box that is less than 0 or is not a whole number
+Expectations: 
+  - Receive pop-up warning or red note about the wrong format
+  - Impossible to process to wallet confirmation page, thus fail to owner mint
+```
+
 #### Withdraw balance
+
+```
+Test case ID: Withdraw_balance_001
+Test case Name: Withdraw balance earned from sales of an owner account with all correct inserted information
+Pre-requisite: 
+  - Connected active project owner account with enough balance for gas fee
+  - A project created in MY ACCOUNT \ MY PROJECT
+Steps: 
+  1. Go to MY ACCOUNT \ MY PROJECT and navigate to the project
+  2. Click on button WITHDRAW BALANCE. A number of revenue will be displayed.
+  3. Fill in a number that is higher than 0, and less than or equal to the revenue displayed, or simply click on MAX button.
+  4. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & balance is deducted with gas fee and increased with the number you have withdrawn
+```
+
+```
+Test case ID: Withdraw_balance_002
+Test case Name: Withdraw balance earned from sales of an owner account with 1 or more incorrect inserted information
+Pre-requisite: 
+  - Connected active project owner account
+  - A project created in MY ACCOUNT \ MY PROJECT
+Steps: 
+  1. Go to MY ACCOUNT \ MY PROJECT and navigate to the project
+  2. Click on button WITHDRAW BALANCE. A number of revenue will be displayed.
+  3. Fill in a number that is less than 0, or hight than the revenue displayed
+Expectations: 
+  - Receive pop-up warning or red note about the wrong format
+  - Impossible to process to wallet confirmation page, thus fail to withdraw balance.
+```
+
 #### Mint an NFT
+```
+Test case ID: Mint_an_NFT_001
+Test case Name: Mint an NFT with all correct inserted information
+Pre-requisite: 
+  - Connected active account with enough balance for NFT mint price & gas fee
+  - A project with a phase active for minting
+Steps: 
+  1. Go to LAUNCHPAD and navigate to the project. Look at the number of whitelist NFTs you are allowed to mint. If there is whitelist NFT, you will mint from whitelist first (with 0 mint price or lower mint price than public mint price). Then you will mint from public mint.
+  2. Fill in a number that is higher than 0, and must be a whole number, click MINT 
+  4. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & balance is deducted with gas fee and total mint price x number of NFTs minted.
+  - Observe the STATS:
+    + The next payout increases by: (Total mint cost x Launchpad mint  x 30%)
+```
+
+```
+Test case ID: Mint_an_NFT_002
+Test case Name: Mint an NFT with incorrect inserted information
+Pre-requisite: 
+  - Connected active account
+  - A project with a phase active for minting
+Steps: 
+  1. Go to LAUNCHPAD and navigate to the project. Look at the number of whitelist NFTs you are allowed to mint. If there is whitelist NFT, you will mint from whitelist first (with 0 mint price or lower mint price than public mint price). Then you will mint from public mint.
+  2. Fill in a number that is les than 0, or  a whole number, click MINT 
+  4. Fill wallet password & sign transaction
+Expectations: 
+  - Receive pop-up warning or red note about the wrong format
+  - Impossible to process to wallet confirmation page, thus fail to mint.
+```
+
+### Admin
+
+#### Set doxxed badge
+
+```
+Test case ID: Set_doxxed_badge_for_a_collection_001
+Test case Name: Set doxxed badge for a collection or a project
+Pre-requisite: 
+  - Connected marketplace owner account with enough balance for gas fee
+  - A collection is created
+Steps: 
+  1. Go to ADMIN page and go to tab MANAGE COLLECTION and navigate to the collection you want to set Doxxed badge
+  2. Click on icon SET DOXXED YES
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & able to navigate the icon DOXXED in the collection featured image
+  - Balance is deducted with gas fee
+```
+
+#### Remove doxxed badge
+
+```
+Test case ID: Remove_doxxed_badge_for_a_collection_001
+Test case Name: Remove doxxed badge for a collection or a project
+Pre-requisite: 
+  - Connected marketplace owner account with enough balance for gas fee
+  - A collection is created and set Doxxed before
+Steps: 
+  1. Go to ADMIN page and go to tab MANAGE COLLECTION and navigate to the collection you want to Remove Doxxed badge
+  2. Click on icon REMOVE DOXXED
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & unable to navigate the icon DOXXED in the collection featured image
+  - Balance is deducted with gas fee
+```
+
+#### Set verified badge
+
+```
+Test case ID: Set_verified_badge_for_a_collection_001
+Test case Name: Set verified badge for a collection or a project
+Pre-requisite: 
+  - Connected marketplace owner account with enough balance for gas fee
+  - A collection is created
+Steps: 
+  1. Go to ADMIN page and go to tab MANAGE COLLECTION and navigate to the collection you want to set Verified badge
+  2. Click on icon SET VERIFIED YES
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & able to navigate the icon VERIFIED in the collection featured image
+  - Balance is deducted with gas fee
+```
+
+#### Remove verified badge
+
+```
+Test case ID: Remove_verified_badge_for_a_collection_001
+Test case Name: Remove verified badge for a collection or a project
+Pre-requisite: 
+  - Connected marketplace owner account with enough balance for gas fee
+  - A collection is created and set verified before
+Steps: 
+  1. Go to ADMIN page and go to tab MANAGE COLLECTION and navigate to the collection you want to Remove verified badge
+  2. Click on icon REMOVE VERIFIED
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & unable to navigate the icon VERIFIED in the collection featured image
+  - Balance is deducted with gas fee
+```
+
+#### Enable a collection
+
+```
+Test case ID: Enable_a_collection_001
+Test case Name: Enable a collection
+Pre-requisite: 
+  - Connected marketplace owner account with enough balance for gas fee
+  - A collection is created
+Steps: 
+  1. Go to ADMIN page and go to tab MANAGE COLLECTION and navigate to the collection you want to enable
+  2. Click on icon ENABLE
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & the collection is visible in MARKETPLACE
+  - Balance is deducted with gas fee
+```
+
+#### Disable a collection
+
+```
+Test case ID: Disable_a_collection_001
+Test case Name: Disable a collection
+Pre-requisite: 
+  - Connected marketplace owner account with enough balance for gas fee
+  - A collection is created and enabled before
+Steps: 
+  1. Go to ADMIN page and go to tab MANAGE COLLECTION and navigate to the collection you want to disable
+  2. Click on icon DISABLE
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & the collection is not visible anymore in MARKETPLACE
+  - Balance is deducted with gas fee
+```
+
+#### Grant admin to mange the platform
+
+```
+Test case ID: Grant_an_admin_role_of_the_platform_001
+Test case Name: Grant an admin role to manage the marketplace with all correct data inputs
+Pre-requisite: 
+  - Connected marketplace ower active account with enough balance for gas fee
+Steps: 
+  1. Go to ADMIN page
+  2. Insert the right address in the Grant Admin role box for Azero (Polkadot js., Subwallet, Nova wallet) & click icon SUBMIT
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction
+  - Balance is deducted with gas fee
+  - Granted address can carry out some actions to manage the Admin page but not to claim balance.
+```
+
+```
+Test case ID: Grant_an_admin_role_of_the_platform_002
+Test case Name: Grant an admin role to manage the marketplace with incorrect data inputs
+Pre-requisite: 
+  - Connected marketplace ower active account with enough balance for gas fee
+Steps: 
+  1. Go to ADMIN page
+  2. Insert the right address in the Grant Admin role box but not for Azero (Polkadot js., Subwallet, Nova wallet) & click icon SUBMIT
+Expectations: 
+  - Receive pop-up or red note stating the incorrect wallet
+  - Impossible to process to wallet confirmation page, thus fail to grant the admin role
+```
+
+#### Check advanced mode collection
+
+```
+Test case ID: Check_advanced_mode_collection_001
+Test case Name: Check advanced mode collection with all correct data inputs
+Pre-requisite: 
+  - Connected marketplace ower active account with enough balance for gas fee
+Steps: 
+  1. Go to ADMIN page, navigate to CHECK ADVANCED MODE COLLECTION
+  2. Insert the right address of an advanced mode collection in the box. 
+  3. Press button SUBMIT.
+Expectations: 
+  - If it is not the right address of an advanced mode, information of it will be displayed. Otherwise, a warning will be returned saying "There is no collection for this address"
+```
+
+#### Enable a project
+#### Disable a project
+#### Lock staking
+#### Add rewards
+#### Start reward distribution
+#### Stop reward distribution
+#### Unlock staking
+#### Claim balance
 
 > Add more Categories and Test Cases here
       
