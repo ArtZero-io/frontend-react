@@ -18,9 +18,42 @@
       - [Remove an offer](#Remove-an-offer)
       - [Accept an offer](#Accept-an-offer)
       - [Transfer an NFT](#Transfer-an-NFT)
+      - [Claim unsuccessful bids](#Claim-unsuccessful-bids)
       - [Lock Metadata of an NFT](#Lock-metadata-of-an-NFT)
-      - [Filter](#Filter)
+      - [Stake a PMP NFT](#Stake-a-PMP_NFT)
+      - [Multi-stake a PMP NFT](#Multi-stake-a-PMP_NFT)
+      - [Unstake a PMP NFT](#Unstake-a-PMP_NFT)
+      - [Cancel stake of a PMP NFT](#Cancel-stake-of-a-PMP-NFT)
+      - [Multi-Unstake a PMP NFT](#Multi-Unstake-a-PMP_NFT)
+      - [Multi-cancel unstake of a PMP NFT](#Multi-cancel-unstake-of-a-PMP-NFT)
+      - [Claim earnings from staking](#Claim-earnings-from-staking)
     - [LaunchPad](#launchpad)
+      - [Create a project](#Create-a-project)
+      - [Update art location](#Update-art-location)
+      - [Grant admin role](#Grant-admin-role)
+      - [Update project info](#Update-project-info)
+      - [Update project phases](#Update-project-phases)
+      - [Add a whitelist](#Add-a-whitelist)
+      - [Owner mint](#Owner-mint)
+      - [Withdraw balance](#Withdraw-balance)
+      - [Mint an NFT](#Mint-an-NFT)
+    - [Admin](#Admin)
+      - [Set doxxed badge](#Set-doxxed-badge)
+      - [Remove doxxed badge](#Remove-doxxed-badge)
+      - [Set verified badge](#Set-verified-badge)
+      - [Remove verified badge](#Remove-verified-badge)
+      - [Enable a collection](#Enable-a-collection)
+      - [Disable a collection](#Disable-a-collection)
+      - [Grant admin to mange the platform](#Grant-admin-to-mange-the-platform)
+      - [Check advanced mode collection](#Check-advanced-mode-collection)
+      - [Enable a project](#Enable-a-project)
+      - [Disable a project](#Disable-a-project)
+      - [Lock staking](#Lock-staking)
+      - [Add rewards](#Add-rewards)
+      - [Start reward distribution](#Start-reward-distribution)
+      - [Stop reward distribution](#Stop-reward-distribution)
+      - [Unlock staking](#Unlock-staking)
+      - [Claim balance](#Claim-balance)
 
 ## Introduction
 > Add introduction and guide here
@@ -1065,7 +1098,7 @@ Test case ID: Lock_metadata_of_an_NFT_001
 Test case Name: Lock Metadata of an NFT
 Pre-requisite: 
   - Connected active account with enough balance for gas fee
-  - An NFT in MY ACCOUNT \ MY NFTS \ MY COLLECTED
+  - A collection you created in simple mode and an NFT of that collection in MY ACCOUNT \ MY NFTS \ MY COLLECTED
 Steps: 
   1. Go to MY ACCOUNT \ MY NFTS \ MY COLLECTED and navigate to the NFT
   2. Insert the right receiver address for Azero (Polkadot js., Subwallet, Nova wallet) & click icon TRANSFER
@@ -1074,15 +1107,6 @@ Expectations:
   - Successful transaction & unable to navigate the NFT in MY ACCOUNT \ MY NFTS
   - Balance is deducted gas fee
   - Receiver can navidate the NFT in MY ACCOUNT \ MY NFTS \ MY COLLECTED
-```
-
-#### Filter
-
-```
-Test case ID: marketplace_001
-Test case Name: ....
-Pre-requisite: ....
-Expectations: write the expected result here.
 ```
 
 ### LaunchPad
