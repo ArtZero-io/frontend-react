@@ -21,11 +21,11 @@
       - [Claim unsuccessful bids](#Claim-unsuccessful-bids)
       - [Lock Metadata of an NFT](#Lock-metadata-of-an-NFT)
       - [Stake a PMP NFT](#Stake-a-PMP_NFT)
-      - [Multi-stake a PMP NFT](#Multi-stake-a-PMP_NFT)
+      - [Multi-stake PMP NFTs](#Multi-stake-PMP_NFTs)
       - [Unstake a PMP NFT](#Unstake-a-PMP_NFT)
-      - [Cancel stake of a PMP NFT](#Cancel-stake-of-a-PMP-NFT)
-      - [Multi-Unstake a PMP NFT](#Multi-Unstake-a-PMP_NFT)
-      - [Multi-cancel unstake of a PMP NFT](#Multi-cancel-unstake-of-a-PMP-NFT)
+      - [Cancel unstake of a PMP NFT](#Cancel-unstake-of-a-PMP-NFT)
+      - [Multi-Unstake PMP NFTs](#Multi-Unstake-PMP_NFTs)
+      - [Multi-cancel unstake of PMP NFTs](#Multi-cancel-unstake-of-PMP-NFTs)
       - [Claim earnings from staking](#Claim-earnings-from-staking)
     - [LaunchPad](#launchpad)
       - [Create a project](#Create-a-project)
@@ -1133,21 +1133,123 @@ Test case ID: Stake_an_NFT_001
 Test case Name: Stake an NFT
 Pre-requisite: 
   - Connected active account with anough balance for gas fee
+  - 1 PMP NFT in MY ACCOUNT \ MY STAKES \ NOT STAKED
+  - No PMP NFT in MY ACCOUNT \MY STAKES \ STAKED
+Steps: 
+  1. Navigate to a PMP NFT in the MY ACCOUNT \ MY STAKES \ NOT STAKED that you want to stake
+  2. Click button STAKE at the PMP NFT
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & able to navigate PMP NFT in MY ACCOUNT \MY STAKES \ STAKED
+  - Observer the Stats in the Staking Dashboard: Trading fee is reduced by 30% compared to the original trading fee.
+```
+
+#### Multi-stake PMP NFTs
+
+```
+Test case ID: Multi-stake_NFTs_001
+Test case Name: Multi-Stake NFTs
+Pre-requisite: 
+  - Connected active account with anough balance for gas fee
   - 20 PMP NFT in MY ACCOUNT \ MY STAKES \ NOT STAKED
   - No PMP NFT in MY ACCOUNT \MY STAKES \ STAKED
 Steps: 
-  1. Navigate to the NFT in the LISTED tab a COLLECTION in the MARKETPLACE that you want to buy
-  2. Click button BUY NOW
+  1. Navigate to a PMP NFT in the MY ACCOUNT \ MY STAKES \ NOT STAKED that you want to stake
+  2. Click to choose 2 or more (max 5) PMP NFTS. A button will appear: STAKE PMP:... (number of PMPs). Click the button.
+  3. Fill wallet password & sign transaction.
+  4. Repeat the steps 1-2-3 for total number of staked PMP NFTs: 5 - 7 - 9 - 20 PMP NFTs to observe trade fee
 Expectations: 
-  - Receive pop-up about low balance, thus cannot proceed to sign transaction
+  - Successful transaction & able to navigate PMP NFT in MY ACCOUNT \MY STAKES \ STAKED
+  - Observer the Stats in the Staking Dashboard: Trading fee is reduced by 50% - 66% - 80% - 90% compared to the original trading fee when you stake 5 - 7- 9- 20 PMP NFTs in total respectively.
 ```
 
-#### Multi-stake a PMP NFT
 #### Unstake a PMP NFT
-#### Cancel stake of a PMP NFT
-#### Multi-Unstake a PMP NFT
-#### Multi-cancel unstake of a PMP NFT
+
+```
+Test case ID: Unstake_an_NFT_001
+Test case Name: Unstake an NFT
+Pre-requisite: 
+  - Connected active account with anough balance for gas fee
+  - 1 PMP NFT in MY ACCOUNT \MY STAKES \ STAKED
+Steps: 
+  1. Navigate to a PMP NFT in the MY ACCOUNT \ MY STAKES \ STAKED that you want to unstake
+  2. Click button REQUEST UNSTAKE at the PMP NFT
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & able to navigate PMP NFT in MY ACCOUNT \MY STAKES \ PENDING UNSTAKE
+  - Observer the Stats in the Staking Dashboard: Trading fee is not reduced by 30% and returned to the original trading fee.
+```
+
+#### Cancel unstake of a PMP NFT
+
+```
+Test case ID: Cancel Unstake_an_NFT_001
+Test case Name: Cancel Unstake an NFT
+Pre-requisite: 
+  - Connected active account with anough balance for gas fee
+  - 1 PMP NFT in MY ACCOUNT \MY STAKES \ PENDING UNSTAKE
+  - No PMP NFT in MY ACCOUNT \MY STAKES \ STAKED
+Steps: 
+  1. Navigate to a PMP NFT in the MY ACCOUNT \ MY STAKES \ PENDING UNSTAKE that you want to cancel unstake
+  2. Click button CANCEL UNSTAKE at the PMP NFT
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & able to navigate PMP NFT in MY ACCOUNT \MY STAKES \ STAKED
+  - Observer the Stats in the Staking Dashboard: Trading fee is reduced by 30% compared to the original trading fee.
+```
+
+#### Multi-Unstake PMP NFTs
+
+```
+Test case ID: Multi-unstake_NFT_001
+Test case Name: Multi-unStake NFTs
+Pre-requisite: 
+  - Connected active account with anough balance for gas fee
+  - 20 PMP NFT in MY ACCOUNT \ MY STAKES \ STAKED
+Steps: 
+  1. Navigate to a PMP NFT in the MY ACCOUNT \ MY STAKES \ STAKED that you want to multi-unstake
+  2. Click to choose 2 or more (max 5) PMP NFTS. A button will appear: UNSTAKE PMP:... (number of PMPs). Click the button.
+  3. Fill wallet password & sign transaction.
+  4. Repeat the steps 1-2-3 for total number of staked PMP NFTs: 9 - 7 - 5 - 0 PMP NFTs to observe trade fee
+Expectations: 
+  - Successful transaction & able to navigate PMP NFT in MY ACCOUNT \MY STAKES \ PENDING UNSTAKE
+  - Observer the Stats in the Staking Dashboard: Trading fee is reduced from 90% to 80% - 66% - 50% - 30% - 0% compared to the original trading fee when you unstake from 20 to 9 - 7 - 5 - 0 PMP NFTs in total respectively.
+```
+
+#### Multi-cancel unstake of PMP NFT
+
+```
+Test case ID: Multi-Cancel Unstake_NFTs_001
+Test case Name: Multi-Cancel Unstake an NFT
+Pre-requisite: 
+  - Connected active account with anough balance for gas fee
+  - 2 or more PMP NFT in MY ACCOUNT \MY STAKES \ PENDING UNSTAKE
+Steps: 
+  1. Navigate to PMP NFTs in the MY ACCOUNT \ MY STAKES \ PENDING UNSTAKE that you want to cancel unstake
+  2. Click button CANCEL UNSTAKE at the PMP NFTs
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & able to navigate PMP NFTs in MY ACCOUNT \MY STAKES \ STAKED
+```
+
 #### Claim earnings from staking
+
+```
+Test case ID: Claim_earnings_from_staking_001
+Test case Name: Claim earnings from staking PMP NFT(s)
+Pre-requisite: 
+  - Connected active account with enough balance gas fee
+  - 1 or more PMP NFT(s) staked
+  - Rewards distribution started by Marketplace admin
+Steps: 
+  1. Navigate to MY ACCOUNT \ GENERAL. Observe the number of total staked PMP NFT(s) and the estimated earnings. 
+  2. Click button CLAIM EARNINGS
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction
+  - Balance is increased with the earnings and is deducted with gas fee.
+  - The reward pool is decreased by the claimed earnings
+```
 
 ### LaunchPad
 
