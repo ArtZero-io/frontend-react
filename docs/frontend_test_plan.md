@@ -1101,12 +1101,12 @@ Pre-requisite:
   - A collection you created in simple mode and an NFT of that collection in MY ACCOUNT \ MY NFTS \ MY COLLECTED
 Steps: 
   1. Go to MY ACCOUNT \ MY NFTS \ MY COLLECTED and navigate to the NFT
-  2. Insert the right receiver address for Azero (Polkadot js., Subwallet, Nova wallet) & click icon TRANSFER
+  2. Click on icon Lock Metadata
   3. Fill wallet password & sign transaction
 Expectations: 
-  - Successful transaction & unable to navigate the NFT in MY ACCOUNT \ MY NFTS
+  - Successful transaction & able to navigate the icon Metadata is locked
   - Balance is deducted gas fee
-  - Receiver can navidate the NFT in MY ACCOUNT \ MY NFTS \ MY COLLECTED
+  - When click at the icon locked metadata, a pop-up notices you about metadata is locked and cannot be un
 ```
 
 #### Claim unsuccessful bids
@@ -1253,6 +1253,250 @@ Expectations:
 
 ### LaunchPad
 
+#### Create a project
+
+```
+Test case ID: Create_a_project_001
+Test case Name: Create a project in the launchpad with all correct data inputs
+Pre-requisite: 
+  - Connected active account with enough balance for project fee & gas fee
+Steps: 
+  1. Go to LAUNCHPAD \ CREATE PROJECT
+  2. Input all information in correct format
+    - Upload 3 images as avatar image, featured image, header image, any of which is of a correct format including:
+      + not bigger than 5MB in size
+      + format of file is: .png, .jpeg., .jpg
+    - Project Name: within 30 characters
+    - Start time - End time: start date, time & end date, time of the project
+    - social links in the correct format:
+      + Website c
+      + Twitter starts with https://twitter.com/ or http://twitter.com/
+      + Telegram starts with https://t.me/ or http://t.me/
+      + Discord starts with https://discord.com/ or http://discord.com/
+    - Project description: within 5000 characters
+    - Royalty fee: 
+      + turn on if you want to collect royalty fee: insert a number from 0.5% until 5%
+      + turn of if you do not want to collect royalty fee
+    - Project roadmap: Leave 1 phase or add more milestone(s) including:
+      + Milestone name: within 100 characters
+      + Milestone description: within 5000 characters
+    - Project team member: Leave 1 member or add more member(s) including:
+      + Upload avatar image that is not bigger than 5MB in size & format of file is: .png, .jpeg., .jpg
+      + Name: within 100 characters
+      + Tile: within 100 characters
+      + Social link: starts with https://twitter.com/ or http://twitter.com/
+    - NFT information: 
+      + NFT name: within 100 characters
+      + NFT symbol: within 30 characters
+      + Total supply: from 1 & must be whole number
+    - Sale phase information: Leave 1 phase or add more phase(s) including:
+      + Phase name: within 100 characters
+      + Start time - End time: start date, time & end date, time of the phase but not overlap other phases' time or project time.
+      + Allow public mint:
+        > turn off if you only want whitelist for this phase
+        > turn on if you want both whitelist mint & public mint
+          >> Public minting fee: higher than or equal to 0
+          >> Total mint amount: of all phases not higher than total supply and must be a whole number
+          >> Max per mint: higher than 0 and must  a whole number
+    - Contact information: input your email in an email format
+    - Tick 3 boxes: agree to pay Project fee, mint fee, ToS
+  3. Click button CREATE PROJECT
+  4. Fill wallet password & sign transaction
+Expectations: 
+  - Receive pop-up message from the team
+  - Receive email confirming of the success of the project creation
+  - Able to navigate the project or edit project in MY ACCOUNT \ MY PROJECTS
+  - Balance is deducted with project fee & gas fee
+```
+
+```
+Test case ID: Create_a_project_002
+Test case Name: Create a project in the launchpad with 1 or more incorrect data inputs
+Pre-requisite: 
+  - Connected active account
+Steps: 
+  1. Go to LAUNCHPAD \ CREATE PROJECT
+  2. Input all information that 1 or more are in incorrect format, including:
+    - Upload 3 images as avatar image, featured image, header image, any of which is of a incorrect format including:
+      + bigger than 5MB in size
+      + format of file is not: .png, .jpeg., .jpg
+    - Project Name: longer than 30 characters
+    - Start time - End time: start date, time & end date, time of the project that end time happens before start time or underlaps any phase
+    - social links in the correct format:
+      + Website not starts with https:// or http://
+      + Twitter nots tarts with https://twitter.com/ or http://twitter.com/
+      + Telegram not starts with https://t.me/ or http://t.me/
+      + Discord not starts with https://discord.com/ or http://discord.com/
+    - Project description: longer than 5000 characters
+    - Royalty fee: turn on & insert a number that is less than 0%
+    - Project roadmap: Leave 1 phase or add more milestone(s) including:
+      + Milestone name: longer than 100 characters
+      + Milestone description: longer than 5000 characters
+    - Project team member: Leave 1 member or add more member(s) including:
+      + Upload avatar image that is bigger than 5MB in size & format of file is not: .png, .jpeg., .jpg
+      + Name: longer than 100 characters
+      + Tile: longer than 100 characters
+      + Social link: not starts with https:// or http://
+    - NFT information: 
+      + NFT name: longer than 100 characters
+      + NFT symbol: longer than 30 characters
+      + Total supply: less than 1 or is not a whole number
+    - Sale phase information: Leave 1 phase or add more phase(s) including:
+      + Phase name: longer than 100 characters
+      + Start time - End time: start date, time & end date, time of the phase but overlap other phases' time or project time.
+      + Allow public mint: 
+        > in case of turn on if you want both whitelist mint & public mint
+          >> Public minting fee: less than 0
+          >> Total mint amount: of all phases higher than total supply or not a whole number
+          >> Max per mint: less than 0 or not a whole number
+    - Contact information: not in an email format
+    - Tick 3 boxes: not tick any of the boxes to agree to pay Project fee, mint fee, ToS
+  3. Click button CREATE PROJECT
+Expectations: 
+  - Receive pop-up warning or red note about the wrong format
+  - Impossible to process to wallet confirmation page, thus fail to create a collection.
+```
+
+#### Update art location
+
+```
+Test case ID: Update_art-location_001
+Test case Name: Update art location of a project
+Pre-requisite: 
+  - Connected active account with enough balance for gas fee
+  - Upload artworks & metadata of the artworks and get their ipfs link
+Steps: 
+  1. Navigate the project in MY ACCOUNT \ MY PROJECT
+  2. Click button UPDATE ART LOCATION
+  3. Fill the link starts with ipfs://
+  4. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction & when NFTs are minted (and already cached), artworks are fetched both in the project in the Launchpad or in the collection
+  - Balance is deducted gas fee
+```
+
+```
+Test case ID: Update_art-location_002
+Test case Name: Update art location of a project
+Pre-requisite: 
+  - Connected active account
+Steps: 
+  1. Navigate the project in MY ACCOUNT \ MY PROJECT
+  2. Click button UPDATE ART LOCATION
+  3. Fill the link but not starts with ipfs://
+  4. Fill wallet password & sign transaction
+Expectations: 
+  - Receive pop-up warning or red note about the wrong format
+  - Impossible to process to wallet confirmation page, thus fail to create a collection.
+```
+
+#### Grant admin role
+
+```
+Test case ID: Grant_an_admin_role_001
+Test case Name: Grant an admin role to a project with all correct data inputs
+Pre-requisite: 
+  - Connected active account with enough balance for gas fee
+  - A project in MY ACCOUNT \ MY PROJECT
+Steps: 
+  1. Go to MY ACCOUNT \ MY PROJECT and navigate to the project
+  2. Insert the right address for Azero (Polkadot js., Subwallet, Nova wallet) & click icon SUBMIT
+  3. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction
+  - Balance is deducted with gas fee
+  - Granted address can navidate the project in MY ACCOUNT \ MY PROJECT and carry out some actions as edit phases, edit project information, add whitelist
+```
+
+```
+Test case ID: Grant_an_admin_role_002
+Test case Name: Grant an admin role to a project with incorrect data inputs
+Pre-requisite: 
+  - Connected active account
+  - An project in MY ACCOUNT \ MY PROJECT
+Steps: 
+  1. Go to MY ACCOUNT \ MY PROJECT and navigate to the project
+  2. Insert the wrong format address for Azero (Polkadot js., Subwallet, Nova wallet) & click icon SUBMIT
+Expectations: 
+  - Receive pop-up or red note stating the incorrect wallet
+  - Impossible to process to wallet confirmation page, thus fail to transfer the NFT
+```
+
+#### Update project info
+```
+Test case ID: Update_a_project_001
+Test case Name: Update a project in the launchpad with all correct data inputs
+Pre-requisite: 
+  - Connected active account with enough balance for project fee & gas fee
+  - A project in MY ACCOUNT \ MY PROJECT
+Steps: 
+  1. Go to LAUNCHPAD \ CREATE PROJECT
+  2. Input all information in correct format
+    - Upload 3 images as avatar image, featured image, header image, any of which is of a correct format including:
+      + not bigger than 5MB in size
+      + format of file is: .png, .jpeg., .jpg
+    - Project Name: within 30 characters
+    - Start time - End time: start date, time & end date, time of the project in case project has not started. If project has started, it is impossible to update
+    - social links in the correct format:
+      + Website starts with https:// or http://
+      + Twitter starts with https://twitter.com/ or http://twitter.com/
+      + Telegram starts with https://t.me/ or http://t.me/
+      + Discord starts with https://discord.com/ or http://discord.com/
+    - Project description: within 5000 characters
+    - Project roadmap: Update 1 phase or delete or add more milestone(s) including:
+      + Milestone name: within 100 characters
+      + Milestone description: within 5000 characters
+    - Project team member: Leave 1 member or delete or add more member(s) including:
+      + Upload avatar image that is not bigger than 5MB in size & format of file is: .png, .jpeg., .jpg
+      + Name: within 100 characters
+      + Tile: within 100 characters
+      + Social link: starts with https://twitter.com/ or http://twitter.com/
+  3. Click button UPDATE PROJECT
+  4. Fill wallet password & sign transaction
+Expectations: 
+  - Successful transaction& able to navigate the project update or edit project in MY ACCOUNT \ MY PROJECTS
+  - Balance is deducted with gas fee
+```
+
+```
+Test case ID: Update_a_project_001
+Test case Name: Update a project in the launchpad with incorrect data inputs
+Pre-requisite: 
+  - Connected active account
+  - A project in MY ACCOUNT \ MY PROJECT
+Steps: 
+  1. Go to LAUNCHPAD \ CREATE PROJECT
+  2. Input all information, 1 or more of which is in incorrect format
+    - Upload 3 images as avatar image, featured image, header image, any of which is of a incorrect format including:
+      + bigger than 5MB in size
+      + format of file is not: .png, .jpeg., .jpg
+    - Project Name: longer than 30 characters
+    - Start time - End time: start date, time & end date, time of the project that end date begins before start date or project time underlaps phases time in case project has not started. If project has started, it is impossible to update
+    - social links in the correct format:
+      + Website not starts with https:// or http://
+      + Twitter not starts with https://twitter.com/ or http://twitter.com/
+      + Telegram not starts with https://t.me/ or http://t.me/
+      + Discord not starts with https://discord.com/ or http://discord.com/
+    - Project description: longer than 5000 characters
+    - Project roadmap: Update 1 phase or delete or add more milestone(s) including:
+      + Milestone name: longer than 100 characters
+      + Milestone description: longer than 5000 characters
+    - Project team member: Leave 1 member or delete or add more member(s) including:
+      + Upload avatar image that is  bigger than 5MB in size & format of file is not: .png, .jpeg., .jpg
+      + Name: longer than 100 characters
+      + Tile: longer than 100 characters
+      + Social link: not starts with https://twitter.com/ or http://twitter.com/
+  3. Click button UPDATE PROJECT
+Expectations: 
+  - Receive pop-up warning or red note about the wrong format
+  - Impossible to process to wallet confirmation page, thus fail to create a collection.
+```
+
+#### Update project phases
+#### Add a whitelist
+#### Owner mint
+#### Withdraw balance
+#### Mint an NFT
 
 > Add more Categories and Test Cases here
       
