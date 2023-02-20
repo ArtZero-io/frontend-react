@@ -1,4 +1,22 @@
-### sample `.env` file
+# ArtZero.io Front-end
+
+ArtZero.io frond-end is a web application for creator can create, collect and trade NFTs on Aleph Zero network.
+
+## Run the app locally
+
+Install dependencies
+
+```bash
+yarn
+```
+
+Run dev server
+
+```bash
+yarn start
+```
+
+## Sample `.env` file
 
 ```
 PORT=8001
