@@ -3,8 +3,11 @@
 - Table of Contents
   - [Introduction](#introduction)
   - [Test Cases](#test-cases)
-    - [General](#general)
-    - [Accounts](#accounts)
+    - [My Account](#My-Account)
+      - [My Collection](#My-Collection)
+      - [My NFT](#My-NFT)
+      - [My Collection](#My-Stakes)
+      - [My Profile](#My-Profile)
     - [Marketplace](#marketplace)
       - [Add new collection in simple mode](#Add-new-collection-in-simple-mode)
       - [Edit a collection](#Edit-a-collection)
@@ -56,50 +59,62 @@
       - [Claim balance](#Claim-balance)
 
 ## Introduction
-> Add introduction and guide here
+```
+This test plan aims to define a structured approach to ensure the quality of the front-end functionality of an NFT Marketplace project. The plan includes testing the core features of the marketplace, including browsing and purchasing NFTs, creating and managing collections, staking NFTs, and participating in NFT auctions.
+
+The objective of this test plan is to identify any functional and usability issues in the front-end of the marketplace, ensuring that users have a seamless experience while using the platform.
+
+The test plan includes a comprehensive set of test cases that cover various scenarios and test conditions. It also outlines the pre-requisites required for executing the test cases, test steps to perform, and the expected outcomes.
+
+The primary audience for this test plan includes the quality assurance team, developers, project managers, and stakeholders involved in the development of the NFT marketplace. The test plan will guide the testing activities and help to ensure that the front-end functionality of the marketplace meets the defined requirements and user expectations.
+
+```
 
 ## Test Cases
 
-### Dashboard
+### My Account
 ```
-Test case ID: dashboard_001
+Test case ID: my_account_001
 Test case Name: Verify Dashboard Page Information Display
 Pre-requisite: User must be logged in and have access to the Dashboard page.
 Expectations:
-  The user's address should be displayed on the Dashboard page.
-  The number of NFTs for sale should be displayed on the Dashboard page.
-  The number of Staked NFTs should be displayed on the Dashboard page.
-  The number of Pending Staked NFTs should be displayed on the Dashboard page.
-  The total number of owned NFTs should be displayed on the Dashboard page.
-  The recent reward history should be displayed on the Dashboard page.
-  The Info staking NFT should be displayed on the Dashboard page.
+  -	The user's address should be displayed on the Dashboard page.
+  -	The number of NFTs for sale should be displayed on the Dashboard page.
+  -	The number of Staked NFTs should be displayed on the Dashboard page.
+  -	The number of Pending Staked NFTs should be displayed on the Dashboard page.
+  -	The total number of owned NFTs should be displayed on the Dashboard page.
+  -	The recent reward history should be displayed on the Dashboard page.
+  -	The Info staking NFT should be displayed on the Dashboard page.
+
 Test Steps:
-  Login to the NFT marketplace as a registered user.
-  Navigate to the Dashboard page.
-  Verify that the user's address is displayed on the page.
-  Verify that the number of NFTs for sale is displayed on the page.
-  Verify that the number of Staked NFTs is displayed on the page.
-  Verify that the number of Pending Staked NFTs is displayed on the page.
-  Verify that the total number of owned NFTs is displayed on the page.
-  Verify that the recent reward history is displayed on the page.
-  Verify that the Info staking NFT is displayed on the page.
+  1.	Login to the NFT marketplace as a registered user.
+  2.	Navigate to the Dashboard page.
+  3.	Verify that the user's address is displayed on the page.
+  4.	Verify that the number of NFTs for sale is displayed on the page.
+  5.	Verify that the number of Staked NFTs is displayed on the page.
+  6.	Verify that the number of Pending Staked NFTs is displayed on the page.
+  7.	Verify that the total number of owned NFTs is displayed on the page.
+  8.	Verify that the recent reward history is displayed on the page.
+  9.	Verify that the Info staking NFT is displayed on the page.
+
 ```
 
-```Test case ID: dashboard_002
+```Test case ID: my_account_002
 Test case Name: Verify Functionality of Trade Discount Modal for PMP NFT Staked
 Pre-requisite: User must be logged in and have access to the Dashboard page.
 Expectations:
-  The user should be able to access the Trade Discount Modal on the Dashboard page.
-  The modal should display a table with three columns: Stakers, Trade Fee, and Trade Discount by Percent.
-  The user should be able to view the stakers who are eligible for the trade discount.
-  The user should be able to view the trade fee and trade discount for each stake NFT quantity.
+  -	The user should be able to access the Trade Discount Modal on the Dashboard page.
+  -	The modal should display a table with three columns: Stakers, Trade Fee, and Trade Discount by Percent.
+  -	The user should be able to view the stakers who are eligible for the trade discount.
+  -	The user should be able to view the trade fee and trade discount for each stake NFT quantity.
+
 Test Steps:
-  Login to the NFT marketplace as a registered user.
-  Navigate to the Dashboard page.
-  Locate and access the Trade Discount Modal.
-  Verify that the modal displays a table with the columns Stakers, Trade Fee, and Trade Discount by Percent.
-  Verify that the table displays the stakers who are eligible for the trade discount.
-  Verify that the table displays the trade fee and trade discount for each stake NFT quantity.
+  1.	Login to the NFT marketplace as a registered user.
+  2.	Navigate to the Dashboard page.
+  3.	Locate and access the Trade Discount Modal.
+  4.	Verify that the modal displays a table with the columns Stakers, Trade Fee, and Trade Discount by Percent.
+  5.	Verify that the table displays the stakers who are eligible for the trade discount.
+  6.	Verify that the table displays the trade fee and trade discount for each stake NFT quantity.
 ```
 ### My Collection
 
@@ -108,95 +123,92 @@ Test case ID: collection_001
 Test case Name: Verify Functionality of My Collection Page
 Pre-requisite: User must be logged in and have created collections.
 Expectations:
+-	The user should be able to access the My Collection page.
+-	The page should display all collections created by the user.
+-	The collections should be displayed with pagination.
+-	The page should have a Create Collection button.
+-	Each collection should display information including an avatar, volume, royalty percent, and image.
 
-The user should be able to access the My Collection page.
-The page should display all collections created by the user.
-The collections should be displayed with pagination.
-The page should have a Create Collection button.
-Each collection should display information including an avatar, volume, royalty percent, and image.
 Test Steps:
+1.	Login to the NFT marketplace as a registered user.
+2.	Navigate to the My Collection page.
+3.	Verify that all collections created by the user are displayed on the page.
+4.	Verify that the collections are displayed with pagination.
+5.	Verify that the page has a Create Collection button.
+6.	Select a collection and verify that it displays the collection's information including an avatar, volume, royalty percent, and image.
 
-Login to the NFT marketplace as a registered user.
-Navigate to the My Collection page.
-Verify that all collections created by the user are displayed on the page.
-Verify that the collections are displayed with pagination.
-Verify that the page has a Create Collection button.
-Select a collection and verify that it displays the collection's information including an avatar, volume, royalty percent, and image.
 ```
 ```
 Test case ID: collection_002
 Test case Name: Verify Pagination Functionality on My Collection Page
 Pre-requisite: User must be logged in and have created collections.
 Expectations:
-  The user should be able to access the My Collection page.
-  The page should display all collections created by the user.
-  The collections should be displayed with pagination.
-  The user should be able to navigate to other pages using the pagination buttons.
-Test Steps:
+  -	The user should be able to access the My Collection page.
+  -	The page should display all collections created by the user.
+  -	The collections should be displayed with pagination.
+  -	The user should be able to navigate to other pages using the pagination buttons.
 
-  Login to the NFT marketplace as a registered user.
-  Navigate to the My Collection page.
-  Verify that all collections created by the user are displayed on the page.
-  Verify that the collections are displayed with pagination.
-  Select the pagination button to navigate to the next page.
-  Verify that the next set of collections is displayed on the page.
+Test Steps:
+  1.	Login to the NFT marketplace as a registered user.
+  2.	Navigate to the My Collection page.
+  3.	Verify that all collections created by the user are displayed on the page.
+  4.	Verify that the collections are displayed with pagination.
+  5.	Select the pagination button to navigate to the next page.
+  6.	Verify that the next set of collections is displayed on the page.
+
 ```
 ```
 Test case ID: collection_003
 Test case Name: Verify Functionality of Collection Royalty on My Collection Page
 Pre-requisite: User must be logged in and have created collections.
 Expectations:
+-	The user should be able to access the My Collection page.
+-	Each collection should display a royalty percent.
+-	The user should be able to edit the royalty percent for the collection.
 
-The user should be able to access the My Collection page.
-Each collection should display a royalty percent.
-The user should be able to edit the royalty percent for the collection.
 Test Steps:
-
-Login to the NFT marketplace as a registered user.
-Navigate to the My Collection page.
-Select a collection from the list.
-Verify that the collection displays a royalty percent.
-Select the Edit button for the collection.
-Edit the royalty percent for the collection and save the changes.
-Verify that the new royalty percent is displayed for the collection.
+  1.	Login to the NFT marketplace as a registered user.
+  2.	Navigate to the My Collection page.
+  3.	Select a collection from the list.
+  4.	Verify that the collection displays a royalty percent.
+  5.	Select the Edit button for the collection.
+  6.	Edit the royalty percent for the collection and save the changes.
+  7.	Verify that the new royalty percent is displayed for the collection.
 
 ```
-### My Collection
+### My NFT
 ```
 Test case ID: mynft_001
 Test case Name: Verify Functionality of My NFTs Page with All NFTs
 Pre-requisite: User must be logged in and have at least one NFT in their collection.
 Expectations:
+  -	The user should be able to access the My NFTs page.
+  -	All NFTs in the user's collection should be displayed.
+  -	The user should be able to view detailed information for each NFT.
 
-  The user should be able to access the My NFTs page.
-  All NFTs in the user's collection should be displayed.
-  The user should be able to view detailed information for each NFT.
 Test Steps:
-
-  Login to the NFT marketplace as a registered user.
-  Navigate to the My NFTs page.
-  Verify that all NFTs in the user's collection are displayed.
-  Select an NFT from the list.
-  Verify that detailed information is displayed for the NFT, including the collection it belongs to, the owner, the creator, the date of creation, and any other relevant information.
+  1.	Login to the NFT marketplace as a registered user.
+  2.	Navigate to the My NFTs page.
+  3.	Verify that all NFTs in the user's collection are displayed.
+  4.	Select an NFT from the list.
+  5.	Verify that detailed information is displayed for the NFT, including the collection it belongs to, the owner, the creator, the date of creation, and any other relevant information.
 ```
 ```
 Test case ID: mynft_002
 Test case Name: Verify Functionality of My Collected Tab on My NFTs Page
 Pre-requisite: User must be logged in and have at least one NFT in their collection.
 Expectations:
-
-  The user should be able to access the My NFTs page.
-  All NFTs in the user's collection should be displayed.
-  The My Collected tab should display only the NFTs the user has collected.
-  The user should be able to view detailed information for each NFT.
+  -	The user should be able to access the My NFTs page.
+  -	All NFTs in the user's collection should be displayed.
+  -	The My Collected tab should display only the NFTs the user has collected.
+  -	The user should be able to view detailed information for each NFT.
 Test Steps:
-
-  Login to the NFT marketplace as a registered user.
-  Navigate to the My NFTs page.
-  Select the My Collected tab.
-  Verify that only the NFTs the user has collected are displayed.
-  Select an NFT from the list.
-  Verify that detailed information is displayed for the NFT, including the collection it belongs to, the owner, the creator, the date of creation, and any other relevant information.
+  1.	Login to the NFT marketplace as a registered user.
+  2.	Navigate to the My NFTs page.
+  3.	Select the My Collected tab.
+  4.	Verify that only the NFTs the user has collected are displayed.
+  5.	Select an NFT from the list.
+  6.	Verify that detailed information is displayed for the NFT, including the collection it belongs to, the owner, the creator, the date of creation, and any other relevant information.
 ```
 
 ```
@@ -204,21 +216,19 @@ Test case ID: mynft_003
 Test case Name: Verify Functionality of My Listing Tab on My NFTs Page
 Pre-requisite: User must be logged in and have at least one NFT listed for sale.
 Expectations:
-
-  The user should be able to access the My NFTs page.
-  The My Listing tab should display only the NFTs the user has listed for sale.
-  The user should be able to view detailed information for each NFT.
-  The user should be able to edit or cancel their listings.
+  -	The user should be able to access the My NFTs page.
+  -	The My Listing tab should display only the NFTs the user has listed for sale.
+  -	The user should be able to view detailed information for each NFT.
+  -	The user should be able to edit or cancel their listings.
 Test Steps:
-
-  Login to the NFT marketplace as a registered user.
-  Navigate to the My NFTs page.
-  Select the My Listing tab.
-  Verify that only the NFTs the user has listed for sale are displayed.
-  Select an NFT from the list.
-  Verify that detailed information is displayed for the NFT, including the collection it belongs to, the owner, the creator, the date of creation, and any other relevant information.
-  Select the Edit or Cancel button for the listing.
-  Verify that the user is able to edit or cancel the listing.
+  1.	Login to the NFT marketplace as a registered user.
+  2.	Navigate to the My NFTs page.
+  3.	Select the My Listing tab.
+  4.	Verify that only the NFTs the user has listed for sale are displayed.
+  5.	Select an NFT from the list.
+  6.	Verify that detailed information is displayed for the NFT, including the collection it belongs to, the owner, the creator, the date of creation, and any other relevant information.
+  7.	Select the Edit or Cancel button for the listing.
+  8.	Verify that the user is able to edit or cancel the listing.
 ```
 ### My Stakes
 ```
@@ -226,55 +236,49 @@ Test case ID: mystake_001
 Test case Name: Verify Functionality of My Stake NFT Page with All Staker NFTs
 Pre-requisite: User must be logged in and have at least one staked NFT.
 Expectations:
-
-  The user should be able to access the My Stake NFT page.
-  All staker NFT collections should be displayed.
-  The user should be able to view detailed information for each staker NFT.
-  PMP NFT stats should be displayed for the user.
+  •	The user should be able to access the My Stake NFT page.
+  •	All staker NFT collections should be displayed.
+  •	The user should be able to view detailed information for each staker NFT.
+  •	PMP NFT stats should be displayed for the user.
 Test Steps:
-
-  Login to the NFT marketplace as a registered user.
-  Navigate to the My Stake NFT page.
-  Verify that all staker NFT collections are displayed.
-  Select a staker NFT from the list.
-  Verify that detailed information is displayed for the NFT, including the collection it belongs to, the owner, the creator, the date of creation, and any other relevant information.
-  Verify that PMP NFT stats are displayed for the user.
+  1.	Login to the NFT marketplace as a registered user.
+  2.	Navigate to the My Stake NFT page.
+  3.	Verify that all staker NFT collections are displayed.
+  4.	Select a staker NFT from the list.
+  5.	Verify that detailed information is displayed for the NFT, including the collection it belongs to, the owner, the creator, the date of creation, and any other relevant information.
+  6.	Verify that PMP NFT stats are displayed for the user.
 ```
 ```
 Test case ID: mystake_002
 Test case Name: Verify Functionality of NOT Staked Tab on My Stake NFT Page
 Pre-requisite: User must be logged in and have at least one NFT collection with staking available but not staked.
 Expectations:
-
-The user should be able to access the My Stake NFT page.
-The NOT Staked tab should display only the NFT collections the user has not staked.
-The user should be able to view detailed information for each staker NFT.
+  -	The user should be able to access the My Stake NFT page.
+  -	The NOT Staked tab should display only the NFT collections the user has not staked.
+  -	The user should be able to view detailed information for each staker NFT.
 Test Steps:
-
-Login to the NFT marketplace as a registered user.
-Navigate to the My Stake NFT page.
-Select the NOT Staked tab.
-Verify that only the NFT collections the user has not staked are displayed.
-Select a staker NFT from the list.
-Verify that detailed information is displayed for the NFT, including the collection it belongs to, the owner, the creator, the date of creation, and any other relevant information.
+  1.	Login to the NFT marketplace as a registered user.
+  2.	Navigate to the My Stake NFT page.
+  3.	Select the NOT Staked tab.
+  4.	Verify that only the NFT collections the user has not staked are displayed.
+  5.	Select a staker NFT from the list.
+  6.	Verify that detailed information is displayed for the NFT, including the collection it belongs to, the owner, the creator, the date of creation, and any other relevant information.
 ```
 ```
 Test case ID: mystake_003
 Test case Name: Verify Functionality of Pending Unstake Tab on My Stake NFT Page
 Pre-requisite: User must be logged in and have at least one staked NFT with a pending unstake.
 Expectations:
-
-The user should be able to access the My Stake NFT page.
-The Pending Unstake tab should display only the NFT collections the user has staked with a pending unstake.
-The user should be able to view detailed information for each staker NFT.
+  -	The user should be able to access the My Stake NFT page.
+  -	The Pending Unstake tab should display only the NFT collections the user has staked with a pending unstake.
+  -	The user should be able to view detailed information for each staker NFT.
 Test Steps:
-
-Login to the NFT marketplace as a registered user.
-Navigate to the My Stake NFT page.
-Select the Pending Unstake tab.
-Verify that only the NFT collections the user has staked with a pending unstake are displayed.
-Select a staker NFT from the list.
-Verify that detailed information is displayed for the NFT, including the collection it belongs to, the owner, the creator, the date of creation
+  1.	Login to the NFT marketplace as a registered user.
+  2.	Navigate to the My Stake NFT page.
+  3.	Select the Pending Unstake tab.
+  4.	Verify that only the NFT collections the user has staked with a pending unstake are displayed.
+  5.	Select a staker NFT from the list.
+  6.	Verify that detailed information is displayed for the NFT, including the collection it belongs to, the owner, the creator, the date of creation
 ```
 ```
 Test case ID: mystake_004
@@ -283,9 +287,8 @@ Test case Name: Verify refresh data button
 Pre-requisite: User is logged in and has staked and unstaked PMP NFTs.
 
 Expectations:
-
-Click on the "Refresh Data" button and verify that the staking details and PMP NFT stats are updated correctly.
-Verify that the total number of staked and unstaked PMP NFTs displayed in the corresponding tabs are updated correctly after clicking the "Refresh Data" button.
+  -	Click on the "Refresh Data" button and verify that the staking details and PMP NFT stats are updated correctly.
+  -	Verify that the total number of staked and unstaked PMP NFTs displayed in the corresponding tabs are updated correctly after clicking the "Refresh Data" button.
 ```
 ### My Projects
 ```
@@ -295,14 +298,12 @@ Test case Name: Verify display of all created launchpad projects
 Pre-requisite: User is logged in and has created at least one launchpad project.
 
 Test steps:
-
-Navigate to the "My Project" page.
-Verify that all created launchpad projects are displayed correctly, with the project name, logo, status, and creation date.
-Verify that each project has a "Mint NFT" and "Whitelist Address" button.
+  1.	Navigate to the "My Project" page.
+  2.	Verify that all created launchpad projects are displayed correctly, with the project name, logo, status, and creation date.
+  3.	Verify that each project has a "Mint NFT" and "Whitelist Address" button.
 Expectations:
-
-All created launchpad projects are displayed correctly on the "My Project" page.
-Each project has a "Mint NFT" and "Whitelist Address" button.
+  All created launchpad projects are displayed correctly on the "My Project" page.
+  Each project has a "Mint NFT" and "Whitelist Address" button.
 ```
 ```
 Test case ID: myproject_002
@@ -311,17 +312,15 @@ Test case Name: Verify "Mint NFT" button functionality
 Pre-requisite: User has created a launchpad project and has NFTs to mint.
 
 Test steps:
-
-Navigate to the "My Project" page.
-Click on the "Mint NFT" button for a project.
-Fill in the required fields in the minting form.
-Submit the form.
-Verify that the new NFT is created successfully and is visible in the user's wallet.
+  1.	Navigate to the "My Project" page.
+  2.	Click on the "Mint NFT" button for a project.
+  3.	Fill in the required fields in the minting form.
+  4.	Submit the form.
+  5.	Verify that the new NFT is created successfully and is visible in the user's wallet.
 Expectations:
-
-The minting form is displayed after clicking on the "Mint NFT" button.
-The required fields in the minting form are filled correctly.
-The new NFT is created successfully and is visible in the user's wallet.
+  -	The minting form is displayed after clicking on the "Mint NFT" button.
+  -	The required fields in the minting form are filled correctly.
+  -	The new NFT is created successfully and is visible in the user's wallet.
 ```
 ```
 Test case ID: myproject_003
@@ -330,17 +329,15 @@ Test case Name: Verify "Whitelist Address" button functionality
 Pre-requisite: User has created a launchpad project and has a list of addresses to whitelist.
 
 Test steps:
-
-Navigate to the "My Project" page.
-Click on the "Whitelist Address" button for a project.
-Add the required addresses to the whitelist.
-Submit the form.
-Verify that the addresses are added to the whitelist successfully and are able to participate in the project's launchpad.
+  1.	Navigate to the "My Project" page.
+  2.	Click on the "Whitelist Address" button for a project.
+  3.	Add the required addresses to the whitelist.
+  4.	Submit the form.
+  5.	Verify that the addresses are added to the whitelist successfully and are able to participate in the project's launchpad.
 Expectations:
-
-The whitelist form is displayed after clicking on the "Whitelist Address" button.
-The required addresses are added to the whitelist correctly.
-The addresses are added to the whitelist successfully and are able to participate in the project's launchpad.
+  -	The whitelist form is displayed after clicking on the "Whitelist Address" button.
+  -	The required addresses are added to the whitelist correctly.
+  -	The addresses are added to the whitelist successfully and are able to participate in the project's launchpad.
 ```
 
 ### My Profile
@@ -350,35 +347,34 @@ Test case Name: Update user profile information
 Pre-requisite: User is logged in and on the update profile modal
 
 Test Steps:
+  1.	Click on the 'Update Profile' button on the profile page.
+  2.	Verify that the modal window is displayed with the current user details.
+  3.	Try to update the profile image by selecting an invalid file format.
+  4.	Verify that the 'Invalid File Format' error message is displayed.
+  5.	Try to update the 'User Name' field with an invalid input (e.g. special characters).
+  6.	Verify that the 'User Name' field is not updated and an error message is displayed.
+  7.	Try to update the 'Bio' field with an invalid input (e.g. too long).
+  8.	Verify that the 'Bio' field is not updated and an error message is displayed.
+  9.	Try to update the 'Twitter URL' field with an invalid URL.
+  10.	Verify that the 'Twitter URL' field is not updated and an error message is displayed.
+  11.	Try to update the 'Facebook URL' field with an invalid URL.
+  12.	Verify that the 'Facebook URL' field is not updated and an error message is displayed.
+  13.	Try to update the 'Telegram URL' field with an invalid URL.
+  14.	Verify that the 'Telegram URL' field is not updated and an error message is displayed.
+  15.	Try to update the 'Instagram URL' field with an invalid URL.
+  16.	Verify that the 'Instagram URL' field is not updated and an error message is displayed.
+  17.	Click on the 'Save Changes' button.
+  18.	Verify that the modal remains open and no changes are saved.
 
-Click on the 'Update Profile' button on the profile page.
-Verify that the modal window is displayed with the current user details.
-Update the profile image by selecting a new image file from the local system.
-Verify that the updated image is displayed in the preview section of the modal.
-Update the 'User Name' field with a new valid name.
-Verify that the 'User Name' field is updated with the new value.
-Update the 'Bio' field with a new valid description.
-Verify that the 'Bio' field is updated with the new value.
-Update the 'Twitter URL' field with a valid URL.
-Verify that the 'Twitter URL' field is updated with the new value.
-Update the 'Facebook URL' field with a valid URL.
-Verify that the 'Facebook URL' field is updated with the new value.
-Update the 'Telegram URL' field with a valid URL.
-Verify that the 'Telegram URL' field is updated with the new value.
-Update the 'Instagram URL' field with a valid URL.
-Verify that the 'Instagram URL' field is updated with the new value.
-Click on the 'Save Changes' button.
-Verify that the modal is closed and the updated user profile information is displayed on the profile page.
 Expectations:
-
-The user should be able to update the profile image with a new image file.
-The user should be able to update the 'User Name' field with a new valid name.
-The user should be able to update the 'Bio' field with a new valid description.
-The user should be able to update the 'Twitter URL' field with a valid URL.
-The user should be able to update the 'Facebook URL' field with a valid URL.
-The user should be able to update the 'Telegram URL' field with a valid URL.
-The user should be able to update the 'Instagram URL' field with a valid URL.
-The updated user profile information should be displayed on the profile page after saving the changes.
+-	The user should be able to update the profile image with a new image file.
+-	The user should be able to update the 'User Name' field with a new valid name.
+-	The user should be able to update the 'Bio' field with a new valid description.
+-	The user should be able to update the 'Twitter URL' field with a valid URL.
+-	The user should be able to update the 'Facebook URL' field with a valid URL.
+-	The user should be able to update the 'Telegram URL' field with a valid URL.
+-	The user should be able to update the 'Instagram URL' field with a valid URL.
+-	The updated user profile information should be displayed on the profile page after saving the changes.
 ```
 ```
 Test case ID: myprofile_002
@@ -386,35 +382,33 @@ Test case Name: Update user profile with invalid input
 Pre-requisite: User is logged in and on the update profile modal
 
 Test Steps:
-
-Click on the 'Update Profile' button on the profile page.
-Verify that the modal window is displayed with the current user details.
-Try to update the profile image by selecting an invalid file format.
-Verify that the 'Invalid File Format' error message is displayed.
-Try to update the 'User Name' field with an invalid input (e.g. special characters).
-Verify that the 'User Name' field is not updated and an error message is displayed.
-Try to update the 'Bio' field with an invalid input (e.g. too long).
-Verify that the 'Bio' field is not updated and an error message is displayed.
-Try to update the 'Twitter URL' field with an invalid URL.
-Verify that the 'Twitter URL' field is not updated and an error message is displayed.
-Try to update the 'Facebook URL' field with an invalid URL.
-Verify that the 'Facebook URL' field is not updated and an error message is displayed.
-Try to update the 'Telegram URL' field with an invalid URL.
-Verify that the 'Telegram URL' field is not updated and an error message is displayed.
-Try to update the 'Instagram URL' field with an invalid URL.
-Verify that the 'Instagram URL' field is not updated and an error message is displayed.
-Click on the 'Save Changes' button.
-Verify that the modal remains open and no changes are saved.
+  1.	Click on the 'Update Profile' button on the profile page.
+  2.	Verify that the modal window is displayed with the current user details.
+  3.	Try to update the profile image by selecting an invalid file format.
+  4.	Verify that the 'Invalid File Format' error message is displayed.
+  5.	Try to update the 'User Name' field with an invalid input (e.g. special characters).
+  6.	Verify that the 'User Name' field is not updated and an error message is displayed.
+  7.	Try to update the 'Bio' field with an invalid input (e.g. too long).
+  8.	Verify that the 'Bio' field is not updated and an error message is displayed.
+  9.	Try to update the 'Twitter URL' field with an invalid URL.
+  10.	Verify that the 'Twitter URL' field is not updated and an error message is displayed.
+  11.	Try to update the 'Facebook URL' field with an invalid URL.
+  12.	Verify that the 'Facebook URL' field is not updated and an error message is displayed.
+  13.	Try to update the 'Telegram URL' field with an invalid URL.
+  14.	Verify that the 'Telegram URL' field is not updated and an error message is displayed.
+  15.	Try to update the 'Instagram URL' field with an invalid URL.
+  16.	Verify that the 'Instagram URL' field is not updated and an error message is displayed.
+  17.	Click on the 'Save Changes' button.
+  18.	Verify that the modal remains open and no changes are saved.
 Expectations:
-
-The user should not be able to update the profile image with an invalid file format.
-The user should not be able to update the 'User Name' field with an invalid input.
-The user should not be able to update the 'Bio' field with an invalid input.
-The user should not be able to update the 'Twitter URL' field with an invalid URL.
-The user should not be able to update the 'Facebook URL' field with an invalid URL.
-The user should not be able to update the 'Telegram URL' field with an invalid URL.
-The user should not be able to update the 'Instagram URL' field with an invalid URL.
-The modal should remain open and no changes should be saved if any input is invalid.
+  •	The user should not be able to update the profile image with an invalid file format.
+  •	The user should not be able to update the 'User Name' field with an invalid input.
+  •	The user should not be able to update the 'Bio' field with an invalid input.
+  •	The user should not be able to update the 'Twitter URL' field with an invalid URL.
+  •	The user should not be able to update the 'Facebook URL' field with an invalid URL.
+  •	The user should not be able to update the 'Telegram URL' field with an invalid URL.
+  •	The user should not be able to update the 'Instagram URL' field with an invalid URL.
+  •	The modal should remain open and no changes should be saved if any input is invalid.
 ```
 ```
 Test case ID: myprofile_003
@@ -422,25 +416,23 @@ Test case Name: View user profile
 Pre-requisite: User is logged in and on the profile page
 
 Test Steps:
-
-Verify that the user's profile image is displayed on the page.
-Verify that the user's User Name is displayed on the page.
-Verify that the user's Bio is displayed on the page.
-Verify that the 'About' section is displayed on the page.
-Verify that the 'Twitter URL' button is displayed and clickable.
-Verify that the 'Facebook URL' button is displayed and clickable.
-Verify that the 'Telegram URL' button is displayed and clickable.
-Verify that the 'Instagram URL' button is displayed and clickable.
+  1.	Verify that the user's profile image is displayed on the page.
+  2.	Verify that the user's User Name is displayed on the page.
+  3.	Verify that the user's Bio is displayed on the page.
+  4.	Verify that the 'About' section is displayed on the page.
+  5.	Verify that the 'Twitter URL' button is displayed and clickable.
+  6.	Verify that the 'Facebook URL' button is displayed and clickable.
+  7.	Verify that the 'Telegram URL' button is displayed and clickable.
+  8.	Verify that the 'Instagram URL' button is displayed and clickable.
 Expectations:
-
-The user's profile image should be displayed on the page.
-The user's User Name should be displayed on the page.
-The user's Bio should be displayed on the page.
-The 'About' section should be displayed on the page.
-The 'Twitter URL' button should be displayed and clickable.
-The 'Facebook URL' button should be displayed and clickable.
-The 'Telegram URL' button should be displayed and clickable.
-The 'Instagram URL' button should be displayed and clickable.
+  -	The user's profile image should be displayed on the page.
+  -	The user's User Name should be displayed on the page.
+  -	The user's Bio should be displayed on the page.
+  -	The 'About' section should be displayed on the page.
+  -	The 'Twitter URL' button should be displayed and clickable.
+  -	The 'Facebook URL' button should be displayed and clickable.
+  -	The 'Telegram URL' button should be displayed and clickable.
+  -	The 'Instagram URL' button should be displayed and clickable.
 ```
 ```
 Test case ID: myprofile_004
@@ -448,12 +440,10 @@ Test case Name: Click 'Twitter URL' button
 Pre-requisite: User is logged in and on the profile page
 
 Test Steps:
-
-Click on the 'Twitter URL' button.
-Verify that the Twitter URL is opened in a new tab.
+  1.	Click on the 'Twitter URL' button.
+  2.	Verify that the Twitter URL is opened in a new tab.
 Expectations:
-
-The Twitter URL should be opened in a new tab.
+  The Twitter URL should be opened in a new tab.
 ```
 ```
 Test case ID: myprofile_005
@@ -461,12 +451,10 @@ Test case Name: Click 'Facebook URL' button
 Pre-requisite: User is logged in and on the profile page
 
 Test Steps:
-
-Click on the 'Facebook URL' button.
-Verify that the Facebook URL is opened in a new tab.
+  1.	Click on the 'Facebook URL' button.
+  2.	Verify that the Facebook URL is opened in a new tab.
 Expectations:
-
-The Facebook URL should be opened in a new tab.
+  The Facebook URL should be opened in a new tab.
 ```
 ```
 Test case ID: myprofile_006
@@ -474,12 +462,10 @@ Test case Name: Click 'Telegram URL' button
 Pre-requisite: User is logged in and on the profile page
 
 Test Steps:
-
-Click on the 'Telegram URL' button.
-Verify that the Telegram URL is opened in a new tab.
+  1.	Click on the 'Telegram URL' button.
+  2.	Verify that the Telegram URL is opened in a new tab.
 Expectations:
-
-The Telegram URL should be opened in a new tab.
+  The Telegram URL should be opened in a new tab.
 ```
 ```
 Test case ID: myprofile_007
@@ -487,20 +473,10 @@ Test case Name: Click 'Instagram URL' button
 Pre-requisite: User is logged in and on the profile page
 
 Test Steps:
-
-Click on the 'Instagram URL' button.
-Verify that the Instagram URL is opened in a new tab.
+  1.	Click on the 'Instagram URL' button.
+  2.	Verify that the Instagram URL is opened in a new tab.
 Expectations:
-
-The Instagram URL should be opened in a new tab.
-```
-### Accounts
-> Test case Template
-```
-Test case ID: account_001
-Test case Name: ....
-Pre-requisite: ....
-Expectations: write the expected result here.
+  The Instagram URL should be opened in a new tab.
 ```
 
 ### Marketplace
@@ -1830,13 +1806,186 @@ Expectations:
 ```
 
 #### Enable a project
+```
+Test Case ID: project_001
+Test Case Name: Enable Project in Project List
+
+Pre-requisite:
+  -	User has admin access to the NFT marketplace.
+  -	User is logged in to the admin page.
+  -	There is at least one disabled project in the Project List.
+Test Steps:
+  1.	Navigate to the Project Management tab on the admin page.
+  2.	Verify that the Project List is displayed with all projects, including any disabled ones.
+  3.	Locate the disabled project that you want to enable.
+  4.	Click on the "Enable" button next to the disabled project.
+  5.	Verify that the project is now enabled and visible in the Project List.
+  6.	Verify that the "Enable" button is replaced by a "Disable" button for the enabled project.
+Expectations:
+  -	The disabled project should be successfully enabled and visible in the Project List.
+  -	The "Enable" button should be replaced by a "Disable" button for the enabled project.
+```
+
 #### Disable a project
+```
+Test Case ID: project_002
+Test Case Name: Disable Project in Project List
+
+Pre-requisite:
+
+User has admin access to the NFT marketplace.
+User is logged in to the admin page.
+There is at least one enabled project in the Project List.
+Test Steps:
+  1.	Navigate to the Project Management tab on the admin page.
+  2.	Verify that the Project List is displayed with all projects, including any enabled ones.
+  3.	Locate the enabled project that you want to disable.
+  4.	Click on the "Disable" button next to the enabled project.
+  5.	Verify that the project is now disabled and no longer visible in the Project List.
+  6.	Verify that the "Disable" button is replaced by an "Enable" button for the disabled project.
+Expectations:
+  -	The enabled project should be successfully disabled and no longer visible in the Project List.
+  -	The "Disable" button should be replaced by an "Enable" button for the disabled project.
+```
 #### Lock staking
+```
+Test Case ID: staking_reward_001
+Test Case Name: Lock Staking 
+
+Pre-requisite:
+
+User has admin access to the NFT marketplace.
+User is logged in to the admin page.
+The Staking Contract Control tab is accessible.
+There is at least one staking contract created in the NFT marketplace.
+Test Steps:
+  1.	Navigate to the Staking Contract Control tab on the admin page.
+  2.	Verify that the list of staking contracts is displayed.
+  3.	Locate the staking contract that you want to lock.
+  4.	Click on the "Lock" button next to the staking contract.
+  5.	Verify that the staking contract is now locked.
+  6.	Click on the "Sign Transaction" button next to the locked staking contract.
+  7.	Verify that a confirmation message appears asking if you are sure you want to sign the transaction.
+  8.	Click on the "Yes" button to confirm signing the transaction.
+Expectations:
+  -	The staking contract should be successfully locked.
+  -	The "Sign Transaction" button should be available for the locked staking contract.
+  -	The confirmation message for locking and signing the transaction should be displayed.
+  -	The transaction should be successfully signed and processed.
+```
 #### Add rewards
+```
+Test Case ID: staking_reward_002
+Test Case Name: Add Rewards
+
+Pre-requisite:
+
+User has admin access to the NFT marketplace.
+User is logged in to the admin page.
+The Staking Contract Control tab is accessible.
+There is at least one staking contract created in the NFT marketplace.
+The staking contract is not locked.
+Test Steps:
+  1.	Navigate to the Staking Contract Control tab on the admin page.
+  2.	Verify that the list of staking contracts is displayed.
+  3.	Locate the staking contract that you want to add a reward to.
+  4.	Click on the "Reward Contribution" button next to the staking contract.
+  5.	Verify that the "Add Reward" modal appears.
+  6.	Enter the amount of reward to add in the input field.
+  7.	Click on the "Add Reward" button.
+  8.	Verify that the reward has been added to the staking contract.
+  9.	Click on the "Sign Transaction" button next to the staking contract.
+  10.	Verify that a confirmation message appears asking if you are sure you want to sign the transaction.
+  11.	Click on the "Yes" button to confirm signing the transaction.
+Expectations:
+  -	The "Reward Contribution" button should be available for the staking contract.
+  -	The "Add Reward" modal should appear when the button is clicked.
+  -	The input field for the reward amount should be available and accepts only numeric input.
+  -	The confirmation message for adding the reward and signing the transaction should be displayed.
+  -	The reward should be successfully added to the staking contract.
+  -	The transaction should be successfully signed and processed.
+```
 #### Start reward distribution
+```
+Test case ID: staking_reward_003
+Test case Name: Start reward distribution
+Pre-requisite: Admin is logged in and has access to the STAKING CONTRACT CONTROL tab in the admin page.
+
+Test Steps:
+  1.	Navigate to the STAKING CONTRACT CONTROL tab in the admin page.
+  2.	Look for the Reward Contribution section.
+  3.	Click on the Start Distribution button.
+  4.	Verify that a confirmation modal pops up.
+  5.	Click on the Confirm button.
+  6.	Verify that a success message appears confirming that the reward distribution has been started.
+  7.	Verify that the Start Distribution button is disabled.
+Expectations:
+  -	The reward distribution should start successfully.
+  -	A confirmation modal should pop up to confirm the action.
+  -	A success message should appear confirming that the reward distribution has been started.
+  -	The Start Distribution button should be disabled after starting the reward distribution.
+```
 #### Stop reward distribution
+```
+Test case ID: staking_reward_004
+Test case Name: Disable reward distribution
+Pre-requisite: Admin is logged in and has access to the STAKING CONTRACT CONTROL tab in the admin page.
+
+Test Steps:
+  1.	Navigate to the STAKING CONTRACT CONTROL tab in the admin page.
+  2.	Look for the Reward Contribution section.
+  3.	Click on the Disable Distribution button.
+  4.	Verify that a confirmation modal pops up.
+  5.	Click on the Confirm button.
+  6.	Verify that a success message appears confirming that the reward distribution has been disabled.
+  7.	Verify that the Disable Distribution button is disabled.
+  8.	Verify that the Start Distribution button is enabled.
+Expectations:
+  -	The reward distribution should be disabled successfully.
+  -	A confirmation modal should pop up to confirm the action.
+  -	A success message should appear confirming that the reward distribution has been disabled.
+  -	The Disable Distribution button should be disabled after disabling the reward distribution.
+  -	The Start Distribution button should be enabled after disabling the reward distribution.
+```
 #### Unlock staking
+```
+Test case ID: staking_reward_005
+Test case Name: Unlock staking
+Pre-requisite: Admin is logged in and has access to the STAKING CONTRACT CONTROL tab in the admin page.
+
+Test Steps:
+  1.	Navigate to the STAKING CONTRACT CONTROL tab in the admin page.
+  2.	Look for the Staking Control section.
+  3.	Click on the Unlock Staking button.
+  4.	Verify that a confirmation modal pops up.
+  5.	Click on the Confirm button.
+  6.	Verify that a success message appears confirming that the staking has been unlocked.
+  7.	Verify that the Unlock Staking button is disabled.
+  8.	Verify that the Lock Staking button is enabled.
+Expectations:
+  -	The staking should be unlocked successfully.
+  -	A confirmation modal should pop up to confirm the action.
+  -	A success message should appear confirming that the staking has been unlocked.
+  -	The Unlock Staking button should be disabled after unlocking the staking.
+  -	The Lock Staking button should be enabled after unlocking the staking.
+```
 #### Claim balance
+```
+Test case ID: staking_reward_006
+Test case Name: Verify the Claim balance feature in the reward contribution tab
+Pre-requisite: User should have a connected wallet to sign the transaction in the blockchain.
+
+Test Steps:
+  -	Navigate to the Admin page and click on the Reward Contribution tab.
+  -	Check if the Claim balance button is available on the screen.
+  -	Click on the Claim balance button and confirm the transaction with the connected wallet.
+  -	Check if the transaction is successfully completed by verifying the transaction hash or balance updated in the wallet.
+Expectations:
+  1.	The Claim balance button should be available on the screen.
+  2.	On clicking the Claim balance button, a prompt to sign the transaction should appear.
+  3.	On signing the transaction, the balance should be claimed successfully and should be reflected in the connected wallet.
+  4.	On verifying the transaction hash, the transaction should be successful, and the balance should be updated in the connected wallet.
+```
 
 > Add more Categories and Test Cases here
       
