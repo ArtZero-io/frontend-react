@@ -410,7 +410,7 @@ function HomePage() {
                 fontSize={["13px", null, "18px"]}
                 lineHeight={["21px", null, "30px"]}
               >
-                you will need some testnet Astar (ASTR) to start. get free
+                you will need some testnet Astar (SBY) to start. get free
                 Astar from{" "}
                 <Link
                   isExternal
