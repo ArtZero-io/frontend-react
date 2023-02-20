@@ -11,6 +11,7 @@ import { APICall } from "@api/client";
 import { clientAPI } from "@api/client";
 import collection_manager from "@utils/blockchain/collection-manager";
 import { getEstimatedGas, readOnlyGasLimit, formatOutput, delay } from "..";
+import emailjs from "@emailjs/browser";
 
 let contract;
 
@@ -25,7 +26,14 @@ export const setCollectionContract = (api, data) => {
 //SETTERS
 
 // CREATE COLLECTION ADVANCED MODE
-async function addNewCollection(caller_account, data, dispatch, txType, api) {
+async function addNewCollection(
+  caller_account,
+  data,
+  dispatch,
+  txType,
+  api,
+  templateParams
+) {
   if (!contract || !caller_account) {
     toast.error(`Contract or caller not valid!`);
     return null;
@@ -65,71 +73,115 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
       data.collectionAllowRoyaltyFee,
       data.collectionRoyaltyFeeData
     )
-    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
-      txResponseErrorHandler({
-        status,
-        dispatchError,
-        dispatch,
-        txType,
-        api,
-        caller_account,
-      });
-
-      if (status?.isFinalized) {
-        toast.success("Collection is created successful!");
-
-        let transactionData = data;
-        await APICall.askBeUpdateCollectionData({
-          collection_address: data?.nftContractAddress,
+    .signAndSend(
+      address,
+      { signer },
+      async ({ status, events, dispatchError }) => {
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
         });
-        if (transactionData.attributes?.length) {
-          let cacheImages = [];
 
-          for (let i = 0; i < transactionData.attributes.length; i++) {
-            console.log(transactionData.attributes[i]);
-            if (transactionData.attributes[i] === "avatar_image") {
-              cacheImages.push({
-                input: transactionData.attributeVals[i],
-                is1920: false,
-                imageType: "collection",
-                metadata: {
-                  collectionAddress: data?.nftContractAddress,
-                  type: "avatar_image",
-                },
-              });
+        events.forEach(({ event: { method } }) => {
+          if (method === "ExtrinsicSuccess" && status.type === "Finalized") {
+            if (templateParams) {
+              templateParams.collection_address = data?.nftContractAddress;
+
+              emailjs
+                .send(
+                  process.env.REACT_APP_EMAILJS_SERVICE_ID,
+                  process.env.REACT_APP_EMAILJS_COLLECTION_TEMPLATE_ID,
+                  templateParams,
+                  process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+                )
+                .then(
+                  function (response) {
+                    console.log("SUCCESS!", response.status, response.text);
+                  },
+                  function (error) {
+                    console.log("error send email FAILED...", error);
+                  }
+                );
             }
-            if (transactionData.attributes[i] === "header_image") {
-              cacheImages.push({
-                input: transactionData.attributeVals[i],
-                is1920: false,
-                imageType: "collection",
-                metadata: {
-                  collectionAddress: data?.nftContractAddress,
-                  type: "header_image",
+
+            toast(
+              "Thank you for submitting. Your Collection has been created successfully. It will need enabling by our team. We will get in touch with you within the next 48 hours. In the meantime, you can navigate to MY ACCOUNT/MY COLLECTIONS and start creating NFTs in the Collection.",
+              {
+                icon: "👏",
+                duration: 8000,
+                reverseOrder: true,
+                position: "bottom-left",
+                style: {
+                  color: "#000",
+                  padding: "8px",
+                  borderRadius: 0,
+                  background: "#7AE7FF",
                 },
-              });
-            }
-            if (transactionData.attributes[i] === "header_square_image") {
-              cacheImages.push({
-                input: transactionData.attributeVals[i],
-                is1920: true,
-                imageType: "collection",
-                metadata: {
-                  collectionAddress: data?.nftContractAddress,
-                  type: "header_square_image",
-                },
-              });
-            }
+              }
+            );
+          } else if (method === "ExtrinsicFailed") {
+            toast.error(`Error: ${method}.`);
           }
+        });
 
-          if (cacheImages.length) {
-            await clientAPI("post", "/cacheImages", {
-              images: JSON.stringify(cacheImages),
-            });
+        if (status?.isFinalized) {
+          let transactionData = data;
+          await APICall.askBeUpdateCollectionData({
+            collection_address: data?.nftContractAddress,
+          });
+          if (transactionData.attributes?.length) {
+            let cacheImages = [];
+
+            for (let i = 0; i < transactionData.attributes.length; i++) {
+              console.log(transactionData.attributes[i]);
+              if (transactionData.attributes[i] === "avatar_image") {
+                cacheImages.push({
+                  input: transactionData.attributeVals[i],
+                  is1920: false,
+                  imageType: "collection",
+                  metadata: {
+                    collectionAddress: data?.nftContractAddress,
+                    type: "avatar_image",
+                  },
+                });
+              }
+              if (transactionData.attributes[i] === "header_image") {
+                cacheImages.push({
+                  input: transactionData.attributeVals[i],
+                  is1920: false,
+                  imageType: "collection",
+                  metadata: {
+                    collectionAddress: data?.nftContractAddress,
+                    type: "header_image",
+                  },
+                });
+              }
+              if (transactionData.attributes[i] === "header_square_image") {
+                cacheImages.push({
+                  input: transactionData.attributeVals[i],
+                  is1920: true,
+                  imageType: "collection",
+                  metadata: {
+                    collectionAddress: data?.nftContractAddress,
+                    type: "header_square_image",
+                  },
+                });
+              }
+            }
+
+            if (cacheImages.length) {
+              await clientAPI("post", "/cacheImages", {
+                images: JSON.stringify(cacheImages),
+              });
+            }
           }
         }
       }
-    })
+    )
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 
@@ -137,7 +189,14 @@ async function addNewCollection(caller_account, data, dispatch, txType, api) {
 }
 
 // CREATE COLLECTION SIMPLE MODE
-async function autoNewCollection(caller_account, data, dispatch, txType, api) {
+async function autoNewCollection(
+  caller_account,
+  data,
+  dispatch,
+  txType,
+  api,
+  templateParams
+) {
   if (!contract || !caller_account) {
     throw Error(`Contract or caller not valid!`);
   }
@@ -229,6 +288,28 @@ async function autoNewCollection(caller_account, data, dispatch, txType, api) {
                   }
                   await delay(15000)
                   if (event_name === "AddNewCollectionEvent") {
+                    templateParams.collection_address = eventValues[1];
+
+                    emailjs
+                      .send(
+                        process.env.REACT_APP_EMAILJS_SERVICE_ID,
+                        process.env.REACT_APP_EMAILJS_COLLECTION_TEMPLATE_ID,
+                        templateParams,
+                        process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+                      )
+                      .then(
+                        function (response) {
+                          console.log(
+                            "SUCCESS!",
+                            response.status,
+                            response.text
+                          );
+                        },
+                        function (error) {
+                          console.log("error send email FAILED...", error);
+                        }
+                      );
+
                     await APICall.askBeUpdateCollectionData({
                       collection_address: eventValues[1],
                     });

@@ -44,6 +44,11 @@ export const CommonCard = (props) => {
     "2xl": "18px",
   });
 
+  const cardWidthRes = useBreakpointValue({
+    base: cardWidth - 18,
+    md: cardWidth - 4,
+  });
+
   return (
     <motion.div
       whileHover={{
@@ -62,7 +67,7 @@ export const CommonCard = (props) => {
             objectPosition="center"
             width={cardWidth}
             height={cardWidth}
-            fallback={<Skeleton width={cardWidth} height={cardWidth} />}
+            fallback={<Skeleton width={cardWidthRes} height={cardWidthRes} />}
             src={projImage}
           />
         </Flex>

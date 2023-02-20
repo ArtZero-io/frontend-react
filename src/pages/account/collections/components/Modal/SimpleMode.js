@@ -53,7 +53,7 @@ function SimpleModeModal({
           hasArrow
           bg="#333"
           color="#fff"
-          label="Simple Mode is designed for non-tech people. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
+          label="Simple Mode is to create NFT one by one manually. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
         >
           <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
             Simple Mode

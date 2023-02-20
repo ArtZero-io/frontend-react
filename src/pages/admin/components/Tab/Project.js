@@ -147,6 +147,7 @@ function ProjectAdmin() {
     await onGetCollectionCount();
     await delay(1000);
     await getAllCollections();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAccount?.address]);
   const onSetStatusCollection = async (collection_contract, isActive) => {
     if (!isLPAdmin) {

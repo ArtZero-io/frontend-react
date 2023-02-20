@@ -39,7 +39,6 @@ import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp3
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import CommonStack from "./CommonStack";
-import emailjs from "@emailjs/browser";
 
 import useTxStatus from "@hooks/useTxStatus";
 import { setTxStatus } from "@store/actions/txStatus";
@@ -76,6 +75,7 @@ import {
 import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 import { useCallback } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
+import { APICall } from "../../../../api/client";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
@@ -491,8 +491,8 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         values.twitter,
                         values.discord,
                         values.telegram,
-                        false,
-                        false,
+                        "0",
+                        "0",
                       ],
                       collectionAllowRoyaltyFee: isSetRoyal,
                       collectionRoyaltyFeeData: isSetRoyal
@@ -513,44 +513,26 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       CREATE_COLLECTION,
                       api
                     );
-                    var templateParams = {
-                      email_owner: values.email_owner,
-                      nft_address: nft_address,
-                      project_name: values.name,
-                      reply_to: values.email_owner,
-                    };
-                    emailjs
-                      .send(
-                        "service_gz6dl9u",
-                        "template_980idtm",
-                        templateParams,
-                        "q4EO2tL6l8kY1jEZh"
-                      )
-                      .then(
-                        function (response) {
-                          console.log(
-                            "SUCCESS!",
-                            response.status,
-                            response.text
-                          );
-                        },
-                        function (error) {
-                          console.log("error send email FAILED...", error);
-                        }
-                      );
                   };
 
                   dispatch(setTxStatus({ type: CREATE_PROJECT, step: START }));
 
                   toast.success("Step 1. Creating project...");
 
+                  const templateParams = {
+                    email_owner: values.email_owner,
+                    project_name: values.name,
+                    collection_telegram: values.telegram,
+                  };
+                  console.log("PROJ templateParams", templateParams);
                   await launchpad_contract_calls.addNewProject(
                     currentAccount,
                     data,
                     dispatch,
                     CREATE_PROJECT,
                     api,
-                    createNewCollection
+                    createNewCollection,
+                    templateParams
                   );
                 } else {
                   if (mode === formMode.EDIT) {
@@ -1220,7 +1202,7 @@ export const fetchInitialValuesProject = async ({
       startTime,
       endTime,
     } = projectInfo;
-
+    console.log("projectInfo", projectInfo);
     initialValues.isEditMode = true;
     initialValues.nftName = nftName;
     initialValues.nftSymbol = nftSymbol;
@@ -1235,6 +1217,14 @@ export const fetchInitialValuesProject = async ({
     initialValues.telegram = telegram;
     initialValues.members = teamMembers;
     initialValues.roadmap = roadmaps;
+
+    const { ret, status } = await APICall.getCollectionByAddress({
+      collection_address,
+    });
+
+    if (status === "OK") {
+      initialValues.royaltyFee = ret[0].royaltyFee / 100;
+    }
 
     return {
       initialValues,

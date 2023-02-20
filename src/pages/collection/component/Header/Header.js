@@ -7,7 +7,6 @@ import {
   Heading,
   HStack,
   SimpleGrid,
-  Skeleton,
   Tag,
   Text,
   Tooltip,
@@ -19,7 +18,7 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 import SocialCard from "@components/Card/Social";
 
 import { shortenNumber } from "@utils";
-import { memo } from "react";
+import { memo, useRef } from "react";
 import { useState } from "react";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 
@@ -27,6 +26,7 @@ const overlay =
   "linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)";
 
 function CollectionHeader(props) {
+  console.log("props", props?.name);
   const {
     avatarImage,
     name,
@@ -46,6 +46,17 @@ function CollectionHeader(props) {
 
   const [isSeeMore, setIsSeeMore] = useState(false);
   const descLength = useBreakpointValue([115, 175]);
+
+  const headerRef = useRef(name);
+  const descriptionRef = useRef(description);
+
+  if (name !== undefined && headerRef.current !== name) {
+    headerRef.current = name;
+  }
+
+  if (description !== undefined && descriptionRef.current !== description) {
+    descriptionRef.current = description;
+  }
 
   return (
     <Box
@@ -85,7 +96,7 @@ function CollectionHeader(props) {
 
           <HStack spacing="10px" pt="10px">
             {isDoxxed && (
-              <Tooltip label="At least one of team members verified his identity.">
+              <Tooltip label="At least one of the team members’ identity is verified.">
                 <Box p="1">
                   <Tag border="1px solid #7ae7ff">DOXXED</Tag>
                 </Box>
@@ -107,63 +118,62 @@ function CollectionHeader(props) {
             pb={["8px", "14px"]}
             justifyContent="center"
           >
-            <Skeleton w="full" maxW="680px" isLoaded={name?.length}>
-              <VStack
-                textAlign="center"
-                justifyContent="space-between"
-                minH={"60px"}
+            <VStack
+              textAlign="center"
+              justifyContent="space-between"
+              minH={"60px"}
+            >
+              <Heading
+                px="4px"
+                color="#fff"
+                noOfLines={[2, 2]}
+                fontSize={["32px", "48px"]}
+                lineHeight={["46px", "60px"]}
               >
-                <Heading
-                  px="4px"
-                  color="#fff"
-                  noOfLines={[2, 2]}
-                  fontSize={["32px", "48px"]}
-                  lineHeight={["46px", "60px"]}
-                >
-                  {name}
-                </Heading>
-              </VStack>
-            </Skeleton>
+                {headerRef.current}
+              </Heading>
+            </VStack>
           </HStack>
 
-          <Skeleton
+          {/* <Skeleton
             display="flex"
             justifyContent="center"
             w="full"
             maxW="680px"
-            isLoaded={name?.length}
+          > */}
+          <Flex
+            paddingBottom="24px"
+            w="full"
+            maxW="576px"
+            textAlign="center"
+            position="relative"
+            minH={["48px", "54px"]}
+            justifyContent="center"
+            fontSize={["16px", "18px"]}
           >
-            <Flex
-              paddingBottom="24px"
-              w="full"
-              maxW="576px"
-              textAlign="center"
-              position="relative"
-              minH={["48px", "54px"]}
-              justifyContent="center"
-              fontSize={["16px", "18px"]}
-            >
-              <Text noOfLines={[isSeeMore ? 999 : 2]}>{description}</Text>
+            <Text noOfLines={[isSeeMore ? 999 : 2]}>
+              {descriptionRef.current}
+            </Text>
 
-              <Flex
-                w="full"
-                bottom="0"
-                right="0"
-                minW="75px"
-                px="2px"
-                cursor="pointer"
-                color="#7ae7ff"
-                zIndex="docked"
-                position="absolute"
-                justifyContent="center"
-                textDecoration="underline"
-                onClick={() => setIsSeeMore(!isSeeMore)}
-                display={description?.length > descLength ? "flex" : "none"}
-              >
-                {isSeeMore ? "See less" : "Show more"}
-              </Flex>
+            <Flex
+              w="full"
+              bottom="0"
+              right="0"
+              minW="75px"
+              px="2px"
+              cursor="pointer"
+              color="#7ae7ff"
+              zIndex="docked"
+              position="absolute"
+              justifyContent="center"
+              textDecoration="underline"
+              onClick={() => setIsSeeMore(!isSeeMore)}
+              display={description?.length > descLength ? "flex" : "none"}
+            >
+              {isSeeMore ? "See less" : "Show more"}
             </Flex>
-          </Skeleton>
+          </Flex>
+          {/* </Skeleton> */}
 
           <HStack>
             <Flex

@@ -701,7 +701,8 @@ function HomePage() {
                 color="#ababab"
                 width={["175px", "full", "full"]}
               >
-                © copyright 2022 artzero. all rights reserved
+                &copy; Copyright {new Date().getFullYear()} ArtZero. All Rights
+                Reserved
               </Text>
             </Center>
           </Box>

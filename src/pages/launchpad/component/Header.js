@@ -131,9 +131,13 @@ function LaunchpadDetailHeader({
         if (now > p) {
           continue;
         }
-
         timeNeedCount = p;
         phase = phasesInfo[Math.floor(i / 2)];
+
+        return {
+          phase: phase,
+          countDownTimer: timeNeedCount,
+        };
       }
 
       return {
@@ -165,6 +169,10 @@ function LaunchpadDetailHeader({
       countDownTimer = currentPhase?.endTime - Date.now();
     }
 
+    if (countDownTimer < 0) {
+      countDownTimer = 0;
+    }
+    
     const seconds = Math.floor((countDownTimer / 1000) % 60);
     const minutes = Math.floor((countDownTimer / 1000 / 60) % 60);
     const hours = Math.floor((countDownTimer / (1000 * 60 * 60)) % 24);
@@ -261,7 +269,7 @@ function LaunchpadDetailHeader({
 
           <HStack spacing="10px" pt="10px">
             {isDoxxed && (
-              <Tooltip label="At least one of team members verified his identity.">
+              <Tooltip label="At least one of the team members’ identity is verified.">
                 <Box p="1">
                   <Tag border="1px solid #7ae7ff">DOXXED</Tag>
                 </Box>
@@ -386,7 +394,11 @@ function LaunchpadDetailHeader({
                               display={["block", "inline"]}
                               color="#fff"
                             >
-                              {currentPhase?.publicMintingFee / 10 ** 18 || 0}{" "}
+                              {currentPhase?.publicMintingFee / 10 ** 18 ||
+                                nextPhaseWhenNoCurrPhaseId?.phase
+                                  ?.publicMintingFee /
+                                  10 ** 18 ||
+                                0}{" "}
                               <AzeroIcon
                                 width={["14px", "16px"]}
                                 height={["14px", "16px"]}
