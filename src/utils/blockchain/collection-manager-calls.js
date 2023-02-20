@@ -94,7 +94,7 @@ async function addNewCollection(
               emailjs
                 .send(
                   process.env.REACT_APP_EMAILJS_SERVICE_ID,
-                  process.env.REACT_APP_EMAILJS_COLLECTION_TEMPLATE_ID,
+                  process.env.REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
                   templateParams,
                   process.env.REACT_APP_EMAILJS_PUBLIC_KEY
                 )
@@ -293,7 +293,8 @@ async function autoNewCollection(
                     emailjs
                       .send(
                         process.env.REACT_APP_EMAILJS_SERVICE_ID,
-                        process.env.REACT_APP_EMAILJS_COLLECTION_TEMPLATE_ID,
+                        process.env
+                          .REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
                         templateParams,
                         process.env.REACT_APP_EMAILJS_PUBLIC_KEY
                       )
@@ -385,7 +386,8 @@ async function updateIsActive(
   isActive,
   dispatch,
   txType,
-  api
+  api,
+  templateParams
 ) {
   if (
     !contract ||
@@ -414,22 +416,51 @@ async function updateIsActive(
 
   contract.tx
     .updateIsActive({ gasLimit, value }, collection_address, isActive)
-    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
-      txResponseErrorHandler({
-        status,
-        dispatchError,
-        dispatch,
-        txType,
-        api,
-        caller_account,
-      });
-
-      if (status?.isFinalized) {
-        await APICall.askBeUpdateCollectionData({
-          collection_address: collection_address,
+    .signAndSend(
+      address,
+      { signer },
+      async ({ status, dispatchError, events }) => {
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller_account,
         });
+
+        events.forEach(({ event: { method } }) => {
+          if (method === "ExtrinsicSuccess" && status.type === "Finalized") {
+
+            if (templateParams && isActive) {
+              emailjs
+                .send(
+                  process.env.REACT_APP_EMAILJS_SERVICE_ID,
+                  process.env.REACT_APP_EMAILJS_ACTIVE_COLLECTION_TEMPLATE_ID,
+                  templateParams,
+                  process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+                )
+                .then(
+                  function (response) {
+                    console.log("SUCCESS!", response.status, response.text);
+                  },
+                  function (error) {
+                    console.log("error send email FAILED...", error);
+                  }
+                );
+            }
+          } else if (method === "ExtrinsicFailed") {
+            toast.error(`Error: ${method}.`);
+          }
+        });
+
+        if (status?.isFinalized) {
+          await APICall.askBeUpdateCollectionData({
+            collection_address: collection_address,
+          });
+        }
       }
-    })
+    )
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
 
