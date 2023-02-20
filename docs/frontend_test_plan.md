@@ -3,8 +3,11 @@
 - Table of Contents
   - [Introduction](#introduction)
   - [Test Cases](#test-cases)
-    - [General](#general)
-    - [Accounts](#accounts)
+    - [Dashboard](#Dashboard)
+    - [My Collection](#My-Collection)
+    - [My NFT](#My-NFT)
+    - [My Collection](#My-Stakes)
+    - [My Profile](#My-Profile)
     - [Marketplace](#marketplace)
       - [Add new collection in simple mode](#Add-new-collection-in-simple-mode)
       - [Edit a collection](#Edit-a-collection)
@@ -161,7 +164,7 @@ Edit the royalty percent for the collection and save the changes.
 Verify that the new royalty percent is displayed for the collection.
 
 ```
-### My Collection
+### My NFT
 ```
 Test case ID: mynft_001
 Test case Name: Verify Functionality of My NFTs Page with All NFTs
@@ -493,14 +496,6 @@ Verify that the Instagram URL is opened in a new tab.
 Expectations:
 
 The Instagram URL should be opened in a new tab.
-```
-### Accounts
-> Test case Template
-```
-Test case ID: account_001
-Test case Name: ....
-Pre-requisite: ....
-Expectations: write the expected result here.
 ```
 
 ### Marketplace
@@ -1830,13 +1825,211 @@ Expectations:
 ```
 
 #### Enable a project
+```
+Test Case ID: project_001
+Test Case Name: Enable Project in Project List
+
+Pre-requisite:
+
+User has admin access to the NFT marketplace.
+User is logged in to the admin page.
+There is at least one disabled project in the Project List.
+Test Steps:
+
+Navigate to the Project Management tab on the admin page.
+Verify that the Project List is displayed with all projects, including any disabled ones.
+Locate the disabled project that you want to enable.
+Click on the "Enable" button next to the disabled project.
+Verify that a confirmation message appears asking if you are sure you want to enable the project.
+Click on the "Yes" button to confirm enabling the project.
+Verify that the project is now enabled and visible in the Project List.
+Verify that the "Enable" button is replaced by a "Disable" button for the enabled project.
+Expectations:
+
+The disabled project should be successfully enabled and visible in the Project List.
+The "Enable" button should be replaced by a "Disable" button for the enabled project.
+```
+
 #### Disable a project
+```
+Test Case ID: project_002
+Test Case Name: Disable Project in Project List
+
+Pre-requisite:
+
+User has admin access to the NFT marketplace.
+User is logged in to the admin page.
+There is at least one enabled project in the Project List.
+Test Steps:
+
+Navigate to the Project Management tab on the admin page.
+Verify that the Project List is displayed with all projects, including any enabled ones.
+Locate the enabled project that you want to disable.
+Click on the "Disable" button next to the enabled project.
+Verify that a confirmation message appears asking if you are sure you want to disable the project.
+Click on the "Yes" button to confirm disabling the project.
+Verify that the project is now disabled and no longer visible in the Project List.
+Verify that the "Disable" button is replaced by an "Enable" button for the disabled project.
+Expectations:
+
+The enabled project should be successfully disabled and no longer visible in the Project List.
+The "Disable" button should be replaced by an "Enable" button for the disabled project.
+```
 #### Lock staking
+```
+Test Case ID: staking_reward_001
+Test Case Name: Lock Staking 
+
+Pre-requisite:
+
+User has admin access to the NFT marketplace.
+User is logged in to the admin page.
+The Staking Contract Control tab is accessible.
+There is at least one staking contract created in the NFT marketplace.
+Test Steps:
+
+Navigate to the Staking Contract Control tab on the admin page.
+Verify that the list of staking contracts is displayed.
+Locate the staking contract that you want to lock.
+Click on the "Lock" button next to the staking contract.
+Verify that a confirmation message appears asking if you are sure you want to lock the staking contract.
+Click on the "Yes" button to confirm locking the staking contract.
+Verify that the staking contract is now locked.
+Click on the "Sign Transaction" button next to the locked staking contract.
+Verify that a confirmation message appears asking if you are sure you want to sign the transaction.
+Click on the "Yes" button to confirm signing the transaction.
+Expectations:
+
+The staking contract should be successfully locked.
+The "Sign Transaction" button should be available for the locked staking contract.
+The confirmation message for locking and signing the transaction should be displayed.
+The transaction should be successfully signed and processed.
+```
 #### Add rewards
+```
+Test Case ID: staking_reward_002
+Test Case Name: Add Rewards
+
+Pre-requisite:
+
+User has admin access to the NFT marketplace.
+User is logged in to the admin page.
+The Staking Contract Control tab is accessible.
+There is at least one staking contract created in the NFT marketplace.
+The staking contract is not locked.
+Test Steps:
+
+Navigate to the Staking Contract Control tab on the admin page.
+Verify that the list of staking contracts is displayed.
+Locate the staking contract that you want to add a reward to.
+Click on the "Reward Contribution" button next to the staking contract.
+Verify that the "Add Reward" modal appears.
+Enter the amount of reward to add in the input field.
+Click on the "Add Reward" button.
+Verify that a confirmation message appears asking if you are sure you want to add the reward to the staking contract.
+Click on the "Yes" button to confirm adding the reward.
+Verify that the reward has been added to the staking contract.
+Click on the "Sign Transaction" button next to the staking contract.
+Verify that a confirmation message appears asking if you are sure you want to sign the transaction.
+Click on the "Yes" button to confirm signing the transaction.
+Expectations:
+
+The "Reward Contribution" button should be available for the staking contract.
+The "Add Reward" modal should appear when the button is clicked.
+The input field for the reward amount should be available and accepts only numeric input.
+The confirmation message for adding the reward and signing the transaction should be displayed.
+The reward should be successfully added to the staking contract.
+The transaction should be successfully signed and processed.
+```
 #### Start reward distribution
+```
+Test case ID: staking_reward_003
+Test case Name: Start reward distribution
+Pre-requisite: Admin is logged in and has access to the STAKING CONTRACT CONTROL tab in the admin page.
+
+Test Steps:
+
+Navigate to the STAKING CONTRACT CONTROL tab in the admin page.
+Look for the Reward Contribution section.
+Click on the Start Distribution button.
+Verify that a confirmation modal pops up.
+Click on the Confirm button.
+Verify that a success message appears confirming that the reward distribution has been started.
+Verify that the Start Distribution button is disabled.
+Expectations:
+
+The reward distribution should start successfully.
+A confirmation modal should pop up to confirm the action.
+A success message should appear confirming that the reward distribution has been started.
+The Start Distribution button should be disabled after starting the reward distribution.
+```
 #### Stop reward distribution
+```
+Test case ID: staking_reward_004
+Test case Name: Disable reward distribution
+Pre-requisite: Admin is logged in and has access to the STAKING CONTRACT CONTROL tab in the admin page.
+
+Test Steps:
+
+Navigate to the STAKING CONTRACT CONTROL tab in the admin page.
+Look for the Reward Contribution section.
+Click on the Disable Distribution button.
+Verify that a confirmation modal pops up.
+Click on the Confirm button.
+Verify that a success message appears confirming that the reward distribution has been disabled.
+Verify that the Disable Distribution button is disabled.
+Verify that the Start Distribution button is enabled.
+Expectations:
+
+The reward distribution should be disabled successfully.
+A confirmation modal should pop up to confirm the action.
+A success message should appear confirming that the reward distribution has been disabled.
+The Disable Distribution button should be disabled after disabling the reward distribution.
+The Start Distribution button should be enabled after disabling the reward distribution.
+```
 #### Unlock staking
+```
+Test case ID: staking_reward_005
+Test case Name: Unlock staking
+Pre-requisite: Admin is logged in and has access to the STAKING CONTRACT CONTROL tab in the admin page.
+
+Test Steps:
+
+Navigate to the STAKING CONTRACT CONTROL tab in the admin page.
+Look for the Staking Control section.
+Click on the Unlock Staking button.
+Verify that a confirmation modal pops up.
+Click on the Confirm button.
+Verify that a success message appears confirming that the staking has been unlocked.
+Verify that the Unlock Staking button is disabled.
+Verify that the Lock Staking button is enabled.
+Expectations:
+
+The staking should be unlocked successfully.
+A confirmation modal should pop up to confirm the action.
+A success message should appear confirming that the staking has been unlocked.
+The Unlock Staking button should be disabled after unlocking the staking.
+The Lock Staking button should be enabled after unlocking the staking.
+```
 #### Claim balance
+```
+Test case ID: staking_reward_006
+Test case Name: Verify the Claim balance feature in the reward contribution tab
+Pre-requisite: User should have a connected wallet to sign the transaction in the blockchain.
+
+Steps to be executed:
+
+Navigate to the Admin page and click on the Reward Contribution tab.
+Check if the Claim balance button is available on the screen.
+Click on the Claim balance button and confirm the transaction with the connected wallet.
+Check if the transaction is successfully completed by verifying the transaction hash or balance updated in the wallet.
+Expectations:
+
+The Claim balance button should be available on the screen.
+On clicking the Claim balance button, a prompt to sign the transaction should appear.
+On signing the transaction, the balance should be claimed successfully and should be reflected in the connected wallet.
+On verifying the transaction hash, the transaction should be successful, and the balance should be updated in the connected wallet.
+```
 
 > Add more Categories and Test Cases here
       
