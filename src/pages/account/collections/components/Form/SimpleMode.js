@@ -308,10 +308,9 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                   collection_name: values.collectionName,
                   collection_telegram: values.telegram,
                 };
-                console.log("templateParams", templateParams);
+
                 dispatch(setTxStatus({ type: CREATE_COLLECTION, step: START }));
-                console.log("data", data);
-                console.log("values", values);
+
                 await collection_manager_calls.autoNewCollection(
                   currentAccount,
                   data,

@@ -307,11 +307,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                   email_owner: values.emailOwner,
                   collection_name: values.collectionName,
                   collection_telegram: values.telegram,
-                  reply_to: values.emailOwner,
                 };
 
-                console.log("ADV templateParams", templateParams);
-                
                 dispatch(setTxStatus({ type: CREATE_COLLECTION, step: START }));
 
                 await collection_manager_calls.addNewCollection(

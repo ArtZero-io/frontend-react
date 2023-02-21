@@ -521,7 +521,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                   const templateParams = {
                     email_owner: values.email_owner,
-                    project_name: values.name,
+                    collection_name: values.name,
                     collection_telegram: values.telegram,
                   };
                   console.log("PROJ templateParams", templateParams);

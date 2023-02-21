@@ -6,19 +6,32 @@ The ArtZero platform aims to be a decentralized NFT marketplace on the AlephZero
 
 ## Sample `.env` file
 
+### Backend API config
+
+URL feed data for client use.
+
 ```
-PORT=8001
-NODE_ENV=development
 REACT_APP_API_BASE_URL=https://api.artzero.io
+```
 
-REACT_APP_IPFS_PROJECT_ID=xyz
-REACT_APP_IPFS_PROJECT_KEY=xyz
+### IPFS config
 
-# Email config
-REACT_APP_EMAILJS_SERVICE_ID=xyz
-REACT_APP_EMAILJS_COLLECTION_TEMPLATE_ID=xyz
-REACT_APP_EMAILJS_PROJECT_TEMPLATE_ID=xyz
-REACT_APP_EMAILJS_PUBLIC_KEY=xyz
+Use for client upload NFT images, media assets to [ipfs.infura](ipfs.infura.io) host.
+
+```
+REACT_APP_IPFS_PROJECT_ID=2DEt23644RzswJNwtdabcabcabc
+REACT_APP_IPFS_PROJECT_KEY=b352ba9d861d026ea80f608abcabcabc
+```
+
+### Email config for [emailjs](https://www.emailjs.com/) service.
+
+Use to inform creator about collection/project is created or active.
+
+```
+REACT_APP_EMAILJS_SERVICE_ID=DEt23644Rzabcabc
+REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID=DEt23644Rzabcabc
+REACT_APP_EMAILJS_ACTIVE_COLLECTION_TEMPLATE_ID=DEt23644Rzabcabc
+REACT_APP_EMAILJS_PUBLIC_KEY=DEt23644Rzabcabc
 ```
 
 ## Run the app locally
@@ -37,7 +50,7 @@ yarn start
 
 ## Support
 
-If you need futher support from us, please contact us using:
+If you need further support from us, please contact us using:
 
 - Telegram: https://t.me/artzero_io
 - Discord: https://discord.gg/wzkZ2JTvN4
