@@ -250,7 +250,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
 
             if (userBalance < addingFee) {
               return toast.error(
-                `You need ${addingFee} AZERO to create new collection!`
+                `You need ${addingFee} SBY to create new collection!`
               );
             }
 
@@ -652,7 +652,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       fontSize={["md", "lg", "lg"]}
                     >
                       Create new collection you will pay
-                      <strong> {addingFee} AZERO </strong> in fee to ArtZero.io
+                      <strong> {addingFee} SBY </strong> in fee to ArtZero.io
                     </Text>
                     <HStack justifyContent="center">
                       <CommonCheckbox

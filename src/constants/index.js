@@ -76,6 +76,8 @@ export const MAX_ITEM_STAKE = 5;
 export const MAX_BID_COUNT = 30;
 export const ADMIN_ROLE_CODE = 3739740293;
 
+export const networkSS58 = 5
+
 export const SCROLLBAR = {
   '&::-webkit-scrollbar': {
     width: '4px',

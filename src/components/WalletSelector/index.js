@@ -24,9 +24,8 @@ import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { truncateStr } from "@utils/index";
 import { useHistory } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { reformatAddress } from "../../utils/substrate/SubstrateContext";
-
-const networkSS58 = 5
+import { reformatAddress } from "@utils/substrate/SubstrateContext";
+import { networkSS58 } from "@constants";
 
 function WalletSelector({ display }) {
   const { path } = useLocation();

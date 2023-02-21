@@ -12,6 +12,8 @@ import { clientAPI } from "@api/client";
 import collection_manager from "@utils/blockchain/collection-manager";
 import { getEstimatedGas, readOnlyGasLimit, formatOutput, delay } from "..";
 import emailjs from "@emailjs/browser";
+import { reformatAddress } from "@utils/substrate/SubstrateContext";
+import { networkSS58 } from "@constants";
 
 let contract;
 
@@ -288,7 +290,7 @@ async function autoNewCollection(
                   }
                   await delay(15000)
                   if (event_name === "AddNewCollectionEvent") {
-                    templateParams.collection_address = eventValues[1];
+                    templateParams.collection_address = reformatAddress(eventValues[1], networkSS58);
 
                     emailjs
                       .send(

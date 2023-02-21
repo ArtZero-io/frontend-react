@@ -16,6 +16,8 @@ import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import { APICall } from "@api/client";
 import { readOnlyGasLimit, formatOutput } from "..";
 import emailjs from "@emailjs/browser";
+import { reformatAddress } from "@utils/substrate/SubstrateContext";
+import { networkSS58 } from "@constants";
 
 let contract;
 
@@ -307,7 +309,7 @@ async function addNewProject(
                   }
 
                   const nft_address = eventValues[1];
-                  templateParams.collection_address = eventValues[1];
+                  templateParams.collection_address = reformatAddress(eventValues[1], networkSS58);
 
                   emailjs
                     .send(
