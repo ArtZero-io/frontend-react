@@ -117,6 +117,14 @@ export const APICall = {
     });
   },
 
+  updateCollectionEmail: async ({ collection_address, email }) => {
+    const ret = await client("POST", "/updateCollectionEmail", {
+      collection_address,
+      email,
+    });
+
+    return ret;
+  },
   askBeUpdateProjectData: async ({ project_address }) => {
     const ret = await client("POST", "/updateProject", {
       project_address,

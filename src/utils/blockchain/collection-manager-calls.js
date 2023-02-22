@@ -12,6 +12,7 @@ import { clientAPI } from "@api/client";
 import collection_manager from "@utils/blockchain/collection-manager";
 import { getEstimatedGas, readOnlyGasLimit, formatOutput } from "..";
 import emailjs from "@emailjs/browser";
+import { delay } from "@utils";
 
 let contract;
 
@@ -288,32 +289,6 @@ async function autoNewCollection(
                     eventValues.push(value.toString());
                   }
                   if (event_name === "AddNewCollectionEvent") {
-                    templateParams.collection_address = eventValues[1];
-
-                    emailjs
-                      .send(
-                        process.env.REACT_APP_EMAILJS_SERVICE_ID,
-                        process.env
-                          .REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
-                        templateParams,
-                        process.env.REACT_APP_EMAILJS_PUBLIC_KEY
-                      )
-                      .then(
-                        function (response) {
-                          console.log(
-                            "SUCCESS!",
-                            response.status,
-                            response.text
-                          );
-                        },
-                        function (error) {
-                          console.log("error send email FAILED...", error);
-                        }
-                      );
-
-                    await APICall.askBeUpdateCollectionData({
-                      collection_address: eventValues[1],
-                    });
                     if (transactionData.attributes?.length) {
                       let cacheImages = [];
 
@@ -366,6 +341,40 @@ async function autoNewCollection(
                         });
                       }
                     }
+
+                    templateParams.collection_address = eventValues[1];
+
+                    emailjs
+                      .send(
+                        process.env.REACT_APP_EMAILJS_SERVICE_ID,
+                        process.env
+                          .REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
+                        templateParams,
+                        process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+                      )
+                      .then(
+                        function (response) {
+                          console.log(
+                            "SUCCESS!",
+                            response.status,
+                            response.text
+                          );
+                        },
+                        function (error) {
+                          console.log("error send email FAILED...", error);
+                        }
+                      );
+
+                    await APICall.askBeUpdateCollectionData({
+                      collection_address: eventValues[1],
+                    });
+
+                    await delay(6000);
+
+                    await APICall.updateCollectionEmail({
+                      collection_address: eventValues[1],
+                      email: templateParams.email_owner,
+                    });
                   }
                 }
               }
@@ -431,7 +440,6 @@ async function updateIsActive(
 
         events.forEach(({ event: { method } }) => {
           if (method === "ExtrinsicSuccess" && status.type === "Finalized") {
-
             if (templateParams && isActive) {
               emailjs
                 .send(
