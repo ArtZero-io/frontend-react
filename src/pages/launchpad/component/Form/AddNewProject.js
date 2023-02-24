@@ -145,10 +145,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
   const handleOnRedirect = useCallback(() => {
     if (mode === formMode.ADD) {
-      toast.success(
-        "Thank you for submitting. Our team member will get in touch with you in the next 48 hours."
-      );
-
       dispatch(clearTxStatus());
 
       history.push(`/account/projects`);
@@ -506,13 +502,18 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     );
 
                     toast.success("Step 2. Creating collection...");
-
+                    const templateParams = {
+                      email_owner: values.email_owner,
+                      collection_name: values.name,
+                      collection_telegram: values.telegram,
+                    };
                     await collection_manager_calls.addNewCollection(
                       currentAccount,
                       collectionData,
                       dispatch,
                       CREATE_COLLECTION,
-                      api
+                      api,
+                      templateParams
                     );
                   };
 
@@ -520,20 +521,20 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                   toast.success("Step 1. Creating project...");
 
-                  const templateParams = {
-                    email_owner: values.email_owner,
-                    collection_name: values.name,
-                    collection_telegram: values.telegram,
-                  };
-                  console.log("PROJ templateParams", templateParams);
+                  // const templateParams = {
+                  //   email_owner: values.email_owner,
+                  //   collection_name: values.name,
+                  //   collection_telegram: values.telegram,
+                  // };
+                  // console.log("PROJ templateParams", templateParams);
                   await launchpad_contract_calls.addNewProject(
                     currentAccount,
                     data,
                     dispatch,
                     CREATE_PROJECT,
                     api,
-                    createNewCollection,
-                    templateParams
+                    createNewCollection
+                    // templateParams
                   );
                 } else {
                   if (mode === formMode.EDIT) {
