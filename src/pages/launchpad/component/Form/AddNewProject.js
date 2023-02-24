@@ -49,6 +49,7 @@ import {
   CREATE_COLLECTION,
   START,
   FINALIZED,
+  ArtZero_TOS,
 } from "@constants";
 import * as ROUTES from "@constants/routes";
 import { getPublicCurrentAccount } from "@utils";
@@ -1073,9 +1074,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                                       }}
                                       textTransform="none"
                                       isExternal
-                                      href={
-                                        "https://artzero.io/demotestnet/assets/ArtZero_Terms_Of_Service.pdf"
-                                      }
+                                      href={ArtZero_TOS}
                                     >
                                       Terms of Service
                                     </Link>
