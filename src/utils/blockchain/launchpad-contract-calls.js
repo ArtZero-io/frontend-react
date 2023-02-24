@@ -307,12 +307,12 @@ async function addNewProject(
                   }
 
                   const nft_address = eventValues[1];
-                  templateParams.nft_address = eventValues[1];
+                  templateParams.collection_address = eventValues[1];
 
                   emailjs
                     .send(
                       process.env.REACT_APP_EMAILJS_SERVICE_ID,
-                      process.env.REACT_APP_EMAILJS_PROJECT_TEMPLATE_ID,
+                      process.env.REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
                       templateParams,
                       process.env.REACT_APP_EMAILJS_PUBLIC_KEY
                     )

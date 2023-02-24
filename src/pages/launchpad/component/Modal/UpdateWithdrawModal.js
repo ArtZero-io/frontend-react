@@ -69,7 +69,7 @@ export default function UpdateWithdrawModal({
 
       const tempBalFloorRound = Math.floor(tempBal);
 
-      setContractBalance(tempBalFloorRound / 10 ** 6);
+      setContractBalance(tempBalFloorRound);
     };
 
     fetch();

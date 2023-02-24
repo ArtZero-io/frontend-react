@@ -5,6 +5,7 @@ import {
   GridItem,
   Heading,
   HStack,
+  IconButton,
   InputRightElement,
   Link,
   NumberInput,
@@ -18,6 +19,7 @@ import {
   Text,
   Tooltip,
   useBreakpointValue,
+  useDisclosure,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
@@ -27,6 +29,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import { BsFlag } from 'react-icons/bs';
 
 import {
   convertStringToPrice,
@@ -59,6 +62,7 @@ import { Fragment } from "react";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 import SocialShare from "@components/SocialShare/SocialShare";
 import { MAX_BID_COUNT } from "../../../../constants";
+import NFTReportModal from "../Modal/NFTReport";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -75,8 +79,9 @@ const NFTTabCollectible = (props) => {
     rarityTable,
     traits = {},
     totalNftCount,
+    name
   } = props;
-
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
   const gridSize = useBreakpointValue({ base: `8rem`, "2xl": `11rem` });
@@ -350,6 +355,34 @@ const NFTTabCollectible = (props) => {
                 </Tooltip>
               )}
               <SocialShare title={nftName} shareUrl={path} />
+              <Tooltip
+                  hasArrow
+                  bg="#333"
+                  color="#fff"
+                  borderRadius="0"
+                  label="Report this item"
+                >
+                  <span
+                    style={{
+                      width: iconWidth,
+                      height: iconWidth,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "2px solid #333333",
+                    }}
+                  >
+                   
+                    <IconButton
+                    aria-label="Report this item"
+                    icon={<BsFlag />}
+                    variant="solid"
+                    width={iconWidth}
+                      height={iconWidth}
+                      onClick={() => onOpen()}
+            />
+                  </span>
+                </Tooltip>
             </HStack>
           </HStack>
 
@@ -643,6 +676,11 @@ const NFTTabCollectible = (props) => {
           </Skeleton>
         </Stack>
       </Stack>
+      <NFTReportModal isOpen={isOpen}
+        onOpen={onOpen}
+        name={name}
+        nftName={nftName}
+        onClose={onClose}/>
     </>
   );
 };

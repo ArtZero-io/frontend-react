@@ -1081,7 +1081,8 @@ const LaunchpadDetailPage = () => {
                                 {userPLClaimedInfo[index] || 0} NFT
                                 {userPLClaimedInfo[index] > 1 ? "s" : ""}
                               </Text>{" "}
-                              (scroll down to view your NFTs)
+                              {!!userPLClaimedInfo[index] &&
+                                `(scroll down to view your NFTs)`}
                             </Text>
                           </ListItem>
                         </UnorderedList>

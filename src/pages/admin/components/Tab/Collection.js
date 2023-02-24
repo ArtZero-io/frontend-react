@@ -174,13 +174,25 @@ function CollectionAdmin() {
         })
       );
 
+      const selectedCollection = collections.filter(
+        (c) => c.nftContractAddress === collection_contract
+      );
+
+      const templateParams = {
+        project_name: selectedCollection[0]?.name,
+        collection_address: collection_contract,
+        // email_owner:  selectedCollection[0]?.email?
+        // TODO: waiting for new api added email,
+      };
+
       await collection_manager_calls.updateIsActive(
         currentAccount,
         collection_contract,
         isActive,
         dispatch,
         UPDATE_COLLECTION_STATUS,
-        api
+        api,
+        templateParams
       );
     } catch (error) {
       console.log(error);

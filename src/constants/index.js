@@ -123,3 +123,5 @@ export const SUPPORTED_WALLET_LIST = [
       'https://addons.mozilla.org/en-US/firefox/addon/polkadot-js-extension/',
   },
 ];
+
+export const MESSAGE_SIGN = "Sign message to report"

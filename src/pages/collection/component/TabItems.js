@@ -59,6 +59,7 @@ const CollectionItems = ({
   priceQuery,
   setPriceQuery,
   setSortData,
+  name,
   ...rest
 }) => {
   const { currentAccount } = useSubstrateState();
@@ -366,6 +367,7 @@ const CollectionItems = ({
               rarityTable={rarityTable}
               totalNftCount={nft_count}
               bigCardNew={bigCardNew}
+              name={name}
             />
           )}
         </Box>
@@ -392,6 +394,7 @@ const CollectionGridNew = ({
   rarityTable,
   totalNftCount,
   bigCardNew,
+  name
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedNft, setSelectedNft] = useState(null);
@@ -417,6 +420,7 @@ const CollectionGridNew = ({
           totalNftCount={totalNftCount}
           isOpen={isOpen}
           onClose={onClose}
+          name={name}
           collectionOwner={collectionOwner}
           showOnChainMetadata={showOnChainMetadata}
         />
