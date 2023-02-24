@@ -290,7 +290,7 @@ export const createLevelAttribute = (levelString) => {
 };
 
 export const getPublicCurrentAccount = () => {
-  const keyring = new Keyring({ type: "sr25519" });
+  const keyring = new Keyring();
   const PHRASE =
     "entire material egg meadow latin bargain dutch coral blood melt acoustic thought";
 

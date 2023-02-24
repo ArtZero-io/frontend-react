@@ -426,6 +426,13 @@ export const APICall = {
     return ret;
   },
 
+  // Rewards API Calls
+  reportNFT: async (data) => {
+    const ret = await client("POST", "/reportNFT", data);
+
+    return ret;
+  },
+
   getAllRewardClaimed: async ({
     staker_address = "",
     limit = 1000,
