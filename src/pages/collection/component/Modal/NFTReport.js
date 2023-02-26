@@ -58,7 +58,8 @@ function NFTReportModal({ isOpen, onClose, name, nftName, ...rest }) {
       nft_link: window.location.href,
     };
     const res = await APICall.reportNFT(data);
-    if (res.data === "ok") {
+    console.log(res, 'resres');
+    if (res.status === "OK") {
       toast.success("Thank you. Submit successful!");
       onClose()
     } else {
