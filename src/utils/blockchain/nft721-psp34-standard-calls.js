@@ -154,7 +154,8 @@ async function mintWithAttributes(
   attributes,
   dispatch,
   txType,
-  api
+  api,
+  inputCacheImages
 ) {
   if (!contract || !caller_account) {
     throw Error(`Contract or caller not valid!`);
@@ -164,6 +165,7 @@ async function mintWithAttributes(
   let gasLimit;
 
   let metadata = [];
+
   for (const attribute of attributes) {
     metadata.push([attribute.name.trim(), attribute.value.trim()]);
   }
@@ -180,6 +182,7 @@ async function mintWithAttributes(
     "mintWithAttributes",
     metadata
   );
+
   contract.tx
     .mintWithAttributes({ gasLimit, value }, metadata)
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
@@ -204,20 +207,16 @@ async function mintWithAttributes(
         if (attributes?.length) {
           let cacheImages = [];
 
-          for (let i = 0; i < attributes.length; i++) {
-            if (attributes[i].name === "avatar") {
-              cacheImages.push({
-                input: attributes[i].value,
-                is1920: false,
-                imageType: "nft",
-                metadata: {
-                  collectionAddress: nft_address,
-                  tokenId: token_id,
-                  type: "avatar",
-                },
-              });
-            }
-          }
+          cacheImages.push({
+            input: inputCacheImages,
+            is1920: false,
+            imageType: "nft",
+            metadata: {
+              collectionAddress: nft_address,
+              tokenId: token_id,
+              type: "avatar",
+            },
+          });
 
           if (cacheImages.length) {
             await clientAPI("post", "/cacheImages", {
@@ -394,7 +393,8 @@ async function setMultipleAttributesNFT(
   attributes,
   dispatch,
   txType,
-  api
+  api,
+  inputCacheImages
 ) {
   if (!contract || !caller_account) {
     toast.error(`Contract or caller not valid!`);
@@ -440,7 +440,7 @@ async function setMultipleAttributesNFT(
         });
 
         events.forEach(({ event: { method } }) => {
-          if (method === "ExtrinsicSuccess" && status.type === "InBlock") {
+          if (method === "ExtrinsicSuccess" && status.type === "Finalized") {
             toast.success("NFT is updated successful!");
           } else if (method === "ExtrinsicFailed") {
             toast.error(`Error: ${method}.`);
@@ -456,20 +456,16 @@ async function setMultipleAttributesNFT(
           if (attributes?.length) {
             let cacheImages = [];
 
-            for (let i = 0; i < attributes.length; i++) {
-              if (attributes[i].name === "avatar") {
-                cacheImages.push({
-                  input: attributes[i].value,
-                  is1920: false,
-                  imageType: "nft",
-                  metadata: {
-                    collectionAddress: collection_address,
-                    tokenId: tokenID,
-                    type: "avatar",
-                  },
-                });
-              }
-            }
+            cacheImages.push({
+              input: inputCacheImages,
+              is1920: false,
+              imageType: "nft",
+              metadata: {
+                collectionAddress: collection_address,
+                tokenId: tokenID,
+                type: "avatar",
+              },
+            });
 
             if (cacheImages.length) {
               await clientAPI("post", "/cacheImages", {
