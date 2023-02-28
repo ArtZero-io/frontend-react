@@ -138,7 +138,7 @@ export const CollectionCard = ({
               {isDuplicationChecked && (
                 <Tooltip label="Artwork is verified by third-party for its uniqueness">
                   <Tag ml="4px" bg="#34B979" border="1px solid #7ae7ff">
-                    VERIFIED
+                    AUTHENTIC
                   </Tag>
                 </Tooltip>
               )}

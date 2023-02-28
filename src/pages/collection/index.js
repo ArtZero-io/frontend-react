@@ -81,6 +81,7 @@ function CollectionPage() {
     if (query?.traits && Object.keys(query?.traits).length) {
       setTraitsQuery({ ...query.traits });
     }
+    initEvents()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -294,19 +295,19 @@ function CollectionPage() {
 
   const fetchPlatformEvents = useCallback(async () => {
     try {
-      const getPurchaseEvents = await APICall.getPurchaseEvents({
+      const getPurchaseEvents =  APICall.getPurchaseEvents({
         collection_address,
       });
 
-      const getBidWinEvents = await APICall.getBidWinEvents({
+      const getBidWinEvents =  APICall.getBidWinEvents({
         collection_address,
       });
 
-      const getUnlistEvents = await APICall.getUnlistEvents({
+      const getUnlistEvents =  APICall.getUnlistEvents({
         collection_address,
       });
 
-      const getNewListEvents = await APICall.getNewListEvents({
+      const getNewListEvents = APICall.getNewListEvents({
         collection_address,
       });
 
