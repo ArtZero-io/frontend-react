@@ -8,6 +8,11 @@ The ArtZero platform aims to be a decentralized NFT marketplace on the AlephZero
 
 ### Backend API config
 
+After cloning the frontend repository, please run the command below to set up the automation .env file
+```shell
+cd frontend-react
+./setup_env_fe.sh.x
+```
 URL feed data for client use.
 
 ```
