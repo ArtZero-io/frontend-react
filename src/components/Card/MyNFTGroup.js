@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import MyNFTCard from "./MyNFT";
-import { createObjAttrsNFT } from "@utils/index";
+// import { createObjAttrsNFT } from "@utils/index";
 import ResponsivelySizedModal from "@components/Modal/Modal";
 import { useSubstrateState } from "@utils/substrate";
 import { motion, useAnimation } from "framer-motion";
@@ -77,16 +77,16 @@ function MyNFTGroupCard({
     const getAttributesData = async () => {
       if (showOnChainMetadata) {
         //On-Chain Data
-        const data = listNFT?.map((item) => {
-          const itemData = createObjAttrsNFT(
-            item.attributes,
-            item.attributesValue
-          );
+        // const data = listNFT?.map((item) => {
+        //   const itemData = createObjAttrsNFT(
+        //     item.attributes,
+        //     item.attributesValue
+        //   );
 
-          return { ...item, ...itemData };
-        });
-
-        setListNFTFormatted(data);
+        //   return { ...item, ...itemData };
+        // });
+        // console.log('showOnChainMetadata true data', data)
+        setListNFTFormatted(listNFT);
       } else {
         //Off-chain Data
 

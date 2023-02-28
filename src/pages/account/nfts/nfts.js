@@ -329,6 +329,7 @@ const MyNFTsPage = () => {
               </Text>
             </HStack>
           )}
+
           {myCollections &&
             myCollections?.map((item, idx) => {
               return (
