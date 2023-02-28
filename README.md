@@ -17,7 +17,7 @@ chmod +x setup_env_fe.sh.x
 URL feed data for client use.
 
 ```
-REACT_APP_API_BASE_URL=https://api.artzero.io
+REACT_APP_API_BASE_URL=https://127.0.0.1:3410
 ```
 
 ### IPFS config
@@ -45,7 +45,7 @@ REACT_APP_EMAILJS_PUBLIC_KEY=DEt23644Rzabcabc
 Install dependencies
 
 ```bash
-yarn
+yarn install
 ```
 
 Run dev server
