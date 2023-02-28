@@ -187,7 +187,7 @@ function TabActivity({
           </TabList>
         )}
 
-        {!platformEvents?.events ? (
+        {loading ? (
           <AnimationLoader loadingTime={5} />
         ) : (
           <TabPanels h="full" minH="md">

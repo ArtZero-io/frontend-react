@@ -393,7 +393,7 @@ function MyNFTTabInfo(props) {
               )}
               {!is_locked &&
                 showOnChainMetadata &&
-                owner === currentAccount.address && (
+                owner === currentAccount.address && !(is_for_sale || actionType) && (
                   <AddNewNFTModal
                     {...props}
                     mode={formMode.EDIT}
