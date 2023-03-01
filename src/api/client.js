@@ -134,11 +134,13 @@ export const APICall = {
   },
 
   // Event API Calls
-  getPurchaseEvents: async ({ collection_address }) => {
+  getPurchaseEvents: async ({ collection_address, limit = 6,
+    offset = 0,
+    sort = -1, }) => {
     let { ret: result } = await client("POST", "/getPurchaseEvents", {
-      limit: 10,
-      offset: 0,
-      sort: -1,
+      limit,
+      offset,
+      sort,
       collection_address,
     });
 
@@ -149,11 +151,13 @@ export const APICall = {
     return result;
   },
 
-  getBidWinEvents: async ({ collection_address }) => {
+  getBidWinEvents: async ({ collection_address, limit = 6,
+    offset = 0,
+    sort = -1, }) => {
     let { ret: result } = await client("POST", "/getBidWinEvents", {
-      limit: 10,
-      offset: 0,
-      sort: -1,
+      limit,
+      offset,
+      sort,
       collection_address,
     });
 
@@ -164,11 +168,13 @@ export const APICall = {
     return result;
   },
 
-  getUnlistEvents: async ({ collection_address }) => {
+  getUnlistEvents: async ({ collection_address, limit = 6,
+    offset = 0,
+    sort = -1, }) => {
     let { ret: result } = await client("POST", "/getUnlistEvents", {
-      limit: 10,
-      offset: 0,
-      sort: -1,
+      limit,
+      offset,
+      sort,
       collection_address,
     });
 
@@ -179,11 +185,13 @@ export const APICall = {
     return result;
   },
 
-  getNewListEvents: async ({ collection_address }) => {
+  getNewListEvents: async ({ collection_address, limit = 6,
+    offset = 0,
+    sort = -1, }) => {
     let { ret: result } = await client("POST", "/getNewListEvents", {
-      limit: 10,
-      offset: 0,
-      sort: -1,
+      limit,
+      offset,
+      sort,
       collection_address,
     });
 
