@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {
   Box,
   Text,
@@ -17,6 +18,8 @@ import {
   Tr,
   Stack,
   Flex,
+  Textarea,
+  Button,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useSubstrateState } from "@utils/substrate";
@@ -359,7 +362,7 @@ function MyWhiteListProjectPage() {
       whiteListDataTableTmp = whiteListDataTableTmp.filter((item) => {
         return item?.whitelistAmount * 1 !== 0;
       });
-      
+
       setWhiteListDataTable(whiteListDataTableTmp);
 
       setLoading(false);
@@ -385,6 +388,50 @@ function MyWhiteListProjectPage() {
       setWhitelistAmount(1);
       setIsUpdateMode(null);
       fetchPhaseInfo();
+    }
+  );
+
+  let [value, setValue] = useState("");
+  let [valueBulkWL, setValueBulkWL] = useState(null);
+
+  let handleInputChange = (e) => {
+    let inputValue = e.target.value;
+    setValue(inputValue);
+  };
+
+  // const formatValue = value.split(/[,\s\n]/);
+  const formatValue = value
+    .trim()
+    .split(/[\n]/)
+    .map((item) => {
+      const itemArray = item.split(/[,]/);
+      return {
+        address: itemArray[0],
+        whitelistAmount: itemArray[1],
+        claimedAmount: 0,
+        mintingFee: itemArray[2],
+      };
+    });
+
+  const value4Contract = formatValue.reduce(
+    (prev, curr) => {
+      const { firstArr, secondArr, thirdArr } = prev;
+      // TODO add BN
+      firstArr.push(curr.address);
+      secondArr.push(curr.whitelistAmount * 10 ** 12);
+      thirdArr.push(curr.mintingFee * 10 ** 12);
+
+      return {
+        ...prev,
+        firstArr,
+        secondArr,
+        thirdArr,
+      };
+    },
+    {
+      firstArr: [],
+      secondArr: [],
+      thirdArr: [],
     }
   );
 
@@ -781,7 +828,80 @@ function MyWhiteListProjectPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <TableContainer
+            <>
+              <Textarea
+                value={value}
+                onChange={handleInputChange}
+                placeholder="Here is a sample placeholder"
+                size="sm"
+              />
+              <Button onClick={() => setValueBulkWL()}>Validate</Button>
+              <Text mb="8px">
+                Value1: {JSON.stringify(value4Contract?.firstArr)}
+              </Text>
+              <Text mb="8px">
+                Value2: {JSON.stringify(value4Contract?.secondArr)}
+              </Text>
+              <Text mb="8px">
+                Value3: {JSON.stringify(value4Contract?.thirdArr)}
+              </Text>
+
+              <TableContainer
+                fontSize="lg"
+                w="full"
+                maxH={{ base: "390px", xl: "400px" }}
+                overflowY="scroll"
+                sx={SCROLLBAR}
+              >
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <Table variant="striped" colorScheme="blackAlpha">
+                    <Thead>
+                      <Tr>
+                        {Object.values(tableHeaders)?.map((item, idx) => (
+                          <Th
+                            top={0}
+                            zIndex={1}
+                            textAlign="center"
+                            key={idx}
+                            fontFamily="Evogria"
+                            color="#888"
+                            // bg="#171717"
+                            fontSize="15px"
+                            fontWeight="400"
+                            dropShadow="lg"
+                          >
+                            {item}
+                          </Th>
+                        ))}
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {formatValue?.map((item, idx) => (
+                        <Tr key={idx} color="#fff">
+                          <Td textAlign="center" color="#fff">
+                            {truncateStr(item.address, 6)}
+                          </Td>
+                          <Td textAlign="center" color="#fff">
+                            {item.whitelistAmount}
+                          </Td>
+                          <Td textAlign="center" color="#fff">
+                            {item.claimedAmount}
+                          </Td>
+                          <Td textAlign="center" color="#fff">
+                            {item.mintingFee} <AzeroIcon mb={1.5} />
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </motion.div>
+              </TableContainer>
+            </>
+            {/* <TableContainer
               fontSize="lg"
               w="full"
               // w={{ base: "full", xl: "1560px" }}
@@ -839,7 +959,7 @@ function MyWhiteListProjectPage() {
                   <Text py={2}>No info found!</Text>
                 )}
               </motion.div>
-            </TableContainer>
+            </TableContainer> */}
           </motion.div>
         )}
       </Stack>
