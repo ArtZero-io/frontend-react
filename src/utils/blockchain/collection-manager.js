@@ -1,9 +1,9 @@
 const collection_manager = {
-  CONTRACT_ADDRESS: "5EeLsoPYu4QJnQR1YKqPgr5iEbfVhyVqdGMAAam7a8qyK4Ee",
+  CONTRACT_ADDRESS: "5F6Vyav6tjgkWfLssWANihmg3C5FoJecoGsDzDnNcaHZkGcd",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xe2ad960fec296abb4a1e984b3e81f82f10e860cfc5d30320260a9921846b00bd",
-      "language": "ink! 4.0.0-beta",
+      "hash": "0x9d89cb5ab9c6c068095447e31f2595434e153ac3276225bba191d6a906d09919",
+      "language": "ink! 4.0.1",
       "compiler": "rustc 1.69.0-nightly",
       "build_info": {
         "build_mode": "Debug",
@@ -101,7 +101,7 @@ const collection_manager = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 35
+                "type": 37
               }
             },
             {
@@ -112,7 +112,7 @@ const collection_manager = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 35
+                "type": 37
               }
             },
             {
@@ -123,7 +123,7 @@ const collection_manager = {
                 "displayName": [
                   "CollectionType"
                 ],
-                "type": 27
+                "type": 29
               }
             },
             {
@@ -248,7 +248,7 @@ const collection_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 21
+                "type": 23
               }
             },
             {
@@ -257,7 +257,7 @@ const collection_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 21
+                "type": 23
               }
             },
             {
@@ -311,7 +311,7 @@ const collection_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 21
+                "type": 23
               }
             },
             {
@@ -320,7 +320,7 @@ const collection_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 21
+                "type": 23
               }
             },
             {
@@ -405,48 +405,12 @@ const collection_manager = {
               }
             },
             {
-              "label": "nft_contract_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Update NFT Contract Address of a collection - Only Admin Role can change"
-          ],
-          "label": "update_nft_contract_address",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 15
-          },
-          "selector": "0x6500109f"
-        },
-        {
-          "args": [
-            {
-              "label": "contract_address",
-              "type": {
-                "displayName": [
-                  "AccountId"
-                ],
-                "type": 0
-              }
-            },
-            {
               "label": "attributes",
               "type": {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 21
+                "type": 23
               }
             },
             {
@@ -455,7 +419,7 @@ const collection_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 21
+                "type": 23
               }
             }
           ],
@@ -491,7 +455,7 @@ const collection_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 21
+                "type": 23
               }
             }
           ],
@@ -504,7 +468,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 22
+            "type": 24
           },
           "selector": "0x8d76b3fe"
         },
@@ -538,7 +502,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 23
+            "type": 25
           },
           "selector": "0x97f86da4"
         },
@@ -574,7 +538,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 24
+            "type": 26
           },
           "selector": "0xad107a1c"
         },
@@ -610,7 +574,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 25
+            "type": 27
           },
           "selector": "0x3e3fd068"
         },
@@ -637,7 +601,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 25
+            "type": 27
           },
           "selector": "0xc1763e9b"
         },
@@ -658,7 +622,7 @@ const collection_manager = {
                 "displayName": [
                   "CollectionType"
                 ],
-                "type": 27
+                "type": 29
               }
             }
           ],
@@ -952,7 +916,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 28
+            "type": 30
           },
           "selector": "0x786d1a79"
         },
@@ -979,7 +943,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 31
+            "type": 33
           },
           "selector": "0x83091e54"
         },
@@ -996,7 +960,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 33
+            "type": 35
           },
           "selector": "0xbeb47f47"
         },
@@ -1023,7 +987,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 34
+            "type": 36
           },
           "selector": "0x672b1346"
         },
@@ -1040,7 +1004,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 36
+            "type": 38
           },
           "selector": "0x95c014c7"
         },
@@ -1057,7 +1021,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 36
+            "type": 38
           },
           "selector": "0xe149966a"
         },
@@ -1074,7 +1038,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 37
+            "type": 39
           },
           "selector": "0x97db002d"
         },
@@ -1091,7 +1055,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 37
+            "type": 39
           },
           "selector": "0xa333e69e"
         },
@@ -1108,7 +1072,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 38
+            "type": 40
           },
           "selector": "0x8c734238"
         },
@@ -1136,54 +1100,9 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 38
+            "type": 40
           },
           "selector": "0x83da3bb2"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "GrantRoleInput1"
-                ],
-                "type": 4
-              }
-            },
-            {
-              "label": "account",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "GrantRoleInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Grants `role` to `account`.",
-            "",
-            " On success a `RoleGranted` event is emitted.",
-            "",
-            " # Errors",
-            "",
-            " Returns with `MissingRole` error if caller can't grant the role.",
-            " Returns with `RoleRedundant` error `account` has `role`."
-          ],
-          "label": "AccessControl::grant_role",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 39
-          },
-          "selector": "0x4ac062fd"
         },
         {
           "args": [
@@ -1229,7 +1148,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 39
+            "type": 41
           },
           "selector": "0xeaf1248a"
         },
@@ -1267,9 +1186,54 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 24
+            "type": 26
           },
           "selector": "0xc1d9ac18"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "GrantRoleInput1"
+                ],
+                "type": 4
+              }
+            },
+            {
+              "label": "account",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "GrantRoleInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Grants `role` to `account`.",
+            "",
+            " On success a `RoleGranted` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Returns with `MissingRole` error if caller can't grant the role.",
+            " Returns with `RoleRedundant` error `account` has `role`."
+          ],
+          "label": "AccessControl::grant_role",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 41
+          },
+          "selector": "0x4ac062fd"
         },
         {
           "args": [
@@ -1311,26 +1275,9 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 39
-          },
-          "selector": "0x6e4f0991"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Returns the address of the current owner."
-          ],
-          "label": "Ownable::owner",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
             "type": 41
           },
-          "selector": "0x4fa43c8c"
+          "selector": "0x6e4f0991"
         },
         {
           "args": [],
@@ -1355,7 +1302,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 42
+            "type": 43
           },
           "selector": "0x5e228753"
         },
@@ -1392,27 +1339,16 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 42
+            "type": 43
           },
           "selector": "0x11f43efd"
         },
         {
-          "args": [
-            {
-              "label": "nft_contract_address",
-              "type": {
-                "displayName": [
-                  "artzerocollectiontrait_external",
-                  "GetContractTypeInput1"
-                ],
-                "type": 0
-              }
-            }
-          ],
+          "args": [],
           "docs": [
-            " This function returns NFT Contract Type. When the collection is created using auto_new_collection, this set to 2 and when using add_new_collection, this set to 1. Contract Type is to identify if the contract is standard or customized one."
+            " Returns the address of the current owner."
           ],
-          "label": "ArtZeroCollectionTrait::get_contract_type",
+          "label": "Ownable::owner",
           "mutates": false,
           "payable": false,
           "returnType": {
@@ -1420,9 +1356,9 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 44
+            "type": 45
           },
-          "selector": "0xdcd3b8f4"
+          "selector": "0x4fa43c8c"
         },
         {
           "args": [
@@ -1448,7 +1384,7 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 24
+            "type": 26
           },
           "selector": "0x08c3a1b4"
         },
@@ -1476,9 +1412,37 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 34
+            "type": 36
           },
           "selector": "0xeb3b33fd"
+        },
+        {
+          "args": [
+            {
+              "label": "nft_contract_address",
+              "type": {
+                "displayName": [
+                  "artzerocollectiontrait_external",
+                  "GetContractTypeInput1"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " This function returns NFT Contract Type. When the collection is created using auto_new_collection, this set to 2 and when using add_new_collection, this set to 1. Contract Type is to identify if the contract is standard or customized one."
+          ],
+          "label": "ArtZeroCollectionTrait::get_contract_type",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 46
+          },
+          "selector": "0xdcd3b8f4"
         },
         {
           "args": [
@@ -1504,9 +1468,95 @@ const collection_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 38
+            "type": 40
           },
           "selector": "0xfd0ba95a"
+        },
+        {
+          "args": [
+            {
+              "label": "value",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "WithdrawFeeInput1"
+                ],
+                "type": 7
+              }
+            },
+            {
+              "label": "receiver",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "WithdrawFeeInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " This function allows contract owner to withdraw contract balance to his account."
+          ],
+          "label": "AdminTrait::withdraw_fee",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 15
+          },
+          "selector": "0x07573e99"
+        },
+        {
+          "args": [
+            {
+              "label": "nft_contract_address",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "token_id",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput2"
+                ],
+                "type": 47
+              }
+            },
+            {
+              "label": "receiver",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput3"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
+          ],
+          "label": "AdminTrait::tranfer_nft",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 15
+          },
+          "selector": "0xed1e1dfa"
         },
         {
           "args": [
@@ -1555,92 +1605,6 @@ const collection_manager = {
             "type": 15
           },
           "selector": "0xd9aad284"
-        },
-        {
-          "args": [
-            {
-              "label": "nft_contract_address",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput1"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "token_id",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput2"
-                ],
-                "type": 45
-              }
-            },
-            {
-              "label": "receiver",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput3"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
-          ],
-          "label": "AdminTrait::tranfer_nft",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 15
-          },
-          "selector": "0xed1e1dfa"
-        },
-        {
-          "args": [
-            {
-              "label": "value",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "WithdrawFeeInput1"
-                ],
-                "type": 7
-              }
-            },
-            {
-              "label": "receiver",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "WithdrawFeeInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " This function allows contract owner to withdraw contract balance to his account."
-          ],
-          "label": "AdminTrait::withdraw_fee",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 15
-          },
-          "selector": "0x07573e99"
         },
         {
           "args": [
@@ -2571,66 +2535,70 @@ const collection_manager = {
                 },
                 {
                   "index": 28,
-                  "name": "WhitelistNotExist"
+                  "name": "PhaseDeactivate"
                 },
                 {
                   "index": 29,
-                  "name": "WithdrawFeeError"
+                  "name": "WhitelistNotExist"
                 },
                 {
                   "index": 30,
-                  "name": "WithdrawNFTError"
+                  "name": "WithdrawFeeError"
                 },
                 {
                   "index": 31,
-                  "name": "WithdrawPSP22Error"
+                  "name": "WithdrawNFTError"
                 },
                 {
                   "index": 32,
-                  "name": "NotListed"
+                  "name": "WithdrawPSP22Error"
                 },
                 {
                   "index": 33,
-                  "name": "BidAlreadyExist"
+                  "name": "NotListed"
                 },
                 {
                   "index": 34,
-                  "name": "BidNotExist"
+                  "name": "BidAlreadyExist"
                 },
                 {
                   "index": 35,
-                  "name": "NotInMarket"
+                  "name": "BidNotExist"
                 },
                 {
                   "index": 36,
-                  "name": "NotForSale"
+                  "name": "NotInMarket"
                 },
                 {
                   "index": 37,
-                  "name": "NotInSaleList"
+                  "name": "NotForSale"
                 },
                 {
                   "index": 38,
-                  "name": "InvalidBidLength"
+                  "name": "NotInSaleList"
                 },
                 {
                   "index": 39,
-                  "name": "InvalidCollectionOwner"
+                  "name": "InvalidBidLength"
                 },
                 {
                   "index": 40,
-                  "name": "InvalidTime"
+                  "name": "InvalidCollectionOwner"
                 },
                 {
                   "index": 41,
-                  "name": "RewardStarted"
+                  "name": "InvalidTime"
                 },
                 {
                   "index": 42,
-                  "name": "RewardNotStarted"
+                  "name": "RewardStarted"
                 },
                 {
                   "index": 43,
+                  "name": "RewardNotStarted"
+                },
+                {
+                  "index": 44,
                   "name": "ClaimMustBeFalse"
                 },
                 {
@@ -2640,7 +2608,7 @@ const collection_manager = {
                       "typeName": "OwnableError"
                     }
                   ],
-                  "index": 44,
+                  "index": 45,
                   "name": "OwnableError"
                 },
                 {
@@ -2650,8 +2618,28 @@ const collection_manager = {
                       "typeName": "AccessControlError"
                     }
                   ],
-                  "index": 45,
+                  "index": 46,
                   "name": "AccessControlError"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 21,
+                      "typeName": "PSP22Error"
+                    }
+                  ],
+                  "index": 47,
+                  "name": "PSP22Error"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 22,
+                      "typeName": "PSP34Error"
+                    }
+                  ],
+                  "index": 48,
+                  "name": "PSP34Error"
                 }
               ]
             }
@@ -2732,10 +2720,54 @@ const collection_manager = {
         "id": 21,
         "type": {
           "def": {
-            "sequence": {
-              "type": 18
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 12,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Custom"
+                },
+                {
+                  "index": 1,
+                  "name": "InsufficientBalance"
+                },
+                {
+                  "index": 2,
+                  "name": "InsufficientAllowance"
+                },
+                {
+                  "index": 3,
+                  "name": "ZeroRecipientAddress"
+                },
+                {
+                  "index": 4,
+                  "name": "ZeroSenderAddress"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 12,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 5,
+                  "name": "SafeTransferCheckFailed"
+                }
+              ]
             }
-          }
+          },
+          "path": [
+            "openbrush_contracts",
+            "traits",
+            "errors",
+            "psp22",
+            "PSP22Error"
+          ]
         }
       },
       {
@@ -2747,7 +2779,71 @@ const collection_manager = {
                 {
                   "fields": [
                     {
-                      "type": 21
+                      "type": 12,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Custom"
+                },
+                {
+                  "index": 1,
+                  "name": "SelfApprove"
+                },
+                {
+                  "index": 2,
+                  "name": "NotApproved"
+                },
+                {
+                  "index": 3,
+                  "name": "TokenExists"
+                },
+                {
+                  "index": 4,
+                  "name": "TokenNotExists"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 12,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 5,
+                  "name": "SafeTransferCheckFailed"
+                }
+              ]
+            }
+          },
+          "path": [
+            "openbrush_contracts",
+            "traits",
+            "errors",
+            "psp34",
+            "PSP34Error"
+          ]
+        }
+      },
+      {
+        "id": 23,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 18
+            }
+          }
+        }
+      },
+      {
+        "id": 24,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 23
                     }
                   ],
                   "index": 0,
@@ -2768,7 +2864,7 @@ const collection_manager = {
           "params": [
             {
               "name": "T",
-              "type": 21
+              "type": 23
             },
             {
               "name": "E",
@@ -2781,7 +2877,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 23,
+        "id": 25,
         "type": {
           "def": {
             "variant": {
@@ -2823,7 +2919,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 24,
+        "id": 26,
         "type": {
           "def": {
             "variant": {
@@ -2865,7 +2961,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 25,
+        "id": 27,
         "type": {
           "def": {
             "variant": {
@@ -2873,7 +2969,7 @@ const collection_manager = {
                 {
                   "fields": [
                     {
-                      "type": 26
+                      "type": 28
                     }
                   ],
                   "index": 0,
@@ -2894,7 +2990,7 @@ const collection_manager = {
           "params": [
             {
               "name": "T",
-              "type": 26
+              "type": 28
             },
             {
               "name": "E",
@@ -2907,7 +3003,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 26,
+        "id": 28,
         "type": {
           "def": {
             "variant": {
@@ -2940,7 +3036,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 27,
+        "id": 29,
         "type": {
           "def": {
             "variant": {
@@ -2985,7 +3081,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 28,
+        "id": 30,
         "type": {
           "def": {
             "variant": {
@@ -2993,7 +3089,7 @@ const collection_manager = {
                 {
                   "fields": [
                     {
-                      "type": 29
+                      "type": 31
                     }
                   ],
                   "index": 0,
@@ -3014,7 +3110,7 @@ const collection_manager = {
           "params": [
             {
               "name": "T",
-              "type": 29
+              "type": 31
             },
             {
               "name": "E",
@@ -3027,7 +3123,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 29,
+        "id": 31,
         "type": {
           "def": {
             "variant": {
@@ -3039,7 +3135,7 @@ const collection_manager = {
                 {
                   "fields": [
                     {
-                      "type": 30
+                      "type": 32
                     }
                   ],
                   "index": 1,
@@ -3051,7 +3147,7 @@ const collection_manager = {
           "params": [
             {
               "name": "T",
-              "type": 30
+              "type": 32
             }
           ],
           "path": [
@@ -3060,7 +3156,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 30,
+        "id": 32,
         "type": {
           "def": {
             "composite": {
@@ -3077,7 +3173,7 @@ const collection_manager = {
                 },
                 {
                   "name": "contract_type",
-                  "type": 27,
+                  "type": 29,
                   "typeName": "CollectionType"
                 },
                 {
@@ -3113,7 +3209,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 31,
+        "id": 33,
         "type": {
           "def": {
             "variant": {
@@ -3121,7 +3217,7 @@ const collection_manager = {
                 {
                   "fields": [
                     {
-                      "type": 32
+                      "type": 34
                     }
                   ],
                   "index": 0,
@@ -3142,7 +3238,7 @@ const collection_manager = {
           "params": [
             {
               "name": "T",
-              "type": 32
+              "type": 34
             },
             {
               "name": "E",
@@ -3155,7 +3251,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 32,
+        "id": 34,
         "type": {
           "def": {
             "variant": {
@@ -3188,7 +3284,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 33,
+        "id": 35,
         "type": {
           "def": {
             "variant": {
@@ -3230,7 +3326,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 34,
+        "id": 36,
         "type": {
           "def": {
             "variant": {
@@ -3238,7 +3334,7 @@ const collection_manager = {
                 {
                   "fields": [
                     {
-                      "type": 35
+                      "type": 37
                     }
                   ],
                   "index": 0,
@@ -3259,7 +3355,7 @@ const collection_manager = {
           "params": [
             {
               "name": "T",
-              "type": 35
+              "type": 37
             },
             {
               "name": "E",
@@ -3272,7 +3368,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 35,
+        "id": 37,
         "type": {
           "def": {
             "variant": {
@@ -3305,7 +3401,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 36,
+        "id": 38,
         "type": {
           "def": {
             "variant": {
@@ -3347,7 +3443,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 37,
+        "id": 39,
         "type": {
           "def": {
             "variant": {
@@ -3389,7 +3485,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 38,
+        "id": 40,
         "type": {
           "def": {
             "variant": {
@@ -3431,7 +3527,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 39,
+        "id": 41,
         "type": {
           "def": {
             "variant": {
@@ -3439,7 +3535,7 @@ const collection_manager = {
                 {
                   "fields": [
                     {
-                      "type": 40
+                      "type": 42
                     }
                   ],
                   "index": 0,
@@ -3460,7 +3556,7 @@ const collection_manager = {
           "params": [
             {
               "name": "T",
-              "type": 40
+              "type": 42
             },
             {
               "name": "E",
@@ -3473,7 +3569,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 40,
+        "id": 42,
         "type": {
           "def": {
             "variant": {
@@ -3515,91 +3611,49 @@ const collection_manager = {
         }
       },
       {
-        "id": 41,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 0
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 14
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 0
-            },
-            {
-              "name": "E",
-              "type": 14
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 42,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 43
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 14
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 43
-            },
-            {
-              "name": "E",
-              "type": 14
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
         "id": 43,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 44
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 14
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 44
+            },
+            {
+              "name": "E",
+              "type": 14
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 44,
         "type": {
           "def": {
             "variant": {
@@ -3641,7 +3695,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 44,
+        "id": 45,
         "type": {
           "def": {
             "variant": {
@@ -3649,7 +3703,7 @@ const collection_manager = {
                 {
                   "fields": [
                     {
-                      "type": 27
+                      "type": 0
                     }
                   ],
                   "index": 0,
@@ -3670,7 +3724,7 @@ const collection_manager = {
           "params": [
             {
               "name": "T",
-              "type": 27
+              "type": 0
             },
             {
               "name": "E",
@@ -3683,7 +3737,49 @@ const collection_manager = {
         }
       },
       {
-        "id": 45,
+        "id": 46,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 29
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 14
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 29
+            },
+            {
+              "name": "E",
+              "type": 14
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 47,
         "type": {
           "def": {
             "variant": {
@@ -3701,7 +3797,7 @@ const collection_manager = {
                 {
                   "fields": [
                     {
-                      "type": 46,
+                      "type": 48,
                       "typeName": "u16"
                     }
                   ],
@@ -3760,7 +3856,7 @@ const collection_manager = {
         }
       },
       {
-        "id": 46,
+        "id": 48,
         "type": {
           "def": {
             "primitive": "u16"
