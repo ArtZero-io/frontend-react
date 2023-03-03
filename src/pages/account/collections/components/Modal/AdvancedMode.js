@@ -7,7 +7,6 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalOverlay,
   Tooltip,
   useBreakpointValue,
   useDisclosure,
@@ -96,10 +95,10 @@ function AdvancedModeModal({
         scrollBehavior={"inside"}
         closeOnOverlayClick={false}
       >
-        <ModalOverlay
+        {/* <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
-        />
+        /> */}
         <ModalContent
           borderRadius="0"
           position="relative"
@@ -114,6 +113,8 @@ function AdvancedModeModal({
             position="absolute"
             top={["0", "-8", "-8"]}
             right={["0", "-8", "-8"]}
+            _hover="none"
+            bg="#171717"
             onClick={() => step === FINALIZED && onEndClick()}
           />
           <ModalHeader>

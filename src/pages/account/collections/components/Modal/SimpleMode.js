@@ -6,7 +6,6 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalOverlay,
   useDisclosure,
   IconButton,
   Tooltip,
@@ -96,10 +95,10 @@ function SimpleModeModal({
         scrollBehavior={"inside"}
         closeOnOverlayClick={false}
       >
-        <ModalOverlay
+        {/* <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
-        />
+        /> */}
         <ModalContent
           borderRadius="0"
           textAlign="center"
@@ -111,6 +110,8 @@ function SimpleModeModal({
           <ModalCloseButton
             borderWidth={2}
             borderRadius="0"
+            _hover="none"
+            bg="#171717"
             position="absolute"
             top={["0", "-8", "-8"]}
             right={["0", "-8", "-8"]}

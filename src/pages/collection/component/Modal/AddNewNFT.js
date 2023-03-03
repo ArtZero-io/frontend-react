@@ -6,7 +6,7 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalOverlay,
+  // ModalOverlay,
   Text,
   Tooltip,
   useBreakpointValue,
@@ -122,10 +122,10 @@ const AddNewNFTModal = ({
         scrollBehavior="inside"
         closeOnOverlayClick={false}
       >
-        <ModalOverlay
+        {/* <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
-        />
+        /> */}
         <ModalContent
           maxWidth={["340px", "940px"]}
           borderRadius="0"
@@ -140,6 +140,8 @@ const AddNewNFTModal = ({
             borderWidth={2}
             borderRadius="0"
             position="absolute"
+            _hover="none"
+            bg="#171717"
             top={["0", "-8", "-8"]}
             right={["0", "-8", "-8"]}
             onClick={() => step === FINALIZED && onEndClick()}

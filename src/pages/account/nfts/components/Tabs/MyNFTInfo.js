@@ -428,8 +428,7 @@ function MyNFTTabInfo(props) {
                 Owned by{" "}
                 <Link
                   as={ReactRouterLink}
-                  // to="/user/xxx"
-                  to="#"
+                  to={`/public-account/general/${ownerAddress}`}
                   color="#7AE7FF"
                   textTransform="capitalize"
                   textDecoration="underline"
