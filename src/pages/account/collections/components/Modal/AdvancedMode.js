@@ -8,7 +8,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Text,
   Tooltip,
   useBreakpointValue,
   useDisclosure,
@@ -63,24 +62,6 @@ function AdvancedModeModal({
 
       {mode === formMode.EDIT && (
         <>
-          <Text
-            h="40px"
-            px="8px"
-            bg="black"
-            top="2px"
-            zIndex="1"
-            minW="40px"
-            right="40px"
-            pos="absolute"
-            lineHeight="36px"
-            color="#7ae7ff"
-          >
-            {contractType === "Psp34Auto"
-              ? "Simple"
-              : contractType === "Psp34Manual"
-              ? "Adv"
-              : ""}
-          </Text>
           <IconButton
             h="40px"
             top="2px"

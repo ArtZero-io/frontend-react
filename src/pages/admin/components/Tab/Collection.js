@@ -179,12 +179,11 @@ function CollectionAdmin() {
       );
 
       const templateParams = {
-        project_name: selectedCollection[0]?.name,
+        collection_name: selectedCollection[0]?.name,
         collection_address: collection_contract,
-        // email_owner:  selectedCollection[0]?.email?
-        // TODO: waiting for new api added email,
+        email_owner: selectedCollection[0]?.email,
       };
-
+      console.log("templateParams", templateParams);
       await collection_manager_calls.updateIsActive(
         currentAccount,
         collection_contract,

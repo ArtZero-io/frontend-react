@@ -87,11 +87,11 @@ async function addNewCollection(
           caller_account,
         });
 
-        events.forEach(({ event: { method } }) => {
+        events.forEach(async ({ event: { method } }) => {
           if (method === "ExtrinsicSuccess" && status.type === "Finalized") {
             if (templateParams) {
               templateParams.collection_address = data?.nftContractAddress;
-
+              // sent email
               emailjs
                 .send(
                   process.env.REACT_APP_EMAILJS_SERVICE_ID,
@@ -107,80 +107,93 @@ async function addNewCollection(
                     console.log("error send email FAILED...", error);
                   }
                 );
+
+              // toast info
+              toast(
+                "Thank you for submitting. Your Collection has been created successfully. It will need enabling by our team. We will get in touch with you within the next 48 hours. In the meantime, you can navigate to MY ACCOUNT/MY COLLECTIONS and start creating NFTs in the Collection.",
+                {
+                  icon: "👏",
+                  duration: 8000,
+                  reverseOrder: true,
+                  position: "bottom-left",
+                  style: {
+                    color: "#000",
+                    padding: "8px",
+                    borderRadius: 0,
+                    background: "#7AE7FF",
+                  },
+                }
+              );
+
+              await APICall.askBeUpdateCollectionData({
+                collection_address: data?.nftContractAddress,
+              });
+
+              await delay(6000);
+
+              const res = await APICall.updateCollectionEmail({
+                collection_address: data?.nftContractAddress,
+                email: templateParams.email_owner,
+              });
+              console.log("updateCollectionEmail res", res);
             }
 
-            toast(
-              "Thank you for submitting. Your Collection has been created successfully. It will need enabling by our team. We will get in touch with you within the next 48 hours. In the meantime, you can navigate to MY ACCOUNT/MY COLLECTIONS and start creating NFTs in the Collection.",
-              {
-                icon: "👏",
-                duration: 8000,
-                reverseOrder: true,
-                position: "bottom-left",
-                style: {
-                  color: "#000",
-                  padding: "8px",
-                  borderRadius: 0,
-                  background: "#7AE7FF",
-                },
+            let transactionData = data;
+
+            await APICall.askBeUpdateCollectionData({
+              collection_address: data?.nftContractAddress,
+            });
+
+            if (transactionData.attributes?.length) {
+              let cacheImages = [];
+
+              for (let i = 0; i < transactionData.attributes.length; i++) {
+                console.log(transactionData.attributes[i]);
+                if (transactionData.attributes[i] === "avatar_image") {
+                  cacheImages.push({
+                    input: transactionData.attributeVals[i],
+                    is1920: false,
+                    imageType: "collection",
+                    metadata: {
+                      collectionAddress: data?.nftContractAddress,
+                      type: "avatar_image",
+                    },
+                  });
+                }
+                if (transactionData.attributes[i] === "header_image") {
+                  cacheImages.push({
+                    input: transactionData.attributeVals[i],
+                    is1920: false,
+                    imageType: "collection",
+                    metadata: {
+                      collectionAddress: data?.nftContractAddress,
+                      type: "header_image",
+                    },
+                  });
+                }
+                if (transactionData.attributes[i] === "header_square_image") {
+                  cacheImages.push({
+                    input: transactionData.attributeVals[i],
+                    is1920: true,
+                    imageType: "collection",
+                    metadata: {
+                      collectionAddress: data?.nftContractAddress,
+                      type: "header_square_image",
+                    },
+                  });
+                }
               }
-            );
+
+              if (cacheImages.length) {
+                await clientAPI("post", "/cacheImages", {
+                  images: JSON.stringify(cacheImages),
+                });
+              }
+            }
           } else if (method === "ExtrinsicFailed") {
             toast.error(`Error: ${method}.`);
           }
         });
-
-        if (status?.isFinalized) {
-          let transactionData = data;
-          await APICall.askBeUpdateCollectionData({
-            collection_address: data?.nftContractAddress,
-          });
-          if (transactionData.attributes?.length) {
-            let cacheImages = [];
-
-            for (let i = 0; i < transactionData.attributes.length; i++) {
-              console.log(transactionData.attributes[i]);
-              if (transactionData.attributes[i] === "avatar_image") {
-                cacheImages.push({
-                  input: transactionData.attributeVals[i],
-                  is1920: false,
-                  imageType: "collection",
-                  metadata: {
-                    collectionAddress: data?.nftContractAddress,
-                    type: "avatar_image",
-                  },
-                });
-              }
-              if (transactionData.attributes[i] === "header_image") {
-                cacheImages.push({
-                  input: transactionData.attributeVals[i],
-                  is1920: false,
-                  imageType: "collection",
-                  metadata: {
-                    collectionAddress: data?.nftContractAddress,
-                    type: "header_image",
-                  },
-                });
-              }
-              if (transactionData.attributes[i] === "header_square_image") {
-                cacheImages.push({
-                  input: transactionData.attributeVals[i],
-                  is1920: true,
-                  imageType: "collection",
-                  metadata: {
-                    collectionAddress: data?.nftContractAddress,
-                    type: "header_square_image",
-                  },
-                });
-              }
-            }
-
-            if (cacheImages.length) {
-              await clientAPI("post", "/cacheImages", {
-                images: JSON.stringify(cacheImages),
-              });
-            }
-          }
-        }
       }
     )
     .then((unsub) => (unsubscribe = unsub))
@@ -371,10 +384,12 @@ async function autoNewCollection(
 
                     await delay(6000);
 
-                    await APICall.updateCollectionEmail({
+                    const res = await APICall.updateCollectionEmail({
                       collection_address: eventValues[1],
                       email: templateParams.email_owner,
                     });
+
+                    console.log("updateCollectionEmail res >>", res);
                   }
                 }
               }

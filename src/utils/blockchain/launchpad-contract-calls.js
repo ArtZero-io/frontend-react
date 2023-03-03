@@ -15,7 +15,8 @@ import {
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import { APICall } from "@api/client";
 import { readOnlyGasLimit, formatOutput } from "..";
-import emailjs from "@emailjs/browser";
+// import emailjs from "@emailjs/browser";
+// import { delay } from "@utils";
 
 let contract;
 
@@ -220,8 +221,8 @@ async function addNewProject(
   dispatch,
   txType,
   api,
-  createNewCollection,
-  templateParams
+  createNewCollection
+  // templateParams
 ) {
   if (!contract || !caller_account) {
     throw Error(`Contract or caller not valid!`);
@@ -283,62 +284,66 @@ async function addNewProject(
         });
 
         if (status.isInBlock) {
-          events.forEach(({ event: { data, method, section }, phase }) => {
-            if (section === "contracts" && method === "ContractEmitted") {
-              const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
+          events.forEach(
+            async ({ event: { data, method, section }, phase }) => {
+              if (section === "contracts" && method === "ContractEmitted") {
+                const [accId, bytes] = data.map((data, _) => data).slice(0, 2);
 
-              const contract_address = accId.toString();
+                const contract_address = accId.toString();
 
-              if (contract_address === launchpad_manager.CONTRACT_ADDRESS) {
-                const abi_launchpad_contract = new Abi(
-                  launchpad_manager.CONTRACT_ABI
-                );
-
-                const decodedEvent = abi_launchpad_contract.decodeEvent(bytes);
-
-                let event_name = decodedEvent.event.identifier;
-
-                if (event_name === "AddNewProjectEvent") {
-                  const eventValues = [];
-
-                  for (let i = 0; i < decodedEvent.args.length; i++) {
-                    const value = decodedEvent.args[i];
-                    eventValues.push(value.toString());
-                  }
-
-                  const nft_address = eventValues[1];
-                  templateParams.collection_address = eventValues[1];
-
-                  emailjs
-                    .send(
-                      process.env.REACT_APP_EMAILJS_SERVICE_ID,
-                      process.env.REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
-                      templateParams,
-                      process.env.REACT_APP_EMAILJS_PUBLIC_KEY
-                    )
-                    .then(
-                      function (response) {
-                        console.log("SUCCESS!", response.status, response.text);
-                      },
-                      function (error) {
-                        console.log("error send email FAILED...", error);
-                      }
-                    );
-
-                  (async () =>
-                    await APICall.askBeUpdateProjectData({
-                      project_address: nft_address,
-                    }))();
-
-                  console.log(
-                    "APICall.askBeUpdateProjectData addNewProject nft_address,",
-                    nft_address
+                if (contract_address === launchpad_manager.CONTRACT_ADDRESS) {
+                  const abi_launchpad_contract = new Abi(
+                    launchpad_manager.CONTRACT_ABI
                   );
-                  createNewCollection(nft_address);
+
+                  const decodedEvent =
+                    abi_launchpad_contract.decodeEvent(bytes);
+
+                  let event_name = decodedEvent.event.identifier;
+
+                  if (event_name === "AddNewProjectEvent") {
+                    const eventValues = [];
+
+                    for (let i = 0; i < decodedEvent.args.length; i++) {
+                      const value = decodedEvent.args[i];
+                      eventValues.push(value.toString());
+                    }
+
+                    const nft_address = eventValues[1];
+                    // templateParams.collection_address = eventValues[1];
+
+                    // emailjs
+                    //   .send(
+                    //     process.env.REACT_APP_EMAILJS_SERVICE_ID,
+                    //     process.env
+                    //       .REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
+                    //     templateParams,
+                    //     process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+                    //   )
+                    //   .then(
+                    //     function (response) {
+                    //       console.log(
+                    //         "SUCCESS!",
+                    //         response.status,
+                    //         response.text
+                    //       );
+                    //     },
+                    //     function (error) {
+                    //       console.log("error send email FAILED...", error);
+                    //     }
+                    //   );
+
+                    const res = await APICall.askBeUpdateProjectData({
+                      project_address: nft_address,
+                    });
+                    console.log("askBeUpdateProjectData res", res);
+
+                    await createNewCollection(nft_address);
+                  }
                 }
               }
             }
-          });
+          );
         }
       }
     )

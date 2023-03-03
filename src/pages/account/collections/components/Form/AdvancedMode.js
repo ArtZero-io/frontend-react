@@ -22,6 +22,7 @@ import {
   CREATE_COLLECTION,
   EDIT_COLLECTION,
   START,
+  ArtZero_TOS,
 } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
@@ -671,9 +672,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                               }}
                               textTransform="none"
                               isExternal
-                              href={
-                                "https://artzero.io/demotestnet/assets/ArtZero_Terms_Of_Service.pdf"
-                              }
+                              href={ArtZero_TOS}
                             >
                               Terms of Service
                             </Link>
