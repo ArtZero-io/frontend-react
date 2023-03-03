@@ -1,9 +1,9 @@
 const profile = {
-  CONTRACT_ADDRESS: "5EwYLdFHmytUsLDQ1itCcpYZY4GkWQP7JXGUVVRWCUin8EXt",
+  CONTRACT_ADDRESS: "5FUXaNYkcdvwYurXXxzU4cdLsVFViE2xEbNnUZLBoi41axUx",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x0fae9732950d2e127019b1a433095d40f1b07dee55c1c5c69fd3a38b649c6d8a",
-      "language": "ink! 4.0.0",
+      "hash": "0xd9e66c2e777c1705ba62e2e6e60027cab28b383e9a5d9b7bf6ebcca0d4337c35",
+      "language": "ink! 4.0.0-beta",
       "compiler": "rustc 1.69.0-nightly",
       "build_info": {
         "build_mode": "Debug",
@@ -115,7 +115,7 @@ const profile = {
               "ink",
               "MessageResult"
             ],
-            "type": 16
+            "type": 14
           },
           "selector": "0x8d76b3fe"
         },
@@ -132,7 +132,7 @@ const profile = {
               "ink",
               "MessageResult"
             ],
-            "type": 17
+            "type": 15
           },
           "selector": "0x4fa43c8c"
         },
@@ -169,7 +169,7 @@ const profile = {
               "ink",
               "MessageResult"
             ],
-            "type": 18
+            "type": 16
           },
           "selector": "0x11f43efd"
         },
@@ -196,57 +196,9 @@ const profile = {
               "ink",
               "MessageResult"
             ],
-            "type": 18
+            "type": 16
           },
           "selector": "0x5e228753"
-        },
-        {
-          "args": [
-            {
-              "label": "nft_contract_address",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput1"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "token_id",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput2"
-                ],
-                "type": 20
-              }
-            },
-            {
-              "label": "receiver",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput3"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
-          ],
-          "label": "AdminTrait::tranfer_nft",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 9
-          },
-          "selector": "0xed1e1dfa"
         },
         {
           "args": [
@@ -257,7 +209,7 @@ const profile = {
                   "admintrait_external",
                   "WithdrawFeeInput1"
                 ],
-                "type": 24
+                "type": 18
               }
             },
             {
@@ -305,7 +257,7 @@ const profile = {
                   "admintrait_external",
                   "TranferPsp22Input2"
                 ],
-                "type": 24
+                "type": 18
               }
             },
             {
@@ -333,6 +285,54 @@ const profile = {
             "type": 9
           },
           "selector": "0xd9aad284"
+        },
+        {
+          "args": [
+            {
+              "label": "nft_contract_address",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "token_id",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput2"
+                ],
+                "type": 19
+              }
+            },
+            {
+              "label": "receiver",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput3"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
+          ],
+          "label": "AdminTrait::tranfer_nft",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 9
+          },
+          "selector": "0xed1e1dfa"
         },
         {
           "args": [
@@ -873,70 +873,66 @@ const profile = {
                 },
                 {
                   "index": 28,
-                  "name": "PhaseDeactivate"
-                },
-                {
-                  "index": 29,
                   "name": "WhitelistNotExist"
                 },
                 {
-                  "index": 30,
+                  "index": 29,
                   "name": "WithdrawFeeError"
                 },
                 {
-                  "index": 31,
+                  "index": 30,
                   "name": "WithdrawNFTError"
                 },
                 {
-                  "index": 32,
+                  "index": 31,
                   "name": "WithdrawPSP22Error"
                 },
                 {
-                  "index": 33,
+                  "index": 32,
                   "name": "NotListed"
                 },
                 {
-                  "index": 34,
+                  "index": 33,
                   "name": "BidAlreadyExist"
                 },
                 {
-                  "index": 35,
+                  "index": 34,
                   "name": "BidNotExist"
                 },
                 {
-                  "index": 36,
+                  "index": 35,
                   "name": "NotInMarket"
                 },
                 {
-                  "index": 37,
+                  "index": 36,
                   "name": "NotForSale"
                 },
                 {
-                  "index": 38,
+                  "index": 37,
                   "name": "NotInSaleList"
                 },
                 {
-                  "index": 39,
+                  "index": 38,
                   "name": "InvalidBidLength"
                 },
                 {
-                  "index": 40,
+                  "index": 39,
                   "name": "InvalidCollectionOwner"
                 },
                 {
-                  "index": 41,
+                  "index": 40,
                   "name": "InvalidTime"
                 },
                 {
-                  "index": 42,
+                  "index": 41,
                   "name": "RewardStarted"
                 },
                 {
-                  "index": 43,
+                  "index": 42,
                   "name": "RewardNotStarted"
                 },
                 {
-                  "index": 44,
+                  "index": 43,
                   "name": "ClaimMustBeFalse"
                 },
                 {
@@ -946,7 +942,7 @@ const profile = {
                       "typeName": "OwnableError"
                     }
                   ],
-                  "index": 45,
+                  "index": 44,
                   "name": "OwnableError"
                 },
                 {
@@ -956,28 +952,8 @@ const profile = {
                       "typeName": "AccessControlError"
                     }
                   ],
-                  "index": 46,
+                  "index": 45,
                   "name": "AccessControlError"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 14,
-                      "typeName": "PSP22Error"
-                    }
-                  ],
-                  "index": 47,
-                  "name": "PSP22Error"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 15,
-                      "typeName": "PSP34Error"
-                    }
-                  ],
-                  "index": 48,
-                  "name": "PSP34Error"
                 }
               ]
             }
@@ -1055,114 +1031,6 @@ const profile = {
                 {
                   "fields": [
                     {
-                      "type": 4,
-                      "typeName": "String"
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Custom"
-                },
-                {
-                  "index": 1,
-                  "name": "InsufficientBalance"
-                },
-                {
-                  "index": 2,
-                  "name": "InsufficientAllowance"
-                },
-                {
-                  "index": 3,
-                  "name": "ZeroRecipientAddress"
-                },
-                {
-                  "index": 4,
-                  "name": "ZeroSenderAddress"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 4,
-                      "typeName": "String"
-                    }
-                  ],
-                  "index": 5,
-                  "name": "SafeTransferCheckFailed"
-                }
-              ]
-            }
-          },
-          "path": [
-            "openbrush_contracts",
-            "traits",
-            "errors",
-            "psp22",
-            "PSP22Error"
-          ]
-        }
-      },
-      {
-        "id": 15,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 4,
-                      "typeName": "String"
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Custom"
-                },
-                {
-                  "index": 1,
-                  "name": "SelfApprove"
-                },
-                {
-                  "index": 2,
-                  "name": "NotApproved"
-                },
-                {
-                  "index": 3,
-                  "name": "TokenExists"
-                },
-                {
-                  "index": 4,
-                  "name": "TokenNotExists"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 4,
-                      "typeName": "String"
-                    }
-                  ],
-                  "index": 5,
-                  "name": "SafeTransferCheckFailed"
-                }
-              ]
-            }
-          },
-          "path": [
-            "openbrush_contracts",
-            "traits",
-            "errors",
-            "psp34",
-            "PSP34Error"
-          ]
-        }
-      },
-      {
-        "id": 16,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
                       "type": 7
                     }
                   ],
@@ -1197,7 +1065,7 @@ const profile = {
         }
       },
       {
-        "id": 17,
+        "id": 15,
         "type": {
           "def": {
             "variant": {
@@ -1239,7 +1107,7 @@ const profile = {
         }
       },
       {
-        "id": 18,
+        "id": 16,
         "type": {
           "def": {
             "variant": {
@@ -1247,7 +1115,7 @@ const profile = {
                 {
                   "fields": [
                     {
-                      "type": 19
+                      "type": 17
                     }
                   ],
                   "index": 0,
@@ -1268,7 +1136,7 @@ const profile = {
           "params": [
             {
               "name": "T",
-              "type": 19
+              "type": 17
             },
             {
               "name": "E",
@@ -1281,7 +1149,7 @@ const profile = {
         }
       },
       {
-        "id": 19,
+        "id": 17,
         "type": {
           "def": {
             "variant": {
@@ -1323,7 +1191,15 @@ const profile = {
         }
       },
       {
-        "id": 20,
+        "id": 18,
+        "type": {
+          "def": {
+            "primitive": "u128"
+          }
+        }
+      },
+      {
+        "id": 19,
         "type": {
           "def": {
             "variant": {
@@ -1341,7 +1217,7 @@ const profile = {
                 {
                   "fields": [
                     {
-                      "type": 21,
+                      "type": 20,
                       "typeName": "u16"
                     }
                   ],
@@ -1351,7 +1227,7 @@ const profile = {
                 {
                   "fields": [
                     {
-                      "type": 22,
+                      "type": 21,
                       "typeName": "u32"
                     }
                   ],
@@ -1361,7 +1237,7 @@ const profile = {
                 {
                   "fields": [
                     {
-                      "type": 23,
+                      "type": 22,
                       "typeName": "u64"
                     }
                   ],
@@ -1371,7 +1247,7 @@ const profile = {
                 {
                   "fields": [
                     {
-                      "type": 24,
+                      "type": 18,
                       "typeName": "u128"
                     }
                   ],
@@ -1400,7 +1276,7 @@ const profile = {
         }
       },
       {
-        "id": 21,
+        "id": 20,
         "type": {
           "def": {
             "primitive": "u16"
@@ -1408,7 +1284,7 @@ const profile = {
         }
       },
       {
-        "id": 22,
+        "id": 21,
         "type": {
           "def": {
             "primitive": "u32"
@@ -1416,18 +1292,10 @@ const profile = {
         }
       },
       {
-        "id": 23,
+        "id": 22,
         "type": {
           "def": {
             "primitive": "u64"
-          }
-        }
-      },
-      {
-        "id": 24,
-        "type": {
-          "def": {
-            "primitive": "u128"
           }
         }
       }
