@@ -13,30 +13,36 @@ import {
 
 import * as ROUTES from '@constants/routes';
 import Layout from '@components/Layout/Layout';
-import ProfileHeader from '@pages/account/components/Header';
+import ProfileHeader from '@pages/accountPublic/components/Header';
 import { SCROLLBAR } from '@constants';
 
-const AccountLayout = ({ children }) => {
+const PublicAccountLayout = ({ children, match }) => {
   const history = useHistory();
   const { pathname } = useLocation();
   // TODO refactor tab nav
   // eslint-disable-next-line no-unused-vars
   const [tabsData, setTabsData] = useState(tabsList);
+  const [dataUrl, setDataUrl] = useState({});
 
   const handleTabsChange = (index) => {
-    history.push(tabsData[index].route);
+    history.push(tabsData[index].route + `/${dataUrl.address}`);
   };
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  useEffect(() => {
+    const arr = pathname.split('/')
+    setDataUrl({address: arr[arr.length - 1], route: arr[arr.length - 2]})
+  }, [pathname]);
+
   const [isBigScreen] = useMediaQuery('(min-width: 480px)');
 
   return (
     <Layout>
       <Box as="section" position="relative" bg="#000" mx="auto">
-        <ProfileHeader />
+        <ProfileHeader address={dataUrl.address}/>
 
         <Tabs
           isLazy
@@ -44,7 +50,7 @@ const AccountLayout = ({ children }) => {
           align="center"
           colorScheme="brand.blue"
           onChange={handleTabsChange}
-          index={tabsData.map((i) => i.route).indexOf(pathname)}
+          index={tabsData.findIndex((i) => i.route.includes(dataUrl.route))}
         >
           <TabList>
             {!isBigScreen ? (
@@ -111,32 +117,32 @@ const AccountLayout = ({ children }) => {
   );
 };
 
-export default AccountLayout;
+export default PublicAccountLayout;
 
 const tabsList = [
   {
     label: 'General',
     isDisabled: false,
-    route: ROUTES.ACCOUNT,
+    route: '/public-account/general',
   },
   {
-    label: 'My Collections',
+    label: 'Collections',
     isDisabled: false,
-    route: ROUTES.ACCOUNT_MY_COLLECTIONS,
+    route: '/public-account/collections',
   },
   {
-    label: 'My NFTS',
+    label: 'NFTS',
     isDisabled: false,
-    route: ROUTES.ACCOUNT_MY_NFTS,
+    route: '/public-account/nfts',
   },
+  // {
+  //   label: 'My Stakes',
+  //   isDisabled: false,
+  //   route: '/public-account/stakes',
+  // },
   {
-    label: 'My Stakes',
+    label: 'Projects',
     isDisabled: false,
-    route: ROUTES.ACCOUNT_MY_STAKES,
-  },
-  {
-    label: 'My Projects',
-    isDisabled: false,
-    route: ROUTES.ACCOUNT_MY_PROJECTS,
+    route: '/public-account/projects',
   },
 ];
