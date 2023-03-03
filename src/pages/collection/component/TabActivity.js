@@ -20,6 +20,11 @@ function TabActivity({
   tokenUriType1,
   latestBlockNumber,
   collectionOwner,
+  hasMore,
+  fetchMore,
+  fetchBack,
+  resetPage,
+  currentPage,
   ...rest
 }) {
   const { platformEvents } = useSelector((s) => s.account);
@@ -27,7 +32,6 @@ function TabActivity({
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(null);
   const [collectionEventsFull, setCollectionEventsFull] = useState(null);
-
   const latestBlockNumberRef = useRef(latestBlockNumber);
   const shouldUpdate = latestBlockNumber !== latestBlockNumberRef.current;
 
@@ -87,6 +91,10 @@ function TabActivity({
           type="PURCHASE"
           collectionOwnerName={truncateStr(collectionOwner)}
           tableHeaders={headers.purchase}
+          fetchMore={fetchMore}
+          fetchBack={fetchBack}
+          currentPage={currentPage}
+          hasMore={hasMore[0]}
           tableData={collectionEventsFull?.filter((i) => i.type === "PURCHASE")}
         />
       ),
@@ -99,6 +107,10 @@ function TabActivity({
           type="LIST"
           collectionOwnerName={truncateStr(collectionOwner)}
           tableHeaders={headers.list}
+          fetchMore={fetchMore}
+          fetchBack={fetchBack}
+          currentPage={currentPage}
+          hasMore={hasMore[3]}
           tableData={collectionEventsFull?.filter((i) => i.type === "LIST")}
         />
       ),
@@ -111,6 +123,10 @@ function TabActivity({
           type="UNLIST"
           collectionOwnerName={truncateStr(collectionOwner)}
           tableHeaders={headers.unlist}
+          fetchMore={fetchMore}
+          hasMore={hasMore[2]}
+          currentPage={currentPage}
+          fetchBack={fetchBack}
           tableData={collectionEventsFull?.filter((i) => i.type === "UNLIST")}
         />
       ),
@@ -123,6 +139,10 @@ function TabActivity({
           type="BID ACCEPT"
           collectionOwnerName={truncateStr(collectionOwner)}
           tableHeaders={headers.bidAccepted}
+          fetchMore={fetchMore}
+          fetchBack={fetchBack}
+          currentPage={currentPage}
+          hasMore={hasMore[1]}
           tableData={collectionEventsFull?.filter(
             (i) => i.type === "BID ACCEPTED"
           )}
@@ -139,7 +159,10 @@ function TabActivity({
       <Tabs
         px="12px"
         index={tabIndex}
-        onChange={(i) => setTabIndex(i)}
+        onChange={(i) => {
+          setTabIndex(i);
+          resetPage();
+        }}
         isLazy
         align="center"
         colorScheme="brand.blue"
@@ -187,7 +210,7 @@ function TabActivity({
           </TabList>
         )}
 
-        {!platformEvents?.events ? (
+        {loading ? (
           <AnimationLoader loadingTime={5} />
         ) : (
           <TabPanels h="full" minH="md">

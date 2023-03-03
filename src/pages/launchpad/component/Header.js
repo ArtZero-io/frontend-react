@@ -279,7 +279,7 @@ function LaunchpadDetailHeader({
             {isDuplicationChecked && (
               <Tooltip label="Artwork is verified by third-party for its uniqueness">
                 <Box p="1">
-                  <Tag border="1px solid #7ae7ff">VERIFIED</Tag>
+                  <Tag border="1px solid #7ae7ff">AUTHENTIC</Tag>
                 </Box>
               </Tooltip>
             )}
