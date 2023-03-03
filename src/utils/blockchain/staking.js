@@ -1,9 +1,9 @@
 const staking = {
-  CONTRACT_ADDRESS: "5DHfvGcjXoUb7e1am1cSxcZ4w9ErC3omNp6exk2AibMn75kt",
+  CONTRACT_ADDRESS: "5FzGLJowywPTraKbY567VLc3eQsfnchpkAKeoZUpUfaihP5B",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0x0af3d8ee0d28afdc39f23128b634cbe61673e8a19c8ebb7c22817aade1c5d41d",
-      "language": "ink! 4.0.0-beta",
+      "hash": "0x7df9f5557f14ac2748cd788b0579b034191f7c6175b31f6abef0a14723cc4f6c",
+      "language": "ink! 4.0.0",
       "compiler": "rustc 1.69.0-nightly",
       "build_info": {
         "build_mode": "Debug",
@@ -79,7 +79,7 @@ const staking = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 25
+                "type": 28
               }
             },
             {
@@ -107,7 +107,7 @@ const staking = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 25
+                "type": 28
               }
             },
             {
@@ -135,7 +135,7 @@ const staking = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 25
+                "type": 28
               }
             },
             {
@@ -163,7 +163,7 @@ const staking = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 25
+                "type": 28
               }
             },
             {
@@ -191,7 +191,7 @@ const staking = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 25
+                "type": 28
               }
             },
             {
@@ -510,7 +510,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 16
+            "type": 19
           },
           "selector": "0x443c6a4a"
         },
@@ -525,7 +525,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 16
+            "type": 19
           },
           "selector": "0x411901a1"
         },
@@ -550,7 +550,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 17
+            "type": 20
           },
           "selector": "0xc58eed46"
         },
@@ -565,7 +565,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 17
+            "type": 20
           },
           "selector": "0xca663a02"
         },
@@ -582,7 +582,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 18
+            "type": 21
           },
           "selector": "0xd25bb869"
         },
@@ -599,7 +599,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 17
+            "type": 20
           },
           "selector": "0x72d8d756"
         },
@@ -616,7 +616,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 18
+            "type": 21
           },
           "selector": "0x8938ef71"
         },
@@ -652,7 +652,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 19
+            "type": 22
           },
           "selector": "0x5d08378a"
         },
@@ -688,7 +688,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 20
+            "type": 23
           },
           "selector": "0xd5ee8ef6"
         },
@@ -715,7 +715,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 22
+            "type": 25
           },
           "selector": "0xdeaeabe3"
         },
@@ -742,7 +742,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 24
+            "type": 27
           },
           "selector": "0x9698ca4b"
         },
@@ -759,7 +759,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 19
+            "type": 22
           },
           "selector": "0xf7c0188d"
         },
@@ -795,7 +795,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 20
+            "type": 23
           },
           "selector": "0xf154c3c5"
         },
@@ -812,7 +812,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 19
+            "type": 22
           },
           "selector": "0x02c779a5"
         },
@@ -829,7 +829,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 19
+            "type": 22
           },
           "selector": "0x50d71ce0"
         },
@@ -841,7 +841,7 @@ const staking = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 26
+                "type": 29
               }
             }
           ],
@@ -868,7 +868,7 @@ const staking = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 26
+                "type": 29
               }
             }
           ],
@@ -895,7 +895,7 @@ const staking = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 26
+                "type": 29
               }
             }
           ],
@@ -922,7 +922,7 @@ const staking = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 26
+                "type": 29
               }
             }
           ],
@@ -940,161 +940,6 @@ const staking = {
             "type": 10
           },
           "selector": "0x82364901"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "GetRoleAdminInput1"
-                ],
-                "type": 4
-              }
-            }
-          ],
-          "docs": [
-            " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
-          ],
-          "label": "AccessControl::get_role_admin",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 27
-          },
-          "selector": "0x83da3bb2"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "RevokeRoleInput1"
-                ],
-                "type": 4
-              }
-            },
-            {
-              "label": "account",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "RevokeRoleInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Revokes `role` from `account`.",
-            "",
-            " On success a `RoleRevoked` event is emitted.",
-            "",
-            " # Errors",
-            "",
-            " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
-          ],
-          "label": "AccessControl::revoke_role",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 28
-          },
-          "selector": "0x6e4f0991"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "GrantRoleInput1"
-                ],
-                "type": 4
-              }
-            },
-            {
-              "label": "account",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "GrantRoleInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Grants `role` to `account`.",
-            "",
-            " On success a `RoleGranted` event is emitted.",
-            "",
-            " # Errors",
-            "",
-            " Returns with `MissingRole` error if caller can't grant the role.",
-            " Returns with `RoleRedundant` error `account` has `role`."
-          ],
-          "label": "AccessControl::grant_role",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 28
-          },
-          "selector": "0x4ac062fd"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "HasRoleInput1"
-                ],
-                "type": 4
-              }
-            },
-            {
-              "label": "address",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "HasRoleInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Returns `true` if `account` has been granted `role`."
-          ],
-          "label": "AccessControl::has_role",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 17
-          },
-          "selector": "0xc1d9ac18"
         },
         {
           "args": [
@@ -1140,9 +985,191 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 28
+            "type": 30
           },
           "selector": "0xeaf1248a"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "HasRoleInput1"
+                ],
+                "type": 4
+              }
+            },
+            {
+              "label": "address",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "HasRoleInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Returns `true` if `account` has been granted `role`."
+          ],
+          "label": "AccessControl::has_role",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 20
+          },
+          "selector": "0xc1d9ac18"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "GrantRoleInput1"
+                ],
+                "type": 4
+              }
+            },
+            {
+              "label": "account",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "GrantRoleInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Grants `role` to `account`.",
+            "",
+            " On success a `RoleGranted` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Returns with `MissingRole` error if caller can't grant the role.",
+            " Returns with `RoleRedundant` error `account` has `role`."
+          ],
+          "label": "AccessControl::grant_role",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 30
+          },
+          "selector": "0x4ac062fd"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "GetRoleAdminInput1"
+                ],
+                "type": 4
+              }
+            }
+          ],
+          "docs": [
+            " Returns the admin role that controls `role`. See `grant_role` and `revoke_role`."
+          ],
+          "label": "AccessControl::get_role_admin",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 32
+          },
+          "selector": "0x83da3bb2"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "RevokeRoleInput1"
+                ],
+                "type": 4
+              }
+            },
+            {
+              "label": "account",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "RevokeRoleInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Revokes `role` from `account`.",
+            "",
+            " On success a `RoleRevoked` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
+          ],
+          "label": "AccessControl::revoke_role",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 30
+          },
+          "selector": "0x6e4f0991"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Leaves the contract without owner. It will not be possible to call",
+            " owner's functions anymore. Can only be called by the current owner.",
+            "",
+            " NOTE: Renouncing ownership will leave the contract without an owner,",
+            " thereby removing any functionality that is only available to the owner.",
+            "",
+            " On success a `OwnershipTransferred` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Panics with `CallerIsNotOwner` error if caller is not owner"
+          ],
+          "label": "Ownable::renounce_ownership",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 33
+          },
+          "selector": "0x5e228753"
         },
         {
           "args": [
@@ -1177,7 +1204,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 30
+            "type": 33
           },
           "selector": "0x11f43efd"
         },
@@ -1194,36 +1221,9 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 18
+            "type": 21
           },
           "selector": "0x4fa43c8c"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Leaves the contract without owner. It will not be possible to call",
-            " owner's functions anymore. Can only be called by the current owner.",
-            "",
-            " NOTE: Renouncing ownership will leave the contract without an owner,",
-            " thereby removing any functionality that is only available to the owner.",
-            "",
-            " On success a `OwnershipTransferred` event is emitted.",
-            "",
-            " # Errors",
-            "",
-            " Panics with `CallerIsNotOwner` error if caller is not owner"
-          ],
-          "label": "Ownable::renounce_ownership",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 30
-          },
-          "selector": "0x5e228753"
         },
         {
           "args": [
@@ -1249,7 +1249,7 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 19
+            "type": 22
           },
           "selector": "0xcc24ad6d"
         },
@@ -1277,47 +1277,9 @@ const staking = {
               "ink",
               "MessageResult"
             ],
-            "type": 19
+            "type": 22
           },
           "selector": "0x5da4d83d"
-        },
-        {
-          "args": [
-            {
-              "label": "value",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "WithdrawFeeInput1"
-                ],
-                "type": 7
-              }
-            },
-            {
-              "label": "receiver",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "WithdrawFeeInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " This function allows contract owner to withdraw contract balance to his account."
-          ],
-          "label": "AdminTrait::withdraw_fee",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 10
-          },
-          "selector": "0x07573e99"
         },
         {
           "args": [
@@ -1386,7 +1348,7 @@ const staking = {
                   "admintrait_external",
                   "TranferNftInput2"
                 ],
-                "type": 32
+                "type": 35
               }
             },
             {
@@ -1414,6 +1376,44 @@ const staking = {
             "type": 10
           },
           "selector": "0xed1e1dfa"
+        },
+        {
+          "args": [
+            {
+              "label": "value",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "WithdrawFeeInput1"
+                ],
+                "type": 7
+              }
+            },
+            {
+              "label": "receiver",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "WithdrawFeeInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " This function allows contract owner to withdraw contract balance to his account."
+          ],
+          "label": "AdminTrait::withdraw_fee",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 10
+          },
+          "selector": "0x07573e99"
         },
         {
           "args": [
@@ -2221,66 +2221,70 @@ const staking = {
                 },
                 {
                   "index": 28,
-                  "name": "WhitelistNotExist"
+                  "name": "PhaseDeactivate"
                 },
                 {
                   "index": 29,
-                  "name": "WithdrawFeeError"
+                  "name": "WhitelistNotExist"
                 },
                 {
                   "index": 30,
-                  "name": "WithdrawNFTError"
+                  "name": "WithdrawFeeError"
                 },
                 {
                   "index": 31,
-                  "name": "WithdrawPSP22Error"
+                  "name": "WithdrawNFTError"
                 },
                 {
                   "index": 32,
-                  "name": "NotListed"
+                  "name": "WithdrawPSP22Error"
                 },
                 {
                   "index": 33,
-                  "name": "BidAlreadyExist"
+                  "name": "NotListed"
                 },
                 {
                   "index": 34,
-                  "name": "BidNotExist"
+                  "name": "BidAlreadyExist"
                 },
                 {
                   "index": 35,
-                  "name": "NotInMarket"
+                  "name": "BidNotExist"
                 },
                 {
                   "index": 36,
-                  "name": "NotForSale"
+                  "name": "NotInMarket"
                 },
                 {
                   "index": 37,
-                  "name": "NotInSaleList"
+                  "name": "NotForSale"
                 },
                 {
                   "index": 38,
-                  "name": "InvalidBidLength"
+                  "name": "NotInSaleList"
                 },
                 {
                   "index": 39,
-                  "name": "InvalidCollectionOwner"
+                  "name": "InvalidBidLength"
                 },
                 {
                   "index": 40,
-                  "name": "InvalidTime"
+                  "name": "InvalidCollectionOwner"
                 },
                 {
                   "index": 41,
-                  "name": "RewardStarted"
+                  "name": "InvalidTime"
                 },
                 {
                   "index": 42,
-                  "name": "RewardNotStarted"
+                  "name": "RewardStarted"
                 },
                 {
                   "index": 43,
+                  "name": "RewardNotStarted"
+                },
+                {
+                  "index": 44,
                   "name": "ClaimMustBeFalse"
                 },
                 {
@@ -2290,7 +2294,7 @@ const staking = {
                       "typeName": "OwnableError"
                     }
                   ],
-                  "index": 44,
+                  "index": 45,
                   "name": "OwnableError"
                 },
                 {
@@ -2300,8 +2304,28 @@ const staking = {
                       "typeName": "AccessControlError"
                     }
                   ],
-                  "index": 45,
+                  "index": 46,
                   "name": "AccessControlError"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 16,
+                      "typeName": "PSP22Error"
+                    }
+                  ],
+                  "index": 47,
+                  "name": "PSP22Error"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 18,
+                      "typeName": "PSP34Error"
+                    }
+                  ],
+                  "index": 48,
+                  "name": "PSP34Error"
                 }
               ]
             }
@@ -2387,6 +2411,124 @@ const staking = {
                 {
                   "fields": [
                     {
+                      "type": 17,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Custom"
+                },
+                {
+                  "index": 1,
+                  "name": "InsufficientBalance"
+                },
+                {
+                  "index": 2,
+                  "name": "InsufficientAllowance"
+                },
+                {
+                  "index": 3,
+                  "name": "ZeroRecipientAddress"
+                },
+                {
+                  "index": 4,
+                  "name": "ZeroSenderAddress"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 17,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 5,
+                  "name": "SafeTransferCheckFailed"
+                }
+              ]
+            }
+          },
+          "path": [
+            "openbrush_contracts",
+            "traits",
+            "errors",
+            "psp22",
+            "PSP22Error"
+          ]
+        }
+      },
+      {
+        "id": 17,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 2
+            }
+          }
+        }
+      },
+      {
+        "id": 18,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 17,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Custom"
+                },
+                {
+                  "index": 1,
+                  "name": "SelfApprove"
+                },
+                {
+                  "index": 2,
+                  "name": "NotApproved"
+                },
+                {
+                  "index": 3,
+                  "name": "TokenExists"
+                },
+                {
+                  "index": 4,
+                  "name": "TokenNotExists"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 17,
+                      "typeName": "String"
+                    }
+                  ],
+                  "index": 5,
+                  "name": "SafeTransferCheckFailed"
+                }
+              ]
+            }
+          },
+          "path": [
+            "openbrush_contracts",
+            "traits",
+            "errors",
+            "psp34",
+            "PSP34Error"
+          ]
+        }
+      },
+      {
+        "id": 19,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
                       "type": 7
                     }
                   ],
@@ -2421,7 +2563,7 @@ const staking = {
         }
       },
       {
-        "id": 17,
+        "id": 20,
         "type": {
           "def": {
             "variant": {
@@ -2463,7 +2605,7 @@ const staking = {
         }
       },
       {
-        "id": 18,
+        "id": 21,
         "type": {
           "def": {
             "variant": {
@@ -2505,7 +2647,7 @@ const staking = {
         }
       },
       {
-        "id": 19,
+        "id": 22,
         "type": {
           "def": {
             "variant": {
@@ -2547,7 +2689,7 @@ const staking = {
         }
       },
       {
-        "id": 20,
+        "id": 23,
         "type": {
           "def": {
             "variant": {
@@ -2555,7 +2697,7 @@ const staking = {
                 {
                   "fields": [
                     {
-                      "type": 21
+                      "type": 24
                     }
                   ],
                   "index": 0,
@@ -2576,7 +2718,7 @@ const staking = {
           "params": [
             {
               "name": "T",
-              "type": 21
+              "type": 24
             },
             {
               "name": "E",
@@ -2589,7 +2731,7 @@ const staking = {
         }
       },
       {
-        "id": 21,
+        "id": 24,
         "type": {
           "def": {
             "variant": {
@@ -2622,7 +2764,7 @@ const staking = {
         }
       },
       {
-        "id": 22,
+        "id": 25,
         "type": {
           "def": {
             "variant": {
@@ -2630,7 +2772,7 @@ const staking = {
                 {
                   "fields": [
                     {
-                      "type": 23
+                      "type": 26
                     }
                   ],
                   "index": 0,
@@ -2651,7 +2793,7 @@ const staking = {
           "params": [
             {
               "name": "T",
-              "type": 23
+              "type": 26
             },
             {
               "name": "E",
@@ -2664,7 +2806,7 @@ const staking = {
         }
       },
       {
-        "id": 23,
+        "id": 26,
         "type": {
           "def": {
             "variant": {
@@ -2697,7 +2839,7 @@ const staking = {
         }
       },
       {
-        "id": 24,
+        "id": 27,
         "type": {
           "def": {
             "variant": {
@@ -2705,7 +2847,7 @@ const staking = {
                 {
                   "fields": [
                     {
-                      "type": 25
+                      "type": 28
                     }
                   ],
                   "index": 0,
@@ -2726,7 +2868,7 @@ const staking = {
           "params": [
             {
               "name": "T",
-              "type": 25
+              "type": 28
             },
             {
               "name": "E",
@@ -2739,7 +2881,7 @@ const staking = {
         }
       },
       {
-        "id": 25,
+        "id": 28,
         "type": {
           "def": {
             "variant": {
@@ -2772,139 +2914,13 @@ const staking = {
         }
       },
       {
-        "id": 26,
+        "id": 29,
         "type": {
           "def": {
             "sequence": {
               "type": 6
             }
           }
-        }
-      },
-      {
-        "id": 27,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 4
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 9
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 4
-            },
-            {
-              "name": "E",
-              "type": 9
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 28,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 29
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 9
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 29
-            },
-            {
-              "name": "E",
-              "type": 9
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 29,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 3
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 15
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 3
-            },
-            {
-              "name": "E",
-              "type": 15
-            }
-          ],
-          "path": [
-            "Result"
-          ]
         }
       },
       {
@@ -2967,6 +2983,132 @@ const staking = {
                 {
                   "fields": [
                     {
+                      "type": 15
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 3
+            },
+            {
+              "name": "E",
+              "type": 15
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 32,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 4
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 9
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 4
+            },
+            {
+              "name": "E",
+              "type": 9
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 33,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 34
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 9
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 34
+            },
+            {
+              "name": "E",
+              "type": 9
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 34,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 3
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
                       "type": 14
                     }
                   ],
@@ -2992,7 +3134,7 @@ const staking = {
         }
       },
       {
-        "id": 32,
+        "id": 35,
         "type": {
           "def": {
             "variant": {
@@ -3010,7 +3152,7 @@ const staking = {
                 {
                   "fields": [
                     {
-                      "type": 33,
+                      "type": 36,
                       "typeName": "u16"
                     }
                   ],
@@ -3050,7 +3192,7 @@ const staking = {
                 {
                   "fields": [
                     {
-                      "type": 34,
+                      "type": 17,
                       "typeName": "Vec<u8>"
                     }
                   ],
@@ -3069,20 +3211,10 @@ const staking = {
         }
       },
       {
-        "id": 33,
+        "id": 36,
         "type": {
           "def": {
             "primitive": "u16"
-          }
-        }
-      },
-      {
-        "id": 34,
-        "type": {
-          "def": {
-            "sequence": {
-              "type": 2
-            }
           }
         }
       }
