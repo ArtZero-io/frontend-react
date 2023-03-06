@@ -20,6 +20,8 @@ import {
   Flex,
   Textarea,
   Button,
+  Tooltip,
+  Spacer,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useSubstrateState } from "@utils/substrate";
@@ -50,6 +52,8 @@ import { SCROLLBAR } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { APICall } from "../../../api/client";
 import { execContractQuery } from "../nfts/nfts";
+import { formatNumToBN, isEmptyObj, isValidAddress } from "../../../utils";
+import { CheckCircleIcon, WarningTwoIcon } from "@chakra-ui/icons";
 
 const tableHeaders = ["Address", "Amount", "Claimed", "Price"];
 
@@ -392,12 +396,12 @@ function MyWhiteListProjectPage() {
   );
 
   let [value, setValue] = useState("");
-  let [valueBulkWL, setValueBulkWL] = useState(null);
 
   let handleInputChange = (e) => {
     let inputValue = e.target.value;
     setValue(inputValue);
   };
+  const regexTestNum = /^-?\d+(\.\d+(e\d+)?)?$/;
 
   // const formatValue = value.split(/[,\s\n]/);
   const formatValue = value
@@ -405,36 +409,192 @@ function MyWhiteListProjectPage() {
     .split(/[\n]/)
     .map((item) => {
       const itemArray = item.split(/[,]/);
+
+      const isValid =
+        itemArray?.length === 3 &&
+        isValidAddress(itemArray[0]) &&
+        regexTestNum.test(itemArray[1]) &&
+        regexTestNum.test(itemArray[2]);
+
       return {
         address: itemArray[0],
         whitelistAmount: itemArray[1],
         claimedAmount: 0,
         mintingFee: itemArray[2],
+        isValid,
       };
     });
 
   const value4Contract = formatValue.reduce(
     (prev, curr) => {
-      const { firstArr, secondArr, thirdArr } = prev;
-      // TODO add BN
-      firstArr.push(curr.address);
-      secondArr.push(curr.whitelistAmount * 10 ** 12);
-      thirdArr.push(curr.mintingFee * 10 ** 12);
+      let { addressList, minAmountList, minPriceList, totalCount, falseCase } =
+        prev;
+
+      addressList.push(curr.address);
+      minAmountList.push(curr.whitelistAmount);
+      minPriceList.push(formatNumToBN(curr.mintingFee));
+      totalCount = totalCount + (parseInt(curr.whitelistAmount) || 0);
+      falseCase = falseCase + (!curr?.isValid ? 1 : 0);
 
       return {
         ...prev,
-        firstArr,
-        secondArr,
-        thirdArr,
+        addressList,
+        minAmountList,
+        minPriceList,
+        totalCount,
+        falseCase,
       };
     },
     {
-      firstArr: [],
-      secondArr: [],
-      thirdArr: [],
+      addressList: [],
+      minAmountList: [],
+      minPriceList: [],
+      totalCount: 0,
+      falseCase: 0,
     }
   );
 
+  async function bulkAddWLHandler(params) {
+    console.log("formatValue", formatValue);
+    console.log("value4Contract", value4Contract);
+    // console.log("selectedPhaseCode", selectedPhaseCode);
+    // console.log("addressList", value4Contract?.addressList);
+    // console.log("minAmountList", value4Contract?.minAmountList);
+    // console.log("minPriceList", value4Contract?.minPriceList);
+    // console.log("totalCount", value4Contract?.totalCount);
+
+    // validate proj is selected
+    if (!selectedProjectAddress) {
+      setPhasesListWhitelist(null);
+      toast.error(`Please pick your project!`);
+      return;
+    }
+
+    // validate phase is selected
+    if (!selectedPhaseCode) {
+      // setPhasesListWhitelist(null);
+      toast.error(`Please pick your phase!`);
+      return;
+    }
+
+    try {
+      const phaseInfo = await APICall.getPhaseInfo({
+        nftContractAddress: selectedProjectAddress,
+        phaseId: selectedPhaseCode,
+      });
+
+      // TODO:
+      // change format return to {status, ret, message}
+      // add info "availableTokenAmount" to whitelist database
+      // add info "isActive" to phase database
+      // phaseId not exit BE still return data = {}
+
+      console.log("phaseInfo", phaseInfo);
+
+      const { status, data, message } = phaseInfo;
+
+      if (status !== "OK") {
+        return toast.error("Error ", message);
+      }
+
+      if (isEmptyObj(data)) {
+        return toast.error("There is something wrong with your phase ID!");
+      }
+
+      const { phaseId: phaseIdData, userData, phaseData } = data;
+
+      if (parseInt(phaseIdData) !== parseInt(selectedPhaseCode)) {
+        return toast.error("There is something wrong with your phase Data!");
+      }
+
+      // TODO:
+      // add info "availableTokenAmount" to phase database
+      // if (parseInt(phaseData?.availableTokenAmount) < parseInt(value4Contract.totalCount)) {
+      if (parseInt(availableToken) < parseInt(value4Contract?.totalCount)) {
+        return toast.error(
+          "Total Bulk Whitelist can not greater than remain slot!"
+        );
+      }
+
+      // TODO:
+      // add info "isActive" to phase database
+      // if (!phaseData?.isActive) {
+      if (!currentPhase?.isActive) {
+        return toast.error("Can not add whitelist to inactive phase!");
+      }
+
+      const regexTestNum = /^-?\d+(\.\d+(e\d+)?)?$/;
+
+      for (let i = 0; i < value4Contract?.addressList?.length; i++) {
+        console.log(
+          "value4Contract?.addressList[i]",
+          value4Contract?.addressList[i]
+        );
+        if (!isValidAddress(value4Contract?.addressList[i])) {
+          return toast.error(
+            `This address is invalid! ${truncateStr(
+              value4Contract?.addressList[i]
+            )}`
+          );
+        }
+
+        if (userData?.length > 0) {
+          const isAlreadyAdded = userData
+            ?.map((i) => i.address)
+            .includes(value4Contract?.addressList[i]);
+
+          if (isAlreadyAdded) {
+            return toast.error(
+              `This address was already added to whitelist! ${truncateStr(
+                value4Contract?.addressList[i]
+              )}`
+            );
+          }
+        }
+
+        if (!regexTestNum.test(value4Contract?.minPriceList[i])) {
+          return toast.error(
+            `This price is wrong format! ${value4Contract?.minPriceList[i]}`
+          );
+        }
+      }
+    } catch (error) {
+      console.log("error", error);
+      return toast.error("Error ", error);
+    }
+
+    const launchpad_psp34_nft_standard_contract = new ContractPromise(
+      api,
+      launchpad_psp34_nft_standard.CONTRACT_ABI,
+      selectedProjectAddress
+    );
+
+    launchpad_psp34_nft_standard_calls.setContract(
+      launchpad_psp34_nft_standard_contract
+    );
+
+    dispatch(setTxStatus({ type: ADD_WHITELIST, step: START }));
+
+    await launchpad_psp34_nft_standard_calls.addMultiWhitelists(
+      currentAccount,
+      selectedPhaseCode,
+      value4Contract?.addressList,
+      value4Contract?.minAmountList,
+      value4Contract?.minPriceList,
+      dispatch,
+      ADD_WHITELIST,
+      api
+    );
+  }
+
+  const [isBulkMode, setIsBulkMode] = useState(false);
+
+  function onChangeSelectedMode(v) {
+    console.log("v", v);
+    console.log("isBulkMode", isBulkMode);
+
+    setIsBulkMode(!isBulkMode);
+  }
   return (
     <Stack
       w="full"
@@ -480,6 +640,7 @@ function MyWhiteListProjectPage() {
             </Select>
           </Box>
         </Stack>
+
         <Stack>
           <Text py={2}>Choose Phase</Text>
           <Box>
@@ -508,6 +669,37 @@ function MyWhiteListProjectPage() {
             </Select>
           </Box>
         </Stack>
+
+        <Stack>
+          <Text py={2}>Choose Mode</Text>
+          <Box>
+            <Select
+              isDisabled={actionType || parseInt(selectedPhaseCode) === 0}
+              h="50px"
+              borderRadius="0"
+              fontSize="15px"
+              color="#7ae7ff"
+              value={isBulkMode ? "BULK" : "SINGLE"}
+              fontFamily="Oswald, san serif"
+              textTransform="capitalize"
+              border="1px solid #343333"
+              onChange={({ target }) => onChangeSelectedMode(target.value)}
+            >
+              <option className="my-mode" value={0}>
+                Click to Choose mode
+              </option>
+              {[
+                { id: "SINGLE", code: "single add" },
+                { id: "BULK", code: "bulk add" },
+              ].map((item, index) => (
+                <option value={item.id} key={index}>
+                  {item.code}
+                </option>
+              ))}
+            </Select>
+          </Box>
+        </Stack>
+
         <Stack>
           <Text py={2}>Whitelist Address</Text>
 
@@ -828,80 +1020,178 @@ function MyWhiteListProjectPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <>
-              <Textarea
-                value={value}
-                onChange={handleInputChange}
-                placeholder="Here is a sample placeholder"
-                size="sm"
-              />
-              <Button onClick={() => setValueBulkWL()}>Validate</Button>
-              <Text mb="8px">
-                Value1: {JSON.stringify(value4Contract?.firstArr)}
-              </Text>
-              <Text mb="8px">
-                Value2: {JSON.stringify(value4Contract?.secondArr)}
-              </Text>
-              <Text mb="8px">
-                Value3: {JSON.stringify(value4Contract?.thirdArr)}
-              </Text>
+            {isBulkMode && (
+              <>
+                {value?.trim() && (
+                  <Flex mb="8px">
+                    <Flex>
+                      {value4Contract?.falseCase >=
+                      value4Contract?.totalCount ? (
+                        <Tooltip
+                          hasArrow
+                          label={
+                            <>{`${value4Contract?.falseCase} OUT OF ${value4Contract?.addressList?.length} TOTAL WHITELIST ARE INVALID. PLEASE MAKE SURE: DECIMAL SEPARATOR MUST BE A DOT (.) AND ADDRESS SHOULD BE VALID`}</>
+                          }
+                          bg="gray.300"
+                          color="black"
+                        >
+                          <Flex alignItems="center">
+                            <WarningTwoIcon />
+                            <Text ml="4px">0 valid whitelist</Text>
+                          </Flex>
+                        </Tooltip>
+                      ) : value4Contract?.falseCase !== 0 ? (
+                        <Tooltip
+                          hasArrow
+                          label={
+                            <>{`${value4Contract?.falseCase} OUT OF ${value4Contract?.addressList?.length} TOTAL WHITELIST ARE INVALID. PLEASE MAKE SURE: DECIMAL SEPARATOR MUST BE A DOT (.) AND ADDRESS SHOULD BE VALID`}</>
+                          }
+                          bg="gray.300"
+                          color="black"
+                        >
+                          <Flex alignItems="center">
+                            <WarningTwoIcon />
+                            <Text ml="4px">
+                              {value4Contract?.addressList?.length -
+                                value4Contract?.falseCase}{" "}
+                              valid whitelist
+                            </Text>
+                          </Flex>
+                        </Tooltip>
+                      ) : (
+                        <Flex alignItems="center">
+                          <CheckCircleIcon />
+                          <Text ml="4px">
+                            {value4Contract?.addressList?.length} valid
+                            whitelist
+                          </Text>
+                        </Flex>
+                      )}
+                    </Flex>
+                    <Spacer />
+                    {value4Contract?.falseCase === 0 && (
+                      <Stack textAlign="left">
+                        <Text>
+                          Summary: {value4Contract?.addressList?.length}{" "}
+                          wallets, {value4Contract?.totalCount} slots
+                        </Text>
+                      </Stack>
+                    )}
+                  </Flex>
+                )}
 
-              <TableContainer
-                fontSize="lg"
-                w="full"
-                maxH={{ base: "390px", xl: "400px" }}
-                overflowY="scroll"
-                sx={SCROLLBAR}
-              >
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                >
-                  <Table variant="striped" colorScheme="blackAlpha">
-                    <Thead>
-                      <Tr>
-                        {Object.values(tableHeaders)?.map((item, idx) => (
-                          <Th
-                            top={0}
-                            zIndex={1}
-                            textAlign="center"
-                            key={idx}
-                            fontFamily="Evogria"
-                            color="#888"
-                            // bg="#171717"
-                            fontSize="15px"
-                            fontWeight="400"
-                            dropShadow="lg"
-                          >
-                            {item}
-                          </Th>
-                        ))}
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {formatValue?.map((item, idx) => (
-                        <Tr key={idx} color="#fff">
-                          <Td textAlign="center" color="#fff">
-                            {truncateStr(item.address, 6)}
-                          </Td>
-                          <Td textAlign="center" color="#fff">
-                            {item.whitelistAmount}
-                          </Td>
-                          <Td textAlign="center" color="#fff">
-                            {item.claimedAmount}
-                          </Td>
-                          <Td textAlign="center" color="#fff">
-                            {item.mintingFee} <AzeroIcon mb={1.5} />
-                          </Td>
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                </motion.div>
-              </TableContainer>
-            </>
-            {/* <TableContainer
+                <Textarea
+                  rows={5}
+                  fontFamily="monospace"
+                  fontSize="16px"
+                  value={value}
+                  onChange={handleInputChange}
+                  size="sm"
+                  placeholder="Enter one address, WL amount and mint price Azero on each line.
+                A decimal separator of amount must use dot (.)
+                
+
+                Example: for WL amount 50 and mint price 2.99 Azero 
+                5GRdmMkKeKaV94qU3JjDr2ZwRAgn3xwzd2FEJYKjjSFipiAe,50,2.99"
+                />
+                <Stack my="8px">
+                  <CommonButton
+                    size="md"
+                    mx="0"
+                    {...rest}
+                    // w="full"
+                    text="Bulk Add"
+                    onClick={() => bulkAddWLHandler()}
+                    isDisabled={
+                      loadingForceUpdate ||
+                      (actionType && actionType !== UPDATE_WHITELIST) ||
+                      whiteListPrice < 0 ||
+                      parseInt(whitelistAmount) <
+                        parseInt(whitelistAmountClaimed) ||
+                      whitelistAmount >
+                        parseInt(availableToken) +
+                          parseInt(whitelistAmountRef.current)
+                    }
+                  />
+                </Stack>
+                {/* <Button onClick={() => bulkAddWLHandler()}>Bulk Add</Button> */}
+                {/* <Text mb="8px">
+                Value1: {JSON.stringify(value4Contract?.addressList)}
+              </Text>
+              <Text mb="8px">
+                Value2: {JSON.stringify(value4Contract?.minAmountList)}
+              </Text>
+              <Text mb="8px">
+                Value3: {JSON.stringify(value4Contract?.minPriceList)}
+              </Text> */}
+
+                {value?.trim() &&
+                  value4Contract?.totalCount - value4Contract?.falseCase >
+                    0 && (
+                    <TableContainer
+                      fontSize="lg"
+                      w="full"
+                      maxH={{ base: "390px", xl: "400px" }}
+                      overflowY="scroll"
+                      sx={SCROLLBAR}
+                    >
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        <Table variant="striped" colorScheme="blackAlpha">
+                          <Thead>
+                            <Tr>
+                              {Object.values(tableHeaders)?.map((item, idx) => (
+                                <Th
+                                  top={0}
+                                  zIndex={1}
+                                  textAlign="center"
+                                  key={idx}
+                                  fontFamily="Evogria"
+                                  color="#888"
+                                  // bg="#171717"
+                                  fontSize="15px"
+                                  fontWeight="400"
+                                  dropShadow="lg"
+                                >
+                                  {item}
+                                </Th>
+                              ))}
+                            </Tr>
+                          </Thead>
+                          <Tbody>
+                            {formatValue?.map((item, idx) => (
+                              <Tr key={idx} color="#fff">
+                                <Td textAlign="center" color="#fff">
+                                  {truncateStr(item.address, 6)}
+                                </Td>
+                                <Td textAlign="center" color="#fff">
+                                  {item.whitelistAmount}
+                                </Td>
+                                <Td textAlign="center" color="#fff">
+                                  {item.claimedAmount}
+                                </Td>
+                                <Td textAlign="center" color="#fff">
+                                  {item.mintingFee} <AzeroIcon mb={1.5} />
+                                </Td>
+                              </Tr>
+                            ))}
+                          </Tbody>
+                        </Table>
+                      </motion.div>
+                    </TableContainer>
+                  )}
+              </>
+            )}
+
+            {isBulkMode && (
+              <Heading size="h5" my="8px">
+                Current Whitelist
+              </Heading>
+            )}
+            <TableContainer
               fontSize="lg"
               w="full"
               // w={{ base: "full", xl: "1560px" }}
@@ -959,7 +1249,7 @@ function MyWhiteListProjectPage() {
                   <Text py={2}>No info found!</Text>
                 )}
               </motion.div>
-            </TableContainer> */}
+            </TableContainer>
           </motion.div>
         )}
       </Stack>
