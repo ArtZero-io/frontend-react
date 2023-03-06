@@ -1,9 +1,9 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5DnWBzH81PJKYv3fZUJME19yUobD1v42Nh7ukm4EntD3TFDq",
+  CONTRACT_ADDRESS: "5D4rYbyX36woCv4ECwrp71rKRmixhy94xdR34YtwgmvaCpo3",
   CONTRACT_ABI: {
     "source": {
-      "hash": "0xe1781f1a3d4b0dcfd6d7202b949e411db6bb2ed157384ee819b5464921aaa86e",
-      "language": "ink! 4.0.0",
+      "hash": "0x0837d0b95b94e620dc19103852bd83c4bd86eb34e9a5b00fd27210d969965007",
+      "language": "ink! 4.0.0-beta",
       "compiler": "rustc 1.69.0-nightly",
       "build_info": {
         "build_mode": "Debug",
@@ -117,7 +117,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Option"
                 ],
-                "type": 31
+                "type": 28
               }
             }
           ],
@@ -247,7 +247,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 21
+                "type": 18
               }
             },
             {
@@ -256,7 +256,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 22
+                "type": 19
               }
             },
             {
@@ -265,7 +265,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 23
+                "type": 20
               }
             },
             {
@@ -274,7 +274,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 24
+                "type": 21
               }
             },
             {
@@ -283,7 +283,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 24
+                "type": 21
               }
             },
             {
@@ -292,7 +292,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 24
+                "type": 21
               }
             },
             {
@@ -301,7 +301,7 @@ const launchpad_manager = {
                 "displayName": [
                   "Vec"
                 ],
-                "type": 24
+                "type": 21
               }
             }
           ],
@@ -415,7 +415,7 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 25
+            "type": 22
           },
           "selector": "0x15b7463b"
         },
@@ -442,7 +442,7 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 25
+            "type": 22
           },
           "selector": "0xa81f0494"
         },
@@ -522,7 +522,7 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 27
+            "type": 24
           },
           "selector": "0x57fe17e8"
         },
@@ -539,7 +539,7 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 28
+            "type": 25
           },
           "selector": "0xd86a7732"
         },
@@ -556,7 +556,7 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 28
+            "type": 25
           },
           "selector": "0x5e97f98d"
         },
@@ -573,7 +573,7 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 29
+            "type": 26
           },
           "selector": "0xbeb47f47"
         },
@@ -598,7 +598,7 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 30
+            "type": 27
           },
           "selector": "0xbe4185f5"
         },
@@ -625,7 +625,7 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 32
+            "type": 29
           },
           "selector": "0xf25b0961"
         },
@@ -652,7 +652,7 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 33
+            "type": 30
           },
           "selector": "0x908e3150"
         },
@@ -667,47 +667,9 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 36
+            "type": 33
           },
           "selector": "0xc14ff7e1"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "HasRoleInput1"
-                ],
-                "type": 4
-              }
-            },
-            {
-              "label": "address",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "HasRoleInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Returns `true` if `account` has been granted `role`."
-          ],
-          "label": "AccessControl::has_role",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 37
-          },
-          "selector": "0xc1d9ac18"
         },
         {
           "args": [
@@ -733,7 +695,7 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 38
+            "type": 34
           },
           "selector": "0x83da3bb2"
         },
@@ -778,53 +740,9 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 25
+            "type": 22
           },
           "selector": "0x4ac062fd"
-        },
-        {
-          "args": [
-            {
-              "label": "role",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "RevokeRoleInput1"
-                ],
-                "type": 4
-              }
-            },
-            {
-              "label": "account",
-              "type": {
-                "displayName": [
-                  "accesscontrol_external",
-                  "RevokeRoleInput2"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " Revokes `role` from `account`.",
-            "",
-            " On success a `RoleRevoked` event is emitted.",
-            "",
-            " # Errors",
-            "",
-            " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
-          ],
-          "label": "AccessControl::revoke_role",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 25
-          },
-          "selector": "0x6e4f0991"
         },
         {
           "args": [
@@ -870,9 +788,91 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 25
+            "type": 22
           },
           "selector": "0xeaf1248a"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "RevokeRoleInput1"
+                ],
+                "type": 4
+              }
+            },
+            {
+              "label": "account",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "RevokeRoleInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Revokes `role` from `account`.",
+            "",
+            " On success a `RoleRevoked` event is emitted.",
+            "",
+            " # Errors",
+            "",
+            " Returns with `MissingRole` error if caller can't grant the `role` or if `account` doesn't have `role`."
+          ],
+          "label": "AccessControl::revoke_role",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 22
+          },
+          "selector": "0x6e4f0991"
+        },
+        {
+          "args": [
+            {
+              "label": "role",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "HasRoleInput1"
+                ],
+                "type": 4
+              }
+            },
+            {
+              "label": "address",
+              "type": {
+                "displayName": [
+                  "accesscontrol_external",
+                  "HasRoleInput2"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " Returns `true` if `account` has been granted `role`."
+          ],
+          "label": "AccessControl::has_role",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 35
+          },
+          "selector": "0xc1d9ac18"
         },
         {
           "args": [],
@@ -897,26 +897,9 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 39
+            "type": 36
           },
           "selector": "0x5e228753"
-        },
-        {
-          "args": [],
-          "docs": [
-            " Returns the address of the current owner."
-          ],
-          "label": "Ownable::owner",
-          "mutates": false,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 41
-          },
-          "selector": "0x4fa43c8c"
         },
         {
           "args": [
@@ -951,9 +934,26 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 39
+            "type": 36
           },
           "selector": "0x11f43efd"
+        },
+        {
+          "args": [],
+          "docs": [
+            " Returns the address of the current owner."
+          ],
+          "label": "Ownable::owner",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 38
+          },
+          "selector": "0x4fa43c8c"
         },
         {
           "args": [],
@@ -968,7 +968,7 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 38
+            "type": 34
           },
           "selector": "0x87b065fe"
         },
@@ -985,7 +985,7 @@ const launchpad_manager = {
               "ink",
               "MessageResult"
             ],
-            "type": 28
+            "type": 25
           },
           "selector": "0x5cae8061"
         },
@@ -1026,6 +1026,54 @@ const launchpad_manager = {
             "type": 12
           },
           "selector": "0x07573e99"
+        },
+        {
+          "args": [
+            {
+              "label": "nft_contract_address",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput1"
+                ],
+                "type": 0
+              }
+            },
+            {
+              "label": "token_id",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput2"
+                ],
+                "type": 39
+              }
+            },
+            {
+              "label": "receiver",
+              "type": {
+                "displayName": [
+                  "admintrait_external",
+                  "TranferNftInput3"
+                ],
+                "type": 0
+              }
+            }
+          ],
+          "docs": [
+            " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
+          ],
+          "label": "AdminTrait::tranfer_nft",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "ink",
+              "MessageResult"
+            ],
+            "type": 12
+          },
+          "selector": "0xed1e1dfa"
         },
         {
           "args": [
@@ -1074,54 +1122,6 @@ const launchpad_manager = {
             "type": 12
           },
           "selector": "0xd9aad284"
-        },
-        {
-          "args": [
-            {
-              "label": "nft_contract_address",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput1"
-                ],
-                "type": 0
-              }
-            },
-            {
-              "label": "token_id",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput2"
-                ],
-                "type": 42
-              }
-            },
-            {
-              "label": "receiver",
-              "type": {
-                "displayName": [
-                  "admintrait_external",
-                  "TranferNftInput3"
-                ],
-                "type": 0
-              }
-            }
-          ],
-          "docs": [
-            " This function allow contract owner withdraw NFT to an account in case there is any NFT sent to contract by mistake"
-          ],
-          "label": "AdminTrait::tranfer_nft",
-          "mutates": true,
-          "payable": false,
-          "returnType": {
-            "displayName": [
-              "ink",
-              "MessageResult"
-            ],
-            "type": 12
-          },
-          "selector": "0xed1e1dfa"
         },
         {
           "args": [
@@ -1968,70 +1968,66 @@ const launchpad_manager = {
                 },
                 {
                   "index": 28,
-                  "name": "PhaseDeactivate"
-                },
-                {
-                  "index": 29,
                   "name": "WhitelistNotExist"
                 },
                 {
-                  "index": 30,
+                  "index": 29,
                   "name": "WithdrawFeeError"
                 },
                 {
-                  "index": 31,
+                  "index": 30,
                   "name": "WithdrawNFTError"
                 },
                 {
-                  "index": 32,
+                  "index": 31,
                   "name": "WithdrawPSP22Error"
                 },
                 {
-                  "index": 33,
+                  "index": 32,
                   "name": "NotListed"
                 },
                 {
-                  "index": 34,
+                  "index": 33,
                   "name": "BidAlreadyExist"
                 },
                 {
-                  "index": 35,
+                  "index": 34,
                   "name": "BidNotExist"
                 },
                 {
-                  "index": 36,
+                  "index": 35,
                   "name": "NotInMarket"
                 },
                 {
-                  "index": 37,
+                  "index": 36,
                   "name": "NotForSale"
                 },
                 {
-                  "index": 38,
+                  "index": 37,
                   "name": "NotInSaleList"
                 },
                 {
-                  "index": 39,
+                  "index": 38,
                   "name": "InvalidBidLength"
                 },
                 {
-                  "index": 40,
+                  "index": 39,
                   "name": "InvalidCollectionOwner"
                 },
                 {
-                  "index": 41,
+                  "index": 40,
                   "name": "InvalidTime"
                 },
                 {
-                  "index": 42,
+                  "index": 41,
                   "name": "RewardStarted"
                 },
                 {
-                  "index": 43,
+                  "index": 42,
                   "name": "RewardNotStarted"
                 },
                 {
-                  "index": 44,
+                  "index": 43,
                   "name": "ClaimMustBeFalse"
                 },
                 {
@@ -2041,7 +2037,7 @@ const launchpad_manager = {
                       "typeName": "OwnableError"
                     }
                   ],
-                  "index": 45,
+                  "index": 44,
                   "name": "OwnableError"
                 },
                 {
@@ -2051,28 +2047,8 @@ const launchpad_manager = {
                       "typeName": "AccessControlError"
                     }
                   ],
-                  "index": 46,
+                  "index": 45,
                   "name": "AccessControlError"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 18,
-                      "typeName": "PSP22Error"
-                    }
-                  ],
-                  "index": 47,
-                  "name": "PSP22Error"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 20,
-                      "typeName": "PSP34Error"
-                    }
-                  ],
-                  "index": 48,
-                  "name": "PSP34Error"
                 }
               ]
             }
@@ -2153,124 +2129,6 @@ const launchpad_manager = {
         "id": 18,
         "type": {
           "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 19,
-                      "typeName": "String"
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Custom"
-                },
-                {
-                  "index": 1,
-                  "name": "InsufficientBalance"
-                },
-                {
-                  "index": 2,
-                  "name": "InsufficientAllowance"
-                },
-                {
-                  "index": 3,
-                  "name": "ZeroRecipientAddress"
-                },
-                {
-                  "index": 4,
-                  "name": "ZeroSenderAddress"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 19,
-                      "typeName": "String"
-                    }
-                  ],
-                  "index": 5,
-                  "name": "SafeTransferCheckFailed"
-                }
-              ]
-            }
-          },
-          "path": [
-            "openbrush_contracts",
-            "traits",
-            "errors",
-            "psp22",
-            "PSP22Error"
-          ]
-        }
-      },
-      {
-        "id": 19,
-        "type": {
-          "def": {
-            "sequence": {
-              "type": 2
-            }
-          }
-        }
-      },
-      {
-        "id": 20,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 19,
-                      "typeName": "String"
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Custom"
-                },
-                {
-                  "index": 1,
-                  "name": "SelfApprove"
-                },
-                {
-                  "index": 2,
-                  "name": "NotApproved"
-                },
-                {
-                  "index": 3,
-                  "name": "TokenExists"
-                },
-                {
-                  "index": 4,
-                  "name": "TokenNotExists"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 19,
-                      "typeName": "String"
-                    }
-                  ],
-                  "index": 5,
-                  "name": "SafeTransferCheckFailed"
-                }
-              ]
-            }
-          },
-          "path": [
-            "openbrush_contracts",
-            "traits",
-            "errors",
-            "psp34",
-            "PSP34Error"
-          ]
-        }
-      },
-      {
-        "id": 21,
-        "type": {
-          "def": {
             "sequence": {
               "type": 15
             }
@@ -2278,7 +2136,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 22,
+        "id": 19,
         "type": {
           "def": {
             "sequence": {
@@ -2288,7 +2146,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 23,
+        "id": 20,
         "type": {
           "def": {
             "sequence": {
@@ -2298,7 +2156,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 24,
+        "id": 21,
         "type": {
           "def": {
             "sequence": {
@@ -2308,7 +2166,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 25,
+        "id": 22,
         "type": {
           "def": {
             "variant": {
@@ -2316,7 +2174,7 @@ const launchpad_manager = {
                 {
                   "fields": [
                     {
-                      "type": 26
+                      "type": 23
                     }
                   ],
                   "index": 0,
@@ -2337,7 +2195,7 @@ const launchpad_manager = {
           "params": [
             {
               "name": "T",
-              "type": 26
+              "type": 23
             },
             {
               "name": "E",
@@ -2350,7 +2208,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 26,
+        "id": 23,
         "type": {
           "def": {
             "variant": {
@@ -2392,7 +2250,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 27,
+        "id": 24,
         "type": {
           "def": {
             "variant": {
@@ -2434,7 +2292,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 28,
+        "id": 25,
         "type": {
           "def": {
             "variant": {
@@ -2476,7 +2334,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 29,
+        "id": 26,
         "type": {
           "def": {
             "variant": {
@@ -2506,6 +2364,123 @@ const launchpad_manager = {
             {
               "name": "T",
               "type": 5
+            },
+            {
+              "name": "E",
+              "type": 11
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 27,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 28
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 11
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 28
+            },
+            {
+              "name": "E",
+              "type": 11
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 28,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 0
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 0
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 29,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 8
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 11
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 8
             },
             {
               "name": "E",
@@ -2572,7 +2547,7 @@ const launchpad_manager = {
                 {
                   "fields": [
                     {
-                      "type": 0
+                      "type": 32
                     }
                   ],
                   "index": 1,
@@ -2584,7 +2559,7 @@ const launchpad_manager = {
           "params": [
             {
               "name": "T",
-              "type": 0
+              "type": 32
             }
           ],
           "path": [
@@ -2594,123 +2569,6 @@ const launchpad_manager = {
       },
       {
         "id": 32,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 8
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 11
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 8
-            },
-            {
-              "name": "E",
-              "type": 11
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 33,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 34
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 11
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 34
-            },
-            {
-              "name": "E",
-              "type": 11
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 34,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "index": 0,
-                  "name": "None"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 35
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Some"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 35
-            }
-          ],
-          "path": [
-            "Option"
-          ]
-        }
-      },
-      {
-        "id": 35,
         "type": {
           "def": {
             "composite": {
@@ -2753,7 +2611,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 36,
+        "id": 33,
         "type": {
           "def": {
             "variant": {
@@ -2795,49 +2653,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 37,
-        "type": {
-          "def": {
-            "variant": {
-              "variants": [
-                {
-                  "fields": [
-                    {
-                      "type": 7
-                    }
-                  ],
-                  "index": 0,
-                  "name": "Ok"
-                },
-                {
-                  "fields": [
-                    {
-                      "type": 11
-                    }
-                  ],
-                  "index": 1,
-                  "name": "Err"
-                }
-              ]
-            }
-          },
-          "params": [
-            {
-              "name": "T",
-              "type": 7
-            },
-            {
-              "name": "E",
-              "type": 11
-            }
-          ],
-          "path": [
-            "Result"
-          ]
-        }
-      },
-      {
-        "id": 38,
+        "id": 34,
         "type": {
           "def": {
             "variant": {
@@ -2879,7 +2695,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 39,
+        "id": 35,
         "type": {
           "def": {
             "variant": {
@@ -2887,7 +2703,7 @@ const launchpad_manager = {
                 {
                   "fields": [
                     {
-                      "type": 40
+                      "type": 7
                     }
                   ],
                   "index": 0,
@@ -2908,7 +2724,7 @@ const launchpad_manager = {
           "params": [
             {
               "name": "T",
-              "type": 40
+              "type": 7
             },
             {
               "name": "E",
@@ -2921,7 +2737,49 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 40,
+        "id": 36,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 37
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Ok"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 11
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Err"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 37
+            },
+            {
+              "name": "E",
+              "type": 11
+            }
+          ],
+          "path": [
+            "Result"
+          ]
+        }
+      },
+      {
+        "id": 37,
         "type": {
           "def": {
             "variant": {
@@ -2963,7 +2821,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 41,
+        "id": 38,
         "type": {
           "def": {
             "variant": {
@@ -3005,7 +2863,7 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 42,
+        "id": 39,
         "type": {
           "def": {
             "variant": {
@@ -3023,7 +2881,7 @@ const launchpad_manager = {
                 {
                   "fields": [
                     {
-                      "type": 43,
+                      "type": 40,
                       "typeName": "u16"
                     }
                   ],
@@ -3063,7 +2921,7 @@ const launchpad_manager = {
                 {
                   "fields": [
                     {
-                      "type": 19,
+                      "type": 41,
                       "typeName": "Vec<u8>"
                     }
                   ],
@@ -3082,10 +2940,20 @@ const launchpad_manager = {
         }
       },
       {
-        "id": 43,
+        "id": 40,
         "type": {
           "def": {
             "primitive": "u16"
+          }
+        }
+      },
+      {
+        "id": 41,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 2
+            }
           }
         }
       }
