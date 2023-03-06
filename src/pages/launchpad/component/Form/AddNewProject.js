@@ -170,10 +170,14 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
       });
 
       if (maxRoyaltyFeeRate === 0) {
-        const maxRoyaltyFeeRateData =
-          await collection_manager_calls.getMaxRoyaltyFeeRate(currentAccount);
+        try {
+          const maxRoyaltyFeeRateData =
+            await collection_manager_calls.getMaxRoyaltyFeeRate(currentAccount);
 
-        setMaxRoyaltyFeeRate(maxRoyaltyFeeRateData / 100);
+          setMaxRoyaltyFeeRate(maxRoyaltyFeeRateData / 100);
+        } catch (error) {
+          console.log("error", error);
+        }
 
         if (addingFee === 0) {
           const addingFeeData =
@@ -506,6 +510,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       email_owner: values.email_owner,
                       collection_name: values.name,
                       collection_telegram: values.telegram,
+                      template: "PROJECT",
                     };
                     await collection_manager_calls.addNewCollection(
                       currentAccount,

@@ -222,7 +222,6 @@ async function addNewProject(
   txType,
   api,
   createNewCollection
-  // templateParams
 ) {
   if (!contract || !caller_account) {
     throw Error(`Contract or caller not valid!`);
@@ -310,28 +309,6 @@ async function addNewProject(
                     }
 
                     const nft_address = eventValues[1];
-                    // templateParams.collection_address = eventValues[1];
-
-                    // emailjs
-                    //   .send(
-                    //     process.env.REACT_APP_EMAILJS_SERVICE_ID,
-                    //     process.env
-                    //       .REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
-                    //     templateParams,
-                    //     process.env.REACT_APP_EMAILJS_PUBLIC_KEY
-                    //   )
-                    //   .then(
-                    //     function (response) {
-                    //       console.log(
-                    //         "SUCCESS!",
-                    //         response.status,
-                    //         response.text
-                    //       );
-                    //     },
-                    //     function (error) {
-                    //       console.log("error send email FAILED...", error);
-                    //     }
-                    //   );
 
                     const res = await APICall.askBeUpdateProjectData({
                       project_address: nft_address,

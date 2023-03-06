@@ -91,11 +91,17 @@ async function addNewCollection(
           if (method === "ExtrinsicSuccess" && status.type === "Finalized") {
             if (templateParams) {
               templateParams.collection_address = data?.nftContractAddress;
+
+              const templateMode =
+                templateParams?.template === "PROJECT"
+                  ? process.env.REACT_APP_EMAILJS_NEW_PROJECT_TEMPLATE_ID
+                  : process.env.REACT_APP_EMAILJS_NEW_COLLECTION_TEMPLATE_ID;
+
               // sent email
               emailjs
                 .send(
                   process.env.REACT_APP_EMAILJS_SERVICE_ID,
-                  process.env.REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
+                  templateMode,
                   templateParams,
                   process.env.REACT_APP_EMAILJS_PUBLIC_KEY
                 )
@@ -129,7 +135,7 @@ async function addNewCollection(
                 collection_address: data?.nftContractAddress,
               });
 
-              await delay(6000);
+              await delay(3000);
 
               const res = await APICall.updateCollectionEmail({
                 collection_address: data?.nftContractAddress,
@@ -361,7 +367,7 @@ async function autoNewCollection(
                       .send(
                         process.env.REACT_APP_EMAILJS_SERVICE_ID,
                         process.env
-                          .REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
+                          .REACT_APP_EMAILJS_NEW_COLLECTION_TEMPLATE_ID,
                         templateParams,
                         process.env.REACT_APP_EMAILJS_PUBLIC_KEY
                       )
@@ -382,7 +388,7 @@ async function autoNewCollection(
                       collection_address: eventValues[1],
                     });
 
-                    await delay(6000);
+                    await delay(3000);
 
                     const res = await APICall.updateCollectionEmail({
                       collection_address: eventValues[1],
