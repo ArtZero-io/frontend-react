@@ -1,5 +1,5 @@
 const launchpad_manager = {
-  CONTRACT_ADDRESS: "5HcACWijXGpmzUVFzqy5V4XD8Tuju2gsuB6b8jSKusmM1obf",
+  CONTRACT_ADDRESS: "5DnWBzH81PJKYv3fZUJME19yUobD1v42Nh7ukm4EntD3TFDq",
   CONTRACT_ABI: {
     "source": {
       "hash": "0xe1781f1a3d4b0dcfd6d7202b949e411db6bb2ed157384ee819b5464921aaa86e",
