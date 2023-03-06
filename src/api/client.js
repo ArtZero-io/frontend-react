@@ -134,9 +134,12 @@ export const APICall = {
   },
 
   // Event API Calls
-  getPurchaseEvents: async ({ collection_address, limit = 6,
+  getPurchaseEvents: async ({
+    collection_address,
+    limit = 6,
     offset = 0,
-    sort = -1, }) => {
+    sort = -1,
+  }) => {
     let { ret: result } = await client("POST", "/getPurchaseEvents", {
       limit,
       offset,
@@ -151,9 +154,12 @@ export const APICall = {
     return result;
   },
 
-  getBidWinEvents: async ({ collection_address, limit = 6,
+  getBidWinEvents: async ({
+    collection_address,
+    limit = 6,
     offset = 0,
-    sort = -1, }) => {
+    sort = -1,
+  }) => {
     let { ret: result } = await client("POST", "/getBidWinEvents", {
       limit,
       offset,
@@ -168,9 +174,12 @@ export const APICall = {
     return result;
   },
 
-  getUnlistEvents: async ({ collection_address, limit = 6,
+  getUnlistEvents: async ({
+    collection_address,
+    limit = 6,
     offset = 0,
-    sort = -1, }) => {
+    sort = -1,
+  }) => {
     let { ret: result } = await client("POST", "/getUnlistEvents", {
       limit,
       offset,
@@ -185,9 +194,12 @@ export const APICall = {
     return result;
   },
 
-  getNewListEvents: async ({ collection_address, limit = 6,
+  getNewListEvents: async ({
+    collection_address,
+    limit = 6,
     offset = 0,
-    sort = -1, }) => {
+    sort = -1,
+  }) => {
     let { ret: result } = await client("POST", "/getNewListEvents", {
       limit,
       offset,
@@ -418,6 +430,15 @@ export const APICall = {
       offset,
       sort,
       isActive,
+    });
+
+    return ret;
+  },
+
+  getPhaseInfo: async ({ nftContractAddress, phaseId }) => {
+    const ret = await client("POST", "/getPhaseInfo", {
+      nftContractAddress,
+      phaseId,
     });
 
     return ret;

@@ -29,7 +29,7 @@ import CommonButton from "@components/Button/CommonButton";
 import { setTxStatus } from "@store/actions/txStatus";
 import { APICall } from "@api/client";
 import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
-import { convertStringToPrice } from "@utils";
+import { isValidAddress, convertStringToPrice } from "@utils";
 import { validationEmail } from "@constants/yup";
 
 const AdvancedModeForm = ({ mode = "add", id }) => {
@@ -112,6 +112,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
       discord: "",
       telegram: "",
       agreeTosCheckbox: false,
+      confirmInfoCheckbox: false,
     };
 
     const fetchCollectionsByID = async () => {
@@ -143,6 +144,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           collectRoyaltyFee,
           royaltyFee: royaltyFee / 100,
           agreeTosCheckbox: false,
+          confirmInfoCheckbox: false,
           website,
           twitter,
           discord,
@@ -174,6 +176,14 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
       : setInitialValues(newInitialValues);
   }, [id, mode]);
 
+  async function getContractInfo(api, address) {
+    if (isValidAddress(address)) {
+      const ret = await api.query.contracts.contractInfoOf(address);
+
+      return ret.unwrapOr(null);
+    }
+  }
+
   return (
     <>
       {initialValues && (
@@ -183,10 +193,37 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
             isEditMode: Yup.boolean(),
 
             nftContractAddress: Yup.string()
-              .trim()
-              .min(3, "Must be at least 3 characters")
-              .max(48, "Must be at most 48 characters")
+              .test(
+                "Test nftContractAddress",
+                "Validate NFT Contract Address failed!",
+                (value, { path, createError }) => {
+                  return new Promise((resolve, reject) => {
+                    if (!isValidAddress(value)) {
+                      reject(
+                        createError({
+                          path,
+                          message: "Address is not valid!",
+                        })
+                      );
+                    }
+
+                    return getContractInfo(api, value).then((isOnChain) => {
+                      if (!isOnChain) {
+                        reject(
+                          createError({
+                            path,
+                            message: "Contract Address is not on-chain!",
+                          })
+                        );
+                      }
+
+                      resolve(true);
+                    });
+                  });
+                }
+              )
               .required("This field is required"),
+
             collectionName: Yup.string()
               .trim()
               .min(3, "Must be at least 3 characters")
@@ -225,6 +262,12 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               then: Yup.boolean()
                 .required("The terms of service must be accepted.")
                 .oneOf([true], "The TOS must be accepted."),
+            }),
+            confirmInfoCheckbox: Yup.boolean().when("isEditMode", {
+              is: false,
+              then: Yup.boolean()
+                .required("This terms must be accepted.")
+                .oneOf([true], "This terms must be accepted."),
             }),
             emailOwner: validationEmail,
           })}
@@ -655,6 +698,21 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                       Create new collection you will pay
                       <strong> {addingFee} AZERO </strong> in fee to ArtZero.io
                     </Text>
+
+                    <HStack justifyContent="center">
+                      <CommonCheckbox
+                        isDisabled={actionType}
+                        name="confirmInfoCheckbox"
+                        content={
+                          <>
+                            <Text as="span" color="#888">
+                              {`I confirm all info is correct.`}
+                            </Text>
+                          </>
+                        }
+                      />
+                    </HStack>
+
                     <HStack justifyContent="center">
                       <CommonCheckbox
                         isDisabled={actionType}

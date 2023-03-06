@@ -543,3 +543,16 @@ export function formatNumberOutput(o) {
 
   return parseInt(frmtRet?.replaceAll(",", ""));
 }
+
+export function isValidAddress(address) {
+  try {
+    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+export const formatNumToBN = (number = 0, decimal = 12) => {
+  return new BN(number * 10 ** 6).mul(new BN(10 ** (decimal - 6))).toString();
+};
