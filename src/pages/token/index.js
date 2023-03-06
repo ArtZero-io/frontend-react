@@ -100,6 +100,7 @@ function TokenPage() {
   // const [bidsList, setBidsList] = useState(null);
   const [collection, setCollection] = useState(null);
   const [ownerName, setOwnerName] = useState(null);
+  const [ownerAddress, setOwnerAddress] = useState(null);
   const [myTradingFee, setMyTradingFee] = useState(null);
   const [feeCalculated, setFeeCalculated] = useState(null);
 
@@ -154,7 +155,7 @@ function TokenPage() {
         // get username onchain if any
         const name = truncateStr(ownerAddress);
         setOwnerName(name);
-
+        setOwnerAddress(ownerAddress)
         if (ownerAddress === currentAccount?.address) {
           setIsOwner(true);
         } else {
@@ -473,7 +474,7 @@ function TokenPage() {
                     Owned by{" "}
                     <Link
                       // to="/user/xxx"
-                      to="#"
+                      to={`/public-account/general/${ownerAddress}`}
                       color="brand.blue"
                       textTransform="none"
                       textDecoration="underline"
@@ -756,8 +757,7 @@ function TokenPage() {
                   <Text>
                     Owned by{" "}
                     <Link
-                      // to="/user/xxx"
-                      to="#"
+                      to={`/public-account/general/${ownerAddress}`}
                       color="brand.blue"
                       textTransform="none"
                       textDecoration="underline"

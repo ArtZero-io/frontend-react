@@ -7,7 +7,6 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalOverlay,
   Spacer,
   Stack,
   useBreakpointValue,
@@ -56,10 +55,10 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
       )}
 
       <Modal isCentered size={modalSize} isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay
+        {/* <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
-        />
+        /> */}
         <ModalContent
           borderRadius="0"
           position="relative"
@@ -71,6 +70,8 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
             borderWidth={2}
             borderRadius="0"
             position="absolute"
+            _hover="none"
+            bg="#171717"
             top={["0", "-8", "-8"]}
             right={["0", "-8", "-8"]}
           />

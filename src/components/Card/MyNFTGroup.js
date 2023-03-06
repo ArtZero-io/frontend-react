@@ -46,6 +46,7 @@ function MyNFTGroupCard({
   nftContractAddress,
   hasBottomBorder = false,
   isStakingContractLocked,
+  type,
   ...rest
 }) {
   const { currentAccount, api } = useSubstrateState();
@@ -60,6 +61,7 @@ function MyNFTGroupCard({
   const location = useLocation();
 
   function onClickHandler(item) {
+    if(type === "public") return
     if (isBigScreen) {
       setSelectedNFT(item);
       item?.stakeStatus === 0 && onOpen();

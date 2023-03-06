@@ -2,7 +2,6 @@ import {
   Modal,
   ModalCloseButton,
   ModalContent,
-  ModalOverlay,
   useBreakpointValue,
   Tab,
   TabList,
@@ -62,10 +61,10 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
       scrollBehavior="inside"
       closeOnOverlayClick={false}
     >
-      <ModalOverlay
+      {/* <ModalOverlay
         bg="blackAlpha.300"
         backdropFilter="blur(10px) hue-rotate(90deg)"
-      />
+      /> */}
 
       <ModalContent
         p={0}
@@ -82,6 +81,8 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
           borderWidth={[0, '2px']}
           top={['0', '-8', '-8']}
           right={['0', '-8', '-8']}
+          _hover="none"
+            bg="#171717"
           onClick={() => step === FINALIZED && onEndClick()}
         />
 

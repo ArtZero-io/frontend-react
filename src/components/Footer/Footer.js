@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import SocialCard from "@components/Card/Social";
 import { ArtZeroLogo } from "@theme/assets/logo/ArtZeroLogo";
-import { ArtZero_Cookies, ArtZero_Privacy, ArtZero_TOS } from "../../constants";
+import { ArtZero_Cookies, ArtZero_Privacy, ArtZero_TOS, ArtZero_Assets } from "../../constants";
 
 const profile = [
   { discord: "https://discord.gg/wzkZ2JTvN4" },
@@ -103,6 +103,18 @@ export const Footer = () => {
                     textDecoration: "underline",
                     color: "#7ae7ff",
                   }}
+                  href={ArtZero_Assets}
+                >
+                  Brand Assets
+                </Link>
+                <Link
+                  mx="20px"
+                  textTransform="none"
+                  _hover={{
+                    textDecoration: "underline",
+                    color: "#7ae7ff",
+                  }}
+                  target="_blank"
                   href={ArtZero_Privacy}
                 >
                   Privacy Policy
