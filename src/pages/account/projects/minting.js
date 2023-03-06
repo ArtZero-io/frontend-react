@@ -326,7 +326,7 @@ function MyMintingProjectPage() {
             variant="outline"
             text="mint"
             onClick={() => onOwnerMint()}
-            isDisabled={!projStatus || remainAmount <= 0 || loadingForceUpdate}
+            isDisabled={!projStatus || remainAmount <= 0 || loadingForceUpdate || mintAmount > parseInt(remainAmount) || parseInt(mintAmount) < 1}
           />
         </HStack>
       </Stack>
