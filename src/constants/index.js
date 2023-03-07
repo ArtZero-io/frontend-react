@@ -79,7 +79,7 @@ export const ADMIN_ROLE_CODE = 3739740293;
 export const ArtZero_TOS="https://alephzero.artzero.io/assets/ArtZero_Terms_Of_Service.pdf";
 export const ArtZero_Cookies="https://alephzero.artzero.io/assets/ArtZero_Cookies_Policy.pdf";
 export const ArtZero_Privacy="https://alephzero.artzero.io/assets/ArtZero_Privacy_Policy.pdf";
-export const ArtZero_Assets="https://drive.google.com/drive/folders/1EXuGDmYVypszJUq4yr9dNTOZCuP96e3i"
+export const ArtZero_Assets="https://docs.artzero.io/what-is-artzero/artzero-brand-package"
 
 export const SCROLLBAR = {
   "&::-webkit-scrollbar": {

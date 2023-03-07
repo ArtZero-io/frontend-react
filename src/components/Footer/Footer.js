@@ -85,6 +85,18 @@ export const Footer = () => {
                 discover, collect and trade nfts on artzero
               </Heading>
               <Flex w="full" align="center" justifyContent="center">
+              <Link
+                  mx="20px"
+                  textTransform="none"
+                  _hover={{
+                    textDecoration: "underline",
+                    color: "#7ae7ff",
+                  }}
+                  target="_blank"
+                  href={ArtZero_Assets}
+                >
+                  Brand Assets
+                </Link>
                 <Link
                   mx="20px"
                   textTransform="none"
@@ -103,18 +115,6 @@ export const Footer = () => {
                     textDecoration: "underline",
                     color: "#7ae7ff",
                   }}
-                  href={ArtZero_Assets}
-                >
-                  Brand Assets
-                </Link>
-                <Link
-                  mx="20px"
-                  textTransform="none"
-                  _hover={{
-                    textDecoration: "underline",
-                    color: "#7ae7ff",
-                  }}
-                  target="_blank"
                   href={ArtZero_Privacy}
                 >
                   Privacy Policy
