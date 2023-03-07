@@ -70,9 +70,11 @@ Register new account at https://emailjs.com. And `Add new service` on **Email Se
 ![Screenshot 2023-03-07 155910](https://user-images.githubusercontent.com/35419213/223377640-854f7719-a908-4044-bb4d-c365b4b097d6.png)
 
 Config Template on **Email Templates** Tab
+
 <img width="721" alt="Screenshot 2023-03-07 160153" src="https://user-images.githubusercontent.com/35419213/223377926-4ab7c894-fd1f-44d7-9506-29e87878fca0.png">
 
-`new_collection_project`
+Email template: `new_collection_project`
+
 ![Screenshot 2023-03-07 160306](https://user-images.githubusercontent.com/35419213/223378225-252785ff-2878-420f-a9ee-a754fac8a86f.png)
 
 **Content**:
@@ -95,8 +97,8 @@ ArtZero Support Team
 ```
 
 
+Email template: `active_collection`
 
-`active_collection`
 <img width="714" alt="Screenshot 2023-03-07 162047" src="https://user-images.githubusercontent.com/35419213/223378629-28087b89-93a5-4344-9f62-9d0277bf02d2.png">
 
 **Content**:
@@ -113,6 +115,7 @@ ArtZero Support Team
 
 
 More config detail on **Account Tab** for `API Public key`,...
+
 ![Screenshot 2023-03-07 162436](https://user-images.githubusercontent.com/35419213/223379671-743f0ee2-3c72-4f33-ac34-b05ca476a0b8.png)
 
 
