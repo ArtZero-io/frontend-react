@@ -6,6 +6,7 @@ The ArtZero platform aims to be a decentralized NFT marketplace on the AlephZero
 
 ## Sample `.env` file
 
+Using .env template file in repo or replace the fields below
 
 ### Backend API config
 
