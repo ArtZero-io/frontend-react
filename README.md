@@ -7,7 +7,7 @@ The ArtZero platform aims to be a decentralized NFT marketplace on the AlephZero
 ## Sample `.env` file
 
 Please scroll to bottom for more detail guide about **ipfs** and **emailjs** register, get and config your own key and API.
-Or for quick test Front-End you can use ready-to-run `.env` file we prepared [here](.env) to replace below sample `.env `.
+Or for quick test Front-End you can use ready-to-run `.env` file we prepared [here](.env.example) to replace below sample `.env `.
 
 ### Backend API config
 
