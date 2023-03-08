@@ -31,6 +31,8 @@ import { APICall } from "@api/client";
 import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 import { isValidAddress, convertStringToPrice } from "@utils";
 import { validationEmail } from "@constants/yup";
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
+import { execContractQuery } from "../../../nfts/nfts";
 
 const AdvancedModeForm = ({ mode = "add", id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -205,20 +207,68 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                           message: "Address is not valid!",
                         })
                       );
+                      return false;
                     }
 
-                    return getContractInfo(api, value).then((isOnChain) => {
-                      if (!isOnChain) {
-                        reject(
-                          createError({
-                            path,
-                            message: "Contract Address is not on-chain!",
-                          })
-                        );
-                      }
+                    return getContractInfo(api, value).then(
+                      async (isOnChain) => {
+                        if (!isOnChain) {
+                          reject(
+                            createError({
+                              path,
+                              message: "Contract Address is not on-chain!",
+                            })
+                          );
 
-                      resolve(true);
-                    });
+                          return false;
+                        }
+
+                        // OK onchain
+                        // validate call totalSupply
+
+                        await execContractQuery(
+                          currentAccount?.address,
+                          api,
+                          nft721_psp34_standard.CONTRACT_ABI,
+                          value,
+                          "psp34::totalSupply"
+                        ).then((queryResult) => {
+                          if (!queryResult.toHuman().Ok) {
+                            reject(
+                              createError({
+                                path,
+                                message:
+                                  "Contract Address can not get total Supply!",
+                              })
+                            );
+
+                            return false;
+                          }
+                        });
+
+                        // validate call getAttributeCount
+                        await execContractQuery(
+                          currentAccount?.address,
+                          api,
+                          nft721_psp34_standard.CONTRACT_ABI,
+                          value,
+                          "psp34Traits::getAttributeCount"
+                        ).then((queryResult) => {
+                          if (!queryResult.toHuman().Ok) {
+                            reject(
+                              createError({
+                                path,
+                                message:
+                                  "Contract Address can not get Attribute Count!",
+                              })
+                            );
+
+                            return false;
+                          }
+                        });
+                        resolve(true);
+                      }
+                    );
                   });
                 }
               )
