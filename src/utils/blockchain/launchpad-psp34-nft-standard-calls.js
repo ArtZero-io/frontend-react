@@ -263,6 +263,61 @@ async function addMultiWhitelists(
 
   return unsubscribe;
 }
+async function clearWhitelistPhase(
+  caller_account,
+  phaseId,
+  accountList,
+  dispatch,
+  txType,
+  api
+) {
+  if (!contract || !caller_account) {
+    toast.error(`Contract or caller not valid!`);
+    return null;
+  }
+
+  let unsubscribe;
+  let gasLimit;
+
+  const address = caller_account?.address;
+  const { signer } = await web3FromSource(caller_account?.meta?.source);
+  const value = 0;
+
+  gasLimit = await getEstimatedGas(
+    address,
+    contract,
+    value,
+    "clearWhitelistPhase",
+    phaseId,
+    accountList
+  );
+  // console.log("gasLimit", gasLimit);
+  // console.log("phaseId", phaseId);
+  // console.log("accountList", accountList);
+  // console.log("amountList", amountList);
+  // console.log("priceList", priceList);
+  const txNotSign = contract.tx.clearWhitelistPhase(
+    { gasLimit, value },
+    phaseId,
+    accountList
+  );
+
+  await txNotSign
+    .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
+      txResponseErrorHandler({
+        status,
+        dispatchError,
+        dispatch,
+        txType,
+        api,
+        caller_account,
+      });
+    })
+    .then((unsub) => (unsubscribe = unsub))
+    .catch((error) => txErrorHandler({ error, dispatch }));
+
+  return unsubscribe;
+}
 
 async function getLastPhaseId(caller_account) {
   if (!contract || !caller_account) {
@@ -1247,6 +1302,7 @@ const launchpad_psp34_nft_standard_calls = {
   getPhaseScheduleById,
   addWhitelist,
   addMultiWhitelists,
+  clearWhitelistPhase,
   getCurrentPhase,
   getWhitelistByAccountId,
   whitelistMint,

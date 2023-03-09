@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Box,
   Text,
@@ -43,17 +42,23 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 import useTxStatus from "@hooks/useTxStatus";
 import CommonButton from "@components/Button/CommonButton";
-import { ADD_WHITELIST, UPDATE_WHITELIST, START } from "@constants";
+import {
+  ADD_WHITELIST,
+  UPDATE_WHITELIST,
+  CLEAR_WHITELIST,
+  START,
+} from "@constants";
 import { setTxStatus } from "@store/actions/txStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { isValidAddressPolkadotAddress } from "@utils";
 import { SCROLLBAR } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
-import { APICall } from "../../../api/client";
-import { execContractQuery } from "../nfts/nfts";
-import { formatNumToBN, isEmptyObj, isValidAddress } from "../../../utils";
+import { APICall } from "@api/client";
+import { formatNumToBN, isEmptyObj, isPhaseEnd, isValidAddress } from "@utils";
 import { CheckCircleIcon, WarningTwoIcon } from "@chakra-ui/icons";
+import { usePhaseInfo } from "@hooks/usePhaseInfo";
+import { useMyProjectAdmin } from "@hooks/useMyProjectAdmin";
 
 const tableHeaders = ["Address", "Amount", "Claimed", "Price"];
 
@@ -61,7 +66,7 @@ function MyWhiteListProjectPage() {
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
 
-  const [myProjectsList, setMyProjectsList] = useState([]);
+  // const [myProjectsList, setMyProjectsList] = useState([]);
   const [phasesListWhitelist, setPhasesListWhitelist] = useState(null);
 
   const [currentPhase, setCurrentPhase] = useState({});
@@ -80,49 +85,12 @@ function MyWhiteListProjectPage() {
 
   const [isUpdateMode, setIsUpdateMode] = useState(null);
   const [whitelistAmountClaimed, setWhitelistAmountClaimed] = useState(0);
-  const fetchMyProjectList = useCallback(async () => {
-    const checkIsAdmin = async ({ nftContractAddress, address }) => {
-      if (!api) return;
 
-      const queryResult1 = await execContractQuery(
-        currentAccount?.address,
-        api,
-        launchpad_psp34_nft_standard.CONTRACT_ABI,
-        nftContractAddress,
-        "accessControl::hasRole",
-        3739740293,
-        address
-      );
-
-      return queryResult1.toHuman().Ok;
-    };
-    const { ret: projList1 } = await APICall.getAllProjects({});
-    const { ret: projList2 } = await APICall.getAllProjects({
-      isActive: false,
-    });
-
-    const projList = projList1.concat(projList2);
-    const projAddCheckAdmin = await Promise.all(
-      projList.map(async (proj) => {
-        const isAdmin = await checkIsAdmin({
-          nftContractAddress: proj?.nftContractAddress,
-          address: currentAccount?.address,
-        });
-
-        return { ...proj, isAdmin };
-      })
-    );
-    const myProjList = projAddCheckAdmin.filter(
-      ({ isAdmin, collectionOwner }) =>
-        collectionOwner === currentAccount.address || isAdmin
-    );
-
-    setMyProjectsList(myProjList);
-  }, [api, currentAccount.address]);
-
-  useEffect(() => {
-    fetchMyProjectList();
-  }, [fetchMyProjectList]);
+  const { myProjectAdmin } = useMyProjectAdmin(
+    api,
+    launchpad_psp34_nft_standard.CONTRACT_ABI,
+    currentAccount?.address
+  );
 
   const onAddWhitelist = async () => {
     if (!selectedProjectAddress) {
@@ -227,7 +195,6 @@ function MyWhiteListProjectPage() {
 
   const onChangeSelectedProjectAddress = async (address) => {
     setSelectedPhaseCode(0);
-    setWhiteListDataTable([]);
     setIsUpdateMode(null);
     setWhiteListDataTable([]);
     setCurrentPhase({});
@@ -262,6 +229,8 @@ function MyWhiteListProjectPage() {
           currentAccount,
           i
         );
+
+      console.log("phaseSchedule", phaseSchedule);
       if (phaseSchedule.isActive) {
         phasesListAll.push({ ...phaseSchedule });
 
@@ -377,6 +346,16 @@ function MyWhiteListProjectPage() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [api, currentAccount, selectedPhaseCode]);
+
+  // const { projectList } = useProjectList();
+  // console.log("projectList", projectList);
+
+  // const myProjectAdmin = useCallback(
+  //   () => {
+
+  //   },
+  //   [ ],
+  // )
 
   useEffect(() => {
     fetchPhaseInfo();
@@ -501,6 +480,7 @@ function MyWhiteListProjectPage() {
         return toast.error("There is something wrong with your phase ID!");
       }
 
+      // eslint-disable-next-line no-unused-vars
       const { phaseId: phaseIdData, userData, phaseData } = data;
 
       if (parseInt(phaseIdData) !== parseInt(selectedPhaseCode)) {
@@ -587,13 +567,64 @@ function MyWhiteListProjectPage() {
     );
   }
 
-  const [isBulkMode, setIsBulkMode] = useState(false);
+  const [whitelistMode, setWhitelistMode] = useState("SINGLE");
 
   function onChangeSelectedMode(v) {
-    console.log("v", v);
-    console.log("isBulkMode", isBulkMode);
+    setWhitelistMode(v);
+  }
 
-    setIsBulkMode(!isBulkMode);
+  // TODO: add phase name
+  // book lai data BE side
+  const { phaseInfo } = usePhaseInfo(selectedProjectAddress, selectedPhaseCode);
+
+  async function onClearWLHandler() {
+    // validate proj is selected
+    if (!selectedProjectAddress) {
+      setPhasesListWhitelist(null);
+      toast.error(`Please pick your project!`);
+      return;
+    }
+
+    // validate phase is selected
+    if (!selectedPhaseCode) {
+      // setPhasesListWhitelist(null);
+      toast.error(`Please pick your phase!`);
+      return;
+    }
+
+    try {
+      if (!isPhaseEnd(currentPhase?.endTime)) {
+        return toast.error("Only clear whitelist for ended phase!");
+      }
+
+      const removeList = phaseInfo?.userData
+        ?.map((i) => i.address)
+        .slice(0, Math.min(phaseInfo?.userData?.length, 10));
+
+      const launchpad_psp34_nft_standard_contract = new ContractPromise(
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        selectedProjectAddress
+      );
+
+      launchpad_psp34_nft_standard_calls.setContract(
+        launchpad_psp34_nft_standard_contract
+      );
+
+      dispatch(setTxStatus({ type: CLEAR_WHITELIST, step: START }));
+
+      await launchpad_psp34_nft_standard_calls.clearWhitelistPhase(
+        currentAccount,
+        selectedPhaseCode,
+        removeList,
+        dispatch,
+        CLEAR_WHITELIST,
+        api
+      );
+    } catch (error) {
+      console.log("error", error);
+      return toast.error("Error ", error);
+    }
   }
   return (
     <Stack
@@ -630,13 +661,11 @@ function MyWhiteListProjectPage() {
               <option className="my-option" value={0}>
                 Click to pick project
               </option>
-              {myProjectsList?.length
-                ? myProjectsList.map((item, index) => (
-                    <option value={item.nftContractAddress} key={index}>
-                      {item.name}
-                    </option>
-                  ))
-                : ""}
+              {myProjectAdmin.map((item, index) => (
+                <option value={item.nftContractAddress} key={index}>
+                  {item.name}
+                </option>
+              ))}
             </Select>
           </Box>
         </Stack>
@@ -679,7 +708,7 @@ function MyWhiteListProjectPage() {
               borderRadius="0"
               fontSize="15px"
               color="#7ae7ff"
-              value={isBulkMode ? "BULK" : "SINGLE"}
+              value={whitelistMode}
               fontFamily="Oswald, san serif"
               textTransform="capitalize"
               border="1px solid #343333"
@@ -689,8 +718,9 @@ function MyWhiteListProjectPage() {
                 Click to Choose mode
               </option>
               {[
-                { id: "SINGLE", code: "single add" },
-                { id: "BULK", code: "bulk add" },
+                { id: "SINGLE", code: "single add whitelist" },
+                { id: "BULK", code: "bulk add whitelist" },
+                { id: "CLEAR_WL", code: "clear whitelist" },
               ].map((item, index) => (
                 <option value={item.id} key={index}>
                   {item.code}
@@ -1020,7 +1050,8 @@ function MyWhiteListProjectPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {isBulkMode && (
+            {/* BULK MODE */}
+            {whitelistMode === "BULK" && (
               <>
                 {value?.trim() && (
                   <Flex mb="8px">
@@ -1103,6 +1134,8 @@ function MyWhiteListProjectPage() {
                     text="Bulk Add"
                     onClick={() => bulkAddWLHandler()}
                     isDisabled={
+                      value4Contract?.falseCase ||
+                      !value?.trim() ||
                       loadingForceUpdate ||
                       (actionType && actionType !== UPDATE_WHITELIST) ||
                       whiteListPrice < 0 ||
@@ -1114,16 +1147,6 @@ function MyWhiteListProjectPage() {
                     }
                   />
                 </Stack>
-                {/* <Button onClick={() => bulkAddWLHandler()}>Bulk Add</Button> */}
-                {/* <Text mb="8px">
-                Value1: {JSON.stringify(value4Contract?.addressList)}
-              </Text>
-              <Text mb="8px">
-                Value2: {JSON.stringify(value4Contract?.minAmountList)}
-              </Text>
-              <Text mb="8px">
-                Value3: {JSON.stringify(value4Contract?.minPriceList)}
-              </Text> */}
 
                 {value?.trim() &&
                   value4Contract?.totalCount - value4Contract?.falseCase >
@@ -1183,73 +1206,102 @@ function MyWhiteListProjectPage() {
                       </motion.div>
                     </TableContainer>
                   )}
+
+                <Heading size="h5" my="8px">
+                  Current Whitelist
+                </Heading>
               </>
             )}
-
-            {isBulkMode && (
-              <Heading size="h5" my="8px">
-                Current Whitelist
-              </Heading>
-            )}
-            <TableContainer
-              fontSize="lg"
-              w="full"
-              // w={{ base: "full", xl: "1560px" }}
-              maxH={{ base: "390px", xl: "400px" }}
-              overflowY="scroll"
-              sx={SCROLLBAR}
-            >
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+            {/* SINGLE MODE */}
+            {whitelistMode === "SINGLE" && (
+              <TableContainer
+                fontSize="lg"
+                w="full"
+                // w={{ base: "full", xl: "1560px" }}
+                maxH={{ base: "390px", xl: "400px" }}
+                overflowY="scroll"
+                sx={SCROLLBAR}
               >
-                {whiteListDataTable?.length ? (
-                  <Table variant="striped" colorScheme="blackAlpha">
-                    <Thead>
-                      <Tr>
-                        {Object.values(tableHeaders)?.map((item, idx) => (
-                          <Th
-                            top={0}
-                            zIndex={1}
-                            textAlign="center"
-                            key={idx}
-                            fontFamily="Evogria"
-                            color="#888"
-                            // bg="#171717"
-                            fontSize="15px"
-                            fontWeight="400"
-                            dropShadow="lg"
-                          >
-                            {item}
-                          </Th>
-                        ))}
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {whiteListDataTable?.map((item, idx) => (
-                        <Tr key={idx} color="#fff">
-                          <Td textAlign="center" color="#fff">
-                            {truncateStr(item.address, 6)}
-                          </Td>
-                          <Td textAlign="center" color="#fff">
-                            {item.whitelistAmount}
-                          </Td>
-                          <Td textAlign="center" color="#fff">
-                            {item.claimedAmount}
-                          </Td>
-                          <Td textAlign="center" color="#fff">
-                            {item.mintingFee} <AzeroIcon mb={1.5} />
-                          </Td>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  {whiteListDataTable?.length ? (
+                    <Table variant="striped" colorScheme="blackAlpha">
+                      <Thead>
+                        <Tr>
+                          {Object.values(tableHeaders)?.map((item, idx) => (
+                            <Th
+                              top={0}
+                              zIndex={1}
+                              textAlign="center"
+                              key={idx}
+                              fontFamily="Evogria"
+                              color="#888"
+                              // bg="#171717"
+                              fontSize="15px"
+                              fontWeight="400"
+                              dropShadow="lg"
+                            >
+                              {item}
+                            </Th>
+                          ))}
                         </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                ) : (
-                  <Text py={2}>No info found!</Text>
-                )}
-              </motion.div>
-            </TableContainer>
+                      </Thead>
+                      <Tbody>
+                        {whiteListDataTable?.map((item, idx) => (
+                          <Tr key={idx} color="#fff">
+                            <Td textAlign="center" color="#fff">
+                              {truncateStr(item.address, 6)}
+                            </Td>
+                            <Td textAlign="center" color="#fff">
+                              {item.whitelistAmount}
+                            </Td>
+                            <Td textAlign="center" color="#fff">
+                              {item.claimedAmount}
+                            </Td>
+                            <Td textAlign="center" color="#fff">
+                              {item.mintingFee} <AzeroIcon mb={1.5} />
+                            </Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                    </Table>
+                  ) : (
+                    <Text py={2}>No info found!</Text>
+                  )}
+                </motion.div>
+              </TableContainer>
+            )}
+            {console.log("phaseInfo", phaseInfo)}
+            {/* CLEAR WL */}
+            {whitelistMode === "CLEAR_WL" && (
+              <Stack>
+                <Text textAlign="left">
+                  Phase status:{" "}
+                  {phaseInfo?.phaseData?.isActive ? "Active" : "Inactive"}.
+                  <br />
+                  Phase phaseId: {phaseInfo?.phaseId}.<br />
+                  Total WL: {phaseInfo?.phaseData?.totalCountWLAddress}.<br />
+                  Phase ended:{" "}
+                  {isPhaseEnd(phaseInfo?.phaseData?.endTime) ? "YES" : "NO"}.
+                  <br />
+                </Text>
+
+                <Text>
+                  You will restore 0.070399999996 AZERO for every 10 Whitelist
+                  address clear.
+                </Text>
+                <Button
+                  isDisabled={!phaseInfo?.phaseData?.totalCountWLAddress}
+                  onClick={() => onClearWLHandler()}
+                >
+                  Clear{" "}
+                  {Math.min(10, phaseInfo?.phaseData?.totalCountWLAddress)} WL
+                </Button>
+              </Stack>
+            )}
           </motion.div>
         )}
       </Stack>

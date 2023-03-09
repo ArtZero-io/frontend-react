@@ -57,6 +57,7 @@ export const DELETE_PHASE = "deletePhase";
 
 export const UPDATE_WHITELIST = "updateWhitelist";
 export const ADD_WHITELIST = "addWhitelist";
+export const CLEAR_WHITELIST = "clearWhitelist";
 
 // PROFILE ACTIONS
 export const UPDATE_PROFILE = "updateProfile";
@@ -76,10 +77,14 @@ export const MAX_ITEM_STAKE = 5;
 export const MAX_BID_COUNT = 30;
 export const ADMIN_ROLE_CODE = 3739740293;
 
-export const ArtZero_TOS="https://alephzero.artzero.io/assets/ArtZero_Terms_Of_Service.pdf";
-export const ArtZero_Cookies="https://alephzero.artzero.io/assets/ArtZero_Cookies_Policy.pdf";
-export const ArtZero_Privacy="https://alephzero.artzero.io/assets/ArtZero_Privacy_Policy.pdf";
-export const ArtZero_Assets="https://drive.google.com/drive/folders/1EXuGDmYVypszJUq4yr9dNTOZCuP96e3i"
+export const ArtZero_TOS =
+  "https://alephzero.artzero.io/assets/ArtZero_Terms_Of_Service.pdf";
+export const ArtZero_Cookies =
+  "https://alephzero.artzero.io/assets/ArtZero_Cookies_Policy.pdf";
+export const ArtZero_Privacy =
+  "https://alephzero.artzero.io/assets/ArtZero_Privacy_Policy.pdf";
+export const ArtZero_Assets =
+  "https://drive.google.com/drive/folders/1EXuGDmYVypszJUq4yr9dNTOZCuP96e3i";
 
 export const SCROLLBAR = {
   "&::-webkit-scrollbar": {
@@ -129,4 +134,4 @@ export const SUPPORTED_WALLET_LIST = [
   },
 ];
 
-export const MESSAGE_SIGN = "Sign message to report"
+export const MESSAGE_SIGN = "Sign message to report";

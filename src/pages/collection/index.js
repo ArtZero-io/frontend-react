@@ -37,7 +37,7 @@ import useForceUpdate from "@hooks/useForceUpdate";
 import { Helmet } from "react-helmet";
 import qs from "qs";
 import * as ROUTES from "@constants/routes";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 // import toast from "react-hot-toast";
 

@@ -148,7 +148,7 @@ async function addNewCollection(
               let cacheImages = [];
 
               for (let i = 0; i < transactionData.attributes.length; i++) {
-                console.log(transactionData.attributes[i]);
+
                 if (transactionData.attributes[i] === "avatar_image") {
                   cacheImages.push({
                     input: transactionData.attributeVals[i],

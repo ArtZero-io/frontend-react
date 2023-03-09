@@ -7,10 +7,18 @@ import { store } from "@store/store";
 import { SubstrateContextProvider } from "@utils/substrate";
 
 import App from "@components/App";
-// import HeadHelmet from "@components/Helmet/Helmet";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-const queryClient = new QueryClient();
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      onError: queryErrorHandler,
+    },
+  },
+});
 
 ReactDOM.render(
   <QueryClientProvider client={queryClient}>
@@ -20,7 +28,15 @@ ReactDOM.render(
           <App />
         </HashRouter>
       </Provider>
-    </SubstrateContextProvider>
+    </SubstrateContextProvider>{" "}
+    <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>,
   document.getElementById("root")
 );
+
+function queryErrorHandler(err) {
+  const title =
+    err instanceof Error ? err.message : "Error connecting to server";
+
+  toast.error("Query error: ", title);
+}

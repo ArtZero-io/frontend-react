@@ -9,6 +9,8 @@ import toast from "react-hot-toast";
 import { APICall } from "../api/client";
 import { BN, BN_ONE } from "@polkadot/util";
 import getGasLimit from "../utils/blockchain/dryRun";
+import { execContractQuery } from "../pages/account/nfts/nfts";
+import { ADMIN_ROLE_CODE } from "../constants";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
@@ -555,4 +557,27 @@ export function isValidAddress(address) {
 
 export const formatNumToBN = (number = 0, decimal = 12) => {
   return new BN(number * 10 ** 6).mul(new BN(10 ** (decimal - 6))).toString();
+};
+
+export const checkHasRoleAdmin = async ({
+  api,
+  contractAbi,
+  contractAddress,
+  address,
+}) => {
+  if (!api) return;
+
+  const publicAccount = getPublicCurrentAccount();
+
+  const queryResult = await execContractQuery(
+    publicAccount?.address,
+    api,
+    contractAbi,
+    contractAddress,
+    "accessControl::hasRole",
+    ADMIN_ROLE_CODE,
+    address
+  );
+
+  return queryResult.toHuman().Ok;
 };
