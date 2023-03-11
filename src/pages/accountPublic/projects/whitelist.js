@@ -424,7 +424,7 @@ function MyWhiteListProjectPage() {
                 Click to pick project
               </option>
               {myProjectsList?.length
-                ? myProjectsList.map((item, index) => (
+                ? myProjectsList?.map((item, index) => (
                     <option value={item.nftContractAddress} key={index}>
                       {item.name}
                     </option>

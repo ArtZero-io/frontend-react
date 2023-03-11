@@ -46,28 +46,32 @@ function MyMintingProjectPage() {
   const [mintAmount, setMintAmount] = useState(1);
 
   const fetchMyProjectList = useCallback(async () => {
-    let projectAddrList = await launchpad_contract_calls.getProjectsByOwner(
-      currentAccount,
-      currentAccount?.address
-    );
+    try {
+      let projectAddrList = await launchpad_contract_calls.getProjectsByOwner(
+        currentAccount,
+        currentAccount?.address
+      );
 
-    const { ret: projList1 } = await APICall.getAllProjects({
-      isActive: false,
-    });
+      const { ret: projList1 } = await APICall.getAllProjects({
+        isActive: false,
+      });
 
-    const { ret: projList2 } = await APICall.getAllProjects({
-      isActive: true,
-    });
+      const { ret: projList2 } = await APICall.getAllProjects({
+        isActive: true,
+      });
 
-    const projList = projList1.concat(projList2);
+      const projList = projList1.concat(projList2);
 
-    const ret = projectAddrList?.map((item) => {
-      const proj = projList.find((proj) => proj.nftContractAddress === item);
+      const ret = projectAddrList?.map((item) => {
+        const proj = projList.find((proj) => proj?.nftContractAddress === item);
 
-      return proj;
-    });
+        return proj;
+      });
 
-    setMyProjectsList(ret);
+      setMyProjectsList(ret);
+    } catch (error) {
+      setMyProjectsList([]);
+    }
   }, [currentAccount]);
 
   useEffect(() => {
@@ -208,8 +212,8 @@ function MyMintingProjectPage() {
   });
 
   const { totalSupply, remainAmount, projStatus } = useMemo(() => {
-    const selectedProj = myProjectsList.find(
-      (item) => item.nftContractAddress === selectedProjectAddress
+    const selectedProj = myProjectsList?.find(
+      (item) => item?.nftContractAddress === selectedProjectAddress
     );
 
     const totalSupply = selectedProj?.nft_count || 0;
@@ -258,9 +262,9 @@ function MyMintingProjectPage() {
                 Click to pick project
               </option>
               {myProjectsList?.length
-                ? myProjectsList.map((item, index) => (
-                    <option value={item.nftContractAddress} key={index}>
-                      {item.name}
+                ? myProjectsList?.map((item, index) => (
+                    <option value={item?.nftContractAddress} key={index}>
+                      {item?.name}
                     </option>
                   ))
                 : ""}

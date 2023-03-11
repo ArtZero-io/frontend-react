@@ -43,7 +43,6 @@ async function fetchMyProjectAdmin(api, contractAbi, address) {
       ({ collectionOwner, isAdmin }) => collectionOwner === address || isAdmin
     );
 
-    console.log("myProjList", myProjList);
     return myProjList;
   } catch (error) {
     console.log("error", error);
@@ -53,7 +52,7 @@ async function fetchMyProjectAdmin(api, contractAbi, address) {
 
 export function useMyProjectAdmin(api, contractAbi, address) {
   const { data, isLoading } = useQuery(
-    [queryKeys.projectAdmin, contractAbi, address],
+    [queryKeys.projectAdmin, address],
     () => fetchMyProjectAdmin(api, contractAbi, address),
     { enabled: !!contractAbi && !!address }
   );

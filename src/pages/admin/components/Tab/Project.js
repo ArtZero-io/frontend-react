@@ -14,17 +14,15 @@ import { useCallback, useEffect, useState } from "react";
 import { delay, truncateStr } from "@utils";
 import toast from "react-hot-toast";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
-import { timestampWithoutCommas } from "@utils";
-import { ContractPromise } from "@polkadot/api-contract";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
-import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+
 import { Link, Link as ReactRouterLink } from "react-router-dom";
 import * as ROUTES from "@constants/routes";
-import { APICall } from "../../../../api/client";
 import { execContractQuery, execContractTx } from "../../../account/nfts/nfts";
-import launchpad_manager from "../../../../utils/blockchain/launchpad-manager";
+import launchpad_manager from "@utils/blockchain/launchpad-manager";
+import { useProjectList } from "@hooks/useProjectList";
 
 import { isValidAddressPolkadotAddress } from "@utils";
+import { isPhaseEnd } from "@utils";
 
 function ProjectAdmin() {
   const dispatch = useDispatch();
@@ -33,7 +31,7 @@ function ProjectAdmin() {
 
   const [collectionCount, setCollectionCount] = useState(0);
 
-  const [collections, setCollections] = useState([]);
+  // const [collections, setCollections] = useState([]);
   const [collectionContractOwner, setCollectionContractOwner] = useState("");
   const [isLPAdmin, setIsLPAdmin] = useState(null);
 
@@ -62,7 +60,6 @@ function ProjectAdmin() {
       );
 
       return queryResult1.toHuman().Ok;
-
     };
     const isLPAdmin = await checkIsAdmin({
       address: currentAccount?.address,
@@ -77,78 +74,17 @@ function ProjectAdmin() {
       setCollectionCount(res);
     } else setCollectionCount(0);
   };
-  const getAllCollections = async (e) => {
-    let projectCount = await launchpad_contract_calls.getProjectCount(
-      currentAccount
-    );
 
-    let tmpProjects = [];
-    for (let i = 1; i <= projectCount; i++) {
-      const nftAddress = await launchpad_contract_calls.getProjectById(
-        currentAccount,
-        i
-      );
-
-      const project = await launchpad_contract_calls.getProjectByNftAddress(
-        currentAccount,
-        nftAddress
-      );
-
-      const launchpad_psp34_nft_standard_contract = new ContractPromise(
-        api,
-        launchpad_psp34_nft_standard.CONTRACT_ABI,
-        nftAddress
-      );
-
-      launchpad_psp34_nft_standard_calls.setContract(
-        launchpad_psp34_nft_standard_contract
-      );
-
-      const projectInfoHash =
-        await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
-
-      const projectInfo = await APICall.getProjectInfoByHash({
-        projectHash: projectInfoHash,
-      });
-
-      const currentTime = Date.now();
-      let projectTypeLabel = "live";
-      if (
-        timestampWithoutCommas(project.startTime) < currentTime &&
-        currentTime < timestampWithoutCommas(project.endTime) &&
-        project.projectType === 1
-      ) {
-        projectTypeLabel = "live";
-      } else if (
-        currentTime < timestampWithoutCommas(project.startTime) &&
-        project.projectType === 1
-      ) {
-        projectTypeLabel = "Coming";
-      } else {
-        projectTypeLabel = "Ended";
-      }
-      const projectTmp = {
-        index: i,
-        isActive: project.isActive,
-        collectionOwner: project.projectOwner,
-        nftContractAddress: nftAddress,
-        name: projectInfo.name,
-        projectTypeLabel: projectTypeLabel,
-      };
-
-      tmpProjects.push(projectTmp);
-    }
-
-    setCollections(tmpProjects);
-  };
+  const { projectList } = useProjectList();
+  console.log("projectList", projectList);
 
   const onRefreshCollection = useCallback(async () => {
     await onGetCollectionContractOwner();
     await onGetCollectionContractAdmin();
     await onGetCollectionCount();
     await delay(1000);
-    await getAllCollections();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // await getAllCollections();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAccount?.address]);
   const onSetStatusCollection = async (collection_contract, isActive) => {
     if (!isLPAdmin) {
@@ -167,7 +103,7 @@ function ProjectAdmin() {
     await delay(10000);
     await onGetCollectionCount();
     await delay(1000);
-    await getAllCollections();
+    // await getAllCollections();
   };
   useEffect(() => {
     const doRefresh = async () => {
@@ -313,7 +249,7 @@ function ProjectAdmin() {
                   fontWeight="normal"
                   py={7}
                 >
-                  Type
+                  Status
                 </Th>
                 <Th
                   fontFamily="Evogria"
@@ -321,7 +257,24 @@ function ProjectAdmin() {
                   fontWeight="normal"
                   py={7}
                 >
-                  Status
+                  NFT Count
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  Phase count.(Id/wallet/nft)
+                </Th>
+
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  Active ?
                 </Th>
                 <Th
                   fontFamily="Evogria"
@@ -334,12 +287,12 @@ function ProjectAdmin() {
               </Tr>
             </Thead>
             <Tbody>
-              {collectionCount === 0 ? (
+              {projectList?.length === 0 ? (
                 <Tr>
                   <Td py={7}>There is no data.</Td>
                 </Tr>
               ) : (
-                collections.map((collection, index) => (
+                projectList?.map((collection, index) => (
                   <Tr key={index}>
                     <Td py={7}>
                       <Link
@@ -356,7 +309,28 @@ function ProjectAdmin() {
                       {truncateStr(collection.nftContractAddress, 5)}
                     </Td>
                     <Td py={7}>{truncateStr(collection.collectionOwner, 5)}</Td>
-                    <Td>{collection.projectTypeLabel} </Td>
+                    <Td>
+                      {!isPhaseEnd(collection.startTime)
+                        ? "Coming"
+                        : isPhaseEnd(collection.endTime)
+                        ? "End"
+                        : "Live"}
+                    </Td>
+
+                    <Td py={7}>{collection.nft_count}</Td>
+                    <Td py={7}>
+                      {collection.whiteList?.length}
+                      {collection?.whiteList?.map(
+                        ({
+                          phaseId,
+                          phaseData: { totalCountWLAddress, whitelistAmount },
+                        }) => (
+                          <>
+                            .({phaseId}/{totalCountWLAddress}/{whitelistAmount})
+                          </>
+                        )
+                      )}
+                    </Td>
                     <Td py={7}>
                       {collection.isActive ? "Active" : "Inactive"}{" "}
                     </Td>

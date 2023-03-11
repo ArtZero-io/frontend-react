@@ -155,7 +155,7 @@ function TokenPage() {
         // get username onchain if any
         const name = truncateStr(ownerAddress);
         setOwnerName(name);
-        setOwnerAddress(ownerAddress)
+        setOwnerAddress(ownerAddress);
         if (ownerAddress === currentAccount?.address) {
           setIsOwner(true);
         } else {

@@ -136,7 +136,11 @@ export function convertStringToDateTime(stringTimeStamp) {
 
   const dateObject = new Date(parseInt(timeStamp));
 
-  return dateObject.toLocaleString();
+  return dateObject.toLocaleString("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    hour12: false,
+  });
   //2019-12-9 10:30:15
 }
 
@@ -427,6 +431,8 @@ export default function isNotEmptyStr(data) {
 }
 
 export function isEmptyObj(value) {
+  if (!value) return true;
+
   return Object.keys(value).length === 0 && value.constructor === Object;
 }
 

@@ -18,14 +18,13 @@ import {
   Stack,
   Flex,
   Textarea,
-  Button,
   Tooltip,
   Spacer,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch } from "react-redux";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { convertStringToDateTime } from "@utils";
 import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
@@ -33,11 +32,7 @@ import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { Select } from "@chakra-ui/react";
 
-import {
-  convertNumberWithoutCommas,
-  convertStringToPrice,
-  truncateStr,
-} from "@utils";
+import { truncateStr } from "@utils";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 
 import useTxStatus from "@hooks/useTxStatus";
@@ -66,22 +61,14 @@ function MyWhiteListProjectPage() {
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
 
-  // const [myProjectsList, setMyProjectsList] = useState([]);
-  const [phasesListWhitelist, setPhasesListWhitelist] = useState(null);
-
-  const [currentPhase, setCurrentPhase] = useState({});
-
   const [whitelistAddress, setWhitelistAddress] = useState("");
   const [whiteListPrice, setWhiteListPrice] = useState(0);
   const [whitelistAmount, setWhitelistAmount] = useState(1);
-  const [whiteListDataTable, setWhiteListDataTable] = useState([]);
-  const [availableToken, setAvailableToken] = useState(0);
+
   const whitelistAmountRef = useRef(whitelistAmount);
 
   const [selectedProjectAddress, setSelectedProjectAddress] = useState(null);
   const [selectedPhaseCode, setSelectedPhaseCode] = useState(0);
-
-  const [loading, setLoading] = useState(false);
 
   const [isUpdateMode, setIsUpdateMode] = useState(null);
   const [whitelistAmountClaimed, setWhitelistAmountClaimed] = useState(0);
@@ -94,7 +81,7 @@ function MyWhiteListProjectPage() {
 
   const onAddWhitelist = async () => {
     if (!selectedProjectAddress) {
-      setPhasesListWhitelist(null);
+      // setPhasesListWhitelist(null);
       toast.error(`Please pick your project!`);
       return;
     }
@@ -103,8 +90,8 @@ function MyWhiteListProjectPage() {
       return toast.error(`Invalid address! Please check again!`);
     }
 
-    const isAlreadyAdded = whiteListDataTable
-      .map((i) => i.address)
+    const isAlreadyAdded = phaseInfo?.userData
+      ?.map((i) => i.address)
       .includes(whitelistAddress);
 
     if (isAlreadyAdded) {
@@ -139,7 +126,7 @@ function MyWhiteListProjectPage() {
     //check whitelistAddress
 
     if (!selectedProjectAddress) {
-      setPhasesListWhitelist(null);
+      // setPhasesListWhitelist(null);
       toast.error(`Please pick your project!`);
       return;
     }
@@ -148,7 +135,7 @@ function MyWhiteListProjectPage() {
       return toast.error(`Invalid address! Please check again!`);
     }
 
-    const isAlreadyAdded = whiteListDataTable
+    const isAlreadyAdded = phaseInfo?.userData
       .map((i) => i.address)
       .includes(whitelistAddress);
 
@@ -156,7 +143,7 @@ function MyWhiteListProjectPage() {
       return toast.error(`This address is not in Whitelist!`);
     }
 
-    const claimedAmount = whiteListDataTable
+    const claimedAmount = phaseInfo?.userData
       .find((i) => i.address === whitelistAddress)
       ?.claimedAmount.replaceAll(",", "");
 
@@ -196,170 +183,47 @@ function MyWhiteListProjectPage() {
   const onChangeSelectedProjectAddress = async (address) => {
     setSelectedPhaseCode(0);
     setIsUpdateMode(null);
-    setWhiteListDataTable([]);
-    setCurrentPhase({});
+    // setWhiteListDataTable([]);
+    // setphaseInfo({});
     setWhiteListPrice(0);
     setWhitelistAmount(1);
 
     if (!address || address === "0") {
-      setPhasesListWhitelist(null);
+      setSelectedProjectAddress(null);
+      // setPhasesListWhitelist(null);
       setSelectedPhaseCode(0);
       return;
     }
 
-    const launchpad_psp34_nft_standard_contract = new ContractPromise(
-      api,
-      launchpad_psp34_nft_standard.CONTRACT_ABI,
-      address
-    );
-
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
-
-    const totalPhase = await launchpad_psp34_nft_standard_calls.getLastPhaseId(
-      currentAccount
-    );
-
-    let phasesTmp = [];
-    let phasesListAll = [];
-    for (let i = 1; i <= totalPhase; i++) {
-      const phaseSchedule =
-        await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-          currentAccount,
-          i
-        );
-
-      console.log("phaseSchedule", phaseSchedule);
-      if (phaseSchedule.isActive) {
-        phasesListAll.push({ ...phaseSchedule });
-
-        const phaseCode = phaseSchedule.title;
-
-        const phaseInfo = {
-          id: i,
-          code: phaseCode,
-          ...phaseSchedule,
-        };
-        phasesTmp.push(phaseInfo);
-      }
-    }
-
-    setPhasesListWhitelist(phasesTmp);
     setSelectedProjectAddress(address);
     setWhitelistAddress("");
   };
 
   const onChangeSelectedPhaseCode = async (phaseId) => {
-    if (parseInt(phaseId) === 0) {
-      setWhiteListDataTable([]);
-    }
+    // if (parseInt(phaseId) === 0) {
+    //   setWhiteListDataTable([]);
+    // }
 
     setWhitelistAddress("");
     setIsUpdateMode(null);
-    setCurrentPhase({});
+    // setphaseInfo({});
     setWhiteListPrice(0);
     setWhitelistAmount(1);
     setSelectedPhaseCode(phaseId);
   };
 
-  const fetchPhaseInfo = useCallback(async () => {
-    if (!selectedPhaseCode || !selectedProjectAddress) {
-      setCurrentPhase(null);
+  const currentProjectInfo = myProjectAdmin.find(
+    (i) => i.nftContractAddress === selectedProjectAddress
+  );
 
-      return;
-    }
+  const phasesListWhitelist = currentProjectInfo?.whiteList.map((item) => {
+    return { ...item.phaseData, id: item.phaseId };
+  });
 
-    try {
-      setLoading(true);
-      const availableTokenAmount =
-        await launchpad_psp34_nft_standard_calls.getAvailableTokenAmount(
-          currentAccount
-        );
-      setAvailableToken(convertNumberWithoutCommas(availableTokenAmount));
-
-      const launchpad_psp34_nft_standard_contract = new ContractPromise(
-        api,
-        launchpad_psp34_nft_standard.CONTRACT_ABI,
-        selectedProjectAddress
-      );
-
-      launchpad_psp34_nft_standard_calls.setContract(
-        launchpad_psp34_nft_standard_contract
-      );
-
-      const phaseInfo =
-        await launchpad_psp34_nft_standard_calls.getPhaseScheduleById(
-          currentAccount,
-          selectedPhaseCode
-        );
-
-      if (phaseInfo?.isActive) {
-        setCurrentPhase(phaseInfo);
-      }
-
-      const totalPhaseAccountLink =
-        await launchpad_psp34_nft_standard_calls.getPhaseAccountLastIndex(
-          currentAccount,
-          selectedPhaseCode
-        );
-      let whiteListDataTableTmp = [];
-
-      for (let i = 0; i < totalPhaseAccountLink; i++) {
-        const whitelistPhaseAccountAddress =
-          await launchpad_psp34_nft_standard_calls.getPhaseAccountLink(
-            currentAccount,
-            selectedPhaseCode,
-            i
-          );
-
-        const whiteListData =
-          await launchpad_psp34_nft_standard_calls.getWhitelistByAccountId(
-            currentAccount,
-            selectedPhaseCode,
-            whitelistPhaseAccountAddress
-          );
-
-        if (whiteListData) {
-          const whiteListDataItemTmp = {
-            address: whitelistPhaseAccountAddress,
-            whitelistAmount: whiteListData.whitelistAmount,
-            claimedAmount: whiteListData.claimedAmount,
-            mintingFee: convertStringToPrice(whiteListData.mintingFee),
-          };
-
-          whiteListDataTableTmp.push(whiteListDataItemTmp);
-        }
-      }
-
-      whiteListDataTableTmp = whiteListDataTableTmp.filter((item) => {
-        return item?.whitelistAmount * 1 !== 0;
-      });
-
-      setWhiteListDataTable(whiteListDataTableTmp);
-
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.log(error);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [api, currentAccount, selectedPhaseCode]);
-
-  // const { projectList } = useProjectList();
-  // console.log("projectList", projectList);
-
-  // const myProjectAdmin = useCallback(
-  //   () => {
-
-  //   },
-  //   [ ],
-  // )
-
-  useEffect(() => {
-    fetchPhaseInfo();
-  }, [fetchPhaseInfo]);
+  // TODO add fitler emplty WL length
+  //     // whiteListDataTableTmp = whiteListDataTableTmp.filter((item) => {
+  //     //   return item?.whitelistAmount * 1 !== 0;
+  //     // });
 
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
@@ -370,7 +234,7 @@ function MyWhiteListProjectPage() {
       setWhiteListPrice(0);
       setWhitelistAmount(1);
       setIsUpdateMode(null);
-      fetchPhaseInfo();
+      // fetchPhaseInfo();
     }
   );
 
@@ -382,7 +246,6 @@ function MyWhiteListProjectPage() {
   };
   const regexTestNum = /^-?\d+(\.\d+(e\d+)?)?$/;
 
-  // const formatValue = value.split(/[,\s\n]/);
   const formatValue = value
     .trim()
     .split(/[\n]/)
@@ -433,18 +296,10 @@ function MyWhiteListProjectPage() {
     }
   );
 
-  async function bulkAddWLHandler(params) {
-    console.log("formatValue", formatValue);
-    console.log("value4Contract", value4Contract);
-    // console.log("selectedPhaseCode", selectedPhaseCode);
-    // console.log("addressList", value4Contract?.addressList);
-    // console.log("minAmountList", value4Contract?.minAmountList);
-    // console.log("minPriceList", value4Contract?.minPriceList);
-    // console.log("totalCount", value4Contract?.totalCount);
-
+  async function bulkAddWLHandler() {
     // validate proj is selected
     if (!selectedProjectAddress) {
-      setPhasesListWhitelist(null);
+      // setPhasesListWhitelist(null);
       toast.error(`Please pick your project!`);
       return;
     }
@@ -463,44 +318,50 @@ function MyWhiteListProjectPage() {
       });
 
       // TODO:
-      // change format return to {status, ret, message}
-      // add info "availableTokenAmount" to whitelist database
-      // add info "isActive" to phase database
       // phaseId not exit BE still return data = {}
 
       console.log("phaseInfo", phaseInfo);
 
-      const { status, data, message } = phaseInfo;
+      const { status, ret, message } = phaseInfo;
 
       if (status !== "OK") {
         return toast.error("Error ", message);
       }
 
-      if (isEmptyObj(data)) {
+      if (isEmptyObj(ret)) {
         return toast.error("There is something wrong with your phase ID!");
       }
 
       // eslint-disable-next-line no-unused-vars
-      const { phaseId: phaseIdData, userData, phaseData } = data;
+      const { phaseId: phaseIdData, userData, phaseData } = ret;
 
       if (parseInt(phaseIdData) !== parseInt(selectedPhaseCode)) {
         return toast.error("There is something wrong with your phase Data!");
       }
 
-      // TODO:
-      // add info "availableTokenAmount" to phase database
-      // if (parseInt(phaseData?.availableTokenAmount) < parseInt(value4Contract.totalCount)) {
-      if (parseInt(availableToken) < parseInt(value4Contract?.totalCount)) {
+      if (
+        parseInt(currentProjectInfo?.availableTokenAmount) <
+        parseInt(value4Contract?.totalCount)
+      ) {
         return toast.error(
           "Total Bulk Whitelist can not greater than remain slot!"
         );
       }
 
-      // TODO:
-      // add info "isActive" to phase database
-      // if (!phaseData?.isActive) {
-      if (!currentPhase?.isActive) {
+      if (!phaseInfo?.isActive) {
         return toast.error("Can not add whitelist to inactive phase!");
+      }
+
+      if (value4Contract?.addressList?.length > 0) {
+        let isDuplicated = value4Contract?.addressList?.filter(
+          (i, idx) => value4Contract?.addressList?.indexOf(i) !== idx
+        );
+
+        if (isDuplicated?.length > 0) {
+          return toast.error(
+            `You have ${isDuplicated?.length} duplicate wallet address on your list.`
+          );
+        }
       }
 
       const regexTestNum = /^-?\d+(\.\d+(e\d+)?)?$/;
@@ -510,6 +371,7 @@ function MyWhiteListProjectPage() {
           "value4Contract?.addressList[i]",
           value4Contract?.addressList[i]
         );
+
         if (!isValidAddress(value4Contract?.addressList[i])) {
           return toast.error(
             `This address is invalid! ${truncateStr(
@@ -519,9 +381,11 @@ function MyWhiteListProjectPage() {
         }
 
         if (userData?.length > 0) {
-          const isAlreadyAdded = userData
-            ?.map((i) => i.address)
-            .includes(value4Contract?.addressList[i]);
+          const addressList = userData?.map((i) => i.address);
+
+          const isAlreadyAdded = addressList.includes(
+            value4Contract?.addressList[i]
+          );
 
           if (isAlreadyAdded) {
             return toast.error(
@@ -538,33 +402,35 @@ function MyWhiteListProjectPage() {
           );
         }
       }
+
+      const launchpad_psp34_nft_standard_contract = new ContractPromise(
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        selectedProjectAddress
+      );
+
+      launchpad_psp34_nft_standard_calls.setContract(
+        launchpad_psp34_nft_standard_contract
+      );
+
+      dispatch(setTxStatus({ type: ADD_WHITELIST, step: START }));
+
+      await launchpad_psp34_nft_standard_calls.addMultiWhitelists(
+        currentAccount,
+        selectedPhaseCode,
+        value4Contract?.addressList,
+        value4Contract?.minAmountList,
+        value4Contract?.minPriceList,
+        dispatch,
+        ADD_WHITELIST,
+        api
+      );
+
+      setValue("");
     } catch (error) {
       console.log("error", error);
       return toast.error("Error ", error);
     }
-
-    const launchpad_psp34_nft_standard_contract = new ContractPromise(
-      api,
-      launchpad_psp34_nft_standard.CONTRACT_ABI,
-      selectedProjectAddress
-    );
-
-    launchpad_psp34_nft_standard_calls.setContract(
-      launchpad_psp34_nft_standard_contract
-    );
-
-    dispatch(setTxStatus({ type: ADD_WHITELIST, step: START }));
-
-    await launchpad_psp34_nft_standard_calls.addMultiWhitelists(
-      currentAccount,
-      selectedPhaseCode,
-      value4Contract?.addressList,
-      value4Contract?.minAmountList,
-      value4Contract?.minPriceList,
-      dispatch,
-      ADD_WHITELIST,
-      api
-    );
   }
 
   const [whitelistMode, setWhitelistMode] = useState("SINGLE");
@@ -580,7 +446,7 @@ function MyWhiteListProjectPage() {
   async function onClearWLHandler() {
     // validate proj is selected
     if (!selectedProjectAddress) {
-      setPhasesListWhitelist(null);
+      // setPhasesListWhitelist(null);
       toast.error(`Please pick your project!`);
       return;
     }
@@ -593,7 +459,7 @@ function MyWhiteListProjectPage() {
     }
 
     try {
-      if (!isPhaseEnd(currentPhase?.endTime)) {
+      if (!isPhaseEnd(phaseInfo?.endTime)) {
         return toast.error("Only clear whitelist for ended phase!");
       }
 
@@ -674,7 +540,7 @@ function MyWhiteListProjectPage() {
           <Text py={2}>Choose Phase</Text>
           <Box>
             <Select
-              isDisabled={actionType}
+              isDisabled={actionType || !selectedProjectAddress}
               h="50px"
               borderRadius="0"
               fontSize="15px"
@@ -688,13 +554,12 @@ function MyWhiteListProjectPage() {
               <option className="my-option" value={0}>
                 Click to pick phase
               </option>
-              {phasesListWhitelist?.length
-                ? phasesListWhitelist.map((item, index) => (
-                    <option value={item.id} key={index}>
-                      {item.code}
-                    </option>
-                  ))
-                : ""}
+              {/* TODO: change to title wen data be avai */}
+              {phasesListWhitelist?.map((item) => (
+                <option value={item.id} key={item.code}>
+                  {item.title || item.id}
+                </option>
+              ))}
             </Select>
           </Box>
         </Stack>
@@ -738,8 +603,7 @@ function MyWhiteListProjectPage() {
               isDisabled={
                 actionType ||
                 parseInt(selectedPhaseCode) === 0 ||
-                parseInt(currentPhase?.endTime?.replaceAll(",", "")) <
-                  Date.now()
+                parseInt(phaseInfo?.endTime?.replaceAll(",", "")) < Date.now()
               }
               bg="black"
               h="3.125rem"
@@ -755,14 +619,14 @@ function MyWhiteListProjectPage() {
                 if (!event.target.value.toString()) {
                   setIsUpdateMode(null);
                 } else {
-                  const isAlreadyAdded = whiteListDataTable
+                  const isAlreadyAdded = phaseInfo?.userData
                     .map((i) => i.address)
                     .includes(event.target.value.toString());
 
                   if (!isAlreadyAdded) {
                     setIsUpdateMode("ADD");
                   } else {
-                    const editAddr = whiteListDataTable.find(
+                    const editAddr = phaseInfo?.userData.find(
                       (i) => i.address === event.target.value.toString()
                     );
 
@@ -778,8 +642,7 @@ function MyWhiteListProjectPage() {
             />
           </Box>
           <>
-            {parseInt(currentPhase?.endTime?.replaceAll(",", "")) <
-            Date.now() ? (
+            {parseInt(phaseInfo?.endTime?.replaceAll(",", "")) < Date.now() ? (
               <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
                 This phase is ended!
               </Text>
@@ -834,7 +697,7 @@ function MyWhiteListProjectPage() {
               ? `(Claimed: ${whitelistAmountClaimed} NFTs). Min: ${parseInt(
                   whitelistAmountClaimed
                 )} - Max: ${
-                  parseInt(availableToken) +
+                  parseInt(currentProjectInfo?.availableTokenAmount) +
                   parseInt(whitelistAmountRef.current)
                 }`
               : null}
@@ -854,9 +717,9 @@ function MyWhiteListProjectPage() {
               px={0}
               max={
                 isUpdateMode === "EDIT"
-                  ? parseInt(availableToken) +
+                  ? parseInt(currentProjectInfo?.availableTokenAmount) +
                     parseInt(whitelistAmountRef.current)
-                  : availableToken
+                  : currentProjectInfo?.availableTokenAmount
               }
             >
               <NumberInputField
@@ -880,11 +743,11 @@ function MyWhiteListProjectPage() {
                 </Text>
               ) : null}{" "}
               {whitelistAmount >
-              parseInt(availableToken) +
+              parseInt(currentProjectInfo?.availableTokenAmount) +
                 parseInt(whitelistAmountRef.current) ? (
                 <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
                   Update amount must be less than or equal to{" "}
-                  {parseInt(availableToken) +
+                  {parseInt(currentProjectInfo?.availableTokenAmount) +
                     parseInt(whitelistAmountRef.current)}
                 </Text>
               ) : null}{" "}
@@ -896,10 +759,11 @@ function MyWhiteListProjectPage() {
                   Number must be greater than or equal to zero.
                 </Text>
               ) : null}{" "}
-              {whitelistAmount > parseInt(availableToken) ? (
+              {whitelistAmount >
+              parseInt(currentProjectInfo?.availableTokenAmount) ? (
                 <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
                   Number must be less than or equal to{" "}
-                  {parseInt(availableToken)}
+                  {parseInt(currentProjectInfo?.availableTokenAmount)}
                 </Text>
               ) : null}{" "}
             </>
@@ -927,7 +791,7 @@ function MyWhiteListProjectPage() {
                 whiteListPrice < 0 ||
                 parseInt(whitelistAmount) < parseInt(whitelistAmountClaimed) ||
                 whitelistAmount >
-                  parseInt(availableToken) +
+                  parseInt(currentProjectInfo?.availableTokenAmount) +
                     parseInt(whitelistAmountRef.current)
               }
             />
@@ -940,7 +804,7 @@ function MyWhiteListProjectPage() {
             alignItems="center"
             hidden={isUpdateMode === "EDIT"}
           >
-            {availableToken <= 0 ? (
+            {currentProjectInfo?.availableTokenAmount <= 0 ? (
               <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
                 The remaining slot is 0. You can't add more!{" "}
               </Text>
@@ -953,13 +817,14 @@ function MyWhiteListProjectPage() {
               text="add new"
               onClick={() => onAddWhitelist()}
               isDisabled={
-                availableToken <= 0 ||
+                currentProjectInfo?.availableTokenAmount <= 0 ||
                 loadingForceUpdate ||
                 (actionType && actionType !== ADD_WHITELIST) ||
                 !isValidAddressPolkadotAddress(whitelistAddress) ||
                 whiteListPrice < 0 ||
                 parseInt(whitelistAmount) < 0 ||
-                whitelistAmount > parseInt(availableToken)
+                whitelistAmount >
+                  parseInt(currentProjectInfo?.availableTokenAmount)
               }
             />
           </Flex>
@@ -970,8 +835,7 @@ function MyWhiteListProjectPage() {
         <Heading fontSize="32px" pb="20px" textAlign="center">
           Whitelist Management
         </Heading>
-
-        {currentPhase && currentPhase.title && (
+        {phaseInfo && phaseInfo?.phaseId && (
           <>
             <Stack
               textAlign="left"
@@ -995,9 +859,9 @@ function MyWhiteListProjectPage() {
                 <Text>
                   Total amount: <br />
                   <Text as="span" color="#fff">
-                    {currentPhase.whitelistAmount}{" "}
+                    {phaseInfo?.phaseData?.whitelistAmount}{" "}
                     <Text as="span">
-                      NFT{currentPhase.whitelistAmount > 1 ? "s" : ""}
+                      NFT{phaseInfo?.phaseData?.whitelistAmount > 1 ? "s" : ""}
                     </Text>
                   </Text>
                 </Text>
@@ -1005,14 +869,15 @@ function MyWhiteListProjectPage() {
                 <Text>
                   Available: <br />
                   <Text as="span" color="#fff">
-                    {availableToken} <Text as="span">NFTs</Text>
+                    {currentProjectInfo?.availableTokenAmount}{" "}
+                    <Text as="span">NFTs</Text>
                   </Text>
                 </Text>
 
                 <Text>
                   Total Claimed: <br />
                   <Text as="span" color="#fff">
-                    {whiteListDataTable.reduce((acc, curr) => {
+                    {phaseInfo?.userData.reduce((acc, curr) => {
                       return acc + parseInt(curr.claimedAmount);
                     }, 0)}
                     <Text as="span"> NFTs</Text>
@@ -1024,7 +889,7 @@ function MyWhiteListProjectPage() {
                 <Text color="#fff">
                   Start:{" "}
                   <Text as="span" color="#7ae7ff">
-                    {convertStringToDateTime(currentPhase.startTime)}
+                    {convertStringToDateTime(phaseInfo?.phaseData?.startTime)}
                   </Text>
                 </Text>
                 <Text as="span" display={["none", "flex"]}>
@@ -1033,15 +898,14 @@ function MyWhiteListProjectPage() {
                 <Text color="#fff">
                   End:{" "}
                   <Text as="span" color="#7ae7ff">
-                    {convertStringToDateTime(currentPhase.endTime)}
+                    {convertStringToDateTime(phaseInfo?.phaseData?.endTime)}
                   </Text>
                 </Text>
               </Stack>
             </Stack>
           </>
         )}
-
-        {loadingForceUpdate || loading ? (
+        {loadingForceUpdate ? (
           <AnimationLoader />
         ) : (
           <motion.div
@@ -1112,6 +976,7 @@ function MyWhiteListProjectPage() {
                 )}
 
                 <Textarea
+                  isDisabled={isPhaseEnd(phaseInfo?.endTime)}
                   rows={5}
                   fontFamily="monospace"
                   fontSize="16px"
@@ -1130,7 +995,6 @@ function MyWhiteListProjectPage() {
                     size="md"
                     mx="0"
                     {...rest}
-                    // w="full"
                     text="Bulk Add"
                     onClick={() => bulkAddWLHandler()}
                     isDisabled={
@@ -1142,7 +1006,7 @@ function MyWhiteListProjectPage() {
                       parseInt(whitelistAmount) <
                         parseInt(whitelistAmountClaimed) ||
                       whitelistAmount >
-                        parseInt(availableToken) +
+                        parseInt(currentProjectInfo?.availableTokenAmount) +
                           parseInt(whitelistAmountRef.current)
                     }
                   />
@@ -1206,10 +1070,6 @@ function MyWhiteListProjectPage() {
                       </motion.div>
                     </TableContainer>
                   )}
-
-                <Heading size="h5" my="8px">
-                  Current Whitelist
-                </Heading>
               </>
             )}
             {/* SINGLE MODE */}
@@ -1227,7 +1087,7 @@ function MyWhiteListProjectPage() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                 >
-                  {whiteListDataTable?.length ? (
+                  {phaseInfo?.userData?.length ? (
                     <Table variant="striped" colorScheme="blackAlpha">
                       <Thead>
                         <Tr>
@@ -1250,7 +1110,7 @@ function MyWhiteListProjectPage() {
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {whiteListDataTable?.map((item, idx) => (
+                        {phaseInfo?.userData?.map((item, idx) => (
                           <Tr key={idx} color="#fff">
                             <Td textAlign="center" color="#fff">
                               {truncateStr(item.address, 6)}
@@ -1274,7 +1134,7 @@ function MyWhiteListProjectPage() {
                 </motion.div>
               </TableContainer>
             )}
-            {console.log("phaseInfo", phaseInfo)}
+
             {/* CLEAR WL */}
             {whitelistMode === "CLEAR_WL" && (
               <Stack>
@@ -1293,13 +1153,24 @@ function MyWhiteListProjectPage() {
                   You will restore 0.070399999996 AZERO for every 10 Whitelist
                   address clear.
                 </Text>
-                <Button
-                  isDisabled={!phaseInfo?.phaseData?.totalCountWLAddress}
-                  onClick={() => onClearWLHandler()}
-                >
-                  Clear{" "}
-                  {Math.min(10, phaseInfo?.phaseData?.totalCountWLAddress)} WL
-                </Button>
+
+                <Stack my="8px">
+                  <CommonButton
+                    size="md"
+                    mx="0"
+                    {...rest}
+                    text={`Clear
+                    ${Math.min(
+                      10,
+                      phaseInfo?.phaseData?.totalCountWLAddress
+                    )} WL`}
+                    onClick={() => onClearWLHandler()}
+                    isDisabled={
+                      !phaseInfo?.phaseData?.totalCountWLAddress ||
+                      loadingForceUpdate
+                    }
+                  />
+                </Stack>
               </Stack>
             )}
           </motion.div>

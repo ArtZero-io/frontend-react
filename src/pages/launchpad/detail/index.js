@@ -77,6 +77,7 @@ import { getMetaDataOffChain, strToNumber } from "@utils";
 import { clearTxStatus } from "@store/actions/txStatus";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { ImageCloudFlareLaunchpad } from "../../../components/ImageWrapper/ImageCloudFlare";
+import { convertStringToDateTime } from "../../../utils";
 
 const NUMBER_PER_PAGE = 6;
 
@@ -975,7 +976,7 @@ const LaunchpadDetailPage = () => {
                         <Text color="brand.blue">
                           Start:{" "}
                           <Text as="span" color="#fff">
-                            {new Date(Number(item?.startTime)).toLocaleString()}{" "}
+                            {convertStringToDateTime(item?.startTime)}
                           </Text>
                         </Text>
 
@@ -986,7 +987,7 @@ const LaunchpadDetailPage = () => {
                         <Text color="brand.blue">
                           End:{" "}
                           <Text as="span" color="#fff">
-                            {new Date(Number(item?.endTime)).toLocaleString()}{" "}
+                            {convertStringToDateTime(item?.endTime)}
                           </Text>
                         </Text>
                       </Stack>
