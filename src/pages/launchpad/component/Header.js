@@ -793,12 +793,12 @@ function LaunchpadDetailHeader({
             collection_address={collection_address}
             onClose={onCloseWithdrawModal}
           />
-           {isOpenWithdrawHistoryModal && <LaunchpadEventModal
+           {<LaunchpadEventModal
             isOpen={isOpenHistoryModal}
             collection_address={collection_address}
             onClose={onCloseHistoryModal}
           />}
-            {isOpenWithdrawHistoryModal && <WithdrawHistoryModal
+            {<WithdrawHistoryModal
             isOpen={isOpenWithdrawHistoryModal}
             collection_address={collection_address}
             onClose={onCloseWithdrawHistoryModal}
