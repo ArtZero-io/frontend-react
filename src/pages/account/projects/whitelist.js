@@ -976,7 +976,7 @@ function MyWhiteListProjectPage() {
                 )}
 
                 <Textarea
-                  isDisabled={isPhaseEnd(phaseInfo?.endTime)}
+                  isDisabled={isPhaseEnd(phaseInfo?.phaseData?.endTime)}
                   rows={5}
                   fontFamily="monospace"
                   fontSize="16px"
@@ -1011,7 +1011,6 @@ function MyWhiteListProjectPage() {
                     }
                   />
                 </Stack>
-
                 {value?.trim() &&
                   value4Contract?.totalCount - value4Contract?.falseCase >
                     0 && (
