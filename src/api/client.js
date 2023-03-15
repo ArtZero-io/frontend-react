@@ -71,6 +71,33 @@ const client = async (
   return data;
 };
 
+// new API client call
+const clientWithGetParams = async (
+  method,
+  url,
+  options = {},
+  baseURL = process.env.REACT_APP_API_BASE_URL
+) => {
+  const headers = {
+    Accept: "*/*",
+    "Content-Type": "application/x-www-form-urlencoded",
+  };
+
+  const { data } = await axios({
+    baseURL,
+    url,
+    method,
+    headers,
+    params: options
+  });
+
+  if (data?.status === "FAILED") {
+    console.log("error FAILED @ xx>>", url, data?.message);
+  }
+
+  return data;
+};
+
 export const APICall = {
   // get list of Bidder by Address
   getBidsByBidderAddress: async ({
@@ -240,6 +267,22 @@ export const APICall = {
 
   getCollectionCount: async () => {
     return await client("GET", "/getCollectionCount", {});
+  },
+
+  getWithdrawEvent: async ({ limit = 5, offset = 0 }) => {
+    return clientWithGetParams("GET", "/api/withdraw-event-schemas", { limit, offset });
+  },
+
+  getLaunchpadEvent: async ({ limit = 5, offset = 0, nftContractAddress }) => {
+    return clientWithGetParams("GET", "/api/launchpad-minting-event-schemas", {
+      filter: {
+        limit,
+        offset,
+        where: {
+          nftContractAddress: nftContractAddress,
+        },
+      },
+    });
   },
 
   getCollectionByAddress: async ({ collection_address }) => {
