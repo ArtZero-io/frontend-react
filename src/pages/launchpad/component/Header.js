@@ -46,6 +46,8 @@ import { useEffect } from "react";
 import { execContractQuery } from "../../account/nfts/nfts";
 import { useMemo } from "react";
 import { APICall } from "../../../api/client";
+import LaunchpadEventModal from "./Modal/LaunchpadEventModal";
+import WithdrawHistoryModal from "./Modal/WithdrawHistoryModal";
 
 function LaunchpadDetailHeader({
   loading,
@@ -102,6 +104,18 @@ function LaunchpadDetailHeader({
     isOpen: isOpenWithdrawModal,
     onOpen: onOpenWithdrawModal,
     onClose: onCloseWithdrawModal,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenHistoryModal,
+    onOpen: onOpenHistoryModal,
+    onClose: onCloseHistoryModal,
+  } = useDisclosure();
+
+  const {
+    isOpen: isOpenWithdrawHistoryModal,
+    onOpen: onOpenWithdrawHistoryModal,
+    onClose: onCloseWithdrawHistoryModal,
   } = useDisclosure();
 
   const nextPhaseWhenNoCurrPhaseId = useMemo(() => {
@@ -504,6 +518,7 @@ function LaunchpadDetailHeader({
           </Skeleton>
 
           {isProjOwner || isAdmin ? (
+             <>
             <Stack
               py="30px"
               spacing={["20px", "10px"]}
@@ -662,6 +677,64 @@ function LaunchpadDetailHeader({
                 </Heading>
               </HStack>
             </Stack>
+            <Stack
+            py="30px"
+            spacing={["20px", "10px"]}
+            minW={["fit-content", "870px"]}
+            alignItems="center"
+            direction={["column", "row"]}
+          >
+            <HStack
+              minW="fit-content"
+              cursor="pointer"
+              onClick={() =>
+                isProjOwner
+                  ? onOpenHistoryModal()
+                  : toast.error(
+                      "You must be the project owner to update art location!"
+                    )
+              }
+            >
+              <ProjectInfoIcon color={isProjOwner ? "#fff" : "#888"} />
+              <Heading
+                fontSize={["md", "sm"]}
+                color={isProjOwner ? "brand.blue" : "#888"}
+                textDecoration="underline"
+                fontFamily="Evogria, sans-serif"
+              >
+                Minting History
+              </Heading>
+            </HStack>
+
+            <Divider
+              width="2px"
+              height="30px"
+              bg="#232323"
+              display={["none", "inline"]}
+            />
+            <HStack
+              minW="fit-content"
+              cursor="pointer"
+              onClick={() =>
+                isProjOwner
+                  ? onOpenWithdrawHistoryModal()
+                  : toast.error(
+                      "You must be the project owner to update art location!"
+                    )
+              }
+            >
+              <ProjectInfoIcon color={isProjOwner ? "#fff" : "#888"} />
+              <Heading
+                fontSize={["md", "sm"]}
+                color={isProjOwner ? "brand.blue" : "#888"}
+                textDecoration="underline"
+                fontFamily="Evogria, sans-serif"
+              >
+                Withdraw History
+              </Heading>
+            </HStack>
+          </Stack>
+         </>
           ) : null}
         </VStack>
       </Box>
@@ -720,6 +793,16 @@ function LaunchpadDetailHeader({
             collection_address={collection_address}
             onClose={onCloseWithdrawModal}
           />
+           {isOpenWithdrawHistoryModal && <LaunchpadEventModal
+            isOpen={isOpenHistoryModal}
+            collection_address={collection_address}
+            onClose={onCloseHistoryModal}
+          />}
+            {isOpenWithdrawHistoryModal && <WithdrawHistoryModal
+            isOpen={isOpenWithdrawHistoryModal}
+            collection_address={collection_address}
+            onClose={onCloseWithdrawHistoryModal}
+          />}
           <UpdatePhasesModal
             {...project}
             isOpen={isOpenPhase}

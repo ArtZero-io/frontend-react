@@ -70,7 +70,7 @@ const Router = () => {
           </AccountLayout>
         )}
       />
-      <PrivateRoute
+      <Route
         path={"/public-account"}
         render={(props) => (
           <PublicAccountLayout match={props.match}>
