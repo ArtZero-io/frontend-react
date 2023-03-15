@@ -137,7 +137,7 @@ function LockNFTModal({
               <span
                 onClick={
                   isDisabled || actionType
-                    ? () => toast.error("This item is currently for sale!")
+                    ? () => toast.error("This item is can not lock!")
                     : onOpen
                 }
                 style={{

@@ -91,7 +91,7 @@ const AddNewNFTModal = ({
             <span
               onClick={
                 isDisabled || actionType
-                  ? () => toast.error("This item is currently for sale!")
+                  ? () => toast.error("This item can not edit!")
                   : onOpen
               }
               style={{

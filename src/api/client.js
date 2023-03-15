@@ -477,6 +477,43 @@ export const APICall = {
 
     return ret;
   },
+
+  // new API call from loopback have /api/ prefix
+  // get all My Collected Nft
+  // getMyCollectedNft: async () => {
+  //   const filter = {
+  //     offset: 0,
+  //     limit: 100,
+  //     skip: 0,
+  //     order: "string",
+  //     where: {
+  //       owner: "5EfUESCp28GXw1v9CXmpAL5BfoCNW2y4skipcEoKAbN5Ykfn",
+  //     },
+  //   };
+
+  //   const filterEncoded = encodeURI(JSON.stringify(filter));
+
+  //   return await client("GET", `/api/nfts-schemas?filter=${filterEncoded}`, {});
+  // },
+
+  // get all My Collected Nft
+  getCollectionList: async () => {
+    const filter = {
+      offset: 0,
+      limit: 100,
+      skip: 0,
+      // order: "string",
+      where: { nft_count: { gt: 0 } },
+    };
+
+    const filterEncoded = encodeURI(JSON.stringify(filter));
+
+    return await client(
+      "GET",
+      `/api/collections-schemas?filter=${filterEncoded}`,
+      {}
+    );
+  },
 };
 
 // IPFS API client call
