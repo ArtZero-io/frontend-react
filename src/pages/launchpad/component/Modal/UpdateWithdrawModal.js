@@ -165,7 +165,10 @@ export default function UpdateWithdrawModal({
                 isDisabled={actionType}
                 max={contractBalance}
                 value={withdrawBalance}
-                onChange={(valueString) => setWithdrawBalance(valueString)}
+                onChange={(valueString) => {
+                  if (/[eE+-]/.test(valueString)) return;
+                  setWithdrawBalance(valueString);
+                }}
               >
                 <NumberInputField
                   h="3.125rem"
