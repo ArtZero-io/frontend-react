@@ -77,8 +77,9 @@ function MyNFTTabInfo(props) {
     royaltyFee,
     nft_count,
     rarityTable,
-    // traits = {},
+    isActive,
   } = props;
+
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
@@ -191,6 +192,8 @@ function MyNFTTabInfo(props) {
   ]);
 
   const handleListTokenAction = async () => {
+    if (!isActive) return toast.error("This collection is inactive!");
+
     try {
       await listToken(
         api,
@@ -212,6 +215,8 @@ function MyNFTTabInfo(props) {
   };
 
   const handleUnlistTokenAction = async () => {
+    if (!isActive) return toast.error("This collection is inactive!");
+
     try {
       await unlistToken(
         api,
@@ -388,7 +393,7 @@ function MyNFTTabInfo(props) {
               {!is_locked && owner === currentAccount?.address && (
                 <LockNFTModal
                   {...props}
-                  isDisabled={is_for_sale || actionType}
+                  isDisabled={!isActive || is_for_sale || actionType}
                 />
               )}
               {!is_locked &&
@@ -398,13 +403,13 @@ function MyNFTTabInfo(props) {
                     {...props}
                     mode={formMode.EDIT}
                     collectionOwner={owner}
-                    isDisabled={is_for_sale || actionType}
+                    isDisabled={!isActive || is_for_sale || actionType}
                   />
                 )}
               {ownerAddress === currentAccount?.address && (
                 <TransferNFTModal
                   {...props}
-                  isDisabled={is_for_sale || actionType}
+                  isDisabled={!isActive || is_for_sale || actionType}
                 />
               )}
             </HStack>

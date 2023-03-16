@@ -12,7 +12,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import MyNFTGroupCard from "@components/Card/MyNFTGroup";
 import { useSubstrateState } from "@utils/substrate";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
-import { clientAPI } from "@api/client";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import CommonButton from "@components/Button/CommonButton";
 import CommonContainer from "@components/Container/CommonContainer";
@@ -35,6 +34,7 @@ import { APICall } from "../../../api/client";
 import { ContractPromise } from "@polkadot/api-contract";
 import toast from "react-hot-toast";
 import { readOnlyGasLimit } from "@utils";
+import { useCollectionList } from "../../../hooks/useCollectionList";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
@@ -78,19 +78,14 @@ const MyNFTsPage = () => {
     }
   }
 
+  const { collectionList } = useCollectionList();
+
   const fetchMyCollections = useCallback(async () => {
     try {
       setLoading(true);
 
-      const allCollectionsOwned = await clientAPI("post", "/getCollections", {
-        limit: 10000,
-        offset: 0,
-        sort: -1,
-        isActive: true,
-      });
-
       let data = await Promise.all(
-        allCollectionsOwned?.map(async (collection) => {
+        collectionList?.map(async (collection) => {
           const options = {
             collection_address: collection.nftContractAddress,
             owner: currentAccount?.address,
@@ -139,7 +134,7 @@ const MyNFTsPage = () => {
 
       setLoading(false);
     }
-  }, [currentAccount?.address, filterSelected]);
+  }, [collectionList, currentAccount?.address, filterSelected]);
 
   const fetchMyBids = useCallback(
     async (isMounted) => {

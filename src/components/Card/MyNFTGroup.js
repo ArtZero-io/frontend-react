@@ -2,7 +2,11 @@ import {
   Box,
   Flex,
   Heading,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
   Text,
+  Tooltip,
   useBreakpointValue,
   useDisclosure,
   useMediaQuery,
@@ -35,6 +39,7 @@ import CommonButton from "../Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
 import ImageCloudFlare from "../ImageWrapper/ImageCloudFlare";
 import { getMetaDataOffChain, readOnlyGasLimit } from "../../utils";
+import InActiveIcon from "@theme/assets/icon/InActive.js";
 
 function MyNFTGroupCard({
   name,
@@ -61,7 +66,8 @@ function MyNFTGroupCard({
   const location = useLocation();
 
   function onClickHandler(item) {
-    if(type === "public") return
+    if (type === "public") return;
+
     if (isBigScreen) {
       setSelectedNFT(item);
       item?.stakeStatus === 0 && onOpen();
@@ -78,16 +84,6 @@ function MyNFTGroupCard({
 
     const getAttributesData = async () => {
       if (showOnChainMetadata) {
-        //On-Chain Data
-        // const data = listNFT?.map((item) => {
-        //   const itemData = createObjAttrsNFT(
-        //     item.attributes,
-        //     item.attributesValue
-        //   );
-
-        //   return { ...item, ...itemData };
-        // });
-        // console.log('showOnChainMetadata true data', data)
         setListNFTFormatted(listNFT);
       } else {
         //Off-chain Data
@@ -158,14 +154,35 @@ function MyNFTGroupCard({
             border="2px solid white"
           />
           <VStack w="full" align="start" ml={3} justifyContent="center">
-            <Heading
-              size="h6"
-              cursor="pointer"
-              _hover={{ color: "#7ae7ff" }}
-              onClick={() => history.push(`/collection/${nftContractAddress}`)}
-            >
-              {name}
-            </Heading>
+            <Flex justifyContent="start" alignItems="center">
+              <Heading
+                size="h6"
+                cursor="pointer"
+                _hover={{ color: "#7ae7ff" }}
+                onClick={() =>
+                  history.push(`/collection/${nftContractAddress}`)
+                }
+              >
+                {name}
+              </Heading>
+              {/* Keep use rest?.isActive - no change */}
+              {!rest?.isActive && (
+                <Tooltip
+                  placeContent="start"
+                  hasArrow
+                  bg="#333"
+                  color="#fff"
+                  borderRadius="0"
+                  label="Contact ArtZero to activate your Collection"
+                >
+                  <Tag variant="inActive" fontSize={["14px", "16px"]}>
+                    <TagLeftIcon as={InActiveIcon} />
+                    <TagLabel textTransform="capitalize">Inactive</TagLabel>
+                  </Tag>
+                </Tooltip>
+              )}
+            </Flex>
+
             <Text textAlign="left" color="brand.grayLight" size="2xs">
               {listNFTFormatted?.length} item
               {listNFTFormatted?.length > 1 ? "s" : ""}

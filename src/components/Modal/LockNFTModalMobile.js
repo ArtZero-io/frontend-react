@@ -116,7 +116,7 @@ function LockNFTModalMobile({
             onClick={
               !isDisabled
                 ? onOpen
-                : () => toast.error("This item is currently for sale!")
+                : () => toast.error("This item can not lock!")
             }
             style={{
               width: iconWidth,

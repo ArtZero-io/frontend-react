@@ -91,7 +91,9 @@ const NFTTabCollectible = (props) => {
     traits = {},
     totalNftCount,
     name,
+    isActive,
   } = props;
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
@@ -173,6 +175,8 @@ const NFTTabCollectible = (props) => {
   }, [fetchSaleInfo]);
 
   const handleBuyAction = async () => {
+    if (!isActive) return toast.error("This collection is inactive!");
+
     try {
       await buyToken(
         api,
@@ -192,6 +196,8 @@ const NFTTabCollectible = (props) => {
   };
 
   const handleRemoveBidAction = async () => {
+    if (!isActive) return toast.error("This collection is inactive!");
+
     try {
       await removeBid(
         api,
@@ -209,6 +215,8 @@ const NFTTabCollectible = (props) => {
   };
 
   const handleBidAction = async () => {
+    if (!isActive) return toast.error("This collection is inactive!");
+
     if (bidderCount > MAX_BID_COUNT) {
       toast.error(`This NFT had reached max ${MAX_BID_COUNT} bids!`);
       return;
@@ -241,7 +249,10 @@ const NFTTabCollectible = (props) => {
   )}/${tokenID}`;
 
   const [askPrice, setAskPrice] = useState(1);
+
   const handleListTokenAction = async () => {
+    if (!isActive) return toast.error("This collection is inactive!");
+
     try {
       await listToken(
         api,
@@ -263,6 +274,8 @@ const NFTTabCollectible = (props) => {
   };
 
   const handleUnlistTokenAction = async () => {
+    if (!isActive) return toast.error("This collection is inactive!");
+
     try {
       await unlistToken(
         api,
@@ -316,14 +329,14 @@ const NFTTabCollectible = (props) => {
                 <AddNewNFTModal
                   {...props}
                   mode={formMode.EDIT}
-                  isDisabled={is_for_sale || actionType}
+                  isDisabled={!isActive || is_for_sale || actionType}
                 />
               )}
 
               {!is_locked && isOwner && (
                 <LockNFTModal
                   {...props}
-                  isDisabled={is_for_sale || actionType}
+                  isDisabled={!isActive || is_for_sale || actionType}
                 />
               )}
 

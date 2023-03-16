@@ -607,6 +607,7 @@ const LaunchpadDetailPage = () => {
             const metaData = await getMetaDataOffChain(idOfNFT, baseUri);
 
             if (metaData?.status === "FAILED") {
+              console.log(projectInfo?.nftName, "not cache baseUri", baseUri);
               return {
                 nftName: `${projectInfo?.nftName} #${idOfNFT}`,
                 avatar: "Qmc1az4MVBL9MhfLLv3b1Hf9RCs9AoqXR2AZuUZb2XBhpJ",
@@ -630,7 +631,7 @@ const LaunchpadDetailPage = () => {
               currentAccount,
               tokenID: index,
             });
-
+            console.log(projectInfo?.nftName, "has no baseUri");
             return {
               nftName: `${projectInfo?.nftName} #${idOfNFT}`,
               avatar: "Qmc1az4MVBL9MhfLLv3b1Hf9RCs9AoqXR2AZuUZb2XBhpJ",
@@ -1234,7 +1235,8 @@ const LaunchpadDetailPage = () => {
           ) : (
             <>
               <Text fontSize="lg" color="#888">
-                You minted {myNFTs?.length} NFTs.
+                You minted {myNFTs?.length} NFTs. (Excluding listed & staked
+                NFTs)
               </Text>
 
               <HStack

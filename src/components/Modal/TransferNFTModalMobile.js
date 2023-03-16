@@ -136,7 +136,7 @@ function TransferNFTModalMobile({
         <span
           onClick={
             isDisabled || actionType
-              ? () => toast.error("This item is currently for sale!")
+              ? () => toast.error("This item can not transfer!")
               : onOpen
           }
           style={{
