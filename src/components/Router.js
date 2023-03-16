@@ -15,7 +15,6 @@ import MyStakesPage from "@pages/account/stakes";
 import StatsPage from "@pages/stats";
 
 import MyCollectionsPublicPage from "@pages/accountPublic/collections/collections";
-import GeneralPublicPage from "@pages/accountPublic/general";
 import MyNFTsPublicPage from "@pages/accountPublic/nfts/nfts";
 import MyStakesPublicPage from "@pages/accountPublic/stakes";
 import MyProjectsPublicPage from "@pages/accountPublic/projects/projects";
@@ -74,7 +73,6 @@ const Router = () => {
         path={"/public-account"}
         render={(props) => (
           <PublicAccountLayout match={props.match}>
-            <Route exact path={ROUTES.PUBLIC_ACCOUNT} component={GeneralPublicPage} />
             <Route
               exact
               path={ROUTES.PUBLIC_ACCOUNT_MY_COLLECTIONS}

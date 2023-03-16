@@ -14,7 +14,7 @@ export const ACCOUNT_WHITELIST_PROJECTS = "/account/projects/whitelist";
 export const ACCOUNT_MINTING_PROJECTS = "/account/projects/minting";
 
 //PUBLIC ACCOUNT
-export const PUBLIC_ACCOUNT = "/public-account/general/:address";
+export const PUBLIC_ACCOUNT = "/public-account/collections/:address";
 export const PUBLIC_ACCOUNT_MY_COLLECTIONS = "/public-account/collections/:address";
 export const PUBLIC_ACCOUNT_MY_NFTS = "/public-account/nfts/:address";
 export const PUBLIC_ACCOUNT_MY_STAKES = "/public-account/stakes/:address";

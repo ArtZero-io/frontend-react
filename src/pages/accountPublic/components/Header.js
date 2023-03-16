@@ -15,14 +15,11 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
-import { getProfile } from "@actions/account";
 import IdenticonAvatar from "@components/IdenticonAvatar/IdenticonAvatar";
 import { useSubstrateState } from "@utils/substrate";
 import toast from "react-hot-toast";
 import { truncateStr } from "@utils";
 import SocialCard from "@components/Card/Social";
-import { UPDATE_PROFILE } from "@constants";
-import useForceUpdate from "@hooks/useForceUpdate";
 import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
 
 import CommonButton from "@components/Button/CommonButton";
@@ -72,28 +69,6 @@ function ProfileHeader({address}) {
       fetchProfile();
     }
   }, [api, dispatch, profile, address]);
-
-  // eslint-disable-next-line no-unused-vars
-  const { loading: loadingForceUpdate } = useForceUpdate(
-    [UPDATE_PROFILE],
-    () => async () => {
-      const res = await dispatch(getProfile(currentAccount));
-      if (res.status === "OK") {
-        if (!res.data.username) {
-          res.data.username = truncateStr(currentAccount?.address);
-        }
-
-        setProfile((prev) => {
-          return {
-            ...res.data,
-            address: currentAccount?.address,
-          };
-        });
-      } else {
-        toast.error(res.message);
-      }
-    }
-  );
 
   const [claimAmount, setClaimAmount] = useState(0);
 
@@ -166,7 +141,7 @@ function ProfileHeader({address}) {
           <VStack textAlign="center" justifyContent="space-between">
             <Center w="full" pos="relative">
               <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>
-                {profile?.username || truncateStr(currentAccount.address)}
+                {profile?.username || truncateStr(currentAccount?.address)}
               </Heading>
             </Center>
 
