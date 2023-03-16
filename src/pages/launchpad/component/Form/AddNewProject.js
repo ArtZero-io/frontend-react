@@ -725,7 +725,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                               label="Start time & end time of launchpad project."
                             >
                               <Text w="fit-content" fontSize="lg" ml={1}>
-                                Start time - End time{" "}
+                                Pick time range Start & End time{" "}
                                 <Text as="span" fontSize="lg" color="#fc8181">
                                   *
                                 </Text>

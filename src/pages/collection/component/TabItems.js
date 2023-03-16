@@ -125,24 +125,6 @@ const CollectionItems = ({
     abc();
   }, [currentAccount, result, result?.NFTList]);
 
-  // const getSortedNFT = () => {
-  //   if (!result?.totalResults) return [];
-
-  //   let ret = result?.NFTList;
-
-  //   // if (selectedItem === 0) {
-  //   //   ret = ret.sort((a, b) => a.price - b.price);
-  //   // }
-
-  //   // if (selectedItem === 1) {
-  //   //   ret = ret.sort((a, b) => b.price - a.price);
-  //   // }
-
-  //   return ret;
-  // };
-
-  // const sortedNFT = getSortedNFT();
-
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   // NEW FIXED GRID LAYOUT START
@@ -368,6 +350,7 @@ const CollectionItems = ({
               totalNftCount={nft_count}
               bigCardNew={bigCardNew}
               name={name}
+              {...rest}
             />
           )}
         </Box>
@@ -394,7 +377,8 @@ const CollectionGridNew = ({
   rarityTable,
   totalNftCount,
   bigCardNew,
-  name
+  name,
+  ...rest
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedNft, setSelectedNft] = useState(null);
@@ -415,6 +399,7 @@ const CollectionGridNew = ({
     <>
       {isBigScreen && (
         <NFTDetailModal
+          {...rest}
           {...selectedNft}
           rarityTable={rarityTable}
           totalNftCount={totalNftCount}

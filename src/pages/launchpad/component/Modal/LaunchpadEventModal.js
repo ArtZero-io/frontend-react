@@ -38,13 +38,18 @@ export default function LaunchpadEventModal({
   const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
-  const [totalCount, setTotalCount] = useState(0)
-  const [loading, setLoading] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
+  const [, setLoading] = useState(false);
   const [events, setEvents] = useState([]);
 
-  const { pagesCount, currentPage, setCurrentPage, isDisabled, offset,
-    pageSize, } =
-  usePagination({
+  const {
+    pagesCount,
+    currentPage,
+    setCurrentPage,
+    isDisabled,
+    offset,
+    pageSize,
+  } = usePagination({
     total: totalCount,
     initialState: {
       currentPage: 1,
@@ -52,8 +57,6 @@ export default function LaunchpadEventModal({
       pageSize: NUMBER_PER_PAGE,
     },
   });
-
-console.log(loading, events);
 
   const fetchEvents = useCallback(
     async (isMounted) => {
@@ -66,9 +69,11 @@ console.log(loading, events);
       };
 
       try {
-        const { ret: dataList, totalCount } = await APICall.getLaunchpadEvent(options);
+        const { ret: dataList, totalCount } = await APICall.getLaunchpadEvent(
+          options
+        );
         if (!isMounted) return;
-        setTotalCount(totalCount?.count)
+        setTotalCount(totalCount?.count);
         setEvents(dataList);
 
         setLoading(false);
@@ -81,7 +86,7 @@ console.log(loading, events);
         toast.error("There was an error while fetching the collections.");
       }
     },
-    [currentAccount, offset, pageSize]
+    [collection_address, offset, pageSize]
   );
 
   useEffect(() => {
@@ -132,7 +137,7 @@ console.log(loading, events);
         </ModalHeader>
 
         <ModalBody>
-          <Box mt={'20px'}>
+          <Box mt={"20px"}>
             <TableContainer
               maxW="6xl-mid"
               fontSize="lg"
@@ -250,16 +255,16 @@ console.log(loading, events);
               </Skeleton>
             </TableContainer>
             <Stack w="full" py="30px">
-                <PaginationMP
-                  bg="#333"
-                  maxW="230px"
-                  hasGotoPage={false}
-                  pagesCount={pagesCount}
-                  isDisabled={isDisabled}
-                  currentPage={currentPage}
-                  setCurrentPage={setCurrentPage}
-                />
-              </Stack>
+              <PaginationMP
+                bg="#333"
+                maxW="230px"
+                hasGotoPage={false}
+                pagesCount={pagesCount}
+                isDisabled={isDisabled}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+              />
+            </Stack>
           </Box>
         </ModalBody>
       </ModalContent>
