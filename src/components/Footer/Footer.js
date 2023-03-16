@@ -80,7 +80,7 @@ export const Footer = () => {
               <SocialCard profile={profile} />
             </Box>
 
-            <VStack w="full">
+            <VStack w="full" zIndex={10}>
               <Heading fontSize={["sm", "lg"]} color="brand.blue" mt="2">
                 discover, collect and trade nfts on artzero
               </Heading>
