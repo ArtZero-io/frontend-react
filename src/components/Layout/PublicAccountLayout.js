@@ -121,11 +121,6 @@ export default PublicAccountLayout;
 
 const tabsList = [
   {
-    label: 'General',
-    isDisabled: false,
-    route: '/public-account/general',
-  },
-  {
     label: 'Collections',
     isDisabled: false,
     route: '/public-account/collections',

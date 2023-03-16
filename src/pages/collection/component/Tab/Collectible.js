@@ -467,7 +467,7 @@ const NFTTabCollectible = (props) => {
                 Owned by{" "}
                 <Link
                   as={ReactRouterLink}
-                  to={`/public-account/general/${ownerAddress}`}
+                  to={`/public-account/collections/${ownerAddress}`}
                   color="#7AE7FF"
                   textTransform="capitalize"
                   textDecoration="underline"
