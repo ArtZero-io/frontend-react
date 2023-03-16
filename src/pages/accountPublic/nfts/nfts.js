@@ -10,7 +10,6 @@ import {
 
 import React, { useCallback, useEffect, useState } from "react";
 import MyNFTGroupCard from "@components/Card/MyNFTGroup";
-import { useSubstrateState } from "@utils/substrate";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import { clientAPI } from "@api/client";
 import AnimationLoader from "@components/Loader/AnimationLoader";
@@ -38,7 +37,6 @@ import { readOnlyGasLimit } from "@utils";
 import { useParams } from "react-router-dom";
 
 const MyNFTsPage = () => {
-  const { currentAccount } = useSubstrateState();
   const { actionType } = useTxStatus();
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
@@ -237,7 +235,7 @@ const MyNFTsPage = () => {
     filterSelected !== "BIDS" ? fetchMyCollections() : fetchMyBids(isMounted);
 
     return () => (isMounted = false);
-  }, [currentAccount.address, fetchMyBids, fetchMyCollections, filterSelected]);
+  }, [address, fetchMyBids, fetchMyCollections, filterSelected]);
 
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 

@@ -474,7 +474,7 @@ function TokenPage() {
                     Owned by{" "}
                     <Link
                       // to="/user/xxx"
-                      to={`/public-account/general/${ownerAddress}`}
+                      to={`/public-account/collections/${ownerAddress}`}
                       color="brand.blue"
                       textTransform="none"
                       textDecoration="underline"
@@ -757,7 +757,7 @@ function TokenPage() {
                   <Text>
                     Owned by{" "}
                     <Link
-                      to={`/public-account/general/${ownerAddress}`}
+                      to={`/public-account/collections/${ownerAddress}`}
                       color="brand.blue"
                       textTransform="none"
                       textDecoration="underline"
