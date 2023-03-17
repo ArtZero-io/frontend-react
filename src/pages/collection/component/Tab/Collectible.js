@@ -517,9 +517,12 @@ const NFTTabCollectible = (props) => {
                               bg="black"
                               max={999000000}
                               min={1}
-                              precision={6}
-                              onChange={(v) => setAskPrice(v)}
-                              value={askPrice}
+                              onChange={(v) => {
+                                if (/[eE+-]/.test(v)) return;
+
+                                setAskPrice(v);
+                              }}
+                              value={format(askPrice)}
                               h="40px"
                             >
                               <NumberInputField
@@ -838,3 +841,9 @@ const NFTTabCollectible = (props) => {
 };
 
 export default NFTTabCollectible;
+
+const format = (val) => {
+  if (val?.toString().slice(-1) === ".") return val;
+
+  return formatNumDynamicDecimal(val, 6);
+};
