@@ -7,12 +7,10 @@ import {
   VStack,
 
   useBreakpointValue,
-  Flex,
-  Tooltip,
 } from "@chakra-ui/react";
 
 
-import { useCallback, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import IdenticonAvatar from "@components/IdenticonAvatar/IdenticonAvatar";
@@ -21,19 +19,9 @@ import toast from "react-hot-toast";
 import { truncateStr } from "@utils";
 import SocialCard from "@components/Card/Social";
 import ImageCloudFlare from "../../../components/ImageWrapper/ImageCloudFlare";
-
-import CommonButton from "@components/Button/CommonButton";
-
-import marketplace from "../../../utils/blockchain/marketplace";
-import { delay } from "@utils";
-import {
-  execContractQuery,
-  execContractTx,
-  formatQueryResultToNumber,
-} from "../nfts/nfts";
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { getProfileOnChain } from "../../../utils/blockchain/profile_calls";
 import { getPublicCurrentAccount } from "../../../utils";
+import { useHistory } from "react-router-dom";
 
 function ProfileHeader({address}) {
   const dispatch = useDispatch();
@@ -41,8 +29,16 @@ function ProfileHeader({address}) {
   const { currentAccount, api } = useSubstrateState();
 
   const [profile, setProfile] = useState(null);
+  const history = useHistory()
 
   const avatarProfileSize = useBreakpointValue([64, 120]);
+
+  useEffect(() => {
+    if(address === currentAccount?.address) {
+      history.replace('/account/general')
+    }
+  
+  }, [currentAccount, address, history])
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -69,46 +65,6 @@ function ProfileHeader({address}) {
       fetchProfile();
     }
   }, [api, dispatch, profile, address]);
-
-  const [claimAmount, setClaimAmount] = useState(0);
-
-  const fetchMyBidHoldInfo = useCallback(async () => {
-    if (!api) return;
-
-    const queryResult = await execContractQuery(
-      currentAccount?.address,
-      api,
-      marketplace.CONTRACT_ABI,
-      marketplace.CONTRACT_ADDRESS,
-      "getHoldAmountOfBidder",
-      currentAccount?.address
-    );
-
-    const amount = formatQueryResultToNumber(queryResult);
-
-    setClaimAmount(amount);
-  }, [api, currentAccount?.address]);
-
-  useEffect(() => {
-    fetchMyBidHoldInfo();
-  }, [fetchMyBidHoldInfo]);
-
-  const onClaimHandler = async () => {
-    await execContractTx(
-      currentAccount,
-      api,
-      marketplace.CONTRACT_ABI,
-      marketplace.CONTRACT_ADDRESS,
-      0, //=>value
-      "receiveHoldAmount",
-      currentAccount?.address
-    );
-
-    await delay(2000).then(() => {
-      toast.success("You have unsuccessful Bids to claim!");
-      fetchMyBidHoldInfo();
-    });
-  };
 
   return (
     <Box
@@ -159,28 +115,6 @@ function ProfileHeader({address}) {
               />
             )}
 
-            <Flex
-              hidden={claimAmount <= 0}
-              alignItems="center"
-              w="full"
-              justifyContent="center"
-            >
-              <CommonButton
-                text={`Claim unsuccessful Bids: ${claimAmount} AZERO`}
-                onClick={() => onClaimHandler()}
-              />{" "}
-              <Tooltip
-                mx="4px"
-                hasArrow
-                bg="#333"
-                color="#fff"
-                cursor="pointer"
-                borderRadius="0"
-                label={`Claim back your bids when NFT is unlisted or sold to a different user`}
-              >
-                <QuestionOutlineIcon />
-              </Tooltip>
-            </Flex>
           </VStack>
         </HStack>
       </VStack>
