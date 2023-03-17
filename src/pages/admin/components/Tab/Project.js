@@ -100,9 +100,8 @@ function ProjectAdmin() {
       "editProject",
       api
     );
-    await delay(10000);
+    await delay(3000);
     await onGetCollectionCount();
-    await delay(1000);
     // await getAllCollections();
   };
   useEffect(() => {
