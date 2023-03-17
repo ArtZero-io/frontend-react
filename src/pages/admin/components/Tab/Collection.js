@@ -29,6 +29,8 @@ import useForceUpdate from "@hooks/useForceUpdate";
 import { useCallback } from "react";
 import { execContractQuery, execContractTx } from "../../../account/nfts/nfts";
 import { isValidAddressPolkadotAddress } from "@utils";
+import { isEmptyObj } from "@utils";
+import { ipfsClient } from "@api/client";
 
 let collection_count = 0;
 
@@ -238,7 +240,47 @@ function CollectionAdmin() {
       return;
     }
 
+    const selectedCollection = collections.find(
+      (item) => item.nftContractAddress === address
+    );
+
+    if (isEmptyObj(selectedCollection)) {
+      return toast.error("There is some wrong !");
+    }
     const statusBeSet = curDoxxedStatus ? "0" : "1";
+
+    const {
+      name,
+      description,
+      avatarImage,
+      headerImage,
+      squareImage,
+      website,
+      twitter,
+      discord,
+      telegram,
+      isDuplicationChecked,
+    } = selectedCollection;
+
+    console.log("selectedCollection", selectedCollection);
+
+    let { path: metadataHash } = await ipfsClient.add(
+      JSON.stringify({
+        name,
+        description,
+        avatarImage,
+        headerImage,
+        squareImage,
+        website,
+        twitter,
+        discord,
+        telegram,
+        isDoxxed: statusBeSet,
+        isDuplicationChecked: isDuplicationChecked ? "1" : "0",
+      })
+    );
+
+    console.log("setDoxxedHandler metadataHash", metadataHash);
 
     try {
       await execContractTx(
@@ -249,8 +291,8 @@ function CollectionAdmin() {
         0, //=>value
         "setMultipleAttributes",
         address,
-        ["is_doxxed"],
-        [statusBeSet]
+        ["metadata"],
+        [metadataHash]
       );
 
       await APICall.askBeUpdateCollectionData({
@@ -269,6 +311,45 @@ function CollectionAdmin() {
 
     const statusBeSet = currDupStatus ? "0" : "1";
 
+    const selectedCollection = collections.find(
+      (item) => item.nftContractAddress === address
+    );
+
+    if (isEmptyObj(selectedCollection)) {
+      return toast.error("There is some wrong !");
+    }
+
+    const {
+      name,
+      description,
+      avatarImage,
+      headerImage,
+      squareImage,
+      website,
+      twitter,
+      discord,
+      telegram,
+      isDoxxed,
+    } = selectedCollection;
+
+    console.log("selectedCollection", selectedCollection);
+
+    let { path: metadataHash } = await ipfsClient.add(
+      JSON.stringify({
+        name,
+        description,
+        avatarImage,
+        headerImage,
+        squareImage,
+        website,
+        twitter,
+        discord,
+        telegram,
+        isDoxxed: isDoxxed ? "1" : "0",
+        isDuplicationChecked: statusBeSet,
+      })
+    );
+    console.log("setDupCheckedHandler metadataHash", metadataHash);
     try {
       await execContractTx(
         currentAccount,
@@ -278,8 +359,8 @@ function CollectionAdmin() {
         0, //=>value
         "setMultipleAttributes",
         address,
-        ["is_duplication_checked"],
-        [statusBeSet]
+        ["metadata"],
+        [metadataHash]
       );
 
       await APICall.askBeUpdateCollectionData({

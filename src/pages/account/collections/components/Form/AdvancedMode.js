@@ -33,6 +33,7 @@ import { isValidAddress, convertStringToPrice } from "@utils";
 import { validationEmail } from "@constants/yup";
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import { execContractQuery } from "../../../nfts/nfts";
+import { ipfsClient } from "@api/client";
 
 const AdvancedModeForm = ({ mode = "add", id }) => {
   const [avatarIPFSUrl, setAvatarIPFSUrl] = useState("");
@@ -351,50 +352,42 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
             if (!isValidAddressPolkadotAddress(values.nftContractAddress)) {
               toast.error(`The NFT contract address must be an address!`);
             } else {
+              // Update new traits attribute
+              const metadata = {
+                name: values.collectionName.trim(),
+                description: values.collectionDescription.trim(),
+                avatarImage: values.avatarIPFSUrl,
+                headerImage: values.headerIPFSUrl,
+                squareImage: values.headerSquareIPFSUrl,
+                website: values.website,
+                twitter: values.twitter,
+                discord: values.discord,
+                telegram: values.telegram,
+                isDoxxed: "0",
+                isDuplicationChecked: "0",
+              };
+              console.log("metadata ADV MODE", metadata);
+
+              let { path: metadataHash } = await ipfsClient.add(
+                JSON.stringify(metadata)
+              );
               const data = {
                 nftContractAddress: values.nftContractAddress,
-
-                attributes: [
-                  "name",
-                  "description",
-                  "avatar_image",
-                  "header_image",
-                  "header_square_image",
-                  "website",
-                  "twitter",
-                  "discord",
-                  "telegram",
-                  "is_doxxed",
-                  "is_duplication_checked",
-                ],
-
-                attributeVals: [
-                  values.collectionName.trim(),
-                  values.collectionDescription.trim(),
-                  values.avatarIPFSUrl,
-                  values.headerIPFSUrl,
-                  values.headerSquareIPFSUrl,
-                  values.website,
-                  values.twitter,
-                  values.discord,
-                  values.telegram,
-                  "0",
-                  "0",
-                ],
-
+                attributes: ["metadata"],
+                attributeVals: [metadataHash],
                 collectionAllowRoyaltyFee: values.collectRoyaltyFee,
-
                 collectionRoyaltyFeeData: values.collectRoyaltyFee
                   ? Math.round(values.royaltyFee * 100)
                   : 0,
               };
-              if (
-                !data?.attributeVals[2] ||
-                !data?.attributeVals[3] ||
-                !data?.attributeVals[4]
-              ) {
-                return toast.error("Some images is invalid!");
-              }
+              // if (
+              //   !data?.attributeVals[2] ||
+              //   !data?.attributeVals[3] ||
+              //   !data?.attributeVals[4]
+              // ) {
+              //   return toast.error("Some images is invalid!");
+              // }
+              console.log("ADv Mode data", data);
 
               if (mode === formMode.ADD) {
                 const templateParams = {
@@ -441,7 +434,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 <AdvancedModeInput
                   type="text"
                   isRequired={true}
-                  isDisabled={actionType}
+                  isDisabled={actionType || mode === formMode.EDIT}
                   name="nftContractAddress"
                   label="NFT Contract Address"
                   placeholder="NFT Contract Address"
