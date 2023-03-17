@@ -57,7 +57,9 @@ import { useMyProjectAdmin } from "@hooks/useMyProjectAdmin";
 
 const tableHeaders = ["Address", "Amount", "Claimed", "Price"];
 
-function MyWhiteListProjectPage() {
+function MyWhiteListProjectPage(props) {
+  const { projectInfo, selectedProjectAddress } = props;
+
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
 
@@ -67,7 +69,6 @@ function MyWhiteListProjectPage() {
 
   const whitelistAmountRef = useRef(whitelistAmount);
 
-  const [selectedProjectAddress, setSelectedProjectAddress] = useState(null);
   const [selectedPhaseCode, setSelectedPhaseCode] = useState(0);
 
   const [isUpdateMode, setIsUpdateMode] = useState(null);
@@ -180,25 +181,6 @@ function MyWhiteListProjectPage() {
     }
   };
 
-  const onChangeSelectedProjectAddress = async (address) => {
-    setSelectedPhaseCode(0);
-    setIsUpdateMode(null);
-    // setWhiteListDataTable([]);
-    // setphaseInfo({});
-    setWhiteListPrice(0);
-    setWhitelistAmount(1);
-
-    if (!address || address === "0") {
-      setSelectedProjectAddress(null);
-      // setPhasesListWhitelist(null);
-      setSelectedPhaseCode(0);
-      return;
-    }
-
-    setSelectedProjectAddress(address);
-    setWhitelistAddress("");
-  };
-
   const onChangeSelectedPhaseCode = async (phaseId) => {
     // if (parseInt(phaseId) === 0) {
     //   setWhiteListDataTable([]);
@@ -212,11 +194,11 @@ function MyWhiteListProjectPage() {
     setSelectedPhaseCode(phaseId);
   };
 
-  const currentProjectInfo = myProjectAdmin.find(
+  const currentProjectInfo = myProjectAdmin?.find(
     (i) => i.nftContractAddress === selectedProjectAddress
   );
 
-  const phasesListWhitelist = currentProjectInfo?.whiteList.map((item) => {
+  const phasesListWhitelist = currentProjectInfo?.whiteList?.map((item) => {
     return { ...item.phaseData, id: item.phaseId };
   });
 
@@ -348,7 +330,7 @@ function MyWhiteListProjectPage() {
         );
       }
 
-      if (!phaseInfo?.isActive) {
+      if (!phaseInfo?.phaseData?.isActive) {
         return toast.error("Can not add whitelist to inactive phase!");
       }
 
@@ -436,6 +418,10 @@ function MyWhiteListProjectPage() {
   const [whitelistMode, setWhitelistMode] = useState("SINGLE");
 
   function onChangeSelectedMode(v) {
+    setWhitelistAddress("");
+    setIsUpdateMode(null);
+    setWhiteListPrice(0);
+    setWhitelistAmount(1);
     setWhitelistMode(v);
   }
 
@@ -459,7 +445,7 @@ function MyWhiteListProjectPage() {
     }
 
     try {
-      if (!isPhaseEnd(phaseInfo?.endTime)) {
+      if (!isPhaseEnd(phaseInfo?.phaseData?.endTime)) {
         return toast.error("Only clear whitelist for ended phase!");
       }
 
@@ -510,30 +496,7 @@ function MyWhiteListProjectPage() {
         </Heading>
         <Stack>
           <Text py={2}>Choose Project</Text>
-          <Box>
-            <Select
-              isDisabled={actionType}
-              h="50px"
-              borderRadius="0"
-              fontSize="15px"
-              border="1px solid #343333"
-              color="#7ae7ff"
-              textTransform="capitalize"
-              fontFamily="Oswald, san serif"
-              onChange={({ target }) =>
-                onChangeSelectedProjectAddress(target.value)
-              }
-            >
-              <option className="my-option" value={0}>
-                Click to pick project
-              </option>
-              {myProjectAdmin.map((item, index) => (
-                <option value={item.nftContractAddress} key={index}>
-                  {item.name}
-                </option>
-              ))}
-            </Select>
-          </Box>
+          <Heading size="h6">{projectInfo?.name}</Heading>
         </Stack>
 
         <Stack>
@@ -595,240 +558,257 @@ function MyWhiteListProjectPage() {
           </Box>
         </Stack>
 
-        <Stack>
-          <Text py={2}>Whitelist Address</Text>
-
-          <Box>
-            <Input
-              isDisabled={
-                actionType ||
-                parseInt(selectedPhaseCode) === 0 ||
-                parseInt(phaseInfo?.endTime?.replaceAll(",", "")) < Date.now()
-              }
-              bg="black"
-              h="3.125rem"
-              w="full"
-              mx={0}
-              px={2}
-              borderRadius={0}
-              borderWidth={0}
-              color="#fff"
-              placeholder="Enter address"
-              value={whitelistAddress}
-              onChange={(event) => {
-                if (!event.target.value.toString()) {
-                  setIsUpdateMode(null);
-                } else {
-                  const isAlreadyAdded = phaseInfo?.userData
-                    .map((i) => i.address)
-                    .includes(event.target.value.toString());
-
-                  if (!isAlreadyAdded) {
-                    setIsUpdateMode("ADD");
-                  } else {
-                    const editAddr = phaseInfo?.userData.find(
-                      (i) => i.address === event.target.value.toString()
-                    );
-
-                    setWhiteListPrice(editAddr.mintingFee);
-                    setWhitelistAmount(editAddr.whitelistAmount);
-                    whitelistAmountRef.current = editAddr.whitelistAmount;
-                    setWhitelistAmountClaimed(editAddr.claimedAmount);
-                    setIsUpdateMode("EDIT");
-                  }
-                }
-                setWhitelistAddress(event.target.value.toString());
-              }}
-            />
-          </Box>
+        {whitelistMode !== "CLEAR_WL" && (
           <>
-            {parseInt(phaseInfo?.endTime?.replaceAll(",", "")) < Date.now() ? (
-              <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                This phase is ended!
+            <Stack>
+              <Text py={2}>Whitelist Address</Text>
+
+              <Box>
+                <Input
+                  isDisabled={
+                    actionType ||
+                    parseInt(selectedPhaseCode) === 0 ||
+                    parseInt(phaseInfo?.phaseData?.endTime) < Date.now()
+                  }
+                  bg="black"
+                  h="3.125rem"
+                  w="full"
+                  mx={0}
+                  px={2}
+                  borderRadius={0}
+                  borderWidth={0}
+                  color="#fff"
+                  placeholder="Enter address"
+                  value={whitelistAddress}
+                  onChange={(event) => {
+                    if (!event.target.value.toString()) {
+                      setIsUpdateMode(null);
+                    } else {
+                      const isAlreadyAdded = phaseInfo?.userData
+                        .map((i) => i.address)
+                        .includes(event.target.value.toString());
+
+                      if (!isAlreadyAdded) {
+                        setIsUpdateMode("ADD");
+                      } else {
+                        const editAddr = phaseInfo?.userData.find(
+                          (i) => i.address === event.target.value.toString()
+                        );
+
+                        setWhiteListPrice(editAddr.mintingFee);
+                        setWhitelistAmount(editAddr.whitelistAmount);
+                        whitelistAmountRef.current = editAddr.whitelistAmount;
+                        setWhitelistAmountClaimed(editAddr.claimedAmount);
+                        setIsUpdateMode("EDIT");
+                      }
+                    }
+                    setWhitelistAddress(event.target.value.toString());
+                  }}
+                />
+              </Box>
+              <>
+                {parseInt(phaseInfo?.phaseData?.endTime) < Date.now() ? (
+                  <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                    This phase is ended!
+                  </Text>
+                ) : null}
+              </>
+            </Stack>
+
+            <Stack hidden={!isUpdateMode}>
+              <Text py={2}>
+                {isUpdateMode === "ADD"
+                  ? "Price"
+                  : isUpdateMode === "EDIT"
+                  ? "New price"
+                  : ""}
               </Text>
-            ) : null}
-          </>
-        </Stack>
-        <Stack hidden={!isUpdateMode}>
-          <Text py={2}>
-            {isUpdateMode === "ADD"
-              ? "Price"
-              : isUpdateMode === "EDIT"
-              ? "New price"
-              : ""}
-          </Text>
-          <NumberInput
-            bg="black"
-            onChange={(valueString) => setWhiteListPrice(valueString)}
-            value={whiteListPrice}
-            mr={3}
-            h="3.125rem"
-            w="full"
-            px={0}
-            min={0}
-            isDisabled={actionType}
-          >
-            <NumberInputField
-              h="3.125rem"
-              borderRadius={0}
-              borderWidth={0}
-              color="#fff"
-            />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          {whiteListPrice < 0 ? (
-            <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-              Whitelist price must be greater than or equal to 0 Azero
-            </Text>
-          ) : null}{" "}
-        </Stack>
-        <Stack hidden={!isUpdateMode} pb="30px">
-          <Text py={2}>
-            {" "}
-            {isUpdateMode === "ADD"
-              ? "Add number"
-              : isUpdateMode === "EDIT"
-              ? "Update amount"
-              : ""}{" "}
-            {isUpdateMode === "EDIT"
-              ? `(Claimed: ${whitelistAmountClaimed} NFTs). Min: ${parseInt(
-                  whitelistAmountClaimed
-                )} - Max: ${
-                  parseInt(currentProjectInfo?.availableTokenAmount) +
-                  parseInt(whitelistAmountRef.current)
-                }`
-              : null}
-          </Text>
-          <Box>
-            <NumberInput
-              isDisabled={actionType}
-              bg="black"
-              min={
-                isUpdateMode === "EDIT" ? parseInt(whitelistAmountClaimed) : 0
-              }
-              onChange={(valueString) => setWhitelistAmount(valueString)}
-              value={whitelistAmount}
-              mr={3}
-              h="3.125rem"
-              w="full"
-              px={0}
-              max={
-                isUpdateMode === "EDIT"
-                  ? parseInt(currentProjectInfo?.availableTokenAmount) +
-                    parseInt(whitelistAmountRef.current)
-                  : currentProjectInfo?.availableTokenAmount
-              }
-            >
-              <NumberInputField
+              <NumberInput
+                bg="black"
+                onChange={(valueString) => {
+                  if (/[eE+-]/.test(valueString)) return;
+
+                  setWhiteListPrice(valueString);
+                }}
+                value={whiteListPrice}
+                mr={3}
                 h="3.125rem"
-                borderRadius={0}
-                borderWidth={0}
-                color="#fff"
-              />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
-          </Box>
-          {isUpdateMode === "EDIT" ? (
-            <>
-              {parseInt(whitelistAmount) < parseInt(whitelistAmountClaimed) ? (
+                w="full"
+                px={0}
+                min={0}
+                isDisabled={actionType}
+              >
+                <NumberInputField
+                  h="3.125rem"
+                  borderRadius={0}
+                  borderWidth={0}
+                  color="#fff"
+                />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+              {whiteListPrice < 0 ? (
                 <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                  Update amount must be greater than or equal to{" "}
-                  {parseInt(whitelistAmountClaimed)}
+                  Whitelist price must be greater than or equal to 0 Azero
                 </Text>
               ) : null}{" "}
-              {whitelistAmount >
-              parseInt(currentProjectInfo?.availableTokenAmount) +
-                parseInt(whitelistAmountRef.current) ? (
-                <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                  Update amount must be less than or equal to{" "}
-                  {parseInt(currentProjectInfo?.availableTokenAmount) +
-                    parseInt(whitelistAmountRef.current)}
-                </Text>
-              ) : null}{" "}
-            </>
-          ) : (
-            <>
-              {parseInt(whitelistAmount) < 0 ? (
-                <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                  Number must be greater than or equal to zero.
-                </Text>
-              ) : null}{" "}
-              {whitelistAmount >
-              parseInt(currentProjectInfo?.availableTokenAmount) ? (
-                <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                  Number must be less than or equal to{" "}
-                  {parseInt(currentProjectInfo?.availableTokenAmount)}
-                </Text>
-              ) : null}{" "}
-            </>
-          )}
-        </Stack>
+            </Stack>
 
-        <Flex w="full" hidden={!isUpdateMode} justify="start">
-          <Stack
-            w="full"
-            direction="column"
-            justify="space-between"
-            alignItems="center"
-            hidden={isUpdateMode === "ADD"}
-          >
-            <CommonButton
-              mx="0"
-              {...rest}
-              w="full"
-              text="update"
-              variant="outline"
-              onClick={() => onUpdateWhitelist()}
-              isDisabled={
-                loadingForceUpdate ||
-                (actionType && actionType !== UPDATE_WHITELIST) ||
-                whiteListPrice < 0 ||
-                parseInt(whitelistAmount) < parseInt(whitelistAmountClaimed) ||
-                whitelistAmount >
-                  parseInt(currentProjectInfo?.availableTokenAmount) +
-                    parseInt(whitelistAmountRef.current)
-              }
-            />
-          </Stack>
-
-          <Flex
-            w="full"
-            direction="column"
-            justify="space-between"
-            alignItems="center"
-            hidden={isUpdateMode === "EDIT"}
-          >
-            {currentProjectInfo?.availableTokenAmount <= 0 ? (
-              <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
-                The remaining slot is 0. You can't add more!{" "}
+            <Stack hidden={!isUpdateMode} pb="30px">
+              <Text py={2}>
+                {" "}
+                {isUpdateMode === "ADD"
+                  ? "Add number"
+                  : isUpdateMode === "EDIT"
+                  ? "Update amount"
+                  : ""}{" "}
+                {isUpdateMode === "EDIT"
+                  ? `(Claimed: ${whitelistAmountClaimed} NFTs). Min: ${parseInt(
+                      whitelistAmountClaimed
+                    )} - Max: ${
+                      parseInt(currentProjectInfo?.availableTokenAmount) +
+                      parseInt(whitelistAmountRef.current)
+                    }`
+                  : null}
               </Text>
-            ) : null}
-            <CommonButton
-              mx="0"
-              {...rest}
-              w="full"
-              variant="outline"
-              text="add new"
-              onClick={() => onAddWhitelist()}
-              isDisabled={
-                currentProjectInfo?.availableTokenAmount <= 0 ||
-                loadingForceUpdate ||
-                (actionType && actionType !== ADD_WHITELIST) ||
-                !isValidAddressPolkadotAddress(whitelistAddress) ||
-                whiteListPrice < 0 ||
-                parseInt(whitelistAmount) < 0 ||
-                whitelistAmount >
-                  parseInt(currentProjectInfo?.availableTokenAmount)
-              }
-            />
-          </Flex>
-        </Flex>
+              <Box>
+                <NumberInput
+                  isDisabled={actionType}
+                  bg="black"
+                  min={
+                    isUpdateMode === "EDIT"
+                      ? parseInt(whitelistAmountClaimed)
+                      : 0
+                  }
+                  onChange={(valueString) => {
+                    if (/[eE+-]/.test(valueString)) return;
+                    setWhitelistAmount(valueString);
+                  }}
+                  value={whitelistAmount}
+                  mr={3}
+                  h="3.125rem"
+                  w="full"
+                  px={0}
+                  max={
+                    isUpdateMode === "EDIT"
+                      ? parseInt(currentProjectInfo?.availableTokenAmount) +
+                        parseInt(whitelistAmountRef.current)
+                      : currentProjectInfo?.availableTokenAmount
+                  }
+                >
+                  <NumberInputField
+                    h="3.125rem"
+                    borderRadius={0}
+                    borderWidth={0}
+                    color="#fff"
+                  />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </Box>
+              {isUpdateMode === "EDIT" ? (
+                <>
+                  {parseInt(whitelistAmount) <
+                  parseInt(whitelistAmountClaimed) ? (
+                    <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                      Update amount must be greater than or equal to{" "}
+                      {parseInt(whitelistAmountClaimed)}
+                    </Text>
+                  ) : null}{" "}
+                  {whitelistAmount >
+                  parseInt(currentProjectInfo?.availableTokenAmount) +
+                    parseInt(whitelistAmountRef.current) ? (
+                    <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                      Update amount must be less than or equal to{" "}
+                      {parseInt(currentProjectInfo?.availableTokenAmount) +
+                        parseInt(whitelistAmountRef.current)}
+                    </Text>
+                  ) : null}{" "}
+                </>
+              ) : (
+                <>
+                  {parseInt(whitelistAmount) < 0 ? (
+                    <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                      Number must be greater than or equal to zero.
+                    </Text>
+                  ) : null}{" "}
+                  {whitelistAmount >
+                  parseInt(currentProjectInfo?.availableTokenAmount) ? (
+                    <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                      Number must be less than or equal to{" "}
+                      {parseInt(currentProjectInfo?.availableTokenAmount)}
+                    </Text>
+                  ) : null}{" "}
+                </>
+              )}
+            </Stack>
+
+            <Flex w="full" hidden={!isUpdateMode} justify="start">
+              <Stack
+                w="full"
+                direction="column"
+                justify="space-between"
+                alignItems="center"
+                hidden={isUpdateMode === "ADD"}
+              >
+                <CommonButton
+                  mx="0"
+                  {...rest}
+                  w="full"
+                  text="update"
+                  variant="outline"
+                  onClick={() => onUpdateWhitelist()}
+                  isDisabled={
+                    loadingForceUpdate ||
+                    (actionType && actionType !== UPDATE_WHITELIST) ||
+                    whiteListPrice < 0 ||
+                    parseInt(whitelistAmount) <
+                      parseInt(whitelistAmountClaimed) ||
+                    whitelistAmount >
+                      parseInt(currentProjectInfo?.availableTokenAmount) +
+                        parseInt(whitelistAmountRef.current)
+                  }
+                />
+              </Stack>
+
+              <Flex
+                w="full"
+                direction="column"
+                justify="space-between"
+                alignItems="center"
+                hidden={isUpdateMode === "EDIT"}
+              >
+                {currentProjectInfo?.availableTokenAmount <= 0 ? (
+                  <Text textAlign="left" color="#ff8c8c" ml={1} fontSize="sm">
+                    The remaining slot is 0. You can't add more!{" "}
+                  </Text>
+                ) : null}
+                <CommonButton
+                  mx="0"
+                  {...rest}
+                  w="full"
+                  variant="outline"
+                  text="add new"
+                  onClick={() => onAddWhitelist()}
+                  isDisabled={
+                    currentProjectInfo?.availableTokenAmount <= 0 ||
+                    loadingForceUpdate ||
+                    (actionType && actionType !== ADD_WHITELIST) ||
+                    !isValidAddressPolkadotAddress(whitelistAddress) ||
+                    whiteListPrice < 0 ||
+                    parseInt(whitelistAmount) < 0 ||
+                    whitelistAmount >
+                      parseInt(currentProjectInfo?.availableTokenAmount)
+                  }
+                />
+              </Flex>
+            </Flex>
+          </>
+        )}
       </Stack>
 
       <Stack w={["full", "70%"]} pb="30px">

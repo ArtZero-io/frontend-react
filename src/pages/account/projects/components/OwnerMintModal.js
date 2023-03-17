@@ -1,5 +1,4 @@
 import {
-  Button,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -8,21 +7,20 @@ import {
   ModalOverlay,
   useDisclosure,
   useBreakpointValue,
-} from '@chakra-ui/react';
+  Heading,
+  HStack,
+} from "@chakra-ui/react";
 
-import useTxStatus from '@hooks/useTxStatus';
-import { formMode, SCROLLBAR, FINALIZED } from '@constants';
-import MyMintingProjectPage from '../minting';
+import useTxStatus from "@hooks/useTxStatus";
+import { formMode, SCROLLBAR, FINALIZED } from "@constants";
+import MyMintingProjectPage from "../minting";
+import ProjectInfoIcon from "@theme/assets/icon/ProjectInfo";
+import toast from "react-hot-toast";
 
-function OwnerMintModal({
-  mode = formMode.ADD,
-  isDisabled,
-  id,
-  nftContractAddress,
-}) {
+function OwnerMintModal({ mode = formMode.ADD, isDisabled, ...rest }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { step, onEndClick } = useTxStatus();
-  const modalSize = useBreakpointValue(['xs', '4xl', '4xl']);
+  const modalSize = useBreakpointValue(["xs", "4xl", "4xl"]);
 
   // useEffect(() => {
   //   step === END && onClose();
@@ -31,15 +29,25 @@ function OwnerMintModal({
   return (
     <>
       {mode === formMode.ADD && (
-        <Button
-          w={['full', 'auto']}
-          isDisabled={isDisabled}
-          variant="outline"
-          color="brand.blue"
-          onClick={() => onOpen()}
+        <HStack
+          minW="fit-content"
+          cursor="pointer"
+          onClick={
+            isDisabled
+              ? () => toast.error("You must be the project owner!")
+              : () => onOpen()
+          }
         >
-          owner mint
-        </Button>
+          <ProjectInfoIcon color={!isDisabled ? "#fff" : "#888"} />
+          <Heading
+            fontSize={["md", "sm"]}
+            color={!isDisabled ? "brand.blue" : "#888"}
+            textDecoration="underline"
+            fontFamily="Evogria, sans-serif"
+          >
+            owner mint
+          </Heading>
+        </HStack>
       )}
 
       <Modal
@@ -48,7 +56,7 @@ function OwnerMintModal({
         size={modalSize}
         onClose={onClose}
         closeOnEsc={false}
-        scrollBehavior={'inside'}
+        scrollBehavior={"inside"}
         closeOnOverlayClick={false}
       >
         <ModalOverlay
@@ -60,21 +68,21 @@ function OwnerMintModal({
           textAlign="center"
           position="relative"
           bg="brand.grayDark"
-          px={['4px', '24px', '24px']}
-          pb={['4px', '32px', '32px']}
+          px={["4px", "24px", "24px"]}
+          pb={["4px", "32px", "32px"]}
         >
           <ModalCloseButton
             borderWidth={2}
             borderRadius="0"
             position="absolute"
-            top={['0', '-8', '-8']}
-            right={['0', '-8', '-8']}
+            top={["0", "-8", "-8"]}
+            right={["0", "-8", "-8"]}
             onClick={() => step === FINALIZED && onEndClick()}
           />
           <ModalHeader></ModalHeader>
 
           <ModalBody overflowY="auto" sx={SCROLLBAR}>
-            <MyMintingProjectPage />
+            <MyMintingProjectPage {...rest} />
           </ModalBody>
         </ModalContent>
       </Modal>
