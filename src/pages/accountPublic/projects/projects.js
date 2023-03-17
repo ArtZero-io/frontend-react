@@ -10,7 +10,7 @@ import launchpad_psp34_nft_standard from "../../../utils/blockchain/launchpad-ps
 import { useParams } from "react-router-dom";
 
 const MyProjectsPage = () => {
-  const { api, currentAccount } = useSubstrateState();
+  const { api } = useSubstrateState();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -55,7 +55,7 @@ const MyProjectsPage = () => {
         );
         const myProjList = projAddCheckAdmin.filter(
           ({ collectionOwner, isAdmin }) =>
-            collectionOwner === currentAccount.address || isAdmin
+            collectionOwner === address || isAdmin
         );
 
         if (isUnmounted) return;
@@ -72,7 +72,7 @@ const MyProjectsPage = () => {
     fetchMyProjectListDetails();
 
     return () => (isUnmounted = true);
-  }, [api, currentAccount]);
+  }, [api, address]);
 
   return (
     <CommonContainer>
