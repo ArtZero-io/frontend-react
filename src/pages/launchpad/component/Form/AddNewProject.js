@@ -445,18 +445,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     code_phases: code_phases,
                     start_time_phases: start_time_phases,
                     end_time_phases: end_time_phases,
-                    collectionName: values.name.trim(),
-                    collectionDescription: values.description.trim(),
-                    avatarIPFSUrl: values.avatarIPFSUrl,
-                    headerIPFSUrl: values.headerIPFSUrl,
-                    headerSquareIPFSUrl: values.headerSquareIPFSUrl,
-                    website: values.website.trim(),
-                    twitter: values.twitter.trim(),
-                    discord: values.discord.trim(),
-                    telegram: values.telegram.trim(),
-                    collectRoyaltyFee: isSetRoyal,
-                    royaltyFee: values.royaltyFee,
-                    collectionAddingFee: addingFee,
                     is_public_phases: is_public_phases,
                     public_minting_fee_phases: public_minting_fee_phases,
                     public_minting_amout_phases: public_minting_amout_phases,
@@ -465,36 +453,30 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   };
 
                   const createNewCollection = async (nft_address) => {
+                    // New traits attribute
+
+                    const metadata = {
+                      name: values.name.trim(),
+                      description: values.description.trim(),
+                      avatarImage: values.avatarIPFSUrl,
+                      headerImage: values.headerIPFSUrl,
+                      squareImage: values.headerSquareIPFSUrl,
+                      website: values.website,
+                      twitter: values.twitter,
+                      discord: values.discord,
+                      telegram: values.telegram,
+                      isDoxxed: "0",
+                      isDuplicationChecked: "0",
+                    };
+
+                    let { path: metadataHash } = await ipfsClient.add(
+                      JSON.stringify(metadata)
+                    );
                     // Lay gia tri nft_address tu launchpad_contract_calls roi tao collection
                     const collectionData = {
                       nftContractAddress: nft_address,
-                      attributes: [
-                        "name",
-                        "description",
-                        "avatar_image",
-                        "header_image",
-                        "header_square_image",
-                        "website",
-                        "twitter",
-                        "discord",
-                        "telegram",
-                        "is_doxxed",
-                        "is_duplication_checked",
-                      ],
-
-                      attributeVals: [
-                        values.name,
-                        values.description,
-                        values.avatarIPFSUrl,
-                        values.headerIPFSUrl,
-                        values.headerSquareIPFSUrl,
-                        values.website,
-                        values.twitter,
-                        values.discord,
-                        values.telegram,
-                        "0",
-                        "0",
-                      ],
+                      attributes: ["metadata"],
+                      attributeVals: [metadataHash],
                       collectionAllowRoyaltyFee: isSetRoyal,
                       collectionRoyaltyFeeData: isSetRoyal
                         ? Math.round(values.royaltyFee * 100)
@@ -526,12 +508,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
 
                   toast.success("Step 1. Creating project...");
 
-                  // const templateParams = {
-                  //   email_owner: values.email_owner,
-                  //   collection_name: values.name,
-                  //   collection_telegram: values.telegram,
-                  // };
-                  // console.log("PROJ templateParams", templateParams);
                   await launchpad_contract_calls.addNewProject(
                     currentAccount,
                     data,
@@ -539,7 +515,6 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     CREATE_PROJECT,
                     api,
                     createNewCollection
-                    // templateParams
                   );
                 } else {
                   if (mode === formMode.EDIT) {
