@@ -708,6 +708,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                             </Tooltip>
 
                             <DateTimeRangePicker
+                              showDoubleView={true}
                               disableClock
                               disabled={!!actionType || mode === formMode.EDIT}
                               onChange={(e) =>
@@ -1158,6 +1159,8 @@ export const fetchInitialValuesProject = async ({
     agreeTosCheckbox: false,
     agreeProjectMintFeeCheckbox: false,
     agreeFeeCheckbox: false,
+    startTime: Date.now(),
+    endTime: Date.now(),
   };
 
   if (mode === formMode.ADD) {

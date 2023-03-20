@@ -229,7 +229,7 @@ async function getStakingDiscountCriteria(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getStakingDiscountCriteria(
+  const { result, output } = await contract.query['artZeroMarketplaceTrait::getStakingDiscountCriteria'](
     address,
     { value: azero_value, gasLimit }
   );
@@ -257,7 +257,7 @@ async function getStakingDiscountRate(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getStakingDiscountRate(
+  const { result, output } = await contract.query["artZeroMarketplaceTrait::getStakingDiscountRate"](
     address,
     { value: azero_value, gasLimit }
   );
@@ -275,12 +275,12 @@ async function getPlatformFee(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getPlatformFee(address, {
+  const { result, output } = await contract.query['artZeroMarketplaceTrait::getPlatformFee'](address, {
     value: azero_value,
     gasLimit,
   });
   if (result.isOk) {
-   return formatNumberOutput(output);
+    return formatNumberOutput(output);
   }
   return null;
 }
@@ -293,14 +293,19 @@ async function getCurrentProfit(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getCurrentProfit(address, {
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getCurrentProfit"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
   if (result.isOk) {
-    /* eslint-disable no-useless-escape */
-    const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 12;
+    console.log(
+      "artZeroMarketplaceTrait::getCurrentProfit",
+      formatNumberOutput(output)
+    );
+
+    return formatNumberOutput(output);
   }
   return null;
 }

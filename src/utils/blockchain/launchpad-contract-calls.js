@@ -388,11 +388,12 @@ async function getProjectAddingFee(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getProjectAddingFee(address, {
+  const { result, output } = await contract.query["artZeroLaunchPadTrait::getProjectAddingFee"](address, {
     value: azero_value,
     gasLimit,
   });
   if (result.isOk) {
+    console.log('artZeroLaunchPadTrait::get_project_adding_fee formatOutput(output)',formatOutput(output))
     return formatOutput(output);
   }
 

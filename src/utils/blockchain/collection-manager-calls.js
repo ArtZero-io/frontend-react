@@ -154,7 +154,6 @@ async function addNewCollection(
               let cacheImages = [];
 
               for (let i = 0; i < transactionData.attributes.length; i++) {
-
                 if (transactionData.attributes[i] === "avatar_image") {
                   cacheImages.push({
                     input: transactionData.attributeVals[i],
@@ -505,11 +504,17 @@ async function getCollectionCount(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getCollectionCount(address, {
+  const { result, output } = await contract.query[
+    "artZeroCollectionTrait::getCollectionCount"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
   if (result.isOk) {
+    console.log(
+      "ArtZeroCollectionTrait::getCollectionCount formatOutput(output)",
+      formatOutput(output)
+    );
     return formatOutput(output);
   }
   return null;
@@ -682,12 +687,16 @@ async function getSimpleModeAddingFee(caller_account) {
 async function getAdvanceModeAddingFee(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const address = caller_account?.address;
-  const { result, output } = await contract.query.getAdvanceModeAddingFee(
-    address,
-    { gasLimit }
-  );
+  const { result, output } = await contract.query[
+    "artZeroCollectionTrait::getAdvanceModeAddingFee"
+  ](address, { gasLimit });
 
   if (result.isOk) {
+    console.log(
+      "artZeroCollectionTrait::getAdvanceModeAddingFee",
+      formatOutput(output)
+    );
+
     return formatOutput(output);
   }
   return null;
@@ -696,12 +705,15 @@ async function getAdvanceModeAddingFee(caller_account) {
 async function getMaxRoyaltyFeeRate(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const address = caller_account?.address;
-  const { result, output } = await contract.query.getMaxRoyaltyFeeRate(
-    address,
-    { gasLimit }
-  );
+  const { result, output } = await contract.query[
+    "artZeroCollectionTrait::getMaxRoyaltyFeeRate"
+  ](address, { gasLimit });
 
   if (result.isOk) {
+    console.log(
+      "artZeroCollectionTrait::getMaxRoyaltyFeeRate",
+      formatOutput(output)
+    );
     return formatOutput(output);
   }
   return null;
