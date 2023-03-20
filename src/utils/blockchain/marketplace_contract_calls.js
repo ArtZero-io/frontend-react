@@ -41,12 +41,10 @@ async function totalTokensForSale(
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.totalTokensForSale(
-    address,
-    { value: azero_value, gasLimit },
-    nft_contract_address,
-    seller
-  );
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::totalTokensForSale"
+  ](address, { value: azero_value, gasLimit }, nft_contract_address, seller);
+
   if (result.isOk) {
     return formatOutput(output);
   }
@@ -65,15 +63,12 @@ async function getVolumeByCollection(caller_account, nft_contract_address) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getVolumeByCollection(
-    address,
-    { value: azero_value, gasLimit },
-    nft_contract_address
-  );
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getVolumeByCollection"
+  ](address, { value: azero_value, gasLimit }, nft_contract_address);
+
   if (result.isOk) {
-    /* eslint-disable no-useless-escape */
-    const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 12;
   }
   return 0;
 }
@@ -86,14 +81,15 @@ async function getTotalVolume(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getTotalVolume(address, {
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getTotalVolume"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
+
   if (result.isOk) {
-    /* eslint-disable no-useless-escape */
-    const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 12;
   }
   return null;
 }
@@ -119,13 +115,15 @@ async function getNftSaleInfo(caller_account, nft_contract_address, token_id) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getNftSaleInfo(
-    address,
-    { value: azero_value, gasLimit },
-    nft_contract_address,
-    token_id
-  );
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getNftSaleInfo"
+  ](address, { value: azero_value, gasLimit }, nft_contract_address, token_id);
+
   if (result.isOk) {
+    console.log(
+      "artZeroMarketplaceTrait::getNftSaleInfo obj",
+      output.toHuman().Ok
+    );
     return output.toHuman().Ok;
   }
   return null;
@@ -149,13 +147,16 @@ async function getForSaleTokenId(
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getForSaleTokenId(
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getForSaleTokenId"
+  ](
     address,
     { value: azero_value, gasLimit },
     nft_contract_address,
     seller,
     index
   );
+
   if (result.isOk) {
     return formatOutput(output);
   }
@@ -188,7 +189,9 @@ async function getAllBids(
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getAllBids(
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getAllBids"
+  ](
     address,
     { value: azero_value, gasLimit },
     nft_contract_address,
@@ -197,6 +200,10 @@ async function getAllBids(
   );
 
   if (result.isOk) {
+    console.log(
+      "artZeroMarketplaceTrait::getAllBids array",
+      output.toHuman().Ok
+    );
     return output.toHuman().Ok;
   }
 
@@ -215,6 +222,7 @@ async function owner(caller_account) {
     value: azero_value,
     gasLimit,
   });
+
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -229,10 +237,10 @@ async function getStakingDiscountCriteria(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query['artZeroMarketplaceTrait::getStakingDiscountCriteria'](
-    address,
-    { value: azero_value, gasLimit }
-  );
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getStakingDiscountCriteria"
+  ](address, { value: azero_value, gasLimit });
+
   if (result.isOk) {
     const ret = output.toHuman().Ok;
 
@@ -257,10 +265,10 @@ async function getStakingDiscountRate(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query["artZeroMarketplaceTrait::getStakingDiscountRate"](
-    address,
-    { value: azero_value, gasLimit }
-  );
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getStakingDiscountRate"
+  ](address, { value: azero_value, gasLimit });
+
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -275,10 +283,13 @@ async function getPlatformFee(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query['artZeroMarketplaceTrait::getPlatformFee'](address, {
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getPlatformFee"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
+
   if (result.isOk) {
     return formatNumberOutput(output);
   }
@@ -299,13 +310,14 @@ async function getCurrentProfit(caller_account) {
     value: azero_value,
     gasLimit,
   });
+
   if (result.isOk) {
     console.log(
       "artZeroMarketplaceTrait::getCurrentProfit",
       formatNumberOutput(output)
     );
 
-    return formatNumberOutput(output);
+    return formatNumberOutput(output) / 10 ** 12;
   }
   return null;
 }
@@ -318,14 +330,15 @@ async function getTotalProfit(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getTotalProfit(address, {
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getTotalProfit"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
+
   if (result.isOk) {
-    /* eslint-disable no-useless-escape */
-    const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 12;
   }
   return null;
 }
@@ -345,12 +358,10 @@ async function getListedTokenCountByCollectionAddress(
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } =
-    await contract.query.getListedTokenCountByCollectionAddress(
-      address,
-      { value: azero_value, gasLimit },
-      nft_contract_address
-    );
+  const { result, output } = await contract.query[
+    "artZeroMarketplaceTrait::getListedTokenCountByCollectionAddress"
+  ](address, { value: azero_value, gasLimit }, nft_contract_address);
+
   if (result.isOk) {
     return formatOutput(output);
   }

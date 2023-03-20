@@ -528,11 +528,9 @@ async function getCollectionsByOwner(caller_account, owner) {
   const azero_value = 0;
   const address = caller_account?.address;
 
-  const { result, output } = await contract.query.getCollectionsByOwner(
-    address,
-    { value: azero_value, gasLimit },
-    owner
-  );
+  const { result, output } = await contract.query[
+    "artZeroCollectionTrait::getCollectionsByOwner"
+  ](address, { value: azero_value, gasLimit }, owner);
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -547,11 +545,9 @@ async function getContractById(caller_account, collection_id) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getContractById(
-    address,
-    { value: azero_value, gasLimit },
-    collection_id
-  );
+  const { result, output } = await contract.query[
+    "artZeroCollectionTrait::getContractById"
+  ](address, { value: azero_value, gasLimit }, collection_id);
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -657,11 +653,9 @@ async function getCollectionByAddress(caller_account, collection_address) {
   const azero_value = 0;
   const address = caller_account?.address;
 
-  const { result, output } = await contract.query.getCollectionByAddress(
-    address,
-    { value: azero_value, gasLimit },
-    collection_address
-  );
+  const { result, output } = await contract.query[
+    "artZeroCollectionTrait::getCollectionByAddress"
+  ](address, { value: azero_value, gasLimit }, collection_address);
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -671,12 +665,11 @@ async function getCollectionByAddress(caller_account, collection_address) {
 async function getSimpleModeAddingFee(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const address = caller_account?.address;
-  const { result, output } = await contract.query.getSimpleModeAddingFee(
-    address,
-    {
-      gasLimit,
-    }
-  );
+  const { result, output } = await contract.query[
+    "artZeroCollectionTrait::getSimpleModeAddingFee"
+  ](address, {
+    gasLimit,
+  });
   if (result.isOk) {
     return formatOutput(output);
   }
@@ -747,13 +740,12 @@ async function getActiveCollectionCount(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getActiveCollectionCount(
-    address,
-    {
-      value: azero_value,
-      gasLimit,
-    }
-  );
+  const { result, output } = await contract.query[
+    "artZeroCollectionTrait::getActiveCollectionCount"
+  ](address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return formatOutput(output);
   }
@@ -769,12 +761,9 @@ async function getAttributes(caller_account, collection_address, attributes) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
   const address = caller_account?.address;
-  const { result, output } = await contract.query.getAttributes(
-    address,
-    { value: azero_value, gasLimit },
-    collection_address,
-    attributes
-  );
+  const { result, output } = await contract.query[
+    "artZeroCollectionTrait::getAttributes"
+  ](address, { value: azero_value, gasLimit }, collection_address, attributes);
   if (result.isOk) {
     attributeVals = output.toHuman().Ok;
   }
