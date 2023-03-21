@@ -293,9 +293,7 @@ async function getClaimableReward(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    /* eslint-disable no-useless-escape */
-    const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 12;
   }
   return null;
 }

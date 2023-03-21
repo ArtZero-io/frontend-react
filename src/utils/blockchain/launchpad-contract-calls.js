@@ -3,11 +3,11 @@ import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
 import {
   getEstimatedGas,
-  handleContractCallAnimation,
+  // handleContractCallAnimation,
   isValidAddressPolkadotAddress,
 } from "@utils";
 import { ContractPromise, Abi } from "@polkadot/api-contract";
-import { AccountActionTypes } from "@store/types/account.types";
+// import { AccountActionTypes } from "@store/types/account.types";
 import {
   txErrorHandler,
   txResponseErrorHandler,
@@ -470,7 +470,7 @@ async function updateIsActiveProject(
 const launchpad_contract_calls = {
   setLaunchPadContract,
   getAttributes,
-  setMultipleAttributes,
+  // setMultipleAttributes,
   addNewProject,
   getProjectCount,
   getProjectByNftAddress,
