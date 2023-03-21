@@ -6,7 +6,7 @@ const queryKeys = { collectionList: "collectionList" };
 async function fetchCollectionList() {
   try {
     const collectionList = await APICall.getCollectionList();
-    console.log('collectionList', collectionList)
+
     return collectionList;
   } catch (error) {
     console.log("error", error);
@@ -16,7 +16,7 @@ async function fetchCollectionList() {
 }
 
 export function useCollectionList() {
-  const { data = [], isLoading } = useQuery(
+  const { data, isLoading } = useQuery(
     [queryKeys.project],
     fetchCollectionList
   );

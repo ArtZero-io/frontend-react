@@ -1,13 +1,13 @@
-import BN from "bn.js";
+// import BN from "bn.js";
 import toast from "react-hot-toast";
 import { web3FromSource } from "../wallets/extension-dapp";
-import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
+// import { isValidAddressPolkadotAddress, getEstimatedGas } from "@utils";
 import { ContractPromise } from "@polkadot/api-contract";
 import {
   txErrorHandler,
-  txResponseErrorHandler,
+  // txResponseErrorHandler,
 } from "../../store/actions/txStatus";
-import { formatOutput, readOnlyGasLimit } from "..";
+import { formatOutput, getEstimatedGas, readOnlyGasLimit } from "..";
 
 let contract;
 

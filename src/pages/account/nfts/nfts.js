@@ -97,7 +97,7 @@ const MyNFTsPage = () => {
           let { ret: dataList } = await APICall.getNFTsByOwnerAndCollection(
             options
           );
-            console.log('dataList',dataList)
+
           if (filterSelected === "COLLECTED") {
             dataList = dataList.filter((item) => item.is_for_sale !== true);
           }
