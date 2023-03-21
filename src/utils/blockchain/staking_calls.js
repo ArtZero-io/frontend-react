@@ -463,14 +463,16 @@ async function updateIsLocked(caller_account, status) {
     address,
     contract,
     value,
-    "updateIsLocked",
+    "artZeroStakingTrait::updateIsLocked",
     status
   );
   const lockingStatus = status ? "Lock" : "Unlock";
 
   // TODO update new Error handler
-  await contract.tx
-    .updateIsLocked({ gasLimit, value }, status)
+  await contract.tx["artZeroStakingTrait::updateIsLocked"](
+    { gasLimit, value },
+    status
+  )
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       if (dispatchError) {
         if (dispatchError.isModule) {
@@ -520,12 +522,14 @@ async function startRewardDistribution(caller_account) {
     address,
     contract,
     value,
-    "startRewardDistribution"
+    "artZeroStakingTrait::startRewardDistribution"
   );
 
   // TODO update new Error handler
-  await contract.tx
-    .startRewardDistribution({ gasLimit, value })
+  await contract.tx["artZeroStakingTrait::startRewardDistribution"]({
+    gasLimit,
+    value,
+  })
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       if (dispatchError) {
         if (dispatchError.isModule) {
@@ -575,12 +579,14 @@ async function stopRewardDistribution(caller_account) {
     address,
     contract,
     value,
-    "stopRewardDistribution"
+    "artZeroStakingTrait::stopRewardDistribution"
   );
 
   // TODO update new Error handler
-  await contract.tx
-    .stopRewardDistribution({ gasLimit, value })
+  await contract.tx["artZeroStakingTrait::stopRewardDistribution"]({
+    gasLimit,
+    value,
+  })
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       if (dispatchError) {
         if (dispatchError.isModule) {
