@@ -289,7 +289,7 @@ function CollectionAdmin() {
         collection_manager.CONTRACT_ABI,
         collection_manager.CONTRACT_ADDRESS,
         0, //=>value
-        "setMultipleAttributes",
+        "artZeroCollectionTrait::setMultipleAttributes",
         address,
         ["metadata"],
         [metadataHash]
@@ -357,7 +357,7 @@ function CollectionAdmin() {
         collection_manager.CONTRACT_ABI,
         collection_manager.CONTRACT_ADDRESS,
         0, //=>value
-        "setMultipleAttributes",
+        "artZeroCollectionTrait::setMultipleAttributes",
         address,
         ["metadata"],
         [metadataHash]

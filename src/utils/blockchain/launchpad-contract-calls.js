@@ -73,71 +73,71 @@ async function getProjectsByOwner(caller_account, ownerAddress) {
 }
 
 // No use ?
-async function setMultipleAttributes(
-  account,
-  collection_address,
-  attributes,
-  values,
-  dispatch
-) {
-  let unsubscribe;
+// async function setMultipleAttributes(
+//   account,
+//   collection_address,
+//   attributes,
+//   values,
+//   dispatch
+// ) {
+//   let unsubscribe;
 
-  const address = account?.address;
-  const gasLimit = readOnlyGasLimit(contract);
-  const value = 0;
+//   const address = account?.address;
+//   const gasLimit = readOnlyGasLimit(contract);
+//   const value = 0;
 
-  const injector = await web3FromSource(account?.meta?.source);
+//   const injector = await web3FromSource(account?.meta?.source);
 
-  account &&
-    contract.tx
-      .setMultipleAttributes(
-        { gasLimit, value },
-        collection_address,
-        attributes,
-        values
-      )
-      .signAndSend(
-        address,
-        { signer: injector.signer },
-        async ({ status, dispatchError }) => {
-          if (dispatchError) {
-            if (dispatchError.isModule) {
-              toast.error(`There is some error with your request`);
-            } else {
-              console.log("dispatchError ", dispatchError.toString());
-            }
-          }
+//   account &&
+//     contract.tx
+//       .setMultipleAttributes(
+//         { gasLimit, value },
+//         collection_address,
+//         attributes,
+//         values
+//       )
+//       .signAndSend(
+//         address,
+//         { signer: injector.signer },
+//         async ({ status, dispatchError }) => {
+//           if (dispatchError) {
+//             if (dispatchError.isModule) {
+//               toast.error(`There is some error with your request`);
+//             } else {
+//               console.log("dispatchError ", dispatchError.toString());
+//             }
+//           }
 
-          if (status) {
-            handleContractCallAnimation(status, dispatchError, dispatch);
+//           if (status) {
+//             handleContractCallAnimation(status, dispatchError, dispatch);
 
-            if (status?.isFinalized) {
-              await APICall.askBeUpdateCollectionData({
-                collection_address: collection_address,
-              });
-            }
+//             if (status?.isFinalized) {
+//               await APICall.askBeUpdateCollectionData({
+//                 collection_address: collection_address,
+//               });
+//             }
 
-            // const statusText = Object.keys(status.toHuman().Ok)[0];
-            // toast.success(
-            //   `Update Collection Attributes ${
-            //     statusText === "0" ? "started" : statusText.toLowerCase()
-            //   }.`
-            // );
-          }
-        }
-      )
-      .then((unsub) => (unsubscribe = unsub))
-      .catch((e) => {
-        dispatch({
-          type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
-        });
-        const mess = `Tnx is ${e.message}`;
+//             // const statusText = Object.keys(status.toHuman().Ok)[0];
+//             // toast.success(
+//             //   `Update Collection Attributes ${
+//             //     statusText === "0" ? "started" : statusText.toLowerCase()
+//             //   }.`
+//             // );
+//           }
+//         }
+//       )
+//       .then((unsub) => (unsubscribe = unsub))
+//       .catch((e) => {
+//         dispatch({
+//           type: AccountActionTypes.CLEAR_ADD_COLLECTION_TNX_STATUS,
+//         });
+//         const mess = `Tnx is ${e.message}`;
 
-        toast.error(mess);
-      });
+//         toast.error(mess);
+//       });
 
-  return unsubscribe;
-}
+//   return unsubscribe;
+// }
 
 async function owner(caller_account) {
   if (!contract || !caller_account) {
@@ -433,13 +433,16 @@ async function updateIsActiveProject(
     address,
     contract,
     value,
-    "updateIsActiveProject",
+    "artZeroLaunchPadTrait::updateIsActiveProject",
     isActive,
     collection_address
   );
 
-  contract.tx
-    .updateIsActiveProject({ gasLimit, value }, isActive, collection_address)
+  contract.tx["artZeroLaunchPadTrait::updateIsActiveProject"](
+    { gasLimit, value },
+    isActive,
+    collection_address
+  )
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,

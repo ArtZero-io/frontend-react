@@ -831,7 +831,7 @@ export const withdrawMarketplaceContract = async (
     address,
     contract,
     value,
-    "withdrawProfit",
+    "artZeroMarketplaceTrait::withdrawProfit",
     amountFormatted,
     receiver_address || address
   );
@@ -840,7 +840,7 @@ export const withdrawMarketplaceContract = async (
   // withdrawProfit for normal use case
   // address set fixed due to withdraw to admin address only
 
-  const txNotSign = contract.tx.withdrawProfit(
+  const txNotSign = contract.tx["artZeroMarketplaceTrait::withdrawProfit"](
     { gasLimit, value },
     amountFormatted,
     receiver_address || address

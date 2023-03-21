@@ -438,13 +438,16 @@ async function updateIsActive(
     address,
     contract,
     value,
-    "updateIsActive",
+    "artZeroCollectionTrait::updateIsActive",
     collection_address,
     isActive
   );
 
-  contract.tx
-    .updateIsActive({ gasLimit, value }, collection_address, isActive)
+  contract.tx["artZeroCollectionTrait::updateIsActive"](
+    { gasLimit, value },
+    collection_address,
+    isActive
+  )
     .signAndSend(
       address,
       { signer },
@@ -799,7 +802,7 @@ async function setMultipleAttributes(
     address,
     contract,
     value,
-    "setMultipleAttributes",
+    "artZeroCollectionTrait::setMultipleAttributes",
     collection_address,
     attributes,
     values
@@ -807,7 +810,7 @@ async function setMultipleAttributes(
 
   caller_account &&
     contract.tx
-      .setMultipleAttributes(
+      ['artZeroCollectionTrait::setMultipleAttributes'](
         { gasLimit, value },
         collection_address,
         attributes,

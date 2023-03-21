@@ -486,12 +486,14 @@ async function editProjectInformation(
     address,
     contract,
     value,
-    "editProjectInformation",
+    "psp34LaunchPadTraits::editProjectInformation",
     projectInfo
   );
 
-  contract.tx
-    .editProjectInformation({ gasLimit, value }, projectInfo)
+  contract.tx["psp34LaunchPadTraits::editProjectInformation"](
+    { gasLimit, value },
+    projectInfo
+  )
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
       txResponseErrorHandler({
         status,
@@ -1026,7 +1028,7 @@ async function updateSchedulePhase(
     address,
     contract,
     value,
-    "updateSchedulePhase",
+    "psp34LaunchPadTraits::updateSchedulePhase",
     phaseId,
     phaseCode,
     isPublic,
@@ -1037,7 +1039,7 @@ async function updateSchedulePhase(
     endTime
   );
 
-  const txNotSign = contract.tx.updateSchedulePhase(
+  const txNotSign = contract.tx["psp34LaunchPadTraits::updateSchedulePhase"](
     { gasLimit, value },
     phaseId,
     phaseCode,
@@ -1083,11 +1085,14 @@ async function deactivePhase(caller_account, phaseId, dispatch, txType, api) {
     address,
     contract,
     value,
-    "deactivePhase",
+    "psp34LaunchPadTraits::deactivePhase",
     phaseId
   );
 
-  const txNotSign = contract.tx.deactivePhase({ gasLimit, value }, phaseId);
+  const txNotSign = contract.tx["psp34LaunchPadTraits::deactivePhase"](
+    { gasLimit, value },
+    phaseId
+  );
 
   await txNotSign
     .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
