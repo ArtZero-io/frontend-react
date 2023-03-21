@@ -84,37 +84,39 @@ const MyNFTsPage = () => {
     try {
       setLoading(true);
 
-      let data = await Promise.all(
-        collectionList?.map(async (collection) => {
-          const options = {
-            collection_address: collection.nftContractAddress,
-            owner: currentAccount?.address,
-            limit: 10000,
-            offset: 0,
-            sort: -1,
-          };
+      let data =
+        collectionList &&
+        (await Promise.all(
+          collectionList?.map(async (collection) => {
+            const options = {
+              collection_address: collection.nftContractAddress,
+              owner: currentAccount?.address,
+              limit: 10000,
+              offset: 0,
+              sort: -1,
+            };
 
-          let { ret: dataList } = await APICall.getNFTsByOwnerAndCollection(
-            options
-          );
+            let { ret: dataList } = await APICall.getNFTsByOwnerAndCollection(
+              options
+            );
 
-          if (filterSelected === "COLLECTED") {
-            dataList = dataList.filter((item) => item.is_for_sale !== true);
-          }
+            if (filterSelected === "COLLECTED") {
+              dataList = dataList.filter((item) => item.is_for_sale !== true);
+            }
 
-          if (filterSelected === "LISTING") {
-            dataList = dataList.filter((item) => item.is_for_sale === true);
-          }
+            if (filterSelected === "LISTING") {
+              dataList = dataList.filter((item) => item.is_for_sale === true);
+            }
 
-          const data = dataList?.map((item) => {
-            return { ...item, stakeStatus: 0 };
-          });
+            const data = dataList?.map((item) => {
+              return { ...item, stakeStatus: 0 };
+            });
 
-          collection.listNFT = data;
+            collection.listNFT = data;
 
-          return collection;
-        })
-      );
+            return collection;
+          })
+        ));
 
       //Don't Display Collection with no NFT
       data = data.filter((item) => item.listNFT?.length > 0);
