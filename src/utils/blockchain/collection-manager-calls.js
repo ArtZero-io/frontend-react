@@ -110,7 +110,8 @@ async function addNewCollection(
                     console.log("SUCCESS!", response.status, response.text);
                   },
                   function (error) {
-                    console.log("error send email FAILED...", error);
+                    toast.error("Error: sending email failed ...");
+                    console.log("error send email FAILED...", error.text);
                   }
                 );
 
@@ -379,7 +380,8 @@ async function autoNewCollection(
                           );
                         },
                         function (error) {
-                          console.log("error send email FAILED...", error);
+                          toast.error("Error: sending email failed ...");
+                          console.log("error send email FAILED...", error.text);
                         }
                       );
 
@@ -476,7 +478,8 @@ async function updateIsActive(
                     console.log("SUCCESS!", response.status, response.text);
                   },
                   function (error) {
-                    console.log("error send email FAILED...", error);
+                    toast.error("Error: sending email failed ...");
+                    console.log("error send email FAILED...", error.text);
                   }
                 );
             }
@@ -809,13 +812,12 @@ async function setMultipleAttributes(
   );
 
   caller_account &&
-    contract.tx
-      ['artZeroCollectionTrait::setMultipleAttributes'](
-        { gasLimit, value },
-        collection_address,
-        attributes,
-        values
-      )
+    contract.tx["artZeroCollectionTrait::setMultipleAttributes"](
+      { gasLimit, value },
+      collection_address,
+      attributes,
+      values
+    )
       .signAndSend(address, { signer }, async ({ status, dispatchError }) => {
         txResponseErrorHandler({
           status,
