@@ -185,7 +185,7 @@ function CollectionAdmin() {
         collection_address: collection_contract,
         email_owner: selectedCollection[0]?.email,
       };
-      console.log("templateParams", templateParams);
+      // console.log("templateParams", templateParams);
       await collection_manager_calls.updateIsActive(
         currentAccount,
         collection_contract,
@@ -262,7 +262,7 @@ function CollectionAdmin() {
       isDuplicationChecked,
     } = selectedCollection;
 
-    console.log("selectedCollection", selectedCollection);
+    // console.log("selectedCollection", selectedCollection);
 
     let { path: metadataHash } = await ipfsClient.add(
       JSON.stringify({
@@ -280,7 +280,7 @@ function CollectionAdmin() {
       })
     );
 
-    console.log("setDoxxedHandler metadataHash", metadataHash);
+    // console.log("setDoxxedHandler metadataHash", metadataHash);
 
     try {
       await execContractTx(
@@ -332,7 +332,7 @@ function CollectionAdmin() {
       isDoxxed,
     } = selectedCollection;
 
-    console.log("selectedCollection", selectedCollection);
+    // console.log("selectedCollection", selectedCollection);
 
     let { path: metadataHash } = await ipfsClient.add(
       JSON.stringify({
@@ -349,7 +349,7 @@ function CollectionAdmin() {
         isDuplicationChecked: statusBeSet,
       })
     );
-    console.log("setDupCheckedHandler metadataHash", metadataHash);
+    // console.log("setDupCheckedHandler metadataHash", metadataHash);
     try {
       await execContractTx(
         currentAccount,

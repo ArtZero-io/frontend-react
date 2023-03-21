@@ -38,7 +38,7 @@ function ProjectAdmin() {
   const onGetCollectionContractOwner = async (e) => {
     let res = await launchpad_contract_calls.owner(currentAccount);
 
-    console.log("res", res);
+    // console.log("res", res);
     if (res) setCollectionContractOwner(res);
     else setCollectionContractOwner("");
   };
@@ -76,7 +76,7 @@ function ProjectAdmin() {
   };
 
   const { projectList } = useProjectList();
-  console.log("projectList", projectList);
+  // console.log("projectList", projectList);
 
   const onRefreshCollection = useCallback(async () => {
     await onGetCollectionContractOwner();

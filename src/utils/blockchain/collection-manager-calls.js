@@ -517,10 +517,10 @@ async function getCollectionCount(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    console.log(
-      "ArtZeroCollectionTrait::getCollectionCount formatOutput(output)",
-      formatOutput(output)
-    );
+    // console.log(
+    //   "ArtZeroCollectionTrait::getCollectionCount formatOutput(output)",
+    //   formatOutput(output)
+    // );
     return formatOutput(output);
   }
   return null;
@@ -691,10 +691,10 @@ async function getAdvanceModeAddingFee(caller_account) {
   ](address, { gasLimit });
 
   if (result.isOk) {
-    console.log(
-      "artZeroCollectionTrait::getAdvanceModeAddingFee",
-      formatOutput(output)
-    );
+    // console.log(
+    //   "artZeroCollectionTrait::getAdvanceModeAddingFee",
+    //   formatOutput(output)
+    // );
 
     return formatOutput(output);
   }
@@ -709,10 +709,10 @@ async function getMaxRoyaltyFeeRate(caller_account) {
   ](address, { gasLimit });
 
   if (result.isOk) {
-    console.log(
-      "artZeroCollectionTrait::getMaxRoyaltyFeeRate",
-      formatOutput(output)
-    );
+    // console.log(
+    //   "artZeroCollectionTrait::getMaxRoyaltyFeeRate",
+    //   formatOutput(output)
+    // );
     return formatOutput(output);
   }
   return null;

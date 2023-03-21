@@ -366,7 +366,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 isDoxxed: "0",
                 isDuplicationChecked: "0",
               };
-              console.log("metadata ADV MODE", metadata);
+              // console.log("metadata ADV MODE", metadata);
 
               let { path: metadataHash } = await ipfsClient.add(
                 JSON.stringify(metadata)
@@ -387,7 +387,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               // ) {
               //   return toast.error("Some images is invalid!");
               // }
-              console.log("ADv Mode data", data);
+              // console.log("ADv Mode data", data);
 
               if (mode === formMode.ADD) {
                 const templateParams = {

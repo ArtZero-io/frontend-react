@@ -69,7 +69,7 @@ export default function WithdrawHistoryModal({
 
       try {
         const { ret: dataList, totalCount } = await APICall.getWithdrawEvent(options);
-        console.log(dataList, "dataList");
+        // console.log(dataList, "dataList");
         setTotalCount(totalCount?.count)
         setEvents(dataList);
 

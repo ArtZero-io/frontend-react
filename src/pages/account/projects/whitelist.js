@@ -302,7 +302,7 @@ function MyWhiteListProjectPage(props) {
       // TODO:
       // phaseId not exit BE still return data = {}
 
-      console.log("phaseInfo", phaseInfo);
+      // console.log("phaseInfo", phaseInfo);
 
       const { status, ret, message } = phaseInfo;
 

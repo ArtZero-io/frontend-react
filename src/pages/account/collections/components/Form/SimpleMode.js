@@ -270,12 +270,12 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               isDoxxed: "0",
               isDuplicationChecked: "0",
             };
-            console.log("metadata", metadata);
+            // console.log("metadata", metadata);
 
             let { path: metadataHash } = await ipfsClient.add(
               JSON.stringify(metadata)
             );
-            console.log("metadataHash", metadataHash);
+            // console.log("metadataHash", metadataHash);
 
             const data = {
               nftName: values.nftName,
@@ -287,7 +287,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 ? Math.round(values.royaltyFee * 100)
                 : 0,
             };
-            console.log("metadataHash1", metadataHash);
+            // console.log("metadataHash1", metadataHash);
 
             // Double check 3 images is exits
             // if (
@@ -307,7 +307,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                 };
 
                 dispatch(setTxStatus({ type: CREATE_COLLECTION, step: START }));
-                console.log("SIMPLE data", data);
+                // console.log("SIMPLE data", data);
                 await collection_manager_calls.autoNewCollection(
                   currentAccount,
                   data,

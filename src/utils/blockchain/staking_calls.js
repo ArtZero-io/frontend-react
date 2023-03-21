@@ -39,7 +39,7 @@ async function getTotalStaked(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    console.log("artZeroStakingTrait::getTotalStaked", formatOutput(output));
+    // console.log("artZeroStakingTrait::getTotalStaked", formatOutput(output));
     return formatOutput(output);
   }
   return null;
@@ -224,7 +224,7 @@ async function isClaimed(caller_account, account) {
     account
   );
   if (result.isOk) {
-    console.log("artZeroStakingTrait::isClaimed bool", output.toHuman().Ok);
+    // console.log("artZeroStakingTrait::isClaimed bool", output.toHuman().Ok);
     return output.toHuman().Ok;
   }
   return null;

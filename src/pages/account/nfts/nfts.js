@@ -101,11 +101,11 @@ const MyNFTsPage = () => {
             );
 
             if (filterSelected === "COLLECTED") {
-              dataList = dataList.filter((item) => item.is_for_sale !== true);
+              dataList = dataList?.filter((item) => item.is_for_sale !== true);
             }
 
             if (filterSelected === "LISTING") {
-              dataList = dataList.filter((item) => item.is_for_sale === true);
+              dataList = dataList?.filter((item) => item.is_for_sale === true);
             }
 
             const data = dataList?.map((item) => {
@@ -119,7 +119,7 @@ const MyNFTsPage = () => {
         ));
 
       //Don't Display Collection with no NFT
-      data = data.filter((item) => item.listNFT?.length > 0);
+      data = data?.filter((item) => item.listNFT?.length > 0);
 
       if (data?.length) {
         setMyCollections(data);
