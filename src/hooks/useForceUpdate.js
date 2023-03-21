@@ -30,7 +30,7 @@ function useForceUpdate(typeArray, cb, noDelay = false) {
 
     // 8 giay
 
-    const delayTime = noDelay ? 500 : 3000;
+    const delayTime = noDelay ? 1000 : 3000;
 
     const doDelay = async () => {
       try {
