@@ -8,7 +8,7 @@ import {
   txResponseErrorHandler,
 } from "@store/actions/txStatus";
 import { APICall } from "../../api/client";
-import { readOnlyGasLimit } from "@utils";
+import { readOnlyGasLimit, formatNumberOutput } from "@utils";
 import { formatOutput } from "..";
 import { BN } from "@polkadot/util";
 
@@ -32,11 +32,14 @@ async function getTotalStaked(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getTotalStaked(address, {
+  const { result, output } = await contract.query[
+    "artZeroStakingTrait::getTotalStaked"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
   if (result.isOk) {
+    console.log("artZeroStakingTrait::getTotalStaked", formatOutput(output));
     return formatOutput(output);
   }
   return null;
@@ -84,12 +87,9 @@ async function getStakedId(caller_account, account, index) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getStakedId(
-    address,
-    { value: azero_value, gasLimit },
-    account,
-    index
-  );
+  const { result, output } = await contract.query[
+    "artZeroStakingTrait::getStakedId"
+  ](address, { value: azero_value, gasLimit }, account, index);
 
   if (result.isOk) {
     return output.toHuman().Ok;
@@ -105,12 +105,9 @@ async function getPendingUnstakedId(caller_account, account, index) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getPendingUnstakedId(
-    address,
-    { value: azero_value, gasLimit },
-    account,
-    index
-  );
+  const { result, output } = await contract.query[
+    "artZeroStakingTrait::getPendingUnstakedId"
+  ](address, { value: azero_value, gasLimit }, account, index);
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -130,12 +127,9 @@ async function getRequestUnstakeTime(caller_account, account, token_id) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getRequestUnstakeTime(
-    address,
-    { value: azero_value, gasLimit },
-    address,
-    token_id
-  );
+  const { result, output } = await contract.query[
+    "artZeroStakingTrait::getRequestUnstakeTime"
+  ](address, { value: azero_value, gasLimit }, address, token_id);
 
   if (result.isOk) {
     return output.toHuman().Ok;
@@ -152,7 +146,9 @@ async function getLimitUnstakeTime(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getLimitUnstakeTime(address, {
+  const { result, output } = await contract.query[
+    "artZeroStakingTrait::getLimitUnstakeTime"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
@@ -171,13 +167,12 @@ async function getTotalCountOfStakeholders(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getStakedAccountsLastIndex(
-    address,
-    {
-      value: azero_value,
-      gasLimit,
-    }
-  );
+  const { result, output } = await contract.query[
+    "artZeroStakingTrait::getStakedAccountsLastIndex"
+  ](address, {
+    value: azero_value,
+    gasLimit,
+  });
   if (result.isOk) {
     return formatOutput(output);
   }
@@ -193,15 +188,16 @@ async function getStakedAccountsAccountByIndex(caller_account, index) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } =
-    await contract.query.getStakedAccountsAccountByIndex(
-      address,
-      {
-        value: azero_value,
-        gasLimit,
-      },
-      index
-    );
+  const { result, output } = await contract.query[
+    "artZeroStakingTrait::getStakedAccountsAccountByIndex"
+  ](
+    address,
+    {
+      value: azero_value,
+      gasLimit,
+    },
+    index
+  );
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -217,7 +213,9 @@ async function isClaimed(caller_account, account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.isClaimed(
+  const { result, output } = await contract.query[
+    "artZeroStakingTrait::isClaimed"
+  ](
     address,
     {
       value: azero_value,
@@ -226,6 +224,7 @@ async function isClaimed(caller_account, account) {
     account
   );
   if (result.isOk) {
+    console.log("artZeroStakingTrait::isClaimed bool", output.toHuman().Ok);
     return output.toHuman().Ok;
   }
   return null;
@@ -240,7 +239,9 @@ async function getIsLocked(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getIsLocked(address, {
+  const { result, output } = await contract.query[
+    "artZeroStakingTrait::getIsLocked"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
@@ -259,11 +260,18 @@ async function getRewardStarted(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getRewardStarted(address, {
+  const { result, output } = await contract.query[
+    "artZeroStakingTrait::getRewardStarted"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
   if (result.isOk) {
+    console.log(
+      "artZeroStakingTrait::getRewardStarted bool ",
+      output.toHuman().Ok
+    );
+
     return output.toHuman().Ok;
   }
   return null;
@@ -278,7 +286,9 @@ async function getClaimableReward(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getClaimableReward(address, {
+  const { result, output } = await contract.query[
+    "artZeroStakingTrait::getClaimableReward"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
@@ -300,14 +310,14 @@ async function getRewardPool(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getRewardPool(address, {
+  const { result, output } = await contract.query[
+    "artZeroStakingTrait::getRewardPool"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
   if (result.isOk) {
-    /* eslint-disable no-useless-escape */
-    const a = output.toHuman().Ok.replace(/\,/g, "");
-    return a / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 12;
   }
   return null;
 }
@@ -821,7 +831,6 @@ const staking_calls = {
   startRewardDistribution,
   getRewardStarted,
   getStakedAccountsAccountByIndex,
-
   updateIsLocked,
   getIsLocked,
   claimReward,
