@@ -80,8 +80,6 @@ function AddPhase({
   };
 
   const handleOnChangeSwitch = (index) => {
-
-    
     if (value[index].isPublic) {
       value[index].publicAmount = "";
       value[index].publicMaxMintingAmount = "";

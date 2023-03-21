@@ -27,7 +27,7 @@ export const setLaunchPadContract = (api, data) => {
     data?.CONTRACT_ADDRESS
   );
 };
-
+// no use???
 async function getAttributes(caller_account, collection_address, attributes) {
   if (!contract || !caller_account) {
     return null;
@@ -56,7 +56,9 @@ async function getProjectsByOwner(caller_account, ownerAddress) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getProjectsByOwner(
+  const { result, output } = await contract.query[
+    "artZeroLaunchPadTrait::getProjectsByOwner"
+  ](
     address,
     {
       value: azero_value,
@@ -163,7 +165,9 @@ async function getProjectCount(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getProjectCount(address, {
+  const { result, output } = await contract.query[
+    "artZeroLaunchPadTrait::getProjectCount"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
@@ -180,11 +184,9 @@ async function getProjectById(caller_account, project_id) {
   const azero_value = 0;
   const address = caller_account?.address;
 
-  const { result, output } = await contract.query.getProjectById(
-    address,
-    { value: azero_value, gasLimit },
-    project_id
-  );
+  const { result, output } = await contract.query[
+    "artZeroLaunchPadTrait::getProjectById"
+  ](address, { value: azero_value, gasLimit }, project_id);
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -204,11 +206,9 @@ async function getProjectByNftAddress(caller_account, nft_address) {
   const azero_value = 0;
   const address = caller_account?.address;
 
-  const { result, output } = await contract.query.getProjectByNftAddress(
-    address,
-    { value: azero_value, gasLimit },
-    nft_address
-  );
+  const { result, output } = await contract.query[
+    "artZeroLaunchPadTrait::getProjectByNftAddress"
+  ](address, { value: azero_value, gasLimit }, nft_address);
   if (result.isOk) {
     return output.toHuman().Ok;
   }
@@ -388,11 +388,17 @@ async function getProjectAddingFee(caller_account) {
   const gasLimit = readOnlyGasLimit(contract);
   const azero_value = 0;
 
-  const { result, output } = await contract.query.getProjectAddingFee(address, {
+  const { result, output } = await contract.query[
+    "artZeroLaunchPadTrait::getProjectAddingFee"
+  ](address, {
     value: azero_value,
     gasLimit,
   });
   if (result.isOk) {
+    console.log(
+      "artZeroLaunchPadTrait::get_project_adding_fee formatOutput(output)",
+      formatOutput(output)
+    );
     return formatOutput(output);
   }
 

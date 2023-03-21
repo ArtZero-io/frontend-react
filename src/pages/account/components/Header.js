@@ -111,7 +111,7 @@ function ProfileHeader() {
       api,
       marketplace.CONTRACT_ABI,
       marketplace.CONTRACT_ADDRESS,
-      "getHoldAmountOfBidder",
+      "artZeroMarketplaceTrait::getHoldAmountOfBidder",
       currentAccount?.address
     );
 
