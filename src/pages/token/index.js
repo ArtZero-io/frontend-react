@@ -1397,13 +1397,13 @@ export const calculateFee = (askPrice, royaltyFee, myTradingFee) => {
   return ret;
 };
 
-const FeeCalculatedBar = ({ feeCalculated }) => {
+export const FeeCalculatedBar = ({ feeCalculated }) => {
   return (
     <HStack
       w="full"
       justify="space-between"
       borderTop="1px solid #282828"
-      pt={["10px", "20px"]}
+      // pt={["10px", "20px"]}
     >
       <VStack alignItems="start">
         <Text fontSize={{ base: "13px", md: "16px" }}>

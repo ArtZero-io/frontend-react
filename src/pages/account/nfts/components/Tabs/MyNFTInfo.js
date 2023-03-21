@@ -64,7 +64,7 @@ function MyNFTTabInfo(props) {
     avatar,
     nftName,
     description,
-    attrsList,
+    traits,
     is_for_sale,
     price,
     filterSelected,
@@ -80,6 +80,10 @@ function MyNFTTabInfo(props) {
     isActive,
   } = props;
 
+  const attrsList = Object.entries(traits).map(([k, v]) => {
+    return { [k]: v };
+  });
+  
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =

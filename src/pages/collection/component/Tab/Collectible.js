@@ -54,6 +54,8 @@ import { BUY, BID, REMOVE_BID, LIST_TOKEN, UNLIST_TOKEN } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import {
   buyToken,
+  calculateFee,
+  FeeCalculatedBar,
   listToken,
   placeBid,
   removeBid,
@@ -74,6 +76,12 @@ import marketplace from "@utils/blockchain/marketplace";
 
 import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
+import staking_calls from "@utils/blockchain/staking_calls";
+
+import {
+  fetchMyPMPStakedCount,
+  fetchMyTradingFee,
+} from "@pages/account/stakes";
 
 const NFTTabCollectible = (props) => {
   const {
@@ -92,6 +100,7 @@ const NFTTabCollectible = (props) => {
     totalNftCount,
     name,
     isActive,
+    royaltyFee,
   } = props;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -293,6 +302,59 @@ const NFTTabCollectible = (props) => {
     }
   };
 
+  const [myTradingFee, setMyTradingFee] = useState(null);
+
+  const fetchData = useCallback(
+    async function () {
+      try {
+        setLoading(true);
+        if (currentAccount) {
+          const stakedCount = await fetchMyPMPStakedCount(
+            currentAccount,
+            staking_calls
+          );
+          const myTradingFeeData = await fetchMyTradingFee(
+            stakedCount,
+            currentAccount,
+            marketplace_contract_calls
+          );
+
+          setMyTradingFee(myTradingFeeData);
+        }
+
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        toast.error(error.message);
+
+        setLoading(false);
+      }
+    },
+    [currentAccount]
+  );
+
+  useEffect(() => {
+    if (!currentAccount) {
+      toast.error("Please connect wallet for full-function using!");
+    }
+
+    fetchData();
+  }, [currentAccount, fetchData]);
+
+  const [feeCalculated, setFeeCalculated] = useState(null);
+
+  useEffect(() => {
+    let p = askPrice;
+
+    if (is_for_sale) {
+      p = price / 1000000000000;
+    }
+
+    const info = calculateFee(p, royaltyFee, myTradingFee);
+
+    setFeeCalculated(info);
+  }, [askPrice, is_for_sale, myTradingFee, price, royaltyFee]);
+  
   return (
     <>
       <Stack
@@ -555,9 +617,9 @@ const NFTTabCollectible = (props) => {
                         </Stack>
                       </Stack>
 
-                      {/* <Stack w="full">
+                      <Stack w="full" pl="8px">
                         <FeeCalculatedBar feeCalculated={feeCalculated} />
-                      </Stack> */}
+                      </Stack>
                     </>
                   )}
                   {/* 3 For sale & owner  */}
@@ -590,9 +652,9 @@ const NFTTabCollectible = (props) => {
                         </Stack>
                       </Stack>
 
-                      {/* <Stack w="full">
+                      <Stack w="full" pl="8px">
                         <FeeCalculatedBar feeCalculated={feeCalculated} />
-                      </Stack> */}
+                      </Stack>
                     </>
                   )}
 
