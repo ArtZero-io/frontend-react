@@ -14,28 +14,35 @@ import {
 } from "@chakra-ui/react";
 import AdvancedMode from "./AdvancedMode";
 import SimpleMode from "./SimpleMode";
+import * as ROUTES from "@constants/routes";
 
-import AddCollectionIcon from "@theme/assets/icon/AddCollection";
+// import AddCollectionIcon from "@theme/assets/icon/AddCollection";
 import { useEffect } from "react";
 import { formMode, FINALIZED } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
+import { CreateButton } from "./CreateButton";
+import ProjectNFTIcon from "@theme/assets/icon/ProjectNFTIcon";
+import { useHistory } from "react-router-dom";
+import { SCROLLBAR } from "@constants";
 
 function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { step } = useTxStatus();
 
+  const history = useHistory();
+
   useEffect(() => {
     step === FINALIZED && onClose();
   }, [step, onClose]);
 
-  const modalSize = useBreakpointValue({ base: "xs", md: "xl" });
+  const modalSize = useBreakpointValue(["xs", "5xl", "5xl"]);
 
   return (
     <>
       {variant !== "navbar" && mode === formMode.ADD && (
         <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-          create collection
+          create Project
         </Button>
       )}
 
@@ -50,11 +57,11 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
           fontFamily="Evogria, sans-serif"
           fontSize={{ base: "18px", md: "15px" }}
         >
-          create collection
+          create Project
         </MenuItem>
       )}
 
-      <Modal isCentered size={modalSize} isOpen={isOpen} onClose={onClose}>
+      <Modal isCentered size={modalSize}  scrollBehavior={"inside"} isOpen={isOpen} onClose={onClose}>
         {/* <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
@@ -64,7 +71,7 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
           position="relative"
           bg="brand.grayDark"
           px={["4px", "24px", "24px"]}
-          py="32px"
+          py={["4px", "32px", "32px"]}
         >
           <ModalCloseButton
             borderWidth={2}
@@ -77,21 +84,15 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
           />
 
           <ModalHeader textAlign="center">
-            <AddCollectionIcon
-              width={["36px", "48px"]}
-              height={["36px", "48px"]}
-            />
-
             <Heading fontSize={["xl", "3xl", "3xl"]} my={3}>
-              create new collection
+            Create a new project on:
             </Heading>
           </ModalHeader>
 
-          <ModalBody>
+          <ModalBody overflowY="auto" sx={SCROLLBAR}>
             <Stack
-              w="80%"
               mx="auto"
-              gap={["10px", "30px"]}
+              gap={["10px", "20px"]}
               direction={{ base: "column", md: "row" }}
             >
               <SimpleMode variant={variant} mode={mode} id={id} />
@@ -99,6 +100,22 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
               <Spacer />
 
               <AdvancedMode variant={variant} mode={mode} id={id} />
+              <Spacer />
+              <CreateButton
+                onClick={() =>
+                  history.push({
+                    state: { formMode: "ADD" },
+                    pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
+                  })
+                }
+                icon={<ProjectNFTIcon />}
+                title={"Launchpad"}
+                data={[
+                  "for non-tech creators",
+                  "allow users to mint NFTs",
+                  "auto create Advanced mode collection on the Marketplace to trade minted NFTs",
+                ]}
+              />
             </Stack>
           </ModalBody>
         </ModalContent>

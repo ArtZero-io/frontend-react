@@ -1,5 +1,4 @@
 import {
-  Button,
   Heading,
   IconButton,
   Modal,
@@ -20,6 +19,8 @@ import AdvancedModeForm from "../Form/AdvancedMode";
 import { formMode, SCROLLBAR, FINALIZED } from "@constants";
 import * as ROUTES from "@constants/routes";
 import { useHistory } from "react-router-dom";
+import { CreateButton } from "./CreateButton";
+import NFTAdvanIcon from "@theme/assets/icon/NFTAdvanIcon";
 
 function AdvancedModeModal({
   mode = "add",
@@ -47,16 +48,17 @@ function AdvancedModeModal({
   return (
     <>
       {mode === formMode.ADD && (
-        <Tooltip
-          hasArrow
-          bg="#333"
-          color="#fff"
-          label="Advanced mode is designed for those who wants to use customized NFT smart contract for example dedicated 5k or 10k collections with whitelisted options."
-        >
-          <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-            Advanced Mode
-          </Button>
-        </Tooltip>
+        // <Tooltip
+        //   hasArrow
+        //   bg="#333"
+        //   color="#fff"
+        //   label="Advanced mode is designed for those who wants to use customized NFT smart contract for example dedicated 5k or 10k collections with whitelisted options."
+        // >
+        //   <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
+        //     Advanced Mode
+        //   </Button>
+        // </Tooltip>
+        <CreateButton icon={<NFTAdvanIcon />} onClick={() => onOpen()} title={'Marketplace in Advanced mode'} data={[" for tech creators", "customize NFT smart contract for big NFT collections ", " usually use this for secondary market"]}/>
       )}
 
       {mode === formMode.EDIT && (

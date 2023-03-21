@@ -1,5 +1,4 @@
 import {
-  Button,
   Heading,
   Modal,
   ModalBody,
@@ -20,6 +19,8 @@ import SimpleModeForm from "../Form/SimpleMode";
 import { formMode, SCROLLBAR, FINALIZED } from "@constants";
 import { useHistory } from "react-router-dom";
 import * as ROUTES from "@constants/routes";
+import { CreateButton } from "./CreateButton";
+import NFTSimpleIcon from "@theme/assets/icon/NFTSimpleIcon";
 
 function SimpleModeModal({
   mode = formMode.ADD,
@@ -47,16 +48,17 @@ function SimpleModeModal({
   return (
     <>
       {mode === formMode.ADD && (
-        <Tooltip
-          hasArrow
-          bg="#333"
-          color="#fff"
-          label="Simple Mode is to create NFT one by one manually. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
-        >
-          <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-            Simple Mode
-          </Button>
-        </Tooltip>
+        // <Tooltip
+        //   hasArrow
+        //   bg="#333"
+        //   color="#fff"
+        //   label="Simple Mode is to create NFT one by one manually. NFT Creators can enter all information in the website and the collection will be created on-chain using our standard NFT smart contract."
+        // >
+        //   <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
+        //     Simple Mode
+        //   </Button>
+        // </Tooltip>
+        <CreateButton icon={<NFTSimpleIcon />} onClick={() => onOpen()} title={'Marketplace in Simple mode'} data={["for non-tech creators", "auto created on-chain using our standard NFT smart contract", " add NFTs and list NFTs manually later"]}/>
       )}
 
       {mode === formMode.EDIT && (
