@@ -278,6 +278,11 @@ const AddNewNFTForm = ({
 
                   // inputCacheImages only use for cache only no Contract use
 
+                  if (!metadataHash) {
+                    toast.error("There is an error with metadata hash!");
+                    return;
+                  }
+
                   dispatch(setTxStatus({ type: CREATE_NFT, step: START }));
                   await nft721_psp34_standard_calls.mintWithAttributes(
                     currentAccount,
@@ -320,6 +325,11 @@ const AddNewNFTForm = ({
                   const { path: metadataHash } = await ipfsClient.add(
                     JSON.stringify(metadata)
                   );
+
+                  if (!metadataHash) {
+                    toast.error("There is an error with metadata hash!");
+                    return;
+                  }
 
                   await nft721_psp34_standard_calls.setMultipleAttributesNFT(
                     currentAccount,

@@ -275,7 +275,13 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
             let { path: metadataHash } = await ipfsClient.add(
               JSON.stringify(metadata)
             );
+
             // console.log("metadataHash", metadataHash);
+
+            if (!metadataHash) {
+              toast.error("There is an error with metadata hash!");
+              return;
+            }
 
             const data = {
               nftName: values.nftName,

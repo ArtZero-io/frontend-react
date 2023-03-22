@@ -473,6 +473,12 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                       JSON.stringify(metadata)
                     );
                     // Lay gia tri nft_address tu launchpad_contract_calls roi tao collection
+
+                    if (!metadataHash) {
+                      toast.error("There is an error with metadata hash!");
+                      return;
+                    }
+
                     const collectionData = {
                       nftContractAddress: nft_address,
                       attributes: ["metadata"],
