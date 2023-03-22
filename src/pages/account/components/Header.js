@@ -131,7 +131,7 @@ function ProfileHeader() {
       marketplace.CONTRACT_ABI,
       marketplace.CONTRACT_ADDRESS,
       0, //=>value
-      "receiveHoldAmount",
+      "artZeroMarketplaceTrait::receiveHoldAmount",
       currentAccount?.address
     );
 
