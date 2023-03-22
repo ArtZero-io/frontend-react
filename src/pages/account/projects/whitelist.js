@@ -558,7 +558,7 @@ function MyWhiteListProjectPage(props) {
           </Box>
         </Stack>
 
-        {whitelistMode !== "CLEAR_WL" && (
+        {whitelistMode === "SINGLE" && (
           <>
             <Stack>
               <Text py={2}>Whitelist Address</Text>
@@ -1122,16 +1122,28 @@ function MyWhiteListProjectPage(props) {
                   {phaseInfo?.phaseData?.isActive ? "Active" : "Inactive"}.
                   <br />
                   Phase phaseId: {phaseInfo?.phaseId}.<br />
-                  Total WL: {phaseInfo?.phaseData?.totalCountWLAddress}.<br />
+                  Phase title: {phaseInfo?.phaseData?.title}
+                  <br />
+                  Total WL: {phaseInfo?.phaseData?.totalCountWLAddress}
+                  <br />
                   Phase ended:{" "}
                   {isPhaseEnd(phaseInfo?.phaseData?.endTime) ? "YES" : "NO"}.
                   <br />
                 </Text>
 
-                <Text>
-                  You will restore 0.070399999996 AZERO for every 10 Whitelist
-                  address clear.
-                </Text>
+                {Math.min(10, phaseInfo?.phaseData?.totalCountWLAddress) !==
+                  0 && (
+                  <Text>
+                    You will restore{" "}
+                    {(
+                      0.070399999996 *
+                      Math.min(10, phaseInfo?.phaseData?.totalCountWLAddress)
+                    ).toFixed(4)}{" "}
+                    AZERO for{" "}
+                    {Math.min(10, phaseInfo?.phaseData?.totalCountWLAddress)}{" "}
+                    Whitelist address clear.
+                  </Text>
+                )}
 
                 <Stack my="8px">
                   <CommonButton
