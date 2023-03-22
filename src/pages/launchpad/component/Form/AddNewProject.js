@@ -708,7 +708,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                             </Tooltip>
 
                             <DateTimeRangePicker
-                              // showDoubleView={true}
+                              showDoubleView={true}
                               disableClock
                               disabled={!!actionType || mode === formMode.EDIT}
                               onChange={(e) =>
