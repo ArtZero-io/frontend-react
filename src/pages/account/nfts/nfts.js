@@ -32,9 +32,13 @@ import {
 } from "@constants";
 import { APICall } from "../../../api/client";
 import { ContractPromise } from "@polkadot/api-contract";
-import toast from "react-hot-toast";
+//  import toast from "react-hot-toast";
 import { readOnlyGasLimit } from "@utils";
 import { useCollectionList } from "../../../hooks/useCollectionList";
+import {
+  txErrorHandler,
+  txResponseErrorHandler,
+} from "@store/actions/txStatus";
 
 const MyNFTsPage = () => {
   const { currentAccount } = useSubstrateState();
@@ -407,6 +411,8 @@ export const formatQueryResultToNumber = (result, chainDecimals = 12) => {
 
 export async function execContractTx(
   caller, // -> currentAccount Object
+  dispatch,
+  txType,
   api,
   contractAbi,
   contractAddress,
@@ -422,7 +428,6 @@ export async function execContractTx(
 
   let unsubscribe;
   let gasLimit;
-  // 6946816000 * 5;
 
   const { signer } = await web3FromSource(caller?.meta?.source);
 
@@ -437,24 +442,23 @@ export async function execContractTx(
   const txNotSign = contract.tx[queryName]({ gasLimit, value }, ...args);
 
   await txNotSign
-    .signAndSend(caller.address, { signer }, ({ events = [], status }) => {
-      if (Object.keys(status.toHuman())[0] === "0") {
-        toast.success(`Processing ...`);
+    .signAndSend(
+      caller.address,
+      { signer },
+      async ({ events = [], status, dispatchError }) => {
+        console.log("txResponseErrorHandler...1");
+        txResponseErrorHandler({
+          status,
+          dispatchError,
+          dispatch,
+          txType,
+          api,
+          caller,
+        });
       }
-
-      events.forEach(({ event: { method } }) => {
-        if (method === "ExtrinsicSuccess" && status.type === "InBlock") {
-          toast.success("Successful!");
-        } else if (method === "ExtrinsicFailed") {
-          toast.error(`Error: ${method}.`);
-        }
-      });
-    })
+    )
     .then((unsub) => (unsubscribe = unsub))
-    .catch((error) => {
-      console.log("error", error);
-      toast.error(`Error ${error}.`);
-    });
+    .catch((error) => txErrorHandler({ error, dispatch }));
 
   return unsubscribe;
 }

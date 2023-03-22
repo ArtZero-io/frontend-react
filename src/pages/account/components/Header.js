@@ -38,6 +38,7 @@ import {
   formatQueryResultToNumber,
 } from "../nfts/nfts";
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
+import { clearTxStatus } from "@store/actions/txStatus";
 
 function ProfileHeader() {
   const dispatch = useDispatch();
@@ -127,6 +128,8 @@ function ProfileHeader() {
   const onClaimHandler = async () => {
     await execContractTx(
       currentAccount,
+      dispatch,
+      "receiveHoldAmount",
       api,
       marketplace.CONTRACT_ABI,
       marketplace.CONTRACT_ADDRESS,
@@ -134,9 +137,11 @@ function ProfileHeader() {
       "artZeroMarketplaceTrait::receiveHoldAmount",
       currentAccount?.address
     );
+    // TODO: update to remote dispatch(clearTxStatus());
 
     await delay(2000).then(() => {
       toast.success("You have unsuccessful Bids to claim!");
+      dispatch(clearTxStatus());
       fetchMyBidHoldInfo();
     });
   };

@@ -822,13 +822,13 @@ async function grantAdminRoleToAddress(
         caller_account,
       });
 
-      if (status.isFinalized) {
-        const res = await APICall.askBeUpdateProjectData({
-          project_address: collection_address,
-        });
+      // if (status.isFinalized) {
+      //   const res = await APICall.askBeUpdateProjectData({
+      //     project_address: collection_address,
+      //   });
 
-        console.log("askBeUpdateProjectData res", res);
-      }
+      //   console.log("askBeUpdateProjectData res", res);
+      // }
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));

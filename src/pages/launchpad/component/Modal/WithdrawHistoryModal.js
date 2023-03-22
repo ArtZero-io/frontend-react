@@ -18,11 +18,11 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { useSubstrateState } from "@utils/substrate";
 import useTxStatus from "@hooks/useTxStatus";
 import { FINALIZED } from "@constants";
-import { clearTxStatus } from "@store/actions/txStatus";
+// import { clearTxStatus } from "@store/actions/txStatus";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import PaginationMP from "@components/Pagination/Pagination";
 
@@ -38,11 +38,11 @@ export default function WithdrawHistoryModal({
   isOpen,
   onClose,
 }) {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
   const [events, setEvents] = useState([]);
-  const [totalCount, setTotalCount] = useState(0)
+  const [totalCount, setTotalCount] = useState(0);
 
   const {
     pagesCount,
@@ -68,11 +68,12 @@ export default function WithdrawHistoryModal({
       };
 
       try {
-        const { ret: dataList, totalCount } = await APICall.getWithdrawEvent(options);
+        const { ret: dataList, totalCount } = await APICall.getWithdrawEvent(
+          options
+        );
         // console.log(dataList, "dataList");
-        setTotalCount(totalCount?.count)
+        setTotalCount(totalCount?.count);
         setEvents(dataList);
-
       } catch (error) {
         console.log(error);
         setEvents([]);
@@ -93,10 +94,10 @@ export default function WithdrawHistoryModal({
     };
   }, [currentAccount, fetchEvents]);
 
-  if (rest.step === FINALIZED) {
-    dispatch(clearTxStatus());
-    onClose();
-  }
+  // if (rest.step === FINALIZED) {
+  //   dispatch(clearTxStatus());
+  //   onClose();
+  // }
 
   return (
     <Modal
@@ -108,13 +109,13 @@ export default function WithdrawHistoryModal({
       size={["xs", "xl"]}
     >
       <ModalOverlay
-          bg="blackAlpha.300"
-          backdropFilter="blur(10px) hue-rotate(90deg)"
-        />
+        bg="blackAlpha.300"
+        backdropFilter="blur(10px) hue-rotate(90deg)"
+      />
 
       <ModalContent
-       px={['4px', '24px', '24px']}
-       pb={['4px', '32px', '32px']}
+        px={["4px", "24px", "24px"]}
+        pb={["4px", "32px", "32px"]}
         borderRadius="0"
         position="relative"
         bg="brand.grayDark"
@@ -231,7 +232,9 @@ export default function WithdrawHistoryModal({
                             />
                           </Td>
                           <Td textAlign="left" py={7}>
-                            {moment(reward.createdTime).format('MMMM Do YYYY, h:mm:ss a')}
+                            {moment(reward.createdTime).format(
+                              "MMMM Do YYYY, h:mm:ss a"
+                            )}
                           </Td>
                         </Tr>
                       ))

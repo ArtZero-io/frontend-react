@@ -522,7 +522,7 @@ function LaunchpadDetailHeader({
           {isProjOwner || isAdmin ? (
             <>
               <Stack
-                py="30px"
+                py="10px"
                 spacing={["20px", "10px"]}
                 minW={["fit-content", "870px"]}
                 justifyContent="space-between"
@@ -679,11 +679,13 @@ function LaunchpadDetailHeader({
                   </Heading>
                 </HStack>
               </Stack>
+              
               <Stack
-                py="30px"
+                py="10px"
                 spacing={["20px", "10px"]}
                 minW={["fit-content", "870px"]}
                 alignItems="center"
+                justifyContent="center"
                 direction={["column", "row"]}
               >
                 <HStack

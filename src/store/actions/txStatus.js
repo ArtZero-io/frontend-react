@@ -148,16 +148,23 @@ export const txResponseErrorHandler = async ({
 
   if (!dispatchError && status) {
     if (Object.keys(status.toHuman())[0] === "0") {
-      dispatch(setTxStatus({ txType, txStatus: READY, step: READY, type }));
+      dispatch(
+        setTxStatus({
+          txType,
+          txStatus: READY,
+          step: READY,
+          type,
+        })
+      );
     } else {
       if (!isApprovalTx) {
         dispatch(
           setTxStatus({
-            type,
-            txType: txType,
+            type: txType,
+            // txType: txType,
+            // txStatus: statusToHuman[0][0],
             timeStamp: Date.now(),
             step: statusToHuman[0][0],
-            txStatus: statusToHuman[0][0],
           })
         );
       }

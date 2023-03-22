@@ -106,7 +106,7 @@ export default function UpdateWithdrawModal({
     setWithdrawBalance(contractBalance);
   }
 
-  if (rest.step === FINALIZED) {
+  if (actionType === WITHDRAW_LAUNCHPAD && rest.step === FINALIZED) {
     dispatch(clearTxStatus());
     setWithdrawBalance(0);
     onClose();

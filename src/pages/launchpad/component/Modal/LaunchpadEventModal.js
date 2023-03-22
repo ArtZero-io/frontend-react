@@ -17,11 +17,11 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { useSubstrateState } from "@utils/substrate";
 import useTxStatus from "@hooks/useTxStatus";
 import { FINALIZED } from "@constants";
-import { clearTxStatus } from "@store/actions/txStatus";
+// import { clearTxStatus } from "@store/actions/txStatus";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
 import PaginationMP from "@components/Pagination/Pagination";
 
@@ -35,7 +35,7 @@ export default function LaunchpadEventModal({
   isOpen,
   onClose,
 }) {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const { currentAccount } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
   const [totalCount, setTotalCount] = useState(0);
@@ -99,10 +99,10 @@ export default function LaunchpadEventModal({
     };
   }, [currentAccount, fetchEvents]);
 
-  if (rest.step === FINALIZED) {
-    dispatch(clearTxStatus());
-    onClose();
-  }
+  // if (rest.step === FINALIZED) {
+  //   dispatch(clearTxStatus());
+  //   onClose();
+  // }
 
   return (
     <Modal

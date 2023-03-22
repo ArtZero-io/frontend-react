@@ -5,8 +5,8 @@ const txStatusReducer = (state = {}, { type, payload }) => {
     case SET_STATUS:
       return {
         ...state,
-        [`${payload.txType}Status`]: payload.txStatus,
-        tokenID: state?.tokenID || payload?.tokenID,
+        // [`${payload.txType}Status`]: payload.txStatus,
+        // tokenID: state?.tokenID || payload?.tokenID,
 
         type: payload.type || state.type,
         step: payload.step || state.step,

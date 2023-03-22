@@ -6,7 +6,6 @@ import {
   Stack,
   Skeleton,
   Input,
-  Button,
 } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
@@ -203,7 +202,7 @@ function CollectionAdmin() {
   };
 
   const { loading: loadingForceUpdate } = useForceUpdate(
-    [UPDATE_COLLECTION_STATUS],
+    [UPDATE_COLLECTION_STATUS, "grantRole", "setDoxxed", "setDupChecked"],
     () => getAllCollections()
   );
   const [newAdminAddress, setNewAdminAddress] = useState("");
@@ -216,8 +215,12 @@ function CollectionAdmin() {
       return toast.error(`Invalid address! Please check again!`);
     }
     try {
+      dispatch(setTxStatus({ type: "grantRole", step: START }));
+      
       await execContractTx(
         currentAccount,
+        dispatch,
+        "grantRole",
         api,
         collection_manager.CONTRACT_ABI,
         collection_manager.CONTRACT_ADDRESS,
@@ -281,10 +284,18 @@ function CollectionAdmin() {
     );
 
     // console.log("setDoxxedHandler metadataHash", metadataHash);
+    if (!metadataHash) {
+      toast.error("There is an error with metadata hash!");
+      return;
+    }
 
     try {
+      dispatch(setTxStatus({ type: "setDoxxed", step: START }));
+
       await execContractTx(
         currentAccount,
+        dispatch,
+        "setDoxxed",
         api,
         collection_manager.CONTRACT_ABI,
         collection_manager.CONTRACT_ADDRESS,
@@ -350,9 +361,19 @@ function CollectionAdmin() {
       })
     );
     // console.log("setDupCheckedHandler metadataHash", metadataHash);
+
+    if (!metadataHash) {
+      toast.error("There is an error with metadata hash!");
+      return;
+    }
+
     try {
+      dispatch(setTxStatus({ type: "setDupChecked", step: START }));
+
       await execContractTx(
         currentAccount,
+        dispatch,
+        "setDupChecked",
         api,
         collection_manager.CONTRACT_ABI,
         collection_manager.CONTRACT_ADDRESS,
@@ -384,58 +405,63 @@ function CollectionAdmin() {
           pb={5}
           borderBottomWidth={1}
         >
-          <Flex alignItems="start" pr={20}>
-            <Text ml={1} color="brand.grayLight">
-              Total Collection:{" "}
-            </Text>
-            <Skeleton
-              ml={2}
-              h="25px"
-              w="50px"
-              color="#fff"
-              isLoaded={collectionCount}
-            >
-              {collectionCount}{" "}
-            </Skeleton>
-          </Flex>
-          <Flex alignItems="start" pr={{ base: 0, xl: 20 }}>
-            <Text ml={1} color="brand.grayLight">
-              Collection Contract Balance:
-            </Text>
-            <Skeleton
-              ml={2}
-              h="25px"
-              w="60px"
-              color="#fff"
-              isLoaded={collectionContractBalance}
-            >
-              {collectionContractBalance}
-            </Skeleton>
-            ZERO
-          </Flex>
-
-          <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>
-            <Text ml={1} color="brand.grayLight">
-              Collection Contract Owner:{" "}
-            </Text>
-            <Skeleton
-              ml={2}
-              h="35px"
-              w="150px"
-              color="#fff"
-              isLoaded={collectionContractOwner}
-            >
-              {truncateStr(collectionContractOwner, 9)}
-            </Skeleton>
+          <Stack>
+            <Flex alignItems="start" pr={20}>
+              <Text ml={1} color="brand.grayLight">
+                Total Collection:{" "}
+              </Text>
+              <Skeleton
+                ml={2}
+                h="25px"
+                w="50px"
+                color="#fff"
+                isLoaded={collectionCount}
+              >
+                {collectionCount}{" "}
+              </Skeleton>
+            </Flex>
+            <Flex alignItems="start" pr={{ base: 0, xl: 20 }}>
+              <Text ml={1} color="brand.grayLight">
+                Collection Contract Balance:
+              </Text>
+              <Skeleton
+                ml={2}
+                h="25px"
+                w="60px"
+                color="#fff"
+                isLoaded={collectionContractBalance}
+              >
+                {collectionContractBalance}
+              </Skeleton>
+              ZERO
+            </Flex>
           </Stack>
 
-          <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>
-            <Text ml={1} color="brand.grayLight">
-              Your role:{" "}
-            </Text>
-            <Text> {isCollectionAdmin ? "Admin" : "Not admin"}</Text>
+          <Stack>
+            <Flex alignItems="start" pr={{ base: 0, xl: 20 }}>
+              <Text ml={1} color="brand.grayLight">
+                Collection Contract Owner:{" "}
+              </Text>
+              <Skeleton
+                ml={2}
+                h="35px"
+                w="150px"
+                color="#fff"
+                isLoaded={collectionContractOwner}
+              >
+                {truncateStr(collectionContractOwner, 9)}
+              </Skeleton>
+            </Flex>
+
+            <Flex alignItems="start" pr={{ base: 0, xl: 20 }}>
+              <Text ml={1} color="brand.grayLight">
+                Your role:{" "}
+              </Text>{" "}
+              <Text> {isCollectionAdmin ? " Admin" : " Not admin"}</Text>
+            </Flex>
           </Stack>
-          <Flex>
+
+          <Flex maxW="500px" w="full">
             <Input
               bg="black"
               mb="15px"
@@ -445,7 +471,13 @@ function CollectionAdmin() {
               placeholder="Your new address here"
               onChange={({ target }) => setNewAdminAddress(target.value)}
             />
-            <Button onClick={grantAdminAddress}>Grant admin</Button>
+            <CommonButton
+              {...rest}
+              text="Grant admin"
+              ml="8px"
+              onClick={grantAdminAddress}
+              isDisabled={actionType && actionType !== "grantRole"}
+            />
           </Flex>
         </Stack>
 

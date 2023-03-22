@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   Heading,
   Input,
   Modal,
@@ -7,7 +8,14 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
   Text,
+  Th,
+  Thead,
+  Tr,
   VStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
@@ -23,7 +31,12 @@ import { UPDATE_ADMIN_ADDRESS, START, FINALIZED } from "@constants";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { isValidAddressPolkadotAddress } from "@utils";
 import toast from "react-hot-toast";
+import { execContractQuery, execContractTx } from "../../../account/nfts/nfts";
+import { useCallback } from "react";
 // import { execContractTx } from "../../../account/nfts/nfts";
+import useForceUpdate from "@hooks/useForceUpdate";
+import { REVOKE_ADMIN_ADDRESS } from "../../../../constants";
+import AddressCopier from "@components/AddressCopier/AddressCopier";
 
 export default function UpdateAdminAddressModal({
   collection_address,
@@ -36,10 +49,14 @@ export default function UpdateAdminAddressModal({
   const { currentAccount, api } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
+  const { loading: loadingForceUpdate } = useForceUpdate(
+    [UPDATE_ADMIN_ADDRESS, REVOKE_ADMIN_ADDRESS],
+    () => fetchMyAdminList()
+  );
   useEffect(() => {
     if (rest.step === FINALIZED) {
       dispatch(clearTxStatus());
-      onClose();
+      // onClose();
     }
   }, [dispatch, onClose, rest.step]);
 
@@ -47,6 +64,11 @@ export default function UpdateAdminAddressModal({
     if (!isValidAddressPolkadotAddress(newAdminAddress)) {
       return toast.error(`Invalid address! Please check again!`);
     }
+
+    if (adminList.includes(newAdminAddress)) {
+      return toast.error(`This wallet is already have admin role!`);
+    }
+
     try {
       const launchpad_psp34_nft_standard_contract = new ContractPromise(
         api,
@@ -68,8 +90,11 @@ export default function UpdateAdminAddressModal({
         api,
         collection_address
       );
+
+      setNewAdminAddress("");
       // await execContractTx(
-      //   currentAccount,
+      //   currentAccount,dispatch,
+      // UPDATE_ADMIN_ADDRESS,
       //   api,
       //   launchpad_psp34_nft_standard.CONTRACT_ABI,
       //   collection_address,
@@ -84,6 +109,83 @@ export default function UpdateAdminAddressModal({
     }
   };
 
+  const [adminList, setAdminList] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchMyAdminList = useCallback(async () => {
+    console.log("fetchMyAdminList");
+
+    if (!api) return;
+
+    try {
+      setLoading(true);
+
+      const queryResult = await execContractQuery(
+        currentAccount?.address,
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        collection_address,
+        "accessControlEnumerable::getRoleMemberCount",
+        3739740293
+      );
+
+      const amount = parseInt(queryResult.toHuman().Ok);
+
+      const list = await Promise.all(
+        [...Array(amount)].map(async (_, idx) => {
+          const queryResult = await execContractQuery(
+            currentAccount?.address,
+            api,
+            launchpad_psp34_nft_standard.CONTRACT_ABI,
+            collection_address,
+            "accessControlEnumerable::getRoleMember",
+            3739740293,
+            idx
+          );
+
+          return queryResult.toHuman().Ok;
+        })
+      );
+      setAdminList(list);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log("error", error);
+    }
+  }, [api, collection_address, currentAccount?.address]);
+
+  useEffect(() => {
+    fetchMyAdminList();
+  }, [fetchMyAdminList]);
+
+  const onRemoveHandler = async (adminAddress) => {
+    try {
+      dispatch(
+        setTxStatus({
+          type: REVOKE_ADMIN_ADDRESS,
+          step: START,
+          tokenIDArray: [adminAddress],
+        })
+      );
+
+      await execContractTx(
+        currentAccount,
+        dispatch,
+        REVOKE_ADMIN_ADDRESS,
+        api,
+        launchpad_psp34_nft_standard.CONTRACT_ABI,
+        collection_address,
+        0, //=>value
+        "accessControl::revokeRole",
+        3739740293,
+        adminAddress
+      );
+      setNewAdminAddress("");
+    } catch (error) {
+      toast.error(error.message);
+      dispatch(clearTxStatus());
+    }
+  };
   return (
     <Modal
       closeOnOverlayClick={false}
@@ -101,7 +203,7 @@ export default function UpdateAdminAddressModal({
       <ModalContent
         pt="20px"
         pb="30px"
-        px={[0, "30px"]}
+        px={[0, "10px"]}
         borderRadius="0"
         position="relative"
         bg="brand.grayDark"
@@ -113,7 +215,10 @@ export default function UpdateAdminAddressModal({
           position="absolute"
           top={["0", "-8", "-8"]}
           right={["0", "-8", "-8"]}
-          onClick={() => rest?.step === FINALIZED && rest?.onEndClick()}
+          onClick={() => {
+            setNewAdminAddress("");
+            rest?.step === FINALIZED && rest?.onEndClick();
+          }}
         />
         <ModalHeader textAlign="center">
           <Heading size="h4" my={2}>
@@ -136,14 +241,72 @@ export default function UpdateAdminAddressModal({
               onChange={({ target }) => setNewAdminAddress(target.value)}
             />
             <CommonButton
+              isDisabled={actionType && actionType !== UPDATE_ADMIN_ADDRESS}
               {...rest}
               w="full"
               onClick={updateAdminAddress}
               text="submit"
             />
+            <Heading mt="8px" size="h6" textAlign="center">
+              Admin Address List
+            </Heading>
+            {loading || loadingForceUpdate ? (
+              <CircularProgress isIndeterminate color="green.300" />
+            ) : (
+              <AdminList
+                adminList={adminList}
+                onRemoveHandler={onRemoveHandler}
+              />
+            )}
           </VStack>
         </ModalBody>
       </ModalContent>
     </Modal>
   );
 }
+
+const AdminList = ({ adminList, onRemoveHandler }) => {
+  const { tokenIDArray, actionType, ...rest } = useTxStatus();
+
+  return (
+    <TableContainer w="full">
+      {adminList?.length === 0 ? (
+        <Text textAlign="center">Not found</Text>
+      ) : (
+        <Table>
+          <Thead>
+            <Tr>
+              <Th>#</Th>
+              <Th>Address</Th>
+              <Th>Remove</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {adminList?.map((item, idx) => (
+              <Tr key={item}>
+                <Td>{idx + 1}</Td>
+                <Td>
+                  <AddressCopier address={item} truncateStrNum={12} />
+                </Td>
+                <Td w={"10px"}>
+                  <CommonButton
+                    isDisabled={
+                      (actionType && actionType !== REVOKE_ADMIN_ADDRESS) ||
+                      (actionType === REVOKE_ADMIN_ADDRESS &&
+                        !tokenIDArray?.includes(item))
+                    }
+                    {...rest}
+                    minW="160px"
+                    onClick={() => onRemoveHandler(item)}
+                    size="xs"
+                    text="Remove role"
+                  />
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      )}
+    </TableContainer>
+  );
+};

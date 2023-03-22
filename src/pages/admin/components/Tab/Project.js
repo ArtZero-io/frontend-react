@@ -23,6 +23,11 @@ import { useProjectList } from "@hooks/useProjectList";
 
 import { isValidAddressPolkadotAddress } from "@utils";
 import { isPhaseEnd } from "@utils";
+import { setTxStatus } from "@store/actions/txStatus";
+import { START } from "@constants";
+import CommonButton from "@components/Button/CommonButton";
+import useTxStatus from "@hooks/useTxStatus";
+import useForceUpdate from "@hooks/useForceUpdate";
 
 function ProjectAdmin() {
   const dispatch = useDispatch();
@@ -34,7 +39,13 @@ function ProjectAdmin() {
   // const [collections, setCollections] = useState([]);
   const [collectionContractOwner, setCollectionContractOwner] = useState("");
   const [isLPAdmin, setIsLPAdmin] = useState(null);
-
+  const { tokenIDArray, actionType, ...rest } = useTxStatus();
+  // eslint-disable-next-line no-unused-vars
+  const { loading: loadingForceUpdate } = useForceUpdate(
+    ["grantRole"],
+    () => {},
+    true
+  );
   const onGetCollectionContractOwner = async (e) => {
     let res = await launchpad_contract_calls.owner(currentAccount);
 
@@ -120,8 +131,12 @@ function ProjectAdmin() {
       return toast.error(`Invalid address! Please check again!`);
     }
     try {
+      dispatch(setTxStatus({ type: "grantRole", step: START }));
+
       await execContractTx(
         currentAccount,
+        dispatch,
+        "grantRole",
         api,
         launchpad_manager.CONTRACT_ABI,
         launchpad_manager.CONTRACT_ADDRESS,
@@ -187,7 +202,13 @@ function ProjectAdmin() {
               placeholder="Your new address here"
               onChange={({ target }) => setNewAdminAddress(target.value)}
             />
-            <Button onClick={grantAdminAddress}>Grant admin</Button>
+            <CommonButton
+              {...rest}
+              text="Grant admin"
+              ml="8px"
+              onClick={grantAdminAddress}
+              isDisabled={actionType && actionType !== "grantRole"}
+            />
           </Flex>
         </Stack>
         <TableContainer

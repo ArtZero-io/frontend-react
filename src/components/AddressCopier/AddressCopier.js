@@ -3,7 +3,7 @@ import { useClipboard, Flex } from "@chakra-ui/react";
 import { truncateStr } from "@utils";
 import toast from "react-hot-toast";
 
-export default function AddressCopier({ address }) {
+export default function AddressCopier({ address, truncateStrNum = 5 }) {
   const { onCopy } = useClipboard(address);
 
   const handleCopy = () => {
@@ -19,7 +19,7 @@ export default function AddressCopier({ address }) {
         onClick={handleCopy}
         alignItems="center"
       >
-        {truncateStr(address, 5)}
+        {truncateStr(address, truncateStrNum)}
       </Flex>
     </>
   );
