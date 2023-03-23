@@ -218,8 +218,8 @@ const AddNewNFTForm = ({
                 [["name", "level", "levelMax"]]
               )
             )
-              .min(0)
-              .max(10, "Level must have less than or equal to 10 items!"),
+              .min(0),
+              // .max(10, "Level must have less than or equal to 10 items!"),
           })}
           onSubmit={async (values) => {
             !avatarIPFSUrl && toast.error("Upload images first");
