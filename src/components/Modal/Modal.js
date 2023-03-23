@@ -2,7 +2,6 @@ import {
   Modal,
   ModalCloseButton,
   ModalContent,
-  ModalOverlay,
   Tab,
   TabList,
   TabPanel,
@@ -58,10 +57,10 @@ export default function ResponsivelySizedModal({
       scrollBehavior="inside"
       closeOnOverlayClick={false}
     >
-      <ModalOverlay
+      {/* <ModalOverlay
         bg="blackAlpha.300"
         backdropFilter="blur(10px) hue-rotate(90deg)"
-      />
+      /> */}
 
       <ModalContent
         p={0}
