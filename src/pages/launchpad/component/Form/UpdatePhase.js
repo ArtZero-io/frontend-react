@@ -481,7 +481,6 @@ function UpdatePhase({
                     <Button
                       size="sm"
                       onClick={() => onUpdatePhase(index)}
-                      isDisabled={index === 0 && value.length === 1}
                     >
                       update
                     </Button>

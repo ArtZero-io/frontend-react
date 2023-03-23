@@ -167,8 +167,8 @@ const AddNewNFTForm = ({
                   [["type", "name"]]
                 )
               )
-              .min(0)
-              .max(10, "Property must have less than or equal to 10 items!"),
+              .min(0),
+              // .max(10, "Property must have less than or equal to 10 items!"),
             levels: Yup.array(
               Yup.object().shape(
                 {
@@ -282,7 +282,7 @@ const AddNewNFTForm = ({
                     toast.error("There is an error with metadata hash!");
                     return;
                   }
-
+                  console.log(metadataHash, 'metadataHashmetadataHash');
                   dispatch(setTxStatus({ type: CREATE_NFT, step: START }));
                   await nft721_psp34_standard_calls.mintWithAttributes(
                     currentAccount,
