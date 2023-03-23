@@ -79,6 +79,7 @@ function MyWhiteListProjectPage(props) {
     launchpad_psp34_nft_standard.CONTRACT_ABI,
     currentAccount?.address
   );
+  const { phaseInfo } = usePhaseInfo(selectedProjectAddress, selectedPhaseCode);
 
   const onAddWhitelist = async () => {
     if (!selectedProjectAddress) {
@@ -119,7 +120,8 @@ function MyWhiteListProjectPage(props) {
       whiteListPrice,
       dispatch,
       ADD_WHITELIST,
-      api
+      api,
+      selectedProjectAddress
     );
   };
 
@@ -173,7 +175,8 @@ function MyWhiteListProjectPage(props) {
         whiteListPrice,
         dispatch,
         UPDATE_WHITELIST,
-        api
+        api,
+        selectedProjectAddress
       );
     } catch (error) {
       toast.error(error.message);
@@ -277,6 +280,7 @@ function MyWhiteListProjectPage(props) {
       falseCase: 0,
     }
   );
+  console.log("1 phaseInfo", phaseInfo);
 
   async function bulkAddWLHandler() {
     // validate proj is selected
@@ -302,7 +306,7 @@ function MyWhiteListProjectPage(props) {
       // TODO:
       // phaseId not exit BE still return data = {}
 
-      // console.log("phaseInfo", phaseInfo);
+      console.log("2 phaseInfo", phaseInfo);
 
       const { status, ret, message } = phaseInfo;
 
@@ -330,7 +334,7 @@ function MyWhiteListProjectPage(props) {
         );
       }
 
-      if (!phaseInfo?.phaseData?.isActive) {
+      if (!phaseData?.isActive) {
         return toast.error("Can not add whitelist to inactive phase!");
       }
 
@@ -405,7 +409,8 @@ function MyWhiteListProjectPage(props) {
         value4Contract?.minPriceList,
         dispatch,
         ADD_WHITELIST,
-        api
+        api,
+        selectedProjectAddress
       );
 
       setValue("");
@@ -427,7 +432,6 @@ function MyWhiteListProjectPage(props) {
 
   // TODO: add phase name
   // book lai data BE side
-  const { phaseInfo } = usePhaseInfo(selectedProjectAddress, selectedPhaseCode);
 
   async function onClearWLHandler() {
     // validate proj is selected
@@ -845,7 +849,7 @@ function MyWhiteListProjectPage(props) {
                     </Text>
                   </Text>
                 </Text>
-
+                {console.log("currentProjectInfo", currentProjectInfo)}
                 <Text>
                   Available: <br />
                   <Text as="span" color="#fff">

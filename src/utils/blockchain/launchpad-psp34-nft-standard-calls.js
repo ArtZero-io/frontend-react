@@ -70,7 +70,8 @@ async function updateWhitelist(
   price,
   dispatch,
   txType,
-  api
+  api,
+  selectedProjectAddress
 ) {
   if (!contract || !caller_account) {
     toast.error(`Contract or caller not valid!`);
@@ -125,6 +126,14 @@ async function updateWhitelist(
         api,
         caller_account,
       });
+
+      if (status.isFinalized) {
+        const res = await APICall.askBeUpdateProjectData({
+          project_address: selectedProjectAddress,
+        });
+
+        console.log("askBeUpdateProjectData res", res);
+      }
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
@@ -140,7 +149,8 @@ async function addWhitelist(
   price,
   dispatch,
   txType,
-  api
+  api,
+  selectedProjectAddress
 ) {
   if (!contract || !caller_account) {
     toast.error(`Contract or caller not valid!`);
@@ -195,6 +205,14 @@ async function addWhitelist(
         api,
         caller_account,
       });
+
+      if (status.isFinalized) {
+        const res = await APICall.askBeUpdateProjectData({
+          project_address: selectedProjectAddress,
+        });
+
+        console.log("askBeUpdateProjectData res", res);
+      }
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
@@ -210,7 +228,8 @@ async function addMultiWhitelists(
   priceList,
   dispatch,
   txType,
-  api
+  api,
+  selectedProjectAddress
 ) {
   if (!contract || !caller_account) {
     toast.error(`Contract or caller not valid!`);
@@ -257,6 +276,14 @@ async function addMultiWhitelists(
         api,
         caller_account,
       });
+
+      if (status.isFinalized) {
+        const res = await APICall.askBeUpdateProjectData({
+          project_address: selectedProjectAddress,
+        });
+
+        console.log("askBeUpdateProjectData res", res);
+      }
     })
     .then((unsub) => (unsubscribe = unsub))
     .catch((error) => txErrorHandler({ error, dispatch }));
