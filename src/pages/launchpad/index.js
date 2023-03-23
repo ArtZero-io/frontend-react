@@ -99,7 +99,7 @@ export const LaunchpadPage = () => {
   );
 };
 
-const getProjectStatus = ({ startTime, endTime }) => {
+export const getProjectStatus = ({ startTime, endTime }) => {
   const currentTime = Date.now();
 
   if (currentTime >= endTime) return "ended";

@@ -303,35 +303,37 @@ function CollectionAdmin() {
           pb={5}
           borderBottomWidth={1}
         >
-          <Flex alignItems="start" pr={20}>
-            <Text ml={1} color="brand.grayLight">
-              Total Collection:{" "}
-            </Text>
-            <Skeleton
-              ml={2}
-              h="25px"
-              w="50px"
-              color="#fff"
-              isLoaded={collectionCount}
-            >
-              {collectionCount}{" "}
-            </Skeleton>
-          </Flex>
-          <Flex alignItems="start" pr={{ base: 0, xl: 20 }}>
-            <Text ml={1} color="brand.grayLight">
-              Collection Contract Balance:
-            </Text>
-            <Skeleton
-              ml={2}
-              h="25px"
-              w="60px"
-              color="#fff"
-              isLoaded={collectionContractBalance}
-            >
-              {collectionContractBalance}
-            </Skeleton>
-            ZERO
-          </Flex>
+          <Stack>
+            <Flex alignItems="start" pr={20}>
+              <Text ml={1} color="brand.grayLight">
+                Total Collection:{" "}
+              </Text>
+              <Skeleton
+                ml={2}
+                h="25px"
+                w="50px"
+                color="#fff"
+                isLoaded={collectionCount}
+              >
+                {collectionCount}{" "}
+              </Skeleton>
+            </Flex>
+            <Flex alignItems="start" pr={{ base: 0, xl: 20 }}>
+              <Text ml={1} color="brand.grayLight">
+                Collection Contract Balance:
+              </Text>
+              <Skeleton
+                ml={2}
+                h="25px"
+                w="60px"
+                color="#fff"
+                isLoaded={collectionContractBalance}
+              >
+                {collectionContractBalance}
+              </Skeleton>
+              ZERO
+            </Flex>
+          </Stack>
 
           <Stack alignItems="start" pr={{ base: 0, xl: 20 }}>
             <Text ml={1} color="brand.grayLight">
@@ -420,16 +422,9 @@ function CollectionAdmin() {
                     fontWeight="normal"
                     py={7}
                   >
-                    Type
+                    Status | Metadata | Type
                   </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    Status
-                  </Th>
+
                   <Th
                     fontFamily="Evogria"
                     fontSize="sm"
@@ -446,13 +441,14 @@ function CollectionAdmin() {
                   >
                     Royalty Fee
                   </Th>
+
                   <Th
                     fontFamily="Evogria"
                     fontSize="sm"
                     fontWeight="normal"
                     py={7}
                   >
-                    Metadata
+                    Action
                   </Th>
                   <Th
                     fontFamily="Evogria"
@@ -469,14 +465,6 @@ function CollectionAdmin() {
                     py={7}
                   >
                     Dup Checked
-                  </Th>
-                  <Th
-                    fontFamily="Evogria"
-                    fontSize="sm"
-                    fontWeight="normal"
-                    py={7}
-                  >
-                    Action
                   </Th>
                 </Tr>
               </Thead>
@@ -498,23 +486,43 @@ function CollectionAdmin() {
                         {truncateStr(collection.collectionOwner, 5)}
                       </Td>
                       <Td>
+                        {collection.isActive ? "Active" : "Inactive"} |{" "}
+                        {collection.showOnChainMetadata
+                          ? "On -chain"
+                          : "Off-chain"}{" "}
+                        |{" "}
                         {collection.contractType === "Psp34Auto"
-                          ? "Auto"
-                          : "Manual"}{" "}
+                          ? "Simple Mode"
+                          : "Advanced Mode"}{" "}
                       </Td>
-                      <Td py={7}>
-                        {collection.isActive ? "Active" : "Inactive"}{" "}
-                      </Td>
+
                       <Td py={7}>{collection.nft_count}</Td>
                       <Td py={7}>
                         {collection.isCollectRoyaltyFee
                           ? collection.royaltyFee / 100 + "%"
                           : "N/A"}{" "}
                       </Td>
-                      <Td py={7}>
-                        {collection.showOnChainMetadata
-                          ? "On-chain"
-                          : "Off-chain"}{" "}
+
+                      <Td>
+                        <CommonButton
+                          {...rest}
+                          size="sm"
+                          maxW="120px"
+                          variant={collection.isActive ? "outline" : ""}
+                          text={!collection.isActive ? "Enable" : "Disable"}
+                          isDisabled={
+                            actionType &&
+                            !tokenIDArray?.includes(
+                              collection.nftContractAddress
+                            )
+                          }
+                          onClick={() =>
+                            onSetStatusCollection(
+                              collection.nftContractAddress,
+                              !collection.isActive
+                            )
+                          }
+                        />
                       </Td>
                       <Td py={7}>
                         {collection.isDoxxed ? "YES" : "NO"}{" "}
@@ -562,28 +570,6 @@ function CollectionAdmin() {
                             setDupCheckedHandler(
                               collection.nftContractAddress,
                               collection.isDuplicationChecked
-                            )
-                          }
-                        />
-                      </Td>
-
-                      <Td>
-                        <CommonButton
-                          {...rest}
-                          size="sm"
-                          maxW="120px"
-                          variant={collection.isActive ? "outline" : ""}
-                          text={!collection.isActive ? "Enable" : "Disable"}
-                          isDisabled={
-                            actionType &&
-                            !tokenIDArray?.includes(
-                              collection.nftContractAddress
-                            )
-                          }
-                          onClick={() =>
-                            onSetStatusCollection(
-                              collection.nftContractAddress,
-                              !collection.isActive
                             )
                           }
                         />

@@ -6,18 +6,16 @@ import {
   TableContainer,
   Stack,
   Input,
+  CircularProgress,
 } from "@chakra-ui/react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch } from "react-redux";
 import { useCallback, useEffect, useState } from "react";
-import { delay, truncateStr } from "@utils";
+import { truncateStr } from "@utils";
 import toast from "react-hot-toast";
 import launchpad_contract_calls from "@utils/blockchain/launchpad-contract-calls";
-import { timestampWithoutCommas } from "@utils";
-import { ContractPromise } from "@polkadot/api-contract";
-import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
-import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+
 import { Link, Link as ReactRouterLink } from "react-router-dom";
 import * as ROUTES from "@constants/routes";
 import { APICall } from "../../../../api/client";
@@ -25,6 +23,12 @@ import { execContractQuery, execContractTx } from "../../../account/nfts/nfts";
 import launchpad_manager from "../../../../utils/blockchain/launchpad-manager";
 
 import { isValidAddressPolkadotAddress } from "@utils";
+import { getProjectStatus } from "../../../launchpad";
+import { setTxStatus } from "@store/actions/txStatus";
+import { EDIT_PROJECT, START } from "@constants";
+import useTxStatus from "@hooks/useTxStatus";
+import CommonButton from "@components/Button/CommonButton";
+import useForceUpdate from "@hooks/useForceUpdate";
 
 function ProjectAdmin() {
   const dispatch = useDispatch();
@@ -36,6 +40,11 @@ function ProjectAdmin() {
   const [collections, setCollections] = useState([]);
   const [collectionContractOwner, setCollectionContractOwner] = useState("");
   const [isLPAdmin, setIsLPAdmin] = useState(null);
+  const { tokenIDArray, actionType, ...rest } = useTxStatus();
+
+  const { loading: loadingForceUpdate } = useForceUpdate([EDIT_PROJECT], () =>
+    getAllCollections()
+  );
 
   const onGetCollectionContractOwner = async (e) => {
     let res = await launchpad_contract_calls.owner(currentAccount);
@@ -62,7 +71,6 @@ function ProjectAdmin() {
       );
 
       return queryResult1.toHuman().Ok;
-
     };
     const isLPAdmin = await checkIsAdmin({
       address: currentAccount?.address,
@@ -71,89 +79,52 @@ function ProjectAdmin() {
     setIsLPAdmin(isLPAdmin);
     return;
   };
-  const onGetCollectionCount = async () => {
-    let res = await launchpad_contract_calls.getProjectCount(currentAccount);
-    if (res) {
-      setCollectionCount(res);
-    } else setCollectionCount(0);
-  };
+
+  const [loading, setLoading] = useState(true);
+
   const getAllCollections = async (e) => {
-    let projectCount = await launchpad_contract_calls.getProjectCount(
-      currentAccount
-    );
-
-    let tmpProjects = [];
-    for (let i = 1; i <= projectCount; i++) {
-      const nftAddress = await launchpad_contract_calls.getProjectById(
-        currentAccount,
-        i
-      );
-
-      const project = await launchpad_contract_calls.getProjectByNftAddress(
-        currentAccount,
-        nftAddress
-      );
-
-      const launchpad_psp34_nft_standard_contract = new ContractPromise(
-        api,
-        launchpad_psp34_nft_standard.CONTRACT_ABI,
-        nftAddress
-      );
-
-      launchpad_psp34_nft_standard_calls.setContract(
-        launchpad_psp34_nft_standard_contract
-      );
-
-      const projectInfoHash =
-        await launchpad_psp34_nft_standard_calls.getProjectInfo(currentAccount);
-
-      const projectInfo = await APICall.getProjectInfoByHash({
-        projectHash: projectInfoHash,
+    try {
+      setLoading(true);
+      let allProjectList = [];
+      const { ret: projList } = await APICall.getAllProjects({ sort: 1 });
+      const { ret: projList2 } = await APICall.getAllProjects({
+        sort: 1,
+        isActive: false,
       });
 
-      const currentTime = Date.now();
-      let projectTypeLabel = "live";
-      if (
-        timestampWithoutCommas(project.startTime) < currentTime &&
-        currentTime < timestampWithoutCommas(project.endTime) &&
-        project.projectType === 1
-      ) {
-        projectTypeLabel = "live";
-      } else if (
-        currentTime < timestampWithoutCommas(project.startTime) &&
-        project.projectType === 1
-      ) {
-        projectTypeLabel = "Coming";
-      } else {
-        projectTypeLabel = "Ended";
-      }
-      const projectTmp = {
-        index: i,
-        isActive: project.isActive,
-        collectionOwner: project.projectOwner,
-        nftContractAddress: nftAddress,
-        name: projectInfo.name,
-        projectTypeLabel: projectTypeLabel,
-      };
+      allProjectList = projList.concat(projList2);
 
-      tmpProjects.push(projectTmp);
+      const projectCount = await launchpad_contract_calls.getProjectCount(
+        currentAccount
+      );
+
+      setCollectionCount(projectCount || 0);
+      setCollections(allProjectList);
+      setLoading(false);
+    } catch (error) {
+      toast.error("There is something wrong when get all collections");
+      setLoading(false);
     }
-
-    setCollections(tmpProjects);
   };
 
   const onRefreshCollection = useCallback(async () => {
     await onGetCollectionContractOwner();
     await onGetCollectionContractAdmin();
-    await onGetCollectionCount();
-    await delay(1000);
     await getAllCollections();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAccount?.address]);
   const onSetStatusCollection = async (collection_contract, isActive) => {
     if (!isLPAdmin) {
       return toast.error("Only admin can set status collection");
     }
+
+    dispatch(
+      setTxStatus({
+        step: START,
+        type: EDIT_PROJECT,
+        tokenIDArray: [collection_contract],
+      })
+    );
 
     toast.success(`Setting status...`);
     await launchpad_contract_calls.updateIsActiveProject(
@@ -161,13 +132,9 @@ function ProjectAdmin() {
       isActive,
       collection_contract,
       dispatch,
-      "editProject",
+      EDIT_PROJECT,
       api
     );
-    await delay(10000);
-    await onGetCollectionCount();
-    await delay(1000);
-    await getAllCollections();
   };
   useEffect(() => {
     const doRefresh = async () => {
@@ -175,7 +142,9 @@ function ProjectAdmin() {
     };
     doRefresh();
   }, [currentAccount, onRefreshCollection]);
+
   const [newAdminAddress, setNewAdminAddress] = useState("");
+
   const grantAdminAddress = async () => {
     if (!isOwner) {
       return toast.error(`Only owner can grant admin role!`);
@@ -202,6 +171,7 @@ function ProjectAdmin() {
       console.log("error.message", error.message);
     }
   };
+
   return (
     <Box
       mx="auto"
@@ -255,10 +225,9 @@ function ProjectAdmin() {
             <Button onClick={grantAdminAddress}>Grant admin</Button>
           </Flex>
         </Stack>
+
         <TableContainer
           maxW="6xl-mid"
-          // maxH={{ base: "20rem", "2xl": "30rem" }}
-
           fontSize="lg"
           h="full"
           overflow="auto"
@@ -333,68 +302,106 @@ function ProjectAdmin() {
                 </Th>
               </Tr>
             </Thead>
-            <Tbody>
-              {collectionCount === 0 ? (
-                <Tr>
-                  <Td py={7}>There is no data.</Td>
-                </Tr>
-              ) : (
-                collections.map((collection, index) => (
-                  <Tr key={index}>
-                    <Td py={7}>
-                      <Link
-                        cursor="pointer"
-                        as={ReactRouterLink}
-                        to={`${ROUTES.LAUNCHPAD_BASE}/${collection?.nftContractAddress}`}
-                      >
-                        <Text _hover={{ color: "#7ae7ff" }}>
-                          {collection?.name}
-                        </Text>
-                      </Link>
-                    </Td>
-                    <Td py={7}>
-                      {truncateStr(collection.nftContractAddress, 5)}
-                    </Td>
-                    <Td py={7}>{truncateStr(collection.collectionOwner, 5)}</Td>
-                    <Td>{collection.projectTypeLabel} </Td>
-                    <Td py={7}>
-                      {collection.isActive ? "Active" : "Inactive"}{" "}
-                    </Td>
 
-                    <Td>
-                      {!collection.isActive ? (
-                        <Button
-                          size="sm"
-                          color="black"
-                          onClick={() =>
-                            onSetStatusCollection(
-                              collection.nftContractAddress,
-                              true
-                            )
-                          }
-                        >
-                          Enable
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          color="#7ae7ff"
-                          onClick={() =>
-                            onSetStatusCollection(
-                              collection.nftContractAddress,
-                              false
-                            )
-                          }
-                        >
-                          Disable
-                        </Button>
-                      )}
-                    </Td>
+            {loading || loadingForceUpdate ? (
+              <Tbody w="full">
+                <Tr>
+                  <Td textAlign="center" colSpan="6" py={7}>
+                    <CircularProgress isIndeterminate color="#7ae7ff" />{" "}
+                  </Td>
+                </Tr>
+              </Tbody>
+            ) : (
+              <Tbody>
+                {collectionCount === 0 ? (
+                  <Tr>
+                    <Td py={7}>There is no data.</Td>
                   </Tr>
-                ))
-              )}
-            </Tbody>
+                ) : (
+                  collections.map((collection, index) => (
+                    <Tr key={index}>
+                      <Td py={7}>
+                        <Link
+                          cursor="pointer"
+                          as={ReactRouterLink}
+                          to={`${ROUTES.LAUNCHPAD_BASE}/${collection?.nftContractAddress}`}
+                        >
+                          <Text _hover={{ color: "#7ae7ff" }}>
+                            {collection?.name}
+                          </Text>
+                        </Link>
+                      </Td>
+                      <Td py={7}>
+                        {truncateStr(collection.nftContractAddress, 5)}
+                      </Td>
+                      <Td py={7}>
+                        {truncateStr(collection.collectionOwner, 5)}
+                      </Td>
+                      <Td>
+                        {getProjectStatus({
+                          startTime: collection?.startTime,
+                          endTime: collection?.endTime,
+                        })?.toUpperCase()}
+                      </Td>
+                      <Td py={7}>
+                        {collection.isActive ? "Active" : "Inactive"}{" "}
+                      </Td>
+
+                      <Td>
+                        {!collection.isActive ? (
+                          <CommonButton
+                            minW="180px"
+                            isDisabled={
+                              (actionType && actionType !== EDIT_PROJECT) ||
+                              (actionType === EDIT_PROJECT &&
+                                !tokenIDArray?.includes(
+                                  collection.nftContractAddress
+                                ))
+                            }
+                            {...rest}
+                            size="sm"
+                            text="Enable"
+                            color="black"
+                            onClick={() =>
+                              onSetStatusCollection(
+                                collection.nftContractAddress,
+                                true
+                              )
+                            }
+                          >
+                            Enable
+                          </CommonButton>
+                        ) : (
+                          <CommonButton
+                            minW="180px"
+                            isDisabled={
+                              (actionType && actionType !== EDIT_PROJECT) ||
+                              (actionType === EDIT_PROJECT &&
+                                !tokenIDArray?.includes(
+                                  collection.nftContractAddress
+                                ))
+                            }
+                            {...rest}
+                            variant="outline"
+                            size="sm"
+                            text="Disable"
+                            color="#7ae7ff"
+                            onClick={() =>
+                              onSetStatusCollection(
+                                collection.nftContractAddress,
+                                false
+                              )
+                            }
+                          >
+                            Disable
+                          </CommonButton>
+                        )}
+                      </Td>
+                    </Tr>
+                  ))
+                )}
+              </Tbody>
+            )}
           </Table>
         </TableContainer>
       </Box>
