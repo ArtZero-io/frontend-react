@@ -49,6 +49,8 @@ export const ENDED = "ended";
 // PROJECT ACTIONS
 export const EDIT_PROJECT = "editProject";
 export const CREATE_PROJECT = "createProject";
+export const CREATE_PROJECT_STEP_1 = "createProjectStep1";
+
 export const UPDATE_BASE_URI = "updateBaseUri";
 export const UPDATE_ADMIN_ADDRESS = "updateAdminAddress";
 export const REVOKE_ADMIN_ADDRESS = "revokeAdminAddress";

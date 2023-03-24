@@ -531,7 +531,7 @@ async function editProjectInformation(
         caller_account,
       });
 
-      if (status.isFinalized) {
+      if (status.isInBlock) {
         const res = await APICall.askBeUpdateProjectData({
           project_address: nftContractAddress,
         });

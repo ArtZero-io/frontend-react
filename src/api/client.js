@@ -88,7 +88,7 @@ const clientWithGetParams = async (
     url,
     method,
     headers,
-    params: options
+    params: options,
   });
 
   if (data?.status === "FAILED") {
@@ -270,7 +270,10 @@ export const APICall = {
   },
 
   getWithdrawEvent: async ({ limit = 5, offset = 0 }) => {
-    return clientWithGetParams("GET", "/api/withdraw-event-schemas", { limit, offset });
+    return clientWithGetParams("GET", "/api/withdraw-event-schemas", {
+      limit,
+      offset,
+    });
   },
 
   getLaunchpadEvent: async ({ limit = 5, offset = 0, nftContractAddress }) => {
@@ -556,6 +559,25 @@ export const APICall = {
       `/api/collections-schemas?filter=${filterEncoded}`,
       {}
     );
+  },
+
+  // get Project By Address
+  getProjectByAddress: async ({ nftContractAddress }) => {
+    const filter = {
+      where: {
+        nftContractAddress,
+      },
+    };
+
+    const filterEncoded = encodeURI(JSON.stringify(filter));
+
+    const ret = await client(
+      "GET",
+      `/api/projects-schemas?filter=${filterEncoded}`,
+      {}
+    );
+    // TEMP format to match current return format
+    return { ret };
   },
 };
 

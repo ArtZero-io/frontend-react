@@ -10,6 +10,7 @@ import {
   Flex,
   Container,
   Link,
+  Button,
 } from "@chakra-ui/react";
 import BN from "bn.js";
 import CommonCheckbox from "@components/Checkbox/Checkbox";
@@ -44,7 +45,7 @@ import useTxStatus from "@hooks/useTxStatus";
 import { setTxStatus } from "@store/actions/txStatus";
 import CommonButton from "@components/Button/CommonButton";
 import {
-  CREATE_PROJECT,
+  CREATE_PROJECT_STEP_1,
   EDIT_PROJECT,
   CREATE_COLLECTION,
   START,
@@ -77,6 +78,7 @@ import ImageUploadThumbnail from "@components/ImageUpload/Thumbnail";
 import { useCallback } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { APICall } from "../../../../api/client";
+import { delay } from "../../../../utils";
 
 const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   const dispatch = useDispatch();
@@ -143,7 +145,9 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
     setFieldValue("endTime", e[1]?.getTime());
   };
 
-  const handleOnRedirect = useCallback(() => {
+  const handleOnRedirect = useCallback(async () => {
+    await delay(2000);
+
     if (mode === formMode.ADD) {
       dispatch(clearTxStatus());
 
@@ -232,8 +236,13 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
   }, [currentAccount]);
 
   useEffect(() => {
-    rest?.step === FINALIZED && handleOnRedirect();
+    if (rest?.step === FINALIZED) {
+      if (actionType === CREATE_PROJECT_STEP_1) return;
+      handleOnRedirect();
+    }
   }, [actionType, handleOnRedirect, rest?.step]);
+
+  const [formStep, setFormStep] = useState(null);
 
   return (
     <>
@@ -283,7 +292,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
             <Formik
               initialValues={initialValues}
               validationSchema={validationSchema}
-              onSubmit={async (values, { setSubmitting }) => {
+              onSubmit={async (values) => {
                 // check wallet connect?
                 if (!currentAccount) {
                   return toast.error("Please connect wallet first!");
@@ -510,18 +519,32 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     );
                   };
 
-                  dispatch(setTxStatus({ type: CREATE_PROJECT, step: START }));
+                  if (formStep === "STEP1") {
+                    dispatch(
+                      setTxStatus({ type: CREATE_PROJECT_STEP_1, step: START })
+                    );
 
-                  toast.success("Step 1. Creating project...");
+                    toast.success("Step 1. Creating project...");
 
-                  await launchpad_contract_calls.addNewProject(
-                    currentAccount,
-                    data,
-                    dispatch,
-                    CREATE_PROJECT,
-                    api,
-                    createNewCollection
-                  );
+                    await launchpad_contract_calls.addNewProject(
+                      currentAccount,
+                      data,
+                      dispatch,
+                      CREATE_PROJECT_STEP_1,
+                      api
+                    );
+                  }
+
+                  if (formStep === "STEP2") {
+                    if (!tokenIDArray[0]) {
+                      toast.error(
+                        "There is something wrong with your project!"
+                      );
+                      return;
+                    }
+
+                    await createNewCollection(tokenIDArray[0]);
+                  }
                 } else {
                   if (mode === formMode.EDIT) {
                     const project_info = {
@@ -569,7 +592,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                 }
               }}
             >
-              {({ values, dirty, isValid, setFieldValue }) => (
+              {({ values, dirty, isValid, setFieldValue, handleSubmit }) => (
                 <Form>
                   <Container maxW="1200px" px={["0px", "15px"]}>
                     <CommonStack stackTitle="1. project info">
@@ -1074,20 +1097,60 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                         </>
                       )}
 
-                      <Stack w="full">
-                        <CommonButton
-                          mx="0"
-                          onRedirect={handleOnRedirect}
-                          w="full"
-                          my="24px"
-                          {...rest}
-                          type="submit"
-                          text={`${
-                            mode === formMode.ADD ? "create" : "update"
-                          } project`}
-                          isDisabled={!(dirty && isValid) && noImagesChange}
-                        />
-                      </Stack>
+                      {mode === formMode.ADD && (
+                        <HStack justifyContent="center">
+                          <Button
+                            minW="180px"
+                            {...rest}
+                            isLoading={formStep === "STEP1" && rest.isLoading}
+                            isDisabled={tokenIDArray}
+                            value="STEP1"
+                            text="STEP1"
+                            type="button"
+                            onClick={({ target }) => {
+                              setFormStep(target.value);
+                              handleSubmit();
+                            }}
+                          >
+                            STEP 1
+                          </Button>
+                          <Button
+                            minW="180px"
+                            {...rest}
+                            isLoading={formStep === "STEP2" && rest.isLoading}
+                            isDisabled={!tokenIDArray || !tokenIDArray[0]}
+                            value="STEP2"
+                            text="STEP2"
+                            type="button"
+                            onClick={({ target }) => {
+                              setFormStep(target.value);
+                              handleSubmit();
+                            }}
+                          >
+                            STEP 2
+                          </Button>
+                        </HStack>
+                      )}
+
+                      {mode === formMode.EDIT && (
+                        <Stack w="full">
+                          <CommonButton
+                            mx="0"
+                            onRedirect={handleOnRedirect}
+                            w="full"
+                            my="24px"
+                            {...rest}
+                            type="submit"
+                            text={`${
+                              mode === formMode.ADD ? "create" : "update"
+                            } project`}
+                            isDisabled={
+                              (!(dirty && isValid) && noImagesChange) ||
+                              rest?.step === FINALIZED
+                            }
+                          />
+                        </Stack>
+                      )}
                     </Box>
                   </Container>
                 </Form>

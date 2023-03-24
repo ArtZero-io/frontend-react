@@ -314,8 +314,6 @@ async function addNewProject(
                       project_address: nft_address,
                     });
                     console.log("askBeUpdateProjectData res", res);
-
-                    await createNewCollection(nft_address);
                   }
                 }
               }

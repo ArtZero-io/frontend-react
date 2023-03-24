@@ -57,6 +57,7 @@ import {
   DELETE_PHASE,
   START,
   UPDATE_ADMIN_ADDRESS,
+  EDIT_PROJECT,
 } from "@constants";
 import { useDispatch } from "react-redux";
 import {
@@ -109,6 +110,7 @@ const LaunchpadDetailPage = () => {
       ADD_PHASE,
       DELETE_PHASE,
       UPDATE_ADMIN_ADDRESS,
+      EDIT_PROJECT,
     ],
     () => {
       fetchPublicPhasesInfoData();
@@ -140,29 +142,39 @@ const LaunchpadDetailPage = () => {
 
         setLoading(true);
 
-        const { ret: projList1 } = await APICall.getAllProjects({
-          isActive: false,
+        // const { ret: projList1 } = await APICall.getAllProjects({
+        //   isActive: false,
+        // });
+
+        // const { ret: projList2 } = await APICall.getAllProjects({
+        //   isActive: true,
+        // });
+
+        // const projList = projList1.concat(projList2);
+
+        // const data = projList
+        //   .map((item) => {
+        //     return {
+        //       ...item,
+        //       roadmaps: JSON.parse(item.roadmaps),
+        //       teamMembers: JSON.parse(item.teamMembers),
+        //     };
+        //   })
+        //   .find(
+        //     ({ nftContractAddress }) =>
+        //       collection_address === nftContractAddress
+        //   );
+        // console.log("data", data);
+
+        const { ret } = await APICall.getProjectByAddress({
+          nftContractAddress: collection_address,
         });
-
-        const { ret: projList2 } = await APICall.getAllProjects({
-          isActive: true,
-        });
-
-        const projList = projList1.concat(projList2);
-
-        const data = projList
-          .map((item) => {
-            return {
-              ...item,
-              roadmaps: JSON.parse(item.roadmaps),
-              teamMembers: JSON.parse(item.teamMembers),
-            };
-          })
-          .find(
-            ({ nftContractAddress }) =>
-              collection_address === nftContractAddress
-          );
-
+        // console.log("ret", ret);
+        const data = {
+          ...ret[0],
+          roadmaps: JSON.parse(ret[0].roadmaps),
+          teamMembers: JSON.parse(ret[0].teamMembers),
+        };
         if (isUnmounted) return;
         setProjectInfo(data);
         setLoading(false);
