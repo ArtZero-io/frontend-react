@@ -42,7 +42,7 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
     <>
       {variant !== "navbar" && mode === formMode.ADD && (
         <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-          create Project
+          create
         </Button>
       )}
 
@@ -57,7 +57,7 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
           fontFamily="Evogria, sans-serif"
           fontSize={{ base: "18px", md: "15px" }}
         >
-          create Project
+          create
         </MenuItem>
       )}
 
