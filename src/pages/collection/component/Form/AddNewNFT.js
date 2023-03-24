@@ -134,18 +134,21 @@ const AddNewNFTForm = ({
                             "Test Prop",
                             "Duplicated Props Type!",
                             (value, schema) => {
+                              const levelsArr = schema?.from[1].value?.levels;
+                              const keyLevelsArr = levelsArr.map((p) =>
+                                p.name?.trim()
+                              );
+  
                               const propsArr =
-                                schema?.from[1].value?.properties;
-
-                              const keyPropsArr = propsArr.map((p) =>
-                                p.type?.trim()
-                              );
-
-                              const [isDup] = keyPropsArr.filter(
-                                (v, i) => i !== keyPropsArr.indexOf(v)
-                              );
-
-                              return !(isDup && isDup.trim() === value.trim());
+                                  schema?.from[1].value?.properties;
+                                const keyPropsArr = propsArr.map((p) =>
+                                  p.type?.trim()
+                                );
+  
+                           
+                              return keyPropsArr.filter((val) => val === value).length +
+                              keyLevelsArr.filter((val) => val === value).length <=
+                              1
                             }
                           )
                           .required("Must have type value.")
@@ -182,16 +185,20 @@ const AddNewNFTForm = ({
                           "Duplicated Levels Name!",
                           (value, schema) => {
                             const levelsArr = schema?.from[1].value?.levels;
-
                             const keyLevelsArr = levelsArr.map((p) =>
                               p.name?.trim()
                             );
 
-                            const [isDup] = keyLevelsArr.filter(
-                              (v, i) => i !== keyLevelsArr.indexOf(v)
-                            );
+                            const propsArr =
+                                schema?.from[1].value?.properties;
+                              const keyPropsArr = propsArr.map((p) =>
+                                p.type?.trim()
+                              );
 
-                            return !(isDup && isDup.trim() === value.trim());
+                         
+                            return keyPropsArr.filter((val) => val === value).length +
+                            keyLevelsArr.filter((val) => val === value).length <=
+                            1
                           }
                         )
                         .required("Must have level name.")
