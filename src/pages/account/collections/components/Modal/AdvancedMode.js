@@ -58,7 +58,7 @@ function AdvancedModeModal({
         //     Advanced Mode
         //   </Button>
         // </Tooltip>
-        <CreateButton icon={<NFTAdvanIcon />} onClick={() => onOpen()} title={'Marketplace in Advanced mode'} data={[" for tech creators", "customize NFT smart contract for big NFT collections ", " usually use this for secondary market"]}/>
+        <CreateButton icon={<NFTAdvanIcon />} onClick={() => onOpen()} title={'Advanced mode'} data={["Designed for tech-savvy creators", "Ability to customize the NFT smart contract to handle large NFT collections"]}/>
       )}
 
       {mode === formMode.EDIT && (

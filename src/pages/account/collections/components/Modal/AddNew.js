@@ -85,7 +85,7 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
 
           <ModalHeader textAlign="center">
             <Heading fontSize={["xl", "3xl", "3xl"]} my={3}>
-            Create a new project on:
+            Setting up a new NFT Collection:
             </Heading>
           </ModalHeader>
 
@@ -111,9 +111,9 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
                 icon={<ProjectNFTIcon />}
                 title={"Launchpad"}
                 data={[
-                  "for non-tech creators",
-                  "allow users to mint NFTs",
-                  "auto create Advanced mode collection on the Marketplace to trade minted NFTs",
+                  "Intended for non-technical creators",
+                  "Comprehensive platform to launch NFT projects that allow creators to easily sell their NFTs to the public",
+                  "Provides whitelist options and offers a variety of price strategies",
                 ]}
               />
             </Stack>

@@ -58,7 +58,7 @@ function SimpleModeModal({
         //     Simple Mode
         //   </Button>
         // </Tooltip>
-        <CreateButton icon={<NFTSimpleIcon />} onClick={() => onOpen()} title={'Marketplace in Simple mode'} data={["for non-tech creators", "auto created on-chain using our standard NFT smart contract", " add NFTs and list NFTs manually later"]}/>
+        <CreateButton icon={<NFTSimpleIcon />} onClick={() => onOpen()} title={'Simple mode'} data={["Suitable for non-technical creators", "On-chain creation of NFTs with our standard NFT smart contract", "Ability to manually add and list NFTs later"]}/>
       )}
 
       {mode === formMode.EDIT && (
