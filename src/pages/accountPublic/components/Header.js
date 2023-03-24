@@ -34,7 +34,7 @@ function ProfileHeader({address}) {
   const avatarProfileSize = useBreakpointValue([64, 120]);
 
   useEffect(() => {
-    if(address === currentAccount?.address) {
+    if(address && address === currentAccount?.address) {
       history.replace('/account/general')
     }
   

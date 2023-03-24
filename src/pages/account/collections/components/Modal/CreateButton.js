@@ -11,8 +11,9 @@ export const CreateButton = ({ icon, title, data, onClick }) => {
       borderRadius="lg"
       overflow="hidden"
       bg="gray.700"
-      _hover={{bg: '#7AE7FF'}}
+      _hover={{ borderColor: "#7ae7ff", }}
       onClick={onClick}
+      cursor="pointer"
     >
       <Flex justifyContent={"center"} pt="15px">
         {icon || (
@@ -26,12 +27,14 @@ export const CreateButton = ({ icon, title, data, onClick }) => {
       <Heading textAlign={"center"} fontSize={["sm", "md"]} my={3}>
         {title}
       </Heading>
-      <Box p={1}>
-        <List p={2} spacing={1} bg="brand.grayDark">
+      <Box  p={1}>
+        <List minHeight={"168px"} p={2} spacing={1} bg="brand.grayDark">
           {data?.map((el) => (
             <ListItem>
-              <ListIcon as={MdCheck} />
-              {el}
+              <Flex>
+                <ListIcon as={MdCheck} />
+                <Box>{el}</Box>
+              </Flex>
             </ListItem>
           ))}
         </List>
