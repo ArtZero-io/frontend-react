@@ -28,12 +28,12 @@ export const CreateButton = ({ icon, title, data, onClick }) => {
         {title}
       </Heading>
       <Box  p={1}>
-        <List minHeight={"168px"} p={2} spacing={1} bg="brand.grayDark">
+        <List minHeight={"150px"} p={2} spacing={1} bg="brand.grayDark">
           {data?.map((el) => (
             <ListItem>
               <Flex>
                 <ListIcon as={MdCheck} />
-                <Box>{el}</Box>
+                <Box fontSize={"14px"}>{el}</Box>
               </Flex>
             </ListItem>
           ))}
