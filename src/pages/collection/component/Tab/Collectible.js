@@ -20,6 +20,7 @@ import {
   Tooltip,
   useBreakpointValue,
   useDisclosure,
+  // eslint-disable-next-line no-unused-vars
   VStack,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -354,7 +355,7 @@ const NFTTabCollectible = (props) => {
 
     setFeeCalculated(info);
   }, [askPrice, is_for_sale, myTradingFee, price, royaltyFee]);
-  
+
   return (
     <>
       <Stack
@@ -541,7 +542,10 @@ const NFTTabCollectible = (props) => {
           </Stack>
 
           <Skeleton h="full" w="full" isLoaded={!loading}>
-            <Stack mt="20px" spacing="30px">
+            <Stack
+              mt={isOwner ? "4px" : "20px"}
+              spacing={isOwner ? "10px" : "30px"}
+            >
               <Stack w="full">
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -569,7 +573,7 @@ const NFTTabCollectible = (props) => {
                   {/* Not for sale & owner  */}
                   {!is_for_sale && isOwner && (
                     <>
-                      <Stack p="20px" border="1px solid #333">
+                      <>
                         <Stack>
                           <HStack spacing="20px" mb="12px">
                             <NumberInput
@@ -604,6 +608,7 @@ const NFTTabCollectible = (props) => {
                             </NumberInput>
 
                             <CommonButton
+                              minW="200px"
                               w="50%"
                               h="40px"
                               {...rest}
@@ -615,20 +620,21 @@ const NFTTabCollectible = (props) => {
                             />
                           </HStack>
                         </Stack>
-                      </Stack>
+                      </>
 
-                      <Stack w="full" pl="8px">
+                      {/* <Stack w="full" pl="8px" bg="green">
                         <FeeCalculatedBar feeCalculated={feeCalculated} />
-                      </Stack>
+                      </Stack> */}
                     </>
                   )}
                   {/* 3 For sale & owner  */}
                   {is_for_sale && isOwner && (
                     <>
-                      <Stack p="20px" border="1px solid #333">
-                        <Stack>
+                      <>
+                        <>
                           <HStack spacing="20px" mb="12px">
                             <CommonButton
+                              minW="200px"
                               w="50%"
                               h="40px"
                               {...rest}
@@ -638,8 +644,10 @@ const NFTTabCollectible = (props) => {
                                 actionType && actionType !== UNLIST_TOKEN
                               }
                             />{" "}
-                            <VStack w="50%" alignItems="end">
-                              <Text color="#888">Current price</Text>
+                            <HStack w="50%" alignItems="end">
+                              <Text color="#888" w="100px">
+                                Current price
+                              </Text>
 
                               <Tag minH="20px" pr={0} bg="transparent">
                                 <TagLabel bg="transparent">
@@ -647,14 +655,14 @@ const NFTTabCollectible = (props) => {
                                 </TagLabel>
                                 <TagRightIcon as={AzeroIcon} w="14px" />
                               </Tag>
-                            </VStack>
+                            </HStack>
                           </HStack>
-                        </Stack>
-                      </Stack>
+                        </>
+                      </>
 
-                      <Stack w="full" pl="8px">
+                      {/* <Stack w="full" pl="8px">
                         <FeeCalculatedBar feeCalculated={feeCalculated} />
-                      </Stack>
+                      </Stack> */}
                     </>
                   )}
 
@@ -887,6 +895,14 @@ const NFTTabCollectible = (props) => {
                   </>
                 )}
               </Stack>
+
+              {isOwner && (
+                <>
+                  <Stack w="full" pl="8px">
+                    <FeeCalculatedBar feeCalculated={feeCalculated} />
+                  </Stack>
+                </>
+              )}
             </Stack>
           </Skeleton>
         </Stack>

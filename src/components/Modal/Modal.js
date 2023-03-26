@@ -36,7 +36,7 @@ export default function ResponsivelySizedModal({
 
   const tabData = [
     {
-      label: 'nft info',
+      label: 'detail',
       content: <MyNFTTabInfo filterSelected={filterSelected} {...rest} />,
       isDisabled: actionType,
     },

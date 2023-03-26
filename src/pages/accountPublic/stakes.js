@@ -3,7 +3,7 @@ import {
   Flex,
   Heading,
   Spacer,
-  IconButton,
+  // IconButton,
   Text,
   HStack,
   Stack,
@@ -16,7 +16,7 @@ import artzero_nft_calls from "@utils/blockchain/artzero-nft-calls";
 import staking_calls from "@utils/blockchain/staking_calls";
 import marketplace_contract_calls from "@utils/blockchain/marketplace_contract_calls";
 
-import RefreshIcon from "@theme/assets/icon/Refresh.js";
+// import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import BN from "bn.js";
 import { APICall } from "@api/client";
 import MyNFTGroupCard from "@components/Card/MyNFTGroup";
@@ -199,14 +199,14 @@ const MyStakesPage = () => {
               />
             ))}
 
-            <IconButton
+            {/* <IconButton
               mx={1}
               size="icon"
               variant="iconSolid"
               aria-label="refresh"
               icon={<RefreshIcon />}
               onClick={() => fetchCollectionDetail(true)}
-            />
+            /> */}
           </HStack>
         )}
       </Flex>
@@ -218,7 +218,7 @@ const MyStakesPage = () => {
           pb={[0, "8px"]}
           justifyContent="space-between"
         >
-          <IconButton
+          {/* <IconButton
             mr="2px"
             size="icon"
             variant="iconSolid"
@@ -226,7 +226,7 @@ const MyStakesPage = () => {
             onClick={() => fetchCollectionDetail(true)}
             icon={<RefreshIcon />}
             _hover={{ color: "black", bg: "#7ae7ff" }}
-          />
+          /> */}
           <Spacer display={["none", "flex"]} />
           (
           <DropdownMobile
@@ -269,7 +269,7 @@ const MyStakesPage = () => {
                   {item === "totalCount"
                     ? "Total"
                     : item === "unstakedCount"
-                    ? "Total Not Staked"
+                    ? "Total Stakeable"
                     : item === "pendingCount"
                     ? "Total Pending Unstake"
                     : item === "stakedCount"

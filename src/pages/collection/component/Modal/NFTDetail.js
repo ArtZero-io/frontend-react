@@ -32,7 +32,7 @@ function NFTDetailModal({ isOpen, onClose, ...rest }) {
 
   const tabData = [
     {
-      label: 'collectible',
+      label: 'detail',
       content: <NFTTabCollectible {...rest} />,
       isDisabled: actionType,
     },

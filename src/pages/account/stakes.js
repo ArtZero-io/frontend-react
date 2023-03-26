@@ -269,7 +269,7 @@ const MyStakesPage = () => {
                   {item === "totalCount"
                     ? "Total"
                     : item === "unstakedCount"
-                    ? "Total Not Staked"
+                    ? "Total Stakeable"
                     : item === "pendingCount"
                     ? "Total Pending Unstake"
                     : item === "stakedCount"
