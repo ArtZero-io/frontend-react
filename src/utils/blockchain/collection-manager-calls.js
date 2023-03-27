@@ -91,22 +91,28 @@ async function addNewCollection(
           if (method === "ExtrinsicSuccess" && status.type === "Finalized") {
             if (templateParams) {
               templateParams.collection_address = data?.nftContractAddress;
+
+              try {
+                emailjs
+                  .send(
+                    process.env.REACT_APP_EMAILJS_SERVICE_ID,
+                    process.env
+                      .REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
+                    templateParams,
+                    process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+                  )
+                  .then(
+                    function (response) {
+                      console.log("SUCCESS!", response.status, response.text);
+                    },
+                    function (error) {
+                      console.log("error send email FAILED...", error);
+                    }
+                  );
+              } catch (error) {
+                console.log("error", error);
+              }
               // sent email
-              emailjs
-                .send(
-                  process.env.REACT_APP_EMAILJS_SERVICE_ID,
-                  process.env.REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
-                  templateParams,
-                  process.env.REACT_APP_EMAILJS_PUBLIC_KEY
-                )
-                .then(
-                  function (response) {
-                    console.log("SUCCESS!", response.status, response.text);
-                  },
-                  function (error) {
-                    console.log("error send email FAILED...", error);
-                  }
-                );
 
               // toast info
               toast(
@@ -356,27 +362,30 @@ async function autoNewCollection(
                     }
 
                     templateParams.collection_address = eventValues[1];
-
-                    emailjs
-                      .send(
-                        process.env.REACT_APP_EMAILJS_SERVICE_ID,
-                        process.env
-                          .REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
-                        templateParams,
-                        process.env.REACT_APP_EMAILJS_PUBLIC_KEY
-                      )
-                      .then(
-                        function (response) {
-                          console.log(
-                            "SUCCESS!",
-                            response.status,
-                            response.text
-                          );
-                        },
-                        function (error) {
-                          console.log("error send email FAILED...", error);
-                        }
-                      );
+                    try {
+                      emailjs
+                        .send(
+                          process.env.REACT_APP_EMAILJS_SERVICE_ID,
+                          process.env
+                            .REACT_APP_EMAILJS_NEW_COLLECTION_PROJ_TEMPLATE_ID,
+                          templateParams,
+                          process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+                        )
+                        .then(
+                          function (response) {
+                            console.log(
+                              "SUCCESS!",
+                              response.status,
+                              response.text
+                            );
+                          },
+                          function (error) {
+                            console.log("error send email FAILED...", error);
+                          }
+                        );
+                    } catch (error) {
+                      console.log("error", error);
+                    }
 
                     await APICall.askBeUpdateCollectionData({
                       collection_address: eventValues[1],
@@ -456,21 +465,25 @@ async function updateIsActive(
         events.forEach(({ event: { method } }) => {
           if (method === "ExtrinsicSuccess" && status.type === "Finalized") {
             if (templateParams && isActive) {
-              emailjs
-                .send(
-                  process.env.REACT_APP_EMAILJS_SERVICE_ID,
-                  process.env.REACT_APP_EMAILJS_ACTIVE_COLLECTION_TEMPLATE_ID,
-                  templateParams,
-                  process.env.REACT_APP_EMAILJS_PUBLIC_KEY
-                )
-                .then(
-                  function (response) {
-                    console.log("SUCCESS!", response.status, response.text);
-                  },
-                  function (error) {
-                    console.log("error send email FAILED...", error);
-                  }
-                );
+              try {
+                emailjs
+                  .send(
+                    process.env.REACT_APP_EMAILJS_SERVICE_ID,
+                    process.env.REACT_APP_EMAILJS_ACTIVE_COLLECTION_TEMPLATE_ID,
+                    templateParams,
+                    process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+                  )
+                  .then(
+                    function (response) {
+                      console.log("SUCCESS!", response.status, response.text);
+                    },
+                    function (error) {
+                      console.log("error send email FAILED...", error);
+                    }
+                  );
+              } catch (error) {
+                console.log("error", error);
+              }
             }
           } else if (method === "ExtrinsicFailed") {
             toast.error(`Error: ${method}.`);
