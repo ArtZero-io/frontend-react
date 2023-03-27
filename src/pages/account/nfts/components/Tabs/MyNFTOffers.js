@@ -64,7 +64,7 @@ function MyNFTOffer({ nftContractAddress, tokenID }) {
 
         // map array index to bidId
         listBidder = listBidder?.map((i, idx) => {
-          return { ...i, bidId: idx };
+          return { ...i, bidId: idx, bidDate: i.bidDate.replaceAll(",", "") };
         });
 
         //sort highest price first

@@ -1,16 +1,16 @@
-import {decodeAddress, encodeAddress} from "@polkadot/keyring";
-import {hexToU8a, isHex} from "@polkadot/util";
-import {AccountActionTypes} from "../store/types/account.types";
+import { decodeAddress, encodeAddress } from "@polkadot/keyring";
+import { hexToU8a, isHex } from "@polkadot/util";
+import { AccountActionTypes } from "../store/types/account.types";
 import Keyring from "@polkadot/keyring";
-import {IPFS_BASE_URL} from "@constants/index";
+import { IPFS_BASE_URL } from "@constants/index";
 import numeral from "numeral";
 import axios from "axios";
 import toast from "react-hot-toast";
-import {APICall} from "../api/client";
-import {BN, BN_ONE} from "@polkadot/util";
+import { APICall } from "../api/client";
+import { BN, BN_ONE } from "@polkadot/util";
 import getGasLimit from "../utils/blockchain/dryRun";
-import {execContractQuery} from "../pages/account/nfts/nfts";
-import {ADMIN_ROLE_CODE} from "../constants";
+import { execContractQuery } from "../pages/account/nfts/nfts";
+import { ADMIN_ROLE_CODE } from "../constants";
 import moment from "moment/moment";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
@@ -51,11 +51,11 @@ export async function getCloudFlareImage(imageHash = "", size = 500) {
 }
 
 export async function getMetaDataOffChain(tokenID, token_uri) {
-  const metadata = await APICall.getNftJson({tokenID, token_uri});
+  const metadata = await APICall.getNftJson({ tokenID, token_uri });
 
   if (metadata) {
     const attrsList = metadata?.attributes?.map((item) => {
-      return {[item.trait_type]: item.value};
+      return { [item.trait_type]: item.value };
     });
 
     return {
@@ -73,13 +73,13 @@ export function shortenNumber(number) {
 
 function nFormatter(num, digits) {
   var si = [
-    {value: 1, symbol: ""},
-    {value: 1e3, symbol: "K"},
-    {value: 1e6, symbol: "M"},
-    {value: 1e9, symbol: "G"},
-    {value: 1e12, symbol: "T"},
-    {value: 1e15, symbol: "P"},
-    {value: 1e18, symbol: "E"},
+    { value: 1, symbol: "" },
+    { value: 1e3, symbol: "K" },
+    { value: 1e6, symbol: "M" },
+    { value: 1e9, symbol: "G" },
+    { value: 1e12, symbol: "T" },
+    { value: 1e15, symbol: "P" },
+    { value: 1e18, symbol: "E" },
   ];
   var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
   var i;
@@ -135,11 +135,7 @@ export function convertStringToDateTime(stringTimeStamp) {
     timeStamp = stringTimeStamp.replace(/\,/g, "");
   }
 
-  return moment(timeStamp).format("MMM D YYYY, H:mm");
-
-
-
-  //2019-12-9 10:30:15
+  return moment(parseInt(timeStamp)).format("MMM D YYYY, H:mm");
 }
 
 export function isValidAddressPolkadotAddress(address) {
@@ -232,7 +228,7 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
   if (dispatchError) {
     if (dispatchError.isModule) {
       const decoded = contract.registry.findMetaError(dispatchError.asModule);
-      const {docs, name, section} = decoded;
+      const { docs, name, section } = decoded;
 
       console.log(`Lỗi: ${section}.${name}: ${docs.join(" ")}`);
     } else {
@@ -246,7 +242,7 @@ export function handleContractCall(status, dispatchError, dispatch, contract) {
     if (Object.keys(status.toHuman())[0] === "0") {
       dispatch({
         type: AccountActionTypes.SET_TNX_STATUS,
-        payload: {status: "Ready"},
+        payload: { status: "Ready" },
       });
     } else {
       dispatch({
@@ -272,7 +268,7 @@ export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
     const attrsValList = attrsValArr.slice(3, attrsArr.length);
 
     const formatList = Object.assign(
-      [...attrsList].map((v, i) => ({[v]: attrsValList[i]}))
+      [...attrsList].map((v, i) => ({ [v]: attrsValList[i] }))
     );
 
     result.attrsList = formatList.filter((obj) => !!Object.values(obj)[0]);
@@ -284,13 +280,13 @@ export const createObjAttrsNFT = function (attrsArr, attrsValArr) {
 };
 
 export const createLevelAttribute = (levelString) => {
-  if (!levelString) return {level: "", levelMax: ""};
+  if (!levelString) return { level: "", levelMax: "" };
 
   const location = Number(levelString.indexOf("|"));
   const level = levelString.slice(0, location);
   const levelMax = levelString.slice(location + 1, levelString.length);
 
-  return {level, levelMax};
+  return { level, levelMax };
 };
 
 export const getPublicCurrentAccount = () => {
@@ -298,11 +294,11 @@ export const getPublicCurrentAccount = () => {
   const PHRASE =
     "entire material egg meadow latin bargain dutch coral blood melt acoustic thought";
 
-  keyring.addFromUri(PHRASE, {name: "Nobody"});
+  keyring.addFromUri(PHRASE, { name: "Nobody" });
 
   const keyringOptions = keyring
     .getPairs()
-    .map(({address, meta: {name}}) => ({
+    .map(({ address, meta: { name } }) => ({
       key: address,
       address,
       name,
@@ -324,7 +320,7 @@ export function handleContractCallAnimation(status, dispatchError, dispatch) {
     if (Object.keys(status.toHuman())[0] === "0") {
       dispatch({
         type: AccountActionTypes.SET_ADD_COLLECTION_TNX_STATUS,
-        payload: {status: "Ready"},
+        payload: { status: "Ready" },
       });
     } else {
       const finalizedTimeStamp = Date.now();
@@ -359,7 +355,7 @@ export function handleContractCallAddNftAnimation(
     if (Object.keys(status.toHuman())[0] === "0") {
       dispatch({
         type: AccountActionTypes.SET_ADD_NFT_TNX_STATUS,
-        payload: {status: "Ready"},
+        payload: { status: "Ready" },
       });
     } else {
       const finalizedTimeStamp = Date.now();
@@ -380,7 +376,7 @@ export function handleContractCallAddNftAnimation(
   }
 }
 
-export function onCloseButtonModal({status, dispatch, type}) {
+export function onCloseButtonModal({ status, dispatch, type }) {
   const endTimeStamp = Date.now();
 
   status === "Finalized" &&
@@ -462,7 +458,7 @@ export async function getEstimatedGas(
         address,
         queryName,
         contract,
-        {value},
+        { value },
         args
       );
 
