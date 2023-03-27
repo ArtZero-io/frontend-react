@@ -308,7 +308,7 @@ function MyNFTTabInfo(props) {
             <Heading
               color="#fff"
               size="h4"
-              fontSize={{ base: "28px", "2xl": "32px" }}
+              fontSize={{ base: "28px", "2xl": "28px" }}
             >
               {nftName}
             </Heading>
