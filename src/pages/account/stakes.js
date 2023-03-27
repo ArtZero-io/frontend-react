@@ -35,6 +35,7 @@ import { SCROLLBAR } from "@constants";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
+import toast from "react-hot-toast";
 
 const MyStakesPage = () => {
   const { currentAccount, api } = useSubstrateState();
@@ -371,6 +372,11 @@ export const fetchPlatformStakingDiscountStep = async (
   const response = await marketplace_contract_calls.getStakingDiscountCriteria(
     currentAccount
   );
+
+  if (!response) {
+    toast.error("Error when fetch Platform Staking Discount Step");
+    return [];
+  }
 
   return Array.from(response);
 };
