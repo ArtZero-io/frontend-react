@@ -1140,7 +1140,7 @@ function MyWhiteListProjectPage(props) {
                   <Text>
                     You will restore{" "}
                     {(
-                      0.070399999996 *
+                      0.0070399999996 *
                       Math.min(10, phaseInfo?.phaseData?.totalCountWLAddress)
                     ).toFixed(4)}{" "}
                     AZERO for{" "}
