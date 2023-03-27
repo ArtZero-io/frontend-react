@@ -219,7 +219,7 @@ export default function LaunchpadEventModal({
                   <Tbody>
                     {events?.length === 0 ? (
                       <Tr color="#fff">
-                        <Td colSpan={4} py={7} textAlign="center">
+                        <Td colSpan={5} py={7} textAlign="center">
                           No record found
                         </Td>
                       </Tr>

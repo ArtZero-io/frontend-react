@@ -289,7 +289,6 @@ const AddNewNFTForm = ({
                     toast.error("There is an error with metadata hash!");
                     return;
                   }
-                  console.log(metadataHash, 'metadataHashmetadataHash');
                   dispatch(setTxStatus({ type: CREATE_NFT, step: START }));
                   await nft721_psp34_standard_calls.mintWithAttributes(
                     currentAccount,
@@ -337,7 +336,6 @@ const AddNewNFTForm = ({
                     toast.error("There is an error with metadata hash!");
                     return;
                   }
-
                   await nft721_psp34_standard_calls.setMultipleAttributesNFT(
                     currentAccount,
                     collection_address || rest.nftContractAddress,

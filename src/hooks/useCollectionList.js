@@ -18,7 +18,8 @@ async function fetchCollectionList() {
 export function useCollectionList() {
   const { data, isLoading } = useQuery(
     [queryKeys.project],
-    fetchCollectionList
+    fetchCollectionList,
+    {refetchOnWindowFocus: false}
   );
 
   return { collectionList: data, isLoading };

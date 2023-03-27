@@ -63,6 +63,7 @@ export default function WithdrawHistoryModal({
   const fetchEvents = useCallback(
     async (isMounted) => {
       const options = {
+        nftContractAddress: collection_address,
         limit: pageSize,
         offset: offset,
       };
