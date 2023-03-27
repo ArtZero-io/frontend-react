@@ -4,71 +4,58 @@ import {
   Spacer,
   Stack,
   Text,
-  useMediaQuery,
 } from "@chakra-ui/react";
-import { useSubstrateState } from "@utils/substrate";
+import {useSubstrateState} from "@utils/substrate";
 import CommonContainer from "@components/Container/CommonContainer";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import GridA from "@components/Grid/GridA";
 
-import OwnerMintModal from "./components/OwnerMintModal";
-import WhitelistManagerModal from "./components/WhitelistManagerModal";
 
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
-import { useMyProjectAdmin } from "@hooks/useMyProjectAdmin";
-import { useHistory } from "react-router-dom";
+import {useMyProjectAdmin} from "@hooks/useMyProjectAdmin";
+import {useHistory} from "react-router-dom";
 import * as ROUTES from "@constants/routes";
 
 const MyProjectsPage = () => {
   const history = useHistory();
-  const { api, currentAccount } = useSubstrateState();
+  const {api, currentAccount} = useSubstrateState();
 
-  const { myProjectAdmin, isLoading } = useMyProjectAdmin(
+  const {myProjectAdmin, isLoading} = useMyProjectAdmin(
     api,
     launchpad_psp34_nft_standard.CONTRACT_ABI,
     currentAccount?.address
   );
 
-  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   return (
     <CommonContainer>
       <Stack
         w="full"
         pb={["20px", "20px", "48px"]}
-        direction={{ base: "column", xl: "row" }}
+        direction={{base: "column", xl: "row"}}
       >
         <Heading fontSize={["3xl-mid", "5xl", "5xl"]}>my projects</Heading>
 
-        {isBigScreen && (
-          <>
-            <Spacer mt={{ base: "20px", xl: "0px" }} />
-            {currentAccount && (
-              <Button
-                my="20px"
-                variant="outline"
-                onClick={() =>
-                  history.push({
-                    state: { formMode: "ADD" },
-                    pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
-                  })
-                }
-              >
-                create project
-              </Button>
-            )}
-            {/* <OwnerMintModal isDisabled={myProjectAdmin?.length === 0} />
-            <WhitelistManagerModal isDisabled={myProjectAdmin?.length === 0} /> */}
-          </>
-        )}
+        <>
+          <Spacer mt={{base: "20px", xl: "0px"}} />
+          {currentAccount && (
+            <Button
+              my="20px"
+              variant="outline"
+              onClick={() =>
+                history.push({
+                  state: {formMode: "ADD"},
+                  pathname: ROUTES.LAUNCHPAD_ADD_PROJECT,
+                })
+              }
+            >
+              create project
+            </Button>
+          )}
+
+        </>
       </Stack>
 
-      {!isBigScreen && (
-        <Stack spacing="20px" alignItems="center" mb="20px">
-          <OwnerMintModal isDisabled={myProjectAdmin?.length === 0} />
-          <WhitelistManagerModal isDisabled={myProjectAdmin?.length === 0} />
-        </Stack>
-      )}
 
       {isLoading ? (
         <AnimationLoader />
