@@ -39,6 +39,7 @@ import { REVOKE_ADMIN_ADDRESS } from "../../../../constants";
 import AddressCopier from "@components/AddressCopier/AddressCopier";
 
 export default function UpdateAdminAddressModal({
+  collectionOwner,
   collection_address,
   isOpen,
   onClose,
@@ -254,6 +255,7 @@ export default function UpdateAdminAddressModal({
               <CircularProgress isIndeterminate color="green.300" />
             ) : (
               <AdminList
+                collectionOwner={collectionOwner}
                 adminList={adminList}
                 onRemoveHandler={onRemoveHandler}
               />
@@ -265,7 +267,7 @@ export default function UpdateAdminAddressModal({
   );
 }
 
-const AdminList = ({ adminList, onRemoveHandler }) => {
+const AdminList = ({ collectionOwner, adminList, onRemoveHandler }) => {
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
 
   return (
@@ -289,18 +291,22 @@ const AdminList = ({ adminList, onRemoveHandler }) => {
                   <AddressCopier address={item} truncateStrNum={12} />
                 </Td>
                 <Td w={"10px"}>
-                  <CommonButton
-                    isDisabled={
-                      (actionType && actionType !== REVOKE_ADMIN_ADDRESS) ||
-                      (actionType === REVOKE_ADMIN_ADDRESS &&
-                        !tokenIDArray?.includes(item))
-                    }
-                    {...rest}
-                    minW="160px"
-                    onClick={() => onRemoveHandler(item)}
-                    size="xs"
-                    text="Remove role"
-                  />
+                  {collectionOwner === item ? (
+                    "Project Owner"
+                  ) : (
+                    <CommonButton
+                      isDisabled={
+                        (actionType && actionType !== REVOKE_ADMIN_ADDRESS) ||
+                        (actionType === REVOKE_ADMIN_ADDRESS &&
+                          !tokenIDArray?.includes(item))
+                      }
+                      {...rest}
+                      minW="160px"
+                      onClick={() => onRemoveHandler(item)}
+                      size="xs"
+                      text="Remove role"
+                    />
+                  )}
                 </Td>
               </Tr>
             ))}

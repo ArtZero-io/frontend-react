@@ -679,7 +679,7 @@ function LaunchpadDetailHeader({
                   </Heading>
                 </HStack>
               </Stack>
-              
+
               <Stack
                 py="10px"
                 spacing={["20px", "10px"]}
@@ -804,6 +804,7 @@ function LaunchpadDetailHeader({
             collection_address={collection_address}
           />
           <UpdateAdminAddressModal
+            collectionOwner={project?.collectionOwner}
             isOpen={isOpenUpdateAdminAddressModal}
             collection_address={collection_address}
             onClose={onCloseUpdateAdminAddressModal}
