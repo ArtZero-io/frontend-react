@@ -29,6 +29,7 @@ import {
   LOCK,
   TRANSFER,
   ACCEPT_BID,
+  EDIT_NFT
 } from "@constants";
 import { APICall } from "../../../api/client";
 import { ContractPromise } from "@polkadot/api-contract";
@@ -45,7 +46,7 @@ const MyNFTsPage = () => {
   const { actionType } = useTxStatus();
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
-    [REMOVE_BID, ACCEPT_BID, UNLIST_TOKEN, LIST_TOKEN, LOCK, TRANSFER],
+    [REMOVE_BID, ACCEPT_BID, UNLIST_TOKEN, LIST_TOKEN, LOCK, TRANSFER, EDIT_NFT],
     () => handleForceUpdate()
   );
 
@@ -70,6 +71,11 @@ const MyNFTsPage = () => {
 
     if (actionType === UNLIST_TOKEN) {
       return setFilterSelected("COLLECTED");
+    }
+
+    if(actionType === EDIT_NFT ) {
+      fetchMyCollections();
+      return
     }
 
     setFilterSelected("COLLECTED");
@@ -228,10 +234,8 @@ const MyNFTsPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentAccount?.address, filterSelected]
   );
-
   useEffect(() => {
     let isMounted = true;
-
     filterSelected !== "BIDS" ? fetchMyCollections() : fetchMyBids(isMounted);
 
     return () => (isMounted = false);

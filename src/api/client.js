@@ -269,11 +269,10 @@ export const APICall = {
     return await client("GET", "/getCollectionCount", {});
   },
 
-  getWithdrawEvent: async ({ limit = 5, offset = 0 }) => {
-    return clientWithGetParams("GET", "/api/withdraw-event-schemas", {
-      limit,
-      offset,
-    });
+  getWithdrawEvent: async ({ limit = 5, offset = 0, nftContractAddress }) => {
+    return clientWithGetParams("GET", "/api/withdraw-event-schemas", { filter: {limit, offset, where: {
+      nftContractAddress: nftContractAddress,
+    }, }});
   },
 
   getLaunchpadEvent: async ({ limit = 5, offset = 0, nftContractAddress }) => {
