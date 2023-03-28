@@ -57,14 +57,6 @@ function TxHistory({
     tokenID,
   ]);
 
-  if (!currentAccount) {
-    return (
-      <Text textAlign="center" py="2rem">
-        Please connect wallet first!{" "}
-      </Text>
-    );
-  }
-
   return (
     <>
       {historyList?.length === 0 ? (
