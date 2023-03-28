@@ -176,9 +176,11 @@ const NFTTabCollectible = (props) => {
     }
   }, [currentAccount, is_for_sale, nftContractAddress, owner, tokenID]);
 
-  const attrsList = Object.entries(traits).map(([k, v]) => {
-    return { [k]: v };
-  });
+  const attrsList = !traits
+    ? {}
+    : Object.entries(traits).map(([k, v]) => {
+        return { [k]: v };
+      });
 
   useEffect(() => {
     fetchSaleInfo();

@@ -138,17 +138,20 @@ const AddNewNFTForm = ({
                               const keyLevelsArr = levelsArr.map((p) =>
                                 p.name?.trim()
                               );
-  
+
                               const propsArr =
-                                  schema?.from[1].value?.properties;
-                                const keyPropsArr = propsArr.map((p) =>
-                                  p.type?.trim()
-                                );
-  
-                           
-                              return keyPropsArr.filter((val) => val === value).length +
-                              keyLevelsArr.filter((val) => val === value).length <=
-                              1
+                                schema?.from[1].value?.properties;
+                              const keyPropsArr = propsArr.map((p) =>
+                                p.type?.trim()
+                              );
+
+                              return (
+                                keyPropsArr.filter((val) => val === value)
+                                  .length +
+                                  keyLevelsArr.filter((val) => val === value)
+                                    .length <=
+                                1
+                              );
                             }
                           )
                           .required("Must have type value.")
@@ -171,7 +174,7 @@ const AddNewNFTForm = ({
                 )
               )
               .min(0),
-              // .max(10, "Property must have less than or equal to 10 items!"),
+            // .max(10, "Property must have less than or equal to 10 items!"),
             levels: Yup.array(
               Yup.object().shape(
                 {
@@ -189,16 +192,18 @@ const AddNewNFTForm = ({
                               p.name?.trim()
                             );
 
-                            const propsArr =
-                                schema?.from[1].value?.properties;
-                              const keyPropsArr = propsArr.map((p) =>
-                                p.type?.trim()
-                              );
+                            const propsArr = schema?.from[1].value?.properties;
+                            const keyPropsArr = propsArr.map((p) =>
+                              p.type?.trim()
+                            );
 
-                         
-                            return keyPropsArr.filter((val) => val === value).length +
-                            keyLevelsArr.filter((val) => val === value).length <=
-                            1
+                            return (
+                              keyPropsArr.filter((val) => val === value)
+                                .length +
+                                keyLevelsArr.filter((val) => val === value)
+                                  .length <=
+                              1
+                            );
                           }
                         )
                         .required("Must have level name.")
@@ -224,9 +229,8 @@ const AddNewNFTForm = ({
                 },
                 [["name", "level", "levelMax"]]
               )
-            )
-              .min(0),
-              // .max(10, "Level must have less than or equal to 10 items!"),
+            ).min(0),
+            // .max(10, "Level must have less than or equal to 10 items!"),
           })}
           onSubmit={async (values) => {
             !avatarIPFSUrl && toast.error("Upload images first");
@@ -309,17 +313,26 @@ const AddNewNFTForm = ({
                 }
               } else {
                 // add deleted properties
-                const oldAttrsKeysList = Object.keys(traits);
+                let oldAttrsKeysList = {};
+                try {
+                  oldAttrsKeysList = Object.keys(traits);
+                } catch (error) {
+                  console.log("error", error);
+                }
 
                 const newAttrsKeysList = attributes.map((item) => item.name);
 
-                for (let oldAttr of oldAttrsKeysList) {
-                  if (newAttrsKeysList.indexOf(oldAttr) === -1) {
-                    attributes.push({
-                      name: oldAttr,
-                      value: "",
-                    });
+                try {
+                  for (let oldAttr of oldAttrsKeysList) {
+                    if (newAttrsKeysList.indexOf(oldAttr) === -1) {
+                      attributes.push({
+                        name: oldAttr,
+                        value: "",
+                      });
+                    }
                   }
+                } catch (error) {
+                  console.log("error", error);
                 }
 
                 try {

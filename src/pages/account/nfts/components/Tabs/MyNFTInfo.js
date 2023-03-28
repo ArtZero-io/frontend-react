@@ -80,10 +80,12 @@ function MyNFTTabInfo(props) {
     isActive,
   } = props;
 
-  const attrsList = Object.entries(traits).map(([k, v]) => {
-    return { [k]: v };
-  });
-  
+  const attrsList = !traits
+    ? {}
+    : Object.entries(traits).map(([k, v]) => {
+        return { [k]: v };
+      });
+
   const { api, currentAccount } = useSubstrateState();
   const [askPrice, setAskPrice] = useState(10);
   const [isAllowanceMarketplaceContract, setIsAllowanceMarketplaceContract] =
