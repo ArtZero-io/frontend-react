@@ -464,7 +464,6 @@ function GeneralPage() {
             <Image
               w="full"
               h="full"
-              // src="https://api.artzero.io/getImage?input=QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH&size=500&url=https://ipfs.infura.io/ipfs/QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH"
               src="https://imagedelivery.net/Iw4Pp5uTB3HCaJ462QFK1Q/QmQRXjhAbKc6Jv9nKyd4Z7Ncit143F8ghcJEkEezgNGNkH/500"
             />
           </Square>
