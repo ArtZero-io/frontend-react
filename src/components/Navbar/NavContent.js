@@ -48,7 +48,7 @@ import {
 } from "@chakra-ui/icons";
 
 const links = [
-  // { label: "Marketplace", href: ROUTES.MARKETPLACE },
+  { label: "Marketplace", href: ROUTES.MARKETPLACE },
   { label: "Launchpad", href: ROUTES.LAUNCHPAD_BASE },
   // { label: "Stats", href: ROUTES.STATS },
 ];
@@ -158,13 +158,13 @@ const DesktopNavContent = (props) => {
           <NavLink.Desktop key={index} label={link.label} to={link.href} />
         ))}
 
-        {
+        {/* {
           <NavLink.Desktop
             label="Stake2Earn"
             to={ROUTES.STAKE2EARN}
             isExternal={true}
           />
-        }
+        } */}
 
         <NavLink.Desktop label="Stats" to={ROUTES.STATS} />
         <NavLink.Desktop label="Docs" to={ROUTES.DOCS} isExternal={true} />
@@ -618,19 +618,19 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
 };
 
 const NAV_ITEMS = [
-  // {
-  //   label: "marketplace",
-  //   href: ROUTES.MARKETPLACE,
-  // },
+  {
+    label: "marketplace",
+    href: ROUTES.MARKETPLACE,
+  },
   {
     label: "launchpad",
     href: ROUTES.LAUNCHPAD_BASE,
   },
-  {
-    label: "stake2earn",
-    href: ROUTES.STAKE2EARN,
-    isExternal: true,
-  },
+  // {
+  //   label: "stake2earn",
+  //   href: ROUTES.STAKE2EARN,
+  //   isExternal: true,
+  // },
   {
     label: "stats",
     href: ROUTES.STATS,
