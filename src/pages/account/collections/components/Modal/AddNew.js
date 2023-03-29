@@ -57,11 +57,17 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
           fontFamily="Evogria, sans-serif"
           fontSize={{ base: "18px", md: "15px" }}
         >
-          create
+          become a creator
         </MenuItem>
       )}
 
-      <Modal isCentered size={modalSize}  scrollBehavior={"inside"} isOpen={isOpen} onClose={onClose}>
+      <Modal
+        isCentered
+        size={modalSize}
+        scrollBehavior={"inside"}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
         {/* <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
@@ -85,7 +91,7 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
 
           <ModalHeader textAlign="center">
             <Heading fontSize={["xl", "3xl", "3xl"]} my={3}>
-            Setting up a new NFT Collection:
+              Setting up a new NFT Collection:
             </Heading>
           </ModalHeader>
 

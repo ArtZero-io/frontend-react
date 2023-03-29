@@ -26,8 +26,8 @@ function Nav() {
           h="full"
         >
           <Link
-            as={ReactRouterLink}
-            to="/"
+            isExternal
+            href="https://artzero.io/"
             rel="home"
             _focus={{ border: "none" }}
           >
