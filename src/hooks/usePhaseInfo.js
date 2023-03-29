@@ -20,11 +20,12 @@ async function fetchPhaseInfo(nftContractAddress, phaseId) {
 }
 
 export function usePhaseInfo(contractAddress, phaseId) {
-  const { data, isLoading } = useQuery(
-    [queryKeys.phase, contractAddress, phaseId],
-    () => fetchPhaseInfo(contractAddress, phaseId),
-    { enabled: !!contractAddress && !!phaseId && phaseId !== "0" }
-  );
+  const { data, isLoading, isRefetching, refetch } = useQuery({
+    queryKey: [queryKeys.phase, contractAddress, phaseId],
+    queryFn: async () => await fetchPhaseInfo(contractAddress, phaseId),
+    cacheTime: 3000,
+    enabled: !!contractAddress && !!phaseId && phaseId !== "0",
+  });
 
-  return { phaseInfo: data, isLoading };
+  return { phaseInfo: data, isLoading, isRefetching, refetch };
 }

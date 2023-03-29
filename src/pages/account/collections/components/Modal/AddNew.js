@@ -42,7 +42,7 @@ function AddNewCollection({ variant = "", mode = formMode.ADD, id }) {
     <>
       {variant !== "navbar" && mode === formMode.ADD && (
         <Button variant="outline" color="brand.blue" onClick={() => onOpen()}>
-          create
+          become a creator
         </Button>
       )}
 

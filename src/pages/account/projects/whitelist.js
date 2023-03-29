@@ -54,6 +54,7 @@ import { formatNumToBN, isEmptyObj, isPhaseEnd, isValidAddress } from "@utils";
 import { CheckCircleIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import { usePhaseInfo } from "@hooks/usePhaseInfo";
 import { useMyProjectAdmin } from "@hooks/useMyProjectAdmin";
+import AddressCopier from "@components/AddressCopier/AddressCopier";
 
 const tableHeaders = ["Address", "Amount", "Claimed", "Price"];
 
@@ -79,7 +80,10 @@ function MyWhiteListProjectPage(props) {
     launchpad_psp34_nft_standard.CONTRACT_ABI,
     currentAccount?.address
   );
-  const { phaseInfo } = usePhaseInfo(selectedProjectAddress, selectedPhaseCode);
+  const { phaseInfo, isRefetching, refetch } = usePhaseInfo(
+    selectedProjectAddress,
+    selectedPhaseCode
+  );
 
   const onAddWhitelist = async () => {
     if (!selectedProjectAddress) {
@@ -214,12 +218,14 @@ function MyWhiteListProjectPage(props) {
 
   const { loading: loadingForceUpdate } = useForceUpdate(
     [UPDATE_WHITELIST, ADD_WHITELIST],
-    () => {
+    async () => {
       setWhitelistAddress("");
       setWhiteListPrice(0);
       setWhitelistAmount(1);
       setIsUpdateMode(null);
       // fetchPhaseInfo();
+
+      await refetch();
     }
   );
 
@@ -889,7 +895,7 @@ function MyWhiteListProjectPage(props) {
             </Stack>
           </>
         )}
-        {loadingForceUpdate ? (
+        {loadingForceUpdate || isRefetching ? (
           <AnimationLoader />
         ) : (
           <motion.div
@@ -1096,7 +1102,7 @@ function MyWhiteListProjectPage(props) {
                         {phaseInfo?.userData?.map((item, idx) => (
                           <Tr key={idx} color="#fff">
                             <Td textAlign="center" color="#fff">
-                              {truncateStr(item.address, 6)}
+                              <AddressCopier address={item.address} />
                             </Td>
                             <Td textAlign="center" color="#fff">
                               {item.whitelistAmount}
@@ -1162,7 +1168,8 @@ function MyWhiteListProjectPage(props) {
                     onClick={() => onClearWLHandler()}
                     isDisabled={
                       !phaseInfo?.phaseData?.totalCountWLAddress ||
-                      loadingForceUpdate
+                      loadingForceUpdate ||
+                      isRefetching
                     }
                   />
                 </Stack>

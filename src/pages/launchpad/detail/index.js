@@ -77,8 +77,8 @@ import { APICall } from "@api/client";
 import { getMetaDataOffChain, strToNumber } from "@utils";
 import { clearTxStatus } from "@store/actions/txStatus";
 import AnimationLoader from "@components/Loader/AnimationLoader";
-import { ImageCloudFlareLaunchpad } from "../../../components/ImageWrapper/ImageCloudFlare";
-import { convertStringToDateTime } from "../../../utils";
+import { ImageCloudFlareLaunchpad } from "@components/ImageWrapper/ImageCloudFlare";
+import { convertStringToDateTime } from "@utils";
 
 const NUMBER_PER_PAGE = 6;
 
@@ -148,9 +148,10 @@ const LaunchpadDetailPage = () => {
         // console.log("ret", ret);
         const data = {
           ...ret[0],
-          roadmaps: JSON.parse(ret[0].roadmaps),
-          teamMembers: JSON.parse(ret[0].teamMembers),
+          roadmaps: JSON.parse(ret[0]?.roadmaps),
+          teamMembers: JSON.parse(ret[0]?.teamMembers),
         };
+
         if (isUnmounted) return;
         setProjectInfo(data);
         setLoading(false);
