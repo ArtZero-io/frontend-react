@@ -48,7 +48,7 @@ import {
 } from "@chakra-ui/icons";
 
 const links = [
-  { label: "Marketplace", href: ROUTES.MARKETPLACE },
+  // { label: "Marketplace", href: ROUTES.MARKETPLACE },
   { label: "Launchpad", href: ROUTES.LAUNCHPAD_BASE },
   // { label: "Stats", href: ROUTES.STATS },
 ];
@@ -147,7 +147,7 @@ const DesktopNavContent = (props) => {
         justifyContent={{
           base: "flex-start",
           md: "space-between",
-          xl: "flex-start",
+          xl: "center",
         }}
         spacing={{ xl: "35px", "2xl": "55px" }}
         pl={{ base: "8px", md: "32px", xl: "50px" }}
@@ -618,10 +618,10 @@ const MobileNavItem = ({ label, children, href, isExternal, onCloseMenu }) => {
 };
 
 const NAV_ITEMS = [
-  {
-    label: "marketplace",
-    href: ROUTES.MARKETPLACE,
-  },
+  // {
+  //   label: "marketplace",
+  //   href: ROUTES.MARKETPLACE,
+  // },
   {
     label: "launchpad",
     href: ROUTES.LAUNCHPAD_BASE,

@@ -25,7 +25,12 @@ function Nav() {
           w="full"
           h="full"
         >
-          <Link as={ReactRouterLink} to="/" rel="home">
+          <Link
+            as={ReactRouterLink}
+            to="/"
+            rel="home"
+            _focus={{ border: "none" }}
+          >
             <VisuallyHidden>ArtZero.io</VisuallyHidden>
             <ArtZeroLogo
               display={{ base: "none", md: "flex" }}

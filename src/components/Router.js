@@ -1,7 +1,7 @@
 import { Switch, Route } from "react-router-dom";
 import * as ROUTES from "@constants/routes";
 
-import HomePage from "@pages/home";
+// import HomePage from "@pages/home";
 // import AdminPage from "@pages/admin";
 
 import CollectionsPage from "@pages/collections/collections";
@@ -117,7 +117,7 @@ const Router = () => {
         component={LaunchpadDetailPage}
       />
       <Route exact path={ROUTES.LAUNCHPAD_BASE} component={LaunchpadPage} />
-      <Route exact path={ROUTES.HOME} component={HomePage} />
+      <Route exact path={ROUTES.HOME} component={CollectionsPage} />
     </Switch>
   );
 };

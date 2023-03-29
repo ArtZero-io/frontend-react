@@ -83,7 +83,6 @@ const CollectionsPage = () => {
           await APICall.getFeaturedCollections();
 
         if (status !== "OK" || featCollectionsAddrList?.length === 0) {
-          console.log('status...',)
           return setFeaturedCollections([]);
         }
 
@@ -173,34 +172,30 @@ const CollectionsPage = () => {
             </Box>
           </Box>
 
-          <Box
-            as="section"
-            // maxW="container.3xl"
-            w="full"
-          >
-            <Box
-              mx="auto"
-              maxW="1240px"
-              px={{ base: "22px", "2xl": "0" }}
-              pt={{ base: "12", "2xl": "20" }}
-            >
-              <Heading
-                my="5rem"
-                textAlign="center"
-                fontSize={["3xl-mid", "5xl", "5xl"]}
-              >
-                featured collections
-              </Heading>
-              <>
-                {featuredCollections?.length ? (
+          {featuredCollections?.length ? (
+            <>
+              <Box as="section" w="full">
+                <Box
+                  mx="auto"
+                  maxW="1240px"
+                  px={{ base: "22px", "2xl": "0" }}
+                  pt={{ base: "12", "2xl": "20" }}
+                >
+                  <Heading
+                    my="5rem"
+                    textAlign="center"
+                    fontSize={["3xl-mid", "5xl", "5xl"]}
+                  >
+                    featured collections
+                  </Heading>{" "}
                   <GridA
                     collections={featuredCollections}
                     variant="marketplace-collection"
                   />
-                ) : null}
-              </>
-            </Box>
-          </Box>
+                </Box>
+              </Box>
+            </>
+          ) : null}
 
           <Box
             as="section"

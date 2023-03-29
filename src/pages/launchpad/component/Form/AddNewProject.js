@@ -1384,6 +1384,7 @@ const validationSchema = Yup.object().shape({
   nftSymbol: validationNftSymbol,
   phases: Yup.array()
     .min(1, "Phases must have at least 1 items")
+    .max(10, "Must be at most 10 phases")
     .of(
       Yup.object().shape({
         name: Yup.string()

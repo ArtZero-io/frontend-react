@@ -80,12 +80,11 @@ export const MAX_ITEM_STAKE = 5;
 export const MAX_BID_COUNT = 30;
 export const ADMIN_ROLE_CODE = 3739740293;
 
-export const ArtZero_TOS =
-  "https://alephzero.artzero.io/assets/ArtZero_Terms_Of_Service.pdf";
-export const ArtZero_Cookies =
-  "https://alephzero.artzero.io/assets/ArtZero_Cookies_Policy.pdf";
-export const ArtZero_Privacy =
-  "https://alephzero.artzero.io/assets/ArtZero_Privacy_Policy.pdf";
+const SUB_DOMAIN = "https://a0-test.artzero.io";
+
+export const ArtZero_TOS = `${SUB_DOMAIN}/assets/ArtZero_Terms_Of_Service.pdf`;
+export const ArtZero_Cookies = `${SUB_DOMAIN}/assets/ArtZero_Cookies_Policy.pdf`;
+export const ArtZero_Privacy = `${SUB_DOMAIN}/assets/ArtZero_Privacy_Policy.pdf`;
 export const ArtZero_Assets =
   "https://drive.google.com/drive/folders/1EXuGDmYVypszJUq4yr9dNTOZCuP96e3i";
 

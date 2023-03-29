@@ -451,7 +451,7 @@ function UpdatePhase({
                     />
                     <NumberInput
                       isRequired={value[index].isPublic}
-                      max={50}
+                      max={100}
                       type="number"
                       height="50px"
                       precision={0}
