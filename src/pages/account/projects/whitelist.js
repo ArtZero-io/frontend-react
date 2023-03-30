@@ -20,17 +20,21 @@ import {
   Textarea,
   Tooltip,
   Spacer,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useSubstrateState } from "@utils/substrate";
 import { useDispatch } from "react-redux";
-import { useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import { convertStringToDateTime } from "@utils";
 import toast from "react-hot-toast";
 import { ContractPromise } from "@polkadot/api-contract";
 import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { Select } from "@chakra-ui/react";
+import debounce from "lodash.debounce";
+import { FiSearch, FiX } from "react-icons/fi";
 
 import { truncateStr } from "@utils";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
@@ -55,6 +59,8 @@ import { CheckCircleIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import { usePhaseInfo } from "@hooks/usePhaseInfo";
 import { useMyProjectAdmin } from "@hooks/useMyProjectAdmin";
 import AddressCopier from "@components/AddressCopier/AddressCopier";
+import { usePagination } from "@ajna/pagination";
+import PaginationMP from "@components/Pagination/Pagination";
 
 const tableHeaders = ["Address", "Amount", "Claimed", "Price"];
 
@@ -74,7 +80,29 @@ function MyWhiteListProjectPage(props) {
 
   const [isUpdateMode, setIsUpdateMode] = useState(null);
   const [whitelistAmountClaimed, setWhitelistAmountClaimed] = useState(0);
+  const [keywords, setKeywords] = useState("");
+  const [resultList, setResultList] = useState(null)
 
+  const getSearchResult = (keywords) => {
+    const result = phaseInfo?.userData?.filter(el => el.address === keywords) || []
+    if(!result?.length && !keywords) {
+      setResultList()
+      return
+    }
+    setResultList(result);
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceGetSearchResult = useCallback(
+    debounce((k) => getSearchResult(k), 1000),
+    []
+  );
+
+  const handleInputOnchange = (value) => {
+
+    setKeywords(value);
+    debounceGetSearchResult(value);
+  };
   const { myProjectAdmin } = useMyProjectAdmin(
     api,
     launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -84,6 +112,21 @@ function MyWhiteListProjectPage(props) {
     selectedProjectAddress,
     selectedPhaseCode
   );
+
+  const {
+    pagesCount,
+    currentPage,
+    setCurrentPage,
+    isDisabled,
+    pageSize,
+  } = usePagination({
+    total: (resultList || phaseInfo?.userData)?.length,
+    initialState: {
+      currentPage: 1,
+      isDisabled: false,
+      pageSize: 5,
+    },
+  });
 
   const onAddWhitelist = async () => {
     if (!selectedProjectAddress) {
@@ -286,7 +329,6 @@ function MyWhiteListProjectPage(props) {
       falseCase: 0,
     }
   );
-  console.log("1 phaseInfo", phaseInfo);
 
   async function bulkAddWLHandler() {
     // validate proj is selected
@@ -855,7 +897,6 @@ function MyWhiteListProjectPage(props) {
                     </Text>
                   </Text>
                 </Text>
-                {console.log("currentProjectInfo", currentProjectInfo)}
                 <Text>
                   Available: <br />
                   <Text as="span" color="#fff">
@@ -1067,7 +1108,7 @@ function MyWhiteListProjectPage(props) {
                 fontSize="lg"
                 w="full"
                 // w={{ base: "full", xl: "1560px" }}
-                maxH={{ base: "390px", xl: "400px" }}
+                maxH={{ base: "390px", xl: "555px" }}
                 overflowY="scroll"
                 sx={SCROLLBAR}
               >
@@ -1077,6 +1118,33 @@ function MyWhiteListProjectPage(props) {
                   exit={{ opacity: 0 }}
                 >
                   {phaseInfo?.userData?.length ? (
+                    <>
+                    <InputGroup
+                borderColor="#ffffff25"
+                borderBottomWidth="2px"
+                mb="20px"
+                width={"80%"}
+              >
+                <Input
+                  h="40px"
+                  bg="transparent"
+                  px="0px"
+                  fontSize="lg"
+                  value={keywords}
+                  id="keywords"
+                  onChange={(e) => handleInputOnchange(e.target.value)}
+                  placeholder="Search address..."
+                />
+                <InputRightElement
+                  transform="translateX(22px)"
+                  bg="transparent"
+                  h="full"
+                  w={16}
+                  cursor="pointer"
+                >
+                  {keywords ? <FiX onClick={(e) => handleInputOnchange('')} size="22px" p="0" /> :<FiSearch size="22px" p="0" />}
+                </InputRightElement>
+              </InputGroup>
                     <Table variant="striped" colorScheme="blackAlpha">
                       <Thead>
                         <Tr>
@@ -1099,7 +1167,7 @@ function MyWhiteListProjectPage(props) {
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {phaseInfo?.userData?.map((item, idx) => (
+                        {(resultList || phaseInfo?.userData)?.slice((currentPage - 1) * pageSize, currentPage * pageSize)?.map((item, idx) => (
                           <Tr key={idx} color="#fff">
                             <Td textAlign="center" color="#fff">
                               <AddressCopier address={item.address} />
@@ -1117,6 +1185,18 @@ function MyWhiteListProjectPage(props) {
                         ))}
                       </Tbody>
                     </Table>
+                     <Stack w="full" py="30px">
+                     <PaginationMP
+                       bg="#333"
+                       maxW="230px"
+                       hasGotoPage={false}
+                       pagesCount={pagesCount}
+                       isDisabled={isDisabled}
+                       currentPage={currentPage}
+                       setCurrentPage={setCurrentPage}
+                     />
+                   </Stack>
+                   </>
                   ) : (
                     <Text py={2}>No info found!</Text>
                   )}

@@ -3,7 +3,7 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalOverlay,
+  // ModalOverlay,
   useDisclosure,
   useBreakpointValue,
   ModalHeader,
@@ -64,10 +64,10 @@ function WhitelistManagerModal({
         scrollBehavior={"inside"}
         closeOnOverlayClick={false}
       >
-        <ModalOverlay
+        {/* <ModalOverlay
           bg="blackAlpha.300"
           backdropFilter="blur(10px) hue-rotate(90deg)"
-        />
+        /> */}
         <ModalContent
           borderRadius="0"
           textAlign="center"
