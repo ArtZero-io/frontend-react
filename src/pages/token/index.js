@@ -151,7 +151,11 @@ function TokenPage() {
         const ownerAddress = tokenDetails?.is_for_sale
           ? tokenDetails?.nft_owner
           : tokenDetails?.owner;
-
+          tokenDetails.attrsList = !tokenDetails?.traits
+          ? {}
+          : Object.entries(tokenDetails?.traits).map(([k, v]) => {
+              return { [k]: v };
+            });
         // get username onchain if any
         const name = truncateStr(ownerAddress);
         setOwnerName(name);
@@ -993,7 +997,7 @@ function TokenPage() {
                               isDisabled={actionType}
                               bg="black"
                               max={999000000}
-                              min={1}
+                              min={0.01}
                               precision={6}
                               onChange={(v) => setBidPrice(v)}
                               value={bidPrice}

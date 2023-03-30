@@ -97,13 +97,13 @@ const NFTTabCollectible = (props) => {
     is_locked,
     showOnChainMetadata,
     rarityTable,
+    collectionOwner,
     traits = {},
     totalNftCount,
     name,
     isActive,
     royaltyFee,
   } = props;
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
@@ -390,7 +390,7 @@ const NFTTabCollectible = (props) => {
             <Spacer />
 
             <HStack>
-              {!is_locked && showOnChainMetadata && isOwner && (
+              {!is_locked && showOnChainMetadata && (collectionOwner === currentAccount?.address) && (
                 <AddNewNFTModal
                   {...props}
                   mode={formMode.EDIT}
@@ -760,7 +760,7 @@ const NFTTabCollectible = (props) => {
                                 />
 
                                 <NumberInput
-                                  min={1}
+                                  min={0.01}
                                   ml={3}
                                   h="50px"
                                   bg="black"

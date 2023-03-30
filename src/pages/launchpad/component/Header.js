@@ -754,7 +754,7 @@ function LaunchpadDetailHeader({
                   display={["none", "inline"]}
                 />{" "}
                 <WhitelistManagerModal
-                  isDisabled={!isProjOwner}
+                  isDisabled={!(isProjOwner || isAdmin)}
                   selectedProjectAddress={collection_address}
                   projectInfo={project}
                 />

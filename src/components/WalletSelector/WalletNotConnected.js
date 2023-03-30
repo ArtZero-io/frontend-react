@@ -16,6 +16,7 @@ import { useSubstrate } from "@utils/substrate/SubstrateContext";
 import { SUPPORTED_WALLET_LIST } from "@constants/index";
 import SubwalletLogo from "@utils/wallets/SubWalletLogo.svg";
 import PolkadotjsLogo from "@utils/wallets/PolkadotjsLogo.svg";
+import NovaLogo from "@utils/wallets/nova.jpg";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { loadAccounts } from "@utils/substrate/SubstrateContext";
 import { motion } from "framer-motion";
@@ -117,9 +118,15 @@ function WalletNotConnected(props) {
                             />
                           )}
 
-                          {wallet.extensionName === "polkadot-js" && (
+                          {wallet.title === "Polkadot{.js}" && (
                             <Image
                               src={PolkadotjsLogo}
+                              alt={wallet.extensionName}
+                            />
+                          )}
+                          {wallet.title === "Nova Wallet" && (
+                            <Image
+                              src={NovaLogo}
                               alt={wallet.extensionName}
                             />
                           )}

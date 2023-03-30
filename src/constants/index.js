@@ -135,7 +135,7 @@ export const SUPPORTED_WALLET_LIST = [
       "https://addons.mozilla.org/en-US/firefox/addon/polkadot-js-extension/",
   },
   {
-    extensionName: "Nova Wallet",
+    extensionName: "polkadot-js",
     title: "Nova Wallet",
     logo: "nova.jpg",
     isMobile: true,

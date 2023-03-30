@@ -5,7 +5,6 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  Button,
   Collapse,
   Drawer,
   DrawerBody,
@@ -16,7 +15,6 @@ import {
   Heading,
   Icon,
   IconButton,
-  Input,
   Spacer,
   Stack,
   Text,
@@ -26,7 +24,6 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import LeftArrowIcon from "@theme/assets/icon/LeftArrow";
-import RightArrowIcon from "@theme/assets/icon/RightArrow";
 import { motion } from "framer-motion";
 import { SCROLLBAR } from "@constants";
 import { useEffect } from "react";
@@ -145,7 +142,7 @@ function LeftPanel({
           </Flex>
 
           <Collapse in={isOpen} animateOpacity>
-            <Button
+            {/* <Button
               isDisabled={activeTab !== "LISTED"}
               onClick={() => {
                 if (!draftPriceQuery.min || !draftPriceQuery.max) {
@@ -196,7 +193,7 @@ function LeftPanel({
                 }
                 value={draftPriceQuery.max}
               />
-            </Flex>
+            </Flex> */}
 
             <Heading size="h5" mb={"24px"}>
               Attributes
@@ -374,7 +371,7 @@ function LeftPanel({
               </DrawerHeader>
 
               <DrawerBody px="18px">
-                <Button
+                {/* <Button
                   isDisabled={activeTab !== "LISTED"}
                   onClick={() => {
                     if (!draftPriceQuery.min || !draftPriceQuery.max) {
@@ -426,7 +423,7 @@ function LeftPanel({
                     }
                     value={draftPriceQuery.max}
                   />
-                </Flex>
+                </Flex> */}
 
                 <Heading size="h5" mb={"24px"}>
                   Attributes
