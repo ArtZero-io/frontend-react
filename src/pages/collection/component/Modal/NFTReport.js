@@ -43,6 +43,9 @@ function NFTReportModal({ isOpen, onClose, name, nftName, ...rest }) {
   }, [step, onClose]);
 
   const onClickSubmit = async () => {
+    if (!currentAccount) {
+      toast.error("Please connect wallet for full-function using!");
+    }
     const { signer } = await web3FromSource(currentAccount?.meta?.source);
     const { signature } = await signer.signRaw({
       address: currentAccount.address,
