@@ -95,7 +95,8 @@ async function addNewCollection(
               const templateMode =
                 templateParams?.template === "PROJECT"
                   ? process.env.REACT_APP_EMAILJS_NEW_PROJECT_TEMPLATE_ID
-                  : process.env.REACT_APP_EMAILJS_NEW_COLLECTION_TEMPLATE_ID;
+                  : process.env
+                      .REACT_APP_EMAILJS_NEW_COLLECTION_ADVANCED_TEMPLATE_ID;
 
               // sent email
               emailjs
@@ -367,7 +368,7 @@ async function autoNewCollection(
                       .send(
                         process.env.REACT_APP_EMAILJS_SERVICE_ID,
                         process.env
-                          .REACT_APP_EMAILJS_NEW_COLLECTION_TEMPLATE_ID,
+                          .REACT_APP_EMAILJS_NEW_COLLECTION_SIMPLE_TEMPLATE_ID,
                         templateParams,
                         process.env.REACT_APP_EMAILJS_PUBLIC_KEY
                       )
@@ -465,11 +466,15 @@ async function updateIsActive(
 
         events.forEach(({ event: { method } }) => {
           if (method === "ExtrinsicSuccess" && status.type === "Finalized") {
-            if (templateParams && isActive) {
+            if (templateParams) {
+              const templateMode = isActive
+                ? process.env.REACT_APP_EMAILJS_ACTIVE_COLLECTION_TEMPLATE_ID
+                : process.env.REACT_APP_EMAILJS_DISABLE_COLLECTION_TEMPLATE_ID;
+
               emailjs
                 .send(
                   process.env.REACT_APP_EMAILJS_SERVICE_ID,
-                  process.env.REACT_APP_EMAILJS_ACTIVE_COLLECTION_TEMPLATE_ID,
+                  templateMode,
                   templateParams,
                   process.env.REACT_APP_EMAILJS_PUBLIC_KEY
                 )

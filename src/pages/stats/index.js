@@ -16,6 +16,7 @@ import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import collection_manager from "@utils/blockchain/collection-manager";
 import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
 import toast from "react-hot-toast";
+import { formatBalance } from "@polkadot/util";
 
 const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
 
@@ -78,7 +79,7 @@ function StatsPage() {
         address: collection_manager?.CONTRACT_ADDRESS,
       });
 
-      const { balance: validatorProfit } = await fetchUserBalance({
+      const { balance: validatorProfit } = await fetchValidatorProfit({
         api,
         currentAccount: publicCurrentAccount,
         address: process.env.REACT_APP_VALIDATOR_ADDRESS,
@@ -257,3 +258,34 @@ function StatsPage() {
 }
 
 export default StatsPage;
+
+export const fetchValidatorProfit = async ({
+  currentAccount,
+  api,
+  address,
+}) => {
+  if (currentAccount && api) {
+    const {
+      data: { free, reserved },
+    } = await api.query.system.account(address || currentAccount?.address);
+
+    const [chainDecimals] = await api.registry.chainDecimals;
+
+    const formattedStrBal = formatBalance(free, {
+      withSi: false,
+      forceUnit: "-",
+      chainDecimals,
+    });
+    const formattedStrBalReserved = formatBalance(reserved, {
+      withSi: false,
+      forceUnit: "-",
+      chainDecimals,
+    });
+
+    const formattedNumBal =
+      formattedStrBal?.replaceAll(",", "") * 1 +
+      formattedStrBalReserved?.replaceAll(",", "") * 1;
+
+    return { balance: formattedNumBal / 10 ** 12 };
+  }
+};

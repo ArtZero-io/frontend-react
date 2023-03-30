@@ -548,6 +548,7 @@ const LaunchpadDetailPage = () => {
     });
 
   const [loadingUserNft, setLoadingUserNft] = useState(false);
+
   const fetchNFTs = useCallback(
     async (isUnmounted) => {
       setLoadingUserNft(true);
@@ -677,7 +678,7 @@ const LaunchpadDetailPage = () => {
           >
             <Heading fontSize={["16px", "18px"]}>Mint ended</Heading>
           </Box>
-        ) : (
+        ) : activePhaseId ? (
           <Box
             w="full"
             mx="auto"
@@ -686,45 +687,53 @@ const LaunchpadDetailPage = () => {
             px={["15px", "30px"]}
             py={["17px", "26px"]}
           >
-            <Skeleton display="flex" isLoaded={!loading} w="full" mb="15px">
-              <Heading fontSize={["16px", "18px"]}>
-                {!activePhaseId ? (
-                  `upcoming`
-                ) : (
-                  <>
-                    <Text as="span" color="#7ae7ff">
-                      {currentPhase?.title}
-                    </Text>{" "}
-                    in progress
-                  </>
+            {activePhaseId && (
+              <Skeleton
+                bg="blue"
+                display="flex"
+                isLoaded={!loading}
+                w="full"
+                mb="15px"
+              >
+                <Heading bg="green" fontSize={["16px", "18px"]}>
+                  {!activePhaseId ? (
+                    `upcoming`
+                  ) : (
+                    <>
+                      <Text as="span" color="#7ae7ff">
+                        {currentPhase?.title}
+                      </Text>{" "}
+                      in progress
+                    </>
+                  )}
+                </Heading>
+
+                <Spacer />
+
+                {activePhaseId && (
+                  <Tooltip
+                    hasArrow
+                    bg="#333"
+                    color="#fff"
+                    borderRadius="0"
+                    label="Mint progress of this phase"
+                  >
+                    <span>
+                      <Skeleton isLoaded={!loadingForceUpdate}>
+                        <Text as="span" color="#888" fontSize={["sm", "md"]}>
+                          {Math.round(
+                            (currentPhase?.claimedAmount * 100) /
+                              currentPhase?.totalAmount
+                          ) || 0}
+                          % ({currentPhase?.claimedAmount}/
+                          {currentPhase?.totalAmount})
+                        </Text>
+                      </Skeleton>
+                    </span>
+                  </Tooltip>
                 )}
-              </Heading>
-
-              <Spacer />
-
-              {activePhaseId && (
-                <Tooltip
-                  hasArrow
-                  bg="#333"
-                  color="#fff"
-                  borderRadius="0"
-                  label="Mint progress of this phase"
-                >
-                  <span>
-                    <Skeleton isLoaded={!loadingForceUpdate}>
-                      <Text as="span" color="#888" fontSize={["sm", "md"]}>
-                        {Math.round(
-                          (currentPhase?.claimedAmount * 100) /
-                            currentPhase?.totalAmount
-                        ) || 0}
-                        % ({currentPhase?.claimedAmount}/
-                        {currentPhase?.totalAmount})
-                      </Text>
-                    </Skeleton>
-                  </span>
-                </Tooltip>
-              )}
-            </Skeleton>
+              </Skeleton>
+            )}
 
             {activePhaseId && (
               <Progress
@@ -737,198 +746,206 @@ const LaunchpadDetailPage = () => {
               />
             )}
 
-            <Skeleton isLoaded={userWLInfo} h="50px">
-              {!currentAccount ? (
-                <Flex w="full" justifyContent="center">
-                  <Text fontSize="lg" color="#888">
-                    Please connect your wallet to mint !
-                  </Text>
-                </Flex>
-              ) : null}
-              {/* //Public phases*/}
-              {currentAccount &&
-                activePhaseId &&
-                currentPhase?.isPublic &&
-                (!userWLInfo[currentPhase?.id - 1] ||
-                  userWLInfo[currentPhase?.id - 1]?.remainAmount <= 0) && (
-                  <HStack
-                    w="full"
-                    justifyContent="start"
-                    alignItems="center"
-                    spacing="20px"
-                  >
-                    {currentPhase?.publicMintingAmount ? (
-                      <>
-                        <NumberInput
-                          bg="black"
-                          min={1}
-                          w="150px"
-                          mr={[0, 3]}
-                          h="3.125rem"
-                          // mb={["10px", 0]}
-                          isDisabled={
-                            actionType ||
-                            currentPhase?.publicClaimedAmount >=
-                              currentPhase?.publicMintingAmount
-                          }
-                          value={mintingAmount}
-                          max={Math.min(
-                            currentPhase?.publicRemainAmount,
-                            currentPhase?.publicMaxMintingAmount
+            {activePhaseId && (
+              <Skeleton isLoaded={userWLInfo} h="50px">
+                {!currentAccount ? (
+                  <Flex w="full" justifyContent="center">
+                    <Text fontSize="lg" color="#888">
+                      Please connect your wallet to mint !
+                    </Text>
+                  </Flex>
+                ) : null}
+                {/* //Public phases*/}
+                {currentAccount &&
+                  activePhaseId &&
+                  currentPhase?.isPublic &&
+                  (!userWLInfo[currentPhase?.id - 1] ||
+                    userWLInfo[currentPhase?.id - 1]?.remainAmount <= 0) && (
+                    <HStack
+                      w="full"
+                      justifyContent="start"
+                      alignItems="center"
+                      spacing="20px"
+                    >
+                      {currentPhase?.publicMintingAmount ? (
+                        <>
+                          <NumberInput
+                            bg="black"
+                            min={1}
+                            w="150px"
+                            mr={[0, 3]}
+                            h="3.125rem"
+                            // mb={["10px", 0]}
+                            isDisabled={
+                              actionType ||
+                              currentPhase?.publicClaimedAmount >=
+                                currentPhase?.publicMintingAmount
+                            }
+                            value={mintingAmount}
+                            max={Math.min(
+                              currentPhase?.publicRemainAmount,
+                              currentPhase?.publicMaxMintingAmount
+                            )}
+                            onChange={(valueString) =>
+                              setMintingAmount(valueString)
+                            }
+                          >
+                            <NumberInputField
+                              h="3.125rem"
+                              borderRadius={0}
+                              borderWidth={0}
+                              color="#fff"
+                            />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+                          <CommonButton
+                            w={["full", "auto"]}
+                            {...rest}
+                            variant="outline"
+                            text="public mint"
+                            onClick={onPublicMint}
+                            isDisabled={
+                              loading ||
+                              loadingForceUpdate ||
+                              currentPhase?.publicClaimedAmount >=
+                                currentPhase?.publicMintingAmount ||
+                              mintingAmount >
+                                currentPhase?.publicMaxMintingAmount
+                            }
+                          />
+
+                          {currentPhase?.publicClaimedAmount <
+                            currentPhase?.publicMintingAmount &&
+                          mintingAmount >
+                            Math.min(
+                              currentPhase?.publicRemainAmount,
+                              currentPhase?.publicMaxMintingAmount
+                            ) ? (
+                            <Text
+                              textAlign="left"
+                              color="#ff8c8c"
+                              ml={1}
+                              fontSize="sm"
+                            >
+                              You can only mint maximum{" "}
+                              {Math.min(
+                                currentPhase?.publicRemainAmount,
+                                currentPhase?.publicMaxMintingAmount
+                              )}{" "}
+                              NFT
+                              {Math.min(
+                                currentPhase?.publicRemainAmount,
+                                currentPhase?.publicMaxMintingAmount
+                              ) > 1
+                                ? "s"
+                                : ""}
+                              .
+                            </Text>
+                          ) : (
+                            ""
                           )}
-                          onChange={(valueString) =>
-                            setMintingAmount(valueString)
-                          }
-                        >
-                          <NumberInputField
+                        </>
+                      ) : (
+                        <Text fontSize="lg" color="#888">
+                          You are not in public mint list!
+                        </Text>
+                      )}
+                    </HStack>
+                  )}
+                {/* //WhiteList phases*/}
+                {currentAccount &&
+                  activePhaseId &&
+                  userWLInfo[currentPhase?.id - 1] &&
+                  userWLInfo[currentPhase?.id - 1]?.remainAmount > 0 && (
+                    <HStack
+                      w="full"
+                      justifyContent="start"
+                      alignItems="center"
+                      spacing="20px"
+                    >
+                      {userWLInfo[currentPhase?.id - 1]?.whitelistAmount ? (
+                        <>
+                          <NumberInput
+                            bg="black"
+                            min={1}
+                            w="150px"
+                            mr={[0, 3]}
                             h="3.125rem"
-                            borderRadius={0}
-                            borderWidth={0}
-                            color="#fff"
-                          />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                        <CommonButton
-                          w={["full", "auto"]}
-                          {...rest}
-                          variant="outline"
-                          text="public mint"
-                          onClick={onPublicMint}
-                          isDisabled={
-                            loading ||
-                            loadingForceUpdate ||
-                            currentPhase?.publicClaimedAmount >=
-                              currentPhase?.publicMintingAmount ||
-                            mintingAmount > currentPhase?.publicMaxMintingAmount
-                          }
-                        />
-
-                        {currentPhase?.publicClaimedAmount <
-                          currentPhase?.publicMintingAmount &&
-                        mintingAmount >
-                          Math.min(
-                            currentPhase?.publicRemainAmount,
-                            currentPhase?.publicMaxMintingAmount
-                          ) ? (
-                          <Text
-                            textAlign="left"
-                            color="#ff8c8c"
-                            ml={1}
-                            fontSize="sm"
+                            // mb={["10px", 0]}
+                            isDisabled={
+                              actionType ||
+                              userWLInfo[currentPhase?.id - 1]?.remainAmount <=
+                                0
+                            }
+                            value={whitelistMintingAmount}
+                            max={userWLInfo[currentPhase?.id - 1]?.remainAmount}
+                            onChange={(valueString) =>
+                              setWhitelistMintingAmount(valueString)
+                            }
                           >
-                            You can only mint maximum{" "}
-                            {Math.min(
-                              currentPhase?.publicRemainAmount,
-                              currentPhase?.publicMaxMintingAmount
-                            )}{" "}
-                            NFT
-                            {Math.min(
-                              currentPhase?.publicRemainAmount,
-                              currentPhase?.publicMaxMintingAmount
-                            ) > 1
-                              ? "s"
-                              : ""}
-                            .
-                          </Text>
-                        ) : (
-                          ""
-                        )}
-                      </>
-                    ) : (
-                      <Text fontSize="lg" color="#888">
-                        You are not in public mint list!
-                      </Text>
-                    )}
-                  </HStack>
-                )}
-              {/* //WhiteList phases*/}
-              {currentAccount &&
-                activePhaseId &&
-                userWLInfo[currentPhase?.id - 1] &&
-                userWLInfo[currentPhase?.id - 1]?.remainAmount > 0 && (
-                  <HStack
-                    w="full"
-                    justifyContent="start"
-                    alignItems="center"
-                    spacing="20px"
-                  >
-                    {userWLInfo[currentPhase?.id - 1]?.whitelistAmount ? (
-                      <>
-                        <NumberInput
-                          bg="black"
-                          min={1}
-                          w="150px"
-                          mr={[0, 3]}
-                          h="3.125rem"
-                          // mb={["10px", 0]}
-                          isDisabled={
-                            actionType ||
-                            userWLInfo[currentPhase?.id - 1]?.remainAmount <= 0
-                          }
-                          value={whitelistMintingAmount}
-                          max={userWLInfo[currentPhase?.id - 1]?.remainAmount}
-                          onChange={(valueString) =>
-                            setWhitelistMintingAmount(valueString)
-                          }
-                        >
-                          <NumberInputField
-                            h="3.125rem"
-                            borderRadius={0}
-                            borderWidth={0}
-                            color="#fff"
+                            <NumberInputField
+                              h="3.125rem"
+                              borderRadius={0}
+                              borderWidth={0}
+                              color="#fff"
+                            />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+
+                          <CommonButton
+                            w={["full", "auto"]}
+                            mx="0"
+                            {...rest}
+                            isDisabled={
+                              loading ||
+                              loadingForceUpdate ||
+                              userWLInfo[currentPhase?.id - 1]?.remainAmount <=
+                                0 ||
+                              whitelistMintingAmount >
+                                userWLInfo[currentPhase?.id - 1]?.remainAmount
+                            }
+                            variant="outline"
+                            text="whitelist mint"
+                            onClick={onWhiteListMint}
                           />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
 
-                        <CommonButton
-                          w={["full", "auto"]}
-                          mx="0"
-                          {...rest}
-                          isDisabled={
-                            loading ||
-                            loadingForceUpdate ||
-                            userWLInfo[currentPhase?.id - 1]?.remainAmount <=
-                              0 ||
-                            whitelistMintingAmount >
-                              userWLInfo[currentPhase?.id - 1]?.remainAmount
-                          }
-                          variant="outline"
-                          text="whitelist mint"
-                          onClick={onWhiteListMint}
-                        />
-
-                        {whitelistMintingAmount >
-                        userWLInfo[currentPhase?.id - 1]?.remainAmount ? (
-                          <Text
-                            textAlign="left"
-                            color="#ff8c8c"
-                            ml={1}
-                            fontSize="sm"
-                          >
-                            You can only mint maximum{" "}
-                            {userWLInfo[currentPhase?.id - 1]?.remainAmount} NFT
-                            {userWLInfo[currentPhase?.id - 1]?.remainAmount > 1
-                              ? "s"
-                              : ""}
-                            .
-                          </Text>
-                        ) : null}
-                      </>
-                    ) : (
-                      <Text fontSize="lg" color="#888">
-                        You are not in whitelist mint list!
-                      </Text>
-                    )}
-                  </HStack>
-                )}
-            </Skeleton>
+                          {whitelistMintingAmount >
+                          userWLInfo[currentPhase?.id - 1]?.remainAmount ? (
+                            <Text
+                              textAlign="left"
+                              color="#ff8c8c"
+                              ml={1}
+                              fontSize="sm"
+                            >
+                              You can only mint maximum{" "}
+                              {userWLInfo[currentPhase?.id - 1]?.remainAmount}{" "}
+                              NFT
+                              {userWLInfo[currentPhase?.id - 1]?.remainAmount >
+                              1
+                                ? "s"
+                                : ""}
+                              .
+                            </Text>
+                          ) : null}
+                        </>
+                      ) : (
+                        <Text fontSize="lg" color="#888">
+                          You are not in whitelist mint list!
+                        </Text>
+                      )}
+                    </HStack>
+                  )}
+              </Skeleton>
+            )}
           </Box>
+        ) : (
+          ""
         )}
 
         {/* New phase section */}
