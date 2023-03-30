@@ -55,6 +55,8 @@ import { CheckCircleIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import { usePhaseInfo } from "@hooks/usePhaseInfo";
 import { useMyProjectAdmin } from "@hooks/useMyProjectAdmin";
 import AddressCopier from "@components/AddressCopier/AddressCopier";
+import { usePagination } from "@ajna/pagination";
+import PaginationMP from "@components/Pagination/Pagination";
 
 const tableHeaders = ["Address", "Amount", "Claimed", "Price"];
 
@@ -84,6 +86,21 @@ function MyWhiteListProjectPage(props) {
     selectedProjectAddress,
     selectedPhaseCode
   );
+
+  const {
+    pagesCount,
+    currentPage,
+    setCurrentPage,
+    isDisabled,
+    pageSize,
+  } = usePagination({
+    total: phaseInfo?.userData?.length,
+    initialState: {
+      currentPage: 1,
+      isDisabled: false,
+      pageSize: 6,
+    },
+  });
 
   const onAddWhitelist = async () => {
     if (!selectedProjectAddress) {
@@ -286,7 +303,6 @@ function MyWhiteListProjectPage(props) {
       falseCase: 0,
     }
   );
-  console.log("1 phaseInfo", phaseInfo);
 
   async function bulkAddWLHandler() {
     // validate proj is selected
@@ -855,7 +871,6 @@ function MyWhiteListProjectPage(props) {
                     </Text>
                   </Text>
                 </Text>
-                {console.log("currentProjectInfo", currentProjectInfo)}
                 <Text>
                   Available: <br />
                   <Text as="span" color="#fff">
@@ -1067,7 +1082,7 @@ function MyWhiteListProjectPage(props) {
                 fontSize="lg"
                 w="full"
                 // w={{ base: "full", xl: "1560px" }}
-                maxH={{ base: "390px", xl: "400px" }}
+                maxH={{ base: "390px", xl: "555px" }}
                 overflowY="scroll"
                 sx={SCROLLBAR}
               >
@@ -1077,6 +1092,7 @@ function MyWhiteListProjectPage(props) {
                   exit={{ opacity: 0 }}
                 >
                   {phaseInfo?.userData?.length ? (
+                    <>
                     <Table variant="striped" colorScheme="blackAlpha">
                       <Thead>
                         <Tr>
@@ -1099,7 +1115,7 @@ function MyWhiteListProjectPage(props) {
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {phaseInfo?.userData?.map((item, idx) => (
+                        {phaseInfo?.userData?.slice((currentPage - 1) * pageSize, currentPage * pageSize)?.map((item, idx) => (
                           <Tr key={idx} color="#fff">
                             <Td textAlign="center" color="#fff">
                               <AddressCopier address={item.address} />
@@ -1117,6 +1133,18 @@ function MyWhiteListProjectPage(props) {
                         ))}
                       </Tbody>
                     </Table>
+                     <Stack w="full" py="30px">
+                     <PaginationMP
+                       bg="#333"
+                       maxW="230px"
+                       hasGotoPage={false}
+                       pagesCount={pagesCount}
+                       isDisabled={isDisabled}
+                       currentPage={currentPage}
+                       setCurrentPage={setCurrentPage}
+                     />
+                   </Stack>
+                   </>
                   ) : (
                     <Text py={2}>No info found!</Text>
                   )}
