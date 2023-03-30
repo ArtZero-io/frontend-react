@@ -152,7 +152,7 @@ function StatsTable({ tableHeaders, tableData, azeroPrice, useAzeroUnit }) {
     <>
       {tableData?.length === 0 ? (
         <Heading py="30px" size="h6">
-          No event found!
+          Not found!
         </Heading>
       ) : (
         <TableContainer minH="500px" fontSize="lg" h="full" overflow="auto">

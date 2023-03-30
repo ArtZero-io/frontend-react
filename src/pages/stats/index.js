@@ -1,5 +1,5 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import Layout from "@components/Layout/Layout";
 import StatsHeader from "./component/Header/StatsHeader";
@@ -20,35 +20,33 @@ import toast from "react-hot-toast";
 const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
 
 function StatsPage() {
-  const { currentAccount, api } = useSubstrateState();
+  const { api } = useSubstrateState();
 
   const [platformStatistics, setPlatformStatistics] = useState(null);
   const [topCollections, setTopCollections] = useState(null);
   const [azeroPrice, setAzeroPrice] = useState(1);
+
   const [isLoading, setIsLoading] = useState(false);
+
+  const publicCurrentAccount = getPublicCurrentAccount();
+
+  const fetchAzeroPrice = useCallback(async () => {
+    await fetch(url)
+      .then((res) => res.json())
+      .then(({ USD }) => {
+        console.log("AZERO - USD:", USD.toFixed(4));
+        setAzeroPrice(USD.toFixed(4));
+      })
+      .catch((err) => {
+        setAzeroPrice(1);
+        console.log(err);
+        toast.error("Failed to fetch Azero price. Temp set to 1 USD");
+      });
+  }, []);
 
   const prepareStats = async () => {
     try {
-      await fetch(url)
-        .then((res) => res.json())
-        .then(({ USD }) => {
-          setAzeroPrice(USD.toFixed(4));
-        })
-        .catch((err) => {
-          toast.error("Failed to fetch Azero price. Temp set to 1 USD");
-          setAzeroPrice(1);
-          console.log(err);
-        });
-
-      const platformTotalStaked = await staking_calls.getTotalStaked(
-        currentAccount || getPublicCurrentAccount()
-      );
-      // const platformTotalStakeholders =
-      //   await staking_calls.getTotalCountOfStakeholders(
-      //     currentAccount || getPublicCurrentAccount()
-      //   );
-
-      // TODO: get total Payouts
+      // Total Payout
       const { ret: data } = await APICall.getAllRewardPayout({
         limit: 1000,
         offset: 0,
@@ -59,39 +57,73 @@ function StatsPage() {
         return acc + curr.rewardAmount;
       }, 0);
 
-      const currentProfit = await marketplace_contract_calls.getCurrentProfit(
-        currentAccount || getPublicCurrentAccount()
+      // Total Marketplace Vol
+      const totalVolume = await marketplace_contract_calls.getTotalVolume(
+        publicCurrentAccount
       );
 
-      const launchpadBalance = await fetchUserBalance({
-        currentAccount: currentAccount || getPublicCurrentAccount(),
+      // Calculator Next Payout
+      const marketplaceProfit =
+        await marketplace_contract_calls.getCurrentProfit(publicCurrentAccount);
+
+      const { balance: launchpadProfit } = await fetchUserBalance({
         api,
+        currentAccount: publicCurrentAccount,
         address: launchpad_manager?.CONTRACT_ADDRESS,
       });
 
-      const collectionBalance = await fetchUserBalance({
-        currentAccount: currentAccount || getPublicCurrentAccount(),
+      const { balance: collectionProfit } = await fetchUserBalance({
         api,
+        currentAccount: publicCurrentAccount,
         address: collection_manager?.CONTRACT_ADDRESS,
       });
 
-      // console.log("PF profit START %---------------");
-      // console.log("PF marketplace \t", currentProfit);
-      // console.log("PF launchpad \t", launchpadBalance?.balance);
-      // console.log("PF collection \t", collectionBalance?.balance);
+      const { balance: validatorProfit } = await fetchUserBalance({
+        api,
+        currentAccount: publicCurrentAccount,
+        address: process.env.REACT_APP_VALIDATOR_ADDRESS,
+      });
 
-      const totalVolume = await marketplace_contract_calls.getTotalVolume(
-        currentAccount || getPublicCurrentAccount()
+      const totalPlatformProfit =
+        marketplaceProfit + launchpadProfit + collectionProfit;
+
+      const totalNextPayout = totalPlatformProfit * 0.3 + validatorProfit * 0.5;
+
+      process.env.NODE_ENV === "development" &&
+        console.table({
+          Marketplace: {
+            "Total Profit": marketplaceProfit,
+            "30% Share": marketplaceProfit * 0.3,
+          },
+          Launchpad: {
+            "Total Profit": launchpadProfit,
+            "30% Share": launchpadProfit * 0.3,
+          },
+          Collection: {
+            "Total Profit": collectionProfit,
+            "30% Share": collectionProfit * 0.3,
+          },
+          Validator: {
+            "Total Profit": validatorProfit,
+            "50% Share": validatorProfit * 0.5,
+          },
+          Sum: {
+            "Total Profit": totalPlatformProfit + validatorProfit,
+            "30% Share": totalPlatformProfit * 0.3,
+            "50% Share": validatorProfit * 0.5,
+            "Total Next Payout":
+              totalPlatformProfit * 0.3 + validatorProfit * 0.5,
+          },
+        });
+
+      // END Calculator Next Payout
+
+      //Total NFTs Staked
+      const platformTotalStaked = await staking_calls.getTotalStaked(
+        publicCurrentAccount
       );
 
-      const totalProfit =
-        currentProfit + launchpadBalance?.balance + collectionBalance?.balance;
-      // console.log("PF --------------------------------");
-
-      // console.log("PF totalProfit \t", totalProfit);
-      // console.log("PF Profit 30% \t", totalProfit * 0.3);
-      // console.log("PF profit END %---------------");
-
+      // TOP COLLECTIONS
       const { ret: dataList } = await APICall.getCollectionsByVolume({
         limit: 5,
       });
@@ -128,7 +160,7 @@ function StatsPage() {
           },
           {
             title: "Next Payout",
-            value: (totalProfit * 0.3).toFixed(2),
+            value: totalNextPayout.toFixed(2),
             unit: "azero",
           },
           {
@@ -150,6 +182,7 @@ function StatsPage() {
   useEffect(() => {
     if (!platformStatistics || !topCollections) {
       setIsLoading(true);
+      fetchAzeroPrice();
       prepareStats().then((data) => {
         setPlatformStatistics(data?.platformStatistics);
         setTopCollections(data?.topCollections);
@@ -159,11 +192,12 @@ function StatsPage() {
   }, []);
 
   useInterval(() => {
+    fetchAzeroPrice();
     prepareStats().then((data) => {
       setPlatformStatistics(data.platformStatistics);
       setTopCollections(data.topCollections);
     });
-  }, 15000);
+  }, 60000);
 
   const tabData = [
     {
