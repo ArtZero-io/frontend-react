@@ -10,6 +10,7 @@ import {
   MenuItem,
   MenuList,
   Text,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { useSubstrate } from "@utils/substrate/SubstrateContext";
 import { SUPPORTED_WALLET_LIST } from "@constants/index";
@@ -34,6 +35,8 @@ function WalletNotConnected(props) {
       scale: 0.99,
     },
   };
+
+  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
 
   SUPPORTED_WALLET_LIST.map(
     (item) =>
@@ -91,7 +94,7 @@ function WalletNotConnected(props) {
               borderColor="brand.blue"
               p={3}
             >
-              {SUPPORTED_WALLET_LIST.map((wallet) => (
+              {SUPPORTED_WALLET_LIST.filter(el => !(isBigScreen && el.isMobile)).map((wallet) => (
                 <Flex
                   key={wallet.extensionName}
                   minW="36"
