@@ -21,6 +21,7 @@ import { shortenNumber } from "@utils";
 import { memo, useRef } from "react";
 import { useState } from "react";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
+import AddressCopier from "@components/AddressCopier/AddressCopier";
 
 const overlay =
   "linear-gradient(0deg, #000000 3.25%, #000000 3.26%, rgba(0, 0, 0, 0) 100%)";
@@ -42,8 +43,8 @@ function CollectionHeader(props) {
     royaltyFee,
     isDoxxed,
     isDuplicationChecked,
+    nftContractAddress,
   } = props;
-
   const [isSeeMore, setIsSeeMore] = useState(false);
   const descLength = useBreakpointValue([115, 175]);
 
@@ -135,12 +136,10 @@ function CollectionHeader(props) {
             </VStack>
           </HStack>
 
-          {/* <Skeleton
-            display="flex"
-            justifyContent="center"
-            w="full"
-            maxW="680px"
-          > */}
+          <HStack>
+            <AddressCopier address={nftContractAddress} hasIcon={true} />
+          </HStack>
+
           <Flex
             paddingBottom="24px"
             w="full"
@@ -173,7 +172,6 @@ function CollectionHeader(props) {
               {isSeeMore ? "See less" : "Show more"}
             </Flex>
           </Flex>
-          {/* </Skeleton> */}
 
           <HStack>
             <Flex
