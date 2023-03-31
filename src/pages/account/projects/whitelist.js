@@ -264,7 +264,7 @@ function MyWhiteListProjectPage(props) {
       setWhitelistAmount(1);
       setIsUpdateMode(null);
       // fetchPhaseInfo();
-
+      toast.success("It can take a while to load all Whitelist addresses")
       await refetch();
     }
   );
