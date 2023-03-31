@@ -342,7 +342,6 @@ const LaunchpadDetailPage = () => {
               );
 
             let userWhitelist = null;
-
             if (data) {
               userWhitelist = {
                 ...data,
@@ -360,7 +359,6 @@ const LaunchpadDetailPage = () => {
         );
 
         if (isUnmounted) return;
-
         setUserWLInfo(allPhasesAddWL);
         setLoadingUserWLInfo(false);
       } catch (error) {
@@ -416,8 +414,8 @@ const LaunchpadDetailPage = () => {
 
   useEffect(() => {
     let isUnmounted = false;
-
-    if (currentAccount && activePhaseId) {
+  
+    if (currentAccount) {
       fetchWhitelistData(isUnmounted);
       fetchUserPLClaimedData(isUnmounted);
     }
@@ -1065,6 +1063,7 @@ const LaunchpadDetailPage = () => {
                                     h={["14px", "16px"]}
                                   />
                                 </Text>
+                                {userWLInfo[index]?.claimedAmount > 0 && <>
                                 . You have minted from whitelist{" "}
                                 <Skeleton
                                   isLoaded={!loadingForceUpdate}
@@ -1077,6 +1076,7 @@ const LaunchpadDetailPage = () => {
                                       : ""}
                                   </Text>
                                 </Skeleton>
+                                </>}
                               </Text>
                             </ListItem>
                           )}
