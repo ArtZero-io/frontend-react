@@ -48,7 +48,7 @@ function UpdatePhase({
   const handlePhaseTime = (e, index) => {
     if (e) {
       if (!canEditPhase(e[0]?.getTime())) {
-        return toast.error("New phase time can not in the past.");
+        toast.error("New phase time can not in the past.");
       }
 
       const valueAddHash = value.map((item, idx) => {
@@ -108,7 +108,7 @@ function UpdatePhase({
     const isOverlap = isPhaseTimeOverlap(value);
 
     if (isOverlap) {
-      return toast.error("Sub phase time is not valid or overlap.");
+      return;
     }
 
     const phasesArray = [...value];
@@ -218,7 +218,7 @@ function UpdatePhase({
     const isOverlap = isPhaseTimeOverlap(value);
 
     if (isOverlap) {
-      return toast.error("Sub phase time is not valid or overlap.");
+      return;
     }
 
     const phasesArray = [...value];
@@ -555,7 +555,7 @@ export default UpdatePhase;
 // end > Date.now()
 //
 
-const canEditPhase = (startTime) => {
+export const canEditPhase = (startTime) => {
   const now = new Date();
 
   if (startTime > now) return true;
