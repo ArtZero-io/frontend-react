@@ -12,6 +12,7 @@ import getGasLimit from "../utils/blockchain/dryRun";
 import { execContractQuery } from "../pages/account/nfts/nfts";
 import { ADMIN_ROLE_CODE } from "../constants";
 import moment from "moment/moment";
+import { canEditPhase } from "../pages/launchpad/component/Form/UpdatePhase";
 
 const MAX_CALL_WEIGHT = new BN(5_000_000_000_000).isub(BN_ONE);
 
@@ -108,7 +109,7 @@ export function timestampWithoutCommas(input) {
 
 export function convertDateToTimeStamp(dateStr) {
   const date = new Date(dateStr);
-  return date.getTime();
+  return date?.getTime();
 }
 
 export function convertStringToPrice(stringPrice) {
@@ -408,7 +409,16 @@ export const isPhaseTimeOverlap = (phaseArr) => {
   phaseArr.sort((a, b) => a.start - b.start);
 
   for (let i = 1; i < phaseArr?.length; i++) {
-    if (phaseArr[i - 1].end > phaseArr[i].start) return true;
+    if (!canEditPhase(phaseArr[i].start) || !canEditPhase(phaseArr[i].end)) {
+      toast.error("Phase time can not in the past.");
+      return true;
+    }
+
+    if (phaseArr[i - 1].end > phaseArr[i].start) {
+      toast.error("Sub phase time is not valid or overlap.");
+
+      return true;
+    }
   }
 
   return false;

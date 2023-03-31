@@ -9,7 +9,7 @@ import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-
 import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
 import { ContractPromise } from "@polkadot/api-contract";
 
-import { isPhaseTimeOverlap, strToNumber } from "@utils";
+import { isPhaseTimeOverlap } from "@utils";
 import { useSubstrateState } from "@utils/substrate";
 import {
   formMode,
@@ -26,7 +26,7 @@ import Input from "@components/Input/Input";
 import NumberInput from "@components/Input/NumberInput";
 import AdvancedModeSwitch from "@components/Switch/Switch";
 import CommonButton from "@components/Button/CommonButton";
-import { isPhaseEnd } from "@utils";
+// import { isPhaseEnd } from "@utils";
 import { clearTxStatus } from "@store/actions/txStatus";
 
 function UpdatePhase({
@@ -47,8 +47,8 @@ function UpdatePhase({
 
   const handlePhaseTime = (e, index) => {
     if (e) {
-      if (!canEditPhase(e[0].getTime())) {
-        return toast.error("New phase time can not in the past.");
+      if (!canEditPhase(e[0]?.getTime())) {
+        toast.error("New phase time can not in the past.");
       }
 
       const valueAddHash = value.map((item, idx) => {
@@ -56,8 +56,8 @@ function UpdatePhase({
           return { ...item, start: null, end: null };
         }
 
-        const startTime = idx !== index ? item?.start : e[0].getTime();
-        const endTime = idx !== index ? item?.end : e[1].getTime();
+        const startTime = idx !== index ? item?.start : e[0]?.getTime();
+        const endTime = idx !== index ? item?.end : e[1]?.getTime();
 
         return { ...item, start: startTime, end: endTime };
       });
@@ -75,21 +75,21 @@ function UpdatePhase({
     const allPhases = [...value];
     allPhases.sort((a, b) => a.start - b.start);
 
-    const lastPhase = allPhases[allPhases?.length - 1];
-    const firstPhase = allPhases[0];
+    // const lastPhase = allPhases[allPhases?.length - 1];
+    // const firstPhase = allPhases[0];
 
-    const prjEndTime = arrayHelpers?.form?.values?.endTime;
-    const prjStartTime = arrayHelpers?.form?.values?.startTime;
+    // const prjEndTime = arrayHelpers?.form?.values?.endTime;
+    // const prjStartTime = arrayHelpers?.form?.values?.startTime;
 
-    if (prjEndTime < lastPhase?.end || prjStartTime > firstPhase?.start) {
-      const newValue = value.map((i, idx) => {
-        return idx === value.length - 1 ? { ...i, start: null, end: null } : i;
-      });
+    // if (prjEndTime < lastPhase?.end || prjStartTime > firstPhase?.start) {
+    //   const newValue = value.map((i, idx) => {
+    //     return idx === value.length - 1 ? { ...i, start: null, end: null } : i;
+    //   });
 
-      helpers.setValue(newValue);
+    //   helpers.setValue(newValue);
 
-      return toast.error("Phase time can not overlaps project time.");
-    }
+    //   return toast.error("Phase time can not overlaps project time.");
+    // }
 
     arrayHelpers.push({
       name: "",
@@ -108,13 +108,13 @@ function UpdatePhase({
     const isOverlap = isPhaseTimeOverlap(value);
 
     if (isOverlap) {
-      return toast.error("Sub phase time is not valid or overlap.");
+      return;
     }
 
     const phasesArray = [...value];
 
-    const prjStartTime = strToNumber(startTime);
-    const prjEndTime = strToNumber(endTime);
+    // const prjStartTime = strToNumber(startTime);
+    // const prjEndTime = strToNumber(endTime);
 
     // check public mint amount max
     if (phasesArray?.length) {
@@ -129,22 +129,22 @@ function UpdatePhase({
         );
       }
 
-      const startFirstPhase = phasesArray[0]?.start;
-      const endLastPhase = [...phasesArray].pop().end;
+      // const startFirstPhase = phasesArray[0]?.start;
+      // const endLastPhase = [...phasesArray].pop().end;
 
       // check proj & phase overlap
-      if (
-        !(
-          prjStartTime <= startFirstPhase &&
-          startFirstPhase <= endLastPhase &&
-          endLastPhase <= prjEndTime
-        )
-      ) {
-        toast.error(
-          "Sub phase time is not valid or overlap project phase time."
-        );
-        return;
-      }
+      // if (
+      //   !(
+      //     prjStartTime <= startFirstPhase &&
+      //     startFirstPhase <= endLastPhase &&
+      //     endLastPhase <= prjEndTime
+      //   )
+      // ) {
+      //   toast.error(
+      //     "Sub phase time is not valid or overlap project phase time."
+      //   );
+      //   return;
+      // }
     }
 
     const {
@@ -218,7 +218,7 @@ function UpdatePhase({
     const isOverlap = isPhaseTimeOverlap(value);
 
     if (isOverlap) {
-      return toast.error("Sub phase time is not valid or overlap.");
+      return;
     }
 
     const phasesArray = [...value];
@@ -353,7 +353,7 @@ function UpdatePhase({
                       placeholder="Phase name here"
                       isDisabled={
                         actionType ||
-                        isPhaseEnd(endTime) ||
+                        // isPhaseEnd(endTime) ||
                         (!canEditPhase(value[index].start) && !value[index].new)
                       }
                     />{" "}
@@ -371,7 +371,7 @@ function UpdatePhase({
                         disableClock
                         disabled={
                           !!actionType ||
-                          isPhaseEnd(endTime) ||
+                          // isPhaseEnd(endTime) ||
                           (!canEditPhase(value[index].start) &&
                             !value[index].new)
                         }
@@ -401,7 +401,7 @@ function UpdatePhase({
                     label="Set public mint"
                     isDisabled={
                       actionType ||
-                      isPhaseEnd(endTime) ||
+                      // isPhaseEnd(endTime) ||
                       (!canEditPhase(value[index].start) && !value[index].new)
                     }
                     isChecked={value[index].isPublic}
@@ -427,7 +427,7 @@ function UpdatePhase({
                       hasStepper={false}
                       isDisabled={
                         actionType ||
-                        isPhaseEnd(endTime) ||
+                        // isPhaseEnd(endTime) ||
                         (!value[index].new && !canEditPhase(value[index].start))
                       }
                       label="Public minting fee"
@@ -442,7 +442,7 @@ function UpdatePhase({
                       hasStepper={false}
                       isDisabled={
                         actionType ||
-                        isPhaseEnd(endTime) ||
+                        // isPhaseEnd(endTime) ||
                         (!value[index].new && !canEditPhase(value[index].start))
                       }
                       label="Total Mint Amount"
@@ -458,7 +458,7 @@ function UpdatePhase({
                       hasStepper={false}
                       isDisabled={
                         actionType ||
-                        isPhaseEnd(endTime) ||
+                        // isPhaseEnd(endTime) ||
                         (!value[index].new && !canEditPhase(value[index].start))
                       }
                       label="Max per mint"
@@ -478,10 +478,7 @@ function UpdatePhase({
                   {!value[index].new &&
                   mode === formMode.EDIT &&
                   canEditPhase(value[index].start) ? (
-                    <Button
-                      size="sm"
-                      onClick={() => onUpdatePhase(index)}
-                    >
+                    <Button size="sm" onClick={() => onUpdatePhase(index)}>
                       update
                     </Button>
                   ) : null}
@@ -537,7 +534,7 @@ function UpdatePhase({
                 my="24px"
                 variant="outline"
                 text="add new phase"
-                isDisabled={isPhaseEnd(endTime)}
+                // isDisabled={isPhaseEnd(endTime)}
                 onClick={() => handleAddPhase(arrayHelpers)}
               />
             </Stack>
@@ -558,7 +555,7 @@ export default UpdatePhase;
 // end > Date.now()
 //
 
-const canEditPhase = (startTime) => {
+export const canEditPhase = (startTime) => {
   const now = new Date();
 
   if (startTime > now) return true;
