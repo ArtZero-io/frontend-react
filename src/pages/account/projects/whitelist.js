@@ -83,26 +83,7 @@ function MyWhiteListProjectPage(props) {
   const [keywords, setKeywords] = useState("");
   const [resultList, setResultList] = useState(null)
 
-  const getSearchResult = (keywords) => {
-    const result = phaseInfo?.userData?.filter(el => el.address === keywords) || []
-    if(!result?.length && !keywords) {
-      setResultList()
-      return
-    }
-    setResultList(result);
-  }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debounceGetSearchResult = useCallback(
-    debounce((k) => getSearchResult(k), 1000),
-    []
-  );
-
-  const handleInputOnchange = (value) => {
-
-    setKeywords(value);
-    debounceGetSearchResult(value);
-  };
   const { myProjectAdmin } = useMyProjectAdmin(
     api,
     launchpad_psp34_nft_standard.CONTRACT_ABI,
@@ -127,6 +108,28 @@ function MyWhiteListProjectPage(props) {
       pageSize: 5,
     },
   });
+
+  const getSearchResult = (keywords) => {
+    setCurrentPage(1)
+    const result = phaseInfo?.userData?.filter(el => el.address.toLowerCase().includes(keywords.trim().toLowerCase())) || []
+    if(!result?.length && !keywords) {
+      setResultList()
+      return
+    }
+    setResultList(result);
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceGetSearchResult = useCallback(
+    debounce((k) => getSearchResult(k), 1000),
+    [phaseInfo?.userData]
+  );
+
+  const handleInputOnchange = (value) => {
+
+    setKeywords(value);
+    debounceGetSearchResult(value);
+  };
 
   const onAddWhitelist = async () => {
     if (!selectedProjectAddress) {
