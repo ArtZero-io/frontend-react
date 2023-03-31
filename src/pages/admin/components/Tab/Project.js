@@ -28,6 +28,7 @@ import { START } from "@constants";
 import CommonButton from "@components/Button/CommonButton";
 import useTxStatus from "@hooks/useTxStatus";
 import useForceUpdate from "@hooks/useForceUpdate";
+import moment from "moment/moment";
 
 function ProjectAdmin() {
   const dispatch = useDispatch();
@@ -302,6 +303,22 @@ function ProjectAdmin() {
                   fontWeight="normal"
                   py={7}
                 >
+                  Project time
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  Phase time
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
                   Action
                 </Th>
               </Tr>
@@ -353,6 +370,33 @@ function ProjectAdmin() {
                     </Td>
                     <Td py={7}>
                       {collection.isActive ? "Active" : "Inactive"}{" "}
+                    </Td>
+                    <Td>
+                      <Text>
+                        S:
+                        {moment(collection.startTime).format("DD/MM/YY, h:mm")}
+                      </Text>
+                      <Text>
+                        E:{moment(collection.endTime).format("DD/MM/YY, h:mm")}
+                      </Text>
+                    </Td>
+                    <Td>
+                      {collection.whiteList.map((item) => {
+                        return (
+                          <Flex>
+                            <Text>
+                              Id:{item.phaseId}. S:{" "}
+                              {moment(item.phaseData?.startTime).format(
+                                "DD/MM/YY, h:mm"
+                              )}
+                              - E:{" "}
+                              {moment(item.phaseData?.endtTime).format(
+                                "DD/MM/YY, h:mm"
+                              )}
+                            </Text>
+                          </Flex>
+                        );
+                      })}
                     </Td>
 
                     <Td>
