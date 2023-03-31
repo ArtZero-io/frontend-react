@@ -106,7 +106,7 @@ export const SCROLLBAR = {
   },
 };
 
-export const IPFS_BASE_URL = "https://artzero-a0.infura-ipfs.io/ipfs";
+export const IPFS_BASE_URL = "https://artzeronft.infura-ipfs.io/ipfs";
 
 export const SUPPORTED_WALLET_LIST = [
   {
