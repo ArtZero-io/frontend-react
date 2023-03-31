@@ -108,7 +108,7 @@ export function timestampWithoutCommas(input) {
 
 export function convertDateToTimeStamp(dateStr) {
   const date = new Date(dateStr);
-  return date.getTime();
+  return date?.getTime();
 }
 
 export function convertStringToPrice(stringPrice) {
