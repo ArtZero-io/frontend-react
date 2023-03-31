@@ -10,22 +10,23 @@ import {
   Input,
   Text,
   Link,
-} from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSubstrateState } from '@utils/substrate';
-import launchpad_psp34_nft_standard from '@utils/blockchain/launchpad-psp34-nft-standard';
-import launchpad_psp34_nft_standard_calls from '@utils/blockchain/launchpad-psp34-nft-standard-calls';
-import { ContractPromise } from '@polkadot/api-contract';
-import useTxStatus from '@hooks/useTxStatus';
-import { setTxStatus } from '@store/actions/txStatus';
-import CommonButton from '@components/Button/CommonButton';
-import { UPDATE_BASE_URI, START, FINALIZED } from '@constants';
-import { clearTxStatus } from '@store/actions/txStatus';
-import toast from 'react-hot-toast';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
-import nft721_psp34_standard from '@utils/blockchain/nft721-psp34-standard';
+} from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useSubstrateState } from "@utils/substrate";
+import launchpad_psp34_nft_standard from "@utils/blockchain/launchpad-psp34-nft-standard";
+import launchpad_psp34_nft_standard_calls from "@utils/blockchain/launchpad-psp34-nft-standard-calls";
+import { ContractPromise } from "@polkadot/api-contract";
+import useTxStatus from "@hooks/useTxStatus";
+import { setTxStatus } from "@store/actions/txStatus";
+import CommonButton from "@components/Button/CommonButton";
+import { UPDATE_BASE_URI, START, FINALIZED } from "@constants";
+import { clearTxStatus } from "@store/actions/txStatus";
+import toast from "react-hot-toast";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+import nft721_psp34_standard from "@utils/blockchain/nft721-psp34-standard";
 import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
+import { getPublicCurrentAccount } from "@utils";
 
 export default function UpdateURIModal({
   collection_address,
@@ -34,32 +35,35 @@ export default function UpdateURIModal({
 }) {
   const dispatch = useDispatch();
 
-  const [newURI, setNewURI] = useState('');
-  const [currentURI, setCurrentURI] = useState('');
+  const [newURI, setNewURI] = useState("");
+  const [currentURI, setCurrentURI] = useState("");
   const { currentAccount, api } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
-
-  const getTokenUri = async () => {
-    let token_uri = "";
-    const nft721_psp34_standard_contract = new ContractPromise(
-      api,
-      nft721_psp34_standard.CONTRACT_ABI,
-      collection_address
-    );
-
-    nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
-      token_uri = await nft721_psp34_standard_calls.tokenUri(currentAccount, 1);
-    // console.log("token_uri", token_uri);
-    if(!token_uri) toast.error('No token_uri!')
-
-    let base_uri = token_uri.replace("1.json", "");
-    setCurrentURI(base_uri)
-  }
+  const publicCurrentAccount = getPublicCurrentAccount();
 
   useEffect(() => {
-    getTokenUri()
-  }, [collection_address])
-  
+    const getTokenUri = async () => {
+      let token_uri = "";
+      const nft721_psp34_standard_contract = new ContractPromise(
+        api,
+        nft721_psp34_standard.CONTRACT_ABI,
+        collection_address
+      );
+
+      nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+      token_uri = await nft721_psp34_standard_calls.tokenUri(
+        publicCurrentAccount,
+        1
+      );
+
+      console.log("token_uri", token_uri);
+      if (!token_uri) toast.error("No token_uri!");
+
+      let base_uri = token_uri.replace("1.json", "");
+      setCurrentURI(base_uri);
+    };
+    getTokenUri();
+  }, [collection_address, api, publicCurrentAccount]);
 
   useEffect(() => {
     if (rest.step === FINALIZED) {
@@ -69,8 +73,8 @@ export default function UpdateURIModal({
   }, [dispatch, onClose, rest.step]);
 
   const updateBaseUri = async () => {
-    if (newURI.toString().substr(-1) !== '/') {
-      toast.error('Base Uri must be end with /');
+    if (newURI.toString().substr(-1) !== "/") {
+      toast.error("Base Uri must be end with /");
       return;
     }
 
@@ -96,7 +100,7 @@ export default function UpdateURIModal({
       );
     } catch (error) {
       console.log(error);
-      toast.error('There was an error while update art location.');
+      toast.error("There was an error while update art location.");
       dispatch(clearTxStatus());
     }
   };
@@ -108,7 +112,7 @@ export default function UpdateURIModal({
       onClose={onClose}
       isCentered
       isOpen={isOpen}
-      size={['xs', 'xl']}
+      size={["xs", "xl"]}
     >
       <ModalOverlay
         bg="blackAlpha.300"
@@ -118,25 +122,29 @@ export default function UpdateURIModal({
       <ModalContent
         pt="20px"
         pb="30px"
-        px={[0, '30px']}
+        px={[0, "30px"]}
         borderRadius="0"
         position="relative"
         bg="brand.grayDark"
-        maxW={['340px', '600px']}
+        maxW={["340px", "600px"]}
       >
         <ModalCloseButton
           borderWidth={2}
           borderRadius="0"
           position="absolute"
-          top={['0', '-8', '-8']}
-          right={['0', '-8', '-8']}
+          top={["0", "-8", "-8"]}
+          right={["0", "-8", "-8"]}
           onClick={() => rest?.step === FINALIZED && rest?.onEndClick()}
         />
         <ModalHeader textAlign="center">
           <Heading size="h4" my={2}>
             update art location
           </Heading>
-          <Text fontSize="sm" fontWeight="400">{currentURI ? `Current Art Location: ${currentURI}` : 'Art Location is not set' }</Text>
+          <Text fontSize="sm" fontWeight="400">
+            {currentURI
+              ? `Current Art Location: ${currentURI}`
+              : "Art Location is not set"}
+          </Text>
           <Text fontSize="sm" fontWeight="400">
             We currently use IPFS to store Art Work of all collections. The
             example format of Art Location is
@@ -145,7 +153,7 @@ export default function UpdateURIModal({
           <Text fontSize="sm" fontWeight="400">
             Note that: to make the process quicker, please contact our team to
             have your art work cached in our server. If you don't want to reveal
-            your art during sale period, you can leave this empty. See more at{' '}
+            your art during sale period, you can leave this empty. See more at{" "}
             <Link textTransform="none" href="#" isExternal>
               this link <ExternalLinkIcon mx="2px" />
             </Link>

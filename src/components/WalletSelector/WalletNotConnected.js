@@ -10,7 +10,6 @@ import {
   MenuItem,
   MenuList,
   Text,
-  useMediaQuery,
 } from "@chakra-ui/react";
 import { useSubstrate } from "@utils/substrate/SubstrateContext";
 import { SUPPORTED_WALLET_LIST } from "@constants/index";
@@ -20,7 +19,9 @@ import NovaLogo from "@utils/wallets/nova.jpg";
 import { useLocalStorage } from "../../hooks/useLocalStorage";
 import { loadAccounts } from "@utils/substrate/SubstrateContext";
 import { motion } from "framer-motion";
-import { browserName } from "react-device-detect";
+import { browserName, isMobile } from "react-device-detect";
+import { isEmptyObj } from "@utils";
+const win = window || {};
 
 function WalletNotConnected(props) {
   const { dispatch, state } = useSubstrate();
@@ -37,14 +38,29 @@ function WalletNotConnected(props) {
     },
   };
 
-  const [isBigScreen] = useMediaQuery("(min-width: 480px)");
-
   SUPPORTED_WALLET_LIST.map(
     (item) =>
       (item.installed = Object.keys(window?.injectedWeb3).includes(
         item.extensionName
       ))
   );
+
+  let supportedWalletList = SUPPORTED_WALLET_LIST;
+
+  if (isMobile) {
+    const injectedWeb3 = win?.injectedWeb3;
+    if (!isEmptyObj(injectedWeb3)) {
+      if (injectedWeb3["subwallet-js"]) {
+        supportedWalletList = SUPPORTED_WALLET_LIST.filter(
+          (item) => item.extensionName === "subwallet-js"
+        );
+      } else {
+        supportedWalletList = SUPPORTED_WALLET_LIST.filter(
+          (item) => item.extensionName === "polkadot-js"
+        );
+      }
+    }
+  }
 
   function handleConnect(wallet) {
     if (!keyring) {
@@ -95,7 +111,7 @@ function WalletNotConnected(props) {
               borderColor="brand.blue"
               p={3}
             >
-              {SUPPORTED_WALLET_LIST.filter(el => !(isBigScreen && el.isMobile)).map((wallet) => (
+              {supportedWalletList.map((wallet) => (
                 <Flex
                   key={wallet.extensionName}
                   minW="36"
@@ -125,10 +141,7 @@ function WalletNotConnected(props) {
                             />
                           )}
                           {wallet.title === "Nova Wallet" && (
-                            <Image
-                              src={NovaLogo}
-                              alt={wallet.extensionName}
-                            />
+                            <Image src={NovaLogo} alt={wallet.extensionName} />
                           )}
                         </Box>
                         <Text fontSize="15px" pl="16px" mr="2">
@@ -137,19 +150,21 @@ function WalletNotConnected(props) {
                       </Flex>
                     </Box>
                   </MenuItem>
-                  {!wallet.installed && (
-                    <Link
-                      href={wallet[`installUrl${browserName}`]}
-                      isExternal="true"
-                      fontSize="14px"
-                      color="#fff"
-                      pr="2px"
-                      fontFamily="Evogria, sans-serif"
-                      _hover={{ bg: "blackAlpha.900", color: "#7ae7ff" }}
-                    >
-                      Install <ExternalLinkIcon mx="1px" />
-                    </Link>
-                  )}
+                  {!isMobile
+                    ? !wallet.installed && (
+                        <Link
+                          href={wallet[`installUrl${browserName}`]}
+                          isExternal="true"
+                          fontSize="14px"
+                          color="#fff"
+                          pr="2px"
+                          fontFamily="Evogria, sans-serif"
+                          _hover={{ bg: "blackAlpha.900", color: "#7ae7ff" }}
+                        >
+                          Install <ExternalLinkIcon mx="1px" />
+                        </Link>
+                      )
+                    : ""}
                 </Flex>
               ))}
             </MenuList>

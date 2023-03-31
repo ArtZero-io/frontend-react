@@ -134,14 +134,14 @@ export const SUPPORTED_WALLET_LIST = [
     installUrlFirefox:
       "https://addons.mozilla.org/en-US/firefox/addon/polkadot-js-extension/",
   },
-  {
-    extensionName: "polkadot-js",
-    title: "Nova Wallet",
-    logo: "nova.jpg",
-    isMobile: true,
-    noExtensionMessage:
-      "You can use any Polkadot compatible wallet but we recommend using Polkadot{.js}",
-    },
+  // {
+  //   extensionName: "polkadot-js",
+  //   title: "Nova Wallet",
+  //   logo: "nova.jpg",
+  //   isMobile: true,
+  //   noExtensionMessage:
+  //     "You can use any Polkadot compatible wallet but we recommend using Polkadot{.js}",
+  //   },
 ];
 
 export const MESSAGE_SIGN = "Sign message to report";

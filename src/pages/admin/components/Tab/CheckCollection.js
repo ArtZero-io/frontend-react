@@ -19,6 +19,7 @@ import { ContractPromise } from "@polkadot/api-contract";
 import { clientAPI } from "@api/client";
 import { delay } from "@utils";
 import { APICall } from "../../../../api/client";
+import { getPublicCurrentAccount } from "@utils";
 
 function CheckCollection() {
   const [collectionAddress, setCollectionAddress] = useState("");
@@ -29,7 +30,8 @@ function CheckCollection() {
   const [cachedImageCount, setCachedImageCount] = useState(0);
   const [contractType, setContractType] = useState(0);
   const [isActive, setIsActive] = useState(0);
-  const { api, currentAccount } = useSubstrateState();
+  const { api } = useSubstrateState();
+  const publicCurrentAccount = getPublicCurrentAccount();
 
   // useEffect(async () => {
 
@@ -43,14 +45,14 @@ function CheckCollection() {
     }
 
     let contract_type = await collection_manager_calls.getContractType(
-      currentAccount,
+      publicCurrentAccount,
       collectionAddress
     );
 
     setContractType(contract_type);
 
     let is_active = await collection_manager_calls.isActive(
-      currentAccount,
+      publicCurrentAccount,
       collectionAddress
     );
 
@@ -65,18 +67,23 @@ function CheckCollection() {
     nft721_psp34_standard_calls.setContract(nft_contract);
 
     let total_supply = await nft721_psp34_standard_calls.getTotalSupply(
-      currentAccount
+      publicCurrentAccount
     );
 
     setTotalSupply(total_supply);
 
     let token_uri = "";
 
-    if (total_supply > 0) {
-      token_uri = await nft721_psp34_standard_calls.tokenUri(currentAccount, 1);
-    }
-    // console.log("token_uri", token_uri);
-    if(!token_uri) toast.error('No token_uri!')
+    // if (total_supply > 0) {
+      token_uri = await nft721_psp34_standard_calls.tokenUri(
+        publicCurrentAccount,
+        1
+      );
+    // }
+    console.log("token_uri", token_uri);
+
+    if (!token_uri) toast.error("No token_uri!");
+
     const metadata = await clientAPI("get", "/getJSON?input=" + token_uri, {});
 
     setImageUri(metadata.image);
@@ -119,7 +126,7 @@ function CheckCollection() {
 
   return (
     <>
-      {!currentAccount?.address ? (
+      {!publicCurrentAccount?.address ? (
         <Loader />
       ) : (
         <>

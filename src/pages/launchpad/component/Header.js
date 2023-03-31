@@ -451,6 +451,7 @@ function LaunchpadDetailHeader({
                   <Text textAlign="left" mx={["25px", "42px"]}>
                     Phase:{" "}
                     <Text
+                      isTruncated
                       as="span"
                       minW="60px"
                       display={["block", "inline"]}

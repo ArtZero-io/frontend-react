@@ -29,7 +29,7 @@ import {
   LOCK,
   TRANSFER,
   ACCEPT_BID,
-  EDIT_NFT
+  EDIT_NFT,
 } from "@constants";
 import { APICall } from "../../../api/client";
 import { ContractPromise } from "@polkadot/api-contract";
@@ -46,7 +46,15 @@ const MyNFTsPage = () => {
   const { actionType } = useTxStatus();
 
   const { loading: loadingForceUpdate, loadingTime } = useForceUpdate(
-    [REMOVE_BID, ACCEPT_BID, UNLIST_TOKEN, LIST_TOKEN, LOCK, TRANSFER, EDIT_NFT],
+    [
+      REMOVE_BID,
+      ACCEPT_BID,
+      UNLIST_TOKEN,
+      LIST_TOKEN,
+      LOCK,
+      TRANSFER,
+      EDIT_NFT,
+    ],
     () => handleForceUpdate()
   );
 
@@ -73,9 +81,9 @@ const MyNFTsPage = () => {
       return setFilterSelected("COLLECTED");
     }
 
-    if(actionType === EDIT_NFT ) {
+    if (actionType === EDIT_NFT) {
       fetchMyCollections();
-      return
+      return;
     }
 
     setFilterSelected("COLLECTED");
@@ -380,7 +388,7 @@ export async function execContractQuery(
     console.log("Api invalid");
     // return toast.error("Api invalid");
   }
-  // console.log("@_@ ", queryName, " callerAddress ", callerAddress);
+  //  console.log("@_@ ", queryName, " callerAddress ", callerAddress);
 
   const contract = new ContractPromise(api, contractAbi, contractAddress);
 

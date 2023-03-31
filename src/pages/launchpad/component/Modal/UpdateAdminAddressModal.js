@@ -62,6 +62,8 @@ export default function UpdateAdminAddressModal({
   }, [dispatch, onClose, rest.step]);
 
   const updateAdminAddress = async () => {
+    if (!currentAccount) return;
+
     if (!isValidAddressPolkadotAddress(newAdminAddress)) {
       return toast.error(`Invalid address! Please check again!`);
     }
@@ -116,7 +118,7 @@ export default function UpdateAdminAddressModal({
   const fetchMyAdminList = useCallback(async () => {
     console.log("fetchMyAdminList");
 
-    if (!api) return;
+    if (!api || !currentAccount) return;
 
     try {
       setLoading(true);
@@ -153,13 +155,15 @@ export default function UpdateAdminAddressModal({
       setLoading(false);
       console.log("error", error);
     }
-  }, [api, collection_address, currentAccount?.address]);
+  }, [api, collection_address, currentAccount]);
 
   useEffect(() => {
     fetchMyAdminList();
   }, [fetchMyAdminList]);
 
   const onRemoveHandler = async (adminAddress) => {
+    if (!api || !currentAccount) return;
+
     try {
       dispatch(
         setTxStatus({
