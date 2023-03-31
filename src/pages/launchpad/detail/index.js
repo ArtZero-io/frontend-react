@@ -414,7 +414,7 @@ const LaunchpadDetailPage = () => {
 
   useEffect(() => {
     let isUnmounted = false;
-  
+
     if (currentAccount) {
       fetchWhitelistData(isUnmounted);
       fetchUserPLClaimedData(isUnmounted);
@@ -686,14 +686,8 @@ const LaunchpadDetailPage = () => {
             py={["17px", "26px"]}
           >
             {activePhaseId && (
-              <Skeleton
-                bg="blue"
-                display="flex"
-                isLoaded={!loading}
-                w="full"
-                mb="15px"
-              >
-                <Heading bg="green" fontSize={["16px", "18px"]}>
+              <Skeleton display="flex" isLoaded={!loading} w="full" mb="15px">
+                <Heading fontSize={["16px", "18px"]}>
                   {!activePhaseId ? (
                     `upcoming`
                   ) : (
@@ -1063,20 +1057,22 @@ const LaunchpadDetailPage = () => {
                                     h={["14px", "16px"]}
                                   />
                                 </Text>
-                                {userWLInfo[index]?.claimedAmount > 0 && <>
-                                . You have minted from whitelist{" "}
-                                <Skeleton
-                                  isLoaded={!loadingForceUpdate}
-                                  as="span"
-                                >
-                                  <Text as="span" color="#fff">
-                                    {userWLInfo[index]?.claimedAmount} NFT
-                                    {userWLInfo[index]?.claimedAmount > 1
-                                      ? "s"
-                                      : ""}
-                                  </Text>
-                                </Skeleton>
-                                </>}
+                                {userWLInfo[index]?.claimedAmount > 0 && (
+                                  <>
+                                    . You have minted from whitelist{" "}
+                                    <Skeleton
+                                      isLoaded={!loadingForceUpdate}
+                                      as="span"
+                                    >
+                                      <Text as="span" color="#fff">
+                                        {userWLInfo[index]?.claimedAmount} NFT
+                                        {userWLInfo[index]?.claimedAmount > 1
+                                          ? "s"
+                                          : ""}
+                                      </Text>
+                                    </Skeleton>
+                                  </>
+                                )}
                               </Text>
                             </ListItem>
                           )}
