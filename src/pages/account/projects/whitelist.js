@@ -81,16 +81,17 @@ function MyWhiteListProjectPage(props) {
   const [isUpdateMode, setIsUpdateMode] = useState(null);
   const [whitelistAmountClaimed, setWhitelistAmountClaimed] = useState(0);
   const [keywords, setKeywords] = useState("");
-  const [resultList, setResultList] = useState(null)
+  const [resultList, setResultList] = useState(null);
 
   const getSearchResult = (keywords) => {
-    const result = phaseInfo?.userData?.filter(el => el.address === keywords) || []
-    if(!result?.length && !keywords) {
-      setResultList()
-      return
+    const result =
+      phaseInfo?.userData?.filter((el) => el.address === keywords) || [];
+    if (!result?.length && !keywords) {
+      setResultList();
+      return;
     }
     setResultList(result);
-  }
+  };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceGetSearchResult = useCallback(
@@ -99,7 +100,6 @@ function MyWhiteListProjectPage(props) {
   );
 
   const handleInputOnchange = (value) => {
-
     setKeywords(value);
     debounceGetSearchResult(value);
   };
@@ -113,20 +113,15 @@ function MyWhiteListProjectPage(props) {
     selectedPhaseCode
   );
 
-  const {
-    pagesCount,
-    currentPage,
-    setCurrentPage,
-    isDisabled,
-    pageSize,
-  } = usePagination({
-    total: (resultList || phaseInfo?.userData)?.length,
-    initialState: {
-      currentPage: 1,
-      isDisabled: false,
-      pageSize: 5,
-    },
-  });
+  const { pagesCount, currentPage, setCurrentPage, isDisabled, pageSize } =
+    usePagination({
+      total: (resultList || phaseInfo?.userData)?.length,
+      initialState: {
+        currentPage: 1,
+        isDisabled: false,
+        pageSize: 5,
+      },
+    });
 
   const onAddWhitelist = async () => {
     if (!selectedProjectAddress) {
@@ -1119,84 +1114,97 @@ function MyWhiteListProjectPage(props) {
                 >
                   {phaseInfo?.userData?.length ? (
                     <>
-                    <InputGroup
-                borderColor="#ffffff25"
-                borderBottomWidth="2px"
-                mb="20px"
-                width={"80%"}
-              >
-                <Input
-                  h="40px"
-                  bg="transparent"
-                  px="0px"
-                  fontSize="lg"
-                  value={keywords}
-                  id="keywords"
-                  onChange={(e) => handleInputOnchange(e.target.value)}
-                  placeholder="Search address..."
-                />
-                <InputRightElement
-                  transform="translateX(22px)"
-                  bg="transparent"
-                  h="full"
-                  w={16}
-                  cursor="pointer"
-                >
-                  {keywords ? <FiX onClick={(e) => handleInputOnchange('')} size="22px" p="0" /> :<FiSearch size="22px" p="0" />}
-                </InputRightElement>
-              </InputGroup>
-                    <Table variant="striped" colorScheme="blackAlpha">
-                      <Thead>
-                        <Tr>
-                          {Object.values(tableHeaders)?.map((item, idx) => (
-                            <Th
-                              top={0}
-                              zIndex={1}
-                              textAlign="center"
-                              key={idx}
-                              fontFamily="Evogria"
-                              color="#888"
-                              // bg="#171717"
-                              fontSize="15px"
-                              fontWeight="400"
-                              dropShadow="lg"
-                            >
-                              {item}
-                            </Th>
-                          ))}
-                        </Tr>
-                      </Thead>
-                      <Tbody>
-                        {(resultList || phaseInfo?.userData)?.slice((currentPage - 1) * pageSize, currentPage * pageSize)?.map((item, idx) => (
-                          <Tr key={idx} color="#fff">
-                            <Td textAlign="center" color="#fff">
-                              <AddressCopier address={item.address} />
-                            </Td>
-                            <Td textAlign="center" color="#fff">
-                              {item.whitelistAmount}
-                            </Td>
-                            <Td textAlign="center" color="#fff">
-                              {item.claimedAmount}
-                            </Td>
-                            <Td textAlign="center" color="#fff">
-                              {item.mintingFee} <AzeroIcon mb={1.5} />
-                            </Td>
+                      <InputGroup
+                        borderColor="#ffffff25"
+                        borderBottomWidth="2px"
+                        mb="20px"
+                        width={"80%"}
+                      >
+                        <Input
+                          h="40px"
+                          bg="transparent"
+                          px="0px"
+                          fontSize="lg"
+                          value={keywords}
+                          id="keywords"
+                          onChange={(e) => handleInputOnchange(e.target.value)}
+                          placeholder="Search address..."
+                        />
+                        <InputRightElement
+                          transform="translateX(22px)"
+                          bg="transparent"
+                          h="full"
+                          w={16}
+                          cursor="pointer"
+                        >
+                          {keywords ? (
+                            <FiX
+                              onClick={(e) => handleInputOnchange("")}
+                              size="22px"
+                              p="0"
+                            />
+                          ) : (
+                            <FiSearch size="22px" p="0" />
+                          )}
+                        </InputRightElement>
+                      </InputGroup>
+                      <Table variant="striped" colorScheme="blackAlpha">
+                        <Thead>
+                          <Tr>
+                            {Object.values(tableHeaders)?.map((item, idx) => (
+                              <Th
+                                top={0}
+                                zIndex={1}
+                                textAlign="center"
+                                key={idx}
+                                fontFamily="Evogria"
+                                color="#888"
+                                // bg="#171717"
+                                fontSize="15px"
+                                fontWeight="400"
+                                dropShadow="lg"
+                              >
+                                {item}
+                              </Th>
+                            ))}
                           </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
-                     <Stack w="full" py="30px">
-                     <PaginationMP
-                       bg="#333"
-                       maxW="230px"
-                       hasGotoPage={false}
-                       pagesCount={pagesCount}
-                       isDisabled={isDisabled}
-                       currentPage={currentPage}
-                       setCurrentPage={setCurrentPage}
-                     />
-                   </Stack>
-                   </>
+                        </Thead>
+                        <Tbody>
+                          {(resultList || phaseInfo?.userData)
+                            ?.slice(
+                              (currentPage - 1) * pageSize,
+                              currentPage * pageSize
+                            )
+                            ?.map((item, idx) => (
+                              <Tr key={idx} color="#fff">
+                                <Td textAlign="center" color="#fff">
+                                  <AddressCopier address={item.address} />
+                                </Td>
+                                <Td textAlign="center" color="#fff">
+                                  {item.whitelistAmount}
+                                </Td>
+                                <Td textAlign="center" color="#fff">
+                                  {item.claimedAmount}
+                                </Td>
+                                <Td textAlign="center" color="#fff">
+                                  {item.mintingFee} <AzeroIcon mb={1.5} />
+                                </Td>
+                              </Tr>
+                            ))}
+                        </Tbody>
+                      </Table>
+                      <Stack w="full" py="30px">
+                        <PaginationMP
+                          bg="#333"
+                          maxW="230px"
+                          hasGotoPage={false}
+                          pagesCount={pagesCount}
+                          isDisabled={isDisabled}
+                          currentPage={currentPage}
+                          setCurrentPage={setCurrentPage}
+                        />
+                      </Stack>
+                    </>
                   ) : (
                     <Text py={2}>No info found!</Text>
                   )}
@@ -1208,8 +1216,11 @@ function MyWhiteListProjectPage(props) {
             {whitelistMode === "CLEAR_WL" && (
               <Stack>
                 <Text textAlign="left">
+                  Project status:{" "}
+                  {projectInfo?.isActive ? "Active" : "Inactive"}
+                  <br />
                   Phase status:{" "}
-                  {phaseInfo?.phaseData?.isActive ? "Active" : "Inactive"}.
+                  {phaseInfo?.phaseData?.isActive ? "Active" : "Inactive"}
                   <br />
                   Phase phaseId: {phaseInfo?.phaseId}.<br />
                   Phase title: {phaseInfo?.phaseData?.title}
@@ -1249,7 +1260,8 @@ function MyWhiteListProjectPage(props) {
                     isDisabled={
                       !phaseInfo?.phaseData?.totalCountWLAddress ||
                       loadingForceUpdate ||
-                      isRefetching
+                      isRefetching ||
+                      !projectInfo?.isActive
                     }
                   />
                 </Stack>

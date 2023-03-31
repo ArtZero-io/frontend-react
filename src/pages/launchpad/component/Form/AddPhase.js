@@ -32,8 +32,8 @@ function AddPhase({
           return { ...item, start: null, end: null };
         }
 
-        const startTime = idx !== index ? item?.start : e[0].getTime();
-        const endTime = idx !== index ? item?.end : e[1].getTime();
+        const startTime = idx !== index ? item?.start : e[0]?.getTime();
+        const endTime = idx !== index ? item?.end : e[1]?.getTime();
 
         return { ...item, start: startTime, end: endTime, new: true };
       });
