@@ -24,6 +24,8 @@ import { UPDATE_BASE_URI, START, FINALIZED } from '@constants';
 import { clearTxStatus } from '@store/actions/txStatus';
 import toast from 'react-hot-toast';
 import { ExternalLinkIcon } from '@chakra-ui/icons';
+import nft721_psp34_standard from '@utils/blockchain/nft721-psp34-standard';
+import nft721_psp34_standard_calls from "@utils/blockchain/nft721-psp34-standard-calls";
 
 export default function UpdateURIModal({
   collection_address,
@@ -33,8 +35,31 @@ export default function UpdateURIModal({
   const dispatch = useDispatch();
 
   const [newURI, setNewURI] = useState('');
+  const [currentURI, setCurrentURI] = useState('');
   const { currentAccount, api } = useSubstrateState();
   const { tokenIDArray, actionType, ...rest } = useTxStatus();
+
+  const getTokenUri = async () => {
+    let token_uri = "";
+    const nft721_psp34_standard_contract = new ContractPromise(
+      api,
+      nft721_psp34_standard.CONTRACT_ABI,
+      collection_address
+    );
+
+    nft721_psp34_standard_calls.setContract(nft721_psp34_standard_contract);
+      token_uri = await nft721_psp34_standard_calls.tokenUri(currentAccount, 1);
+    // console.log("token_uri", token_uri);
+    if(!token_uri) toast.error('No token_uri!')
+
+    let base_uri = token_uri.replace("1.json", "");
+    setCurrentURI(base_uri)
+  }
+
+  useEffect(() => {
+    getTokenUri()
+  }, [collection_address])
+  
 
   useEffect(() => {
     if (rest.step === FINALIZED) {
@@ -111,6 +136,7 @@ export default function UpdateURIModal({
           <Heading size="h4" my={2}>
             update art location
           </Heading>
+          <Text fontSize="sm" fontWeight="400">{currentURI ? `Current Art Location: ${currentURI}` : 'Art Location is not set' }</Text>
           <Text fontSize="sm" fontWeight="400">
             We currently use IPFS to store Art Work of all collections. The
             example format of Art Location is

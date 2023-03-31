@@ -649,10 +649,9 @@ function MyWhiteListProjectPage(props) {
                         const editAddr = phaseInfo?.userData.find(
                           (i) => i.address === event.target.value.toString()
                         );
-
                         setWhiteListPrice(editAddr.mintingFee);
-                        setWhitelistAmount(editAddr.whitelistAmount);
-                        whitelistAmountRef.current = editAddr.whitelistAmount;
+                        setWhitelistAmount(Number(editAddr.whitelistAmount.replace(',','')));
+                        whitelistAmountRef.current = Number(editAddr.whitelistAmount.replace(',',''));
                         setWhitelistAmountClaimed(editAddr.claimedAmount);
                         setIsUpdateMode("EDIT");
                       }
