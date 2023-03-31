@@ -688,14 +688,8 @@ const LaunchpadDetailPage = () => {
             py={["17px", "26px"]}
           >
             {activePhaseId && (
-              <Skeleton
-                bg="blue"
-                display="flex"
-                isLoaded={!loading}
-                w="full"
-                mb="15px"
-              >
-                <Heading bg="green" fontSize={["16px", "18px"]}>
+              <Skeleton display="flex" isLoaded={!loading} w="full" mb="15px">
+                <Heading fontSize={["16px", "18px"]}>
                   {!activePhaseId ? (
                     `upcoming`
                   ) : (
