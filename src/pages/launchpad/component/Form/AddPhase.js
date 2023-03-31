@@ -51,21 +51,21 @@ function AddPhase({
     const allPhases = [...value];
     allPhases.sort((a, b) => a.start - b.start);
 
-    const lastPhase = allPhases[allPhases?.length - 1];
-    const firstPhase = allPhases[0];
+    // const lastPhase = allPhases[allPhases?.length - 1];
+    // const firstPhase = allPhases[0];
 
-    const prjEndTime = arrayHelpers?.form?.values?.endTime;
-    const prjStartTime = arrayHelpers?.form?.values?.startTime;
+    // const prjEndTime = arrayHelpers?.form?.values?.endTime;
+    // const prjStartTime = arrayHelpers?.form?.values?.startTime;
 
-    if (prjEndTime < lastPhase?.end || prjStartTime > firstPhase?.start) {
-      const newValue = value.map((i, idx) => {
-        return idx === value.length - 1 ? { ...i, start: null, end: null } : i;
-      });
+    // if (prjEndTime < lastPhase?.end || prjStartTime > firstPhase?.start) {
+    //   const newValue = value.map((i, idx) => {
+    //     return idx === value.length - 1 ? { ...i, start: null, end: null } : i;
+    //   });
 
-      helpers.setValue(newValue);
+    //   helpers.setValue(newValue);
 
-      return toast.error("Phase time can not overlaps project time.");
-    }
+    //   return toast.error("Phase time can not overlaps project time.");
+    // }
 
     arrayHelpers.push({
       name: "",

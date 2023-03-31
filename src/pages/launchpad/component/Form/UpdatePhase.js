@@ -223,10 +223,10 @@ function UpdatePhase({
 
     const phasesArray = [...value];
 
-    const prjStartTime = parseInt(
-      JSON.stringify(startTime).replaceAll(",", "")
-    );
-    const prjEndTime = parseInt(JSON.stringify(endTime).replaceAll(",", ""));
+    // const prjStartTime = parseInt(
+    //   JSON.stringify(startTime).replaceAll(",", "")
+    // );
+    // const prjEndTime = parseInt(JSON.stringify(endTime).replaceAll(",", ""));
 
     if (phasesArray?.length) {
       const { publicAmount } = phasesArray[index];
@@ -238,21 +238,21 @@ function UpdatePhase({
         );
       }
 
-      const startFirstPhase = phasesArray[0]?.start;
-      const endLastPhase = [...phasesArray].pop().end;
+      // const startFirstPhase = phasesArray[0]?.start;
+      // const endLastPhase = [...phasesArray].pop().end;
 
-      if (
-        !(
-          prjStartTime <= startFirstPhase &&
-          startFirstPhase <= endLastPhase &&
-          endLastPhase <= prjEndTime
-        )
-      ) {
-        toast.error(
-          "Sub phase time is not valid or overlap project phase time."
-        );
-        return;
-      }
+      // if (
+      //   !(
+      //     prjStartTime <= startFirstPhase &&
+      //     startFirstPhase <= endLastPhase &&
+      //     endLastPhase <= prjEndTime
+      //   )
+      // ) {
+      //   toast.error(
+      //     "Sub phase time is not valid or overlap project phase time."
+      //   );
+      //   return;
+      // }
     }
 
     const launchpad_psp34_nft_standard_contract = new ContractPromise(

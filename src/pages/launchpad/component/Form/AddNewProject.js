@@ -336,7 +336,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                   // check prj time-frame is picked?
                   const prjStartTime = values?.startTime;
                   const prjEndTime = values?.endTime;
-                  if (!values.isEditMode && (!prjStartTime || !prjStartTime)) {
+                  if (!values.isEditMode && (!prjStartTime || !prjEndTime)) {
                     return toast.error("Please pick time frame for project!");
                   }
 
@@ -364,23 +364,23 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     );
                   }
 
-                  if (phasesArray?.length) {
-                    const startFirstPhase = phasesArray[0]?.start;
-                    const endLastPhase = [...phasesArray].pop().end;
+                  // if (phasesArray?.length) {
+                  //   const startFirstPhase = phasesArray[0]?.start;
+                  //   const endLastPhase = [...phasesArray].pop().end;
 
-                    if (
-                      !(
-                        prjStartTime <= startFirstPhase &&
-                        startFirstPhase <= endLastPhase &&
-                        endLastPhase <= prjEndTime
-                      )
-                    ) {
-                      toast.error(
-                        "Sub phase time is not valid or overlap project phase time."
-                      );
-                      return;
-                    }
-                  }
+                  //   if (
+                  //     !(
+                  //       prjStartTime <= startFirstPhase &&
+                  //       startFirstPhase <= endLastPhase &&
+                  //       endLastPhase <= prjEndTime
+                  //     )
+                  //   ) {
+                  //     toast.error(
+                  //       "Sub phase time is not valid or overlap project phase time."
+                  //     );
+                  //     return;
+                  //   }
+                  // }
                 }
 
                 //check low balance?
