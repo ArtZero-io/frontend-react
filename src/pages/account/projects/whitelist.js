@@ -264,7 +264,7 @@ function MyWhiteListProjectPage(props) {
       setWhitelistAmount(1);
       setIsUpdateMode(null);
       // fetchPhaseInfo();
-
+      toast.success("It can take a while to load all Whitelist addresses")
       await refetch();
     }
   );
@@ -643,10 +643,9 @@ function MyWhiteListProjectPage(props) {
                         const editAddr = phaseInfo?.userData.find(
                           (i) => i.address === event.target.value.toString()
                         );
-
                         setWhiteListPrice(editAddr.mintingFee);
-                        setWhitelistAmount(editAddr.whitelistAmount);
-                        whitelistAmountRef.current = editAddr.whitelistAmount;
+                        setWhitelistAmount(Number(editAddr.whitelistAmount.replace(',','')));
+                        whitelistAmountRef.current = Number(editAddr.whitelistAmount.replace(',',''));
                         setWhitelistAmountClaimed(editAddr.claimedAmount);
                         setIsUpdateMode("EDIT");
                       }
