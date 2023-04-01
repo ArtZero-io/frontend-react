@@ -254,6 +254,30 @@ function ProjectAdmin() {
                   fontWeight="normal"
                   py={7}
                 >
+                  Project time
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  Phase time
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
+                  Phase count.(Id/wallet/nft)
+                </Th>
+                <Th
+                  fontFamily="Evogria"
+                  fontSize="sm"
+                  fontWeight="normal"
+                  py={7}
+                >
                   Address
                 </Th>
                 <Th
@@ -280,14 +304,6 @@ function ProjectAdmin() {
                 >
                   NFT Count
                 </Th>
-                <Th
-                  fontFamily="Evogria"
-                  fontSize="sm"
-                  fontWeight="normal"
-                  py={7}
-                >
-                  Phase count.(Id/wallet/nft)
-                </Th>
 
                 <Th
                   fontFamily="Evogria"
@@ -297,22 +313,7 @@ function ProjectAdmin() {
                 >
                   Active ?
                 </Th>
-                <Th
-                  fontFamily="Evogria"
-                  fontSize="sm"
-                  fontWeight="normal"
-                  py={7}
-                >
-                  Project time
-                </Th>
-                <Th
-                  fontFamily="Evogria"
-                  fontSize="sm"
-                  fontWeight="normal"
-                  py={7}
-                >
-                  Phase time
-                </Th>
+
                 <Th
                   fontFamily="Evogria"
                   fontSize="sm"
@@ -342,19 +343,35 @@ function ProjectAdmin() {
                         </Text>
                       </Link>
                     </Td>
-                    <Td py={7}>
-                      {truncateStr(collection.nftContractAddress, 5)}
-                    </Td>
-                    <Td py={7}>{truncateStr(collection.collectionOwner, 5)}</Td>
-                    <Td>
-                      {!isPhaseEnd(collection.startTime)
-                        ? "Coming"
-                        : isPhaseEnd(collection.endTime)
-                        ? "End"
-                        : "Live"}
-                    </Td>
 
-                    <Td py={7}>{collection.nft_count}</Td>
+                    <Td>
+                      <Text>
+                        S:
+                        {moment(collection.startTime).format("DD/MM/YY, H:mm")}
+                      </Text>
+                      <Text>
+                        E:
+                        {moment(collection.endTime).format("DD/MM/YY, H:mm")}
+                      </Text>
+                    </Td>
+                    <Td>
+                      {collection.whiteList.map((item) => {
+                        return (
+                          <Flex>
+                            <Text>
+                              Id:{item.phaseId}. S:{" "}
+                              {moment(item.phaseData?.startTime).format(
+                                "DD/MM/YY, H:mm"
+                              )}
+                              - E:{" "}
+                              {moment(item.phaseData?.endTime).format(
+                                "DD/MM/YY, H:mm"
+                              )}
+                            </Text>
+                          </Flex>
+                        );
+                      })}
+                    </Td>
                     <Td py={7}>
                       {collection.whiteList?.length}
                       {collection?.whiteList?.map(
@@ -369,34 +386,21 @@ function ProjectAdmin() {
                       )}
                     </Td>
                     <Td py={7}>
+                      {truncateStr(collection.nftContractAddress, 5)}
+                    </Td>
+                    <Td py={7}>{truncateStr(collection.collectionOwner, 5)}</Td>
+                    <Td>
+                      {!isPhaseEnd(collection.startTime)
+                        ? "Coming"
+                        : isPhaseEnd(collection.endTime)
+                        ? "End"
+                        : "Live"}
+                    </Td>
+
+                    <Td py={7}>{collection.nft_count}</Td>
+
+                    <Td py={7}>
                       {collection.isActive ? "Active" : "Inactive"}{" "}
-                    </Td>
-                    <Td>
-                      <Text>
-                        S:
-                        {moment(collection.startTime).format("DD/MM/YY, h:mm")}
-                      </Text>
-                      <Text>
-                        E:{moment(collection.endTime).format("DD/MM/YY, h:mm")}
-                      </Text>
-                    </Td>
-                    <Td>
-                      {collection.whiteList.map((item) => {
-                        return (
-                          <Flex>
-                            <Text>
-                              Id:{item.phaseId}. S:{" "}
-                              {moment(item.phaseData?.startTime).format(
-                                "DD/MM/YY, h:mm"
-                              )}
-                              - E:{" "}
-                              {moment(item.phaseData?.endtTime).format(
-                                "DD/MM/YY, h:mm"
-                              )}
-                            </Text>
-                          </Flex>
-                        );
-                      })}
                     </Td>
 
                     <Td>
