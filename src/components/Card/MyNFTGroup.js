@@ -72,18 +72,17 @@ function MyNFTGroupCard({
       history.push(`/nft/${item.nftContractAddress}/${item.tokenID}`);
     }
   }
-
   return (
     <Box my={10} position="relative">
       <ResponsivelySizedModal
         contractType={contractType}
-        {...selectedNFT}
         isOpen={isOpen}
         onClose={onClose}
         hasTabs={true}
         filterSelected={filterSelected}
         showOnChainMetadata={showOnChainMetadata}
         {...rest}
+        {...selectedNFT}
       />
 
       <motion.div

@@ -215,7 +215,7 @@ const CollectionsPage = () => {
                 textAlign="center"
                 fontSize={["3xl-mid", "5xl", "5xl"]}
               >
-                All collections
+                {selectedItem === 0 ? `All collections`:'Trending collections'}
               </Heading>
               {collections?.length ? (
                 <>
