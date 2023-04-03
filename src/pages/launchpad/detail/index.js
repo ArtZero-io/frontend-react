@@ -587,10 +587,18 @@ const LaunchpadDetailPage = () => {
 
         ret = await Promise.all(
           [...Array(totalNFTCount)].map(async (_, index) => {
-            const idOfNFT = await getIdOfPsp34NFT({
+            let idOfNFT = await getIdOfPsp34NFT({
               currentAccount,
               tokenID: index,
             });
+
+            try {
+              if (idOfNFT?.includes(",")) {
+                idOfNFT = idOfNFT?.replaceAll(",", "");
+              }
+            } catch (error) {
+              console.log("error", error);
+            }
 
             const metaData = await getMetaDataOffChain(idOfNFT, baseUri);
 
