@@ -116,8 +116,6 @@ export default function UpdateAdminAddressModal({
   const [loading, setLoading] = useState(false);
 
   const fetchMyAdminList = useCallback(async () => {
-    console.log("fetchMyAdminList");
-
     if (!api || !currentAccount) return;
 
     try {

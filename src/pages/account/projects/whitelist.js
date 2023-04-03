@@ -351,7 +351,7 @@ function MyWhiteListProjectPage(props) {
       // TODO:
       // phaseId not exit BE still return data = {}
 
-      console.log("2 phaseInfo", phaseInfo);
+      // console.log("2 phaseInfo", phaseInfo);
 
       const { status, ret, message } = phaseInfo;
 
