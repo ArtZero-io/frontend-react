@@ -57,6 +57,8 @@ import { APICall } from "@api/client";
 import { useMemo } from "react";
 import { clearTxStatus } from "@store/actions/txStatus";
 import { fetchMyPMPPendingCount } from "./stakes";
+import { getPublicCurrentAccount } from "../../utils";
+import { fetchValidatorProfit } from "../stats";
 
 function GeneralPage() {
   const history = useHistory();
@@ -75,6 +77,8 @@ function GeneralPage() {
   const [claimed, setClaimed] = useState(false);
   const [estimatedEarningBaseRewardPool, setEstimatedEarningBaseRewardPool] =
     useState(0);
+
+  const publicCurrentAccount = getPublicCurrentAccount();
 
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -144,6 +148,13 @@ function GeneralPage() {
           api,
           address: collection_manager?.CONTRACT_ADDRESS,
         });
+
+        const { balance: validatorProfit } = await fetchValidatorProfit({
+          api,
+          currentAccount: publicCurrentAccount,
+          address: process.env.REACT_APP_VALIDATOR_ADDRESS,
+        });
+
         const totalProfit =
           marketplaceProfit +
           launchpadBalance?.balance +
@@ -151,7 +162,8 @@ function GeneralPage() {
 
         const estimatedEarning =
           platformTotalStaked * 1
-            ? (totalProfit * 0.3 * totalStakedPromise) /
+            ? ((totalProfit * 0.3 + validatorProfit * 0.5) *
+                totalStakedPromise) /
               (platformTotalStaked * 1)
             : 0;
 
@@ -303,13 +315,23 @@ function GeneralPage() {
 
   const lastDay = useMemo(() => {
     const now = new Date();
+    const lastDayA = new Date(now.getFullYear(), now.getMonth() + 1, -3);
     const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-    return lastDay.toLocaleString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
+    return (
+      <>
+        {lastDayA.toLocaleString("en-US", {
+          month: "long",
+          day: "numeric",
+        })}{" "}
+        -{" "}
+        {lastDay.toLocaleString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}
+      </>
+    );
   }, []);
 
   return (

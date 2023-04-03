@@ -343,7 +343,7 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
               return toast.error("Low balance!");
             }
 
-            if (userBalance < addingFee) {
+            if (mode === formMode.ADD && userBalance < addingFee) {
               return toast.error(
                 `You need ${addingFee} AZERO to create new collection!`
               );

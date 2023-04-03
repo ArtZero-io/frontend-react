@@ -176,7 +176,10 @@ export const convertTimeStamp = (input) => {
 };
 
 export const secondsToTime = (secs) => {
-  let hours = Math.floor(secs / (60 * 60));
+  let days = Math.floor(secs / (60 * 60 * 24));
+
+  let divisor_for_hours = secs % (60 * 60 * 24);
+  let hours = Math.floor(divisor_for_hours / (60 * 60));
 
   let divisor_for_minutes = secs % (60 * 60);
   let minutes = Math.floor(divisor_for_minutes / 60);
@@ -185,6 +188,7 @@ export const secondsToTime = (secs) => {
   let seconds = Math.ceil(divisor_for_seconds);
 
   let obj = {
+    d: twoDigit(days),
     h: twoDigit(hours),
     m: twoDigit(minutes),
     s: twoDigit(seconds),
@@ -476,6 +480,7 @@ export async function getEstimatedGas(
         console.log(queryName, "getEstimatedGas err ", gasLimitResult.error);
         return;
       }
+      console.log("gasLimit", gasLimitResult);
 
       ret = gasLimitResult?.value;
     } catch (error) {

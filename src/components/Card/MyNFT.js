@@ -105,7 +105,7 @@ function MyNFTCard({
         setCountdownTime(secondsToTime(valid_time - now));
       else {
         setIsUnstakeTime(true);
-        setCountdownTime({ h: 0, m: 0, s: 0 });
+        setCountdownTime({ d: 0, h: 0, m: 0, s: 0 });
       }
     }
   }, 1000);
@@ -137,7 +137,7 @@ function MyNFTCard({
           setCountdownTime(secondsToTime(valid_time - now));
         else {
           setIsUnstakeTime(true);
-          setCountdownTime({ h: 0, m: 0, s: 0 });
+          setCountdownTime({ d: 0, h: 0, m: 0, s: 0 });
         }
       }
 
@@ -241,8 +241,8 @@ function MyNFTCard({
                 color="brand.grayLight"
                 fontSize={["xs", "md"]}
               >
-                Unstake in {countdownTime?.h || 0}h : {countdownTime?.m || 0}m :{" "}
-                {countdownTime?.s || 0}s
+                Unstake in {countdownTime?.d || 0}d: {countdownTime?.h || 0}h :{" "}
+                {countdownTime?.m || 0}m : {countdownTime?.s || 0}s
               </Text>
             </Flex>
           ) : null}

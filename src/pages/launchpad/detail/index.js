@@ -442,7 +442,7 @@ const LaunchpadDetailPage = () => {
       (whitelistMintingAmount * userWLInfo[activePhaseId - 1]?.mintingFee) /
       10 ** 12;
 
-    if (balance < 0.5) {
+    if (balance < 0.25) {
       toast.error("Low balance to mint");
       return;
     }

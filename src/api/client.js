@@ -270,9 +270,15 @@ export const APICall = {
   },
 
   getWithdrawEvent: async ({ limit = 5, offset = 0, nftContractAddress }) => {
-    return clientWithGetParams("GET", "/api/withdraw-event-schemas", { filter: {limit, offset, where: {
-      nftContractAddress: nftContractAddress,
-    }, }});
+    return clientWithGetParams("GET", "/api/withdraw-event-schemas", {
+      filter: {
+        limit,
+        offset,
+        where: {
+          nftContractAddress: nftContractAddress,
+        },
+      },
+    });
   },
 
   getLaunchpadEvent: async ({ limit = 5, offset = 0, nftContractAddress }) => {
@@ -443,6 +449,14 @@ export const APICall = {
   },
 
   getNFTByID: async ({ collection_address, token_id }) => {
+    try {
+      if (token_id?.includes(",")) {
+        token_id?.replaceAll(",", "");
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+    console.log("token_id", token_id);
     return await client("POST", "/getNFTByID", {
       collection_address,
       token_id,
