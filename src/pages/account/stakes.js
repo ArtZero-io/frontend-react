@@ -473,18 +473,19 @@ export const getMyPendingPMP = async ({
   try {
     ret = await Promise.all(
       [...Array(pendingCount)].map(async (_, index) => {
-        const token_id = await getTokenIdOfPendingPMP({
+        let token_id = await getTokenIdOfPendingPMP({
           currentAccount,
           index,
         });
 
+        token_id = token_id?.replaceAll(",", "");
         let token_info;
 
         const { ret, status } = await APICall.getNFTByID({
           collection_address: PMPContractAddress,
           token_id,
         });
-
+        console.log("token_id token_id", token_id);
         if (status === "OK") {
           token_info = ret[0];
         }
@@ -508,8 +509,9 @@ export const getMyStakedPMP = async ({ stakedCount, currentAccount }) => {
 
   ret = await Promise.all(
     [...Array(stakedCount)].map(async (_, index) => {
-      const token_id = await getTokenIdOfStakedPMP({ currentAccount, index });
+      let token_id = await getTokenIdOfStakedPMP({ currentAccount, index });
 
+      token_id = token_id?.replaceAll(",", "");
       let token_info;
 
       const { ret, status } = await APICall.getNFTByID({
