@@ -109,8 +109,8 @@ const CollectionItems = ({
             listBidder?.length &&
               listBidder.sort((a, b) => {
                 return (
-                  b.bidValue.replaceAll(",", "") * 1 -
-                  a.bidValue.replaceAll(",", "") * 1
+                  b.bidValue?.replaceAll(",", "") * 1 -
+                  a.bidValue?.replaceAll(",", "") * 1
                 );
               });
 

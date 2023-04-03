@@ -181,8 +181,8 @@ function TokenPage() {
             //sort highest price first
             listBidder.sort((a, b) => {
               return (
-                b.bidValue.replaceAll(",", "") * 1 -
-                a.bidValue.replaceAll(",", "") * 1
+                b.bidValue?.replaceAll(",", "") * 1 -
+                a.bidValue?.replaceAll(",", "") * 1
               );
             });
 
@@ -197,7 +197,7 @@ function TokenPage() {
             const myBid = listBidder.filter((item) => item.isMyBid === true);
             if (myBid.length) {
               const bidValue =
-                (myBid[0].bidValue.replaceAll(",", "") * 1) / 10 ** 12;
+                (myBid[0].bidValue?.replaceAll(",", "") * 1) / 10 ** 12;
 
               setBidPrice(bidValue);
               setIsAlreadyBid(true);

@@ -1185,8 +1185,8 @@ export const fetchUserBalance = async ({ currentAccount, api, address }) => {
     });
 
     const formattedNumBal =
-      formattedStrBal.replaceAll(",", "") * 1 -
-      formattedStrBalMiscFrozen.replaceAll(",", "") * 1;
+      formattedStrBal?.replaceAll(",", "") * 1 -
+      formattedStrBalMiscFrozen?.replaceAll(",", "") * 1;
 
     return { balance: formattedNumBal / 10 ** 12 };
   }

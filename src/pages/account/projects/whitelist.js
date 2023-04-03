@@ -192,7 +192,7 @@ function MyWhiteListProjectPage(props) {
 
     const claimedAmount = phaseInfo?.userData
       .find((i) => i.address === whitelistAddress)
-      ?.claimedAmount.replaceAll(",", "");
+      ?.claimedAmount?.replaceAll(",", "");
 
     if (parseInt(claimedAmount) > whitelistAmount) {
       return toast.error(`New amount must greater than claimed amount!`);
