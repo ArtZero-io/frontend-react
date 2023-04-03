@@ -44,7 +44,10 @@ function CollectionHeader(props) {
     isDoxxed,
     isDuplicationChecked,
     nftContractAddress,
+    ...rest
   } = props;
+
+  console.log("rest", rest);
   const [isSeeMore, setIsSeeMore] = useState(false);
   const descLength = useBreakpointValue([115, 175]);
 
@@ -137,6 +140,7 @@ function CollectionHeader(props) {
           </HStack>
 
           <HStack>
+            <Text>Contract Address:</Text>{" "}
             <AddressCopier address={nftContractAddress} hasIcon={true} />
           </HStack>
 
