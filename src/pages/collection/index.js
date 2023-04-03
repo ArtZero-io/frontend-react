@@ -376,11 +376,11 @@ function CollectionPage() {
 
   const initEvents = async () => {
     const payload = await fetchPlatformEvents();
-    console.log(
-      currentPageActivity,
-      payload,
-      "currentPageActivitycurrentPageActivity"
-    );
+    // console.log(
+    //   currentPageActivity,
+    //   payload,
+    //   "currentPageActivitycurrentPageActivity"
+    // );
 
     dispatch({
       type: AccountActionTypes.SET_EVENTS,

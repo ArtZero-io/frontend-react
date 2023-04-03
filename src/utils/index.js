@@ -390,7 +390,7 @@ export function onCloseButtonModal({ status, dispatch, type }) {
     });
 }
 
-export const formatNumDynamicDecimal = (num = 0, dec = 6) => {
+export const formatNumDynamicDecimal = (num = 0, dec = 2) => {
   const number = parseInt(num * 10 ** dec) / 10 ** dec;
   const numStr = number.toString();
   const dotIdx = numStr.indexOf(".");

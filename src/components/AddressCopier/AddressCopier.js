@@ -25,7 +25,7 @@ export default function AddressCopier({
         alignItems="center"
       >
         {truncateStr(address, truncateStrNum)}{" "}
-        {hasIcon && <CopyIcon ml="8px" />}
+        {address && hasIcon && <CopyIcon ml="8px" />}
       </Flex>
     </>
   );

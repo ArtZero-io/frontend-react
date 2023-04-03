@@ -126,7 +126,7 @@ function StatsPage() {
 
       // TOP COLLECTIONS
       const { ret: dataList } = await APICall.getCollectionsByVolume({
-        limit: 5,
+        limit: 20,
       });
 
       const dataListWithFP = await Promise.all(

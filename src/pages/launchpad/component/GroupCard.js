@@ -19,7 +19,7 @@ import * as ROUTES from "@constants/routes";
 import { useSubstrateState } from "@utils/substrate";
 import CardContentLoader from "./CardContentLoader";
 
-const NO_OF_PROJ_TO_DISPLAY = 4;
+const NO_OF_PROJ_TO_DISPLAY = 8;
 
 export const GroupCard = ({ variant = "live", projectsList, loading }) => {
   const { currentAccount } = useSubstrateState();
