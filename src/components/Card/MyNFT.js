@@ -77,7 +77,7 @@ function MyNFTCard({
     if (target.checked && multiStakeData?.list?.length >= MAX_ITEM_STAKE) {
       !multiStakeData?.list?.includes(tokenID) && setIsTicked(false);
 
-      return toast.error(`Max items allowed limited to ${MAX_ITEM_STAKE}!`);
+      return toast.error(`You can stake up to ${MAX_ITEM_STAKE} PMPs per transaction!`);
     }
 
     target.checked ? setIsTicked(true) : setIsTicked(false);
