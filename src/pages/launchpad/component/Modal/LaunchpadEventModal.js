@@ -28,7 +28,7 @@ import PaginationMP from "@components/Pagination/Pagination";
 import toast from "react-hot-toast";
 import { usePagination } from "@ajna/pagination";
 import { APICall } from "../../../../api/client";
-const NUMBER_PER_PAGE = 3;
+const NUMBER_PER_PAGE = 5;
 
 export default function LaunchpadEventModal({
   collection_address,

@@ -10,11 +10,11 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 
-import { truncateStr } from "@utils";
 import { APICall } from "@api/client";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { SCROLLBAR } from "@constants";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
+import AddressCopier from "../../../components/AddressCopier/AddressCopier";
 
 function TabActivity({
   tokenUriType1,
@@ -58,9 +58,9 @@ function TabActivity({
 
               event = {
                 ...event,
-                buyerName: truncateStr(event.buyer),
-                sellerName: truncateStr(event.seller),
-                traderName: truncateStr(event.trader),
+                buyerName: <AddressCopier address={event.buyer} truncateStr={9} textOnly={true}/>,
+                sellerName: <AddressCopier address={event.seller} truncateStr={9} textOnly={true}/>,
+                traderName: <AddressCopier address={event.trader} truncateStr={9} textOnly={true}/>,
                 collectionName: name,
                 nftName,
                 avatar,
@@ -89,7 +89,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="PURCHASE"
-          collectionOwnerName={truncateStr(collectionOwner)}
+          collectionOwnerName={<AddressCopier address={collectionOwner} truncateStr={9} textOnly={true}/>}
           tableHeaders={headers.purchase}
           fetchMore={fetchMore}
           fetchBack={fetchBack}
@@ -105,7 +105,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="LIST"
-          collectionOwnerName={truncateStr(collectionOwner)}
+          collectionOwnerName={<AddressCopier address={collectionOwner} truncateStr={9} textOnly={true}/>}
           tableHeaders={headers.list}
           fetchMore={fetchMore}
           fetchBack={fetchBack}
@@ -121,7 +121,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="UNLIST"
-          collectionOwnerName={truncateStr(collectionOwner)}
+          collectionOwnerName={<AddressCopier address={collectionOwner} truncateStr={9} textOnly={true}/>}
           tableHeaders={headers.unlist}
           fetchMore={fetchMore}
           hasMore={hasMore[2]}
@@ -137,7 +137,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="BID ACCEPT"
-          collectionOwnerName={truncateStr(collectionOwner)}
+          collectionOwnerName={<AddressCopier address={collectionOwner} truncateStr={9} textOnly={true}/>}
           tableHeaders={headers.bidAccepted}
           fetchMore={fetchMore}
           fetchBack={fetchBack}

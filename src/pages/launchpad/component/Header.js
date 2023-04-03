@@ -30,7 +30,6 @@ import { memo, useState } from "react";
 import useInterval from "use-interval";
 import { useHistory } from "react-router-dom";
 
-import { truncateStr } from "@utils";
 import * as ROUTES from "@constants/routes";
 import { useSubstrateState } from "@utils/substrate";
 
@@ -50,6 +49,7 @@ import LaunchpadEventModal from "./Modal/LaunchpadEventModal";
 import WithdrawHistoryModal from "./Modal/WithdrawHistoryModal";
 import OwnerMintModal from "../../account/projects/components/OwnerMintModal";
 import WhitelistManagerModal from "../../account/projects/components/WhitelistManagerModal";
+import AddressCopier from "@components/AddressCopier/AddressCopier";
 
 function LaunchpadDetailHeader({
   loading,
@@ -334,7 +334,8 @@ function LaunchpadDetailHeader({
                   <Heading fontSize={["sm", "md"]} mb={["6px", "8px"]}>
                     project creator:{" "}
                     <Text as="span" color="#7ae7ff">
-                      {truncateStr(projectOwner)}{" "}
+                    <AddressCopier address={projectOwner} textOnly={true}/>
+
                     </Text>
                   </Heading>
 
@@ -343,7 +344,7 @@ function LaunchpadDetailHeader({
                       <Heading fontSize={["sm", "md"]}>
                         project admin:{" "}
                         <Text as="span" color="#7ae7ff">
-                          {truncateStr(currentAccount?.address)}
+                          <AddressCopier address={currentAccount?.address} textOnly={true}/>
                         </Text>
                       </Heading>
                     )}

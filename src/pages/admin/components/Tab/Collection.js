@@ -12,7 +12,6 @@ import { useSubstrateState } from "@utils/substrate";
 import collection_manager_calls from "@utils/blockchain/collection-manager-calls";
 import collection_manager from "@utils/blockchain/collection-manager";
 import { useEffect, useState } from "react";
-import { truncateStr } from "@utils";
 import toast from "react-hot-toast";
 import BN from "bn.js";
 import { SCROLLBAR } from "@constants";
@@ -449,7 +448,7 @@ function CollectionAdmin() {
                 color="#fff"
                 isLoaded={collectionContractOwner}
               >
-                {truncateStr(collectionContractOwner, 9)}
+                <AddressCopier address={collectionContractOwner} truncateStr={9} textOnly={true}/>
               </Skeleton>
             </Flex>
 
@@ -608,7 +607,7 @@ function CollectionAdmin() {
                       </Td>
                       <Td py={7}>{collection.name}</Td>
                       <Td py={7}>
-                        {truncateStr(collection.collectionOwner, 5)}
+                        <AddressCopier address={collection.collectionOwner} truncateStr={5} textOnly={true}/>
                       </Td>
                       <Td>
                         {collection.contractType === "Psp34Auto"
