@@ -41,12 +41,17 @@ function MyNFTOffer({ nftContractAddress, tokenID }) {
 
   const publicCurrentAccount = getPublicCurrentAccount();
   useEffect(() => {
+    let isMounted = true;
+
     const fetchBidder = async () => {
       const sale_info = await marketplace_contract_calls.getNftSaleInfo(
         publicCurrentAccount,
         nftContractAddress,
         { u64: tokenID }
       );
+
+      if (!isMounted) return;
+
       setSaleInfo(sale_info);
 
       if (sale_info) {
@@ -84,6 +89,7 @@ function MyNFTOffer({ nftContractAddress, tokenID }) {
     };
 
     fetchBidder();
+    return () => (isMounted = false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nftContractAddress, tokenID, currentAccount?.address]);
 
