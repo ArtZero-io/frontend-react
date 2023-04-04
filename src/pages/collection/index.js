@@ -41,7 +41,7 @@ import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 // import toast from "react-hot-toast";
 
-const NUMBER_PER_PAGE = 12;
+const NUMBER_PER_PAGE = 24;
 
 const OFFSET_ACTIVITY = 6;
 

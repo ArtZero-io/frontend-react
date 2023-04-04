@@ -270,8 +270,9 @@ function LeftPanel({
                                       setTraitsQuery(newTraitsQuery);
                                     }}
                                   >
-                                    <Flex>
+                                    <Flex alignItems="baseline">
                                       <Text
+                                        mr="8px"
                                         fontFamily="Oswald, sans-serif"
                                         fontStyle="italic"
                                         color="#7AE7FF"
@@ -280,7 +281,7 @@ function LeftPanel({
                                         {item.name}
                                       </Text>
                                       <Spacer />
-                                      <Text>
+                                      <Text fontSize="14px">
                                         {item.count}/{totalNftCountRef.current}
                                       </Text>
                                     </Flex>
