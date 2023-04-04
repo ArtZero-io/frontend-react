@@ -70,7 +70,7 @@ function TransferNFTModalMobile({
         nftContractAddress
       );
       let unsubscribe;
-      let gasLimit ;
+      let gasLimit;
 
       const address = currentAccount?.address;
       const { signer } = await web3FromSource(currentAccount?.meta?.source);
@@ -87,8 +87,6 @@ function TransferNFTModalMobile({
         { u64: tokenID },
         stringToU8a(additionalData)
       );
-
-      
 
       await contract.tx["psp34::transfer"](
         { value, gasLimit },
@@ -134,11 +132,8 @@ function TransferNFTModalMobile({
         label="Transfer NFT"
       >
         <span
-          onClick={
-            isDisabled || actionType
-              ? () => toast.error("This item can not transfer!")
-              : onOpen
-          }
+          isDisabled={true}
+          onClick={isDisabled || actionType ? () => {} : onOpen}
           style={{
             width: iconWidth,
             height: iconWidth,

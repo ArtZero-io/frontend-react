@@ -104,6 +104,7 @@ const NFTTabCollectible = (props) => {
     isActive,
     royaltyFee,
   } = props;
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
   const { api, currentAccount } = useSubstrateState();
@@ -379,9 +380,10 @@ const NFTTabCollectible = (props) => {
               to={`/nft/${nftContractAddress}/${tokenID}`}
             >
               <Heading
+                isTruncated
                 color="#fff"
                 size="h4"
-                fontSize={{ base: "28px", "2xl": "28px" }}
+                fontSize={{ base: "26px" }}
               >
                 {nftName}
               </Heading>
@@ -592,7 +594,7 @@ const NFTTabCollectible = (props) => {
                             <NumberInput
                               w="50%"
                               minW={"85px"}
-                              isDisabled={actionType}
+                              isDisabled={!isActive || actionType}
                               bg="black"
                               max={999000000}
                               min={1}
@@ -628,7 +630,8 @@ const NFTTabCollectible = (props) => {
                               text="push for sale"
                               onClick={handleListTokenAction}
                               isDisabled={
-                                actionType && actionType !== LIST_TOKEN
+                                !isActive ||
+                                (actionType && actionType !== LIST_TOKEN)
                               }
                             />
                           </HStack>
