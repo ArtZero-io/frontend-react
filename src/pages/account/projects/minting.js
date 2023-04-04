@@ -39,27 +39,24 @@ function MyMintingProjectPage(props) {
 
   const [ownerMinted, setOwnerMinted] = useState(0);
 
-  const fetchPhasesInfoData = useCallback(
-    async () => {
-      const launchpad_psp34_nft_standard_contract = new ContractPromise(
-        api,
-        launchpad_psp34_nft_standard.CONTRACT_ABI,
-        selectedProjectAddress
+  const fetchPhasesInfoData = useCallback(async () => {
+    const launchpad_psp34_nft_standard_contract = new ContractPromise(
+      api,
+      launchpad_psp34_nft_standard.CONTRACT_ABI,
+      selectedProjectAddress
+    );
+
+    launchpad_psp34_nft_standard_calls.setContract(
+      launchpad_psp34_nft_standard_contract
+    );
+
+    const ownerClaimedAmount =
+      await launchpad_psp34_nft_standard_calls.getOwnerClaimedAmount(
+        currentAccount
       );
 
-      launchpad_psp34_nft_standard_calls.setContract(
-        launchpad_psp34_nft_standard_contract
-      );
-
-      const ownerClaimedAmount =
-        await launchpad_psp34_nft_standard_calls.getOwnerClaimedAmount(
-          currentAccount
-        );
-
-      setOwnerMinted(ownerClaimedAmount);
-    },
-    [api, currentAccount, selectedProjectAddress]
-  );
+    setOwnerMinted(ownerClaimedAmount);
+  }, [api, currentAccount, selectedProjectAddress]);
 
   useEffect(() => {
     let isUnmounted = false;
@@ -139,9 +136,8 @@ function MyMintingProjectPage(props) {
         </Heading>
 
         <Text w="full">
-          If you are an owner project, you can mint the remain NFTs of public
-          phases.
-          <br /> This action is free
+          Project owner can mint remaining NFTs when phase is inactive or when
+          project is ended.
         </Text>
 
         <HStack textAlign="left">
