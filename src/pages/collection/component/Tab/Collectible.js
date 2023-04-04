@@ -390,13 +390,15 @@ const NFTTabCollectible = (props) => {
             <Spacer />
 
             <HStack>
-              {!is_locked && showOnChainMetadata && (collectionOwner === currentAccount?.address) && (
-                <AddNewNFTModal
-                  {...props}
-                  mode={formMode.EDIT}
-                  isDisabled={!isActive || is_for_sale || actionType}
-                />
-              )}
+              {!is_locked &&
+                showOnChainMetadata &&
+                collectionOwner === currentAccount?.address && (
+                  <AddNewNFTModal
+                    {...props}
+                    mode={formMode.EDIT}
+                    isDisabled={!isActive || is_for_sale || actionType}
+                  />
+                )}
 
               {!is_locked && isOwner && (
                 <LockNFTModal
@@ -515,15 +517,24 @@ const NFTTabCollectible = (props) => {
           </HStack>
 
           <Stack>
-            <Text
-              isTruncated
-              fontSize="lg"
-              color="brand.grayLight"
-              lineHeight="1.35"
-              maxW={{ base: "500px", "2xl": "610px" }}
+            <Tooltip
+              cursor="pointer"
+              hasArrow
+              bg="#333"
+              color="#fff"
+              borderRadius="0"
+              label={description}
             >
-              {description}
-            </Text>
+              <Text
+                isTruncated
+                fontSize="lg"
+                color="brand.grayLight"
+                lineHeight="1.35"
+                maxW={{ base: "500px", "2xl": "610px" }}
+              >
+                {description}
+              </Text>
+            </Tooltip>
           </Stack>
 
           <Stack w="full">
