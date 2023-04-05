@@ -722,7 +722,7 @@ function TokenPage() {
                     />
                   </>
                 )}
-
+                {console.log("token", token)}
                 {isOwner && (
                   <TransferNFTModalMobile
                     {...token}

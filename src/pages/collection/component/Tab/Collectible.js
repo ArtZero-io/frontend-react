@@ -912,7 +912,7 @@ const NFTTabCollectible = (props) => {
                 )}
               </Stack>
 
-              {isOwner && (
+              {isActive && isOwner && (
                 <>
                   <Stack w="full" pl="8px">
                     <FeeCalculatedBar feeCalculated={feeCalculated} />
