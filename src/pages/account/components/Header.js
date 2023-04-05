@@ -140,7 +140,7 @@ function ProfileHeader() {
     // TODO: update to remote dispatch(clearTxStatus());
 
     await delay(2000).then(() => {
-      toast.success("You have unsuccessful bid claim");
+      toast.success("You have successfully claim your unsuccessful bid!");
       dispatch(clearTxStatus());
       fetchMyBidHoldInfo();
     });

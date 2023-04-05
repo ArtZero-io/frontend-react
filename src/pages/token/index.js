@@ -151,7 +151,7 @@ function TokenPage() {
         const ownerAddress = tokenDetails?.is_for_sale
           ? tokenDetails?.nft_owner
           : tokenDetails?.owner;
-          tokenDetails.attrsList = !tokenDetails?.traits
+        tokenDetails.attrsList = !tokenDetails?.traits
           ? {}
           : Object.entries(tokenDetails?.traits).map(([k, v]) => {
               return { [k]: v };
@@ -181,8 +181,8 @@ function TokenPage() {
             //sort highest price first
             listBidder.sort((a, b) => {
               return (
-                b.bidValue.replaceAll(",", "") * 1 -
-                a.bidValue.replaceAll(",", "") * 1
+                b.bidValue?.replaceAll(",", "") * 1 -
+                a.bidValue?.replaceAll(",", "") * 1
               );
             });
 
@@ -197,7 +197,7 @@ function TokenPage() {
             const myBid = listBidder.filter((item) => item.isMyBid === true);
             if (myBid.length) {
               const bidValue =
-                (myBid[0].bidValue.replaceAll(",", "") * 1) / 10 ** 12;
+                (myBid[0].bidValue?.replaceAll(",", "") * 1) / 10 ** 12;
 
               setBidPrice(bidValue);
               setIsAlreadyBid(true);
@@ -850,7 +850,7 @@ function TokenPage() {
                             <NumberInput
                               w="50%"
                               minW={"85px"}
-                              isDisabled={actionType}
+                              isDisabled={!collection?.isActive || actionType}
                               bg="black"
                               max={999000000}
                               min={1}
@@ -874,7 +874,6 @@ function TokenPage() {
                                 <AzeroIcon w="14px" h="14px" />
                               </InputRightElement>
                             </NumberInput>
-
                             <CommonButton
                               w="50%"
                               h="40px"
@@ -882,7 +881,8 @@ function TokenPage() {
                               text="push for sale"
                               onClick={handleListTokenAction}
                               isDisabled={
-                                actionType && actionType !== LIST_TOKEN
+                                !collection?.isActive ||
+                                (actionType && actionType !== LIST_TOKEN)
                               }
                             />
                           </HStack>

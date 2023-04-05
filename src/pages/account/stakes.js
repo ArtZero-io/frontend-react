@@ -389,7 +389,7 @@ export const fetchPlatformStakingDiscountRate = async (
     currentAccount
   );
   const ret = response?.map((rate) => {
-    return rate.replaceAll(",", "") / 100;
+    return rate?.replaceAll(",", "") / 100;
   });
 
   return ret;

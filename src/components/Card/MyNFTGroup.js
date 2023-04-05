@@ -119,7 +119,7 @@ function MyNFTGroupCard({
                   bg="#333"
                   color="#fff"
                   borderRadius="0"
-                  label="Contact ArtZero to activate your Collection"
+                  label="This collection is not enabled on the Marketplace yet."
                 >
                   <Tag variant="inActive" fontSize={["14px", "16px"]}>
                     <TagLeftIcon as={InActiveIcon} />

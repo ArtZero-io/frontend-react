@@ -65,7 +65,7 @@ const CollectionItems = ({
   const { currentAccount } = useSubstrateState();
 
   const [bigCardNew, setBigCardNew] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(1);
+  const [selectedItem, setSelectedItem] = useState(0);
 
   const options = [
     // "Price: Newest",
@@ -109,8 +109,8 @@ const CollectionItems = ({
             listBidder?.length &&
               listBidder.sort((a, b) => {
                 return (
-                  b.bidValue.replaceAll(",", "") * 1 -
-                  a.bidValue.replaceAll(",", "") * 1
+                  b.bidValue?.replaceAll(",", "") * 1 -
+                  a.bidValue?.replaceAll(",", "") * 1
                 );
               });
 

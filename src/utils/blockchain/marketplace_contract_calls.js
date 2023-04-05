@@ -120,10 +120,6 @@ async function getNftSaleInfo(caller_account, nft_contract_address, token_id) {
   ](address, { value: azero_value, gasLimit }, nft_contract_address, token_id);
 
   if (result.isOk) {
-    console.log(
-      "artZeroMarketplaceTrait::getNftSaleInfo obj",
-      output.toHuman().Ok
-    );
     return output.toHuman().Ok;
   }
   return null;
@@ -200,10 +196,6 @@ async function getAllBids(
   );
 
   if (result.isOk) {
-    console.log(
-      "artZeroMarketplaceTrait::getAllBids array",
-      output.toHuman().Ok
-    );
     return output.toHuman().Ok;
   }
 
@@ -312,11 +304,6 @@ async function getCurrentProfit(caller_account) {
   });
 
   if (result.isOk) {
-    console.log(
-      "artZeroMarketplaceTrait::getCurrentProfit",
-      formatNumberOutput(output)
-    );
-
     return formatNumberOutput(output) / 10 ** 12;
   }
   return null;

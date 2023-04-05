@@ -422,15 +422,24 @@ function MyNFTTabInfo(props) {
           </HStack>
 
           <Stack>
-            <Text
-              isTruncated
-              fontSize="lg"
-              color="brand.grayLight"
-              lineHeight="1.35"
-              maxW={{ base: "500px", "2xl": "610px" }}
+            <Tooltip
+              cursor="pointer"
+              hasArrow
+              bg="#333"
+              color="#fff"
+              borderRadius="0"
+              label={description}
             >
-              {description}
-            </Text>
+              <Text
+                isTruncated
+                fontSize="lg"
+                color="brand.grayLight"
+                lineHeight="1.35"
+                maxW={{ base: "500px", "2xl": "610px" }}
+              >
+                {description}
+              </Text>
+            </Tooltip>
           </Stack>
 
           <Stack>
@@ -521,7 +530,7 @@ function MyNFTTabInfo(props) {
                 <Spacer />
                 <NumberInput
                   // maxW={32}
-                  isDisabled={actionType}
+                  isDisabled={!isActive || actionType}
                   bg="black"
                   max={999000000}
                   min={1}
@@ -546,7 +555,9 @@ function MyNFTTabInfo(props) {
                   {...rest}
                   text="push for sale"
                   onClick={handleListTokenAction}
-                  isDisabled={actionType && actionType !== LIST_TOKEN}
+                  isDisabled={
+                    !isActive || (actionType && actionType !== LIST_TOKEN)
+                  }
                 />
               </Flex>
             )}

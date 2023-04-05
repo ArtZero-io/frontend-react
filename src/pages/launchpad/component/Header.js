@@ -323,14 +323,7 @@ function LaunchpadDetailHeader({
                   {name}
                 </Heading>
 
-                <VStack
-                  minW={["auto", "870px"]}
-                  w="full"
-                  borderBottom="#282828 solid"
-                  borderBottomWidth={["0px", "1px"]}
-                  pt={["12px", "12px"]}
-                  pb={["20px", "30px"]}
-                >
+                <VStack pt={["12px", "12px"]}>
                   <Heading fontSize={["sm", "md"]} mb={["6px", "8px"]}>
                     project creator:{" "}
                     <Text as="span" color="#7ae7ff">
@@ -350,7 +343,17 @@ function LaunchpadDetailHeader({
                     )}
                   </Skeleton>
                 </VStack>
-
+                <HStack
+                  pb={["20px", "30px"]}
+                  justifyContent="center"
+                  minW={["auto", "870px"]}
+                  w="full"
+                  borderBottom="#282828 solid"
+                  borderBottomWidth={["0px", "1px"]}
+                >
+                  <Text>Contract Address:</Text>{" "}
+                  <AddressCopier address={nftContractAddress} hasIcon={true} />
+                </HStack>
                 <Flex
                   color="#888"
                   pt={["2px", "22px"]}

@@ -393,10 +393,6 @@ async function getProjectAddingFee(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    console.log(
-      "artZeroLaunchPadTrait::get_project_adding_fee formatOutput(output)",
-      formatOutput(output)
-    );
     return formatOutput(output);
   }
 

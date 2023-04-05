@@ -267,11 +267,6 @@ async function getRewardStarted(caller_account) {
     gasLimit,
   });
   if (result.isOk) {
-    console.log(
-      "artZeroStakingTrait::getRewardStarted bool ",
-      output.toHuman().Ok
-    );
-
     return output.toHuman().Ok;
   }
   return null;
