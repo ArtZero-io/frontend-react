@@ -398,10 +398,7 @@ function MyWhiteListProjectPage(props) {
       const regexTestNum = /^-?\d+(\.\d+(e\d+)?)?$/;
 
       for (let i = 0; i < value4Contract?.addressList?.length; i++) {
-        console.log(
-          "value4Contract?.addressList[i]",
-          value4Contract?.addressList[i]
-        );
+         
 
         if (!isValidAddress(value4Contract?.addressList[i])) {
           return toast.error(

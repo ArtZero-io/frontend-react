@@ -44,10 +44,8 @@ function CollectionHeader(props) {
     isDoxxed,
     isDuplicationChecked,
     nftContractAddress,
-    ...rest
   } = props;
 
-  console.log("rest", rest);
   const [isSeeMore, setIsSeeMore] = useState(false);
   const descLength = useBreakpointValue([115, 175]);
 
