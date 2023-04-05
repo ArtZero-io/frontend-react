@@ -456,7 +456,6 @@ export const APICall = {
     } catch (error) {
       console.log("error", error);
     }
-    console.log("token_id", token_id);
     return await client("POST", "/getNFTByID", {
       collection_address,
       token_id,

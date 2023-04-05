@@ -249,7 +249,6 @@ function CollectionPage() {
   }, [pagesCount]);
 
   useEffect(() => {
-    
     initEvents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPageActivity]);
@@ -271,11 +270,11 @@ function CollectionPage() {
   }, [collection_address, traitsQuery, priceQuery, activeTab]);
 
   const resetPage = () => {
-    if(currentPageActivity !== 1) {
-      setHasMorePage([true, true, true, true])
-      setCurrentPageActivity(1)
-    } 
-  }
+    if (currentPageActivity !== 1) {
+      setHasMorePage([true, true, true, true]);
+      setCurrentPageActivity(1);
+    }
+  };
 
   const tabsData = [
     {
@@ -357,9 +356,9 @@ function CollectionPage() {
         hasMorePage[2] ? getUnlistEvents : [],
         hasMorePage[3] ? getNewListEvents : [],
       ]).then(async (res) => {
-        const newMore = res.map(el => el.length === OFFSET_ACTIVITY + 1)
-        setHasMorePage(newMore)
-        const newArray = res.map(el => el.slice(0,6))
+        const newMore = res.map((el) => el.length === OFFSET_ACTIVITY + 1);
+        setHasMorePage(newMore);
+        const newArray = res.map((el) => el.slice(0, 6));
         result = newArray
           .reduce((a, b) => [...a, ...b])
           .sort((a, b) => b.blockNumber - a.blockNumber);
