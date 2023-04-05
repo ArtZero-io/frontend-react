@@ -118,6 +118,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
       discord: "",
       telegram: "",
       agreeTosCheckbox: false,
+      isDoxxed: "0",
+      isDuplicationChecked: "0",
     };
     const fetchCollectionsByID = async () => {
       try {
@@ -135,6 +137,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
           twitter: dataList[0].twitter,
           discord: dataList[0].discord,
           telegram: dataList[0].telegram,
+          isDoxxed: dataList[0].isDoxxed ? "1" : "0",
+          isDuplicationChecked: dataList[0].isDuplicationChecked ? "1" : "0",
         };
 
         if (dataList?.length) {
@@ -267,8 +271,8 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               twitter: values.twitter,
               discord: values.discord,
               telegram: values.telegram,
-              isDoxxed: "0",
-              isDuplicationChecked: "0",
+              isDoxxed: values.isDoxxed,
+              isDuplicationChecked: values.isDuplicationChecked,
             };
             // console.log("metadata", metadata);
 
