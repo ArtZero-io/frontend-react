@@ -1,9 +1,8 @@
-/* eslint-disable no-unused-vars */
-import { Flex, Spacer, Stack } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { usePagination } from "@ajna/pagination";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import Layout from "@components/Layout/Layout";
 import PaginationMP from "@components/Pagination/Pagination";
@@ -13,7 +12,6 @@ import TabCollectionItems from "./component/TabItems";
 import CollectionHeader from "./component/Header/Header";
 
 import { APICall } from "@api/client";
-import useInterval from "@hooks/useInterval";
 
 import { AccountActionTypes } from "@store/types/account.types";
 import { getPublicCurrentAccount } from "@utils";
@@ -49,7 +47,7 @@ function CollectionPage() {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { search } = useLocation();
+  const { search, state } = useLocation();
   const { collection_address } = useParams();
 
   const { actionType } = useTxStatus();
@@ -65,6 +63,14 @@ function CollectionPage() {
   const [hasMorePage, setHasMorePage] = useState([true, true, true, true]);
 
   const [sortData, setSortData] = useState(1);
+
+  useEffect(() => {
+    if (state?.selectedItem === 1) {
+      setSortData(-1);
+    } else {
+      setSortData(1);
+    }
+  }, [state?.selectedItem]);
 
   useEffect(() => {
     if (!search) return;
@@ -163,11 +169,7 @@ function CollectionPage() {
 
     ret.totalListed = totalListedCount || 0;
 
-    const {
-      status: floorStatus,
-      message,
-      ret: floorPrice,
-    } = await APICall.getCollectionFloorPrice({
+    const { message, ret: floorPrice } = await APICall.getCollectionFloorPrice({
       collection_address,
     });
 

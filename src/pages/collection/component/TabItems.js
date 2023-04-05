@@ -21,7 +21,7 @@ import { BsGrid3X3 } from "react-icons/bs";
 import RefreshIcon from "@theme/assets/icon/Refresh.js";
 import BigGridIcon from "@theme/assets/icon/BigGrid";
 
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
@@ -66,6 +66,14 @@ const CollectionItems = ({
 
   const [bigCardNew, setBigCardNew] = useState(false);
   const [selectedItem, setSelectedItem] = useState(0);
+
+  const { state } = useLocation();
+
+  useEffect(() => {
+    if (state?.selectedItem) {
+      setSelectedItem(state?.selectedItem);
+    }
+  }, [state?.selectedItem]);
 
   const options = [
     // "Price: Newest",
@@ -340,6 +348,7 @@ const CollectionItems = ({
             <AnimationLoader loadingTime={loadingTime} />
           ) : (
             <CollectionGridNew
+              selectedItem={selectedItem}
               columns={columns}
               gap={stackSpacing}
               cardWidth={nftCardWidthNew}
@@ -378,10 +387,12 @@ const CollectionGridNew = ({
   totalNftCount,
   bigCardNew,
   name,
+  selectedItem,
   ...rest
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedNft, setSelectedNft] = useState(null);
+  const location = useLocation();
 
   const history = useHistory();
   const [isBigScreen] = useMediaQuery("(min-width: 480px)");
@@ -391,7 +402,10 @@ const CollectionGridNew = ({
       setSelectedNft(item);
       onOpen();
     } else {
-      history.push(`/nft/${item.nftContractAddress}/${item.tokenID}`);
+      history.push({
+        state: { selectedItem, ...location },
+        pathname: `/nft/${item.nftContractAddress}/${item.tokenID}`,
+      });
     }
   }
 
