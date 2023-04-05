@@ -64,7 +64,7 @@ function CollectionPage() {
 
   const [hasMorePage, setHasMorePage] = useState([true, true, true, true]);
 
-  const [sortData, setSortData] = useState(-1);
+  const [sortData, setSortData] = useState(1);
 
   useEffect(() => {
     if (!search) return;

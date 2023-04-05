@@ -65,7 +65,7 @@ const CollectionItems = ({
   const { currentAccount } = useSubstrateState();
 
   const [bigCardNew, setBigCardNew] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(1);
+  const [selectedItem, setSelectedItem] = useState(0);
 
   const options = [
     // "Price: Newest",
