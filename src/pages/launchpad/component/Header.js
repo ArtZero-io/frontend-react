@@ -30,7 +30,6 @@ import { memo, useState } from "react";
 import useInterval from "use-interval";
 import { useHistory } from "react-router-dom";
 
-import { truncateStr } from "@utils";
 import * as ROUTES from "@constants/routes";
 import { useSubstrateState } from "@utils/substrate";
 
@@ -326,19 +325,18 @@ function LaunchpadDetailHeader({
 
                 <VStack pt={["12px", "12px"]}>
                   <Heading fontSize={["sm", "md"]} mb={["6px", "8px"]}>
-                    project creator:{" "}
-                    <Text as="span" color="#7ae7ff">
-                      {truncateStr(projectOwner)}{" "}
-                    </Text>
+                    <Flex as="span">
+                      project creator: <AddressCopier address={projectOwner} />
+                    </Flex>
                   </Heading>
 
                   <Skeleton isLoaded={!loading}>
                     {isAdmin && (
                       <Heading fontSize={["sm", "md"]}>
-                        project admin:{" "}
-                        <Text as="span" color="#7ae7ff">
-                          {truncateStr(currentAccount?.address)}
-                        </Text>
+                        <Flex as="span">
+                          project admin:{" "}
+                          <AddressCopier address={currentAccount?.address} />
+                        </Flex>
                       </Heading>
                     )}
                   </Skeleton>
