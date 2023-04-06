@@ -20,13 +20,14 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import AzeroIcon from "@theme/assets/icon/Azero.js";
-import { MdOutlineArrowBackIos } from "react-icons/md";
+import { TiArrowBackOutline } from "react-icons/ti";
 
 import toast from "react-hot-toast";
 import {
   Link as ReactRouterLink,
   useHistory,
   useParams,
+  useLocation,
 } from "react-router-dom";
 
 import { APICall } from "@api/client";
@@ -93,6 +94,7 @@ function TokenPage() {
   const { currentAccount, api } = useSubstrateState();
   const { collection_address, token_id } = useParams();
   const history = useHistory();
+  const { state } = useLocation();
 
   const [token, setToken] = useState(null);
   const [bidPrice, setBidPrice] = useState(1);
@@ -439,9 +441,23 @@ function TokenPage() {
                     cursor="pointer"
                     display="flex"
                     alignItems="center"
-                    onClick={() => history.goBack()}
+                    onClick={() => {
+                      if (!state?.pathname) {
+                        history.push({
+                          state: { selectedItem: state?.selectedItem },
+                          pathname: `/collection/` + token?.nftContractAddress,
+                        });
+                        return;
+                      }
+
+                      history.push({
+                        state: { selectedItem: state?.selectedItem },
+                        pathname: state?.pathname,
+                        search: state?.search,
+                      });
+                    }}
                   >
-                    <MdOutlineArrowBackIos />
+                    <TiArrowBackOutline />
                     <Text size="h6" pl="4px">{`${collection?.name}`}</Text>
                   </HStack>
                 </BreadcrumbItem>
@@ -725,7 +741,7 @@ function TokenPage() {
                     />
                   </>
                 )}
-
+                {console.log("token", token)}
                 {isOwner && (
                   <TransferNFTModalMobile
                     {...token}
@@ -893,7 +909,9 @@ function TokenPage() {
                       </Stack>
 
                       <Stack w="full">
-                        <FeeCalculatedBar feeCalculated={feeCalculated} />
+                        {collection?.isActive && (
+                          <FeeCalculatedBar feeCalculated={feeCalculated} />
+                        )}
                       </Stack>
                     </>
                   )}
@@ -931,7 +949,9 @@ function TokenPage() {
                       </Stack>
 
                       <Stack w="full">
-                        <FeeCalculatedBar feeCalculated={feeCalculated} />
+                        {collection?.isActive && (
+                          <FeeCalculatedBar feeCalculated={feeCalculated} />
+                        )}
                       </Stack>
                     </>
                   )}

@@ -72,7 +72,7 @@ function CommonTable({
                       py={{ base: "1rem", "2xl": "1.75rem" }}
                       textAlign="left"
                     >
-                      <AddressCopier address={item?.bidder} truncateStrNum={6} textOnly={true}/>
+                      <AddressCopier address={item.bidder} />
                     </Td>
 
                     <Td

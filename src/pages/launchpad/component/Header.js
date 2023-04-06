@@ -325,20 +325,18 @@ function LaunchpadDetailHeader({
 
                 <VStack pt={["12px", "12px"]}>
                   <Heading fontSize={["sm", "md"]} mb={["6px", "8px"]}>
-                    project creator:{" "}
-                    <Text as="span" color="#7ae7ff">
-                    <AddressCopier address={projectOwner} textOnly={true}/>
-
-                    </Text>
+                    <Flex as="span">
+                      project creator: <AddressCopier address={projectOwner} />
+                    </Flex>
                   </Heading>
 
                   <Skeleton isLoaded={!loading}>
                     {isAdmin && (
                       <Heading fontSize={["sm", "md"]}>
-                        project admin:{" "}
-                        <Text as="span" color="#7ae7ff">
-                          <AddressCopier address={currentAccount?.address} textOnly={true}/>
-                        </Text>
+                        <Flex as="span">
+                          project admin:{" "}
+                          <AddressCopier address={currentAccount?.address} />
+                        </Flex>
                       </Heading>
                     )}
                   </Skeleton>

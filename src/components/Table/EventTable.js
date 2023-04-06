@@ -19,6 +19,7 @@ import { memo } from "react";
 import { SCROLLBAR } from "@constants";
 import ImageCloudFlare from "@components/ImageWrapper/ImageCloudFlare";
 import CommonButton from "../Button/CommonButton";
+import AddressCopier from "@components/AddressCopier/AddressCopier";
 
 function EventTable({
   tableHeaders,
@@ -28,7 +29,7 @@ function EventTable({
   fetchBack,
   fetchMore,
   currentPage,
-  hasMore
+  hasMore,
 }) {
   return (
     <>
@@ -69,7 +70,7 @@ function EventTable({
                         dropShadow="lg"
                         py={{ base: "1rem", "2xl": "1.75rem" }}
                       >
-                        collection creator
+                        creator
                       </Th>
                       {Object.values(tableHeaders)?.map((item, idx) =>
                         item === "image" ? null : (
@@ -118,14 +119,14 @@ function EventTable({
                           textAlign="left"
                           color="#7ae7ff"
                         >
-                          {collectionOwnerName}
+                          <AddressCopier address={collectionOwnerName} />
                         </Td>
                         {Object.keys(tableHeaders)?.map((i, idx) =>
                           i === "avatar" ? null : (
                             <Td
                               key={idx}
                               textAlign="left"
-                              minW={["auto", "250px"]}
+                              // minW={["auto", "250px"]}
                               // isNumeric={i === "price" ? true : false}
                               py={{ base: "1rem", "2xl": "1.75rem" }}
                             >
@@ -145,11 +146,13 @@ function EventTable({
                                     mr="20px"
                                     src={item["avatar"]}
                                   />
-                                  {/* <Square>
-                                </Square> */}
+
                                   <Text>{item.nftName}</Text>
                                 </HStack>
-                              ) : (
+                              ) : i === "sellerName" ||
+                                i === "traderName" ||
+                                i === "buyerName" ||
+                                i === "nftContractAddress" ? (
                                 <Text
                                   color={
                                     [
@@ -160,8 +163,10 @@ function EventTable({
                                     ].includes(i) && "#7ae7ff"
                                   }
                                 >
-                                  {item[i]}
+                                  <AddressCopier address={item[i]} />
                                 </Text>
+                              ) : (
+                                <Text>{item[i]}</Text>
                               )}
                             </Td>
                           )

@@ -116,6 +116,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
       telegram: "",
       agreeTosCheckbox: false,
       confirmInfoCheckbox: false,
+      isDoxxed: "0",
+      isDuplicationChecked: "0",
     };
 
     const fetchCollectionsByID = async () => {
@@ -137,6 +139,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           twitter,
           discord,
           telegram,
+          isDoxxed,
+          isDuplicationChecked,
         } = dataList;
 
         newInitialValues = {
@@ -152,6 +156,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
           twitter,
           discord,
           telegram,
+          isDoxxed: isDoxxed ? "1" : "0",
+          isDuplicationChecked: isDuplicationChecked ? "1" : "0",
         };
 
         if (dataList) {
@@ -363,8 +369,8 @@ const AdvancedModeForm = ({ mode = "add", id }) => {
                 twitter: values.twitter,
                 discord: values.discord,
                 telegram: values.telegram,
-                isDoxxed: "0",
-                isDuplicationChecked: "0",
+                isDoxxed: values.isDoxxed,
+                isDuplicationChecked: values.isDuplicationChecked,
               };
               // console.log("metadata ADV MODE", metadata);
 

@@ -412,10 +412,12 @@ function MyNFTTabInfo(props) {
                     isDisabled={!isActive || is_for_sale || actionType}
                   />
                 )}
+              {console.log("isActive", isActive)}
+              {console.log("is_for_sale", is_for_sale)}
               {ownerAddress === currentAccount?.address && (
                 <TransferNFTModal
                   {...props}
-                  isDisabled={!isActive || is_for_sale || actionType}
+                  isDisabled={is_for_sale || actionType}
                 />
               )}
             </HStack>
@@ -627,7 +629,7 @@ function MyNFTTabInfo(props) {
             )}
           </Stack>
 
-          {filterSelected === "COLLECTED" ? (
+          {isActive && filterSelected === "COLLECTED" ? (
             <HStack
               w="full"
               pt="10px"
@@ -663,7 +665,7 @@ function MyNFTTabInfo(props) {
             </HStack>
           ) : null}
 
-          {filterSelected === "LISTING" ? (
+          {isActive && filterSelected === "LISTING" ? (
             <HStack
               w="full"
               pt="10px"

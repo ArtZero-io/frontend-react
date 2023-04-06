@@ -14,7 +14,7 @@ import AzeroIcon from "@theme/assets/icon/Azero.js";
 import { motion } from "framer-motion";
 import { formatNumDynamicDecimal } from "@utils";
 import { SCROLLBAR } from "@constants";
-import AddressCopier from "../AddressCopier/AddressCopier";
+import AddressCopier from "@components/AddressCopier/AddressCopier";
 
 function HistoryTable({ tableHeaders, tableData }) {
   const formatDataCell = (itemObj, headerValue) => {
@@ -31,16 +31,16 @@ function HistoryTable({ tableHeaders, tableData }) {
         );
 
       case "trader":
-        return <AddressCopier address={itemObj[headerValue]} textOnly={true}/>;
+        return <AddressCopier address={itemObj[headerValue]} />;
 
       case "seller":
-        return <AddressCopier address={itemObj[headerValue]} textOnly={true}/>;
+        return <AddressCopier address={itemObj[headerValue]} />;
 
       case "buyer":
-        return <AddressCopier address={itemObj[headerValue]} textOnly={true}/>;
+        return <AddressCopier address={itemObj[headerValue]} />;
 
       case "nftContractAddress":
-        return <AddressCopier address={itemObj[headerValue]} textOnly={true}/>;
+        return <AddressCopier address={itemObj[headerValue]} />;
 
       default:
         return <Text textAlign="left">{itemObj[headerValue]}</Text>;
