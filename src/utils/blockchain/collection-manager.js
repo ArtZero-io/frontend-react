@@ -343,7 +343,7 @@ const collection_manager = {
 			}
 		  ],
 		  "docs": [
-			" Advanced Add new collection - with fee in AZERO 1% = 100 - anyone can add Existing contract - Collection_Owner is owner of NFT contract and receive royal fee"
+			" Advanced Add new collection - with fee in ASTR 1% = 100 - anyone can add Existing contract - Collection_Owner is owner of NFT contract and receive royal fee"
 		  ],
 		  "label": "add_new_collection",
 		  "mutates": true,

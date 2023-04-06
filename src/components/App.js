@@ -179,7 +179,7 @@ const Main = () => {
   return (
     <>
       <Helmet>
-        <title>ArtZero.io - NFT Marketplace for Aleph Zero Blockchain</title>
+        <title>ArtZero.io - NFT Marketplace for Astar Network Blockchain</title>
       </Helmet>
       {loadContractDone && (
         <Fragment>

@@ -5,6 +5,7 @@ import { ApiPromise, WsProvider } from "@polkadot/api";
 import { web3Accounts, web3Enable } from "../wallets/extension-dapp";
 import { keyring as Keyring } from "@polkadot/ui-keyring";
 import { isTestChain } from "@polkadot/util";
+import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
 import { TypeRegistry } from "@polkadot/types/create";
 
 import config from "./config";
@@ -37,6 +38,18 @@ const initialState = {
 };
 
 const registry = new TypeRegistry();
+
+export function reformatAddress (address, networkPrefix) {
+
+  const publicKey = decodeAddress(address);
+
+  if (networkPrefix < 0) {
+    return address;
+  }
+
+  return encodeAddress(publicKey, networkPrefix);
+}
+
 
 ///
 // Reducer function for `useReducer`
@@ -167,7 +180,7 @@ export const loadAccounts = async (state, dispatch, wallet) => {
         Keyring.loadAll({ isDevelopment }, allAccounts);
       } catch (error) {
         allAccounts.forEach(({ address, meta }) => {
-          Keyring.saveAddress(address, meta);
+          Keyring.saveAddress(reformatAddress(address, systemChainType?.registry?.chainSS58 || 5), meta);
         });
       }
 

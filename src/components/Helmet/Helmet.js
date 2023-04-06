@@ -8,21 +8,21 @@ export default function HeadHelmet({ title, image }) {
       <meta name="theme-color" content="#000000" />
 
       {/* <!-- HTML Meta Tags --> */}
-      <title>ArtZero.io - NFT Marketplace for Aleph Zero Blockchain</title>
+      <title>ArtZero.io - NFT Marketplace for Astar Network Blockchain</title>
       <meta
         name="description"
-        content="Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io"
+        content="Discover, create, collect and trade NFTs on Astar Network Blockchain with ArtZero.io"
       />
 
       {/* <!-- Google / Search Engine Tags --> */}
       <meta
         itemprop="name"
-        content="ArtZero.io - NFT Marketplace for Aleph Zero Blockchain"
+        content="ArtZero.io - NFT Marketplace for Astar Network Blockchain"
       />
 
       <meta
         itemprop="description"
-        content="Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io"
+        content="Discover, create, collect and trade NFTs on Astar Network Blockchain with ArtZero.io"
       />
 
       <meta itemprop="image" content="https://artzero.io/assets/preview.jpg" />
@@ -33,12 +33,12 @@ export default function HeadHelmet({ title, image }) {
 
       <meta
         property="og:title"
-        content="ArtZero.io - NFT Marketplace for Aleph Zero Blockchain"
+        content="ArtZero.io - NFT Marketplace for Astar Network Blockchain"
       />
 
       <meta
         property="og:description"
-        content="Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io"
+        content="Discover, create, collect and trade NFTs on Astar Network Blockchain with ArtZero.io"
       />
       <meta
         property="og:image"
@@ -52,12 +52,12 @@ export default function HeadHelmet({ title, image }) {
 
       <meta
         name="twitter:title"
-        content="ArtZero.io - NFT Marketplace for Aleph Zero Blockchain"
+        content="ArtZero.io - NFT Marketplace for Astar Network Blockchain"
       />
 
       <meta
         name="twitter:description"
-        content="Discover, create, collect and trade NFTs on Aleph Zero Blockchain with ArtZero.io"
+        content="Discover, create, collect and trade NFTs on Astar Network Blockchain with ArtZero.io"
       />
 
       <meta

@@ -403,7 +403,7 @@ async function addReward(caller_account, amount) {
 
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
-  const value = new BN(amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const value = new BN(amount * 10 ** 6).mul(new BN(10 ** 12)).toString();
 
   gasLimit = await getEstimatedGas(address, contract, value, "addReward");
 

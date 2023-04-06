@@ -64,7 +64,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
               currentAccount
             );
 
-          setAddingFee(addingFeeData / 10 ** 12);
+          setAddingFee(addingFeeData / 10 ** 18);
         }
       } catch (error) {
         console.log("error fetchFee", error.message);
@@ -245,7 +245,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
 
             if (mode === formMode.ADD && userBalance <= addingFee) {
               return toast.error(
-                `You need ${addingFee} AZERO to create new collection!`
+                `You need ${addingFee} ASTR to create new collection!`
               );
             }
             // if (
@@ -672,7 +672,7 @@ const SimpleModeForm = ({ mode = formMode.ADD, id, nftContractAddress }) => {
                       fontSize={["md", "lg", "lg"]}
                     >
                       Create new collection you will pay
-                      <strong> {addingFee} AZERO </strong> in fee to ArtZero.io
+                      <strong> {addingFee} ASTR </strong> in fee to ArtZero.io
                     </Text>
                     <HStack justifyContent="center">
                       <CommonCheckbox

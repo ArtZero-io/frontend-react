@@ -148,7 +148,7 @@ export default function UpdateWithdrawModal({
             Withdraw Balance
           </Heading>
           <Text ml={1} fontSize="sm" fontWeight="400">
-            Your balance {contractBalance} AZERO.
+            Your balance {contractBalance} ASTR.
           </Text>
         </ModalHeader>
 

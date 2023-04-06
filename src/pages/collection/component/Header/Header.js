@@ -256,7 +256,7 @@ function CollectionHeader(props) {
                 />
                 <Flex alignItems="center" justifyContent="center">
                   <Text fontSize={["34px", "40px"]}>
-                    {shortenNumber(floorPrice / 10 ** 12) || 0}
+                    {shortenNumber(floorPrice / 10 ** 18) || 0}
                   </Text>
 
                   <AzeroIcon ml="6px" w="20px" />
@@ -280,7 +280,7 @@ function CollectionHeader(props) {
               >
                 <Flex alignItems="center" justifyContent="center">
                   <Text fontSize={["34px", "40px"]}>
-                    {shortenNumber(volume) || 0}
+                    {shortenNumber(volume / 10**6) || 0}
                   </Text>
                   <AzeroIcon ml="6px" w="20px" />
                 </Flex>

@@ -294,7 +294,7 @@ function MyNFTCard({
                   </Text>
                   <Tag minH={["30px", "40px"]}>
                     <TagLabel>
-                      {formatNumDynamicDecimal(price / 10 ** 12)}
+                      {formatNumDynamicDecimal(price / 10 ** 18)}
                     </TagLabel>
                     <TagRightIcon as={AzeroIcon} />
                   </Tag>
@@ -312,7 +312,7 @@ function MyNFTCard({
                   {isBid?.status ? (
                     <HStack minH={"20px"} bg="transparent">
                       <TagLabel bg="transparent">
-                        {formatNumDynamicDecimal(isBid?.bidPrice / 10 ** 12)}
+                        {formatNumDynamicDecimal(isBid?.bidPrice / 10 ** 18)}
                       </TagLabel>
                       <TagRightIcon as={AzeroIcon} />
                     </HStack>
@@ -333,7 +333,7 @@ function MyNFTCard({
                       {highest_bid ? (
                         <HStack ml={"6px"} bg="transparent" i>
                           <Text color="#fff" bg="transparent">
-                            {formatNumDynamicDecimal(highest_bid / 10 ** 12)}
+                            {formatNumDynamicDecimal(highest_bid / 10 ** 18)}
                           </Text>
                           <TagRightIcon as={AzeroIcon} />
                         </HStack>

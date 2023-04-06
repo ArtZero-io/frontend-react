@@ -15,6 +15,8 @@ import {
 import launchpad_manager from "@utils/blockchain/launchpad-manager";
 import { APICall } from "@api/client";
 import { readOnlyGasLimit, formatOutput } from "..";
+import { reformatAddress } from "@utils/substrate/SubstrateContext";
+import { networkSS58 } from "@constants";
 // import emailjs from "@emailjs/browser";
 // import { delay } from "@utils";
 
@@ -308,7 +310,7 @@ async function addNewProject(
                       eventValues.push(value.toString());
                     }
 
-                    const nft_address = eventValues[1];
+                    const nft_address = reformatAddress(eventValues[1], networkSS58);
 
                     const res = await APICall.askBeUpdateProjectData({
                       project_address: nft_address,
@@ -523,7 +525,7 @@ export const withdrawLaunchpadContract = async (
   const value = 0;
 
   const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
-    .mul(new BN(10 ** 6))
+    .mul(new BN(10 ** 12))
     .toString();
 
   gasLimit = await getEstimatedGas(

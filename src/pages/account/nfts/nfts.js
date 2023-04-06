@@ -409,7 +409,7 @@ export async function execContractQuery(
   }
 }
 
-export const formatQueryResultToNumber = (result, chainDecimals = 12) => {
+export const formatQueryResultToNumber = (result, chainDecimals = 18) => {
   const ret = result?.toHuman().Ok?.replaceAll(",", "");
 
   const formattedStrBal = formatBalance(ret, {
@@ -433,7 +433,7 @@ export async function execContractTx(
   ...args
 ) {
   // NOTE: amount need to convert before passing in
-  // const totalAmount = new BN(token_amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  // const totalAmount = new BN(token_amount * 10 ** 6).mul(new BN(10 ** 12)).toString();
   // console.log("execContractTx ", queryName);
 
   const contract = new ContractPromise(api, contractAbi, contractAddress);

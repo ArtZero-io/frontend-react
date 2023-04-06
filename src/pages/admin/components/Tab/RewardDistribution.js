@@ -298,7 +298,7 @@ function RewardDistribution() {
         dispatch(setTxStatus({ type: WITHDRAW_MARKETPLACE, step: START }));
 
         toast.success(
-          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} AZERO!`
+          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} ASTR!`
         );
 
         await withdrawMarketplaceContract(
@@ -331,7 +331,7 @@ function RewardDistribution() {
         dispatch(setTxStatus({ type: WITHDRAW_COLLECTION, step: START }));
 
         toast.success(
-          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} AZERO!`
+          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} ASTR!`
         );
 
         await withdrawCollectionContract(
@@ -364,7 +364,7 @@ function RewardDistribution() {
         dispatch(setTxStatus({ type: WITHDRAW_LAUNCHPAD, step: START }));
 
         toast.success(
-          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} AZERO!`
+          `Claiming ${formatNumDynamicDecimal(item.balance, 2)} ASTR!`
         );
 
         await withdrawLaunchpadContract(
@@ -411,10 +411,10 @@ function RewardDistribution() {
                       <Tr>
                         <Td>{item.name.toLocaleUpperCase()}</Td>
                         <Td>
-                          {formatNumDynamicDecimal(item.balance, 2)} AZERO
+                          {formatNumDynamicDecimal(item.balance, 2)} ASTR
                         </Td>
                         <Td>{item.percent}</Td>
-                        <Td>{formatNumDynamicDecimal(item.net, 2)} AZERO</Td>
+                        <Td>{formatNumDynamicDecimal(item.net, 2)} ASTR</Td>
 
                         <Td>
                           {item.name !== "TOTAL" && (

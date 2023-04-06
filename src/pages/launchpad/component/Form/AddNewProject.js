@@ -189,7 +189,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
               currentAccount
             );
 
-          setAddingFee(addingFeeData / 10 ** 12);
+          setAddingFee(addingFeeData / 10 ** 18);
         }
       }
 
@@ -227,7 +227,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
           currentAccount || getPublicCurrentAccount()
         );
 
-      const totalFee = addProjFee / 10 ** 12 + addCollectionFee / 10 ** 12;
+      const totalFee = addProjFee / 10 ** 18 + addCollectionFee / 10 ** 18;
 
       setAddProjectTotalFee(totalFee);
     };
@@ -421,7 +421,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                     is_public_phases.push(phase.isPublic);
                     let public_minting_fee_phase_tmp = phase.isPublic
                       ? new BN(phase.publicMintingFee * 10 ** 6)
-                          .mul(new BN(10 ** 6))
+                          .mul(new BN(10 ** 12))
                           .toString()
                       : 0;
                     public_minting_fee_phases.push(
@@ -1017,7 +1017,7 @@ const AddNewProjectForm = ({ mode = formMode.ADD, nftContractAddress }) => {
                                       color="#888"
                                     >{`Create new project you will pay `}</Text>
                                     <Text color="#fff" as="span">
-                                      {`${addProjectTotalFee} AZERO`}
+                                      {`${addProjectTotalFee} ASTR`}
                                     </Text>
                                     <Text
                                       as="span"

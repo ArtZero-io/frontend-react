@@ -39,7 +39,7 @@ function TopCollectionsTab({ topCollections, azeroPrice }) {
             <HStack w="full">
               <Spacer />
               {/* <Text fontSize='sm' pr={["5px", "15px"]}>
-                ( AZERO/USD ${azeroPrice} )
+                ( ASTR/USD ${azeroPrice} )
               </Text> */}
               <Text color="brand.grayLight" pr={["5px", "25px"]}>
                 Switch currency

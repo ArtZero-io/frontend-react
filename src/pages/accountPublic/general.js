@@ -472,13 +472,13 @@ function GeneralPage() {
               >
                 <span>stake </span>
                 <span style={{ color: "#7AE7FF" }}>
-                  praying mantis predators
+                  Artzero NFT on Astar
                 </span>{" "}
                 <Box display={{ base: "none", xl: "flex" }} />
                 <span>to reduce </span>
                 <span style={{ color: "#7AE7FF" }}>fees</span>
                 <span> and earn </span>
-                <span style={{ color: "#7AE7FF" }}>AZERO</span>
+                <span style={{ color: "#7AE7FF" }}>ASTR</span>
               </Box>
 
               <Spacer />

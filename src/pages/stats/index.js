@@ -18,7 +18,7 @@ import { fetchUserBalance } from "../launchpad/component/Form/AddNewProject";
 import toast from "react-hot-toast";
 import { formatBalance } from "@polkadot/util";
 
-const url = "https://min-api.cryptocompare.com/data/price?fsym=azero&tsyms=USD";
+const url = "https://min-api.cryptocompare.com/data/price?fsym=astr&tsyms=USD";
 
 function StatsPage() {
   const { api } = useSubstrateState();
@@ -35,7 +35,7 @@ function StatsPage() {
     await fetch(url)
       .then((res) => res.json())
       .then(({ USD }) => {
-        console.log("AZERO - USD:", USD.toFixed(4));
+        console.log("ASTR - USD:", USD.toFixed(4));
         setAzeroPrice(USD.toFixed(4));
       })
       .catch((err) => {
@@ -140,7 +140,8 @@ function StatsPage() {
           return {
             ...item,
             order: index + 1,
-            floorPrice: data?.price / 10 ** 12 || 0,
+            volume: item.volume / 10**6 || 0,
+            floorPrice: data?.price / 10 ** 18 || 0,
           };
         })
       );

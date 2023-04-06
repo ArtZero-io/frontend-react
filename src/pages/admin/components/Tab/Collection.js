@@ -51,9 +51,9 @@ function CollectionAdmin() {
       collection_manager.CONTRACT_ADDRESS
     );
     setCollectionContractBalance(
-      new BN(balance.free, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 6 -
+      new BN(balance.free, 10, "le").div(new BN(10 ** 6)).toNumber() / 10 ** 12 -
         new BN(balance.miscFrozen, 10, "le").div(new BN(10 ** 6)).toNumber() /
-          10 ** 6
+          10 ** 12
     );
   }, [api.query.system]);
 

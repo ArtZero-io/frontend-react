@@ -145,3 +145,5 @@ export const SUPPORTED_WALLET_LIST = [
 ];
 
 export const MESSAGE_SIGN = "Sign message to report";
+
+export const networkSS58 = 5

@@ -1095,10 +1095,10 @@ Pre-requisite:
   - Unsuccessful bids (happen when you bid for an NFT but other offer gets accepted, or someone else just buy the listed price)
 Steps: 
   1. Navigate to MY ACCOUNT
-  2. Click button CLAIM UNSUCCESSFUL BIDS ... AZERO
+  2. Click button CLAIM UNSUCCESSFUL BIDS ... ASTR
   3. Fill wallet password & sign transaction
 Expectations: 
-  - Successful transaction & unable to navigate the button CLAIM UNSUCCESSFUL BIDS ... AZERO in MY ACCOUNT anymore
+  - Successful transaction & unable to navigate the button CLAIM UNSUCCESSFUL BIDS ... ASTR in MY ACCOUNT anymore
   - Balance is increased with the unsuccessful bids and is deducted with gas fee.
 ```
 

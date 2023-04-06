@@ -68,7 +68,7 @@ async function getVolumeByCollection(caller_account, nft_contract_address) {
   ](address, { value: azero_value, gasLimit }, nft_contract_address);
 
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 18;
   }
   return 0;
 }
@@ -89,7 +89,7 @@ async function getTotalVolume(caller_account) {
   });
 
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 18;
   }
   return null;
 }
@@ -304,7 +304,7 @@ async function getCurrentProfit(caller_account) {
   });
 
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 18;
   }
   return null;
 }
@@ -325,7 +325,7 @@ async function getTotalProfit(caller_account) {
   });
 
   if (result.isOk) {
-    return formatNumberOutput(output) / 10 ** 12;
+    return formatNumberOutput(output) / 10 ** 18;
   }
   return null;
 }
@@ -381,7 +381,7 @@ async function list(
 
   const value = 0;
 
-  const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const sale_price = new BN(price * 10 ** 6).mul(new BN(10 ** 12)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -511,7 +511,7 @@ async function bid(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(bid_amount * 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const value = new BN(bid_amount * 10 ** 6).mul(new BN(10 ** 12)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -642,7 +642,7 @@ async function buy(
   const address = caller_account?.address;
   const { signer } = await web3FromSource(caller_account?.meta?.source);
 
-  const value = new BN(price / 10 ** 6).mul(new BN(10 ** 6)).toString();
+  const value = new BN(price / 10 ** 6).mul(new BN(10 ** 12)).toString();
 
   gasLimit = await getEstimatedGas(
     address,
@@ -811,7 +811,7 @@ export const withdrawMarketplaceContract = async (
   const value = 0;
 
   const amountFormatted = new BN(parseFloat(amount) * 10 ** 6)
-    .mul(new BN(10 ** 6))
+    .mul(new BN(10 ** 12))
     .toString();
 
   gasLimit = await getEstimatedGas(
