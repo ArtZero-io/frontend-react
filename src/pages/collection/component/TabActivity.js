@@ -14,7 +14,7 @@ import { APICall } from "@api/client";
 import AnimationLoader from "@components/Loader/AnimationLoader";
 import { SCROLLBAR } from "@constants";
 import DropdownMobile from "@components/Dropdown/DropdownMobile";
-import AddressCopier from "../../../components/AddressCopier/AddressCopier";
+import { truncateStr } from "@utils";
 
 function TabActivity({
   tokenUriType1,
@@ -89,7 +89,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="PURCHASE"
-          collectionOwnerName={<AddressCopier address={collectionOwner} truncateStr={9} textOnly={true}/>}
+          collectionOwnerName={truncateStr(collectionOwner)}
           tableHeaders={headers.purchase}
           fetchMore={fetchMore}
           fetchBack={fetchBack}
@@ -105,7 +105,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="LIST"
-          collectionOwnerName={<AddressCopier address={collectionOwner} truncateStr={9} textOnly={true}/>}
+          collectionOwnerName={truncateStr(collectionOwner)}
           tableHeaders={headers.list}
           fetchMore={fetchMore}
           fetchBack={fetchBack}
@@ -121,7 +121,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="UNLIST"
-          collectionOwnerName={<AddressCopier address={collectionOwner} truncateStr={9} textOnly={true}/>}
+          collectionOwnerName={truncateStr(collectionOwner)}
           tableHeaders={headers.unlist}
           fetchMore={fetchMore}
           hasMore={hasMore[2]}
@@ -137,7 +137,7 @@ function TabActivity({
         <EventTable
           {...rest}
           type="BID ACCEPT"
-          collectionOwnerName={<AddressCopier address={collectionOwner} truncateStr={9} textOnly={true}/>}
+          collectionOwnerName={truncateStr(collectionOwner)}
           tableHeaders={headers.bidAccepted}
           fetchMore={fetchMore}
           fetchBack={fetchBack}
