@@ -1101,7 +1101,7 @@ function MyWhiteListProjectPage(props) {
                 fontSize="lg"
                 w="full"
                 // w={{ base: "full", xl: "1560px" }}
-                maxH={{ base: "390px", xl: "555px" }}
+                maxH={{ base: "555px", xl: "555px" }}
                 overflowY="scroll"
                 sx={SCROLLBAR}
               >
